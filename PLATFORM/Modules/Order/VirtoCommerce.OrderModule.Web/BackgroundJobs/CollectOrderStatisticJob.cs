@@ -2,22 +2,22 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using CacheManager.Core;
 using VirtoCommerce.OrderModule.Data.Repositories;
 using VirtoCommerce.OrderModule.Web.Model;
-using VirtoCommerce.Platform.Core.Caching;
 
 namespace VirtoCommerce.OrderModule.Web.BackgroundJobs
 {
 	public class CollectOrderStatisticJob
 	{
 		private readonly Func<IOrderRepository> _repositoryFactory;
-		private readonly CacheManager _cacheManager;
+		private readonly ICacheManager<object> _cacheManager;
 
 		internal CollectOrderStatisticJob()
 		{
 		}
 
-		public CollectOrderStatisticJob(Func<IOrderRepository> repositoryFactory, CacheManager cacheManager)
+		public CollectOrderStatisticJob(Func<IOrderRepository> repositoryFactory, ICacheManager<object> cacheManager)
 		{
 			_repositoryFactory = repositoryFactory;
 			_cacheManager = cacheManager;

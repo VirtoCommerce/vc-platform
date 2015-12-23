@@ -1,43 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using coreModel = VirtoCommerce.Domain.Catalog.Model;
-using VirtoCommerce.Domain.Catalog.Services;
-using VirtoCommerce.Platform.Core.Asset;
-using VirtoCommerce.Platform.Core.Caching;
-using VirtoCommerce.Platform.Core.Notifications;
-using VirtoCommerce.Platform.Core.Common;
 using System.IO;
-using CsvHelper;
-using System.Text;
-using System.Reflection;
-using VirtoCommerce.CatalogModule.Web.Model.PushNotifications;
-using webModel = VirtoCommerce.CatalogModule.Web.Model;
-using CsvHelper.Configuration;
-using VirtoCommerce.Domain.Pricing.Model;
-using System.Globalization;
-using VirtoCommerce.Domain.Inventory.Model;
-using VirtoCommerce.Domain.Pricing.Services;
-using VirtoCommerce.Domain.Inventory.Services;
-using VirtoCommerce.Domain.Commerce.Services;
+using System.Linq;
 using System.Threading.Tasks;
-using VirtoCommerce.Domain.Commerce.Model;
+using CsvHelper;
 using VirtoCommerce.Domain.Catalog.Model;
+using VirtoCommerce.Domain.Catalog.Services;
+using VirtoCommerce.Domain.Commerce.Model;
+using VirtoCommerce.Domain.Commerce.Services;
+using VirtoCommerce.Domain.Inventory.Services;
+using VirtoCommerce.Domain.Pricing.Model;
+using VirtoCommerce.Domain.Pricing.Services;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.PushNotifications;
+using coreModel = VirtoCommerce.Domain.Catalog.Model;
 
 
 namespace VirtoCommerce.CatalogModule.Web.ExportImport
 {
-	public sealed class CsvCatalogImporter
+    public sealed class CsvCatalogImporter
 	{
 		private readonly char[] _categoryDelimiters = new char[] { '/', '|', '\\', '>' };
 		private readonly ICatalogService _catalogService;
 		private readonly ICategoryService _categoryService;
 		private readonly IItemService _productService;
 		private readonly IPushNotificationManager _pushNotificationManager;
-		private readonly CacheManager _cacheManager;
 		private readonly ISkuGenerator _skuGenerator;
 		private readonly IPricingService _pricingService;
 		private readonly IInventoryService _inventoryService;
@@ -47,7 +35,7 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 		private object _lockObject = new object();
 
 		public CsvCatalogImporter(ICatalogService catalogService, ICategoryService categoryService, IItemService productService,
-								IPushNotificationManager pushNotificationManager, CacheManager cacheManager, ISkuGenerator skuGenerator,
+								IPushNotificationManager pushNotificationManager, ISkuGenerator skuGenerator,
 								IPricingService pricingService, IInventoryService inventoryService, ICommerceService commerceService,
 								IPropertyService propertyService, ICatalogSearchService searchService)
 		{
@@ -55,7 +43,6 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 			_categoryService = categoryService;
 			_productService = productService;
 			_pushNotificationManager = pushNotificationManager;
-			_cacheManager = cacheManager;
 			_skuGenerator = skuGenerator;
 			_pricingService = pricingService;
 			_inventoryService = inventoryService;

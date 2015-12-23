@@ -1,17 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using CacheManager.Core;
 using VirtoCommerce.Domain.Catalog.Model;
 using VirtoCommerce.Domain.Catalog.Services;
-using VirtoCommerce.Platform.Core.Caching;
+using VirtoCommerce.Platform.Data.Common;
 
 namespace VirtoCommerce.SearchModule.Data.Services
 {
     public sealed class CatalogOutlineBuilder
     {
         private readonly ICategoryService _categoryService;
-        private readonly CacheManager _cacheManager;
+        private readonly ICacheManager<object> _cacheManager;
 
-        public CatalogOutlineBuilder(ICategoryService categoryService, CacheManager cacheManager)
+        public CatalogOutlineBuilder(ICategoryService categoryService, ICacheManager<object> cacheManager)
         {
             _categoryService = categoryService;
             _cacheManager = cacheManager;
@@ -19,8 +20,8 @@ namespace VirtoCommerce.SearchModule.Data.Services
 
         private Category GetCategoryById(string categoryId)
         {
-            var cacheKey = CacheKey.Create("CatalogOutlineBuilder.GetCategoryById", categoryId);
-            var retVal = _cacheManager.Get(cacheKey, () => _categoryService.GetById(categoryId, CategoryResponseGroup.Full));
+            var cacheKey = "CatalogOutlineBuilder.GetCategoryById:" +  categoryId;
+            var retVal = _cacheManager.Get(cacheKey, "SearchModuleRegion",  () => _categoryService.GetById(categoryId, CategoryResponseGroup.Full));
             return retVal;
         }
 

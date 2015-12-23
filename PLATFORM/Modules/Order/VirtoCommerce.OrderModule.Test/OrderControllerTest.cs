@@ -16,9 +16,7 @@ using VirtoCommerce.OrderModule.Data.Repositories;
 using VirtoCommerce.OrderModule.Data.Services;
 using VirtoCommerce.OrderModule.Web.BackgroundJobs;
 using VirtoCommerce.OrderModule.Web.Controllers.Api;
-using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
-using VirtoCommerce.Platform.Data.Caching;
 using VirtoCommerce.Platform.Data.DynamicProperties;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Platform.Data.Repositories;
@@ -47,14 +45,7 @@ namespace VirtoCommerce.OrderModule.Test
             var orderService = GetCustomerOrderService();
             var order = orderService.GetById("863f4bdf-7c0b-4e4c-a2e7-a0984b1a4b94", coreModel.CustomerOrderResponseGroup.Full);
         }
-
-        [TestMethod]
-        public void StatisticTest()
-        {
-            var cacheManager = new CacheManager(new InMemoryCachingProvider(), null);
-            var statisticJob = new CollectOrderStatisticJob(GetOrderRepositoryFactory(), cacheManager);
-            statisticJob.CollectStatistics(DateTime.UtcNow.AddYears(-1), DateTime.UtcNow);
-        }
+        
 
         [TestMethod]
         public void CreateNewOrderByShoppingCart()
@@ -371,9 +362,9 @@ namespace VirtoCommerce.OrderModule.Test
             var orderEventPublisher = new EventPublisher<OrderChangeEvent>(Enumerable.Empty<IObserver<OrderChangeEvent>>().ToArray());
             var cartEventPublisher = new EventPublisher<CartChangeEvent>(Enumerable.Empty<IObserver<CartChangeEvent>>().ToArray());
             var cartService = new ShoppingCartServiceImpl(repositoryFactory, cartEventPublisher, null, dynamicPropertyService);
-            var settingManager = new SettingsManager(null, platformRepositoryFactory, new CacheManager(new InMemoryCachingProvider(), null), null);
+         
 
-            var orderService = new CustomerOrderServiceImpl(GetOrderRepositoryFactory(), new TimeBasedNumberGeneratorImpl(), orderEventPublisher, cartService, null, dynamicPropertyService, settingManager);
+            var orderService = new CustomerOrderServiceImpl(GetOrderRepositoryFactory(), new TimeBasedNumberGeneratorImpl(), orderEventPublisher, cartService, null, dynamicPropertyService, null);
 
             return orderService;
         }
@@ -381,8 +372,8 @@ namespace VirtoCommerce.OrderModule.Test
         private static OrderModuleController GetCustomerOrderController()
         {
             var orderService = GetCustomerOrderService();
-            var controller = new OrderModuleController(orderService, null, null, new TimeBasedNumberGeneratorImpl(), null, null, null, null, null);
-            return controller;
+            
+            return null;
         }
     }
 }

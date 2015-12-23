@@ -8,7 +8,6 @@ using VirtoCommerce.Domain.Marketing.Model.DynamicContent;
 using VirtoCommerce.Domain.Marketing.Services;
 using VirtoCommerce.MarketingModule.Data.Repositories;
 using VirtoCommerce.Domain.Marketing.Model;
-using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Domain.Common;
 
 namespace VirtoCommerce.MarketingModule.Data.Services

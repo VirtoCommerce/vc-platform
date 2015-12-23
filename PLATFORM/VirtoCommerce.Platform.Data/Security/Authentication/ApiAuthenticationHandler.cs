@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Infrastructure;
-using VirtoCommerce.Platform.Core.Caching;
+using VirtoCommerce.Platform.Data.Common;
 using VirtoCommerce.Platform.Data.Security.Identity;
 
 namespace VirtoCommerce.Platform.Data.Security.Authentication
@@ -13,7 +13,6 @@ namespace VirtoCommerce.Platform.Data.Security.Authentication
     public abstract class ApiAuthenticationHandler<TOptions> : AuthenticationHandler<TOptions>
         where TOptions : ApiAuthenticationOptions
     {
-        public const string CacheGroup = CacheGroups.Security + "_ApiAuthenticationHandler";
 
         protected abstract string ExtractUserIdFromRequest();
 
@@ -52,8 +51,8 @@ namespace VirtoCommerce.Platform.Data.Security.Authentication
 
         protected virtual async Task<ClaimsIdentity> GetIdentityByUserId(string userId)
         {
-            var cacheKey = CacheKey.Create(CacheGroup, "GetIdentityByUserId", userId);
-            var result = await Options.CacheManager.Get(cacheKey, () => CreateIdentityByUserId(userId));
+            var cacheKey = String.Join(":",  "GetIdentityByUserId", userId);
+            var result = await Options.CacheManager.Get(cacheKey, "PlatformRegion", () => CreateIdentityByUserId(userId));
             return result;
         }
 

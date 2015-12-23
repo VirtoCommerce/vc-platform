@@ -34,6 +34,10 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CacheManager.Core, Version=0.6.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CacheManager.Core.0.6.1\lib\net45\CacheManager.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="DotLiquid">
       <HintPath>..\packages\DotLiquid.1.8.0\lib\NET45\DotLiquid.dll</HintPath>
     </Reference>
@@ -140,12 +144,9 @@
     <Compile Include="Asset\BlobStorageMultipartStreamProvider.cs" />
     <Compile Include="Asset\CustomMultipartStreamProvider.cs" />
     <Compile Include="Asset\FileSystemBlobProvider.cs" />
-    <Compile Include="Caching\CacheEntries.cs" />
-    <Compile Include="Caching\CacheEntry.cs" />
-    <Compile Include="Caching\HttpCacheProvider.cs" />
-    <Compile Include="Caching\InMemoryCacheProvider.cs" />
     <Compile Include="ChangeLog\ChangeLogConverter.cs" />
     <Compile Include="ChangeLog\ChangeLogService.cs" />
+    <Compile Include="Common\CacheManagerExtensions.cs" />
     <Compile Include="Common\ConnectionHelper.cs" />
     <Compile Include="Common\ConventionInjections\CloneInjection.cs" />
     <Compile Include="Common\ConventionInjections\IgnorePropertiesInjection.cs" />

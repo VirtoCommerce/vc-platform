@@ -3,8 +3,9 @@ using System.Globalization;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using VirtoCommerce.Platform.Core.Caching;
+using CacheManager.Core;
 using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Platform.Data.Common;
 using VirtoCommerce.Platform.Data.Model;
 using VirtoCommerce.Platform.Data.Repositories;
 
@@ -13,9 +14,9 @@ namespace VirtoCommerce.Platform.Data.Security
     public class ApiAccountProvider : IApiAccountProvider
     {
         private readonly Func<IPlatformRepository> _platformRepository;
-        private readonly CacheManager _cacheManager;
+        private readonly ICacheManager<object> _cacheManager;
 
-        public ApiAccountProvider(Func<IPlatformRepository> platformRepository, CacheManager cacheManager)
+        public ApiAccountProvider(Func<IPlatformRepository> platformRepository, ICacheManager<object> cacheManager)
         {
             _platformRepository = platformRepository;
             _cacheManager = cacheManager;
@@ -25,9 +26,8 @@ namespace VirtoCommerce.Platform.Data.Security
 
         public ApiAccountEntity GetAccountByAppId(ApiAccountType type, string appId)
         {
-            return _cacheManager.Get(
-                CacheKey.Create(CacheGroups.Security, "ApiAccount", type.ToString(), appId),
-                () => LoadApiAccount(type, appId));
+            var cacheKey = String.Join(":", "ApiAccount", type.ToString(), appId);
+            return _cacheManager.Get(cacheKey, "PlatformRegion",  () => LoadApiAccount(type, appId));
         }
 
         public ApiAccountEntity GenerateApiCredentials(ApiAccountType type)

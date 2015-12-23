@@ -1,28 +1,24 @@
 ﻿using System;
-using System.Data.Entity;
-using System.Dynamic;
 using Microsoft.Practices.Unity;
 using VirtoCommerce.CoreModule.Data.Services;
 using VirtoCommerce.Domain.Common;
-using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Domain.Order.Events;
 using VirtoCommerce.Domain.Order.Services;
+using VirtoCommerce.OrderModule.Data.Notifications;
 using VirtoCommerce.OrderModule.Data.Observers;
 using VirtoCommerce.OrderModule.Data.Repositories;
 using VirtoCommerce.OrderModule.Data.Services;
 using VirtoCommerce.OrderModule.Web.ExportImport;
-using VirtoCommerce.Platform.Core.Caching;
+using VirtoCommerce.OrderModule.Web.Resources;
+using VirtoCommerce.OrderModule.Web.Security;
+using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Modularity;
+using VirtoCommerce.Platform.Core.Notifications;
+using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
-using VirtoCommerce.Platform.Core.Notifications;
-using VirtoCommerce.OrderModule.Data.Notifications;
-using VirtoCommerce.OrderModule.Web.Resources;
-using VirtoCommerce.Platform.Core.Settings;
-using VirtoCommerce.Platform.Core.Security;
-using VirtoCommerce.OrderModule.Web.Security;
-using VirtoCommerce.Domain.Store.Services;
 
 namespace VirtoCommerce.OrderModule.Web
 {
@@ -68,13 +64,7 @@ namespace VirtoCommerce.OrderModule.Web
 
         public override void PostInitialize()
         {
-            var cacheManager = _container.Resolve<CacheManager>();
-            var cacheSettings = new[] 
-			{
-				new CacheSettings("Statistic", TimeSpan.FromHours(1))
-			};
-            cacheManager.AddCacheSettings(cacheSettings);
-
+ 
             var notificationManager = _container.Resolve<INotificationManager>();
 
             notificationManager.RegisterNotificationType(() => new OrderCreateEmailNotification(_container.Resolve<IEmailNotificationSendingGateway>())

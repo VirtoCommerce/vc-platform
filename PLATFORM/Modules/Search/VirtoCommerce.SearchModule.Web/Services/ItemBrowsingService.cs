@@ -5,7 +5,6 @@ using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Domain.Search.Model;
 using VirtoCommerce.Domain.Search.Services;
 using VirtoCommerce.Platform.Core.Asset;
-using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.SearchModule.Web.Converters;
 using VirtoCommerce.SearchModule.Web.Model;
@@ -20,7 +19,7 @@ namespace VirtoCommerce.SearchModule.Web.Services
         private readonly ISearchConnection _searchConnection;
         private readonly ISearchProvider _searchProvider;
 
-        public ItemBrowsingService(IItemService itemService, ISearchProvider searchService, CacheManager cacheManager, IBlobUrlResolver blobUrlResolver = null, ISearchConnection searchConnection = null)
+        public ItemBrowsingService(IItemService itemService, ISearchProvider searchService, IBlobUrlResolver blobUrlResolver = null, ISearchConnection searchConnection = null)
         {
             _searchProvider = searchService;
             _searchConnection = searchConnection;

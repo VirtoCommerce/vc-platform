@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using VirtoCommerce.CatalogModule.Data.Converters;
 using VirtoCommerce.CatalogModule.Data.Repositories;
 using VirtoCommerce.Domain.Catalog.Services;
-using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using dataModel = VirtoCommerce.CatalogModule.Data.Model;
 using coreModel = VirtoCommerce.Domain.Catalog.Model;

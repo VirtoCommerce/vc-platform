@@ -1,30 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
+using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
+using CacheManager.Core;
+using Hangfire;
+using Omu.ValueInjecter;
+using VirtoCommerce.Domain.Common;
 using VirtoCommerce.Domain.Order.Services;
+using VirtoCommerce.Domain.Payment.Model;
+using VirtoCommerce.Domain.Store.Services;
+using VirtoCommerce.OrderModule.Data.Repositories;
+using VirtoCommerce.OrderModule.Web.BackgroundJobs;
+using VirtoCommerce.OrderModule.Web.Converters;
+using VirtoCommerce.OrderModule.Web.Security;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Platform.Core.Settings;
+using VirtoCommerce.Platform.Data.Common;
 using coreModel = VirtoCommerce.Domain.Order.Model;
 using webModel = VirtoCommerce.OrderModule.Web.Model;
-using VirtoCommerce.OrderModule.Web.Converters;
-using VirtoCommerce.Domain.Cart.Services;
-using System.Web.Http.ModelBinding;
-using VirtoCommerce.OrderModule.Web.Binders;
-using VirtoCommerce.Platform.Core.Common;
-using VirtoCommerce.Domain.Store.Services;
-using VirtoCommerce.Domain.Payment.Model;
-using Omu.ValueInjecter;
-using VirtoCommerce.Platform.Core.Caching;
-using Hangfire;
-using VirtoCommerce.Domain.Common;
-using VirtoCommerce.OrderModule.Web.BackgroundJobs;
-using VirtoCommerce.OrderModule.Data.Repositories;
-using VirtoCommerce.OrderModule.Web.Security;
-using System.Web;
-using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.OrderModule.Web.Controllers.Api
 {
@@ -35,7 +31,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         private readonly ICustomerOrderSearchService _searchService;
         private readonly IUniqueNumberGenerator _uniqueNumberGenerator;
         private readonly IStoreService _storeService;
-        private readonly CacheManager _cacheManager;
+        private readonly ICacheManager<object> _cacheManager;
         private readonly Func<IOrderRepository> _repositoryFactory;
         private readonly ISecurityService _securityService;
         private readonly IPermissionScopeService _permissionScopeService;
@@ -43,7 +39,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         private static object _lockObject = new object();
 
         public OrderModuleController(ICustomerOrderService customerOrderService, ICustomerOrderSearchService searchService, IStoreService storeService, IUniqueNumberGenerator numberGenerator,
-                                     CacheManager cacheManager, Func<IOrderRepository> repositoryFactory, IPermissionScopeService permissionScopeService, ISecurityService securityService, ISettingsManager settingManager)
+                                     ICacheManager<object> cacheManager, Func<IOrderRepository> repositoryFactory, IPermissionScopeService permissionScopeService, ISecurityService securityService, ISettingsManager settingManager)
         {
             _customerOrderService = customerOrderService;
             _searchService = searchService;
@@ -368,10 +364,10 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
 
             // Hack: to compinsate for incorrect Local dates to UTC
             end = end.Value.AddDays(2);
-            var cacheKey = CacheKey.Create("Statistic", start.Value.ToString("yyyy-MM-dd"), end.Value.ToString("yyyy-MM-dd"));
+            var cacheKey = String.Join(":", "Statistic", start.Value.ToString("yyyy-MM-dd"), end.Value.ToString("yyyy-MM-dd"));
             lock (_lockObject)
             {
-                retVal = _cacheManager.Get(cacheKey, () =>
+                retVal = _cacheManager.Get(cacheKey, "OrderModuleRegion", () =>
                 {
 
                     var collectStaticJob = new CollectOrderStatisticJob(_repositoryFactory, _cacheManager);

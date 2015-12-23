@@ -11,8 +11,8 @@ using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Security.Identity;
 using VirtoCommerce.Platform.Data.Common;
-using VirtoCommerce.Platform.Core.Caching;
 using System.Threading.Tasks;
+using CacheManager.Core;
 
 namespace VirtoCommerce.Platform.Data.ExportImport
 {
@@ -50,9 +50,9 @@ namespace VirtoCommerce.Platform.Data.ExportImport
         private readonly IRoleManagementService _roleManagementService;
         private readonly ISettingsManager _settingsManager;
         private readonly IDynamicPropertyService _dynamicPropertyService;
-		private readonly CacheManager _cacheManager;
+		private readonly ICacheManager<object> _cacheManager;
 
-        public PlatformExportImportManager(ISecurityService securityService, IRoleManagementService roleManagementService, ISettingsManager settingsManager, IDynamicPropertyService dynamicPropertyService, IPackageService packageService, CacheManager cacheManager)
+        public PlatformExportImportManager(ISecurityService securityService, IRoleManagementService roleManagementService, ISettingsManager settingsManager, IDynamicPropertyService dynamicPropertyService, IPackageService packageService, ICacheManager<object> cacheManager)
         {
             _dynamicPropertyService = dynamicPropertyService;
             _securityService = securityService;
