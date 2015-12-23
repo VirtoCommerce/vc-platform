@@ -45,14 +45,15 @@
 					    categoryId: data.categoryId,
 					    name: data.name,
 					    imageUrl: data.imgSrc,
-						sku: data.sku,
+					    sku: data.code,
 					    quantity: 1,
-					    price: price ? price.sale : 0,
+					    price: price ? (price.sale ? price.sale : price.list) : 0,
 					    tax: 0,
 					    discountAmount: 0,
 					    currency: $scope.blade.currentEntity.currency
 					};
                     $scope.blade.currentEntity.items.push(newLineItem);
+                    $scope.pageSettings.totalItems = $scope.blade.currentEntity.items.length;
                 },
                 function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
             },
@@ -61,13 +62,13 @@
     };
 
     $scope.openItemDynamicProperties = function (item) {
-    	var blade = {
-    		id: "dynamicPropertiesList",
-    		currentEntity: item,
-    		controller: 'platformWebApp.propertyValueListController',
-    		template: '$(Platform)/Scripts/app/dynamicProperties/blades/propertyValue-list.tpl.html'
-    	};
-    	bladeNavigationService.showBlade(blade, $scope.blade);
+        var blade = {
+            id: "dynamicPropertiesList",
+            currentEntity: item,
+            controller: 'platformWebApp.propertyValueListController',
+            template: '$(Platform)/Scripts/app/dynamicProperties/blades/propertyValue-list.tpl.html'
+        };
+        bladeNavigationService.showBlade(blade, $scope.blade);
     };
 
     $scope.openItemDetail = function (item) {
@@ -137,7 +138,7 @@
             executeMethod: function () {
                 var lineItems = $scope.blade.currentEntity.items;
                 $scope.blade.currentEntity.items = _.difference(lineItems, _.filter(lineItems, function (x) { return x.selected }));
-
+                $scope.pageSettings.totalItems = $scope.blade.currentEntity.items.length;
             },
             canExecuteMethod: function () {
                 return _.any($scope.blade.currentEntity.items, function (x) { return x.selected; });;
