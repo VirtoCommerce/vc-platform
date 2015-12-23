@@ -31,9 +31,8 @@
                     </ul>
                     <div class="form-group">
                         <label class="form-label">{{ 'customer.blades.customer-detail.labels.organizations' | translate }}</label>
-                        <!--<ui-select multiple ng-model="blade.currentEntity.organizations">-->
-                        <ui-select ng-model="blade.currentEntity.organization">
-                            <ui-select-match placeholder="{{ 'customer.blades.customer-detail.placeholders.organizations' | translate }}" allow-clear>{{$select.selected.name}}</ui-select-match>
+                        <ui-select multiple ng-model="blade.currentEntity.organizations">
+                            <ui-select-match placeholder="{{ 'customer.blades.customer-detail.placeholders.organizations' | translate }}">{{$item.name}}</ui-select-match>
                             <ui-select-choices repeat="x.id as x in organizations | filter: {name: $select.search}">
                                 <span ng-bind-html="x.name | highlight: $select.search"></span>
                             </ui-select-choices>

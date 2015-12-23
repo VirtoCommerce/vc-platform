@@ -120,10 +120,6 @@
     }
 
     function initializeBlade(data) {
-        // temporal workaround
-        if (!blade.isOrganization && data.organizations.length > 0) {
-            data.organization = data.organizations[0];
-        }
         blade.currentEntity = angular.copy(data);
         blade.origEntity = data;
         blade.isLoading = false;
@@ -135,11 +131,6 @@
 
     $scope.saveChanges = function () {
         blade.isLoading = true;
-
-        // temporal workaround
-        if (!blade.isOrganization) {
-            blade.currentEntity.organizations = blade.currentEntity.organization ? [blade.currentEntity.organization] : [];
-        }
 
         if (blade.currentEntityId) {
             if (customerAccount && customerAccount.userState !== blade.currentEntity.userState) {
