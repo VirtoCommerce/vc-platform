@@ -7,7 +7,7 @@
   {% assign has_sidebar = true %}
 {% endif %}
 
-<div class="grid grid-border">
+<div class="grid grid-border" ng-controller="categoryController">
 
   {% if has_sidebar %}
   <div class="grid-item large--one-fifth collection-filters" id="collectionFilters">
@@ -61,3 +61,13 @@
 </div>
 
 {% endpaginate %}
+<script>
+    window.products = [];
+    {% for product in collection.products %}
+        window.products.push({
+            id: "{{ product.id }}",
+            catalogId: "{{ product.catalog_id }}",
+            categoryId: "{{ product.category_id }}"
+        });
+    {% endfor %}
+</script>
