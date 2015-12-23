@@ -21,7 +21,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
 
         public override string ToString()
         {
-            var filters = Context["collection_sidebar_filters"]?.ToString();
+            var filters = (Context["collection_sidebar_filters"] ?? string.Empty).ToString();
 
             if (filters == "groups")
             {

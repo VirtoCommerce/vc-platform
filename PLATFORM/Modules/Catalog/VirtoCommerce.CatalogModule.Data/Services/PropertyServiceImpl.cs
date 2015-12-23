@@ -66,14 +66,18 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                 if (property.CategoryId != null)
                 {
                     var dbCategory = repository.GetCategoriesByIds(new[] { property.CategoryId }, coreModel.CategoryResponseGroup.Info).FirstOrDefault();
-                    dbCategory?.Properties.Add(dbProperty);
+                    if (dbCategory == null)
+                    {
+                        throw new NullReferenceException("dbCategory");
+                    }
+                    dbCategory.Properties.Add(dbProperty);
                 }
                 else
                 {
                     var dbCatalog = repository.GetCatalogById(property.CatalogId);
                     if (dbCatalog == null)
                     {
-                        throw new OperationCanceledException("Add property only to catalog");
+                        throw new NullReferenceException("dbCatalog");
                     }
                     dbCatalog.Properties.Add(dbProperty);
                 }

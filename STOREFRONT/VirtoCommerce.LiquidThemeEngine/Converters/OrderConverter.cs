@@ -55,7 +55,8 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                     .FirstOrDefault();
             }
 
-            var discountTotal = order.DiscountAmount?.Amount;
+
+            var discountTotal = order.DiscountAmount != null ? order.DiscountAmount.Amount : 0;
             var discounts = new List<Discount>();
 
             if (order.Discount != null)
@@ -193,7 +194,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
 
             result.Discounts = discounts.ToArray();
 
-            result.TotalPrice = result.SubtotalPrice + result.ShippingPrice + result.TaxPrice - discountTotal ?? 0m;
+            result.TotalPrice = result.SubtotalPrice + result.ShippingPrice + result.TaxPrice - discountTotal;
 
             return result;
         }

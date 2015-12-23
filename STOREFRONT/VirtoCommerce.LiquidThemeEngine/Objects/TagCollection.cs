@@ -14,7 +14,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         {
             get
             {
-                return Root?.GroupBy(t => t.GroupName).Select(g => g.Key);
+                return Root != null ? Root.GroupBy(t => t.GroupName).Select(g => g.Key) : null;
             }
         }
     }

@@ -12,7 +12,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
 
         public static Tag ToShopifyModel(this AggregationItem item, string groupName, string groupLabel)
         {
-            return new Tag(groupName, item.Value?.ToString())
+            return new Tag(groupName, item.Value != null ? item.Value.ToString() : null)
             {
                 GroupLabel = groupLabel,
                 Label = item.Label,

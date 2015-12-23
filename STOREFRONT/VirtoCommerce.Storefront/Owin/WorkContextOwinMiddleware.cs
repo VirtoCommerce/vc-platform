@@ -329,8 +329,8 @@ namespace VirtoCommerce.Storefront.Owin
             var country = new Country
             {
                 Name = pair.Key,
-                Code2 = region?.TwoLetterISORegionName,
-                Code3 = region?.ThreeLetterISORegionName,
+                Code2 = region != null ? region.TwoLetterISORegionName : String.Empty,
+                Code3 = region != null ? region.ThreeLetterISORegionName : String.Empty,
             };
 
             var provinceCodes = pair.Value["province_codes"].ToObject<Dictionary<string, string>>();

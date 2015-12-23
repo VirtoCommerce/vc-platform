@@ -65,7 +65,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
 
             if (product != null)
             {
-                retVal = product.FeaturedImage?.Src;
+                retVal = product.FeaturedImage != null ? product.FeaturedImage.Src : null;
             }
             if (image != null)
             {
@@ -73,11 +73,11 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
             }
             if (variant != null)
             {
-                retVal = variant.FeaturedImage?.Src;
+                retVal = variant.FeaturedImage != null ? variant.FeaturedImage.Src : null;
             }
             if (collection != null)
             {
-                retVal = collection.Image?.Src;
+                retVal = collection.Image != null ? collection.Image.Src : null;
             }
 
             return retVal;

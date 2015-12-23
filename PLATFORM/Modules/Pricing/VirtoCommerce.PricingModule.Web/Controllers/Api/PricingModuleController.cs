@@ -178,11 +178,15 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
         public IHttpActionResult GetProductPrices(string productId)
         {
             var prices = _pricingService.EvaluateProductPrices(new coreModel.PriceEvaluationContext { ProductIds = new[] { productId } });
-            var result = prices?.GroupBy(x => x.Currency)
-                .Select(x => x.First().ToWebModel())
-                .ToArray();
+            if (prices != null)
+            {
+                var result = prices.GroupBy(x => x.Currency)
+                    .Select(x => x.First().ToWebModel())
+                    .ToArray();
 
-            return result != null ? Ok(result) : (IHttpActionResult)NotFound();
+                return Ok(result);
+            }
+            return NotFound();
         }
 
         /// <summary>

@@ -47,10 +47,13 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                 Id = category.Id,
                 Description = null,
                 Handle = category.SeoInfo != null ? category.SeoInfo.Slug : category.Id,
-                Image = category.PrimaryImage?.ToShopifyModel(),
                 Title = category.Name,
                 Url = "~/category/" + category.Id
             };
+            if(category.PrimaryImage != null)
+            {
+                result.Image = category.PrimaryImage.ToShopifyModel();
+            }
 
             if (category.SeoInfo != null)
             {

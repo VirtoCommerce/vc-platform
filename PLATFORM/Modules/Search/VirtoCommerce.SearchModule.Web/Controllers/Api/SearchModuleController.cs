@@ -424,7 +424,7 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
             var result = new List<string>();
 
             var browsing = GetFilteredBrowsing(store);
-            if (browsing?.Attributes != null)
+            if (browsing != null && browsing.Attributes != null)
             {
                 result.AddRange(browsing.Attributes.Select(a => a.Key));
             }

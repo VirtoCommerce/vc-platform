@@ -40,7 +40,10 @@ namespace VirtoCommerce.SearchModule.Web.Services
 
             // TODO need better way to find applied filter values
             var appliedFilters = criteria.CurrentFilters.SelectMany(x => x.GetValues()).Select(x => x.Id).ToArray();
-            response.Aggregations = results.FacetGroups?.Select(g => g.ToModuleModel(appliedFilters)).ToArray();
+            if (results.FacetGroups != null)
+            {
+                response.Aggregations = results.FacetGroups.Select(g => g.ToModuleModel(appliedFilters)).ToArray();
+            }
             return response;
         }
 
