@@ -40,7 +40,7 @@ namespace VirtoCommerce.DynamicExpressionModule.Web
 
         private static ConditionExpressionTree GetPricingDynamicExpression()
         {
-            var conditions = new DynamicExpression[] { new ConditionGeoTimeZone(), new ConditionGeoZipCode(), new ConditionStoreSearchedPhrase(), new ConditionAgeIs(), new ConditionGenderIs(), new ConditionGeoCity(), new ConditionGeoCountry(), new ConditionGeoState(), new ConditionLanguageIs() }.ToList();
+            var conditions = new DynamicExpression[] { new ConditionGeoTimeZone(), new ConditionGeoZipCode(), new ConditionStoreSearchedPhrase(), new ConditionAgeIs(), new ConditionGenderIs(), new ConditionGeoCity(), new ConditionGeoCountry(), new ConditionGeoState(), new ConditionLanguageIs(), new TagsContainsCondition() }.ToList();
             var rootBlock = new BlockPricingCondition { AvailableChildren = conditions };
             var retVal = new ConditionExpressionTree()
             {
