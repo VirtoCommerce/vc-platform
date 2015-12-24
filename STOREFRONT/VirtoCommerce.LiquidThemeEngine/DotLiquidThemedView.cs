@@ -72,7 +72,7 @@ namespace VirtoCommerce.LiquidThemeEngine
             //if layout specified need render with master page
             if (!String.IsNullOrEmpty(_masterViewName))
             {
-                //add sepcial placeholder 'content_for_layout' to content it will be replaced in master page by main content
+                //add special placeholder 'content_for_layout' to content it will be replaced in master page by main content
                 parameters.Add("content_for_layout", viewTemplate);
                 viewTemplate = _themeAdaptor.RenderTemplateByName(_masterViewName, parameters);
             }

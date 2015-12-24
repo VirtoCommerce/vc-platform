@@ -100,5 +100,12 @@ namespace VirtoCommerce.Storefront.Controllers
             }
             return HttpNotFound();
         }
+
+        // GET: common/nostore
+        [HttpGet]
+        public ActionResult NoStore()
+        {
+            return View("NoStore");
+        }
     }
 }

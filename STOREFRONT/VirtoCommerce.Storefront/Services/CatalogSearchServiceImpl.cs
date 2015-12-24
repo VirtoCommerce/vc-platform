@@ -121,7 +121,14 @@ namespace VirtoCommerce.Storefront.Services
 
         private void LoadProductsPrices(Product[] products)
         {
-            var result = _pricingModuleApi.PricingModuleEvaluatePrices(_workContext.CurrentStore.Id, _workContext.CurrentStore.Catalog, products.Select(x => x.Id).ToList(), null, null, _workContext.CurrentCustomer.Id, null, _workContext.StorefrontUtcNow);
+            var result = _pricingModuleApi.PricingModuleEvaluatePrices(
+                   evalContextStoreId: _workContext.CurrentStore.Id,
+                   evalContextCatalogId: _workContext.CurrentStore.Catalog, 
+                   evalContextProductIds: products.Select(x => x.Id).ToList(),
+                   evalContextCustomerId: _workContext.CurrentCustomer.Id,
+                   evalContextCertainDate: _workContext.StorefrontUtcNow,
+                   evalContextPricelistIds: _workContext.CurrentPriceListIds.ToList());
+
             foreach (var item in products)
             {
                 item.Prices = result.Where(x => x.ProductId == item.Id).Select(x => x.ToWebModel()).ToList();

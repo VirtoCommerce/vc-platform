@@ -20,25 +20,34 @@ using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.LiquidThemeEngine
 {
-  
+    
+
     public class DotLiquidThemedViewEngine : IViewEngine
     {
-        private ShopifyLiquidThemeEngine _themeAdaptor;
+        private ShopifyLiquidThemeEngine _themeEngine;
 
-        public DotLiquidThemedViewEngine(ShopifyLiquidThemeEngine themeAdaptor)
+        public DotLiquidThemedViewEngine(ShopifyLiquidThemeEngine themeEngine)
         {
-            _themeAdaptor = themeAdaptor;
+            _themeEngine = themeEngine;
         }
 
         #region IViewEngine members
         public ViewEngineResult FindPartialView(ControllerContext controllerContext, string partialViewName, bool useCache)
         {
-            return new ViewEngineResult(new DotLiquidThemedView(_themeAdaptor, partialViewName, null), this);
+            if (_themeEngine.ResolveTemplatePath(partialViewName) != null)
+            {
+                return new ViewEngineResult(new DotLiquidThemedView(_themeEngine, partialViewName, null), this);
+            }
+            return new NullViewEngineResult();
         }
 
         public ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName, bool useCache)
         {
-            return new ViewEngineResult(new DotLiquidThemedView(_themeAdaptor, viewName, masterName), this);
+            if (_themeEngine.ResolveTemplatePath(viewName) != null)
+            {
+                return new ViewEngineResult(new DotLiquidThemedView(_themeEngine, viewName, masterName), this);
+            }
+            return new NullViewEngineResult();
         }
 
         public void ReleaseView(ControllerContext controllerContext, IView view)
@@ -46,5 +55,17 @@ namespace VirtoCommerce.LiquidThemeEngine
             //Nothing todo  
         }
         #endregion
+    }
+    /// <summary>
+    /// Class used to tell ASp.NET View locator what view not exist (because no other way to construct ViewEngineResult with null View)
+    /// </summary>
+    public class NullViewEngineResult : ViewEngineResult
+    {
+        public NullViewEngineResult()
+            : base(new string[] { })
+        {
+            View = null;
+        }
+        public new IView View { get; private set; }
     }
 }
