@@ -27,44 +27,44 @@ namespace VirtoCommerce.Content.Web.ExportImport
         public byte[] Data { get; set; }
     }
 
-	public sealed class BackupObject
-	{
+    public sealed class BackupObject
+    {
         public BackupObject()
         {
             MenuLinkLists = new List<webModels.MenuLinkList>();
             ContentFolders = new List<ContentFolder>();
         }
-		public ICollection<webModels.MenuLinkList> MenuLinkLists { get; set; }
+        public ICollection<webModels.MenuLinkList> MenuLinkLists { get; set; }
         public ICollection<ContentFolder> ContentFolders { get; set; }
-	}
+    }
 
-	public sealed class ContentExportImport
-	{
-        private static string[] _exportedFolders = {  "Pages", "Themes" };
-		private readonly IMenuService _menuService;
-		private readonly IContentStorageProvider _contentStorageProvider;  
+    public sealed class ContentExportImport
+    {
+        private static string[] _exportedFolders = { "Pages", "Themes" };
+        private readonly IMenuService _menuService;
+        private readonly IContentStorageProvider _contentStorageProvider;
 
-		public ContentExportImport(IMenuService menuService, Func<IContentStorageProvider> themesStorageProviderFactory)
-		{
-			_menuService = menuService;
-		    _contentStorageProvider = themesStorageProviderFactory();
-		}
+        public ContentExportImport(IMenuService menuService, Func<IContentStorageProvider> themesStorageProviderFactory)
+        {
+            _menuService = menuService;
+            _contentStorageProvider = themesStorageProviderFactory();
+        }
 
-		public void DoExport(Stream backupStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
-		{
-			var backupObject = GetBackupObject(progressCallback, manifest.HandleBinaryData);
-			backupObject.SerializeJson(backupStream);
-		}
+        public void DoExport(Stream backupStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
+        {
+            var backupObject = GetBackupObject(progressCallback, manifest.HandleBinaryData);
+            backupObject.SerializeJson(backupStream);
+        }
 
-		public void DoImport(Stream backupStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
-		{
-			var backupObject = backupStream.DeserializeJson<BackupObject>();
-			var originalObject = GetBackupObject(progressCallback, false);
+        public void DoImport(Stream backupStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
+        {
+            var backupObject = backupStream.DeserializeJson<BackupObject>();
+            var originalObject = GetBackupObject(progressCallback, false);
 
-			var progressInfo = new ExportImportProgressInfo();
-			progressInfo.Description = String.Format("{0} menu link lists importing...", backupObject.MenuLinkLists.Count());
-			progressCallback(progressInfo);
-			UpdateMenuLinkLists(backupObject.MenuLinkLists);
+            var progressInfo = new ExportImportProgressInfo();
+            progressInfo.Description = String.Format("{0} menu link lists importing...", backupObject.MenuLinkLists.Count());
+            progressCallback(progressInfo);
+            UpdateMenuLinkLists(backupObject.MenuLinkLists);
 
             if (manifest.HandleBinaryData)
             {
@@ -75,27 +75,27 @@ namespace VirtoCommerce.Content.Web.ExportImport
                     SaveContentFolderRecursive(folder);
                 }
             }
-		}
+        }
 
-		private void UpdateMenuLinkLists(ICollection<webModels.MenuLinkList> linkLIsts)
-		{
-			foreach (var item in linkLIsts.Select(x=>x.ToCoreModel()))
-			{
+        private void UpdateMenuLinkLists(ICollection<webModels.MenuLinkList> linkLIsts)
+        {
+            foreach (var item in linkLIsts.Select(x => x.ToCoreModel()))
+            {
                 _menuService.Update(item);
-			}
-		}
+            }
+        }
 
 
 
-		private BackupObject GetBackupObject(Action<ExportImportProgressInfo> progressCallback, bool handleBynaryData)
-		{
+        private BackupObject GetBackupObject(Action<ExportImportProgressInfo> progressCallback, bool handleBynaryData)
+        {
             var retVal = new BackupObject();
 
-			var progressInfo = new ExportImportProgressInfo();
-			progressInfo.Description = "cms content loading...";
-			progressCallback(progressInfo);
+            var progressInfo = new ExportImportProgressInfo();
+            progressInfo.Description = "cms content loading...";
+            progressCallback(progressInfo);
 
-            retVal.MenuLinkLists = _menuService.GetAllLinkLists().Select(x=>x.ToWebModel()).ToList();
+            retVal.MenuLinkLists = _menuService.GetAllLinkLists().Select(x => x.ToWebModel()).ToList();
 
             if (handleBynaryData)
             {
@@ -135,19 +135,23 @@ namespace VirtoCommerce.Content.Web.ExportImport
             var result = _contentStorageProvider.Search(folder.Url, null);
             foreach (var blobFolder in result.Folders)
             {
-                var contentFolder = new ContentFolder()
+                //Do not export default theme its will distributed with code
+                if (blobFolder.Url != "/Themes/default")
                 {
-                    Url = blobFolder.Url
-                };
-                ReadContentFoldersRecurive(contentFolder);
-                folder.Folders.Add(contentFolder);
+                    var contentFolder = new ContentFolder()
+                    {
+                        Url = blobFolder.Url
+                    };
+                    ReadContentFoldersRecurive(contentFolder);
+                    folder.Folders.Add(contentFolder);
+                }
             }
 
             foreach (var blobItem in result.Items)
             {
                 var contentFile = new ContentFile
                 {
-                     Url = blobItem.Url                      
+                    Url = blobItem.Url
                 };
                 using (var stream = _contentStorageProvider.OpenRead(blobItem.Url))
                 {
