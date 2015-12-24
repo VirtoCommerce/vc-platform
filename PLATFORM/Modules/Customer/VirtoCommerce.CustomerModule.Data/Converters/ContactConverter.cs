@@ -138,7 +138,7 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 
             if (!source.MemberRelations.IsNullCollection())
             {
-                var relationComparer = AnonymousComparer.Create((dataModel.MemberRelation x) => x.Id);
+                var relationComparer = AnonymousComparer.Create((dataModel.MemberRelation x) => x.AncestorId);
                 source.MemberRelations.Patch(target.MemberRelations, relationComparer, (sourceRel, targetRel) => { /*Nothing todo*/ });
             }
         }

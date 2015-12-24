@@ -33,7 +33,7 @@ storefrontApp.service('cartService', ['$http', function ($http) {
             return $http.get('cart/json?t=' + new Date().getTime());
         },
         addLineItem: function (productId, quantity) {
-            return $http.post('cart/additem', { id: productId, quantity: quantity });
+            return $http.post('cart/additem', { productId: productId, quantity: quantity });
         },
         changeLineItem: function (lineItemId, quantity) {
             return $http.post('cart/changeitem', { lineItemId: lineItemId, quantity: quantity });

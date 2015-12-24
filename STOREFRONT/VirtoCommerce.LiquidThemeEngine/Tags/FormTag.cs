@@ -37,6 +37,8 @@ namespace VirtoCommerce.LiquidThemeEngine.Tags
             _formsMap["recover_customer_password"] = "~/account/forgotpassword";
             //Generates a form for setting a new password on the reset_password.liquid template.
             _formsMap["reset_customer_password"] = "~/account/resetpassword";
+            // Generates a form for adding product to customer wishlist (temporary without actual URL)
+            _formsMap["customer"] = "~";
         }
 
         #region Public Methods and Operators
