@@ -14,11 +14,13 @@ namespace VirtoCommerce.Storefront.Controllers
     public class ProductController : StorefrontControllerBase
     {
         private readonly ICatalogSearchService _productService;
+        private readonly ICatalogSearchService _searchService;
 
-        public ProductController(WorkContext context, IStorefrontUrlBuilder urlBuilder, ICatalogSearchService productService)
+        public ProductController(WorkContext context, IStorefrontUrlBuilder urlBuilder, ICatalogSearchService productService, ICatalogSearchService searchService)
             : base(context, urlBuilder)
         {
             _productService = productService;
+            _searchService = searchService;
         }
 
         /// <summary>
@@ -30,8 +32,13 @@ namespace VirtoCommerce.Storefront.Controllers
         [HttpGet]
         public async Task<ActionResult> ProductDetails(string productId)
         {
-            base.WorkContext.CurrentProduct = await _productService.GetProductAsync(productId, Model.Catalog.ItemResponseGroup.ItemInfo | Model.Catalog.ItemResponseGroup.ItemWithPrices);
-            return View("product", base.WorkContext);
+            var product = await _productService.GetProductAsync(productId, Model.Catalog.ItemResponseGroup.ItemInfo | Model.Catalog.ItemResponseGroup.ItemWithPrices);
+            WorkContext.CurrentProduct = product;
+
+            WorkContext.CurrentCatalogSearchCriteria.CategoryId = product.CategoryId;
+            WorkContext.CurrentCatalogSearchResult = await _searchService.SearchAsync(WorkContext.CurrentCatalogSearchCriteria);
+
+            return View("product", WorkContext);
         }
 
         /// <summary>
