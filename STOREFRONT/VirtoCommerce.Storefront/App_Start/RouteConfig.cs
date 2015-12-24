@@ -68,6 +68,7 @@ namespace VirtoCommerce.Storefront
             routes.MapLocalizedStorefrontRoute("Common.Getregions", "common/getregions/{countryCode}/json", defaults: new { controller = "Common", action = "GetRegions" });
             routes.MapLocalizedStorefrontRoute("Common.ContactUsPost", "contact", defaults: new { controller = "Common", action = "СontactUs" }, constraints: new { httpMethod = new HttpMethodConstraint(new string[] { "POST" }) });
             routes.MapLocalizedStorefrontRoute("Common.ContactUs", "contact", defaults: new { controller = "Common", action = "СontactUs" }, constraints: new { httpMethod = new HttpMethodConstraint(new string[] { "GET" }) });
+            routes.MapLocalizedStorefrontRoute("Common.NoStore", "common/nostore", defaults: new { controller = "Common", action = "NoStore" });
 
             //Marketing 
             routes.MapLocalizedStorefrontRoute("Marketing.DynamicContent", "marketing/dynamiccontent/{placeName}/json", defaults: new { controller = "Marketing", action = "GetDynamicContentJson" });

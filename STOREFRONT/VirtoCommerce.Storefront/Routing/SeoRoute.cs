@@ -116,6 +116,8 @@ namespace VirtoCommerce.Storefront.Routing
 
         private ContentPage TryToFindContentPageWithUrl(string url, Store store, Language language)
         {
+            if (store == null)
+                return null;
             var cacheKey = String.Join(":", "TryToFindContentPageWithUrl", url, store.Id, language.CultureName);
             var retVal = _cacheManager.Get(cacheKey, "ContentRegion", () =>
             {

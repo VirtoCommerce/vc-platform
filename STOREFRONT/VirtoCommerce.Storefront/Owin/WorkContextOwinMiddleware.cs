@@ -64,43 +64,46 @@ namespace VirtoCommerce.Storefront.Owin
             workContext.AllCountries = _allCountries;
             
             workContext.AllStores = await _cacheManager.GetAsync("GetAllStores", "StoreRegion", async () => { return await GetAllStoresAsync(); });
-            var currentCustomerId = GetCurrentCustomerId(context);
-            workContext.CurrentCustomer = await _cacheManager.GetAsync("GetCustomer-" + currentCustomerId, "ApiRegion", async () => { return await GetCustomerAsync(context); });  
-            MaintainAnonymousCustomerCookie(context, workContext);
-
-            // Initialize request specific properties
-            workContext.CurrentStore = GetStore(context, workContext.AllStores);
-            workContext.CurrentLanguage = GetLanguage(context, workContext.AllStores, workContext.CurrentStore);
-            workContext.CurrentCurrency = GetCurrency(context, workContext.CurrentStore);
-
-            //Do not load shopping cart and other for resource requests
-            if (!IsAssetRequest(context.Request.Uri))
+            if (workContext.AllStores != null && workContext.AllStores.Any())
             {
-                //Shopping cart
-                await _cartBuilder.GetOrCreateNewTransientCartAsync(workContext.CurrentStore, workContext.CurrentCustomer, workContext.CurrentLanguage, workContext.CurrentCurrency);
-                workContext.CurrentCart = _cartBuilder.Cart;
+                var currentCustomerId = GetCurrentCustomerId(context);
+                workContext.CurrentCustomer = await _cacheManager.GetAsync("GetCustomer-" + currentCustomerId, "ApiRegion", async () => { return await GetCustomerAsync(context); });
+                MaintainAnonymousCustomerCookie(context, workContext);
 
-                var linkLists = await _cacheManager.GetAsync("GetLinkLists-" + workContext.CurrentStore.Id, "ApiRegion", async () => { return await _cmsApi.MenuGetListsAsync(workContext.CurrentStore.Id); });
-                workContext.CurrentLinkLists = linkLists != null ? linkLists.Select(ll => ll.ToWebModel(urlBuilder)).ToList() : null;
+                // Initialize request specific properties
+                workContext.CurrentStore = GetStore(context, workContext.AllStores);
+                workContext.CurrentLanguage = GetLanguage(context, workContext.AllStores, workContext.CurrentStore);
+                workContext.CurrentCurrency = GetCurrency(context, workContext.CurrentStore);
 
-                //Initialize catalog search criteria
-                workContext.CurrentCatalogSearchCriteria = GetSearchCriteria(workContext);
-
-                //Initialize blogs search criteria 
-                //TODO: read from query string
-                workContext.CurrentBlogSearchCritera = new Model.StaticContent.BlogSearchCriteria();
-                //Pricelists
-                var priceListCachey = String.Join("-", "EvaluatePriceLists", workContext.CurrentStore.Id, workContext.CurrentCustomer.Id);
-                workContext.CurrentPriceListIds = await _cacheManager.GetAsync(priceListCachey, "ApiRegion", async () =>
+                //Do not load shopping cart and other for resource requests
+                if (!IsAssetRequest(context.Request.Uri))
                 {
-                    var pricingResult = await _pricingModuleApi.PricingModuleEvaluatePriceListsAsync(
-                                                     evalContextStoreId: workContext.CurrentStore.Id,
-                                                     evalContextCatalogId: workContext.CurrentStore.Catalog,
-                                                     evalContextCustomerId: workContext.CurrentCustomer.Id,
-                                                     evalContextCurrency: workContext.CurrentCurrency.Code,
-                                                     evalContextQuantity: 1);
-                    return pricingResult.Select(p => p.Id).ToList();
-                });
+                    //Shopping cart
+                    await _cartBuilder.GetOrCreateNewTransientCartAsync(workContext.CurrentStore, workContext.CurrentCustomer, workContext.CurrentLanguage, workContext.CurrentCurrency);
+                    workContext.CurrentCart = _cartBuilder.Cart;
+
+                    var linkLists = await _cacheManager.GetAsync("GetLinkLists-" + workContext.CurrentStore.Id, "ApiRegion", async () => { return await _cmsApi.MenuGetListsAsync(workContext.CurrentStore.Id); });
+                    workContext.CurrentLinkLists = linkLists != null ? linkLists.Select(ll => ll.ToWebModel(urlBuilder)).ToList() : null;
+
+                    //Initialize catalog search criteria
+                    workContext.CurrentCatalogSearchCriteria = GetSearchCriteria(workContext);
+
+                    //Initialize blogs search criteria 
+                    //TODO: read from query string
+                    workContext.CurrentBlogSearchCritera = new Model.StaticContent.BlogSearchCriteria();
+                    //Pricelists
+                    var priceListCachey = String.Join("-", "EvaluatePriceLists", workContext.CurrentStore.Id, workContext.CurrentCustomer.Id);
+                    workContext.CurrentPriceListIds = await _cacheManager.GetAsync(priceListCachey, "ApiRegion", async () =>
+                    {
+                        var pricingResult = await _pricingModuleApi.PricingModuleEvaluatePriceListsAsync(
+                                                         evalContextStoreId: workContext.CurrentStore.Id,
+                                                         evalContextCatalogId: workContext.CurrentStore.Catalog,
+                                                         evalContextCustomerId: workContext.CurrentCustomer.Id,
+                                                         evalContextCurrency: workContext.CurrentCurrency.Code,
+                                                         evalContextQuantity: 1);
+                        return pricingResult.Select(p => p.Id).ToList();
+                    });
+                }
             }
 
             await Next.Invoke(context);

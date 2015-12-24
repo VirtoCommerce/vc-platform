@@ -2,6 +2,10 @@
 using Newtonsoft.Json.Converters;
 using System;
 using System.Web.Mvc;
+using VirtoCommerce.Storefront.Model;
+using Microsoft.Practices.Unity;
+using System.Linq;
+using System.Web.Routing;
 
 namespace VirtoCommerce.Storefront.App_Start
 {
@@ -10,7 +14,21 @@ namespace VirtoCommerce.Storefront.App_Start
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
             filters.Add(new JsonNetActionFilter());
+            filters.Add(new StorefrontValidationActionFilter());
         }
+    }
+    public class StorefrontValidationActionFilter : ActionFilterAttribute
+    {
+        public override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            var workContext = UnityConfig.GetConfiguredContainer().Resolve<WorkContext>();
+            if ((workContext.AllStores == null || !workContext.AllStores.Any()) && filterContext.ActionDescriptor.ActionName != "NoStoreFound")
+            {
+                filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Common", action = "NoStore" }));
+            }
+            base.OnActionExecuting(filterContext);
+        }
+      
     }
 
     public class JsonNetActionFilter : ActionFilterAttribute

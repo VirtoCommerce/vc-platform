@@ -207,6 +207,28 @@ namespace VirtoCommerce.LiquidThemeEngine
         }
 
         /// <summary>
+        /// resolve  template path by it name
+        /// </summary>
+        /// <param name="templateName"></param>
+        /// <returns></returns>
+        public string ResolveTemplatePath(string templateName)
+        {
+            if (WorkContext.CurrentStore == null)
+                return null;
+
+            var curentThemediscoveryPaths = _templatesDiscoveryFolders.Select(x => Path.Combine(CurrentThemeLocalPath, x, String.Format(_liquidTemplateFormat, templateName)));
+            //First try to find template in current theme folder
+            var retVal = curentThemediscoveryPaths.FirstOrDefault(x => File.Exists(x));
+            if (retVal == null && GlobalThemeLocalPath != CurrentThemeLocalPath)
+            {
+                //Then try to find in global theme
+                var globalThemeDiscoveyPaths = _templatesDiscoveryFolders.Select(x => Path.Combine(GlobalThemeLocalPath, x, String.Format(_liquidTemplateFormat, templateName)));
+                retVal = globalThemeDiscoveyPaths.FirstOrDefault(x => File.Exists(x));
+            }
+            return retVal;
+        }
+
+        /// <summary>
         /// Read template by name
         /// </summary>
         /// <param name="templateName"></param>
@@ -219,24 +241,11 @@ namespace VirtoCommerce.LiquidThemeEngine
 
         private string InnerReadTemplateByName(string templateName)
         {
-            if (templateName == null || !_templateRegex.IsMatch(templateName))
-                throw new FileSystemException("Error - Illegal template name '{0}'", templateName);
-
-            var curentThemediscoveryPaths = _templatesDiscoveryFolders.Select(x => Path.Combine(CurrentThemeLocalPath, x, String.Format(_liquidTemplateFormat, templateName)));
-            //First try to find template in current theme folder
-            var existTemplatePath = curentThemediscoveryPaths.FirstOrDefault(x => File.Exists(x));
-            if (existTemplatePath == null && GlobalThemeLocalPath != CurrentThemeLocalPath)
+            var templatePath = ResolveTemplatePath(templateName);
+            if (!String.IsNullOrEmpty(templatePath) && File.Exists(templatePath))
             {
-                //Then try to find in global theme
-                var globalThemeDiscoveyPaths = _templatesDiscoveryFolders.Select(x => Path.Combine(GlobalThemeLocalPath, x, String.Format(_liquidTemplateFormat, templateName)));
-                existTemplatePath = globalThemeDiscoveyPaths.FirstOrDefault(x => File.Exists(x));
+                return File.ReadAllText(templatePath);
             }
-
-            if (existTemplatePath != null)
-            {
-                return File.ReadAllText(existTemplatePath);
-            }
-
             throw new FileSystemException("Error - No such template {0} . Looked in the following locations:<br />{1}", templateName, CurrentThemeName);
         }
 
