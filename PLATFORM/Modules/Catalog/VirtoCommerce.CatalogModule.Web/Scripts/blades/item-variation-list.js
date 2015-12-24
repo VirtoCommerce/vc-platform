@@ -63,48 +63,51 @@
 
     blade.headIcon = 'fa-dropbox';
 
-    blade.toolbarCommands = [
-        {
-            name: "platform.commands.refresh", icon: 'fa fa-refresh',
-            executeMethod: function () {
-                blade.refresh(false);
+    if (blade.toolbarCommandsAndEvents && blade.toolbarCommandsAndEvents.toolbarCommands) {
+        blade.toolbarCommands = blade.toolbarCommandsAndEvents.toolbarCommands;
+    } else
+        blade.toolbarCommands = [
+            {
+                name: "platform.commands.refresh", icon: 'fa fa-refresh',
+                executeMethod: function () {
+                    blade.refresh(false);
+                },
+                canExecuteMethod: function () { return true; }
             },
-            canExecuteMethod: function () { return true; }
-        },
-	    {
-	        name: "platform.commands.add", icon: 'fa fa-plus',
-	        executeMethod: function () {
-	            items.newVariation({ itemId: blade.itemId }, function (data) {
-	                // take variation properties only
-	                data.properties = _.where(data.properties, { type: 'Variation' });
-	                data.productType = blade.item.productType;
+            {
+                name: "platform.commands.add", icon: 'fa fa-plus',
+                executeMethod: function () {
+                    items.newVariation({ itemId: blade.itemId }, function (data) {
+                        // take variation properties only
+                        data.properties = _.where(data.properties, { type: 'Variation' });
+                        data.productType = blade.item.productType;
 
-	                var newBlade = {
-	                    id: 'variationDetail',
-	                    item: data,
-	                    title: "catalog.wizards.new-variation.title",
-	                    subtitle: 'catalog.wizards.new-variation.subtitle',
-	                    controller: 'virtoCommerce.catalogModule.newProductWizardController',
-	                    template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/wizards/newProduct/new-variation-wizard.tpl.html'
-	                };
-	                bladeNavigationService.showBlade(newBlade, blade);
-	            },
-                function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
-	        },
-	        canExecuteMethod: function () { return true; },
-	        permission: 'catalog:create'
-	    },
-        {
-            name: "platform.commands.delete", icon: 'fa fa-trash-o',
-            executeMethod: function () {
-                $scope.deleteList($scope.gridApi.selection.getSelectedRows());
+                        var newBlade = {
+                            id: 'variationDetail',
+                            item: data,
+                            title: "catalog.wizards.new-variation.title",
+                            subtitle: 'catalog.wizards.new-variation.subtitle',
+                            controller: 'virtoCommerce.catalogModule.newProductWizardController',
+                            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/wizards/newProduct/new-variation-wizard.tpl.html'
+                        };
+                        bladeNavigationService.showBlade(newBlade, blade);
+                    },
+                    function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
+                },
+                canExecuteMethod: function () { return true; },
+                permission: 'catalog:create'
             },
-            canExecuteMethod: function () {
-                return $scope.gridApi && _.any($scope.gridApi.selection.getSelectedRows());
-            },
-            permission: 'catalog:delete'
-        }
-    ];
+            {
+                name: "platform.commands.delete", icon: 'fa fa-trash-o',
+                executeMethod: function () {
+                    $scope.deleteList($scope.gridApi.selection.getSelectedRows());
+                },
+                canExecuteMethod: function () {
+                    return $scope.gridApi && _.any($scope.gridApi.selection.getSelectedRows());
+                },
+                permission: 'catalog:delete'
+            }
+        ];
 
     // ui-grid
     $scope.setGridOptions = function (gridOptions) {
@@ -112,6 +115,10 @@
         function (gridApi) {
             gridApi.grid.registerRowsProcessor($scope.singleFilter, 90);
             $scope.$watch('pageSettings.currentPage', gridApi.pagination.seek);
+
+            if (blade.toolbarCommandsAndEvents && blade.toolbarCommandsAndEvents.externalRegisterApiCallback) {
+                blade.toolbarCommandsAndEvents.externalRegisterApiCallback(gridApi);
+            }
         });
     };
 

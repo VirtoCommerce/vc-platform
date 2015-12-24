@@ -57,18 +57,20 @@ namespace VirtoCommerce.PricingModule.Web.Converters
 		{
 			var retVal = new coreModel.PricelistAssignment();
 			retVal.InjectFrom(assignment);
+            if (assignment.DynamicExpression != null && assignment.DynamicExpression.Children != null)
+            {
+                var conditionExpression = assignment.DynamicExpression.GetConditionExpression();
+                retVal.ConditionExpression = SerializationUtil.SerializeExpression(conditionExpression);
 
-			var conditionExpression = assignment.DynamicExpression.GetConditionExpression();
-			retVal.ConditionExpression = SerializationUtil.SerializeExpression(conditionExpression);
-
-			//Clear availableElements in expression (for decrease size)
-			assignment.DynamicExpression.AvailableChildren = null;
-			var allBlocks = ((DynamicExpression)assignment.DynamicExpression).Traverse(x => x.Children);
-			foreach (var block in allBlocks)
-			{
-				block.AvailableChildren = null;
-			}
-			retVal.PredicateVisualTreeSerialized = JsonConvert.SerializeObject(assignment.DynamicExpression);
+                //Clear availableElements in expression (for decrease size)
+                assignment.DynamicExpression.AvailableChildren = null;
+                var allBlocks = ((DynamicExpression)assignment.DynamicExpression).Traverse(x => x.Children);
+                foreach (var block in allBlocks)
+                {
+                    block.AvailableChildren = null;
+                }
+                retVal.PredicateVisualTreeSerialized = JsonConvert.SerializeObject(assignment.DynamicExpression);
+            }
 
 			return retVal;
 		}

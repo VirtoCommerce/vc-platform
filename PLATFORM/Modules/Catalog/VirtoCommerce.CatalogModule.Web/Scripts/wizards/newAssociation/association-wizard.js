@@ -25,10 +25,9 @@
     }
 
     $scope.openBlade = function () {
-        var initialSelection = _.union(blade.selection, _.pluck(blade.associations, 'productId'));
         var selection = [];
         var options = {
-            selectedItemIds: initialSelection,
+            selectedItemIds: _.union(blade.selection, _.pluck(blade.associations, 'productId')),
             checkItemFn: function (listItem, isSelected) {
                 if (isSelected) {
                     if (_.all(selection, function (x) { return x.id != listItem.id; })) {

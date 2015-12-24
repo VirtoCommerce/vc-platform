@@ -59,6 +59,8 @@
     <Compile Include="Common\Conditions\MatchedConditionBase.cs" />
     <Compile Include="Common\Conditions\GeoConditions\ConditionGeoZipCode.cs" />
     <Compile Include="Pricing\BlockPricingCondition.cs" />
+    <Compile Include="Pricing\Conditions\TagsContainsCondition.cs" />
+    <Compile Include="Pricing\Helpers\PriceEvaluationContextExtension.cs" />
     <Compile Include="Promotion\Conditions\CartConditions\BlockCartCondition.cs" />
     <Compile Include="Promotion\Conditions\CatalogConditions\BlockCatalogCondition.cs" />
     <Compile Include="Promotion\Conditions\CustomerConditions\BlockCustomerCondition.cs" />

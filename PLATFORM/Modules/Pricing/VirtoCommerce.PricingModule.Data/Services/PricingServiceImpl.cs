@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using VirtoCommerce.CoreModule.Data.Common;
 using VirtoCommerce.Domain.Catalog.Services;
+using VirtoCommerce.Domain.Common;
 using VirtoCommerce.Domain.Pricing.Services;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Data.Infrastructure;
@@ -27,7 +29,7 @@ namespace VirtoCommerce.PricingModule.Data.Services
 
         public IEnumerable<coreModel.Pricelist> EvaluatePriceLists(coreModel.PriceEvaluationContext evalContext)
         {
-            IEnumerable<coreModel.Pricelist> retVal;
+            var retVal = new List<coreModel.Pricelist>();
 
             using (var repository = _repositoryFactory())
             {
@@ -46,9 +48,18 @@ namespace VirtoCommerce.PricingModule.Data.Services
                     //filter by date expiration
                     query = query.Where(x => (x.StartDate == null || evalContext.CertainDate >= x.StartDate) && (x.EndDate == null || x.EndDate >= evalContext.CertainDate));
                 }
-                // sort content by type and priority
-                retVal = query.OrderByDescending(x => x.Priority).ThenByDescending(x => x.Name)
-                              .ToArray().Select(x => x.Pricelist.ToCoreModel());
+                var assinments = query.OrderByDescending(x => x.Priority).ThenByDescending(x => x.Name).ToArray();
+                retVal.AddRange(assinments.Where(x => x.ConditionExpression == null).Select(x => x.Pricelist.ToCoreModel()));
+
+                foreach (var assignment in assinments.Where(x => x.ConditionExpression != null))
+                {
+                    //Next step need filter assignments contains dynamicexpression
+                    var condition = SerializationUtil.DeserializeExpression<Func<IEvaluationContext, bool>>(assignment.ConditionExpression);
+                    if (condition(evalContext))
+                    {
+                        retVal.Add(assignment.Pricelist.ToCoreModel());
+                    }
+                }
             }
 
             return retVal;
@@ -74,14 +85,14 @@ namespace VirtoCommerce.PricingModule.Data.Services
                                              .Where(x => evalContext.ProductIds.Contains(x.ProductId))
                                              .Where(x => evalContext.Quantity >= x.MinQuantity || evalContext.Quantity == 0);
 
-                if (evalContext.PricelistIds != null)
+                if(evalContext.PricelistIds == null)
                 {
-                    query = query.Where(x => evalContext.PricelistIds.Contains(x.PricelistId));
+                    evalContext.PricelistIds = EvaluatePriceLists(evalContext).Select(x=>x.Id).ToArray();
                 }
-				else if (evalContext.Currency != null)
-				{
-					query = query.Where(x => x.Pricelist.Currency == evalContext.Currency.ToString());
-				}
+              
+                query = query.Where(x => evalContext.PricelistIds.Contains(x.PricelistId));
+                
+			
                 var prices = query.ToArray().Select(x => x.ToCoreModel());
 
                 foreach (var currencyPricesGroup in prices.GroupBy(x => x.Currency))
