@@ -71,8 +71,8 @@
         var newBlade = {
             id: "importMapping",
             importConfiguration: blade.importConfiguration,
-            title: 'catalog.blades.catalog-CSV-import-wizard-mapping-step.title',
-            subtitle: 'catalog.blades.catalog-CSV-import-wizard-mapping-step.subtitle',
+            title: 'catalog.wizards.catalog-CSV-import-wizard-mapping-step.title',
+            subtitle: 'catalog.wizards.catalog-CSV-import-wizard-mapping-step.subtitle',
             controller: 'virtoCommerce.catalogModule.catalogCSVimportWizardMappingStepController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/import/wizard/catalog-CSV-import-wizard-mapping-step.tpl.html'
         };
