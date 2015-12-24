@@ -49,6 +49,10 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         /// </summary>
         public bool? PostedSuccessfully { get; set; }
 
+        /// <summary>
+        /// Returns true if the form requires password, false otherwise
+        /// </summary>
+        public bool PasswordNeeded { get; set; }
 
         public IDictionary<string, object> Properties { get; set; }
 

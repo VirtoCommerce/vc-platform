@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Omu.ValueInjecter;
-using VirtoCommerce.LiquidThemeEngine.Objects;
-using VirtoCommerce.Storefront.Model.Common;
+﻿using VirtoCommerce.LiquidThemeEngine.Objects;
 using StorefrontModel = VirtoCommerce.Storefront.Model;
 
 namespace VirtoCommerce.LiquidThemeEngine.Converters
 {
-    public static class ContactUsConverter
+    public static class ContactUsFormConverter
     {
         public static Form ToShopifyModel(this StorefrontModel.ContactUsForm contactUsForm)
         {
