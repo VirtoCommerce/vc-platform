@@ -24,7 +24,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             result.CreatedAt = order.CreatedDate ?? DateTime.MinValue;
             result.Name = order.Number;
             result.OrderNumber = order.Number;
-            result.CustomerUrl = urlBuilder.ToAppAbsolute("/account/order/" + order.Id);
+            result.CustomerUrl = urlBuilder.ToAppAbsolute("/account/order/" + order.Number);
 
 
             if (order.Addresses != null)

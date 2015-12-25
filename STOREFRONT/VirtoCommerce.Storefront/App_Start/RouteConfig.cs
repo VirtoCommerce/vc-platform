@@ -35,9 +35,12 @@ namespace VirtoCommerce.Storefront
             routes.MapLocalizedStorefrontRoute("Account.Json", "account/json", defaults: new { controller = "Account", action = "GetCurrentCustomer" });
 
             //Cart
-            routes.MapLocalizedStorefrontRoute("Cart.AddJs", "cart/add.js", defaults: new { controller = "Cart", action = "AddItemJson" });
-            routes.MapLocalizedStorefrontRoute("Cart.Add", "cart/add", defaults: new { controller = "Cart", action = "AddItemJson" });
-            routes.MapLocalizedStorefrontRoute("Cart.ChangeJs", "cart/change.js", defaults: new { controller = "Cart", action = "ChangeItemJson" });
+            routes.MapLocalizedStorefrontRoute("ShopifyCart.CartJs", "cart.js", defaults: new { controller = "ShopifyAjax", action = "CartJs" });
+            routes.MapLocalizedStorefrontRoute("ShopifyCart.AddJs", "cart/add.js", defaults: new { controller = "ShopifyAjax", action = "AddJs" });
+            routes.MapLocalizedStorefrontRoute("ShopifyCart.ChangeJs", "cart/change.js", defaults: new { controller = "ShopifyAjax", action = "ChangeJs" });
+            routes.MapLocalizedStorefrontRoute("ShopifyCart.ClearJs", "cart/clear.js", defaults: new { controller = "ShopifyAjax", action = "ClearJs" });
+            routes.MapLocalizedStorefrontRoute("ShopifyCart.UpdateJs", "cart/update.js", defaults: new { controller = "ShopifyAjax", action = "UpdateJs" });
+            routes.MapLocalizedStorefrontRoute("Cart.Add", "cart/add", defaults: new { controller = "Cart", action = "Add" });
             routes.MapLocalizedStorefrontRoute("Cart.Change", "cart/change", defaults: new { controller = "Cart", action = "Change" });
             routes.MapLocalizedStorefrontRoute("Cart.Cart", "cart", defaults: new { controller = "Cart", action = "Cart" }, constraints: new { httpMethod = new HttpMethodConstraint(new string[] { "POST" }) });
             routes.MapLocalizedStorefrontRoute("Cart.Index", "cart", defaults: new { controller = "Cart", action = "Index" }, constraints: new { httpMethod = new HttpMethodConstraint(new string[] { "GET" }) });
@@ -45,7 +48,8 @@ namespace VirtoCommerce.Storefront
             routes.MapLocalizedStorefrontRoute("Cart.AddItem", "cart/additem", defaults: new { controller = "Cart", action = "AddItemJson" });
             routes.MapLocalizedStorefrontRoute("Cart.ChangeItem", "cart/changeitem", defaults: new { controller = "Cart", action = "ChangeItemJson" });
             routes.MapLocalizedStorefrontRoute("Cart.RemoveItem", "cart/removeitem", defaults: new { controller = "Cart", action = "RemoveItemJson" });
-            routes.MapLocalizedStorefrontRoute("Cart.Clear", "cart/clear", defaults: new { controller = "Cart", action = "ClearJson" });
+            routes.MapLocalizedStorefrontRoute("Cart.Clear", "cart/clear", defaults: new { controller = "Cart", action = "Clear" }, constraints: new { httpMethod = new HttpMethodConstraint(new string[] { "GET" }) });
+            routes.MapLocalizedStorefrontRoute("Cart.ClearJson", "cart/clear", defaults: new { controller = "Cart", action = "ClearJson" }, constraints: new { httpMethod = new HttpMethodConstraint(new string[] { "POST" }) });
             routes.MapLocalizedStorefrontRoute("Cart.Checkout", "cart/checkout", defaults: new { controller = "Cart", action = "Checkout" });
             routes.MapLocalizedStorefrontRoute("Cart.ShippingMethods", "cart/shippingmethods/json", defaults: new { controller = "Cart", action = "CartShippingMethodsJson" });
             routes.MapLocalizedStorefrontRoute("Cart.PaymentMethods", "cart/paymentmethods/json", defaults: new { controller = "Cart", action = "CartPaymentMethodsJson" });

@@ -1,4 +1,5 @@
 ﻿using DotLiquid;
+using Newtonsoft.Json;
 using System.Runtime.Serialization;
 
 namespace VirtoCommerce.LiquidThemeEngine.Objects
@@ -10,6 +11,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
     /// https://docs.shopify.com/themes/liquid-documentation/objects/product#product-image
     /// </remarks>
     [DataContract]
+    [JsonConverter(typeof(ToStringJsonConverter))]
     public class Image : Drop
     {
         /// <summary>
@@ -53,5 +55,10 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         /// </summary>
         [DataMember]
         public Variant[] Variants { get; set; }
+
+        public override string ToString()
+        {
+            return Src;
+        }
     }
 }

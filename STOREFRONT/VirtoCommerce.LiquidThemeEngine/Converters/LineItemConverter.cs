@@ -14,7 +14,13 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             shopifyModel.Fulfillment = null; // TODO
             shopifyModel.Grams = lineItem.Weight;
             shopifyModel.Id = lineItem.Id;
-            //shopifyModel.Image = lineItem.Product.PrimaryImage != null ? lineItem.Product.PrimaryImage.ToShopifyModel() : null;
+            shopifyModel.Image = new Image
+            {
+                Alt = lineItem.Name,
+                Name = lineItem.Name,
+                ProductId = lineItem.ProductId,
+                Src = lineItem.ImageUrl
+            };
             shopifyModel.LinePrice = lineItem.ExtendedPrice.Amount;
             shopifyModel.Price = lineItem.PlacedPrice.Amount;
             shopifyModel.ProductId = lineItem.ProductId;
@@ -27,7 +33,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             shopifyModel.Type = null; // TODO
             shopifyModel.Url = null; // TODO
             shopifyModel.Variant = null; // TODO
-            shopifyModel.VariantId = null; // TODO
+            shopifyModel.VariantId = lineItem.ProductId;
             shopifyModel.Vendor = null; // TODO
 
             return shopifyModel;

@@ -55,6 +55,22 @@ namespace VirtoCommerce.Storefront.Controllers
             return StoreFrontRedirect("~/cart");
         }
 
+        // POST: /cart/add
+        [HttpPost]
+        public async Task<ActionResult> Add(string id, int quantity)
+        {
+            await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
+
+            var product = await _catalogService.GetProductAsync(id, Model.Catalog.ItemResponseGroup.ItemLarge);
+            if (product != null)
+            {
+                await _cartBuilder.AddItemAsync(product, quantity);
+                await _cartBuilder.SaveAsync();
+            }
+
+            return StoreFrontRedirect("~/cart");
+        }
+
         // POST: /cart?updates=...&update=...
         [HttpPost]
         public async Task<ActionResult> Cart(int[] updates, string checkout)
@@ -64,14 +80,21 @@ namespace VirtoCommerce.Storefront.Controllers
             await _cartBuilder.ChangeItemsQuantitiesAsync(updates);
             await _cartBuilder.SaveAsync();
 
+            string virtualRedirectUrl = "~/cart";
+
             if (Request.Form.Get("checkout") != null)
             {
-                return StoreFrontRedirect("~/cart/checkout");
+                if (_cartBuilder.Cart.HasPhysicalProducts)
+                {
+                    virtualRedirectUrl = "~/cart/checkout/#/customer-information";
+                }
+                else
+                {
+                    virtualRedirectUrl = "~/cart/checkout/#/payment-method";
+                }
             }
-            else
-            {
-                return StoreFrontRedirect("~/cart");
-            }
+
+            return StoreFrontRedirect(virtualRedirectUrl);
         }
 
         // GET: /cart/json
@@ -121,6 +144,18 @@ namespace VirtoCommerce.Storefront.Controllers
             await _cartBuilder.SaveAsync();
 
             return Json(null, JsonRequestBehavior.AllowGet);
+        }
+
+        // GET: /cart/clear
+        [HttpGet]
+        public async Task<ActionResult> Clear()
+        {
+            await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
+
+            await _cartBuilder.ClearAsync();
+            await _cartBuilder.SaveAsync();
+
+            return StoreFrontRedirect("~/cart");
         }
 
         // POST: /cart/clear

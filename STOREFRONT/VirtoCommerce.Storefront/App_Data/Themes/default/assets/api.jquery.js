@@ -25,6 +25,14 @@ Shopify.money_format = '${{amount}}';
 
 /*
 
+Getting base URL
+
+*/
+
+var baseUrl = document.getElementsByTagName('base')[0].getAttribute('href');
+
+/*
+
 Events (override!)
 
 Example override:
@@ -156,7 +164,7 @@ Shopify.addItem = function(variant_id, quantity, callback) {
   var quantity = quantity || 1;
   var params = {
     type: 'POST',
-    url: '/cart/add.js',
+    url: baseUrl + 'cart/add.js',
     data: 'quantity=' + quantity + '&id=' + variant_id,
     dataType: 'json',
     success: function(line_item) {
@@ -180,7 +188,7 @@ Shopify.addItem = function(variant_id, quantity, callback) {
 Shopify.addItemFromForm = function(form_id, callback) {
     var params = {
       type: 'POST',
-      url: '/cart/add.js',
+      url: baseUrl + 'cart/add.js',
       data: jQuery('#' + form_id).serialize(),
       dataType: 'json',
       success: function(line_item) {
@@ -202,7 +210,7 @@ Shopify.addItemFromForm = function(form_id, callback) {
 // GET cart.js returns the cart in JSON.
 // ---------------------------------------------------------
 Shopify.getCart = function(callback) {
-  jQuery.getJSON('/cart.js', function (cart, textStatus) {
+  jQuery.getJSON(baseUrl + 'cart.js?t=' + new Date().getTime(), function (cart, textStatus) {
     if ((typeof callback) === 'function') {
       callback(cart);
     }
@@ -268,7 +276,7 @@ Shopify.getProduct = function(handle, callback) {
 Shopify.changeItem = function(variant_id, quantity, callback) {
   var params = {
     type: 'POST',
-    url: '/cart/change.js',
+    url: baseUrl + 'cart/change.js',
     data:  'quantity='+quantity+'&id='+variant_id,
     dataType: 'json',
     success: function(cart) {
@@ -292,7 +300,7 @@ Shopify.changeItem = function(variant_id, quantity, callback) {
 Shopify.removeItem = function(variant_id, callback) {
   var params = {
     type: 'POST',
-    url: '/cart/change.js',
+    url: baseUrl + 'cart/change.js',
     data:  'quantity=0&id='+variant_id,
     dataType: 'json',
     success: function(cart) {
@@ -318,7 +326,7 @@ Shopify.removeItem = function(variant_id, callback) {
 Shopify.clear = function(callback) {
   var params = {
     type: 'POST',
-    url: '/cart/clear.js',
+    url: baseUrl + 'cart/clear.js',
     data:  '',
     dataType: 'json',
     success: function(cart) {
@@ -342,7 +350,7 @@ Shopify.clear = function(callback) {
 Shopify.updateCartFromForm = function(form_id, callback) {
   var params = {
     type: 'POST',
-    url: '/cart/update.js',
+    url: baseUrl + 'cart/update.js',
     data: jQuery('#' + form_id).serialize(),
     dataType: 'json',
     success: function(cart) {
@@ -386,7 +394,7 @@ Shopify.updateCartAttributes = function(attributes, callback) {
   }
   var params = {
     type: 'POST',
-    url: '/cart/update.js',
+    url: baseUrl + 'cart/update.js',
     data: data,
     dataType: 'json',
     success: function(cart) {
@@ -410,7 +418,7 @@ Shopify.updateCartAttributes = function(attributes, callback) {
 Shopify.updateCartNote = function(note, callback) {
   var params = {
     type: 'POST',
-    url: '/cart/update.js',
+    url: baseUrl + 'cart/update.js',
     data: 'note=' + attributeToString(note),
     dataType: 'json',
     success: function(cart) {

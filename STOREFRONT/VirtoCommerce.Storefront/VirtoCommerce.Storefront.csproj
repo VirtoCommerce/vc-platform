@@ -356,6 +356,7 @@
     <Compile Include="Controllers\BlogController.cs" />
     <Compile Include="Controllers\PageController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
+    <Compile Include="Controllers\ShopifyAjaxController.cs" />
     <Compile Include="Controllers\StorefrontControllerBase.cs" />
     <Compile Include="Converters\AddressConverter.cs" />
     <Compile Include="Converters\AggregationConverters.cs" />
@@ -535,6 +536,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Pages\" />
+    <Folder Include="App_Data\Themes\Electronics\" />
     <Folder Include="Content\" />
     <Folder Include="fonts\" />
     <Folder Include="Models\" />
