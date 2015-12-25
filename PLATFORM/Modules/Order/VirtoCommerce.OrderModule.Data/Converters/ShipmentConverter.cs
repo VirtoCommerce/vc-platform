@@ -55,8 +55,8 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			retVal.Currency = shipment.Currency;
 			retVal.Sum = shipment.ShippingPrice;
 			retVal.Tax = shipment.TaxTotal;
-
-			if(shipment.DeliveryAddress != null)
+            retVal.Status = "New";
+            if (shipment.DeliveryAddress != null)
 			{
 				retVal.DeliveryAddress = shipment.DeliveryAddress.ToCoreModel();
 			}

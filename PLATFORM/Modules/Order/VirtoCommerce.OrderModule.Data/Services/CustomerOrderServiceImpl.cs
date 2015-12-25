@@ -89,7 +89,7 @@ namespace VirtoCommerce.OrderModule.Data.Services
         {
             EnsureThatAllOperationsHaveNumber(order);
 
-            _eventPublisher.Publish(new OrderChangeEvent(EntryState.Added, null, order));
+            _eventPublisher.Publish(new OrderChangeEvent(EntryState.Added, order, order));
             var pkMap = new PrimaryKeyResolvingMap(); 
             var entity = order.ToDataModel(pkMap);
 
