@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using Common.Logging;
 using VirtoCommerce.CoreModule.Data.Common;
 using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Domain.Common;
@@ -19,10 +20,12 @@ namespace VirtoCommerce.PricingModule.Data.Services
     {
         private readonly Func<IPricingRepository> _repositoryFactory;
 		private readonly IItemService _productService;
-        public PricingServiceImpl(Func<IPricingRepository> repositoryFactory, IItemService productService)
+        private readonly ILog _logger;
+        public PricingServiceImpl(Func<IPricingRepository> repositoryFactory, IItemService productService, ILog logger)
         {
             _repositoryFactory = repositoryFactory;
 			_productService = productService;
+            _logger = logger;
         }
 
         #region IPricingService Members
@@ -53,11 +56,18 @@ namespace VirtoCommerce.PricingModule.Data.Services
 
                 foreach (var assignment in assinments.Where(x => x.ConditionExpression != null))
                 {
-                    //Next step need filter assignments contains dynamicexpression
-                    var condition = SerializationUtil.DeserializeExpression<Func<IEvaluationContext, bool>>(assignment.ConditionExpression);
-                    if (condition(evalContext))
+                    try
                     {
-                        retVal.Add(assignment.Pricelist.ToCoreModel());
+                        //Next step need filter assignments contains dynamicexpression
+                        var condition = SerializationUtil.DeserializeExpression<Func<IEvaluationContext, bool>>(assignment.ConditionExpression);
+                        if (condition(evalContext))
+                        {
+                            retVal.Add(assignment.Pricelist.ToCoreModel());
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Error(ex);
                     }
                 }
             }
@@ -426,4 +436,6 @@ namespace VirtoCommerce.PricingModule.Data.Services
 
 
     }
+
+ 
 }

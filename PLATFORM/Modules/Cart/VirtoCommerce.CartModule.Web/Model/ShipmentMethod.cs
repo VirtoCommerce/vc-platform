@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.CartModule.Web.Model
 {
@@ -58,5 +59,7 @@ namespace VirtoCommerce.CartModule.Web.Model
         /// Collection of Discount objects
         /// </value>
         public ICollection<Discount> Discounts { get; set; }
+
+        public ICollection<SettingEntry> Settings { get; set; }
     }
 }

@@ -142,18 +142,9 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
 			var store = _storeService.GetById(cart.StoreId);
 			var evalContext = new ShippingEvaluationContext(cart);
 
-			var retVal = store.ShippingMethods.Where(x => x.IsActive).SelectMany(x => x.CalculateRates(evalContext))
-				.Select(x => new webModel.ShippingMethod
-				{
-					Currency = cart.Currency,
-					Name = x.ShippingMethod.Description,
-					OptionName = x.OptionName,
-					OptionDescription = x.OptionDescription,
-					Price = x.Rate,
-					ShipmentMethodCode = x.ShippingMethod.Code,
-					LogoUrl = x.ShippingMethod.LogoUrl,
-					TaxType = x.ShippingMethod.TaxType
-				});
+            var retVal = store.ShippingMethods.Where(x => x.IsActive)
+                                              .SelectMany(x => x.CalculateRates(evalContext))
+                                              .Select(x => x.ToWebModel()).ToArray();
 			
 			return Ok(retVal);
 		}
@@ -171,17 +162,7 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
 
 			var store = _storeService.GetById(cart.StoreId);
 
-			var retVal = store.PaymentMethods.Where(p => p.IsActive).Select(p => new webModel.PaymentMethod
-							{
-								GatewayCode = p.Code,
-								Name = p.Name,
-								IconUrl = p.LogoUrl,
-								Type = p.PaymentMethodType.ToString(),
-								Group = p.PaymentMethodGroupType.ToString(),
-								Description = p.Description,
-								Priority = p.Priority,
-                                IsAvailableForPartial = p.IsAvailableForPartial
-							}).ToArray();
+			var retVal = store.PaymentMethods.Where(x => x.IsActive).Select(x => x.ToWebModel()).ToArray();
 
 			return this.Ok(retVal);
 		}
@@ -197,17 +178,7 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
         {
             var store = _storeService.GetById(storeId);
 
-            var retVal = store.PaymentMethods.Where(p => p.IsActive).Select(p => new webModel.PaymentMethod
-            {
-                GatewayCode = p.Code,
-                Name = p.Description,
-                IconUrl = p.LogoUrl,
-                Type = p.PaymentMethodType.ToString(),
-                Group = p.PaymentMethodGroupType.ToString(),
-                Description = p.Description,
-                Priority = p.Priority,
-                IsAvailableForPartial = p.IsAvailableForPartial
-            }).ToArray();
+            var retVal = store.PaymentMethods.Where(x => x.IsActive).Select(x => x.ToWebModel()).ToArray();
 
             return this.Ok(retVal);
         }
