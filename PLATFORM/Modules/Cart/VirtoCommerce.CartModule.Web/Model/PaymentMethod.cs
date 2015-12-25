@@ -1,4 +1,6 @@
-﻿using VirtoCommerce.Platform.Core.Common;
+﻿using System.Collections.Generic;
+using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.CartModule.Web.Model
 {
@@ -49,5 +51,7 @@ namespace VirtoCommerce.CartModule.Web.Model
         /// Is payment method available for partial payments
         /// </summary>
         public bool IsAvailableForPartial { get; set; }
+
+        public ICollection<SettingEntry> Settings { get; set; }
     }
 }

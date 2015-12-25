@@ -46,7 +46,7 @@ namespace VirtoCommerce.LiquidThemeEngine
         private readonly Func<IStorefrontUrlBuilder> _storeFrontUrlBuilderFactory;
         private readonly ICacheManager<object> _cacheManager;
         private readonly FileSystemWatcher _fileSystemWatcher;
-        private readonly SassCompilerProxy _compiler = new SassCompilerProxy();
+        private readonly SassCompilerProxy _saasCompiler = new SassCompilerProxy();
 
         public ShopifyLiquidThemeEngine(ICacheManager<object> cacheManager, Func<WorkContext> workContextFactory, Func<IStorefrontUrlBuilder> storeFrontUrlBuilderFactory, string themesLocalPath, string themesAssetsRelativeUrl, string globalThemeAssetsRelativeUrl)
         {
@@ -143,7 +143,8 @@ namespace VirtoCommerce.LiquidThemeEngine
         #region IFileSystem members
         public string ReadTemplateFile(Context context, string templateName)
         {
-            return ReadTemplateByName(templateName);
+            var templatePath = ResolveTemplatePath(templateName);
+            return ReadTemplateByPath(templatePath);
         }
         #endregion
 
@@ -183,14 +184,16 @@ namespace VirtoCommerce.LiquidThemeEngine
                 fileName = fileName.Replace(".scss.css", ".scss");
                 var settings = GetSettings("''");
                 //Try to parse liquid asset resource
-                var content = RenderTemplateByName(fileName, new Dictionary<string, object>() { { "settings", settings } });
+                var themeAssetPath = ResolveTemplatePath(fileName, searchInGlobalThemeOnly);
+                var templateContent = ReadTemplateByPath(themeAssetPath);
+                var content = RenderTemplate(templateContent, new Dictionary<string, object>() { { "settings", settings } });
 
                 if (fileName.EndsWith(".scss"))
                 {
                     try
                     {
                         //handle scss resources
-                        content = _compiler.Compile(content);
+                        content = _saasCompiler.Compile(content);
                     }
                     catch (Exception ex)
                     {
@@ -211,42 +214,22 @@ namespace VirtoCommerce.LiquidThemeEngine
         /// </summary>
         /// <param name="templateName"></param>
         /// <returns></returns>
-        public string ResolveTemplatePath(string templateName)
+        public string ResolveTemplatePath(string templateName, bool searchInGlobalThemeOnly = false)
         {
             if (WorkContext.CurrentStore == null)
                 return null;
 
-            var curentThemediscoveryPaths = _templatesDiscoveryFolders.Select(x => Path.Combine(CurrentThemeLocalPath, x, String.Format(_liquidTemplateFormat, templateName)));
+            var liquidTemplateFileName = String.Format(_liquidTemplateFormat, templateName);
+            var curentThemediscoveryPaths = _templatesDiscoveryFolders.Select(x => Path.Combine(CurrentThemeLocalPath, x, liquidTemplateFileName));
             //First try to find template in current theme folder
             var retVal = curentThemediscoveryPaths.FirstOrDefault(x => File.Exists(x));
-            if (retVal == null && GlobalThemeLocalPath != CurrentThemeLocalPath)
+            if (searchInGlobalThemeOnly || (retVal == null && GlobalThemeLocalPath != CurrentThemeLocalPath))
             {
                 //Then try to find in global theme
-                var globalThemeDiscoveyPaths = _templatesDiscoveryFolders.Select(x => Path.Combine(GlobalThemeLocalPath, x, String.Format(_liquidTemplateFormat, templateName)));
+                var globalThemeDiscoveyPaths = _templatesDiscoveryFolders.Select(x => Path.Combine(GlobalThemeLocalPath, x, liquidTemplateFileName));
                 retVal = globalThemeDiscoveyPaths.FirstOrDefault(x => File.Exists(x));
             }
             return retVal;
-        }
-
-        /// <summary>
-        /// Read template by name
-        /// </summary>
-        /// <param name="templateName"></param>
-        /// <returns></returns>
-        public string ReadTemplateByName(string templateName)
-        {
-            var retVal =  _cacheManager.Get(GetCacheKey("ReadTemplateByName", templateName), "LiquidThemeRegion", () => { return InnerReadTemplateByName(templateName); });
-            return retVal;
-        }
-
-        private string InnerReadTemplateByName(string templateName)
-        {
-            var templatePath = ResolveTemplatePath(templateName);
-            if (!String.IsNullOrEmpty(templatePath) && File.Exists(templatePath))
-            {
-                return File.ReadAllText(templatePath);
-            }
-            throw new FileSystemException("Error - No such template {0} . Looked in the following locations:<br />{1}", templateName, CurrentThemeName);
         }
 
         /// <summary>
@@ -261,8 +244,8 @@ namespace VirtoCommerce.LiquidThemeEngine
             {
                 throw new ArgumentNullException("templateName");
             }
-
-            var templateContent = ReadTemplateByName(templateName);
+            var templatePath = ResolveTemplatePath(templateName);
+            var templateContent = ReadTemplateByPath(templatePath);
             var retVal = RenderTemplate(templateContent, parameters);
             return retVal;
         }
@@ -326,24 +309,7 @@ namespace VirtoCommerce.LiquidThemeEngine
              });
         }
 
-        private JObject InnerGetSettings(string themePath)
-        {
-            JObject retVal = null;
-            var settingsFilePath = Path.Combine(themePath, "config\\settings_data.json");
-            if (File.Exists(settingsFilePath))
-            {
-                var settings = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(settingsFilePath));
-                // now get settings for current theme and add it as a settings parameter
-                retVal = settings["current"] as JObject;
-                if (retVal == null)
-                {
-                    //is setting preset name need return it as active
-                    retVal = settings["presets"][settings["current"].ToString()] as JObject;
-                }
-            }
-            return retVal;
-        }
-
+  
         /// <summary>
         /// Read localization resources 
         /// </summary>
@@ -366,6 +332,27 @@ namespace VirtoCommerce.LiquidThemeEngine
                 return retVal;
             });
         }
+
+        /// <summary>
+        /// Get relative url for assets (assets folder)
+        /// </summary>
+        /// <param name="assetName"></param>
+        /// <returns></returns>
+        public string GetAssetAbsoluteUrl(string assetName)
+        {
+            return UrlBuilder.ToAppAbsolute(_themesAssetsRelativeUrl.TrimEnd('/') + "/" + assetName.TrimStart('/'), WorkContext.CurrentStore, WorkContext.CurrentLanguage);
+        }
+
+        /// <summary>
+        /// Get relative url for global assets
+        /// </summary>
+        /// <param name="assetName"></param>
+        /// <returns></returns>
+        public string GetGlobalAssetAbsoluteUrl(string assetName)
+        {
+            return UrlBuilder.ToAppAbsolute(_globalThemeAssetsRelativeUrl.TrimEnd('/') + "/" + assetName.TrimStart('/'), WorkContext.CurrentStore, WorkContext.CurrentLanguage);
+        }
+
 
         private JObject InnerReadLocalization(string themePath, Language language)
         {
@@ -399,24 +386,36 @@ namespace VirtoCommerce.LiquidThemeEngine
             return retVal;
         }
 
-        /// <summary>
-        /// Get relative url for assets (assets folder)
-        /// </summary>
-        /// <param name="assetName"></param>
-        /// <returns></returns>
-        public string GetAssetAbsoluteUrl(string assetName)
+
+        private JObject InnerGetSettings(string themePath)
         {
-            return UrlBuilder.ToAppAbsolute(_themesAssetsRelativeUrl.TrimEnd('/') + "/" + assetName.TrimStart('/'), WorkContext.CurrentStore, WorkContext.CurrentLanguage);
+            JObject retVal = null;
+            var settingsFilePath = Path.Combine(themePath, "config\\settings_data.json");
+            if (File.Exists(settingsFilePath))
+            {
+                var settings = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(settingsFilePath));
+                // now get settings for current theme and add it as a settings parameter
+                retVal = settings["current"] as JObject;
+                if (retVal == null)
+                {
+                    //is setting preset name need return it as active
+                    retVal = settings["presets"][settings["current"].ToString()] as JObject;
+                }
+            }
+            return retVal;
         }
 
-        /// <summary>
-        /// Get relative url for global assets
-        /// </summary>
-        /// <param name="assetName"></param>
-        /// <returns></returns>
-        public string GetGlobalAssetAbsoluteUrl(string assetName)
+        private string ReadTemplateByPath(string templatePath)
         {
-            return UrlBuilder.ToAppAbsolute(_globalThemeAssetsRelativeUrl.TrimEnd('/') + "/" + assetName.TrimStart('/'), WorkContext.CurrentStore, WorkContext.CurrentLanguage);
+            var retVal = _cacheManager.Get(GetCacheKey("ReadTemplateByName", templatePath), "LiquidThemeRegion", () =>
+            {
+                if (!String.IsNullOrEmpty(templatePath) && File.Exists(templatePath))
+                {
+                    return File.ReadAllText(templatePath);
+                }
+                throw new FileSystemException("Error - No such template {0}.", templatePath);
+            });
+            return retVal;
         }
 
         private string GetCacheKey(params string[] parts)
