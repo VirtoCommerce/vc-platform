@@ -7,7 +7,7 @@ using VirtoCommerce.Domain.Shipping.Model;
 
 namespace VirtoCommerce.Domain.Shipping.Services
 {
-	public class ShippingServiceImpl : IShippingService
+	public class ShippingMethodsServiceImpl : IShippingMethodsService
 	{
 		private List<Func<ShippingMethod>> _shippingMethods = new List<Func<ShippingMethod>>();
 		

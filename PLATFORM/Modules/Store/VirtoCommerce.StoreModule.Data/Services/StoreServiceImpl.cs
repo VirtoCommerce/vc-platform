@@ -24,12 +24,12 @@ namespace VirtoCommerce.StoreModule.Data.Services
         private readonly ICommerceService _commerceService;
         private readonly ISettingsManager _settingManager;
         private readonly IDynamicPropertyService _dynamicPropertyService;
-        private readonly IShippingService _shippingService;
+        private readonly IShippingMethodsService _shippingService;
         private readonly IPaymentMethodsService _paymentService;
         private readonly ITaxService _taxService;
 
 		public StoreServiceImpl(Func<IStoreRepository> repositoryFactory, ICommerceService commerceService, ISettingsManager settingManager, 
-							    IDynamicPropertyService dynamicPropertyService, IShippingService shippingService, IPaymentMethodsService paymentService, ITaxService taxService)
+							    IDynamicPropertyService dynamicPropertyService, IShippingMethodsService shippingService, IPaymentMethodsService paymentService, ITaxService taxService)
         {
             _repositoryFactory = repositoryFactory;
             _commerceService = commerceService;

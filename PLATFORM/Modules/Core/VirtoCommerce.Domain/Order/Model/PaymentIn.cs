@@ -14,6 +14,7 @@ namespace VirtoCommerce.Domain.Order.Model
 
 		public string GatewayCode { get; set; }
 
+        public PaymentMethod PaymentMethod { get; set; }
 		public string OrganizationId { get; set; }
 		public string OrganizationName { get; set; }
 

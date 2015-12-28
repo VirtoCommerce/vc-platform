@@ -10,12 +10,14 @@ using Omu.ValueInjecter;
 using cart = VirtoCommerce.Domain.Cart.Model;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Data.Common.ConventionInjections;
+using VirtoCommerce.Domain.Shipping.Model;
+using VirtoCommerce.Domain.Payment.Model;
 
 namespace VirtoCommerce.OrderModule.Data.Converters
 {
 	public static class CustomerOrderConverter
 	{
-		public static CustomerOrder ToCoreModel(this CustomerOrderEntity entity)
+		public static CustomerOrder ToCoreModel(this CustomerOrderEntity entity, IEnumerable<ShippingMethod> shippingMethods, IEnumerable<PaymentMethod> paymentMethods)
 		{
 			if (entity == null)
 				throw new ArgumentNullException("entity");
@@ -40,11 +42,11 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			}
 			if (entity.Shipments != null)
 			{
-				retVal.Shipments = entity.Shipments.Select(x => x.ToCoreModel()).ToList();
+				retVal.Shipments = entity.Shipments.Select(x => x.ToCoreModel(shippingMethods, paymentMethods)).ToList();
 			}
 			if (entity.InPayments != null)
 			{
-				retVal.InPayments = entity.InPayments.Select(x => x.ToCoreModel()).ToList();
+				retVal.InPayments = entity.InPayments.Select(x => x.ToCoreModel(paymentMethods)).ToList();
 			}
 			retVal.TaxDetails = entity.TaxDetails.Select(x => x.ToCoreModel()).ToList();
 			return retVal;

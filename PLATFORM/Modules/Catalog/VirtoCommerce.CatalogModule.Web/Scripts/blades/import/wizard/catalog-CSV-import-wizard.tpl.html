@@ -10,8 +10,8 @@
                 <fieldset ng-init="setForm(importWizardForm)">
                     <label class="form-label">{{ 'catalog.wizards.catalog-CSV-import.labels.delimiter' | translate }}</label>
                     <ui-select required ng-model="blade.columnDelimiter">
-                        <ui-select-match allow-clear="true" placeholder="{{ 'catalog.wizards.catalog-CSV-import.placeholders.delimiter' | translate }}">{{$select.selected.name}}</ui-select-match>
-                        <ui-select-choices repeat="x.value as x in columnDelimiters | filter| translate: $select.search ">
+                        <ui-select-match placeholder="{{ 'catalog.wizards.catalog-CSV-import.placeholders.delimiter' | translate }}">{{$select.selected.name | translate}}</ui-select-match>
+                        <ui-select-choices repeat="x.value as x in columnDelimiters | filter: { name: $select.search }">
                             <span ng-bind-html="x.name | translate | highlight: $select.search"></span>
                         </ui-select-choices>
                     </ui-select>
@@ -33,7 +33,7 @@
                         <div class="progress-bar __aqua" ng-style="{'width': uploader.progress + '%'}" style="width: 0%;"></div>
                     </div>
                 </fieldset>
-             
+
             </form>
 
             <ul class="list __items">

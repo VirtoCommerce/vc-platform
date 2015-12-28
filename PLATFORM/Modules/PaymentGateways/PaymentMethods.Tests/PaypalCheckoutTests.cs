@@ -102,7 +102,7 @@ namespace PaymentMethods.Tests
             var cartService = new ShoppingCartServiceImpl(repositoryFactory, cartEventPublisher, null, dynamicPropertyService);
             var settingManager = new SettingsManager(null, null, null, null);
 
-            var orderService = new CustomerOrderServiceImpl(orderRepositoryFactory, new TimeBasedNumberGeneratorImpl(), orderEventPublisher, cartService, GetItemService(), dynamicPropertyService, settingManager);
+            var orderService = new CustomerOrderServiceImpl(orderRepositoryFactory, new TimeBasedNumberGeneratorImpl(), orderEventPublisher, cartService, GetItemService(), dynamicPropertyService, settingManager, null, null);
             return orderService;
         }
 

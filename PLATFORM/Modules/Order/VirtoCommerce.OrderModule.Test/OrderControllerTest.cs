@@ -71,7 +71,7 @@ namespace VirtoCommerce.OrderModule.Test
             var payment = testOrder.InPayments.FirstOrDefault();
 
             var mockPaymentManager = new Mock<IPaymentMethodsService>();
-            var gateway = mockPaymentManager.Object.GetAllPaymentMethods().FirstOrDefault(x => x.Code == payment.GatewayCode);
+            var gateway = mockPaymentManager.Object.GetAllPaymentMethods().FirstOrDefault(x => x.Code == payment.PaymentMethod.Code);
 
             var paymentEvaluationContext = new ProcessPaymentEvaluationContext();
 
@@ -331,7 +331,7 @@ namespace VirtoCommerce.OrderModule.Test
 
             var payment = new webModel.PaymentIn
             {
-                GatewayCode = "PayPal",
+                
                 Currency = CurrencyCodes.USD,
                 Sum = 10,
                 CustomerId = "et"
@@ -364,7 +364,7 @@ namespace VirtoCommerce.OrderModule.Test
             var cartService = new ShoppingCartServiceImpl(repositoryFactory, cartEventPublisher, null, dynamicPropertyService);
          
 
-            var orderService = new CustomerOrderServiceImpl(GetOrderRepositoryFactory(), new TimeBasedNumberGeneratorImpl(), orderEventPublisher, cartService, null, dynamicPropertyService, null);
+            var orderService = new CustomerOrderServiceImpl(GetOrderRepositoryFactory(), new TimeBasedNumberGeneratorImpl(), orderEventPublisher, cartService, null, dynamicPropertyService, null, null, null);
 
             return orderService;
         }

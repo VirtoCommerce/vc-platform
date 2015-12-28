@@ -21,14 +21,14 @@ namespace VirtoCommerce.StoreModule.Web.Controllers.Api
     public class StoreModuleController : ApiController
     {
         private readonly IStoreService _storeService;
-        private readonly IShippingService _shippingService;
+        private readonly IShippingMethodsService _shippingService;
         private readonly IPaymentMethodsService _paymentService;
         private readonly ITaxService _taxService;
         private readonly ISecurityService _securityService;
         private readonly IPermissionScopeService _permissionScopeService;
         private readonly INotificationManager _notificationManager;
 
-        public StoreModuleController(IStoreService storeService, IShippingService shippingService, IPaymentMethodsService paymentService, ITaxService taxService,
+        public StoreModuleController(IStoreService storeService, IShippingMethodsService shippingService, IPaymentMethodsService paymentService, ITaxService taxService,
                                      ISecurityService securityService, IPermissionScopeService permissionScopeService, INotificationManager notificationManager)
         {
             _storeService = storeService;

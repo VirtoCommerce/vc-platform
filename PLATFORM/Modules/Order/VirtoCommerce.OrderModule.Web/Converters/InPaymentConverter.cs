@@ -4,6 +4,9 @@ using VirtoCommerce.Domain.Payment.Model;
 using VirtoCommerce.Platform.Core.Common;
 using coreModel = VirtoCommerce.Domain.Order.Model;
 using webModel = VirtoCommerce.OrderModule.Web.Model;
+using corePaymentModel = VirtoCommerce.Domain.Payment.Model;
+using System.Collections.Generic;
+using System;
 
 namespace VirtoCommerce.OrderModule.Web.Converters
 {
@@ -21,6 +24,15 @@ namespace VirtoCommerce.OrderModule.Web.Converters
             if (payment.DynamicProperties != null)
                 retVal.DynamicProperties = payment.DynamicProperties;
 
+            retVal.PaymentMethod = new webModel.PaymentMethod();
+            retVal.PaymentMethod.Code = payment.GatewayCode;
+            retVal.PaymentMethod.Description = payment.GatewayCode;
+            retVal.PaymentMethod.Name = payment.GatewayCode;
+ 
+            if (payment.PaymentMethod != null)
+            {
+                retVal.PaymentMethod = payment.PaymentMethod.ToWebModel();
+            }
             return retVal;
         }
 

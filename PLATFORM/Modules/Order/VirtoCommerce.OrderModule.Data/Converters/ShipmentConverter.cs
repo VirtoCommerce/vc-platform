@@ -10,12 +10,14 @@ using VirtoCommerce.OrderModule.Data.Model;
 using cartCoreModel = VirtoCommerce.Domain.Cart.Model;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Data.Common.ConventionInjections;
+using VirtoCommerce.Domain.Shipping.Model;
+using VirtoCommerce.Domain.Payment.Model;
 
 namespace VirtoCommerce.OrderModule.Data.Converters
 {
 	public static class ShipmentConverter
 	{
-		public static Shipment ToCoreModel(this ShipmentEntity entity)
+		public static Shipment ToCoreModel(this ShipmentEntity entity, IEnumerable<ShippingMethod> shippingMethods, IEnumerable<PaymentMethod> paymentMethods)
 		{
 			if (entity == null)
 				throw new ArgumentNullException("entity");
@@ -38,14 +40,22 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			}
 			if (entity.InPayments != null)
 			{
-				retVal.InPayments = entity.InPayments.Select(x => x.ToCoreModel()).ToList();
+				retVal.InPayments = entity.InPayments.Select(x => x.ToCoreModel(paymentMethods)).ToList();
 			}
 			if (entity.Packages != null)
 			{
 				retVal.Packages = entity.Packages.Select(x => x.ToCoreModel()).ToList();
 			}
 			retVal.TaxDetails = entity.TaxDetails.Select(x => x.ToCoreModel()).ToList();
-			return retVal;
+
+            //Set shipment method for shipment by code
+            if (shippingMethods != null)
+            {
+                retVal.ShippingMethod = shippingMethods.FirstOrDefault(x => String.Equals(x.Code, entity.ShipmentMethodCode, StringComparison.InvariantCultureIgnoreCase));
+            }
+         
+
+            return retVal;
 		}
 
 		public static Shipment ToCoreModel(this cartCoreModel.Shipment shipment)
