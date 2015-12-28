@@ -12,12 +12,12 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
             Id = string.Concat(GroupName, "_", Value).ToLowerInvariant();
         }
 
-        public string GroupName { get; }
+        public string GroupName { get; set; }
         public string GroupLabel { get; set; }
         public string Label { get; set; }
         public int Count { get; set; }
-        public string Value { get; }
-        public string Id { get; }
+        public string Value { get; set; }
+        public string Id { get; set; }
 
         public override string ToString()
         {

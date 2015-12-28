@@ -103,15 +103,12 @@ angular.module(moduleName, ['virtoCommerce.catalogModule', 'virtoCommerce.pricin
 	    widgetService.registerWidget(dynamicPropertyWidget, 'paymentDetailWidgets');
 
 
-
 	    var operationsTreeWidget = {
 	        controller: 'virtoCommerce.orderModule.operationTreeWidgetController',
 	        size: [4, 3],
 	        template: 'Modules/$(VirtoCommerce.Orders)/Scripts/widgets/operation-tree-widget.tpl.html'
 	    };
 	    widgetService.registerWidget(operationsTreeWidget, 'customerOrderDetailWidgets');
-	    widgetService.registerWidget(operationsTreeWidget, 'shipmentDetailWidgets');
-	    widgetService.registerWidget(operationsTreeWidget, 'paymentDetailWidgets');
 
 	    // register dashboard widgets
 	    var statisticsController = 'virtoCommerce.orderModule.dashboard.statisticsWidgetController';
