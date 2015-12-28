@@ -12,7 +12,7 @@ using Swashbuckle.Swagger;
 using System.Web.Hosting;
 using System.IO;
 using System.Reflection;
-using VirtoCommerce.Platform.Core.Caching;
+using CacheManager.Core;
 
 namespace SwashbuckleModule.Web
 {
@@ -34,7 +34,7 @@ namespace SwashbuckleModule.Web
             var assembly = Assembly.GetExecutingAssembly();
             var xmlRelativePaths = new[] { moduleInitializerOptions.VirtualRoot + "/App_Data/Modules", moduleInitializerOptions.VirtualRoot + "/bin" };
             Func<PopulateTagsFilter> tagsFilterFactory = () => new PopulateTagsFilter(_container.Resolve<IPackageService>(), _container.Resolve<ISettingsManager>());
-            Func<ISwaggerProvider, ISwaggerProvider> providerFactory = (defaultProvider) => new CachedSwaggerProviderWrapper(defaultProvider, _container.Resolve<CacheManager>());
+            Func<ISwaggerProvider, ISwaggerProvider> providerFactory = (defaultProvider) => new CachedSwaggerProviderWrapper(defaultProvider, _container.Resolve<ICacheManager<object>>());
 
             GlobalConfiguration.Configuration.
                  EnableSwagger(moduleInitializerOptions.RoutPrefix + "docs/{apiVersion}",
@@ -76,14 +76,6 @@ namespace SwashbuckleModule.Web
 
         public override void PostInitialize()
         {
-            var settingsManager = _container.Resolve<ISettingsManager>();
-            var cacheManager = _container.Resolve<CacheManager>();
-            var cacheSettings = new[]
-            {
-                new CacheSettings("Swashbuckle", TimeSpan.FromDays(365))
-            };
-            cacheManager.AddCacheSettings(cacheSettings);
-
             base.PostInitialize();
         }
 

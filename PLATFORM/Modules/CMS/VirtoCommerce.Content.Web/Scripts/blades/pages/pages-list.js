@@ -282,7 +282,7 @@
     }
 
     blade.defaultButtons = function () {
-        if (blade.currentPageCatalog.folderName === 'blogs') {
+        if ((blade.currentPageCatalog && blade.currentPageCatalog.folderName === 'blogs') || (!blade.currentPageCatalog && blade.isBlogsBlade)) {
             $scope.blade.toolbarCommands = [
                 {
                     name: "content.commands.add-blog", icon: 'fa fa-plus',

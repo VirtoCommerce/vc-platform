@@ -2,6 +2,7 @@
 using VirtoCommerce.CustomerModule.Data.Converters;
 using VirtoCommerce.Domain.Marketing.Services;
 using VirtoCommerce.MarketingModule.Data.Repositories;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using coreModel = VirtoCommerce.Domain.Marketing.Model;
@@ -44,15 +45,16 @@ namespace VirtoCommerce.MarketingModule.Data.Services
 
         public coreModel.DynamicContentItem CreateContent(coreModel.DynamicContentItem content)
         {
-            var entity = content.ToDataModel();
+            var pkMap = new PrimaryKeyResolvingMap();
+            var entity = content.ToDataModel(pkMap);
 
             using (var repository = _repositoryFactory())
             {
                 repository.Add(entity);
                 CommitChanges(repository);
+                pkMap.ResolvePrimaryKeys();
             }
 
-            content.SetObjectId(entity.Id);
             _dynamicPropertyService.SaveDynamicPropertyValues(content);
 
             var retVal = GetContentItemById(entity.Id);
@@ -61,12 +63,13 @@ namespace VirtoCommerce.MarketingModule.Data.Services
 
         public void UpdateContents(coreModel.DynamicContentItem[] contents)
         {
+            var pkMap = new PrimaryKeyResolvingMap();
             using (var repository = _repositoryFactory())
             using (var changeTracker = GetChangeTracker(repository))
             {
                 foreach (var content in contents)
                 {
-                    var sourceEntity = content.ToDataModel();
+                    var sourceEntity = content.ToDataModel(pkMap);
                     var targetEntity = repository.GetContentItemById(content.Id);
                     if (targetEntity == null)
                     {
@@ -77,9 +80,13 @@ namespace VirtoCommerce.MarketingModule.Data.Services
                         changeTracker.Attach(targetEntity);
                         sourceEntity.Patch(targetEntity);
                     }
-                    _dynamicPropertyService.SaveDynamicPropertyValues(content);
                 }
                 CommitChanges(repository);
+                pkMap.ResolvePrimaryKeys();
+            }
+            foreach (var content in contents)
+            {
+                _dynamicPropertyService.SaveDynamicPropertyValues(content);
             }
         }
 

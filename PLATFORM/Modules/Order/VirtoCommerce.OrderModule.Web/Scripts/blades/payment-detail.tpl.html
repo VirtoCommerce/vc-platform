@@ -58,9 +58,9 @@
                         <label class="form-label">{{ 'orders.blades.payment-detail.labels.payment-gateway' | translate }}</label>
                         <div class="form-input">
                             <ui-select ng-model="blade.currentEntity.gatewayCode">
-                                <ui-select-match placeholder="{{ 'orders.blades.payment-detail.placeholders.payment-gateway' | translate }}">{{$select.selected.gatewayCode}}</ui-select-match>
-                                <ui-select-choices repeat="x.gatewayCode as x in paymentGateways | filter: { gatewayCode: $select.search }">
-                                    <span ng-bind-html="x.gatewayCode | highlight: $select.search"></span>
+                                <ui-select-match placeholder="{{ 'orders.blades.payment-detail.placeholders.payment-gateway' | translate }}">{{$select.selected.name}}</ui-select-match>
+                                <ui-select-choices repeat="x.id as x in currentStore.paymentMethods | filter: { name: $select.search }">
+                                    <span ng-bind-html="x.name | highlight: $select.search"></span>
                                 </ui-select-choices>
                             </ui-select>
 

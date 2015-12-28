@@ -1,24 +1,27 @@
 ﻿angular.module('virtoCommerce.orderModule')
-.controller('virtoCommerce.orderModule.customerOrderItemsWidgetController', ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
-	$scope.blade = $scope.widget.blade;
-	$scope.operation = {};
+.controller('virtoCommerce.orderModule.customerOrderItemsWidgetController', ['$scope', '$translate', 'platformWebApp.bladeNavigationService',
+    function ($scope, $translate, bladeNavigationService) {
+    $scope.blade = $scope.widget.blade;
+    $scope.operation = {};
 
-	$scope.$watch('widget.blade.currentEntity', function (operation) {
-		$scope.operation = operation;
-	});
+    $scope.$watch('widget.blade.currentEntity', function (operation) {
+        $scope.operation = operation;
+    });
 
-	$scope.openItemsBlade = function () {
-		var newBlade = {
-			id: 'customerOrderItems',
-			title: 'orders.widgets.customerOrder-items.blade-title',
-			titleValues: { title: $scope.blade.title },
-			subtitle: 'orders.widgets.customerOrder-items.blade-subtitle',
-			currentEntity: $scope.blade.currentEntity,
-			isClosingDisabled: false,
-			controller: 'virtoCommerce.orderModule.customerOrderItemsController',
-			template: 'Modules/$(VirtoCommerce.Orders)/Scripts/blades/customerOrder-items.tpl.html'
-		};
-		bladeNavigationService.showBlade(newBlade, $scope.blade);
-	};
+    $scope.openItemsBlade = function () {
+        $translate('orders.blades.customerOrder-detail.title', { customer: $scope.operation.customerName }).then(function (result) {
+            var newBlade = {
+                id: 'customerOrderItems',
+                title: 'orders.widgets.customerOrder-items.blade-title',
+                titleValues: { title: result },
+                subtitle: 'orders.widgets.customerOrder-items.blade-subtitle',
+                currentEntity: $scope.blade.currentEntity,
+                isClosingDisabled: false,
+                controller: 'virtoCommerce.orderModule.customerOrderItemsController',
+                template: 'Modules/$(VirtoCommerce.Orders)/Scripts/blades/customerOrder-items.tpl.html'
+            };
+            bladeNavigationService.showBlade(newBlade, $scope.blade);
+        });
+    };
 
 }]);

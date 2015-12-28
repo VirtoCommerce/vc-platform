@@ -17,7 +17,12 @@ namespace VirtoCommerce.Content.Data.Services
             _menuRepositoryFactory = menuRepositoryFactory;
 		}
 
-		public IEnumerable<Models.MenuLinkList> GetListsByStoreId(string storeId)
+        public IEnumerable<Models.MenuLinkList> GetAllLinkLists()
+        {
+            return _menuRepositoryFactory().GetAllLinkLists();
+        }
+
+        public IEnumerable<Models.MenuLinkList> GetListsByStoreId(string storeId)
 		{
            return _menuRepositoryFactory().GetListsByStoreId(storeId);
 		}

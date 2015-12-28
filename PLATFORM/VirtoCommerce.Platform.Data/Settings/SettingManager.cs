@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Linq;
-using VirtoCommerce.Platform.Core.Caching;
+using CacheManager.Core;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Settings;
+using VirtoCommerce.Platform.Data.Common;
 using VirtoCommerce.Platform.Data.Model;
 using VirtoCommerce.Platform.Data.Repositories;
 using VirtoCommerce.Platform.Data.Settings.Converters;
@@ -17,11 +18,10 @@ namespace VirtoCommerce.Platform.Data.Settings
     {
         private readonly IModuleManifestProvider _manifestProvider;
         private readonly Func<IPlatformRepository> _repositoryFactory;
-        private readonly CacheManager _cacheManager;
-        private readonly CacheKey _cacheKey = CacheKey.Create(CacheGroups.Settings, "AllSettings");
+        private readonly ICacheManager<object> _cacheManager;
         private readonly ModuleManifest[] _predefinedManifests;
 
-        public SettingsManager(IModuleManifestProvider manifestProvider, Func<IPlatformRepository> repositoryFactory, CacheManager cacheManager, ModuleManifest[] predefinedManifests)
+        public SettingsManager(IModuleManifestProvider manifestProvider, Func<IPlatformRepository> repositoryFactory, ICacheManager<object> cacheManager, ModuleManifest[] predefinedManifests)
         {
             _manifestProvider = manifestProvider;
             _repositoryFactory = repositoryFactory;
@@ -308,7 +308,7 @@ namespace VirtoCommerce.Platform.Data.Settings
 
         private List<SettingEntity> GetAllEntities()
         {
-            var result = _cacheManager.Get(_cacheKey, LoadAllEntities);
+            var result = _cacheManager.Get("AllSettings", "PlatformRegion", LoadAllEntities);
             return result;
         }
 
@@ -324,7 +324,7 @@ namespace VirtoCommerce.Platform.Data.Settings
 
         private void ClearCache()
         {
-            _cacheManager.Remove(_cacheKey);
+            _cacheManager.Remove("AllSettings", "PlatformRegion");
         }
     }
 }

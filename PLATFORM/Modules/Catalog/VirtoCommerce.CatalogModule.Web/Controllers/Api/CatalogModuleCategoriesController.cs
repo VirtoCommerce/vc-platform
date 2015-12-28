@@ -21,17 +21,14 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
     {
         private readonly ICatalogSearchService _searchService;
         private readonly ICategoryService _categoryService;
-        private readonly IPropertyService _propertyService;
         private readonly ICatalogService _catalogService;
 		private readonly IBlobUrlResolver _blobUrlResolver;
 
-        public CatalogModuleCategoriesController(ICatalogSearchService searchService, ICategoryService categoryService, IPropertyService propertyService, 
-                                                 ICatalogService catalogService, IBlobUrlResolver blobUrlResolver, ISecurityService securityService, IPermissionScopeService permissionScopeService)
+        public CatalogModuleCategoriesController(ICatalogSearchService searchService, ICategoryService categoryService,  ICatalogService catalogService, IBlobUrlResolver blobUrlResolver, ISecurityService securityService, IPermissionScopeService permissionScopeService)
             :base(securityService, permissionScopeService)
         {
             _searchService = searchService;
             _categoryService = categoryService;
-            _propertyService = propertyService;
             _catalogService = catalogService;
 			_blobUrlResolver = blobUrlResolver;
         }
@@ -46,16 +43,16 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         [Route("{id}")]
         public IHttpActionResult Get(string id)
         {
-            var category = _categoryService.GetById(id);
-
-            base.CheckCurrentUserHasPermissionForObjects(CatalogPredefinedPermissions.Read, category);
+            var category = _categoryService.GetById(id, Domain.Catalog.Model.CategoryResponseGroup.Full);
 
             if (category == null)
             {
                 return NotFound();
             }
-            var allCategoryProperties = _propertyService.GetCategoryProperties(id);
-            var retVal = category.ToWebModel(_blobUrlResolver, allCategoryProperties);
+
+            base.CheckCurrentUserHasPermissionForObjects(CatalogPredefinedPermissions.Read, category);
+
+            var retVal = category.ToWebModel(_blobUrlResolver);
 
             retVal.SecurityScopes = base.GetObjectPermissionScopeStrings(category);
 
@@ -138,7 +135,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         [Route("")]
         public IHttpActionResult Delete([FromUri]string[] ids)
         {
-            var categories = ids.Select(x => _categoryService.GetById(x)).ToArray();
+            var categories = _categoryService.GetByIds(ids, Domain.Catalog.Model.CategoryResponseGroup.WithParents);
             base.CheckCurrentUserHasPermissionForObjects(CatalogPredefinedPermissions.Delete, categories);
 
             _categoryService.Delete(ids);

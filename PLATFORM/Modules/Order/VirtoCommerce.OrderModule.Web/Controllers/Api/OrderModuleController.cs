@@ -1,30 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
+using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
+using CacheManager.Core;
+using Hangfire;
+using Omu.ValueInjecter;
+using VirtoCommerce.Domain.Common;
 using VirtoCommerce.Domain.Order.Services;
+using VirtoCommerce.Domain.Payment.Model;
+using VirtoCommerce.Domain.Store.Services;
+using VirtoCommerce.OrderModule.Data.Repositories;
+using VirtoCommerce.OrderModule.Web.BackgroundJobs;
+using VirtoCommerce.OrderModule.Web.Converters;
+using VirtoCommerce.OrderModule.Web.Security;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Platform.Core.Settings;
+using VirtoCommerce.Platform.Data.Common;
 using coreModel = VirtoCommerce.Domain.Order.Model;
 using webModel = VirtoCommerce.OrderModule.Web.Model;
-using VirtoCommerce.OrderModule.Web.Converters;
-using VirtoCommerce.Domain.Cart.Services;
-using System.Web.Http.ModelBinding;
-using VirtoCommerce.OrderModule.Web.Binders;
-using VirtoCommerce.Platform.Core.Common;
-using VirtoCommerce.Domain.Store.Services;
-using VirtoCommerce.Domain.Payment.Model;
-using Omu.ValueInjecter;
-using VirtoCommerce.Platform.Core.Caching;
-using Hangfire;
-using VirtoCommerce.Domain.Common;
-using VirtoCommerce.OrderModule.Web.BackgroundJobs;
-using VirtoCommerce.OrderModule.Data.Repositories;
-using VirtoCommerce.OrderModule.Web.Security;
-using System.Web;
-using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.OrderModule.Web.Controllers.Api
 {
@@ -35,7 +31,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         private readonly ICustomerOrderSearchService _searchService;
         private readonly IUniqueNumberGenerator _uniqueNumberGenerator;
         private readonly IStoreService _storeService;
-        private readonly CacheManager _cacheManager;
+        private readonly ICacheManager<object> _cacheManager;
         private readonly Func<IOrderRepository> _repositoryFactory;
         private readonly ISecurityService _securityService;
         private readonly IPermissionScopeService _permissionScopeService;
@@ -43,7 +39,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         private static object _lockObject = new object();
 
         public OrderModuleController(ICustomerOrderService customerOrderService, ICustomerOrderSearchService searchService, IStoreService storeService, IUniqueNumberGenerator numberGenerator,
-                                     CacheManager cacheManager, Func<IOrderRepository> repositoryFactory, IPermissionScopeService permissionScopeService, ISecurityService securityService, ISettingsManager settingManager)
+                                     ICacheManager<object> cacheManager, Func<IOrderRepository> repositoryFactory, IPermissionScopeService permissionScopeService, ISecurityService securityService, ISettingsManager settingManager)
         {
             _customerOrderService = customerOrderService;
             _searchService = searchService;
@@ -63,7 +59,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         [HttpGet]
         [ResponseType(typeof(webModel.SearchResult))]
         [Route("")]
-        public IHttpActionResult Search([ModelBinder(typeof(SearchCriteriaBinder))] coreModel.SearchCriteria criteria)
+        public IHttpActionResult Search([FromUri]coreModel.SearchCriteria criteria)
         {
             //Scope bound ACL filtration
             criteria = FilterOrderSearchCriteria(HttpContext.Current.User.Identity.Name, criteria);
@@ -73,9 +69,40 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         }
 
         /// <summary>
+        /// Find customer order by number
+        /// </summary>
+        /// <remarks>Return a single customer order with all nested documents or null if order was not found</remarks>
+        /// <param name="number">customer order number</param>
+        [HttpGet]
+        [ResponseType(typeof(webModel.CustomerOrder))]
+        [Route("number/{number}")]
+        public IHttpActionResult GetByNumber(string number)
+        {
+            var retVal = _customerOrderService.GetByOrderNumber(number, coreModel.CustomerOrderResponseGroup.Full);
+
+            if (retVal == null)
+            {
+                return Ok();
+            }
+            //Scope bound security check
+            var scopes = _permissionScopeService.GetObjectPermissionScopeStrings(retVal).ToArray();
+            if (!_securityService.UserHasAnyPermission(User.Identity.Name, scopes, OrderPredefinedPermissions.Read))
+            {
+                throw new HttpResponseException(HttpStatusCode.Unauthorized);
+            }
+
+            var result = retVal.ToWebModel();
+            //Set scopes for UI scope bounded ACL checking
+            result.Scopes = scopes;
+
+            return Ok(result);
+        }
+
+
+        /// <summary>
         /// Find customer order by id
         /// </summary>
-        /// <remarks>Return a single customer order with all nested documents</remarks>
+        /// <remarks>Return a single customer order with all nested documents or null if order was not found</remarks>
         /// <param name="id">customer order id</param>
         [HttpGet]
         [ResponseType(typeof(webModel.CustomerOrder))]
@@ -83,9 +110,10 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         public IHttpActionResult GetById(string id)
         {
             var retVal = _customerOrderService.GetById(id, coreModel.CustomerOrderResponseGroup.Full);
+
             if (retVal == null)
             {
-                return NotFound();
+                return Ok();
             }
             //Scope bound security check
             var scopes = _permissionScopeService.GetObjectPermissionScopeStrings(retVal).ToArray();
@@ -123,11 +151,17 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         /// <param name="orderId">customer order id</param>
         /// <param name="paymentId">payment id</param>
         [HttpPost]
-        [ResponseType(typeof(webModel.CustomerOrder))]
+        [ResponseType(typeof(webModel.ProcessPaymentResult))]
         [Route("{orderId}/processPayment/{paymentId}")]
         public IHttpActionResult ProcessOrderPayments([FromBody]BankCardInfo bankCardInfo, string orderId, string paymentId)
         {
-            var order = _customerOrderService.GetById(orderId, coreModel.CustomerOrderResponseGroup.Full);
+            //search first by order number
+            var order = _customerOrderService.GetByOrderNumber(orderId, coreModel.CustomerOrderResponseGroup.Full);
+
+            //if not found by order number search by order id
+            if (order == null)
+                order = _customerOrderService.GetById(orderId, coreModel.CustomerOrderResponseGroup.Full);
+            
             if (order == null)
             {
                 throw new NullReferenceException("order");
@@ -330,10 +364,10 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
 
             // Hack: to compinsate for incorrect Local dates to UTC
             end = end.Value.AddDays(2);
-            var cacheKey = CacheKey.Create("Statistic", start.Value.ToString("yyyy-MM-dd"), end.Value.ToString("yyyy-MM-dd"));
+            var cacheKey = String.Join(":", "Statistic", start.Value.ToString("yyyy-MM-dd"), end.Value.ToString("yyyy-MM-dd"));
             lock (_lockObject)
             {
-                retVal = _cacheManager.Get(cacheKey, () =>
+                retVal = _cacheManager.Get(cacheKey, "OrderModuleRegion", () =>
                 {
 
                     var collectStaticJob = new CollectOrderStatisticJob(_repositoryFactory, _cacheManager);

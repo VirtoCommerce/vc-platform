@@ -23,7 +23,7 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 
 		[Required]
 		[StringLength(64)]
-		[CustomValidation(typeof(Category), "ValidateCategoryCode", ErrorMessage = @"Code can't contain $+;=%{}[]|\/@ ~#!^*&()?:'<>, characters")]
+		[CustomValidation(typeof(Category), "ValidateCategoryCode", ErrorMessage = @"Code can't contain $+;=%{}[]|\/@ ~!^*&()?:'<>, characters")]
 		public string Code { get; set; }
 
 		[Required]
@@ -40,6 +40,9 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 
 		[StringLength(64)]
 		public string TaxType { get; set; }
+
+        [NotMapped]
+        public Category[] AllParents { get; set; }
 
 		#region Navigation Properties
 		[StringLength(128)]
@@ -71,7 +74,7 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 				return new ValidationResult("Code can't be empty");
 			}
 
-			const string invalidCodeCharacters = @"$+;=%{}[]|\/@ ~#!^*&()?:'<>,";
+			const string invalidCodeCharacters = @"$+;=%{}[]|\/@ ~!^*&()?:'<>,";
 
 			if (value.IndexOfAny(invalidCodeCharacters.ToCharArray()) > -1)
 			{

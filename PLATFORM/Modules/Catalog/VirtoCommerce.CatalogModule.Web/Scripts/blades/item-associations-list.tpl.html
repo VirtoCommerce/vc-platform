@@ -16,6 +16,7 @@
                     enableSorting: false,
                     virtualizationThreshold: 1000,                    
                     columnDefs: [
+                        { name: 'actions', displayName: '', enableColumnResizing: false, enableSorting: false, width: 30, cellTemplate: 'list-actions.cell.html', pinnedLeft:true },
                         {
                             name: 'productImg', displayName: 'catalog.blades.item-associations-list.labels.picture',
                             enableColumnResizing: false, width: 60, cellTemplate: 'icon.cell.html'
@@ -23,7 +24,15 @@
                         { name: 'customField', displayName: 'catalog.blades.item-associations-list.labels.product', field: 'productName', cellTemplate: 'productName.cell.html'},
                         { name: 'name', displayName: 'catalog.blades.item-associations-list.labels.group', cellTooltip: 'Association group name', width: 120 }                        
                     ]})" ng-if="blade.currentEntities.length">
-                <div ui-grid="gridOptions" ui-grid-save-state ui-grid-selection ui-grid-resize-columns ui-grid-move-columns ui-grid-draggable-rows></div>
+                <div ui-grid="gridOptions" ui-grid-save-state ui-grid-selection ui-grid-resize-columns ui-grid-move-columns ui-grid-pinning ui-grid-draggable-rows ui-grid-height></div>
+                <ul class="menu __context" role="menu" id="ial_menu">
+                    <li class="menu-item" ng-click='selectNode(contextMenuEntity)'>
+                        <i class="menu-ico fa fa-edit"></i> {{'platform.commands.manage' | translate}}
+                    </li>
+                    <li class="menu-item" ng-click='deleteList([contextMenuEntity])' va-permission="catalog:update">
+                        <i class="menu-ico fa fa-trash-o"></i> {{'platform.commands.delete' | translate}}
+                    </li>
+                </ul>
             </div>
             <div ng-if="blade.currentEntities.length == 0" class="note">No Associations yet</div>
         </div>
@@ -32,7 +41,12 @@
 
 <script type="text/ng-template" id="list.row.html">
     <div grid="grid" class="ui-grid-draggable-row" draggable="true">
-        <div ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + '-' + col.uid + '-cell'" class="ui-grid-cell" ng-class="{'ui-grid-row-header-cell': col.isRowHeader}" role="{{col.isRowHeader ? 'rowheader' : 'gridcell' }}" ui-grid-cell style='cursor:move'></div>
+        <div ng-click='grid.appScope.selectNode(row.entity)' ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + '-' + col.uid + '-cell'" class="ui-grid-cell" ng-class="{'ui-grid-row-header-cell': col.isRowHeader, '__hovered': grid.appScope.contextMenuEntity === row.entity, '__selected': row.entity.productId===grid.appScope.selectedNodeId}" role="{{col.isRowHeader ? 'rowheader' : 'gridcell' }}" ui-grid-cell style="{{'cursor: ' + (col.name==='actions' ? 'pointer' : 'move')}}" context-menu="grid.appScope.contextMenuEntity = row.entity" data-target="ial_menu"></div>
+    </div>
+</script>
+<script type="text/ng-template" id="list-actions.cell.html">
+    <div class="ui-grid-actions" left-click-menu="grid.appScope.contextMenuEntity = row.entity" data-target="ial_menu">
+        <i class="fa fa-ellipsis-v"></i>
     </div>
 </script>
 <script type="text/ng-template" id="icon.cell.html">

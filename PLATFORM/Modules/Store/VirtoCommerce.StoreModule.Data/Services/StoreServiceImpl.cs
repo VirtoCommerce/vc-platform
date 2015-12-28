@@ -8,7 +8,6 @@ using VirtoCommerce.Domain.Payment.Services;
 using VirtoCommerce.Domain.Shipping.Services;
 using VirtoCommerce.Domain.Store.Services;
 using VirtoCommerce.Domain.Tax.Services;
-using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Core.Settings;
@@ -28,10 +27,9 @@ namespace VirtoCommerce.StoreModule.Data.Services
         private readonly IShippingService _shippingService;
         private readonly IPaymentMethodsService _paymentService;
         private readonly ITaxService _taxService;
-		private readonly CacheManager _cacheManager;
 
 		public StoreServiceImpl(Func<IStoreRepository> repositoryFactory, ICommerceService commerceService, ISettingsManager settingManager, 
-							    IDynamicPropertyService dynamicPropertyService, IShippingService shippingService, IPaymentMethodsService paymentService, ITaxService taxService, CacheManager cacheManager)
+							    IDynamicPropertyService dynamicPropertyService, IShippingService shippingService, IPaymentMethodsService paymentService, ITaxService taxService)
         {
             _repositoryFactory = repositoryFactory;
             _commerceService = commerceService;
@@ -39,7 +37,6 @@ namespace VirtoCommerce.StoreModule.Data.Services
             _dynamicPropertyService = dynamicPropertyService;
             _shippingService = shippingService;
             _paymentService = paymentService;
-			_cacheManager = cacheManager;
             _taxService = taxService;
         }
 
@@ -47,30 +44,28 @@ namespace VirtoCommerce.StoreModule.Data.Services
 
         public coreModel.Store GetById(string id)
         {
-  			var cacheKey = CacheKey.Create("StoreModule", "GetById", id);
-			return _cacheManager.Get(cacheKey, () =>
-				{
-					coreModel.Store retVal = null;
-					using (var repository = _repositoryFactory())
-					{
-						var entity = repository.GetStoreById(id);
 
-						if (entity != null)
-						{
-							//Load original typed shipping method and populate it  personalized information from db
-							retVal = entity.ToCoreModel(_shippingService.GetAllShippingMethods(), _paymentService.GetAllPaymentMethods(), _taxService.GetAllTaxProviders());
+            coreModel.Store retVal = null;
+            using (var repository = _repositoryFactory())
+            {
+                var entity = repository.GetStoreById(id);
 
-							var fulfillmentCenters = _commerceService.GetAllFulfillmentCenters().ToList();
-							retVal.ReturnsFulfillmentCenter = fulfillmentCenters.FirstOrDefault(x => x.Id == entity.ReturnsFulfillmentCenterId);
-							retVal.FulfillmentCenter = fulfillmentCenters.FirstOrDefault(x => x.Id == entity.FulfillmentCenterId);
-							retVal.SeoInfos = _commerceService.GetObjectsSeo(new[] { id }).ToList();
+                if (entity != null)
+                {
+                    //Load original typed shipping method and populate it  personalized information from db
+                    retVal = entity.ToCoreModel(_shippingService.GetAllShippingMethods(), _paymentService.GetAllPaymentMethods(), _taxService.GetAllTaxProviders());
 
-                            _settingManager.LoadEntitySettingsValues(retVal);
-                            _dynamicPropertyService.LoadDynamicPropertyValues(retVal);
-						}
-					}
-					return retVal;
-				});
+                    var fulfillmentCenters = _commerceService.GetAllFulfillmentCenters().ToList();
+                    retVal.ReturnsFulfillmentCenter = fulfillmentCenters.FirstOrDefault(x => x.Id == entity.ReturnsFulfillmentCenterId);
+                    retVal.FulfillmentCenter = fulfillmentCenters.FirstOrDefault(x => x.Id == entity.FulfillmentCenterId);
+
+                    _commerceService.LoadSeoForObjects(new[] { retVal });
+                    _settingManager.LoadEntitySettingsValues(retVal);
+                    _dynamicPropertyService.LoadDynamicPropertyValues(retVal);
+                }
+            }
+            return retVal;
+
         }
 
         public coreModel.Store Create(coreModel.Store store)
@@ -81,27 +76,16 @@ namespace VirtoCommerce.StoreModule.Data.Services
             {
                 repository.Add(dbStore);
                 CommitChanges(repository);
+                store.Id = dbStore.Id;
             }
 
             //Need add seo separately
-            if (store.SeoInfos != null)
-            {
-                foreach (var seoInfo in store.SeoInfos)
-                {
-                    seoInfo.ObjectId = dbStore.Id;
-                    seoInfo.ObjectType = typeof(coreModel.Store).Name;
-                    _commerceService.UpsertSeo(seoInfo);
-                }
-            }
+            _commerceService.UpsertSeoForObjects(new[] { store });
 
             //Deep save properties
             _dynamicPropertyService.SaveDynamicPropertyValues(store);
             //Deep save settings
             _settingManager.SaveEntitySettingsValues(store);
-
-            //Reset cache
-            var cacheKey = CacheKey.Create("StoreModule", "GetById", store.Id);
-			_cacheManager.Remove(cacheKey);
 
             var retVal = GetById(store.Id);
             return retVal;
@@ -130,22 +114,8 @@ namespace VirtoCommerce.StoreModule.Data.Services
                     _settingManager.SaveEntitySettingsValues(store);
 
                     //Patch SeoInfo  separately
-                    if (store.SeoInfos != null)
-                    {
-                        foreach (var seoInfo in store.SeoInfos)
-                        {
-                            seoInfo.ObjectId = store.Id;
-                            seoInfo.ObjectType = typeof(coreModel.Store).Name;
-                        }
+                    _commerceService.UpsertSeoForObjects(stores);
 
-                        var seoInfos = new ObservableCollection<SeoInfo>(_commerceService.GetObjectsSeo(new[] { store.Id }));
-                        seoInfos.ObserveCollection(x => _commerceService.UpsertSeo(x), x => _commerceService.DeleteSeo(new[] { x.Id }));
-                        store.SeoInfos.Patch(seoInfos, (source, target) => _commerceService.UpsertSeo(source));
-                    }
-
-					//Reset cache
-					var cacheKey = CacheKey.Create("StoreModule", "GetById", store.Id);
-					_cacheManager.Remove(cacheKey);
                 }
 
                 CommitChanges(repository);
@@ -159,16 +129,13 @@ namespace VirtoCommerce.StoreModule.Data.Services
                 foreach (var id in ids)
                 {
                     var store = GetById(id);
+                    _commerceService.DeleteSeoForObject(store);
                     _dynamicPropertyService.DeleteDynamicPropertyValues(store);
                     //Deep remove settings
                     _settingManager.RemoveEntitySettings(store);
 
                     var entity = repository.GetStoreById(id);
                     repository.Remove(entity);
-
-					//Reset cache
-					var cacheKey = CacheKey.Create("StoreModule", "GetById", id);
-					_cacheManager.Remove(cacheKey);
                 }
 
                 CommitChanges(repository);

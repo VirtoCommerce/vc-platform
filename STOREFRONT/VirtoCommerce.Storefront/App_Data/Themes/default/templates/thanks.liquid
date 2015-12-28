@@ -1,0 +1,35 @@
+﻿<h1>Thank you!</h1>
+<h4>{{ 'customer.order.title' | t: name: order.name }}</h4>
+<table class="full">
+    <thead>
+        <tr>
+            <th>{{ 'customer.order.product' | t }}</th>
+            <th>{{ 'customer.order.sku' | t }}</th>
+            <th>{{ 'customer.order.price' | t }}</th>
+            <th class="text-center">{{ 'customer.order.quantity' | t }}</th>
+            <th class="text-right">{{ 'customer.order.total' | t }}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for line_item in order.line_items %}
+        <tr id="{{ line_item.id }}">
+            <td>
+                {{ line_item.title | link_to: line_item.product.url }}
+                {% if line_item.fulfillment %}
+                <div class="note">
+                    {% assign date = line_item.fulfillment.created_at | date: format: 'month_day_year' %}
+                    {{ 'customer.order.fulfilled_on' | t: date: date }}
+                    {% if line_item.fulfillment.tracking_number %}
+                    <a href="{{ line_item.fulfillment.tracking_url }}">{{ line_item.fulfillment.tracking_company }} #{{ line_item.fulfillment.tracking_number}}</a>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </td>
+            <td>{{ line_item.sku }}</td>
+            <td>{{ line_item.price | money }}</td>
+            <td class="text-center">{{ line_item.quantity }}</td>
+            <td class="text-right">{{ line_item.line_price | money }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

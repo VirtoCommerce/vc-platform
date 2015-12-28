@@ -174,7 +174,6 @@
 		angular.forEach(blade.childrenBlades.slice(), function (child) {
 			bladeNavigationService.closeBlade(child);
 		});
-		$scope.selectedNodeId = null;
 	}
 
 	blade.getFolder = function (data) {

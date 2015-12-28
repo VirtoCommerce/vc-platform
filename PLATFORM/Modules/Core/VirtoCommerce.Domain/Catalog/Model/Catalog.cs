@@ -21,6 +21,7 @@ namespace VirtoCommerce.Domain.Catalog.Model
 			}
 		}
         public ICollection<CatalogLanguage> Languages { get; set; }
-		public ICollection<PropertyValue> PropertyValues { get; set; }
+        public ICollection<Property> Properties { get; set; }
+        public ICollection<PropertyValue> PropertyValues { get; set; }
     }
 }

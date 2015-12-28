@@ -44,6 +44,14 @@
     <NoWarn>1591</NoWarn>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Common.Logging, Version=3.1.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Common.Logging.3.1.0\lib\net40\Common.Logging.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Common.Logging.Core, Version=3.1.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Common.Logging.Core.3.1.0\lib\net40\Common.Logging.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="CsvHelper, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\CsvHelper.2.13.0.0\lib\net40-client\CsvHelper.dll</HintPath>
@@ -121,7 +129,12 @@
     <Compile Include="Controllers\Api\CatalogModuleExportImportController.cs" />
     <Compile Include="Controllers\Api\CatalogModuleProductsController.cs" />
     <Compile Include="Controllers\Api\CatalogModuleListEntryController.cs" />
+    <Compile Include="Controllers\Api\CatalogModuleSearchController.cs" />
     <Compile Include="Controllers\Api\CatalogModulePropertiesController.cs" />
+    <Compile Include="Converters\AggregationConverters.cs" />
+    <Compile Include="Model\Aggregation.cs" />
+    <Compile Include="Model\AggregationItem.cs" />
+    <Compile Include="Model\CatalogSearchResult.cs" />
     <Compile Include="Security\CatalogPredefinedPermissions.cs" />
     <Compile Include="Converters\AssetConverter.cs" />
     <Compile Include="Converters\AssociationConverter.cs" />
@@ -154,9 +167,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Model\EditorialReview.cs" />
-    <Compile Include="Model\EventNotifications\ExportNotification.cs" />
-    <Compile Include="Model\EventNotifications\ImportNotification.cs" />
-    <Compile Include="Model\EventNotifications\JobNotificationBase.cs" />
+    <Compile Include="Model\PushNotifications\ExportNotification.cs" />
+    <Compile Include="Model\PushNotifications\ImportNotification.cs" />
+    <Compile Include="Model\PushNotifications\JobNotificationBase.cs" />
     <Compile Include="Model\ListEntryLink.cs" />
     <Compile Include="ExportImport\CsvProductPropertyMap.cs" />
     <Compile Include="Model\PasteInfo.cs" />
@@ -182,6 +195,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\CatalogSelectedScope.cs" />
     <Compile Include="Security\CatalogSelectedCategoryScope.cs" />
+    <Compile Include="Security\SearchCriteriaExtensions.cs" />
     <Content Include="Content\css\catalog.css" />
     <Content Include="Scripts\blades\import\catalog-CSV-import.js" />
     <Content Include="Scripts\blades\import\catalog-CSV-import.tpl.html" />
@@ -247,8 +261,8 @@
     <Content Include="Scripts\blades\catalogs-list.js" />
     <Content Include="Scripts\blades\categories-items-list.js" />
     <Content Include="Scripts\blades\categories-items-list.tpl.html" />
-    <Content Include="Scripts\blades\category-property-detail.js" />
-    <Content Include="Scripts\blades\category-property-detail.tpl.html" />
+    <Content Include="Scripts\blades\category-property-list.js" />
+    <Content Include="Scripts\blades\category-property-list.tpl.html" />
     <Content Include="Scripts\blades\item-detail.js" />
     <Content Include="Scripts\blades\item-detail.tpl.html" />
     <Content Include="Scripts\blades\item-asset-detail.js" />

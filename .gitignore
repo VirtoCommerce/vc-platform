@@ -163,9 +163,11 @@ $RECYCLE.BIN/
 /STOREFRONT/Website/App_Data/Pages
 /STOREFRONT/Website/App_Data/Themes/*
 !/STOREFRONT/Website/App_Data/Themes/_**
+!/STOREFRONT/Website/App_Data/Themes/default/**
 .vs/
 /PLATFORM/VirtoCommerce.Platform.Web/client_packages
 /PLATFORM/VirtoCommerce.Platform.Web/node_modules
 /PLATFORM/Modules/CMS/VirtoCommerce.Content.Web/client_packages
 /PLATFORM/Modules/CMS/VirtoCommerce.Content.Web/node_modules
 /WebPI/wwwroot
+*.nupkg

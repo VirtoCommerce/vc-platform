@@ -1,5 +1,5 @@
-﻿using Microsoft.Owin.Security;
-using VirtoCommerce.Platform.Core.Caching;
+﻿using CacheManager.Core;
+using Microsoft.Owin.Security;
 using VirtoCommerce.Platform.Data.Security.Identity;
 
 namespace VirtoCommerce.Platform.Data.Security.Authentication
@@ -8,7 +8,7 @@ namespace VirtoCommerce.Platform.Data.Security.Authentication
     {
         public IClaimsIdentityProvider IdentityProvider { get; set; }
         public IApiAccountProvider ApiCredentialsProvider { get; set; }
-        public CacheManager CacheManager { get; set; }
+        public ICacheManager<object> CacheManager { get; set; }
 
         public ApiAuthenticationOptions(string authenticationType)
             : base(authenticationType)

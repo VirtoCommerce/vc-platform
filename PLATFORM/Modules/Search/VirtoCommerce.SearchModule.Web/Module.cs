@@ -4,7 +4,6 @@ using Owin;
 using VirtoCommerce.Domain.Search;
 using VirtoCommerce.Domain.Search.Model;
 using VirtoCommerce.Domain.Search.Services;
-using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Data.Common;
 using VirtoCommerce.SearchModule.Data.Model;
@@ -13,6 +12,7 @@ using VirtoCommerce.SearchModule.Data.Providers.ElasticSearch;
 using VirtoCommerce.SearchModule.Data.Providers.Lucene;
 using VirtoCommerce.SearchModule.Data.Services;
 using VirtoCommerce.SearchModule.Web.BackgroundJobs;
+using VirtoCommerce.SearchModule.Web.Services;
 
 namespace VirtoCommerce.SearchModule.Web
 {
@@ -43,6 +43,8 @@ namespace VirtoCommerce.SearchModule.Web
             _container.RegisterInstance<ISearchProviderManager>(searchProviderManager);
             _container.RegisterInstance<ISearchProvider>(searchProviderManager);
 
+            _container.RegisterType<IBrowseFilterService, FilterService>();
+            _container.RegisterType<IItemBrowsingService, ItemBrowsingService>();
         }
 
         public override void PostInitialize()
@@ -58,13 +60,7 @@ namespace VirtoCommerce.SearchModule.Web
             searchProviderManager.RegisterSearchProvider(SearchProviders.Lucene.ToString(), connection => new LuceneSearchProvider(new LuceneSearchQueryBuilder(), connection));
             searchProviderManager.RegisterSearchProvider(SearchProviders.AzureSearch.ToString(), connection => new AzureSearchProvider(new AzureSearchQueryBuilder(), connection));
 
-            var cacheManager = _container.Resolve<CacheManager>();
-            var cacheSettings = new[] 
-			{
-				new CacheSettings("CatalogItemIndexBuilder.GetCategoryById", TimeSpan.FromMinutes(30))
-			};
-            cacheManager.AddCacheSettings(cacheSettings);
-
+         
         }
 
         #endregion

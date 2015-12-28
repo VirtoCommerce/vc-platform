@@ -1,6 +1,4 @@
-﻿#region usings
-
-using System;
+﻿using System;
 using System.Configuration;
 using System.Diagnostics;
 using System.Globalization;
@@ -13,6 +11,7 @@ using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using CacheManager.Core;
 using Hangfire;
 using Hangfire.SqlServer;
 using Microsoft.AspNet.Identity;
@@ -25,7 +24,6 @@ using Microsoft.Owin.StaticFiles;
 using Microsoft.Practices.Unity;
 using Owin;
 using VirtoCommerce.Platform.Core.Asset;
-using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.ChangeLog;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
@@ -37,7 +35,6 @@ using VirtoCommerce.Platform.Core.PushNotifications;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Asset;
-using VirtoCommerce.Platform.Data.Caching;
 using VirtoCommerce.Platform.Data.ChangeLog;
 using VirtoCommerce.Platform.Data.DynamicProperties;
 using VirtoCommerce.Platform.Data.ExportImport;
@@ -56,7 +53,6 @@ using VirtoCommerce.Platform.Web.Resources;
 using VirtoCommerce.Platform.Web.SignalR;
 using WebGrease.Extensions;
 
-#endregion
 
 [assembly: OwinStartup(typeof(Startup))]
 
@@ -104,6 +100,7 @@ namespace VirtoCommerce.Platform.Web
             var moduleManager = container.Resolve<IModuleManager>();
             var moduleCatalog = container.Resolve<IModuleCatalog>();
 
+
             var applicationBase = AppDomain.CurrentDomain.SetupInformation.ApplicationBase.EnsureEndSeparator();
 
             // Register URL rewriter for platform scripts
@@ -117,16 +114,8 @@ namespace VirtoCommerce.Platform.Web
                 FileSystem = new Microsoft.Owin.FileSystems.PhysicalFileSystem(scriptsRelativePath)
             });
 
-            //var localizationPhysicalPath = HostingEnvironment.MapPath(VirtualRoot + "/Test/Localization").EnsureEndSeparator();
-            //var localizatioinRelativePath = MakeRelativePath(applicationBase, localizationPhysicalPath);
 
-            //var localizationUrlRewriterOptions = new UrlRewriterOptions();
-            //localizationUrlRewriterOptions.Items.Add(PathString.FromUriComponent("/Localization"), "/Test/Localization");
-            //app.Use<UrlRewriterOwinMiddleware>(localizationUrlRewriterOptions);
-            //app.UseStaticFiles(new StaticFileOptions
-            //{
-            //    FileSystem = new Microsoft.Owin.FileSystems.PhysicalFileSystem(localizatioinRelativePath)
-            //});
+        
             // Register URL rewriter before modules initialization
             if (Directory.Exists(modulesPhysicalPath))
             {
@@ -200,6 +189,18 @@ namespace VirtoCommerce.Platform.Web
                 }
             });
 
+            notificationManager.RegisterNotificationType(() => new ResetPasswordEmailNotification(container.Resolve<IEmailNotificationSendingGateway>())
+            {
+                DisplayName = "Reset password notification",
+                Description = "This notification sends by email to client when he want to reset his password",
+                NotificationTemplate = new NotificationTemplate
+                {
+                    Body = PlatformNotificationResource.ResetPasswordNotificationBody,
+                    Subject = PlatformNotificationResource.ResetPasswordNotificationSubject,
+                    Language = "en-US"
+                }
+            });
+
             var postInitializeModules = moduleCatalog.CompleteListWithDependencies(moduleCatalog.Modules)
                 .Where(m => m.ModuleInstance != null)
                 .ToArray();
@@ -256,6 +257,7 @@ namespace VirtoCommerce.Platform.Web
 
             #endregion
 
+
             Func<IPlatformRepository> platformRepositoryFactory = () => new PlatformRepository(connectionStringName, new AuditableInterceptor(), new EntityPrimaryKeyGeneratorInterceptor());
             container.RegisterType<IPlatformRepository>(new InjectionFactory(c => platformRepositoryFactory()));
             container.RegisterInstance(platformRepositoryFactory);
@@ -263,17 +265,15 @@ namespace VirtoCommerce.Platform.Web
             var manifestProvider = container.Resolve<IModuleManifestProvider>();
 
             #region Caching
-
-            var cacheProvider = new HttpCacheProvider();
-            var cacheSettings = new[]
+            var cacheManager = CacheFactory.Build("platformCache", settings =>
             {
-                new CacheSettings(CacheGroups.Settings, TimeSpan.FromDays(1)),
-                new CacheSettings(CacheGroups.Security, TimeSpan.FromMinutes(1)),
-            };
-
-            var cacheManager = new CacheManager(cacheProvider, cacheSettings);
-            container.RegisterInstance(cacheManager);
-
+                settings
+                    .WithUpdateMode(CacheUpdateMode.Up)
+                    .WithSystemRuntimeCacheHandle("memoryHandle")
+                        .EnablePerformanceCounters()
+                        .WithExpiration(ExpirationMode.Absolute, TimeSpan.FromDays(1));
+            });
+            container.RegisterInstance<ICacheManager<object>>(cacheManager);
             #endregion
 
             #region Settings
@@ -320,6 +320,43 @@ namespace VirtoCommerce.Platform.Web
                                 }
                             }
                         },
+
+                        new ModuleSettingsGroup
+                        {
+                            Name = "Platform|Notifications|SmtpClient",
+                            Settings = new []
+                            {
+                                new ModuleSetting
+                                {
+                                    Name = "VirtoCommerce.Platform.Notifications.SmptClient.Host",
+                                    ValueType = ModuleSetting.TypeString,
+                                    Title = "Smtp server host",
+                                    Description = "Smtp server host"
+                                },
+                                new ModuleSetting
+                                {
+                                    Name = "VirtoCommerce.Platform.Notifications.SmptClient.Port",
+                                    ValueType = ModuleSetting.TypeInteger,
+                                    Title = "Smtp server port",
+                                    Description = "Smtp server port"
+                                },
+                                new ModuleSetting
+                                {
+                                    Name = "VirtoCommerce.Platform.Notifications.SmptClient.Login",
+                                    ValueType = ModuleSetting.TypeString,
+                                    Title = "Smtp server login",
+                                    Description = "Smtp server login"
+                                },
+                                new ModuleSetting
+                                {
+                                    Name = "VirtoCommerce.Platform.Notifications.SmptClient.Password",
+                                    ValueType = ModuleSetting.TypeString,
+                                    Title = "Smtp server password",
+                                    Description = "Smtp server password"
+                                }
+                            }
+                        },
+
                          new ModuleSettingsGroup
                         {
                             Name = "Platform|Security",
@@ -337,31 +374,7 @@ namespace VirtoCommerce.Platform.Web
                                 }
                             }
                         }
-                        // new ModuleSettingsGroup
-                        //{
-                        //    Name = "Platform|General",
-                        //    Settings = new []
-                        //    {
-                        //        new ModuleSetting
-                        //        {
-                        //            Name = "VirtoCommerce.Platform.General.ManagerDefaultLanguage",
-                        //            ValueType = ModuleSetting.TypeString,
-                        //            Title = "Commerce Manager's default language",
-                        //            Description = "The default language that Commerce Manager is displayed in",
-                        //            DefaultValue = "en"
-                        //        },
-                        //        new ModuleSetting
-                        //        {
-                        //            Name = "VirtoCommerce.Platform.General.ManagerLanguages",
-                        //            ValueType = ModuleSetting.TypeString,
-                        //            Title = "Commerce Manager languages",
-                        //            Description = "Languages that the Commerce Manager is translated to",
-                        //            IsArray = true,
-                        //            ArrayValues = new [] { "en"},
-                        //            DefaultValue = "en"
-                        //        }
-                        //    }
-                        //}
+                      
                     }
                 }
             };
@@ -387,7 +400,8 @@ namespace VirtoCommerce.Platform.Web
             var notificationTemplateService = new NotificationTemplateServiceImpl(platformRepositoryFactory);
             var notificationManager = new NotificationManager(resolver, platformRepositoryFactory, notificationTemplateService);
 
-            var emailNotificationSendingGateway = new DefaultEmailNotificationSendingGateway(settingsManager);
+            //var emailNotificationSendingGateway = new DefaultEmailNotificationSendingGateway(settingsManager);
+            var emailNotificationSendingGateway = new DefaultSmtpEmailNotificationSendingGateway(settingsManager);
 
             var defaultSmsNotificationSendingGateway = new DefaultSmsNotificationSendingGateway();
 
@@ -409,15 +423,15 @@ namespace VirtoCommerce.Platform.Web
                 var properties = assetsConnection.ConnectionString.ToDictionary(";", "=");
                 var provider = properties["provider"];
                 var assetsConnectionString = properties.ToString(";", "=", "provider");
-
+ 
                 if (string.Equals(provider, FileSystemBlobProvider.ProviderName, StringComparison.OrdinalIgnoreCase))
                 {
-                    var fileSystemBlobProvider = new FileSystemBlobProvider(assetsConnectionString);
+                    var storagePath = HostingEnvironment.MapPath(properties["rootPath"]);
+                    var publicUrl = properties["publicUrl"];
+                    var fileSystemBlobProvider = new FileSystemBlobProvider(storagePath, publicUrl);
 
                     container.RegisterInstance<IBlobStorageProvider>(fileSystemBlobProvider);
                     container.RegisterInstance<IBlobUrlResolver>(fileSystemBlobProvider);
-
-
                 }
                 else if (string.Equals(provider, AzureBlobProvider.ProviderName, StringComparison.OrdinalIgnoreCase))
                 {

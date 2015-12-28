@@ -1,7 +1,7 @@
 ﻿<div class="gridster-cnt __note" ng-click="openCommentBlade()">
     <div class="cnt-inner">
+        <div class="list-t" ng-if="operation.comment">{{operation.comment}}</div>
         <div class="comment-ico fa fa-comments" ng-if="!operation.comment"></div>
-        <div class="list-t" ng-show="operation.comment">{{operation.comment}}</div>
-        <div class="list-t" ng-hide="operation.comment">{{'orders.widgets.operation-comment.no-comments' | translate}}</div>
+        <div class="list-t" ng-if="!operation.comment">{{'orders.widgets.operation-comment.no-comments' | translate}}</div>
     </div>
 </div>

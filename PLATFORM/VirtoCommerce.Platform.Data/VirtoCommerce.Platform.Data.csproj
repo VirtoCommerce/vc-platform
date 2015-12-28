@@ -34,6 +34,18 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CacheManager.Core, Version=0.6.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CacheManager.Core.0.6.1\lib\net45\CacheManager.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Common.Logging, Version=3.1.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.3.1.0\lib\net40\Common.Logging.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Common.Logging.Core, Version=3.1.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.Core.3.1.0\lib\net40\Common.Logging.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="DotLiquid">
       <HintPath>..\packages\DotLiquid.1.8.0\lib\NET45\DotLiquid.dll</HintPath>
     </Reference>
@@ -140,12 +152,9 @@
     <Compile Include="Asset\BlobStorageMultipartStreamProvider.cs" />
     <Compile Include="Asset\CustomMultipartStreamProvider.cs" />
     <Compile Include="Asset\FileSystemBlobProvider.cs" />
-    <Compile Include="Caching\CacheEntries.cs" />
-    <Compile Include="Caching\CacheEntry.cs" />
-    <Compile Include="Caching\HttpCacheProvider.cs" />
-    <Compile Include="Caching\InMemoryCacheProvider.cs" />
     <Compile Include="ChangeLog\ChangeLogConverter.cs" />
     <Compile Include="ChangeLog\ChangeLogService.cs" />
+    <Compile Include="Common\CacheManagerExtensions.cs" />
     <Compile Include="Common\ConnectionHelper.cs" />
     <Compile Include="Common\ConventionInjections\CloneInjection.cs" />
     <Compile Include="Common\ConventionInjections\IgnorePropertiesInjection.cs" />
@@ -170,6 +179,7 @@
     <Compile Include="Infrastructure\Interceptors\ChangeInterceptor.cs" />
     <Compile Include="Infrastructure\Interceptors\ChangeLogPolicy.cs" />
     <Compile Include="Infrastructure\Interceptors\EntityPrimaryKeyGeneratorInterceptor.cs" />
+    <Compile Include="Infrastructure\Interceptors\GuidCombiPrimaryKeyGeneratorInterceptor.cs" />
     <Compile Include="Infrastructure\Interceptors\IInterceptor.cs" />
     <Compile Include="Infrastructure\Interceptors\InterceptionContext.cs" />
     <Compile Include="Infrastructure\Interceptors\ChangeLogInterceptor.cs">
@@ -200,6 +210,8 @@
     <Compile Include="Model\SettingValueEntity.cs" />
     <Compile Include="Notifications\DefaultEmailNotificationSendingGateway.cs" />
     <Compile Include="Notifications\DefaultSmsNotificationSendingGateway.cs" />
+    <Compile Include="Notifications\DefaultSmtpEmailNotificationSendingGateway.cs" />
+    <Compile Include="Notifications\ResetPasswordEmailNotification.cs" />
     <Compile Include="PushNotifications\InMemoryPushNotificationManager.cs" />
     <Compile Include="Notifications\LiquidNotificationTemplateResolver.cs" />
     <Compile Include="Notifications\NotificationConverter.cs" />

@@ -1,4 +1,5 @@
 ﻿using System;
+using CacheManager.Core;
 using Hangfire;
 using Hangfire.SqlServer;
 using Microsoft.AspNet.Identity;
@@ -8,7 +9,6 @@ using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
 using Microsoft.Practices.Unity;
 using Owin;
-using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Security;
@@ -64,13 +64,8 @@ namespace VirtoCommerce.Platform.Web
             {
                 var apiAccountProvider = container.Resolve<IApiAccountProvider>();
                 var claimsIdentityProvider = container.Resolve<IClaimsIdentityProvider>();
-                var cacheManager = container.Resolve<CacheManager>();
+                var cacheManager = container.Resolve<ICacheManager<object>>();
 
-                var cacheSettings = new[]
-                {
-                    new CacheSettings(HmacAuthenticationHandler.CacheGroup, TimeSpan.FromSeconds(60))
-                };
-                cacheManager.AddCacheSettings(cacheSettings);
 
                 if (authenticationOptions.HmacEnabled)
                 {

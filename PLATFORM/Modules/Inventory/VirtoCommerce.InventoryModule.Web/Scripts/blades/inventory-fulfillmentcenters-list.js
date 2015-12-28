@@ -1,18 +1,20 @@
 ﻿angular.module('virtoCommerce.inventoryModule')
 .controller('virtoCommerce.inventoryModule.inventoryFulfillmentcentersListController', ['$scope', '$timeout', 'platformWebApp.bladeNavigationService', function ($scope, $timeout, bladeNavigationService) {
+    var blade = $scope.blade;
+
     $scope.selectedItem = null;
     var openFirstEntityDetailsOnce = _.once(function () {
-        if ($scope.blade.currentEntities && $scope.blade.currentEntities.length > 0)
+        if (_.any(blade.currentEntities))
             $timeout(function () {
-                $scope.openBlade($scope.blade.currentEntities[0]);
+                $scope.openBlade(blade.currentEntities[0]);
             }, 0, false);
     });
 
-    $scope.blade.refresh = function () {
-        $scope.blade.isLoading = true;
-        return $scope.blade.parentWidgetRefresh().$promise.then(function (results) {
-            $scope.blade.isLoading = false;
-            $scope.blade.currentEntities = results;
+    blade.refresh = function () {
+        blade.isLoading = true;
+        return blade.parentWidgetRefresh().$promise.then(function (results) {
+            blade.isLoading = false;
+            blade.currentEntities = results;
 
             openFirstEntityDetailsOnce();
             return results;
@@ -24,40 +26,53 @@
 
         var newBlade = {
             id: "inventoryDetailBlade",
-            itemId: $scope.blade.itemId,
+            itemId: blade.itemId,
             data: data,
             title: data.fulfillmentCenter.name,
             subtitle: 'inventory.blades.inventory-detail.subtatle',
             controller: 'virtoCommerce.inventoryModule.inventoryDetailController',
             template: 'Modules/$(VirtoCommerce.Inventory)/Scripts/blades/inventory-detail.tpl.html'
         };
-        bladeNavigationService.showBlade(newBlade, $scope.blade);
+        bladeNavigationService.showBlade(newBlade, blade);
     };
 
-    $scope.blade.onClose = function (closeCallback) {
+    blade.onClose = function (closeCallback) {
         closeChildrenBlades();
         closeCallback();
     };
 
     function closeChildrenBlades() {
-        angular.forEach($scope.blade.childrenBlades.slice(), function (child) {
+        angular.forEach(blade.childrenBlades.slice(), function (child) {
             bladeNavigationService.closeBlade(child);
         });
     }
 
-    $scope.blade.headIcon = 'fa-cubes';
+    blade.headIcon = 'fa-cubes';
 
-    $scope.blade.toolbarCommands = [
+    blade.toolbarCommands = [
         {
             name: "platform.commands.refresh", icon: 'fa fa-refresh',
             executeMethod: function () {
-                $scope.blade.refresh();
+                blade.refresh();
             },
             canExecuteMethod: function () {
                 return true;
             }
-        }
+        },
+		{
+		    name: "core.blades.fulfillment-center-list.subtitle", icon: 'fa fa-wrench',
+		    executeMethod: function () {
+		        var newBlade = {
+		            id: 'fulfillmentCenterList',
+		            controller: 'virtoCommerce.coreModule.fulfillment.fulfillmentListController',
+		            template: 'Modules/$(VirtoCommerce.Core)/Scripts/fulfillment/blades/fulfillment-center-list.tpl.html'
+		        };
+		        bladeNavigationService.showBlade(newBlade, blade.parentBlade);
+		    },
+		    canExecuteMethod: function () { return true; },
+		    permission: 'core:fulfillment:create'
+		}
     ];
 
-    $scope.blade.refresh();
+    blade.refresh();
 }]);

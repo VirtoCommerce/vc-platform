@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace VirtoCommerce.Domain.Commerce.Model
 {
-	public interface ISeoSupport
+	public interface ISeoSupport 
 	{
+        string Id { get; set; }
 		ICollection<SeoInfo> SeoInfos { get; set; }
 	}
 }

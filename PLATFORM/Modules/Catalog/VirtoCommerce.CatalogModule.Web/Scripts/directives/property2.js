@@ -22,27 +22,33 @@
                 if (newValue != oldValue) {
                     scope.context.currentPropValues = [];
                     angular.forEach(scope.context.langValuesMap, function (langGroup, languageCode) {
-
                         angular.forEach(langGroup.currentPropValues, function (propValue) {
                             propValue.languageCode = languageCode;
                             scope.context.currentPropValues.push(propValue);
-                        })
+                        });
                     });
                 }
             }, true);
 
-            scope.$watch('context.currentPropValues', function (newValue, oldValue) {
+            scope.$watch('context.currentPropValues', function (newValues) {
                 //reflect only real changes
-                if (newValue.length != scope.currentEntity.values.length || difference(newValue, scope.currentEntity.values).length > 0) {
-                    //Prevent reflect changing when use null value for empty initial values
-                    if (!(scope.currentEntity.values.length == 0 && newValue[0].value == null)) {
-                        if (scope.currentEntity.dictionary && scope.currentEntity.multilanguage && !scope.currentEntity.multivalue) {
-                            scope.currentEntity.values = _.where(scope.context.allDictionaryValues, { alias: newValue[0].alias });
+                if (isValuesDifferent(newValues, scope.currentEntity.values)) {                    
+                    if (scope.currentEntity.dictionary && scope.currentEntity.multilanguage) {
+                        if (scope.currentEntity.multivalue) {
+                            var realAliases = _.pluck(_.where(newValues, { languageCode: scope.currentEntity.catalog.defaultLanguage.languageCode }), 'alias');
+                            scope.currentEntity.values = _.filter(scope.context.allDictionaryValues, function (x) {
+                                return _.contains(realAliases, x.alias);
+                            });
                         } else {
-                            scope.currentEntity.values = newValue;
+                            scope.currentEntity.values = _.where(scope.context.allDictionaryValues, { alias: newValues[0].alias });
                         }
-                        ngModelController.$setViewValue(scope.currentEntity);
+                    } else {
+                        scope.currentEntity.values = newValues;
                     }
+                    	//reset inherited status to force property value override
+                        _.each(scope.currentEntity.values, function (x) { x.isInherited = false; });
+
+                    ngModelController.$setViewValue(scope.currentEntity);
                 }
             }, true);
 
@@ -56,71 +62,76 @@
                 }
 
                 if (scope.currentEntity.dictionary) {
-                    loadDictionaryValues(scope.currentEntity);
+                    loadDictionaryValues();
                 }
-                if (scope.currentEntity.multilanguage) {
-                    initLanguagesValuesMap(scope.currentEntity);
-                }
+
+                initLanguagesValuesMap();
 
                 chageValueTemplate(scope.currentEntity.valueType);
             };
 
-            var difference = function (one, two) {
-                var containsEquals = function (obj, target) {
-                    if (obj == null) return false;
-                    return _.any(obj, function (value) {
-                        return value.value == target.value
+            function isValuesDifferent(newValues, currentValues) {
+                var elementCountIsDifferent = newValues.length != currentValues.length;
+                var elementsNotEqual = _.any(newValues, function (x) {
+                    return _.all(currentValues, function (y) {
+                        return !(y.value === x.value && y.languageCode == x.languageCode);
                     });
-                };
-                return _.filter(one, function (value) { return !containsEquals(two, value); });
+                });
+
+                return (elementCountIsDifferent || elementsNotEqual) &&
+                        (_.any(currentValues) || (newValues[0] && newValues[0].value)); //Prevent reflecting the change when null value was added to empty initial values
             };
 
             function needAddEmptyValue(property, values) {
                 return !property.multivalue && !property.dictionary && values.length == 0;
             };
 
-            function initLanguagesValuesMap(property) {
+            function initLanguagesValuesMap() {
+                if (scope.currentEntity.multilanguage) {
+                    //Group values by language 
+                    angular.forEach(scope.currentEntity.catalog.languages, function (language) {
+                        //Currently select values
+                        var currentPropValues = _.where(scope.context.currentPropValues, { languageCode: language.languageCode });
+                        // provide default value if value wasn't found in specified language.
+                        if (!_.any(currentPropValues) && _.any(scope.context.currentPropValues)) {
+                            currentPropValues = angular.copy(_.filter(scope.context.currentPropValues, function (x) { return !x.languageCode }));
+                            _.each(currentPropValues, function (x) {
+                                x.id = null;
+                                x.languageCode = language.languageCode;
+                            });
+                        }
+                        //need add empty value for single  value type
+                        if (needAddEmptyValue(scope.currentEntity, currentPropValues)) {
+                            currentPropValues.push({ value: null, languageCode: language.languageCode });
+                        }
+                        //All possible dict values
+                        var allValues = _.where(scope.context.allDictionaryValues, { languageCode: language.languageCode });
 
-                //Group values by language 
-                angular.forEach(property.catalog.languages, function (language) {
-                    //Currently select values
-                    var currentPropValues = _.where(scope.context.currentPropValues, { languageCode: language.languageCode });
-                    //need add empty value for single  value type
-                    if (needAddEmptyValue(property, currentPropValues)) {
-                        currentPropValues.push({ value: null, languageCode: language.languageCode });
-                    }
-                    //All possible dict values
-                    var allValues = _.where(scope.context.allDictionaryValues, { languageCode: language.languageCode });
-
-                    var langValuesGroup = {
-                        allValues: allValues,
-                        currentPropValues: currentPropValues
-                    };
-                    scope.context.langValuesMap[language.languageCode] = langValuesGroup;
-                });
+                        var langValuesGroup = {
+                            allValues: allValues,
+                            currentPropValues: currentPropValues
+                        };
+                        scope.context.langValuesMap[language.languageCode] = langValuesGroup;
+                    });
+                }
             };
 
-
-            function loadDictionaryValues(property) {
-                var selectedValues = property.values;
-                scope.getPropValues()(property.id).then(function (result) {
+            function loadDictionaryValues() {
+                scope.getPropValues()(scope.currentEntity.id).then(function (result) {
                     scope.context.allDictionaryValues = [];
                     scope.context.currentPropValues = [];
 
                     angular.forEach(result, function (dictValue) {
                         //Need to select already selected values. Dictionary values have same type as standard values.
-                        dictValue.selected = angular.isDefined(_.find(selectedValues, function (value) { return value.valueId == dictValue.valueId }));
+                        dictValue.selected = angular.isDefined(_.find(scope.currentEntity.values, function (value) { return value.valueId == dictValue.valueId }));
                         scope.context.allDictionaryValues.push(dictValue);
                         if (dictValue.selected) {
                             //add selected value
                             scope.context.currentPropValues.push(dictValue);
                         }
-
                     });
 
-                    if (property.multilanguage) {
-                        initLanguagesValuesMap(scope.currentEntity);
-                    }
+                    initLanguagesValuesMap();
 
                     return result;
                 });

@@ -1,14 +1,12 @@
 ﻿angular.module('virtoCommerce.contentModule')
 .controller('virtoCommerce.contentModule.themesListController', ['$scope', 'virtoCommerce.contentModule.themes', 'virtoCommerce.contentModule.stores', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', function ($scope, themes, themesStores, bladeNavigationService, dialogService) {
-	$scope.selectedNodeId = null;
-
-	var blade = $scope.blade;
-	blade.choosenTheme = undefined;
+    var blade = $scope.blade;
 	blade.defaultThemeName = undefined;
 
 	blade.initialize = function () {
 		blade.isLoading = true;
-		themes.get({ storeId: blade.storeId }, function (data) {
+	    blade.choosenTheme = undefined;
+	    themes.get({ storeId: blade.storeId, cacheKill: new Date().getTime() }, function (data) {
 		    blade.currentEntities = data;
 		    if (data.length > 0) {
 		        blade.choosenTheme = blade.currentEntities[0];

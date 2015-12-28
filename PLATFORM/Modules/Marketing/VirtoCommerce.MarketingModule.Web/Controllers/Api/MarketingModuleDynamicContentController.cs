@@ -19,18 +19,41 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
     {
 		private readonly IMarketingExtensionManager _marketingExtensionManager;
 		private readonly IDynamicContentService _dynamicContentService;
-		public MarketingModuleDynamicContentController(IDynamicContentService dynamicContentService, IMarketingExtensionManager marketingExtensionManager)
+        private readonly IMarketingDynamicContentEvaluator _dynamicContentEvaluator;
+
+        public MarketingModuleDynamicContentController(IDynamicContentService dynamicContentService, IMarketingExtensionManager marketingExtensionManager,
+            IMarketingDynamicContentEvaluator dynamicContentEvaluator)
 		{
 			_dynamicContentService = dynamicContentService;
 			_marketingExtensionManager = marketingExtensionManager;
-		}
+            _dynamicContentEvaluator = dynamicContentEvaluator;
+        }
 
-		/// <summary>
-		/// Find dynamic content item object by id
-		/// </summary>
-		/// <remarks>Return a single dynamic content item object </remarks>
-		/// <param name="id"> content item id</param>
-		[HttpGet]
+        /// <summary>
+        /// Get dynamic content for given placeholders
+        /// </summary>
+        [HttpGet]
+        [ResponseType(typeof(webModel.DynamicContentItem[]))]
+        [Route("contentitems/evaluate")]
+        public IHttpActionResult EvaluateDynamicContent(string storeId, string placeHolder)
+        {
+            var context = new coreModel.DynamicContent.DynamicContentEvaluationContext()
+            {
+                StoreId = storeId,
+                PlaceName = placeHolder
+            };
+
+            var retVal = _dynamicContentEvaluator.EvaluateItems(context).Select(x => x.ToWebModel()).ToArray();
+
+            return Ok(retVal);
+        }
+
+        /// <summary>
+        /// Find dynamic content item object by id
+        /// </summary>
+        /// <remarks>Return a single dynamic content item object </remarks>
+        /// <param name="id"> content item id</param>
+        [HttpGet]
 		[ResponseType(typeof(webModel.DynamicContentItem))]
 		[Route("contentitems/{id}")]
 		public IHttpActionResult GetDynamicContentById(string id)

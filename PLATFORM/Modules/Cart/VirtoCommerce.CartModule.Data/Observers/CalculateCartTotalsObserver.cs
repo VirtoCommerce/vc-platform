@@ -3,13 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VirtoCommerce.CartModule.Data.Converters;
 using VirtoCommerce.Domain.Cart.Events;
 using VirtoCommerce.Domain.Cart.Model;
+using VirtoCommerce.Domain.Shipping.Model;
+using VirtoCommerce.Domain.Store.Services;
+using VirtoCommerce.Domain.Tax.Model;
 
 namespace VirtoCommerce.CartModule.Data.Observers
 {
 	public class CalculateCartTotalsObserver : IObserver<CartChangeEvent>
 	{
+        private readonly IStoreService _storeService;
+        public CalculateCartTotalsObserver(IStoreService storeService)
+        {
+            _storeService = storeService;
+        }
+
 		#region IObserver<CustomerOrder> Members
 
 		public void OnCompleted()
@@ -26,15 +36,28 @@ namespace VirtoCommerce.CartModule.Data.Observers
 		}
 
 		#endregion
-		private static void CalculateCartTotals(CartChangeEvent cartChangeEvent)
+		private void CalculateCartTotals(CartChangeEvent cartChangeEvent)
 		{
 			var cart = cartChangeEvent.ModifiedCart;
+            var store = _storeService.GetById(cart.StoreId);
 
-			cart.Total = 0;
-			cart.SubTotal = 0;
-			cart.TaxTotal = 0;
-			cart.ShippingTotal = 0;
-			cart.DiscountTotal = 0;
+            cart.Total = 0;
+            cart.SubTotal = 0;
+            cart.TaxTotal = 0;
+            cart.ShippingTotal = 0;
+            cart.DiscountTotal = 0;
+
+            if (store != null)
+            {
+                //Calculate taxes
+                var taxProvider = store.TaxProviders.Where(x => x.IsActive).OrderBy(x => x.Priority).FirstOrDefault();
+                if (taxProvider != null)
+                {
+                    var taxRequest = cart.ToTaxRequest();
+                    var taxEvalContext = new TaxEvaluationContext(taxRequest);
+                    cart.TaxTotal = taxProvider.CalculateRates(taxEvalContext).Select(x => x.Rate).DefaultIfEmpty(0).Sum(x => x);
+                }
+            }
 
 			if (cart.Items != null)
 			{

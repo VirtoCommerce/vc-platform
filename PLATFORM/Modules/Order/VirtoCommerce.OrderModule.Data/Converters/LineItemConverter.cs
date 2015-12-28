@@ -47,8 +47,9 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			retVal.Price = lineItem.PlacedPrice;
 			retVal.Tax = lineItem.TaxTotal;
 			retVal.FulfillmentLocationCode = lineItem.FulfillmentLocationCode;
+            retVal.DynamicProperties = null; //to prevent copy dynamic properties from ShoppingCart LineItem to Order LineItem
 
-			if(lineItem.Discounts != null)
+            if (lineItem.Discounts != null)
 			{
 				retVal.Discount = lineItem.Discounts.Select(x => x.ToCoreModel()).FirstOrDefault();
 			}
@@ -56,13 +57,15 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			return retVal;
 		}
 
-		public static LineItemEntity ToDataModel(this LineItem lineItem)
+		public static LineItemEntity ToDataModel(this LineItem lineItem, PrimaryKeyResolvingMap pkMap)
 		{
 			if (lineItem == null)
 				throw new ArgumentNullException("lineItem");
 
 			var retVal = new LineItemEntity();
-			retVal.InjectFrom(lineItem);
+            pkMap.AddPair(lineItem, retVal);
+
+            retVal.InjectFrom(lineItem);
 			retVal.Currency = lineItem.Currency.ToString();
 			if(lineItem.Discount != null)
 			{

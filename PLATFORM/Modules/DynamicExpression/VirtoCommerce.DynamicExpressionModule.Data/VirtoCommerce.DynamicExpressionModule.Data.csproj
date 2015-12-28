@@ -31,6 +31,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Common.Logging, Version=3.1.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Common.Logging.3.1.0\lib\net40\Common.Logging.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Common.Logging.Core, Version=3.1.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Common.Logging.Core.3.1.0\lib\net40\Common.Logging.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -59,6 +67,8 @@
     <Compile Include="Common\Conditions\MatchedConditionBase.cs" />
     <Compile Include="Common\Conditions\GeoConditions\ConditionGeoZipCode.cs" />
     <Compile Include="Pricing\BlockPricingCondition.cs" />
+    <Compile Include="Pricing\Conditions\TagsContainsCondition.cs" />
+    <Compile Include="Pricing\Helpers\PriceEvaluationContextExtension.cs" />
     <Compile Include="Promotion\Conditions\CartConditions\BlockCartCondition.cs" />
     <Compile Include="Promotion\Conditions\CatalogConditions\BlockCatalogCondition.cs" />
     <Compile Include="Promotion\Conditions\CustomerConditions\BlockCustomerCondition.cs" />

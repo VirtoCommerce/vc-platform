@@ -22,7 +22,8 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 			EditorialReviews = new NullCollection<EditorialReview>();
 			ItemPropertyValues = new NullCollection<PropertyValue>();
 			Childrens = new NullCollection<Item>();
-		}
+            Assosiations = new NullCollection<Association>();
+        }
 
 		[StringLength(1024)]
 		[Required]
@@ -51,7 +52,7 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 		[StringLength(64)]
 		[Required]
 		[Index(IsUnique = true)] 
-		[CustomValidation(typeof(Item), "ValidateItemCode", ErrorMessage = @"Code can't contain $+;=%{}[]|\/@ ~#!^*&()?:'<>, characters")]
+		[CustomValidation(typeof(Item), "ValidateItemCode", ErrorMessage = @"Code can't contain $+;=%{}[]|\/@ ~!^*&()?:'<>, characters")]
 		public string Code { get; set; }
 
 		[StringLength(128)]
@@ -93,7 +94,8 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 
 		public virtual ObservableCollection<Image> Images { get; set; }
 
-		public virtual ObservableCollection<AssociationGroup> AssociationGroups { get; set; }
+        public virtual ObservableCollection<Association> Assosiations { get; set; }
+        public virtual ObservableCollection<AssociationGroup> AssociationGroups { get; set; }
 
 		public virtual ObservableCollection<EditorialReview> EditorialReviews { get; set; }
 
@@ -119,7 +121,7 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 				return new ValidationResult("Code can't be empty");
 			}
 
-			const string invalidCodeCharacters = @"$+;=%{}[]|\/@ ~#!^*&()?:'<>,";
+			const string invalidCodeCharacters = @"$+;=%{}[]|\/@ ~!^*&()?:'<>,";
 
 			if (value.IndexOfAny(invalidCodeCharacters.ToCharArray()) > -1)
 			{

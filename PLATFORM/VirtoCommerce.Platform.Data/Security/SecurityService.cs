@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using CacheManager.Core;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Omu.ValueInjecter;
-using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Platform.Data.Common;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Model;
 using VirtoCommerce.Platform.Data.Repositories;
@@ -24,12 +25,12 @@ namespace VirtoCommerce.Platform.Data.Security
         private readonly Func<ApplicationUserManager> _userManagerFactory;
         private readonly IApiAccountProvider _apiAccountProvider;
         private readonly ISecurityOptions _securityOptions;
-        private readonly CacheManager _cacheManager;
+        private readonly ICacheManager<object> _cacheManager;
         private readonly IModuleManifestProvider _manifestProvider;
         private readonly IPermissionScopeService _permissionScopeService;
 
         public SecurityService(Func<IPlatformRepository> platformRepository, Func<ApplicationUserManager> userManagerFactory, IApiAccountProvider apiAccountProvider,
-                               ISecurityOptions securityOptions, IModuleManifestProvider manifestProvider, IPermissionScopeService permissionScopeService, CacheManager cacheManager)
+                               ISecurityOptions securityOptions, IModuleManifestProvider manifestProvider, IPermissionScopeService permissionScopeService, ICacheManager<object> cacheManager)
         {
             _platformRepository = platformRepository;
             _userManagerFactory = userManagerFactory;
@@ -303,9 +304,7 @@ namespace VirtoCommerce.Platform.Data.Security
 
         public Permission[] GetAllPermissions()
         {
-            return _cacheManager.Get(
-                CacheKey.Create(CacheGroups.Security, "AllPermissions"),
-                LoadAllPermissions);
+            return _cacheManager.Get("AllPermissions", "PlatformRegion", LoadAllPermissions);
         }
     
         public bool UserHasAnyPermission(string userName, string[] scopes, params string[] permissionIds)
@@ -320,8 +319,17 @@ namespace VirtoCommerce.Platform.Data.Security
             {
                 return true;
             }
-           
+        
             var retVal = user.UserState == Core.Security.AccountState.Approved;
+
+            //For managers always allow to call api
+            if (retVal && permissionIds != null && permissionIds.Count() == 1 && permissionIds.Contains(PredefinedPermissions.SecurityCallApi)
+               && ( String.Equals(user.UserType, AccountType.Manager.ToString(), StringComparison.InvariantCultureIgnoreCase) ||
+                    String.Equals(user.UserType, AccountType.Administrator.ToString(), StringComparison.InvariantCultureIgnoreCase)))
+            {
+                return true;
+            }
+
             if (retVal)
             {
                 var fqUserPermissions = user.Roles.SelectMany(x => x.Permissions).SelectMany(x => x.GetPermissionWithScopeCombinationNames()).Distinct();

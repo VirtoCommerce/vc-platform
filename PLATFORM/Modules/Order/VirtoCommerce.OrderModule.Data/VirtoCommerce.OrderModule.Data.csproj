@@ -33,6 +33,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CacheManager.Core, Version=0.6.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\CacheManager.Core.0.6.1\lib\net45\CacheManager.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Common.Logging, Version=3.1.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Common.Logging.3.1.0\lib\net40\Common.Logging.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Common.Logging.Core, Version=3.1.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Common.Logging.Core.3.1.0\lib\net40\Common.Logging.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.dll</HintPath>
@@ -47,6 +59,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -100,6 +113,14 @@
     <Compile Include="Migrations\201507240957387_RemoveOrderProperties.cs" />
     <Compile Include="Migrations\201507240957387_RemoveOrderProperties.Designer.cs">
       <DependentUpon>201507240957387_RemoveOrderProperties.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201512080949087_AddProductTypeColumn.cs" />
+    <Compile Include="Migrations\201512080949087_AddProductTypeColumn.Designer.cs">
+      <DependentUpon>201512080949087_AddProductTypeColumn.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201512081407299_ChangeRequiredForProductTypeColumn.cs" />
+    <Compile Include="Migrations\201512081407299_ChangeRequiredForProductTypeColumn.Designer.cs">
+      <DependentUpon>201512081407299_ChangeRequiredForProductTypeColumn.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\AddressEntity.cs" />
@@ -172,6 +193,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201507240957387_RemoveOrderProperties.resx">
       <DependentUpon>201507240957387_RemoveOrderProperties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201512080949087_AddProductTypeColumn.resx">
+      <DependentUpon>201512080949087_AddProductTypeColumn.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201512081407299_ChangeRequiredForProductTypeColumn.resx">
+      <DependentUpon>201512081407299_ChangeRequiredForProductTypeColumn.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

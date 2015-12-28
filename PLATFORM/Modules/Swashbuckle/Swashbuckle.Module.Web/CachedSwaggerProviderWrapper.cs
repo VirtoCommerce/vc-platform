@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using CacheManager.Core;
 using Swashbuckle.Swagger;
-using VirtoCommerce.Platform.Core.Caching;
+using VirtoCommerce.Platform.Data.Common;
 
 namespace SwashbuckleModule.Web
 {
@@ -13,9 +14,9 @@ namespace SwashbuckleModule.Web
 	/// </summary>
 	public class CachedSwaggerProviderWrapper : ISwaggerProvider
 	{
-		private readonly CacheManager _cacheManager;
+		private readonly ICacheManager<object> _cacheManager;
 		private readonly ISwaggerProvider _swaggerProvider;
-		public CachedSwaggerProviderWrapper(ISwaggerProvider swaggerProvider, CacheManager cacheManager)
+		public CachedSwaggerProviderWrapper(ISwaggerProvider swaggerProvider, ICacheManager<object> cacheManager)
 		{
 			_cacheManager = cacheManager;
 			_swaggerProvider = swaggerProvider;
@@ -24,9 +25,8 @@ namespace SwashbuckleModule.Web
 
 		public SwaggerDocument GetSwagger(string rootUrl, string apiVersion)
 		{
-			var cacheKey = CacheKey.Create("Swashbuckle", apiVersion);
-			return _cacheManager.Get(cacheKey, () => _swaggerProvider.GetSwagger(rootUrl, apiVersion));
-		}
+			return _cacheManager.Get("Swashbuckle" + apiVersion, "SwashbuckleRegion",  () => _swaggerProvider.GetSwagger(rootUrl, apiVersion));
+        }
 
 		#endregion
 	}

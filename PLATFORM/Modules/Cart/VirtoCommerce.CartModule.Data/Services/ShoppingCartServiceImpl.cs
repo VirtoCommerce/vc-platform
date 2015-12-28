@@ -9,7 +9,8 @@ using VirtoCommerce.Domain.Cart.Events;
 using VirtoCommerce.Domain.Cart.Model;
 using VirtoCommerce.Domain.Cart.Services;
 using VirtoCommerce.Domain.Catalog.Services;
-using VirtoCommerce.Domain.Common;
+using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Data.Infrastructure;
 
@@ -22,13 +23,15 @@ namespace VirtoCommerce.CartModule.Data.Services
 		private Func<ICartRepository> _repositoryFactory;
 		private readonly IEventPublisher<CartChangeEvent> _eventPublisher;
 		private readonly IItemService _productService;
+        private readonly IDynamicPropertyService _dynamicPropertyService;
 
-		public ShoppingCartServiceImpl(Func<ICartRepository> repositoryFactory, IEventPublisher<CartChangeEvent> eventPublisher, IItemService productService)
+        public ShoppingCartServiceImpl(Func<ICartRepository> repositoryFactory, IEventPublisher<CartChangeEvent> eventPublisher, IItemService productService, IDynamicPropertyService dynamicPropertyService)
 		{
 			_repositoryFactory = repositoryFactory;
 			_eventPublisher = eventPublisher;
 			_productService = productService;
-		}
+            _dynamicPropertyService = dynamicPropertyService;
+        }
 
 		#region IShoppingCartService Members
 
@@ -57,51 +60,42 @@ namespace VirtoCommerce.CartModule.Data.Services
 				}
 			}
 
-			return retVal;
+            if (retVal != null)
+            {
+                _dynamicPropertyService.LoadDynamicPropertyValues(retVal);
+            }
+
+            return retVal;
 		}
 
 		public ShoppingCart Create(ShoppingCart cart)
 		{
+            var pkMap = new PrimaryKeyResolvingMap();
+            //Do business logic on temporary  order object
+            _eventPublisher.Publish(new CartChangeEvent(Platform.Core.Common.EntryState.Added, null, cart));
 
-			//Do business logic on temporary  order object
-			_eventPublisher.Publish(new CartChangeEvent(Platform.Core.Common.EntryState.Added, null, cart));
-
-			var entity = cart.ToDataModel();
+			var entity = cart.ToDataModel(pkMap);
 			ShoppingCart retVal = null;
 			using (var repository = _repositoryFactory())
 			{
 				repository.Add(entity);
 				CommitChanges(repository);
-			}
-			retVal = GetById(entity.Id);
+                pkMap.ResolvePrimaryKeys();
+            }
+
+            retVal = GetById(entity.Id);
 			return retVal;
 		}
 
 		public void Update(ShoppingCart[] carts)
 		{
 			var changedCarts = new List<ShoppingCart>();
-			//Thats need to correct handle partial cart update
-			foreach (var cart in carts)
-			{
-				//Apply changes to temporary  object
-				var targetCart = GetById(cart.Id);
-				if (targetCart == null)
-				{
-					throw new NullReferenceException("targetCart");
-				}
-				var sourceCartEntity = cart.ToDataModel();
-				var targetCartEntity = targetCart.ToDataModel();
-				sourceCartEntity.Patch(targetCartEntity);
-				var changedCart = targetCartEntity.ToCoreModel();
-				changedCarts.Add(changedCart);
-			}
+            var pkMap = new PrimaryKeyResolvingMap();
 
-
-			//Need a call business logic for changes and persist changes
-			using (var repository = _repositoryFactory())
+            using (var repository = _repositoryFactory())
 			using (var changeTracker = base.GetChangeTracker(repository))
 			{
-				foreach (var changedCart in changedCarts)
+				foreach (var changedCart in carts)
 				{
 					var origCart = GetById(changedCart.Id);
 
@@ -118,7 +112,7 @@ namespace VirtoCommerce.CartModule.Data.Services
 
 					_eventPublisher.Publish(new CartChangeEvent(Platform.Core.Common.EntryState.Modified, origCart, changedCart));
 
-					var sourceCartEntity = changedCart.ToDataModel();
+					var sourceCartEntity = changedCart.ToDataModel(pkMap);
 					var targetCartEntity = repository.GetShoppingCartById(changedCart.Id);
 					if (targetCartEntity == null)
 					{
@@ -127,22 +121,31 @@ namespace VirtoCommerce.CartModule.Data.Services
 
 					changeTracker.Attach(targetCartEntity);
 					sourceCartEntity.Patch(targetCartEntity);
-				}
-				CommitChanges(repository);
-			}
+                }
+                CommitChanges(repository);
+                pkMap.ResolvePrimaryKeys();
+            }
 
-		}
+            //Save dynamic properties for carts and all nested objects
+            foreach(var cart in carts)
+            {
+                _dynamicPropertyService.SaveDynamicPropertyValues(cart);
+            }
+        }
 
-		public void Delete(string[] cartIds)
+        public void Delete(string[] cartIds)
 		{
 			using (var repository = _repositoryFactory())
 			{
 				foreach (var id in cartIds)
 				{
 					var cart = GetById(id);
-					_eventPublisher.Publish(new CartChangeEvent(Platform.Core.Common.EntryState.Deleted, cart, cart));
+                   
+                    _eventPublisher.Publish(new CartChangeEvent(Platform.Core.Common.EntryState.Deleted, cart, cart));
 
-					var entity = repository.GetShoppingCartById(id);
+                    _dynamicPropertyService.DeleteDynamicPropertyValues(cart);
+
+                    var entity = repository.GetShoppingCartById(id);
 					if (entity != null)
 					{
 						repository.Remove(entity);
@@ -152,8 +155,7 @@ namespace VirtoCommerce.CartModule.Data.Services
 			}
 		}
 
-		#endregion
+        #endregion
 
-
-	}
+    }
 }

@@ -914,6 +914,7 @@ h3
             background-repeat: no-repeat;
             background-size: contain;
             height: 100%;
+            margin: 0 0 0 8px;
             position: relative;
             width: 100%;
         }
@@ -2465,6 +2466,10 @@ button.btn
                 transition: right .25s ease-in-out 0s;
     }
 
+    .__items.__reverse .list-item:after {
+        right:60px;
+        content: "\f053";
+    }
 
     .__items .list-item.__default:after
     {
@@ -2512,6 +2517,11 @@ button.btn
     .__items .list-item:hover:after
     {
         right: 25px;
+    }
+
+    .__items.__reverse .list-item:hover:after
+    {
+        right: 55px;
     }
 
     .__items .list-item.__default:hover:after
@@ -4942,7 +4952,8 @@ tags-input .tags .tag-item .remove-button
     }
 
     .blade .blade-inner::-webkit-scrollbar,
-    .log::-webkit-scrollbar
+    .log::-webkit-scrollbar,
+    .ui-grid-viewport::-webkit-scrollbar
     {
         background: transparent;
     }
@@ -4959,12 +4970,14 @@ tags-input .tags .tag-item .remove-button
         background: #e6e6e6;
     }
 
-    .blade .__gray .blade-inner::-webkit-scrollbar-track-piece
+    .blade .__gray .blade-inner::-webkit-scrollbar-track-piece,
+    .ui-grid-viewport::-webkit-scrollbar-track-piece
     {
         background: #e9e9e9;
     }
 
-    .blade .__gray .blade-inner::-webkit-scrollbar-thumb
+    .blade .__gray .blade-inner::-webkit-scrollbar-thumb,
+    .ui-grid-viewport::-webkit-scrollbar-thumb
     {
         background: #d6d6d6;
     }
@@ -4978,7 +4991,8 @@ tags-input .tags .tag-item .remove-button
         -ms-scrollbar-track-color: #f9f9f9;
     }
 
-    .blade .__gray .blade-inner
+    .blade .__gray .blade-inner,
+    .ui-grid-viewport
     {
         -ms-scrollbar-arrow-color: #e9e9e9;
         -ms-scrollbar-face-color: #d6d6d6;
@@ -4989,6 +5003,11 @@ tags-input .tags .tag-item .remove-button
     .blade .blade-inner:hover
     {
         overflow-y: auto;
+    }
+
+    .blade .blade-inner.ui-grid-no-scroll:hover
+    {
+        overflow: visible;
     }
 
         .blade-inner .inner-block
@@ -5095,6 +5114,7 @@ tags-input .tags .tag-item .remove-button
     border-style: solid;
     border-width: 0 0 1px;
     font-size: 14px;
+    cursor: pointer;
 }
 
 .ui-grid-cell .table-descr
@@ -5138,8 +5158,10 @@ tags-input .tags .tag-item .remove-button
 
 .ui-grid-row:hover .ui-grid-cell,
 .ui-grid-row:nth-child(2n):hover .ui-grid-cell,
-.ui-grid-row:hover .image,
-.ui-grid-row:nth-child(2n):hover .image
+.ui-grid-row:nth-child(2n):hover .ui-grid-cell,
+.ui-grid-row .ui-grid-cell.__hovered,
+.ui-grid-row:nth-child(2n):hover .image,
+.ui-grid-row:nth-child(2n) .ui-grid-cell.__hovered
 {
     background-color: #ecf7fc !important;
 }
@@ -5223,14 +5245,15 @@ tags-input .tags .tag-item .remove-button
     vertical-align: middle;
 }
 
-.ui-grid-row .ui-grid-cell:first-child .ui-grid-cell-contents
-{
-    text-align: center;
-}
-
 .ui-grid-icon-cancel::before
 {
     visibility: hidden;
+}
+
+.ui-grid-row:last-child .ui-grid-cell
+{
+    border-bottom-color: #dee9f0;
+    border-bottom-width: 1px !important;
 }
 
 .ui-grid-menu .ui-grid-menu-inner
@@ -5243,7 +5266,7 @@ tags-input .tags .tag-item .remove-button
 
 .ui-grid-menu-button .ui-grid-menu .ui-grid-menu-mid
 {
-    
+    overflow-x: hidden !important;
     overflow: auto;
 }
 
@@ -5438,6 +5461,7 @@ input.ui-grid-filter-input[type="text"]
 {
     margin: 6px -1px 0 0;
     padding: 0;
+    min-width: 160px;
 }
 
 .ui-grid-menu .ui-grid-menu-inner ul li

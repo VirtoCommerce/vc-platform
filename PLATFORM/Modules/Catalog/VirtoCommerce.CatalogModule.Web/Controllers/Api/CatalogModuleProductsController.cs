@@ -21,17 +21,17 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
     public class CatalogModuleProductsController : CatalogBaseController
     {
         private readonly IItemService _itemsService;
-        private readonly IPropertyService _propertyService;
         private readonly IBlobUrlResolver _blobUrlResolver;
         private readonly ICatalogService _catalogService;
+        private readonly ICategoryService _categoryService;
         private readonly ISkuGenerator _skuGenerator;
 
-        public CatalogModuleProductsController(IItemService itemsService, IPropertyService propertyService, IBlobUrlResolver blobUrlResolver, 
-                                               ICatalogService catalogService, ISkuGenerator skuGenerator, ISecurityService securityService, IPermissionScopeService permissionScopeService)
+        public CatalogModuleProductsController(IItemService itemsService, IBlobUrlResolver blobUrlResolver,  ICatalogService catalogService, ICategoryService categoryService,
+                                               ISkuGenerator skuGenerator, ISecurityService securityService, IPermissionScopeService permissionScopeService)
             :base(securityService, permissionScopeService)
         {
             _itemsService = itemsService;
-            _propertyService = propertyService;
+            _categoryService = categoryService;
             _blobUrlResolver = blobUrlResolver;
             _catalogService = catalogService;
             _skuGenerator = skuGenerator;
@@ -42,12 +42,13 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         /// Gets item by id.
         /// </summary>
         /// <param name="id">Item id.</param>
+        ///<param name="respGroup">Response group.</param>
         [HttpGet]
         [ResponseType(typeof(webModel.Product))]
         [Route("{id}")]
-        public IHttpActionResult Get(string id)
+        public IHttpActionResult Get(string id, [FromUri] coreModel.ItemResponseGroup respGroup = coreModel.ItemResponseGroup.ItemLarge)
         {
-            var item = _itemsService.GetById(id, coreModel.ItemResponseGroup.ItemLarge);
+            var item = _itemsService.GetById(id, respGroup);
             if (item == null)
             {
                 return NotFound();
@@ -55,8 +56,8 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 
             base.CheckCurrentUserHasPermissionForObjects(CatalogPredefinedPermissions.Read, item);
 
-            var properties = GetAllCatalogProperies(item.CatalogId, item.CategoryId);
-            var retVal = item.ToWebModel(_blobUrlResolver, properties);
+            var retVal = item.ToWebModel(_blobUrlResolver);
+
             retVal.SecurityScopes = base.GetObjectPermissionScopeStrings(item);
             return Ok(retVal);
         }
@@ -98,21 +99,28 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 
             base.CheckCurrentUserHasPermissionForObjects(CatalogPredefinedPermissions.Create, retVal.ToModuleModel(_blobUrlResolver));
 
+            if(catalogId != null)
+            {
+                var catalog = _catalogService.GetById(catalogId);
+                retVal.Properties = catalog.Properties.Select(x => x.ToWebModel()).ToList();
+            }
 
-            if (catalogId != null)
-			{
-				var properites = GetAllCatalogProperies(catalogId, categoryId);
-				retVal.Properties = properites.Select(x => x.ToWebModel()).ToList();
+            if (categoryId != null)
+            {
+                var category = _categoryService.GetById(categoryId, Domain.Catalog.Model.CategoryResponseGroup.WithProperties);
+                retVal.Properties = category.Properties.Select(x => x.ToWebModel()).ToList();
+            }
 
-				foreach (var property in retVal.Properties)
-				{
-					property.Values = new List<webModel.PropertyValue>();
-					property.IsManageable = true;
-					property.IsReadOnly = property.Type != coreModel.PropertyType.Product && property.Type != coreModel.PropertyType.Variation;
-				}
-			}
 
-			retVal.Code = _skuGenerator.GenerateSku(retVal.ToModuleModel(null));
+            foreach (var property in retVal.Properties)
+            {
+                property.Values = new List<webModel.PropertyValue>();
+                property.IsManageable = true;
+                property.IsReadOnly = property.Type != coreModel.PropertyType.Product && property.Type != coreModel.PropertyType.Variation;
+            }
+
+
+            retVal.Code = _skuGenerator.GenerateSku(retVal.ToModuleModel(null));
 
 			return Ok(retVal);
 		}
@@ -135,9 +143,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 
             base.CheckCurrentUserHasPermissionForObjects(CatalogPredefinedPermissions.Create, product);
 
-
-            var properties = GetAllCatalogProperies(product.CatalogId, product.CategoryId);
-            var mainWebProduct = product.ToWebModel(_blobUrlResolver, properties);
+            var mainWebProduct = product.ToWebModel(_blobUrlResolver);
 
             var newVariation = new webModel.Product
             {
@@ -150,16 +156,11 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 
             foreach (var property in newVariation.Properties)
             {
-                //Need reset value ids
-                foreach (var val in property.Values.ToArray())
-                {
-                    val.Id = null;
-                }
-
-                // Mark variation property as required
+               // Mark variation property as required
                 if (property.Type == coreModel.PropertyType.Variation)
                 {
                     property.Required = true;
+                    property.Values.Clear();
                 }
 
                 property.IsManageable = true;
@@ -205,23 +206,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        private coreModel.Property[] GetAllCatalogProperies(string catalogId, string categoryId)
-        {
-            if (catalogId == null)
-                throw new ArgumentNullException("catalogId");
-
-            coreModel.Property[] retVal = null;
-            if (!String.IsNullOrEmpty(categoryId))
-            {
-                retVal = _propertyService.GetCategoryProperties(categoryId);
-            }
-            else
-            {
-                retVal = _propertyService.GetCatalogProperties(catalogId);
-            }
-            return retVal;
-        }
-
+ 
         private coreModel.CatalogProduct UpdateProduct(webModel.Product product)
         {
             var moduleProduct = product.ToModuleModel(_blobUrlResolver);

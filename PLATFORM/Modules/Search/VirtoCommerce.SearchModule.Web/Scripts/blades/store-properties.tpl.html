@@ -1,0 +1,33 @@
+﻿<div class="blade-content __medium-wide">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <div class="sub-t">Pick Catalog properties eligible for filtering in this Store</div>
+            <div class="columns" ng-if="blade.currentEntities.length">
+                <div class="column">
+                    <div class="form-group">
+                        <p class="note">Available properties.<br><i>Click to select.<br><br></i></p>
+                        <ul class="list __items">
+                            <li class="list-item" ng-click='blade.select(data)' ng-repeat="data in blade.currentEntities | filter: {isSelected: false} | orderBy: 'name'">
+                                <span class="list-name">{{data.name}}</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="form-group">
+                        <p class="note">Selected properties.<br><i>Click to unselect.<br>Drag and drop to change the order.</i></p>
+                        <div class="table-wrapper">
+                            <ul class="list __items __reverse" ui-sortable="sortableOptions" ng-model="blade.selectedEntities">
+                                <li class="list-item" ng-repeat="data in blade.selectedEntities" ng-click='blade.unselect(data)'>
+                                    <span class="list-name">{{data.name}}</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <p class="text" ng-if="!blade.currentEntities.length">No Catalog properties found.</p>
+        </div>
+    </div>
+</div>

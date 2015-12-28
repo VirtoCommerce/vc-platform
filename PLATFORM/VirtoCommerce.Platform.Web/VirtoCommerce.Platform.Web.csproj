@@ -58,6 +58,18 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="CacheManager.Core, Version=0.6.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CacheManager.Core.0.6.1\lib\net45\CacheManager.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="CacheManager.SystemRuntimeCaching, Version=0.6.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CacheManager.SystemRuntimeCaching.0.6.1\lib\net45\CacheManager.SystemRuntimeCaching.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="CacheManager.Web, Version=0.6.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CacheManager.Web.0.6.1\lib\net45\CacheManager.Web.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Common.Logging">
       <HintPath>..\packages\Common.Logging.3.1.0\lib\net40\Common.Logging.dll</HintPath>
     </Reference>
@@ -184,6 +196,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
+    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Spatial">
       <HintPath>..\packages\System.Spatial.5.6.0\lib\net40\System.Spatial.dll</HintPath>
       <Private>True</Private>
@@ -300,7 +313,6 @@
     <Compile Include="Controllers\Api\AssetsController.cs" />
     <Compile Include="Controllers\Api\DynamicPropertiesController.cs" />
     <Compile Include="Controllers\Api\PlatformExportImportController.cs" />
-    <Compile Include="Controllers\Api\FrontEndSecurityController.cs" />
     <Compile Include="Controllers\Api\JobsController.cs" />
     <Compile Include="Controllers\Api\ModulesController.cs" />
     <Compile Include="Controllers\Api\PushNotificationController.cs" />
@@ -394,6 +406,7 @@
     <Content Include="Scripts\codemirror\gfm.js" />
     <Content Include="Scripts\codemirror\markdown.js" />
     <Content Include="Scripts\codemirror\overlay.js" />
+    <Content Include="Scripts\common\uiGridUtils.js" />
     <Content Include="Scripts\common\worldLanguages.js" />
     <Content Include="Scripts\common\dialogs\galleryDialog.js" />
     <Content Include="Scripts\common\dialogs\galleryDialog.tpl.html" />
@@ -578,7 +591,6 @@
     <Content Include="Scripts\app\navigation\blade\bladeNavigation.js" />
     <Content Include="Scripts\codemirror\ui-codemirror.js" />
     <Content Include="Scripts\codemirror\xml.js" />
-    <Content Include="Scripts\common\directives\ng-context-menu.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -610,6 +622,7 @@
   <ItemGroup>
     <Content Include="Content\themes\main\fonts\fontawesome-webfont.woff2" />
     <Content Include="Localizations\en.VirtoCommerce.Platform.json" />
+    <Content Include="Localizations\en.VirtoCommerce.Common.json" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>

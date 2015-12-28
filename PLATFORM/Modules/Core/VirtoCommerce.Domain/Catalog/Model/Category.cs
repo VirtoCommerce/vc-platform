@@ -19,6 +19,7 @@ namespace VirtoCommerce.Domain.Catalog.Model
 		public string Name { get; set; }
 		public string Path	{  get;  set; }
 		public bool Virtual { get; set; }
+        public int Level { get; set; }
 		public Category[] Parents { get; set; }
 	
 	    public int Priority { get; set; }
@@ -26,6 +27,7 @@ namespace VirtoCommerce.Domain.Catalog.Model
 	    public bool? IsActive { get; set; }
 
         public ICollection<Category> Children { get; set; }
+        public ICollection<Property> Properties { get; set; }
 		public ICollection<PropertyValue> PropertyValues { get; set; }
 		public ICollection<CategoryLink> Links { get; set; }
 		public ICollection<SeoInfo> SeoInfos { get; set; }

@@ -15,7 +15,7 @@
         }
       },
       "pricelist-list": {
-        "subtitle": "Merchandise management",
+        "subtitle": "Manage Price lists",
         "labels": {
           "name": "Name",
           "currency": "Currency",

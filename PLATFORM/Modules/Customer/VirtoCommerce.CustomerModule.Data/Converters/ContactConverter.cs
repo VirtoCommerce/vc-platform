@@ -24,22 +24,24 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
             var retVal = new coreModel.Contact();
             retVal.InjectFrom(dbEntity);
 
-            retVal.Addresses = dbEntity.Addresses.Select(x => x.ToCoreModel()).ToList();
-            retVal.Emails = dbEntity.Emails.Select(x => x.Address).ToList();
-            retVal.Notes = dbEntity.Notes.Select(x => x.ToCoreModel()).ToList();
-            retVal.Phones = dbEntity.Phones.Select(x => x.Number).ToList();
+            retVal.Addresses = dbEntity.Addresses.OrderBy(x=>x.Id).Select(x => x.ToCoreModel()).ToList();
+            retVal.Emails = dbEntity.Emails.OrderBy(x => x.Id).Select(x => x.Address).ToList();
+            retVal.Notes = dbEntity.Notes.OrderBy(x => x.Id).Select(x => x.ToCoreModel()).ToList();
+            retVal.Phones = dbEntity.Phones.OrderBy(x => x.Id).Select(x => x.Number).ToList();
             retVal.Organizations = dbEntity.MemberRelations.Select(x => x.Ancestor).OfType<dataModel.Organization>().Select(x => x.Id).ToList();
             return retVal;
 
         }
 
 
-        public static dataModel.Contact ToDataModel(this coreModel.Contact contact)
+        public static dataModel.Contact ToDataModel(this coreModel.Contact contact, PrimaryKeyResolvingMap pkMap)
         {
             if (contact == null)
                 throw new ArgumentNullException("contact");
 
             var retVal = new dataModel.Contact();
+
+            pkMap.AddPair(contact, retVal);
 
             retVal.InjectFrom(contact);
 
@@ -136,7 +138,7 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 
             if (!source.MemberRelations.IsNullCollection())
             {
-                var relationComparer = AnonymousComparer.Create((dataModel.MemberRelation x) => x.Id);
+                var relationComparer = AnonymousComparer.Create((dataModel.MemberRelation x) => x.AncestorId);
                 source.MemberRelations.Patch(target.MemberRelations, relationComparer, (sourceRel, targetRel) => { /*Nothing todo*/ });
             }
         }

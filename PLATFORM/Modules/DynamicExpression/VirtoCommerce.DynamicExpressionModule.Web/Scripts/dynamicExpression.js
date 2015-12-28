@@ -210,7 +210,11 @@ angular.module(moduleName, [])
           id: 'BlockPricingCondition',
           newChildLabel: '+ add condition'
       });
-
+      dynamicExpressionService.registerExpression({
+      	groupName: groupNames[1],
+      	id: 'TagsContainsCondition',
+      	displayName: 'Tags contains []'
+      });
 
       $http.get('Modules/$(VirtoCommerce.DynamicExpression)/Scripts/all-templates.html').then(function (response) {
           // compile the response, which will put stuff into the cache

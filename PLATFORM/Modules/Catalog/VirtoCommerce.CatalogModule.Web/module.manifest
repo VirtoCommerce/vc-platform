@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <module>
   <id>VirtoCommerce.Catalog</id>
-  <version>2.5.0</version>
-  <platformVersion>2.5.0</platformVersion>
+  <version>2.6.0</version>
+  <platformVersion>2.6.0</platformVersion>
   <dependencies>
-    <dependency id="VirtoCommerce.Core" version="2.5.0" />
+    <dependency id="VirtoCommerce.Core" version="2.6.0" />
   </dependencies>
 
   <title>Catalog module</title>
@@ -55,8 +55,8 @@
         <name>Catalog.EditorialReviewTypes</name>
         <valueType>string</valueType>
         <defaultValue>QuickReview</defaultValue>
-        <title>Editorial review types</title>
-        <description>Dictionary of possible types that item's Editorial Review can have</description>
+        <title>Item description types</title>
+        <description>Dictionary of possible types that item's Descriptions can have</description>
         <isArray>true</isArray>
         <arrayValues>
           <value>QuickReview</value>

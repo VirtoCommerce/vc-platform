@@ -6,10 +6,8 @@ using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Domain.Commerce.Services;
 using VirtoCommerce.Domain.Pricing.Services;
 using VirtoCommerce.Domain.Search.Model;
-using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.ChangeLog;
 using VirtoCommerce.Platform.Core.Settings;
-using VirtoCommerce.Platform.Data.Caching;
 using VirtoCommerce.Platform.Data.ChangeLog;
 using VirtoCommerce.Platform.Data.Common;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
@@ -26,19 +24,7 @@ namespace VirtoCommerce.SearchModule.Tests
 {
     public class SearchTest
     {
-        [Fact]
-        public void SettingManagerTest()
-        {
-            Func<IPlatformRepository> platformRepositoryFactory = GetPlatformRepository;
-
-            var cacheManager = new CacheManager(new InMemoryCachingProvider(), null);
-            var settingManager = new SettingsManager(null, platformRepositoryFactory, cacheManager, null);
-
-            var name = Guid.NewGuid().ToString();
-
-            settingManager.SetValue(name, 1); // сохраняется
-            settingManager.SetValue(name, 2); // не сохраняется
-        }
+   
 
         [Fact]
         public void SearchCatalogBuilderTest()
@@ -50,18 +36,9 @@ namespace VirtoCommerce.SearchModule.Tests
 
         private SearchIndexController GetSearchIndexController()
         {
-            var cacheSettings = new[] 
-			{
-				new CacheSettings("CatalogItemIndexBuilder.IndexItemCategories", TimeSpan.FromMinutes(30))
-			};
-
-            var settingManager = new Moq.Mock<ISettingsManager>();
-            var cacheManager = new CacheManager(new InMemoryCachingProvider(), cacheSettings);
-            var searchConnection = new SearchConnection(ConnectionHelper.GetConnectionString("SearchConnectionString"));
-            var searchProvider = new LuceneSearchProvider(new LuceneSearchQueryBuilder(), searchConnection);
-            var catalogIndexBuilder = new CatalogItemIndexBuilder(searchProvider, GetSearchService(), GetItemService(), GetPricingService(), GetPropertyService(), GetChangeLogService(), new CatalogOutlineBuilder(GetCategoryService(), cacheManager));
-            var searchController = new SearchIndexController(settingManager.Object, catalogIndexBuilder);
-            return searchController;
+ 
+        
+            return null;
         }
 
 
@@ -72,12 +49,12 @@ namespace VirtoCommerce.SearchModule.Tests
 
         private ICatalogSearchService GetSearchService()
         {
-            return new CatalogSearchServiceImpl(GetCatalogRepository, GetItemService(), GetCatalogService(), GetCategoryService(), null);
+            return new CatalogSearchServiceImpl(GetCatalogRepository, GetItemService(), GetCatalogService(), GetCategoryService());
         }
 
         private IPricingService GetPricingService()
         {
-            return new PricingServiceImpl(GetPricingRepository, null);
+            return new PricingServiceImpl(GetPricingRepository, null, null);
         }
 
         private IPropertyService GetPropertyService()

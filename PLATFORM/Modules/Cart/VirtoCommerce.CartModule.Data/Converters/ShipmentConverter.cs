@@ -37,13 +37,15 @@ namespace VirtoCommerce.CartModule.Data.Converters
             return retVal;
 		}
 
-		public static ShipmentEntity ToDataModel(this Shipment shipment)
+		public static ShipmentEntity ToDataModel(this Shipment shipment, PrimaryKeyResolvingMap pkMap)
 		{
 			if (shipment == null)
 				throw new ArgumentNullException("shipment");
 
 			var retVal = new ShipmentEntity();
-			retVal.InjectFrom(shipment);
+            pkMap.AddPair(shipment, retVal);
+
+            retVal.InjectFrom(shipment);
 	
 			retVal.Currency = shipment.Currency.ToString();
 		
@@ -53,7 +55,7 @@ namespace VirtoCommerce.CartModule.Data.Converters
 			}
 			if (shipment.Items != null)
 			{
-				retVal.Items = new ObservableCollection<LineItemEntity>(shipment.Items.Select(x => x.ToDataModel()));
+				retVal.Items = new ObservableCollection<LineItemEntity>(shipment.Items.Select(x => x.ToDataModel(pkMap)));
 			}
 			if (shipment.TaxDetails != null)
 			{
@@ -63,7 +65,7 @@ namespace VirtoCommerce.CartModule.Data.Converters
             if (shipment.Discounts != null)
             {
                 retVal.Discounts = new ObservableCollection<DiscountEntity>();
-                retVal.Discounts.AddRange(shipment.Discounts.Select(x => x.ToDataModel()));
+                retVal.Discounts.AddRange(shipment.Discounts.Select(x => x.ToDataModel(pkMap)));
             }
             return retVal;
 		}

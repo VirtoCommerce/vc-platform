@@ -17,6 +17,8 @@ using VirtoCommerce.Domain.Store.Model;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Content.Web.Security;
 using VirtoCommerce.Domain.Store.Services;
+using System.Configuration;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Content.Web
 {
@@ -41,168 +43,17 @@ namespace VirtoCommerce.Content.Web
 
         public override void Initialize()
         {
-
             Func<IMenuRepository> menuRepFactory = () =>
-                new DatabaseContentRepositoryImpl("VirtoCommerce", new AuditableInterceptor(), new EntityPrimaryKeyGeneratorInterceptor());
+                new ContentRepositoryImpl("VirtoCommerce", new AuditableInterceptor(), new EntityPrimaryKeyGeneratorInterceptor());
 
             _container.RegisterInstance(menuRepFactory);
             _container.RegisterType<IMenuService, MenuServiceImpl>();
 
-
             var settingsManager = _container.Resolve<ISettingsManager>();
+            var contentStoragePath = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Storefront.AppData.Path", settingsManager.GetValue("VirtoCommerce.Content.StoragePath", string.Empty));
 
-            var githubToken =
-                settingsManager.GetValue("VirtoCommerce.Content.GitHub.Token", string.Empty);
-
-            var githubProductHeaderValue =
-                settingsManager.GetValue("VirtoCommerce.Content.GitHub.ProductHeaderValue", string.Empty);
-
-            var githubOwnerName =
-                settingsManager.GetValue("VirtoCommerce.Content.GitHub.OwnerName", string.Empty);
-
-            var githubRepositoryName =
-                settingsManager.GetValue("VirtoCommerce.Content.GitHub.RepositoryName", string.Empty);
-
-            #region Themes_Initialize
-
-            var githubMainPath = "Themes/";
-            var fileSystemMainPath = HostingEnvironment.MapPath("~/App_Data/Themes/");
-
-            var uploadPath = HostingEnvironment.MapPath("~/App_Data/Uploads/");
-            var uploadPathFiles = HostingEnvironment.MapPath("~/App_Data/Uploads/Files/");
-
-
-
-            Func<string, IThemeService> themesFactory = x =>
-            {
-                switch (x)
-                {
-                    case "GitHub":
-                        return new ThemeServiceImpl(() =>
-                            new GitHubContentRepositoryImpl(
-                                githubToken,
-                                githubProductHeaderValue,
-                                githubOwnerName,
-                                githubRepositoryName,
-                                githubMainPath));
-
-                    case "Database":
-						return new ThemeServiceImpl(() =>
-                            new DatabaseContentRepositoryImpl(
-                                "VirtoCommerce",
-                                new AuditableInterceptor(),
-                                new EntityPrimaryKeyGeneratorInterceptor()));
-
-                    case "File System":
-						return new ThemeServiceImpl(() => new FileSystemContentRepositoryImpl(fileSystemMainPath));
-
-                    case "Azure and Database":
-						return new ThemeServiceImpl(() =>
-                            new DatabaseContentRepositoryImpl(
-                                "VirtoCommerce",
-                                new AuditableInterceptor(),
-                                new EntityPrimaryKeyGeneratorInterceptor()),
-                            uploadPath); // TODO: It could be not the Azure provider.
-
-                    default:
-						return new ThemeServiceImpl(() => new FileSystemContentRepositoryImpl(fileSystemMainPath));
-                }
-            };
-
-            var chosenThemeRepositoryName = settingsManager.GetValue("VirtoCommerce.Content.MainProperties.ThemesRepositoryType", string.Empty);
-            var currentThemeService = themesFactory(chosenThemeRepositoryName);
-            _container.RegisterInstance<IThemeService>(currentThemeService);
-
-            if (!Directory.Exists(fileSystemMainPath))
-            {
-                Directory.CreateDirectory(fileSystemMainPath);
-            }
-
-            if (!Directory.Exists(uploadPath))
-            {
-                Directory.CreateDirectory(uploadPath);
-            }
-            else
-            {
-                var files = Directory.GetFiles(uploadPath);
-                foreach (var file in files)
-                    File.Delete(file);
-            }
-
-            if (!Directory.Exists(uploadPathFiles))
-            {
-                Directory.CreateDirectory(uploadPathFiles);
-            }
-            else
-            {
-                var files = Directory.GetFiles(uploadPathFiles);
-                foreach (var file in files)
-                    File.Delete(file);
-            }
-
-            var options = _container.Resolve<IModuleInitializerOptions>();
-            var modulePath = options.GetModuleDirectoryPath("VirtoCommerce.Content");
-            var themePath = Path.Combine(modulePath, "Default_Theme");
-
-            _container.RegisterType<ThemeController>(new InjectionConstructor(themesFactory, settingsManager, _container.Resolve<ISecurityService>(), 
-                                                                             _container.Resolve<IPermissionScopeService>(),
-                                                                              uploadPath, uploadPathFiles, themePath));
-
-            #endregion
-
-            #region Pages_Initialize
-
-            var pagesGithubMainPath = "Pages/";
-            var pagesFileSystemMainPath = HostingEnvironment.MapPath("~/App_Data/Pages/");
-
-            Func<string, IPagesService> pagesFactory = (x) =>
-            {
-                switch (x)
-                {
-                    case "GitHub":
-						return new PagesServiceImpl(() =>
-                            new GitHubContentRepositoryImpl(
-                                githubToken,
-                                githubProductHeaderValue,
-                                githubOwnerName,
-                                githubRepositoryName,
-                                pagesGithubMainPath));
-
-                    case "Database":
-						return new PagesServiceImpl(() =>
-                            new DatabaseContentRepositoryImpl(
-                                "VirtoCommerce",
-                                new AuditableInterceptor(),
-                                new EntityPrimaryKeyGeneratorInterceptor()));
-
-                    case "File System":
-						return new PagesServiceImpl(() => new FileSystemContentRepositoryImpl(pagesFileSystemMainPath));
-
-                    default:
-						return new PagesServiceImpl(() => new FileSystemContentRepositoryImpl(pagesFileSystemMainPath));
-                }
-            };
-
-			var chosenPagesRepositoryName = settingsManager.GetValue("VirtoCommerce.Content.MainProperties.PagesRepositoryType", string.Empty);
-			var currentPagesService = pagesFactory(chosenPagesRepositoryName);
-			_container.RegisterInstance(currentPagesService);
-
-            if (!Directory.Exists(fileSystemMainPath))
-            {
-                Directory.CreateDirectory(fileSystemMainPath);
-            }
-
-            _container.RegisterType<PagesController>(new InjectionConstructor(pagesFactory, settingsManager, _container.Resolve<ISecurityService>(),
-                                                                             _container.Resolve<IPermissionScopeService>()));
-
-            _container.RegisterType<ContentExportImport>(new InjectionConstructor(_container.Resolve<IMenuService>(), themesFactory, pagesFactory, _container.Resolve<IStoreService>(), settingsManager));
-
-
-            #endregion
-
-            #region Sync_Initialize
-            _container.RegisterType<SyncController>(new InjectionConstructor(themesFactory, pagesFactory, settingsManager));
-            #endregion
+            Func<IContentStorageProvider> contentProviderFactory = () =>  new ContentStorageProviderImpl(NormalizePath(contentStoragePath));
+            _container.RegisterInstance(contentProviderFactory);
         }
 
         public override void PostInitialize()
@@ -229,13 +80,9 @@ namespace VirtoCommerce.Content.Web
 
         public override void SetupDatabase()
         {
-            var options = _container.Resolve<IModuleInitializerOptions>();
-            var modulePath = options.GetModuleDirectoryPath("VirtoCommerce.Content");
-            var themePath = Path.Combine(modulePath, "Default_Theme");
-
-            using (var context = new DatabaseContentRepositoryImpl())
+            using (var context = new ContentRepositoryImpl())
             {
-				var initializer = new SetupDatabaseInitializer<DatabaseContentRepositoryImpl, Data.Migrations.Configuration>();
+				var initializer = new SetupDatabaseInitializer<ContentRepositoryImpl, Data.Migrations.Configuration>();
                 initializer.InitializeDatabase(context);
             }
         }
@@ -266,5 +113,24 @@ namespace VirtoCommerce.Content.Web
 		}
 
 		#endregion
+
+        private string NormalizePath(string path)
+        {
+            var retVal = path;
+            if(path.StartsWith("~"))
+            {
+                retVal = HostingEnvironment.MapPath(path);
+            }
+            else if(Path.IsPathRooted(path))
+            {
+                retVal = path;
+            }
+            else
+            {
+                retVal = HostingEnvironment.MapPath("~/");
+                retVal += path;
+            }
+            return retVal;
+        }
 	}
 }

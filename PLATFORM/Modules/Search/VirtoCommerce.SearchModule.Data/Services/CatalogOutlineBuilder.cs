@@ -1,83 +1,87 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using CacheManager.Core;
 using VirtoCommerce.Domain.Catalog.Model;
 using VirtoCommerce.Domain.Catalog.Services;
-using VirtoCommerce.Platform.Core.Caching;
+using VirtoCommerce.Platform.Data.Common;
 
 namespace VirtoCommerce.SearchModule.Data.Services
 {
-	public sealed class CatalogOutlineBuilder
-	{
-		private const string _separator = "/";
-		private readonly ICategoryService _categoryService;
-		private readonly CacheManager _cacheManager;
+    public sealed class CatalogOutlineBuilder
+    {
+        private readonly ICategoryService _categoryService;
+        private readonly ICacheManager<object> _cacheManager;
 
-		public CatalogOutlineBuilder(ICategoryService categoryService, CacheManager cacheManager)
+        public CatalogOutlineBuilder(ICategoryService categoryService, ICacheManager<object> cacheManager)
         {
             _categoryService = categoryService;
-             _cacheManager = cacheManager;
+            _cacheManager = cacheManager;
         }
 
-		private Category GetCategoryById(string categoryId)
-		{
-			var cacheKey = CacheKey.Create("CatalogOutlineBuilder.GetCategoryById", categoryId);
-			var retVal = _cacheManager.Get(cacheKey, () => _categoryService.GetById(categoryId));
-			return retVal;
-		}
+        private Category GetCategoryById(string categoryId)
+        {
+            var cacheKey = "CatalogOutlineBuilder.GetCategoryById:" +  categoryId;
+            var retVal = _cacheManager.Get(cacheKey, "SearchModuleRegion",  () => _categoryService.GetById(categoryId, CategoryResponseGroup.Full));
+            return retVal;
+        }
 
-		public string[] GetOutlines(string categoryId)
-		{
-			var retVal = new List<string>();
-			var stringBuilder = new StringBuilder();
-			var category = GetCategoryById(categoryId);
+        /// <summary>
+        /// Returns a collection of all possible paths to the root (catalog): catalog/parents/category
+        /// </summary>
+        /// <param name="categoryId"></param>
+        /// <returns></returns>
+        public string[] GetOutlines(string categoryId)
+        {
+            var result = new List<string>();
 
-			//first direct outline
-			var outline = new List<string>();
-			//catalog/parents/category
-			outline.Add(category.CatalogId);
-			outline.AddRange(category.Parents.Select(x => x.Id));
-			outline.Add(category.Id);
-			retVal.Add(String.Join(_separator, outline));
+            var outlines = new List<List<string>>();
+            AddOutlinesForParentAndLinkedCategories(categoryId, new List<string>(), outlines);
+            result.AddRange(outlines.SelectMany(ExpandOutline));
 
-			//Next direct links (need remove directory id from outline for displaying products in mapped virtual category)
-			foreach (var link in category.Links)
-			{
-				//VirtualCatalog/virtual categories/foreign virtual category
-				outline = new List<string>();
-				outline.Add(link.CatalogId);
-				if (link.CategoryId != null)
-				{
-					link.Category = GetCategoryById(link.CategoryId);
-					outline.AddRange(link.Category.Parents.Select(x => x.Id));
-					outline.Add(link.CategoryId);
-				}
-				retVal.Add(String.Join(_separator, outline));
-			}
+            return result.Distinct().ToArray();
+        }
 
-			//Parent category links 
-			foreach (var parent in category.Parents)
-			{
-				//Virtual catalog/virtual categories/foreign virtual category/parent category
-				var parentCategory = GetCategoryById(parent.Id);
-				foreach (var link in parentCategory.Links)
-				{
-					outline = new List<string>();
-					outline.Add(link.CatalogId);
-					if (link.CategoryId != null)
-					{
-						link.Category = GetCategoryById(link.CategoryId);
-						outline.AddRange(link.Category.Parents.Select(x => x.Id));
-						outline.Add(link.CategoryId);
-					}
-					outline.Add(parent.Id);
-					retVal.Add(String.Join(_separator, outline));
-				}
-			}
-			return retVal.Distinct().ToArray();
 
-		}
-	}
+        private void AddOutlinesForParentAndLinkedCategories(string categoryId, List<string> outline, List<List<string>> outlines)
+        {
+            var newOutline = new List<string>(outline);
+            newOutline.Insert(0, categoryId);
+
+            var category = GetCategoryById(categoryId);
+
+            if (string.IsNullOrEmpty(category.ParentId))
+            {
+                var finalOutline = new List<string>(newOutline);
+                finalOutline.Insert(0, category.CatalogId);
+                outlines.Add(finalOutline);
+            }
+            else
+            {
+                AddOutlinesForParentAndLinkedCategories(category.ParentId, newOutline, outlines);
+            }
+
+            foreach (var link in category.Links.Where(link => !string.IsNullOrEmpty(link.CategoryId)))
+            {
+                // Don't include the linked category in the outline, so pass the original outline
+                AddOutlinesForParentAndLinkedCategories(link.CategoryId, outline, outlines);
+            }
+        }
+
+        private static IEnumerable<string> ExpandOutline(List<string> outline)
+        {
+            var result = new List<string> { outline.First(), string.Join("/", outline) };
+
+            // For each child category create a separate outline: catalog/child_category
+            if (outline.Count > 2)
+            {
+                var catalogId = outline.FirstOrDefault();
+                result.AddRange(
+                    outline.Skip(1)
+                    .Select(categoryId =>
+                        string.Join("/", catalogId, categoryId)));
+            }
+
+            return result;
+        }
+    }
 }

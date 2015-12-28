@@ -4,6 +4,7 @@ using System.Linq;
 using VirtoCommerce.CustomerModule.Data.Converters;
 using VirtoCommerce.CustomerModule.Data.Repositories;
 using VirtoCommerce.Domain.Customer.Services;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using coreModel = VirtoCommerce.Domain.Customer.Model;
@@ -44,15 +45,16 @@ namespace VirtoCommerce.CustomerModule.Data.Services
 
         public coreModel.Organization Create(coreModel.Organization organization)
         {
-            var entity = organization.ToDataModel();
+            var pkMap = new PrimaryKeyResolvingMap();
+            var entity = organization.ToDataModel(pkMap);
 
             using (var repository = _repositoryFactory())
             {
                 repository.Add(entity);
                 CommitChanges(repository);
+                pkMap.ResolvePrimaryKeys();
             }
 
-            organization.SetObjectId(entity.Id);
             _dynamicPropertyService.SaveDynamicPropertyValues(organization);
 
             var retVal = GetById(entity.Id);
@@ -61,12 +63,13 @@ namespace VirtoCommerce.CustomerModule.Data.Services
 
         public void Update(coreModel.Organization[] organizations)
         {
+            var pkMap = new PrimaryKeyResolvingMap();
             using (var repository = _repositoryFactory())
             using (var changeTracker = GetChangeTracker(repository))
             {
                 foreach (var organization in organizations)
                 {
-                    var sourceEntity = organization.ToDataModel();
+                    var sourceEntity = organization.ToDataModel(pkMap);
                     var targetEntity = repository.GetOrganizationById(organization.Id);
 
                     if (targetEntity == null)
@@ -76,11 +79,15 @@ namespace VirtoCommerce.CustomerModule.Data.Services
 
                     changeTracker.Attach(targetEntity);
                     sourceEntity.Patch(targetEntity);
-
-                    _dynamicPropertyService.SaveDynamicPropertyValues(organization);
                 }
 
                 CommitChanges(repository);
+                pkMap.ResolvePrimaryKeys();
+            }
+
+            foreach (var organization in organizations)
+            {
+                _dynamicPropertyService.SaveDynamicPropertyValues(organization);
             }
         }
 

@@ -29,13 +29,13 @@ namespace VirtoCommerce.Platform.Data.Notifications
 		private List<Func<Core.Notifications.Notification>> _notifications = new List<Func<Core.Notifications.Notification>>();
 		private List<Func<INotificationSendingGateway>> _gateways = new List<Func<INotificationSendingGateway>>();
 
-		public void RegisterNotificationType(Func<Core.Notifications.Notification> notification)
+		public void RegisterNotificationType(Func<Core.Notifications.Notification> notificationFactory)
 		{
-			var notificationType = GetNewNotification(notification().GetType().Name);
-
-			if (notificationType == null)
+            var notifications = GetNotifications();
+            var notification = notificationFactory();
+            if (!notifications.Any(x => String.Equals(x.GetType().Name, notification.Type, StringComparison.InvariantCultureIgnoreCase)))
 			{
-				_notifications.Add(notification);
+				_notifications.Add(notificationFactory);
 			}
 		}
 
@@ -95,38 +95,40 @@ namespace VirtoCommerce.Platform.Data.Notifications
 			return GetNewNotification(type, null, null, null);
 		}
 
-		public Core.Notifications.Notification GetNewNotification(string type, string objectId, string objectTypeId, string language)
-		{
-			var notifications = GetNotifications();
-			var retVal = notifications.FirstOrDefault(x => x.GetType().Name == type);
-			if (retVal != null)
-			{
-				retVal.ObjectId = objectId;
-				retVal.ObjectTypeId = objectTypeId;
-				retVal.Language = language;
-				if (retVal != null)
-				{
-					var template = _notificationTemplateService.GetByNotification(type, objectId, objectTypeId, language);
-					if (template != null)
-					{
-						retVal.NotificationTemplate = template;
-					}
-					else if (retVal.NotificationTemplate == null)
-					{
-						retVal.NotificationTemplate = new NotificationTemplate();
-					}
-				}
+        public Core.Notifications.Notification GetNewNotification(string type, string objectId, string objectTypeId, string language)
+        {
+            var notifications = GetNotifications();
+            var retVal = notifications.FirstOrDefault(x => x.GetType().Name == type);
+            if (retVal == null)
+            {
+                throw new NullReferenceException("Notification  " + type + " not found. Please register this type by notificationManager.RegisterNotificationType before use");
+            }
 
-				if (retVal.NotificationTemplate != null && string.IsNullOrEmpty(retVal.NotificationTemplate.NotificationTypeId))
-				{
-					retVal.NotificationTemplate.NotificationTypeId = type;
-				}
-			}
+            retVal.ObjectId = objectId;
+            retVal.ObjectTypeId = objectTypeId;
+            retVal.Language = language;
+            if (retVal != null)
+            {
+                var template = _notificationTemplateService.GetByNotification(type, objectId, objectTypeId, language);
+                if (template != null)
+                {
+                    retVal.NotificationTemplate = template;
+                }
+                else if (retVal.NotificationTemplate == null)
+                {
+                    retVal.NotificationTemplate = new NotificationTemplate();
+                }
+            }
 
-			return retVal;
-		}
+            if (retVal.NotificationTemplate != null && string.IsNullOrEmpty(retVal.NotificationTemplate.NotificationTypeId))
+            {
+                retVal.NotificationTemplate.NotificationTypeId = type;
+            }
 
-		public T GetNewNotification<T>(string objectId, string objectTypeId, string language) where T : Core.Notifications.Notification
+            return retVal;
+        }
+
+        public T GetNewNotification<T>(string objectId, string objectTypeId, string language) where T : Core.Notifications.Notification
 		{
 			return GetNewNotification(typeof(T).Name, objectId, objectTypeId, language) as T;
 		}
@@ -208,7 +210,8 @@ namespace VirtoCommerce.Platform.Data.Notifications
 			}
 		}
 
-		private Core.Notifications.Notification GetNotificationCoreModel(NotificationEntity entity)
+
+        private Core.Notifications.Notification GetNotificationCoreModel(NotificationEntity entity)
 		{
 			var retVal = GetNewNotification(entity.Type);
 			retVal.InjectFrom(entity);

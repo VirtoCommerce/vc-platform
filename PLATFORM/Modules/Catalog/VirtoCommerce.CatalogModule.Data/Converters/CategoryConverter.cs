@@ -8,6 +8,7 @@ using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Data.Common;
 using VirtoCommerce.Platform.Data.Common.ConventionInjections;
 using VirtoCommerce.Domain.Commerce.Model;
+using System.Collections.Generic;
 
 namespace VirtoCommerce.CatalogModule.Data.Converters
 {
@@ -21,28 +22,23 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
         /// <param name="properties">The properties.</param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentNullException">catalog</exception>
-        public static coreModel.Category ToCoreModel(this dataModel.Category dbCategory, coreModel.Catalog catalog,
-                                                     dataModel.Category[] allParents = null)
+        public static coreModel.Category ToCoreModel(this dataModel.Category dbCategory, bool convertProps = true)
         {
-            if (catalog == null)
-                throw new ArgumentNullException("catalog");
-
-			var retVal = new coreModel.Category();
+ 			var retVal = new coreModel.Category();
 			retVal.InjectFrom(dbCategory);
-			retVal.CatalogId = catalog.Id;
-			retVal.Catalog = catalog;
+			retVal.CatalogId = dbCategory.CatalogId;
+			retVal.Catalog = dbCategory.Catalog.ToCoreModel();
 			retVal.ParentId = dbCategory.ParentCategoryId;
 			retVal.IsActive = dbCategory.IsActive;
-
-
-			retVal.PropertyValues = dbCategory.CategoryPropertyValues.Select(x => x.ToCoreModel(dbCategory.Properties)).ToList();
-			retVal.Virtual = catalog.Virtual;
+		
+			retVal.Virtual = dbCategory.Catalog.Virtual;
 			retVal.Links = dbCategory.OutgoingLinks.Select(x => x.ToCoreModel(retVal)).ToList();
 
 
-            if (allParents != null)
+            if (dbCategory.AllParents != null)
             {
-                retVal.Parents = allParents.Select(x => x.ToCoreModel(catalog)).ToArray();
+                retVal.Parents = dbCategory.AllParents.Select(x => x.ToCoreModel()).ToArray();
+                retVal.Level = retVal.Parents.Count();
             }
 
 			//Try to inherit taxType from parent category
@@ -51,15 +47,47 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 				retVal.TaxType = retVal.Parents.Select(x => x.TaxType).Where(x => x != null).FirstOrDefault();
 			}
 
-			#region Images
 			if (dbCategory.Images != null)
 			{
 				retVal.Images = dbCategory.Images.OrderBy(x => x.SortOrder).Select(x => x.ToCoreModel()).ToList();
 			}
-			#endregion
 
+            if (convertProps)
+            {
+                retVal.PropertyValues = dbCategory.CategoryPropertyValues.Select(x => x.ToCoreModel()).ToList();
+
+                var properties = new List<coreModel.Property>();
+                //Add inherited from catalog properties
+                properties.AddRange(retVal.Catalog.Properties);
+                //For parents categories
+                if (retVal.Parents != null)
+                {
+                    properties.AddRange(retVal.Parents.SelectMany(x => x.Properties));
+                }
+                //Self properties
+                properties.AddRange(dbCategory.Properties.Select(x => x.ToCoreModel()));
+
+                //property override - need leave only property has a min distance to target category 
+                //Algorithm based on index property in resulting list (property with min index will more closed to category)
+                var propertyGroups = properties.Select((x, index) => new { PropertyName = x.Name.ToLowerInvariant(), Property = x, Index = index }).GroupBy(x => x.PropertyName);
+                retVal.Properties = propertyGroups.Select(x => x.OrderBy(y => y.Index).First().Property).ToList();
+
+                //Next need set Property in PropertyValues objects
+                foreach (var propValue in retVal.PropertyValues.ToArray())
+                {
+                    propValue.Property = retVal.Properties.FirstOrDefault(x => x.IsSuitableForValue(propValue));
+                    //Because multilingual dictionary values for all languages may not stored in db then need to add it in result manually from property dictionary values
+                    var localizedDictValues = propValue.TryGetAllLocalizedDictValues();
+                    foreach (var localizedDictValue in localizedDictValues)
+                    {
+                        if (!retVal.PropertyValues.Any(x => x.ValueId == localizedDictValue.ValueId && x.LanguageCode == localizedDictValue.LanguageCode))
+                        {
+                            retVal.PropertyValues.Add(localizedDictValue);
+                        }
+                    }
+                }
+            }
             return retVal;
-
         }
 
         /// <summary>
@@ -67,11 +95,11 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
         /// </summary>
         /// <param name="category">The category.</param>
         /// <returns></returns>
-        public static dataModel.Category ToDataModel(this coreModel.Category category)
+        public static dataModel.Category ToDataModel(this coreModel.Category category, PrimaryKeyResolvingMap pkMap)
         {
 			var retVal = new dataModel.Category();
-
-			retVal.InjectFrom(category);
+            pkMap.AddPair(category, retVal);
+            retVal.InjectFrom(category);
 	
 			retVal.ParentCategoryId = category.ParentId;
 			retVal.EndDate = DateTime.UtcNow.AddYears(100);
@@ -81,7 +109,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
             if (category.PropertyValues != null)
             {
                 retVal.CategoryPropertyValues = new ObservableCollection<dataModel.PropertyValue>();
-                retVal.CategoryPropertyValues.AddRange(category.PropertyValues.Select(x => x.ToDataModel()));
+                retVal.CategoryPropertyValues.AddRange(category.PropertyValues.Select(x => x.ToDataModel(pkMap)));
             }
 
             if (category.Links != null)
@@ -93,7 +121,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			#region Images
 			if (category.Images != null)
 			{
-				retVal.Images = new ObservableCollection<dataModel.Image>(category.Images.Select(x=>x.ToDataModel()));
+				retVal.Images = new ObservableCollection<dataModel.Image>(category.Images.Select(x=>x.ToDataModel(pkMap)));
 			}
 			#endregion
 
@@ -105,7 +133,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
         /// </summary>
         /// <param name="source"></param>
         /// <param name="target"></param>
-		public static void Patch(this coreModel.Category source, dataModel.Category target)
+		public static void Patch(this coreModel.Category source, dataModel.Category target, PrimaryKeyResolvingMap pkMap)
         {
             if (target == null)
                 throw new ArgumentNullException("target");
@@ -120,7 +148,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
                 target.ParentCategoryId = null;
 
 
-            var dbSource = source.ToDataModel() as dataModel.Category;
+            var dbSource = source.ToDataModel(pkMap) as dataModel.Category;
 			var dbTarget = target as dataModel.Category;
 
             if (dbSource != null && dbTarget != null)
