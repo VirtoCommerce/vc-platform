@@ -92,9 +92,6 @@ namespace VirtoCommerce.CartModule.Data.Model
 		public virtual ShoppingCartEntity ShoppingCart { get; set; }
 		public string ShoppingCartId { get; set; }
 
-		public virtual ShipmentEntity Shipment { get; set; }
-		public string ShipmentId { get; set; }
-
 		public virtual ObservableCollection<TaxDetailEntity> TaxDetails { get; set; }
 
         public virtual ObservableCollection<DiscountEntity> Discounts { get; set; }

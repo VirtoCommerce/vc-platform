@@ -37,7 +37,7 @@ namespace VirtoCommerce.Domain.Cart.Model
 		public Address DeliveryAddress { get; set; }
 
 		public ICollection<Discount> Discounts { get; set; }
-		public ICollection<LineItem> Items { get; set; }
+		public ICollection<ShipmentItem> Items { get; set; }
 
 		#region IHaveTaxDetalization Members
 		public ICollection<TaxDetail> TaxDetails { get; set; }

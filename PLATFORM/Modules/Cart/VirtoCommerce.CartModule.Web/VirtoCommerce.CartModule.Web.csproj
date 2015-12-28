@@ -114,6 +114,7 @@
     <Compile Include="Converters\LineItemConverter.cs" />
     <Compile Include="Converters\DiscountConverter.cs" />
     <Compile Include="Converters\PaymentConverter.cs" />
+    <Compile Include="Converters\ShipmentItemConverter.cs" />
     <Compile Include="Converters\ShippingMethodConverter.cs" />
     <Compile Include="Converters\PaymentMethodConverter.cs" />
     <Compile Include="Converters\SearchCriteriaConverter.cs" />
@@ -129,6 +130,7 @@
     <Compile Include="Model\SearchCriteria.cs" />
     <Compile Include="Model\SearchResult.cs" />
     <Compile Include="Model\Shipment.cs" />
+    <Compile Include="Model\ShipmentItem.cs" />
     <Compile Include="Model\ShipmentMethod.cs" />
     <Compile Include="Model\ShoppingCart.cs" />
     <Compile Include="Module.cs" />

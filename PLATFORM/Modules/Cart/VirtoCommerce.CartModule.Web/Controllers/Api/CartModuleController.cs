@@ -103,14 +103,14 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
         /// <param name="cart">Shopping cart model</param>
         /// <response code="204">Operation completed</response>
 		[HttpPost]
-		[ResponseType(typeof(void))]
+		[ResponseType(typeof(ShoppingCart))]
 		[Route("carts")]
         [CheckPermission(Permission = PredefinedPermissions.Create)]
 		public IHttpActionResult Create(webModel.ShoppingCart cart)
 		{
 			var coreCart = cart.ToCoreModel();
-			_shoppingCartService.Create(coreCart);
-			return this.StatusCode(HttpStatusCode.NoContent);
+            coreCart = _shoppingCartService.Create(coreCart);
+            return Ok(coreCart.ToWebModel());
 		}
 
 		/// <summary>

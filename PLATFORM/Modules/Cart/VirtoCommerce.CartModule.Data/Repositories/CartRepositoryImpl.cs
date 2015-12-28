@@ -44,10 +44,6 @@ namespace VirtoCommerce.CartModule.Data.Repositories
                                        .WithMany(x => x.Items)
                                        .HasForeignKey(x => x.ShoppingCartId).WillCascadeOnDelete(true);
 
-            modelBuilder.Entity<LineItemEntity>().HasOptional(x => x.Shipment)
-                                       .WithMany(x => x.Items)
-                                       .HasForeignKey(x => x.ShipmentId);
-
             modelBuilder.Entity<LineItemEntity>().ToTable("CartLineItem");
             #endregion
 
@@ -61,6 +57,23 @@ namespace VirtoCommerce.CartModule.Data.Repositories
 
 
             modelBuilder.Entity<ShipmentEntity>().ToTable("CartShipment");
+            #endregion
+
+            #region ShipmentItemEntity
+            modelBuilder.Entity<ShipmentItemEntity>().HasKey(x => x.Id)
+                .Property(x => x.Id);
+
+
+            modelBuilder.Entity<ShipmentItemEntity>().HasRequired(x => x.LineItem)
+                                       .WithMany()
+                                       .HasForeignKey(x => x.LineItemId).WillCascadeOnDelete(true);
+
+            modelBuilder.Entity<ShipmentItemEntity>().HasRequired(x => x.Shipment)
+                                       .WithMany(x => x.Items)
+                                       .HasForeignKey(x => x.ShipmentId).WillCascadeOnDelete(false);
+
+
+            modelBuilder.Entity<ShipmentItemEntity>().ToTable("CartShipmentItem");
             #endregion
 
             #region Address
@@ -177,6 +190,7 @@ namespace VirtoCommerce.CartModule.Data.Repositories
             var shipments = Shipments.Include(x => x.TaxDetails)
                                      .Include(x => x.Discounts)
                                      .Include(x => x.Addresses)
+                                     .Include(x => x.Items)
                                      .Where(x => x.ShoppingCartId == id).ToArray();
             return query.FirstOrDefault();
         }

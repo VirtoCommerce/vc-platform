@@ -65,6 +65,7 @@
     <Compile Include="Cart\Model\SearchResult.cs" />
     <Compile Include="Cart\Model\Shipment.cs" />
     <Compile Include="Cart\Model\PaymentMethod.cs" />
+    <Compile Include="Cart\Model\ShipmentItem.cs" />
     <Compile Include="Cart\Model\ShipmentMethod.cs" />
     <Compile Include="Cart\Model\ShoppingCart.cs" />
     <Compile Include="Cart\Services\IShoppingCartSearchService.cs" />

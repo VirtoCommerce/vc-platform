@@ -38,7 +38,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			return retVal;
 		}
 
-		public static Discount ToCoreModel(this coreModel.Discount discount)
+		public static Discount ToOrderCoreModel(this coreModel.Discount discount)
 		{
 			if (discount == null)
 				throw new ArgumentNullException("discount");

@@ -68,6 +68,7 @@
     <Compile Include="Converters\LineItemConverter.cs" />
     <Compile Include="Converters\PaymentConverter.cs" />
     <Compile Include="Converters\ShipmentConverter.cs" />
+    <Compile Include="Converters\ShipmentItemConverter.cs" />
     <Compile Include="Converters\ShoppingCartConverter.cs" />
     <Compile Include="Converters\TaxDetailConverter.cs" />
     <Compile Include="Migrations\201504300613351_Initial.cs" />
@@ -106,12 +107,17 @@
     <Compile Include="Migrations\201512081409214_ChangeRequiredForProductTypeColumn.Designer.cs">
       <DependentUpon>201512081409214_ChangeRequiredForProductTypeColumn.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201512281256078_AddShipmentItem.cs" />
+    <Compile Include="Migrations\201512281256078_AddShipmentItem.Designer.cs">
+      <DependentUpon>201512281256078_AddShipmentItem.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\AddressEntity.cs" />
     <Compile Include="Model\DiscountEntity.cs" />
     <Compile Include="Model\LineItemEntity.cs" />
     <Compile Include="Model\PaymentEntity.cs" />
     <Compile Include="Model\ShipmentEntity.cs" />
+    <Compile Include="Model\ShipmentItemEntity.cs" />
     <Compile Include="Model\ShoppingCartEntity.cs" />
     <Compile Include="Model\TaxDetailEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -166,6 +172,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201512081409214_ChangeRequiredForProductTypeColumn.resx">
       <DependentUpon>201512081409214_ChangeRequiredForProductTypeColumn.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201512281256078_AddShipmentItem.resx">
+      <DependentUpon>201512281256078_AddShipmentItem.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

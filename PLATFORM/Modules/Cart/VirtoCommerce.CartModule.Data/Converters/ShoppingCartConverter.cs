@@ -79,7 +79,7 @@ namespace VirtoCommerce.CartModule.Data.Converters
 			}
 			if (cart.Shipments != null)
 			{
-				retVal.Shipments = new ObservableCollection<ShipmentEntity>(cart.Shipments.Select(x => x.ToDataModel(pkMap)));
+				retVal.Shipments = new ObservableCollection<ShipmentEntity>(cart.Shipments.Select(x => x.ToDataModel(retVal, pkMap)));
 			}
 			if (cart.Payments != null)
 			{

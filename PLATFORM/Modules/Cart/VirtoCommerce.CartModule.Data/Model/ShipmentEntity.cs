@@ -14,8 +14,9 @@ namespace VirtoCommerce.CartModule.Data.Model
 	{
 		public ShipmentEntity()
 		{
+            Items = new NullCollection<ShipmentItemEntity>();
             Discounts = new NullCollection<DiscountEntity>();
-            Items = new NullCollection<LineItemEntity>();
+            Items = new NullCollection<ShipmentItemEntity>();
 			Addresses = new NullCollection<AddressEntity>();
 			TaxDetails = new NullCollection<TaxDetailEntity>();
 		}
@@ -53,9 +54,9 @@ namespace VirtoCommerce.CartModule.Data.Model
 		[StringLength(64)]
 		public string TaxType { get; set; }
 
+        public virtual ObservableCollection<ShipmentItemEntity> Items { get; set; }
         public virtual ObservableCollection<DiscountEntity> Discounts { get; set; }
         public virtual ObservableCollection<AddressEntity> Addresses { get; set; }
-		public virtual ObservableCollection<LineItemEntity> Items { get; set; }
 		public virtual ObservableCollection<TaxDetailEntity> TaxDetails { get; set; }
 		public virtual ShoppingCartEntity ShoppingCart { get; set; }
 		public string ShoppingCartId { get; set; }

@@ -34,7 +34,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			return retVal;
 		}
 
-		public static LineItem ToCoreModel(this cartCoreModel.LineItem lineItem)
+		public static LineItem ToOrderCoreModel(this cartCoreModel.LineItem lineItem)
 		{
 			if (lineItem == null)
 				throw new ArgumentNullException("lineItem");
@@ -51,7 +51,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 
             if (lineItem.Discounts != null)
 			{
-				retVal.Discount = lineItem.Discounts.Select(x => x.ToCoreModel()).FirstOrDefault();
+				retVal.Discount = lineItem.Discounts.Select(x => x.ToOrderCoreModel()).FirstOrDefault();
 			}
 			retVal.TaxDetails = lineItem.TaxDetails;
 			return retVal;

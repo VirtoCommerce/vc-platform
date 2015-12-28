@@ -38,7 +38,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
             return retVal;
         }
 
-        public static PaymentIn ToCoreModel(this coreModel.Payment payment)
+        public static PaymentIn ToOrderCoreModel(this coreModel.Payment payment)
         {
             if (payment == null)
                 throw new ArgumentNullException("payment");

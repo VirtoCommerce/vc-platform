@@ -132,7 +132,7 @@ namespace VirtoCommerce.CartModule.Data.Observers
 			{
 				foreach (var item in shipment.Items)
 				{
-					shipment.ItemSubtotal += item.PlacedPrice * item.Quantity;
+					shipment.ItemSubtotal += item.LineItem.PlacedPrice * item.Quantity;
 				}
 			}
 		    if (shipment.TaxTotal > 0)

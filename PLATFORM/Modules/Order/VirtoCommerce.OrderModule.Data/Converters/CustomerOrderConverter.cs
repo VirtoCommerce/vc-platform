@@ -70,11 +70,11 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			
 			if(cart.Items != null)
 			{
-				retVal.Items = cart.Items.Select(x => x.ToCoreModel()).ToList();
+				retVal.Items = cart.Items.Select(x => x.ToOrderCoreModel()).ToList();
 			}
 			if (cart.Discounts != null)
 			{
-				retVal.Discount = cart.Discounts.Select(x=>x.ToCoreModel()).FirstOrDefault();
+				retVal.Discount = cart.Discounts.Select(x=>x.ToOrderCoreModel()).FirstOrDefault();
 			}
 			if (cart.Addresses != null)
 			{
@@ -82,12 +82,12 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			}
 			if (cart.Shipments != null)
 			{
-				retVal.Shipments = cart.Shipments.Select(x => x.ToCoreModel()).ToList();
+				retVal.Shipments = cart.Shipments.Select(x => x.ToOrderCoreModel()).ToList();
 				//Redistribute order line items to shipment if cart shipment items empty 
 				var shipment = retVal.Shipments.FirstOrDefault();
 				if(shipment != null && (shipment.Items == null || !shipment.Items.Any()))
 				{
-					shipment.Items = cart.Items.Select(x => x.ToCoreShipmentItemModel()).ToList();
+					shipment.Items = retVal.Items.Select(x => new ShipmentItem { LineItem = x, Quantity = x.Quantity }).ToList();
 				}
 			}
 			if (cart.Payments != null)
@@ -95,7 +95,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 				retVal.InPayments = new List<PaymentIn>();
 				foreach(var payment in cart.Payments)
 				{
-					var paymentIn = payment.ToCoreModel();
+					var paymentIn = payment.ToOrderCoreModel();
 					paymentIn.CustomerId = cart.CustomerId;
 					retVal.InPayments.Add(paymentIn);
 				}

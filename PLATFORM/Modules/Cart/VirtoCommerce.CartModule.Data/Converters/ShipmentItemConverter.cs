@@ -4,14 +4,14 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using VirtoCommerce.Domain.Order.Model;
+using VirtoCommerce.Domain.Cart.Model;
 using Omu.ValueInjecter;
-using VirtoCommerce.OrderModule.Data.Model;
+using VirtoCommerce.CartModule.Data.Model;
 using cartCoreModel = VirtoCommerce.Domain.Cart.Model;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Data.Common.ConventionInjections;
 
-namespace VirtoCommerce.OrderModule.Data.Converters
+namespace VirtoCommerce.CartModule.Data.Converters
 {
 	public static class ShipmentItemConverter
 	{
@@ -30,20 +30,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			return retVal;
 		}
 
-		public static ShipmentItem ToOrderCoreModel(this cartCoreModel.ShipmentItem shipmentItem)
-		{
-			if (shipmentItem == null)
-				throw new ArgumentNullException("shipmentItem");
-
-			var retVal = new ShipmentItem();
-			retVal.InjectFrom(shipmentItem);
-
-			retVal.LineItem = shipmentItem.LineItem.ToOrderCoreModel();
-			return retVal;
-		}
-
-
-		public static ShipmentItemEntity ToDataModel(this ShipmentItem shipmentItem, CustomerOrderEntity orderEntity, PrimaryKeyResolvingMap pkMap)
+		public static ShipmentItemEntity ToDataModel(this ShipmentItem shipmentItem, ShoppingCartEntity cartEntity, PrimaryKeyResolvingMap pkMap)
 		{
 			if (shipmentItem == null)
 				throw new ArgumentNullException("shipmentItem");
@@ -53,24 +40,25 @@ namespace VirtoCommerce.OrderModule.Data.Converters
             retVal.InjectFrom(shipmentItem);
 
             //Try to find cart line item by shipment item
-            if (!String.IsNullOrEmpty(shipmentItem.LineItemId))
+            if(!String.IsNullOrEmpty(shipmentItem.LineItemId))
             {
-                retVal.LineItem = orderEntity.Items.FirstOrDefault(x => x.Id == shipmentItem.LineItemId);
+                retVal.LineItem = cartEntity.Items.FirstOrDefault(x => x.Id == shipmentItem.LineItemId);
+            }
+            if(retVal.LineItem == null && shipmentItem.LineItem != null)
+            {
+                retVal.LineItem = cartEntity.Items.FirstOrDefault(x => x.Id == shipmentItem.LineItem.Id);
             }
             if (retVal.LineItem == null && shipmentItem.LineItem != null)
             {
-                retVal.LineItem = orderEntity.Items.FirstOrDefault(x => x.Id == shipmentItem.LineItem.Id);
+                retVal.LineItem = cartEntity.Items.FirstOrDefault(x => x.ProductId == shipmentItem.LineItem.ProductId);
             }
-            if (retVal.LineItem == null && shipmentItem.LineItem != null)
-            {
-                retVal.LineItem = orderEntity.Items.FirstOrDefault(x => x.ProductId == shipmentItem.LineItem.ProductId);
-            }
-            if (retVal.LineItem != null && !String.IsNullOrEmpty(retVal.LineItem.Id))
+            if(retVal.LineItem != null && !String.IsNullOrEmpty(retVal.LineItem.Id))
             {
                 retVal.LineItemId = retVal.LineItem.Id;
                 retVal.LineItem = null;
             }
-            return retVal;
+         
+			return retVal;
 		}
 
 		/// <summary>
@@ -84,7 +72,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 				throw new ArgumentNullException("target");
 
 
-			var patchInjectionPolicy = new PatchInjection<ShipmentItemEntity>(x => x.BarCode, x => x.ShipmentId, x => x.ShipmentPackageId, x=>x.Quantity);
+			var patchInjectionPolicy = new PatchInjection<ShipmentItemEntity>(x => x.BarCode, x => x.ShipmentId, x=>x.Quantity);
 			target.InjectFrom(patchInjectionPolicy, source);
 		}
 

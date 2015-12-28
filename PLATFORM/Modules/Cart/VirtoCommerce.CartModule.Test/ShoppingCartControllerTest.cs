@@ -7,41 +7,113 @@ using VirtoCommerce.CartModule.Data.Services;
 using dataModel = VirtoCommerce.CartModule.Data.Model;
 using webModel = VirtoCommerce.CartModule.Web.Model;
 using VirtoCommerce.Domain.Commerce.Model;
+using VirtoCommerce.CartModule.Web.Controllers.Api;
+using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
+using Moq;
+using VirtoCommerce.Platform.Core.Events;
+using VirtoCommerce.Domain.Cart.Events;
+using VirtoCommerce.Domain.Catalog.Services;
+using VirtoCommerce.Platform.Core.DynamicProperties;
+using VirtoCommerce.Domain.Store.Services;
+using System.Collections.Generic;
 
 namespace VirtoCommerce.CartModule.Test
 {
-    using VirtoCommerce.CartModule.Web.Controllers.Api;
-	using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
-	using VirtoCommerce.Domain.Common;
-	using VirtoCommerce.Domain.Payment.Services;
 
     [TestClass]
 	public class ShoppingCartControllerTest
 	{
-		[TestMethod]
-		public void Tst1()
-		{
-			var repository = new CartRepositoryImpl("VirtoCommerce", new AuditableInterceptor(),
-															   new EntityPrimaryKeyGeneratorInterceptor());
-			var cart = new dataModel.ShoppingCartEntity
-			{
-				StoreId = "ss",
-				CustomerId = "ss",
-				Currency = "ss",
+        [TestMethod]
+        public void CreateMultishipmentCart()
+        {
+            var controller = GetCartController();
+       
+            var cart = new webModel.ShoppingCart
+            {
+                Currency = Platform.Core.Common.CurrencyCodes.USD,
+                CustomerId = "et",
+                CustomerName = "et",
+                Name = "default",
+                StoreId = "Clothing"
+            };
+            var item = new webModel.LineItem
+            {
+                CatalogId = "Samsung",
+                CategoryId = "100df6d5-8210-4b72-b00a-5003f9dcb79d",
+                ProductId = "v-b000bkzs9w",
+                ListPrice = 10.44m,
+                PlacedPrice = 20.33m,
+                Quantity = 1,
+                Sku = "v-b000bkzs9w",
+                Name = "Samsung YP-T7JX 512 MB Digital Audio Player with FM Tuner & Recorder",
+                Currency = cart.Currency
+            };
+            cart.Items = new List<webModel.LineItem>();
+            cart.Items.Add(item);
+            var deliveryAddress = new webModel.Address
+            {
+                Type = AddressType.Shipping,
+                City = "london",
+                Phone = "+68787687",
+                PostalCode = "2222",
+                CountryCode = "ENG",
+                CountryName = "England",
+                Email = "user@mail.com",
+                FirstName = "first name",
+                LastName = "last name",
+                Organization = "org1",
+                Line1 = "sss"
+            }; 
+            //Select appropriate shipment method
+            var shipment = new webModel.Shipment
+            {
+                DeliveryAddress = deliveryAddress,
+                Currency = Platform.Core.Common.CurrencyCodes.USD,
+                ShipmentMethodCode = "",
+                ShippingPrice = 10
+            };
+            cart.Shipments = new List<webModel.Shipment>();
+            cart.Shipments.Add(shipment);
+            shipment.Items = new List<webModel.ShipmentItem>();
+            shipment.Items.Add(new Web.Model.ShipmentItem { Quantity = 10, LineItem = item });
 
-			};
+            cart = (controller.Create(cart) as OkNegotiatedContentResult<webModel.ShoppingCart>).Content;
 
-			var shipment = new dataModel.ShipmentEntity
-			{
-				Currency = "sss",
+            //Add exist line items in cart
+            var existLineItem = cart.Items.First();
+            var shipment2 = new webModel.Shipment
+            {
+                DeliveryAddress = deliveryAddress,
+                Currency = Platform.Core.Common.CurrencyCodes.USD,
+                ShipmentMethodCode = "sss",
+                ShippingPrice = 11
+            };
+            cart.Shipments.Add(shipment2);
+            shipment2.Items = new List<webModel.ShipmentItem>();
+            shipment2.Items.Add(new Web.Model.ShipmentItem { Quantity = 5, LineItem = existLineItem });
+            existLineItem.Quantity += 5;
 
-			};
-			cart.Shipments.Add(shipment);
-			repository.Add(cart);
-			repository.UnitOfWork.Commit();
-		}
+            cart = (controller.Update(cart) as OkNegotiatedContentResult<webModel.ShoppingCart>).Content;
 
-		[TestMethod]
+            //Add new item to exist shipment
+            var item2 = new webModel.LineItem
+            {
+                CatalogId = "Sony",
+                CategoryId = "100df6d5-8210-4b72-b00a-5003f9dcb79d",
+                ProductId = "v-sssss",
+                ListPrice = 10.44m,
+                PlacedPrice = 20.33m,
+                Quantity = 1,
+                Sku = "v-ssss",
+                Name = "Sony",
+                Currency = cart.Currency
+            };
+            cart.Items.Add(item2);
+            cart.Shipments.First().Items.Add(new Web.Model.ShipmentItem { Quantity = 3, LineItem = item2 });
+            cart = (controller.Update(cart) as OkNegotiatedContentResult<webModel.ShoppingCart>).Content;
+        }
+
+        [TestMethod]
 		public void GetCurrentCartTest()
 		{
 			var controller = GetCartController();
@@ -73,9 +145,6 @@ namespace VirtoCommerce.CartModule.Test
 
 			result = controller.GetCartById(cart.Id) as OkNegotiatedContentResult<webModel.ShoppingCart>;
 			cart = result.Content;
-
-
-			Assert.IsNotNull(result.Content);
 		}
 
 		[TestMethod]
@@ -166,6 +235,7 @@ namespace VirtoCommerce.CartModule.Test
 
 			//Next it call customer order method create order form cart
 		}
+
 		//[TestMethod]
 		//public void SearchCarts()
 		//{
@@ -184,12 +254,12 @@ namespace VirtoCommerce.CartModule.Test
 			//Business logic for core model
 		
 
-			var cartService = new ShoppingCartServiceImpl(repositoryFactory, null, null, null);
+			var cartService = new ShoppingCartServiceImpl(repositoryFactory, new Mock<IEventPublisher<CartChangeEvent>>().Object, new Mock<IItemService>().Object, new Mock<IDynamicPropertyService>().Object);
 			var searchService = new ShoppingCartSearchServiceImpl(repositoryFactory);
 			//var memoryPaymentGatewayManager = new InMemoryPaymentGatewayManagerImpl();
 
 
-			var controller = new CartModuleController(cartService, searchService, null);
+			var controller = new CartModuleController(cartService, searchService, new Mock<IStoreService>().Object);
 			return controller;
 		}
 	}

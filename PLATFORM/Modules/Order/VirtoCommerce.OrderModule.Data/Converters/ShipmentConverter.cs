@@ -58,7 +58,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
             return retVal;
 		}
 
-		public static Shipment ToCoreModel(this cartCoreModel.Shipment shipment)
+		public static Shipment ToOrderCoreModel(this cartCoreModel.Shipment shipment)
 		{
 			var retVal = new Shipment();
 			retVal.InjectFrom(shipment);
@@ -72,11 +72,11 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			}
 			if(shipment.Items != null)
 			{
-				retVal.Items = shipment.Items.Select(x => x.ToCoreShipmentItemModel()).ToList();
+				retVal.Items = shipment.Items.Select(x => x.ToOrderCoreModel()).ToList();
 			}
             if (shipment.Discounts != null)
             {
-                retVal.Discount = shipment.Discounts.Select(x => x.ToCoreModel()).FirstOrDefault();
+                retVal.Discount = shipment.Discounts.Select(x => x.ToOrderCoreModel()).FirstOrDefault();
             }
             retVal.TaxDetails = shipment.TaxDetails;
 			return retVal;

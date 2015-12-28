@@ -120,9 +120,9 @@ namespace VirtoCommerce.CartModule.Web.Model
         /// Gets or sets the collection of shipping items
         /// </summary>
         /// <value>
-        /// Collection of LineItem objects
+        /// Collection of shipment items objects
         /// </value>
-        public ICollection<LineItem> Items { get; set; }
+        public ICollection<ShipmentItem> Items { get; set; }
 
         /// <summary>
         /// Gets or sets the value of shipping tax type

@@ -273,7 +273,7 @@ namespace VirtoCommerce.Storefront.Builders
 
         private void AddLineItem(LineItem lineItem)
         {
-            var existingLineItem = _cart.Items.FirstOrDefault(li => li.Sku == lineItem.Sku);
+            var existingLineItem = _cart.Items.FirstOrDefault(li => li.ProductId == lineItem.ProductId);
             if (existingLineItem != null)
             {
                 existingLineItem.Quantity += lineItem.Quantity;

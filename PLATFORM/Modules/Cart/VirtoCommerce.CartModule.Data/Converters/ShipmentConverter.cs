@@ -37,7 +37,7 @@ namespace VirtoCommerce.CartModule.Data.Converters
             return retVal;
 		}
 
-		public static ShipmentEntity ToDataModel(this Shipment shipment, PrimaryKeyResolvingMap pkMap)
+		public static ShipmentEntity ToDataModel(this Shipment shipment, ShoppingCartEntity cartEntity, PrimaryKeyResolvingMap pkMap)
 		{
 			if (shipment == null)
 				throw new ArgumentNullException("shipment");
@@ -55,7 +55,7 @@ namespace VirtoCommerce.CartModule.Data.Converters
 			}
 			if (shipment.Items != null)
 			{
-				retVal.Items = new ObservableCollection<LineItemEntity>(shipment.Items.Select(x => x.ToDataModel(pkMap)));
+				retVal.Items = new ObservableCollection<ShipmentItemEntity>(shipment.Items.Select(x => x.ToDataModel(cartEntity, pkMap)));
 			}
 			if (shipment.TaxDetails != null)
 			{
@@ -92,7 +92,6 @@ namespace VirtoCommerce.CartModule.Data.Converters
 			{
 				source.Addresses.Patch(target.Addresses, new AddressComparer(), (sourceAddress, targetAddress) => sourceAddress.Patch(targetAddress));
 			}
-
 			if (source.Items != null)
 			{
 				source.Items.Patch(target.Items, (sourceItem, targetItem) => sourceItem.Patch(targetItem));
