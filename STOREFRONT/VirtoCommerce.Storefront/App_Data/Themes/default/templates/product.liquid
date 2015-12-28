@@ -163,11 +163,8 @@
 </div>
 
 <script>
-    window.products = [{
-        id: "{{ product.id }}",
-        catalogId: "{{ product.catalog_id }}",
-        categoryId: "{{ product.category_id }}"
-    }];
+    window.products = [];
+    window.products.push({{ product | json }});
 </script>
 
 <!--Template for variation images-->
