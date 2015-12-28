@@ -312,7 +312,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
 
                     if (tag.Count > 0)
                     {
-                        label += $" ({tag.Count})";
+                        label += string.Format(" ({0})", tag.Count);
                     }
                 }
                 else
