@@ -59,8 +59,8 @@ namespace VirtoCommerce.CoreModule.Web
             _container.RegisterInstance<ITaxService>(taxService);
             #endregion
             #region Shipping service
-            var shippingService = new ShippingServiceImpl();
-            _container.RegisterInstance<IShippingService>(shippingService);
+            var shippingService = new ShippingMethodsServiceImpl();
+            _container.RegisterInstance<IShippingMethodsService>(shippingService);
             #endregion
 
             #region Payment service
@@ -72,7 +72,7 @@ namespace VirtoCommerce.CoreModule.Web
         public override void PostInitialize()
         {
             var settingManager = _container.Resolve<ISettingsManager>();
-            var shippingService = _container.Resolve<IShippingService>();
+            var shippingService = _container.Resolve<IShippingMethodsService>();
             var taxService = _container.Resolve<ITaxService>();
 			var paymentService = _container.Resolve<IPaymentMethodsService>();
             var moduleSettings = settingManager.GetModuleSettings("VirtoCommerce.Core");

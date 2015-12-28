@@ -187,7 +187,6 @@
     <Compile Include="Order\Model\Discount.cs" />
     <Compile Include="Order\Model\Operation.cs" />
     <Compile Include="Order\Model\PaymentIn.cs" />
-    <Compile Include="Order\Model\PaymentMethod.cs" />
     <Compile Include="Order\Model\SearchCriteria.cs" />
     <Compile Include="Order\Model\SearchResult.cs" />
     <Compile Include="Order\Model\Shipment.cs" />
@@ -210,8 +209,8 @@
     <Compile Include="Payment\Model\ValidatePostProcessRequestResult.cs" />
     <Compile Include="Payment\Model\VoidProcessPaymentEvaluationContext.cs" />
     <Compile Include="Payment\Model\VoidProcessPaymentResult.cs" />
-    <Compile Include="Payment\Services\IPaymentService.cs" />
-    <Compile Include="Payment\Services\PaymentServiceImpl.cs" />
+    <Compile Include="Payment\Services\IPaymentMethodsService.cs" />
+    <Compile Include="Payment\Services\PaymentMethodsServiceImpl.cs" />
     <Compile Include="Payment\Model\PaymentMethodType.cs" />
     <Compile Include="Pricing\Model\Price.cs" />
     <Compile Include="Pricing\Model\PriceEvaluationContext.cs" />
@@ -281,8 +280,8 @@
     <Compile Include="Shipping\Model\ShippingEvaluationContext.cs" />
     <Compile Include="Shipping\Model\ShippingMethod.cs" />
     <Compile Include="Shipping\Model\ShippingRate.cs" />
-    <Compile Include="Shipping\Services\IShippingService.cs" />
-    <Compile Include="Shipping\Services\ShippingServiceImpl.cs" />
+    <Compile Include="Shipping\Services\IShippingMethodsService.cs" />
+    <Compile Include="Shipping\Services\ShippingMethodsServiceImpl.cs" />
     <Compile Include="Store\Model\Store.cs" />
     <Compile Include="Store\Model\StoreState.cs" />
     <Compile Include="Store\Services\IStoreService.cs" />

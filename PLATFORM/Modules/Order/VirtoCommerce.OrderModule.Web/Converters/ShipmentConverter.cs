@@ -35,7 +35,19 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 				retVal.DiscountAmount = shipment.Discount.DiscountAmount;
 			}
 
-			retVal.ChildrenOperations = shipment.GetFlatObjectsListWithInterface<coreModel.IOperation>().Except(new[] { shipment }).Select(x => x.ToWebModel()).ToList();
+            //Populate shipment method for shipment
+            retVal.ShippingMethod = new webModel.ShippingMethod();
+            retVal.ShippingMethod.Code = shipment.ShipmentMethodCode;
+            retVal.ShippingMethod.Description = shipment.ShipmentMethodCode;
+            retVal.ShippingMethod.OptionDescription = shipment.ShipmentMethodOption;
+            retVal.ShippingMethod.OptionName = shipment.ShipmentMethodOption;
+
+            if (shipment.ShippingMethod != null)
+            {
+                retVal.ShippingMethod = shipment.ShippingMethod.ToWebModel();
+            }
+
+            retVal.ChildrenOperations = shipment.GetFlatObjectsListWithInterface<coreModel.IOperation>().Except(new[] { shipment }).Select(x => x.ToWebModel()).ToList();
 
 			retVal.TaxDetails = shipment.TaxDetails;
 

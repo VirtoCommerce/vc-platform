@@ -8,12 +8,14 @@ using VirtoCommerce.OrderModule.Data.Model;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Data.Common.ConventionInjections;
 using coreModel = VirtoCommerce.Domain.Cart.Model;
+using VirtoCommerce.Domain.Payment.Model;
+using System.Collections.Generic;
 
 namespace VirtoCommerce.OrderModule.Data.Converters
 {
     public static class PaymentInConverter
     {
-        public static PaymentIn ToCoreModel(this PaymentInEntity entity)
+        public static PaymentIn ToCoreModel(this PaymentInEntity entity, IEnumerable<PaymentMethod> paymentMethods)
         {
             if (entity == null)
                 throw new ArgumentNullException("entity");
@@ -27,6 +29,12 @@ namespace VirtoCommerce.OrderModule.Data.Converters
             {
                 retVal.BillingAddress = entity.Addresses.First().ToCoreModel();
             }
+
+            if (paymentMethods != null)
+            {
+                retVal.PaymentMethod = paymentMethods.FirstOrDefault(x => String.Equals(x.Code, entity.GatewayCode, StringComparison.InvariantCultureIgnoreCase));
+            }
+
             return retVal;
         }
 

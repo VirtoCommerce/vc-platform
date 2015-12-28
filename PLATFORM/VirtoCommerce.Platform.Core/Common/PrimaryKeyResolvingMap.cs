@@ -16,7 +16,7 @@ namespace VirtoCommerce.Platform.Core.Common
    
         public void AddPair(Entity transientEntity, Entity persistentEntity)
         {
-            _resolvingMap.Add(transientEntity, persistentEntity);
+            _resolvingMap[transientEntity] = persistentEntity;
         }
 
         public void ResolvePrimaryKeys()

@@ -8,16 +8,22 @@ using VirtoCommerce.Domain.Order.Services;
 using VirtoCommerce.OrderModule.Data.Repositories;
 using VirtoCommerce.OrderModule.Data.Converters;
 using System.Data.Entity;
+using VirtoCommerce.Domain.Shipping.Services;
+using VirtoCommerce.Domain.Payment.Services;
 
 namespace VirtoCommerce.OrderModule.Data.Services
 {
 	public class CustomerOrderSearchServiceImpl : ICustomerOrderSearchService
 	{
 		private readonly Func<IOrderRepository> _orderRepositoryFactory;
-		public CustomerOrderSearchServiceImpl(Func<IOrderRepository> orderRepositoryFactory)
+        private readonly IShippingMethodsService _shippingMethodsService;
+        private readonly IPaymentMethodsService _paymentMethodsService;
+        public CustomerOrderSearchServiceImpl(Func<IOrderRepository> orderRepositoryFactory, IShippingMethodsService shippingMethodsService, IPaymentMethodsService paymentMethodsService)
 		{
 			_orderRepositoryFactory = orderRepositoryFactory;
-		}
+            _shippingMethodsService = shippingMethodsService;
+            _paymentMethodsService = paymentMethodsService;
+        }
 
 		#region ICustomerOrderSearchService Members
 
@@ -100,7 +106,7 @@ namespace VirtoCommerce.OrderModule.Data.Services
 										  .Skip(criteria.Start)
 										  .Take(criteria.Count)
 										  .ToArray()
-										  .Select(x => x.ToCoreModel())
+										  .Select(x => x.ToCoreModel(_shippingMethodsService.GetAllShippingMethods(), _paymentMethodsService.GetAllPaymentMethods()))
 										  .ToList()
 				};
 			}

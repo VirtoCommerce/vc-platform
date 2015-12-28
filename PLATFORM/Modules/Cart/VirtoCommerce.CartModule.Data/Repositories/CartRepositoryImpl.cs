@@ -11,107 +11,107 @@ using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 
 namespace VirtoCommerce.CartModule.Data.Repositories
 {
-	public class CartRepositoryImpl : EFRepositoryBase, ICartRepository
-	{
-		public CartRepositoryImpl()
-		{
-		}
+    public class CartRepositoryImpl : EFRepositoryBase, ICartRepository
+    {
+        public CartRepositoryImpl()
+        {
+        }
 
-		public CartRepositoryImpl(string nameOrConnectionString, params IInterceptor[] interceptors)
-			: base(nameOrConnectionString, null, interceptors)
-		{
-			Configuration.LazyLoadingEnabled = false;
-		}
-
-
-
-		protected override void OnModelCreating(DbModelBuilder modelBuilder)
-		{
-			modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
-
-			#region ShoppingCart
-			modelBuilder.Entity<ShoppingCartEntity>().HasKey(x => x.Id)
-					.Property(x => x.Id);
-
-			modelBuilder.Entity<ShoppingCartEntity>().ToTable("Cart");
-			#endregion
-
-			#region LineItem
-			modelBuilder.Entity<LineItemEntity>().HasKey(x => x.Id)
-					.Property(x => x.Id);
-
-			modelBuilder.Entity<LineItemEntity>().HasOptional(x => x.ShoppingCart)
-									   .WithMany(x => x.Items)
-									   .HasForeignKey(x => x.ShoppingCartId).WillCascadeOnDelete(true);
-
-			modelBuilder.Entity<LineItemEntity>().HasOptional(x => x.Shipment)
-									   .WithMany(x => x.Items)
-									   .HasForeignKey(x => x.ShipmentId);
-
-			modelBuilder.Entity<LineItemEntity>().ToTable("CartLineItem");
-			#endregion
-
-			#region Shipment
-			modelBuilder.Entity<ShipmentEntity>().HasKey(x => x.Id)
-				.Property(x => x.Id);
-
-			modelBuilder.Entity<ShipmentEntity>().HasRequired(x => x.ShoppingCart)
-										   .WithMany(x => x.Shipments)
-										   .HasForeignKey(x => x.ShoppingCartId).WillCascadeOnDelete(true);
+        public CartRepositoryImpl(string nameOrConnectionString, params IInterceptor[] interceptors)
+            : base(nameOrConnectionString, null, interceptors)
+        {
+            Configuration.LazyLoadingEnabled = false;
+        }
 
 
-			modelBuilder.Entity<ShipmentEntity>().ToTable("CartShipment");
-			#endregion
 
-			#region Address
-			modelBuilder.Entity<AddressEntity>().HasKey(x => x.Id)
-				.Property(x => x.Id);
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
 
-			modelBuilder.Entity<AddressEntity>().HasOptional(x => x.ShoppingCart)
-									   .WithMany(x => x.Addresses)
-									   .HasForeignKey(x => x.ShoppingCartId).WillCascadeOnDelete(true);
+            #region ShoppingCart
+            modelBuilder.Entity<ShoppingCartEntity>().HasKey(x => x.Id)
+                    .Property(x => x.Id);
 
-			modelBuilder.Entity<AddressEntity>().HasOptional(x => x.Shipment)
-									   .WithMany(x => x.Addresses)
-									   .HasForeignKey(x => x.ShipmentId);
+            modelBuilder.Entity<ShoppingCartEntity>().ToTable("Cart");
+            #endregion
 
-			modelBuilder.Entity<AddressEntity>().HasOptional(x => x.Payment)
-									   .WithMany(x => x.Addresses)
-									   .HasForeignKey(x => x.PaymentId);
+            #region LineItem
+            modelBuilder.Entity<LineItemEntity>().HasKey(x => x.Id)
+                    .Property(x => x.Id);
 
-			modelBuilder.Entity<AddressEntity>().ToTable("CartAddress");
-			#endregion
+            modelBuilder.Entity<LineItemEntity>().HasOptional(x => x.ShoppingCart)
+                                       .WithMany(x => x.Items)
+                                       .HasForeignKey(x => x.ShoppingCartId).WillCascadeOnDelete(true);
 
-			#region Payment
-			modelBuilder.Entity<PaymentEntity>().HasKey(x => x.Id)
-				.Property(x => x.Id);
+            modelBuilder.Entity<LineItemEntity>().HasOptional(x => x.Shipment)
+                                       .WithMany(x => x.Items)
+                                       .HasForeignKey(x => x.ShipmentId);
 
-			modelBuilder.Entity<PaymentEntity>().HasOptional(x => x.ShoppingCart)
-									   .WithMany(x => x.Payments)
-									   .HasForeignKey(x => x.ShoppingCartId).WillCascadeOnDelete(true);
+            modelBuilder.Entity<LineItemEntity>().ToTable("CartLineItem");
+            #endregion
 
-			modelBuilder.Entity<PaymentEntity>().ToTable("CartPayment");
-			#endregion
+            #region Shipment
+            modelBuilder.Entity<ShipmentEntity>().HasKey(x => x.Id)
+                .Property(x => x.Id);
 
-			#region TaxDetail
-			modelBuilder.Entity<TaxDetailEntity>().HasKey(x => x.Id)
-						.Property(x => x.Id);
+            modelBuilder.Entity<ShipmentEntity>().HasRequired(x => x.ShoppingCart)
+                                           .WithMany(x => x.Shipments)
+                                           .HasForeignKey(x => x.ShoppingCartId).WillCascadeOnDelete(true);
 
 
-			modelBuilder.Entity<TaxDetailEntity>().HasOptional(x => x.ShoppingCart)
-									   .WithMany(x => x.TaxDetails)
-									   .HasForeignKey(x => x.ShoppingCartId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<ShipmentEntity>().ToTable("CartShipment");
+            #endregion
 
-			modelBuilder.Entity<TaxDetailEntity>().HasOptional(x => x.Shipment)
-									   .WithMany(x => x.TaxDetails)
-									   .HasForeignKey(x => x.ShipmentId).WillCascadeOnDelete(false);
+            #region Address
+            modelBuilder.Entity<AddressEntity>().HasKey(x => x.Id)
+                .Property(x => x.Id);
 
-			modelBuilder.Entity<TaxDetailEntity>().HasOptional(x => x.LineItem)
-									   .WithMany(x => x.TaxDetails)
-									   .HasForeignKey(x => x.LineItemId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<AddressEntity>().HasOptional(x => x.ShoppingCart)
+                                       .WithMany(x => x.Addresses)
+                                       .HasForeignKey(x => x.ShoppingCartId).WillCascadeOnDelete(true);
+
+            modelBuilder.Entity<AddressEntity>().HasOptional(x => x.Shipment)
+                                       .WithMany(x => x.Addresses)
+                                       .HasForeignKey(x => x.ShipmentId);
+
+            modelBuilder.Entity<AddressEntity>().HasOptional(x => x.Payment)
+                                       .WithMany(x => x.Addresses)
+                                       .HasForeignKey(x => x.PaymentId);
+
+            modelBuilder.Entity<AddressEntity>().ToTable("CartAddress");
+            #endregion
+
+            #region Payment
+            modelBuilder.Entity<PaymentEntity>().HasKey(x => x.Id)
+                .Property(x => x.Id);
+
+            modelBuilder.Entity<PaymentEntity>().HasOptional(x => x.ShoppingCart)
+                                       .WithMany(x => x.Payments)
+                                       .HasForeignKey(x => x.ShoppingCartId).WillCascadeOnDelete(true);
+
+            modelBuilder.Entity<PaymentEntity>().ToTable("CartPayment");
+            #endregion
+
+            #region TaxDetail
+            modelBuilder.Entity<TaxDetailEntity>().HasKey(x => x.Id)
+                        .Property(x => x.Id);
 
 
-			modelBuilder.Entity<TaxDetailEntity>().ToTable("CartTaxDetail");
+            modelBuilder.Entity<TaxDetailEntity>().HasOptional(x => x.ShoppingCart)
+                                       .WithMany(x => x.TaxDetails)
+                                       .HasForeignKey(x => x.ShoppingCartId).WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<TaxDetailEntity>().HasOptional(x => x.Shipment)
+                                       .WithMany(x => x.TaxDetails)
+                                       .HasForeignKey(x => x.ShipmentId).WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<TaxDetailEntity>().HasOptional(x => x.LineItem)
+                                       .WithMany(x => x.TaxDetails)
+                                       .HasForeignKey(x => x.LineItemId).WillCascadeOnDelete(false);
+
+
+            modelBuilder.Entity<TaxDetailEntity>().ToTable("CartTaxDetail");
             #endregion
 
             #region Discount
@@ -136,14 +136,14 @@ namespace VirtoCommerce.CartModule.Data.Repositories
             #endregion
 
             base.OnModelCreating(modelBuilder);
-		}
+        }
 
-		#region ICartRepository Members
+        #region ICartRepository Members
 
-		public IQueryable<ShoppingCartEntity> ShoppingCarts
-		{
-			get { return GetAsQueryable<ShoppingCartEntity>(); }
-		}
+        public IQueryable<ShoppingCartEntity> ShoppingCarts
+        {
+            get { return GetAsQueryable<ShoppingCartEntity>(); }
+        }
 
         public IQueryable<AddressEntity> Addresses
         {
@@ -165,20 +165,21 @@ namespace VirtoCommerce.CartModule.Data.Repositories
         }
 
         public ShoppingCartEntity GetShoppingCartById(string id)
-		{
+        {
             var query = ShoppingCarts.Include(x => x.TaxDetails)
-                                     .Include(x=> x.Discounts)
+                                     .Include(x => x.Discounts)
                                      .Where(x => x.Id == id);
             var addresses = Addresses.Where(x => x.ShoppingCartId == id).ToArray();
-            var payments = Payments.Include(x=> x.Addresses).Where(x => x.ShoppingCartId == id).ToArray();
+            var payments = Payments.Include(x => x.Addresses).Where(x => x.ShoppingCartId == id).ToArray();
             var lineItems = LineItems.Include(x => x.Discounts)
-                                     .Include(x=>x.TaxDetails)
+                                     .Include(x => x.TaxDetails)
                                      .Where(x => x.ShoppingCartId == id).ToArray();
-            var shipments = Shipments.Include(x=>x.TaxDetails)
-                                     .Include(x=>x.Discounts)
+            var shipments = Shipments.Include(x => x.TaxDetails)
+                                     .Include(x => x.Discounts)
+                                     .Include(x => x.Addresses)
                                      .Where(x => x.ShoppingCartId == id).ToArray();
-			return query.FirstOrDefault();
-		}
-		#endregion
-	}
+            return query.FirstOrDefault();
+        }
+        #endregion
+    }
 }

@@ -7,7 +7,7 @@ using VirtoCommerce.Domain.Shipping.Model;
 
 namespace VirtoCommerce.Domain.Shipping.Services
 {
-	public interface IShippingService
+	public interface IShippingMethodsService
 	{
 		ShippingMethod[] GetAllShippingMethods();
 		void RegisterShippingMethod(Func<ShippingMethod> methodFactory);

@@ -123,6 +123,10 @@
     <Compile Include="BackgroundJobs\CollectOrderStatisticJob.cs" />
     <Compile Include="Binders\SearchCriteriaBinder.cs" />
     <Compile Include="Controllers\Api\OrderModuleController.cs" />
+    <Compile Include="Converters\PaymentMethodConverter.cs" />
+    <Compile Include="Converters\ShipmentMethodConverter.cs" />
+    <Compile Include="Model\PaymentMethod.cs" />
+    <Compile Include="Model\ShipmentMethod.cs" />
     <Compile Include="Security\OrderPredefinedPermissions.cs" />
     <Compile Include="Converters\AddressConverter.cs" />
     <Compile Include="Converters\CustomerOrderConverter.cs" />

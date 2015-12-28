@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using VirtoCommerce.Domain.Commerce.Model;
+using VirtoCommerce.Domain.Shipping.Model;
 
 namespace VirtoCommerce.Domain.Order.Model
 {
@@ -19,7 +20,9 @@ namespace VirtoCommerce.Domain.Order.Model
 		public string ShipmentMethodCode { get; set; }
 		public string ShipmentMethodOption { get; set; }
 
-		public string CustomerOrderId { get; set; }
+        public ShippingMethod ShippingMethod { get; set; }
+
+        public string CustomerOrderId { get; set; }
 		public CustomerOrder CustomerOrder { get; set; }
 
 		#region IStockOperation members

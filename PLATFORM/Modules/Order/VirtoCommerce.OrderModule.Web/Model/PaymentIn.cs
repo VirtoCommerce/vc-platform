@@ -25,10 +25,10 @@ namespace VirtoCommerce.OrderModule.Web.Model
 		/// </summary>
 		public string Purpose { get; set; }
 
-		/// <summary>
-		/// Payment gateway code used for link with gateway provider realization
-		/// </summary>
-		public string GatewayCode { get; set; }
+	    /// <summary>
+        /// Payment method for current order payment
+        /// </summary>
+        public PaymentMethod PaymentMethod { get; set; }
 
 		/// <summary>
 		/// Expected date of receipt of payment

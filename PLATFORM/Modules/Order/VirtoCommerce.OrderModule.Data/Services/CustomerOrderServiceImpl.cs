@@ -6,6 +6,8 @@ using VirtoCommerce.Domain.Common;
 using VirtoCommerce.Domain.Order.Events;
 using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.Domain.Order.Services;
+using VirtoCommerce.Domain.Payment.Services;
+using VirtoCommerce.Domain.Shipping.Services;
 using VirtoCommerce.OrderModule.Data.Converters;
 using VirtoCommerce.OrderModule.Data.Repositories;
 using VirtoCommerce.Platform.Core.Common;
@@ -25,8 +27,11 @@ namespace VirtoCommerce.OrderModule.Data.Services
         private readonly IEventPublisher<OrderChangeEvent> _eventPublisher;
         private readonly IDynamicPropertyService _dynamicPropertyService;
         private readonly ISettingsManager _settingManager;
+        private readonly IShippingMethodsService _shippingMethodsService;
+        private readonly IPaymentMethodsService _paymentMethodsService;
 
-        public CustomerOrderServiceImpl(Func<IOrderRepository> orderRepositoryFactory, IUniqueNumberGenerator uniqueNumberGenerator, IEventPublisher<OrderChangeEvent> eventPublisher, IShoppingCartService shoppingCartService, IItemService productService, IDynamicPropertyService dynamicPropertyService, ISettingsManager settingManager)
+        public CustomerOrderServiceImpl(Func<IOrderRepository> orderRepositoryFactory, IUniqueNumberGenerator uniqueNumberGenerator, IEventPublisher<OrderChangeEvent> eventPublisher, IShoppingCartService shoppingCartService, IItemService productService, 
+                                      IDynamicPropertyService dynamicPropertyService, ISettingsManager settingManager, IShippingMethodsService shippingMethodsService, IPaymentMethodsService paymentMethodsService)
         {
             _repositoryFactory = orderRepositoryFactory;
             _shoppingCartService = shoppingCartService;
@@ -35,6 +40,8 @@ namespace VirtoCommerce.OrderModule.Data.Services
             _productService = productService;
             _dynamicPropertyService = dynamicPropertyService;
             _settingManager = settingManager;
+            _shippingMethodsService = shippingMethodsService;
+            _paymentMethodsService = paymentMethodsService;
         }
 
         #region ICustomerOrderService Members
@@ -47,7 +54,7 @@ namespace VirtoCommerce.OrderModule.Data.Services
                 var orderEntity = repository.GetCustomerOrderById(orderId, respGroup);
                 if (orderEntity != null)
                 {
-                    retVal = orderEntity.ToCoreModel();
+                    retVal = orderEntity.ToCoreModel(_shippingMethodsService.GetAllShippingMethods(), _paymentMethodsService.GetAllPaymentMethods());
 
                     if ((respGroup & CustomerOrderResponseGroup.WithProducts) == CustomerOrderResponseGroup.WithProducts)
                     {

@@ -24,14 +24,12 @@ namespace VirtoCommerce.OrderModule.Web.Model
 		/// </summary>
 		public string FulfillmentCenterName { get; set; }
 		public string FulfillmentCenterId { get; set; }
-		/// <summary>
-		/// Code used for link shipment with external carrier service implementation (FedEx, USPS etc)
-		/// </summary>
-		public string ShipmentMethodCode { get; set; }
-		/// <summary>
-		/// Describe some shipment options (Vip, Air, Moment etc)
-		/// </summary>
-		public string ShipmentMethodOption { get; set; }
+	
+        /// <summary>
+        /// Selected shipping method to deliver current shipment
+        /// </summary>
+        public ShippingMethod ShippingMethod { get; set; }
+
 		/// <summary>
 		/// Employee who responsible for handling current shipment
 		/// </summary>
