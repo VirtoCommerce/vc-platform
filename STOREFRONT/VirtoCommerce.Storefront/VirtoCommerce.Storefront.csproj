@@ -303,6 +303,7 @@
     <Content Include="App_Data\Themes\default\assets\right-arrow-light.svg" />
     <Content Include="App_Data\Themes\default\assets\shipping-location-pin.svg" />
     <Content Include="App_Data\Themes\default\assets\sofort.svg" />
+    <Content Include="App_Data\Themes\default\assets\spr.js" />
     <Content Include="App_Data\Themes\default\assets\status-reduced.svg" />
     <Content Include="App_Data\Themes\default\assets\status-sold-out.svg" />
     <Content Include="App_Data\Themes\default\assets\shopify_common.js" />
@@ -356,7 +357,7 @@
     <Compile Include="Controllers\BlogController.cs" />
     <Compile Include="Controllers\PageController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
-    <Compile Include="Controllers\ShopifyAjaxController.cs" />
+    <Compile Include="Controllers\ShopifyCompatibilityController.cs" />
     <Compile Include="Controllers\StorefrontControllerBase.cs" />
     <Compile Include="Converters\AddressConverter.cs" />
     <Compile Include="Converters\AggregationConverters.cs" />

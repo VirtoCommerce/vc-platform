@@ -30,11 +30,11 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             result.CompareAtPriceMin = result.Variants.Select(x => x.CompareAtPrice).Min();
             result.CompareAtPriceVaries = result.CompareAtPriceMax != result.CompareAtPriceMin;
 
-            result.CompareAtPrice = product.Price.ListPrice.Amount;
-            result.Price = product.Price.SalePrice.Amount;
+            result.CompareAtPrice = product.Price.ListPrice.Amount * 100;
+            result.Price = product.Price.SalePrice.Amount * 100;
             if(product.Price.ActiveDiscount != null)
             {
-                result.Price = result.Price - product.Price.ActiveDiscount.Amount.Amount;
+                result.Price = result.Price - product.Price.ActiveDiscount.Amount.Amount * 100;
             }
             result.PriceMax = result.Variants.Select(x => x.Price).Max();
             result.PriceMin = result.Variants.Select(x => x.Price).Min();
@@ -95,12 +95,12 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             result.Id = product.Id;
             result.InventoryPolicy = "continue";
             result.InventoryQuantity = product.Inventory != null ? product.Inventory.InStockQuantity ?? 0 : 0;
-             result.Options = product.VariationProperties.Select(p => p.Value).ToArray();
-            result.CompareAtPrice = product.Price.ListPrice.Amount;
-            result.Price = product.Price.SalePrice.Amount;
+            result.Options = product.VariationProperties.Select(p => p.Value).ToArray();
+            result.CompareAtPrice = product.Price.ListPrice.Amount * 100;
+            result.Price = product.Price.SalePrice.Amount * 100;
             if (product.Price.ActiveDiscount != null)
             {
-                result.Price = result.Price - product.Price.ActiveDiscount.Amount.Amount;
+                result.Price = result.Price - product.Price.ActiveDiscount.Amount.Amount * 100;
             }
 
             result.Selected = false;
