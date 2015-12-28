@@ -14,7 +14,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
             Root = (collection ?? Enumerable.Empty<T>()).ToList();
         }
 
-        public IList<T> Root { get; }
+        public IList<T> Root { get; set; }
 
         public object SyncRoot { get { return Root; } }
 

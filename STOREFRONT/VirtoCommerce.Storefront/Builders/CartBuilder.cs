@@ -299,7 +299,7 @@ namespace VirtoCommerce.Storefront.Builders
             }
             else
             {
-                cart.CustomerName = $"{_customer.FirstName} {_customer.LastName}";
+                cart.CustomerName = String.Format("{0} {1}", _customer.FirstName, _customer.LastName);
             }
 
             return cart;
@@ -307,7 +307,7 @@ namespace VirtoCommerce.Storefront.Builders
 
         private string GetCartCacheKey(string storeId, string customerId)
         {
-            return $"Cart-{storeId}-{customerId}";
+            return String.Format("Cart-{0}-{1}", storeId, customerId);
         }
 
         private async Task EvaluatePromotionsAsync()
