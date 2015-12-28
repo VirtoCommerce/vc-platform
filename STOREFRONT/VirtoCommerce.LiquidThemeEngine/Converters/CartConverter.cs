@@ -13,7 +13,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             result.Items = cart.Items.Select(x => x.ToShopifyModel(workContext)).ToList();
             result.ItemCount = cart.Items.Count();
             result.Note = cart.Comment;
-            result.TotalPrice = cart.Total.Amount;
+            result.TotalPrice = cart.SubTotal.Amount * 100;
             result.TotalWeight = cart.Weight;
 
             return result;

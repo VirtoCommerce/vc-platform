@@ -11,7 +11,6 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
     /// https://docs.shopify.com/themes/liquid-documentation/objects/product#product-image
     /// </remarks>
     [DataContract]
-    [JsonConverter(typeof(ToStringJsonConverter))]
     public class Image : Drop
     {
         /// <summary>

@@ -21,8 +21,8 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                 ProductId = lineItem.ProductId,
                 Src = lineItem.ImageUrl
             };
-            shopifyModel.LinePrice = lineItem.ExtendedPrice.Amount;
-            shopifyModel.Price = lineItem.PlacedPrice.Amount;
+            shopifyModel.LinePrice = lineItem.ExtendedPrice.Amount * 100;
+            shopifyModel.Price = lineItem.PlacedPrice.Amount * 100;
             shopifyModel.ProductId = lineItem.ProductId;
             //shopifyModel.Properties = null; // TODO
             shopifyModel.Quantity = lineItem.Quantity;
@@ -47,7 +47,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                 Grams = lineItem.Weight ?? 0m,
                 Id = lineItem.Id,
                 Quantity = lineItem.Quantity ?? 0,
-                Price = lineItem.Price.Amount,
+                Price = lineItem.Price.Amount * 100,
                 ProductId = lineItem.ProductId,
                 Sku = lineItem.Name,
                 Title = lineItem.Name,
