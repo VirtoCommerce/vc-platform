@@ -107,9 +107,9 @@
     <Compile Include="Migrations\201512081409214_ChangeRequiredForProductTypeColumn.Designer.cs">
       <DependentUpon>201512081409214_ChangeRequiredForProductTypeColumn.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201512281256078_AddShipmentItem.cs" />
-    <Compile Include="Migrations\201512281256078_AddShipmentItem.Designer.cs">
-      <DependentUpon>201512281256078_AddShipmentItem.cs</DependentUpon>
+    <Compile Include="Migrations\201512281445261_AddShipmentItem.cs" />
+    <Compile Include="Migrations\201512281445261_AddShipmentItem.Designer.cs">
+      <DependentUpon>201512281445261_AddShipmentItem.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\AddressEntity.cs" />
@@ -173,8 +173,8 @@
     <EmbeddedResource Include="Migrations\201512081409214_ChangeRequiredForProductTypeColumn.resx">
       <DependentUpon>201512081409214_ChangeRequiredForProductTypeColumn.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201512281256078_AddShipmentItem.resx">
-      <DependentUpon>201512281256078_AddShipmentItem.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201512281445261_AddShipmentItem.resx">
+      <DependentUpon>201512281445261_AddShipmentItem.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

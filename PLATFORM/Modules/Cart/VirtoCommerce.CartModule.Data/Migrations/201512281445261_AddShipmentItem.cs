@@ -8,6 +8,7 @@ namespace VirtoCommerce.CartModule.Data.Migrations
         public override void Up()
         {
             DropIndex("dbo.CartLineItem", new[] { "ShipmentId" });
+            DropForeignKey("dbo.CartLineItem", "ShipmentId", "dbo.CartShipment");
             CreateTable(
                 "dbo.CartShipmentItem",
                 c => new

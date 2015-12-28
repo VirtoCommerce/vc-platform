@@ -13,7 +13,7 @@ namespace VirtoCommerce.CartModule.Data.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201512281256078_AddShipmentItem"; }
+            get { return "201512281445261_AddShipmentItem"; }
         }
         
         string IMigrationMetadata.Source
