@@ -62,7 +62,8 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 				CustomerId = cart.CustomerId,
 				CustomerName = cart.CustomerName,
 				StoreId = cart.StoreId,
-				OrganizationId = cart.OrganizationId
+				OrganizationId = cart.OrganizationId,
+                Status = "New"
 			};
 			
 			if(cart.Items != null)
