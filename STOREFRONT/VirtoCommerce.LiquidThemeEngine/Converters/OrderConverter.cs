@@ -26,7 +26,6 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             result.OrderNumber = order.Number;
             result.CustomerUrl = urlBuilder.ToAppAbsolute("/account/order/" + order.Number);
 
-
             if (order.Addresses != null)
             {
                 var shippingAddress = order.Addresses
@@ -87,7 +86,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
 
                     if (inPayment.TaxIncluded == true)
                     {
-                        taxLines.Add(new TaxLine { Title = "Payments tax", Price = inPayment.Tax.Amount });
+                        taxLines.Add(new TaxLine { Title = "Payments tax", Price = inPayment.Tax.Amount * 100 });
                     }
                 }
             }
@@ -114,7 +113,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
 
                     if (orderShipment.TaxIncluded == true)
                     {
-                        taxLines.Add(new TaxLine { Title = "Shipping tax", Price = orderShipment.Tax.Amount });
+                        taxLines.Add(new TaxLine { Title = "Shipping tax", Price = orderShipment.Tax.Amount * 100 });
                     }
                 }
 
@@ -145,7 +144,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                     {
                         Type = "ShippingDiscount",
                         Code = "Shipping",
-                        Amount = shipmentDiscount,
+                        Amount = shipmentDiscount * 100,
                         Savings = -shipmentDiscount,
                     });
                 }
@@ -165,7 +164,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                     taxLines.Add(new TaxLine
                     {
                         Title = "Line items",
-                        Price = itemsWithTax.Sum(i => i.Tax.Amount),
+                        Price = itemsWithTax.Sum(i => i.Tax.Amount * 100),
                         Rate = itemsWithTax.Where(i => i.TaxDetails != null).Sum(i => i.TaxDetails.Sum(td => td.Rate)),
                     });
                 }
@@ -183,8 +182,8 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                     {
                         Type = "FixedAmountDiscount",
                         Code = "Items",
-                        Amount = itemsDiscount,
-                        Savings = -itemsDiscount,
+                        Amount = itemsDiscount * 100,
+                        Savings = -itemsDiscount * 100,
                     });
                 }
             }

@@ -17,18 +17,15 @@ storefrontApp.controller('cartController', ['$scope', '$timeout', 'cartService',
     $scope.addToCart = function (productId, quantity) {
         var initialItems = angular.copy($scope.cart.Items);
         $scope.isCartModalVisible = true;
-        $timeout.cancel(timer);
-        timer = $timeout(function () {
-            $scope.isUpdating = true;
-            cartService.addLineItem(productId, quantity).then(
-                function (response) {
-                    refreshCart();
-                },
-                function (response) {
-                    $scope.cart.Items = initialItems;
-                    showErrorMessage(2000);
-                });
-        }, 0);
+        $scope.isUpdating = true;
+        cartService.addLineItem(productId, quantity).then(
+            function (response) {
+                refreshCart();
+            },
+            function (response) {
+                $scope.cart.Items = initialItems;
+                showErrorMessage(2000);
+            });
     }
 
     $scope.changeLineItem = function (lineItemId, quantity) {

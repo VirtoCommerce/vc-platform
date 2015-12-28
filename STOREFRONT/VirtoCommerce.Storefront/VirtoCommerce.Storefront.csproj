@@ -249,6 +249,7 @@
     <Content Include="App_Data\Themes\default\assets\collection-view-list.svg" />
     <Content Include="App_Data\Themes\default\assets\customer_area.js" />
     <Content Include="App_Data\Themes\default\assets\dankort.svg" />
+    <Content Include="App_Data\Themes\default\assets\ideal-image-slider-default-theme.css" />
     <Content Include="App_Data\Themes\default\assets\diners-club.svg" />
     <Content Include="App_Data\Themes\default\assets\discover.svg" />
     <Content Include="App_Data\Themes\default\assets\dogecoin.svg" />
@@ -270,11 +271,13 @@
     <Content Include="App_Data\Themes\default\assets\icons.svg" />
     <Content Include="App_Data\Themes\default\assets\icon_facebook_32.png" />
     <Content Include="App_Data\Themes\default\assets\icon_google_32.png" />
+    <Content Include="App_Data\Themes\default\assets\ideal-image-slider.css" />
+    <Content Include="App_Data\Themes\default\assets\ideal-image-slider.min.js" />
+    <Content Include="App_Data\Themes\default\assets\ideal-image-slider-bullet-nav.js" />
+    <Content Include="App_Data\Themes\default\assets\ideal-image-slider-captions.js" />
     <Content Include="App_Data\Themes\default\assets\informer-loader.gif" />
     <Content Include="App_Data\Themes\default\assets\jcb.svg" />
     <Content Include="App_Data\Themes\default\assets\jquery.zoom.min.js" />
-    <Content Include="App_Data\Themes\default\assets\js-image-slider.css" />
-    <Content Include="App_Data\Themes\default\assets\js-image-slider.js" />
     <Content Include="App_Data\Themes\default\assets\klarna-big.png" />
     <Content Include="App_Data\Themes\default\assets\laser.svg" />
     <Content Include="App_Data\Themes\default\assets\litecoin.svg" />

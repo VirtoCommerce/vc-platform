@@ -73,6 +73,7 @@
     <Compile Include="Common\DynamicPropertyExtension.cs" />
     <Compile Include="Common\EventThrottlingExtensions.cs" />
     <Compile Include="Common\IStorefrontPagedList.cs" />
+    <Compile Include="Common\PromotionEvaluator\IDiscountable.cs" />
     <Compile Include="Common\ValueInjecter\NullableAndEnumValueInjecter.cs" />
     <Compile Include="Common\StoreFrontPagedList.cs" />
     <Compile Include="ContactForm.cs" />
