@@ -16,6 +16,8 @@ namespace VirtoCommerce.Storefront.Converters
         public static Product ToWebModel(this VirtoCommerceCatalogModuleWebModelProduct product, Language currentLanguage, Currency currentCurrency)
         {
             var retVal = new Product();
+
+            retVal.Currency = currentCurrency;
             retVal.Price = new ProductPrice(currentCurrency);
 
             retVal.InjectFrom(product);

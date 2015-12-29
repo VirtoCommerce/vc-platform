@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using VirtoCommerce.Client.Api;
-using VirtoCommerce.Storefront.Converters;
-using VirtoCommerce.Storefront.Model.Marketing;
 using VirtoCommerce.Storefront.Model.Services;
 
 namespace VirtoCommerce.Storefront.Services
@@ -16,19 +13,6 @@ namespace VirtoCommerce.Storefront.Services
         public MarketingServiceImpl(IMarketingModuleApi marketingApi)
         {
             _marketingApi = marketingApi;
-        }
-
-        public async Task<ICollection<PromotionReward>> EvaluatePromotionRewardsAsync(PromotionEvaluationContext evaluationContext)
-        {
-            var rewards = new List<PromotionReward>();
-
-            var allRewards = await _marketingApi.MarketingModulePromotionEvaluatePromotionsAsync(evaluationContext.ToServiceModel());
-            if (allRewards != null)
-            {
-                rewards = allRewards.Select(r => r.ToWebModel(evaluationContext.Currency)).ToList();
-            }
-
-            return rewards;
         }
 
         public async Task<string> GetDynamicContentHtmlAsync(string storeId, string placeholderName)

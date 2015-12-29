@@ -8,6 +8,7 @@ using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Cart;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
+using VirtoCommerce.Storefront.Model.Common.PromotionEvaluator;
 using VirtoCommerce.Storefront.Model.Marketing;
 using VirtoCommerce.Storefront.Model.Services;
 
@@ -15,17 +16,17 @@ namespace VirtoCommerce.Storefront.Controllers
 {
     public class MarketingController : StorefrontControllerBase
     {
-        private readonly IMarketingModuleApi _marketingApi;
         private readonly IMarketingService _marketingService;
         private readonly IPricingModuleApi _pricingApi;
+        private readonly IPromotionEvaluator _promotionEvaluator;
 
-        public MarketingController(WorkContext workContext, IStorefrontUrlBuilder urlBuilder, IMarketingModuleApi marketingApi,
-            IMarketingService marketingService, IPricingModuleApi pricingApi)
+        public MarketingController(WorkContext workContext, IStorefrontUrlBuilder urlBuilder, IMarketingService marketingService,
+            IPromotionEvaluator promotionEvaluator, IPricingModuleApi pricingApi)
             : base(workContext, urlBuilder)
         {
-            _marketingApi = marketingApi;
             _marketingService = marketingService;
             _pricingApi = pricingApi;
+            _promotionEvaluator = promotionEvaluator;
         }
 
        // GET: /marketing/dynamiccontent/{placeName}/json
@@ -73,16 +74,14 @@ namespace VirtoCommerce.Storefront.Controllers
                 StoreId = WorkContext.CurrentStore.Id
             };
 
-            var rewards = await _marketingService.EvaluatePromotionRewardsAsync(promotionContext);
-            var validRewards = rewards.Where(r => r.RewardType == PromotionRewardType.CatalogItemAmountReward && r.IsValid);
-            foreach (var price in prices)
+            foreach (var product in products)
             {
-                var validReward = validRewards.FirstOrDefault(r => r.ProductId == price.ProductId);
-                if (validReward != null)
-                {
-                    price.ActiveDiscount = validReward.ToDiscountWebModel(price.SalePrice.Amount, 1, price.Currency);
-                }
+                product.Currency = WorkContext.CurrentCurrency;
+                product.Price = prices.FirstOrDefault(p => p.ProductId == product.Id);
             }
+
+            await _promotionEvaluator.EvaluateDiscountsAsync(promotionContext, products);
+            prices = products.Select(p => p.Price).ToList();
 
             return Json(prices, JsonRequestBehavior.AllowGet);
         }

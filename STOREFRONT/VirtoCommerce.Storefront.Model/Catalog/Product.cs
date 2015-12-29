@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VirtoCommerce.Storefront.Model.Common;
+using VirtoCommerce.Storefront.Model.Common.PromotionEvaluator;
+using VirtoCommerce.Storefront.Model.Marketing;
 
 namespace VirtoCommerce.Storefront.Model.Catalog
 {
-    public class Product : Entity
+    public class Product : Entity, IDiscountable
     {
         public Product()
         {
@@ -18,6 +18,7 @@ namespace VirtoCommerce.Storefront.Model.Catalog
             Variations = new List<Product>();
             Images = new List<Image>();
             Descriptions = new List<LocalizedString>();
+            Discounts = new List<Discount>();
         }
 
         /// <summary>
@@ -225,5 +226,32 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         /// List of product images
         /// </summary>
         public ICollection<Image> Images { get; set; }
+
+        public ICollection<Discount> Discounts { get; }
+
+        public Currency Currency { get; set; }
+
+        public void ApplyRewards(IEnumerable<PromotionReward> rewards)
+        {
+            var productRewards = rewards.Where(r => r.RewardType == PromotionRewardType.CatalogItemAmountReward && r.ProductId == Id);
+            if (productRewards == null)
+            {
+                return;
+            }
+
+            Discounts.Clear();
+
+            foreach (var reward in productRewards)
+            {
+                var discount = reward.ToDiscountModel(Price.SalePrice.Amount, Price.Currency);
+
+                if (reward.IsValid)
+                {
+                    Discounts.Add(discount);
+                }
+            }
+
+            Price.ActiveDiscount = Discounts.FirstOrDefault();
+        }
     }
 }

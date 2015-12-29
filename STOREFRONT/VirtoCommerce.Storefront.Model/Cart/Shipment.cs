@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using VirtoCommerce.Storefront.Model.Common;
+using VirtoCommerce.Storefront.Model.Common.PromotionEvaluator;
 using VirtoCommerce.Storefront.Model.Marketing;
 
 namespace VirtoCommerce.Storefront.Model.Cart
 {
-    public class Shipment : Entity
+    public class Shipment : Entity, IDiscountable
     {
         public Shipment()
         {
@@ -36,14 +37,6 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// Address object
         /// </value>
         public Address DeliveryAddress { get; set; }
-
-        /// <summary>
-        /// Gets or sets the value of shipping currency
-        /// </summary>
-        /// <value>
-        /// Currency code in ISO 4217 format
-        /// </value>
-        public Currency Currency { get; set; }
 
         /// <summary>
         /// Gets or sets the value of volumetric weight
@@ -116,14 +109,6 @@ namespace VirtoCommerce.Storefront.Model.Cart
         public Money Subtotal { get; set; }
 
         /// <summary>
-        /// Gets or sets the collection of shipping discounts
-        /// </summary>
-        /// <value>
-        /// Collection of Discount objects
-        /// </value>
-        public ICollection<Discount> Discounts { get; set; }
-
-        /// <summary>
         /// Gets or sets the collection of shipping items
         /// </summary>
         /// <value>
@@ -143,5 +128,30 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// Collection of TaxDetail objects
         /// </value>
         public ICollection<TaxDetail> TaxDetails { get; set; }
+
+        public ICollection<Discount> Discounts { get; }
+
+        public Currency Currency { get; set; }
+
+        public void ApplyRewards(IEnumerable<PromotionReward> rewards)
+        {
+            var shipmentRewards = rewards.Where(r => r.RewardType == PromotionRewardType.ShipmentReward);
+            if (shipmentRewards == null)
+            {
+                return;
+            }
+
+            Discounts.Clear();
+
+            foreach (var reward in shipmentRewards)
+            {
+                var discount = reward.ToDiscountModel(ShippingPrice.Amount, Currency);
+
+                if (reward.IsValid)
+                {
+                    Discounts.Add(discount);
+                }
+            }
+        }
     }
 }
