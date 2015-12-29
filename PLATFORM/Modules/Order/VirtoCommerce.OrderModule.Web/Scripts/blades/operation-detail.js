@@ -42,6 +42,7 @@
 			            blade.origEntity = _.find(customerOrder.shipments, function (x) { return x.id == operation.id; });
 			            $scope.fulfillmentCenters = order_res_fulfilmentCenters.query();
 			            $scope.statuses = settings.getValues({ id: 'Shipment.Status' });
+			            $scope.currentStore = _.findWhere(blade.stores, { id: customerOrder.storeId });
 			        }
 			        else if (operation.operationType.toLowerCase() == 'paymentin') {
 			            $scope.currentStore = _.findWhere(blade.stores, { id: customerOrder.storeId });
@@ -230,12 +231,10 @@
 			        $modalInstance.close(resolution);
 			    };
 
-
-
 			    // actions on load
 			    blade.refresh(blade.isNew);
-
-			}])
+			}
+])
 .controller('virtoCommerce.orderModule.confirmCancelDialogController', ['$scope', '$modalInstance', function ($scope, $modalInstance, dialog) {
 
     $scope.cancelReason = undefined;
