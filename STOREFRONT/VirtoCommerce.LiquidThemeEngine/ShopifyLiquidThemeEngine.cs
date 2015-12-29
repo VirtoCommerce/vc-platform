@@ -48,6 +48,7 @@ namespace VirtoCommerce.LiquidThemeEngine
         private readonly FileSystemWatcher _fileSystemWatcher;
         private readonly SassCompilerProxy _saasCompiler = new SassCompilerProxy();
 
+        [CLSCompliant(false)]
         public ShopifyLiquidThemeEngine(ICacheManager<object> cacheManager, Func<WorkContext> workContextFactory, Func<IStorefrontUrlBuilder> storeFrontUrlBuilderFactory, string themesLocalPath, string themesAssetsRelativeUrl, string globalThemeAssetsRelativeUrl)
         {
             _workContextFactory = workContextFactory;
@@ -164,7 +165,7 @@ namespace VirtoCommerce.LiquidThemeEngine
                 files = Directory.GetFiles(assetPath, fileName, SearchOption.AllDirectories);
             }
 
-            if(!searchInGlobalThemeOnly && (files == null || !files.Any()))
+            if (!searchInGlobalThemeOnly && (files == null || !files.Any()))
             {
                 //Try to find asset in default theme
                 assetPath = GlobalThemeLocalPath + "\\assets";
@@ -285,31 +286,31 @@ namespace VirtoCommerce.LiquidThemeEngine
         /// <returns></returns>
         public DefaultableDictionary GetSettings(string defaultValue = null)
         {
-             return _cacheManager.Get(GetCacheKey("GetSettings", defaultValue), "LiquidThemeRegion", () =>
-             {
-                 DefaultableDictionary retVal = new DefaultableDictionary(defaultValue);
+            return _cacheManager.Get(GetCacheKey("GetSettings", defaultValue), "LiquidThemeRegion", () =>
+            {
+                DefaultableDictionary retVal = new DefaultableDictionary(defaultValue);
 
-                 var resultSettings = InnerGetSettings(GlobalThemeLocalPath);
-                 if (GlobalThemeLocalPath != CurrentThemeLocalPath)
-                 {
-                     var currentThemeSettings = InnerGetSettings(CurrentThemeLocalPath);
-                     if (currentThemeSettings != null)
-                     {
-                         resultSettings.Merge(currentThemeSettings, new JsonMergeSettings { MergeArrayHandling = MergeArrayHandling.Merge });
-                     }
-                 }
+                var resultSettings = InnerGetSettings(GlobalThemeLocalPath);
+                if (GlobalThemeLocalPath != CurrentThemeLocalPath)
+                {
+                    var currentThemeSettings = InnerGetSettings(CurrentThemeLocalPath);
+                    if (currentThemeSettings != null)
+                    {
+                        resultSettings.Merge(currentThemeSettings, new JsonMergeSettings { MergeArrayHandling = MergeArrayHandling.Merge });
+                    }
+                }
 
-                 if (resultSettings != null)
-                 {
-                     var dict = resultSettings.ToObject<Dictionary<string, object>>().ToDictionary(x => x.Key, x => x.Value);
-                     retVal = new DefaultableDictionary(dict, defaultValue);
-                 }
+                if (resultSettings != null)
+                {
+                    var dict = resultSettings.ToObject<Dictionary<string, object>>().ToDictionary(x => x.Key, x => x.Value);
+                    retVal = new DefaultableDictionary(dict, defaultValue);
+                }
 
-                 return retVal;
-             });
+                return retVal;
+            });
         }
 
-  
+
         /// <summary>
         /// Read localization resources 
         /// </summary>
