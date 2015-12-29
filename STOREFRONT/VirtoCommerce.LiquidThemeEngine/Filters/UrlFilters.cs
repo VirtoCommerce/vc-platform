@@ -80,6 +80,9 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
                 retVal = collection.Image != null ? collection.Image.Src : null;
             }
 
+            var url = new Uri(retVal);
+            retVal = url.AbsoluteUri.Replace(url.Scheme + ":", string.Empty);
+
             return retVal;
         }
 
