@@ -1,7 +1,6 @@
 using System.Linq;
 using System.Web.Mvc;
 using Microsoft.Practices.Unity.Mvc;
-using Microsoft.Web.Infrastructure.DynamicModuleHelper;
 
 [assembly: WebActivatorEx.PreApplicationStartMethod(typeof(VirtoCommerce.Storefront.App_Start.UnityWebActivator), "Start")]
 [assembly: WebActivatorEx.ApplicationShutdownMethod(typeof(VirtoCommerce.Storefront.App_Start.UnityWebActivator), "Shutdown")]
@@ -12,7 +11,7 @@ namespace VirtoCommerce.Storefront.App_Start
     public static class UnityWebActivator
     {
         /// <summary>Integrates Unity when the application starts.</summary>
-        public static void Start() 
+        public static void Start()
         {
             var container = UnityConfig.GetConfiguredContainer();
 

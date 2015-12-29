@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{0E0CB22C-4501-4E16-B9B7-744B51076524}"
 	ProjectSection(SolutionItems) = preProject
@@ -51,6 +51,11 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.OrderModule.Web", "Modules\Order\VirtoCommerce.OrderModule.Web\VirtoCommerce.OrderModule.Web.csproj", "{FB17571F-ED1B-4521-A120-58023AB1C6BF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PaymentGateways", "PaymentGateways", "{4E79CE95-D200-41C9-B191-324B741494BE}"
+	ProjectSection(SolutionItems) = preProject
+		Modules\Merchant\GoogleShopping.Merchant.Web\web.config = Modules\Merchant\GoogleShopping.Merchant.Web\web.config
+		Modules\Merchant\GoogleShopping.Merchant.Web\web.Debug.config = Modules\Merchant\GoogleShopping.Merchant.Web\web.Debug.config
+		Modules\Merchant\GoogleShopping.Merchant.Web\web.Release.config = Modules\Merchant\GoogleShopping.Merchant.Web\web.Release.config
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Klarna.Checkout.Euro", "Modules\PaymentGateways\Klarna.PaymentGatewaysModule.Web\Klarna.Checkout.Euro.csproj", "{F212ED2F-6E93-4931-A8DF-7A128D5DD96B}"
 EndProject
