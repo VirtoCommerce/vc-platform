@@ -63,7 +63,7 @@ namespace VirtoCommerce.Storefront.Converters
 
             if (serviceModel.Shipments != null)
             {
-                webModel.Shipments = serviceModel.Shipments.Select(s => s.ToWebModel(currency, language)).ToList();
+                webModel.Shipments = serviceModel.Shipments.Select(s => s.ToWebModel(webModel)).ToList();
             }
 
             if (serviceModel.DynamicProperties != null)
@@ -79,13 +79,13 @@ namespace VirtoCommerce.Storefront.Converters
             webModel.DiscountTotal = new Money(serviceModel.DiscountTotal ?? 0, currency.Code);
             webModel.HandlingTotal = new Money(serviceModel.HandlingTotal ?? 0, currency.Code);
             webModel.Height = (decimal)(serviceModel.Height ?? 0);
-            webModel.IsAnonymous = (bool)serviceModel.IsAnonymous;
-            webModel.IsRecuring = (bool)serviceModel.IsRecuring;
+            webModel.IsAnonymous = serviceModel.IsAnonymous == true;
+            webModel.IsRecuring = serviceModel.IsRecuring == true;
             webModel.ItemsCount = webModel.Items.Sum(i => i.Quantity);
             webModel.Length = (decimal)(serviceModel.Length ?? 0);
             webModel.ShippingTotal = new Money(serviceModel.ShippingTotal ?? 0, currency.Code);
             webModel.SubTotal = new Money(serviceModel.SubTotal ?? 0, currency.Code);
-            webModel.TaxIncluded = (bool)serviceModel.TaxIncluded;
+            webModel.TaxIncluded = serviceModel.TaxIncluded == true;
             webModel.TaxTotal = new Money(serviceModel.TaxTotal ?? 0, currency.Code);
             webModel.Total = new Money(serviceModel.Total ?? 0, currency.Code);
             webModel.VolumetricWeight = (decimal)(serviceModel.VolumetricWeight ?? 0);

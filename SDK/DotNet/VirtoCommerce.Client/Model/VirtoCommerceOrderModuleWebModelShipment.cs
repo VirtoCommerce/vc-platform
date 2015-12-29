@@ -58,19 +58,11 @@ namespace VirtoCommerce.Client.Model
   
         
         /// <summary>
-        /// Code used for link shipment with external carrier service implementation (FedEx, USPS etc)
+        /// Selected shipping method to deliver current shipment
         /// </summary>
-        /// <value>Code used for link shipment with external carrier service implementation (FedEx, USPS etc)</value>
-        [DataMember(Name="shipmentMethodCode", EmitDefaultValue=false)]
-        public string ShipmentMethodCode { get; set; }
-  
-        
-        /// <summary>
-        /// Describe some shipment options (Vip, Air, Moment etc)
-        /// </summary>
-        /// <value>Describe some shipment options (Vip, Air, Moment etc)</value>
-        [DataMember(Name="shipmentMethodOption", EmitDefaultValue=false)]
-        public string ShipmentMethodOption { get; set; }
+        /// <value>Selected shipping method to deliver current shipment</value>
+        [DataMember(Name="shippingMethod", EmitDefaultValue=false)]
+        public VirtoCommerceOrderModuleWebModelShippingMethod ShippingMethod { get; set; }
   
         
         /// <summary>
@@ -358,8 +350,7 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  OrganizationId: ").Append(OrganizationId).Append("\n");
             sb.Append("  FulfillmentCenterName: ").Append(FulfillmentCenterName).Append("\n");
             sb.Append("  FulfillmentCenterId: ").Append(FulfillmentCenterId).Append("\n");
-            sb.Append("  ShipmentMethodCode: ").Append(ShipmentMethodCode).Append("\n");
-            sb.Append("  ShipmentMethodOption: ").Append(ShipmentMethodOption).Append("\n");
+            sb.Append("  ShippingMethod: ").Append(ShippingMethod).Append("\n");
             sb.Append("  EmployeeName: ").Append(EmployeeName).Append("\n");
             sb.Append("  EmployeeId: ").Append(EmployeeId).Append("\n");
             sb.Append("  DiscountAmount: ").Append(DiscountAmount).Append("\n");
@@ -455,14 +446,9 @@ namespace VirtoCommerce.Client.Model
                     this.FulfillmentCenterId.Equals(other.FulfillmentCenterId)
                 ) && 
                 (
-                    this.ShipmentMethodCode == other.ShipmentMethodCode ||
-                    this.ShipmentMethodCode != null &&
-                    this.ShipmentMethodCode.Equals(other.ShipmentMethodCode)
-                ) && 
-                (
-                    this.ShipmentMethodOption == other.ShipmentMethodOption ||
-                    this.ShipmentMethodOption != null &&
-                    this.ShipmentMethodOption.Equals(other.ShipmentMethodOption)
+                    this.ShippingMethod == other.ShippingMethod ||
+                    this.ShippingMethod != null &&
+                    this.ShippingMethod.Equals(other.ShippingMethod)
                 ) && 
                 (
                     this.EmployeeName == other.EmployeeName ||
@@ -675,11 +661,8 @@ namespace VirtoCommerce.Client.Model
                 if (this.FulfillmentCenterId != null)
                     hash = hash * 57 + this.FulfillmentCenterId.GetHashCode();
                 
-                if (this.ShipmentMethodCode != null)
-                    hash = hash * 57 + this.ShipmentMethodCode.GetHashCode();
-                
-                if (this.ShipmentMethodOption != null)
-                    hash = hash * 57 + this.ShipmentMethodOption.GetHashCode();
+                if (this.ShippingMethod != null)
+                    hash = hash * 57 + this.ShippingMethod.GetHashCode();
                 
                 if (this.EmployeeName != null)
                     hash = hash * 57 + this.EmployeeName.GetHashCode();

@@ -11,7 +11,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
         public Shipment()
         {
             Discounts = new List<Discount>();
-            Items = new List<LineItem>();
+            Items = new List<CartShipmentItem>();
             TaxDetails = new List<TaxDetail>();
         }
 
@@ -112,9 +112,9 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// Gets or sets the collection of shipping items
         /// </summary>
         /// <value>
-        /// Collection of LineItem objects
+        /// Collection of CartShipmentItem objects
         /// </value>
-        public ICollection<LineItem> Items { get; set; }
+        public ICollection<CartShipmentItem> Items { get; set; }
 
         /// <summary>
         /// Gets or sets the value of shipping tax type
@@ -136,10 +136,6 @@ namespace VirtoCommerce.Storefront.Model.Cart
         public void ApplyRewards(IEnumerable<PromotionReward> rewards)
         {
             var shipmentRewards = rewards.Where(r => r.RewardType == PromotionRewardType.ShipmentReward);
-            if (shipmentRewards == null)
-            {
-                return;
-            }
 
             Discounts.Clear();
 

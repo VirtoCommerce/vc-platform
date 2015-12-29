@@ -192,7 +192,7 @@ namespace VirtoCommerce.Client.Model
         /// </summary>
         /// <value>Gets or sets the collection of shipping items</value>
         [DataMember(Name="items", EmitDefaultValue=false)]
-        public List<VirtoCommerceCartModuleWebModelLineItem> Items { get; set; }
+        public List<VirtoCommerceCartModuleWebModelShipmentItem> Items { get; set; }
   
         
         /// <summary>

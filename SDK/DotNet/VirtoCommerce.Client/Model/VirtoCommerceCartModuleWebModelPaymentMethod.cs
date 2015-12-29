@@ -91,6 +91,13 @@ namespace VirtoCommerce.Client.Model
         public bool? IsAvailableForPartial { get; set; }
   
         
+        /// <summary>
+        /// Gets or Sets Settings
+        /// </summary>
+        [DataMember(Name="settings", EmitDefaultValue=false)]
+        public List<VirtoCommercePlatformCoreSettingsSettingEntry> Settings { get; set; }
+  
+        
   
         /// <summary>
         /// Returns the string presentation of the object
@@ -108,6 +115,7 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Group: ").Append(Group).Append("\n");
             sb.Append("  Priority: ").Append(Priority).Append("\n");
             sb.Append("  IsAvailableForPartial: ").Append(IsAvailableForPartial).Append("\n");
+            sb.Append("  Settings: ").Append(Settings).Append("\n");
             
             sb.Append("}\n");
             return sb.ToString();
@@ -184,6 +192,11 @@ namespace VirtoCommerce.Client.Model
                     this.IsAvailableForPartial == other.IsAvailableForPartial ||
                     this.IsAvailableForPartial != null &&
                     this.IsAvailableForPartial.Equals(other.IsAvailableForPartial)
+                ) && 
+                (
+                    this.Settings == other.Settings ||
+                    this.Settings != null &&
+                    this.Settings.SequenceEqual(other.Settings)
                 );
         }
 
@@ -222,6 +235,9 @@ namespace VirtoCommerce.Client.Model
                 
                 if (this.IsAvailableForPartial != null)
                     hash = hash * 57 + this.IsAvailableForPartial.GetHashCode();
+                
+                if (this.Settings != null)
+                    hash = hash * 57 + this.Settings.GetHashCode();
                 
                 return hash;
             }
