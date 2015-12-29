@@ -62,7 +62,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         #region Public Methods and Operators
         public override object BeforeMethod(string method)
         {
-            var result = this.Root.SingleOrDefault(x => x.Namespace == method);
+            var result = this.SingleOrDefault(x => x.Namespace == method);
             return result;
         }
         #endregion
@@ -72,7 +72,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         {
             get
             {
-                var result = this.Root.SingleOrDefault(x => x.Namespace == name);
+                var result = this.SingleOrDefault(x => x.Namespace == name);
                 return result;
             }
         }

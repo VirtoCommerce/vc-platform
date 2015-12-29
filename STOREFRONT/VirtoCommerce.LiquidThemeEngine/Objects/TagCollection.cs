@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace VirtoCommerce.LiquidThemeEngine.Objects
@@ -14,8 +15,25 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         {
             get
             {
-                return Root != null ? Root.GroupBy(t => t.GroupName).Select(g => g.Key) : null;
+                var retVal = this.GroupBy(t => t.GroupName).Select(g => g.Key);
+                return retVal;
             }
+        }
+
+        public override bool Contains(object value)
+        {
+            var tag = value as Tag;
+            var str = value as string;
+            var retVal = false;
+            if(tag != null)
+            {
+                retVal = this.Any(x => x.Equals(tag));
+            }
+            if(str != null)
+            {
+                retVal = this.Any(x =>String.Equals(x.Value, str, StringComparison.InvariantCultureIgnoreCase));
+            }
+            return retVal;
         }
     }
 }
