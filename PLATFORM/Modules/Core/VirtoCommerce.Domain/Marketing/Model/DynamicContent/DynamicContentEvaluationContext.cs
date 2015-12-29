@@ -13,7 +13,7 @@ namespace VirtoCommerce.Domain.Marketing.Model.DynamicContent
 		{
 		}
 
-		public DynamicContentEvaluationContext(string storeId, string placeName, DateTime toDate, TagSet tags)
+		public DynamicContentEvaluationContext(string storeId, string placeName, DateTime toDate, string[] tags)
 		{
 			StoreId = storeId;
 			PlaceName = placeName;
@@ -25,7 +25,7 @@ namespace VirtoCommerce.Domain.Marketing.Model.DynamicContent
 
 		public string PlaceName { get; set; }
 
-        public TagSet Tags { get; set; }
+        public string[] Tags { get; set; }
 
 		public DateTime ToDate { get; set; }
 

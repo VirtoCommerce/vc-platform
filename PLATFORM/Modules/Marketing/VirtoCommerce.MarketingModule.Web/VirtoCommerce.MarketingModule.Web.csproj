@@ -123,6 +123,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Binders\DynamicContentEvalContextBinder.cs" />
     <Compile Include="Binders\MarketingSearchCriteriaBinder.cs" />
     <Compile Include="Controllers\Api\MarketingModuleDynamicContentController.cs">
       <SubType>Code</SubType>
