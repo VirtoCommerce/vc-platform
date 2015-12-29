@@ -16,7 +16,6 @@
                 titleValues: { title: result },
                 subtitle: 'orders.widgets.customerOrder-items.blade-subtitle',
                 currentEntity: $scope.blade.currentEntity,
-                isClosingDisabled: false,
                 controller: 'virtoCommerce.orderModule.customerOrderItemsController',
                 template: 'Modules/$(VirtoCommerce.Orders)/Scripts/blades/customerOrder-items.tpl.html'
             };

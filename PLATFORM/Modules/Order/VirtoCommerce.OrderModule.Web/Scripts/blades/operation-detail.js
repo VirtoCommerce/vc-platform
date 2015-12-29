@@ -64,6 +64,10 @@
 			        return retVal;
 			    };
 
+			    $scope.setForm = function (form) {
+			        $scope.formScope = form;
+			    }
+
 			    function saveChanges() {
 			        blade.isLoading = true;
 			        order_res_customerOrders.update({}, blade.customerOrder, function (data, headers) {
@@ -127,7 +131,7 @@
 					        saveChanges();
 					    },
 					    canExecuteMethod: function () {
-					        return isDirty();
+					        return isDirty() && (!$scope.formScope || $scope.formScope.$valid);
 					    },
 					    permission: 'order:update'
 					},
@@ -201,7 +205,7 @@
 			    ];
 
 			    blade.onClose = function (closeCallback) {
-			        if (isDirty()) {
+			        if (isDirty() && (!$scope.formScope || $scope.formScope.$valid)) {
 			            var dialog = {
 			                id: "confirmItemChange",
 			                title: "orders.dialogs.operation-save.title",

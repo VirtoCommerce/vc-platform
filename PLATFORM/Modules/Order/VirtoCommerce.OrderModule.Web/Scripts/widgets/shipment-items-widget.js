@@ -15,7 +15,6 @@
                 titleValues: { title: result },
                 subtitle: 'orders.blades.shipment-items.subtitle',
                 currentEntity: $scope.blade.currentEntity,
-                isClosingDisabled: false,
                 controller: 'virtoCommerce.orderModule.shipmentItemsController',
                 template: 'Modules/$(VirtoCommerce.Orders)/Scripts/blades/shipment-items.tpl.html'
             };

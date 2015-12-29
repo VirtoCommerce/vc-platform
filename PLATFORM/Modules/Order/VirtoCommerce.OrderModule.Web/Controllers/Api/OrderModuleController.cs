@@ -249,6 +249,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
             {
                 retVal = new coreModel.Shipment
                 {
+                    Id = Guid.NewGuid().ToString(),
                     Currency = order.Currency
                 };
                 var numberTemplate = _settingManager.GetValue("Order.ShipmentNewNumberTemplate", "SH{0:yyMMdd}-{1:D5}");
