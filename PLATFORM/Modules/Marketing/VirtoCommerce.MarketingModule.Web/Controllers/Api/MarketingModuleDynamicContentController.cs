@@ -10,6 +10,8 @@ using webModel = VirtoCommerce.MarketingModule.Web.Model;
 using coreModel = VirtoCommerce.Domain.Marketing.Model;
 using VirtoCommerce.Domain.Common;
 using VirtoCommerce.MarketingModule.Web.Security;
+using System.Web.Http.ModelBinding;
+using VirtoCommerce.MarketingModule.Web.Binders;
 
 namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
 {
@@ -35,15 +37,9 @@ namespace VirtoCommerce.MarketingModule.Web.Controllers.Api
         [HttpGet]
         [ResponseType(typeof(webModel.DynamicContentItem[]))]
         [Route("contentitems/evaluate")]
-        public IHttpActionResult EvaluateDynamicContent(string storeId, string placeHolder)
+        public IHttpActionResult EvaluateDynamicContent([ModelBinder(typeof(DynamicContentEvalContextBinder))] coreModel.DynamicContent.DynamicContentEvaluationContext evalContext)
         {
-            var context = new coreModel.DynamicContent.DynamicContentEvaluationContext()
-            {
-                StoreId = storeId,
-                PlaceName = placeHolder
-            };
-
-            var retVal = _dynamicContentEvaluator.EvaluateItems(context).Select(x => x.ToWebModel()).ToArray();
+            var retVal = _dynamicContentEvaluator.EvaluateItems(evalContext).Select(x => x.ToWebModel()).ToArray();
 
             return Ok(retVal);
         }
