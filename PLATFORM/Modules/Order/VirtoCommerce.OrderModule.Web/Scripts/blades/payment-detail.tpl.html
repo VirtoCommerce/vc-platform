@@ -5,6 +5,25 @@
                 <div class="status" ng-bind="blade.currentEntity.status"></div>
                 <div class="reason" ng-bind="blade.currentEntity.cancelReason" ng-if="blade.currentEntity.isCancelled"></div>
             </div>
+            <div class="order-brand" ng-if="!blade.isNew">
+                <div class="brand-image">
+                    <img class="brand-logo" ng-src="{{blade.currentEntity.paymentMethod.iconUrl}}" alt="" ng-if="blade.currentEntity.paymentMethod.iconUrl">
+                </div>
+                <div class="brand-t" title="{{blade.currentEntity.paymentMethod.description}}">{{blade.currentEntity.paymentMethod.name}}</div>
+                <div class="brand-descr" ng-if="blade.currentEntity.paymentMethod.paymentMethodGroupType">{{blade.currentEntity.paymentMethod.paymentMethodGroupType}}</div>
+            </div>
+            <div class="form-group" ng-if="blade.isNew">
+                <label class="form-label">{{ 'orders.blades.payment-detail.labels.payment-gateway' | translate }}</label>
+                <div class="form-input">
+                    <ui-select ng-model="blade.currentEntity.paymentMethod">
+                        <ui-select-match placeholder="{{ 'orders.blades.payment-detail.placeholders.payment-gateway' | translate }}">{{$select.selected.name}}</ui-select-match>
+                        <ui-select-choices repeat="x in currentStore.paymentMethods | filter: { name: $select.search }">
+                            <span ng-bind-html="x.name | highlight: $select.search"></span>
+                        </ui-select-choices>
+                    </ui-select>
+
+                </div>
+            </div>
             <div class="form-group">
                 <label class="form-label">{{ 'orders.blades.payment-detail.labels.approved' | translate }}</label>
                 <div class="form-input">
@@ -52,18 +71,6 @@
                         <label class="form-label">{{ 'orders.blades.payment-detail.labels.from' | translate }}</label>
                         <div class="form-input">
                             <div class="form-text">{{blade.currentEntity.createdDate | date:'short'}}</div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">{{ 'orders.blades.payment-detail.labels.payment-gateway' | translate }}</label>
-                        <div class="form-input">
-                            <ui-select ng-model="blade.currentEntity.gatewayCode">
-                                <ui-select-match placeholder="{{ 'orders.blades.payment-detail.placeholders.payment-gateway' | translate }}">{{$select.selected.name}}</ui-select-match>
-                                <ui-select-choices repeat="x.id as x in currentStore.paymentMethods | filter: { name: $select.search }">
-                                    <span ng-bind-html="x.name | highlight: $select.search"></span>
-                                </ui-select-choices>
-                            </ui-select>
-
                         </div>
                     </div>
                     <div class="form-group">

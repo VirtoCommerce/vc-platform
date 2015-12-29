@@ -14,7 +14,7 @@ namespace VirtoCommerce.Storefront.Converters
 
             webModel.InjectFrom<NullableAndEnumValueInjecter>(serviceModel);
 
-            webModel.Amount = new Money(serviceModel.Amount ?? 0, currency.Code);
+            webModel.Amount = (decimal)(serviceModel.Amount ?? 0);
             webModel.AmountType = EnumUtility.SafeParse(serviceModel.AmountType, AmountType.Absolute);
             webModel.CouponAmount = new Money(serviceModel.CouponAmount ?? 0, currency.Code);
             webModel.CouponMinOrderAmount = new Money(serviceModel.CouponMinOrderAmount ?? 0, currency.Code);
@@ -22,28 +22,6 @@ namespace VirtoCommerce.Storefront.Converters
             webModel.RewardType = EnumUtility.SafeParse(serviceModel.RewardType, PromotionRewardType.CatalogItemAmountReward);
 
             return webModel;
-        }
-
-        public static Discount ToDiscountWebModel(this PromotionReward reward, decimal amount, int quantity, Currency currency)
-        {
-            var discount = new Discount();
-
-            decimal absoluteDiscountAmount = 0;
-            if (reward.AmountType == AmountType.Absolute)
-            {
-                absoluteDiscountAmount = reward.Amount.Amount * quantity;
-            }
-            if (reward.AmountType == AmountType.Relative)
-            {
-                absoluteDiscountAmount = (amount * quantity * reward.Amount.Amount) / 100;
-            }
-
-            discount.Amount = new Money(absoluteDiscountAmount, currency.Code);
-            discount.Description = reward.Promotion.Description;
-            discount.PromotionId = reward.Promotion.Id;
-            discount.Type = reward.RewardType;
-
-            return discount;
         }
     }
 }

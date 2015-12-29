@@ -38,11 +38,6 @@ namespace VirtoCommerce.Storefront.Converters
 
             webModel.InjectFrom<NullableAndEnumValueInjecter>(serviceModel);
 
-            if (serviceModel.Discounts != null)
-            {
-                webModel.Discounts = serviceModel.Discounts.Select(d => d.ToWebModel()).ToList();
-            }
-
             if (serviceModel.TaxDetails != null)
             {
                 webModel.TaxDetails = serviceModel.TaxDetails.Select(td => td.ToWebModel()).ToList();

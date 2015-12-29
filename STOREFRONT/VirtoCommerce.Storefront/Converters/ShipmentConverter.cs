@@ -21,11 +21,6 @@ namespace VirtoCommerce.Storefront.Converters
                 webModel.DeliveryAddress = shipment.DeliveryAddress.ToWebModel();
             }
 
-            if (shipment.Discounts != null)
-            {
-                webModel.Discounts = shipment.Discounts.Select(d => d.ToWebModel()).ToList();
-            }
-
             if (shipment.Items != null)
             {
                 webModel.Items = shipment.Items.Select(i => i.ToWebModel(currency, language)).ToList();
@@ -45,8 +40,8 @@ namespace VirtoCommerce.Storefront.Converters
 
             serviceModel.InjectFrom(shipment);
             serviceModel.Currency = shipment.Currency.Code;
-            serviceModel.DiscountTotal = (double)shipment.DiscountTotal.Amount;
-            serviceModel.TaxTotal = (double)shipment.TaxTotal.Amount;
+            serviceModel.DiscountTotal = shipment.DiscountTotal != null ? (double?)shipment.DiscountTotal.Amount : null;
+            serviceModel.TaxTotal = shipment.TaxTotal != null ? (double?)shipment.TaxTotal.Amount : null;
             serviceModel.ShippingPrice = (double)shipment.ShippingPrice.Amount;
             serviceModel.Total = (double)shipment.Total.Amount;
 

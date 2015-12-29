@@ -71,6 +71,7 @@
         "title": "Shipment #{{number}}",
         "subtitle": "Edit shipment details",
         "labels": {
+          "shipment-method": "Shipment method",
           "approved": "Approved",
           "shipment-number": "Shipment number",
           "status": "Status",
@@ -81,6 +82,7 @@
         },
         "placeholders": {
           "status": "Select...",
+          "shipment-method": "Select...",
           "fulfillment-center": "Select or search a center..."
         }
       },

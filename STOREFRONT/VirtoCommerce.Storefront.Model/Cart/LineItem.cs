@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Marketing;
@@ -67,14 +68,6 @@ namespace VirtoCommerce.Storefront.Model.Cart
         public int Quantity { get; set; }
 
         /// <summary>
-        /// Gets or sets the value of line item currency
-        /// </summary>
-        /// <value>
-        /// Currency code in ISO 4217 format
-        /// </value>
-        public Currency Currency { get; private set; }
-
-        /// <summary>
         /// Gets or sets the value of line item warehouse location
         /// </summary>
         public string WarehouseLocation { get; set; }
@@ -103,14 +96,6 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// Gets or sets the flag of line item is a gift
         /// </summary>
         public bool IsGift { get; set; }
-
-        /// <summary>
-        /// Gets or sets the collection of line item discounts
-        /// </summary>
-        /// <value>
-        /// Collection od Discount objects
-        /// </value>
-        public ICollection<Discount> Discounts { get; set; }
 
         /// <summary>
         /// Gets or sets the value of language code
@@ -224,5 +209,30 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// </summary>
         /// <value>Dynamic properties collections</value>
         public ICollection<DynamicProperty> DynamicProperties { get; set; }
+
+        public ICollection<Discount> Discounts { get; }
+
+        public Currency Currency { get; }
+
+        public void ApplyRewards(IEnumerable<PromotionReward> rewards)
+        {
+            var lineItemRewards = rewards.Where(r => r.RewardType == PromotionRewardType.CatalogItemAmountReward && r.ProductId == ProductId);
+            if (lineItemRewards == null)
+            {
+                return;
+            }
+
+            Discounts.Clear();
+
+            foreach (var reward in lineItemRewards)
+            {
+                var discount = reward.ToDiscountModel(SalePrice.Amount, Currency);
+
+                if (reward.IsValid)
+                {
+                    Discounts.Add(discount);
+                }
+            }
+        }
     }
 }

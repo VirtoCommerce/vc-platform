@@ -32,7 +32,6 @@ namespace VirtoCommerce.Storefront.Converters
             var shipmentWebModel = new Shipment();
 
             shipmentWebModel.Currency = currency;
-            shipmentWebModel.Discounts = shippingMethod.Discounts;
             shipmentWebModel.ShipmentMethodCode = shippingMethod.ShipmentMethodCode;
             shipmentWebModel.ShippingPrice = shippingMethod.Price;
             shipmentWebModel.TaxType = shippingMethod.TaxType;
