@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using VirtoCommerce.Storefront.Model.Marketing;
 
-namespace VirtoCommerce.Storefront.Model.Common.PromotionEvaluator
+namespace VirtoCommerce.Storefront.Model.Marketing.Services
 {
     public interface IPromotionEvaluator
     {

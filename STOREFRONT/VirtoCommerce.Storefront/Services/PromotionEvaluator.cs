@@ -3,10 +3,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.Storefront.Converters;
-using VirtoCommerce.Storefront.Model.Common.PromotionEvaluator;
 using VirtoCommerce.Storefront.Model.Marketing;
+using VirtoCommerce.Storefront.Model.Marketing.Services;
 
-namespace VirtoCommerce.Storefront.Common
+namespace VirtoCommerce.Storefront.Services
 {
     public class PromotionEvaluator : IPromotionEvaluator
     {

@@ -11,7 +11,7 @@ using VirtoCommerce.Storefront.Model.Cart;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Marketing;
-using VirtoCommerce.Storefront.Model.Common.PromotionEvaluator;
+using VirtoCommerce.Storefront.Model.Marketing.Services;
 
 namespace VirtoCommerce.Storefront.Builders
 {
@@ -261,7 +261,6 @@ namespace VirtoCommerce.Storefront.Builders
             {
                 await _cartApi.CartModuleUpdateAsync(cart);
             }
-
         }
 
         public ShoppingCart Cart

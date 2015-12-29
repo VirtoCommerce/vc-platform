@@ -335,7 +335,7 @@
     <Compile Include="App_Start\UnityMvcActivator.cs" />
     <Compile Include="Builders\CartBuilder.cs" />
     <Compile Include="Builders\ICartBuilder.cs" />
-    <Compile Include="Common\PromotionEvaluator.cs" />
+    <Compile Include="Services\PromotionEvaluator.cs" />
     <Compile Include="Common\StorefrontConstants.cs" />
     <Compile Include="Common\StorefrontUrlBuilder.cs" />
     <Compile Include="Controllers\AccountController.cs" />

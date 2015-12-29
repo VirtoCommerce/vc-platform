@@ -13,11 +13,6 @@ namespace VirtoCommerce.Storefront.Model.Marketing
         public string Code { get; set; }
 
         /// <summary>
-        /// Gets or sets coupon amount
-        /// </summary>
-        public Money Amount { get; set; }
-
-        /// <summary>
         /// Gets or sets coupon description
         /// </summary>
         public string Description { get; set; }

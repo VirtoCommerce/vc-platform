@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using VirtoCommerce.Storefront.Model.Common;
-using VirtoCommerce.Storefront.Model.Common.PromotionEvaluator;
 using VirtoCommerce.Storefront.Model.Marketing;
+using VirtoCommerce.Storefront.Model.Marketing.Services;
 
 namespace VirtoCommerce.Storefront.Model.Cart
 {
@@ -265,22 +265,20 @@ namespace VirtoCommerce.Storefront.Model.Cart
 
             if (Coupon != null && !string.IsNullOrEmpty(Coupon.Code))
             {
-                var couponReward = rewards.FirstOrDefault(r => r.Promotion.Coupons != null && r.Promotion.Coupons.Any());
-                if (couponReward != null)
+                var couponRewards = rewards.Where(r => r.Promotion.Coupons != null && r.Promotion.Coupons.Any());
+                if (!couponRewards.Any())
                 {
-                    var discount = couponReward.ToDiscountModel(SubTotal.Amount, Currency);
-                    string couponCode = couponReward.Promotion.Coupons.FirstOrDefault(c => c == Coupon.Code);
+                    Coupon.AppliedSuccessfully = false;
+                    Coupon.ErrorCode = "InvalidCouponCode";
+                }
+                foreach (var reward in couponRewards)
+                {
+                    var couponCode = reward.Promotion.Coupons.FirstOrDefault(c => c == Coupon.Code);
                     if (!string.IsNullOrEmpty(couponCode))
                     {
-                        Coupon.Amount = discount.Amount;
-                        Coupon.AppliedSuccessfully = couponReward.IsValid;
-                        Coupon.Code = couponCode;
-                        Coupon.Description = couponReward.Promotion.Description;
+                        Coupon.AppliedSuccessfully = reward.IsValid;
+                        Coupon.Description = reward.Promotion.Description;
                     }
-                }
-                else
-                {
-                    Coupon.ErrorCode = "InvalidCouponCode";
                 }
             }
         }

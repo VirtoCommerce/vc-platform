@@ -19,7 +19,6 @@ using VirtoCommerce.Client.Api;
 using VirtoCommerce.Client.Client;
 using VirtoCommerce.LiquidThemeEngine;
 using VirtoCommerce.LiquidThemeEngine.Binders;
-using VirtoCommerce.LiquidThemeEngine.Objects;
 using VirtoCommerce.Storefront;
 using VirtoCommerce.Storefront.App_Start;
 using VirtoCommerce.Storefront.Builders;
@@ -32,7 +31,7 @@ using VirtoCommerce.Storefront.Common;
 using CacheManager.Core;
 using CacheManager.Web;
 using MarkdownDeep;
-using VirtoCommerce.Storefront.Model.Common.PromotionEvaluator;
+using VirtoCommerce.Storefront.Model.Marketing.Services;
 
 [assembly: OwinStartup(typeof(Startup))]
 [assembly: PreApplicationStartMethod(typeof(Startup), "PreApplicationStart")]
