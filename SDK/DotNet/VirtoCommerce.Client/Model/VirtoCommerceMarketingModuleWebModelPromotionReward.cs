@@ -155,6 +155,14 @@ namespace VirtoCommerce.Client.Model
         public string ImageUrl { get; set; }
   
         
+        /// <summary>
+        /// Gets or sets the value of reward shipping method code
+        /// </summary>
+        /// <value>Gets or sets the value of reward shipping method code</value>
+        [DataMember(Name="shippingMethod", EmitDefaultValue=false)]
+        public string ShippingMethod { get; set; }
+  
+        
   
         /// <summary>
         /// Returns the string presentation of the object
@@ -180,6 +188,7 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  CategoryId: ").Append(CategoryId).Append("\n");
             sb.Append("  MeasureUnit: ").Append(MeasureUnit).Append("\n");
             sb.Append("  ImageUrl: ").Append(ImageUrl).Append("\n");
+            sb.Append("  ShippingMethod: ").Append(ShippingMethod).Append("\n");
             
             sb.Append("}\n");
             return sb.ToString();
@@ -296,6 +305,11 @@ namespace VirtoCommerce.Client.Model
                     this.ImageUrl == other.ImageUrl ||
                     this.ImageUrl != null &&
                     this.ImageUrl.Equals(other.ImageUrl)
+                ) && 
+                (
+                    this.ShippingMethod == other.ShippingMethod ||
+                    this.ShippingMethod != null &&
+                    this.ShippingMethod.Equals(other.ShippingMethod)
                 );
         }
 
@@ -358,6 +372,9 @@ namespace VirtoCommerce.Client.Model
                 
                 if (this.ImageUrl != null)
                     hash = hash * 57 + this.ImageUrl.GetHashCode();
+                
+                if (this.ShippingMethod != null)
+                    hash = hash * 57 + this.ShippingMethod.GetHashCode();
                 
                 return hash;
             }

@@ -1,19 +1,19 @@
-﻿using Omu.ValueInjecter;
-using System.Linq;
+﻿using System.Linq;
+using Omu.ValueInjecter;
 using VirtoCommerce.Client.Model;
-using VirtoCommerce.Storefront.Model;
+using VirtoCommerce.Storefront.Model.Cart;
 using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Converters
 {
     public static class ShipmentConverter
     {
-        public static Model.Cart.Shipment ToWebModel(this VirtoCommerceCartModuleWebModelShipment shipment, Currency currency, Language language)
+        public static Model.Cart.Shipment ToWebModel(this VirtoCommerceCartModuleWebModelShipment shipment, ShoppingCart cart)
         {
             var webModel = new Model.Cart.Shipment();
 
             webModel.InjectFrom(shipment);
-            webModel.Currency = currency;
+            webModel.Currency = cart.Currency;
             webModel.ShippingPrice = new Money(shipment.ShippingPrice ?? 0, shipment.Currency);
 
             if (shipment.DeliveryAddress != null)
@@ -23,7 +23,7 @@ namespace VirtoCommerce.Storefront.Converters
 
             if (shipment.Items != null)
             {
-                webModel.Items = shipment.Items.Select(i => i.ToWebModel(currency, language)).ToList();
+                webModel.Items = shipment.Items.Select(i => i.ToWebModel(cart)).ToList();
             }
 
             if (shipment.TaxDetails != null)

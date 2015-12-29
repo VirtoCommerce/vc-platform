@@ -99,6 +99,13 @@ namespace VirtoCommerce.Client.Model
         public List<VirtoCommerceCartModuleWebModelDiscount> Discounts { get; set; }
   
         
+        /// <summary>
+        /// Gets or Sets Settings
+        /// </summary>
+        [DataMember(Name="settings", EmitDefaultValue=false)]
+        public List<VirtoCommercePlatformCoreSettingsSettingEntry> Settings { get; set; }
+  
+        
   
         /// <summary>
         /// Returns the string presentation of the object
@@ -117,6 +124,7 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Currency: ").Append(Currency).Append("\n");
             sb.Append("  Price: ").Append(Price).Append("\n");
             sb.Append("  Discounts: ").Append(Discounts).Append("\n");
+            sb.Append("  Settings: ").Append(Settings).Append("\n");
             
             sb.Append("}\n");
             return sb.ToString();
@@ -198,6 +206,11 @@ namespace VirtoCommerce.Client.Model
                     this.Discounts == other.Discounts ||
                     this.Discounts != null &&
                     this.Discounts.SequenceEqual(other.Discounts)
+                ) && 
+                (
+                    this.Settings == other.Settings ||
+                    this.Settings != null &&
+                    this.Settings.SequenceEqual(other.Settings)
                 );
         }
 
@@ -239,6 +252,9 @@ namespace VirtoCommerce.Client.Model
                 
                 if (this.Discounts != null)
                     hash = hash * 57 + this.Discounts.GetHashCode();
+                
+                if (this.Settings != null)
+                    hash = hash * 57 + this.Settings.GetHashCode();
                 
                 return hash;
             }

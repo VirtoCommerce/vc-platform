@@ -65,11 +65,11 @@ namespace VirtoCommerce.Client.Model
   
         
         /// <summary>
-        /// Payment gateway code used for link with gateway provider realization
+        /// Payment method for current order payment
         /// </summary>
-        /// <value>Payment gateway code used for link with gateway provider realization</value>
-        [DataMember(Name="gatewayCode", EmitDefaultValue=false)]
-        public string GatewayCode { get; set; }
+        /// <value>Payment method for current order payment</value>
+        [DataMember(Name="paymentMethod", EmitDefaultValue=false)]
+        public VirtoCommerceOrderModuleWebModelPaymentMethod PaymentMethod { get; set; }
   
         
         /// <summary>
@@ -259,7 +259,7 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  CustomerName: ").Append(CustomerName).Append("\n");
             sb.Append("  CustomerId: ").Append(CustomerId).Append("\n");
             sb.Append("  Purpose: ").Append(Purpose).Append("\n");
-            sb.Append("  GatewayCode: ").Append(GatewayCode).Append("\n");
+            sb.Append("  PaymentMethod: ").Append(PaymentMethod).Append("\n");
             sb.Append("  IncomingDate: ").Append(IncomingDate).Append("\n");
             sb.Append("  OuterId: ").Append(OuterId).Append("\n");
             sb.Append("  OperationType: ").Append(OperationType).Append("\n");
@@ -346,9 +346,9 @@ namespace VirtoCommerce.Client.Model
                     this.Purpose.Equals(other.Purpose)
                 ) && 
                 (
-                    this.GatewayCode == other.GatewayCode ||
-                    this.GatewayCode != null &&
-                    this.GatewayCode.Equals(other.GatewayCode)
+                    this.PaymentMethod == other.PaymentMethod ||
+                    this.PaymentMethod != null &&
+                    this.PaymentMethod.Equals(other.PaymentMethod)
                 ) && 
                 (
                     this.IncomingDate == other.IncomingDate ||
@@ -494,8 +494,8 @@ namespace VirtoCommerce.Client.Model
                 if (this.Purpose != null)
                     hash = hash * 57 + this.Purpose.GetHashCode();
                 
-                if (this.GatewayCode != null)
-                    hash = hash * 57 + this.GatewayCode.GetHashCode();
+                if (this.PaymentMethod != null)
+                    hash = hash * 57 + this.PaymentMethod.GetHashCode();
                 
                 if (this.IncomingDate != null)
                     hash = hash * 57 + this.IncomingDate.GetHashCode();

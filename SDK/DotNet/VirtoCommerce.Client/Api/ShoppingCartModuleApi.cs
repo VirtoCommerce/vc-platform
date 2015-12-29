@@ -119,8 +119,8 @@ namespace VirtoCommerce.Client.Api
         /// 
         /// </remarks>
         /// <param name="cart">Shopping cart model</param>
-        /// <returns></returns>
-        void CartModuleCreate (VirtoCommerceCartModuleWebModelShoppingCart cart);
+        /// <returns>VirtoCommerceCartModuleWebModelShoppingCart</returns>
+        VirtoCommerceCartModuleWebModelShoppingCart CartModuleCreate (VirtoCommerceCartModuleWebModelShoppingCart cart);
   
         /// <summary>
         /// Create shopping cart
@@ -129,8 +129,8 @@ namespace VirtoCommerce.Client.Api
         /// 
         /// </remarks>
         /// <param name="cart">Shopping cart model</param>
-        /// <returns>ApiResponse of Object(void)</returns>
-        ApiResponse<Object> CartModuleCreateWithHttpInfo (VirtoCommerceCartModuleWebModelShoppingCart cart);
+        /// <returns>ApiResponse of VirtoCommerceCartModuleWebModelShoppingCart</returns>
+        ApiResponse<VirtoCommerceCartModuleWebModelShoppingCart> CartModuleCreateWithHttpInfo (VirtoCommerceCartModuleWebModelShoppingCart cart);
 
         /// <summary>
         /// Create shopping cart
@@ -139,8 +139,8 @@ namespace VirtoCommerce.Client.Api
         /// 
         /// </remarks>
         /// <param name="cart">Shopping cart model</param>
-        /// <returns>Task of void</returns>
-        System.Threading.Tasks.Task CartModuleCreateAsync (VirtoCommerceCartModuleWebModelShoppingCart cart);
+        /// <returns>Task of VirtoCommerceCartModuleWebModelShoppingCart</returns>
+        System.Threading.Tasks.Task<VirtoCommerceCartModuleWebModelShoppingCart> CartModuleCreateAsync (VirtoCommerceCartModuleWebModelShoppingCart cart);
 
         /// <summary>
         /// Create shopping cart
@@ -149,8 +149,8 @@ namespace VirtoCommerce.Client.Api
         /// 
         /// </remarks>
         /// <param name="cart">Shopping cart model</param>
-        /// <returns>Task of ApiResponse</returns>
-        System.Threading.Tasks.Task<ApiResponse<Object>> CartModuleCreateAsyncWithHttpInfo (VirtoCommerceCartModuleWebModelShoppingCart cart);
+        /// <returns>Task of ApiResponse (VirtoCommerceCartModuleWebModelShoppingCart)</returns>
+        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceCartModuleWebModelShoppingCart>> CartModuleCreateAsyncWithHttpInfo (VirtoCommerceCartModuleWebModelShoppingCart cart);
         
         /// <summary>
         /// Delete shopping carts by ids
@@ -760,18 +760,19 @@ namespace VirtoCommerce.Client.Api
         /// Create shopping cart 
         /// </summary>
         /// <param name="cart">Shopping cart model</param> 
-        /// <returns></returns>
-        public void CartModuleCreate (VirtoCommerceCartModuleWebModelShoppingCart cart)
+        /// <returns>VirtoCommerceCartModuleWebModelShoppingCart</returns>
+        public VirtoCommerceCartModuleWebModelShoppingCart CartModuleCreate (VirtoCommerceCartModuleWebModelShoppingCart cart)
         {
-             CartModuleCreateWithHttpInfo(cart);
+             ApiResponse<VirtoCommerceCartModuleWebModelShoppingCart> response = CartModuleCreateWithHttpInfo(cart);
+             return response.Data;
         }
 
         /// <summary>
         /// Create shopping cart 
         /// </summary>
         /// <param name="cart">Shopping cart model</param> 
-        /// <returns>ApiResponse of Object(void)</returns>
-        public ApiResponse<Object> CartModuleCreateWithHttpInfo (VirtoCommerceCartModuleWebModelShoppingCart cart)
+        /// <returns>ApiResponse of VirtoCommerceCartModuleWebModelShoppingCart</returns>
+        public ApiResponse< VirtoCommerceCartModuleWebModelShoppingCart > CartModuleCreateWithHttpInfo (VirtoCommerceCartModuleWebModelShoppingCart cart)
         {
             
             // verify the required parameter 'cart' is set
@@ -789,7 +790,7 @@ namespace VirtoCommerce.Client.Api
 
             // to determine the Accept header
             String[] http_header_accepts = new String[] {
-                
+                "application/json", "text/json"
             };
             String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
@@ -817,20 +818,21 @@ namespace VirtoCommerce.Client.Api
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CartModuleCreate: " + response.ErrorMessage, response.ErrorMessage);
     
-            
-            return new ApiResponse<Object>(statusCode,
+            return new ApiResponse<VirtoCommerceCartModuleWebModelShoppingCart>(statusCode,
                 response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                null);
+                (VirtoCommerceCartModuleWebModelShoppingCart) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceCartModuleWebModelShoppingCart)));
+            
         }
     
         /// <summary>
         /// Create shopping cart 
         /// </summary>
         /// <param name="cart">Shopping cart model</param>
-        /// <returns>Task of void</returns>
-        public async System.Threading.Tasks.Task CartModuleCreateAsync (VirtoCommerceCartModuleWebModelShoppingCart cart)
+        /// <returns>Task of VirtoCommerceCartModuleWebModelShoppingCart</returns>
+        public async System.Threading.Tasks.Task<VirtoCommerceCartModuleWebModelShoppingCart> CartModuleCreateAsync (VirtoCommerceCartModuleWebModelShoppingCart cart)
         {
-             await CartModuleCreateAsyncWithHttpInfo(cart);
+             ApiResponse<VirtoCommerceCartModuleWebModelShoppingCart> response = await CartModuleCreateAsyncWithHttpInfo(cart);
+             return response.Data;
 
         }
 
@@ -838,8 +840,8 @@ namespace VirtoCommerce.Client.Api
         /// Create shopping cart 
         /// </summary>
         /// <param name="cart">Shopping cart model</param>
-        /// <returns>Task of ApiResponse</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Object>> CartModuleCreateAsyncWithHttpInfo (VirtoCommerceCartModuleWebModelShoppingCart cart)
+        /// <returns>Task of ApiResponse (VirtoCommerceCartModuleWebModelShoppingCart)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceCartModuleWebModelShoppingCart>> CartModuleCreateAsyncWithHttpInfo (VirtoCommerceCartModuleWebModelShoppingCart cart)
         {
             // verify the required parameter 'cart' is set
             if (cart == null) throw new ApiException(400, "Missing required parameter 'cart' when calling CartModuleCreate");
@@ -856,7 +858,7 @@ namespace VirtoCommerce.Client.Api
 
             // to determine the Accept header
             String[] http_header_accepts = new String[] {
-                
+                "application/json", "text/json"
             };
             String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
             if (http_header_accept != null)
@@ -884,10 +886,10 @@ namespace VirtoCommerce.Client.Api
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CartModuleCreate: " + response.ErrorMessage, response.ErrorMessage);
 
-            
-            return new ApiResponse<Object>(statusCode,
+            return new ApiResponse<VirtoCommerceCartModuleWebModelShoppingCart>(statusCode,
                 response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                null);
+                (VirtoCommerceCartModuleWebModelShoppingCart) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceCartModuleWebModelShoppingCart)));
+            
         }
         
         /// <summary>

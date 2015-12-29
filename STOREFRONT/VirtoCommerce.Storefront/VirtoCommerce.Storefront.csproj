@@ -354,6 +354,7 @@
     <Compile Include="Converters\AggregationConverters.cs" />
     <Compile Include="Converters\AssetConverter.cs" />
     <Compile Include="Converters\CartPaymentMethodConverter.cs" />
+    <Compile Include="Converters\CartShipmentItemConverter.cs" />
     <Compile Include="Converters\CartShipmentMethodConverter.cs" />
     <Compile Include="Converters\ContactUsFormConverter.cs" />
     <Compile Include="Converters\DiscountConverter.cs" />

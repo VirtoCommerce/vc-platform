@@ -10,8 +10,8 @@ using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Cart;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
-using VirtoCommerce.Storefront.Model.Marketing;
 using VirtoCommerce.Storefront.Model.Common.PromotionEvaluator;
+using VirtoCommerce.Storefront.Model.Marketing;
 
 namespace VirtoCommerce.Storefront.Builders
 {
@@ -47,7 +47,8 @@ namespace VirtoCommerce.Storefront.Builders
 
             _cart = await _cacheManager.GetAsync(_cartCacheKey, _cartCacheRegion, async () =>
             {
-                ShoppingCart retVal = null;
+                ShoppingCart retVal;
+
                 var cartSearchResult = await _cartApi.CartModuleGetCurrentCartAsync(_store.Id, _customer.Id);
                 if (cartSearchResult == null)
                 {
@@ -58,10 +59,9 @@ namespace VirtoCommerce.Storefront.Builders
                     var detalizedCart = await _cartApi.CartModuleGetCartByIdAsync(cartSearchResult.Id);
                     retVal = detalizedCart.ToWebModel(_currency, _language);
                 }
+
                 return retVal;
             });
-
-            _cart.Items.OrderBy(i => i.CreatedDate);
 
             await EvaluatePromotionsAsync();
 
@@ -300,7 +300,7 @@ namespace VirtoCommerce.Storefront.Builders
             }
             else
             {
-                cart.CustomerName = String.Format("{0} {1}", _customer.FirstName, _customer.LastName);
+                cart.CustomerName = string.Format("{0} {1}", _customer.FirstName, _customer.LastName);
             }
 
             return cart;
@@ -308,7 +308,7 @@ namespace VirtoCommerce.Storefront.Builders
 
         private string GetCartCacheKey(string storeId, string customerId)
         {
-            return String.Format("Cart-{0}-{1}", storeId, customerId);
+            return string.Format("Cart-{0}-{1}", storeId, customerId);
         }
 
         private async Task EvaluatePromotionsAsync()
@@ -325,9 +325,6 @@ namespace VirtoCommerce.Storefront.Builders
             promotionContext.Language = _language;
             promotionContext.PromoEntries = promotionItems;
             promotionContext.StoreId = _store.Id;
-
-            var owners = new List<IDiscountable>();
-            owners.Add(_cart);
 
             await _promotionEvaluator.EvaluateDiscountsAsync(promotionContext, new IDiscountable[] { _cart });
 
@@ -359,7 +356,7 @@ namespace VirtoCommerce.Storefront.Builders
                 decimal shipmentTaxTotal = shipment.TaxDetails.Sum(td => td.Amount.Amount);
                 shipment.TaxTotal = new Money(shipmentTaxTotal, _cart.Currency.Code);
 
-                decimal shipmentItemsSubtotal = shipment.Items.Sum(i => i.ExtendedPrice.Amount);
+                decimal shipmentItemsSubtotal = shipment.Items.Sum(i => i.LineItem.ExtendedPrice.Amount);
                 shipment.ItemSubtotal = new Money(shipmentItemsSubtotal, _cart.Currency.Code);
 
                 shipment.Subtotal = shipment.ShippingPrice - shipmentDiscountTotal;

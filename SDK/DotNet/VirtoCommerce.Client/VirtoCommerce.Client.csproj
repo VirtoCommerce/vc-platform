@@ -81,6 +81,7 @@
     <Compile Include="Model\VirtoCommerceCartModuleWebModelSearchCriteria.cs" />
     <Compile Include="Model\VirtoCommerceCartModuleWebModelSearchResult.cs" />
     <Compile Include="Model\VirtoCommerceCartModuleWebModelShipment.cs" />
+    <Compile Include="Model\VirtoCommerceCartModuleWebModelShipmentItem.cs" />
     <Compile Include="Model\VirtoCommerceCartModuleWebModelShippingMethod.cs" />
     <Compile Include="Model\VirtoCommerceCartModuleWebModelShoppingCart.cs" />
     <Compile Include="Model\VirtoCommerceCatalogModuleWebExportImportCsvExportInfo.cs" />
@@ -151,6 +152,7 @@
     <Compile Include="Model\VirtoCommerceDomainCommonConditionExpressionTree.cs" />
     <Compile Include="Model\VirtoCommerceDomainCommonDynamicExpression.cs" />
     <Compile Include="Model\VirtoCommerceDomainInventoryModelInventoryInfo.cs" />
+    <Compile Include="Model\VirtoCommerceDomainMarketingModelDynamicContentDynamicContentEvaluationContext.cs" />
     <Compile Include="Model\VirtoCommerceDomainMarketingModelMarketingSearchCriteria.cs" />
     <Compile Include="Model\VirtoCommerceDomainMarketingModelProductPromoEntry.cs" />
     <Compile Include="Model\VirtoCommerceDomainMarketingModelPromoDynamicExpressionTree.cs" />
@@ -186,12 +188,14 @@
     <Compile Include="Model\VirtoCommerceOrderModuleWebModelMoney.cs" />
     <Compile Include="Model\VirtoCommerceOrderModuleWebModelOperation.cs" />
     <Compile Include="Model\VirtoCommerceOrderModuleWebModelPaymentIn.cs" />
+    <Compile Include="Model\VirtoCommerceOrderModuleWebModelPaymentMethod.cs" />
     <Compile Include="Model\VirtoCommerceOrderModuleWebModelProcessPaymentResult.cs" />
     <Compile Include="Model\VirtoCommerceOrderModuleWebModelQuarterPeriodMoney.cs" />
     <Compile Include="Model\VirtoCommerceOrderModuleWebModelSearchResult.cs" />
     <Compile Include="Model\VirtoCommerceOrderModuleWebModelShipment.cs" />
     <Compile Include="Model\VirtoCommerceOrderModuleWebModelShipmentItem.cs" />
     <Compile Include="Model\VirtoCommerceOrderModuleWebModelShipmentPackage.cs" />
+    <Compile Include="Model\VirtoCommerceOrderModuleWebModelShippingMethod.cs" />
     <Compile Include="Model\VirtoCommercePlatformCoreAssetBlobFolder.cs" />
     <Compile Include="Model\VirtoCommercePlatformCoreChangeLogOperationLog.cs" />
     <Compile Include="Model\VirtoCommercePlatformCoreDynamicPropertiesDynamicObjectProperty.cs" />
@@ -215,6 +219,7 @@
     <Compile Include="Model\VirtoCommercePlatformCoreSecuritySecurityResult.cs" />
     <Compile Include="Model\VirtoCommercePlatformCoreSecurityUserSearchRequest.cs" />
     <Compile Include="Model\VirtoCommercePlatformCoreSecurityUserSearchResponse.cs" />
+    <Compile Include="Model\VirtoCommercePlatformCoreSettingsSettingEntry.cs" />
     <Compile Include="Model\VirtoCommercePlatformWebModelAssetAssetListItem.cs" />
     <Compile Include="Model\VirtoCommercePlatformWebModelAssetBlobInfo.cs" />
     <Compile Include="Model\VirtoCommercePlatformWebModelJobsJob.cs" />

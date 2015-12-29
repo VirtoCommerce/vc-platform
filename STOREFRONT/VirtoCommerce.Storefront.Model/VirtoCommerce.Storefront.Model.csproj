@@ -58,6 +58,7 @@
     <Compile Include="AddressType.cs" />
     <Compile Include="AmountType.cs" />
     <Compile Include="BankCardInfo.cs" />
+    <Compile Include="Cart\CartShipmentItem.cs" />
     <Compile Include="Catalog\Aggregation.cs" />
     <Compile Include="Catalog\AggregationItem.cs" />
     <Compile Include="Catalog\Asset.cs" />
