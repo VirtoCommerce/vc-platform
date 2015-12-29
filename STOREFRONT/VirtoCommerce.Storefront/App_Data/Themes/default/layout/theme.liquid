@@ -121,7 +121,7 @@
                             <br class="medium-down--hide" />
                         {% endif %}
                         {% include 'search-bar' %}
-                        <a class="header-cart-btn cart-toggle" id="btn-cart-toggle" ng-click="showCartModal()">
+                        <a class="header-cart-btn cart-toggle" id="btn-cart-toggle" ng-click="toggleCartModal(isCartModalVisible)">
                             <span class="icon icon-cart"></span>
                             {{ 'layout.cart.cart' | t }} <span id="cartCount" ng-class="{ 'visible-count': cart.ItemsCount > 0 }" ng-bind="cart.ItemsCount"></span>
                         </a>
@@ -140,7 +140,7 @@
                 <a class="menu-toggle mobileNavBar-link">{{ 'layout.navigation.mobile_menu' | t }}</a>
             </div>
             <div class="display-table-cell">
-                <a class="cart-toggle mobileNavBar-link" href="" ng-click="showCartModal()">
+                <a class="cart-toggle mobileNavBar-link" href="" ng-click="toggleCartModal(isCartModalVisible)">
                     <span class="icon icon-cart"></span>
                     {{ 'layout.cart.cart' | t }} <span class="cartCount" ng-bind="cart.ItemsCount" ng-if="cart.ItemsCount > 0"></span>
                 </a>
