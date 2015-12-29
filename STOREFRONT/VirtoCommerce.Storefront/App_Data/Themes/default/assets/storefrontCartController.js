@@ -3,15 +3,12 @@
 storefrontApp.controller('cartController', ['$scope', '$timeout', 'cartService', function ($scope, $timeout, cartService) {
     var timer;
     $scope.cart = {};
+    $scope.isCartModalVisible = false;
 
     initialize();
 
-    $scope.showCartModal = function () {
-        $scope.isCartModalVisible = true;
-    }
-
-    $scope.hideCartModal = function () {
-        $scope.isCartModalVisible = false;
+    $scope.toggleCartModal = function (isShown) {
+        $scope.isCartModalVisible = !isShown;
     }
 
     $scope.addToCart = function (productId, quantity) {
