@@ -29,6 +29,7 @@ namespace VirtoCommerce.Storefront.Services
         private FileSystemWatcher _fileSystemWatcher;
         private readonly ICacheManager<object> _cacheManager;
 
+        [CLSCompliant(false)]
         public StaticContentServiceImpl(string baseLocalPath, Markdown markdownRender, ShopifyLiquidThemeEngine liquidEngine, ICacheManager<object> cacheManager)
         {
             _baseLocalPath = baseLocalPath;

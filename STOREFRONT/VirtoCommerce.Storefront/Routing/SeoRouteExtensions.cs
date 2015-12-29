@@ -53,11 +53,12 @@ namespace VirtoCommerce.Storefront.Routing
             routes.Add(name, route);
         }
 
+        [CLSCompliant(false)]
         public static Route MapSeoRoute(this RouteCollection routes, Func<WorkContext> workContextFactory, ICommerceCoreModuleApi commerceCoreApi, IStaticContentService staticContentService, ICacheManager<object> cacheManager, string name, string url, object defaults)
         {
             return MapSeoRoute(routes, workContextFactory, commerceCoreApi, staticContentService, cacheManager, name, url, defaults, null, null);
         }
-
+        [CLSCompliant(false)]
         public static Route MapSeoRoute(this RouteCollection routes, Func<WorkContext> workContextFactory, ICommerceCoreModuleApi commerceCoreApi, IStaticContentService staticContentService, ICacheManager<object> cacheManager, string name, string url, object defaults, object constraints, string[] namespaces)
         {
             if (routes == null)

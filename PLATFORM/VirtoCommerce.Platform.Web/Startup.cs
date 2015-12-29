@@ -269,7 +269,7 @@ namespace VirtoCommerce.Platform.Web
             {
                 settings
                     .WithUpdateMode(CacheUpdateMode.Up)
-                    .WithSystemRuntimeCacheHandle("memoryHandle")
+                    .WithSystemWebCacheHandle("webCacheHandle")
                         .EnablePerformanceCounters()
                         .WithExpiration(ExpirationMode.Absolute, TimeSpan.FromDays(1));
             });

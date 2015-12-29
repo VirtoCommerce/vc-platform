@@ -16,6 +16,7 @@ namespace VirtoCommerce.Platform.Data.Security
         private readonly Func<IPlatformRepository> _platformRepository;
         private readonly ICacheManager<object> _cacheManager;
 
+        [CLSCompliant(false)]
         public ApiAccountProvider(Func<IPlatformRepository> platformRepository, ICacheManager<object> cacheManager)
         {
             _platformRepository = platformRepository;

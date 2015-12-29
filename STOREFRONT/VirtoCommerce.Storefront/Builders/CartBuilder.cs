@@ -29,6 +29,7 @@ namespace VirtoCommerce.Storefront.Builders
         private string _cartCacheKey;
         private const string _cartCacheRegion = "CartRegion";
 
+        [CLSCompliant(false)]
         public CartBuilder(IShoppingCartModuleApi cartApi, IMarketingService marketingService, ICacheManager<object> cacheManager)
         {
             _cartApi = cartApi;
