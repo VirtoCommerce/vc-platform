@@ -17,9 +17,19 @@ namespace VirtoCommerce.Domain.Order.Model
 		public string EmployeeId { get; set; }
 		public string EmployeeName { get; set; }
 
+        /// <summary>
+        /// Curent shipment method code 
+        /// </summary>
 		public string ShipmentMethodCode { get; set; }
-		public string ShipmentMethodOption { get; set; }
 
+        /// <summary>
+        /// Curent shipment option code 
+        /// </summary>
+        public string ShipmentMethodOption { get; set; }
+
+        /// <summary>
+        ///  Shipment method contains additional shipment method information
+        /// </summary>
         public ShippingMethod ShippingMethod { get; set; }
 
         public string CustomerOrderId { get; set; }

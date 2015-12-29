@@ -42,7 +42,10 @@ namespace VirtoCommerce.OrderModule.Web.Converters
             retVal.InjectFrom(payment);
             retVal.PaymentStatus = EnumUtility.SafeParse<PaymentStatus>(payment.Status, PaymentStatus.Custom);
 
-
+            if(payment.PaymentMethod != null)
+            {
+                retVal.GatewayCode = payment.PaymentMethod.Code;
+            }
             retVal.Currency = payment.Currency;
 
 

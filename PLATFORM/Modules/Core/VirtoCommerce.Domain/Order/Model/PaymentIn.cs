@@ -11,9 +11,13 @@ namespace VirtoCommerce.Domain.Order.Model
 	public class PaymentIn : Operation, IFinanceInOperation
 	{
 		public string Purpose { get; set; }
-
+        /// <summary>
+        /// Payment method (gateway) code
+        /// </summary>
 		public string GatewayCode { get; set; }
-
+        /// <summary>
+        /// Payment method contains additional payment method information
+        /// </summary>
         public PaymentMethod PaymentMethod { get; set; }
 		public string OrganizationId { get; set; }
 		public string OrganizationName { get; set; }
