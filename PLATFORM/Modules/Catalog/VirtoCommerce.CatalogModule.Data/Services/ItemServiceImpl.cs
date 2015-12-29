@@ -48,7 +48,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                 if ((respGroup & coreModel.ItemResponseGroup.Seo) == coreModel.ItemResponseGroup.Seo)
                 {
                     var expandedProducts = retVal.Concat(retVal.Where(x => x.Variations != null).SelectMany(x => x.Variations)).ToArray();
-                    var allCategories = expandedProducts.Select(x => x.Category).Distinct().ToArray();
+                    var allCategories = expandedProducts.Select(x => x.Category).ToArray();
                     var allSeoObjects = expandedProducts.OfType<ISeoSupport>().Concat(allCategories.OfType<ISeoSupport>()).ToArray();
                     _commerceService.LoadSeoForObjects(allSeoObjects);
 
