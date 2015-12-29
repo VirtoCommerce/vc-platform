@@ -92,5 +92,9 @@ namespace VirtoCommerce.MarketingModule.Web.Model
         /// Gets or sets the value of promotion reward logo absolute URL
         /// </summary>
         public string ImageUrl { get; set; }
+        /// <summary>
+        /// Gets or sets the value of reward shipping method code
+        /// </summary>
+        public string ShippingMethod { get; set; }
     }
 }

@@ -21,6 +21,7 @@ using VirtoCommerce.Storefront.Converters;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
+using VirtoCommerce.Storefront.Model.Common.PromotionEvaluator;
 
 namespace VirtoCommerce.Storefront.Owin
 {
@@ -38,6 +39,7 @@ namespace VirtoCommerce.Storefront.Owin
         private readonly ICartBuilder _cartBuilder;
         private readonly ICMSContentModuleApi _cmsApi;
         private readonly ICacheManager<object> _cacheManager;
+        private readonly IPromotionEvaluator _promotionEvaluator;
 
         private readonly UnityContainer _container;
 
@@ -51,6 +53,7 @@ namespace VirtoCommerce.Storefront.Owin
             _cmsApi = container.Resolve<ICMSContentModuleApi>();
             _pricingModuleApi = container.Resolve<IPricingModuleApi>();
             _cacheManager = container.Resolve<ICacheManager<object>>();
+            _promotionEvaluator = container.Resolve<IPromotionEvaluator>();
             _container = container;
         }
 

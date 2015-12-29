@@ -16,6 +16,7 @@ namespace VirtoCommerce.OrderModule.Web.Converters
             retVal.InjectFrom(paymentMethod);
             retVal.PaymentMethodGroupType = paymentMethod.PaymentMethodGroupType;
             retVal.PaymentMethodType = paymentMethod.PaymentMethodType;
+            retVal.IconUrl = paymentMethod.LogoUrl;
             return retVal;
         }
 

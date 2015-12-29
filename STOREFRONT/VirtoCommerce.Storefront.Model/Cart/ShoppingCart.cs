@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using VirtoCommerce.Storefront.Model.Common;
+using VirtoCommerce.Storefront.Model.Common.PromotionEvaluator;
 using VirtoCommerce.Storefront.Model.Marketing;
 
 namespace VirtoCommerce.Storefront.Model.Cart
 {
-    public class ShoppingCart : Entity
+    public class ShoppingCart : Entity, IDiscountable
     {
         public ShoppingCart(Currency currency, Language language)
         {
@@ -65,14 +67,6 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// Gets or sets the value of shopping cart organization id
         /// </summary>
         public string OrganizationId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the value of shopping cart currency
-        /// </summary>
-        /// <value>
-        /// Currency code in ISO 4217 format
-        /// </value>
-        public Currency Currency { get; private set; }
 
         /// <summary>
         /// Gets or sets the shopping cart coupon
@@ -218,14 +212,6 @@ namespace VirtoCommerce.Storefront.Model.Cart
         public ICollection<Shipment> Shipments { get; set; }
 
         /// <summary>
-        /// Gets or sets the collection of shopping cart discounts
-        /// </summary>
-        /// <value>
-        /// Collection of Discount objects
-        /// </value>
-        public ICollection<Discount> Discounts { get; set; }
-
-        /// <summary>
         /// Gets or sets the collection of line item tax detalization lines
         /// </summary>
         /// <value>
@@ -245,5 +231,58 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// </summary>
         /// <value>Dynamic properties collections</value>
         public ICollection<DynamicProperty> DynamicProperties { get; set; }
+
+        public ICollection<Discount> Discounts { get; }
+
+        public Currency Currency { get; }
+
+        public void ApplyRewards(IEnumerable<PromotionReward> rewards)
+        {
+            Discounts.Clear();
+
+            var cartRewards = rewards.Where(r => r.RewardType == PromotionRewardType.CartSubtotalReward);
+            foreach (var reward in cartRewards)
+            {
+                var discount = reward.ToDiscountModel(SubTotal.Amount, Currency);
+
+                if (reward.IsValid)
+                {
+                    Discounts.Add(discount);
+                }
+            }
+
+            var lineItemRewards = rewards.Where(r => r.RewardType == PromotionRewardType.CatalogItemAmountReward);
+            foreach (var lineItem in Items)
+            {
+                lineItem.ApplyRewards(lineItemRewards);
+            }
+
+            var shipmentRewards = rewards.Where(r => r.RewardType == PromotionRewardType.ShipmentReward);
+            foreach (var shipment in Shipments)
+            {
+                shipment.ApplyRewards(shipmentRewards);
+            }
+
+            if (Coupon != null && !string.IsNullOrEmpty(Coupon.Code))
+            {
+                var couponReward = rewards.FirstOrDefault(r => r.Promotion.Coupons != null && r.Promotion.Coupons.Any());
+                if (couponReward != null)
+                {
+                    var discount = couponReward.ToDiscountModel(SubTotal.Amount, Currency);
+                    string couponCode = couponReward.Promotion.Coupons.FirstOrDefault(c => c == Coupon.Code);
+                    if (!string.IsNullOrEmpty(couponCode))
+                    {
+                        Coupon.Amount = discount.Amount;
+                        Coupon.AppliedSuccessfully = couponReward.IsValid;
+                        Coupon.Code = couponCode;
+                        Coupon.Description = couponReward.Promotion.Description;
+                    }
+                }
+                else
+                {
+                    Coupon.ErrorCode = "InvalidCouponCode";
+                }
+            }
+        }
     }
 }

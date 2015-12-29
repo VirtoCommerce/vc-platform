@@ -25,7 +25,12 @@ storefrontApp.controller('productController', ['$scope', '$window', 'catalogServ
                 $scope.checkProperty(propertyMap[x][0])
             });
             $scope.selectedVariation = product;
-            getActualProductPrice($window.products[0]);
+            var simpleProduct = {
+                Id: product.Id,
+                CatalogId: product.CatalogId,
+                CategoryId: product.CategoryId
+            };
+            getActualProductPrice(simpleProduct);
         });
     };
 

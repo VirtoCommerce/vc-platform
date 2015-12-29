@@ -10,7 +10,7 @@ namespace VirtoCommerce.Storefront.Model.Marketing
         /// <summary>
         /// Gets or sets promotion reward amount
         /// </summary>
-        public Money Amount { get; set; }
+        public decimal Amount { get; set; }
 
         /// <summary>
         /// Gets or sets promotion reward amount type (absolute or relative)
@@ -86,5 +86,28 @@ namespace VirtoCommerce.Storefront.Model.Marketing
         /// Gets or sets promotion reward type
         /// </summary>
         public PromotionRewardType RewardType { get; set; }
+
+        public Discount ToDiscountModel(decimal originAmount, Currency currency)
+        {
+            decimal absoluteAmount = GetAbsoluteDiscountAmount(originAmount);
+
+            var discount = new Discount();
+            discount.Amount = new Money(absoluteAmount, currency.Code);
+            discount.Description = Promotion.Description;
+            discount.PromotionId = Promotion.Id;
+
+            return discount;
+        }
+
+        private decimal GetAbsoluteDiscountAmount(decimal originAmount)
+        {
+            decimal absoluteAmount = Amount;
+            if (AmountType == AmountType.Relative)
+            {
+                absoluteAmount = Amount * originAmount / 100;
+            }
+
+            return absoluteAmount;
+        }
     }
 }

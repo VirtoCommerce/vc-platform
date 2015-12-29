@@ -13,6 +13,8 @@ namespace VirtoCommerce.Storefront.Converters
 
             webModel.InjectFrom<NullableAndEnumValueInjecter>(serviceModel);
 
+            webModel.Coupons = serviceModel.Coupons;
+
             return webModel;
         }
     }

@@ -5,24 +5,35 @@
                 <div class="status" ng-bind="blade.currentEntity.status"></div>
                 <div class="reason" ng-bind="blade.currentEntity.cancelReason" ng-if="blade.currentEntity.isCancelled"></div>
             </div>
-            <div class="order-brand">
+            <div class="order-brand" ng-if="!blade.isNew">
                 <div class="brand-image">
-                    <img class="brand-logo" src="{{blade.currentEntity.shippingMethod.logoUrl}}" alt="" ng-if="blade.currentEntity.shippingMethod.logoUrl">
+                    <img class="brand-logo" ng-src="{{blade.currentEntity.shippingMethod.logoUrl}}" alt="" ng-if="blade.currentEntity.shippingMethod.logoUrl">
                 </div>
-                <div class="brand-t" title="{{blade.currentEntity.shippingMethod.description}}">{{blade.currentEntity.shippingMethod.description}}</div>
-                <div class="brand-descr" title="{{blade.currentEntity.shippingMethod.optionDescription}}" ng-if="blade.currentEntity.shippingMethod.optionDescription">{{blade.currentEntity.shippingMethod.optionDescription}}</div>
+                <div class="brand-t" title="{{blade.currentEntity.shippingMethod.description}}">{{blade.currentEntity.shippingMethod.name}}</div>
+                <div class="brand-descr" title="{{blade.currentEntity.shippingMethod.optionDescription}}" ng-if="blade.currentEntity.shippingMethod.optionName">{{blade.currentEntity.shippingMethod.optionName}}</div>
+            </div>
+            <div class="form-group" ng-if="blade.isNew">
+                <label class="form-label">{{ 'orders.blades.shipment-detail.labels.shipment-method' | translate }}</label>
+                <div class="form-input">
+                    <ui-select ng-model="blade.currentEntity.shippingMethod">
+                        <ui-select-match placeholder="{{ 'orders.blades.shipment-detail.placeholders.shipment-method' | translate }}">{{$select.selected.name}}</ui-select-match>
+                        <ui-select-choices repeat="x in currentStore.shippingMethods | filter: { name: $select.search }">
+                            <span ng-bind-html="x.name | highlight: $select.search"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">{{ 'orders.blades.shipment-detail.labels.approved' | translate }}</label>
+                <div class="form-input">
+                    <label class="form-label __switch">
+                        <input type="checkbox" ng-model="blade.currentEntity.isApproved" />
+                        <span class="switch"></span>
+                    </label>
+                </div>
             </div>
             <div class="form columns clearfix">
                 <div class="column">
-                    <div class="form-group">
-                        <label class="form-label">{{ 'orders.blades.shipment-detail.labels.approved' | translate }}</label>
-                        <div class="form-input">
-                            <label class="form-label __switch">
-                                <input type="checkbox" ng-model="blade.currentEntity.isApproved" />
-                                <span class="switch"></span>
-                            </label>
-                        </div>
-                    </div>
                     <div class="form-group">
                         <label class="form-label">{{ 'orders.blades.shipment-detail.labels.shipment-number' | translate }}</label>
                         <div class="form-input">

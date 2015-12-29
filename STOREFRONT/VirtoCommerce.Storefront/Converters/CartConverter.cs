@@ -26,11 +26,6 @@ namespace VirtoCommerce.Storefront.Converters
                 };
             }
 
-            if (serviceModel.Discounts != null)
-            {
-                webModel.Discounts = serviceModel.Discounts.Select(d => d.ToWebModel()).ToList();
-            }
-
             if (serviceModel.Items != null)
             {
                 webModel.Items = serviceModel.Items.Select(i => i.ToWebModel(currency, language)).ToList();
