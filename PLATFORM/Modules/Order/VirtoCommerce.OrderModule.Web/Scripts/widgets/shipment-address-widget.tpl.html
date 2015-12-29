@@ -1,7 +1,10 @@
 ﻿<div class="gridster-cnt" ng-click="openAddressesBlade()">
-    <div class="cnt-inner">
-        <div class="list-count" ng-if="!operation.deliveryAddress">{{'orders.widgets.shipment-address.not-applicable' | translate}}</div>
+    <div class="cnt-inner" ng-if="!operation.deliveryAddress">
+        <div class="list-count">{{'orders.widgets.shipment-address.not-applicable' | translate}}</div>
         <div class="list-t">{{'orders.widgets.shipment-address.title' | translate}}</div>
-        <div class="list-price" ng-if="operation.deliveryAddress" >{{ getAddressName(operation.deliveryAddress) | limitTo :40 }}</div>
+    </div>
+    <div class="cnt-inner" ng-if="operation.deliveryAddress">
+        <div class="list-t">{{'orders.widgets.shipment-address.title' | translate}}</div>
+        <div class="list-price">{{ getAddressName(operation.deliveryAddress) | limitTo :40 }}</div>
     </div>
 </div>

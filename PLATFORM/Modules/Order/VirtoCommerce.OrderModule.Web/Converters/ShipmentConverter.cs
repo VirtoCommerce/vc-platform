@@ -65,6 +65,11 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 	
 			if (shipment.DeliveryAddress != null)
 				retVal.DeliveryAddress = shipment.DeliveryAddress.ToCoreModel();
+            if(shipment.ShippingMethod != null)
+            {
+                retVal.ShipmentMethodCode = shipment.ShippingMethod.Code;
+                retVal.ShipmentMethodOption = shipment.ShippingMethod.OptionName;
+            }
 			if (shipment.InPayments != null)
 				retVal.InPayments = shipment.InPayments.Select(x => x.ToCoreModel()).ToList();
 			if (shipment.Discount != null)

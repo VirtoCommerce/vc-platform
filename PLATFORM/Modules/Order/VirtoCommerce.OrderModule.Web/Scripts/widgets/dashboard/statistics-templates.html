@@ -3,7 +3,7 @@
         <div class="cnt-inner">
             <div class="list-count">
                 <div ng-repeat="data in $storage.ordersDashboardStatistics.revenuePerCustomer track by $index">{{data.amount | number : 2}} {{data.currency}}</div>
-            </div> 
+            </div>
             <div class="list-t">{{'orders.widgets.statistics-templates.revenue' | translate}}</div>
         </div>
     </div>
@@ -21,13 +21,13 @@
         <div class="cnt-inner">
             <div class="list-count">
                 <div ng-repeat="data in $storage.ordersDashboardStatistics.revenuePerCustomer track by $index">{{data.amount | number : 2}} {{data.currency}}</div>
-            </div> 
+            </div>
             <div class="list-t">{{'orders.widgets.statistics-templates.revenue-per-customer' | translate}}</div>
         </div>
     </div>
 </script>
 <script type="text/ng-template" id="order-statistics-orderValue.html">
-    <div class="gridster-cnt">
+    <div class="gridster-cnt" ng-click="openBlade()">
         <div class="cnt-inner">
             <div class="list-count">
                 <div ng-repeat="data in $storage.ordersDashboardStatistics.avgOrderValue track by $index">{{data.amount | number : 2}} {{data.currency}}</div>

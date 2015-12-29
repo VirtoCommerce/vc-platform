@@ -13,7 +13,14 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
 
         public override object BeforeMethod(string method)
         {
-            return Root.SingleOrDefault(x => x.Handle.Equals(method, StringComparison.OrdinalIgnoreCase));
+            return this.SingleOrDefault(x => x.Handle.Equals(method, StringComparison.OrdinalIgnoreCase));
         }
+
+        #region ItemCollection Members
+        public override bool Contains(object value)
+        {
+            return false;
+        }
+        #endregion
     }
 }

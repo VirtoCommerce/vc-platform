@@ -51,7 +51,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
         private readonly ISettingsManager _settingsManager;
         private readonly IDynamicPropertyService _dynamicPropertyService;
 		private readonly ICacheManager<object> _cacheManager;
-
+        [CLSCompliant(false)]
         public PlatformExportImportManager(ISecurityService securityService, IRoleManagementService roleManagementService, ISettingsManager settingsManager, IDynamicPropertyService dynamicPropertyService, IPackageService packageService, ICacheManager<object> cacheManager)
         {
             _dynamicPropertyService = dynamicPropertyService;

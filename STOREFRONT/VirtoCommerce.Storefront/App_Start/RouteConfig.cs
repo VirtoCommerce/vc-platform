@@ -11,6 +11,7 @@ namespace VirtoCommerce.Storefront
 {
     public class RouteConfig
     {
+        [CLSCompliant(false)]
         public static void RegisterRoutes(RouteCollection routes, Func<WorkContext> workContextFactory, ICommerceCoreModuleApi commerceCoreApi, IStaticContentService staticContentService, ICacheManager<object> cacheManager)
         {
             routes.IgnoreRoute("favicon.ico");

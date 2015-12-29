@@ -29,6 +29,7 @@ namespace VirtoCommerce.Platform.Data.Security
         private readonly IModuleManifestProvider _manifestProvider;
         private readonly IPermissionScopeService _permissionScopeService;
 
+        [CLSCompliant(false)]
         public SecurityService(Func<IPlatformRepository> platformRepository, Func<ApplicationUserManager> userManagerFactory, IApiAccountProvider apiAccountProvider,
                                ISecurityOptions securityOptions, IModuleManifestProvider manifestProvider, IPermissionScopeService permissionScopeService, ICacheManager<object> cacheManager)
         {

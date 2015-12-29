@@ -267,9 +267,10 @@ namespace VirtoCommerce.Platform.Web
             #region Caching
             var cacheManager = CacheFactory.Build("platformCache", settings =>
             {
+                //Should be aware to using Web cache cache handle because it not worked in native threads. (Hangfire jobs)
                 settings
                     .WithUpdateMode(CacheUpdateMode.Up)
-                    .WithSystemRuntimeCacheHandle("memoryHandle")
+                    .WithSystemRuntimeCacheHandle("memCacheHandle")
                         .EnablePerformanceCounters()
                         .WithExpiration(ExpirationMode.Absolute, TimeSpan.FromDays(1));
             });

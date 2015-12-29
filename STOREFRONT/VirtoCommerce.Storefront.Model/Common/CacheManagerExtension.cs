@@ -7,6 +7,7 @@ using CacheManager.Core;
 
 namespace VirtoCommerce.Storefront.Model.Common
 {
+    [CLSCompliant(false)]
     public static class CacheManagerExtension
     {
         public static T Get<T>(this ICacheManager<object> cacheManager, string cacheKey, string region, Func<T> getValueFunction)
@@ -43,7 +44,7 @@ namespace VirtoCommerce.Storefront.Model.Common
             if(result == null)
             {
                 result = await getValueFunction(); 
-                var cacheItem = new CacheItem<object>(cacheKey, result, region, ExpirationMode.Absolute, expiration);
+                var cacheItem = new CacheItem<object>(cacheKey, region, result, ExpirationMode.Absolute, expiration);
                 cacheManager.Add(cacheItem);
             }
             return result;

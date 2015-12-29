@@ -20,6 +20,7 @@
 						title: 'orders.blades.shipment-detail.title',
 						titleValues: { number: result.number },
 						subtitle: 'orders.blades.shipment-detail.subtitle',
+						stores: blade.stores,
 						isNew: true,
 						customerOrder: blade.customerOrder,
 						currentEntity: result,

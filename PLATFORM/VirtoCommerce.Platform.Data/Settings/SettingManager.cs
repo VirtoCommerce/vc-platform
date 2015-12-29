@@ -21,6 +21,7 @@ namespace VirtoCommerce.Platform.Data.Settings
         private readonly ICacheManager<object> _cacheManager;
         private readonly ModuleManifest[] _predefinedManifests;
 
+        [CLSCompliant(false)]
         public SettingsManager(IModuleManifestProvider manifestProvider, Func<IPlatformRepository> repositoryFactory, ICacheManager<object> cacheManager, ModuleManifest[] predefinedManifests)
         {
             _manifestProvider = manifestProvider;

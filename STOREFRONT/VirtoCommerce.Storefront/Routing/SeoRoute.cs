@@ -21,6 +21,7 @@ namespace VirtoCommerce.Storefront.Routing
         private readonly IStaticContentService _contentService;
         private readonly ICacheManager<object> _cacheManager;
 
+        [CLSCompliant(false)]
         public SeoRoute(string url, IRouteHandler routeHandler, Func<WorkContext> workContextFactory, ICommerceCoreModuleApi commerceCoreApi, IStaticContentService staticContentService, ICacheManager<object> cacheManager)
             : base(url, routeHandler)
         {
