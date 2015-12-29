@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Omu.ValueInjecter;
@@ -8,8 +9,6 @@ using VirtoCommerce.OrderModule.Data.Model;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Data.Common.ConventionInjections;
 using coreModel = VirtoCommerce.Domain.Cart.Model;
-using VirtoCommerce.Domain.Payment.Model;
-using System.Collections.Generic;
 
 namespace VirtoCommerce.OrderModule.Data.Converters
 {
@@ -70,7 +69,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
             retVal.Currency = paymentIn.Currency.ToString();
             retVal.Status = paymentIn.PaymentStatus.ToString();
 
-         
+
             if (paymentIn.BillingAddress != null)
             {
                 retVal.Addresses = new ObservableCollection<AddressEntity>(new AddressEntity[] { paymentIn.BillingAddress.ToDataModel() });
