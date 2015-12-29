@@ -67,6 +67,7 @@
 			    function saveChanges() {
 			        blade.isLoading = true;
 			        order_res_customerOrders.update({}, blade.customerOrder, function (data, headers) {
+			            blade.isNew = false;
 			            blade.refresh();
 			            blade.parentBlade.refresh();
 			        },
