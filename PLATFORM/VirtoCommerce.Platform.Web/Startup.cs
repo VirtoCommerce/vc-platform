@@ -271,7 +271,6 @@ namespace VirtoCommerce.Platform.Web
                 settings
                     .WithUpdateMode(CacheUpdateMode.Up)
                     .WithSystemRuntimeCacheHandle("memCacheHandle")
-                        .EnablePerformanceCounters()
                         .WithExpiration(ExpirationMode.Absolute, TimeSpan.FromDays(1));
             });
             container.RegisterInstance<ICacheManager<object>>(cacheManager);
