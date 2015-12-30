@@ -34,13 +34,7 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         /// <summary>
         /// Absilute price benefit. You save 40.00 USD
         /// </summary>
-        public Money AbsoluteBenefit
-        {
-            get
-            {
-                return ListPrice - SalePrice;
-            }
-        }
+        public Money AbsoluteBenefit { get; set; }
 
         /// <summary>
         /// Relative benefit. 30% 
@@ -56,6 +50,11 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         /// Sale product price (new price)
         /// </summary>
         public Money SalePrice { get; set; }
+
+        /// <summary>
+        /// Actual price includes all kind of discounts
+        /// </summary>
+        public Money ActualPrice { get; set; }
 
         /// <summary>
         /// Current active discount

@@ -83,6 +83,15 @@ namespace VirtoCommerce.Storefront.Controllers
             await _promotionEvaluator.EvaluateDiscountsAsync(promotionContext, products);
             prices = products.Select(p => p.Price).ToList();
 
+            foreach (var price in prices)
+            {
+                if (price.ActiveDiscount != null)
+                {
+                    price.AbsoluteBenefit += price.ActiveDiscount.Amount;
+                    price.ActualPrice = price.SalePrice - price.AbsoluteBenefit;
+                }
+            }
+
             return Json(prices, JsonRequestBehavior.AllowGet);
         }
 

@@ -59,11 +59,9 @@
                 <span class="old" ng-if="productPrices['{{ product.id }}'].ActiveDiscount.Amount.Amount > 0">
                     <small ng-bind="productPrices['{{ product.id }}'].SalePrice.FormatedAmount"></small>
                 </span>
-                <small ng-if="productPrices['{{ product.id }}'].ActiveDiscount.Amount.Amount == 0" ng-bind="productPrices['{{ product.id }}'].SalePrice.FormatedAmount"></small>
-                <small ng-if="productPrices['{{ product.id }}'].ActiveDiscount.Amount.Amount > 0" ng-bind="((productPrices['{{ product.id }}'].SalePrice.Amount - productPrices['{{ product.id }}'].ActiveDiscount.Amount.Amount) | currency: productPrices['{{ product.id }}'].SalePrice.CurrencySymbol)"></small>
+                <small ng-bind="productPrices['{{ product.id }}'].ActualPrice.FormatedAmount"></small>
             </span>
-            <span class="sale-tag medium--right" ng-if="productPrices['{{ product.id }}'].ListPrice.Amount > productPrices['{{ product.id }}'].SalePrice.Amount" ng-bind="'save ' + ((productPrices['{{ product.id }}'].ListPrice.Amount - productPrices['{{ product.id }}'].SalePrice.Amount) | currency: productPrices['{{ product.id }}'].SalePrice.CurrencySymbol)"></span>
-            <span class="sale-tag medium--right" ng-if="productPrices['{{ product.id }}'].ActiveDiscount.Amount.Amount > 0" ng-bind="'save ' + productPrices['{{ product.id }}'].ActiveDiscount.Amount.FormatedAmount"></span>
+            <span class="sale-tag medium--right" ng-if="productPrices['{{ product.id }}'].AbsoluteBenefit.Amount > 0" ng-bind="'save ' + productPrices['{{ product.id }}'].AbsoluteBenefit.FormatedAmount"></span>
         </div>
 
         <div class="product-item--other">

@@ -22,7 +22,7 @@ namespace VirtoCommerce.Storefront.Converters
             lineItemWebModel.ImageUrl = product.PrimaryImage.Url;
             lineItemWebModel.ListPrice = product.Price.ListPrice;
             lineItemWebModel.SalePrice = product.Price.SalePrice;
-            lineItemWebModel.PlacedPrice = product.Price.SalePrice;
+            lineItemWebModel.PlacedPrice = product.Price.ActualPrice;
             lineItemWebModel.ExtendedPrice = lineItemWebModel.PlacedPrice * quantity;
             lineItemWebModel.ProductId = product.Id;
             lineItemWebModel.Quantity = quantity;

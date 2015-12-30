@@ -16,7 +16,9 @@ namespace VirtoCommerce.Storefront.Converters
             retVal.Currency = currency;
             retVal.ListPrice = new Money((decimal)(price.List ?? 0), price.Currency);
             retVal.SalePrice = price.Sale == null ? retVal.ListPrice : new Money((decimal)price.Sale, price.Currency);
+            retVal.AbsoluteBenefit = retVal.ListPrice - retVal.SalePrice;
             retVal.ActiveDiscount = new Discount { Amount = new Money(0, price.Currency) };
+            retVal.ActualPrice = retVal.SalePrice - retVal.ActiveDiscount.Amount;
             return retVal;
         }
     }
