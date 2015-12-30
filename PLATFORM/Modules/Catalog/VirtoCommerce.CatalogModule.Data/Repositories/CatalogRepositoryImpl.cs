@@ -331,6 +331,11 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
                 var propertyValues = PropertyValues.Where(x => itemIds.Contains(x.ItemId)).ToArray();
                 //Load categories with all properties for property inheritance
                 categories = GetCategoriesByIds(categoryIds, coreModel.CategoryResponseGroup.WithProperties);
+                //load catalogs with properties for products not belongs to any category (EF auto populated all Catalog nav properties for all objects)
+                foreach (var catalogId in retVal.Where(x => x.CategoryId == null).Select(x => x.CatalogId))
+                {
+                    var catalog = GetCatalogById(catalogId);
+                }
             }
             if ((respGroup & coreModel.ItemResponseGroup.ItemAssets) == coreModel.ItemResponseGroup.ItemAssets)
             {
@@ -464,6 +469,8 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
             @"DELETE CI FROM CatalogImage CI INNER JOIN Category C ON C.Id = CI.CategoryId WHERE C.Id IN ({0}) 
             DELETE PV FROM PropertyValue PV INNER JOIN Category C ON C.Id = PV.CategoryId WHERE C.Id IN ({0}) 
             DELETE CR FROM CategoryRelation CR INNER JOIN Category C ON C.Id = CR.SourceCategoryId OR C.Id = CR.TargetCategoryId  WHERE C.Id IN ({0}) 
+            DELETE CIR FROM CategoryItemRelation CIR INNER JOIN Category C ON C.Id = CIR.CategoryId WHERE C.Id IN ({0}) 
+
             DELETE P FROM Property P INNER JOIN Category C ON C.Id = P.CategoryId  WHERE C.Id IN ({0})";
 
             var itemsIds = Items.Where(x => allCategoriesIds.Contains(x.CategoryId)).Select(x => x.Id).ToArray();
