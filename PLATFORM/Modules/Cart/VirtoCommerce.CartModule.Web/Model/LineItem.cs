@@ -149,6 +149,10 @@ namespace VirtoCommerce.CartModule.Web.Model
         public decimal? Width { get; set; }
 
         /// <summary>
+        /// Price id which that was used in the formation of this line item
+        /// </summary>
+        public string PriceId { get; set; }
+        /// <summary>
         /// Gets or sets the value of line item original price
         /// </summary>
         public decimal ListPrice { get; set; }

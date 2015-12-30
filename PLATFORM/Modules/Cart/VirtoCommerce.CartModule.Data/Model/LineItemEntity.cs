@@ -74,7 +74,10 @@ namespace VirtoCommerce.CartModule.Data.Model
 		public decimal? Length { get; set; }
 		public decimal? Width { get; set; }
 
-		[Column(TypeName = "Money")]
+        [StringLength(128)]
+        public string PriceId { get; set; }
+
+        [Column(TypeName = "Money")]
 		public decimal ListPrice { get; set; }
 		[Column(TypeName = "Money")]
 		public decimal SalePrice { get; set; }

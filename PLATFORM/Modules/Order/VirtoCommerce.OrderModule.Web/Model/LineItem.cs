@@ -13,10 +13,14 @@ namespace VirtoCommerce.OrderModule.Web.Model
 {
 	public class LineItem : AuditableEntity, IHaveTaxDetalization, ISupportCancellation
 	{
-		/// <summary>
-		/// Price with tax and without dicount
-		/// </summary>
-		public decimal BasePrice { get; set; }
+        /// <summary>
+        /// Price id which that was used in the formation of this line item
+        /// </summary>
+        public string PriceId { get; set; }
+        /// <summary>
+        /// Price with tax and without dicount
+        /// </summary>
+        public decimal BasePrice { get; set; }
 		/// <summary>
 		/// Price with tax and discount
 		/// </summary>

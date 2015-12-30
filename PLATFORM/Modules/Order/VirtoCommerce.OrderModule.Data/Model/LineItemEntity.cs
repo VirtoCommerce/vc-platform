@@ -19,7 +19,9 @@ namespace VirtoCommerce.OrderModule.Data.Model
 			TaxDetails = new NullCollection<TaxDetailEntity>();
 		}
 
-		[Required]
+        [StringLength(128)]
+        public string PriceId { get; set; }
+        [Required]
 		[StringLength(3)]
 		public string Currency { get; set; }
 		[Column(TypeName = "Money")]
