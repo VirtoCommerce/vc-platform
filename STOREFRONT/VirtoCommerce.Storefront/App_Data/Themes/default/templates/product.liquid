@@ -76,11 +76,9 @@
                         <small ng-if="productPrice.ListPrice.Amount > productPrice.SalePrice.Amount" ng-bind="productPrice.ListPrice.FormatedAmount"></small>
                         <small ng-if="productPrice.ActiveDiscount.Amount.Amount > 0" ng-bind="productPrice.SalePrice.FormatedAmount"></small>
                     </span>
-                    <span class="sale-tag large" id="comparePrice" ng-if="productPrice.ListPrice.Amount > productPrice.SalePrice.Amount" ng-bind="'save ' + productPrice.AbsoluteBenefit.FormatedAmount"></span>
-                    <span class="sale-tag large" id="comparePrice" ng-if="productPrice.ActiveDiscount.Amount.Amount > 0" ng-bind="'save ' + productPrice.ActiveDiscount.Amount.FormatedAmount"></span>
+                    <span class="sale-tag large" id="comparePrice" ng-if="productPrice.AbsoluteBenefit.Amount > 0" ng-bind="'save ' + productPrice.ActiveDiscount.Amount.FormatedAmount"></span>
                     <span class="h1" id="productPrice">
-                        <small ng-if="productPrice.ListPrice.Amount >= productPrice.SalePrice.Amount && productPrice.ActiveDiscount.Amount.Amount == 0" ng-bind="productPrice.SalePrice.FormatedAmount"></small>
-                        <small ng-if="productPrice.ActiveDiscount.Amount.Amount > 0" ng-bind="(productPrice.SalePrice.Amount - productPrice.ActiveDiscount.Amount.Amount) | currency: productPrice.SalePrice.CurrencySymbol"></small>
+                        <small ng-bind="productPrice.ActualPrice.FormatedAmount"></small>
                     </span>
                 </li>
 
