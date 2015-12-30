@@ -87,6 +87,11 @@ namespace VirtoCommerce.Storefront.Model.Marketing
         /// </summary>
         public PromotionRewardType RewardType { get; set; }
 
+        /// <summary>
+        /// Gets or sets the shipping method code for the marketing reward
+        /// </summary>
+        public string ShippingMethodCode { get; set; }
+
         public Discount ToDiscountModel(decimal originAmount, Currency currency)
         {
             decimal absoluteAmount = GetAbsoluteDiscountAmount(originAmount);
