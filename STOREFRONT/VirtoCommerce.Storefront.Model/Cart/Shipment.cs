@@ -135,7 +135,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
 
         public void ApplyRewards(IEnumerable<PromotionReward> rewards)
         {
-            var shipmentRewards = rewards.Where(r => r.RewardType == PromotionRewardType.ShipmentReward);
+            var shipmentRewards = rewards.Where(r => r.RewardType == PromotionRewardType.ShipmentReward && r.ShippingMethodCode == ShipmentMethodCode);
 
             Discounts.Clear();
 
