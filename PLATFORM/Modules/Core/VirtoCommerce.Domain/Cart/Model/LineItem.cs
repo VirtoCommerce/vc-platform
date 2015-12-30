@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.Domain.Catalog.Model;
 using VirtoCommerce.Domain.Commerce.Model;
+using VirtoCommerce.Domain.Pricing.Model;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
 
@@ -51,8 +52,10 @@ namespace VirtoCommerce.Domain.Cart.Model
 		public decimal? Length { get; set; }
 		public decimal? Width { get; set; }
 
+        public string PriceId { get; set; }
+        public Price Price { get; set; }
 
-		public decimal ListPrice { get; set; }
+        public decimal ListPrice { get; set; }
 		public decimal SalePrice { get; set; }
 		public decimal PlacedPrice { get; set; }
 		public decimal ExtendedPrice { get; set; }

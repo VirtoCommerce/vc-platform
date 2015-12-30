@@ -12,6 +12,11 @@ namespace VirtoCommerce.Domain.Order.Model
 {
     public class LineItem : AuditableEntity, IPosition, IHaveTaxDetalization, ISupportCancellation, IHaveDimension, IHasDynamicProperties
     {
+        /// <summary>
+        /// Price id
+        /// </summary>
+        public string PriceId { get; set; }
+
         public CurrencyCodes Currency { get; set; }
         /// <summary>
         /// Price where tax and discount are not applied
