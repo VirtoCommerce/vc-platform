@@ -20,6 +20,7 @@ namespace VirtoCommerce.Storefront.Converters
             webModel.CouponMinOrderAmount = new Money(serviceModel.CouponMinOrderAmount ?? 0, currency.Code);
             webModel.Promotion = serviceModel.Promotion.ToWebModel();
             webModel.RewardType = EnumUtility.SafeParse(serviceModel.RewardType, PromotionRewardType.CatalogItemAmountReward);
+            webModel.ShippingMethodCode = serviceModel.ShippingMethod;
 
             return webModel;
         }
