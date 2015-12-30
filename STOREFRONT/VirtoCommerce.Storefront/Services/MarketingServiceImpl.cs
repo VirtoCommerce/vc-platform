@@ -18,8 +18,8 @@ namespace VirtoCommerce.Storefront.Services
         public async Task<string> GetDynamicContentHtmlAsync(string storeId, string placeholderName)
         {
             string htmlContent = null;
-
-            var dynamicContent = await _marketingApi.MarketingModuleDynamicContentEvaluateDynamicContentAsync(storeId, placeholderName);
+            //TODO: make full context
+            var dynamicContent = await _marketingApi.MarketingModuleDynamicContentEvaluateDynamicContentAsync(evalContextStoreId: storeId, evalContextPlaceName: placeholderName);
             if (dynamicContent != null)
             {
                 var htmlDynamicContent = dynamicContent.FirstOrDefault(dc => !string.IsNullOrEmpty(dc.ContentType) && dc.ContentType.Equals("Html", StringComparison.OrdinalIgnoreCase));

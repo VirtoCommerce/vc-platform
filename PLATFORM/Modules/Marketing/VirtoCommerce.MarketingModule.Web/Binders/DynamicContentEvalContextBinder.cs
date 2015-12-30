@@ -24,7 +24,7 @@ namespace VirtoCommerce.MarketingModule.Web.Binders
             var result = new DynamicContentEvaluationContext();
 
             result.StoreId = qs.Get("storeId") ?? qs.Get("evalContext.storeId");
-            result.PlaceName= qs.Get("placeHolder") ?? qs.Get("evalContext.placeHolder");
+            result.PlaceName= qs.Get("placeName") ?? qs.Get("evalContext.placeName");
             result.Tags = qs.GetValues("tags");
             if (result.Tags == null)
             {
