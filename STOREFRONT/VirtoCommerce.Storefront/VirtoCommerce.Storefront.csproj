@@ -529,7 +529,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Pages\" />
-    <Folder Include="App_Data\Themes\Electronics\" />
     <Folder Include="Content\" />
     <Folder Include="fonts\" />
     <Folder Include="Models\" />
