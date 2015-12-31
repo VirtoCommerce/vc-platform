@@ -28,6 +28,14 @@ namespace VirtoCommerce.Client.Model
 
         
         /// <summary>
+        /// Price id which that was used in the formation of this line item
+        /// </summary>
+        /// <value>Price id which that was used in the formation of this line item</value>
+        [DataMember(Name="priceId", EmitDefaultValue=false)]
+        public string PriceId { get; set; }
+  
+        
+        /// <summary>
         /// Price with tax and without dicount
         /// </summary>
         /// <value>Price with tax and without dicount</value>
@@ -304,6 +312,7 @@ namespace VirtoCommerce.Client.Model
         {
             var sb = new StringBuilder();
             sb.Append("class VirtoCommerceOrderModuleWebModelLineItem {\n");
+            sb.Append("  PriceId: ").Append(PriceId).Append("\n");
             sb.Append("  BasePrice: ").Append(BasePrice).Append("\n");
             sb.Append("  Price: ").Append(Price).Append("\n");
             sb.Append("  DiscountAmount: ").Append(DiscountAmount).Append("\n");
@@ -378,6 +387,11 @@ namespace VirtoCommerce.Client.Model
                 return false;
 
             return 
+                (
+                    this.PriceId == other.PriceId ||
+                    this.PriceId != null &&
+                    this.PriceId.Equals(other.PriceId)
+                ) && 
                 (
                     this.BasePrice == other.BasePrice ||
                     this.BasePrice != null &&
@@ -576,6 +590,9 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
+                
+                if (this.PriceId != null)
+                    hash = hash * 57 + this.PriceId.GetHashCode();
                 
                 if (this.BasePrice != null)
                     hash = hash * 57 + this.BasePrice.GetHashCode();
