@@ -147,7 +147,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                 }
 
                 //Do not search in variations
-                var query = repository.Items.Where(x => x.ParentId == null && criteria.WithHidden ? true : x.IsActive);
+                var query = repository.Items.Where(x => x.ParentId == null).Where(x => criteria.WithHidden ? true : x.IsActive);
 
                 if (searchCategoryIds != null)
                 {
