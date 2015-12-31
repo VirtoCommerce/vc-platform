@@ -349,7 +349,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
             {
                 var variationIds = Items.Where(x => itemIds.Contains(x.ParentId)).Select(x => x.Id).ToArray();
                 //For variations loads only info and images
-                var variations = Items.Include(x => x.Images).Where(x => variationIds.Contains(x.Id)).ToArray();
+                var variations = Items.Include(x => x.Images).Include(x=>x.Assets).Where(x => variationIds.Contains(x.Id)).ToArray();
                 //load variations property values separately
                 var variationPropertyValues = PropertyValues.Where(x => variationIds.Contains(x.ItemId)).ToArray();
             }

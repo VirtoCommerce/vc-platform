@@ -129,6 +129,11 @@ namespace VirtoCommerce.Domain.Catalog.Model
         /// </summary>
         public string Outline { get; set; }
 
+        /// <summary>
+        /// Search also in hidden categories and products
+        /// </summary>
+        public bool WithHidden { get; set; }
+
         public DateTime? StartDateFrom { get; set; }
 
         public void Normalize()

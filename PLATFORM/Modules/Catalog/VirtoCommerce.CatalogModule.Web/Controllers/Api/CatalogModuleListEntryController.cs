@@ -47,7 +47,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         [ResponseType(typeof(webModel.ListEntrySearchResult))]
         public IHttpActionResult ListItemsSearch([ModelBinder(typeof(ListEntrySearchCriteriaBinder))]webModel.ListEntrySearchCriteria criteria)
         {
-            var searchCriteria = criteria.ToModuleModel();
+            var searchCriteria = criteria.ToCoreModel();
             ApplyRestrictionsForCurrentUser(searchCriteria);
 
             var serviceResult = _searchService.Search(searchCriteria);

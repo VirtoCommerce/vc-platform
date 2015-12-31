@@ -37,7 +37,7 @@ namespace VirtoCommerce.CatalogModule.Web.Binders
 			result.CategoryId = qs["category"].EmptyToNull();
 			result.Count = qs["count"].TryParse(20);
 			result.Start = qs["start"].TryParse(0);
-			bindingContext.Model = result;
+            bindingContext.Model = result;
 			return true;
 		}
 	}
