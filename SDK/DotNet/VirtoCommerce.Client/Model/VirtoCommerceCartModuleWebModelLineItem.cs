@@ -236,6 +236,14 @@ namespace VirtoCommerce.Client.Model
   
         
         /// <summary>
+        /// Price id which that was used in the formation of this line item
+        /// </summary>
+        /// <value>Price id which that was used in the formation of this line item</value>
+        [DataMember(Name="priceId", EmitDefaultValue=false)]
+        public string PriceId { get; set; }
+  
+        
+        /// <summary>
         /// Gets or sets the value of line item original price
         /// </summary>
         /// <value>Gets or sets the value of line item original price</value>
@@ -385,6 +393,7 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Height: ").Append(Height).Append("\n");
             sb.Append("  Length: ").Append(Length).Append("\n");
             sb.Append("  Width: ").Append(Width).Append("\n");
+            sb.Append("  PriceId: ").Append(PriceId).Append("\n");
             sb.Append("  ListPrice: ").Append(ListPrice).Append("\n");
             sb.Append("  SalePrice: ").Append(SalePrice).Append("\n");
             sb.Append("  PlacedPrice: ").Append(PlacedPrice).Append("\n");
@@ -568,6 +577,11 @@ namespace VirtoCommerce.Client.Model
                     this.Width.Equals(other.Width)
                 ) && 
                 (
+                    this.PriceId == other.PriceId ||
+                    this.PriceId != null &&
+                    this.PriceId.Equals(other.PriceId)
+                ) && 
+                (
                     this.ListPrice == other.ListPrice ||
                     this.ListPrice != null &&
                     this.ListPrice.Equals(other.ListPrice)
@@ -733,6 +747,9 @@ namespace VirtoCommerce.Client.Model
                 
                 if (this.Width != null)
                     hash = hash * 57 + this.Width.GetHashCode();
+                
+                if (this.PriceId != null)
+                    hash = hash * 57 + this.PriceId.GetHashCode();
                 
                 if (this.ListPrice != null)
                     hash = hash * 57 + this.ListPrice.GetHashCode();

@@ -203,6 +203,13 @@ namespace VirtoCommerce.Client.Model
   
         
         /// <summary>
+        /// Gets or Sets WithHidden
+        /// </summary>
+        [DataMember(Name="withHidden", EmitDefaultValue=false)]
+        public bool? WithHidden { get; set; }
+  
+        
+        /// <summary>
         /// Gets or Sets StartDateFrom
         /// </summary>
         [DataMember(Name="startDateFrom", EmitDefaultValue=false)]
@@ -243,6 +250,7 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Terms: ").Append(Terms).Append("\n");
             sb.Append("  Facets: ").Append(Facets).Append("\n");
             sb.Append("  Outline: ").Append(Outline).Append("\n");
+            sb.Append("  WithHidden: ").Append(WithHidden).Append("\n");
             sb.Append("  StartDateFrom: ").Append(StartDateFrom).Append("\n");
             
             sb.Append("}\n");
@@ -407,6 +415,11 @@ namespace VirtoCommerce.Client.Model
                     this.Outline.Equals(other.Outline)
                 ) && 
                 (
+                    this.WithHidden == other.WithHidden ||
+                    this.WithHidden != null &&
+                    this.WithHidden.Equals(other.WithHidden)
+                ) && 
+                (
                     this.StartDateFrom == other.StartDateFrom ||
                     this.StartDateFrom != null &&
                     this.StartDateFrom.Equals(other.StartDateFrom)
@@ -499,6 +512,9 @@ namespace VirtoCommerce.Client.Model
                 
                 if (this.Outline != null)
                     hash = hash * 57 + this.Outline.GetHashCode();
+                
+                if (this.WithHidden != null)
+                    hash = hash * 57 + this.WithHidden.GetHashCode();
                 
                 if (this.StartDateFrom != null)
                     hash = hash * 57 + this.StartDateFrom.GetHashCode();
