@@ -56,7 +56,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 			// 2. Categories should be loaded by passing array of ids instead of parallel loading one by one
 			using (var repository = _catalogRepositoryFactory())
 			{
-                var query = repository.Categories.Where(x => criteria.WithHidden ? x.IsActive : true);
+                var query = repository.Categories.Where(x => criteria.WithHidden ? true : x.IsActive);
 
                 //Get list of search in categories
                 var searchCategoryIds = criteria.CategoryIds;
@@ -147,7 +147,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                 }
 
                 //Do not search in variations
-                var query = repository.Items.Where(x => x.ParentId == null && criteria.WithHidden ? x.IsActive : true);
+                var query = repository.Items.Where(x => x.ParentId == null && criteria.WithHidden ? true : x.IsActive);
 
                 if (searchCategoryIds != null)
                 {
