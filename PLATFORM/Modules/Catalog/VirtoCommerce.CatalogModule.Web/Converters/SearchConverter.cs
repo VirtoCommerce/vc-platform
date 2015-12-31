@@ -13,6 +13,8 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
         {
             var retVal = new coreModel.SearchCriteria();
             retVal.InjectFrom(criteria);
+            retVal.Skip = criteria.Start;
+            retVal.Take = criteria.Count;
             retVal.WithHidden = true;
             retVal.ResponseGroup = (coreModel.SearchResponseGroup)(int)criteria.ResponseGroup;
 

@@ -171,6 +171,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                     }
                 }
                 products.Add(product);
+                products.AddRange(product.Variations);                
             }
 
             //Scope bound security check
