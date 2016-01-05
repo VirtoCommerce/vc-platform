@@ -22,7 +22,7 @@ namespace VirtoCommerce.Storefront.App_Start
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             var workContext = UnityConfig.GetConfiguredContainer().Resolve<WorkContext>();
-            if ((workContext.AllStores == null || !workContext.AllStores.Any()) && filterContext.ActionDescriptor.ActionName != "NoStoreFound")
+            if ((workContext.AllStores == null || !workContext.AllStores.Any()) && filterContext.ActionDescriptor.ActionName != "NoStore")
             {
                 filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Common", action = "NoStore" }));
             }
