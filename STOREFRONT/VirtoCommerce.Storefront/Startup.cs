@@ -32,6 +32,7 @@ using CacheManager.Core;
 using CacheManager.Web;
 using MarkdownDeep;
 using VirtoCommerce.Storefront.Model.Marketing.Services;
+using System.Web.Http;
 
 [assembly: OwinStartup(typeof(Startup))]
 [assembly: PreApplicationStartMethod(typeof(Startup), "PreApplicationStart")]
@@ -134,6 +135,8 @@ namespace VirtoCommerce.Storefront
             var staticContentService = new StaticContentServiceImpl(HostingEnvironment.MapPath("~/App_data/Pages"), new Markdown(), shopifyLiquidEngine, cacheManager);
             container.RegisterInstance<IStaticContentService>(staticContentService);
 
+            GlobalConfiguration.Configure(WebApiConfig.Register);
+            //app.UseWebApi(GlobalConfiguration.Configuration);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes, () => container.Resolve<WorkContext>(), container.Resolve<ICommerceCoreModuleApi>(), container.Resolve<IStaticContentService>(), cacheManager);
             AuthConfig.ConfigureAuth(app);
