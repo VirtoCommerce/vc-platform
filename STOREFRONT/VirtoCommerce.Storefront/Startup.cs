@@ -134,6 +134,7 @@ namespace VirtoCommerce.Storefront
             var staticContentService = new StaticContentServiceImpl(HostingEnvironment.MapPath("~/App_data/Pages"), new Markdown(), shopifyLiquidEngine, cacheManager);
             container.RegisterInstance<IStaticContentService>(staticContentService);
 
+          
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes, () => container.Resolve<WorkContext>(), container.Resolve<ICommerceCoreModuleApi>(), container.Resolve<IStaticContentService>(), cacheManager);
             AuthConfig.ConfigureAuth(app);

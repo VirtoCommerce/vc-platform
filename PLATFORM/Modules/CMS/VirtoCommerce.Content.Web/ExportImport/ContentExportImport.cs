@@ -72,7 +72,7 @@ namespace VirtoCommerce.Content.Web.ExportImport
                 progressCallback(progressInfo);
                 foreach (var folder in backupObject.ContentFolders)
                 {
-                    SaveContentFolderRecursive(folder);
+                    SaveContentFolderRecursive(folder, progressCallback);
                 }
             }
         }
@@ -106,7 +106,7 @@ namespace VirtoCommerce.Content.Web.ExportImport
                     {
                         Url = blobFolder.Url
                     };
-                    ReadContentFoldersRecurive(contentFolder);
+                    ReadContentFoldersRecurive(contentFolder, progressCallback);
                     retVal.ContentFolders.Add(contentFolder);
                 }
             }
@@ -114,23 +114,26 @@ namespace VirtoCommerce.Content.Web.ExportImport
             return retVal;
         }
 
-        private void SaveContentFolderRecursive(ContentFolder folder)
+        private void SaveContentFolderRecursive(ContentFolder folder, Action<ExportImportProgressInfo> progressCallback)
         {
             foreach (var childFolder in folder.Folders)
             {
-                SaveContentFolderRecursive(childFolder);
+                SaveContentFolderRecursive(childFolder, progressCallback);
             }
             foreach (var folderFile in folder.Files)
             {
                 using (var stream = _contentStorageProvider.OpenWrite(folderFile.Url))
                 using (var memStream = new MemoryStream(folderFile.Data))
                 {
+                    var progressInfo = new ExportImportProgressInfo();
+                    progressInfo.Description = String.Format("Saving {0}", folderFile.Url);
+                    progressCallback(progressInfo);
                     memStream.CopyTo(stream);
                 }
             }
         }
 
-        private void ReadContentFoldersRecurive(ContentFolder folder)
+        private void ReadContentFoldersRecurive(ContentFolder folder, Action<ExportImportProgressInfo> progressCallback)
         {
             var result = _contentStorageProvider.Search(folder.Url, null);
             foreach (var blobFolder in result.Folders)
@@ -142,13 +145,18 @@ namespace VirtoCommerce.Content.Web.ExportImport
                     {
                         Url = blobFolder.Url
                     };
-                    ReadContentFoldersRecurive(contentFolder);
+                
+                    ReadContentFoldersRecurive(contentFolder, progressCallback);
                     folder.Folders.Add(contentFolder);
                 }
             }
 
             foreach (var blobItem in result.Items)
             {
+                var progressInfo = new ExportImportProgressInfo();
+                progressInfo.Description = String.Format("Read {0}", blobItem.Url);
+                progressCallback(progressInfo);
+
                 var contentFile = new ContentFile
                 {
                     Url = blobItem.Url
