@@ -48,6 +48,7 @@ namespace VirtoCommerce.Storefront.Controllers
         /// <param name="productId"></param>
         /// <returns></returns>
         [HttpGet]
+        [OutputCache(NoStore = true, Duration = 0, VaryByParam = "None")]
         public async Task<ActionResult> ProductDetailsJson(string productId)
         {
             base.WorkContext.CurrentProduct = await _productService.GetProductAsync(productId, Model.Catalog.ItemResponseGroup.ItemLarge);

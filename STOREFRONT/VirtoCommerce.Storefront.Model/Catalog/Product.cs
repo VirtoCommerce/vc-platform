@@ -248,10 +248,11 @@ namespace VirtoCommerce.Storefront.Model.Catalog
                 if (reward.IsValid)
                 {
                     Discounts.Add(discount);
+                    Price.ActiveDiscount = discount;
+                    Price.AbsoluteBenefit += Price.ActiveDiscount.Amount;
+                    Price.ActualPrice = Price.SalePrice - Price.AbsoluteBenefit;
                 }
             }
-
-            Price.ActiveDiscount = Discounts.FirstOrDefault();
         }
     }
 }

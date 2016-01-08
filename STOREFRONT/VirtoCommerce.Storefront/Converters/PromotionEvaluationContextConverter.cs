@@ -3,11 +3,38 @@ using System.Linq;
 using VirtoCommerce.Client.Model;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Marketing;
+using VirtoCommerce.Storefront.Model;
 
 namespace VirtoCommerce.Storefront.Converters
 {
     public static class PromotionEvaluationContextConverter
     {
+        public static PromotionEvaluationContext ToPromotionEvaluationContext(this WorkContext workContext)
+        {
+            var retVal = new PromotionEvaluationContext
+            {
+                CartPromoEntries = workContext.CurrentCart.Items.Select(x => x.ToPromotionItem()).ToList(),
+                CartTotal = workContext.CurrentCart.Total,
+                Coupon = workContext.CurrentCart.Coupon != null ? workContext.CurrentCart.Coupon.Code : null,
+                Currency = workContext.CurrentCurrency,
+                CustomerId = workContext.CurrentCustomer.Id,
+                IsRegisteredUser = workContext.CurrentCustomer.HasAccount,
+                Language = workContext.CurrentLanguage,
+                StoreId = workContext.CurrentStore.Id
+            };
+            //Set cart lineitems as default promo items
+            retVal.PromoEntries = retVal.CartPromoEntries;
+            if (workContext.CurrentProduct != null)
+            {
+                retVal.PromoEntry = workContext.CurrentProduct.ToPromotionItem();
+            }
+            if(workContext.CurrentCatalogSearchResult != null && workContext.CurrentCatalogSearchResult.Products != null )
+            {
+                retVal.PromoEntries = workContext.CurrentCatalogSearchResult.Products.Select(x => x.ToPromotionItem()).ToList();
+            }
+            return retVal;
+        }
+
         public static VirtoCommerceDomainMarketingModelPromotionEvaluationContext ToServiceModel(this PromotionEvaluationContext webModel)
         {
             var serviceModel = new VirtoCommerceDomainMarketingModelPromotionEvaluationContext();

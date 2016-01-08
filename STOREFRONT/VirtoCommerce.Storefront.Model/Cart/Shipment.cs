@@ -129,6 +129,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// </value>
         public ICollection<TaxDetail> TaxDetails { get; set; }
 
+        #region IDiscountable Members
         public ICollection<Discount> Discounts { get; }
 
         public Currency Currency { get; set; }
@@ -148,6 +149,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
                     Discounts.Add(discount);
                 }
             }
-        }
+        } 
+        #endregion
     }
 }

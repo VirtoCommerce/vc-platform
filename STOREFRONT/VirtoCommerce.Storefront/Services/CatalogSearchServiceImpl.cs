@@ -6,8 +6,11 @@ using VirtoCommerce.Client.Api;
 using VirtoCommerce.LiquidThemeEngine.Extensions;
 using VirtoCommerce.Storefront.Converters;
 using VirtoCommerce.Storefront.Model;
+using VirtoCommerce.Storefront.Model.Cart;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
+using VirtoCommerce.Storefront.Model.Marketing;
+using VirtoCommerce.Storefront.Model.Marketing.Services;
 using VirtoCommerce.Storefront.Model.Services;
 
 namespace VirtoCommerce.Storefront.Services
@@ -18,15 +21,18 @@ namespace VirtoCommerce.Storefront.Services
         private readonly IPricingModuleApi _pricingModuleApi;
         private readonly IInventoryModuleApi _inventoryModuleApi;
         private readonly ISearchModuleApi _searchApi;
+        private readonly IPromotionEvaluator _promotionEvaluator;
         private readonly WorkContext _workContext;
 
-        public CatalogSearchServiceImpl(WorkContext workContext, ICatalogModuleApi catalogModuleApi, IPricingModuleApi pricingModuleApi, IInventoryModuleApi inventoryModuleApi, ISearchModuleApi searchApi)
+
+        public CatalogSearchServiceImpl(WorkContext workContext, ICatalogModuleApi catalogModuleApi, IPricingModuleApi pricingModuleApi, IInventoryModuleApi inventoryModuleApi, ISearchModuleApi searchApi, IPromotionEvaluator promotionEvaluator)
         {
             _workContext = workContext;
             _catalogModuleApi = catalogModuleApi;
             _pricingModuleApi = pricingModuleApi;
             _inventoryModuleApi = inventoryModuleApi;
             _searchApi = searchApi;
+            _promotionEvaluator = promotionEvaluator;
         }
 
         public async Task<Product> GetProductAsync(string id, ItemResponseGroup responseGroup = ItemResponseGroup.ItemInfo)
@@ -36,10 +42,18 @@ namespace VirtoCommerce.Storefront.Services
             var allProducts = new[] { item }.Concat(item.Variations).ToArray();
 
             var taskList = new List<Task>();
-
+        
             if ((responseGroup | ItemResponseGroup.ItemWithPrices) == responseGroup)
             {
-                taskList.Add(Task.Factory.StartNew(() => LoadProductsPrices(allProducts)));
+                var loadPricesTask = Task.Factory.StartNew(() =>
+                {
+                    LoadProductsPrices(allProducts);
+                    if ((responseGroup | ItemResponseGroup.ItemWithDiscounts) == responseGroup)
+                    {
+                       LoadProductsDiscountsAsync(allProducts).Wait();
+                    }
+                });
+                taskList.Add(loadPricesTask);
             }
             if ((responseGroup | ItemResponseGroup.ItemWithInventories) == responseGroup)
             {
@@ -123,7 +137,7 @@ namespace VirtoCommerce.Storefront.Services
         {
             var result = _pricingModuleApi.PricingModuleEvaluatePrices(
                    evalContextStoreId: _workContext.CurrentStore.Id,
-                   evalContextCatalogId: _workContext.CurrentStore.Catalog, 
+                   evalContextCatalogId: _workContext.CurrentStore.Catalog,
                    evalContextProductIds: products.Select(x => x.Id).ToList(),
                    evalContextCustomerId: _workContext.CurrentCustomer.Id,
                    evalContextCertainDate: _workContext.StorefrontUtcNow,
@@ -140,6 +154,14 @@ namespace VirtoCommerce.Storefront.Services
             }
         }
 
+        private async Task LoadProductsDiscountsAsync(Product[] products)
+        {
+            var promotionContext = _workContext.ToPromotionEvaluationContext();
+            promotionContext.PromoEntries = products.Select(x=>x.ToPromotionItem()).ToList();
+            await _promotionEvaluator.EvaluateDiscountsAsync(promotionContext, products);
+        }
+
+
         private void LoadProductsInventories(Product[] products)
         {
             var inventories = _inventoryModuleApi.InventoryModuleGetProductsInventories(products.Select(x => x.Id).ToList());
@@ -148,5 +170,6 @@ namespace VirtoCommerce.Storefront.Services
                 item.Inventory = inventories.Where(x => x.ProductId == item.Id).Select(x => x.ToWebModel()).FirstOrDefault();
             }
         }
+
     }
 }

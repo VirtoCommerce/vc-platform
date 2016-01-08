@@ -13,10 +13,15 @@ storefrontApp.service('marketingService', ['$http', function ($http) {
         getDynamicContent: function (placeName) {
             return $http.get('marketing/dynamiccontent/' + placeName + '/json?t=' + new Date().getTime());
         },
-        getActualProductPrices: function (products) {
-            return $http.post('marketing/actualprices', { products: products });
-        }
     }
+}]);
+
+storefrontApp.service('pricingService', ['$http', function ($http) {
+	return {
+		getActualProductPrices: function (products) {
+			return $http.post('pricing/actualprices', { products: products });
+		}
+	}
 }]);
 
 storefrontApp.service('catalogService', ['$http', function ($http) {

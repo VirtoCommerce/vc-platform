@@ -46,7 +46,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         [HttpGet]
         [ResponseType(typeof(webModel.Product))]
         [Route("{id}")]
-        public IHttpActionResult Get(string id, [FromUri] coreModel.ItemResponseGroup respGroup = coreModel.ItemResponseGroup.ItemLarge)
+        public IHttpActionResult GetProductById(string id, [FromUri] coreModel.ItemResponseGroup respGroup = coreModel.ItemResponseGroup.ItemLarge)
         {
             var item = _itemsService.GetById(id, respGroup);
             if (item == null)

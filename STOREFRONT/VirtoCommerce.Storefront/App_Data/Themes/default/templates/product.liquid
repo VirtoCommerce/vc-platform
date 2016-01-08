@@ -44,7 +44,7 @@
             {% endif %}
 
             <ul class="inline-list product-meta">
-                <li ng-if="!selectedVariation.Id && !productPriceLoaded">
+                <li ng-if="!selectedVariation.Id">
                     {% if product.compare_at_price > product.price %}
                         <span class="old">
                             {% include 'price' with variant.compare_at_price %}
@@ -60,25 +60,14 @@
                     </span>
                 </li>
                  <!--For sku-selector variations switches-->
-                <li ng-if="selectedVariation.Id && !productPriceLoaded">
+                <li ng-if="selectedVariation.Id">
                     <span ng-if="selectedVariation.Price.AbsoluteBenefit.Amount > 0" class="old">
                         <small ng-bind="selectedVariation.Price.ListPrice.FormatedAmount"></small>
                     </span>
                     <span ng-if="selectedVariation.Price.AbsoluteBenefit.Amount > 0" id="comparePrice" class="sale-tag large" ng-bind="'-' + selectedVariation.Price.AbsoluteBenefit.FormatedAmount">
                     </span>
                     <span id="productPrice" class="h1">
-                        <small ng-bind="selectedVariation.Price.SalePrice.FormatedAmount"></small>
-                    </span>
-                </li>
-
-                <li ng-if="productPriceLoaded">
-                    <span class="old" ng-if="productPrice.ListPrice.Amount > productPrice.SalePrice.Amount || productPrice.ActiveDiscount.Amount.Amount > 0">
-                        <small ng-if="productPrice.ListPrice.Amount > productPrice.SalePrice.Amount" ng-bind="productPrice.ListPrice.FormatedAmount"></small>
-                        <small ng-if="productPrice.ActiveDiscount.Amount.Amount > 0" ng-bind="productPrice.SalePrice.FormatedAmount"></small>
-                    </span>
-                    <span class="sale-tag large" id="comparePrice" ng-if="productPrice.AbsoluteBenefit.Amount > 0" ng-bind="'save ' + productPrice.ActiveDiscount.Amount.FormatedAmount"></span>
-                    <span class="h1" id="productPrice">
-                        <small ng-bind="productPrice.ActualPrice.FormatedAmount"></small>
+                        <small ng-bind="selectedVariation.Price.ActualPrice.FormatedAmount"></small>
                     </span>
                 </li>
 

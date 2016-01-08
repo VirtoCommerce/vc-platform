@@ -232,6 +232,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// <value>Dynamic properties collections</value>
         public ICollection<DynamicProperty> DynamicProperties { get; set; }
 
+        #region IDiscountable Members
         public ICollection<Discount> Discounts { get; }
 
         public Currency Currency { get; }
@@ -281,6 +282,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
                     }
                 }
             }
-        }
+        } 
+        #endregion
     }
 }

@@ -7,7 +7,7 @@ using VirtoCommerce.Storefront.Model.Marketing;
 
 namespace VirtoCommerce.Storefront.Model.Cart
 {
-    public class LineItem : Entity
+    public class LineItem : Entity, IDiscountable
     {
         public LineItem(Currency currency, Language language)
         {
@@ -210,9 +210,11 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// <value>Dynamic properties collections</value>
         public ICollection<DynamicProperty> DynamicProperties { get; set; }
 
-        public ICollection<Discount> Discounts { get; }
 
+        #region IDiscountable  Members
         public Currency Currency { get; }
+
+        public ICollection<Discount> Discounts { get; }
 
         public void ApplyRewards(IEnumerable<PromotionReward> rewards)
         {
@@ -233,6 +235,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
                     Discounts.Add(discount);
                 }
             }
-        }
+        } 
+        #endregion
     }
 }

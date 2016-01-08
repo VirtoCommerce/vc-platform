@@ -115,7 +115,7 @@ namespace VirtoCommerce.LiquidThemeEngine
         {
             get
             {
-                return WorkContext.CurrentStore.ThemeName ?? _globalThemeName;
+                return string.IsNullOrEmpty(WorkContext.CurrentStore.ThemeName) ? _globalThemeName : WorkContext.CurrentStore.ThemeName;
             }
         }
 

@@ -74,7 +74,7 @@
     <Compile Include="Common\DynamicPropertyExtension.cs" />
     <Compile Include="Common\EventThrottlingExtensions.cs" />
     <Compile Include="Common\IStorefrontPagedList.cs" />
-    <Compile Include="Marketing\Services\IDiscountable.cs" />
+    <Compile Include="Marketing\IDiscountable.cs" />
     <Compile Include="Marketing\Services\IPromotionEvaluator.cs" />
     <Compile Include="Common\ValueInjecter\NullableAndEnumValueInjecter.cs" />
     <Compile Include="Common\StoreFrontPagedList.cs" />
