@@ -340,6 +340,7 @@
     <Compile Include="Builders\ICartBuilder.cs" />
     <Compile Include="Controllers\MarketingController.cs" />
     <Compile Include="Controllers\PricingController.cs" />
+    <Compile Include="Services\CartValidator.cs" />
     <Compile Include="Services\PromotionEvaluator.cs" />
     <Compile Include="Common\StorefrontConstants.cs" />
     <Compile Include="Common\StorefrontUrlBuilder.cs" />
