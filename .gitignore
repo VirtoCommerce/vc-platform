@@ -171,3 +171,5 @@ $RECYCLE.BIN/
 /PLATFORM/Modules/CMS/VirtoCommerce.Content.Web/node_modules
 /WebPI/wwwroot
 *.nupkg
+/PLATFORM/VirtoCommerce.Platform.Web/Modules
+/STOREFRONT/VirtoCommerce.Storefront/Areas
