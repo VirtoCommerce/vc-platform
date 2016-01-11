@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
@@ -142,6 +143,60 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
             var retVal = _commerceService.GetSeoByKeyword(slug).ToArray();
 
             return Ok(retVal);
+        }
+
+        /// <summary>
+        /// Return all currencies registered in the system
+        /// </summary>
+        [HttpGet]
+        [ResponseType(typeof(coreModel.Currency[]))]
+        [Route("currencies")]
+        public IHttpActionResult GetAllCurrencies()
+        {
+            var retVal = _commerceService.GetAllCurrencies().ToArray();
+            return Ok(retVal);
+        }
+
+        /// <summary>
+        ///  Update a existing currency 
+        /// </summary>
+        /// <param name="currency">currency</param>
+        [HttpPut]
+        [ResponseType(typeof(void))]
+        [Route("currencies")]
+        [CheckPermission(Permissions = new[] { CommercePredefinedPermissions.Update })]
+        public IHttpActionResult UpdateCurrency(coreModel.Currency currency)
+        {
+            _commerceService.UpsertCurrencies(new[] { currency });
+            return Ok();
+        }
+
+        /// <summary>
+        ///  Create new currency 
+        /// </summary>
+        /// <param name="currency">currency</param>
+        [HttpPost]
+        [ResponseType(typeof(void))]
+        [Route("currencies")]
+        [CheckPermission(Permissions = new[] { CommercePredefinedPermissions.Create })]
+        public IHttpActionResult CreateCurrency(coreModel.Currency currency)
+        {
+            _commerceService.UpsertCurrencies(new[] { currency });
+            return Ok();
+        }
+
+        /// <summary>
+        ///  Delete currencies 
+        /// </summary>
+        /// <param name="codes">currency codes</param>
+        [HttpDelete]
+        [ResponseType(typeof(void))]
+        [Route("currencies")]
+        [CheckPermission(Permissions = new[] { CommercePredefinedPermissions.Delete })]
+        public IHttpActionResult DeleteCurrencies([FromUri] string[] codes)
+        {
+            _commerceService.DeleteCurrencies(codes);
+            return Ok();
         }
     }
 }

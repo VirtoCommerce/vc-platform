@@ -67,7 +67,8 @@ namespace VirtoCommerce.CoreModule.Data.Repositories
 				{
 					repository.Remove(center);
 				}
-			}
+                CommitChanges(repository);
+            }
 		}
 
 
@@ -120,7 +121,7 @@ namespace VirtoCommerce.CoreModule.Data.Repositories
 
                         source.SeoInfos.Patch(target.SeoInfos, new SeoUrlKeywordComparer(), (sourceSeoUrlKeyword, targetSeoUrlKeyword) => sourceSeoUrlKeyword.Patch(targetSeoUrlKeyword));
                     }
-                    repository.UnitOfWork.Commit();
+                    CommitChanges(repository);
                 }
             }
         }
@@ -146,7 +147,7 @@ namespace VirtoCommerce.CoreModule.Data.Repositories
                     {
                         repository.Remove(seoUrlKeyword);
                     }
-                    repository.UnitOfWork.Commit();
+                    CommitChanges(repository);
                 }
             }
         }
@@ -172,7 +173,53 @@ namespace VirtoCommerce.CoreModule.Data.Repositories
 			return retVal;
 		}
 
-		#endregion
+        public IEnumerable<coreModel.Currency> GetAllCurrencies()
+        {
+            var retVal = new List<coreModel.Currency>();
+            using (var repository = _repositoryFactory())
+            {
+                retVal = repository.Currencies.ToArray().Select(x => x.ToCoreModel()).ToList();
+            }
+            return retVal;
+        }
 
-	}
+        public void UpsertCurrencies(coreModel.Currency[] currencies)
+        {
+            if (currencies == null)
+                throw new ArgumentNullException("currencies");
+
+            using (var repository = _repositoryFactory())
+            {
+                foreach (var currency in currencies)
+                {
+                    var sourceEntry = currency.ToDataModel();
+                    var targetEntry = repository.Currencies.FirstOrDefault(x => x.Code == currency.Code);
+                    if (targetEntry == null)
+                    {
+                        repository.Add(sourceEntry);
+                    }
+                    else
+                    {
+                        sourceEntry.Patch(targetEntry);
+                    }
+                }
+                CommitChanges(repository);
+            }
+        }
+
+        public void DeleteCurrencies(string[] codes)
+        {
+            using (var repository = _repositoryFactory())
+            {
+                foreach (var currency in repository.Currencies.Where(x => codes.Contains(x.Code)))
+                {
+                    repository.Remove(currency);
+                }
+                CommitChanges(repository);
+            }
+        }
+
+        #endregion
+
+    }
 }
