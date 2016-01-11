@@ -147,6 +147,7 @@
     <Compile Include="Model\VirtoCommerceDomainCatalogModelPropertyValue.cs" />
     <Compile Include="Model\VirtoCommerceDomainCatalogModelSearchCriteria.cs" />
     <Compile Include="Model\VirtoCommerceDomainCommerceModelAddress.cs" />
+    <Compile Include="Model\VirtoCommerceDomainCommerceModelCurrency.cs" />
     <Compile Include="Model\VirtoCommerceDomainCommerceModelSeoInfo.cs" />
     <Compile Include="Model\VirtoCommerceDomainCommerceModelTaxDetail.cs" />
     <Compile Include="Model\VirtoCommerceDomainCommonConditionExpressionTree.cs" />
