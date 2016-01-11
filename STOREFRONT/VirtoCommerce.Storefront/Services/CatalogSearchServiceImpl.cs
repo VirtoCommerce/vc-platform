@@ -37,12 +37,12 @@ namespace VirtoCommerce.Storefront.Services
 
         public async Task<Product> GetProductAsync(string id, ItemResponseGroup responseGroup = ItemResponseGroup.ItemInfo)
         {
-            var item = (await _catalogModuleApi.CatalogModuleProductsGetAsync(id)).ToWebModel(_workContext.CurrentLanguage, _workContext.CurrentCurrency);
+            var item = (await _catalogModuleApi.CatalogModuleProductsGetProductByIdAsync(id)).ToWebModel(_workContext.CurrentLanguage, _workContext.CurrentCurrency);
 
             var allProducts = new[] { item }.Concat(item.Variations).ToArray();
 
             var taskList = new List<Task>();
-        
+
             if ((responseGroup | ItemResponseGroup.ItemWithPrices) == responseGroup)
             {
                 var loadPricesTask = Task.Factory.StartNew(() =>
@@ -50,7 +50,7 @@ namespace VirtoCommerce.Storefront.Services
                     LoadProductsPrices(allProducts);
                     if ((responseGroup | ItemResponseGroup.ItemWithDiscounts) == responseGroup)
                     {
-                       LoadProductsDiscountsAsync(allProducts).Wait();
+                        LoadProductsDiscountsAsync(allProducts).Wait();
                     }
                 });
                 taskList.Add(loadPricesTask);
@@ -157,7 +157,7 @@ namespace VirtoCommerce.Storefront.Services
         private async Task LoadProductsDiscountsAsync(Product[] products)
         {
             var promotionContext = _workContext.ToPromotionEvaluationContext();
-            promotionContext.PromoEntries = products.Select(x=>x.ToPromotionItem()).ToList();
+            promotionContext.PromoEntries = products.Select(x => x.ToPromotionItem()).ToList();
             await _promotionEvaluator.EvaluateDiscountsAsync(promotionContext, products);
         }
 
