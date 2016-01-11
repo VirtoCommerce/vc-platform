@@ -1,89 +1,124 @@
-﻿using VirtoCommerce.Storefront.Converters;
-using System.Configuration;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
+using System.Web.Hosting;
 using System.Web.Http;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Services;
-using VirtoCommerce.Storefront.Common;
 
 namespace VirtoCommerce.Storefront.Controllers.Api
 {
     [RoutePrefix("api/search")]
-    public class ApiSearchController : ApiController
+    public class ApiSearchController : ApiControllerBase
     {
-        private readonly WorkContext _workContext;
-        private readonly ICatalogSearchService _catalogSearchService;
-        private readonly ICatalogSearchService _productService;
-        private readonly IStoreModuleApi _storeApi;
         public ApiSearchController(WorkContext workContext, ICatalogSearchService catalogSearchService, ICatalogSearchService productService, IStoreModuleApi storeApi)
+            : base(workContext, catalogSearchService, productService, storeApi)
         {
-            _workContext = workContext;
-            _catalogSearchService = catalogSearchService;
-            _productService = productService;
-            _storeApi = storeApi;
         }
 
         //Load categories for main page
         [Route("categories")]
         public async Task<CatalogSearchResult> GetCurrentCategories()
         {
-            InitializeWorkContext();
-
-            _workContext.CurrentCatalogSearchCriteria = new CatalogSearchCriteria
+            WorkContext.CurrentCatalogSearchCriteria = new CatalogSearchCriteria
             {
-                CatalogId = _workContext.CurrentStore.Catalog,
+                CatalogId = WorkContext.CurrentStore.Catalog,
                 ResponseGroup = CatalogSearchResponseGroup.WithCategories
             };
 
-            _workContext.CurrentCatalogSearchResult = await _catalogSearchService.SearchAsync(_workContext.CurrentCatalogSearchCriteria);
-            return _workContext.CurrentCatalogSearchResult;
+            WorkContext.CurrentCatalogSearchResult = await _catalogService.SearchAsync(WorkContext.CurrentCatalogSearchCriteria);
+            return WorkContext.CurrentCatalogSearchResult;
         }
 
         //Load products for category
         [Route("products")]
         public async Task<CatalogSearchResult> GetCategoryProducts([FromUri] ApiWorkContext apiWorkContext)
         {
-            InitializeWorkContext();
-
-            _workContext.CurrentCatalogSearchCriteria = new CatalogSearchCriteria
+            WorkContext.CurrentCatalogSearchCriteria = new CatalogSearchCriteria
             {
                 CatalogId = apiWorkContext.CatalogId,
                 CategoryId = apiWorkContext.CategoryId
             };
 
-            _workContext.CurrentCatalogSearchResult = await _catalogSearchService.SearchAsync(_workContext.CurrentCatalogSearchCriteria);
-            return _workContext.CurrentCatalogSearchResult;
+            WorkContext.CurrentCatalogSearchResult = await _catalogService.SearchAsync(WorkContext.CurrentCatalogSearchCriteria);
+            return WorkContext.CurrentCatalogSearchResult;
         }
 
         //Load product details
         [Route("products/{itemId}")]
         public async Task<Product> GetProduct([FromUri] ApiWorkContext apiWorkContext)
         {
-            InitializeWorkContext();
-            _workContext.CurrentProduct = await _productService.GetProductAsync(apiWorkContext.ItemId, Model.Catalog.ItemResponseGroup.ItemLarge);
-            return _workContext.CurrentProduct;
+            WorkContext.CurrentProduct = await _productService.GetProductAsync(apiWorkContext.ItemId, Model.Catalog.ItemResponseGroup.ItemLarge);
+            return WorkContext.CurrentProduct;
         }
-        
 
-        private void InitializeWorkContext()
+        //Load categories for main page
+        [Route("common/getcountries")]
+        public Country[] GetCountries()
         {
-            if (_workContext.CurrentStore == null)
+            //_countriesWithoutRegions = workContext.AllCountries
+            //    .Select(c => new Country { Name = c.Name, Code2 = c.Code2, Code3 = c.Code3 })
+            //    .ToArray();
+
+            var regions = CultureInfo.GetCultures(CultureTypes.SpecificCultures)
+                .Select(GetRegionInfo)
+                .Where(r => r != null)
+                .ToList();
+
+            var countriesJson = File.ReadAllText(HostingEnvironment.MapPath("~/App_Data/countries.json"));
+            var countriesDict = JsonConvert.DeserializeObject<Dictionary<string, JObject>>(countriesJson);
+
+            var countries = countriesDict
+                .Select(kvp => ParseCountry(kvp, regions))
+                .Where(c => c.Code3 != null)
+                .ToArray();
+
+            return countries;
+        }
+
+        private static RegionInfo GetRegionInfo(CultureInfo culture)
+        {
+            RegionInfo result = null;
+
+            try
             {
-                _workContext.CurrentStore = _storeApi.StoreModuleGetStoreById(ConfigurationManager.AppSettings["DefaultStore"]).ToWebModel();
-                _workContext.CurrentCurrency = _workContext.CurrentStore.DefaultCurrency;
-                _workContext.CurrentLanguage = _workContext.CurrentStore.DefaultLanguage;
+                result = new RegionInfo(culture.LCID);
             }
-            if (_workContext.CurrentCustomer == null)
+            catch
             {
-                _workContext.CurrentCustomer = new Customer
-                {
-                    Id = "anonymous-customer-id",
-                    UserName = StorefrontConstants.AnonymousUsername,
-                    Name = StorefrontConstants.AnonymousUsername
-                };
+                // ignored
             }
+
+            return result;
+        }
+
+        private static Country ParseCountry(KeyValuePair<string, JObject> pair, List<RegionInfo> regions)
+        {
+            var region = regions.FirstOrDefault(r => string.Equals(r.EnglishName, pair.Key, StringComparison.OrdinalIgnoreCase));
+
+            var country = new Country
+            {
+                Name = pair.Key,
+                Code2 = region != null ? region.TwoLetterISORegionName : string.Empty,
+                Code3 = region != null ? region.ThreeLetterISORegionName : string.Empty,
+            };
+
+            var provinceCodes = pair.Value["province_codes"].ToObject<Dictionary<string, string>>();
+            if (provinceCodes != null && provinceCodes.Any())
+            {
+                country.Regions = provinceCodes
+                    .Select(kvp => new CountryRegion { Name = kvp.Key, Code = kvp.Value })
+                    .ToArray();
+            }
+
+            return country;
         }
     }
 }

@@ -369,6 +369,8 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Builders\CartBuilder.cs" />
     <Compile Include="Builders\ICartBuilder.cs" />
+    <Compile Include="Controllers\Api\ApiControllerBase.cs" />
+    <Compile Include="Controllers\Api\ApiCartController.cs" />
     <Compile Include="Controllers\Api\ApiSearchController.cs" />
     <Compile Include="Controllers\Api\ApiWorkContext.cs" />
     <Compile Include="Services\PromotionEvaluator.cs" />
