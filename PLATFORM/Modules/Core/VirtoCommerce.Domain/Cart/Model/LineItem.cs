@@ -30,7 +30,7 @@ namespace VirtoCommerce.Domain.Cart.Model
 		public string ImageUrl { get; set; }
 
 		public bool IsGift { get; set; }
-		public CurrencyCodes Currency { get; set; }
+		public string Currency { get; set; }
 
 		public string LanguageCode { get; set; }
 

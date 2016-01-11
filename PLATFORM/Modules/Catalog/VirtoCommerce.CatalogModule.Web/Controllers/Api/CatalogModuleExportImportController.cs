@@ -170,7 +170,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         public void BackgroundExport(CsvExportInfo exportInfo, ExportNotification notifyEvent)
         {
             var curencySetting = _settingsManager.GetSettingByName("VirtoCommerce.Core.General.Currencies");
-            var defaultCurrency = EnumUtility.SafeParse<CurrencyCodes>(curencySetting.DefaultValue, CurrencyCodes.USD);
+            var defaultCurrency = curencySetting.DefaultValue ?? "USD";
             exportInfo.Currency = exportInfo.Currency ?? defaultCurrency;
             var catalog = _catalogService.GetById(exportInfo.CatalogId);
             if (catalog == null)

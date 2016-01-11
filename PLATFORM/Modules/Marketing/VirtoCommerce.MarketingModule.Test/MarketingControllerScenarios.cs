@@ -64,7 +64,7 @@ namespace VirtoCommerce.MarketingModule.Test
 				
 				//Curreny is USD
 				var currencyExpression = expressionTree.FindAvailableExpression<ConditionCurrencyIs>();
-				currencyExpression.Currency = CurrencyCodes.USD.ToString();
+				currencyExpression.Currency = "USD";
 				expressionTree.Children.Add(currencyExpression);
 				//Condition: Cart subtotal great or equal that 100$
 				var subtotalExpression = expressionTree.FindAvailableExpression<ConditionCartSubtotalLeast>();

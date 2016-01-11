@@ -142,7 +142,7 @@ namespace DiBs.Managers
                 var orderId = context.Order.Number;
 
                 //get md5 hash passing the order number, currency ISO code and order total
-                var md5Hash = CalculateMD5Hash(orderId, (int)context.Order.Currency, (int)(context.Order.Sum * 100));
+                var md5Hash = CalculateMD5Hash(orderId, context.Order.Currency, (int)(context.Order.Sum * 100));
 
                 var reqparm = new NameValueCollection();
                 reqparm.Add(acceptUrlFormDataName, AcceptUrl);
@@ -152,7 +152,7 @@ namespace DiBs.Managers
                 reqparm.Add(orderIdFormDataName, orderId);
                 reqparm.Add(orderInternalIdFormDataName, context.Order.Id);
                 reqparm.Add(amountFormDataName, ((int)(context.Order.Sum * 100)).ToString());
-                reqparm.Add(currencyFormDataName, ((int)context.Order.Currency).ToString());
+                reqparm.Add(currencyFormDataName, context.Order.Currency.ToString());
                 reqparm.Add(languageFormDataName, context.Store.DefaultLanguage.Substring(0, 2));
                 reqparm.Add(md5KeyFormDataName, md5Hash);
                 reqparm.Add(decoratorFormDataName, FormDecoarator);
@@ -233,7 +233,7 @@ namespace DiBs.Managers
             return res;
         }
 
-        private string CalculateMD5Hash(string orderId, int currency, int amount)
+        private string CalculateMD5Hash(string orderId, string currency, int amount)
         {
             var md5 = string.Format(md5ParameterString, MerchantId, orderId, currency, amount);
             md5 = GetMD5Hash(MD5Key2 + GetMD5Hash(MD5Key1 + md5));

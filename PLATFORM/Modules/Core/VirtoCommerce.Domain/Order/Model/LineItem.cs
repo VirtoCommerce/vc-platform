@@ -17,7 +17,7 @@ namespace VirtoCommerce.Domain.Order.Model
         /// </summary>
         public string PriceId { get; set; }
 
-        public CurrencyCodes Currency { get; set; }
+        public string Currency { get; set; }
         /// <summary>
         /// Price where tax and discount are not applied
         /// </summary>

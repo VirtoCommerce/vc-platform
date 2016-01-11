@@ -22,7 +22,7 @@ namespace VirtoCommerce.Domain.Store.Model
         public string Region { get; set; }
         public string DefaultLanguage { get; set; }
 
-        public CurrencyCodes? DefaultCurrency { get; set; }
+        public string DefaultCurrency { get; set; }
         public string Catalog { get; set; }
         public bool CreditCardSavePolicy { get; set; }
         public string SecureUrl { get; set; }
@@ -33,7 +33,7 @@ namespace VirtoCommerce.Domain.Store.Model
         public FulfillmentCenter FulfillmentCenter { get; set; }
         public FulfillmentCenter ReturnsFulfillmentCenter { get; set; }
         public ICollection<string> Languages { get; set; }
-        public ICollection<CurrencyCodes> Currencies { get; set; }
+        public ICollection<string> Currencies { get; set; }
 
         public ICollection<TaxProvider> TaxProviders { get; set; }
         public ICollection<PaymentMethod> PaymentMethods { get; set; }

@@ -14,8 +14,7 @@ namespace VirtoCommerce.PricingModule.Web.Model
         /// <summary>
         /// Currency defined for all prices in the price list
         /// </summary>
-		[JsonConverter(typeof(StringEnumConverter))]
-		public CurrencyCodes Currency { get; set; }
+		public string Currency { get; set; }
 
         /// <summary>
         /// List of Products prices. It includes tiered prices also

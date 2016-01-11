@@ -10,7 +10,7 @@ namespace VirtoCommerce.Domain.Quote.Model
 {
 	public class QuoteItem : AuditableEntity
 	{
-		public CurrencyCodes Currency { get; set; }
+		public string Currency { get; set; }
         /// <summary>
         /// Base catalog price
         /// </summary>

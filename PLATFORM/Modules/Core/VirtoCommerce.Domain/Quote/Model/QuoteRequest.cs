@@ -35,7 +35,7 @@ namespace VirtoCommerce.Domain.Quote.Model
 
        	public string Comment { get; set; }
 		public string InnerComment { get; set; }
-		public CurrencyCodes Currency { get; set; }
+		public string Currency { get; set; }
 
 		public string Coupon { get; set; }
 

@@ -15,7 +15,7 @@ namespace VirtoCommerce.Domain.Order.Model
 		string Status { get; set; }
 
 		string Comment { get; set; }
-		CurrencyCodes Currency { get; set; }
+		string Currency { get; set; }
 		bool TaxIncluded { get; set; }
 		decimal Sum { get; set; }
 		decimal Tax { get; set; }

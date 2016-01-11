@@ -415,7 +415,7 @@ namespace VirtoCommerce.PricingModule.Data.Services
 				CreatePriceListAssignment(assignment);
 			}
 		}
-		private static string GetDefaultPriceListName(CurrencyCodes currency)
+		private static string GetDefaultPriceListName(string currency)
 		{
 			var retVal = "Default" + currency.ToString();
 			return retVal;

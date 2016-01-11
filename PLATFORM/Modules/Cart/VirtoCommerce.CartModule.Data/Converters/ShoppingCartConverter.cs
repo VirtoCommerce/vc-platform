@@ -22,9 +22,9 @@ namespace VirtoCommerce.CartModule.Data.Converters
 
 			var retVal = new ShoppingCart();
 			retVal.InjectFrom(entity);
-			retVal.Currency = (CurrencyCodes)Enum.Parse(typeof(CurrencyCodes), entity.Currency);
+            retVal.Currency = entity.Currency;
 
-			retVal.Items = entity.Items.Select(x => x.ToCoreModel()).ToList();
+            retVal.Items = entity.Items.Select(x => x.ToCoreModel()).ToList();
 			retVal.Addresses = entity.Addresses.Select(x => x.ToCoreModel()).ToList();
 			retVal.Shipments = entity.Shipments.Select(x => x.ToCoreModel()).ToList();
 			retVal.Payments = entity.Payments.Select(x => x.ToCoreModel()).ToList();

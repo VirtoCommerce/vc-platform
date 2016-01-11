@@ -18,7 +18,7 @@ namespace VirtoCommerce.Domain.Cart.Model
 		public string CustomerId { get; set; }
 		public string CustomerName { get; set; }
 		public string OrganizationId { get; set; }
-		public CurrencyCodes Currency { get; set; }
+		public string Currency { get; set; }
 	
 		public string LanguageCode { get; set; }
 		public bool? TaxIncluded { get; set; }

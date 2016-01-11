@@ -34,8 +34,7 @@ namespace VirtoCommerce.OrderModule.Web.Model
 		/// </summary>
 		public decimal Tax { get; set; }
 
-        [JsonConverter(typeof(StringEnumConverter))]
-		public CurrencyCodes Currency { get; set; }
+		public string Currency { get; set; }
 		/// <summary>
 		/// Reserve quantity
 		/// </summary>
