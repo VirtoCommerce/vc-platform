@@ -35,6 +35,8 @@ namespace VirtoCommerce.Storefront.Services
 
         private async Task ValidateCartAsync()
         {
+            _workContext.CurrentCart.ValidationErrors.Clear();
+
             var actualCart = await _cartApi.CartModuleGetCartByIdAsync(_workContext.CurrentCart.Id);
             var actualSubtotal = actualCart.SubTotal.HasValue ? (decimal)actualCart.SubTotal.Value : 0;
 
@@ -50,6 +52,8 @@ namespace VirtoCommerce.Storefront.Services
             foreach (var productId in productIds)
             {
                 var lineItem = _workContext.CurrentCart.Items.FirstOrDefault(i => i.ProductId == productId);
+                lineItem.ValidationErrors.Clear();
+
                 var product = await _catalogService.GetProductAsync(productId, ItemResponseGroup.ItemLarge);
                 if (product == null || product != null && (!product.IsActive || !product.IsBuyable))
                 {
@@ -74,7 +78,7 @@ namespace VirtoCommerce.Storefront.Services
                 {
                     lineItem.ValidationErrors.Add(new ProductPriceError
                     {
-                        NewPrice = lineItem.PlacedPrice
+                        NewPrice = product.Price.ActualPrice
                     });
                 }
             }
@@ -84,6 +88,8 @@ namespace VirtoCommerce.Storefront.Services
         {
             foreach (var shipment in _workContext.CurrentCart.Shipments)
             {
+                shipment.ValidationErrors.Clear();
+
                 var availableShippingMethods = await _cartApi.CartModuleGetShipmentMethodsAsync(_workContext.CurrentCart.Id);
                 var existingShippingMethod = availableShippingMethods.FirstOrDefault(sm => sm.ShipmentMethodCode == shipment.ShipmentMethodCode);
                 if (existingShippingMethod == null)

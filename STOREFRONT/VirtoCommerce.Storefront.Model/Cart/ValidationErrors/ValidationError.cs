@@ -6,7 +6,7 @@ namespace VirtoCommerce.Storefront.Model.Cart.ValidationErrors
     {
         public ValidationError(Type errorType)
         {
-            ErrorCode = errorType.ToString();
+            ErrorCode = errorType.Name;
         }
 
         public string ErrorCode { get; private set; }
