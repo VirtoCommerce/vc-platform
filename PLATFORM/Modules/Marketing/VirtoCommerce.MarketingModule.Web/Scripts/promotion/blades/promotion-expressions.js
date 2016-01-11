@@ -1,7 +1,8 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('virtoCommerce.marketingModule.promotionConditionCurrencyIsController', ['$scope', 'platformWebApp.settings', function ($scope, settings) {
-    $scope.availableCurrencies = settings.getValues({ id: 'VirtoCommerce.Core.General.Currencies' });
+.controller('virtoCommerce.marketingModule.promotionConditionCurrencyIsController', ['$scope', 'virtoCommerce.coreModule.currency.currencyUtils', function ($scope, currencyUtils) {
+    $scope.currencyUtils = currencyUtils;
 }])
+
 .controller('virtoCommerce.marketingModule.promotionExpressionsController', ['$scope', 'platformWebApp.authService', 'platformWebApp.bladeNavigationService', function ($scope, authService, bladeNavigationService) {
 
     $scope.openItemSelectWizard = function (parentElement) {

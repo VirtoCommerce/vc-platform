@@ -30,7 +30,7 @@ angular.module('platformWebApp', AppDependencies).
       pushNotificationService.run();
   }])
 // Specify SignalR server URL (application URL)
-.factory('platformWebApp.signalRServerName', ['$location', function apiTokenFactory($location) {
+.factory('platformWebApp.signalRServerName', ['$location', function ($location) {
     var retVal = $location.url() ? $location.absUrl().slice(0, -$location.url().length - 1) : $location.absUrl();
     return retVal;
 }])
