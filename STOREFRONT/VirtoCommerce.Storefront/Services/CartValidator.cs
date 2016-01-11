@@ -27,7 +27,7 @@ namespace VirtoCommerce.Storefront.Services
         {
             if (!_workContext.CurrentCart.IsTransient())
             {
-                await ValidateProductInventoriesAsync();
+                await ValidateProductsAsync();
                 await ValidateShipmentsAsync();
                 await ValidateCartAsync();
             }
@@ -44,7 +44,7 @@ namespace VirtoCommerce.Storefront.Services
             }
         }
 
-        private async Task ValidateProductInventoriesAsync()
+        private async Task ValidateProductsAsync()
         {
             var productIds = _workContext.CurrentCart.Items.Select(i => i.ProductId);
             foreach (var productId in productIds)
@@ -70,14 +70,15 @@ namespace VirtoCommerce.Storefront.Services
                         });
                     }
                 }
+                if (lineItem.PlacedPrice.Amount != product.Price.ActualPrice.Amount)
+                {
+                    lineItem.ValidationErrors.Add(new ProductPriceError
+                    {
+                        NewPrice = lineItem.PlacedPrice
+                    });
+                }
             }
         }
-
-        //private async Task ValidateProductPricesAsync()
-        //{
-        //    var productIds = _workContext.CurrentCart.Items.Select(i => i.ProductId);
-
-        //}
 
         private async Task ValidateShipmentsAsync()
         {

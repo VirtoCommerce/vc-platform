@@ -5,7 +5,6 @@ using System.Web.Mvc;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.Storefront.Converters;
 using VirtoCommerce.Storefront.Model;
-using VirtoCommerce.Storefront.Model.Cart;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Marketing;
