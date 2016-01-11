@@ -95,16 +95,18 @@ namespace VirtoCommerce.Storefront.Controllers.Api
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
 
             var shippingMethods = await _cartApi.CartModuleGetShipmentMethodsAsync(_cartBuilder.Cart.Id);
+            // shippingMethods.Add(new Client.Model.VirtoCommerceCartModuleWebModelShippingMethod { Name= "test", Price = 555, Currency = "USD", ShipmentMethodCode = "testZZ"  });
             return shippingMethods.Select(sm => sm.ToWebModel());
         }
 
         // POST: /cart/shippingmethod?shippingMethodCode=...
         [HttpPost]
         [Route("shippingmethod")]
-        public async Task<IHttpActionResult> SetShippingMethodsJson(string shippingMethodCode)
+        public async Task<IHttpActionResult> SetShippingMethod(string shippingMethodCode)
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
 
+            WorkContext.CurrentCart = _cartBuilder.Cart;
             var shippingMethods = await _cartApi.CartModuleGetShipmentMethodsAsync(WorkContext.CurrentCart.Id);
             var shippingMethod = shippingMethods.FirstOrDefault(sm => sm.ShipmentMethodCode == shippingMethodCode);
             if (shippingMethod != null)
