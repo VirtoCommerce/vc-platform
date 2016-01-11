@@ -35,6 +35,25 @@
           "phone": "Enter phone number"
         }
       },
+      "currency-list": {
+        "title": "Currencies",
+        "subtitle": "Manage system currencies",
+        "labels": {
+          "exchange-rate": "Exchange rate:"
+        }
+      },
+      "currency-detail": {
+        "new-title" : "New currency",
+        "new-subtitle" : "Enter currency details",
+        "subtitle" : "Edit currency details",
+        "labels": {
+          "code": "Code",
+          "name": "Name",
+          "is-primary": "Is primary",
+          "exchange-rate": "Exchange rate",
+          "symbol": "Symbol"
+        }
+      },
       "fulfillment-center-contact": {
         "labels": {
           "country": "Country",
@@ -77,6 +96,14 @@
         "title": "Save changes",
         "message": "The Address has been modified. Do you want to save changes?"
       },
+      "currency-delete": {
+        "title": "Delete confirmation",
+        "message": "Are you sure you want to delete this Currency?"
+      },
+      "currency-save": {
+        "title": "Save changes",
+        "message": "The Currency has been modified. Do you want to save changes?"
+      },
       "fulfillment-delete": {
         "title": "Delete confirmation",
         "message": "Are you sure you want to delete this Fulfillment center?"
@@ -87,6 +114,9 @@
       }
     },
     "widgets": {
+      "currency": {
+        "title": "Currencies"
+      },
       "fulfillmentCenterContact": {
         "blade-subtitle": "Contact information",
         "title": "Contact information"
