@@ -59,7 +59,7 @@ namespace VirtoCommerce.Storefront.Services
                 {
                     lineItem.ValidationErrors.Add(new ProductUnavailableError());
                 }
-                if (product.TrackInventory && product.Inventory != null && product.Inventory.Status == InventoryStatus.Enabled)
+                if (product.TrackInventory && product.Inventory != null/* && product.Inventory.Status == InventoryStatus.Enabled*/)
                 {
                     var availableQuantity = product.Inventory.InStockQuantity;
                     if (product.Inventory.ReservedQuantity.HasValue)

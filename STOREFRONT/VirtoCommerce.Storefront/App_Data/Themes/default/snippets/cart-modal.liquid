@@ -14,11 +14,11 @@
             <h1 class="h2">{{ 'cart.general.title' | t }}</h1>
             <div class="cart-row" ng-repeat="lineItem in cart.Items">
                 <div class="ajax-informer error fade" ng-if="lineItem.ValidationErrors.length">
-                    <span ng-if="lineItem.ValidationErrors[0].ErrorCode == 'ProductUnavailableError'" ng-bind="Product is currently unavailable!"></span>
-                    <span ng-if="lineItem.ValidationErrors[0].ErrorCode == 'ProductPriceError'" ng-bind="Product price has been changed!"></span>
+                    <span ng-if="lineItem.ValidationErrors[0].ErrorCode == 'ProductUnavailableError'" ng-bind="'Product is currently unavailable!'"></span>
+                    <span ng-if="lineItem.ValidationErrors[0].ErrorCode == 'ProductPriceError'" ng-bind="'Product price has been changed! New price is: ' + lineItem.ValidationErrors[0].NewPrice.FormatedAmount"></span>
                     <span ng-if="lineItem.ValidationErrors[0].ErrorCode == 'ProductQuantityError'" ng-bind="'Product quantity exceeded! Available quantity is: ' + lineItem.ValidationErrors[0].AvailableQuantity"></span>
                 </div>
-                <div class="grid">
+                <div class="grid" ng-style="{ 'margin-top' : lineItem.ValidationErrors.length ? '15px' : '0' }">
                     <div class="grid-item large--seven-twelfths">
                         <div class="grid">
                             <div class="grid-item one-third large--one-quarter">
