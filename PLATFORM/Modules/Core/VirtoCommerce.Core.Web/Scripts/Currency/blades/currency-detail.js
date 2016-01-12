@@ -28,7 +28,7 @@
         };
 
         function initializeBlade(data) {
-            if (blade.isNew) data = {};
+            if (blade.isNew) data = { exchangeRate: 1.00 };
 
             blade.currentEntity = angular.copy(data);
             blade.origEntity = data;

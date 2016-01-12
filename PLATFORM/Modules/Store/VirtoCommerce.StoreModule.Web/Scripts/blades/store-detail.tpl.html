@@ -73,12 +73,12 @@
                 <div class="columns clearfix">
                     <div class="column">
                         <div class="form-group">
-                            <label class="form-label">{{ 'stores.blades.store-detail.labels.default-currency' | translate }}</label>
-                            <div class="form-input">
+                            <label class="form-label">{{ 'stores.blades.store-detail.labels.default-currency' | translate }} <a href="" ng-click="currencyUtils.editCurrencies(blade)"><i class="form-ico fa fa-pencil"></i></a></label>
+                            <div class="form-input" ng-init="currencies = currencyUtils.getCurrencies()">
                                 <ui-select ng-model="blade.currentEntity.defaultCurrency" required>
-                                    <ui-select-match placeholder="{{ 'stores.blades.store-detail.placeholders.default-currency' | translate }}">{{$select.selected}}</ui-select-match>
-                                    <ui-select-choices repeat="x in currencies | filter: $select.search">
-                                        <span ng-bind-html="x | highlight: $select.search"></span>
+                                    <ui-select-match placeholder="{{ 'stores.blades.store-detail.placeholders.default-currency' | translate }}">{{$select.selected.code}}</ui-select-match>
+                                    <ui-select-choices repeat="x.code as x in currencies | filter: $select.search">
+                                        <span ng-bind-html="x.code | highlight: $select.search"></span>
                                     </ui-select-choices>
                                 </ui-select>
                             </div>
@@ -89,9 +89,9 @@
                             <label class="form-label">{{ 'stores.blades.store-detail.labels.additional-currencies' | translate }}</label>
                             <div class="form-input" data-role="input-control">
                                 <ui-select multiple ng-model="blade.currentEntity.additionalCurrencies">
-                                    <ui-select-match placeholder="{{ 'stores.blades.store-detail.placeholders.additional-currencies' | translate }}">{{$item}}</ui-select-match>
-                                    <ui-select-choices repeat="x in currencies | filter:'!'+blade.currentEntity.defaultCurrency | filter: $select.search">
-                                        <span ng-bind-html="x | highlight: $select.search"></span>
+                                    <ui-select-match placeholder="{{ 'stores.blades.store-detail.placeholders.additional-currencies' | translate }}">{{$item.code}}</ui-select-match>
+                                    <ui-select-choices repeat="x.code as x in currencies | filter: {code: '!'+blade.currentEntity.defaultCurrency} | filter: $select.search">
+                                        <span ng-bind-html="x.code | highlight: $select.search"></span>
                                     </ui-select-choices>
                                 </ui-select>
                             </div>
