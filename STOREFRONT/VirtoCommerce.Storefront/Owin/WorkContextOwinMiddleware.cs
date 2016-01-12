@@ -64,8 +64,8 @@ namespace VirtoCommerce.Storefront.Owin
                 // Initialize common properties
                 workContext.RequestUrl = context.Request.Uri;
                 workContext.AllCountries = _allCountries;
-                workContext.AllCurrencies = await _cacheManager.GetAsync("GetAllCurrencies", "StoreRegion", async () => { return await _commerceApi.GetAllCurrencies().Select(x=>x.ToWebModel()); });
-                workContext.AllStores = await _cacheManager.GetAsync("GetAllStores", "StoreRegion", async () => { return await GetAllStoresAsync(workContext.AllCurrencies); });
+                workContext.AllCurrencies = await _cacheManager.GetAsync("GetAllCurrencies", "ApiRegion", async () => { return (await _commerceApi.CommerceGetAllCurrenciesAsync()).Select(x => x.ToWebModel()).ToArray(); });
+                workContext.AllStores = await _cacheManager.GetAsync("GetAllStores", "ApiRegion", async () => { return await GetAllStoresAsync(workContext.AllCurrencies); });
                 if (workContext.AllStores != null && workContext.AllStores.Any())
                 {
                     var currentCustomerId = GetCurrentCustomerId(context);
@@ -101,7 +101,6 @@ namespace VirtoCommerce.Storefront.Owin
                                     evalContextStoreId: workContext.CurrentStore.Id,
                                     evalContextCatalogId: workContext.CurrentStore.Catalog,
                                     evalContextCustomerId: workContext.CurrentCustomer.Id,
-                                    evalContextCurrency: workContext.CurrentCurrency.Code,
                                     evalContextQuantity: 1);
                                 return pricingResult.Select(p => p.Id).ToList();
                             });

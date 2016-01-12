@@ -9,7 +9,7 @@ using VirtoCommerce.Storefront.Model.Marketing;
 
 namespace VirtoCommerce.Storefront.Model.Catalog
 {
-    public class ProductPrice : ValueObject<ProductPrice>
+    public class ProductPrice : ValueObject<ProductPrice>, IConvertible<ProductPrice>
     {
         public ProductPrice(Currency currency)
         {
@@ -34,12 +34,33 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         /// <summary>
         /// Absilute price benefit. You save 40.00 USD
         /// </summary>
-        public Money AbsoluteBenefit { get; set; }
+        public Money AbsoluteBenefit
+        {
+            get
+            {
+                var retVal = ListPrice - SalePrice;
+                if(ActiveDiscount != null)
+                {
+                    retVal += ActiveDiscount.Amount;
+                }
+                return retVal;
+            }
+        }
 
         /// <summary>
         /// Relative benefit. 30% 
         /// </summary>
-        public decimal RelativeBenefit { get; set; }
+        public decimal RelativeBenefit
+        {
+            get
+            {
+                if (ListPrice.Amount > 0)
+                {
+                    return Math.Round(AbsoluteBenefit.Amount / ListPrice.Amount, 2);
+                }
+                return 0;
+            }
+        }
 
         /// <summary>
         /// Original product price (old price)
@@ -54,7 +75,13 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         /// <summary>
         /// Actual price includes all kind of discounts
         /// </summary>
-        public Money ActualPrice { get; set; }
+        public Money ActualPrice
+        {
+            get
+            {
+                return ListPrice - AbsoluteBenefit;
+            }
+        }
 
         /// <summary>
         /// Current active discount
@@ -75,5 +102,29 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         /// Tier prices 
         /// </summary>
         public ICollection<TierPrice> TierPrices { get; set; }
+
+        #region IConvertible<ProductPrice> Members
+        /// <summary>
+        /// Convert current product price to other currency using currency exchange rate
+        /// </summary>
+        /// <param name="currency"></param>
+        /// <returns></returns>
+        public ProductPrice ConvertTo(Currency currency)
+        {
+            var retVal = new ProductPrice(currency);
+            retVal.ListPrice = ListPrice.ConvertTo(currency);
+            retVal.SalePrice = SalePrice.ConvertTo(currency);
+            retVal.ProductId = ProductId;
+            if (ActiveDiscount != null)
+            {
+                retVal.ActiveDiscount = ActiveDiscount.ConvertTo(currency);
+            }
+            if(PotentialDiscount != null)
+            {
+                retVal.PotentialDiscount = PotentialDiscount.ConvertTo(currency);
+            }
+            return retVal;
+        } 
+        #endregion
     }
 }

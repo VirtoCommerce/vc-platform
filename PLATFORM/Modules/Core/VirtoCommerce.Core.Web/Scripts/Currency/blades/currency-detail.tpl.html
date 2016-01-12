@@ -1,0 +1,42 @@
+﻿<div class="blade-static __bottom" ng-include="'$(Platform)/Scripts/common/templates/create.tpl.html'" ng-if="blade.isNew"></div>
+<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block clearfix">
+            <form class="form" name="formScope">
+                <div class="form-group" ng-init="setForm(formScope)">
+                    <label class="form-label">{{ 'core.blades.currency-detail.labels.code' | translate }}</label>
+                    <div class="form-input">
+                        <input ng-model="blade.currentEntity.code" required ng-disabled="!blade.isNew" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">{{ 'core.blades.currency-detail.labels.name' | translate }}</label>
+                    <div class="form-input">
+                        <input ng-model="blade.currentEntity.name" focus-on="" required />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">{{ 'core.blades.currency-detail.labels.is-primary' | translate }}</label>
+                    <div class="form-input">
+                        <label class="form-label __switch">
+                            <input type="checkbox" ng-model="blade.currentEntity.isPrimary" />
+                            <span class="switch"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">{{ 'core.blades.currency-detail.labels.exchange-rate' | translate }}</label>
+                    <div class="form-input __number">
+                        <input smart-float required num-type="float" fraction="4" ng-model="blade.currentEntity.exchangeRate" min="0">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">{{ 'core.blades.currency-detail.labels.symbol' | translate }}</label>
+                    <div class="form-input">
+                        <input ng-model="blade.currentEntity.symbol" />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

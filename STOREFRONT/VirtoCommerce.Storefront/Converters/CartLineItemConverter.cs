@@ -22,11 +22,9 @@ namespace VirtoCommerce.Storefront.Converters
             lineItemWebModel.ImageUrl = product.PrimaryImage.Url;
             lineItemWebModel.ListPrice = product.Price.ListPrice;
             lineItemWebModel.SalePrice = product.Price.SalePrice;
-            lineItemWebModel.PlacedPrice = product.Price.ActualPrice;
-            lineItemWebModel.ExtendedPrice = lineItemWebModel.PlacedPrice * quantity;
             lineItemWebModel.ProductId = product.Id;
             lineItemWebModel.Quantity = quantity;
-            lineItemWebModel.TaxTotal = new Money(currency);
+
             lineItemWebModel.ThumbnailImageUrl = product.PrimaryImage.Url;
 
             return lineItemWebModel;
@@ -48,13 +46,12 @@ namespace VirtoCommerce.Storefront.Converters
                 webModel.DynamicProperties = serviceModel.DynamicProperties.Select(dp => dp.ToWebModel()).ToList();
             }
 
-            webModel.DiscountTotal = new Money(serviceModel.DiscountTotal ?? 0, currency);
-            webModel.ExtendedPrice = new Money(serviceModel.ExtendedPrice ?? 0, currency);
+
             webModel.IsGift = (bool)serviceModel.IsGift;
             webModel.IsReccuring = (bool)serviceModel.IsReccuring;
             webModel.Length = (decimal)(serviceModel.Length ?? 0);
             webModel.ListPrice = new Money(serviceModel.ListPrice ?? 0, currency);
-            webModel.PlacedPrice = new Money(serviceModel.PlacedPrice ?? 0, currency);
+
             webModel.RequiredShipping = (bool)serviceModel.RequiredShipping;
             webModel.SalePrice = new Money(serviceModel.SalePrice ?? 0, currency);
             webModel.TaxIncluded = (bool)serviceModel.TaxIncluded;

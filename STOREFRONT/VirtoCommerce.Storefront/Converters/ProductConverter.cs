@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using VirtoCommerce.Storefront.Model;
-using VirtoCommerce.Client.Model;
 using Omu.ValueInjecter;
+using VirtoCommerce.Client.Model;
+using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Marketing;
@@ -20,7 +19,7 @@ namespace VirtoCommerce.Storefront.Converters
             retVal.Currency = currentCurrency;
             retVal.Price = new ProductPrice(currentCurrency);
 
-            retVal.InjectFrom(product);
+            retVal.InjectFrom<NullableAndEnumValueInjecter>(product);
 
             retVal.Sku = product.Code;
 
@@ -77,7 +76,7 @@ namespace VirtoCommerce.Storefront.Converters
             if (product.Price != null)
             {
                 promoItem.Discount = new Money(product.Price.ActiveDiscount != null ? product.Price.ActiveDiscount.Amount.Amount : 0m, product.Price.Currency);
-                promoItem.Price = new Money(product.Price.SalePrice.Amount, product.Price.Currency);
+                promoItem.Price = product.Price.SalePrice;
             }
          
             promoItem.ProductId = product.Id;

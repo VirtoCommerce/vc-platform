@@ -1,23 +1,20 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using VirtoCommerce.Storefront.Model.Cart.Services;
+using VirtoCommerce.Storefront.Model.Cart.ValidationErrors;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Marketing;
-using VirtoCommerce.Storefront.Model.Marketing.Services;
 
 namespace VirtoCommerce.Storefront.Model.Cart
 {
-    public class ShoppingCart : Entity, IDiscountable
+    public class ShoppingCart : Entity, IDiscountable, IValidatable
     {
         public ShoppingCart(Currency currency, Language language)
         {
             Currency = currency;
             LanguageCode = language.CultureName;
-            DiscountTotal = new Money(currency);
             HandlingTotal = new Money(currency);
-            ShippingTotal = new Money(currency);
-            SubTotal = new Money(currency);
             TaxTotal = new Money(currency);
-            Total = new Money(currency);
 
             Addresses = new List<Address>();
             Discounts = new List<Discount>();
@@ -26,6 +23,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
             Shipments = new List<Shipment>();
             TaxDetails = new List<TaxDetail>();
             DynamicProperties = new List<DynamicProperty>();
+            ValidationErrors = new List<ValidationError>();
         }
 
         /// <summary>
@@ -135,19 +133,41 @@ namespace VirtoCommerce.Storefront.Model.Cart
         public decimal Width { get; set; }
 
         /// <summary>
-        /// Gets or sets the value of shopping cart total cost
+        /// Gets the value of shopping cart total cost
         /// </summary>
-        public Money Total { get; set; }
+        public Money Total
+        {
+            get
+            {
+                return SubTotal + TaxTotal + ShippingTotal - DiscountTotal;
+            }
+        }
 
         /// <summary>
-        /// Gets or sets the value of shopping cart subtotal
+        /// Gets the value of shopping cart subtotal
         /// </summary>
-        public Money SubTotal { get; set; }
+        public Money SubTotal
+        {
+            get
+            {
+                var subtotal = Items.Sum(i => i.ExtendedPrice.Amount);
+
+                return new Money(subtotal, Currency);
+            }
+        }
 
         /// <summary>
-        /// Gets or sets the value of shipping total cost
+        /// Gets the value of shipping total cost
         /// </summary>
-        public Money ShippingTotal { get; set; }
+        public Money ShippingTotal
+        {
+            get
+            {
+                var shippingTotal = Shipments.Sum(s => s.Total.Amount);
+
+                return new Money(shippingTotal, Currency);
+            }
+        }
 
         /// <summary>
         /// Gets or sets the value of handling total cost
@@ -155,9 +175,17 @@ namespace VirtoCommerce.Storefront.Model.Cart
         public Money HandlingTotal { get; set; }
 
         /// <summary>
-        /// Gets or sets the value of total discount amount
+        /// Gets the value of total discount amount
         /// </summary>
-        public Money DiscountTotal { get; set; }
+        public Money DiscountTotal
+        {
+            get
+            {
+                var discountTotal = Discounts.Sum(d => d.Amount.Amount);
+
+                return new Money(discountTotal, Currency);
+            }
+        }
 
         /// <summary>
         /// Gets or sets the value of total tax cost
@@ -232,6 +260,8 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// <value>Dynamic properties collections</value>
         public ICollection<DynamicProperty> DynamicProperties { get; set; }
 
+        public ICollection<ValidationError> ValidationErrors { get; set; }
+
         #region IDiscountable Members
         public ICollection<Discount> Discounts { get; }
 
@@ -244,7 +274,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
             var cartRewards = rewards.Where(r => r.RewardType == PromotionRewardType.CartSubtotalReward);
             foreach (var reward in cartRewards)
             {
-                var discount = reward.ToDiscountModel(SubTotal.Amount, Currency);
+                var discount = reward.ToDiscountModel(SubTotal);
 
                 if (reward.IsValid)
                 {

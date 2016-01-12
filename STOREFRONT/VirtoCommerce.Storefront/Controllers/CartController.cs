@@ -7,6 +7,7 @@ using VirtoCommerce.Client.Model;
 using VirtoCommerce.Storefront.Builders;
 using VirtoCommerce.Storefront.Converters;
 using VirtoCommerce.Storefront.Model;
+using VirtoCommerce.Storefront.Model.Cart.Services;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Services;
 
@@ -21,10 +22,11 @@ namespace VirtoCommerce.Storefront.Controllers
         private readonly IMarketingModuleApi _marketingApi;
         private readonly ICommerceCoreModuleApi _commerceApi;
         private readonly ICustomerManagementModuleApi _customerApi;
+        private readonly ICartValidator _cartValidator;
 
         public CartController(WorkContext workContext, IShoppingCartModuleApi cartApi, IOrderModuleApi orderApi, IStorefrontUrlBuilder urlBuilder,
                               ICartBuilder cartBuilder, ICatalogSearchService catalogService, IMarketingModuleApi marketingApi, ICommerceCoreModuleApi commerceApi,
-                              ICustomerManagementModuleApi customerApi)
+                              ICustomerManagementModuleApi customerApi, ICartValidator cartValidator)
             : base(workContext, urlBuilder)
         {
             _cartBuilder = cartBuilder;
@@ -34,6 +36,7 @@ namespace VirtoCommerce.Storefront.Controllers
             _marketingApi = marketingApi;
             _commerceApi = commerceApi;
             _customerApi = customerApi;
+            _cartValidator = cartValidator;
         }
 
         // GET: /cart
@@ -49,6 +52,8 @@ namespace VirtoCommerce.Storefront.Controllers
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
 
+            await _cartValidator.ValidateAsync();
+
             return Json(_cartBuilder.Cart, JsonRequestBehavior.AllowGet);
         }
 
@@ -61,6 +66,8 @@ namespace VirtoCommerce.Storefront.Controllers
             var product = await _catalogService.GetProductAsync(id, Model.Catalog.ItemResponseGroup.ItemLarge);
             if (product != null)
             {
+                await _cartValidator.ValidateAsync();
+
                 await _cartBuilder.AddItemAsync(product, quantity);
                 await _cartBuilder.SaveAsync();
             }
@@ -73,6 +80,8 @@ namespace VirtoCommerce.Storefront.Controllers
         public async Task<ActionResult> ChangeItemJson(string lineItemId, int quantity)
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
+
+            await _cartValidator.ValidateAsync();
 
             await _cartBuilder.ChangeItemQuantityAsync(lineItemId, quantity);
             await _cartBuilder.SaveAsync();

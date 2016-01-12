@@ -32,6 +32,8 @@ using CacheManager.Core;
 using CacheManager.Web;
 using MarkdownDeep;
 using VirtoCommerce.Storefront.Model.Marketing.Services;
+using VirtoCommerce.Storefront.Model.Cart.Services;
+using VirtoCommerce.Storefront.Model.Pricing.Services;
 
 [assembly: OwinStartup(typeof(Startup))]
 [assembly: PreApplicationStartMethod(typeof(Startup), "PreApplicationStart")]
@@ -107,6 +109,8 @@ namespace VirtoCommerce.Storefront
             container.RegisterType<ISearchModuleApi, SearchModuleApi>();
             container.RegisterType<IMarketingService, MarketingServiceImpl>();
             container.RegisterType<IPromotionEvaluator, PromotionEvaluator>();
+            container.RegisterType<ICartValidator, CartValidator>();
+            container.RegisterType<IPricingService, PricingServiceImpl>();
 
             container.RegisterType<ICartBuilder, CartBuilder>();
             container.RegisterType<ICatalogSearchService, CatalogSearchServiceImpl>();

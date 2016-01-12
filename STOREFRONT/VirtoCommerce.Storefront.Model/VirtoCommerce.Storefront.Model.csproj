@@ -59,11 +59,21 @@
     <Compile Include="AmountType.cs" />
     <Compile Include="BankCardInfo.cs" />
     <Compile Include="Cart\CartShipmentItem.cs" />
+    <Compile Include="Cart\Services\ICartValidator.cs" />
+    <Compile Include="Cart\Services\IValidatable.cs" />
+    <Compile Include="Cart\ValidationErrors\CartSubtotalError.cs" />
+    <Compile Include="Cart\ValidationErrors\ProductPriceError.cs" />
+    <Compile Include="Cart\ValidationErrors\ProductQuantityError.cs" />
+    <Compile Include="Cart\ValidationErrors\ProductUnavailableError.cs" />
+    <Compile Include="Cart\ValidationErrors\ShippingPriceError.cs" />
+    <Compile Include="Cart\ValidationErrors\ShippingUnavailableError.cs" />
+    <Compile Include="Cart\ValidationErrors\ValidationError.cs" />
     <Compile Include="Catalog\Aggregation.cs" />
     <Compile Include="Catalog\AggregationItem.cs" />
     <Compile Include="Catalog\Asset.cs" />
     <Compile Include="Catalog\CatalogSearchResponseGroup.cs" />
     <Compile Include="Catalog\CatalogSearchResult.cs" />
+    <Compile Include="Catalog\InventoryStatus.cs" />
     <Compile Include="Catalog\ItemResponseGroup.cs" />
     <Compile Include="Catalog\CatalogSearchCriteria.cs" />
     <Compile Include="Catalog\Term.cs" />
@@ -74,6 +84,7 @@
     <Compile Include="Common\DynamicPropertyExtension.cs" />
     <Compile Include="Common\EventThrottlingExtensions.cs" />
     <Compile Include="Common\IStorefrontPagedList.cs" />
+    <Compile Include="Common\Money\IConvertible.cs" />
     <Compile Include="Marketing\IDiscountable.cs" />
     <Compile Include="Marketing\Services\IPromotionEvaluator.cs" />
     <Compile Include="Common\ValueInjecter\NullableAndEnumValueInjecter.cs" />
@@ -122,6 +133,7 @@
     <Compile Include="Order\ShipmentItem.cs" />
     <Compile Include="Order\ShipmentPackage.cs" />
     <Compile Include="PaymentMethod.cs" />
+    <Compile Include="Pricing\Services\IPricingService.cs" />
     <Compile Include="Profile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Register.cs" />

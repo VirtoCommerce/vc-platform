@@ -33,7 +33,7 @@ using System.Globalization;
 
 namespace VirtoCommerce.Storefront.Model.Common
 {
-	public class Money : IComparable<Money>, IEquatable<Money>, IComparable
+	public class Money : IComparable<Money>, IEquatable<Money>, IComparable, IConvertible<Money>
 	{
 		private Currency _currency;
 		private decimal _amount;
@@ -141,8 +141,8 @@ namespace VirtoCommerce.Storefront.Model.Common
 			if (object.ReferenceEquals(other, null)) return false;
 
 			if (AllowImplicitConversion)
-				return Amount == other.Convert(Currency).Amount
-				  && other.Amount == Convert(other.Currency).Amount;
+				return Amount == other.ConvertTo(Currency).Amount
+				  && other.Amount == ConvertTo(other.Currency).Amount;
 			else
 				return ((Currency.Equals(other.Currency)) && (Amount == other.Amount));
 		}
@@ -163,25 +163,25 @@ namespace VirtoCommerce.Storefront.Model.Common
 		public static bool operator >(Money first, Money second)
 		{
 			return first.Amount > second.ConvertOrCheck(first.Currency).Amount
-			  && second.Amount < first.Convert(second.Currency).Amount;
+			  && second.Amount < first.ConvertTo(second.Currency).Amount;
 		}
 
 		public static bool operator >=(Money first, Money second)
 		{
 			return first.Amount >= second.ConvertOrCheck(first.Currency).Amount
-			  && second.Amount <= first.Convert(second.Currency).Amount;
+			  && second.Amount <= first.ConvertTo(second.Currency).Amount;
 		}
 
 		public static bool operator <=(Money first, Money second)
 		{
 			return first.Amount <= second.ConvertOrCheck(first.Currency).Amount
-			  && second.Amount >= first.Convert(second.Currency).Amount;
+			  && second.Amount >= first.ConvertTo(second.Currency).Amount;
 		}
 
 		public static bool operator <(Money first, Money second)
 		{
 			return first.Amount < second.ConvertOrCheck(first.Currency).Amount
-			  && second.Amount > first.Convert(second.Currency).Amount;
+			  && second.Amount > first.ConvertTo(second.Currency).Amount;
 		}
 
 		public int CompareTo(object obj)
@@ -355,24 +355,28 @@ namespace VirtoCommerce.Storefront.Model.Common
 			return results;
 		}
 
-		public Money Convert(Currency toCurrency)
-		{
-			if (Currency == toCurrency)
-				return this;
-	       return new Money((_amount * Currency.ExchangeRate ) / toCurrency.ExchangeRate, toCurrency);
-        }
-
+	
 		private Money ConvertOrCheck(Currency toCurrency)
 		{
 			if (Currency == toCurrency)
 				return this;
 			else
 				if (AllowImplicitConversion)
-					return this.Convert(toCurrency);
+					return this.ConvertTo(toCurrency);
 				else
 					throw new InvalidOperationException("Money type mismatch");
 		}
 
-		#endregion
-	}
+        #endregion
+
+        #region IConvertible<Money> Members
+        public Money ConvertTo(Currency toCurrency)
+        {
+            if (Currency == toCurrency)
+                return this;
+            return new Money((_amount * Currency.ExchangeRate) / toCurrency.ExchangeRate, toCurrency);
+        } 
+        #endregion
+
+    }
 }

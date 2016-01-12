@@ -13,7 +13,7 @@ namespace VirtoCommerce.Storefront.Converters
         {
             var webModel = new CustomerOrder();
 
-            var currency = availCurrencies.FirstOrDefault(x=> x.IsHasSameCode(order.Currency));
+            var currency = availCurrencies.FirstOrDefault(x=> x.IsHasSameCode(order.Currency)) ?? new Currency(order.Currency, 1);
 
             webModel.InjectFrom(order);
 

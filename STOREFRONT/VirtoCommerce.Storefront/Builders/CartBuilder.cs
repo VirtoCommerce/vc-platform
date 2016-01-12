@@ -326,55 +326,6 @@ namespace VirtoCommerce.Storefront.Builders
             promotionContext.StoreId = _store.Id;
 
             await _promotionEvaluator.EvaluateDiscountsAsync(promotionContext, new IDiscountable[] { _cart });
-
-            CalculateTotals();
-        }
-
-        private void CalculateTotals()
-        {
-            foreach (var lineItem in _cart.Items)
-            {
-                decimal lineItemDiscountTotal = lineItem.Discounts.Sum(d => d.Amount.Amount);
-                lineItem.DiscountTotal = new Money(lineItemDiscountTotal, _cart.Currency);
-
-                decimal lineItemTaxTotal = lineItem.TaxDetails.Sum(td => td.Amount.Amount);
-                lineItem.TaxTotal = new Money(lineItemTaxTotal, _cart.Currency);
-
-                decimal placedPrice = lineItem.SalePrice.Amount - lineItemDiscountTotal;
-                lineItem.PlacedPrice = new Money(placedPrice, _cart.Currency);
-
-                decimal extendedPrice = placedPrice * lineItem.Quantity;
-                lineItem.ExtendedPrice = new Money(extendedPrice, _cart.Currency);
-            }
-
-            foreach (var shipment in _cart.Shipments)
-            {
-                decimal shipmentDiscountTotal = shipment.Discounts.Sum(d => d.Amount.Amount);
-                shipment.DiscountTotal = new Money(shipmentDiscountTotal, _cart.Currency);
-
-                decimal shipmentTaxTotal = shipment.TaxDetails.Sum(td => td.Amount.Amount);
-                shipment.TaxTotal = new Money(shipmentTaxTotal, _cart.Currency);
-
-                decimal shipmentItemsSubtotal = shipment.Items.Sum(i => i.LineItem.ExtendedPrice.Amount);
-                shipment.ItemSubtotal = new Money(shipmentItemsSubtotal, _cart.Currency);
-
-                shipment.Subtotal = shipment.ShippingPrice - shipmentDiscountTotal;
-                shipment.Total = shipment.Subtotal + shipment.TaxTotal;
-            }
-
-            decimal cartDiscountsTotal = _cart.Discounts.Sum(d => d.Amount.Amount);
-            _cart.DiscountTotal = new Money(cartDiscountsTotal, _cart.Currency);
-
-            decimal cartSubtotal = _cart.Items.Sum(i => i.ExtendedPrice.Amount);
-            _cart.SubTotal = new Money(cartSubtotal, _cart.Currency);
-
-            decimal cartShipmentsTotal = _cart.Shipments.Sum(s => s.Total.Amount);
-            _cart.ShippingTotal = new Money(cartShipmentsTotal, _cart.Currency);
-
-            //decimal cartTaxTotal = _cart.TaxDetails.Sum(td => td.Amount.Amount);
-            //_cart.TaxTotal = new Money(cartTaxTotal, _cart.Currency.Code);
-
-            _cart.Total = _cart.SubTotal + _cart.ShippingTotal + _cart.TaxTotal - _cart.DiscountTotal;
         }
     }
 }

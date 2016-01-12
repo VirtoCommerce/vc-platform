@@ -11,6 +11,7 @@ using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Marketing;
 using VirtoCommerce.Storefront.Model.Marketing.Services;
+using VirtoCommerce.Storefront.Model.Pricing.Services;
 using VirtoCommerce.Storefront.Model.Services;
 
 namespace VirtoCommerce.Storefront.Services
@@ -18,18 +19,18 @@ namespace VirtoCommerce.Storefront.Services
     public class CatalogSearchServiceImpl : ICatalogSearchService
     {
         private readonly ICatalogModuleApi _catalogModuleApi;
-        private readonly IPricingModuleApi _pricingModuleApi;
+        private readonly IPricingService _pricingService;
         private readonly IInventoryModuleApi _inventoryModuleApi;
         private readonly ISearchModuleApi _searchApi;
         private readonly IPromotionEvaluator _promotionEvaluator;
         private readonly WorkContext _workContext;
 
 
-        public CatalogSearchServiceImpl(WorkContext workContext, ICatalogModuleApi catalogModuleApi, IPricingModuleApi pricingModuleApi, IInventoryModuleApi inventoryModuleApi, ISearchModuleApi searchApi, IPromotionEvaluator promotionEvaluator)
+        public CatalogSearchServiceImpl(WorkContext workContext, ICatalogModuleApi catalogModuleApi, IPricingService pricingService, IInventoryModuleApi inventoryModuleApi, ISearchModuleApi searchApi, IPromotionEvaluator promotionEvaluator)
         {
             _workContext = workContext;
             _catalogModuleApi = catalogModuleApi;
-            _pricingModuleApi = pricingModuleApi;
+            _pricingService = pricingService;
             _inventoryModuleApi = inventoryModuleApi;
             _searchApi = searchApi;
             _promotionEvaluator = promotionEvaluator;
@@ -37,27 +38,24 @@ namespace VirtoCommerce.Storefront.Services
 
         public async Task<Product> GetProductAsync(string id, ItemResponseGroup responseGroup = ItemResponseGroup.ItemInfo)
         {
-            var item = (await _catalogModuleApi.CatalogModuleProductsGetAsync(id)).ToWebModel(_workContext.CurrentLanguage, _workContext.CurrentCurrency);
+            var item = (await _catalogModuleApi.CatalogModuleProductsGetProductByIdAsync(id)).ToWebModel(_workContext.CurrentLanguage, _workContext.CurrentCurrency);
 
             var allProducts = new[] { item }.Concat(item.Variations).ToArray();
 
             var taskList = new List<Task>();
-        
-            if ((responseGroup | ItemResponseGroup.ItemWithPrices) == responseGroup)
-            {
-                var loadPricesTask = Task.Factory.StartNew(() =>
-                {
-                    LoadProductsPrices(allProducts);
-                    if ((responseGroup | ItemResponseGroup.ItemWithDiscounts) == responseGroup)
-                    {
-                       LoadProductsDiscountsAsync(allProducts).Wait();
-                    }
-                });
-                taskList.Add(loadPricesTask);
-            }
+
             if ((responseGroup | ItemResponseGroup.ItemWithInventories) == responseGroup)
             {
                 taskList.Add(Task.Factory.StartNew(() => LoadProductsInventories(allProducts)));
+            }
+
+            if ((responseGroup | ItemResponseGroup.ItemWithPrices) == responseGroup)
+            {
+                await _pricingService.EvaluateProductPricesAsync(allProducts);
+                if ((responseGroup | ItemResponseGroup.ItemWithDiscounts) == responseGroup)
+                {
+                    await LoadProductsDiscountsAsync(allProducts);
+                }
             }
 
             Task.WaitAll(taskList.ToArray());
@@ -114,7 +112,7 @@ namespace VirtoCommerce.Storefront.Services
                     var products = result.Products.Select(x => x.ToWebModel(_workContext.CurrentLanguage, _workContext.CurrentCurrency)).ToArray();
                     retVal.Products = new StorefrontPagedList<Product>(products, criteria.PageNumber, criteria.PageSize, result.ProductsTotalCount.Value, page => _workContext.RequestUrl.SetQueryParameter("page", page.ToString()).ToString());
 
-                    LoadProductsPrices(retVal.Products.ToArray());
+                    await _pricingService.EvaluateProductPricesAsync(retVal.Products.ToArray());
                     LoadProductsInventories(retVal.Products.ToArray());
                 }
 
@@ -131,33 +129,11 @@ namespace VirtoCommerce.Storefront.Services
 
             return retVal;
         }
-
-
-        private void LoadProductsPrices(Product[] products)
-        {
-            var result = _pricingModuleApi.PricingModuleEvaluatePrices(
-                   evalContextStoreId: _workContext.CurrentStore.Id,
-                   evalContextCatalogId: _workContext.CurrentStore.Catalog,
-                   evalContextProductIds: products.Select(x => x.Id).ToList(),
-                   evalContextCustomerId: _workContext.CurrentCustomer.Id,
-                   evalContextCertainDate: _workContext.StorefrontUtcNow,
-                   evalContextPricelistIds: _workContext.CurrentPriceListIds.ToList());
-
-            foreach (var item in products)
-            {
-                item.Prices = result.Where(x => x.ProductId == item.Id).Select(x => x.ToWebModel(_workContext.AllCurrencies)).ToList();
-                var price = item.Prices.FirstOrDefault(x => x.Currency.Equals(_workContext.CurrentCurrency));
-                if (price != null)
-                {
-                    item.Price = price;
-                }
-            }
-        }
-
+    
         private async Task LoadProductsDiscountsAsync(Product[] products)
         {
             var promotionContext = _workContext.ToPromotionEvaluationContext();
-            promotionContext.PromoEntries = products.Select(x=>x.ToPromotionItem()).ToList();
+            promotionContext.PromoEntries = products.Select(x => x.ToPromotionItem()).ToList();
             await _promotionEvaluator.EvaluateDiscountsAsync(promotionContext, products);
         }
 
