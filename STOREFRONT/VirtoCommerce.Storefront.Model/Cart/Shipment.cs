@@ -15,6 +15,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
             Items = new List<CartShipmentItem>();
             TaxDetails = new List<TaxDetail>();
             ValidationErrors = new List<ValidationError>();
+            AvailableShippingMethods = new List<ShippingMethod>();
         }
 
         /// <summary>
@@ -110,17 +111,9 @@ namespace VirtoCommerce.Storefront.Model.Cart
         }
 
         /// <summary>
-        /// Gets the value of total shipping tax amount
+        /// Gets or sets the value of total shipping tax amount
         /// </summary>
-        public Money TaxTotal
-        {
-            get
-            {
-                var taxTotal = TaxDetails.Sum(td => td.Amount.Amount);
-
-                return new Money(taxTotal, Currency.Code);
-            }
-        }
+        public Money TaxTotal { get; set; }
 
         /// <summary>
         /// Gets the value of shipping items subtotal
@@ -166,6 +159,8 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// Collection of TaxDetail objects
         /// </value>
         public ICollection<TaxDetail> TaxDetails { get; set; }
+
+        public ICollection<ShippingMethod> AvailableShippingMethods { get; set; }
 
         public ICollection<ValidationError> ValidationErrors { get; set; }
 

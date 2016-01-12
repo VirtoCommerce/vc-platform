@@ -4,10 +4,11 @@ namespace VirtoCommerce.Storefront.Model.Cart.ValidationErrors
 {
     public class ShippingPriceError : ValidationError
     {
-        public ShippingPriceError() : base(typeof(ShippingPriceError))
+        public ShippingPriceError(Money newPrice) : base(typeof(ShippingPriceError))
         {
+            NewPrice = newPrice;
         }
 
-        public Money NewPrice { get; set; }
+        public Money NewPrice { get; private set; }
     }
 }

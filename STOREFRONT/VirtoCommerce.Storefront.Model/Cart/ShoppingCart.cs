@@ -24,6 +24,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
             TaxDetails = new List<TaxDetail>();
             DynamicProperties = new List<DynamicProperty>();
             ValidationErrors = new List<ValidationError>();
+            AvailablePaymentMethods = new List<PaymentMethod>();
         }
 
         /// <summary>
@@ -259,6 +260,8 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// </summary>
         /// <value>Dynamic properties collections</value>
         public ICollection<DynamicProperty> DynamicProperties { get; set; }
+
+        public ICollection<PaymentMethod> AvailablePaymentMethods { get; set; }
 
         public ICollection<ValidationError> ValidationErrors { get; set; }
 

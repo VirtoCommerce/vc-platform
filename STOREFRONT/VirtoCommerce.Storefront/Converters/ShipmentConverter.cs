@@ -15,6 +15,7 @@ namespace VirtoCommerce.Storefront.Converters
             webModel.InjectFrom(shipment);
             webModel.Currency = cart.Currency;
             webModel.ShippingPrice = new Money(shipment.ShippingPrice ?? 0, shipment.Currency);
+            webModel.TaxTotal = new Money(shipment.TaxTotal ?? 0, shipment.Currency);
 
             if (shipment.DeliveryAddress != null)
             {

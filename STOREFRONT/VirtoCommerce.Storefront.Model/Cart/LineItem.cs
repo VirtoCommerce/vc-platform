@@ -203,17 +203,9 @@ namespace VirtoCommerce.Storefront.Model.Cart
         }
 
         /// <summary>
-        /// Gets the value of line item total tax amount
+        /// Gets or sets the value of line item total tax amount
         /// </summary>
-        public Money TaxTotal
-        {
-            get
-            {
-                var taxTotal = TaxDetails.Sum(td => td.Amount.Amount);
-
-                return new Money(taxTotal, Currency.Code);
-            }
-        }
+        public Money TaxTotal { get; set; }
 
         /// <summary>
         /// Gets or sets the value of line item tax type
