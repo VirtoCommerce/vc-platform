@@ -261,6 +261,14 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// <value>Dynamic properties collections</value>
         public ICollection<DynamicProperty> DynamicProperties { get; set; }
 
+        public bool HasValidationErrors
+        {
+            get
+            {
+                return ValidationErrors.Any() || Items.Where(i => i.ValidationErrors.Any()).Any() || Shipments.Where(s => s.ValidationErrors.Any()).Any();
+            }
+        }
+
         public ICollection<PaymentMethod> AvailablePaymentMethods { get; set; }
 
         public ICollection<ValidationError> ValidationErrors { get; set; }

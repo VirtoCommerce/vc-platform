@@ -78,7 +78,7 @@
                             </span>
                         </div>
                         <input class="btn-secondary update-cart" type="button" value="Update cart" />
-                        <button name="checkout" type="button" ng-class="{ 'btn': !isUpdating, 'btn-secondary': isUpdating }" ng-disabled="isUpdating" ng-click="outerRedirect('{{ '/cart/checkout/#/customer-information' | absolute_url }}')">
+                        <button name="checkout" type="button" ng-class="{ 'btn': !isUpdating, 'btn-secondary': isUpdating || cart.HasValidationErrors }" ng-disabled="isUpdating || cart.HasValidationErrors" ng-click="outerRedirect('{{ '/cart/checkout/#/customer-information' | absolute_url }}')">
                             <span class="icon icon-cart"></span>
                             {{ 'cart.general.checkout' | t }}
                         </button>
