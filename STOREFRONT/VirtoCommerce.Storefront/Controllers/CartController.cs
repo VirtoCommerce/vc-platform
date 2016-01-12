@@ -69,10 +69,10 @@ namespace VirtoCommerce.Storefront.Controllers
             var product = await _catalogService.GetProductAsync(id, Model.Catalog.ItemResponseGroup.ItemLarge);
             if (product != null)
             {
-                await _cartValidator.ValidateItemsAsync(new[] { id });
-
                 await _cartBuilder.AddItemAsync(product, quantity);
                 await _cartBuilder.SaveAsync();
+
+                await _cartValidator.ValidateItemsAsync(new[] { id });
             }
 
             return Json(null, JsonRequestBehavior.AllowGet);
@@ -116,30 +116,6 @@ namespace VirtoCommerce.Storefront.Controllers
 
             await _cartBuilder.ClearAsync();
             await _cartBuilder.SaveAsync();
-
-            return Json(null, JsonRequestBehavior.AllowGet);
-        }
-
-        // POST: /cart/reapplyitem
-        [HttpPost]
-        public async Task<ActionResult> ReapplyItemJson(string lineItemId)
-        {
-            await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
-
-            var lineItem = _cartBuilder.Cart.Items.FirstOrDefault(i => i.Id == lineItemId);
-            if (lineItem != null)
-            {
-                var quantity = lineItem.Quantity;
-                var product = await _catalogService.GetProductAsync(lineItem.ProductId, Model.Catalog.ItemResponseGroup.ItemLarge);
-                if (product != null)
-                {
-                    await _cartBuilder.RemoveItemAsync(lineItemId);
-                    await _cartBuilder.AddItemAsync(product, quantity);
-                    await _cartBuilder.SaveAsync();
-
-                    await _cartValidator.ValidateItemsAsync(new[] { product.Id });
-                }
-            }
 
             return Json(null, JsonRequestBehavior.AllowGet);
         }

@@ -90,8 +90,12 @@ storefrontApp.controller('cartController', ['$scope', '$timeout', 'cartService',
         var lineItem = _.find($scope.cart.Items, function (i) { return i.Id == lineItemId });
         if (lineItem) {
             $scope.isUpdating = true;
-            cartService.reapplyLineItem(lineItemId).then(function (response) {
-                refreshCart();
+            var quantity = lineItem.Quantity;
+            var productId = lineItem.ProductId;
+            cartService.removeLineItem(lineItemId).then(function (response) {
+                cartService.addLineItem(productId, quantity).then(function (response) {
+                    refreshCart();
+                });
             });
         }
     }

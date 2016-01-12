@@ -49,9 +49,6 @@ storefrontApp.service('cartService', ['$http', function ($http) {
         clearCart: function () {
             return $http.post('cart/clear');
         },
-        reapplyLineItem: function (lineItemId) {
-            return $http.post('cart/reapplyitem', { lineItemId: lineItemId });
-        },
         getCountries: function () {
             return $http.get('common/getcountries/json?t=' + new Date().getTime());
         },
