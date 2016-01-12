@@ -1,6 +1,6 @@
 ﻿angular.module('virtoCommerce.storeModule')
-.controller('virtoCommerce.storeModule.storeDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.storeModule.stores', 'virtoCommerce.catalogModule.catalogs', 'platformWebApp.settings', 'platformWebApp.settings.helper', 'platformWebApp.dialogService', 'platformWebApp.authService',
-    function ($scope, bladeNavigationService, stores, catalogs, settings, settingsHelper, dialogService, authService) {
+.controller('virtoCommerce.storeModule.storeDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.storeModule.stores', 'virtoCommerce.catalogModule.catalogs', 'platformWebApp.settings', 'platformWebApp.settings.helper', 'platformWebApp.dialogService', 'platformWebApp.authService', 'virtoCommerce.coreModule.currency.currencyUtils',
+    function ($scope, bladeNavigationService, stores, catalogs, settings, settingsHelper, dialogService, authService, currencyUtils) {
         var blade = $scope.blade;
 
         blade.refresh = function (parentRefresh) {
@@ -148,5 +148,5 @@
         $scope.catalogs = catalogs.getCatalogs();
         $scope.storeStates = settings.getValues({ id: 'Stores.States' });
         $scope.languages = settings.getValues({ id: 'VirtoCommerce.Core.General.Languages' });
-        $scope.currencies = settings.getValues({ id: 'VirtoCommerce.Core.General.Currencies' });
+        $scope.currencyUtils = currencyUtils;
     }]);

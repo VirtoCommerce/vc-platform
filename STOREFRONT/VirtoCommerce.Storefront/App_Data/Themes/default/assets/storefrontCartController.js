@@ -86,6 +86,20 @@ storefrontApp.controller('cartController', ['$scope', '$timeout', 'cartService',
         }, 200);
     }
 
+    $scope.reapplyLineItem = function (lineItemId) {
+        var lineItem = _.find($scope.cart.Items, function (i) { return i.Id == lineItemId });
+        if (lineItem) {
+            $scope.isUpdating = true;
+            var quantity = lineItem.Quantity;
+            var productId = lineItem.ProductId;
+            cartService.removeLineItem(lineItemId).then(function (response) {
+                cartService.addLineItem(productId, quantity).then(function (response) {
+                    refreshCart();
+                });
+            });
+        }
+    }
+
     function initialize() {
         $scope.isCartModalVisible = false;
         $scope.isUpdating = false;

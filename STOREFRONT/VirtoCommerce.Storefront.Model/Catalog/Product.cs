@@ -250,7 +250,7 @@ namespace VirtoCommerce.Storefront.Model.Catalog
                     Discounts.Add(discount);
                     Price.ActiveDiscount = discount;
                     Price.AbsoluteBenefit += Price.ActiveDiscount.Amount;
-                    Price.ActualPrice = Price.SalePrice - Price.AbsoluteBenefit;
+                    Price.ActualPrice = Price.ListPrice - Price.AbsoluteBenefit;
                 }
             }
         }

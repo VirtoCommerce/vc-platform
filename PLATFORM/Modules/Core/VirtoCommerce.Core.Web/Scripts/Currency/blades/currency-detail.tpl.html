@@ -27,7 +27,7 @@
                 <div class="form-group">
                     <label class="form-label">{{ 'core.blades.currency-detail.labels.exchange-rate' | translate }}</label>
                     <div class="form-input __number">
-                        <input smart-float required num-type="float" ng-model="blade.currentEntity.exchangeRate" min="0">
+                        <input smart-float required num-type="float" fraction="4" ng-model="blade.currentEntity.exchangeRate" min="0">
                     </div>
                 </div>
                 <div class="form-group">

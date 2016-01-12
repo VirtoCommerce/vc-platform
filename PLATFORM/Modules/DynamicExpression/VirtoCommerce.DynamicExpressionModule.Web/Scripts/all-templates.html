@@ -33,8 +33,8 @@
     <span ng-controller="virtoCommerce.marketingModule.promotionConditionCurrencyIsController">
         Currency is
         <a class="__link" left-click-menu data-target="pcrn_menu{{$index}}">{{element1.currency ? element1.currency : 'select currency' }}</a>
-        <ul class="menu __context" role="menu" id="pcrn_menu{{$index}}">
-            <li class="menu-item" ng-click='element1.currency=x;' ng-repeat="x in availableCurrencies">{{x}}</li>
+        <ul class="menu __context" role="menu" id="pcrn_menu{{$index}}" ng-init="currencies = currencyUtils.getCurrencies()">
+            <li class="menu-item" ng-click='element1.currency=x.code;' ng-repeat="x in currencies">{{x.code}}</li>
         </ul>
     </span>
 </script>

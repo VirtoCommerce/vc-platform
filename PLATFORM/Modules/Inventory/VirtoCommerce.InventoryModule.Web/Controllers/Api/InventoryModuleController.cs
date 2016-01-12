@@ -9,6 +9,8 @@ using VirtoCommerce.InventoryModule.Web.Converters;
 using VirtoCommerce.Domain.Commerce.Services;
 using System.Collections.Generic;
 using VirtoCommerce.InventoryModule.Web.Security;
+using VirtoCommerce.InventoryModule.Web.Binders;
+using System.Web.Http.ModelBinding;
 
 namespace VirtoCommerce.InventoryModule.Web.Controllers.Api
 {
@@ -31,7 +33,7 @@ namespace VirtoCommerce.InventoryModule.Web.Controllers.Api
 		[HttpGet]
 		[ResponseType(typeof(webModel.InventoryInfo[]))]
 		[Route("~/api/inventory/products")]
-		public IHttpActionResult GetProductsInventories([FromUri] string[] ids)
+		public IHttpActionResult GetProductsInventories([ModelBinder(typeof(IdsStringArrayBinder))] string[] ids)
 		{
 			var result = new List<webModel.InventoryInfo>();
 			var allFulfillments = _commerceService.GetAllFulfillmentCenters().ToArray();
