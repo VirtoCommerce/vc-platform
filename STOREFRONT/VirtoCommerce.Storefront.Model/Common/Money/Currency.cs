@@ -21,6 +21,9 @@ namespace VirtoCommerce.Storefront.Model.Common
             {
                 NumberFormat = NumberFormatInfo.InvariantInfo.Clone() as NumberFormatInfo;
                 NumberFormat.CurrencySymbol = symbol;
+                //TODO: move to currency configuration
+                NumberFormat.CurrencyPositivePattern = 3; //n $
+                NumberFormat.CurrencyNegativePattern = 8; //-n $
             }
         }
 

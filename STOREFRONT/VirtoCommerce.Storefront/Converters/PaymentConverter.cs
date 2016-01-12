@@ -9,7 +9,7 @@ namespace VirtoCommerce.Storefront.Converters
     {
         public static Payment TowebModel(this VirtoCommerceCartModuleWebModelPayment payment, Currency currency)
         {
-            var webModel = new Payment();
+            var webModel = new Payment(currency);
 
             webModel.InjectFrom(payment);
 

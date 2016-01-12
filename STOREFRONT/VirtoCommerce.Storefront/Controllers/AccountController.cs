@@ -14,8 +14,8 @@ using VirtoCommerce.Storefront.Converters;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Common;
 using shopifyModel = VirtoCommerce.LiquidThemeEngine.Objects;
-using VirtoCommerce.Storefront.Builders;
 using VirtoCommerce.Storefront.Model.Cart;
+using VirtoCommerce.Storefront.Model.Cart.Services;
 
 namespace VirtoCommerce.Storefront.Controllers
 {

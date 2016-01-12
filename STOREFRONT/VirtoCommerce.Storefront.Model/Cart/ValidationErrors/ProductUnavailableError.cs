@@ -2,8 +2,6 @@
 {
     public class ProductUnavailableError : ValidationError
     {
-        public ProductUnavailableError() : base(typeof(ProductUnavailableError))
-        {
-        }
+
     }
 }

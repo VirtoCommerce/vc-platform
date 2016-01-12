@@ -4,6 +4,11 @@ namespace VirtoCommerce.Storefront.Model.Cart
 {
     public class Payment : Entity
     {
+        public Payment(Currency currency)
+        {
+            Amount = new Money(currency);
+            Currency = currency;
+        }
         /// <summary>
         /// Gets or sets the value of payment outer id
         /// </summary>

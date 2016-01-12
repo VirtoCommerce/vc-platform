@@ -9,12 +9,15 @@ namespace VirtoCommerce.Storefront.Model.Cart
 {
     public class Shipment : Entity, IDiscountable, IValidatable
     {
-        public Shipment()
+        public Shipment(Currency currency)
         {
+            Currency = currency;
             Discounts = new List<Discount>();
             Items = new List<CartShipmentItem>();
             TaxDetails = new List<TaxDetail>();
             ValidationErrors = new List<ValidationError>();
+            ShippingPrice = new Money(currency);
+            TaxTotal = new Money(currency);
         }
 
         /// <summary>
@@ -110,17 +113,9 @@ namespace VirtoCommerce.Storefront.Model.Cart
         }
 
         /// <summary>
-        /// Gets the value of total shipping tax amount
+        /// Gets or sets the value of total shipping tax amount
         /// </summary>
-        public Money TaxTotal
-        {
-            get
-            {
-                var taxTotal = TaxDetails.Sum(td => td.Amount.Amount);
-
-                return new Money(taxTotal, Currency);
-            }
-        }
+        public Money TaxTotal { get; set; }
 
         /// <summary>
         /// Gets the value of shipping items subtotal

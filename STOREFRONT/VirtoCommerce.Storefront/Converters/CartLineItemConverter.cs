@@ -55,6 +55,7 @@ namespace VirtoCommerce.Storefront.Converters
             webModel.RequiredShipping = (bool)serviceModel.RequiredShipping;
             webModel.SalePrice = new Money(serviceModel.SalePrice ?? 0, currency);
             webModel.TaxIncluded = (bool)serviceModel.TaxIncluded;
+            webModel.TaxTotal = new Money(serviceModel.TaxTotal ?? 0, currency);
             webModel.Weight = (decimal)(serviceModel.Weight ?? 0);
             webModel.Width = (decimal)(serviceModel.Width ?? 0);
 

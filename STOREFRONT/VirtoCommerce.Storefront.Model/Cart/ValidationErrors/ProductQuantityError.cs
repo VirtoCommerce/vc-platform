@@ -2,10 +2,11 @@
 {
     public class ProductQuantityError : ValidationError
     {
-        public ProductQuantityError() : base(typeof(ProductQuantityError))
+        public ProductQuantityError(long availableQuantity) 
         {
+            AvailableQuantity = availableQuantity;
         }
 
-        public long AvailableQuantity { get; set; }
+        public long AvailableQuantity { get; private set; }
     }
 }

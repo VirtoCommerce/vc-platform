@@ -19,7 +19,7 @@ namespace VirtoCommerce.Storefront.Converters
 
         public static Payment ToPaymentModel(this PaymentMethod paymentMethod, Money amount, Currency currency)
         {
-            var paymentWebModel = new Payment();
+            var paymentWebModel = new Payment(currency);
 
             paymentWebModel.Amount = amount;
             paymentWebModel.Currency = currency;

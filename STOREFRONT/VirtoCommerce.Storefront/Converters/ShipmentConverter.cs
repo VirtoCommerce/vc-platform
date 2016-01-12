@@ -11,11 +11,12 @@ namespace VirtoCommerce.Storefront.Converters
     {
         public static Model.Cart.Shipment ToWebModel(this VirtoCommerceCartModuleWebModelShipment shipment, ShoppingCart cart)
         {
-            var webModel = new Model.Cart.Shipment();
+            var webModel = new Model.Cart.Shipment(cart.Currency);
 
             webModel.InjectFrom(shipment);
             webModel.Currency = cart.Currency;
             webModel.ShippingPrice = new Money(shipment.ShippingPrice ?? 0, cart.Currency);
+            webModel.TaxTotal = new Money(shipment.TaxTotal ?? 0, cart.Currency);
 
             if (shipment.DeliveryAddress != null)
             {
