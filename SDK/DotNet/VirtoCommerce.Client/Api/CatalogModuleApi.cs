@@ -837,7 +837,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="id">Item id.</param>
         /// <param name="respGroup">Response group.</param>
         /// <returns>VirtoCommerceCatalogModuleWebModelProduct</returns>
-        VirtoCommerceCatalogModuleWebModelProduct CatalogModuleProductsGet (string id, string respGroup = null);
+        VirtoCommerceCatalogModuleWebModelProduct CatalogModuleProductsGetProductById (string id, string respGroup = null);
   
         /// <summary>
         /// Gets item by id.
@@ -848,7 +848,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="id">Item id.</param>
         /// <param name="respGroup">Response group.</param>
         /// <returns>ApiResponse of VirtoCommerceCatalogModuleWebModelProduct</returns>
-        ApiResponse<VirtoCommerceCatalogModuleWebModelProduct> CatalogModuleProductsGetWithHttpInfo (string id, string respGroup = null);
+        ApiResponse<VirtoCommerceCatalogModuleWebModelProduct> CatalogModuleProductsGetProductByIdWithHttpInfo (string id, string respGroup = null);
 
         /// <summary>
         /// Gets item by id.
@@ -859,7 +859,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="id">Item id.</param>
         /// <param name="respGroup">Response group.</param>
         /// <returns>Task of VirtoCommerceCatalogModuleWebModelProduct</returns>
-        System.Threading.Tasks.Task<VirtoCommerceCatalogModuleWebModelProduct> CatalogModuleProductsGetAsync (string id, string respGroup = null);
+        System.Threading.Tasks.Task<VirtoCommerceCatalogModuleWebModelProduct> CatalogModuleProductsGetProductByIdAsync (string id, string respGroup = null);
 
         /// <summary>
         /// Gets item by id.
@@ -870,7 +870,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="id">Item id.</param>
         /// <param name="respGroup">Response group.</param>
         /// <returns>Task of ApiResponse (VirtoCommerceCatalogModuleWebModelProduct)</returns>
-        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceCatalogModuleWebModelProduct>> CatalogModuleProductsGetAsyncWithHttpInfo (string id, string respGroup = null);
+        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceCatalogModuleWebModelProduct>> CatalogModuleProductsGetProductByIdAsyncWithHttpInfo (string id, string respGroup = null);
         
         /// <summary>
         /// Gets the template for a new variation.
@@ -4163,9 +4163,9 @@ namespace VirtoCommerce.Client.Api
         /// <param name="id">Item id.</param> 
         /// <param name="respGroup">Response group.</param> 
         /// <returns>VirtoCommerceCatalogModuleWebModelProduct</returns>
-        public VirtoCommerceCatalogModuleWebModelProduct CatalogModuleProductsGet (string id, string respGroup = null)
+        public VirtoCommerceCatalogModuleWebModelProduct CatalogModuleProductsGetProductById (string id, string respGroup = null)
         {
-             ApiResponse<VirtoCommerceCatalogModuleWebModelProduct> response = CatalogModuleProductsGetWithHttpInfo(id, respGroup);
+             ApiResponse<VirtoCommerceCatalogModuleWebModelProduct> response = CatalogModuleProductsGetProductByIdWithHttpInfo(id, respGroup);
              return response.Data;
         }
 
@@ -4175,11 +4175,11 @@ namespace VirtoCommerce.Client.Api
         /// <param name="id">Item id.</param> 
         /// <param name="respGroup">Response group.</param> 
         /// <returns>ApiResponse of VirtoCommerceCatalogModuleWebModelProduct</returns>
-        public ApiResponse< VirtoCommerceCatalogModuleWebModelProduct > CatalogModuleProductsGetWithHttpInfo (string id, string respGroup = null)
+        public ApiResponse< VirtoCommerceCatalogModuleWebModelProduct > CatalogModuleProductsGetProductByIdWithHttpInfo (string id, string respGroup = null)
         {
             
             // verify the required parameter 'id' is set
-            if (id == null) throw new ApiException(400, "Missing required parameter 'id' when calling CatalogModuleProductsGet");
+            if (id == null) throw new ApiException(400, "Missing required parameter 'id' when calling CatalogModuleProductsGetProductById");
             
     
             var path_ = "/api/catalog/products/{id}";
@@ -4218,9 +4218,9 @@ namespace VirtoCommerce.Client.Api
             int statusCode = (int) response.StatusCode;
     
             if (statusCode >= 400)
-                throw new ApiException (statusCode, "Error calling CatalogModuleProductsGet: " + response.Content, response.Content);
+                throw new ApiException (statusCode, "Error calling CatalogModuleProductsGetProductById: " + response.Content, response.Content);
             else if (statusCode == 0)
-                throw new ApiException (statusCode, "Error calling CatalogModuleProductsGet: " + response.ErrorMessage, response.ErrorMessage);
+                throw new ApiException (statusCode, "Error calling CatalogModuleProductsGetProductById: " + response.ErrorMessage, response.ErrorMessage);
     
             return new ApiResponse<VirtoCommerceCatalogModuleWebModelProduct>(statusCode,
                 response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
@@ -4234,9 +4234,9 @@ namespace VirtoCommerce.Client.Api
         /// <param name="id">Item id.</param>
         /// <param name="respGroup">Response group.</param>
         /// <returns>Task of VirtoCommerceCatalogModuleWebModelProduct</returns>
-        public async System.Threading.Tasks.Task<VirtoCommerceCatalogModuleWebModelProduct> CatalogModuleProductsGetAsync (string id, string respGroup = null)
+        public async System.Threading.Tasks.Task<VirtoCommerceCatalogModuleWebModelProduct> CatalogModuleProductsGetProductByIdAsync (string id, string respGroup = null)
         {
-             ApiResponse<VirtoCommerceCatalogModuleWebModelProduct> response = await CatalogModuleProductsGetAsyncWithHttpInfo(id, respGroup);
+             ApiResponse<VirtoCommerceCatalogModuleWebModelProduct> response = await CatalogModuleProductsGetProductByIdAsyncWithHttpInfo(id, respGroup);
              return response.Data;
 
         }
@@ -4247,10 +4247,10 @@ namespace VirtoCommerce.Client.Api
         /// <param name="id">Item id.</param>
         /// <param name="respGroup">Response group.</param>
         /// <returns>Task of ApiResponse (VirtoCommerceCatalogModuleWebModelProduct)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceCatalogModuleWebModelProduct>> CatalogModuleProductsGetAsyncWithHttpInfo (string id, string respGroup = null)
+        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceCatalogModuleWebModelProduct>> CatalogModuleProductsGetProductByIdAsyncWithHttpInfo (string id, string respGroup = null)
         {
             // verify the required parameter 'id' is set
-            if (id == null) throw new ApiException(400, "Missing required parameter 'id' when calling CatalogModuleProductsGet");
+            if (id == null) throw new ApiException(400, "Missing required parameter 'id' when calling CatalogModuleProductsGetProductById");
             
     
             var path_ = "/api/catalog/products/{id}";
@@ -4289,9 +4289,9 @@ namespace VirtoCommerce.Client.Api
             int statusCode = (int) response.StatusCode;
  
             if (statusCode >= 400)
-                throw new ApiException (statusCode, "Error calling CatalogModuleProductsGet: " + response.Content, response.Content);
+                throw new ApiException (statusCode, "Error calling CatalogModuleProductsGetProductById: " + response.Content, response.Content);
             else if (statusCode == 0)
-                throw new ApiException (statusCode, "Error calling CatalogModuleProductsGet: " + response.ErrorMessage, response.ErrorMessage);
+                throw new ApiException (statusCode, "Error calling CatalogModuleProductsGetProductById: " + response.ErrorMessage, response.ErrorMessage);
 
             return new ApiResponse<VirtoCommerceCatalogModuleWebModelProduct>(statusCode,
                 response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
