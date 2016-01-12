@@ -247,36 +247,31 @@ namespace VirtoCommerce.Storefront.Builders
             return this;
         }
 
-        public async Task<ICartBuilder> GetAvailableShippingMethodsAsync(IEnumerable<string> shipmentIds)
+        public async Task<ICollection<ShippingMethod>> GetAvailableShippingMethodsAsync()
         {
-            foreach (var shipmentId in shipmentIds)
+            var availableShippingMethods = new List<ShippingMethod>();
+
+            // TODO: Remake with shipmentId
+            var serviceModels = await _cartApi.CartModuleGetShipmentMethodsAsync(_cart.Id);
+            foreach (var serviceModel in serviceModels)
             {
-                var shipment = _cart.Shipments.FirstOrDefault(s => s.Id == shipmentId);
-                if (shipment != null)
-                {
-                    shipment.AvailableShippingMethods.Clear();
-                    // TODO: Remake with shipmentId
-                    var availableShippingMethods = await _cartApi.CartModuleGetShipmentMethodsAsync(_cart.Id);
-                    foreach (var availableShippingMethod in availableShippingMethods)
-                    {
-                        shipment.AvailableShippingMethods.Add(availableShippingMethod.ToWebModel());
-                    }
-                }
+                availableShippingMethods.Add(serviceModel.ToWebModel());
             }
 
-            return this;
+            return availableShippingMethods;
         }
 
-        public async Task<ICartBuilder> GetAvailablePaymentMethodsAsync()
+        public async Task<ICollection<PaymentMethod>> GetAvailablePaymentMethodsAsync()
         {
-            _cart.AvailablePaymentMethods.Clear();
-            var availablePaymentMethods = await _cartApi.CartModuleGetPaymentMethodsAsync(_cart.Id);
-            foreach (var availblePaymentMethod in availablePaymentMethods)
+            var availablePaymentMethods = new List<PaymentMethod>();
+
+            var serviceModels = await _cartApi.CartModuleGetPaymentMethodsAsync(_cart.Id);
+            foreach (var serviceModel in serviceModels)
             {
-                _cart.AvailablePaymentMethods.Add(availblePaymentMethod.ToWebModel());
+                availablePaymentMethods.Add(serviceModel.ToWebModel());
             }
 
-            return this;
+            return availablePaymentMethods;
         }
 
         public async Task SaveAsync()

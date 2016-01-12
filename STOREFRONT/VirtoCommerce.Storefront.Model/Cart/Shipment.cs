@@ -11,11 +11,12 @@ namespace VirtoCommerce.Storefront.Model.Cart
     {
         public Shipment()
         {
+            TaxTotal = new Money();
+
             Discounts = new List<Discount>();
             Items = new List<CartShipmentItem>();
             TaxDetails = new List<TaxDetail>();
             ValidationErrors = new List<ValidationError>();
-            AvailableShippingMethods = new List<ShippingMethod>();
         }
 
         /// <summary>
@@ -159,8 +160,6 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// Collection of TaxDetail objects
         /// </value>
         public ICollection<TaxDetail> TaxDetails { get; set; }
-
-        public ICollection<ShippingMethod> AvailableShippingMethods { get; set; }
 
         public ICollection<ValidationError> ValidationErrors { get; set; }
 

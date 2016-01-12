@@ -49,13 +49,7 @@ namespace VirtoCommerce.Storefront.Controllers
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
 
-            var productIds = _cartBuilder.Cart.Items.Select(i => i.ProductId);
-            await _cartValidator.ValidateItemsAsync(productIds);
-
-            var shipmentIds = _cartBuilder.Cart.Shipments.Select(s => s.Id);
-            await _cartValidator.ValidateShipmentsAsync(shipmentIds);
-
-            await _cartValidator.ValidateCartAsync();
+            await _cartValidator.ValidateAsync(_cartBuilder.Cart);
 
             return Json(_cartBuilder.Cart, JsonRequestBehavior.AllowGet);
         }
@@ -71,8 +65,6 @@ namespace VirtoCommerce.Storefront.Controllers
             {
                 await _cartBuilder.AddItemAsync(product, quantity);
                 await _cartBuilder.SaveAsync();
-
-                await _cartValidator.ValidateItemsAsync(new[] { id });
             }
 
             return Json(null, JsonRequestBehavior.AllowGet);
@@ -87,8 +79,6 @@ namespace VirtoCommerce.Storefront.Controllers
             var lineItem = _cartBuilder.Cart.Items.FirstOrDefault(i => i.Id == lineItemId);
             if (lineItem != null)
             {
-                await _cartValidator.ValidateItemsAsync(new[] { lineItem.ProductId });
-
                 await _cartBuilder.ChangeItemQuantityAsync(lineItemId, quantity);
                 await _cartBuilder.SaveAsync();
             }
@@ -129,26 +119,26 @@ namespace VirtoCommerce.Storefront.Controllers
             return View("checkout", "checkout_layout", _cartBuilder.Cart);
         }
 
-        // GET: /cart/getshippingmethods/json
+        // GET: /cart/shippingmethods/json
         [HttpGet]
-        public async Task<ActionResult> GetAvailableShippingMethodsJson(string[] shipmentIds)
+        public async Task<ActionResult> CartShippingMethodsJson(string shipmentId)
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
 
-            await _cartBuilder.GetAvailableShippingMethodsAsync(shipmentIds);
+            var shippingMethods = await _cartBuilder.GetAvailableShippingMethodsAsync();
 
-            return Json(_cartBuilder.Cart.Shipments, JsonRequestBehavior.AllowGet);
+            return Json(shippingMethods, JsonRequestBehavior.AllowGet);
         }
 
-        // GET: /cart/getpaymentmethods/json
+        // GET: /cart/paymentmethods/json
         [HttpGet]
-        public async Task<ActionResult> GetavailablePaymentMethodsJson()
+        public async Task<ActionResult> CartPaymentMethodsJson()
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
 
-            await _cartBuilder.GetAvailablePaymentMethodsAsync();
+            var paymentMethods = await _cartBuilder.GetAvailablePaymentMethodsAsync();
 
-            return Json(_cartBuilder.Cart.AvailablePaymentMethods, JsonRequestBehavior.AllowGet);
+            return Json(paymentMethods, JsonRequestBehavior.AllowGet);
         }
 
         // POST: /cart/addcoupon/{couponCode}
@@ -193,13 +183,13 @@ namespace VirtoCommerce.Storefront.Controllers
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
 
-            //var shippingMethods = await _cartApi.CartModuleGetShipmentMethodsAsync(WorkContext.CurrentCart.Id);
-            //var shippingMethod = shippingMethods.FirstOrDefault(sm => sm.ShipmentMethodCode == shippingMethodCode);
-            //if (shippingMethod != null)
-            //{
-            //    await _cartBuilder.AddShipmentAsync(shippingMethod.ToWebModel());
-            //    await _cartBuilder.SaveAsync();
-            //}
+            var shippingMethods = await _cartBuilder.GetAvailableShippingMethodsAsync();
+            var shippingMethod = shippingMethods.FirstOrDefault(sm => sm.ShipmentMethodCode == shippingMethodCode);
+            if (shippingMethod != null)
+            {
+                await _cartBuilder.AddShipmentAsync(shippingMethod);
+                await _cartBuilder.SaveAsync();
+            }
 
             return Json(null, JsonRequestBehavior.AllowGet);
         }
@@ -210,13 +200,13 @@ namespace VirtoCommerce.Storefront.Controllers
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
 
-            //var paymentMethods = await _cartApi.CartModuleGetPaymentMethodsAsync(WorkContext.CurrentCart.Id);
-            //var paymentMethod = paymentMethods.FirstOrDefault(pm => pm.GatewayCode == paymentMethodCode);
-            //if (paymentMethod != null)
-            //{
-            //    await _cartBuilder.AddPaymentAsync(paymentMethod.ToWebModel());
-            //    await _cartBuilder.SaveAsync();
-            //}
+            var paymentMethods = await _cartBuilder.GetAvailablePaymentMethodsAsync();
+            var paymentMethod = paymentMethods.FirstOrDefault(pm => pm.GatewayCode == paymentMethodCode);
+            if (paymentMethod != null)
+            {
+                await _cartBuilder.AddPaymentAsync(paymentMethod);
+                await _cartBuilder.SaveAsync();
+            }
 
             return Json(null, JsonRequestBehavior.AllowGet);
         }
