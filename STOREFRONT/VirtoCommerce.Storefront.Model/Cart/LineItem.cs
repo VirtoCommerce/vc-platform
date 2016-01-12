@@ -17,6 +17,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
             LanguageCode = language.CultureName;
             ListPrice = new Money(currency.Code);
             SalePrice = new Money(currency.Code);
+            TaxTotal = new Money(currency.Code);
 
             Discounts = new List<Discount>();
             TaxDetails = new List<TaxDetail>();

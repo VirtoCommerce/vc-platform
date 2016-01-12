@@ -55,7 +55,7 @@ namespace VirtoCommerce.Storefront.Services
                 }
                 if (lineItem.PlacedPrice.Amount != product.Price.ActualPrice.Amount)
                 {
-                    lineItem.ValidationErrors.Add(new ProductPriceError(lineItem.PlacedPrice));
+                    lineItem.ValidationErrors.Add(new ProductPriceError(product.Price.ActualPrice));
                 }
             }
         }

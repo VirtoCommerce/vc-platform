@@ -86,6 +86,16 @@ storefrontApp.controller('cartController', ['$scope', '$timeout', 'cartService',
         }, 200);
     }
 
+    $scope.reapplyLineItem = function (lineItemId) {
+        var lineItem = _.find($scope.cart.Items, function (i) { return i.Id == lineItemId });
+        if (lineItem) {
+            $scope.isUpdating = true;
+            cartService.reapplyLineItem(lineItemId).then(function (response) {
+                refreshCart();
+            });
+        }
+    }
+
     function initialize() {
         $scope.isCartModalVisible = false;
         $scope.isUpdating = false;
