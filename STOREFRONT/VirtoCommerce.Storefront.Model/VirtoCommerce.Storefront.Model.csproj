@@ -102,11 +102,7 @@
     <Compile Include="Common\IStorefrontUrlBuilder.cs" />
     <Compile Include="Common\LocalizationExtensions.cs" />
     <Compile Include="Common\Money\Currency.cs" />
-    <Compile Include="Common\Money\CurrencyCodes.cs" />
-    <Compile Include="Common\Money\ICurrencyConverter.cs" />
     <Compile Include="Common\Money\Money.cs" />
-    <Compile Include="Common\Money\SampleConverter.cs" />
-    <Compile Include="Common\Money\SimpleMoney.cs" />
     <Compile Include="Common\ReflectionExtension.cs" />
     <Compile Include="Common\StringExtensions.cs" />
     <Compile Include="Common\ValueObject.cs" />

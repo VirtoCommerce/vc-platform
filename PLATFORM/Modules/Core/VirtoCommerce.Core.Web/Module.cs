@@ -15,6 +15,7 @@ using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using VirtoCommerce.CoreModule.Data.Payment;
 using VirtoCommerce.Domain.Tax.Services;
 using VirtoCommerce.CoreModule.Data.Tax;
+using VirtoCommerce.Domain.Commerce.Model;
 
 namespace VirtoCommerce.CoreModule.Web
 {
@@ -72,6 +73,7 @@ namespace VirtoCommerce.CoreModule.Web
         public override void PostInitialize()
         {
             var settingManager = _container.Resolve<ISettingsManager>();
+            var commerceService = _container.Resolve<ICommerceService>();
             var shippingService = _container.Resolve<IShippingMethodsService>();
             var taxService = _container.Resolve<ITaxService>();
 			var paymentService = _container.Resolve<IPaymentMethodsService>();
@@ -98,6 +100,20 @@ namespace VirtoCommerce.CoreModule.Web
                 Description = "Manual test, don't use on production",
                 LogoUrl = "http://virtocommerce.com/Content/images/logo.jpg",
             });
+
+            var currencies = commerceService.GetAllCurrencies();
+            if(!currencies.Any())
+            {
+                var defaultCurrency = new Currency
+                {
+                    Code = "USD",
+                    IsPrimary = true,
+                    ExchangeRate = 1,
+                    Symbol = "$",
+                    Name = "US dollar"
+                };
+                commerceService.UpsertCurrencies(new[] { defaultCurrency });
+            }
         }
 
         #endregion

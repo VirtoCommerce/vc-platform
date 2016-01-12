@@ -190,6 +190,16 @@ namespace VirtoCommerce.CoreModule.Data.Repositories
 
             using (var repository = _repositoryFactory())
             {
+                //Ensure that only one Primary currency
+                if (currencies.Any(x => x.IsPrimary))
+                {
+                    var oldPrimaryCurrency = repository.Currencies.FirstOrDefault(x => x.IsPrimary);
+                    if(oldPrimaryCurrency != null)
+                    {
+                        oldPrimaryCurrency.IsPrimary = false;
+                    }
+                }
+
                 foreach (var currency in currencies)
                 {
                     var sourceEntry = currency.ToDataModel();
@@ -203,6 +213,7 @@ namespace VirtoCommerce.CoreModule.Data.Repositories
                         sourceEntry.Patch(targetEntry);
                     }
                 }
+ 
                 CommitChanges(repository);
             }
         }
@@ -213,6 +224,10 @@ namespace VirtoCommerce.CoreModule.Data.Repositories
             {
                 foreach (var currency in repository.Currencies.Where(x => codes.Contains(x.Code)))
                 {
+                    if(currency.IsPrimary)
+                    {
+                        throw new ArgumentException("Unable to delete primary currency");
+                    }
                     repository.Remove(currency);
                 }
                 CommitChanges(repository);

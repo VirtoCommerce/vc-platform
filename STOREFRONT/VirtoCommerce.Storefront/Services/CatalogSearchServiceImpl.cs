@@ -145,7 +145,7 @@ namespace VirtoCommerce.Storefront.Services
 
             foreach (var item in products)
             {
-                item.Prices = result.Where(x => x.ProductId == item.Id).Select(x => x.ToWebModel()).ToList();
+                item.Prices = result.Where(x => x.ProductId == item.Id).Select(x => x.ToWebModel(_workContext.AllCurrencies)).ToList();
                 var price = item.Prices.FirstOrDefault(x => x.Currency.Equals(_workContext.CurrentCurrency));
                 if (price != null)
                 {

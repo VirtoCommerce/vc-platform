@@ -2,12 +2,13 @@
 using VirtoCommerce.Storefront.Model;
 using System.Linq;
 using VirtoCommerce.Storefront.Model.Common;
+using System.Collections.Generic;
 
 namespace VirtoCommerce.Storefront.Converters
 {
     public static class StoreConverter
     {
-        public static Store ToWebModel(this VirtoCommerce.Client.Model.VirtoCommerceStoreModuleWebModelStore storeDto)
+        public static Store ToWebModel(this VirtoCommerce.Client.Model.VirtoCommerceStoreModuleWebModelStore storeDto, IEnumerable<Currency> availCurrencies)
         {
             var retVal = new Store();
             retVal.InjectFrom(storeDto);
@@ -20,10 +21,11 @@ namespace VirtoCommerce.Storefront.Converters
             {
                 retVal.Languages = storeDto.Languages.Select(x => new Language(x)).ToList();
             }
-            retVal.DefaultCurrency = Currency.Get(EnumUtility.SafeParse(storeDto.DefaultCurrency, CurrencyCodes.USD));
-            if(storeDto.Currencies != null)
+            retVal.DefaultCurrency = availCurrencies.FirstOrDefault(x => x.IsHasSameCode(storeDto.DefaultCurrency)) ?? new Currency(storeDto.DefaultCurrency, 1);
+
+            if (storeDto.Currencies != null)
             {
-                retVal.Currencies = storeDto.Currencies.Select(x => Currency.Get(EnumUtility.SafeParse(x, CurrencyCodes.USD))).ToList();
+                retVal.Currencies = availCurrencies.Where(x => x.IsHasSameCode(storeDto.DefaultCurrency) || storeDto.Currencies.Any(y => x.IsHasSameCode(y))).ToList();
             }
             if(storeDto.DynamicProperties != null)
             {

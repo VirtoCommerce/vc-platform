@@ -53,7 +53,7 @@ namespace VirtoCommerce.Storefront.Controllers
                 return Json(prices, JsonRequestBehavior.AllowGet);
             }
 
-            prices = pricesResponse.Select(p => p.ToWebModel()).ToList();
+            prices = pricesResponse.Select(p => p.ToWebModel(base.WorkContext.AllCurrencies)).ToList();
             var promotionContext = WorkContext.ToPromotionEvaluationContext();
             promotionContext.PromoEntries = GetPromoEntries(products, prices);
 

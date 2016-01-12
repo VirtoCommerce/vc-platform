@@ -82,6 +82,12 @@ namespace VirtoCommerce.Storefront.Model
         /// List of all supported stores
         /// </summary>
         public Store[] AllStores { get; set; }
+
+        /// <summary>
+        /// List of all active system currencies
+        /// </summary>
+        public IEnumerable<Currency> AllCurrencies { get; set; }
+
         public string ErrorMessage { get; set; }
         /// <summary>
         /// List of active pricelists

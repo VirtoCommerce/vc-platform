@@ -4,23 +4,31 @@ using System.Globalization;
 
 namespace VirtoCommerce.Storefront.Model.Common
 {
-	public class Currency 
-	{
-		public CurrencyCodes CurrencyCode { get; private set; }
-		public string Code { get; private set; }
-		public NumberFormatInfo NumberFormat { get; private set; }
-		public string Symbol { get; private set; }
-		public string EnglishName { get; private set; }
+    public class Currency
+    {
+        public string Code { get; set; }
+        public NumberFormatInfo NumberFormat { get; set; }
+        public string Symbol { get; set; }
+        public string EnglishName { get; set; }
+        public decimal ExchangeRate { get; set; }
 
-		/// <summary>
-		/// Constructs a currency object with a NumberFormatInfo.
-		/// </summary>
-		/// <param name="currencyCode"></param>
-		public Currency(CurrencyCodes currencyCode)
-		{
-			CurrencyCode = currencyCode;
-			Code = Enum.GetName(typeof(CurrencyCodes), CurrencyCode);
-			var cultureInfo = CultureInfoFromCurrencyISO(Code);
+        public Currency(string code, string name, string symbol, decimal exchangeRate)
+            : this(code, exchangeRate)
+        {
+            EnglishName = name;
+            Symbol = symbol;
+            if (NumberFormat == null)
+            {
+                NumberFormat = NumberFormatInfo.InvariantInfo.Clone() as NumberFormatInfo;
+                NumberFormat.CurrencySymbol = symbol;
+            }
+        }
+
+        public Currency(string code, decimal exchangeRate)
+        {
+            Code = code;
+            ExchangeRate = exchangeRate;
+            var cultureInfo = CultureInfoFromCurrencyISO(code);
             if (cultureInfo != null)
             {
                 NumberFormat = cultureInfo.NumberFormat;
@@ -28,55 +36,23 @@ namespace VirtoCommerce.Storefront.Model.Common
                 Symbol = region.CurrencySymbol;
                 EnglishName = region.CurrencyEnglishName;
             }
-		}
+        }
 
-		public static Currency Get(CurrencyCodes currencyCode)
-		{
-			if (CurrencyDictionary.ContainsKey(currencyCode))
-				return CurrencyDictionary[currencyCode];
-			else
-				return null;
-		}
-
-		public static bool Exists(CurrencyCodes currencyCode)
-		{
-			return CurrencyDictionary.ContainsKey(currencyCode);
-		}
-
-		private static CultureInfo CultureInfoFromCurrencyISO(string isoCode)
-		{
-			//CultureInfo cultureInfo = (from culture in CultureInfo.GetCultures(CultureTypes.SpecificCultures)
-			//  let region = new RegionInfo(culture.LCID)
-			//  where String.Equals(region.ISOCurrencySymbol, isoCode, StringComparison.InvariantCultureIgnoreCase)
-			//  select culture).First();
-			//return cultureInfo;
-			foreach (CultureInfo ci in CultureInfo.GetCultures(CultureTypes.SpecificCultures))
-			{
-				RegionInfo ri = new RegionInfo(ci.LCID);
-				if (ri.ISOCurrencySymbol == isoCode)
-					return ci;
-			}
+        private static CultureInfo CultureInfoFromCurrencyISO(string isoCode)
+        {
+            foreach (CultureInfo ci in CultureInfo.GetCultures(CultureTypes.SpecificCultures))
+            {
+                RegionInfo ri = new RegionInfo(ci.LCID);
+                if (ri.ISOCurrencySymbol == isoCode)
+                    return ci;
+            }
             return null;
-		}
+        }
 
-		private static Dictionary<CurrencyCodes, Currency> _currencyDictionary;
-		private static Dictionary<CurrencyCodes, Currency> CurrencyDictionary
-		{
-			get
-			{
-				if (_currencyDictionary == null)
-					_currencyDictionary = CreateCurrencyDictionary();
-				return _currencyDictionary;
-			}
-		}
-		private static Dictionary<CurrencyCodes, Currency> CreateCurrencyDictionary()
-		{
-			var result = new Dictionary<CurrencyCodes, Currency>();
-			foreach (CurrencyCodes code in Enum.GetValues(typeof(CurrencyCodes)))
-				result.Add(code, new Currency(code));
-			return result;
-		}
-
+        public bool IsHasSameCode(string code)
+        {
+            return string.Equals(Code, code, StringComparison.InvariantCultureIgnoreCase);
+        }
 
         /// <summary>
         /// <see cref="M:System.Object.Equals"/>
@@ -95,7 +71,7 @@ namespace VirtoCommerce.Storefront.Model.Common
 
             if (other != null)
             {
-                return String.Equals(other.CurrencyCode, CurrencyCode);
+                return String.Equals(other.Code, Code, StringComparison.InvariantCultureIgnoreCase);
             }
 
             return false;
@@ -107,7 +83,7 @@ namespace VirtoCommerce.Storefront.Model.Common
         /// <returns><see cref="M:System.Object.GetHashCode"/></returns>
         public override int GetHashCode()
         {
-            return CurrencyCode.GetHashCode();
+            return Code.ToUpper().GetHashCode();
         }
 
     }

@@ -56,11 +56,11 @@ namespace VirtoCommerce.Storefront.Model
         public ICollection<Language> Languages { get; set; }
 
         /// <summary>
-        /// Default currency of store. Use ISO 4217 currency codes
+        /// Default currency of store. 
         /// </summary>
         public Currency DefaultCurrency { get; set; }
         /// <summary>
-        /// List of supported additional currencies
+        /// List of all supported currencies
         /// </summary>
         public ICollection<Currency> Currencies { get; set; }
 

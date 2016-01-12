@@ -121,7 +121,7 @@ namespace VirtoCommerce.Storefront.Controllers
 
             var shippingMethods = await _cartApi.CartModuleGetShipmentMethodsAsync(_cartBuilder.Cart.Id);
 
-            return Json(shippingMethods.Select(sm => sm.ToWebModel()), JsonRequestBehavior.AllowGet);
+            return Json(shippingMethods.Select(sm => sm.ToWebModel(base.WorkContext.CurrentStore.Currencies)), JsonRequestBehavior.AllowGet);
         }
 
         // GET: /cart/paymentmethods/json
@@ -181,7 +181,7 @@ namespace VirtoCommerce.Storefront.Controllers
             var shippingMethod = shippingMethods.FirstOrDefault(sm => sm.ShipmentMethodCode == shippingMethodCode);
             if (shippingMethod != null)
             {
-                await _cartBuilder.AddShipmentAsync(shippingMethod.ToWebModel());
+                await _cartBuilder.AddShipmentAsync(shippingMethod.ToWebModel(base.WorkContext.CurrentStore.Currencies));
                 await _cartBuilder.SaveAsync();
             }
 
@@ -294,7 +294,7 @@ namespace VirtoCommerce.Storefront.Controllers
                 return HttpNotFound();
             }
 
-            WorkContext.Order = order.ToWebModel();
+            WorkContext.Order = order.ToWebModel(base.WorkContext.AllCurrencies);
 
             return View("thanks", WorkContext);
         }

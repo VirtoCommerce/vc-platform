@@ -13,6 +13,7 @@ using VirtoCommerce.CatalogModule.Web.Model;
 using VirtoCommerce.CatalogModule.Web.Model.PushNotifications;
 using VirtoCommerce.CatalogModule.Web.Security;
 using VirtoCommerce.Domain.Catalog.Services;
+using VirtoCommerce.Domain.Commerce.Services;
 using VirtoCommerce.Platform.Core.Asset;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.ExportImport;
@@ -31,20 +32,20 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
     {
         private readonly ICatalogService _catalogService;
         private readonly IPushNotificationManager _notifier;
-        private readonly ISettingsManager _settingsManager;
+        private readonly ICommerceService _commerceService;
         private readonly IBlobStorageProvider _blobStorageProvider;
         private readonly CsvCatalogExporter _csvExporter;
         private readonly CsvCatalogImporter _csvImporter;
         private readonly IBlobUrlResolver _blobUrlResolver;
 
-        public CatalogModuleExportImportController(ICatalogService catalogService, IPushNotificationManager pushNotificationManager, ISettingsManager settingsManager,
+        public CatalogModuleExportImportController(ICatalogService catalogService, IPushNotificationManager pushNotificationManager, ICommerceService commerceService,
                                                    IBlobStorageProvider blobStorageProvider, IBlobUrlResolver blobUrlResolver,
                                                    CsvCatalogExporter csvExporter, CsvCatalogImporter csvImporter, ISecurityService securityService, IPermissionScopeService permissionScopeService)
             : base(securityService, permissionScopeService)
         {
             _catalogService = catalogService;
             _notifier = pushNotificationManager;
-            _settingsManager = settingsManager;
+            _commerceService = commerceService;
             _blobStorageProvider = blobStorageProvider;
             _csvExporter = csvExporter;
             _csvImporter = csvImporter;
@@ -169,9 +170,9 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         // Only public methods can be invoked in the background. (Hangfire)
         public void BackgroundExport(CsvExportInfo exportInfo, ExportNotification notifyEvent)
         {
-            var curencySetting = _settingsManager.GetSettingByName("VirtoCommerce.Core.General.Currencies");
-            var defaultCurrency = curencySetting.DefaultValue ?? "USD";
-            exportInfo.Currency = exportInfo.Currency ?? defaultCurrency;
+            var currencies = _commerceService.GetAllCurrencies();
+            var defaultCurrency = currencies.First(x => x.IsPrimary);
+            exportInfo.Currency = exportInfo.Currency ?? defaultCurrency.Code;
             var catalog = _catalogService.GetById(exportInfo.CatalogId);
             if (catalog == null)
             {

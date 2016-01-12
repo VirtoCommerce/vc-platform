@@ -97,7 +97,7 @@ namespace VirtoCommerce.Storefront.Model.Marketing
             decimal absoluteAmount = GetAbsoluteDiscountAmount(originAmount);
 
             var discount = new Discount();
-            discount.Amount = new Money(absoluteAmount, currency.Code);
+            discount.Amount = new Money(absoluteAmount, currency);
             discount.Description = Promotion.Description;
             discount.PromotionId = Promotion.Id;
 

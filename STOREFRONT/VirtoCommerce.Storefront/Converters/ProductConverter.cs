@@ -76,8 +76,8 @@ namespace VirtoCommerce.Storefront.Converters
 
             if (product.Price != null)
             {
-                promoItem.Discount = product.Price.ActiveDiscount != null ? (double)product.Price.ActiveDiscount.Amount.Amount : 0;
-                promoItem.Price = (double)product.Price.SalePrice.Amount;
+                promoItem.Discount = new Money(product.Price.ActiveDiscount != null ? product.Price.ActiveDiscount.Amount.Amount : 0m, product.Price.Currency);
+                promoItem.Price = new Money(product.Price.SalePrice.Amount, product.Price.Currency);
             }
          
             promoItem.ProductId = product.Id;

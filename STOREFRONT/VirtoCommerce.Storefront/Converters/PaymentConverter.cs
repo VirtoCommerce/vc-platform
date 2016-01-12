@@ -7,15 +7,13 @@ namespace VirtoCommerce.Storefront.Converters
 {
     public static class PaymentConverter
     {
-        public static Payment TowebModel(this VirtoCommerceCartModuleWebModelPayment payment)
+        public static Payment TowebModel(this VirtoCommerceCartModuleWebModelPayment payment, Currency currency)
         {
             var webModel = new Payment();
 
-            var currency = new Currency(EnumUtility.SafeParse(payment.Currency, CurrencyCodes.USD));
-
             webModel.InjectFrom(payment);
 
-            webModel.Amount = new Money(payment.Amount ?? 0, currency.Code);
+            webModel.Amount = new Money(payment.Amount ?? 0, currency);
 
             if (payment.BillingAddress != null)
             {

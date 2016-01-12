@@ -14,8 +14,8 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         public ProductPrice(Currency currency)
         {
             Currency = currency;
-            ListPrice = new Money(currency.Code);
-            SalePrice = new Money(currency.Code);
+            ListPrice = new Money(currency);
+            SalePrice = new Money(currency);
         }
         /// <summary>
         /// Price list id

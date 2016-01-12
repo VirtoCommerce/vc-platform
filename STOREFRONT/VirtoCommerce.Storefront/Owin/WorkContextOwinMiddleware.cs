@@ -31,6 +31,7 @@ namespace VirtoCommerce.Storefront.Owin
 
         private readonly IStoreModuleApi _storeApi;
         private readonly IVirtoCommercePlatformApi _platformApi;
+        private readonly ICommerceCoreModuleApi _commerceApi;
         private readonly ICustomerManagementModuleApi _customerApi;
         private readonly IPricingModuleApi _pricingModuleApi;
         private readonly ICartBuilder _cartBuilder;
@@ -48,6 +49,7 @@ namespace VirtoCommerce.Storefront.Owin
             _cartBuilder = container.Resolve<ICartBuilder>();
             _cmsApi = container.Resolve<ICMSContentModuleApi>();
             _pricingModuleApi = container.Resolve<IPricingModuleApi>();
+            _commerceApi = container.Resolve<ICommerceCoreModuleApi>();
             _cacheManager = container.Resolve<ICacheManager<object>>();
             _container = container;
         }
@@ -62,8 +64,8 @@ namespace VirtoCommerce.Storefront.Owin
                 // Initialize common properties
                 workContext.RequestUrl = context.Request.Uri;
                 workContext.AllCountries = _allCountries;
-
-                workContext.AllStores = await _cacheManager.GetAsync("GetAllStores", "StoreRegion", async () => { return await GetAllStoresAsync(); });
+                workContext.AllCurrencies = await _cacheManager.GetAsync("GetAllCurrencies", "StoreRegion", async () => { return await _commerceApi.GetAllCurrencies().Select(x=>x.ToWebModel()); });
+                workContext.AllStores = await _cacheManager.GetAsync("GetAllStores", "StoreRegion", async () => { return await GetAllStoresAsync(workContext.AllCurrencies); });
                 if (workContext.AllStores != null && workContext.AllStores.Any())
                 {
                     var currentCustomerId = GetCurrentCustomerId(context);
@@ -119,10 +121,10 @@ namespace VirtoCommerce.Storefront.Owin
                 && !request.Path.StartsWithSegments(new PathString("/favicon.ico"));
         }
 
-        protected virtual async Task<Store[]> GetAllStoresAsync()
+        protected virtual async Task<Store[]> GetAllStoresAsync(IEnumerable<Currency> availCurrencies)
         {
             var stores = await _storeApi.StoreModuleGetStoresAsync();
-            var result = stores.Select(s => s.ToWebModel()).ToArray();
+            var result = stores.Select(s => s.ToWebModel(availCurrencies)).ToArray();
             return result;
         }
 
@@ -295,8 +297,7 @@ namespace VirtoCommerce.Storefront.Owin
             //Get store default currency if currency not in the supported by stores list
             if (!string.IsNullOrEmpty(currencyCode))
             {
-                var currency = new Currency(EnumUtility.SafeParse(currencyCode, store.DefaultCurrency.CurrencyCode));
-                retVal = store.Currencies.Contains(currency) ? currency : retVal;
+                retVal = store.Currencies.FirstOrDefault(x => x.IsHasSameCode(currencyCode)) ?? retVal;
             }
             return retVal;
         }

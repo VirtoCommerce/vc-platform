@@ -26,7 +26,7 @@ namespace VirtoCommerce.Storefront.Converters
             lineItemWebModel.ExtendedPrice = lineItemWebModel.PlacedPrice * quantity;
             lineItemWebModel.ProductId = product.Id;
             lineItemWebModel.Quantity = quantity;
-            lineItemWebModel.TaxTotal = new Money(0, currency.Code);
+            lineItemWebModel.TaxTotal = new Money(currency);
             lineItemWebModel.ThumbnailImageUrl = product.PrimaryImage.Url;
 
             return lineItemWebModel;
@@ -48,15 +48,15 @@ namespace VirtoCommerce.Storefront.Converters
                 webModel.DynamicProperties = serviceModel.DynamicProperties.Select(dp => dp.ToWebModel()).ToList();
             }
 
-            webModel.DiscountTotal = new Money(serviceModel.DiscountTotal ?? 0, currency.Code);
-            webModel.ExtendedPrice = new Money(serviceModel.ExtendedPrice ?? 0, currency.Code);
+            webModel.DiscountTotal = new Money(serviceModel.DiscountTotal ?? 0, currency);
+            webModel.ExtendedPrice = new Money(serviceModel.ExtendedPrice ?? 0, currency);
             webModel.IsGift = (bool)serviceModel.IsGift;
             webModel.IsReccuring = (bool)serviceModel.IsReccuring;
             webModel.Length = (decimal)(serviceModel.Length ?? 0);
-            webModel.ListPrice = new Money(serviceModel.ListPrice ?? 0, currency.Code);
-            webModel.PlacedPrice = new Money(serviceModel.PlacedPrice ?? 0, currency.Code);
+            webModel.ListPrice = new Money(serviceModel.ListPrice ?? 0, currency);
+            webModel.PlacedPrice = new Money(serviceModel.PlacedPrice ?? 0, currency);
             webModel.RequiredShipping = (bool)serviceModel.RequiredShipping;
-            webModel.SalePrice = new Money(serviceModel.SalePrice ?? 0, currency.Code);
+            webModel.SalePrice = new Money(serviceModel.SalePrice ?? 0, currency);
             webModel.TaxIncluded = (bool)serviceModel.TaxIncluded;
             webModel.Weight = (decimal)(serviceModel.Weight ?? 0);
             webModel.Width = (decimal)(serviceModel.Width ?? 0);
@@ -95,8 +95,8 @@ namespace VirtoCommerce.Storefront.Converters
 
             promoItem.InjectFrom(lineItem);
 
-            promoItem.Discount = (double)lineItem.DiscountTotal.Amount;
-            promoItem.Price = (double)lineItem.PlacedPrice.Amount;
+            promoItem.Discount = new Money(lineItem.DiscountTotal.Amount, lineItem.DiscountTotal.Currency);
+            promoItem.Price = new Money(lineItem.PlacedPrice.Amount, lineItem.PlacedPrice.Currency);
             promoItem.Quantity = lineItem.Quantity;
             promoItem.Variations = null; // TODO
 

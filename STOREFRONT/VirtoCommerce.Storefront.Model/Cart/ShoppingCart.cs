@@ -12,12 +12,12 @@ namespace VirtoCommerce.Storefront.Model.Cart
         {
             Currency = currency;
             LanguageCode = language.CultureName;
-            DiscountTotal = new Money(currency.Code);
-            HandlingTotal = new Money(currency.Code);
-            ShippingTotal = new Money(currency.Code);
-            SubTotal = new Money(currency.Code);
-            TaxTotal = new Money(currency.Code);
-            Total = new Money(currency.Code);
+            DiscountTotal = new Money(currency);
+            HandlingTotal = new Money(currency);
+            ShippingTotal = new Money(currency);
+            SubTotal = new Money(currency);
+            TaxTotal = new Money(currency);
+            Total = new Money(currency);
 
             Addresses = new List<Address>();
             Discounts = new List<Discount>();
