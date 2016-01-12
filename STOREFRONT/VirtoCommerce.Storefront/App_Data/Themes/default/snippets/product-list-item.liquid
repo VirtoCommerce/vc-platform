@@ -57,11 +57,8 @@
 
                 <div class="product-item--price text-center" ng-if="productPricesLoaded">
                     <p class="h1 medium-down--left">
-                        <span class="old" ng-if="productPrices['{{ product.id }}'].ListPrice.Amount > productPrices['{{ product.id }}'].SalePrice.Amount">
+                        <span class="old" ng-if="productPrices['{{ product.id }}'].AbsoluteBenefit.Amount > 0">
                             <small ng-bind="productPrices['{{ product.id }}'].ListPrice.FormatedAmount"></small>
-                        </span>
-                        <span class="old" ng-if="productPrices['{{ product.id }}'].ActiveDiscount.Amount.Amount > 0">
-                            <small ng-bind="productPrices['{{ product.id }}'].SalePrice.FormatedAmount"></small>
                         </span>
                         <small ng-bind="productPrices['{{ product.id }}'].ActualPrice.FormatedAmount"></small>
                     </p>
