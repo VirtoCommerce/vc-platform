@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Web;
+﻿using System.Threading.Tasks;
 using System.Web.Mvc;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Catalog;
@@ -11,11 +7,12 @@ using VirtoCommerce.Storefront.Model.Services;
 namespace VirtoCommerce.Storefront.Controllers
 {
     [OutputCache(CacheProfile = "HomeCachingProfile")]
-    public class HomeController : Controller
+    public class StorefrontHomeController : Controller
     {
         private readonly ICatalogSearchService _catalogSearchService;
         private readonly WorkContext _workContext;
-        public HomeController(WorkContext context, ICatalogSearchService catalogSearchService)
+
+        public StorefrontHomeController(WorkContext context, ICatalogSearchService catalogSearchService)
         {
             _catalogSearchService = catalogSearchService;
             _workContext = context;
@@ -33,6 +30,5 @@ namespace VirtoCommerce.Storefront.Controllers
             _workContext.CurrentCatalogSearchResult = await _catalogSearchService.SearchAsync(catalogSearchCriteria);
             return View("index", _workContext);
         }
-             
     }
 }
