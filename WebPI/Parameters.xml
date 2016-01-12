@@ -69,7 +69,7 @@
                tags="AppURL">
     </parameter>
     <parameter name="VirtoCommerceBaseUrl"
-               defaultValue="{Application URL}/api"
+               defaultValue="{Application URL}"
                tags="Hidden">
         <parameterEntry type="XmlFile" scope="Web\.config$" match="/configuration/connectionStrings/add[@name='VirtoCommerceBaseUrl']/@connectionString" />
     </parameter>

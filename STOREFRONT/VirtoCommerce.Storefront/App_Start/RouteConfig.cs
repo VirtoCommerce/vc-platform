@@ -78,7 +78,7 @@ namespace VirtoCommerce.Storefront
 
             //Marketing 
             routes.MapLocalizedStorefrontRoute("Marketing.DynamicContent", "marketing/dynamiccontent/{placeName}/json", defaults: new { controller = "Marketing", action = "GetDynamicContentJson" });
-            
+
             //Pricing 
             routes.MapLocalizedStorefrontRoute("Pricing.ActualPrices", "pricing/actualprices", defaults: new { controller = "Pricing", action = "GetActualProductPricesJson" });
 
@@ -94,9 +94,7 @@ namespace VirtoCommerce.Storefront
             routes.MapLocalizedStorefrontRoute("Blogs.GetBlog", "blogs/{blog}", defaults: new { controller = "Blog", action = "GetBlog" });
             routes.MapLocalizedStorefrontRoute("Blogs.GetBlogArticle", "blogs/{blog}/{article}", defaults: new { controller = "Blog", action = "GetBlogArticle" });
 
-
-            routes.MapSeoRoute(workContextFactory, commerceCoreApi, staticContentService, cacheManager, "SeoRoute", "{*path}", new { controller = "Home", action = "Index" });
-           
+            routes.MapSeoRoute(workContextFactory, commerceCoreApi, staticContentService, cacheManager, "SeoRoute", "{*path}", new { controller = "StorefrontHome", action = "Index" });
         }
     }
 }
