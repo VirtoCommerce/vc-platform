@@ -61,6 +61,12 @@ namespace VirtoCommerce.Storefront
 
         public void Configuration(IAppBuilder app)
         {
+            if (_managerAssembly != null)
+            {
+                AreaRegistration.RegisterAllAreas();
+                CallChildConfigure(app, _managerAssembly, "VirtoCommerce.Platform.Web.Startup", "Configuration", "~/areas/admin", "admin/");
+            }
+
             UnityWebActivator.Start();
             var container = UnityConfig.GetConfiguredContainer();
 
@@ -113,11 +119,6 @@ namespace VirtoCommerce.Storefront
             container.RegisterType<IAuthenticationManager>(new InjectionFactory((context) => HttpContext.Current.GetOwinContext().Authentication));
 
             container.RegisterType<IStorefrontUrlBuilder, StorefrontUrlBuilder>(new PerRequestLifetimeManager());
-            if (_managerAssembly != null)
-            {
-                AreaRegistration.RegisterAllAreas();
-                CallChildConfigure(app, _managerAssembly, "VirtoCommerce.Platform.Web.Startup", "Configuration", "~/areas/admin", "admin/");
-            }
 
             // Create new work context for each request
             container.RegisterType<WorkContext, WorkContext>(new PerRequestLifetimeManager());
@@ -134,8 +135,7 @@ namespace VirtoCommerce.Storefront
             var staticContentService = new StaticContentServiceImpl(HostingEnvironment.MapPath("~/App_data/Pages"), new Markdown(), shopifyLiquidEngine, cacheManager);
             container.RegisterInstance<IStaticContentService>(staticContentService);
 
-          
-            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
+            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters, () => container.Resolve<WorkContext>());
             RouteConfig.RegisterRoutes(RouteTable.Routes, () => container.Resolve<WorkContext>(), container.Resolve<ICommerceCoreModuleApi>(), container.Resolve<IStaticContentService>(), cacheManager);
             AuthConfig.ConfigureAuth(app);
 
@@ -143,7 +143,7 @@ namespace VirtoCommerce.Storefront
             app.UseStageMarker(PipelineStage.ResolveCache);
         }
 
-    
+
         private static void CallChildConfigure(IAppBuilder app, Assembly assembly, string typeName, string methodName, string virtualRoot, string routPrefix)
         {
             var type = assembly.GetType(typeName);
