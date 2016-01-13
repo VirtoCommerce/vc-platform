@@ -2,8 +2,5 @@
 {
     public class CartSubtotalError : ValidationError
     {
-        public CartSubtotalError() : base(typeof(CartSubtotalError))
-        {
-        }
     }
 }

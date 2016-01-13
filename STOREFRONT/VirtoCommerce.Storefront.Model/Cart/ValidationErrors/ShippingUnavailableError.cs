@@ -2,8 +2,5 @@
 {
     public class ShippingUnavailableError : ValidationError
     {
-        public ShippingUnavailableError() : base(typeof(ShippingUnavailableError))
-        {
-        }
     }
 }

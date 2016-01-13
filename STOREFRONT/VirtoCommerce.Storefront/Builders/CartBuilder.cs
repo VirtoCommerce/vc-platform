@@ -255,7 +255,7 @@ namespace VirtoCommerce.Storefront.Builders
             var serviceModels = await _cartApi.CartModuleGetShipmentMethodsAsync(_cart.Id);
             foreach (var serviceModel in serviceModels)
             {
-                availableShippingMethods.Add(serviceModel.ToWebModel());
+                availableShippingMethods.Add(serviceModel.ToWebModel(new Currency[] { _cart.Currency }));
             }
 
             return availableShippingMethods;

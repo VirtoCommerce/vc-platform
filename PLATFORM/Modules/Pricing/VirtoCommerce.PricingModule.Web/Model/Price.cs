@@ -10,8 +10,7 @@ namespace VirtoCommerce.PricingModule.Web.Model
 	{
 		public string PricelistId { get; set; }
 		
-        [JsonConverter(typeof(StringEnumConverter))]
-		public CurrencyCodes Currency { get; set; }
+		public string Currency { get; set; }
 
 		public string ProductId { get; set; }
         

@@ -11,8 +11,7 @@ namespace VirtoCommerce.OrderModule.Web.Model
 	public class Discount
 	{
 		public string PromotionId { get; set; }
-		[JsonConverter(typeof(StringEnumConverter))]
-		public CurrencyCodes? Currency { get; set; }
+		public string Currency { get; set; }
 		public decimal DiscountAmount { get; set; }
 
 		public Coupon Coupon { get; set; }

@@ -79,8 +79,8 @@ namespace VirtoCommerce.Storefront.Controllers
             var lineItem = _cartBuilder.Cart.Items.FirstOrDefault(i => i.Id == lineItemId);
             if (lineItem != null)
             {
-                await _cartBuilder.ChangeItemQuantityAsync(lineItemId, quantity);
-                await _cartBuilder.SaveAsync();
+            await _cartBuilder.ChangeItemQuantityAsync(lineItemId, quantity);
+            await _cartBuilder.SaveAsync();
             }
 
             return Json(null, JsonRequestBehavior.AllowGet);
@@ -300,7 +300,7 @@ namespace VirtoCommerce.Storefront.Controllers
                 return HttpNotFound();
             }
 
-            WorkContext.Order = order.ToWebModel();
+            WorkContext.Order = order.ToWebModel(base.WorkContext.AllCurrencies);
 
             return View("thanks", WorkContext);
         }

@@ -22,7 +22,7 @@ namespace GoogleShopping.MerchantModule.Web.Converters
         {
             var retVal = new coreModel.Price();
             retVal.InjectFrom(price);
-            retVal.Currency = (CurrencyCodes) Enum.Parse(typeof(CurrencyCodes), price.Currency);
+            retVal.Currency = price.Currency;
             return retVal;
         }
     }

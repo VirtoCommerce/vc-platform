@@ -21,7 +21,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 
             var retVal = new PaymentIn();
             retVal.InjectFrom(entity);
-            retVal.Currency = (CurrencyCodes)Enum.Parse(typeof(CurrencyCodes), entity.Currency);
+            retVal.Currency = entity.Currency;
             retVal.PaymentStatus = EnumUtility.SafeParse<PaymentStatus>(entity.Status, PaymentStatus.Custom);
 
             if (entity.Addresses != null && entity.Addresses.Any())

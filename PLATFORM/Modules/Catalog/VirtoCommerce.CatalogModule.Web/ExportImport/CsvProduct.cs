@@ -25,7 +25,7 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 			Assets = new List<Asset>();
 
 
-			Price = new Price() { Currency = CurrencyCodes.USD };
+			Price = new Price() { Currency = "USD" };
 			Inventory = new InventoryInfo();
 			EditorialReview = new EditorialReview();
 			Reviews = new List<EditorialReview>();
@@ -110,7 +110,7 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 			}
 			set
 			{
-				Price.Currency = EnumUtility.SafeParse<CurrencyCodes>(value, CurrencyCodes.USD);
+				Price.Currency = value;
 			}
 		}
 

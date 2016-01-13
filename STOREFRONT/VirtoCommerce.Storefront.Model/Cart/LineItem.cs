@@ -15,9 +15,9 @@ namespace VirtoCommerce.Storefront.Model.Cart
         {
             Currency = currency;
             LanguageCode = language.CultureName;
-            ListPrice = new Money(currency.Code);
-            SalePrice = new Money(currency.Code);
-            TaxTotal = new Money(currency.Code);
+            ListPrice = new Money(currency);
+            SalePrice = new Money(currency);
+            TaxTotal = new Money(currency);
 
             Discounts = new List<Discount>();
             TaxDetails = new List<TaxDetail>();
@@ -199,7 +199,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
             {
                 var discountTotal = Discounts.Sum(d => d.Amount.Amount);
 
-                return new Money(discountTotal, Currency.Code);
+                return new Money(discountTotal, Currency);
             }
         }
 
@@ -252,7 +252,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
 
             foreach (var reward in lineItemRewards)
             {
-                var discount = reward.ToDiscountModel(SalePrice.Amount, Currency);
+                var discount = reward.ToDiscountModel(SalePrice);
 
                 if (reward.IsValid)
                 {

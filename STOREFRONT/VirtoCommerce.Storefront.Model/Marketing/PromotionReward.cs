@@ -92,12 +92,12 @@ namespace VirtoCommerce.Storefront.Model.Marketing
         /// </summary>
         public string ShippingMethodCode { get; set; }
 
-        public Discount ToDiscountModel(decimal originAmount, Currency currency)
+        public Discount ToDiscountModel(Money amount)
         {
-            decimal absoluteAmount = GetAbsoluteDiscountAmount(originAmount);
+            decimal absoluteAmount = GetAbsoluteDiscountAmount(amount.Amount);
 
             var discount = new Discount();
-            discount.Amount = new Money(absoluteAmount, currency.Code);
+            discount.Amount = new Money(absoluteAmount, amount.Currency);
             discount.Description = Promotion.Description;
             discount.PromotionId = Promotion.Id;
 

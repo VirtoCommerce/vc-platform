@@ -9,14 +9,15 @@ namespace VirtoCommerce.Storefront.Model.Cart
 {
     public class Shipment : Entity, IDiscountable, IValidatable
     {
-        public Shipment()
+        public Shipment(Currency currency)
         {
-            TaxTotal = new Money();
-
+            Currency = currency;
             Discounts = new List<Discount>();
             Items = new List<CartShipmentItem>();
             TaxDetails = new List<TaxDetail>();
             ValidationErrors = new List<ValidationError>();
+            ShippingPrice = new Money(currency);
+            TaxTotal = new Money(currency);
         }
 
         /// <summary>
@@ -107,7 +108,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
             {
                 var discountTotal = Discounts.Sum(d => d.Amount.Amount);
 
-                return new Money(discountTotal, Currency.Code);
+                return new Money(discountTotal, Currency);
             }
         }
 
@@ -125,7 +126,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
             {
                 var itemSubtotal = Items.Sum(i => i.LineItem.ExtendedPrice.Amount);
 
-                return new Money(itemSubtotal, Currency.Code);
+                return new Money(itemSubtotal, Currency);
             }
         }
 
@@ -176,7 +177,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
 
             foreach (var reward in shipmentRewards)
             {
-                var discount = reward.ToDiscountModel(ShippingPrice.Amount, Currency);
+                var discount = reward.ToDiscountModel(ShippingPrice);
 
                 if (reward.IsValid)
                 {

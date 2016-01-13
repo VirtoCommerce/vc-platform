@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Omu.ValueInjecter;
 using VirtoCommerce.Client.Model;
 using VirtoCommerce.Storefront.Model.Cart;
@@ -10,12 +11,12 @@ namespace VirtoCommerce.Storefront.Converters
     {
         public static Model.Cart.Shipment ToWebModel(this VirtoCommerceCartModuleWebModelShipment shipment, ShoppingCart cart)
         {
-            var webModel = new Model.Cart.Shipment();
+            var webModel = new Model.Cart.Shipment(cart.Currency);
 
             webModel.InjectFrom(shipment);
             webModel.Currency = cart.Currency;
-            webModel.ShippingPrice = new Money(shipment.ShippingPrice ?? 0, shipment.Currency);
-            webModel.TaxTotal = new Money(shipment.TaxTotal ?? 0, shipment.Currency);
+            webModel.ShippingPrice = new Money(shipment.ShippingPrice ?? 0, cart.Currency);
+            webModel.TaxTotal = new Money(shipment.TaxTotal ?? 0, cart.Currency);
 
             if (shipment.DeliveryAddress != null)
             {
@@ -69,17 +70,17 @@ namespace VirtoCommerce.Storefront.Converters
             return serviceModel;
         }
 
-        public static Model.Order.Shipment ToWebModel(this VirtoCommerceOrderModuleWebModelShipment shipment)
+        public static Model.Order.Shipment ToWebModel(this VirtoCommerceOrderModuleWebModelShipment shipment, IEnumerable<Currency> availCurrencies)
         {
             var webModel = new Model.Order.Shipment();
 
-            var currency = new Currency(EnumUtility.SafeParse(shipment.Currency, CurrencyCodes.USD));
+            var currency = availCurrencies.First(x => x.IsHasSameCode(shipment.Currency));
 
             webModel.InjectFrom(shipment);
 
             if (shipment.ChildrenOperations != null)
             {
-                webModel.ChildrenOperations = shipment.ChildrenOperations.Select(co => co.ToWebModel()).ToList();
+                webModel.ChildrenOperations = shipment.ChildrenOperations.Select(co => co.ToWebModel(availCurrencies)).ToList();
             }
 
             webModel.Currency = currency;
@@ -91,10 +92,10 @@ namespace VirtoCommerce.Storefront.Converters
 
             if (shipment.Discount != null)
             {
-                webModel.Discount = shipment.Discount.ToWebModel();
+                webModel.Discount = shipment.Discount.ToWebModel(availCurrencies);
             }
 
-            webModel.DiscountAmount = new Money(shipment.DiscountAmount ?? 0, currency.Code);
+            webModel.DiscountAmount = new Money(shipment.DiscountAmount ?? 0, currency);
 
             if (shipment.DynamicProperties != null)
             {
@@ -103,21 +104,21 @@ namespace VirtoCommerce.Storefront.Converters
 
             if (shipment.InPayments != null)
             {
-                webModel.InPayments = shipment.InPayments.Select(p => p.ToWebModel()).ToList();
+                webModel.InPayments = shipment.InPayments.Select(p => p.ToWebModel(availCurrencies)).ToList();
             }
 
             if (shipment.Items != null)
             {
-                webModel.Items = shipment.Items.Select(i => i.ToWebModel()).ToList();
+                webModel.Items = shipment.Items.Select(i => i.ToWebModel(availCurrencies)).ToList();
             }
 
             if (shipment.Packages != null)
             {
-                webModel.Packages = shipment.Packages.Select(p => p.ToWebModel()).ToList();
+                webModel.Packages = shipment.Packages.Select(p => p.ToWebModel(availCurrencies)).ToList();
             }
 
-            webModel.Sum = new Money(shipment.Sum ?? 0, currency.Code);
-            webModel.Tax = new Money(shipment.Tax ?? 0, currency.Code);
+            webModel.Sum = new Money(shipment.Sum ?? 0, currency);
+            webModel.Tax = new Money(shipment.Tax ?? 0, currency);
 
             if (shipment.TaxDetails != null)
             {

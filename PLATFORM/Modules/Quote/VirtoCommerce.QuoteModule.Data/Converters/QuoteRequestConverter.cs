@@ -31,7 +31,7 @@ namespace VirtoCommerce.QuoteModule.Data.Converters
                     ShipmentMethodCode = dbEntity.ShipmentMethodCode
                 };
             }
-            retVal.Currency = (CurrencyCodes)Enum.Parse(typeof(CurrencyCodes), dbEntity.Currency);
+            retVal.Currency = dbEntity.Currency;
             retVal.Addresses = dbEntity.Addresses.Select(x => x.ToCoreModel()).ToList();
 			retVal.Attachments = dbEntity.Attachments.Select(x => x.ToCoreModel()).ToList();
 			retVal.Items = dbEntity.Items.Select(x => x.ToCoreModel()).ToList();

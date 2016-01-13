@@ -28,7 +28,7 @@ namespace VirtoCommerce.PricingModule.Data.Converters
 
             if (dbEntity.Pricelist != null)
             {
-                retVal.Currency = (CurrencyCodes)Enum.Parse(typeof(CurrencyCodes), dbEntity.Pricelist.Currency);
+                retVal.Currency = dbEntity.Pricelist.Currency;
             }
 
             return retVal;

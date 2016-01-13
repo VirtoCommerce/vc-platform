@@ -24,6 +24,7 @@ namespace VirtoCommerce.Storefront.Converters
             lineItemWebModel.SalePrice = product.Price.SalePrice;
             lineItemWebModel.ProductId = product.Id;
             lineItemWebModel.Quantity = quantity;
+
             lineItemWebModel.ThumbnailImageUrl = product.PrimaryImage.Url;
 
             return lineItemWebModel;
@@ -45,14 +46,16 @@ namespace VirtoCommerce.Storefront.Converters
                 webModel.DynamicProperties = serviceModel.DynamicProperties.Select(dp => dp.ToWebModel()).ToList();
             }
 
+
             webModel.IsGift = (bool)serviceModel.IsGift;
             webModel.IsReccuring = (bool)serviceModel.IsReccuring;
             webModel.Length = (decimal)(serviceModel.Length ?? 0);
-            webModel.ListPrice = new Money(serviceModel.ListPrice ?? 0, currency.Code);
+            webModel.ListPrice = new Money(serviceModel.ListPrice ?? 0, currency);
+
             webModel.RequiredShipping = (bool)serviceModel.RequiredShipping;
-            webModel.SalePrice = new Money(serviceModel.SalePrice ?? 0, currency.Code);
+            webModel.SalePrice = new Money(serviceModel.SalePrice ?? 0, currency);
             webModel.TaxIncluded = (bool)serviceModel.TaxIncluded;
-            webModel.TaxTotal = new Money(serviceModel.TaxTotal ?? 0, currency.Code);
+            webModel.TaxTotal = new Money(serviceModel.TaxTotal ?? 0, currency);
             webModel.Weight = (decimal)(serviceModel.Weight ?? 0);
             webModel.Width = (decimal)(serviceModel.Width ?? 0);
 
@@ -90,8 +93,8 @@ namespace VirtoCommerce.Storefront.Converters
 
             promoItem.InjectFrom(lineItem);
 
-            promoItem.Discount = (double)lineItem.DiscountTotal.Amount;
-            promoItem.Price = (double)lineItem.PlacedPrice.Amount;
+            promoItem.Discount = new Money(lineItem.DiscountTotal.Amount, lineItem.DiscountTotal.Currency);
+            promoItem.Price = new Money(lineItem.PlacedPrice.Amount, lineItem.PlacedPrice.Currency);
             promoItem.Quantity = lineItem.Quantity;
             promoItem.Variations = null; // TODO
 

@@ -14,7 +14,7 @@ namespace VirtoCommerce.Domain.Cart.Model
         public string ShipmentMethodOption { get; set; }
         public string  WarehouseLocation { get; set; }
 
-		public CurrencyCodes Currency { get; set; }
+		public string Currency { get; set; }
 		public decimal? VolumetricWeight { get; set; }
 
 		public string WeightUnit { get; set; }

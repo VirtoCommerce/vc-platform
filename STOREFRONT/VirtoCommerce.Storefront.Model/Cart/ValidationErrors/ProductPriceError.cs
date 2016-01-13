@@ -4,7 +4,7 @@ namespace VirtoCommerce.Storefront.Model.Cart.ValidationErrors
 {
     public class ProductPriceError : ValidationError
     {
-        public ProductPriceError(Money newPrice) : base(typeof(ProductPriceError))
+        public ProductPriceError(Money newPrice)
         {
             NewPrice = newPrice;
         }

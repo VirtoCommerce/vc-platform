@@ -30,10 +30,7 @@ namespace VirtoCommerce.Storefront.Services
             {
                 return;
             }
-
-            await ValidateItemsAsync(cart);
-            await ValidateShipmentsAsync(cart);
-            await ValidateCartAsync(cart);
+            await Task.WhenAll(ValidateItemsAsync(cart), ValidateShipmentsAsync(cart), ValidateCartAsync(cart));
         }
 
         private async Task ValidateItemsAsync(ShoppingCart cart)
@@ -84,7 +81,7 @@ namespace VirtoCommerce.Storefront.Services
                 }
                 if (existingShippingMethod != null)
                 {
-                    var shippingMethod = existingShippingMethod.ToWebModel();
+                    var shippingMethod = existingShippingMethod.ToWebModel(_workContext.AllCurrencies);
                     if (shippingMethod.Price.Amount != shipment.ShippingPrice.Amount)
                     {
                         shipment.ValidationErrors.Add(new ShippingPriceError(shippingMethod.Price));

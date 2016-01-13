@@ -36,8 +36,8 @@ namespace VirtoCommerce.StoreModule.Test
                 Id = "testStore",
                 Name = "testStore",
                 Catalog = "catalog",
-                Currencies = new[] { CurrencyCodes.USD, CurrencyCodes.RUB },
-                DefaultCurrency = CurrencyCodes.USD,
+                Currencies = new[] { "USD", "RUB" },
+                DefaultCurrency = "USD",
                 Languages = new[] { "ru-ru", "en-us" },
                 DefaultLanguage = "ru-ru",
                 FulfillmentCenter = new FulfillmentCenter
@@ -68,8 +68,8 @@ namespace VirtoCommerce.StoreModule.Test
             var store = result.Content;
 
             store.Name = "diff name";
-            store.DefaultCurrency = CurrencyCodes.UYU;
-            store.Currencies.Add(CurrencyCodes.UYU);
+            store.DefaultCurrency = "UYU";
+            store.Currencies.Add("UYU");
             store.Languages.Remove(store.Languages.FirstOrDefault());
            
             store.FulfillmentCenter.CountryCode = "SSS";

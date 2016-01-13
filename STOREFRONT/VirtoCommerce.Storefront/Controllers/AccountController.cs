@@ -50,7 +50,7 @@ namespace VirtoCommerce.Storefront.Controllers
 
             var ordersResponse = await _orderApi.OrderModuleSearchAsync(criteriaCustomerId: WorkContext.CurrentCustomer.Id, criteriaResponseGroup: "full");
             WorkContext.CurrentCustomer.OrdersCount = ordersResponse.TotalCount.Value;
-            WorkContext.CurrentCustomer.Orders = ordersResponse.CustomerOrders.Select(o => o.ToWebModel()).ToList();
+            WorkContext.CurrentCustomer.Orders = ordersResponse.CustomerOrders.Select(o => o.ToWebModel(base.WorkContext.AllCurrencies)).ToList();
             return View("customers/account", WorkContext);
         }
 
@@ -64,7 +64,7 @@ namespace VirtoCommerce.Storefront.Controllers
                 return HttpNotFound();
             }
 
-            WorkContext.Order = order.ToWebModel();
+            WorkContext.Order = order.ToWebModel(base.WorkContext.AllCurrencies);
             return View("customers/order", WorkContext);
         }
 
