@@ -28,5 +28,8 @@ namespace VirtoCommerce.CoreModule.Data.Model
         [StringLength(16)]
         public string Symbol { get; set; }
 
+        [StringLength(64)]
+        public string CustomFormatting { get; set; }
+
     }
 }

@@ -29,6 +29,10 @@ namespace VirtoCommerce.Domain.Commerce.Model
         /// Currency symbol
         /// </summary>
         public string Symbol { get; set; }
-    
+
+        /// <summary>
+        /// Custom formatting pattern
+        /// </summary>
+        public string CustomFormatting { get; set; }
     }
 }

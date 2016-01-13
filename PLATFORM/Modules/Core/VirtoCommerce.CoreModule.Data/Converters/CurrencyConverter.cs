@@ -37,8 +37,9 @@ namespace VirtoCommerce.CoreModule.Data.Converters
         {
             if (target == null)
                 throw new ArgumentNullException("target");
-            var patchInjection = new PatchInjection<dataModel.Currency>(x => x.Code, x => x.Name,
-                                                                        x => x.Symbol, x => x.ExchangeRate, x => x.IsPrimary);
+            var patchInjection = new PatchInjection<dataModel.Currency>(x => x.Name,
+                                                                        x => x.Symbol, x => x.ExchangeRate, x => x.IsPrimary,
+                                                                        x => x.CustomFormatting);
             target.InjectFrom(patchInjection, source);
         }
 
