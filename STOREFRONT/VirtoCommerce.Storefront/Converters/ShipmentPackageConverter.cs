@@ -4,12 +4,13 @@ using VirtoCommerce.Client.Model;
 using VirtoCommerce.Storefront.Model.Order;
 using System.Collections.Generic;
 using VirtoCommerce.Storefront.Model.Common;
+using VirtoCommerce.Storefront.Model;
 
 namespace VirtoCommerce.Storefront.Converters
 {
     public static class ShipmentPackageConverter
     {
-        public static ShipmentPackage ToWebModel(this VirtoCommerceOrderModuleWebModelShipmentPackage shipmentPackage, IEnumerable<Currency> currencies)
+        public static ShipmentPackage ToWebModel(this VirtoCommerceOrderModuleWebModelShipmentPackage shipmentPackage, IEnumerable<Currency> currencies, Language language)
         {
             var webModel = new ShipmentPackage();
 
@@ -17,7 +18,7 @@ namespace VirtoCommerce.Storefront.Converters
 
             if (shipmentPackage.Items != null)
             {
-                webModel.Items = shipmentPackage.Items.Select(i => i.ToWebModel(currencies)).ToList();
+                webModel.Items = shipmentPackage.Items.Select(i => i.ToWebModel(currencies, language)).ToList();
             }
 
             return webModel;

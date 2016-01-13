@@ -21,7 +21,8 @@ namespace VirtoCommerce.CatalogModule.Web.Model
 			IsActive = product.IsActive ?? true;
             if(product.Category != null)
             {
-                Parents = product.Category.Parents.Concat(new[] { new KeyValuePair<string, string>(product.Category.Id, product.Category.Name) });
+                Parents = product.Category.Parents ?? new Dictionary<string, string>();
+                Parents.Add(product.Category.Id, product.Category.Name);
             }
 			if (product.Links != null)
 			{

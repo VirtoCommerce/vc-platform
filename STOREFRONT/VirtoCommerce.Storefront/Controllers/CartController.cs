@@ -300,7 +300,7 @@ namespace VirtoCommerce.Storefront.Controllers
                 return HttpNotFound();
             }
 
-            WorkContext.Order = order.ToWebModel(base.WorkContext.AllCurrencies);
+            WorkContext.Order = order.ToWebModel(WorkContext.AllCurrencies, WorkContext.CurrentLanguage);
 
             return View("thanks", WorkContext);
         }

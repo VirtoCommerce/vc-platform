@@ -3,12 +3,13 @@ using VirtoCommerce.Storefront.Model;
 using System.Linq;
 using VirtoCommerce.Storefront.Model.Common;
 using System.Collections.Generic;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Storefront.Converters
 {
     public static class StoreConverter
     {
-        public static Store ToWebModel(this VirtoCommerce.Client.Model.VirtoCommerceStoreModuleWebModelStore storeDto, IEnumerable<Currency> availCurrencies)
+        public static Store ToWebModel(this VirtoCommerce.Client.Model.VirtoCommerceStoreModuleWebModelStore storeDto)
         {
             var retVal = new Store();
             retVal.InjectFrom(storeDto);
@@ -21,13 +22,15 @@ namespace VirtoCommerce.Storefront.Converters
             {
                 retVal.Languages = storeDto.Languages.Select(x => new Language(x)).ToList();
             }
-            retVal.DefaultCurrency = availCurrencies.FirstOrDefault(x => x.IsHasSameCode(storeDto.DefaultCurrency)) ?? new Currency(storeDto.DefaultCurrency, 1);
-
+  
+            retVal.Currencies.Add(new Currency(Language.InvariantLanguage, storeDto.DefaultCurrency));
             if (storeDto.Currencies != null)
             {
-                retVal.Currencies = availCurrencies.Where(x => x.IsHasSameCode(storeDto.DefaultCurrency) || storeDto.Currencies.Any(y => x.IsHasSameCode(y))).ToList();
+                retVal.Currencies.AddRange(storeDto.Currencies.Select(x => new Currency(Language.InvariantLanguage, x))); 
             }
-            if(storeDto.DynamicProperties != null)
+            retVal.DefaultCurrency = retVal.Currencies.FirstOrDefault(x => x.Equals(storeDto.DefaultCurrency));
+
+            if (storeDto.DynamicProperties != null)
             {
                 retVal.DynamicProperties = storeDto.DynamicProperties.Select(x => x.ToWebModel()).ToList();
                 retVal.ThemeName = retVal.DynamicProperties.GetDynamicPropertyValue("DefaultThemeName");

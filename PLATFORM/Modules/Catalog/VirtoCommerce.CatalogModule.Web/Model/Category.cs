@@ -67,7 +67,9 @@ namespace VirtoCommerce.CatalogModule.Web.Model
         /// Gets or sets a value indicating whether this <see cref="Category"/> is active.
         /// </summary>
         public bool? IsActive { get; set; }
-		public IEnumerable<KeyValuePair<string, string>> Parents { get; set; }
+
+        //TODO: Relace Dictionary to something other because we should preserve order
+        public Dictionary<string, string> Parents { get; set; }
         /// <summary>
         /// Gets or sets the children categories.
         /// </summary>

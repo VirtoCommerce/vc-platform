@@ -61,6 +61,6 @@ namespace VirtoCommerce.CatalogModule.Web.Model
         /// <summary>
         /// All entry parents (id : name)
         /// </summary>
-        public IEnumerable<KeyValuePair<string, string>> Parents { get; set; }
+        public Dictionary<string, string> Parents { get; set; }
 	}
 }

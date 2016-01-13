@@ -4,16 +4,17 @@ using VirtoCommerce.Client.Model;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Order;
 using System.Collections.Generic;
+using VirtoCommerce.Storefront.Model;
 
 namespace VirtoCommerce.Storefront.Converters
 {
     public static class OperationConverter
     {
-        public static Operation ToWebModel(this VirtoCommerceOrderModuleWebModelOperation operation, IEnumerable<Currency> availCurrencies)
+        public static Operation ToWebModel(this VirtoCommerceOrderModuleWebModelOperation operation, IEnumerable<Currency> availCurrencies, Language language)
         {
             var operationWebModel = new Operation();
 
-            var currency = availCurrencies.FirstOrDefault(x => x.IsHasSameCode(operation.Currency)) ?? new Currency(operation.Currency, 1); ;
+            var currency = availCurrencies.FirstOrDefault(x => x.Equals(operation.Currency)) ?? new Currency(language, operation.Currency); ;
 
             operationWebModel.InjectFrom(operation);
 
@@ -21,7 +22,7 @@ namespace VirtoCommerce.Storefront.Converters
 
             if (operation.ChildrenOperations != null)
             {
-                operationWebModel.ChildrenOperations = operation.ChildrenOperations.Select(co => co.ToWebModel(availCurrencies)).ToList();
+                operationWebModel.ChildrenOperations = operation.ChildrenOperations.Select(co => co.ToWebModel(availCurrencies, language)).ToList();
             }
 
             if (operation.DynamicProperties != null)

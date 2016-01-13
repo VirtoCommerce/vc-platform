@@ -539,7 +539,7 @@
     <Folder Include="Content\" />
     <Folder Include="fonts\" />
     <Folder Include="Models\" />
-    <Folder Include="Scripts\" />
+    <Folder Include="Services\Scripts\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\SDK\DotNet\VirtoCommerce.Client\VirtoCommerce.Client.csproj">

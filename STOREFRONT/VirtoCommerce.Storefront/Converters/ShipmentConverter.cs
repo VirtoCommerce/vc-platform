@@ -2,6 +2,7 @@
 using System.Linq;
 using Omu.ValueInjecter;
 using VirtoCommerce.Client.Model;
+using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Cart;
 using VirtoCommerce.Storefront.Model.Common;
 
@@ -70,17 +71,17 @@ namespace VirtoCommerce.Storefront.Converters
             return serviceModel;
         }
 
-        public static Model.Order.Shipment ToWebModel(this VirtoCommerceOrderModuleWebModelShipment shipment, IEnumerable<Currency> availCurrencies)
+        public static Model.Order.Shipment ToWebModel(this VirtoCommerceOrderModuleWebModelShipment shipment, IEnumerable<Currency> availCurrencies, Language language)
         {
             var webModel = new Model.Order.Shipment();
 
-            var currency = availCurrencies.First(x => x.IsHasSameCode(shipment.Currency));
+            var currency = availCurrencies.FirstOrDefault(x => x.Equals(shipment.Currency)) ?? new Currency(language, shipment.Currency);
 
             webModel.InjectFrom(shipment);
 
             if (shipment.ChildrenOperations != null)
             {
-                webModel.ChildrenOperations = shipment.ChildrenOperations.Select(co => co.ToWebModel(availCurrencies)).ToList();
+                webModel.ChildrenOperations = shipment.ChildrenOperations.Select(co => co.ToWebModel(availCurrencies, language)).ToList();
             }
 
             webModel.Currency = currency;
@@ -92,7 +93,7 @@ namespace VirtoCommerce.Storefront.Converters
 
             if (shipment.Discount != null)
             {
-                webModel.Discount = shipment.Discount.ToWebModel(availCurrencies);
+                webModel.Discount = shipment.Discount.ToWebModel(availCurrencies, language);
             }
 
             webModel.DiscountAmount = new Money(shipment.DiscountAmount ?? 0, currency);
@@ -104,17 +105,17 @@ namespace VirtoCommerce.Storefront.Converters
 
             if (shipment.InPayments != null)
             {
-                webModel.InPayments = shipment.InPayments.Select(p => p.ToWebModel(availCurrencies)).ToList();
+                webModel.InPayments = shipment.InPayments.Select(p => p.ToWebModel(availCurrencies, language)).ToList();
             }
 
             if (shipment.Items != null)
             {
-                webModel.Items = shipment.Items.Select(i => i.ToWebModel(availCurrencies)).ToList();
+                webModel.Items = shipment.Items.Select(i => i.ToWebModel(availCurrencies, language)).ToList();
             }
 
             if (shipment.Packages != null)
             {
-                webModel.Packages = shipment.Packages.Select(p => p.ToWebModel(availCurrencies)).ToList();
+                webModel.Packages = shipment.Packages.Select(p => p.ToWebModel(availCurrencies, language)).ToList();
             }
 
             webModel.Sum = new Money(shipment.Sum ?? 0, currency);

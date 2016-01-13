@@ -81,7 +81,7 @@ namespace VirtoCommerce.Storefront.Services
                 }
                 if (existingShippingMethod != null)
                 {
-                    var shippingMethod = existingShippingMethod.ToWebModel(_workContext.AllCurrencies);
+                    var shippingMethod = existingShippingMethod.ToWebModel(_workContext.AllCurrencies, _workContext.CurrentLanguage);
                     if (shippingMethod.Price.Amount != shipment.ShippingPrice.Amount)
                     {
                         shipment.ValidationErrors.Add(new ShippingPriceError(shippingMethod.Price));

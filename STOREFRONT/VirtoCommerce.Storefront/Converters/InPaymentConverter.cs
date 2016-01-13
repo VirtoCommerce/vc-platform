@@ -4,22 +4,23 @@ using VirtoCommerce.Client.Model;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Order;
 using System.Collections.Generic;
+using VirtoCommerce.Storefront.Model;
 
 namespace VirtoCommerce.Storefront.Converters
 {
     public static class InPaymentConverter
     {
-        public static PaymentIn ToWebModel(this VirtoCommerceOrderModuleWebModelPaymentIn paymentIn, IEnumerable<Currency> availCurrencies)
+        public static PaymentIn ToWebModel(this VirtoCommerceOrderModuleWebModelPaymentIn paymentIn, IEnumerable<Currency> availCurrencies, Language language)
         {
             var webModel = new PaymentIn();
 
-            var currency = availCurrencies.FirstOrDefault(x => x.IsHasSameCode(paymentIn.Currency)) ?? new Currency(paymentIn.Currency, 1); 
+            var currency = availCurrencies.FirstOrDefault(x => x.Equals(paymentIn.Currency)) ?? new Currency(language, paymentIn.Currency);
 
             webModel.InjectFrom(paymentIn);
 
             if (paymentIn.ChildrenOperations != null)
             {
-                webModel.ChildrenOperations = paymentIn.ChildrenOperations.Select(co => co.ToWebModel(availCurrencies)).ToList();
+                webModel.ChildrenOperations = paymentIn.ChildrenOperations.Select(co => co.ToWebModel(availCurrencies, language)).ToList();
             }
 
             webModel.Currency = currency;

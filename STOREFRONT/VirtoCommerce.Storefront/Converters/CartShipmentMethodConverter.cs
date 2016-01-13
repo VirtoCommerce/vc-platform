@@ -10,16 +10,16 @@ namespace VirtoCommerce.Storefront.Converters
 {
     public static class CartShipmentMethodConverter
     {
-        public static ShippingMethod ToWebModel(this VirtoCommerceCartModuleWebModelShippingMethod shippingMethod, IEnumerable<Currency> availCurrencies)
+        public static ShippingMethod ToWebModel(this VirtoCommerceCartModuleWebModelShippingMethod shippingMethod, IEnumerable<Currency> availCurrencies, Language language)
         {
             var shippingMethodModel = new ShippingMethod();
 
             shippingMethodModel.InjectFrom(shippingMethod);
 
-            var currency = availCurrencies.FirstOrDefault(x=> x.IsHasSameCode(shippingMethod.Currency)) ?? new Currency(shippingMethod.Currency, 1); 
+            var currency = availCurrencies.FirstOrDefault(x=> x.Equals(shippingMethod.Currency)) ?? new Currency(language, shippingMethod.Currency); 
             if (shippingMethod.Discounts != null)
             {
-                shippingMethodModel.Discounts = shippingMethod.Discounts.Select(d => d.ToWebModel(availCurrencies)).ToList();
+                shippingMethodModel.Discounts = shippingMethod.Discounts.Select(d => d.ToWebModel(availCurrencies, language)).ToList();
             }
 
             shippingMethodModel.Price = new Money(shippingMethod.Price ?? 0, currency);

@@ -23,8 +23,8 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 	
 			if(category.Parents != null)
 			{
-                //Canot use ToDictionary because we should preserve order
-                retVal.Parents = category.Parents.Select(x => new KeyValuePair<string, string>(x.Id, x.Name));
+                //TODO: Relace Dictionary to something other because we should preserve order
+                retVal.Parents = category.Parents.ToDictionary(x => x.Id, x => x.Name);
             }
 			//For virtual category links not needed
 			if (!category.Virtual && category.Links != null)

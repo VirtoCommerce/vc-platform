@@ -12,49 +12,52 @@ namespace VirtoCommerce.Storefront.Model.Common
         public string EnglishName { get; set; }
         public decimal ExchangeRate { get; set; }
 
-        public Currency(string code, string name, string symbol, decimal exchangeRate)
-            : this(code, exchangeRate)
+        public Currency(Language language, string code, string name, string symbol, decimal exchangeRate)
+            : this(language, code)
         {
             EnglishName = name;
             Symbol = symbol;
+            ExchangeRate = exchangeRate;
             if (NumberFormat == null)
             {
                 NumberFormat = NumberFormatInfo.InvariantInfo.Clone() as NumberFormatInfo;
-                NumberFormat.CurrencySymbol = symbol;
                 //TODO: move to currency configuration
                 NumberFormat.CurrencyPositivePattern = 3; //n $
                 NumberFormat.CurrencyNegativePattern = 8; //-n $
             }
+            if(!String.IsNullOrEmpty(symbol))
+            {
+                NumberFormat.CurrencySymbol = symbol;
+            }
         }
 
-        public Currency(string code, decimal exchangeRate)
+        public Currency(Language language, string code)
         {
             Code = code;
-            ExchangeRate = exchangeRate;
-            var cultureInfo = CultureInfoFromCurrencyISO(code);
-            if (cultureInfo != null)
+            if (!language.IsInvariant)
             {
-                NumberFormat = cultureInfo.NumberFormat;
-                var region = new RegionInfo(cultureInfo.LCID);
-                Symbol = region.CurrencySymbol;
-                EnglishName = region.CurrencyEnglishName;
+                var cultureInfo = CultureInfo.GetCultureInfo(language.CultureName);
+                if (cultureInfo != null)
+                {
+                    NumberFormat = cultureInfo.NumberFormat.Clone() as NumberFormatInfo;
+                    var region = new RegionInfo(cultureInfo.LCID);
+                    Symbol = region.CurrencySymbol;
+                    EnglishName = region.CurrencyEnglishName;
+                }
             }
         }
 
-        private static CultureInfo CultureInfoFromCurrencyISO(string isoCode)
+        public static bool operator ==(Currency left, Currency right)
         {
-            foreach (CultureInfo ci in CultureInfo.GetCultures(CultureTypes.SpecificCultures))
-            {
-                RegionInfo ri = new RegionInfo(ci.LCID);
-                if (ri.ISOCurrencySymbol == isoCode)
-                    return ci;
-            }
-            return null;
+            if (Object.Equals(left, null))
+                return (Object.Equals(right, null)) ? true : false;
+            else
+                return left.Equals(right);
         }
 
-        public bool IsHasSameCode(string code)
+        public static bool operator !=(Currency left, Currency right)
         {
-            return string.Equals(Code, code, StringComparison.InvariantCultureIgnoreCase);
+            return !(left == right);
         }
 
         /// <summary>
@@ -71,10 +74,14 @@ namespace VirtoCommerce.Storefront.Model.Common
                 return true;
 
             var other = obj as Currency;
-
+            var code = obj as string;
             if (other != null)
             {
-                return String.Equals(other.Code, Code, StringComparison.InvariantCultureIgnoreCase);
+                return String.Equals(Code, other.Code, StringComparison.InvariantCultureIgnoreCase);
+            }
+            if(code != null)
+            {
+                return String.Equals(Code, code, StringComparison.InvariantCultureIgnoreCase);
             }
 
             return false;

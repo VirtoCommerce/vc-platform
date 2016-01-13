@@ -34,7 +34,7 @@ namespace VirtoCommerce.Storefront.Services
                 evalContextCertainDate: _workContext.StorefrontUtcNow,
                 evalContextStoreId: _workContext.CurrentStore.Id);
 
-            var alreadyDefinedProductsPriceGroups = pricesResponse.Select(x => x.ToWebModel(_workContext.AllCurrencies)).GroupBy(x=>x.ProductId);
+            var alreadyDefinedProductsPriceGroups = pricesResponse.Select(x => x.ToWebModel(_workContext.AllCurrencies, _workContext.CurrentLanguage)).GroupBy(x=>x.ProductId);
             foreach (var product in products)
             {
                 var productPricesGroup = alreadyDefinedProductsPriceGroups.FirstOrDefault(x => x.Key == product.Id);
@@ -58,7 +58,7 @@ namespace VirtoCommerce.Storefront.Services
                     }
                 }
                 product.Currency = _workContext.CurrentCurrency;
-                product.Price = product.Prices.FirstOrDefault(x => x.Currency == _workContext.CurrentCurrency);
+                product.Price = product.Prices.FirstOrDefault(x => x.Currency.Equals(_workContext.CurrentCurrency));
             }
 
         }
