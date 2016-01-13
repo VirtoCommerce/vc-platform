@@ -57,5 +57,10 @@ namespace VirtoCommerce.CatalogModule.Web.Model
         /// The links.
         /// </value>
 		public ListEntryLink[] Links { get; set; }
+
+        /// <summary>
+        /// All entry parents (id : name)
+        /// </summary>
+        public IEnumerable<KeyValuePair<string, string>> Parents { get; set; }
 	}
 }
