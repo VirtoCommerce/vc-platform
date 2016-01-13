@@ -404,9 +404,9 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="packages.config">
+    <None Include="packages.config">
       <SubType>Designer</SubType>
-    </Content>
+    </None>
     <Content Include="App_Data\Themes\default\assets\ajaxify.js.liquid" />
     <Content Include="App_Data\Themes\default\assets\ajaxify.scss.liquid" />
     <Content Include="App_Data\Themes\default\assets\checkout.css.liquid" />

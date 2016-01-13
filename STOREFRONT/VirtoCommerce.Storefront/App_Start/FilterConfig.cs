@@ -26,7 +26,10 @@ namespace VirtoCommerce.Storefront
             {
                 var workContext = WorkContextFactory();
 
-                if (workContext != null && workContext.AllStores != null && !workContext.AllStores.Any() && filterContext.ActionDescriptor.ActionName != "NoStore")
+                // RequestUrl is null when current request is not a storefront request
+                if (workContext != null && workContext.RequestUrl != null
+                    && (workContext.AllStores == null || !workContext.AllStores.Any())
+                    && filterContext.ActionDescriptor.ActionName != "NoStore")
                 {
                     filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Common", action = "NoStore" }));
                 }

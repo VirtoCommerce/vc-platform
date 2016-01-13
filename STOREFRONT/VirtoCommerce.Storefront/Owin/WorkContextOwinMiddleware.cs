@@ -131,7 +131,7 @@ namespace VirtoCommerce.Storefront.Owin
         {
             var stores = await _storeApi.StoreModuleGetStoresAsync();
             var result = stores.Select(s => s.ToWebModel()).ToArray();
-            return result;
+            return result.Any() ? result : null;
         }
 
         private CatalogSearchCriteria GetSearchCriteria(WorkContext workContext)

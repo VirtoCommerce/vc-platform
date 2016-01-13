@@ -115,7 +115,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Merchant-e-Solutions.png" />
-    <Content Include="favicon.ico" />
     <Content Include="module.manifest" />
     <None Include="Web.config">
       <SubType>Designer</SubType>

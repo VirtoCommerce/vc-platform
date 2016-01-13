@@ -3,13 +3,13 @@
     <div class="blade-inner">
         <div class="inner-block clearfix">
             <form class="form" name="formScope">
-                <div class="form-group" ng-init="setForm(formScope)">
+                <div class="form-group" ng-init="setForm(formScope)" title="The currency code. Use 3 letter ISO 4217 code, if exists.">
                     <label class="form-label">{{ 'core.blades.currency-detail.labels.code' | translate }}</label>
                     <div class="form-input">
-                        <input ng-model="blade.currentEntity.code" required ng-disabled="!blade.isNew" />
+                        <input ng-model="blade.currentEntity.code" required ng-disabled="!blade.isNew" />                        
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" title="The name of the currency">
                     <label class="form-label">{{ 'core.blades.currency-detail.labels.name' | translate }}</label>
                     <div class="form-input">
                         <input ng-model="blade.currentEntity.name" focus-on="" required />
@@ -24,16 +24,22 @@
                         </label>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" title="The exchange rate against the primary exchange rate currency">
                     <label class="form-label">{{ 'core.blades.currency-detail.labels.exchange-rate' | translate }}</label>
                     <div class="form-input __number">
-                        <input smart-float required num-type="float" fraction="4" ng-model="blade.currentEntity.exchangeRate" min="0">
+                        <input smart-float required num-type="float" fraction="4" ng-model="blade.currentEntity.exchangeRate" min="0.0001">
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" title="The short currency symbol">
                     <label class="form-label">{{ 'core.blades.currency-detail.labels.symbol' | translate }}</label>
                     <div class="form-input">
                         <input ng-model="blade.currentEntity.symbol" />
+                    </div>
+                </div>
+                <div class="form-group" title="The number of decimal places to use in currency values">
+                    <label class="form-label">{{ 'core.blades.currency-detail.labels.currency-decimal-digits' | translate }}</label>
+                    <div class="form-input __number">
+                        <input smart-float num-type="integer" ng-model="blade.currentEntity.currencyDecimalDigits" min="0">
                     </div>
                 </div>
             </form>

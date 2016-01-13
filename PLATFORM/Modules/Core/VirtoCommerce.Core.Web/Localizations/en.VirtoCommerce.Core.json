@@ -51,7 +51,8 @@
           "name": "Name",
           "is-primary": "Is primary",
           "exchange-rate": "Exchange rate",
-          "symbol": "Symbol"
+          "symbol": "Symbol",
+          "currency-decimal-digits": "Currency decimal digits"
         }
       },
       "fulfillment-center-contact": {

@@ -57,7 +57,7 @@
                         $scope.saveChanges();
                     },
                     canExecuteMethod: function () {
-                        return isDirty() && isValid();
+                        return isDirty() && formScope && formScope.$valid;
                     },
                     permission: 'core:currency:update'
                 },
@@ -77,7 +77,7 @@
                         deleteEntry();
                     },
                     canExecuteMethod: function () {
-                        return true;
+                        return !blade.origEntity.isPrimary;
                     },
                     permission: 'core:currency:delete'
                 }
@@ -125,11 +125,7 @@
                 closeCallback();
             }
         };
-
-        function isValid() {
-            return formScope && formScope.$valid;
-        };
-
+        
         // actions on load        
         initializeBlade(blade.data);
     }]);

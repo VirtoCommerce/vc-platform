@@ -2,7 +2,7 @@
 .controller('virtoCommerce.coreModule.currency.currencyListController', ['$scope', 'virtoCommerce.coreModule.currency.currencyApi', 'platformWebApp.bladeNavigationService',
 function ($scope, currencyApi, bladeNavigationService) {
     var blade = $scope.blade;
-    
+
     blade.refresh = function (parentRefresh) {
         blade.isLoading = true;
 
@@ -37,7 +37,7 @@ function ($scope, currencyApi, bladeNavigationService) {
         blade.setSelectedId(node.code);
         showDetailBlade({ data: node });
     };
-    
+
     blade.headIcon = 'fa-money';
     blade.toolbarCommands = [
       {
@@ -53,7 +53,7 @@ function ($scope, currencyApi, bladeNavigationService) {
             name: "platform.commands.add", icon: 'fa fa-plus',
             executeMethod: function () {
                 blade.setSelectedId(null);
-                showDetailBlade({ isNew: true }, 'New currency');
+                showDetailBlade({ isNew: true });
             },
             canExecuteMethod: function () {
                 return true;
