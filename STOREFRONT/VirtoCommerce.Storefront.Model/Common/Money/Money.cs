@@ -119,9 +119,6 @@ namespace VirtoCommerce.Storefront.Model.Common
 		{
 			get { return _currency.NumberFormat.CurrencyDecimalDigits; }
 		}
-
-		public static bool AllowImplicitConversion = false;
-
 		#endregion
 
 		#region Money Operators
@@ -138,21 +135,20 @@ namespace VirtoCommerce.Storefront.Model.Common
 
 		public bool Equals(Money other)
 		{
-			if (object.ReferenceEquals(other, null)) return false;
+            if (other == null)
+                return false;
 
-			if (AllowImplicitConversion)
-				return Amount == other.ConvertTo(Currency).Amount
-				  && other.Amount == ConvertTo(other.Currency).Amount;
-			else
-				return ((Currency.Equals(other.Currency)) && (Amount == other.Amount));
+            if (Object.ReferenceEquals(this, other))
+                return true;
+
+            return ((Currency.Equals(other.Currency)) && (Amount == other.Amount));
 		}
 
 		public static bool operator ==(Money first, Money second)
 		{
 			if (object.ReferenceEquals(first, second)) return true;
 			if (object.ReferenceEquals(first, null) || object.ReferenceEquals(second, null)) return false;
-			return first.Amount == second.ConvertOrCheck(first.Currency).Amount
-			  && second.Amount == first.ConvertOrCheck(second.Currency).Amount;
+			return first.Equals(second);
 		}
 
 		public static bool operator !=(Money first, Money second)
@@ -162,25 +158,25 @@ namespace VirtoCommerce.Storefront.Model.Common
 
 		public static bool operator >(Money first, Money second)
 		{
-			return first.Amount > second.ConvertOrCheck(first.Currency).Amount
+			return first.Amount > second.ConvertTo(first.Currency).Amount
 			  && second.Amount < first.ConvertTo(second.Currency).Amount;
 		}
 
 		public static bool operator >=(Money first, Money second)
 		{
-			return first.Amount >= second.ConvertOrCheck(first.Currency).Amount
+			return first.Amount >= second.ConvertTo(first.Currency).Amount
 			  && second.Amount <= first.ConvertTo(second.Currency).Amount;
 		}
 
 		public static bool operator <=(Money first, Money second)
 		{
-			return first.Amount <= second.ConvertOrCheck(first.Currency).Amount
+			return first.Amount <= second.ConvertTo(first.Currency).Amount
 			  && second.Amount >= first.ConvertTo(second.Currency).Amount;
 		}
 
 		public static bool operator <(Money first, Money second)
 		{
-			return first.Amount < second.ConvertOrCheck(first.Currency).Amount
+			return first.Amount < second.ConvertTo(first.Currency).Amount
 			  && second.Amount > first.ConvertTo(second.Currency).Amount;
 		}
 
@@ -204,22 +200,22 @@ namespace VirtoCommerce.Storefront.Model.Common
 
 		public static Money operator +(Money first, Money second)
 		{
-			return new Money(first.Amount + second.ConvertOrCheck(first.Currency).Amount, first.Currency);
+			return new Money(first.Amount + second.ConvertTo(first.Currency).Amount, first.Currency);
 		}
 
 		public static Money operator -(Money first, Money second)
 		{
-			return new Money(first.Amount - second.ConvertOrCheck(first.Currency).Amount, first.Currency);
+			return new Money(first.Amount - second.ConvertTo(first.Currency).Amount, first.Currency);
 		}
 
 		public static Money operator *(Money first, Money second)
 		{
-			return new Money(first.Amount * second.ConvertOrCheck(first.Currency).Amount, first.Currency);
+			return new Money(first.Amount * second.ConvertTo(first.Currency).Amount, first.Currency);
 		}
 
 		public static Money operator /(Money first, Money second)
 		{
-			return new Money(first.Amount / second.ConvertOrCheck(first.Currency).Amount, first.Currency);
+			return new Money(first.Amount / second.ConvertTo(first.Currency).Amount, first.Currency);
 		}
 
 		#endregion
@@ -353,18 +349,6 @@ namespace VirtoCommerce.Storefront.Model.Common
 			for (int i = remainder; i < n; i++)
 				results[i] = new Money((decimal)lowResult, _currency);
 			return results;
-		}
-
-	
-		private Money ConvertOrCheck(Currency toCurrency)
-		{
-			if (Currency == toCurrency)
-				return this;
-			else
-				if (AllowImplicitConversion)
-					return this.ConvertTo(toCurrency);
-				else
-					throw new InvalidOperationException("Money type mismatch");
 		}
 
         #endregion

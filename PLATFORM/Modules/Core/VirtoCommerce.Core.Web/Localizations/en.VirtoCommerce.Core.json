@@ -53,7 +53,10 @@
             "exchange-rate": "Exchange rate",
             "symbol": "Symbol",
             "custom-formatting": "Currency custom formatting"
-        }     
+        },
+        "placeholders": {
+            "symbol": "Enter symbol or leave empty for culture default"
+        }
       },
       "fulfillment-center-contact": {
         "labels": {

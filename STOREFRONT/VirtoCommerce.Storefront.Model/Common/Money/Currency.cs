@@ -6,22 +6,18 @@ namespace VirtoCommerce.Storefront.Model.Common
 {
     public class Currency
     {
-      
         public Currency(Language language, string code, string name, string symbol, decimal exchangeRate)
             : this(language, code)
         {
-            EnglishName = name;
-            Symbol = symbol;
             ExchangeRate = exchangeRate;
-            if (NumberFormat == null)
+      
+            if (!String.IsNullOrEmpty(name))
             {
-                NumberFormat = NumberFormatInfo.InvariantInfo.Clone() as NumberFormatInfo;
-                //TODO: move to currency configuration
-                NumberFormat.CurrencyPositivePattern = 3; //n $
-                NumberFormat.CurrencyNegativePattern = 8; //-n $
+                EnglishName = name;
             }
-            if(!String.IsNullOrEmpty(symbol))
+            if (!String.IsNullOrEmpty(symbol))
             {
+                Symbol = symbol;
                 NumberFormat.CurrencySymbol = symbol;
             }
         }
@@ -29,16 +25,19 @@ namespace VirtoCommerce.Storefront.Model.Common
         public Currency(Language language, string code)
         {
             Code = code;
+            ExchangeRate = 1;
             if (!language.IsInvariant)
             {
                 var cultureInfo = CultureInfo.GetCultureInfo(language.CultureName);
-                if (cultureInfo != null)
-                {
-                    NumberFormat = cultureInfo.NumberFormat.Clone() as NumberFormatInfo;
-                    var region = new RegionInfo(cultureInfo.LCID);
-                    Symbol = region.CurrencySymbol;
-                    EnglishName = region.CurrencyEnglishName;
-                }
+                NumberFormat = cultureInfo.NumberFormat.Clone() as NumberFormatInfo;
+                var region = new RegionInfo(cultureInfo.LCID);
+                EnglishName = region.CurrencyEnglishName;
+                Symbol = CurrencySymbolFromCodeISO(code) ?? "N/A";
+                NumberFormat.CurrencySymbol = Symbol;
+            }
+            else
+            {
+                NumberFormat = CultureInfo.InvariantCulture.NumberFormat.Clone() as NumberFormatInfo;
             }
         }
 
@@ -58,6 +57,17 @@ namespace VirtoCommerce.Storefront.Model.Common
         /// </summary>
         public string CustomFormatting { get; set; }
 
+
+        private static string CurrencySymbolFromCodeISO(string isoCode)
+        {
+            foreach (CultureInfo ci in CultureInfo.GetCultures(CultureTypes.SpecificCultures))
+            {
+                RegionInfo ri = new RegionInfo(ci.LCID);
+                if (ri.ISOCurrencySymbol == isoCode)
+                    return ri.CurrencySymbol;
+            }
+            return null;
+        }
 
         public static bool operator ==(Currency left, Currency right)
         {

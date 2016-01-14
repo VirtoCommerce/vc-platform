@@ -22,11 +22,10 @@ namespace VirtoCommerce.Storefront.Converters
             {
                 retVal.Languages = storeDto.Languages.Select(x => new Language(x)).ToList();
             }
-  
-            retVal.Currencies.Add(new Currency(Language.InvariantLanguage, storeDto.DefaultCurrency));
+
             if (storeDto.Currencies != null)
             {
-                retVal.Currencies.AddRange(storeDto.Currencies.Select(x => new Currency(Language.InvariantLanguage, x))); 
+                retVal.Currencies.AddRange(storeDto.Currencies.Select(x => new Currency(Language.InvariantLanguage, x)));
             }
             retVal.DefaultCurrency = retVal.Currencies.FirstOrDefault(x => x.Equals(storeDto.DefaultCurrency));
 
