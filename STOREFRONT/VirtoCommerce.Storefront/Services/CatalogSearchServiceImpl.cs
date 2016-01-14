@@ -36,31 +36,34 @@ namespace VirtoCommerce.Storefront.Services
             _promotionEvaluator = promotionEvaluator;
         }
 
-        public async Task<Product> GetProductAsync(string id, ItemResponseGroup responseGroup = ItemResponseGroup.ItemInfo)
+        public async Task<Product[]> GetProductsAsync(string[] ids, ItemResponseGroup responseGroup = ItemResponseGroup.ItemInfo)
         {
-            var item = (await _catalogModuleApi.CatalogModuleProductsGetProductByIdAsync(id)).ToWebModel(_workContext.CurrentLanguage, _workContext.CurrentCurrency);
+            var retVal = (await _catalogModuleApi.CatalogModuleProductsGetProductByIdsAsync(ids.ToList())).Select(x=>x.ToWebModel(_workContext.CurrentLanguage, _workContext.CurrentCurrency)).ToArray();
 
-            var allProducts = new[] { item }.Concat(item.Variations).ToArray();
+            var allProducts = retVal.Concat(retVal.SelectMany(x => x.Variations)).ToArray();
 
-            var taskList = new List<Task>();
-
-            if ((responseGroup | ItemResponseGroup.ItemWithInventories) == responseGroup)
+            if (allProducts != null && allProducts.Any())
             {
-                taskList.Add(Task.Factory.StartNew(() => LoadProductsInventories(allProducts)));
-            }
+                var taskList = new List<Task>();
 
-            if ((responseGroup | ItemResponseGroup.ItemWithPrices) == responseGroup)
-            {
-                await _pricingService.EvaluateProductPricesAsync(allProducts);
-                if ((responseGroup | ItemResponseGroup.ItemWithDiscounts) == responseGroup)
+                if ((responseGroup | ItemResponseGroup.ItemWithInventories) == responseGroup)
                 {
-                    await LoadProductsDiscountsAsync(allProducts);
+                    taskList.Add(Task.Factory.StartNew(() => LoadProductsInventories(allProducts)));
                 }
+
+                if ((responseGroup | ItemResponseGroup.ItemWithPrices) == responseGroup)
+                {
+                    await _pricingService.EvaluateProductPricesAsync(allProducts);
+                    if ((responseGroup | ItemResponseGroup.ItemWithDiscounts) == responseGroup)
+                    {
+                        await LoadProductsDiscountsAsync(allProducts);
+                    }
+                }
+
+                Task.WaitAll(taskList.ToArray());
             }
 
-            Task.WaitAll(taskList.ToArray());
-
-            return item;
+            return retVal;
         }
 
         public async Task<CatalogSearchResult> SearchAsync(CatalogSearchCriteria criteria)

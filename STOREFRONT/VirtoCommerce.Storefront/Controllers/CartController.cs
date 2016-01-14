@@ -60,10 +60,10 @@ namespace VirtoCommerce.Storefront.Controllers
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
 
-            var product = await _catalogService.GetProductAsync(id, Model.Catalog.ItemResponseGroup.ItemLarge);
-            if (product != null)
+            var products = await _catalogService.GetProductsAsync(new string[] { id }, Model.Catalog.ItemResponseGroup.ItemLarge);
+            if (products != null && products.Any())
             {
-                await _cartBuilder.AddItemAsync(product, quantity);
+                await _cartBuilder.AddItemAsync(products.First(), quantity);
                 await _cartBuilder.SaveAsync();
             }
 

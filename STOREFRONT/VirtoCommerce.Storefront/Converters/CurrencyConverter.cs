@@ -13,6 +13,7 @@ namespace VirtoCommerce.Storefront.Converters
         public static Currency ToWebModel(this VirtoCommerceDomainCommerceModelCurrency currency, Language language)
         {
             var retVal = new Currency(language, currency.Code, currency.Name, currency.Symbol, (decimal)currency.ExchangeRate.Value);
+            retVal.CustomFormatting = currency.CustomFormatting;
             return retVal;
         }
     }

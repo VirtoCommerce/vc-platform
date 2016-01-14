@@ -6,12 +6,7 @@ namespace VirtoCommerce.Storefront.Model.Common
 {
     public class Currency
     {
-        public string Code { get; set; }
-        public NumberFormatInfo NumberFormat { get; set; }
-        public string Symbol { get; set; }
-        public string EnglishName { get; set; }
-        public decimal ExchangeRate { get; set; }
-
+      
         public Currency(Language language, string code, string name, string symbol, decimal exchangeRate)
             : this(language, code)
         {
@@ -46,6 +41,23 @@ namespace VirtoCommerce.Storefront.Model.Common
                 }
             }
         }
+
+        /// <summary>
+        /// Currency code may be used ISO 4217
+        /// </summary>
+        public string Code { get; set; }
+        public NumberFormatInfo NumberFormat { get; set; }
+        public string Symbol { get; set; }
+        public string EnglishName { get; set; }
+        /// <summary>
+        /// Exchnage rate with primary currency
+        /// </summary>
+        public decimal ExchangeRate { get; set; }
+        /// <summary>
+        /// https://msdn.microsoft.com/en-us/library/dwhawy9k%28v=vs.110%29.aspx?f=255&MSPPError=-2147217396
+        /// </summary>
+        public string CustomFormatting { get; set; }
+
 
         public static bool operator ==(Currency left, Currency right)
         {

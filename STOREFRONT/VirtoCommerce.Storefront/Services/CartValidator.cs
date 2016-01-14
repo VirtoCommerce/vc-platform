@@ -35,42 +35,44 @@ namespace VirtoCommerce.Storefront.Services
 
         private async Task ValidateItemsAsync(ShoppingCart cart)
         {
-            var productIds = cart.Items.Select(i => i.ProductId);
-            foreach (var productId in productIds)
+            var productIds = cart.Items.Select(i => i.ProductId).ToArray();
+            var products = await _catalogService.GetProductsAsync(productIds, ItemResponseGroup.ItemLarge);
+            foreach (var lineItem in cart.Items)
             {
-                var lineItem = cart.Items.FirstOrDefault(i => i.ProductId == productId);
-                lineItem.ValidationErrors.Clear();
+                var product = products.FirstOrDefault(x => x.Id == lineItem.ProductId);
 
-                var product = await _catalogService.GetProductAsync(lineItem.ProductId, ItemResponseGroup.ItemLarge);
-                if (product == null || product != null && (!product.IsActive || !product.IsBuyable))
+                lineItem.ValidationErrors.Clear();
+                if (product == null || (product != null && (!product.IsActive || !product.IsBuyable)))
                 {
                     lineItem.ValidationErrors.Add(new ProductUnavailableError());
                 }
-                if (product.TrackInventory && product.Inventory != null)
+                else if (product != null)
                 {
-                    var availableQuantity = product.Inventory.InStockQuantity;
-                    if (product.Inventory.ReservedQuantity.HasValue)
+                    if (product.TrackInventory && product.Inventory != null)
                     {
-                        availableQuantity -= product.Inventory.ReservedQuantity.Value;
+                        var availableQuantity = product.Inventory.InStockQuantity;
+                        if (product.Inventory.ReservedQuantity.HasValue)
+                        {
+                            availableQuantity -= product.Inventory.ReservedQuantity.Value;
+                        }
+                        if (availableQuantity.HasValue && lineItem.Quantity > availableQuantity.Value)
+                        {
+                            lineItem.ValidationErrors.Add(new ProductQuantityError(availableQuantity.Value));
+                        }
                     }
-                    if (availableQuantity.HasValue && lineItem.Quantity > availableQuantity.Value)
+
+                    if (lineItem.PlacedPrice != product.Price.ActualPrice)
                     {
-                        lineItem.ValidationErrors.Add(new ProductQuantityError(availableQuantity.Value));
+                        lineItem.ValidationErrors.Add(new ProductPriceError(product.Price.ActualPrice));
                     }
-                }
-                if (lineItem.PlacedPrice.Amount != product.Price.ActualPrice.Amount)
-                {
-                    lineItem.ValidationErrors.Add(new ProductPriceError(product.Price.ActualPrice));
                 }
             }
         }
 
         private async Task ValidateShipmentsAsync(ShoppingCart cart)
         {
-            var shipmentIds = cart.Shipments.Select(s => s.Id);
-            foreach (var shipmentId in shipmentIds)
+            foreach (var shipment in cart.Shipments)
             {
-                var shipment = cart.Shipments.FirstOrDefault(s => s.Id == shipmentId);
                 shipment.ValidationErrors.Clear();
 
                 var availableShippingMethods = await _cartApi.CartModuleGetShipmentMethodsAsync(_workContext.CurrentCart.Id);
@@ -82,7 +84,7 @@ namespace VirtoCommerce.Storefront.Services
                 if (existingShippingMethod != null)
                 {
                     var shippingMethod = existingShippingMethod.ToWebModel(_workContext.AllCurrencies, _workContext.CurrentLanguage);
-                    if (shippingMethod.Price.Amount != shipment.ShippingPrice.Amount)
+                    if (shippingMethod.Price != shipment.ShippingPrice)
                     {
                         shipment.ValidationErrors.Add(new ShippingPriceError(shippingMethod.Price));
                     }

@@ -30,7 +30,7 @@ namespace VirtoCommerce.Storefront.Controllers
         [HttpGet]
         public async Task<ActionResult> ProductDetails(string productId)
         {
-            var product = await _catalogSearchService.GetProductAsync(productId, Model.Catalog.ItemResponseGroup.ItemInfo | Model.Catalog.ItemResponseGroup.ItemWithPrices);
+            var product = (await _catalogSearchService.GetProductsAsync(new[] { productId }, Model.Catalog.ItemResponseGroup.ItemInfo | Model.Catalog.ItemResponseGroup.ItemWithPrices)).FirstOrDefault();
             WorkContext.CurrentProduct = product;
 
             WorkContext.CurrentCatalogSearchCriteria.CategoryId = product.CategoryId;
@@ -49,7 +49,7 @@ namespace VirtoCommerce.Storefront.Controllers
         [OutputCache(NoStore = true, Duration = 0, VaryByParam = "None")]
         public async Task<ActionResult> ProductDetailsJson(string productId)
         {
-            base.WorkContext.CurrentProduct = await _catalogSearchService.GetProductAsync(productId, Model.Catalog.ItemResponseGroup.ItemLarge);
+            base.WorkContext.CurrentProduct = (await _catalogSearchService.GetProductsAsync(new [] { productId }, Model.Catalog.ItemResponseGroup.ItemLarge)).FirstOrDefault();
             return Json(base.WorkContext.CurrentProduct, JsonRequestBehavior.AllowGet);
         }
     }

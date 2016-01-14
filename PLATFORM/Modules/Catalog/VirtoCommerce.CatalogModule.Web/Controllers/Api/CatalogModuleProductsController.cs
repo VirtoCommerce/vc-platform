@@ -14,6 +14,8 @@ using webModel = VirtoCommerce.CatalogModule.Web.Model;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Domain.Commerce.Model;
 using VirtoCommerce.CatalogModule.Web.Security;
+using System.Web.Http.ModelBinding;
+using VirtoCommerce.CatalogModule.Web.Binders;
 
 namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 {
@@ -70,7 +72,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         [HttpGet]
         [ResponseType(typeof(webModel.Product[]))]
         [Route("")]
-        public IHttpActionResult GetProductByIds([FromUri] string[] ids, [FromUri] coreModel.ItemResponseGroup respGroup = coreModel.ItemResponseGroup.ItemLarge)
+        public IHttpActionResult GetProductByIds([ModelBinder(typeof(IdsStringArrayBinder))] string[] ids, [FromUri] coreModel.ItemResponseGroup respGroup = coreModel.ItemResponseGroup.ItemLarge)
         {
             var items = _itemsService.GetByIds(ids, respGroup);
             if (items == null)

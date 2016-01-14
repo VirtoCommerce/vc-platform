@@ -317,22 +317,22 @@ namespace VirtoCommerce.Storefront.Model.Common
 
 		#region Functions
 
-		public string ToString(bool genericFormatter)
+		public override string ToString()
 		{
-			return ToString("C", genericFormatter);
-		}
-
-		public string ToString(string format = "C", bool genericFormatter = false)
-		{
-			if (genericFormatter)
-			{
-				var formatter = (NumberFormatInfo)Currency.NumberFormat.Clone();
-				formatter.CurrencySymbol = this.Currency.Symbol;
-				return Amount.ToString(format, formatter);
-			}
-			else
-				return Amount.ToString(format, Currency.NumberFormat);
-		}
+            string retVal = Amount.ToString();
+            if (Currency != null)
+            {
+                if (!String.IsNullOrEmpty(Currency.CustomFormatting))
+                {
+                    retVal = Amount.ToString(Currency.CustomFormatting);
+                }
+                else if(Currency.NumberFormat != null)
+                {
+                    retVal = Amount.ToString("C", Currency.NumberFormat);
+                }
+            }
+            return retVal;
+        }
 
 		/// <summary>
 		/// Evenly distributes the amount over n parts, resolving remainders that occur due to rounding 
