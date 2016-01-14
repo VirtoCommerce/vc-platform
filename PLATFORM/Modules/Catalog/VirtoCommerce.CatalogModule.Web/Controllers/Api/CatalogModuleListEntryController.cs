@@ -5,7 +5,6 @@ using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
 using System.Web.Http.ModelBinding;
-using VirtoCommerce.CatalogModule.Web.Binders;
 using VirtoCommerce.CatalogModule.Web.Converters;
 using VirtoCommerce.CatalogModule.Web.Security;
 using VirtoCommerce.Domain.Catalog.Services;
@@ -40,22 +39,27 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         /// <summary>
         /// Searches for the items by complex criteria.
         /// </summary>
-        /// <param name="criteria">The search criteria.</param>
+        /// <param name="searchCriteria">The search criteria.</param>
         /// <returns></returns>
         [HttpGet]
         [Route("")]
         [ResponseType(typeof(webModel.ListEntrySearchResult))]
-        public IHttpActionResult ListItemsSearch([ModelBinder(typeof(ListEntrySearchCriteriaBinder))]webModel.ListEntrySearchCriteria criteria)
+        public IHttpActionResult ListItemsSearch([FromUri]coreModel.SearchCriteria searchCriteria)
         {
-            var searchCriteria = criteria.ToCoreModel();
             ApplyRestrictionsForCurrentUser(searchCriteria);
 
+            searchCriteria.WithHidden = true;
+            //Need search in children categories if user specify keyword
+            if(!string.IsNullOrEmpty(searchCriteria.Keyword))
+            {
+                searchCriteria.SearchInChildren = true;
+            }
             var serviceResult = _searchService.Search(searchCriteria);
 
             var retVal = new webModel.ListEntrySearchResult();
 
-            var start = criteria.Start;
-            var count = criteria.Count;
+            var start = searchCriteria.Skip;
+            var count = searchCriteria.Take;
 
             // all categories
             var categories = serviceResult.Categories.Select(x => new webModel.ListEntryCategory(x.ToWebModel(_blobUrlResolver))).ToList();

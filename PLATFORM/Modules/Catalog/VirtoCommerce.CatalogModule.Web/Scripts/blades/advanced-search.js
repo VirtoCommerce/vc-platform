@@ -9,7 +9,7 @@
         //Set filters
         prepareFilter();
 
-        var searchResult = listEntries.listitemssearch({ category: $scope.filter.categoryId, catalog: $scope.filter.catalogId, q: $scope.filter.searchKeyword, propertyValues: $scope.filter.propValues, respGroup: 'withCatalogs, withCategories, withProperties', start: 0, count: 0 }, function () {
+        var searchResult = listEntries.listitemssearch({ categoryId: $scope.filter.categoryId, catalogId: $scope.filter.catalogId, keyword: $scope.filter.searchKeyword, propertyValues: $scope.filter.propValues, responseGroup: 'withCatalogs, withCategories, withProperties', skip: 0, take: 0 }, function () {
             $scope.blade.isLoading = false;
 
             // adding root element

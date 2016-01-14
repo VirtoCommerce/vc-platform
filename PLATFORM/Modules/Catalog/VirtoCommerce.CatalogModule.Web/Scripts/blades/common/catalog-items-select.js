@@ -29,13 +29,13 @@ function ($scope, catalogs, listEntries, bladeNavigationService, uiGridConstants
         if (!$scope.isCatalogSelectMode()) {
             listEntries.listitemssearch(
                 {
-                    catalog: blade.catalogId,
-                    category: blade.categoryId,
-                    q: $scope.filter.searchKeyword,
+                    catalogId: blade.catalogId,
+                    categoryId: blade.categoryId,
+                    keyword: $scope.filter.searchKeyword,
                     // propertyValues: ,
-                    respGroup: 'withCategories, withProducts',
-                    start: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
-                    count: $scope.pageSettings.itemsPerPageCount
+                    responseGroup: 'withCategories, withProducts',
+                    skip: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
+                    take: $scope.pageSettings.itemsPerPageCount
                 },
             function (data, headers) {
                 blade.isLoading = false;

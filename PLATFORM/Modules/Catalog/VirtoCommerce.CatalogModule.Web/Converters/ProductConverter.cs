@@ -62,6 +62,23 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
             {
                 retVal.Associations = product.Associations.Select(x => x.ToWebModel(blobUrlResolver)).ToList();
             }
+            //Init parents
+            if(product.Category != null)
+            {
+                retVal.Parents = new List<webModel.Category>();
+                if(product.Category.Parents != null)
+                {
+                    retVal.Parents.AddRange(product.Category.Parents.Select(x => x.ToWebModel()));
+                }
+                retVal.Parents.Add(product.Category.ToWebModel());
+                foreach(var parent in retVal.Parents)
+                {
+                    //Reset some props to decrease size of resulting json
+                    parent.Catalog = null;
+                    parent.Properties = null;
+                }
+            }
+
             retVal.TitularItemId = product.MainProductId;
 
             retVal.Properties = new List<webModel.Property>();
