@@ -62,6 +62,13 @@ namespace VirtoCommerce.Client.Model
         public string Symbol { get; set; }
   
         
+        /// <summary>
+        /// Gets or Sets CustomFormatting
+        /// </summary>
+        [DataMember(Name="customFormatting", EmitDefaultValue=false)]
+        public string CustomFormatting { get; set; }
+  
+        
   
         /// <summary>
         /// Returns the string presentation of the object
@@ -76,6 +83,7 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  IsPrimary: ").Append(IsPrimary).Append("\n");
             sb.Append("  ExchangeRate: ").Append(ExchangeRate).Append("\n");
             sb.Append("  Symbol: ").Append(Symbol).Append("\n");
+            sb.Append("  CustomFormatting: ").Append(CustomFormatting).Append("\n");
             
             sb.Append("}\n");
             return sb.ToString();
@@ -137,6 +145,11 @@ namespace VirtoCommerce.Client.Model
                     this.Symbol == other.Symbol ||
                     this.Symbol != null &&
                     this.Symbol.Equals(other.Symbol)
+                ) && 
+                (
+                    this.CustomFormatting == other.CustomFormatting ||
+                    this.CustomFormatting != null &&
+                    this.CustomFormatting.Equals(other.CustomFormatting)
                 );
         }
 
@@ -166,6 +179,9 @@ namespace VirtoCommerce.Client.Model
                 
                 if (this.Symbol != null)
                     hash = hash * 57 + this.Symbol.GetHashCode();
+                
+                if (this.CustomFormatting != null)
+                    hash = hash * 57 + this.CustomFormatting.GetHashCode();
                 
                 return hash;
             }

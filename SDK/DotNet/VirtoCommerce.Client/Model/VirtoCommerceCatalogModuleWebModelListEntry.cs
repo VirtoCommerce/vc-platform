@@ -82,6 +82,14 @@ namespace VirtoCommerce.Client.Model
         public List<VirtoCommerceCatalogModuleWebModelListEntryLink> Links { get; set; }
   
         
+        /// <summary>
+        /// All entry parents (id : name)
+        /// </summary>
+        /// <value>All entry parents (id : name)</value>
+        [DataMember(Name="parents", EmitDefaultValue=false)]
+        public Dictionary<string, string> Parents { get; set; }
+  
+        
   
         /// <summary>
         /// Returns the string presentation of the object
@@ -98,6 +106,7 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Code: ").Append(Code).Append("\n");
             sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  Links: ").Append(Links).Append("\n");
+            sb.Append("  Parents: ").Append(Parents).Append("\n");
             
             sb.Append("}\n");
             return sb.ToString();
@@ -169,6 +178,11 @@ namespace VirtoCommerce.Client.Model
                     this.Links == other.Links ||
                     this.Links != null &&
                     this.Links.SequenceEqual(other.Links)
+                ) && 
+                (
+                    this.Parents == other.Parents ||
+                    this.Parents != null &&
+                    this.Parents.SequenceEqual(other.Parents)
                 );
         }
 
@@ -204,6 +218,9 @@ namespace VirtoCommerce.Client.Model
                 
                 if (this.Links != null)
                     hash = hash * 57 + this.Links.GetHashCode();
+                
+                if (this.Parents != null)
+                    hash = hash * 57 + this.Parents.GetHashCode();
                 
                 return hash;
             }
