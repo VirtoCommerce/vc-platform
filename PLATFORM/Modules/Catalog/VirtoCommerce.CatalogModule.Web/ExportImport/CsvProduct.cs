@@ -30,7 +30,7 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 			EditorialReview = new EditorialReview();
 			Reviews = new List<EditorialReview>();
 			Reviews.Add(EditorialReview);
-			SeoInfo = new SeoInfo();
+			SeoInfo = new SeoInfo() { ObjectType = typeof(CatalogProduct).Name };
 			SeoInfos = new List<SeoInfo>();
 			SeoInfos.Add(SeoInfo);
 		}
