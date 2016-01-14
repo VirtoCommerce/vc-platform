@@ -19,10 +19,11 @@ namespace VirtoCommerce.CatalogModule.Web.Model
 			Name = product.Name;
 			ProductType = product.ProductType;
 			IsActive = product.IsActive ?? true;
-            if(product.Category != null)
+            
+            if(product.Parents != null)
             {
-                Parents = product.Category.Parents ?? new Dictionary<string, string>();
-                Parents.Add(product.Category.Id, product.Category.Name);
+                Path = product.Parents.Select(x => x.Name).ToArray();
+                Outline = product.Parents.Select(x => x.Id).ToArray();
             }
 			if (product.Links != null)
 			{

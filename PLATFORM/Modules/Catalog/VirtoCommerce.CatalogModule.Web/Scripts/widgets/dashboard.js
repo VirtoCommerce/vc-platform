@@ -18,7 +18,7 @@
         $state.go('workspace.catalog');
     };
 
-    listEntries.listitemssearch({ count: 0 }, function (data) {
+    listEntries.listitemssearch({ take: 0 }, function (data) {
         $scope.data.count = data.totalCount;
     },
     function (error) { });

@@ -23,8 +23,14 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 	
 			if(category.Parents != null)
 			{
-                //TODO: Relace Dictionary to something other because we should preserve order
-                retVal.Parents = category.Parents.ToDictionary(x => x.Id, x => x.Name);
+                retVal.Parents = new List<webModel.Category>();
+                foreach (var parent in category.Parents.Select(x => x.ToWebModel()))
+                {
+                    //Reset some props to decrease size of resulting json
+                    parent.Catalog = null;
+                    parent.Properties = null;
+                    retVal.Parents.Add(parent);
+                }
             }
 			//For virtual category links not needed
 			if (!category.Virtual && category.Links != null)

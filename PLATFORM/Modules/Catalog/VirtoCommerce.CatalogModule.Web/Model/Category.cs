@@ -68,8 +68,11 @@ namespace VirtoCommerce.CatalogModule.Web.Model
         /// </summary>
         public bool? IsActive { get; set; }
 
-        //TODO: Relace Dictionary to something other because we should preserve order
-        public Dictionary<string, string> Parents { get; set; }
+        /// <summary>
+        /// All parents categories
+        /// </summary>
+        public ICollection<Category> Parents { get; set; }
+     
         /// <summary>
         /// Gets or sets the children categories.
         /// </summary>

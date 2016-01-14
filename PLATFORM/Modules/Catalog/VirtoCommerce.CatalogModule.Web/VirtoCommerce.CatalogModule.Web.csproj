@@ -122,7 +122,6 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Binders\ListEntrySearchCriteriaBinder.cs" />
     <Compile Include="Controllers\Api\CatalogBaseController.cs" />
     <Compile Include="Controllers\Api\CatalogModuleCatalogsController.cs" />
     <Compile Include="Controllers\Api\CatalogModuleCategoriesController.cs" />
