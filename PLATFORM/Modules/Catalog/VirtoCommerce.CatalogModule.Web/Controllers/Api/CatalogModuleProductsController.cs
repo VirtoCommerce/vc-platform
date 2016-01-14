@@ -39,7 +39,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 
 
         /// <summary>
-        /// Gets item by id.
+        /// Gets product by id.
         /// </summary>
         /// <param name="id">Item id.</param>
         ///<param name="respGroup">Response group.</param>
@@ -62,12 +62,38 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             return Ok(retVal);
         }
 
-		/// <summary>
-		/// Gets the template for a new product (outside of category).
-		/// </summary>
-		/// <remarks>Use when need to create item belonging to catalog directly.</remarks>
-		/// <param name="catalogId">The catalog id.</param>
-		[HttpGet]
+        /// <summary>
+        /// Gets products by ids
+        /// </summary>
+        /// <param name="ids">Item ids</param>
+        ///<param name="respGroup">Response group.</param>
+        [HttpGet]
+        [ResponseType(typeof(webModel.Product[]))]
+        [Route("")]
+        public IHttpActionResult GetProductByIds([FromUri] string[] ids, [FromUri] coreModel.ItemResponseGroup respGroup = coreModel.ItemResponseGroup.ItemLarge)
+        {
+            var items = _itemsService.GetByIds(ids, respGroup);
+            if (items == null)
+            {
+                return NotFound();
+            }
+
+            base.CheckCurrentUserHasPermissionForObjects(CatalogPredefinedPermissions.Read, items);
+
+            var retVal = items.Select(x=>x.ToWebModel(_blobUrlResolver)).ToArray();
+            foreach(var product in retVal)
+            {
+                product.SecurityScopes = base.GetObjectPermissionScopeStrings(product);
+            }
+            return Ok(retVal);
+        }
+
+        /// <summary>
+        /// Gets the template for a new product (outside of category).
+        /// </summary>
+        /// <remarks>Use when need to create item belonging to catalog directly.</remarks>
+        /// <param name="catalogId">The catalog id.</param>
+        [HttpGet]
 		[ResponseType(typeof(webModel.Product))]
 		[Route("~/api/catalog/{catalogId}/products/getnew")]
 		public IHttpActionResult GetNewProductByCatalog(string catalogId)

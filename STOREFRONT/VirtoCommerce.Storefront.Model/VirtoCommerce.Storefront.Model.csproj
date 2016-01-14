@@ -80,6 +80,7 @@
     <Compile Include="Catalog\Term.cs" />
     <Compile Include="Catalog\TermExtensions.cs" />
     <Compile Include="Catalog\TierPrice.cs" />
+    <Compile Include="Common\AsyncLock.cs" />
     <Compile Include="Common\CacheManagerExtension.cs" />
     <Compile Include="Common\CollectionExtensions.cs" />
     <Compile Include="Common\DynamicPropertyExtension.cs" />
