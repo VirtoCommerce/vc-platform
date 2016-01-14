@@ -83,11 +83,19 @@ namespace VirtoCommerce.Client.Model
   
         
         /// <summary>
-        /// All entry parents (id : name)
+        /// All entry parents ids
         /// </summary>
-        /// <value>All entry parents (id : name)</value>
-        [DataMember(Name="parents", EmitDefaultValue=false)]
-        public Dictionary<string, string> Parents { get; set; }
+        /// <value>All entry parents ids</value>
+        [DataMember(Name="outline", EmitDefaultValue=false)]
+        public List<string> Outline { get; set; }
+  
+        
+        /// <summary>
+        /// All entry parents names
+        /// </summary>
+        /// <value>All entry parents names</value>
+        [DataMember(Name="path", EmitDefaultValue=false)]
+        public List<string> Path { get; set; }
   
         
   
@@ -106,7 +114,8 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Code: ").Append(Code).Append("\n");
             sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  Links: ").Append(Links).Append("\n");
-            sb.Append("  Parents: ").Append(Parents).Append("\n");
+            sb.Append("  Outline: ").Append(Outline).Append("\n");
+            sb.Append("  Path: ").Append(Path).Append("\n");
             
             sb.Append("}\n");
             return sb.ToString();
@@ -180,9 +189,14 @@ namespace VirtoCommerce.Client.Model
                     this.Links.SequenceEqual(other.Links)
                 ) && 
                 (
-                    this.Parents == other.Parents ||
-                    this.Parents != null &&
-                    this.Parents.SequenceEqual(other.Parents)
+                    this.Outline == other.Outline ||
+                    this.Outline != null &&
+                    this.Outline.SequenceEqual(other.Outline)
+                ) && 
+                (
+                    this.Path == other.Path ||
+                    this.Path != null &&
+                    this.Path.SequenceEqual(other.Path)
                 );
         }
 
@@ -219,8 +233,11 @@ namespace VirtoCommerce.Client.Model
                 if (this.Links != null)
                     hash = hash * 57 + this.Links.GetHashCode();
                 
-                if (this.Parents != null)
-                    hash = hash * 57 + this.Parents.GetHashCode();
+                if (this.Outline != null)
+                    hash = hash * 57 + this.Outline.GetHashCode();
+                
+                if (this.Path != null)
+                    hash = hash * 57 + this.Path.GetHashCode();
                 
                 return hash;
             }

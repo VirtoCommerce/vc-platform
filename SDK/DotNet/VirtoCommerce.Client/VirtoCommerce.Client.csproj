@@ -100,7 +100,6 @@
     <Compile Include="Model\VirtoCommerceCatalogModuleWebModelImage.cs" />
     <Compile Include="Model\VirtoCommerceCatalogModuleWebModelListEntry.cs" />
     <Compile Include="Model\VirtoCommerceCatalogModuleWebModelListEntryLink.cs" />
-    <Compile Include="Model\VirtoCommerceCatalogModuleWebModelListEntrySearchCriteria.cs" />
     <Compile Include="Model\VirtoCommerceCatalogModuleWebModelListEntrySearchResult.cs" />
     <Compile Include="Model\VirtoCommerceCatalogModuleWebModelMoveInfo.cs" />
     <Compile Include="Model\VirtoCommerceCatalogModuleWebModelProduct.cs" />

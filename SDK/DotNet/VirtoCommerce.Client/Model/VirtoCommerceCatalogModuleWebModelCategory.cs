@@ -106,10 +106,11 @@ namespace VirtoCommerce.Client.Model
   
         
         /// <summary>
-        /// Gets or Sets Parents
+        /// All parents categories
         /// </summary>
+        /// <value>All parents categories</value>
         [DataMember(Name="parents", EmitDefaultValue=false)]
-        public Dictionary<string, string> Parents { get; set; }
+        public List<VirtoCommerceCatalogModuleWebModelCategory> Parents { get; set; }
   
         
         /// <summary>
