@@ -5,6 +5,9 @@ using System.Web.Http.ModelBinding;
 
 namespace VirtoCommerce.CatalogModule.Web.Binders
 {
+    /// <summary>
+    /// Because Swagger generated API client passed arrays as joined string need parse query string by binder
+    /// </summary>
     public class IdsStringArrayBinder : IModelBinder
     {
         public bool BindModel(HttpActionContext actionContext, ModelBindingContext bindingContext)

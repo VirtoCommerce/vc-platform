@@ -69,6 +69,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         /// </summary>
         /// <param name="ids">Item ids</param>
         ///<param name="respGroup">Response group.</param>
+        //Because Swagger generated API client passed arrays as joined string need parse query string by binder
         [HttpGet]
         [ResponseType(typeof(webModel.Product[]))]
         [Route("")]
