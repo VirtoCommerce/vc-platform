@@ -3,16 +3,22 @@
     <div class="blade-inner">
         <div class="inner-block clearfix">
             <form class="form" name="formScope">
-                <div class="form-group" ng-init="setForm(formScope)" title="The currency code. Use 3 letter ISO 4217 code, if exists.">
+                <div class="form-group" ng-init="setForm(formScope)">
                     <label class="form-label">{{ 'core.blades.currency-detail.labels.code' | translate }}</label>
-                    <div class="form-input">
-                        <input ng-model="blade.currentEntity.code" required ng-disabled="!blade.isNew" />                        
+                    <div class="form-input __info">
+                        <input ng-model="blade.currentEntity.code" required ng-disabled="!blade.isNew" />
+                        <button class="btn" type="button">
+                            <i class="btn-ico fa fa-info" data-text="The currency code. Use 3 letter ISO 4217 code, if exists."></i>
+                        </button>
                     </div>
                 </div>
-                <div class="form-group" title="The name of the currency">
+                <div class="form-group">
                     <label class="form-label">{{ 'core.blades.currency-detail.labels.name' | translate }}</label>
-                    <div class="form-input">
-                        <input placeholder="Enter currency name" ng-model="blade.currentEntity.name" focus-on="" required />
+                    <div class="form-input __info">
+                        <input placeholder="The currency name" ng-model="blade.currentEntity.name" focus-on="" required />
+                        <button class="btn" type="button">
+                            <i class="btn-ico fa fa-info" data-text="The name of the currency"></i>
+                        </button>
                     </div>
                 </div>
                 <div class="form-group">
@@ -24,25 +30,52 @@
                         </label>
                     </div>
                 </div>
-                <div class="form-group" title="The exchange rate against the primary exchange rate currency">
+                <div class="form-group">
                     <label class="form-label">{{ 'core.blades.currency-detail.labels.exchange-rate' | translate }}</label>
-                    <div class="form-input __number">
+                    <div class="form-input __number __info">
                         <input placeholder="Enter exchange rate against the primary currency" smart-float required num-type="float" fraction="4" ng-model="blade.currentEntity.exchangeRate" min="0.0001">
+                        <button class="btn" type="button">
+                            <i class="btn-ico fa fa-info" data-text="The exchange rate against the primary exchange rate currency"></i>
+                        </button>
                     </div>
                 </div>
-                <div class="form-group" title="The short currency symbol">
+                <div class="form-group">
                     <label class="form-label">{{ 'core.blades.currency-detail.labels.symbol' | translate }}</label>
-                    <div class="form-input">
+                    <div class="form-input __info">
                         <input placeholder="Enter symbol or leave empty for culture default" ng-model="blade.currentEntity.symbol" />
+                        <button class="btn" type="button">
+                            <i class="btn-ico fa fa-info" data-text="Short currency symbol"></i>
+                        </button>
                     </div>
                 </div>
-                <div class="form-group" title="Custom fromatting to be applied to the currency value">
+                <div class="form-group">
                     <label class="form-label">{{ 'core.blades.currency-detail.labels.custom-formatting' | translate }}</label>
-                    <div class="form-input __number">
+                    <div class="form-input __info">
                         <input placeholder="0,0.000" ng-model="blade.currentEntity.customFormatting">
+                        <button class="btn" type="button">
+                            <i class="btn-ico fa fa-info" data-text="Custom formatting to be applied to the currency value"></i>
+                        </button>
                     </div>
                 </div>
             </form>
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    $('.form-input.__info .btn').on('click', function () {
+        var self = $(this),
+            posLeft = self.offset().left + 60,
+            posTop = self.offset().top,
+            toolText = self.find('.btn-ico').data('text');
+
+        $('.tooltip').remove();
+
+        $('body').prepend('<div class="tooltip" style="left: ' + posLeft + 'px; top: ' + posTop + 'px;"><div class="tooltip-cnt">' + toolText + '</div></div>');
+    });
+
+    $(document).on("click", function (event) {
+        if (!$('.tooltip, .btn').is(event.target) && !$('.tooltip, .btn').has(event.target).length) {
+            $('.tooltip').remove();
+        }
+    });
+</script>
