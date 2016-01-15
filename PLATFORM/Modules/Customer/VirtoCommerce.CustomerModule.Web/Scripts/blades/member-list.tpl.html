@@ -51,7 +51,7 @@
 <script type="text/ng-template" id="member-list-icon.cell.html">
     <div class="ui-grid-cell-contents">
         <div class="product-img" ng-attr-title="{{COL_FIELD}}">
-            <i class="table-ico fa" ng-class="'{{COL_FIELD}}' === 'Organization' ? 'fa-university' : 'fa-user'"></i>
+            <i class="table-ico fa" ng-class="COL_FIELD === 'Organization' ? 'fa-university' : 'fa-user'"></i>
         </div>
     </div>
 </script>
