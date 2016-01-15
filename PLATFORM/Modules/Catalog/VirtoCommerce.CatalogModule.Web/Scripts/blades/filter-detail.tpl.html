@@ -1,0 +1,31 @@
+﻿<div class="blade-static __bottom" ng-include="'$(Platform)/Scripts/common/templates/create.tpl.html'" ng-if="blade.isNew"></div>
+<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block clearfix">
+            <form class="form" name="formScope">
+                <div class="form-group" ng-init="setForm(formScope)">
+                    <label class="form-label">{{ 'catalog.blades.filter-detail.labels.property1' | translate }}</label>
+                    <div class="form-input">
+                        <input ng-model="blade.currentEntity.property1" />
+                    </div>
+                </div>                
+                <div class="form-group">
+                    <label class="form-label">{{ 'catalog.blades.filter-detail.labels.has-variations' | translate }}</label>
+                    <div class="form-input">
+                        <label class="form-label __switch">
+                            <input type="checkbox" ng-model="blade.currentEntity.hasVariation" />
+                            <span class="switch"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">{{ 'catalog.blades.filter-detail.labels.name' | translate }}</label>
+                    <div class="form-input">
+                        <!--focus-on=""-->
+                        <input ng-model="blade.currentEntity.name" required />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
