@@ -79,11 +79,25 @@ namespace VirtoCommerce.Storefront
             //https://github.com/MichaCo/CacheManager/issues/32
             cacheManager.OnClearRegion += (sender, region) =>
             {
-                CacheManagerOutputCacheProvider.Cache.ClearRegion(region.Region);
+                try
+                {
+                    CacheManagerOutputCacheProvider.Cache.ClearRegion(region.Region);
+                }
+                catch (Exception)
+                {
+
+                }
             };
             cacheManager.OnClear += (sender, args) =>
             {
-                CacheManagerOutputCacheProvider.Cache.Clear();
+                try
+                {
+                    CacheManagerOutputCacheProvider.Cache.Clear();
+                }
+                catch(Exception)
+                {
+
+                }
             };
 
             // Workaround for old storefront base URL: remove /api/ suffix since it is already included in every resource address in VirtoCommerce.Client library.
