@@ -10,15 +10,25 @@ namespace VirtoCommerce.Storefront.Model.Common
     [CLSCompliant(false)]
     public static class CacheManagerExtension
     {
+        private static object _lockObject = new object();
+
+
         public static T Get<T>(this ICacheManager<object> cacheManager, string cacheKey, string region, Func<T> getValueFunction)
         {
             var result = cacheManager.Get<T>(cacheKey, region);
             if (result == null)
             {
-                result = getValueFunction();
-                if (result != null)
+                lock (_lockObject)
                 {
-                    cacheManager.Put(cacheKey, result, region);
+                    result = cacheManager.Get<T>(cacheKey, region);
+                    if (result == null)
+                    {
+                        result = getValueFunction();
+                        if (result != null)
+                        {
+                            cacheManager.Put(cacheKey, result, region);
+                        }
+                    }
                 }
             }
             return result;
@@ -26,13 +36,22 @@ namespace VirtoCommerce.Storefront.Model.Common
 
         public static async Task<T> GetAsync<T>(this ICacheManager<object> cacheManager, string cacheKey, string region, Func<Task<T>> getValueFunction)
         {
+            //http://sanjeev.dwivedi.net/?p=292
+            var asyncLockObject = new AsyncLock();
             var result = cacheManager.Get<T>(cacheKey, region);
             if (result == null)
             {
-                result = await getValueFunction();
-                if (result != null)
+                using (var lockObject = asyncLockObject.LockAsync())
                 {
-                    cacheManager.Put(cacheKey, result, region);
+                    result = cacheManager.Get<T>(cacheKey, region);
+                    if (result == null)
+                    {
+                        result = await getValueFunction();
+                        if (result != null)
+                        {
+                            cacheManager.Put(cacheKey, result, region);
+                        }
+                    }
                 }
             }
             return result;
@@ -40,12 +59,25 @@ namespace VirtoCommerce.Storefront.Model.Common
 
         public static async Task<T> GetAsync<T>(this ICacheManager<object> cacheManager, string cacheKey, string region, TimeSpan expiration, Func<Task<T>> getValueFunction)
         {
+
             var result = cacheManager.Get<T>(cacheKey, region);
-            if(result == null)
+            if (result == null)
             {
-                result = await getValueFunction(); 
-                var cacheItem = new CacheItem<object>(cacheKey, region, result, ExpirationMode.Absolute, expiration);
-                cacheManager.Add(cacheItem);
+                //http://sanjeev.dwivedi.net/?p=292
+                var asyncLockObject = new AsyncLock();
+                using (var lockObject = asyncLockObject.LockAsync())
+                {
+                    result = cacheManager.Get<T>(cacheKey, region);
+                    if (result == null)
+                    {
+                        result = await getValueFunction();
+                        if (result != null)
+                        {
+                            var cacheItem = new CacheItem<object>(cacheKey, region, result, ExpirationMode.Absolute, expiration);
+                            cacheManager.Add(cacheItem);
+                        }
+                    }
+                }
             }
             return result;
         }

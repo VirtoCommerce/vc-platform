@@ -12,8 +12,7 @@ namespace VirtoCommerce.QuoteModule.Web.Model
 {
 	public class QuoteItem : AuditableEntity
 	{
-        [JsonConverter(typeof(StringEnumConverter))]
-        public CurrencyCodes Currency { get; set; }
+        public string Currency { get; set; }
 
         /// <summary>
         /// Base catalog price

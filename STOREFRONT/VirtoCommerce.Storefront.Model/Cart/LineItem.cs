@@ -1,25 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using VirtoCommerce.Storefront.Model.Cart.Services;
+using VirtoCommerce.Storefront.Model.Cart.ValidationErrors;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Marketing;
 
 namespace VirtoCommerce.Storefront.Model.Cart
 {
-    public class LineItem : Entity
+    public class LineItem : Entity, IDiscountable, IValidatable
     {
         public LineItem(Currency currency, Language language)
         {
             Currency = currency;
             LanguageCode = language.CultureName;
-
-            DiscountTotal = new Money(currency.Code);
-            TaxTotal = new Money(currency.Code);
+            ListPrice = new Money(currency);
+            SalePrice = new Money(currency);
+            TaxTotal = new Money(currency);
 
             Discounts = new List<Discount>();
             TaxDetails = new List<TaxDetail>();
             DynamicProperties = new List<DynamicProperty>();
+            ValidationErrors = new List<ValidationError>();
         }
 
         /// <summary>
@@ -166,19 +169,39 @@ namespace VirtoCommerce.Storefront.Model.Cart
         public Money SalePrice { get; set; }
 
         /// <summary>
-        /// Gets or sets the value of line item actual price (include all types of discounts)
+        /// Gets the value of line item actual price (include all types of discounts)
         /// </summary>
-        public Money PlacedPrice { get; set; }
+        public Money PlacedPrice
+        {
+            get
+            {
+                return SalePrice - DiscountTotal;
+            }
+        }
 
         /// <summary>
-        /// Gets or sets the value of line item subtotal price (actual price * line item quantity)
+        /// Gets the value of line item subtotal price (actual price * line item quantity)
         /// </summary>
-        public Money ExtendedPrice { get; set; }
+        public Money ExtendedPrice
+        {
+            get
+            {
+                return PlacedPrice * Quantity;
+            }
+        }
 
         /// <summary>
-        /// Gets or sets the value of line item total discount amount
+        /// Gets the value of line item total discount amount
         /// </summary>
-        public Money DiscountTotal { get; set; }
+        public Money DiscountTotal
+        {
+            get
+            {
+                var discountTotal = Discounts.Sum(d => d.Amount.Amount);
+
+                return new Money(discountTotal, Currency);
+            }
+        }
 
         /// <summary>
         /// Gets or sets the value of line item total tax amount
@@ -210,9 +233,12 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// <value>Dynamic properties collections</value>
         public ICollection<DynamicProperty> DynamicProperties { get; set; }
 
-        public ICollection<Discount> Discounts { get; }
+        public ICollection<ValidationError> ValidationErrors { get; set; }
 
+        #region IDiscountable  Members
         public Currency Currency { get; }
+
+        public ICollection<Discount> Discounts { get; }
 
         public void ApplyRewards(IEnumerable<PromotionReward> rewards)
         {
@@ -226,13 +252,14 @@ namespace VirtoCommerce.Storefront.Model.Cart
 
             foreach (var reward in lineItemRewards)
             {
-                var discount = reward.ToDiscountModel(SalePrice.Amount, Currency);
+                var discount = reward.ToDiscountModel(SalePrice);
 
                 if (reward.IsValid)
                 {
                     Discounts.Add(discount);
                 }
             }
-        }
+        } 
+        #endregion
     }
 }

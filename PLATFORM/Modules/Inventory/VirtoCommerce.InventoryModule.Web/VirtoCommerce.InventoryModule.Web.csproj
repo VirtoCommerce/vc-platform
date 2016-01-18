@@ -132,6 +132,7 @@
     <None Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Binders\IdsStringArrayBinder.cs" />
     <Compile Include="Controllers\Api\InventoryModuleController.cs" />
     <Compile Include="Security\InventoryPredefinedPermissions.cs" />
     <Compile Include="Converters\FulfillmentCenterConverter.cs" />

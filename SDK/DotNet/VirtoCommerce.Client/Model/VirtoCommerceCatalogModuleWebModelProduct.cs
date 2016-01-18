@@ -106,6 +106,14 @@ namespace VirtoCommerce.Client.Model
   
         
         /// <summary>
+        /// All parents categories
+        /// </summary>
+        /// <value>All parents categories</value>
+        [DataMember(Name="parents", EmitDefaultValue=false)]
+        public List<VirtoCommerceCatalogModuleWebModelCategory> Parents { get; set; }
+  
+        
+        /// <summary>
         /// Gets or sets the date and time that this product was last indexed at.
         /// </summary>
         /// <value>Gets or sets the date and time that this product was last indexed at.</value>
@@ -379,6 +387,7 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  CategoryId: ").Append(CategoryId).Append("\n");
             sb.Append("  Category: ").Append(Category).Append("\n");
             sb.Append("  Outline: ").Append(Outline).Append("\n");
+            sb.Append("  Parents: ").Append(Parents).Append("\n");
             sb.Append("  IndexingDate: ").Append(IndexingDate).Append("\n");
             sb.Append("  TitularItemId: ").Append(TitularItemId).Append("\n");
             sb.Append("  IsBuyable: ").Append(IsBuyable).Append("\n");
@@ -497,6 +506,11 @@ namespace VirtoCommerce.Client.Model
                     this.Outline == other.Outline ||
                     this.Outline != null &&
                     this.Outline.Equals(other.Outline)
+                ) && 
+                (
+                    this.Parents == other.Parents ||
+                    this.Parents != null &&
+                    this.Parents.SequenceEqual(other.Parents)
                 ) && 
                 (
                     this.IndexingDate == other.IndexingDate ||
@@ -701,6 +715,9 @@ namespace VirtoCommerce.Client.Model
                 
                 if (this.Outline != null)
                     hash = hash * 57 + this.Outline.GetHashCode();
+                
+                if (this.Parents != null)
+                    hash = hash * 57 + this.Parents.GetHashCode();
                 
                 if (this.IndexingDate != null)
                     hash = hash * 57 + this.IndexingDate.GetHashCode();

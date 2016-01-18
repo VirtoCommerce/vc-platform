@@ -1,18 +1,23 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using VirtoCommerce.Storefront.Model.Cart.Services;
+using VirtoCommerce.Storefront.Model.Cart.ValidationErrors;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Marketing;
-using VirtoCommerce.Storefront.Model.Marketing.Services;
 
 namespace VirtoCommerce.Storefront.Model.Cart
 {
-    public class Shipment : Entity, IDiscountable
+    public class Shipment : Entity, IDiscountable, IValidatable
     {
-        public Shipment()
+        public Shipment(Currency currency)
         {
+            Currency = currency;
             Discounts = new List<Discount>();
             Items = new List<CartShipmentItem>();
             TaxDetails = new List<TaxDetail>();
+            ValidationErrors = new List<ValidationError>();
+            ShippingPrice = new Money(currency);
+            TaxTotal = new Money(currency);
         }
 
         /// <summary>
@@ -84,14 +89,28 @@ namespace VirtoCommerce.Storefront.Model.Cart
         public Money ShippingPrice { get; set; }
 
         /// <summary>
-        /// Gets or sets the value of total shipping price
+        /// Gets the value of total shipping price
         /// </summary>
-        public Money Total { get; set; }
+        public Money Total
+        {
+            get
+            {
+                return ShippingPrice + TaxTotal - DiscountTotal;
+            }
+        }
 
         /// <summary>
-        /// Gets or sets the value of total shipping discount amount
+        /// Gets the value of total shipping discount amount
         /// </summary>
-        public Money DiscountTotal { get; set; }
+        public Money DiscountTotal
+        {
+            get
+            {
+                var discountTotal = Discounts.Sum(d => d.Amount.Amount);
+
+                return new Money(discountTotal, Currency);
+            }
+        }
 
         /// <summary>
         /// Gets or sets the value of total shipping tax amount
@@ -99,14 +118,28 @@ namespace VirtoCommerce.Storefront.Model.Cart
         public Money TaxTotal { get; set; }
 
         /// <summary>
-        /// Gets or sets the value of shipping items subtotal
+        /// Gets the value of shipping items subtotal
         /// </summary>
-        public Money ItemSubtotal { get; set; }
+        public Money ItemSubtotal
+        {
+            get
+            {
+                var itemSubtotal = Items.Sum(i => i.LineItem.ExtendedPrice.Amount);
+
+                return new Money(itemSubtotal, Currency);
+            }
+        }
 
         /// <summary>
-        /// Gets or sets the value of shipping subtotal
+        /// Gets the value of shipping subtotal
         /// </summary>
-        public Money Subtotal { get; set; }
+        public Money Subtotal
+        {
+            get
+            {
+                return ShippingPrice - DiscountTotal;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the collection of shipping items
@@ -129,6 +162,9 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// </value>
         public ICollection<TaxDetail> TaxDetails { get; set; }
 
+        public ICollection<ValidationError> ValidationErrors { get; set; }
+
+        #region IDiscountable Members
         public ICollection<Discount> Discounts { get; }
 
         public Currency Currency { get; set; }
@@ -141,13 +177,14 @@ namespace VirtoCommerce.Storefront.Model.Cart
 
             foreach (var reward in shipmentRewards)
             {
-                var discount = reward.ToDiscountModel(ShippingPrice.Amount, Currency);
+                var discount = reward.ToDiscountModel(ShippingPrice);
 
                 if (reward.IsValid)
                 {
                     Discounts.Add(discount);
                 }
             }
-        }
+        } 
+        #endregion
     }
 }

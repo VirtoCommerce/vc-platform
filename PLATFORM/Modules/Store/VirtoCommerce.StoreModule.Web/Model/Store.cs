@@ -39,8 +39,7 @@ namespace VirtoCommerce.StoreModule.Web.Model
 		/// <summary>
 		/// Default currency of store. Use ISO 4217 currency codes
 		/// </summary>
-        [JsonConverter(typeof(StringEnumConverter))]
-        public CurrencyCodes? DefaultCurrency { get; set; }
+        public string DefaultCurrency { get; set; }
 
 		/// <summary>
 		/// Product catalog id of store
@@ -75,8 +74,7 @@ namespace VirtoCommerce.StoreModule.Web.Model
 
         public ICollection<string> Languages { get; set; }
 
-        [JsonProperty(ItemConverterType = typeof(StringEnumConverter))]
-        public ICollection<CurrencyCodes> Currencies { get; set; }
+        public ICollection<string> Currencies { get; set; }
 
         public string ObjectType { get; set; }
         public ICollection<DynamicObjectProperty> DynamicProperties { get; set; }

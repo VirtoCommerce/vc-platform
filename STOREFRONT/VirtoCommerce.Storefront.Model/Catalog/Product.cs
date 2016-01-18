@@ -243,15 +243,14 @@ namespace VirtoCommerce.Storefront.Model.Catalog
 
             foreach (var reward in productRewards)
             {
-                var discount = reward.ToDiscountModel(Price.SalePrice.Amount, Price.Currency);
+                var discount = reward.ToDiscountModel(Price.SalePrice);
 
                 if (reward.IsValid)
                 {
                     Discounts.Add(discount);
+                    Price.ActiveDiscount = discount;
                 }
             }
-
-            Price.ActiveDiscount = Discounts.FirstOrDefault();
         }
     }
 }

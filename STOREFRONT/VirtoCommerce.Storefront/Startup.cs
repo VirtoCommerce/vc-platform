@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Web;
 using System.Web.Compilation;
 using System.Web.Hosting;
+using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Microsoft.Owin;
@@ -32,7 +33,8 @@ using CacheManager.Core;
 using CacheManager.Web;
 using MarkdownDeep;
 using VirtoCommerce.Storefront.Model.Marketing.Services;
-using System.Web.Http;
+using VirtoCommerce.Storefront.Model.Cart.Services;
+using VirtoCommerce.Storefront.Model.Pricing.Services;
 
 [assembly: OwinStartup(typeof(Startup))]
 [assembly: PreApplicationStartMethod(typeof(Startup), "PreApplicationStart")]
@@ -62,6 +64,12 @@ namespace VirtoCommerce.Storefront
 
         public void Configuration(IAppBuilder app)
         {
+            if (_managerAssembly != null)
+            {
+                AreaRegistration.RegisterAllAreas();
+                CallChildConfigure(app, _managerAssembly, "VirtoCommerce.Platform.Web.Startup", "Configuration", "~/areas/admin", "admin/");
+            }
+
             UnityWebActivator.Start();
             var container = UnityConfig.GetConfiguredContainer();
 
@@ -108,17 +116,14 @@ namespace VirtoCommerce.Storefront
             container.RegisterType<ISearchModuleApi, SearchModuleApi>();
             container.RegisterType<IMarketingService, MarketingServiceImpl>();
             container.RegisterType<IPromotionEvaluator, PromotionEvaluator>();
+            container.RegisterType<ICartValidator, CartValidator>();
+            container.RegisterType<IPricingService, PricingServiceImpl>();
 
             container.RegisterType<ICartBuilder, CartBuilder>();
             container.RegisterType<ICatalogSearchService, CatalogSearchServiceImpl>();
             container.RegisterType<IAuthenticationManager>(new InjectionFactory((context) => HttpContext.Current.GetOwinContext().Authentication));
 
             container.RegisterType<IStorefrontUrlBuilder, StorefrontUrlBuilder>(new PerRequestLifetimeManager());
-            if (_managerAssembly != null)
-            {
-                AreaRegistration.RegisterAllAreas();
-                CallChildConfigure(app, _managerAssembly, "VirtoCommerce.Platform.Web.Startup", "Configuration", "~/areas/admin", "admin/");
-            }
 
             // Create new work context for each request
             container.RegisterType<WorkContext, WorkContext>(new PerRequestLifetimeManager());
@@ -135,9 +140,9 @@ namespace VirtoCommerce.Storefront
             var staticContentService = new StaticContentServiceImpl(HostingEnvironment.MapPath("~/App_data/Pages"), new Markdown(), shopifyLiquidEngine, cacheManager);
             container.RegisterInstance<IStaticContentService>(staticContentService);
 
+            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters, () => container.Resolve<WorkContext>());
             GlobalConfiguration.Configure(WebApiConfig.Register);
             //app.UseWebApi(GlobalConfiguration.Configuration);
-            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes, () => container.Resolve<WorkContext>(), container.Resolve<ICommerceCoreModuleApi>(), container.Resolve<IStaticContentService>(), cacheManager);
             AuthConfig.ConfigureAuth(app);
 

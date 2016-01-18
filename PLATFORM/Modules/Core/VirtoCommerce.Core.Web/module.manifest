@@ -29,20 +29,6 @@
   <settings>
     <group name="Commerce|General">
       <setting>
-        <name>VirtoCommerce.Core.General.Currencies</name>
-        <valueType>string</valueType>
-        <defaultValue>USD</defaultValue>
-        <title>Currencies</title>
-        <description>Currencies available in system</description>
-        <isArray>true</isArray>
-        <arrayValues>
-          <value>JPY</value>
-          <value>GBP</value>
-          <value>EUR</value>
-          <value>USD</value>
-        </arrayValues>
-      </setting>
-      <setting>
         <name>VirtoCommerce.Core.General.TaxTypes</name>
         <valueType>string</valueType>
         <defaultValue>Default</defaultValue>
@@ -91,6 +77,11 @@
   </settings>
   <permissions>
     <group name="Core">
+      <permission id="core:currency:create" name="Create currency" />
+      <permission id="core:currency:read" name="View currencies" />
+      <permission id="core:currency:update" name="Update currency" />
+      <permission id="core:currency:delete" name="Delete currency" />
+      
       <!--<permission id="core:fulfillment:access" name="Manage fulfillment centers" description="Permission to manage fulfillment centers."/>-->
       <permission id="core:fulfillment:create" name="Create fulfillment center" description=""/>
       <permission id="core:fulfillment:read" name="View fulfillment center data" description=""/>

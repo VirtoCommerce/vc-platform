@@ -57,5 +57,14 @@ namespace VirtoCommerce.CatalogModule.Web.Model
         /// The links.
         /// </value>
 		public ListEntryLink[] Links { get; set; }
-	}
+
+        /// <summary>
+        /// All entry parents ids
+        /// </summary>
+        public string[] Outline { get; set; }
+        /// <summary>
+        /// All entry parents names
+        /// </summary>
+        public string[] Path { get; set; }
+    }
 }

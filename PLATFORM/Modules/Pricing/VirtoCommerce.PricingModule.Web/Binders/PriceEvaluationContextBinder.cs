@@ -50,11 +50,8 @@ namespace VirtoCommerce.CatalogModule.Web.Binders
                 }
             }
 
-            var currency = qs.Get("currency") ?? qs.Get("evalContext.currency");
-            if (currency != null)
-            {
-                result.Currency = EnumUtility.SafeParse(currency, CurrencyCodes.USD);
-            }
+            result.Currency = qs.Get("currency") ?? qs.Get("evalContext.currency");
+          
             result.Quantity = qs.GetValue<decimal>("quantity", 0);
             result.CustomerId = qs.Get("customer") ?? qs.Get("evalContext.customerId");
             result.OrganizationId = qs.Get("organization");

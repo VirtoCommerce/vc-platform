@@ -31,18 +31,14 @@ namespace VirtoCommerce.StoreModule.Data.Converters
 			var retVal = new coreModel.Store();
 			retVal.InjectFrom(dbStore);
 	
-
-			if(dbStore.DefaultCurrency != null)
-			{
-				retVal.DefaultCurrency = (CurrencyCodes?)Enum.Parse(typeof(CurrencyCodes), dbStore.DefaultCurrency, true);
-			}
+			retVal.DefaultCurrency = dbStore.DefaultCurrency;
 			retVal.StoreState = (coreModel.StoreState)dbStore.StoreState;
 			
 			retVal.Languages = dbStore.Languages.Select(x => x.LanguageCode).ToList();
-			retVal.Currencies = dbStore.Currencies.Select(x => (CurrencyCodes)Enum.Parse(typeof(CurrencyCodes), x.CurrencyCode, true)).ToList();
-		
-			//Payment methods need return only contains in registered
-			retVal.PaymentMethods = paymentMethods;
+            retVal.Currencies = dbStore.Currencies.Select(x => x.CurrencyCode).ToList();
+
+            //Payment methods need return only contains in registered
+            retVal.PaymentMethods = paymentMethods;
 			foreach (var paymentMethod in paymentMethods)
 			{
 				var dbStoredPaymentMethod = dbStore.PaymentMethods.FirstOrDefault(x => x.Code == paymentMethod.Code);

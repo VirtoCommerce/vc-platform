@@ -8,7 +8,7 @@
           template: 'Modules/$(VirtoCommerce.Core)/Scripts/fulfillment/widgets/fulfillmentWidget.tpl.html'
       }, 'moduleDetail');
 
-      //Register fulfillment center widgets
+      //Register fulfillmentCenterDetail widgets
       widgetService.registerWidget({
           controller: 'virtoCommerce.coreModule.fulfillment.fulfillmentCenterContactWidgetController',
           template: 'Modules/$(VirtoCommerce.Core)/Scripts/fulfillment/widgets/fulfillmentCenterContactWidget.tpl.html'

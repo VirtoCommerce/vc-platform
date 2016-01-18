@@ -106,7 +106,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     {
                         var pushNotification = new SampleDataImportPushNotification("System");
                         _pushNotifier.Upsert(pushNotification);
-                        BackgroundJob.Enqueue(() => SampleDataImportBackground(new Uri(url), HostingEnvironment.MapPath("~/App_Data/Uploads/"), pushNotification));
+                        BackgroundJob.Enqueue(() => SampleDataImportBackground(new Uri(url), HostingEnvironment.MapPath(Startup.VirtualRoot + "/App_Data/Uploads/"), pushNotification));
 
                         return Ok(pushNotification);
                     }

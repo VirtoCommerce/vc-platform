@@ -1,0 +1,48 @@
+﻿<div class="blade-static __bottom" ng-include="'$(Platform)/Scripts/common/templates/create.tpl.html'" ng-if="blade.isNew"></div>
+<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block clearfix">
+            <form class="form" name="formScope">
+                <div class="form-group" ng-init="setForm(formScope)" title="The currency code. Use 3 letter ISO 4217 code, if exists.">
+                    <label class="form-label">{{ 'core.blades.currency-detail.labels.code' | translate }}</label>
+                    <div class="form-input">
+                        <input ng-model="blade.currentEntity.code" required ng-disabled="!blade.isNew" />                        
+                    </div>
+                </div>
+                <div class="form-group" title="The name of the currency">
+                    <label class="form-label">{{ 'core.blades.currency-detail.labels.name' | translate }}</label>
+                    <div class="form-input">
+                        <input placeholder="Enter currency name" ng-model="blade.currentEntity.name" focus-on="" required />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">{{ 'core.blades.currency-detail.labels.is-primary' | translate }}</label>
+                    <div class="form-input">
+                        <label class="form-label __switch">
+                            <input type="checkbox" ng-model="blade.currentEntity.isPrimary" />
+                            <span class="switch"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group" title="The exchange rate against the primary exchange rate currency">
+                    <label class="form-label">{{ 'core.blades.currency-detail.labels.exchange-rate' | translate }}</label>
+                    <div class="form-input __number">
+                        <input placeholder="Enter exchange rate against the primary currency" smart-float required num-type="float" fraction="4" ng-model="blade.currentEntity.exchangeRate" min="0.0001">
+                    </div>
+                </div>
+                <div class="form-group" title="The short currency symbol">
+                    <label class="form-label">{{ 'core.blades.currency-detail.labels.symbol' | translate }}</label>
+                    <div class="form-input">
+                        <input placeholder="Enter symbol or leave empty for culture default" ng-model="blade.currentEntity.symbol" />
+                    </div>
+                </div>
+                <div class="form-group" title="Custom fromatting to be applied to the currency value">
+                    <label class="form-label">{{ 'core.blades.currency-detail.labels.custom-formatting' | translate }}</label>
+                    <div class="form-input __number">
+                        <input placeholder="0,0.000" ng-model="blade.currentEntity.customFormatting">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

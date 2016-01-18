@@ -56,11 +56,11 @@ namespace VirtoCommerce.Storefront.Model
         public ICollection<Language> Languages { get; set; }
 
         /// <summary>
-        /// Default currency of store. Use ISO 4217 currency codes
+        /// Default currency of store. 
         /// </summary>
         public Currency DefaultCurrency { get; set; }
         /// <summary>
-        /// List of supported additional currencies
+        /// List of all supported currencies
         /// </summary>
         public ICollection<Currency> Currencies { get; set; }
 
@@ -87,6 +87,23 @@ namespace VirtoCommerce.Storefront.Model
         public ICollection<DynamicProperty> DynamicProperties { get; set; }
 
         public ICollection<SeoInfo> SeoInfos { get; set; }
+
+        //Need sync store currencies with system avail currencies for specific language
+        public void SyncCurrencies(IEnumerable<Currency> availCurrencies, Language language)
+        {
+            var storeCurrencies = new List<Currency>();
+            foreach (var storeCurrency in Currencies)
+            {
+                var currency = availCurrencies.FirstOrDefault(x => x.Equals(storeCurrency));
+                if (currency == null)
+                {
+                    currency = new Currency(language, storeCurrency.Code);
+                }
+                storeCurrencies.Add(currency);
+            }
+            Currencies = storeCurrencies;
+            DefaultCurrency = Currencies.FirstOrDefault(x => x.Equals(DefaultCurrency)) ?? new Currency(language, DefaultCurrency.Code);
+        }
 
         /// <summary>
         /// Check that specified request uri matched to this store

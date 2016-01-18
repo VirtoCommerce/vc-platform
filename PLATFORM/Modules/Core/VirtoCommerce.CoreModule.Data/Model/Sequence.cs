@@ -1,9 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.CoreModule.Data.Model
 {
-    public class Sequence : AuditableEntity
+    public class Sequence 
     {
         [Key]
         [StringLength(256)]
@@ -11,5 +12,7 @@ namespace VirtoCommerce.CoreModule.Data.Model
 
         [Required]
         public int Value { get; set; }
+
+        public DateTime? ModifiedDate { get; set; }
     }
 }

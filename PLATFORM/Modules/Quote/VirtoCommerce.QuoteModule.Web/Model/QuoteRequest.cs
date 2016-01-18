@@ -70,8 +70,7 @@ namespace VirtoCommerce.QuoteModule.Web.Model
         /// </summary>
 		public string InnerComment { get; set; }
 
-        [JsonConverter(typeof(StringEnumConverter))]
-        public CurrencyCodes Currency { get; set; }
+        public string Currency { get; set; }
 
         /// <summary>
         /// Resulting totals for selected proposals

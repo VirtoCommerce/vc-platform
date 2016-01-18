@@ -12,12 +12,12 @@
         var skip = ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount;
         listEntries.listitemssearch(
             {
-                catalog: $scope.blade.catalogId,
-                category: $scope.blade.categoryId,
+                catalogId: $scope.blade.catalogId,
+                categoryId: $scope.blade.categoryId,
                 // propertyValues: .... ,
-                respGroup: 'withProducts',
-                start: skip,
-                count: $scope.pageSettings.itemsPerPageCount
+                responseGroup: 'withProducts',
+                skip: skip,
+                take: $scope.pageSettings.itemsPerPageCount
             },
 		function (data, headers) {
 		    $scope.blade.isLoading = false;

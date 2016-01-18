@@ -68,6 +68,11 @@ namespace VirtoCommerce.CatalogModule.Web.Model
         /// </value>
 		public string Outline { get; set; }
         /// <summary>
+        /// All parents categories
+        /// </summary>
+        public ICollection<Category> Parents { get; set; }
+
+        /// <summary>
         /// Gets or sets the date and time that this product was last indexed at.
         /// </summary>
         /// <value>

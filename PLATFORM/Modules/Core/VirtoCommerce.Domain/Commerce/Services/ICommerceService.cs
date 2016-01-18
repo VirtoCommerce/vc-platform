@@ -13,7 +13,11 @@ namespace VirtoCommerce.Domain.Commerce.Services
 		FulfillmentCenter UpsertFulfillmentCenter(FulfillmentCenter fullfilmentCenter);
 		void DeleteFulfillmentCenter(string[] ids);
 
-		IEnumerable<SeoInfo> GetSeoByKeyword(string keyword);
+        IEnumerable<Currency> GetAllCurrencies();
+        void UpsertCurrencies(Currency[] currencies);
+        void DeleteCurrencies(string[] codes);
+
+        IEnumerable<SeoInfo> GetSeoByKeyword(string keyword);
         void LoadSeoForObjects(ISeoSupport[] seoSupportObjects);
         void UpsertSeoForObjects(ISeoSupport[] seoSupportObjects);
         void DeleteSeoForObject(ISeoSupport seoSupportObject);

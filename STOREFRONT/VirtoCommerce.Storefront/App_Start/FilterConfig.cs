@@ -1,34 +1,43 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using System;
-using System.Web.Mvc;
-using VirtoCommerce.Storefront.Model;
-using Microsoft.Practices.Unity;
+﻿using System;
 using System.Linq;
+using System.Web.Mvc;
 using System.Web.Routing;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using VirtoCommerce.Storefront.Model;
 
-namespace VirtoCommerce.Storefront.App_Start
+namespace VirtoCommerce.Storefront
 {
     public class FilterConfig
     {
-        public static void RegisterGlobalFilters(GlobalFilterCollection filters)
+        public static void RegisterGlobalFilters(GlobalFilterCollection filters, Func<WorkContext> workContextFactory)
         {
             filters.Add(new JsonNetActionFilter());
-            filters.Add(new StorefrontValidationActionFilter());
+            filters.Add(new StorefrontValidationActionFilter { WorkContextFactory = workContextFactory });
         }
     }
     public class StorefrontValidationActionFilter : ActionFilterAttribute
     {
+        public Func<WorkContext> WorkContextFactory { get; set; }
+
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            var workContext = UnityConfig.GetConfiguredContainer().Resolve<WorkContext>();
-            if ((workContext.AllStores == null || !workContext.AllStores.Any()) && filterContext.ActionDescriptor.ActionName != "NoStore")
+            if (WorkContextFactory != null)
             {
-                filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Common", action = "NoStore" }));
+                var workContext = WorkContextFactory();
+
+                // RequestUrl is null when current request is not a storefront request
+                if (workContext != null && workContext.RequestUrl != null
+                    && (workContext.AllStores == null || !workContext.AllStores.Any())
+                    && filterContext.ActionDescriptor.ActionName != "NoStore")
+                {
+                    filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Common", action = "NoStore" }));
+                }
             }
+
             base.OnActionExecuting(filterContext);
         }
-      
+
     }
 
     public class JsonNetActionFilter : ActionFilterAttribute

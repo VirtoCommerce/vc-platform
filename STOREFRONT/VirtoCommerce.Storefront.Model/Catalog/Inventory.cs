@@ -32,7 +32,7 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         /// <summary>
         /// Gets or Sets Status
         /// </summary>
-        public string Status { get; set; }
+        public InventoryStatus Status { get; set; }
 
         /// <summary>
         /// Gets or Sets FulfillmentCenterId

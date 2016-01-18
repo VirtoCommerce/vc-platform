@@ -1,6 +1,6 @@
 ﻿var storefrontApp = angular.module('storefrontApp');
 
-storefrontApp.controller('productController', ['$scope', '$window', 'catalogService', 'marketingService', function ($scope, $window, catalogService, marketingService) {
+storefrontApp.controller('productController', ['$scope', '$window', 'catalogService', function ($scope, $window, catalogService) {
     //TODO: prevent add to cart not selected variation
     // display validator please select property
     // display price range
@@ -25,12 +25,7 @@ storefrontApp.controller('productController', ['$scope', '$window', 'catalogServ
                 $scope.checkProperty(propertyMap[x][0])
             });
             $scope.selectedVariation = product;
-            var simpleProduct = {
-                Id: product.Id,
-                CatalogId: product.CatalogId,
-                CategoryId: product.CategoryId
-            };
-            getActualProductPrice(simpleProduct);
+          
         });
     };
 
@@ -81,17 +76,6 @@ storefrontApp.controller('productController', ['$scope', '$window', 'catalogServ
         });
         return retVal;
     };
-
-    function getActualProductPrice(product) {
-        marketingService.getActualProductPrices([product]).then(function (response) {
-            var price = response.data ? response.data[0] : null;
-            if (!price) {
-                return;
-            }
-            $scope.productPrice = price;
-            $scope.productPriceLoaded = true;
-        });
-    }
 
     //Method called from View when user click to one of properties value
     $scope.checkProperty = function (property) {

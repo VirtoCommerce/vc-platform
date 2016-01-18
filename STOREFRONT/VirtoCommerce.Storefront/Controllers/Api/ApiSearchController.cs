@@ -33,7 +33,7 @@ namespace VirtoCommerce.Storefront.Controllers.Api
                 ResponseGroup = CatalogSearchResponseGroup.WithCategories
             };
 
-            WorkContext.CurrentCatalogSearchResult = await _catalogService.SearchAsync(WorkContext.CurrentCatalogSearchCriteria);
+            WorkContext.CurrentCatalogSearchResult = await _catalogSearchService.SearchAsync(WorkContext.CurrentCatalogSearchCriteria);
             return WorkContext.CurrentCatalogSearchResult;
         }
 
@@ -47,7 +47,7 @@ namespace VirtoCommerce.Storefront.Controllers.Api
                 CategoryId = apiWorkContext.CategoryId
             };
 
-            WorkContext.CurrentCatalogSearchResult = await _catalogService.SearchAsync(WorkContext.CurrentCatalogSearchCriteria);
+            WorkContext.CurrentCatalogSearchResult = await _catalogSearchService.SearchAsync(WorkContext.CurrentCatalogSearchCriteria);
             return WorkContext.CurrentCatalogSearchResult;
         }
 
@@ -55,7 +55,7 @@ namespace VirtoCommerce.Storefront.Controllers.Api
         [Route("products/{itemId}")]
         public async Task<Product> GetProduct([FromUri] ApiWorkContext apiWorkContext)
         {
-            WorkContext.CurrentProduct = await _productService.GetProductAsync(apiWorkContext.ItemId, Model.Catalog.ItemResponseGroup.ItemLarge);
+            WorkContext.CurrentProduct = (await _catalogSearchService.GetProductsAsync(new[] { apiWorkContext.ItemId }, Model.Catalog.ItemResponseGroup.ItemLarge)).FirstOrDefault();
             return WorkContext.CurrentProduct;
         }
 

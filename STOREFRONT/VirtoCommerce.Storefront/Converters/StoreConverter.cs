@@ -2,6 +2,8 @@
 using VirtoCommerce.Storefront.Model;
 using System.Linq;
 using VirtoCommerce.Storefront.Model.Common;
+using System.Collections.Generic;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Storefront.Converters
 {
@@ -20,12 +22,14 @@ namespace VirtoCommerce.Storefront.Converters
             {
                 retVal.Languages = storeDto.Languages.Select(x => new Language(x)).ToList();
             }
-            retVal.DefaultCurrency = Currency.Get(EnumUtility.SafeParse(storeDto.DefaultCurrency, CurrencyCodes.USD));
-            if(storeDto.Currencies != null)
+
+            if (storeDto.Currencies != null)
             {
-                retVal.Currencies = storeDto.Currencies.Select(x => Currency.Get(EnumUtility.SafeParse(x, CurrencyCodes.USD))).ToList();
+                retVal.Currencies.AddRange(storeDto.Currencies.Select(x => new Currency(Language.InvariantLanguage, x)));
             }
-            if(storeDto.DynamicProperties != null)
+            retVal.DefaultCurrency = retVal.Currencies.FirstOrDefault(x => x.Equals(storeDto.DefaultCurrency));
+
+            if (storeDto.DynamicProperties != null)
             {
                 retVal.DynamicProperties = storeDto.DynamicProperties.Select(x => x.ToWebModel()).ToList();
                 retVal.ThemeName = retVal.DynamicProperties.GetDynamicPropertyValue("DefaultThemeName");

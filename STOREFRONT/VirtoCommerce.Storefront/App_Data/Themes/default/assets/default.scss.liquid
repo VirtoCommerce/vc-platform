@@ -763,16 +763,16 @@ body {
   display: flex;
   font-size: 11px;
   font-weight: bold;
-  height: 30px;
+  margin: 0 auto;
+  max-width: 360px;
+  min-height: 30px;
   left: 50%;
   opacity: 0;
-  padding: 0 10px;
-  position: absolute;
+  padding: 5px 10px;
   top: 0;
 
   filter: alpha(opacity=0);
 
-  @include transform(translateX(-50%));
   @include box-sizing();
   @include transition(opacity .3s ease);
 }

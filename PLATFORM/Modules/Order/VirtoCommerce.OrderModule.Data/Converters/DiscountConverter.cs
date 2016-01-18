@@ -24,8 +24,8 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 
 			if (entity.Currency != null)
 			{
-				retVal.Currency = (CurrencyCodes)Enum.Parse(typeof(CurrencyCodes), entity.Currency);
-			}
+                retVal.Currency = entity.Currency;
+            }
 
 			if(entity.CouponCode != null)
 			{

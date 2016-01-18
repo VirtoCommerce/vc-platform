@@ -100,7 +100,6 @@
     <Compile Include="Model\VirtoCommerceCatalogModuleWebModelImage.cs" />
     <Compile Include="Model\VirtoCommerceCatalogModuleWebModelListEntry.cs" />
     <Compile Include="Model\VirtoCommerceCatalogModuleWebModelListEntryLink.cs" />
-    <Compile Include="Model\VirtoCommerceCatalogModuleWebModelListEntrySearchCriteria.cs" />
     <Compile Include="Model\VirtoCommerceCatalogModuleWebModelListEntrySearchResult.cs" />
     <Compile Include="Model\VirtoCommerceCatalogModuleWebModelMoveInfo.cs" />
     <Compile Include="Model\VirtoCommerceCatalogModuleWebModelProduct.cs" />
@@ -147,6 +146,7 @@
     <Compile Include="Model\VirtoCommerceDomainCatalogModelPropertyValue.cs" />
     <Compile Include="Model\VirtoCommerceDomainCatalogModelSearchCriteria.cs" />
     <Compile Include="Model\VirtoCommerceDomainCommerceModelAddress.cs" />
+    <Compile Include="Model\VirtoCommerceDomainCommerceModelCurrency.cs" />
     <Compile Include="Model\VirtoCommerceDomainCommerceModelSeoInfo.cs" />
     <Compile Include="Model\VirtoCommerceDomainCommerceModelTaxDetail.cs" />
     <Compile Include="Model\VirtoCommerceDomainCommonConditionExpressionTree.cs" />

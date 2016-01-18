@@ -1,10 +1,10 @@
 ﻿var storefrontApp = angular.module('storefrontApp');
 
-storefrontApp.controller('categoryController', ['$scope', '$window', 'marketingService', function ($scope, $window, marketingService) {
+storefrontApp.controller('categoryController', ['$scope', '$window', 'pricingService', function ($scope, $window, pricingService) {
     $scope.productPricesLoaded = false;
     $scope.productPrices = [];
 
-    marketingService.getActualProductPrices($window.products).then(function (response) {
+    pricingService.getActualProductPrices($window.products).then(function (response) {
         var prices = response.data;
         if (prices.length) {
             for (var i = 0; i < prices.length; i++) {

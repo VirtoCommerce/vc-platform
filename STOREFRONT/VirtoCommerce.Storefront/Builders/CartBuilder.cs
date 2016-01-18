@@ -8,6 +8,7 @@ using VirtoCommerce.Storefront.Common;
 using VirtoCommerce.Storefront.Converters;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Cart;
+using VirtoCommerce.Storefront.Model.Cart.Services;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Marketing;
@@ -37,7 +38,7 @@ namespace VirtoCommerce.Storefront.Builders
             _cacheManager = cacheManager;
         }
 
-        public async Task<CartBuilder> GetOrCreateNewTransientCartAsync(Store store, Customer customer, Language language, Currency currency)
+        public async Task<ICartBuilder> GetOrCreateNewTransientCartAsync(Store store, Customer customer, Language language, Currency currency)
         {
             _store = store;
             _customer = customer;
@@ -68,7 +69,7 @@ namespace VirtoCommerce.Storefront.Builders
             return this;
         }
 
-        public async Task<CartBuilder> AddItemAsync(Product product, int quantity)
+        public async Task<ICartBuilder> AddItemAsync(Product product, int quantity)
         {
             AddLineItem(product.ToLineItem(_language, quantity));
 
@@ -77,7 +78,7 @@ namespace VirtoCommerce.Storefront.Builders
             return this;
         }
 
-        public async Task<CartBuilder> ChangeItemQuantityAsync(string id, int quantity)
+        public async Task<ICartBuilder> ChangeItemQuantityAsync(string id, int quantity)
         {
             var lineItem = _cart.Items.FirstOrDefault(i => i.Id == id);
             if (lineItem != null)
@@ -97,7 +98,7 @@ namespace VirtoCommerce.Storefront.Builders
             return this;
         }
 
-        public async Task<CartBuilder> ChangeItemQuantityAsync(int lineItemIndex, int quantity)
+        public async Task<ICartBuilder> ChangeItemQuantityAsync(int lineItemIndex, int quantity)
         {
             var lineItem = _cart.Items.ElementAt(lineItemIndex);
             if (lineItem != null)
@@ -117,7 +118,7 @@ namespace VirtoCommerce.Storefront.Builders
             return this;
         }
 
-        public async Task<CartBuilder> ChangeItemsQuantitiesAsync(int[] quantities)
+        public async Task<ICartBuilder> ChangeItemsQuantitiesAsync(int[] quantities)
         {
             for (var i = 0; i < quantities.Length; i++)
             {
@@ -133,7 +134,7 @@ namespace VirtoCommerce.Storefront.Builders
             return this;
         }
 
-        public async Task<CartBuilder> RemoveItemAsync(string id)
+        public async Task<ICartBuilder> RemoveItemAsync(string id)
         {
             var lineItem = _cart.Items.FirstOrDefault(i => i.Id == id);
             if (lineItem != null)
@@ -146,7 +147,7 @@ namespace VirtoCommerce.Storefront.Builders
             return this;
         }
 
-        public async Task<CartBuilder> ClearAsync()
+        public async Task<ICartBuilder> ClearAsync()
         {
             _cart.Items.Clear();
 
@@ -155,7 +156,7 @@ namespace VirtoCommerce.Storefront.Builders
             return this;
         }
 
-        public async Task<CartBuilder> AddCouponAsync(string couponCode)
+        public async Task<ICartBuilder> AddCouponAsync(string couponCode)
         {
             _cart.Coupon = new Coupon
             {
@@ -167,7 +168,7 @@ namespace VirtoCommerce.Storefront.Builders
             return this;
         }
 
-        public async Task<CartBuilder> RemoveCouponAsync()
+        public async Task<ICartBuilder> RemoveCouponAsync()
         {
             _cart.Coupon = null;
 
@@ -176,7 +177,7 @@ namespace VirtoCommerce.Storefront.Builders
             return this;
         }
 
-        public async Task<CartBuilder> AddAddressAsync(Address address)
+        public async Task<ICartBuilder> AddAddressAsync(Address address)
         {
             var existingAddress = _cart.Addresses.FirstOrDefault(a => a.Type == address.Type);
             if (existingAddress != null)
@@ -191,7 +192,7 @@ namespace VirtoCommerce.Storefront.Builders
             return this;
         }
 
-        public async Task<CartBuilder> AddShipmentAsync(ShippingMethod shippingMethod)
+        public async Task<ICartBuilder> AddShipmentAsync(ShippingMethod shippingMethod)
         {
             var shipment = shippingMethod.ToShipmentModel(_currency);
 
@@ -203,7 +204,7 @@ namespace VirtoCommerce.Storefront.Builders
             return this;
         }
 
-        public async Task<CartBuilder> AddPaymentAsync(PaymentMethod paymentMethod)
+        public async Task<ICartBuilder> AddPaymentAsync(PaymentMethod paymentMethod)
         {
             var payment = paymentMethod.ToPaymentModel(_cart.Total, _currency);
 
@@ -215,7 +216,7 @@ namespace VirtoCommerce.Storefront.Builders
             return this;
         }
 
-        public async Task<CartBuilder> MergeWithCartAsync(ShoppingCart cart)
+        public async Task<ICartBuilder> MergeWithCartAsync(ShoppingCart cart)
         {
             foreach (var lineItem in cart.Items)
             {
@@ -238,12 +239,39 @@ namespace VirtoCommerce.Storefront.Builders
             return this;
         }
 
-        public async Task<CartBuilder> RemoveCartAsync()
+        public async Task<ICartBuilder> RemoveCartAsync()
         {
             await _cartApi.CartModuleDeleteCartsAsync(new List<string> { _cart.Id });
             _cacheManager.Remove(_cartCacheKey, _cartCacheRegion);
 
             return this;
+        }
+
+        public async Task<ICollection<ShippingMethod>> GetAvailableShippingMethodsAsync()
+        {
+            var availableShippingMethods = new List<ShippingMethod>();
+
+            // TODO: Remake with shipmentId
+            var serviceModels = await _cartApi.CartModuleGetShipmentMethodsAsync(_cart.Id);
+            foreach (var serviceModel in serviceModels)
+            {
+                availableShippingMethods.Add(serviceModel.ToWebModel(new Currency[] { _currency }, _language));
+            }
+
+            return availableShippingMethods;
+        }
+
+        public async Task<ICollection<PaymentMethod>> GetAvailablePaymentMethodsAsync()
+        {
+            var availablePaymentMethods = new List<PaymentMethod>();
+
+            var serviceModels = await _cartApi.CartModuleGetPaymentMethodsAsync(_cart.Id);
+            foreach (var serviceModel in serviceModels)
+            {
+                availablePaymentMethods.Add(serviceModel.ToWebModel());
+            }
+
+            return availablePaymentMethods;
         }
 
         public async Task SaveAsync()
@@ -326,55 +354,6 @@ namespace VirtoCommerce.Storefront.Builders
             promotionContext.StoreId = _store.Id;
 
             await _promotionEvaluator.EvaluateDiscountsAsync(promotionContext, new IDiscountable[] { _cart });
-
-            CalculateTotals();
-        }
-
-        private void CalculateTotals()
-        {
-            foreach (var lineItem in _cart.Items)
-            {
-                decimal lineItemDiscountTotal = lineItem.Discounts.Sum(d => d.Amount.Amount);
-                lineItem.DiscountTotal = new Money(lineItemDiscountTotal, _cart.Currency.Code);
-
-                decimal lineItemTaxTotal = lineItem.TaxDetails.Sum(td => td.Amount.Amount);
-                lineItem.TaxTotal = new Money(lineItemTaxTotal, _cart.Currency.Code);
-
-                decimal placedPrice = lineItem.SalePrice.Amount - lineItemDiscountTotal;
-                lineItem.PlacedPrice = new Money(placedPrice, _cart.Currency.Code);
-
-                decimal extendedPrice = placedPrice * lineItem.Quantity;
-                lineItem.ExtendedPrice = new Money(extendedPrice, _cart.Currency.Code);
-            }
-
-            foreach (var shipment in _cart.Shipments)
-            {
-                decimal shipmentDiscountTotal = shipment.Discounts.Sum(d => d.Amount.Amount);
-                shipment.DiscountTotal = new Money(shipmentDiscountTotal, _cart.Currency.Code);
-
-                decimal shipmentTaxTotal = shipment.TaxDetails.Sum(td => td.Amount.Amount);
-                shipment.TaxTotal = new Money(shipmentTaxTotal, _cart.Currency.Code);
-
-                decimal shipmentItemsSubtotal = shipment.Items.Sum(i => i.LineItem.ExtendedPrice.Amount);
-                shipment.ItemSubtotal = new Money(shipmentItemsSubtotal, _cart.Currency.Code);
-
-                shipment.Subtotal = shipment.ShippingPrice - shipmentDiscountTotal;
-                shipment.Total = shipment.Subtotal + shipment.TaxTotal;
-            }
-
-            decimal cartDiscountsTotal = _cart.Discounts.Sum(d => d.Amount.Amount);
-            _cart.DiscountTotal = new Money(cartDiscountsTotal, _cart.Currency.Code);
-
-            decimal cartSubtotal = _cart.Items.Sum(i => i.ExtendedPrice.Amount);
-            _cart.SubTotal = new Money(cartSubtotal, _cart.Currency.Code);
-
-            decimal cartShipmentsTotal = _cart.Shipments.Sum(s => s.Total.Amount);
-            _cart.ShippingTotal = new Money(cartShipmentsTotal, _cart.Currency.Code);
-
-            //decimal cartTaxTotal = _cart.TaxDetails.Sum(td => td.Amount.Amount);
-            //_cart.TaxTotal = new Money(cartTaxTotal, _cart.Currency.Code);
-
-            _cart.Total = _cart.SubTotal + _cart.ShippingTotal + _cart.TaxTotal - _cart.DiscountTotal;
         }
     }
 }

@@ -11,6 +11,7 @@ angular.module('platformWebApp')
         return {
             require: 'ngModel',
             link: function (scope, elm, attrs, ctrl) {
+                var fraction = attrs.fraction ? attrs.fraction : 2;
                 if (attrs.numType === "float") {
                     ctrl.$parsers.unshift(function (viewValue) {
                         if (FLOAT_REGEXP_1.test(viewValue)) {
@@ -33,7 +34,7 @@ angular.module('platformWebApp')
 
                     ctrl.$formatters.unshift(
                        function (modelValue) {
-                           return $filter('number')(parseFloat(modelValue), 2);
+                           return $filter('number')(parseFloat(modelValue), fraction);
                        }
                     );
                 }

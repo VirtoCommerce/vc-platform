@@ -9,6 +9,7 @@ using VirtoCommerce.Storefront.Model.Cart;
 using VirtoCommerce.Storefront.Converters;
 using System.Collections.Generic;
 using VirtoCommerce.Client.Model;
+using VirtoCommerce.Storefront.Model.Cart.Services;
 
 namespace VirtoCommerce.Storefront.Controllers.Api
 {
@@ -42,13 +43,13 @@ namespace VirtoCommerce.Storefront.Controllers.Api
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
 
-            var product = await _catalogService.GetProductAsync(id, Model.Catalog.ItemResponseGroup.ItemLarge);
-            if (product != null)
+            var products = await _catalogSearchService.GetProductsAsync(new string[] { id }, Model.Catalog.ItemResponseGroup.ItemLarge);
+            if (products != null && products.Any())
             {
-                await _cartBuilder.AddItemAsync(product, quantity);
+                await _cartBuilder.AddItemAsync(products.First(), quantity);
                 await _cartBuilder.SaveAsync();
             }
-
+            
             return new { ItemsCount = _cartBuilder.Cart.Items.Sum(i => i.Quantity) };
         }
 
@@ -97,9 +98,9 @@ namespace VirtoCommerce.Storefront.Controllers.Api
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
 
-            var shippingMethods = await _cartApi.CartModuleGetShipmentMethodsAsync(_cartBuilder.Cart.Id);
+            var shippingMethods = await _cartBuilder.GetAvailableShippingMethodsAsync();
             // shippingMethods.Add(new Client.Model.VirtoCommerceCartModuleWebModelShippingMethod { Name= "test", Price = 555, Currency = "USD", ShipmentMethodCode = "testZZ"  });
-            return shippingMethods.Select(sm => sm.ToWebModel());
+            return shippingMethods;
         }
 
         // POST: /cart/shippingmethod?shippingMethodCode=...
@@ -110,11 +111,11 @@ namespace VirtoCommerce.Storefront.Controllers.Api
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
 
             WorkContext.CurrentCart = _cartBuilder.Cart;
-            var shippingMethods = await _cartApi.CartModuleGetShipmentMethodsAsync(WorkContext.CurrentCart.Id);
+            var shippingMethods = await _cartBuilder.GetAvailableShippingMethodsAsync();
             var shippingMethod = shippingMethods.FirstOrDefault(sm => sm.ShipmentMethodCode == shippingMethodCode);
             if (shippingMethod != null)
             {
-                await _cartBuilder.AddShipmentAsync(shippingMethod.ToWebModel());
+                await _cartBuilder.AddShipmentAsync(shippingMethod);
                 await _cartBuilder.SaveAsync();
             }
 

@@ -66,7 +66,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var files = new List<string>();
 
             // Get platform localization files
-            var platformPath = HostingEnvironment.MapPath("~").EnsureEndSeparator();
+            var platformPath = HostingEnvironment.MapPath(Startup.VirtualRoot).EnsureEndSeparator();
             var platformFileNames = GetLocalizationFilesByPath(platformPath, searchPattern);
             files.AddRange(platformFileNames);
 
@@ -79,7 +79,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
 
             // Get user defined localization files from App_Data/Localizations folder
-            var userLocalizationPath = HostingEnvironment.MapPath("~/App_Data").EnsureEndSeparator();
+            var userLocalizationPath = HostingEnvironment.MapPath(Startup.VirtualRoot + "/App_Data").EnsureEndSeparator();
             var userFileNames = GetLocalizationFilesByPath(userLocalizationPath, searchPattern);
             files.AddRange(userFileNames);
             return files.ToArray();

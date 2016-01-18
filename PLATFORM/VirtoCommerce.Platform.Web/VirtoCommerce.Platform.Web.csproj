@@ -368,7 +368,7 @@
     <Content Include="Content\ui-grid.svg" />
     <Content Include="Content\ui-grid.ttf" />
     <Content Include="Content\ui-grid.woff" />
-    <Content Include="gulpfile.js" />
+    <None Include="gulpfile.js" />
     <Content Include="Scripts\allPackages.js" />
     <Content Include="Content\allStyles.css" />
     <Content Include="Scripts\app\assets\blades\asset-list.js" />
@@ -580,9 +580,9 @@
     <Content Include="Content\themes\main\fonts\fontawesome-webfont.ttf" />
     <Content Include="Content\themes\main\fonts\fontawesome-webfont.woff" />
     <Content Include="Content\themes\main\fonts\FontAwesome.otf" />
-    <Content Include=".bowerrc" />
-    <Content Include="bower.json" />
-    <Content Include="package.json" />
+    <None Include=".bowerrc" />
+    <None Include="bower.json" />
+    <None Include="package.json" />
     <Content Include="Scripts\codemirror\htmlmixed.js" />
     <Content Include="Scripts\codemirror\javascript.js" />
     <Content Include="Scripts\app\app.js" />
@@ -604,12 +604,12 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Views\Shared\_GoogleAnalyticsPartial.cshtml" />
-    <Content Include="Web.Debug.config">
+    <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
-    </Content>
-    <Content Include="Web.Release.config">
+    </None>
+    <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
-    </Content>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Assets\" />
@@ -670,7 +670,7 @@
   <UsingTask TaskName="TransformXml" AssemblyFile="$(VSToolsPath)\Web\Microsoft.Web.Publishing.Tasks.dll" Condition="Exists('$(VSToolsPath)\Web\Microsoft.Web.Publishing.Tasks.dll')" />
   <PropertyGroup>
     <TransformInputFile>$(WebProjectOutputDir)\Web.Temp.config</TransformInputFile>
-    <TransformFile>$(WebProjectOutputDir)\Web.$(Configuration).config</TransformFile>
+    <TransformFile>$(MSBuildProjectDirectory)\Web.$(Configuration).config</TransformFile>
     <TransformOutputFile>$(WebProjectOutputDir)\Web.config</TransformOutputFile>
     <StackTraceEnabled>False</StackTraceEnabled>
   </PropertyGroup>

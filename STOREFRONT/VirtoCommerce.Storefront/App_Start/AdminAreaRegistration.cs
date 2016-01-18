@@ -14,7 +14,8 @@ namespace VirtoCommerce.Storefront
             context.MapRoute(
                 "Admin_default",
                 "Admin",
-                new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+                new { controller = "Home", action = "Index", id = UrlParameter.Optional },
+                new[] { "VirtoCommerce.Platform.Web.Controllers" }
             );
         }
     }

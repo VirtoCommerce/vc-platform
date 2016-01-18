@@ -11,7 +11,7 @@ namespace VirtoCommerce.Storefront.Controllers.Api
     public abstract class ApiControllerBase : ApiController
     {
 #pragma warning disable CS3008 // Identifier is not CLS-compliant
-        protected readonly ICatalogSearchService _catalogService;
+        protected readonly ICatalogSearchService _catalogSearchService;
         protected readonly ICatalogSearchService _productService;
         protected readonly IStoreModuleApi _storeApi;
 #pragma warning restore CS3008 // Identifier is not CLS-compliant
@@ -21,7 +21,7 @@ namespace VirtoCommerce.Storefront.Controllers.Api
         public ApiControllerBase(WorkContext workContext, ICatalogSearchService catalogSearchService, ICatalogSearchService productService, IStoreModuleApi storeApi)
         {
             WorkContext = workContext;
-            _catalogService = catalogSearchService;
+            _catalogSearchService = catalogSearchService;
             _productService = productService;
             _storeApi = storeApi;
 
@@ -36,6 +36,7 @@ namespace VirtoCommerce.Storefront.Controllers.Api
                 WorkContext.CurrentStore = _storeApi.StoreModuleGetStoreById(ConfigurationManager.AppSettings["DefaultStore"]).ToWebModel();
                 WorkContext.CurrentCurrency = WorkContext.CurrentStore.DefaultCurrency;
                 WorkContext.CurrentLanguage = WorkContext.CurrentStore.DefaultLanguage;
+                // WorkContext.AllCurrencies = await _cacheManager.GetAsync("GetAllCurrencies-" + workContext.CurrentLanguage.CultureName, "ApiRegion", async () => { return (await _commerceApi.CommerceGetAllCurrenciesAsync()).Select(x => x.ToWebModel(workContext.CurrentLanguage)).ToArray(); });
             }
             if (WorkContext.CurrentCustomer == null)
             {

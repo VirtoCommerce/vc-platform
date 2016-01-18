@@ -114,6 +114,19 @@ namespace VirtoCommerce.Platform.Data.Security.Authentication.Hmac
 
     public class ApiRequestSignature
     {
+        private static readonly string[] _timestampFormats =
+        {
+            "o",
+            "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fffffffK",
+            "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'ffffffK",
+            "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fffffK",
+            "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'ffffK",
+            "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fffK",
+            "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'ffK",
+            "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fK",
+            "yyyy'-'MM'-'dd'T'HH':'mm':'ssK",
+        };
+
         public string AppId { get; set; }
         public string TimestampString { get; private set; }
         public string Hash { get; set; }
@@ -143,7 +156,7 @@ namespace VirtoCommerce.Platform.Data.Security.Authentication.Hmac
                     if (parts[2].Length == 64)
                     {
                         DateTime timestamp;
-                        if (DateTime.TryParseExact(parts[1], "o", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out timestamp))
+                        if (DateTime.TryParseExact(parts[1], _timestampFormats, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out timestamp))
                         {
                             parsedValue = new ApiRequestSignature
                             {

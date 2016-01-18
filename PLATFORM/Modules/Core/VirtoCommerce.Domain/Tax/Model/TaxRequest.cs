@@ -21,7 +21,7 @@ namespace VirtoCommerce.Domain.Tax.Model
         public Customer.Model.Contact Customer { get; set; }
         public Customer.Model.Organization Organization { get; set; }
         public Address Address { get; set; }
-        public CurrencyCodes Currency { get; set; }
+        public string Currency { get; set; }
         public ICollection<TaxLine> Lines { get; set; }
     }
 }
