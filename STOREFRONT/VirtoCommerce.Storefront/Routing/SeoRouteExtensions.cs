@@ -14,77 +14,52 @@ namespace VirtoCommerce.Storefront.Routing
         {
             routes.MapLocalizedStorefrontRoute(name, url, defaults, null);
         }
+
         public static void MapLocalizedStorefrontRoute(this RouteCollection routes, string name, string url, object defaults, object constraints)
         {
+            routes.MapLocalizedStorefrontRoute(name, url, defaults, defaults, x => new Route(x, new MvcRouteHandler()));
+        }
+
+        /// <summary>
+        /// Generate extra three routing for specified url {store}/url, {store}/{language}/url, {language}/url, url
+        /// </summary>
+        /// <param name="routes"></param>
+        /// <param name="name"></param>
+        /// <param name="url"></param>
+        /// <param name="defaults"></param>
+        /// <param name="constraints"></param>
+        /// <param name="routeFactory"></param>
+        public static void MapLocalizedStorefrontRoute(this RouteCollection routes, string name, string url, object defaults, object constraints, Func<string, Route> routeFactory)
+        {
             var languageConstrain =  @"[a-z]{2}-[A-Z]{2}";
-      
-            var languageWithStoreRoute = new Route(@"{store}/{language}/" + url, new MvcRouteHandler())
-            {
-                Defaults = new RouteValueDictionary(defaults),
-                Constraints = new RouteValueDictionary(constraints),
-                DataTokens = new RouteValueDictionary()
-            };
+
+            var languageWithStoreRoute = routeFactory(@"{store}/{language}/" + url);
+            languageWithStoreRoute.Defaults = new RouteValueDictionary(defaults);
+            languageWithStoreRoute.Constraints = new RouteValueDictionary(constraints);
+            languageWithStoreRoute.DataTokens = new RouteValueDictionary();
             languageWithStoreRoute.Constraints.Add("language", languageConstrain);
             routes.Add(name + "StoreWithLang", languageWithStoreRoute);
 
-            var languageRoute = new Route(@"{language}/" + url, new MvcRouteHandler())
-            {
-                Defaults = new RouteValueDictionary(defaults),
-                Constraints = new RouteValueDictionary(constraints),
-                DataTokens = new RouteValueDictionary()
-            };
+            var languageRoute = routeFactory(@"{language}/" + url);
+            languageRoute.Defaults = new RouteValueDictionary(defaults);
+            languageRoute.Constraints = new RouteValueDictionary(constraints);
+            languageRoute.DataTokens = new RouteValueDictionary();
+
             languageRoute.Constraints.Add("language", languageConstrain);
             routes.Add(name + "Lang", languageRoute);
 
-            var storeRoute = new Route(@"{store}/" + url, new MvcRouteHandler())
-            {
-                Defaults = new RouteValueDictionary(defaults),
-                Constraints = new RouteValueDictionary(constraints),
-                DataTokens = new RouteValueDictionary()
-            };
+            var storeRoute = routeFactory(@"{store}/" + url);
+            storeRoute.Defaults = new RouteValueDictionary(defaults);
+            storeRoute.Constraints = new RouteValueDictionary(constraints);
+            storeRoute.DataTokens = new RouteValueDictionary();
             routes.Add(name + "Store", storeRoute);
 
-            var route = new Route(url, new MvcRouteHandler())
-            {
-                Defaults = new RouteValueDictionary(defaults),
-                Constraints = new RouteValueDictionary(constraints),
-                DataTokens = new RouteValueDictionary()
-            };
+            var route = routeFactory(url);
+            route.Defaults = new RouteValueDictionary(defaults);
+            route.Constraints = new RouteValueDictionary(constraints);
+            route.DataTokens = new RouteValueDictionary();
             routes.Add(name, route);
         }
-
-        [CLSCompliant(false)]
-        public static Route MapSeoRoute(this RouteCollection routes, Func<WorkContext> workContextFactory, ICommerceCoreModuleApi commerceCoreApi, IStaticContentService staticContentService, ICacheManager<object> cacheManager, string name, string url, object defaults)
-        {
-            return MapSeoRoute(routes, workContextFactory, commerceCoreApi, staticContentService, cacheManager, name, url, defaults, null, null);
-        }
-        [CLSCompliant(false)]
-        public static Route MapSeoRoute(this RouteCollection routes, Func<WorkContext> workContextFactory, ICommerceCoreModuleApi commerceCoreApi, IStaticContentService staticContentService, ICacheManager<object> cacheManager, string name, string url, object defaults, object constraints, string[] namespaces)
-        {
-            if (routes == null)
-            {
-                throw new ArgumentNullException("routes");
-            }
-            if (url == null)
-            {
-                throw new ArgumentNullException("url");
-            }
-
-            var route = new SeoRoute(url, new MvcRouteHandler(), workContextFactory, commerceCoreApi, staticContentService, cacheManager)
-            {
-                Defaults = new RouteValueDictionary(defaults),
-                Constraints = new RouteValueDictionary(constraints),
-                DataTokens = new RouteValueDictionary()
-            };
-
-            if ((namespaces != null) && (namespaces.Length > 0))
-            {
-                route.DataTokens["Namespaces"] = namespaces;
-            }
-
-            routes.Add(name, route);
-
-            return route;
-        }
+        
     }
 }
