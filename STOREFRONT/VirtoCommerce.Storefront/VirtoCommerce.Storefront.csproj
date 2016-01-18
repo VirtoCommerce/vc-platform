@@ -339,6 +339,7 @@
     <Compile Include="App_Start\UnityMvcActivator.cs" />
     <Compile Include="Builders\CartBuilder.cs" />
     <Compile Include="Builders\QuoteRequestBuilder.cs" />
+    <Compile Include="Common\HandleJsonErrorAttribute.cs" />
     <Compile Include="Controllers\MarketingController.cs" />
     <Compile Include="Controllers\PricingController.cs" />
     <Compile Include="Controllers\QuoteRequestController.cs" />
@@ -413,6 +414,9 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="NLog.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
@@ -585,6 +589,20 @@
       <LibSassFiles Include="$(WebProjectOutputDir)\bin\LibSass.x64.dll" />
     </ItemGroup>
     <Delete Files="@(LibSassFiles)" />
+  </Target>
+  <!-- Transform Web.config -->
+  <UsingTask TaskName="TransformXml" AssemblyFile="$(VSToolsPath)\Web\Microsoft.Web.Publishing.Tasks.dll" Condition="Exists('$(VSToolsPath)\Web\Microsoft.Web.Publishing.Tasks.dll')" />
+  <PropertyGroup>
+    <TransformInputFile>$(WebProjectOutputDir)\Web.Temp.config</TransformInputFile>
+    <TransformFile>$(MSBuildProjectDirectory)\Web.$(Configuration).config</TransformFile>
+    <TransformOutputFile>$(WebProjectOutputDir)\Web.config</TransformOutputFile>
+    <StackTraceEnabled>False</StackTraceEnabled>
+  </PropertyGroup>
+  <Target Name="TransformWebConfig" AfterTargets="Build">
+    <!-- Copy our web.config into a temp folder as the 'TransformXml' task has a file lock bug -->
+    <Copy SourceFiles="$(TransformOutputFile)" DestinationFiles="$(TransformInputFile)" />
+    <TransformXml Source="$(TransformInputFile)" Transform="$(TransformFile)" Destination="$(TransformOutputFile)" StackTrace="$(StackTraceEnabled)" />
+    <Delete Files="$(TransformInputFile)" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

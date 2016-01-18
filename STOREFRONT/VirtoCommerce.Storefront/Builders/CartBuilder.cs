@@ -38,7 +38,7 @@ namespace VirtoCommerce.Storefront.Builders
             _cacheManager = cacheManager;
         }
 
-        public async Task<ICartBuilder> GetOrCreateNewTransientCartAsync(Store store, Customer customer, Language language, Currency currency)
+        public virtual async Task<ICartBuilder> GetOrCreateNewTransientCartAsync(Store store, Customer customer, Language language, Currency currency)
         {
             _store = store;
             _customer = customer;
@@ -69,7 +69,7 @@ namespace VirtoCommerce.Storefront.Builders
             return this;
         }
 
-        public async Task<ICartBuilder> AddItemAsync(Product product, int quantity)
+        public virtual async Task<ICartBuilder> AddItemAsync(Product product, int quantity)
         {
             AddLineItem(product.ToLineItem(_language, quantity));
 
@@ -78,7 +78,7 @@ namespace VirtoCommerce.Storefront.Builders
             return this;
         }
 
-        public async Task<ICartBuilder> ChangeItemQuantityAsync(string id, int quantity)
+        public virtual async Task<ICartBuilder> ChangeItemQuantityAsync(string id, int quantity)
         {
             var lineItem = _cart.Items.FirstOrDefault(i => i.Id == id);
             if (lineItem != null)
@@ -98,7 +98,7 @@ namespace VirtoCommerce.Storefront.Builders
             return this;
         }
 
-        public async Task<ICartBuilder> ChangeItemQuantityAsync(int lineItemIndex, int quantity)
+        public virtual async Task<ICartBuilder> ChangeItemQuantityAsync(int lineItemIndex, int quantity)
         {
             var lineItem = _cart.Items.ElementAt(lineItemIndex);
             if (lineItem != null)
@@ -118,7 +118,7 @@ namespace VirtoCommerce.Storefront.Builders
             return this;
         }
 
-        public async Task<ICartBuilder> ChangeItemsQuantitiesAsync(int[] quantities)
+        public virtual async Task<ICartBuilder> ChangeItemsQuantitiesAsync(int[] quantities)
         {
             for (var i = 0; i < quantities.Length; i++)
             {
@@ -134,7 +134,7 @@ namespace VirtoCommerce.Storefront.Builders
             return this;
         }
 
-        public async Task<ICartBuilder> RemoveItemAsync(string id)
+        public virtual async Task<ICartBuilder> RemoveItemAsync(string id)
         {
             var lineItem = _cart.Items.FirstOrDefault(i => i.Id == id);
             if (lineItem != null)
@@ -147,7 +147,7 @@ namespace VirtoCommerce.Storefront.Builders
             return this;
         }
 
-        public async Task<ICartBuilder> ClearAsync()
+        public virtual async Task<ICartBuilder> ClearAsync()
         {
             _cart.Items.Clear();
 
@@ -156,7 +156,7 @@ namespace VirtoCommerce.Storefront.Builders
             return this;
         }
 
-        public async Task<ICartBuilder> AddCouponAsync(string couponCode)
+        public virtual async Task<ICartBuilder> AddCouponAsync(string couponCode)
         {
             _cart.Coupon = new Coupon
             {
@@ -168,7 +168,7 @@ namespace VirtoCommerce.Storefront.Builders
             return this;
         }
 
-        public async Task<ICartBuilder> RemoveCouponAsync()
+        public virtual async Task<ICartBuilder> RemoveCouponAsync()
         {
             _cart.Coupon = null;
 
@@ -177,7 +177,7 @@ namespace VirtoCommerce.Storefront.Builders
             return this;
         }
 
-        public async Task<ICartBuilder> AddAddressAsync(Address address)
+        public virtual async Task<ICartBuilder> AddAddressAsync(Address address)
         {
             var existingAddress = _cart.Addresses.FirstOrDefault(a => a.Type == address.Type);
             if (existingAddress != null)
@@ -192,7 +192,7 @@ namespace VirtoCommerce.Storefront.Builders
             return this;
         }
 
-        public async Task<ICartBuilder> AddShipmentAsync(ShippingMethod shippingMethod)
+        public virtual async Task<ICartBuilder> AddShipmentAsync(ShippingMethod shippingMethod)
         {
             var shipment = shippingMethod.ToShipmentModel(_currency);
 
@@ -204,7 +204,7 @@ namespace VirtoCommerce.Storefront.Builders
             return this;
         }
 
-        public async Task<ICartBuilder> AddPaymentAsync(PaymentMethod paymentMethod)
+        public virtual async Task<ICartBuilder> AddPaymentAsync(PaymentMethod paymentMethod)
         {
             var payment = paymentMethod.ToPaymentModel(_cart.Total, _currency);
 
@@ -216,7 +216,7 @@ namespace VirtoCommerce.Storefront.Builders
             return this;
         }
 
-        public async Task<ICartBuilder> MergeWithCartAsync(ShoppingCart cart)
+        public virtual async Task<ICartBuilder> MergeWithCartAsync(ShoppingCart cart)
         {
             foreach (var lineItem in cart.Items)
             {
@@ -239,7 +239,7 @@ namespace VirtoCommerce.Storefront.Builders
             return this;
         }
 
-        public async Task<ICartBuilder> RemoveCartAsync()
+        public virtual async Task<ICartBuilder> RemoveCartAsync()
         {
             await _cartApi.CartModuleDeleteCartsAsync(new List<string> { _cart.Id });
             _cacheManager.Remove(_cartCacheKey, _cartCacheRegion);
@@ -247,7 +247,7 @@ namespace VirtoCommerce.Storefront.Builders
             return this;
         }
 
-        public async Task<ICollection<ShippingMethod>> GetAvailableShippingMethodsAsync()
+        public virtual async Task<ICollection<ShippingMethod>> GetAvailableShippingMethodsAsync()
         {
             var availableShippingMethods = new List<ShippingMethod>();
 
@@ -261,7 +261,7 @@ namespace VirtoCommerce.Storefront.Builders
             return availableShippingMethods;
         }
 
-        public async Task<ICollection<PaymentMethod>> GetAvailablePaymentMethodsAsync()
+        public virtual async Task<ICollection<PaymentMethod>> GetAvailablePaymentMethodsAsync()
         {
             var availablePaymentMethods = new List<PaymentMethod>();
 
@@ -274,7 +274,7 @@ namespace VirtoCommerce.Storefront.Builders
             return availablePaymentMethods;
         }
 
-        public async Task SaveAsync()
+        public virtual async Task SaveAsync()
         {
             var cart = _cart.ToServiceModel();
 
@@ -291,7 +291,7 @@ namespace VirtoCommerce.Storefront.Builders
             }
         }
 
-        public ShoppingCart Cart
+        public  ShoppingCart Cart
         {
             get
             {
