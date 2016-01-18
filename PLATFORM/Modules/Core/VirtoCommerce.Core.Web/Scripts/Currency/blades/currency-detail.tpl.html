@@ -3,16 +3,18 @@
     <div class="blade-inner">
         <div class="inner-block clearfix">
             <form class="form" name="formScope">
-                <div class="form-group" ng-init="setForm(formScope)" title="The currency code. Use 3 letter ISO 4217 code, if exists.">
+                <div class="form-group" ng-init="setForm(formScope)">
                     <label class="form-label">{{ 'core.blades.currency-detail.labels.code' | translate }}</label>
                     <div class="form-input">
-                        <input ng-model="blade.currentEntity.code" required ng-disabled="!blade.isNew" />                        
+                        <input ng-model="blade.currentEntity.code" required ng-disabled="!blade.isNew" />
+                        <va-info-button tool-text="The currency code. Use 3 letter ISO 4217 code, if exists." />
                     </div>
                 </div>
-                <div class="form-group" title="The name of the currency">
+                <div class="form-group">
                     <label class="form-label">{{ 'core.blades.currency-detail.labels.name' | translate }}</label>
                     <div class="form-input">
-                        <input placeholder="Enter currency name" ng-model="blade.currentEntity.name" focus-on="" required />
+                        <input placeholder="The currency name" ng-model="blade.currentEntity.name" focus-on="" required />
+                        <va-info-button tool-text="The name of the currency" />
                     </div>
                 </div>
                 <div class="form-group">
@@ -24,22 +26,25 @@
                         </label>
                     </div>
                 </div>
-                <div class="form-group" title="The exchange rate against the primary exchange rate currency">
+                <div class="form-group">
                     <label class="form-label">{{ 'core.blades.currency-detail.labels.exchange-rate' | translate }}</label>
                     <div class="form-input __number">
                         <input placeholder="Enter exchange rate against the primary currency" smart-float required num-type="float" fraction="4" ng-model="blade.currentEntity.exchangeRate" min="0.0001">
+                        <va-info-button tool-text="The exchange rate against the primary exchange rate currency" />
                     </div>
                 </div>
-                <div class="form-group" title="The short currency symbol">
+                <div class="form-group">
                     <label class="form-label">{{ 'core.blades.currency-detail.labels.symbol' | translate }}</label>
                     <div class="form-input">
                         <input placeholder="Enter symbol or leave empty for culture default" ng-model="blade.currentEntity.symbol" />
+                        <va-info-button tool-text="Short currency symbol" />
                     </div>
                 </div>
-                <div class="form-group" title="Custom fromatting to be applied to the currency value">
+                <div class="form-group">
                     <label class="form-label">{{ 'core.blades.currency-detail.labels.custom-formatting' | translate }}</label>
-                    <div class="form-input __number">
+                    <div class="form-input">
                         <input placeholder="0,0.000" ng-model="blade.currentEntity.customFormatting">
+                        <va-info-button tool-text="Custom formatting to be applied to the currency value" />
                     </div>
                 </div>
             </form>

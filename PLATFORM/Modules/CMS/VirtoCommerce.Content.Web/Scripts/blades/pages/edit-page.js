@@ -243,7 +243,7 @@
         else {
             if (blade.origEntity.pageName !== blade.currentEntity.pageName) {
                 pages.delete({ storeId: blade.choosenStoreId, pageNamesAndLanguges: blade.choosenPageLanguage + '^' + blade.choosenPageName }, function () {
-                    blade.setNewName();
+                    blade.setNewName(blade.choosenPageName);
                     blade.update();
                 }, function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
             }
@@ -353,12 +353,20 @@
         function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
     }
 
-    blade.setNewName = function () {
-        var pathParts = blade.currentEntity.name.split('/');
+    blade.setNewName = function (pageName) {
+        var pathParts = [];
+        if (pageName) {
+            pathParts = pageName.split('/');
+            pathParts = _.initial(pathParts);
+            pathParts.push(blade.currentEntity.name);
+        }
+        else {
+            pathParts = blade.currentEntity.name.split('/');
+        }
         var pageNameWithExtension = pathParts[pathParts.length - 1];
         var parts = pageNameWithExtension.split('.');
 
-        blade.currentEntity.name = blade.currentEntity.id = pathParts.slice(0, pathParts.length - 1).join('/') + (pathParts.length > 1 ? '/' : '') + blade.currentEntity.pageName;
+        blade.currentEntity.name = blade.currentEntity.id = _.initial(pathParts).join('/') + (pathParts.length > 1 ? '/' : '') + blade.currentEntity.pageName;
         if (parts.length > 1) {
             blade.currentEntity.name += "." + parts[parts.length - 1];
             blade.currentEntity.id += "." + parts[parts.length - 1];

@@ -60,10 +60,14 @@
         "title-mapping": "Choose Categories & Items for mapping",
         "subtitle-mapping": "Creating a Link inside virtual catalog",
         "labels": {
+          "new-filter": "Add new filter",
           "inactive": "Inactive",
           "picture": "Pic",
           "name": "Name",
           "sku": "SKU"
+        },
+        "placeholders": {
+          "select-filter": "Select filter"
         }
       },
       "category-detail": {
@@ -114,6 +118,14 @@
         "subtitle": "Catalog properties",
         "labels": {
           "empty-list": "None"
+        }
+      },
+        "filter-detail": {
+        "subtitle": "Edit filter",
+        "new-title": "New filter",
+        "new-subtitle": "Create new filter",
+        "labels": {
+          "name": "Filter name"
         }
       },
       "property-detail": {
@@ -616,6 +628,7 @@
       }
     },
     "commands": {
+      "apply-filter": "Apply filter",
       "start-export": "Start export",
       "start-import": "Start import",
       "clear-all": "Clear all",
