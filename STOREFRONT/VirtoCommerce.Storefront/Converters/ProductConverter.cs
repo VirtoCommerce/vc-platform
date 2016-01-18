@@ -7,6 +7,7 @@ using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Marketing;
+using VirtoCommerce.Storefront.Model.Quote;
 
 namespace VirtoCommerce.Storefront.Converters
 {
@@ -65,6 +66,18 @@ namespace VirtoCommerce.Storefront.Converters
             }
 
             return retVal;
+        }
+
+        public static QuoteItem ToQuoteItem(this Product product)
+        {
+            var quoteItem = new QuoteItem();
+
+            quoteItem.InjectFrom<NullableAndEnumValueInjecter>(product);
+
+            quoteItem.ListPrice = product.Price.ListPrice;
+            quoteItem.SalePrice = product.Price.SalePrice;
+
+            return quoteItem;
         }
 
         public static PromotionProductEntry ToPromotionItem(this Product product)
