@@ -141,7 +141,7 @@ namespace VirtoCommerce.Storefront
             // Create new work context for each request
             container.RegisterType<WorkContext, WorkContext>(new PerRequestLifetimeManager());
 
-            var shopifyLiquidEngine = new ShopifyLiquidThemeEngine(cacheManager, () => container.Resolve<WorkContext>(), () => container.Resolve<IStorefrontUrlBuilder>(), HostingEnvironment.MapPath("~/App_data/themes"), "~/themes/assets", "~/themes/global/assets");
+            var shopifyLiquidEngine = new ShopifyLiquidThemeEngine(cacheManager, () => container.Resolve<WorkContext>(), () => container.Resolve<IStorefrontUrlBuilder>(), HostingEnvironment.MapPath(ConfigurationManager.AppSettings["vc-public-themes"]), "~/themes/assets", "~/themes/global/assets");
             container.RegisterInstance(shopifyLiquidEngine);
             //Register liquid engine
             ViewEngines.Engines.Add(new DotLiquidThemedViewEngine(container.Resolve<ShopifyLiquidThemeEngine>()));
@@ -150,7 +150,7 @@ namespace VirtoCommerce.Storefront
             container.RegisterType<IModelBinderProvider, ShopifyModelBinderProvider>("shopify");
 
             //Static content service
-            var staticContentService = new StaticContentServiceImpl(HostingEnvironment.MapPath("~/App_data/Pages"), new Markdown(), shopifyLiquidEngine, cacheManager);
+            var staticContentService = new StaticContentServiceImpl(HostingEnvironment.MapPath(ConfigurationManager.AppSettings["vc-public-pages"]), new Markdown(), shopifyLiquidEngine, cacheManager);
             container.RegisterInstance<IStaticContentService>(staticContentService);
 
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters, () => container.Resolve<WorkContext>());
