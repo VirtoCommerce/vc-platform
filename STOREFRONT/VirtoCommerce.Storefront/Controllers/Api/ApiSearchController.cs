@@ -8,30 +8,33 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Hosting;
 using System.Web.Http;
-using VirtoCommerce.Client.Api;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Services;
 
 namespace VirtoCommerce.Storefront.Controllers.Api
 {
-    [RoutePrefix("api/search")]
+    [RoutePrefix("storefrontapi/search")]
     public class ApiSearchController : ApiControllerBase
     {
-        public ApiSearchController(WorkContext workContext, ICatalogSearchService catalogSearchService, ICatalogSearchService productService, IStoreModuleApi storeApi)
-            : base(workContext, catalogSearchService, productService, storeApi)
+        public ApiSearchController(WorkContext workContext, ICatalogSearchService catalogSearchService)
+            : base(workContext, catalogSearchService)
         {
+        }
+        
+        //search by keyword
+        [Route("")]
+        public async Task<CatalogSearchResult> GetSearchProducts()
+        {
+            WorkContext.CurrentCatalogSearchResult = await _catalogSearchService.SearchAsync(WorkContext.CurrentCatalogSearchCriteria);
+            return WorkContext.CurrentCatalogSearchResult;
         }
 
         //Load categories for main page
         [Route("categories")]
         public async Task<CatalogSearchResult> GetCurrentCategories()
         {
-            WorkContext.CurrentCatalogSearchCriteria = new CatalogSearchCriteria
-            {
-                CatalogId = WorkContext.CurrentStore.Catalog,
-                ResponseGroup = CatalogSearchResponseGroup.WithCategories
-            };
+            WorkContext.CurrentCatalogSearchCriteria.ResponseGroup = CatalogSearchResponseGroup.WithCategories;
 
             WorkContext.CurrentCatalogSearchResult = await _catalogSearchService.SearchAsync(WorkContext.CurrentCatalogSearchCriteria);
             return WorkContext.CurrentCatalogSearchResult;
@@ -41,16 +44,12 @@ namespace VirtoCommerce.Storefront.Controllers.Api
         [Route("products")]
         public async Task<CatalogSearchResult> GetCategoryProducts([FromUri] ApiWorkContext apiWorkContext)
         {
-            WorkContext.CurrentCatalogSearchCriteria = new CatalogSearchCriteria
-            {
-                CatalogId = apiWorkContext.CatalogId,
-                CategoryId = apiWorkContext.CategoryId
-            };
+            WorkContext.CurrentCatalogSearchCriteria.CategoryId = apiWorkContext.CategoryId;
 
             WorkContext.CurrentCatalogSearchResult = await _catalogSearchService.SearchAsync(WorkContext.CurrentCatalogSearchCriteria);
             return WorkContext.CurrentCatalogSearchResult;
         }
-
+        
         //Load product details
         [Route("products/{itemId}")]
         public async Task<Product> GetProduct([FromUri] ApiWorkContext apiWorkContext)

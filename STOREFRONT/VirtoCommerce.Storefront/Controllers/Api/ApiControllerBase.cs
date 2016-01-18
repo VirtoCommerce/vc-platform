@@ -1,10 +1,6 @@
-﻿using VirtoCommerce.Storefront.Converters;
-using System.Configuration;
-using System.Web.Http;
-using VirtoCommerce.Client.Api;
+﻿using System.Web.Http;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Services;
-using VirtoCommerce.Storefront.Common;
 
 namespace VirtoCommerce.Storefront.Controllers.Api
 {
@@ -12,41 +8,14 @@ namespace VirtoCommerce.Storefront.Controllers.Api
     {
 #pragma warning disable CS3008 // Identifier is not CLS-compliant
         protected readonly ICatalogSearchService _catalogSearchService;
-        protected readonly ICatalogSearchService _productService;
-        protected readonly IStoreModuleApi _storeApi;
 #pragma warning restore CS3008 // Identifier is not CLS-compliant
 
         protected WorkContext WorkContext { get; private set; }
 
-        public ApiControllerBase(WorkContext workContext, ICatalogSearchService catalogSearchService, ICatalogSearchService productService, IStoreModuleApi storeApi)
+        public ApiControllerBase(WorkContext workContext, ICatalogSearchService catalogSearchService)
         {
             WorkContext = workContext;
-            _catalogSearchService = catalogSearchService;
-            _productService = productService;
-            _storeApi = storeApi;
-
-            InitializeWorkContext();
-        }
-
-
-        protected void InitializeWorkContext()
-        {
-            if (WorkContext.CurrentStore == null)
-            {
-                WorkContext.CurrentStore = _storeApi.StoreModuleGetStoreById(ConfigurationManager.AppSettings["DefaultStore"]).ToWebModel();
-                WorkContext.CurrentCurrency = WorkContext.CurrentStore.DefaultCurrency;
-                WorkContext.CurrentLanguage = WorkContext.CurrentStore.DefaultLanguage;
-                // WorkContext.AllCurrencies = await _cacheManager.GetAsync("GetAllCurrencies-" + workContext.CurrentLanguage.CultureName, "ApiRegion", async () => { return (await _commerceApi.CommerceGetAllCurrenciesAsync()).Select(x => x.ToWebModel(workContext.CurrentLanguage)).ToArray(); });
-            }
-            if (WorkContext.CurrentCustomer == null)
-            {
-                WorkContext.CurrentCustomer = new Customer
-                {
-                    Id = "anonymous-customer-id",
-                    UserName = StorefrontConstants.AnonymousUsername,
-                    Name = StorefrontConstants.AnonymousUsername
-                };
-            }
+            _catalogSearchService = catalogSearchService;            
         }
     }
 }

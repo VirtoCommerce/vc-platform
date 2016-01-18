@@ -4,7 +4,6 @@ using System.Web.Http;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Services;
-using VirtoCommerce.Storefront.Builders;
 using VirtoCommerce.Storefront.Model.Cart;
 using VirtoCommerce.Storefront.Converters;
 using System.Collections.Generic;
@@ -13,15 +12,15 @@ using VirtoCommerce.Storefront.Model.Cart.Services;
 
 namespace VirtoCommerce.Storefront.Controllers.Api
 {
-    [RoutePrefix("api/cart")]
+    [RoutePrefix("storefrontapi/cart")]
     public class ApiCartController : ApiControllerBase
     {
         private readonly ICartBuilder _cartBuilder;
         private readonly IShoppingCartModuleApi _cartApi;
         private readonly IOrderModuleApi _orderApi;
 
-        public ApiCartController(WorkContext workContext, ICatalogSearchService catalogSearchService, ICatalogSearchService productService, IStoreModuleApi storeApi, ICartBuilder cartBuilder, IShoppingCartModuleApi cartApi, IOrderModuleApi orderApi)
-            : base(workContext, catalogSearchService, productService, storeApi)
+        public ApiCartController(WorkContext workContext, ICatalogSearchService catalogSearchService, ICartBuilder cartBuilder, IShoppingCartModuleApi cartApi, IOrderModuleApi orderApi)
+            : base(workContext, catalogSearchService)
         {
             _cartBuilder = cartBuilder;
             _cartApi = cartApi;
