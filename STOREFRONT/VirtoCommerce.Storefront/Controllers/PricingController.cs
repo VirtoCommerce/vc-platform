@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using VirtoCommerce.Client.Api;
+using VirtoCommerce.Storefront.Common;
 using VirtoCommerce.Storefront.Converters;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Catalog;
@@ -33,6 +34,7 @@ namespace VirtoCommerce.Storefront.Controllers
 
         // POST: /pricing/actualprices
         [HttpPost]
+        [HandleJsonErrorAttribute]
         public async Task<ActionResult> GetActualProductPricesJson(Product[] products)
         {
             if(products == null)

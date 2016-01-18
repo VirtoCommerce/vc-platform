@@ -337,6 +337,7 @@
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="App_Start\UnityMvcActivator.cs" />
     <Compile Include="Builders\CartBuilder.cs" />
+    <Compile Include="Common\HandleJsonErrorAttribute.cs" />
     <Compile Include="Controllers\MarketingController.cs" />
     <Compile Include="Controllers\PricingController.cs" />
     <Compile Include="Converters\CurrencyConverter.cs" />

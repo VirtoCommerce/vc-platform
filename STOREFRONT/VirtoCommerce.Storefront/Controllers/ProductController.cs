@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using VirtoCommerce.Storefront.Common;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Services;
@@ -47,6 +48,7 @@ namespace VirtoCommerce.Storefront.Controllers
         /// <returns></returns>
         [HttpGet]
         [OutputCache(NoStore = true, Duration = 0, VaryByParam = "None")]
+        [HandleJsonErrorAttribute]
         public async Task<ActionResult> ProductDetailsJson(string productId)
         {
             base.WorkContext.CurrentProduct = (await _catalogSearchService.GetProductsAsync(new [] { productId }, Model.Catalog.ItemResponseGroup.ItemLarge)).FirstOrDefault();

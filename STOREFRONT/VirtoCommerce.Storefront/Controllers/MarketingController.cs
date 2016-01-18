@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using VirtoCommerce.Client.Api;
+using VirtoCommerce.Storefront.Common;
 using VirtoCommerce.Storefront.Converters;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Cart;
@@ -29,9 +30,10 @@ namespace VirtoCommerce.Storefront.Controllers
             _promotionEvaluator = promotionEvaluator;
         }
 
-       // GET: /marketing/dynamiccontent/{placeName}/json
-       [HttpGet]
-       public async Task<ActionResult> GetDynamicContentJson(string placeName)
+        // GET: /marketing/dynamiccontent/{placeName}/json
+        [HttpGet]
+        [HandleJsonErrorAttribute]
+        public async Task<ActionResult> GetDynamicContentJson(string placeName)
         {
             var htmlContent = await _marketingService.GetDynamicContentHtmlAsync(WorkContext.CurrentStore.Id, placeName);
 
