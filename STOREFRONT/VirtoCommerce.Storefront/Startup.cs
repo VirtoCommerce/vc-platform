@@ -94,7 +94,7 @@ namespace VirtoCommerce.Storefront
                 {
                     CacheManagerOutputCacheProvider.Cache.Clear();
                 }
-                catch(Exception)
+                catch (Exception)
                 {
 
                 }
@@ -155,7 +155,7 @@ namespace VirtoCommerce.Storefront
 
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters, () => container.Resolve<WorkContext>());
             RouteConfig.RegisterRoutes(RouteTable.Routes, () => container.Resolve<WorkContext>(), container.Resolve<ICommerceCoreModuleApi>(), container.Resolve<IStaticContentService>(), cacheManager);
-            AuthConfig.ConfigureAuth(app);
+            AuthConfig.ConfigureAuth(app, () => container.Resolve<IStorefrontUrlBuilder>());
 
             app.Use<WorkContextOwinMiddleware>(container);
             app.UseStageMarker(PipelineStage.ResolveCache);
