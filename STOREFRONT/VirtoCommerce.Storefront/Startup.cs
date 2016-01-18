@@ -34,6 +34,7 @@ using MarkdownDeep;
 using VirtoCommerce.Storefront.Model.Marketing.Services;
 using VirtoCommerce.Storefront.Model.Cart.Services;
 using VirtoCommerce.Storefront.Model.Pricing.Services;
+using VirtoCommerce.Storefront.Model.Quote.Services;
 
 [assembly: OwinStartup(typeof(Startup))]
 [assembly: PreApplicationStartMethod(typeof(Startup), "PreApplicationStart")]
@@ -126,6 +127,7 @@ namespace VirtoCommerce.Storefront
             container.RegisterType<IOrderModuleApi, OrderModuleApi>();
             container.RegisterType<IMarketingModuleApi, MarketingModuleApi>();
             container.RegisterType<ICMSContentModuleApi, CMSContentModuleApi>();
+            container.RegisterType<IQuoteModuleApi, QuoteModuleApi>();
             container.RegisterType<ISearchModuleApi, SearchModuleApi>();
             container.RegisterType<IMarketingService, MarketingServiceImpl>();
             container.RegisterType<IPromotionEvaluator, PromotionEvaluator>();
@@ -133,6 +135,7 @@ namespace VirtoCommerce.Storefront
             container.RegisterType<IPricingService, PricingServiceImpl>();
 
             container.RegisterType<ICartBuilder, CartBuilder>();
+            container.RegisterType<IQuoteRequestBuilder, QuoteRequestBuilder>();
             container.RegisterType<ICatalogSearchService, CatalogSearchServiceImpl>();
             container.RegisterType<IAuthenticationManager>(new InjectionFactory((context) => HttpContext.Current.GetOwinContext().Authentication));
 

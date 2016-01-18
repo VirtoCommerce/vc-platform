@@ -2,7 +2,6 @@
 using VirtoCommerce.Storefront.Model;
 using System.Linq;
 using VirtoCommerce.Storefront.Model.Common;
-using System.Collections.Generic;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Storefront.Converters
@@ -34,8 +33,7 @@ namespace VirtoCommerce.Storefront.Converters
                 retVal.DynamicProperties = storeDto.DynamicProperties.Select(x => x.ToWebModel()).ToList();
                 retVal.ThemeName = retVal.DynamicProperties.GetDynamicPropertyValue("DefaultThemeName");
             }
-            
-        
+
             return retVal;
         }
     }

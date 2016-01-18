@@ -5,6 +5,7 @@ using VirtoCommerce.Storefront.Model.Cart;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Order;
+using VirtoCommerce.Storefront.Model.Quote;
 using VirtoCommerce.Storefront.Model.StaticContent;
 
 namespace VirtoCommerce.Storefront.Model
@@ -67,6 +68,8 @@ namespace VirtoCommerce.Storefront.Model
         /// Gets or sets the current shopping cart
         /// </summary>
         public ShoppingCart CurrentCart { get; set; }
+
+        public QuoteRequest CurrentQuoteRequest { get; set; }
 
         /// <summary>
         /// Gets or sets the HTML code for payment method prepared form
