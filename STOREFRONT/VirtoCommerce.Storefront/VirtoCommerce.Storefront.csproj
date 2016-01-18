@@ -578,6 +578,20 @@
     </ItemGroup>
     <Delete Files="@(LibSassFiles)" />
   </Target>
+  <!-- Transform Web.config -->
+  <UsingTask TaskName="TransformXml" AssemblyFile="$(VSToolsPath)\Web\Microsoft.Web.Publishing.Tasks.dll" Condition="Exists('$(VSToolsPath)\Web\Microsoft.Web.Publishing.Tasks.dll')" />
+  <PropertyGroup>
+    <TransformInputFile>$(WebProjectOutputDir)\Web.Temp.config</TransformInputFile>
+    <TransformFile>$(MSBuildProjectDirectory)\Web.$(Configuration).config</TransformFile>
+    <TransformOutputFile>$(WebProjectOutputDir)\Web.config</TransformOutputFile>
+    <StackTraceEnabled>False</StackTraceEnabled>
+  </PropertyGroup>
+  <Target Name="TransformWebConfig" AfterTargets="Build">
+    <!-- Copy our web.config into a temp folder as the 'TransformXml' task has a file lock bug -->
+    <Copy SourceFiles="$(TransformOutputFile)" DestinationFiles="$(TransformInputFile)" />
+    <TransformXml Source="$(TransformInputFile)" Transform="$(TransformFile)" Destination="$(TransformOutputFile)" StackTrace="$(StackTraceEnabled)" />
+    <Delete Files="$(TransformInputFile)" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
