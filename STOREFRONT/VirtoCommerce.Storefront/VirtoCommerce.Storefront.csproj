@@ -317,6 +317,7 @@
     <Content Include="App_Data\Themes\default\assets\warning.svg" />
     <Content Include="App_Data\Themes\default\assets\slide_1.jpg" />
     <Content Include="App_Data\Themes\default\assets\slide_2.jpg" />
+    <Content Include="App_Data\Themes\default\snippets\cart-modal.liquid" />
     <Content Include="App_Data\Themes\default\social\shopify-social.svg" />
     <Content Include="App_Data\Themes\default\social\social-icons.css" />
     <Content Include="App_Data\x64\LibSass.x64.dll" />
@@ -337,6 +338,7 @@
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="App_Start\UnityMvcActivator.cs" />
     <Compile Include="Builders\CartBuilder.cs" />
+    <Compile Include="Common\HandleJsonErrorAttribute.cs" />
     <Compile Include="Controllers\MarketingController.cs" />
     <Compile Include="Controllers\PricingController.cs" />
     <Compile Include="Converters\CurrencyConverter.cs" />
@@ -404,6 +406,9 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="NLog.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
@@ -426,7 +431,6 @@
     <Content Include="App_Data\Themes\default\locales\fr.json" />
     <Content Include="App_Data\Themes\default\locales\pt-BR.json" />
     <Content Include="App_Data\Themes\default\locales\pt-PT.json" />
-    <Content Include="App_Data\Themes\default\snippets\cart-modal.liquid" />
     <Content Include="App_Data\Themes\default\snippets\blog-sidebar.liquid" />
     <Content Include="App_Data\Themes\default\snippets\breadcrumb.liquid" />
     <Content Include="App_Data\Themes\default\snippets\checkout_totals.liquid" />

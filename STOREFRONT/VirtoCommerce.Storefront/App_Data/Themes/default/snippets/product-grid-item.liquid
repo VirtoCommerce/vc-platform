@@ -58,7 +58,7 @@
                 </span>
                 <small ng-bind="productPrices['{{ product.id }}'].ActualPrice.FormatedAmount"></small>
             </span>
-            <span class="sale-tag medium--right" ng-if="productPrices['{{ product.id }}'].AbsoluteBenefit.Amount > 0" ng-bind="'save ' + productPrices['{{ product.id }}'].AbsoluteBenefit.FormatedAmount"></span>
+            <span class="sale-tag medium--right" ng-if="productPrices['{{ product.id }}'].AbsoluteBenefit.Amount > 0" ng-bind="'{{ 'products.general.save_html' | t }}'  + productPrices['{{ product.id }}'].AbsoluteBenefit.FormatedAmount"></span>
         </div>
 
         <div class="product-item--other">

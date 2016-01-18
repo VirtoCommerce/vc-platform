@@ -64,7 +64,7 @@
                     <span ng-if="selectedVariation.Price.AbsoluteBenefit.Amount > 0" class="old">
                         <small ng-bind="selectedVariation.Price.ListPrice.FormatedAmount"></small>
                     </span>
-                    <span ng-if="selectedVariation.Price.AbsoluteBenefit.Amount > 0" id="comparePrice" class="sale-tag large" ng-bind="'-' + selectedVariation.Price.AbsoluteBenefit.FormatedAmount">
+                    <span ng-if="selectedVariation.Price.AbsoluteBenefit.Amount > 0" id="comparePrice" class="sale-tag large" ng-bind="'{{ 'products.general.save_html' | t }}' + selectedVariation.Price.AbsoluteBenefit.FormatedAmount">
                     </span>
                     <span id="productPrice" class="h1">
                         <small ng-bind="selectedVariation.Price.ActualPrice.FormatedAmount"></small>
@@ -105,10 +105,6 @@
                     <span class="icon icon-cart"></span>
                     <span id="addToCartText">{{ 'products.product.add_to_cart' | t }}</span>
                 </button>
-
-                <script ng-if="isCartModalVisible">
-                    window.scrollTo(0, 0);
-                </script>
 
                 {% if shop.quotes_enabled and product.is_quotable %}
                 <button class="btn" id="addToQuote" type="button">
