@@ -64,7 +64,7 @@
                     <span ng-if="selectedVariation.Price.AbsoluteBenefit.Amount > 0" class="old">
                         <small ng-bind="selectedVariation.Price.ListPrice.FormatedAmount"></small>
                     </span>
-                    <span ng-if="selectedVariation.Price.AbsoluteBenefit.Amount > 0" id="comparePrice" class="sale-tag large" ng-bind="'-' + selectedVariation.Price.AbsoluteBenefit.FormatedAmount">
+                    <span ng-if="selectedVariation.Price.AbsoluteBenefit.Amount > 0" id="comparePrice" class="sale-tag large" ng-bind="'{{ 'products.general.save_html' | t }}' + selectedVariation.Price.AbsoluteBenefit.FormatedAmount">
                     </span>
                     <span id="productPrice" class="h1">
                         <small ng-bind="selectedVariation.Price.ActualPrice.FormatedAmount"></small>
