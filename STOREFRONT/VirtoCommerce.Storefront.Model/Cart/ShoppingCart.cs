@@ -261,6 +261,14 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// <value>Dynamic properties collections</value>
         public ICollection<DynamicProperty> DynamicProperties { get; set; }
 
+        public LineItem RecentlyAddedItem
+        {
+            get
+            {
+                return Items.OrderByDescending(i => i.CreatedDate).FirstOrDefault();
+            }
+        }
+
         public bool HasValidationErrors
         {
             get

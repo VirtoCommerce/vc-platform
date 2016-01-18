@@ -40,7 +40,7 @@ storefrontApp.service('cartService', ['$http', function ($http) {
         addLineItem: function (productId, quantity) {
             return $http.post('cart/additem', { id: productId, quantity: quantity });
         },
-        changeLineItem: function (lineItemId, quantity) {
+        changeLineItemQuantity: function (lineItemId, quantity) {
             return $http.post('cart/changeitem', { lineItemId: lineItemId, quantity: quantity });
         },
         removeLineItem: function (lineItemId) {

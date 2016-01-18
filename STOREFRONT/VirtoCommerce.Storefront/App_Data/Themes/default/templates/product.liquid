@@ -106,10 +106,6 @@
                     <span id="addToCartText">{{ 'products.product.add_to_cart' | t }}</span>
                 </button>
 
-                <script ng-if="isCartModalVisible">
-                    window.scrollTo(0, 0);
-                </script>
-
                 {% if shop.quotes_enabled and product.is_quotable %}
                 <button class="btn" id="addToQuote" type="button">
                     <span class="fa fa-calculator"></span>
