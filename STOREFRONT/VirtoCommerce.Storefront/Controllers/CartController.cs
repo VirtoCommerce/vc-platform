@@ -63,15 +63,14 @@ namespace VirtoCommerce.Storefront.Controllers
         public async Task<ActionResult> AddItemJson(string id, int quantity = 1)
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
-            throw new NullReferenceException("ssss");
-            //var products = await _catalogService.GetProductsAsync(new string[] { id }, Model.Catalog.ItemResponseGroup.ItemLarge);
-            //if (products != null && products.Any())
-            //{
-            //    await _cartBuilder.AddItemAsync(products.First(), quantity);
-            //    await _cartBuilder.SaveAsync();
-            //}
+            var products = await _catalogService.GetProductsAsync(new string[] { id }, Model.Catalog.ItemResponseGroup.ItemLarge);
+            if (products != null && products.Any())
+            {
+                await _cartBuilder.AddItemAsync(products.First(), quantity);
+                await _cartBuilder.SaveAsync();
+            }
 
-            //return Json(null, JsonRequestBehavior.AllowGet);
+            return Json(null, JsonRequestBehavior.AllowGet);
         }
 
         // POST: /cart/changeitem?lineItemId=...&quantity=...
