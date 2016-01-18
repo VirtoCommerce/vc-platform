@@ -109,6 +109,11 @@ namespace VirtoCommerce.Storefront.Routing
                         data.Values["action"] = "GetContentPage";
                         data.Values["page"] = contentPage;
                     }
+                    else
+                    {
+                        data.Values["controller"] = "Error";
+                        data.Values["action"] = "Http404";
+                    }
                 }
             }
 
