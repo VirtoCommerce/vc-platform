@@ -45,20 +45,19 @@ namespace VirtoCommerce.CoreModule.Data.Tax
             }
 
             var retVal = new List<TaxRate>();
-            if (taxEvalContext.TaxRequest != null)
+
+            foreach (var line in taxEvalContext.Lines)
             {
-                foreach (var line in taxEvalContext.TaxRequest.Lines)
+                var rate = new TaxRate
                 {
-                    var rate = new TaxRate
-                    {
-                        Rate = line.Amount * Rate * 0.01m,
-                        Currency = taxEvalContext.TaxRequest.Currency,
-                        TaxProvider = this,
-                        Line = line
-                    };
-                    retVal.Add(rate);
-                }
+                    Rate = line.Amount * Rate * 0.01m,
+                    Currency = taxEvalContext.Currency,
+                    TaxProvider = this,
+                    Line = line
+                };
+                retVal.Add(rate);
             }
+
             return retVal;
         }
     }

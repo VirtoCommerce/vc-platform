@@ -34,9 +34,9 @@ namespace VirtoCommerce.CartModule.Data.Converters
             return retVal;
 		}
 
-        public static taxCoreModel.TaxRequest ToTaxRequest(this ShoppingCart cart)
+        public static taxCoreModel.TaxEvaluationContext ToTaxEvalContext(this ShoppingCart cart)
         {
-            var retVal = new taxCoreModel.TaxRequest();
+            var retVal = new taxCoreModel.TaxEvaluationContext();
             retVal.Id = cart.Id;
             retVal.Code = cart.Name;
             retVal.Currency = cart.Currency;

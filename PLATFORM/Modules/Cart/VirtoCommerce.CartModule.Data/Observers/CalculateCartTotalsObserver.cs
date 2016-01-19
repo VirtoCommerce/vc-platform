@@ -53,8 +53,7 @@ namespace VirtoCommerce.CartModule.Data.Observers
                 var taxProvider = store.TaxProviders.Where(x => x.IsActive).OrderBy(x => x.Priority).FirstOrDefault();
                 if (taxProvider != null)
                 {
-                    var taxRequest = cart.ToTaxRequest();
-                    var taxEvalContext = new TaxEvaluationContext(taxRequest);
+                    var taxEvalContext = cart.ToTaxEvalContext();
                     cart.TaxTotal = taxProvider.CalculateRates(taxEvalContext).Select(x => x.Rate).DefaultIfEmpty(0).Sum(x => x);
                 }
             }
