@@ -35,7 +35,10 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             }
 
             result.DefaultSortBy = "manual";
-            result.SortBy = workContext.CurrentCatalogSearchCriteria.SortBy;
+            if (workContext.CurrentCatalogSearchCriteria != null)
+            {
+                result.SortBy = workContext.CurrentCatalogSearchCriteria.SortBy;
+            }
 
             return result;
         }

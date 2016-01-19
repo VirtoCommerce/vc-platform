@@ -155,7 +155,7 @@ namespace VirtoCommerce.Storefront.Owin
 
         private bool IsAssetRequest(Uri uri)
         {
-            return uri.AbsolutePath.Contains("themes/assets");
+            return uri.AbsolutePath.Contains("themes/assets") || !string.IsNullOrEmpty(Path.GetExtension(uri.ToString()));
         }
 
         private string GetCurrentCustomerId(IOwinContext context)
