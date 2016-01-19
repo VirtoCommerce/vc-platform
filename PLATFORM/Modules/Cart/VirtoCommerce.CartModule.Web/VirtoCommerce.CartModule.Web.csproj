@@ -163,6 +163,7 @@
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
+    <Content Include="Content\logo.png" />
     <Content Include="Localizations\en.VirtoCommerce.Cart.json" />
     <None Include="packages.config" />
   </ItemGroup>

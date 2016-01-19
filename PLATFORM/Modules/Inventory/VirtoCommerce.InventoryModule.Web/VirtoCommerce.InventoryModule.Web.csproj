@@ -110,6 +110,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <Content Include="Content\logo.png" />
     <Content Include="Localizations\en.VirtoCommerce.Inventory.json" />
     <None Include="packages.config" />
     <Content Include="module.manifest" />
