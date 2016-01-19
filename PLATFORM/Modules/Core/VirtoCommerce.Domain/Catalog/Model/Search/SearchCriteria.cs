@@ -66,7 +66,7 @@ namespace VirtoCommerce.Domain.Catalog.Model
         public string LanguageCode { get; set; }
 
         /// <summary>
-        /// Product ore category code
+        /// Product or category code
         /// </summary>
         public string Code { get; set; }
 
