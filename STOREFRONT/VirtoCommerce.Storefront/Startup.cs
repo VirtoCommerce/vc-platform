@@ -144,7 +144,7 @@ namespace VirtoCommerce.Storefront
             // Create new work context for each request
             container.RegisterType<WorkContext, WorkContext>(new PerRequestLifetimeManager());
 
-            var shopifyLiquidEngine = new ShopifyLiquidThemeEngine(cacheManager, () => container.Resolve<WorkContext>(), () => container.Resolve<IStorefrontUrlBuilder>(), HostingEnvironment.MapPath("~/App_data/themes"), "~/themes/assets", "~/themes/global/assets");
+            var shopifyLiquidEngine = new ShopifyLiquidThemeEngine(cacheManager, () => container.Resolve<WorkContext>(), () => container.Resolve<IStorefrontUrlBuilder>(), ResolvePath("vc-public-themes", "~/App_data/themes"), "~/themes/assets", "~/themes/global/assets");
             container.RegisterInstance(shopifyLiquidEngine);
             //Register liquid engine
             ViewEngines.Engines.Add(new DotLiquidThemedViewEngine(container.Resolve<ShopifyLiquidThemeEngine>()));
@@ -153,7 +153,7 @@ namespace VirtoCommerce.Storefront
             container.RegisterType<IModelBinderProvider, ShopifyModelBinderProvider>("shopify");
 
             //Static content service
-            var staticContentService = new StaticContentServiceImpl(HostingEnvironment.MapPath("~/App_data/Pages"), new Markdown(), shopifyLiquidEngine, cacheManager);
+            var staticContentService = new StaticContentServiceImpl(ResolvePath("vc-public-pages", "~/App_data/Pages"), new Markdown(), shopifyLiquidEngine, cacheManager);
             container.RegisterInstance<IStaticContentService>(staticContentService);
 
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters, () => container.Resolve<WorkContext>());
@@ -198,6 +198,21 @@ namespace VirtoCommerce.Storefront
             }
 
             return assembly;
+        }
+
+        private static string ResolvePath(string settingId, string defaultValue)
+        {
+            var relativePath = ConfigurationManager.AppSettings[settingId];
+
+            if(string.IsNullOrEmpty(relativePath))
+            {
+                relativePath = defaultValue;
+            }
+
+            if (relativePath.StartsWith("~"))
+                return HostingEnvironment.MapPath(relativePath);
+
+            return relativePath;
         }
     }
 }

@@ -304,7 +304,14 @@ namespace VirtoCommerce.LiquidThemeEngine
                     var currentThemeSettings = InnerGetSettings(CurrentThemeLocalPath);
                     if (currentThemeSettings != null)
                     {
-                        resultSettings.Merge(currentThemeSettings, new JsonMergeSettings { MergeArrayHandling = MergeArrayHandling.Merge });
+                        if (resultSettings == null) // if there is no default settings, use just current theme
+                        {
+                            resultSettings = currentThemeSettings;
+                        }
+                        else
+                        {
+                            resultSettings.Merge(currentThemeSettings, new JsonMergeSettings { MergeArrayHandling = MergeArrayHandling.Merge });
+                        }
                     }
                 }
 
