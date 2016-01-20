@@ -26,6 +26,38 @@ namespace VirtoCommerce.Platform.Core.Common
 		{
 			return ApplyOrder<T>(source, property, "ThenByDescending");
 		}
+
+        public static IOrderedQueryable<T> OrderBySortInfos<T>(this IQueryable<T> source, SortInfo[] sortInfos)
+        {
+            if(sortInfos.IsNullOrEmpty())
+            {
+                throw new ArgumentNullException("sortInfos");
+            }
+            IOrderedQueryable<T> retVal = null;
+            var firstSortInfo = sortInfos.First();
+            if (firstSortInfo.SortDirection == SortDirection.Descending)
+            {
+                retVal = source.OrderByDescending(firstSortInfo.SortColumn);
+            }
+            else
+            {
+                retVal = source.OrderBy(firstSortInfo.SortColumn);
+            }
+
+            foreach (var nextSortInfo in sortInfos.Skip(1))
+            {
+                if (firstSortInfo.SortDirection == SortDirection.Descending)
+                {
+                    retVal = retVal.ThenByDescending(firstSortInfo.SortColumn);
+                }
+                else
+                {
+                    retVal = retVal.ThenBy(firstSortInfo.SortColumn);
+                }
+            }
+            return retVal;
+        }
+
 		public static IOrderedQueryable<T> ApplyOrder<T>(IQueryable<T> source, string property, string methodName)
 		{
 			if (property == null)
@@ -35,14 +67,14 @@ namespace VirtoCommerce.Platform.Core.Common
 			Type type = typeof(T);
 			ParameterExpression arg = Expression.Parameter(type, "x");
 			Expression expr = arg;
-			foreach (string prop in props)
-			{
-				// use reflection (not ComponentModel) to mirror LINQ
-				PropertyInfo pi = type.GetProperty(prop);
-				expr = Expression.Property(expr, pi);
-				type = pi.PropertyType;
-			}
-			Type delegateType = typeof(Func<,>).MakeGenericType(typeof(T), type);
+            foreach (string prop in props)
+            {
+                // use reflection (not ComponentModel) to mirror LINQ
+                PropertyInfo pi = type.GetProperty(prop, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+                expr = Expression.Property(expr, pi);
+                type = pi.PropertyType;
+            }
+            Type delegateType = typeof(Func<,>).MakeGenericType(typeof(T), type);
 			LambdaExpression lambda = Expression.Lambda(delegateType, expr, arg);
 
 			object result = typeof(Queryable).GetMethods().Single(

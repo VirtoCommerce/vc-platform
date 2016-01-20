@@ -333,7 +333,11 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
 
             if (!string.IsNullOrEmpty(criteria.Sort))
             {
-                var isDescending = "desc".Equals(criteria.SortOrder, StringComparison.OrdinalIgnoreCase);
+                var isDescending = false;
+                if(!criteria.SortInfos.IsNullOrEmpty())
+                {
+                    isDescending = criteria.SortInfos.First().SortDirection == SortDirection.Descending;
+                }
 
                 SearchSort sortObject = null;
 
