@@ -173,7 +173,7 @@ namespace VirtoCommerce.Domain.Catalog.Model
         public bool? OnlyBuyable { get; set; }
 
         /// <summary>
-        /// Search only invertory tracking products 
+        /// Search only inventory tracking products 
         /// </summary>
         public bool? OnlyWithTrackingInventory { get; set; }
 

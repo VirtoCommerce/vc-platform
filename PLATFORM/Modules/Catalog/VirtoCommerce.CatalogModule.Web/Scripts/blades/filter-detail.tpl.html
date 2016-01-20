@@ -3,35 +3,67 @@
     <div class="blade-inner">
         <div class="inner-block clearfix">
             <form class="form" name="formScope">
-                <div class="form-group" ng-init="setForm(formScope)">
-                    <label class="form-label">{{ 'catalog.blades.filter-detail.labels.code' | translate }}</label>
-                    <div class="form-input">
-                        <input ng-model="blade.currentEntity.code" />
-                        <va-info-button tool-text="Product or category code" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">{{ 'catalog.blades.filter-detail.labels.store' | translate }}</label>
-                    <div class="form-input">
-                        <input ng-model="blade.currentEntity.storeId" />
-                    </div>
-                </div>
-                <!--<div class="form-group">
-                    <label class="form-label">{{ 'catalog.blades.filter-detail.labels.has-variations' | translate }}</label>
-                    <div class="form-input">
-                        <label class="form-label __switch">
-                            <input type="checkbox" ng-model="blade.currentEntity.hasVariation" />
-                            <span class="switch"></span>
-                        </label>
-                    </div>
-                </div>-->
-                <div class="form-group">
-                    <label class="form-label">{{ 'catalog.blades.filter-detail.labels.name' | translate }}</label>
-                    <div class="form-input">
-                        <input ng-model="blade.currentEntity.name" required />
-                        <va-info-button tool-text="How will you call this filter?" />
-                    </div>
-                </div>
+                <legend>{{ 'catalog.blades.filter-detail.labels.criteria' | translate }}</legend>
+                <ul class="list __info" ng-init="setForm(formScope)">
+                    <li class="list-item">
+                        <label class="form-label">{{ 'catalog.blades.filter-detail.labels.productType' | translate }}</label>
+                        <div class="form-input">
+                            <ui-select ng-model="blade.currentEntity.productType">
+                                <ui-select-match allow-clear="true" placeholder="{{'catalog.blades.filter-detail.placeholders.all' | translate}}">{{$select.selected.name}}</ui-select-match>
+                                <ui-select-choices repeat="x.value as x in itemTypes | filter: $select.search">
+                                    <span ng-bind-html="x.name | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                        <!--<div class="list-descr">Can be tracked?</div>-->
+                    </li>
+                    <li class="list-item">
+                        <label class="form-label">{{ 'catalog.blades.filter-detail.labels.onlyBuyable' | translate }}</label>
+                        <div class="form-input">
+                            <!--<label class="form-label __switch">
+                                <input type="checkbox" ng-model="blade.currentEntity.onlyBuyable" />
+                                <span class="switch"></span>
+                            </label>-->
+                            <ui-select ng-model="blade.currentEntity.onlyBuyable">
+                                <ui-select-match allow-clear="true" placeholder="{{'catalog.blades.filter-detail.placeholders.all' | translate}}">{{$select.selected.name}}</ui-select-match>
+                                <ui-select-choices repeat="x.value as x in trueFalse | filter: $select.search">
+                                    <span ng-bind-html="x.name | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                        <div class="list-descr">Can be purchased?</div>
+                    </li>
+                    <li class="list-item">
+                        <label class="form-label">{{ 'catalog.blades.filter-detail.labels.onlyWithTrackingInventory' | translate }}</label>
+                        <div class="form-input">
+                            <ui-select ng-model="blade.currentEntity.onlyWithTrackingInventory">
+                                <ui-select-match allow-clear="true" placeholder="{{'catalog.blades.filter-detail.placeholders.all' | translate}}">{{$select.selected.name}}</ui-select-match>
+                                <ui-select-choices repeat="x.value as x in trueFalse | filter: $select.search">
+                                    <span ng-bind-html="x.name | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                        <div class="list-descr">Can be tracked?</div>
+                    </li>
+                    <li class="list-item">
+                        <label class="form-label">{{ 'catalog.blades.filter-detail.labels.onlyWithEditorialReviews' | translate }}</label>
+                        <div class="form-input">
+                            <ui-select ng-model="blade.currentEntity.onlyWithEditorialReviews">
+                                <ui-select-match allow-clear="true" placeholder="{{'catalog.blades.filter-detail.placeholders.all' | translate}}">{{$select.selected.name}}</ui-select-match>
+                                <ui-select-choices repeat="x.value as x in trueFalse | filter: $select.search">
+                                    <span ng-bind-html="x.name | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </li>
+                    <li class="list-item">
+                        <label class="form-label">{{ 'catalog.blades.filter-detail.labels.name' | translate }}</label>
+                        <div class="form-input">
+                            <input ng-model="blade.currentEntity.name" required />
+                        </div>
+                        <div class="list-descr">How will you call this filter?</div>
+                    </li>
+                </ul>
             </form>
         </div>
     </div>

@@ -3,6 +3,16 @@
     function ($scope, $localStorage, dialogService, bladeNavigationService) {
         var blade = $scope.blade;
 
+        $scope.trueFalse = [
+            { name: 'True', value: true },
+            { name: 'False', value: false }
+        ];
+
+        $scope.itemTypes = [
+            { name: 'Physical', value: 'Physical' },
+            { name: 'Digital', value: 'Digital' }
+        ];
+
         $scope.saveChanges = function () {
             if (blade.isNew) {
                 // angular.copy(blade.currentEntity, blade.origEntity);
@@ -112,7 +122,7 @@
         //        closeCallback();
         //    }
         //};
-        
+
         // actions on load        
         initializeBlade(blade.data);
     }]);

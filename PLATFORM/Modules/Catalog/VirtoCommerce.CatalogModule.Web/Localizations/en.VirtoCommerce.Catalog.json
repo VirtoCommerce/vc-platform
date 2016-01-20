@@ -3,10 +3,10 @@
     "main-menu-title": "Catalog",
     "main-blade-title": "Catalog",
     "properties": {
-          "catalog": "Catalog properties",
-          "product": "Product properties",
-          "variation": "Variation properties",
-          "category": "Category properties"
+      "catalog": "Catalog properties",
+      "product": "Product properties",
+      "variation": "Variation properties",
+      "category": "Category properties"
     },
     "blades": {
       "catalogs-list": {
@@ -120,12 +120,20 @@
           "empty-list": "None"
         }
       },
-        "filter-detail": {
+      "filter-detail": {
         "subtitle": "Edit filter",
         "new-title": "New filter",
         "new-subtitle": "Create new filter",
         "labels": {
+          "criteria": "Filter criteria",
+          "productType": "Product type",
+          "onlyBuyable": "Only buyable",
+          "onlyWithTrackingInventory": "Only with tracking inventory",
+          "onlyWithEditorialReviews": "Only with descriptions",
           "name": "Filter name"
+        },
+        "placeholders": {
+          "all": "Not specified"
         }
       },
       "property-detail": {
@@ -423,7 +431,7 @@
       },
       "itemImage": {
         "blade-subtitle": "Manage images",
-          "no-images": "No images"
+        "no-images": "No images"
       },
       "itemProperty": {
         "blade-subtitle": "item properties",

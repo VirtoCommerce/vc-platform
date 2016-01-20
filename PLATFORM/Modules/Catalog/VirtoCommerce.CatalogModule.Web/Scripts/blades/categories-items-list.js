@@ -15,18 +15,21 @@
 
             blade.refresh = function () {
                 blade.isLoading = true;
+                var searchCriteria = {
+                    catalogId: blade.catalogId,
+                    categoryId: blade.categoryId,
+                    keyword: (filter.current && filter.current.id === 'byKeyword') ? filter.current.name : undefined,
+                    responseGroup: 'withCategories, withProducts',
+                    sort: getSortExpression(),
+                    skip: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
+                    take: $scope.pageSettings.itemsPerPageCount
+                };
+                if (filter.current && filter.current.id !== 'byKeyword') {
+                    angular.extend(searchCriteria, filter.current);
+                }
+
                 listEntries.listitemssearch(
-                    {
-                        catalogId: blade.catalogId,
-                        categoryId: blade.categoryId,
-                        keyword: (filter.current && filter.current.id === 'byKeyword') ? filter.current.name : undefined,
-                        //code: (filter.current && filter.current.id !== 'byKeyword') ? filter.current.code : undefined,
-                        //storeId: (filter.current && filter.current.id !== 'byKeyword') ? filter.current.storeId : undefined,
-                        responseGroup: 'withCategories, withProducts',
-                        sort: getSortExpression(),
-                        skip: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
-                        take: $scope.pageSettings.itemsPerPageCount
-                    },
+                    searchCriteria,
                     function (data) {
                         transformByFilters(data.listEntries);
 
