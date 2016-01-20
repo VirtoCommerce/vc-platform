@@ -43,7 +43,8 @@ namespace VirtoCommerce.Storefront.Services
         private async Task ValidateItemsAsync(ShoppingCart cart)
         {
             var productIds = cart.Items.Select(i => i.ProductId).ToArray();
-            var products = await _cacheManager.GetAsync("CartValidator.ValidateItemsAsync-" + string.Join(":", productIds), "ApiRegion", async () => { return await _catalogService.GetProductsAsync(productIds, ItemResponseGroup.ItemLarge); });
+            var cacheKey = "CartValidator.ValidateItemsAsync-" + _workContext.CurrentCurrency.Code + ":" + _workContext.CurrentLanguage + ":" + string.Join(":", productIds);
+            var products = await _cacheManager.GetAsync(cacheKey, "ApiRegion", async () => { return await _catalogService.GetProductsAsync(productIds, ItemResponseGroup.ItemLarge); });
             foreach (var lineItem in cart.Items)
             {
                 var product = products.FirstOrDefault(x => x.Id == lineItem.ProductId);
@@ -81,7 +82,7 @@ namespace VirtoCommerce.Storefront.Services
             foreach (var shipment in cart.Shipments)
             {
                 shipment.ValidationErrors.Clear();
-                var availableShippingMethods = await _cacheManager.GetAsync("CartValidator.ValidateShipmentsAsync-" + cart.Id, "ApiRegion", async () => { return await _cartApi.CartModuleGetShipmentMethodsAsync(cart.Id); });
+                var availableShippingMethods = await _cacheManager.GetAsync("CartValidator.ValidateShipmentsAsync-" + _workContext.CurrentCurrency + ":" + cart.Id, "ApiRegion", async () => { return await _cartApi.CartModuleGetShipmentMethodsAsync(cart.Id); });
                 var existingShippingMethod = availableShippingMethods.FirstOrDefault(sm => sm.ShipmentMethodCode == shipment.ShipmentMethodCode);
                 if (existingShippingMethod == null)
                 {

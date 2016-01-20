@@ -74,7 +74,7 @@ namespace VirtoCommerce.Storefront.Services
                 criteriaStoreId: _workContext.CurrentStore.Id,
                 criteriaKeyword: criteria.Keyword,
                 criteriaResponseGroup: criteria.ResponseGroup.ToString(),
-                criteriaSearchInChildren: true,
+                criteriaSearchInChildren: criteria.SearchInChildren,
                 criteriaCategoryId: criteria.CategoryId,
                 criteriaCatalogId: criteria.CatalogId,
                 criteriaCurrency: _workContext.CurrentCurrency.Code,

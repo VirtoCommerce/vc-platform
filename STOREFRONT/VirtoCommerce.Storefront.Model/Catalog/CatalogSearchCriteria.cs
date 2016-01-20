@@ -12,6 +12,7 @@ namespace VirtoCommerce.Storefront.Model.Catalog
             ResponseGroup = CatalogSearchResponseGroup.WithProducts;
             PageNumber = 1;
             PageSize = 20;
+            SearchInChildren = true;
         }
 
         public CatalogSearchResponseGroup ResponseGroup { get; set; }
@@ -24,6 +25,7 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         public int PageSize { get; set; }
         public Term[] Terms { get; set; }
         public string SortBy { get; set; }
+        public bool SearchInChildren { get; set; }
 
         public static CatalogSearchCriteria Parse(NameValueCollection queryString)
         {
