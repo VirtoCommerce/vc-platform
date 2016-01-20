@@ -71,8 +71,15 @@ namespace VirtoCommerce.Platform.Core.Common
             {
                 // use reflection (not ComponentModel) to mirror LINQ
                 PropertyInfo pi = type.GetProperty(prop, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
-                expr = Expression.Property(expr, pi);
-                type = pi.PropertyType;
+                if (pi != null)
+                {
+                    expr = Expression.Property(expr, pi);
+                    type = pi.PropertyType;
+                }
+                else
+                {
+                    return source.OrderBy(x => 1);
+                }
             }
             Type delegateType = typeof(Func<,>).MakeGenericType(typeof(T), type);
 			LambdaExpression lambda = Expression.Lambda(delegateType, expr, arg);
