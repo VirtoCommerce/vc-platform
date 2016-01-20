@@ -20,6 +20,7 @@
 <div class="blade-content __medium-wide">
     <div class="blade-inner">
         <div class="inner-block" ng-init="setGridOptions({
+                useExternalSorting: true,
                 treeRowHeaderAlwaysVisible: false,
                 data: 'items',
                 rowTemplate: 'item-list.row.html',
@@ -55,7 +56,7 @@
 </div>
 
 <script type="text/ng-template" id="item-list.row.html">
-    <div ng-if="row.groupHeader && !col.isRowHeader" ng-click='grid.appScope.selectGroupByItem(row.treeNode.children[0].row.entity, $id)' ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns | limitTo:1 track by col.uid" ng-class="{'__selected': $id===grid.appScope.selectedNodeId}">{{grid.appScope.getGroupText(row.treeNode.row.entity)}}</div>
+    <div ng-if="row.groupHeader && !col.isRowHeader" ng-click='grid.appScope.selectGroupByItem(row.treeNode.children[0].row.entity, $id)' ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns | limitTo:1 track by col.uid" class="ui-grid-cell" ng-class="{'__selected': $id===grid.appScope.selectedNodeId}">{{grid.appScope.getGroupText(row.treeNode.row.entity)}}</div>
     <div ng-if="!row.groupHeader" ng-click='col.isRowHeader || grid.appScope.selectItem($event, row.entity)' ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + '-' + col.uid + '-cell'" class="ui-grid-cell" ng-class="{'ui-grid-row-header-cell': col.isRowHeader, '__hovered': grid.appScope.contextMenuEntity === row.entity, '__selected': row.entity.id===grid.appScope.selectedNodeId }" role="{{col.isRowHeader ? 'rowheader' : 'gridcell' }}" ui-grid-cell context-menu="grid.appScope.contextMenuEntity = row.entity" data-target="cil_menu_{{grid.appScope.blade.level}}"></div>
 </script>
 <script type="text/ng-template" id="item-list-path.cell.html">
