@@ -18,13 +18,13 @@
                 var searchCriteria = {
                     catalogId: blade.catalogId,
                     categoryId: blade.categoryId,
-                    keyword: (filter.current && filter.current.id === 'byKeyword') ? filter.current.name : undefined,
+                    keyword: filter.keyword ? filter.keyword : undefined,
                     responseGroup: 'withCategories, withProducts',
                     sort: getSortExpression(),
                     skip: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
                     take: $scope.pageSettings.itemsPerPageCount
                 };
-                if (filter.current && filter.current.id !== 'byKeyword') {
+                if (filter.current) {
                     angular.extend(searchCriteria, filter.current);
                 }
 
@@ -504,19 +504,6 @@
             //    filter.current = _.findWhere($localStorage.catalogSearchFilters, { id: $localStorage.catalogSearchFilterId });
             //}
 
-            filter.clear = function ($event) {
-                $event.stopPropagation();
-                filter.current = undefined;
-                filter.change();
-            };
-
-            filter.searchByKeyword = function (keyword) {
-                return {
-                    name: keyword,
-                    id: 'byKeyword'
-                };
-            };
-
             filter.change = function () {
                 $localStorage.catalogSearchFilterId = filter.current ? filter.current.id : null;
                 if (filter.current && !filter.current.id) {
@@ -534,7 +521,7 @@
             };
 
             filter.edit = function () {
-                if (filter.current && filter.current.id !== 'byKeyword') {
+                if (filter.current) {
                     showFilterDetailBlade({ data: filter.current });
                 }
             };
@@ -555,7 +542,7 @@
                     x.path = _.any(x.path) ? x.path.join(" \\ ") : '\\';
                 });
 
-                if (filter.current) {
+                if (filter.current || filter.keyword) {
                     //if (!_.contains($scope.gridOptions.columnDefs, groupingColumn)) {
                     //    $scope.gridOptions.columnDefs.splice(1, 0, groupingColumn);
                     //}

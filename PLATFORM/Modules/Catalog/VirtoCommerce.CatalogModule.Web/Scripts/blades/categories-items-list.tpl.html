@@ -1,12 +1,13 @@
 ﻿<div class="blade-static __expanded">
     <va-breadcrumb ng-model="blade.breadcrumbs" blade-id="blade.id"></va-breadcrumb>
     <div class="form-group">
-        <div class="form-input __search">
-            <ui-select ng-model="filter.current" ng-change="filter.change()" autofocus="true" tagging="filter.searchByKeyword" tagging-label="false">
-                <ui-select-match allow-clear="false" placeholder="{{'catalog.blades.categories-items-list.placeholders.select-filter' | translate}}">
-                    {{$select.selected.name}}
-                    <button class="select2-search-choice-close" ng-click="filter.clear($event)" style="right:30px"></button>
-                </ui-select-match>
+        <div class="form-input">
+            <input placeholder="{{'platform.placeholders.search-keyword' | translate}}" ng-model="filter.keyword" ng-keyup="$event.which === 13 && blade.refresh()" style="width: 190px">
+            <button class="btn __other" style="position: relative;right: 45px;">
+                <i class="btn-ico fa fa-times-circle" title="Clear" ng-click="filter.keyword=null;blade.refresh()"></i>
+            </button>
+            <ui-select ng-model="filter.current" ng-change="filter.change()" style="left: 220px;position: absolute;width: 190px;top: 0px;">
+                <ui-select-match allow-clear="true" placeholder="{{'catalog.blades.categories-items-list.placeholders.select-filter' | translate}}">{{$select.selected.name}}</ui-select-match>
                 <ui-select-choices repeat="x in $localStorage.catalogSearchFilters | filter: $select.search">
                     <span ng-bind-html="x.name | translate | highlight: $select.search"></span>
                 </ui-select-choices>
