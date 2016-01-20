@@ -24,7 +24,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
             }
             var themeEngine = (ShopifyLiquidThemeEngine)Template.FileSystem;
             var amount = Convert.ToDecimal(input, CultureInfo.InvariantCulture);
-            var money = new Money(amount / 100, themeEngine.WorkContext.CurrentCurrency.Code);
+            var money = new Money(amount / 100, themeEngine.WorkContext.CurrentCurrency);
 
             return money.ToString();
         }

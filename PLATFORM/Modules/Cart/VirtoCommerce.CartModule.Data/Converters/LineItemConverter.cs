@@ -21,7 +21,7 @@ namespace VirtoCommerce.CartModule.Data.Converters
 
 			var retVal = new LineItem();
 			retVal.InjectFrom(entity);
-			retVal.Currency = (CurrencyCodes)Enum.Parse(typeof(CurrencyCodes), entity.Currency);
+			retVal.Currency = entity.Currency;
 			retVal.TaxDetails = entity.TaxDetails.Select(x => x.ToCoreModel()).ToList();
             retVal.Discounts = entity.Discounts.Select(x => x.ToCoreModel()).ToList();
             return retVal;

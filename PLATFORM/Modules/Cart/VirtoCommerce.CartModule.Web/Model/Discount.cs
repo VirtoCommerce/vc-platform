@@ -18,8 +18,7 @@ namespace VirtoCommerce.CartModule.Web.Model
         /// <value>
         /// Currency code in ISO 4217 format
         /// </value>
-        [JsonConverter(typeof(StringEnumConverter))]
-        public CurrencyCodes Currency { get; set; }
+        public string Currency { get; set; }
 
         /// <summary>
         /// Gets or sets the value of discount amount

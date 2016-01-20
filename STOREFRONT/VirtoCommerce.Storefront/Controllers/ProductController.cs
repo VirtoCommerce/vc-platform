@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using VirtoCommerce.Storefront.Common;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Services;
@@ -13,14 +14,12 @@ namespace VirtoCommerce.Storefront.Controllers
     [OutputCache(CacheProfile = "ProductCachingProfile")]
     public class ProductController : StorefrontControllerBase
     {
-        private readonly ICatalogSearchService _productService;
-        private readonly ICatalogSearchService _searchService;
+        private readonly ICatalogSearchService _catalogSearchService;
 
-        public ProductController(WorkContext context, IStorefrontUrlBuilder urlBuilder, ICatalogSearchService productService, ICatalogSearchService searchService)
+        public ProductController(WorkContext context, IStorefrontUrlBuilder urlBuilder, ICatalogSearchService catalogSearchService)
             : base(context, urlBuilder)
         {
-            _productService = productService;
-            _searchService = searchService;
+            _catalogSearchService = catalogSearchService;
         }
 
         /// <summary>
@@ -32,11 +31,11 @@ namespace VirtoCommerce.Storefront.Controllers
         [HttpGet]
         public async Task<ActionResult> ProductDetails(string productId)
         {
-            var product = await _productService.GetProductAsync(productId, Model.Catalog.ItemResponseGroup.ItemInfo | Model.Catalog.ItemResponseGroup.ItemWithPrices);
+            var product = (await _catalogSearchService.GetProductsAsync(new[] { productId }, Model.Catalog.ItemResponseGroup.ItemInfo | Model.Catalog.ItemResponseGroup.ItemWithPrices)).FirstOrDefault();
             WorkContext.CurrentProduct = product;
 
             WorkContext.CurrentCatalogSearchCriteria.CategoryId = product.CategoryId;
-            WorkContext.CurrentCatalogSearchResult = await _searchService.SearchAsync(WorkContext.CurrentCatalogSearchCriteria);
+            WorkContext.CurrentCatalogSearchResult = await _catalogSearchService.SearchAsync(WorkContext.CurrentCatalogSearchCriteria);
 
             return View("product", WorkContext);
         }
@@ -49,9 +48,10 @@ namespace VirtoCommerce.Storefront.Controllers
         /// <returns></returns>
         [HttpGet]
         [OutputCache(NoStore = true, Duration = 0, VaryByParam = "None")]
+        [HandleJsonErrorAttribute]
         public async Task<ActionResult> ProductDetailsJson(string productId)
         {
-            base.WorkContext.CurrentProduct = await _productService.GetProductAsync(productId, Model.Catalog.ItemResponseGroup.ItemLarge);
+            base.WorkContext.CurrentProduct = (await _catalogSearchService.GetProductsAsync(new [] { productId }, Model.Catalog.ItemResponseGroup.ItemLarge)).FirstOrDefault();
             return Json(base.WorkContext.CurrentProduct, JsonRequestBehavior.AllowGet);
         }
     }

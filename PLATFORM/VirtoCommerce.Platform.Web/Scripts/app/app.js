@@ -15,7 +15,7 @@
   'angularFileUpload',
   'ngSanitize',
   'ng-context-menu',
-  'ui.grid', 'ui.grid.resizeColumns', 'ui.grid.moveColumns', 'ui.grid.saveState', 'ui.grid.selection', 'ui.grid.pagination', 'ui.grid.pinning',
+  'ui.grid', 'ui.grid.autoResize', 'ui.grid.resizeColumns', 'ui.grid.moveColumns', 'ui.grid.saveState', 'ui.grid.selection', 'ui.grid.pagination', 'ui.grid.pinning', 'ui.grid.grouping',
   'ui.grid.draggable-rows',
   'ui.codemirror',
   'focusOn',
@@ -30,7 +30,7 @@ angular.module('platformWebApp', AppDependencies).
       pushNotificationService.run();
   }])
 // Specify SignalR server URL (application URL)
-.factory('platformWebApp.signalRServerName', ['$location', function apiTokenFactory($location) {
+.factory('platformWebApp.signalRServerName', ['$location', function ($location) {
     var retVal = $location.url() ? $location.absUrl().slice(0, -$location.url().length - 1) : $location.absUrl();
     return retVal;
 }])

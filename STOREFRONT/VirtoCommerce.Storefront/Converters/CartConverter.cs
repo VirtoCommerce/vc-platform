@@ -58,7 +58,7 @@ namespace VirtoCommerce.Storefront.Converters
 
             if (serviceModel.Payments != null)
             {
-                webModel.Payments = serviceModel.Payments.Select(p => p.TowebModel()).ToList();
+                webModel.Payments = serviceModel.Payments.Select(p => p.TowebModel(currency)).ToList();
             }
 
             if (serviceModel.Shipments != null)
@@ -76,18 +76,17 @@ namespace VirtoCommerce.Storefront.Converters
                 webModel.TaxDetails = serviceModel.TaxDetails.Select(td => td.ToWebModel()).ToList();
             }
 
-            webModel.DiscountTotal = new Money(serviceModel.DiscountTotal ?? 0, currency.Code);
-            webModel.HandlingTotal = new Money(serviceModel.HandlingTotal ?? 0, currency.Code);
+          
+            webModel.HandlingTotal = new Money(serviceModel.HandlingTotal ?? 0, currency);
             webModel.Height = (decimal)(serviceModel.Height ?? 0);
             webModel.IsAnonymous = serviceModel.IsAnonymous == true;
             webModel.IsRecuring = serviceModel.IsRecuring == true;
             webModel.ItemsCount = webModel.Items.Sum(i => i.Quantity);
             webModel.Length = (decimal)(serviceModel.Length ?? 0);
-            webModel.ShippingTotal = new Money(serviceModel.ShippingTotal ?? 0, currency.Code);
-            webModel.SubTotal = new Money(serviceModel.SubTotal ?? 0, currency.Code);
+         
             webModel.TaxIncluded = serviceModel.TaxIncluded == true;
-            webModel.TaxTotal = new Money(serviceModel.TaxTotal ?? 0, currency.Code);
-            webModel.Total = new Money(serviceModel.Total ?? 0, currency.Code);
+            webModel.TaxTotal = new Money(serviceModel.TaxTotal ?? 0, currency);
+
             webModel.VolumetricWeight = (decimal)(serviceModel.VolumetricWeight ?? 0);
             webModel.Weight = (decimal)(serviceModel.Weight ?? 0);
             webModel.Width = (decimal)(serviceModel.Width ?? 0);

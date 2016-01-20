@@ -46,8 +46,7 @@ namespace VirtoCommerce.QuoteModule.Data.Services
                 var taxProvider = store.TaxProviders.Where(x => x.IsActive).OrderBy(x => x.Priority).FirstOrDefault();
                 if (taxProvider != null)
                 {
-                    var taxRequest = quote.ToTaxRequest();
-                    var taxEvalContext = new TaxEvaluationContext(taxRequest);
+                    var taxEvalContext = quote.ToTaxEvalContext();
                     retVal.TaxTotal = taxProvider.CalculateRates(taxEvalContext).Select(x => x.Rate).DefaultIfEmpty(0).Sum(x => x);
                 }
             }

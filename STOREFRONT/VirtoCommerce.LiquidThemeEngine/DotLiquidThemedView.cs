@@ -68,13 +68,18 @@ namespace VirtoCommerce.LiquidThemeEngine
             }
 
             var viewTemplate = _themeAdaptor.RenderTemplateByName(_viewName, parameters);
-
+            var masterViewName = _masterViewName;
+            object layoutFromTemplate;
+            if (parameters.TryGetValue("layout", out layoutFromTemplate))
+            {
+                masterViewName = layoutFromTemplate.ToString();
+            }
             //if layout specified need render with master page
-            if (!String.IsNullOrEmpty(_masterViewName))
+            if (!String.IsNullOrEmpty(masterViewName))
             {
                 //add special placeholder 'content_for_layout' to content it will be replaced in master page by main content
                 parameters.Add("content_for_layout", viewTemplate);
-                viewTemplate = _themeAdaptor.RenderTemplateByName(_masterViewName, parameters);
+                viewTemplate = _themeAdaptor.RenderTemplateByName(masterViewName, parameters);
             }
             writer.Write(viewTemplate);
 

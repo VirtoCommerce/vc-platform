@@ -18,13 +18,6 @@ namespace VirtoCommerce.SearchModule.Data.Services
             _cacheManager = cacheManager;
         }
 
-        private Category GetCategoryById(string categoryId)
-        {
-            var cacheKey = "CatalogOutlineBuilder.GetCategoryById:" +  categoryId;
-            var retVal = _cacheManager.Get(cacheKey, "SearchModuleRegion",  () => _categoryService.GetById(categoryId, CategoryResponseGroup.Full));
-            return retVal;
-        }
-
         /// <summary>
         /// Returns a collection of all possible paths to the root (catalog): catalog/parents/category
         /// </summary>
@@ -60,11 +53,27 @@ namespace VirtoCommerce.SearchModule.Data.Services
                 AddOutlinesForParentAndLinkedCategories(category.ParentId, newOutline, outlines);
             }
 
-            foreach (var link in category.Links.Where(link => !string.IsNullOrEmpty(link.CategoryId)))
+            foreach (var link in category.Links)
             {
-                // Don't include the linked category in the outline, so pass the original outline
-                AddOutlinesForParentAndLinkedCategories(link.CategoryId, outline, outlines);
+                if (string.IsNullOrEmpty(link.CategoryId))
+                {
+                    var finalOutline = new List<string>(newOutline);
+                    finalOutline.Insert(0, link.CatalogId);
+                    outlines.Add(finalOutline);
+                }
+                else
+                {
+                    // Don't include the linked category in the outline, so use the original outline
+                    AddOutlinesForParentAndLinkedCategories(link.CategoryId, outline, outlines);
+                }
             }
+        }
+
+        private Category GetCategoryById(string categoryId)
+        {
+            var cacheKey = "CatalogOutlineBuilder.GetCategoryById:" + categoryId;
+            var retVal = _cacheManager.Get(cacheKey, "SearchModuleRegion", () => _categoryService.GetById(categoryId, CategoryResponseGroup.Full));
+            return retVal;
         }
 
         private static IEnumerable<string> ExpandOutline(List<string> outline)

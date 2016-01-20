@@ -31,7 +31,7 @@ namespace VirtoCommerce.QuoteModule.Data.Converters
                     ShipmentMethodCode = dbEntity.ShipmentMethodCode
                 };
             }
-            retVal.Currency = (CurrencyCodes)Enum.Parse(typeof(CurrencyCodes), dbEntity.Currency);
+            retVal.Currency = dbEntity.Currency;
             retVal.Addresses = dbEntity.Addresses.Select(x => x.ToCoreModel()).ToList();
 			retVal.Attachments = dbEntity.Attachments.Select(x => x.ToCoreModel()).ToList();
 			retVal.Items = dbEntity.Items.Select(x => x.ToCoreModel()).ToList();
@@ -39,9 +39,9 @@ namespace VirtoCommerce.QuoteModule.Data.Converters
 			return retVal;
 		}
 
-        public static taxCoreModel.TaxRequest ToTaxRequest(this coreModel.QuoteRequest quoteRequest)
+        public static taxCoreModel.TaxEvaluationContext ToTaxEvalContext(this coreModel.QuoteRequest quoteRequest)
         {
-            var retVal = new taxCoreModel.TaxRequest();
+            var retVal = new taxCoreModel.TaxEvaluationContext();
             retVal.Id = quoteRequest.Id;
             retVal.Code = quoteRequest.Number;
             retVal.Currency = quoteRequest.Currency;

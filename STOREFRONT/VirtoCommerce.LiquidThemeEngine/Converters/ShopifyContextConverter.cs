@@ -15,21 +15,21 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             result.CountryOptionTags = string.Join("\r\n", workContext.AllCountries.OrderBy(c => c.Name).Select(c => c.ToOptionTag()));
             result.PageDescription = workContext.CurrentPageSeo != null ? workContext.CurrentPageSeo.MetaDescription : string.Empty;
             result.PageTitle = workContext.CurrentPageSeo != null ? workContext.CurrentPageSeo.Title : string.Empty;
-            result.Shop = workContext.CurrentStore.ToShopifyModel(workContext);
-            result.Cart = workContext.CurrentCart.ToShopifyModel(workContext);
+            result.Shop = workContext.CurrentStore != null ? workContext.CurrentStore.ToShopifyModel(workContext) : null;
+            result.Cart = workContext.CurrentCart != null ? workContext.CurrentCart.ToShopifyModel(workContext) : null;
             result.Product = workContext.CurrentProduct != null ? workContext.CurrentProduct.ToShopifyModel(workContext) : null;
-            result.Customer = workContext.CurrentCustomer.HasAccount ? workContext.CurrentCustomer.ToShopifyModel(workContext, urlBuilder) : null;
+            result.Customer = workContext.CurrentCustomer != null && workContext.CurrentCustomer.HasAccount ? workContext.CurrentCustomer.ToShopifyModel(workContext, urlBuilder) : null;
             result.AllStores = workContext.AllStores.Select(x => x.ToShopifyModel(workContext)).ToArray();
 
-            result.CurrentCurrency = workContext.CurrentCurrency.ToShopifyModel();
-            result.CurrentLanguage = workContext.CurrentLanguage.ToShopifyModel();
+            result.CurrentCurrency = workContext.CurrentCurrency != null ? workContext.CurrentCurrency.ToShopifyModel() : null;
+            result.CurrentLanguage = workContext.CurrentLanguage != null ? workContext.CurrentLanguage.ToShopifyModel() : null;
 
             if (workContext.CurrentProduct != null && workContext.CurrentProduct.Category != null)
             {
                 result.Collection = workContext.CurrentProduct.Category.ToShopifyModel(workContext);
             }
 
-            if (workContext.CurrentCatalogSearchCriteria.Terms.Any())
+            if (workContext.CurrentCatalogSearchCriteria != null && workContext.CurrentCatalogSearchCriteria.Terms.Any())
             {
                 result.CurrentTags =
                     new TagCollection(

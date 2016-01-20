@@ -28,11 +28,22 @@ namespace VirtoCommerce.CoreModule.Data.Repositories
 
 		protected override void OnModelCreating(DbModelBuilder modelBuilder)
 		{
-			MapEntity<FulfillmentCenter>(modelBuilder, toTable: "FulfillmentCenter");
-			MapEntity<SeoUrlKeyword>(modelBuilder, toTable: "SeoUrlKeyword");
-            MapEntity<Sequence>(modelBuilder, toTable: "Sequence");
 
-			base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<FulfillmentCenter>().HasKey(x => x.Id).Property(x => x.Id);
+            modelBuilder.Entity<FulfillmentCenter>().ToTable("FulfillmentCenter");
+
+            modelBuilder.Entity<SeoUrlKeyword>().HasKey(x => x.Id).Property(x => x.Id);
+            modelBuilder.Entity<SeoUrlKeyword>().ToTable("SeoUrlKeyword");
+
+            modelBuilder.Entity<Sequence>().HasKey(x => x.ObjectType).Property(x => x.ObjectType);
+            modelBuilder.Entity<Sequence>().ToTable("Sequence");
+
+
+            modelBuilder.Entity<Currency>().HasKey(x => x.Id).Property(x => x.Id);
+            modelBuilder.Entity<Currency>().ToTable("Currency");
+
+
+            base.OnModelCreating(modelBuilder);
 		}
 
 		#region IСommerceRepository Members
@@ -48,6 +59,10 @@ namespace VirtoCommerce.CoreModule.Data.Repositories
         public IQueryable<Sequence> Sequences
         {
             get { return GetAsQueryable<Sequence>(); }
+        }
+        public IQueryable<Currency> Currencies
+        {
+            get { return GetAsQueryable<Currency>(); }
         }
 
         public SeoUrlKeyword[] GetObjectSeoUrlKeywords(string objectType, string objectId)

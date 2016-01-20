@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using VirtoCommerce.Platform.Core.Common;
 
@@ -41,7 +42,6 @@ namespace VirtoCommerce.Domain.Catalog.Model
             {
                 _categoriesIds = value;
             }
-
         }
 
         public string CatalogId { get; set; }
@@ -66,12 +66,45 @@ namespace VirtoCommerce.Domain.Catalog.Model
         public string LanguageCode { get; set; }
 
         /// <summary>
-        /// Product ore category code
+        /// Product or category code
         /// </summary>
         public string Code { get; set; }
 
+        /// <summary>
+        /// Sorting expression property1:asc;property2:desc
+        /// </summary>
         public string Sort { get; set; }
-        public string SortOrder { get; set; }
+
+        public SortInfo[] SortInfos
+        {
+            get
+            {
+                if(!String.IsNullOrEmpty(Sort))
+                {
+                    var retVal = new List<SortInfo>();
+                    var sortInfoStrings = Sort.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                    foreach(var sortInfoString in sortInfoStrings)
+                    {
+                        var parts = sortInfoString.Split(new[] { ':', '-' }, StringSplitOptions.RemoveEmptyEntries);
+                        if(parts.Any())
+                        {
+                            var sortInfo = new SortInfo
+                            {
+                                SortColumn = parts[0],
+                                SortDirection = SortDirection.Ascending
+                            };
+                            if (parts.Count() > 1)
+                            {
+                                sortInfo.SortDirection = parts[1].StartsWith("desc", StringComparison.InvariantCultureIgnoreCase) ? SortDirection.Descending : SortDirection.Ascending;
+                            }
+                            retVal.Add(sortInfo);
+                        }
+                        return retVal.ToArray();
+                    }
+                }
+                return null;
+            }
+        }
 
         //Hides direct linked categories in virtual category displayed only linked category content without itself
         public bool HideDirectLinkedCategories { get; set; }
@@ -134,13 +167,47 @@ namespace VirtoCommerce.Domain.Catalog.Model
         /// </summary>
         public bool WithHidden { get; set; }
 
+        /// <summary>
+        /// Search only buyable products
+        /// </summary>
+        public bool? OnlyBuyable { get; set; }
+
+        /// <summary>
+        /// Search only inventory tracking products 
+        /// </summary>
+        public bool? OnlyWithTrackingInventory { get; set; }
+
+        /// <summary>
+        /// Search product with specified type
+        /// </summary>
+        public string ProductType { get; set; }
+
+        /// <summary>
+        /// Search product with specified types
+        /// </summary>
+        private string[] _productTypes;
+        public string[] ProductTypes
+        {
+            get
+            {
+                if (_productTypes == null && !string.IsNullOrEmpty(ProductType))
+                {
+                    _productTypes = new[] { ProductType };
+                }
+                return _productTypes;
+            }
+            set
+            {
+                _productTypes = value;
+            }
+        }
+
         public DateTime? StartDateFrom { get; set; }
 
         public void Normalize()
         {
             Keyword = Keyword.EmptyToNull();
             Sort = Sort.EmptyToNull();
-            SortOrder = SortOrder.EmptyToNull();
             CatalogId = CatalogId.EmptyToNull();
             CategoryId = CategoryId.EmptyToNull();
             Sort = Sort.EmptyToNull();

@@ -211,7 +211,7 @@ namespace VirtoCommerce.OrderModule.Test
             var order = new webModel.CustomerOrder
             {
                 Id = id,
-                Currency = CurrencyCodes.USD,
+                Currency = "USD",
                 CustomerId = "vasja customer",
                 EmployeeId = "employe",
                 StoreId = "test store",
@@ -234,7 +234,7 @@ namespace VirtoCommerce.OrderModule.Test
                 Discount = new webModel.Discount
                 {
                     PromotionId = "testPromotion",
-                    Currency = CurrencyCodes.USD,
+                    Currency = "USD",
                     DiscountAmount = 12,
                     Coupon = new webModel.Coupon
                     {
@@ -249,7 +249,7 @@ namespace VirtoCommerce.OrderModule.Test
                 DisplayName = "shoes",
                 ProductId = "shoes",
                 CatalogId = "catalog",
-                Currency = CurrencyCodes.USD,
+                Currency = "USD",
                 CategoryId = "category",
                 Name = "shoes",
                 Quantity = 2,
@@ -258,7 +258,7 @@ namespace VirtoCommerce.OrderModule.Test
                 Discount = new webModel.Discount
                 {
                     PromotionId = "itemPromotion",
-                    Currency = CurrencyCodes.USD,
+                    Currency = "USD",
                     DiscountAmount = 12,
                     Coupon = new webModel.Coupon
                     {
@@ -274,7 +274,7 @@ namespace VirtoCommerce.OrderModule.Test
                 ProductId = "t-shirt",
                 CatalogId = "catalog",
                 CategoryId = "category",
-                Currency = CurrencyCodes.USD,
+                Currency = "USD",
                 Name = "t-shirt",
                 Quantity = 2,
                 FulfilmentLocationCode = "warehouse1",
@@ -282,7 +282,7 @@ namespace VirtoCommerce.OrderModule.Test
                 Discount = new webModel.Discount
                 {
                     PromotionId = "testPromotion",
-                    Currency = CurrencyCodes.USD,
+                    Currency = "USD",
                     DiscountAmount = 12,
                     Coupon = new webModel.Coupon
                     {
@@ -296,7 +296,7 @@ namespace VirtoCommerce.OrderModule.Test
 
             var shipment = new webModel.Shipment
             {
-                Currency = CurrencyCodes.USD,
+                Currency = "USD",
                 DeliveryAddress = new webModel.Address
                 {
                     City = "london",
@@ -313,7 +313,7 @@ namespace VirtoCommerce.OrderModule.Test
                 Discount = new webModel.Discount
                 {
                     PromotionId = "testPromotion",
-                    Currency = CurrencyCodes.USD,
+                    Currency = "USD",
                     DiscountAmount = 12,
                     Coupon = new webModel.Coupon
                     {
@@ -331,8 +331,7 @@ namespace VirtoCommerce.OrderModule.Test
 
             var payment = new webModel.PaymentIn
             {
-                
-                Currency = CurrencyCodes.USD,
+                Currency = "USD",
                 Sum = 10,
                 CustomerId = "et"
             };

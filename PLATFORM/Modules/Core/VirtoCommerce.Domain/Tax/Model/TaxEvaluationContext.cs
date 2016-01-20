@@ -9,13 +9,21 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Domain.Tax.Model
 {
-    public class TaxEvaluationContext : IEvaluationContext
+    public class TaxEvaluationContext : Entity, IEvaluationContext
     {
-        public TaxEvaluationContext(TaxRequest taxRequest)
+        public TaxEvaluationContext()
         {
-            TaxRequest = taxRequest;
+            Lines = new List<TaxLine>();
         }
-        public TaxRequest TaxRequest { get; set; }
+
+        public string Code { get; set; }
+        public string Type { get; set; }
+
+        public Customer.Model.Contact Customer { get; set; }
+        public Customer.Model.Organization Organization { get; set; }
+        public Address Address { get; set; }
+        public string Currency { get; set; }
+        public ICollection<TaxLine> Lines { get; set; }
 
     }
 }

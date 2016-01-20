@@ -84,6 +84,7 @@
     <Compile Include="Catalog\Model\PropertyDisplayName.cs" />
     <Compile Include="Commerce\Model\Address.cs" />
     <Compile Include="Commerce\Model\AddressType.cs" />
+    <Compile Include="Commerce\Model\Currency.cs" />
     <Compile Include="Commerce\Model\IInheritable.cs" />
     <Compile Include="Commerce\Model\ILanguageSupport.cs" />
     <Compile Include="Catalog\Model\ILinkSupport.cs" />
@@ -289,7 +290,6 @@
     <Compile Include="Tax\Model\TaxLine.cs" />
     <Compile Include="Tax\Model\TaxProvider.cs" />
     <Compile Include="Tax\Model\TaxRate.cs" />
-    <Compile Include="Tax\Model\TaxRequest.cs" />
     <Compile Include="Tax\Services\ITaxService.cs" />
     <Compile Include="Tax\Services\TaxServiceImpl.cs" />
   </ItemGroup>

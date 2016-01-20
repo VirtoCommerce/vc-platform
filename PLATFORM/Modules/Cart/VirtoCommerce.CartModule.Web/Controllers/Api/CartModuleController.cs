@@ -3,12 +3,9 @@ using System.Linq;
 using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
-using System.Web.Http.ModelBinding;
-using VirtoCommerce.CartModule.Web.Binders;
 using VirtoCommerce.CartModule.Web.Converters;
 using VirtoCommerce.CartModule.Web.Model;
 using VirtoCommerce.Domain.Cart.Services;
-using VirtoCommerce.Domain.Payment.Services;
 using VirtoCommerce.Domain.Shipping.Model;
 using VirtoCommerce.Domain.Store.Services;
 using VirtoCommerce.Platform.Core.Security;
@@ -56,7 +53,10 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
 
 			var searchResult = this._searchService.Search(criteria);
 			var retVal = searchResult.ShopingCarts.FirstOrDefault(x => !string.IsNullOrEmpty(x.Name) && x.Name.Equals("default", StringComparison.OrdinalIgnoreCase));
-
+            if(retVal == null)
+            {
+                retVal = searchResult.ShopingCarts.FirstOrDefault();
+            }
             if (retVal == null)
             {
                 return Ok();
@@ -91,7 +91,7 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
 		[HttpGet]
 		[ResponseType(typeof(webModel.SearchResult))]
 		[Route("carts")]
-		public IHttpActionResult SearchCarts([ModelBinder(typeof(SearchCriteriaBinder))] webModel.SearchCriteria criteria)
+		public IHttpActionResult SearchCarts(webModel.SearchCriteria criteria)
 		{
 			var retVal = _searchService.Search(criteria.ToCoreModel());
 			return Ok(retVal.ToWebModel());

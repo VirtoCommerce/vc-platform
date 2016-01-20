@@ -67,9 +67,9 @@ namespace VirtoCommerce.Client.Model
   
         
         /// <summary>
-        /// Currecy code
+        /// Currency code
         /// </summary>
-        /// <value>Currecy code</value>
+        /// <value>Currency code</value>
         [DataMember(Name="currency", EmitDefaultValue=false)]
         public string Currency { get; set; }
   

@@ -64,7 +64,7 @@ namespace VirtoCommerce.MarketingModule.Test
 				
 				//Curreny is USD
 				var currencyExpression = expressionTree.FindAvailableExpression<ConditionCurrencyIs>();
-				currencyExpression.Currency = CurrencyCodes.USD.ToString();
+				currencyExpression.Currency = "USD";
 				expressionTree.Children.Add(currencyExpression);
 				//Condition: Cart subtotal great or equal that 100$
 				var subtotalExpression = expressionTree.FindAvailableExpression<ConditionCartSubtotalLeast>();
@@ -78,7 +78,7 @@ namespace VirtoCommerce.MarketingModule.Test
 				promotion = (marketingController.CreatePromotion(promotion) as OkNegotiatedContentResult<webModel.Promotion>).Content;
 			}
 		
-			var marketingEval = new DefaultPromotionEvaluatorImpl(GetMarketingService());
+			var marketingEval = new DefaultPromotionEvaluatorImpl(GetMarketingService(), null);
 			var context = GetPromotionEvaluationContext();
 			var result = marketingEval.EvaluatePromotion(context);
 		}
@@ -126,7 +126,7 @@ namespace VirtoCommerce.MarketingModule.Test
 				promotion = (marketingController.CreatePromotion(promotion) as OkNegotiatedContentResult<webModel.Promotion>).Content;
 			}
 
-			var marketingEval = new DefaultPromotionEvaluatorImpl(GetMarketingService());
+			var marketingEval = new DefaultPromotionEvaluatorImpl(GetMarketingService(), null);
 			var context = GetPromotionEvaluationContext();
 			context.PromoEntries.First().Attributes["tag"] = "#FOOTBAL";
 			var result = marketingEval.EvaluatePromotion(context);
@@ -183,7 +183,7 @@ namespace VirtoCommerce.MarketingModule.Test
 		{
 			Func<IMarketingRepository> foundationRepositoryFactory = () => GetRepository();
 			var promotionExtensionManager = new DefaultMarketingExtensionManagerImpl();
-			var retVal = new PromotionServiceImpl(foundationRepositoryFactory, promotionExtensionManager);
+			var retVal = new PromotionServiceImpl(foundationRepositoryFactory, promotionExtensionManager, null);
 			return retVal;
 		}
 

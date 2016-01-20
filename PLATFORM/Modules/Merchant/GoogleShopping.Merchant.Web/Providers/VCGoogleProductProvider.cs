@@ -39,7 +39,7 @@ namespace GoogleShopping.MerchantModule.Web.Providers
                 var prices = _pricingService.EvaluateProductPrices(new PriceEvaluationContext { ProductIds = new string[] { converted.Id } });
                 if (prices != null)
                 {
-                    converted.Price = prices.First(x => x.Currency == CurrencyCodes.USD).ToGoogleModel();
+                    converted.Price = prices.First(x => x.Currency == "USD").ToGoogleModel();
                     if (retVal == null)
                         retVal = new Collection<Product>();
                     retVal.Add(converted);
@@ -72,7 +72,7 @@ namespace GoogleShopping.MerchantModule.Web.Providers
                 var prices = _pricingService.EvaluateProductPrices(new PriceEvaluationContext { ProductIds = new string[] { converted.Id } });
                 if (prices != null)
                 {
-                    converted.Price = prices.First(x => x.Currency == CurrencyCodes.USD).ToGoogleModel();
+                    converted.Price = prices.First(x => x.Currency == "USD").ToGoogleModel();
                     if (retVal.Entries == null)
                         retVal.Entries = new List<ProductsCustomBatchRequestEntry>();
                     var val = converted.ToBatchEntryModel();

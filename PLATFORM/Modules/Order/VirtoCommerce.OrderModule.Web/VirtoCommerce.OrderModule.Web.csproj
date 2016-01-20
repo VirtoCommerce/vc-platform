@@ -167,6 +167,7 @@
     </Compile>
     <Compile Include="Security\OrderResponsibleScope.cs" />
     <Compile Include="Security\OrderStoreScope.cs" />
+    <Content Include="Content\logo.png" />
     <Content Include="Scripts\blades\shipment-items.tpl.html" />
     <Content Include="Scripts\blades\shipment-items.js" />
     <Content Include="Scripts\blades\operation-comment.js" />

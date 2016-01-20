@@ -3,29 +3,35 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CacheManager.Core;
 using VirtoCommerce.Domain.Common;
 using VirtoCommerce.Domain.Marketing.Model;
 using VirtoCommerce.Domain.Marketing.Services;
+using VirtoCommerce.Platform.Data.Common;
 
 namespace VirtoCommerce.MarketingModule.Data.Services
 {
 	public class DefaultPromotionEvaluatorImpl : IMarketingPromoEvaluator
 	{
 		private readonly IPromotionService _promotionService;
-		public DefaultPromotionEvaluatorImpl(IPromotionService promotionService)
+        private readonly ICacheManager<object> _cacheManager;
+		public DefaultPromotionEvaluatorImpl(IPromotionService promotionService, ICacheManager<object> cacheManager)
 		{
 			_promotionService = promotionService;
-		}
+            _cacheManager = cacheManager;
+
+        }
 
 		#region IMarketingEvaluator Members
 		public PromotionResult EvaluatePromotion(IEvaluationContext context)
 		{
 			var now = DateTime.UtcNow;
-			var promotions = _promotionService.GetActivePromotions();
-
+			
 			var promoContext = (PromotionEvaluationContext)context;
 
-			var retVal = new PromotionResult();
+            var promotions = _cacheManager.Get("IPromotionService.GetActivePromotions", "MarketingModuleRegion", () => _promotionService.GetActivePromotions());
+
+            var retVal = new PromotionResult();
 
 			var rewards = promotions.SelectMany(x => x.EvaluatePromotion(context)).ToArray();
 

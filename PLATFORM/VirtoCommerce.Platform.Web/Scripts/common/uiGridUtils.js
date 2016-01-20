@@ -12,6 +12,7 @@
                     //enableHorizontalScrollbar: uiGridConstants.scrollbars.NEVER,
                     saveFocus: false,
                     saveFilter: false,
+                    saveGrouping: false,
                     savePinning: false,
                     saveSelection: false
                 });

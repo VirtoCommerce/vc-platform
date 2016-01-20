@@ -17,6 +17,162 @@ namespace VirtoCommerce.Client.Api
     {
         
         /// <summary>
+        /// Return all currencies registered in the system
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <returns>List&lt;VirtoCommerceDomainCommerceModelCurrency&gt;</returns>
+        List<VirtoCommerceDomainCommerceModelCurrency> CommerceGetAllCurrencies ();
+  
+        /// <summary>
+        /// Return all currencies registered in the system
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <returns>ApiResponse of List&lt;VirtoCommerceDomainCommerceModelCurrency&gt;</returns>
+        ApiResponse<List<VirtoCommerceDomainCommerceModelCurrency>> CommerceGetAllCurrenciesWithHttpInfo ();
+
+        /// <summary>
+        /// Return all currencies registered in the system
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <returns>Task of List&lt;VirtoCommerceDomainCommerceModelCurrency&gt;</returns>
+        System.Threading.Tasks.Task<List<VirtoCommerceDomainCommerceModelCurrency>> CommerceGetAllCurrenciesAsync ();
+
+        /// <summary>
+        /// Return all currencies registered in the system
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <returns>Task of ApiResponse (List&lt;VirtoCommerceDomainCommerceModelCurrency&gt;)</returns>
+        System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceDomainCommerceModelCurrency>>> CommerceGetAllCurrenciesAsyncWithHttpInfo ();
+        
+        /// <summary>
+        /// Update a existing currency
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="currency">currency</param>
+        /// <returns></returns>
+        void CommerceUpdateCurrency (VirtoCommerceDomainCommerceModelCurrency currency);
+  
+        /// <summary>
+        /// Update a existing currency
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="currency">currency</param>
+        /// <returns>ApiResponse of Object(void)</returns>
+        ApiResponse<Object> CommerceUpdateCurrencyWithHttpInfo (VirtoCommerceDomainCommerceModelCurrency currency);
+
+        /// <summary>
+        /// Update a existing currency
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="currency">currency</param>
+        /// <returns>Task of void</returns>
+        System.Threading.Tasks.Task CommerceUpdateCurrencyAsync (VirtoCommerceDomainCommerceModelCurrency currency);
+
+        /// <summary>
+        /// Update a existing currency
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="currency">currency</param>
+        /// <returns>Task of ApiResponse</returns>
+        System.Threading.Tasks.Task<ApiResponse<Object>> CommerceUpdateCurrencyAsyncWithHttpInfo (VirtoCommerceDomainCommerceModelCurrency currency);
+        
+        /// <summary>
+        /// Create new currency
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="currency">currency</param>
+        /// <returns></returns>
+        void CommerceCreateCurrency (VirtoCommerceDomainCommerceModelCurrency currency);
+  
+        /// <summary>
+        /// Create new currency
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="currency">currency</param>
+        /// <returns>ApiResponse of Object(void)</returns>
+        ApiResponse<Object> CommerceCreateCurrencyWithHttpInfo (VirtoCommerceDomainCommerceModelCurrency currency);
+
+        /// <summary>
+        /// Create new currency
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="currency">currency</param>
+        /// <returns>Task of void</returns>
+        System.Threading.Tasks.Task CommerceCreateCurrencyAsync (VirtoCommerceDomainCommerceModelCurrency currency);
+
+        /// <summary>
+        /// Create new currency
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="currency">currency</param>
+        /// <returns>Task of ApiResponse</returns>
+        System.Threading.Tasks.Task<ApiResponse<Object>> CommerceCreateCurrencyAsyncWithHttpInfo (VirtoCommerceDomainCommerceModelCurrency currency);
+        
+        /// <summary>
+        /// Delete currencies
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="codes">currency codes</param>
+        /// <returns></returns>
+        void CommerceDeleteCurrencies (List<string> codes);
+  
+        /// <summary>
+        /// Delete currencies
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="codes">currency codes</param>
+        /// <returns>ApiResponse of Object(void)</returns>
+        ApiResponse<Object> CommerceDeleteCurrenciesWithHttpInfo (List<string> codes);
+
+        /// <summary>
+        /// Delete currencies
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="codes">currency codes</param>
+        /// <returns>Task of void</returns>
+        System.Threading.Tasks.Task CommerceDeleteCurrenciesAsync (List<string> codes);
+
+        /// <summary>
+        /// Delete currencies
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="codes">currency codes</param>
+        /// <returns>Task of ApiResponse</returns>
+        System.Threading.Tasks.Task<ApiResponse<Object>> CommerceDeleteCurrenciesAsyncWithHttpInfo (List<string> codes);
+        
+        /// <summary>
         /// Return all fulfillment centers registered in the system
         /// </summary>
         /// <remarks>
@@ -588,6 +744,533 @@ namespace VirtoCommerce.Client.Api
             this.Configuration.AddDefaultHeader(key, value);
         }
    
+        
+        /// <summary>
+        /// Return all currencies registered in the system 
+        /// </summary>
+        /// <returns>List&lt;VirtoCommerceDomainCommerceModelCurrency&gt;</returns>
+        public List<VirtoCommerceDomainCommerceModelCurrency> CommerceGetAllCurrencies ()
+        {
+             ApiResponse<List<VirtoCommerceDomainCommerceModelCurrency>> response = CommerceGetAllCurrenciesWithHttpInfo();
+             return response.Data;
+        }
+
+        /// <summary>
+        /// Return all currencies registered in the system 
+        /// </summary>
+        /// <returns>ApiResponse of List&lt;VirtoCommerceDomainCommerceModelCurrency&gt;</returns>
+        public ApiResponse< List<VirtoCommerceDomainCommerceModelCurrency> > CommerceGetAllCurrenciesWithHttpInfo ()
+        {
+            
+    
+            var path_ = "/api/currencies";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                "application/json", "text/json"
+            };
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            
+            
+            
+            
+
+            
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+    
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling CommerceGetAllCurrencies: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling CommerceGetAllCurrencies: " + response.ErrorMessage, response.ErrorMessage);
+    
+            return new ApiResponse<List<VirtoCommerceDomainCommerceModelCurrency>>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (List<VirtoCommerceDomainCommerceModelCurrency>) Configuration.ApiClient.Deserialize(response, typeof(List<VirtoCommerceDomainCommerceModelCurrency>)));
+            
+        }
+    
+        /// <summary>
+        /// Return all currencies registered in the system 
+        /// </summary>
+        /// <returns>Task of List&lt;VirtoCommerceDomainCommerceModelCurrency&gt;</returns>
+        public async System.Threading.Tasks.Task<List<VirtoCommerceDomainCommerceModelCurrency>> CommerceGetAllCurrenciesAsync ()
+        {
+             ApiResponse<List<VirtoCommerceDomainCommerceModelCurrency>> response = await CommerceGetAllCurrenciesAsyncWithHttpInfo();
+             return response.Data;
+
+        }
+
+        /// <summary>
+        /// Return all currencies registered in the system 
+        /// </summary>
+        /// <returns>Task of ApiResponse (List&lt;VirtoCommerceDomainCommerceModelCurrency&gt;)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceDomainCommerceModelCurrency>>> CommerceGetAllCurrenciesAsyncWithHttpInfo ()
+        {
+            
+    
+            var path_ = "/api/currencies";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                "application/json", "text/json"
+            };
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            
+            
+            
+            
+
+            
+
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+ 
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling CommerceGetAllCurrencies: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling CommerceGetAllCurrencies: " + response.ErrorMessage, response.ErrorMessage);
+
+            return new ApiResponse<List<VirtoCommerceDomainCommerceModelCurrency>>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (List<VirtoCommerceDomainCommerceModelCurrency>) Configuration.ApiClient.Deserialize(response, typeof(List<VirtoCommerceDomainCommerceModelCurrency>)));
+            
+        }
+        
+        /// <summary>
+        /// Update a existing currency 
+        /// </summary>
+        /// <param name="currency">currency</param> 
+        /// <returns></returns>
+        public void CommerceUpdateCurrency (VirtoCommerceDomainCommerceModelCurrency currency)
+        {
+             CommerceUpdateCurrencyWithHttpInfo(currency);
+        }
+
+        /// <summary>
+        /// Update a existing currency 
+        /// </summary>
+        /// <param name="currency">currency</param> 
+        /// <returns>ApiResponse of Object(void)</returns>
+        public ApiResponse<Object> CommerceUpdateCurrencyWithHttpInfo (VirtoCommerceDomainCommerceModelCurrency currency)
+        {
+            
+            // verify the required parameter 'currency' is set
+            if (currency == null) throw new ApiException(400, "Missing required parameter 'currency' when calling CommerceUpdateCurrency");
+            
+    
+            var path_ = "/api/currencies";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                
+            };
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            
+            
+            
+            postBody = Configuration.ApiClient.Serialize(currency); // http body (model) parameter
+            
+
+            
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+    
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling CommerceUpdateCurrency: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling CommerceUpdateCurrency: " + response.ErrorMessage, response.ErrorMessage);
+    
+            
+            return new ApiResponse<Object>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                null);
+        }
+    
+        /// <summary>
+        /// Update a existing currency 
+        /// </summary>
+        /// <param name="currency">currency</param>
+        /// <returns>Task of void</returns>
+        public async System.Threading.Tasks.Task CommerceUpdateCurrencyAsync (VirtoCommerceDomainCommerceModelCurrency currency)
+        {
+             await CommerceUpdateCurrencyAsyncWithHttpInfo(currency);
+
+        }
+
+        /// <summary>
+        /// Update a existing currency 
+        /// </summary>
+        /// <param name="currency">currency</param>
+        /// <returns>Task of ApiResponse</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<Object>> CommerceUpdateCurrencyAsyncWithHttpInfo (VirtoCommerceDomainCommerceModelCurrency currency)
+        {
+            // verify the required parameter 'currency' is set
+            if (currency == null) throw new ApiException(400, "Missing required parameter 'currency' when calling CommerceUpdateCurrency");
+            
+    
+            var path_ = "/api/currencies";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                
+            };
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            
+            
+            
+            postBody = Configuration.ApiClient.Serialize(currency); // http body (model) parameter
+            
+
+            
+
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+ 
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling CommerceUpdateCurrency: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling CommerceUpdateCurrency: " + response.ErrorMessage, response.ErrorMessage);
+
+            
+            return new ApiResponse<Object>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                null);
+        }
+        
+        /// <summary>
+        /// Create new currency 
+        /// </summary>
+        /// <param name="currency">currency</param> 
+        /// <returns></returns>
+        public void CommerceCreateCurrency (VirtoCommerceDomainCommerceModelCurrency currency)
+        {
+             CommerceCreateCurrencyWithHttpInfo(currency);
+        }
+
+        /// <summary>
+        /// Create new currency 
+        /// </summary>
+        /// <param name="currency">currency</param> 
+        /// <returns>ApiResponse of Object(void)</returns>
+        public ApiResponse<Object> CommerceCreateCurrencyWithHttpInfo (VirtoCommerceDomainCommerceModelCurrency currency)
+        {
+            
+            // verify the required parameter 'currency' is set
+            if (currency == null) throw new ApiException(400, "Missing required parameter 'currency' when calling CommerceCreateCurrency");
+            
+    
+            var path_ = "/api/currencies";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                
+            };
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            
+            
+            
+            postBody = Configuration.ApiClient.Serialize(currency); // http body (model) parameter
+            
+
+            
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+    
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling CommerceCreateCurrency: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling CommerceCreateCurrency: " + response.ErrorMessage, response.ErrorMessage);
+    
+            
+            return new ApiResponse<Object>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                null);
+        }
+    
+        /// <summary>
+        /// Create new currency 
+        /// </summary>
+        /// <param name="currency">currency</param>
+        /// <returns>Task of void</returns>
+        public async System.Threading.Tasks.Task CommerceCreateCurrencyAsync (VirtoCommerceDomainCommerceModelCurrency currency)
+        {
+             await CommerceCreateCurrencyAsyncWithHttpInfo(currency);
+
+        }
+
+        /// <summary>
+        /// Create new currency 
+        /// </summary>
+        /// <param name="currency">currency</param>
+        /// <returns>Task of ApiResponse</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<Object>> CommerceCreateCurrencyAsyncWithHttpInfo (VirtoCommerceDomainCommerceModelCurrency currency)
+        {
+            // verify the required parameter 'currency' is set
+            if (currency == null) throw new ApiException(400, "Missing required parameter 'currency' when calling CommerceCreateCurrency");
+            
+    
+            var path_ = "/api/currencies";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                
+            };
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            
+            
+            
+            postBody = Configuration.ApiClient.Serialize(currency); // http body (model) parameter
+            
+
+            
+
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+ 
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling CommerceCreateCurrency: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling CommerceCreateCurrency: " + response.ErrorMessage, response.ErrorMessage);
+
+            
+            return new ApiResponse<Object>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                null);
+        }
+        
+        /// <summary>
+        /// Delete currencies 
+        /// </summary>
+        /// <param name="codes">currency codes</param> 
+        /// <returns></returns>
+        public void CommerceDeleteCurrencies (List<string> codes)
+        {
+             CommerceDeleteCurrenciesWithHttpInfo(codes);
+        }
+
+        /// <summary>
+        /// Delete currencies 
+        /// </summary>
+        /// <param name="codes">currency codes</param> 
+        /// <returns>ApiResponse of Object(void)</returns>
+        public ApiResponse<Object> CommerceDeleteCurrenciesWithHttpInfo (List<string> codes)
+        {
+            
+            // verify the required parameter 'codes' is set
+            if (codes == null) throw new ApiException(400, "Missing required parameter 'codes' when calling CommerceDeleteCurrencies");
+            
+    
+            var path_ = "/api/currencies";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                
+            };
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            if (codes != null) queryParams.Add("codes", Configuration.ApiClient.ParameterToString(codes)); // query parameter
+            
+            
+            
+            
+
+            
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+    
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling CommerceDeleteCurrencies: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling CommerceDeleteCurrencies: " + response.ErrorMessage, response.ErrorMessage);
+    
+            
+            return new ApiResponse<Object>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                null);
+        }
+    
+        /// <summary>
+        /// Delete currencies 
+        /// </summary>
+        /// <param name="codes">currency codes</param>
+        /// <returns>Task of void</returns>
+        public async System.Threading.Tasks.Task CommerceDeleteCurrenciesAsync (List<string> codes)
+        {
+             await CommerceDeleteCurrenciesAsyncWithHttpInfo(codes);
+
+        }
+
+        /// <summary>
+        /// Delete currencies 
+        /// </summary>
+        /// <param name="codes">currency codes</param>
+        /// <returns>Task of ApiResponse</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<Object>> CommerceDeleteCurrenciesAsyncWithHttpInfo (List<string> codes)
+        {
+            // verify the required parameter 'codes' is set
+            if (codes == null) throw new ApiException(400, "Missing required parameter 'codes' when calling CommerceDeleteCurrencies");
+            
+    
+            var path_ = "/api/currencies";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                
+            };
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            if (codes != null) queryParams.Add("codes", Configuration.ApiClient.ParameterToString(codes)); // query parameter
+            
+            
+            
+            
+
+            
+
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+ 
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling CommerceDeleteCurrencies: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling CommerceDeleteCurrencies: " + response.ErrorMessage, response.ErrorMessage);
+
+            
+            return new ApiResponse<Object>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                null);
+        }
         
         /// <summary>
         /// Return all fulfillment centers registered in the system 

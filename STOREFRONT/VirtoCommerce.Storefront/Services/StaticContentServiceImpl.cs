@@ -56,7 +56,7 @@ namespace VirtoCommerce.Storefront.Services
             }
             if (Directory.Exists(localPath))
             {
-                var files = Directory.GetFiles(localPath, searchPattern, SearchOption.TopDirectoryOnly)
+                var files = Directory.GetFiles(localPath, "*.*", SearchOption.AllDirectories)
                                              .Where(x => _extensions.Any(y => x.EndsWith(y)));
                 totalCount = files.Count();
                 foreach (var file in files.OrderBy(x => x).Skip((pageIndex - 1) * pageSize).Take(pageSize))

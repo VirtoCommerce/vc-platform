@@ -11,23 +11,23 @@ namespace AvaTax.TaxModule.Web.Converters
 {
     public static class TaxRequestConverter
     {
-        public static GetTaxRequest ToAvaTaxRequest(this TaxRequest request, string companyCode, bool commit = false)
+        public static GetTaxRequest ToAvaTaxRequest(this TaxEvaluationContext evalContext, string companyCode, bool commit = false)
         {
-            if (request.Address != null && request.Lines != null && request.Lines.Any())
+            if (evalContext.Address != null && evalContext.Lines != null && evalContext.Lines.Any())
             {
                 // Document Level Elements
                 // Required Request Parameters
                 var getTaxRequest = new GetTaxRequest
                 {
-                    CustomerCode = request.Customer.Id,
+                    CustomerCode = evalContext.Customer.Id,
                     DocDate = DateTime.UtcNow.ToString("yyyy-MM-dd"),
                     CompanyCode = companyCode,
                     Client = "VirtoCommerce,2.x,VirtoCommerce",
                     DetailLevel = DetailLevel.Tax,
                     Commit = commit,
                     DocType = DocType.SalesInvoice,
-                    DocCode = request.Id,
-                    CurrencyCode = request.Currency.ToString()
+                    DocCode = evalContext.Id,
+                    CurrencyCode = evalContext.Currency.ToString()
                 };
 
                 // Best Practice Request Parameters
@@ -49,7 +49,7 @@ namespace AvaTax.TaxModule.Web.Converters
                 //getTaxRequest.PosLaneCode = "09";
 
                 //add customer tax exemption code to cart if exists
-                getTaxRequest.ExemptionNo = request.Customer.GetDynamicPropertyValue("Tax exempt", string.Empty);
+                getTaxRequest.ExemptionNo = evalContext.Customer.GetDynamicPropertyValue("Tax exempt", string.Empty);
 
                 string destinationAddressIndex = "0";
 
@@ -57,12 +57,12 @@ namespace AvaTax.TaxModule.Web.Converters
                 var addresses = new List<Address>{
                     new Address
                     {
-                        AddressCode = request.Address.AddressType.ToString(),
-                        Line1 = request.Address.Line1,
-                        City = request.Address.City,
-                        Region = request.Address.RegionName ?? request.Address.RegionId,
-                        PostalCode = request.Address.PostalCode,
-                        Country = request.Address.CountryName
+                        AddressCode = evalContext.Address.AddressType.ToString(),
+                        Line1 = evalContext.Address.Line1,
+                        City = evalContext.Address.City,
+                        Region = evalContext.Address.RegionName ?? evalContext.Address.RegionId,
+                        PostalCode = evalContext.Address.PostalCode,
+                        Country = evalContext.Address.CountryName
                     } };
                 
                 getTaxRequest.Addresses = addresses.ToArray();
@@ -70,7 +70,7 @@ namespace AvaTax.TaxModule.Web.Converters
                 // Line Data
                 // Required Parameters
 
-                getTaxRequest.Lines = request.Lines.Select(li =>
+                getTaxRequest.Lines = evalContext.Lines.Select(li =>
                     new Line
                     {
                         LineNo = li.Id,

@@ -276,6 +276,14 @@ namespace VirtoCommerce.LiquidThemeEngine
             };
             var parsedTemplate = _cacheManager.Get(GetCacheKey("ParseTemplate", templateContent.GetHashCode().ToString()), "LiquidTheme", () => { return Template.Parse(templateContent); });
             var retVal = parsedTemplate.RenderWithTracing(renderParams);
+            //Copy key values which were generated in rendering to out parameters
+            if (parameters != null && parsedTemplate.Registers != null)
+            {
+                foreach(var registerPair in parsedTemplate.Registers)
+                {
+                    parameters[registerPair.Key] = registerPair.Value;
+                }
+            }
             return retVal;
         }
 
@@ -296,7 +304,14 @@ namespace VirtoCommerce.LiquidThemeEngine
                     var currentThemeSettings = InnerGetSettings(CurrentThemeLocalPath);
                     if (currentThemeSettings != null)
                     {
-                        resultSettings.Merge(currentThemeSettings, new JsonMergeSettings { MergeArrayHandling = MergeArrayHandling.Merge });
+                        if (resultSettings == null) // if there is no default settings, use just current theme
+                        {
+                            resultSettings = currentThemeSettings;
+                        }
+                        else
+                        {
+                            resultSettings.Merge(currentThemeSettings, new JsonMergeSettings { MergeArrayHandling = MergeArrayHandling.Merge });
+                        }
                     }
                 }
 

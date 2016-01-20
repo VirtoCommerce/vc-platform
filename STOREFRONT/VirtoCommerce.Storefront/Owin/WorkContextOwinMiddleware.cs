@@ -13,27 +13,30 @@ using Microsoft.Practices.Unity;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using VirtoCommerce.Client.Api;
-using VirtoCommerce.Storefront.Builders;
 using VirtoCommerce.Storefront.Common;
 using VirtoCommerce.Storefront.Converters;
 using VirtoCommerce.Storefront.Model;
+using VirtoCommerce.Storefront.Model.Cart.Services;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
+using VirtoCommerce.Storefront.Model.Quote.Services;
 
 namespace VirtoCommerce.Storefront.Owin
 {
     /// <summary>
     /// Populate main work context with such commerce data as store, user profile, cart, etc.
     /// </summary>
-    public class WorkContextOwinMiddleware : OwinMiddleware
+    public sealed class WorkContextOwinMiddleware : OwinMiddleware
     {
         private static readonly Country[] _allCountries = GetAllCounries();
 
         private readonly IStoreModuleApi _storeApi;
         private readonly IVirtoCommercePlatformApi _platformApi;
+        private readonly ICommerceCoreModuleApi _commerceApi;
         private readonly ICustomerManagementModuleApi _customerApi;
         private readonly IPricingModuleApi _pricingModuleApi;
         private readonly ICartBuilder _cartBuilder;
+        private readonly IQuoteRequestBuilder _quoteRequestBuilder;
         private readonly ICMSContentModuleApi _cmsApi;
         private readonly ICacheManager<object> _cacheManager;
 
@@ -46,8 +49,10 @@ namespace VirtoCommerce.Storefront.Owin
             _platformApi = container.Resolve<IVirtoCommercePlatformApi>();
             _customerApi = container.Resolve<ICustomerManagementModuleApi>();
             _cartBuilder = container.Resolve<ICartBuilder>();
+            _quoteRequestBuilder = container.Resolve<IQuoteRequestBuilder>();
             _cmsApi = container.Resolve<ICMSContentModuleApi>();
             _pricingModuleApi = container.Resolve<IPricingModuleApi>();
+            _commerceApi = container.Resolve<ICommerceCoreModuleApi>();
             _cacheManager = container.Resolve<ICacheManager<object>>();
             _container = container;
         }
@@ -62,8 +67,7 @@ namespace VirtoCommerce.Storefront.Owin
                 // Initialize common properties
                 workContext.RequestUrl = context.Request.Uri;
                 workContext.AllCountries = _allCountries;
-
-                workContext.AllStores = await _cacheManager.GetAsync("GetAllStores", "StoreRegion", async () => { return await GetAllStoresAsync(); });
+                workContext.AllStores = await _cacheManager.GetAsync("GetAllStores", "ApiRegion", async () => { return await GetAllStoresAsync(); });
                 if (workContext.AllStores != null && workContext.AllStores.Any())
                 {
                     var currentCustomerId = GetCurrentCustomerId(context);
@@ -73,6 +77,14 @@ namespace VirtoCommerce.Storefront.Owin
                     // Initialize request specific properties
                     workContext.CurrentStore = GetStore(context, workContext.AllStores);
                     workContext.CurrentLanguage = GetLanguage(context, workContext.AllStores, workContext.CurrentStore);
+                    workContext.AllCurrencies = await _cacheManager.GetAsync("GetAllCurrencies-" + workContext.CurrentLanguage.CultureName, "ApiRegion", async () => { return (await _commerceApi.CommerceGetAllCurrenciesAsync()).Select(x => x.ToWebModel(workContext.CurrentLanguage)).ToArray(); });
+                    //Sync store currencies with avail in system
+                    foreach (var store in workContext.AllStores)
+                    {
+                        store.SyncCurrencies(workContext.AllCurrencies, workContext.CurrentLanguage);
+                    }
+
+                    //Set current currency
                     workContext.CurrentCurrency = GetCurrency(context, workContext.CurrentStore);
 
                     //Do not load shopping cart and other for resource requests
@@ -81,6 +93,12 @@ namespace VirtoCommerce.Storefront.Owin
                         //Shopping cart
                         await _cartBuilder.GetOrCreateNewTransientCartAsync(workContext.CurrentStore, workContext.CurrentCustomer, workContext.CurrentLanguage, workContext.CurrentCurrency);
                         workContext.CurrentCart = _cartBuilder.Cart;
+
+                        if (workContext.CurrentStore.QuotesEnabled)
+                        {
+                            await _quoteRequestBuilder.GetOrCreateNewTransientQuoteRequestAsync(workContext.CurrentStore, workContext.CurrentCustomer, workContext.CurrentLanguage, workContext.CurrentCurrency);
+                            workContext.CurrentQuoteRequest = _quoteRequestBuilder.QuoteRequest;
+                        }
 
                         var linkLists = await _cacheManager.GetAsync("GetLinkLists-" + workContext.CurrentStore.Id, "ApiRegion", async () => { return await _cmsApi.MenuGetListsAsync(workContext.CurrentStore.Id); });
                         workContext.CurrentLinkLists = linkLists != null ? linkLists.Select(ll => ll.ToWebModel(urlBuilder)).ToList() : null;
@@ -99,7 +117,6 @@ namespace VirtoCommerce.Storefront.Owin
                                     evalContextStoreId: workContext.CurrentStore.Id,
                                     evalContextCatalogId: workContext.CurrentStore.Catalog,
                                     evalContextCustomerId: workContext.CurrentCustomer.Id,
-                                    evalContextCurrency: workContext.CurrentCurrency.Code,
                                     evalContextQuantity: 1);
                                 return pricingResult.Select(p => p.Id).ToList();
                             });
@@ -111,7 +128,7 @@ namespace VirtoCommerce.Storefront.Owin
         }
 
 
-        protected virtual bool IsStorefrontRequest(IOwinRequest request)
+        private bool IsStorefrontRequest(IOwinRequest request)
         {
             return !request.Path.StartsWithSegments(new PathString("/admin"))
                 && !request.Path.StartsWithSegments(new PathString("/areas/admin"))
@@ -119,14 +136,14 @@ namespace VirtoCommerce.Storefront.Owin
                 && !request.Path.StartsWithSegments(new PathString("/favicon.ico"));
         }
 
-        protected virtual async Task<Store[]> GetAllStoresAsync()
+        private async Task<Store[]> GetAllStoresAsync()
         {
             var stores = await _storeApi.StoreModuleGetStoresAsync();
             var result = stores.Select(s => s.ToWebModel()).ToArray();
             return result.Any() ? result : null;
         }
 
-        protected virtual CatalogSearchCriteria GetSearchCriteria(WorkContext workContext)
+        private CatalogSearchCriteria GetSearchCriteria(WorkContext workContext)
         {
             var qs = HttpUtility.ParseQueryString(workContext.RequestUrl.Query);
             var retVal = CatalogSearchCriteria.Parse(qs);
@@ -138,7 +155,7 @@ namespace VirtoCommerce.Storefront.Owin
 
         private bool IsAssetRequest(Uri uri)
         {
-            return uri.AbsolutePath.Contains("themes/assets");
+            return uri.AbsolutePath.Contains("themes/assets") || !string.IsNullOrEmpty(Path.GetExtension(uri.ToString()));
         }
 
         private string GetCurrentCustomerId(IOwinContext context)
@@ -151,7 +168,7 @@ namespace VirtoCommerce.Storefront.Owin
             return retVal;
         }
 
-        protected virtual async Task<Customer> GetCustomerAsync(IOwinContext context)
+        private async Task<Customer> GetCustomerAsync(IOwinContext context)
         {
             var customer = new Customer();
 
@@ -179,7 +196,7 @@ namespace VirtoCommerce.Storefront.Owin
             return customer;
         }
 
-        protected virtual void MaintainAnonymousCustomerCookie(IOwinContext context, WorkContext workContext)
+        private void MaintainAnonymousCustomerCookie(IOwinContext context, WorkContext workContext)
         {
             string anonymousCustomerId = context.Request.Cookies[StorefrontConstants.AnonymousCustomerIdCookie];
 
@@ -203,7 +220,7 @@ namespace VirtoCommerce.Storefront.Owin
             }
         }
 
-        protected virtual Store GetStore(IOwinContext context, ICollection<Store> stores)
+        private Store GetStore(IOwinContext context, ICollection<Store> stores)
         {
             //Remove store name from url need to prevent writing store in routing
             var storeId = GetStoreIdFromUrl(context, stores);
@@ -228,7 +245,7 @@ namespace VirtoCommerce.Storefront.Owin
             return store;
         }
 
-        protected virtual string GetStoreIdFromUrl(IOwinContext context, ICollection<Store> stores)
+        private string GetStoreIdFromUrl(IOwinContext context, ICollection<Store> stores)
         {
             //Try first find by store url (if it defined)
             var retVal = stores.Where(x => x.IsStoreUri(context.Request.Uri)).Select(x => x.Id).FirstOrDefault();
@@ -248,7 +265,7 @@ namespace VirtoCommerce.Storefront.Owin
             return retVal;
         }
 
-        protected virtual Language GetLanguage(IOwinContext context, ICollection<Store> stores, Store store)
+        private Language GetLanguage(IOwinContext context, ICollection<Store> stores, Store store)
         {
             var languages = stores.SelectMany(s => s.Languages)
                 .Union(stores.Select(s => s.DefaultLanguage))
@@ -274,14 +291,14 @@ namespace VirtoCommerce.Storefront.Owin
             return retVal;
         }
 
-        protected virtual string GetLanguageFromUrl(IOwinContext context, string[] languages)
+        private string GetLanguageFromUrl(IOwinContext context, string[] languages)
         {
             var requestPath = context.Request.Path.ToString();
             var retVal = languages.FirstOrDefault(x => requestPath.Contains(String.Format("/{0}/", x)));
             return retVal;
         }
 
-        protected virtual Currency GetCurrency(IOwinContext context, Store store)
+        private Currency GetCurrency(IOwinContext context, Store store)
         {
             //Get currency from request url
             var currencyCode = context.Request.Query.Get("currency");
@@ -295,8 +312,7 @@ namespace VirtoCommerce.Storefront.Owin
             //Get store default currency if currency not in the supported by stores list
             if (!string.IsNullOrEmpty(currencyCode))
             {
-                var currency = new Currency(EnumUtility.SafeParse(currencyCode, store.DefaultCurrency.CurrencyCode));
-                retVal = store.Currencies.Contains(currency) ? currency : retVal;
+                retVal = store.Currencies.FirstOrDefault(x => x.Equals(currencyCode)) ?? retVal;
             }
             return retVal;
         }

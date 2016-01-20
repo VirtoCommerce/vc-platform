@@ -39,10 +39,9 @@ namespace VirtoCommerce.OrderModule.Web.Model
 
 		public string Comment { get; set; }
 		/// <summary>
-		/// Currecy code
+		/// Currency code
 		/// </summary>
-		[JsonConverter(typeof(StringEnumConverter))]
-		public CurrencyCodes Currency { get; set; }
+		public string Currency { get; set; }
 		public bool TaxIncluded { get; set; }
 		/// <summary>
 		/// Money amount without tax

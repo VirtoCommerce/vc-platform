@@ -36,8 +36,8 @@ namespace VirtoCommerce.StoreModule.Test
                 Id = "testStore",
                 Name = "testStore",
                 Catalog = "catalog",
-                Currencies = new[] { CurrencyCodes.USD, CurrencyCodes.RUB },
-                DefaultCurrency = CurrencyCodes.USD,
+                Currencies = new[] { "USD", "RUB" },
+                DefaultCurrency = "USD",
                 Languages = new[] { "ru-ru", "en-us" },
                 DefaultLanguage = "ru-ru",
                 FulfillmentCenter = new FulfillmentCenter
@@ -68,8 +68,8 @@ namespace VirtoCommerce.StoreModule.Test
             var store = result.Content;
 
             store.Name = "diff name";
-            store.DefaultCurrency = CurrencyCodes.UYU;
-            store.Currencies.Add(CurrencyCodes.UYU);
+            store.DefaultCurrency = "UYU";
+            store.Currencies.Add("UYU");
             store.Languages.Remove(store.Languages.FirstOrDefault());
            
             store.FulfillmentCenter.CountryCode = "SSS";
@@ -104,7 +104,7 @@ namespace VirtoCommerce.StoreModule.Test
             Func<IStoreRepository> repositoryFactory = () => new StoreRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor());
 
             var dynamicPropertyService = new DynamicPropertyService(platformRepositoryFactory);
-            var storeService = new StoreServiceImpl(repositoryFactory, GetCommerceService(), null, dynamicPropertyService, null, null, null);
+            var storeService = new StoreServiceImpl(repositoryFactory, GetCommerceService(), null, dynamicPropertyService, null, null, null, null);
 
             var controller = new StoreModuleController(storeService, null, null, null, null, null, null);
             return controller;

@@ -98,5 +98,16 @@ namespace VirtoCommerce.Storefront.Converters
 
             return addressWebModel;
         }
+
+        public static Address ToWebModel(this VirtoCommerceQuoteModuleWebModelAddress serviceModel)
+        {
+            var webModel = new Address();
+
+            webModel.InjectFrom<NullableAndEnumValueInjecter>(serviceModel);
+
+            webModel.Type = EnumUtility.SafeParse(serviceModel.AddressType, AddressType.BillingAndShipping );
+
+            return webModel;
+        }
     }
 }

@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
+using System.Web.Http.ModelBinding;
 using VirtoCommerce.CoreModule.Web.Converters;
 using VirtoCommerce.CoreModule.Web.Security;
 using VirtoCommerce.Domain.Commerce.Services;
@@ -13,6 +16,7 @@ using VirtoCommerce.Domain.Payment.Model;
 using VirtoCommerce.Domain.Store.Services;
 using VirtoCommerce.Platform.Core.Security;
 using coreModel = VirtoCommerce.Domain.Commerce.Model;
+using coreTaxModel = VirtoCommerce.Domain.Tax.Model;
 using webModel = VirtoCommerce.CoreModule.Web.Model;
 
 namespace VirtoCommerce.CoreModule.Web.Controllers.Api
@@ -30,6 +34,32 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
             _customerOrderService = customerOrderService;
             _storeService = storeService;
         }
+
+
+        /// <summary>
+        /// Evaluate and return all tax rates for specified store and evaluation context 
+        /// </summary>
+        /// <param name="storeId"></param>
+        /// <param name="evalContext"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [ResponseType(typeof(coreTaxModel.TaxRate[]))]
+        [Route("taxes/{storeId}/evaluate")]
+        public IHttpActionResult EvaluateTaxes(string storeId, [FromBody]coreTaxModel.TaxEvaluationContext evalContext)
+        {
+            var retVal = new List<coreTaxModel.TaxRate>();
+            var store = _storeService.GetById(storeId);
+            if(storeId != null)
+            {
+                var activeTaxProvider = store.TaxProviders.FirstOrDefault(x => x.IsActive);
+                if(activeTaxProvider != null)
+                {
+                    retVal.AddRange(activeTaxProvider.CalculateRates(evalContext));
+                }
+            }
+            return Ok(retVal);
+        }
+
 
         /// <summary>
         /// Return all fulfillment centers registered in the system
@@ -142,6 +172,60 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
             var retVal = _commerceService.GetSeoByKeyword(slug).ToArray();
 
             return Ok(retVal);
+        }
+
+        /// <summary>
+        /// Return all currencies registered in the system
+        /// </summary>
+        [HttpGet]
+        [ResponseType(typeof(coreModel.Currency[]))]
+        [Route("currencies")]
+        public IHttpActionResult GetAllCurrencies()
+        {
+            var retVal = _commerceService.GetAllCurrencies().ToArray();
+            return Ok(retVal);
+        }
+
+        /// <summary>
+        ///  Update a existing currency 
+        /// </summary>
+        /// <param name="currency">currency</param>
+        [HttpPut]
+        [ResponseType(typeof(void))]
+        [Route("currencies")]
+        [CheckPermission(Permissions = new[] { CommercePredefinedPermissions.Update })]
+        public IHttpActionResult UpdateCurrency(coreModel.Currency currency)
+        {
+            _commerceService.UpsertCurrencies(new[] { currency });
+            return Ok();
+        }
+
+        /// <summary>
+        ///  Create new currency 
+        /// </summary>
+        /// <param name="currency">currency</param>
+        [HttpPost]
+        [ResponseType(typeof(void))]
+        [Route("currencies")]
+        [CheckPermission(Permissions = new[] { CommercePredefinedPermissions.Create })]
+        public IHttpActionResult CreateCurrency(coreModel.Currency currency)
+        {
+            _commerceService.UpsertCurrencies(new[] { currency });
+            return Ok();
+        }
+
+        /// <summary>
+        ///  Delete currencies 
+        /// </summary>
+        /// <param name="codes">currency codes</param>
+        [HttpDelete]
+        [ResponseType(typeof(void))]
+        [Route("currencies")]
+        [CheckPermission(Permissions = new[] { CommercePredefinedPermissions.Delete })]
+        public IHttpActionResult DeleteCurrencies([FromUri] string[] codes)
+        {
+            _commerceService.DeleteCurrencies(codes);
+            return Ok();
         }
     }
 }

@@ -10,7 +10,7 @@ namespace VirtoCommerce.Domain.Tax.Model
     public class TaxRate : ValueObject<TaxRate>
     {
         public decimal Rate { get; set; }
-        public CurrencyCodes Currency { get; set; }
+        public string Currency { get; set; }
 
         public TaxLine Line { get; set; }
         public TaxProvider TaxProvider { get; set; }

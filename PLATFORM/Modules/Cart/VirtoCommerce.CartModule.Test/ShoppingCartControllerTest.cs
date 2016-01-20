@@ -30,7 +30,7 @@ namespace VirtoCommerce.CartModule.Test
        
             var cart = new webModel.ShoppingCart
             {
-                Currency = Platform.Core.Common.CurrencyCodes.USD,
+                Currency = "USD",
                 CustomerId = "et",
                 CustomerName = "et",
                 Name = "default",
@@ -68,7 +68,7 @@ namespace VirtoCommerce.CartModule.Test
             var shipment = new webModel.Shipment
             {
                 DeliveryAddress = deliveryAddress,
-                Currency = Platform.Core.Common.CurrencyCodes.USD,
+                Currency = "USD",
                 ShipmentMethodCode = "",
                 ShippingPrice = 10
             };
@@ -84,7 +84,7 @@ namespace VirtoCommerce.CartModule.Test
             var shipment2 = new webModel.Shipment
             {
                 DeliveryAddress = deliveryAddress,
-                Currency = Platform.Core.Common.CurrencyCodes.USD,
+                Currency = "USD",
                 ShipmentMethodCode = "sss",
                 ShippingPrice = 11
             };

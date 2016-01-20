@@ -23,7 +23,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			var retVal = new LineItem();
 			retVal.InjectFrom(entity);
 
-			retVal.Currency = (CurrencyCodes)Enum.Parse(typeof(CurrencyCodes), entity.Currency);
+			retVal.Currency = entity.Currency;
 			if (entity.Discounts != null && entity.Discounts.Any())
 			{
 				retVal.Discount = entity.Discounts.First().ToCoreModel();

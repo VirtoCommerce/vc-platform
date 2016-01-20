@@ -20,7 +20,7 @@ namespace VirtoCommerce.Domain.Shipping.Model
 		public string OptionDescription { get; set; }
 
 		public decimal Rate { get; set; }
-		public CurrencyCodes Currency { get; set; }
+		public string Currency { get; set; }
 
 		public ShippingMethod ShippingMethod { get; set; }
 	}

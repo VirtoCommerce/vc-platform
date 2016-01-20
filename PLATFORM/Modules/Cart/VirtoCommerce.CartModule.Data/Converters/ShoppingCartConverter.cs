@@ -22,9 +22,9 @@ namespace VirtoCommerce.CartModule.Data.Converters
 
 			var retVal = new ShoppingCart();
 			retVal.InjectFrom(entity);
-			retVal.Currency = (CurrencyCodes)Enum.Parse(typeof(CurrencyCodes), entity.Currency);
+            retVal.Currency = entity.Currency;
 
-			retVal.Items = entity.Items.Select(x => x.ToCoreModel()).ToList();
+            retVal.Items = entity.Items.Select(x => x.ToCoreModel()).ToList();
 			retVal.Addresses = entity.Addresses.Select(x => x.ToCoreModel()).ToList();
 			retVal.Shipments = entity.Shipments.Select(x => x.ToCoreModel()).ToList();
 			retVal.Payments = entity.Payments.Select(x => x.ToCoreModel()).ToList();
@@ -34,9 +34,9 @@ namespace VirtoCommerce.CartModule.Data.Converters
             return retVal;
 		}
 
-        public static taxCoreModel.TaxRequest ToTaxRequest(this ShoppingCart cart)
+        public static taxCoreModel.TaxEvaluationContext ToTaxEvalContext(this ShoppingCart cart)
         {
-            var retVal = new taxCoreModel.TaxRequest();
+            var retVal = new taxCoreModel.TaxEvaluationContext();
             retVal.Id = cart.Id;
             retVal.Code = cart.Name;
             retVal.Currency = cart.Currency;

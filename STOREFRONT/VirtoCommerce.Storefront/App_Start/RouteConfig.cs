@@ -94,7 +94,9 @@ namespace VirtoCommerce.Storefront
             routes.MapLocalizedStorefrontRoute("Blogs.GetBlog", "blogs/{blog}", defaults: new { controller = "Blog", action = "GetBlog" });
             routes.MapLocalizedStorefrontRoute("Blogs.GetBlogArticle", "blogs/{blog}/{article}", defaults: new { controller = "Blog", action = "GetBlogArticle" });
 
-            routes.MapSeoRoute(workContextFactory, commerceCoreApi, staticContentService, cacheManager, "SeoRoute", "{*path}", new { controller = "StorefrontHome", action = "Index" });
+            Func<string, Route> seoRouteFactory = url => new SeoRoute(url, new MvcRouteHandler(), workContextFactory, commerceCoreApi, staticContentService, cacheManager);
+            routes.MapLocalizedStorefrontRoute(name: "SeoRoute", url: "{*path}", defaults: new { controller = "StorefrontHome", action = "Index" }, constraints: null, routeFactory: seoRouteFactory);
+            
         }
     }
 }

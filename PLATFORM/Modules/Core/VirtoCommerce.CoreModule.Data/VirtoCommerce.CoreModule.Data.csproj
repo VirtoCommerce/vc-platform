@@ -61,6 +61,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converters\CurrencyConverter.cs" />
     <Compile Include="Converters\SeoUrlKeywordConverter.cs" />
     <Compile Include="Converters\FulfillmentCenterConverter.cs" />
     <Compile Include="Common\SerializationUtil.cs" />
@@ -76,7 +77,16 @@
     <Compile Include="Migrations\201508180627556_Sequences.Designer.cs">
       <DependentUpon>201508180627556_Sequences.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201601111022137_AddCurrencies.cs" />
+    <Compile Include="Migrations\201601111022137_AddCurrencies.Designer.cs">
+      <DependentUpon>201601111022137_AddCurrencies.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201601131534132_NewCurrencyFields.cs" />
+    <Compile Include="Migrations\201601131534132_NewCurrencyFields.Designer.cs">
+      <DependentUpon>201601131534132_NewCurrencyFields.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Model\Currency.cs" />
     <Compile Include="Model\FulfillmentCenter.cs" />
     <Compile Include="Model\SeoUrlKeyword.cs" />
     <Compile Include="Model\Sequence.cs" />
@@ -111,6 +121,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201504301238451_Initial.resx">
       <DependentUpon>201504301238451_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201601111022137_AddCurrencies.resx">
+      <DependentUpon>201601111022137_AddCurrencies.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201601131534132_NewCurrencyFields.resx">
+      <DependentUpon>201601131534132_NewCurrencyFields.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

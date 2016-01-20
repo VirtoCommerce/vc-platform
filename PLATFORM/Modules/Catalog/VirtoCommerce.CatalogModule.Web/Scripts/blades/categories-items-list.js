@@ -1,7 +1,9 @@
 ﻿angular.module('virtoCommerce.catalogModule')
     .controller('virtoCommerce.catalogModule.categoriesItemsListController', [
-        '$sessionStorage', '$scope', 'virtoCommerce.catalogModule.categories', 'virtoCommerce.catalogModule.items', 'virtoCommerce.catalogModule.listEntries', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.authService', 'uiGridConstants', 'platformWebApp.uiGridHelper',
-        function ($storage, $scope, categories, items, listEntries, bladeNavigationService, dialogService, authService, uiGridConstants, uiGridHelper) {
+        '$sessionStorage', '$localStorage', '$timeout', '$scope', 'virtoCommerce.catalogModule.categories', 'virtoCommerce.catalogModule.items', 'virtoCommerce.catalogModule.listEntries', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.authService', 'uiGridConstants', 'platformWebApp.uiGridHelper',
+        function ($sessionStorage, $localStorage, $timeout, $scope, categories, items, listEntries, bladeNavigationService, dialogService, authService, uiGridConstants, uiGridHelper) {
+            $scope.uiGridConstants = uiGridConstants;
+
             //pagination settings
             $scope.pageSettings = {};
             $scope.pageSettings.totalItems = 0;
@@ -9,23 +11,28 @@
             $scope.pageSettings.numPages = 5;
             $scope.pageSettings.itemsPerPageCount = 20;
 
-            $scope.filter = { searchKeyword: undefined };
-
             var blade = $scope.blade;
 
             blade.refresh = function () {
                 blade.isLoading = true;
+                var searchCriteria = {
+                    catalogId: blade.catalogId,
+                    categoryId: blade.categoryId,
+                    keyword: filter.keyword ? filter.keyword : undefined,
+                    responseGroup: 'withCategories, withProducts',
+                    sort: getSortExpression(),
+                    skip: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
+                    take: $scope.pageSettings.itemsPerPageCount
+                };
+                if (filter.current) {
+                    angular.extend(searchCriteria, filter.current);
+                }
+
                 listEntries.listitemssearch(
-                    {
-                        catalog: blade.catalogId,
-                        category: blade.categoryId,
-                        q: $scope.filter.searchKeyword,
-                        // propertyValues: ,
-                        respGroup: 'withCategories, withProducts',
-                        start: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
-                        count: $scope.pageSettings.itemsPerPageCount
-                    },
+                    searchCriteria,
                     function (data) {
+                        transformByFilters(data.listEntries);
+
                         blade.isLoading = false;
                         $scope.pageSettings.totalItems = angular.isDefined(data.totalCount) ? data.totalCount : 0;
                         $scope.items = data.listEntries;
@@ -71,10 +78,6 @@
                 };
             }
 
-            $scope.$watch('pageSettings.currentPage', function (newPage) {
-                blade.refresh();
-            });
-
             $scope.edit = function (listItem) {
                 closeChildrenBlades();
 
@@ -102,7 +105,7 @@
             }
 
             function cutList(selection) {
-                $storage.catalogClipboardContent = selection;
+                $sessionStorage.catalogClipboardContent = selection;
             }
 
             $scope.delete = function (data) {
@@ -212,9 +215,10 @@
                 blade.setSelectedItem(listItem);
                 var newBlade;
                 if (listItem.type === 'category') {
+                    var openNewBlade = e.ctrlKey || filter.current;
                     newBlade = {
-                        id: 'itemsList' + (blade.level + (e.ctrlKey ? 1 : 0)),
-                        level: blade.level + (e.ctrlKey ? 1 : 0),
+                        id: 'itemsList' + (blade.level + (openNewBlade ? 1 : 0)),
+                        level: blade.level + (openNewBlade ? 1 : 0),
                         mode: blade.mode,
                         isBrowsingLinkedCategory: blade.isBrowsingLinkedCategory || $scope.hasLinks(listItem),
                         breadcrumbs: blade.breadcrumbs,
@@ -230,7 +234,7 @@
                         template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/categories-items-list.tpl.html'
                     };
 
-                    if (e.ctrlKey) {
+                    if (openNewBlade) {
                         bladeNavigationService.showBlade(newBlade, blade);
                     } else {
                         bladeNavigationService.closeBlade(blade, function () {
@@ -249,6 +253,70 @@
                     bladeNavigationService.showBlade(newBlade, blade);
                 }
             };
+
+            $scope.selectGroupByItem = function (listEntry, $id) {
+                $scope.selectedNodeId = $id;
+                var listItem = {
+                    id: listEntry.outline.slice(-1)[0],
+                    name: listEntry.$path.slice(-1)[0]
+                };
+
+                newBlade = {
+                    id: 'itemsList' + (blade.level + 1),
+                    level: blade.level + 1,
+                    mode: blade.mode,
+                    // isBrowsingLinkedCategory: blade.isBrowsingLinkedCategory || $scope.hasLinks(listItem),
+                    title: 'catalog.blades.categories-items-list.title',
+                    // subtitle: 'catalog.blades.categories-items-list.subtitle',
+                    // subtitleValues: listItem.name ? { name: listItem.name } : '',
+                    catalogId: blade.catalogId,
+                    catalog: blade.catalog,
+                    categoryId: listItem.id,
+                    category: listItem,
+                    controller: 'virtoCommerce.catalogModule.categoriesItemsListController',
+                    template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/categories-items-list.tpl.html'
+                };
+
+                newBlade.breadcrumbs = generateBreadcrumbs(newBlade, listEntry, listEntry.outline.length);
+                bladeNavigationService.showBlade(newBlade, blade);
+            }
+
+            function generateBreadcrumbs(newBlade, listEntry, count) {
+                var newBreadcrumbs = [{
+                    id: blade.catalogId,
+                    name: blade.catalog.name,
+                    navigate: function (breadcrumb) {
+                        bladeNavigationService.closeBlade(newBlade,
+                            function () {
+                                newBlade.disableOpenAnimation = true;
+                                newBlade.categoryId = undefined;
+                                newBlade.category = undefined;
+                                newBlade.breadcrumbs = [];
+                                bladeNavigationService.showBlade(newBlade, blade);
+                                newBlade.refresh();
+                            });
+                    }
+                }];
+
+                for (var i = 0; i < count; i++) {
+                    newBreadcrumbs.push({
+                        id: listEntry.outline[i],
+                        name: listEntry.$path[i],
+                        navigate: function (breadcrumb) {
+                            bladeNavigationService.closeBlade(newBlade,
+                                function () {
+                                    newBlade.disableOpenAnimation = true;
+                                    newBlade.categoryId = breadcrumb.id;
+                                    newBlade.category = breadcrumb;
+                                    newBlade.breadcrumbs = generateBreadcrumbs(newBlade, listEntry, i - 1);
+                                    bladeNavigationService.showBlade(newBlade, blade);
+                                    newBlade.refresh();
+                                });
+                        }
+                    })
+                }
+                return newBreadcrumbs;
+            }
 
             $scope.hasLinks = function (listEntry) {
                 return blade.catalog.virtual && listEntry.links && (listEntry.type === 'category' ? listEntry.links.length > 0 : listEntry.links.length > 1);
@@ -336,16 +404,16 @@
                          listEntries.move({
                              catalog: blade.catalogId,
                              category: blade.categoryId,
-                             listEntries: $storage.catalogClipboardContent
+                             listEntries: $sessionStorage.catalogClipboardContent
                          }, function () {
-                             delete $storage.catalogClipboardContent;
+                             delete $sessionStorage.catalogClipboardContent;
                              blade.refresh();
                          }, function (error) {
                              bladeNavigationService.setError('Error ' + error.status, blade);
                          });
                      },
                      canExecuteMethod: function () {
-                         return $storage.catalogClipboardContent;
+                         return $sessionStorage.catalogClipboardContent;
                      },
                      permission: 'catalog:create'
                  }
@@ -424,9 +492,127 @@
                 bladeNavigationService.showBlade(newBlade, blade);
             };
 
+
+            // simple and advanced filtering
+            var groupingColumn;
+            var filter = blade.filter = $scope.filter = {};
+            $scope.$localStorage = $localStorage;
+            if (!$localStorage.catalogSearchFilters) {
+                $localStorage.catalogSearchFilters = [{ name: 'catalog.blades.categories-items-list.labels.new-filter' }]
+            }
+            //if ($localStorage.catalogSearchFilterId) {
+            //    filter.current = _.findWhere($localStorage.catalogSearchFilters, { id: $localStorage.catalogSearchFilterId });
+            //}
+
+            filter.change = function () {
+                $localStorage.catalogSearchFilterId = filter.current ? filter.current.id : null;
+                if (filter.current && !filter.current.id) {
+                    filter.current = null;
+                    showFilterDetailBlade({ isNew: true });
+                } else {
+                    bladeNavigationService.closeBlade({ id: 'filterDetail' });
+
+                    if ($scope.pageSettings.currentPage > 1) {
+                        $scope.pageSettings.currentPage = 1;
+                    } else {
+                        blade.refresh();
+                    }
+                }
+            };
+
+            filter.edit = function () {
+                if (filter.current) {
+                    showFilterDetailBlade({ data: filter.current });
+                }
+            };
+
+            function showFilterDetailBlade(bladeData) {
+                var newBlade = {
+                    id: 'filterDetail',
+                    controller: 'virtoCommerce.catalogModule.filterDetailController',
+                    template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/filter-detail.tpl.html',
+                };
+                angular.extend(newBlade, bladeData);
+                bladeNavigationService.showBlade(newBlade, blade);
+            };
+
+            function transformByFilters(data) {
+                _.each(data, function (x) {
+                    x.$path = angular.copy(x.path);
+                    x.path = _.any(x.path) ? x.path.join(" \\ ") : '\\';
+                });
+
+                if (filter.current || filter.keyword) {
+                    //if (!_.contains($scope.gridOptions.columnDefs, groupingColumn)) {
+                    //    $scope.gridOptions.columnDefs.splice(1, 0, groupingColumn);
+                    //}
+                    //if ($scope.groupInfo)
+                    //    $scope.gridApi.grouping.setGrouping($scope.groupInfo);
+
+                    //groupingColumn.visible = true;
+                    if (!_.any($scope.gridApi.grouping.getGrouping().grouping)) {
+                        $scope.gridApi.grouping.groupColumn('path');
+                    }
+
+                    $timeout(function () {
+                        $scope.gridApi.treeBase.expandAllRows();
+                    });
+                } else {
+                    //var idx = _.indexOf($scope.gridOptions.columnDefs, groupingColumn);
+                    //if (idx >= 0) {
+                    //    $scope.gridOptions.columnDefs.splice(idx, 1);
+                    //}
+
+                    if ($scope.gridApi) {
+                        //groupingColumn.visible = false;
+                        $scope.gridApi.grouping.clearGrouping();
+                    }
+                }
+            }
+
+
             // ui-grid
             $scope.setGridOptions = function (gridOptions) {
-                uiGridHelper.initialize($scope, gridOptions);
+                uiGridHelper.initialize($scope, gridOptions, function (gridApi) {
+                    groupingColumn = _.findWhere($scope.gridOptions.columnDefs, { name: 'path' });
+                    //$scope.groupInfo = gridApi.grouping.getGrouping();
+
+                    //if (filter.current) {
+                    //    groupingColumn.visible = true;
+                    //    // gridApi.grouping.groupColumn('path'); // crashes
+                    //} else {
+                    //    groupingColumn.visible = false;
+                    //    $timeout(function () {
+                    //        gridApi.grouping.clearGrouping();
+                    //    }, 25);
+                    //}
+
+                    gridApi.core.on.sortChanged($scope, function () {
+                        if (!blade.isLoading)
+                            blade.refresh();
+                    });
+                });
+
+                $scope.$watch('pageSettings.currentPage', blade.refresh);
+            };
+
+            function getSortExpression() {
+                var columnDefs = $scope.gridApi ? $scope.gridApi.grid.columns : $scope.gridOptions.columnDefs;
+                var sorts = _.filter(columnDefs, function (x) {
+                    return x.name !== 'path' && x.sort && (x.sort.direction === uiGridConstants.ASC || x.sort.direction === uiGridConstants.DESC);
+                })
+
+                sorts = _.sortBy(sorts, function (x) {
+                    return x.sort.priority;
+                });
+                sorts = _.map(sorts, function (x) {
+                    return x.name + ':' + (x.sort.direction === uiGridConstants.ASC ? 'asc' : 'desc');
+                });
+                return sorts.join(';');
+            }
+
+            $scope.getGroupText = function (groupEntity) {
+                return _.values(groupEntity)[0].rendered;
             };
 
 

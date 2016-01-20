@@ -6,10 +6,11 @@ using System.Web.Mvc;
 using VirtoCommerce.LiquidThemeEngine.Converters;
 using VirtoCommerce.LiquidThemeEngine.Filters;
 using VirtoCommerce.LiquidThemeEngine.Objects;
-using VirtoCommerce.Storefront.Builders;
 using VirtoCommerce.Storefront.Model;
+using VirtoCommerce.Storefront.Model.Cart.Services;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Services;
+using VirtoCommerce.Storefront.Common;
 
 namespace VirtoCommerce.Storefront.Controllers
 {
@@ -47,7 +48,7 @@ namespace VirtoCommerce.Storefront.Controllers
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
 
-            var product = await _catalogService.GetProductAsync(id, Model.Catalog.ItemResponseGroup.ItemLarge);
+            var product = (await _catalogService.GetProductsAsync(new string[] { id }, Model.Catalog.ItemResponseGroup.ItemLarge)).FirstOrDefault();
             if (product != null)
             {
                 await _cartBuilder.AddItemAsync(product, quantity);
@@ -97,6 +98,7 @@ namespace VirtoCommerce.Storefront.Controllers
 
         // GET: /cart.js
         [HttpGet]
+        [HandleJsonErrorAttribute]
         public async Task<ActionResult> CartJs()
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
@@ -106,13 +108,14 @@ namespace VirtoCommerce.Storefront.Controllers
 
         // POST: /cart/add.js
         [HttpPost]
+        [HandleJsonErrorAttribute]
         public async Task<ActionResult> AddJs(string id, int quantity = 1)
         {
             LineItem lineItem = null;
 
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
 
-            var product = await _catalogService.GetProductAsync(id, Model.Catalog.ItemResponseGroup.ItemLarge);
+            var product = (await _catalogService.GetProductsAsync(new[] { id }, Model.Catalog.ItemResponseGroup.ItemLarge)).FirstOrDefault();
             if (product != null)
             {
                 await _cartBuilder.AddItemAsync(product, quantity);
@@ -130,6 +133,7 @@ namespace VirtoCommerce.Storefront.Controllers
 
         // POST: /cart/change.js
         [HttpPost]
+        [HandleJsonErrorAttribute]
         public async Task<ActionResult> ChangeJs(string id, int quantity)
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
@@ -142,6 +146,7 @@ namespace VirtoCommerce.Storefront.Controllers
 
         // POST: /cart/update.js
         [HttpPost]
+        [HandleJsonErrorAttribute]
         public async Task<ActionResult> UpdateJs(int[] updates)
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
@@ -154,6 +159,7 @@ namespace VirtoCommerce.Storefront.Controllers
 
         // POST: /cart/clear.js
         [HttpPost]
+        [HandleJsonErrorAttribute]
         public async Task<ActionResult> ClearJs()
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);

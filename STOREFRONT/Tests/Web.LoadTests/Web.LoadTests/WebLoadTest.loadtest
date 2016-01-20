@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<LoadTest Name="WebLoadTest" Description="" Owner="" storage="e:\projects\git\vc-community-2\storefront\tests\web.loadtests\web.loadtests\webloadtest.loadtest" Priority="2147483647" Enabled="true" CssProjectStructure="" CssIteration="" DeploymentItemsEditable="" WorkItemIds="" TraceLevel="None" CurrentRunConfig="Run Settings1" Id="50ba7ed4-bfe0-4a78-b26e-0486b4436280" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+<LoadTest Name="WebLoadTest" Description="" Owner="" storage="c:\projects\vcf\vc-community\storefront\tests\web.loadtests\web.loadtests\webloadtest.loadtest" Priority="2147483647" Enabled="true" CssProjectStructure="" CssIteration="" DeploymentItemsEditable="" WorkItemIds="" TraceLevel="None" CurrentRunConfig="Run Settings1" Id="50ba7ed4-bfe0-4a78-b26e-0486b4436280" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
   <Scenarios>
     <Scenario Name="WebScenario" DelayBetweenIterations="0" PercentNewUsers="0" IPSwitching="false" TestMixType="PercentageOfTestsStarted" ApplyDistributionToPacingDelay="true" MaxTestIterations="0" DisableDuringWarmup="false" DelayStartTime="0" AllowedAgents="">
       <ThinkProfile Value="0" Pattern="Off" />
-      <LoadProfile Pattern="Constant" InitialUsers="500" />
+      <LoadProfile Pattern="Constant" InitialUsers="10" />
       <TestMix>
         <TestProfile Name="WebBrowsing" Path="webbrowsing.webtest" Id="de51a5db-f3a6-4612-9432-51c4a83a8abc" Percentage="100" Type="Microsoft.VisualStudio.TestTools.WebStress.DeclarativeWebTestElement, Microsoft.VisualStudio.QualityTools.LoadTest, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
       </TestMix>

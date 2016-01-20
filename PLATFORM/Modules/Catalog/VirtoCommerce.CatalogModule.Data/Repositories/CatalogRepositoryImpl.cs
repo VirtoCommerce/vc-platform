@@ -118,7 +118,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
             #region CategoryItemRelation
             modelBuilder.Entity<dataModel.CategoryItemRelation>().ToTable("CategoryItemRelation").HasKey(x => x.Id).Property(x => x.Id);
 
-            modelBuilder.Entity<dataModel.CategoryItemRelation>().HasRequired(p => p.Category).WithMany().HasForeignKey(x => x.CategoryId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<dataModel.CategoryItemRelation>().HasOptional(p => p.Category).WithMany().HasForeignKey(x => x.CategoryId).WillCascadeOnDelete(false);
             modelBuilder.Entity<dataModel.CategoryItemRelation>().HasRequired(p => p.CatalogItem).WithMany(x => x.CategoryLinks).HasForeignKey(x => x.ItemId).WillCascadeOnDelete(false);
             modelBuilder.Entity<dataModel.CategoryItemRelation>().HasRequired(p => p.Catalog).WithMany().HasForeignKey(x => x.CatalogId).WillCascadeOnDelete(false);
             #endregion
@@ -320,7 +320,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 
             //Load product categories separately
             var categoryIds = retVal.Select(x => x.CategoryId).Where(x=>!String.IsNullOrEmpty(x)).Distinct().ToArray();
-            var categories = Categories.Where(x => categoryIds.Contains(x.Id)).ToArray();
+            var categories = GetCategoriesByIds(categoryIds, coreModel.CategoryResponseGroup.WithParents);
 
             if ((respGroup & coreModel.ItemResponseGroup.Links) == coreModel.ItemResponseGroup.Links)
             {

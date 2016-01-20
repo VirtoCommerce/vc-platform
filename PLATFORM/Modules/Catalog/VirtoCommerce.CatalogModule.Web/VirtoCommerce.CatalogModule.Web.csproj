@@ -122,7 +122,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Binders\ListEntrySearchCriteriaBinder.cs" />
+    <Compile Include="Binders\IdsStringArrayBinder.cs" />
     <Compile Include="Controllers\Api\CatalogBaseController.cs" />
     <Compile Include="Controllers\Api\CatalogModuleCatalogsController.cs" />
     <Compile Include="Controllers\Api\CatalogModuleCategoriesController.cs" />
@@ -197,6 +197,9 @@
     <Compile Include="Security\CatalogSelectedCategoryScope.cs" />
     <Compile Include="Security\SearchCriteriaExtensions.cs" />
     <Content Include="Content\css\catalog.css" />
+    <Content Include="Content\logo.png" />
+    <Content Include="Scripts\blades\filter-detail.js" />
+    <Content Include="Scripts\blades\filter-detail.tpl.html" />
     <Content Include="Scripts\blades\import\catalog-CSV-import.js" />
     <Content Include="Scripts\blades\import\catalog-CSV-import.tpl.html" />
     <Content Include="Scripts\blades\import\notifications\historyImport.tpl.html" />
