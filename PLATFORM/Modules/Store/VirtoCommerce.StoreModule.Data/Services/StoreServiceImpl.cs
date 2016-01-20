@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using CacheManager.Core;
 using VirtoCommerce.Domain.Commerce.Model;
 using VirtoCommerce.Domain.Commerce.Services;
 using VirtoCommerce.Domain.Payment.Services;
@@ -27,9 +28,11 @@ namespace VirtoCommerce.StoreModule.Data.Services
         private readonly IShippingMethodsService _shippingService;
         private readonly IPaymentMethodsService _paymentService;
         private readonly ITaxService _taxService;
+        private readonly ICacheManager<object> _cacheManager;
 
 		public StoreServiceImpl(Func<IStoreRepository> repositoryFactory, ICommerceService commerceService, ISettingsManager settingManager, 
-							    IDynamicPropertyService dynamicPropertyService, IShippingMethodsService shippingService, IPaymentMethodsService paymentService, ITaxService taxService)
+							    IDynamicPropertyService dynamicPropertyService, IShippingMethodsService shippingService, IPaymentMethodsService paymentService, 
+                                ITaxService taxService, ICacheManager<object> cacheManager)
         {
             _repositoryFactory = repositoryFactory;
             _commerceService = commerceService;
@@ -38,6 +41,7 @@ namespace VirtoCommerce.StoreModule.Data.Services
             _shippingService = shippingService;
             _paymentService = paymentService;
             _taxService = taxService;
+            _cacheManager = cacheManager;
         }
 
         #region IStoreService Members
@@ -87,6 +91,9 @@ namespace VirtoCommerce.StoreModule.Data.Services
             //Deep save settings
             _settingManager.SaveEntitySettingsValues(store);
 
+            //Invalidate module cache region
+            _cacheManager.ClearRegion("StoreModuleRegion");
+
             var retVal = GetById(store.Id);
             return retVal;
         }
@@ -119,6 +126,9 @@ namespace VirtoCommerce.StoreModule.Data.Services
                 }
 
                 CommitChanges(repository);
+
+                //Invalidate module cache region
+                _cacheManager.ClearRegion("StoreModuleRegion");
             }
         }
 
@@ -139,6 +149,8 @@ namespace VirtoCommerce.StoreModule.Data.Services
                 }
 
                 CommitChanges(repository);
+                //Invalidate module cache region
+                _cacheManager.ClearRegion("StoreModuleRegion");
             }
         }
 

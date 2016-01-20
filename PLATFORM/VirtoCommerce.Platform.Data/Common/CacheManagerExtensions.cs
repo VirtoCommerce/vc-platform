@@ -35,6 +35,29 @@ namespace VirtoCommerce.Platform.Data.Common
             return result;
         }
 
+        public static T Get<T>(this ICacheManager<object> cacheManager, string cacheKey, string region, TimeSpan expiration, Func<T> getValueFunction)
+        {
+
+            var result = cacheManager.Get<T>(cacheKey, region);
+            if (result == null)
+            {
+                lock (_lockObject)
+                {
+                    result = cacheManager.Get<T>(cacheKey, region);
+                    if (result == null)
+                    {
+                        result = getValueFunction();
+                        if (result != null)
+                        {
+                            var cacheItem = new CacheItem<object>(cacheKey, region, result, ExpirationMode.Absolute, expiration);
+                            cacheManager.Add(cacheItem);
+                        }
+                    }
+                }
+            }
+            return result;
+        }
+
         public static async Task<T> GetAsync<T>(this ICacheManager<object> cacheManager, string cacheKey, string region, Func<Task<T>> getValueFunction)
         {
             //http://sanjeev.dwivedi.net/?p=292

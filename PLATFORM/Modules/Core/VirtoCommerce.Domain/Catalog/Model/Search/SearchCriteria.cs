@@ -85,7 +85,7 @@ namespace VirtoCommerce.Domain.Catalog.Model
                     var sortInfoStrings = Sort.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
                     foreach(var sortInfoString in sortInfoStrings)
                     {
-                        var parts = sortInfoString.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
+                        var parts = sortInfoString.Split(new[] { ':', '-' }, StringSplitOptions.RemoveEmptyEntries);
                         if(parts.Any())
                         {
                             var sortInfo = new SortInfo
@@ -95,7 +95,7 @@ namespace VirtoCommerce.Domain.Catalog.Model
                             };
                             if (parts.Count() > 1)
                             {
-                                sortInfo.SortDirection = string.Equals(parts[1], "desc", StringComparison.InvariantCultureIgnoreCase) ? SortDirection.Descending : SortDirection.Ascending;
+                                sortInfo.SortDirection = parts[1].StartsWith("desc", StringComparison.InvariantCultureIgnoreCase) ? SortDirection.Descending : SortDirection.Ascending;
                             }
                             retVal.Add(sortInfo);
                         }

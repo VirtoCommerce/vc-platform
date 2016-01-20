@@ -70,19 +70,6 @@ namespace VirtoCommerce.Storefront.Services
         {
             var retVal = new CatalogSearchResult();
 
-            string sort = "manual";
-            string sortOrder = "asc";
-
-            if (!string.IsNullOrEmpty(criteria.SortBy))
-            {
-                var splittedSortBy = criteria.SortBy.Split('-');
-                if (splittedSortBy.Length > 1)
-                {
-                    sort = splittedSortBy[0].Equals("title", StringComparison.OrdinalIgnoreCase) ? "name" : splittedSortBy[0];
-                    sortOrder = splittedSortBy[1].IndexOf("descending", StringComparison.OrdinalIgnoreCase) >= 0 ? "desc" : "asc";
-                }
-            }
-
             var result = await _searchApi.SearchModuleSearchAsync(
                 criteriaStoreId: _workContext.CurrentStore.Id,
                 criteriaKeyword: criteria.Keyword,
@@ -96,8 +83,7 @@ namespace VirtoCommerce.Storefront.Services
                 criteriaPricelistIds: _workContext.CurrentPriceListIds.ToList(),
                 criteriaSkip: criteria.PageSize * (criteria.PageNumber - 1),
                 criteriaTake: criteria.PageSize,
-                criteriaSort: sort,
-                criteriaSortOrder: sortOrder);
+                criteriaSort: criteria.SortBy);
 
             if (criteria.CategoryId != null)
             {

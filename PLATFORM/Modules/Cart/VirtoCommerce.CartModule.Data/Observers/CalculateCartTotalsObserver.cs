@@ -3,21 +3,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CacheManager.Core;
 using VirtoCommerce.CartModule.Data.Converters;
 using VirtoCommerce.Domain.Cart.Events;
 using VirtoCommerce.Domain.Cart.Model;
 using VirtoCommerce.Domain.Shipping.Model;
 using VirtoCommerce.Domain.Store.Services;
 using VirtoCommerce.Domain.Tax.Model;
+using VirtoCommerce.Platform.Data.Common;
 
 namespace VirtoCommerce.CartModule.Data.Observers
 {
 	public class CalculateCartTotalsObserver : IObserver<CartChangeEvent>
 	{
         private readonly IStoreService _storeService;
-        public CalculateCartTotalsObserver(IStoreService storeService)
+        private readonly ICacheManager<object> _cacheManager;
+        public CalculateCartTotalsObserver(IStoreService storeService, ICacheManager<object> cacheManager)
         {
             _storeService = storeService;
+            _cacheManager = cacheManager;
         }
 
 		#region IObserver<CustomerOrder> Members
@@ -39,7 +43,7 @@ namespace VirtoCommerce.CartModule.Data.Observers
 		private void CalculateCartTotals(CartChangeEvent cartChangeEvent)
 		{
 			var cart = cartChangeEvent.ModifiedCart;
-            var store = _storeService.GetById(cart.StoreId);
+            var store = _cacheManager.Get("CalculateCartTotalsObserver.CalculateCartTotals.GetStoreById-" + cart.StoreId, "StoreModuleRegion", ()=> _storeService.GetById(cart.StoreId));
 
             cart.Total = 0;
             cart.SubTotal = 0;

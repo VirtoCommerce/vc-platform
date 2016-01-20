@@ -32,7 +32,6 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 			retVal.Store = dbEntity.StoreId;
 			retVal.MaxUsageCount = dbEntity.TotalLimit;
 			retVal.MaxPersonalUsageCount = dbEntity.PerCustomerLimit;
-
 			return retVal;
 		}
 

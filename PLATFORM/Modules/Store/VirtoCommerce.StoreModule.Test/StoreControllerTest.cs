@@ -104,7 +104,7 @@ namespace VirtoCommerce.StoreModule.Test
             Func<IStoreRepository> repositoryFactory = () => new StoreRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor());
 
             var dynamicPropertyService = new DynamicPropertyService(platformRepositoryFactory);
-            var storeService = new StoreServiceImpl(repositoryFactory, GetCommerceService(), null, dynamicPropertyService, null, null, null);
+            var storeService = new StoreServiceImpl(repositoryFactory, GetCommerceService(), null, dynamicPropertyService, null, null, null, null);
 
             var controller = new StoreModuleController(storeService, null, null, null, null, null, null);
             return controller;
