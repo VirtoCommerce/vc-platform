@@ -24,6 +24,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
             TaxDetails = new List<TaxDetail>();
             DynamicProperties = new List<DynamicProperty>();
             ValidationErrors = new List<ValidationError>();
+            ValidationWarnings = new List<ValidationError>();
             AvailablePaymentMethods = new List<PaymentMethod>();
         }
 
@@ -261,14 +262,6 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// <value>Dynamic properties collections</value>
         public ICollection<DynamicProperty> DynamicProperties { get; set; }
 
-        public LineItem RecentlyAddedItem
-        {
-            get
-            {
-                return Items.OrderByDescending(i => i.CreatedDate).FirstOrDefault();
-            }
-        }
-
         public bool HasValidationErrors
         {
             get
@@ -279,7 +272,17 @@ namespace VirtoCommerce.Storefront.Model.Cart
 
         public ICollection<PaymentMethod> AvailablePaymentMethods { get; set; }
 
+        public LineItem RecentlyAddedItem
+        {
+            get
+            {
+                return Items.OrderByDescending(i => i.CreatedDate).FirstOrDefault();
+            }
+        }
+
         public ICollection<ValidationError> ValidationErrors { get; set; }
+
+        public ICollection<ValidationError> ValidationWarnings { get; set; }
 
         #region IDiscountable Members
         public ICollection<Discount> Discounts { get; }

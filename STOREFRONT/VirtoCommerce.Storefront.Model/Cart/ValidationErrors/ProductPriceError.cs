@@ -4,11 +4,11 @@ namespace VirtoCommerce.Storefront.Model.Cart.ValidationErrors
 {
     public class ProductPriceError : ValidationError
     {
-        public ProductPriceError(Money newPrice)
+        public ProductPriceError(Money oldPrice)
         {
-            NewPrice = newPrice;
+            OldPrice = oldPrice;
         }
 
-        public Money NewPrice { get; private set; }
+        public Money OldPrice { get; private set; }
     }
 }

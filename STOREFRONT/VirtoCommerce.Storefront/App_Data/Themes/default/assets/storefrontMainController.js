@@ -19,6 +19,11 @@ storefrontApp.controller('mainController', ['$scope', '$location', '$window', 'c
         $scope.currentPath = $location.$$path.replace('/', '');
     };
 
+    $scope.errorDetailsVisible = false;
+    $scope.toggleErrorDetails = function (isVisible) {
+        $scope.errorDetailsVisible = !isVisible;
+    }
+
     $scope.getObjectSize = function (obj) {
         var size = 0, key;
         for (key in obj) {
