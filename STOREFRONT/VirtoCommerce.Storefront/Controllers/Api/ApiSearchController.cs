@@ -32,29 +32,35 @@ namespace VirtoCommerce.Storefront.Controllers.Api
 
         //Load categories for main page
         [Route("categories")]
-        public async Task<CatalogSearchResult> GetCurrentCategories()
+        public async Task<CatalogSearchResult> GetTopCategories()
         {
-            WorkContext.CurrentCatalogSearchCriteria.ResponseGroup = CatalogSearchResponseGroup.WithCategories;
-
-            WorkContext.CurrentCatalogSearchResult = await _catalogSearchService.SearchAsync(WorkContext.CurrentCatalogSearchCriteria);
+            var catalogSearchCriteria = new CatalogSearchCriteria
+            {
+                CatalogId = WorkContext.CurrentStore.Catalog,
+                ResponseGroup = CatalogSearchResponseGroup.WithCategories,
+                SortBy = "Priority",
+                SearchInChildren = false
+            };
+            
+            WorkContext.CurrentCatalogSearchResult = await _catalogSearchService.SearchAsync(catalogSearchCriteria);
             return WorkContext.CurrentCatalogSearchResult;
         }
 
         //Load products for category
         [Route("products")]
-        public async Task<CatalogSearchResult> GetCategoryProducts([FromUri] ApiWorkContext apiWorkContext)
+        public async Task<CatalogSearchResult> GetCategoryProducts(string categoryId)
         {
-            WorkContext.CurrentCatalogSearchCriteria.CategoryId = apiWorkContext.CategoryId;
+            WorkContext.CurrentCatalogSearchCriteria.CategoryId = categoryId;
 
             WorkContext.CurrentCatalogSearchResult = await _catalogSearchService.SearchAsync(WorkContext.CurrentCatalogSearchCriteria);
             return WorkContext.CurrentCatalogSearchResult;
         }
         
         //Load product details
-        [Route("products/{itemId}")]
-        public async Task<Product> GetProduct([FromUri] ApiWorkContext apiWorkContext)
+        [Route("products/{productId}")]
+        public async Task<Product> GetProduct(string productId)
         {
-            WorkContext.CurrentProduct = (await _catalogSearchService.GetProductsAsync(new[] { apiWorkContext.ItemId }, Model.Catalog.ItemResponseGroup.ItemLarge)).FirstOrDefault();
+            WorkContext.CurrentProduct = (await _catalogSearchService.GetProductsAsync(new[] { productId }, ItemResponseGroup.ItemLarge)).FirstOrDefault();
             return WorkContext.CurrentProduct;
         }
 
