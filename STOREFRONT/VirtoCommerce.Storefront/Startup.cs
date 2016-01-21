@@ -35,6 +35,7 @@ using MarkdownDeep;
 using VirtoCommerce.Storefront.Model.Marketing.Services;
 using VirtoCommerce.Storefront.Model.Cart.Services;
 using VirtoCommerce.Storefront.Model.Pricing.Services;
+using VirtoCommerce.Storefront.Model.Quote.Services;
 
 [assembly: OwinStartup(typeof(Startup))]
 [assembly: PreApplicationStartMethod(typeof(Startup), "PreApplicationStart")]
@@ -80,11 +81,25 @@ namespace VirtoCommerce.Storefront
             //https://github.com/MichaCo/CacheManager/issues/32
             cacheManager.OnClearRegion += (sender, region) =>
             {
-                CacheManagerOutputCacheProvider.Cache.ClearRegion(region.Region);
+                try
+                {
+                    CacheManagerOutputCacheProvider.Cache.ClearRegion(region.Region);
+                }
+                catch (Exception)
+                {
+
+                }
             };
             cacheManager.OnClear += (sender, args) =>
             {
-                CacheManagerOutputCacheProvider.Cache.Clear();
+                try
+                {
+                    CacheManagerOutputCacheProvider.Cache.Clear();
+                }
+                catch (Exception)
+                {
+
+                }
             };
 
             // Workaround for old storefront base URL: remove /api/ suffix since it is already included in every resource address in VirtoCommerce.Client library.
@@ -113,6 +128,7 @@ namespace VirtoCommerce.Storefront
             container.RegisterType<IOrderModuleApi, OrderModuleApi>();
             container.RegisterType<IMarketingModuleApi, MarketingModuleApi>();
             container.RegisterType<ICMSContentModuleApi, CMSContentModuleApi>();
+            container.RegisterType<IQuoteModuleApi, QuoteModuleApi>();
             container.RegisterType<ISearchModuleApi, SearchModuleApi>();
             container.RegisterType<IMarketingService, MarketingServiceImpl>();
             container.RegisterType<IPromotionEvaluator, PromotionEvaluator>();
@@ -120,6 +136,7 @@ namespace VirtoCommerce.Storefront
             container.RegisterType<IPricingService, PricingServiceImpl>();
 
             container.RegisterType<ICartBuilder, CartBuilder>();
+            container.RegisterType<IQuoteRequestBuilder, QuoteRequestBuilder>();
             container.RegisterType<ICatalogSearchService, CatalogSearchServiceImpl>();
             container.RegisterType<IAuthenticationManager>(new InjectionFactory((context) => HttpContext.Current.GetOwinContext().Authentication));
 
@@ -127,8 +144,8 @@ namespace VirtoCommerce.Storefront
 
             // Create new work context for each request
             container.RegisterType<WorkContext, WorkContext>(new PerRequestLifetimeManager());
-
-            var shopifyLiquidEngine = new ShopifyLiquidThemeEngine(cacheManager, () => container.Resolve<WorkContext>(), () => container.Resolve<IStorefrontUrlBuilder>(), HostingEnvironment.MapPath("~/App_data/themes"), "~/themes/assets", "~/themes/global/assets");
+            var themesPath = ConfigurationManager.AppSettings["vc-public-themes"] ?? "~/App_data/Themes";
+            var shopifyLiquidEngine = new ShopifyLiquidThemeEngine(cacheManager, () => container.Resolve<WorkContext>(), () => container.Resolve<IStorefrontUrlBuilder>(), ResolveLocalPath(themesPath), "~/themes/assets", "~/themes/global/assets");
             container.RegisterInstance(shopifyLiquidEngine);
             //Register liquid engine
             ViewEngines.Engines.Add(new DotLiquidThemedViewEngine(container.Resolve<ShopifyLiquidThemeEngine>()));
@@ -136,15 +153,16 @@ namespace VirtoCommerce.Storefront
             // Shopify model binders convert Shopify form fields with bad names to VirtoCommerce model properties.
             container.RegisterType<IModelBinderProvider, ShopifyModelBinderProvider>("shopify");
 
+            var staticContentPath = ConfigurationManager.AppSettings["vc-public-pages"] ?? "~/App_data/Pages";
             //Static content service
-            var staticContentService = new StaticContentServiceImpl(HostingEnvironment.MapPath("~/App_data/Pages"), new Markdown(), shopifyLiquidEngine, cacheManager);
+            var staticContentService = new StaticContentServiceImpl(ResolveLocalPath(staticContentPath), new Markdown(), shopifyLiquidEngine, cacheManager);
             container.RegisterInstance<IStaticContentService>(staticContentService);
 
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters, () => container.Resolve<WorkContext>());
             GlobalConfiguration.Configure(WebApiConfig.Register);
             //app.UseWebApi(GlobalConfiguration.Configuration);
             RouteConfig.RegisterRoutes(RouteTable.Routes, () => container.Resolve<WorkContext>(), container.Resolve<ICommerceCoreModuleApi>(), container.Resolve<IStaticContentService>(), cacheManager);
-            AuthConfig.ConfigureAuth(app);
+            AuthConfig.ConfigureAuth(app, () => container.Resolve<IStorefrontUrlBuilder>());
 
             app.Use<WorkContextOwinMiddleware>(container);
             app.UseStageMarker(PipelineStage.ResolveCache);
@@ -184,6 +202,26 @@ namespace VirtoCommerce.Storefront
             }
 
             return assembly;
+        }
+
+
+        private static string ResolveLocalPath(string path)
+        {
+            var retVal = path;
+            if (path.StartsWith("~"))
+            {
+                retVal = HostingEnvironment.MapPath(path);
+            }
+            else if (Path.IsPathRooted(path))
+            {
+                retVal = path;
+            }
+            else
+            {
+                retVal = HostingEnvironment.MapPath("~/");
+                retVal += path;
+            }
+            return retVal;
         }
     }
 }

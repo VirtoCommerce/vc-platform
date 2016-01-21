@@ -16,6 +16,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
             Items = new List<CartShipmentItem>();
             TaxDetails = new List<TaxDetail>();
             ValidationErrors = new List<ValidationError>();
+            ValidationWarnings = new List<ValidationError>();
             ShippingPrice = new Money(currency);
             TaxTotal = new Money(currency);
         }
@@ -163,6 +164,8 @@ namespace VirtoCommerce.Storefront.Model.Cart
         public ICollection<TaxDetail> TaxDetails { get; set; }
 
         public ICollection<ValidationError> ValidationErrors { get; set; }
+
+        public ICollection<ValidationError> ValidationWarnings { get; set; }
 
         #region IDiscountable Members
         public ICollection<Discount> Discounts { get; }

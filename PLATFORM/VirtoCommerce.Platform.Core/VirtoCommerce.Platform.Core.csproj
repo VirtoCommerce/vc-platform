@@ -94,6 +94,7 @@
     <Compile Include="Asset\IBlobUrlResolver.cs" />
     <Compile Include="Asset\IBlobStorageProvider.cs" />
     <Compile Include="ChangeLog\IHasChangesHistory.cs" />
+    <Compile Include="Common\EnumerableExtensions.cs" />
     <Compile Include="Common\AsyncLock.cs" />
     <Compile Include="Common\ConfigManagerExtensions.cs" />
     <Compile Include="Common\ObservableChangeTracker.cs" />
@@ -101,6 +102,7 @@
     <Compile Include="Common\PrimaryKeyResolvingMap.cs" />
     <Compile Include="Common\SemanticVersion.cs" />
     <Compile Include="Common\SerializationExtension.cs" />
+    <Compile Include="Common\SortInfo.cs" />
     <Compile Include="Common\StreamExtensions.cs" />
     <Compile Include="DynamicProperties\DynamicPropertiesExtensions.cs" />
     <Compile Include="DynamicProperties\DynamicProperty.cs" />
@@ -122,7 +124,6 @@
     <Compile Include="ChangeLog\IChangeLoggingService.cs" />
     <Compile Include="ChangeLog\OperationLog.cs" />
     <Compile Include="Common\AnnonymousComparer.cs" />
-    <Compile Include="Common\ArrayInputAttribute.cs" />
     <Compile Include="Common\AssemblyExtensions.cs" />
     <Compile Include="Common\AttributeExtensions.cs" />
     <Compile Include="Common\AuditableEntity.cs" />

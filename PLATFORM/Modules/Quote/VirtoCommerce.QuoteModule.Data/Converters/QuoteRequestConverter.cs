@@ -39,9 +39,9 @@ namespace VirtoCommerce.QuoteModule.Data.Converters
 			return retVal;
 		}
 
-        public static taxCoreModel.TaxRequest ToTaxRequest(this coreModel.QuoteRequest quoteRequest)
+        public static taxCoreModel.TaxEvaluationContext ToTaxEvalContext(this coreModel.QuoteRequest quoteRequest)
         {
-            var retVal = new taxCoreModel.TaxRequest();
+            var retVal = new taxCoreModel.TaxEvaluationContext();
             retVal.Id = quoteRequest.Id;
             retVal.Code = quoteRequest.Number;
             retVal.Currency = quoteRequest.Currency;

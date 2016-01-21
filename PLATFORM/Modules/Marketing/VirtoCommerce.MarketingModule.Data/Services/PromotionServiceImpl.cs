@@ -11,6 +11,7 @@ using VirtoCommerce.CustomerModule.Data.Converters;
 using ExpressionSerialization;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Core.Common;
+using CacheManager.Core;
 
 namespace VirtoCommerce.MarketingModule.Data.Services
 {
@@ -18,11 +19,12 @@ namespace VirtoCommerce.MarketingModule.Data.Services
     {
 		private readonly Func<IMarketingRepository> _repositoryFactory;
 		private readonly IMarketingExtensionManager _customPromotionManager;
-
-		public PromotionServiceImpl(Func<IMarketingRepository> repositoryFactory, IMarketingExtensionManager customPromotionManager)
+        private readonly ICacheManager<object> _cacheManager;
+        public PromotionServiceImpl(Func<IMarketingRepository> repositoryFactory, IMarketingExtensionManager customPromotionManager, ICacheManager<object> cacheManager)
         {
 			_repositoryFactory = repositoryFactory;
 			_customPromotionManager = customPromotionManager;
+            _cacheManager = cacheManager;
         }
 
         #region IMarketingService Members
@@ -69,7 +71,8 @@ namespace VirtoCommerce.MarketingModule.Data.Services
 				CommitChanges(repository);
 			}
 			retVal = GetPromotionById(entity.Id);
-			return retVal;
+            _cacheManager.ClearRegion("MarketingModuleRegion");
+            return retVal;
 		}
 
 		public void UpdatePromotions(Promotion[] promotions)
@@ -92,7 +95,9 @@ namespace VirtoCommerce.MarketingModule.Data.Services
 					}
 				}
 				CommitChanges(repository);
-			}
+                _cacheManager.ClearRegion("MarketingModuleRegion");
+
+            }
 		}
 
 		public void DeletePromotions(string[] ids)
@@ -105,7 +110,8 @@ namespace VirtoCommerce.MarketingModule.Data.Services
 					repository.Remove(entity);
 				}
 				CommitChanges(repository);
-			}
+                _cacheManager.ClearRegion("MarketingModuleRegion");
+            }
 		}
 
 		public Coupon GetCouponById(string id)

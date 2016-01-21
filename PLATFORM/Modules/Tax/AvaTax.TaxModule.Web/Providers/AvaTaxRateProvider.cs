@@ -103,7 +103,7 @@ namespace AvaTax.TaxModule.Web
                 throw new NullReferenceException("taxEvalContext");
             }
 
-            var retVal = GetTaxRates(taxEvalContext.TaxRequest);
+            var retVal = GetTaxRates(taxEvalContext);
             return retVal;
         }
 
@@ -401,7 +401,7 @@ namespace AvaTax.TaxModule.Web
             }
         }
 
-        private List<TaxRate> GetTaxRates(TaxRequest taxRequest)
+        private List<TaxRate> GetTaxRates(TaxEvaluationContext evalContext)
         {
             List<TaxRate> retVal = new List<TaxRate>();
             LogInvoker<AvalaraLogger.TaxRequestContext>.Execute(log =>
@@ -411,7 +411,7 @@ namespace AvaTax.TaxModule.Web
                     && !string.IsNullOrEmpty(ServiceUrl)
                     && !string.IsNullOrEmpty(CompanyCode))
                 {                    
-                    var request = taxRequest.ToAvaTaxRequest(CompanyCode, false);
+                    var request = evalContext.ToAvaTaxRequest(CompanyCode, false);
                     if (request != null)
                     {
                         log.docCode = request.DocCode;
@@ -433,9 +433,9 @@ namespace AvaTax.TaxModule.Web
                                 var rate = new TaxRate
                                 {
                                     Rate = taxLine.Tax,
-                                    Currency = taxRequest.Currency,
+                                    Currency = evalContext.Currency,
                                     TaxProvider = this,
-                                    Line = taxRequest.Lines.First(l => l.Id == taxLine.LineNo)
+                                    Line = evalContext.Lines.First(l => l.Id == taxLine.LineNo)
                                 };
                                 retVal.Add(rate);                            
                         }

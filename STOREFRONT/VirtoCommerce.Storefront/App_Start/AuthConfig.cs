@@ -7,12 +7,13 @@ using Microsoft.Owin.Security.Facebook;
 using Microsoft.Owin.Security.Google;
 using Owin;
 using VirtoCommerce.Storefront.Common;
+using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront
 {
     public class AuthConfig
     {
-        public static void ConfigureAuth(IAppBuilder app)
+        public static void ConfigureAuth(IAppBuilder app, Func<IStorefrontUrlBuilder> urlBuilderFactory)
         {
             // Configure the db context, user manager and role manager to use a single instance per request
             //app.CreatePerOwinContext(ApplicationUserStore.Create);
@@ -28,23 +29,10 @@ namespace VirtoCommerce.Storefront
                     AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
                     LoginPath = new PathString("/Account/Login"),
                     CookieName = StorefrontConstants.AuthenticationCookie,
-                    //Provider =
-                    //    new CookieAuthenticationProvider
-                    //    {
-                    //        // Enables the application to validate the security stamp when the user logs in.
-                    //        // This is a security feature which is used when you change a password or add an external login to your account.  
-                    //        OnValidateIdentity =
-                    //            SecurityStampValidator
-                    //            .OnValidateIdentity
-                    //            <ApplicationUserManager,
-                    //            ApplicationUser>(
-                    //                TimeSpan.FromMinutes(
-                    //                    30),
-                    //                (manager, user) =>
-                    //            user
-                    //            .GenerateUserIdentityAsync
-                    //            (manager))
-                    //    }
+                    Provider = new CookieAuthenticationProvider
+                    {
+                        OnApplyRedirect = context => ApplyRedirect(context, urlBuilderFactory)
+                    }
                 });
 
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
@@ -75,6 +63,23 @@ namespace VirtoCommerce.Storefront
             googleOptions.ClientId = ConfigurationManager.AppSettings["OAuth2.Google.ClientId"];
             googleOptions.ClientSecret = ConfigurationManager.AppSettings["OAuth2.Google.Secret"];
             app.UseGoogleAuthentication(googleOptions);
+        }
+
+
+        private static void ApplyRedirect(CookieApplyRedirectContext context, Func<IStorefrontUrlBuilder> urlBuilderFactory)
+        {
+            Uri absoluteUri;
+            if (Uri.TryCreate(context.RedirectUri, UriKind.Absolute, out absoluteUri))
+            {
+                var path = PathString.FromUriComponent(absoluteUri);
+                if (path == context.OwinContext.Request.PathBase + context.Options.LoginPath)
+                {
+                    var urlBuilder = urlBuilderFactory();
+                    context.RedirectUri = urlBuilder.ToAppAbsolute(context.Options.LoginPath.ToString()) + new QueryString(context.Options.ReturnUrlParameter, context.Request.Uri.AbsoluteUri);
+                }
+            }
+
+            context.Response.Redirect(context.RedirectUri);
         }
 
         // For more information on configuring authentication, please visit http://go.microsoft.com/fwlink/?LinkId=301864

@@ -345,6 +345,7 @@
     <Content Include="App_Data\Themes\default\assets\warning.svg" />
     <Content Include="App_Data\Themes\default\assets\slide_1.jpg" />
     <Content Include="App_Data\Themes\default\assets\slide_2.jpg" />
+    <Content Include="App_Data\Themes\default\snippets\cart-modal.liquid" />
     <Content Include="App_Data\Themes\default\social\shopify-social.svg" />
     <Content Include="App_Data\Themes\default\social\social-icons.css" />
     <Content Include="App_Data\x64\LibSass.x64.dll" />
@@ -367,9 +368,18 @@
     <Compile Include="App_Start\UnityMvcActivator.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Builders\CartBuilder.cs" />
+    <Compile Include="Builders\QuoteRequestBuilder.cs" />
+    <Compile Include="Common\HandleJsonErrorAttribute.cs" />
     <Compile Include="Controllers\MarketingController.cs" />
     <Compile Include="Controllers\PricingController.cs" />
+    <Compile Include="Controllers\QuoteRequestController.cs" />
+    <Compile Include="Converters\AttachmentConverter.cs" />
     <Compile Include="Converters\CurrencyConverter.cs" />
+    <Compile Include="Converters\QuoteItemConverter.cs" />
+    <Compile Include="Converters\QuoteRequestConverter.cs" />
+    <Compile Include="Converters\QuoteRequestTotalsConverter.cs" />
+    <Compile Include="Converters\ShippingMethodConverter.cs" />
+    <Compile Include="Converters\TierPriceConverter.cs" />
     <Compile Include="Services\CartValidator.cs" />
     <Compile Include="Services\PricingServiceImpl.cs" />
     <Compile Include="Controllers\Api\ApiControllerBase.cs" />
@@ -438,6 +448,9 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="NLog.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
@@ -460,7 +473,6 @@
     <Content Include="App_Data\Themes\default\locales\fr.json" />
     <Content Include="App_Data\Themes\default\locales\pt-BR.json" />
     <Content Include="App_Data\Themes\default\locales\pt-PT.json" />
-    <Content Include="App_Data\Themes\default\snippets\cart-modal.liquid" />
     <Content Include="App_Data\Themes\default\snippets\blog-sidebar.liquid" />
     <Content Include="App_Data\Themes\default\snippets\breadcrumb.liquid" />
     <Content Include="App_Data\Themes\default\snippets\checkout_totals.liquid" />
@@ -573,7 +585,6 @@
     <Folder Include="Content\" />
     <Folder Include="fonts\" />
     <Folder Include="Models\" />
-    <Folder Include="Services\Scripts\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\SDK\DotNet\VirtoCommerce.Client\VirtoCommerce.Client.csproj">
@@ -611,6 +622,20 @@
       <LibSassFiles Include="$(WebProjectOutputDir)\bin\LibSass.x64.dll" />
     </ItemGroup>
     <Delete Files="@(LibSassFiles)" />
+  </Target>
+  <!-- Transform Web.config -->
+  <UsingTask TaskName="TransformXml" AssemblyFile="$(VSToolsPath)\Web\Microsoft.Web.Publishing.Tasks.dll" Condition="Exists('$(VSToolsPath)\Web\Microsoft.Web.Publishing.Tasks.dll')" />
+  <PropertyGroup>
+    <TransformInputFile>$(WebProjectOutputDir)\Web.Temp.config</TransformInputFile>
+    <TransformFile>$(MSBuildProjectDirectory)\Web.$(Configuration).config</TransformFile>
+    <TransformOutputFile>$(WebProjectOutputDir)\Web.config</TransformOutputFile>
+    <StackTraceEnabled>False</StackTraceEnabled>
+  </PropertyGroup>
+  <Target Name="TransformWebConfig" AfterTargets="Build">
+    <!-- Copy our web.config into a temp folder as the 'TransformXml' task has a file lock bug -->
+    <Copy SourceFiles="$(TransformOutputFile)" DestinationFiles="$(TransformInputFile)" />
+    <TransformXml Source="$(TransformInputFile)" Transform="$(TransformFile)" Destination="$(TransformOutputFile)" StackTrace="$(StackTraceEnabled)" />
+    <Delete Files="$(TransformInputFile)" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -19,6 +19,7 @@ using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Cart.Services;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
+using VirtoCommerce.Storefront.Model.Quote.Services;
 
 namespace VirtoCommerce.Storefront.Owin
 {
@@ -35,6 +36,7 @@ namespace VirtoCommerce.Storefront.Owin
         private readonly ICustomerManagementModuleApi _customerApi;
         private readonly IPricingModuleApi _pricingModuleApi;
         private readonly ICartBuilder _cartBuilder;
+        private readonly IQuoteRequestBuilder _quoteRequestBuilder;
         private readonly ICMSContentModuleApi _cmsApi;
         private readonly ICacheManager<object> _cacheManager;
 
@@ -47,6 +49,7 @@ namespace VirtoCommerce.Storefront.Owin
             _platformApi = container.Resolve<IVirtoCommercePlatformApi>();
             _customerApi = container.Resolve<ICustomerManagementModuleApi>();
             _cartBuilder = container.Resolve<ICartBuilder>();
+            _quoteRequestBuilder = container.Resolve<IQuoteRequestBuilder>();
             _cmsApi = container.Resolve<ICMSContentModuleApi>();
             _pricingModuleApi = container.Resolve<IPricingModuleApi>();
             _commerceApi = container.Resolve<ICommerceCoreModuleApi>();
@@ -90,6 +93,12 @@ namespace VirtoCommerce.Storefront.Owin
                         //Shopping cart
                         await _cartBuilder.GetOrCreateNewTransientCartAsync(workContext.CurrentStore, workContext.CurrentCustomer, workContext.CurrentLanguage, workContext.CurrentCurrency);
                         workContext.CurrentCart = _cartBuilder.Cart;
+
+                        if (workContext.CurrentStore.QuotesEnabled)
+                        {
+                            await _quoteRequestBuilder.GetOrCreateNewTransientQuoteRequestAsync(workContext.CurrentStore, workContext.CurrentCustomer, workContext.CurrentLanguage, workContext.CurrentCurrency);
+                            workContext.CurrentQuoteRequest = _quoteRequestBuilder.QuoteRequest;
+                        }
 
                         var linkLists = await _cacheManager.GetAsync("GetLinkLists-" + workContext.CurrentStore.Id, "ApiRegion", async () => { return await _cmsApi.MenuGetListsAsync(workContext.CurrentStore.Id); });
                         workContext.CurrentLinkLists = linkLists != null ? linkLists.Select(ll => ll.ToWebModel(urlBuilder)).ToList() : null;
@@ -146,7 +155,7 @@ namespace VirtoCommerce.Storefront.Owin
 
         private bool IsAssetRequest(Uri uri)
         {
-            return uri.AbsolutePath.Contains("themes/assets");
+            return uri.AbsolutePath.Contains("themes/assets") || !string.IsNullOrEmpty(Path.GetExtension(uri.ToString()));
         }
 
         private string GetCurrentCustomerId(IOwinContext context)

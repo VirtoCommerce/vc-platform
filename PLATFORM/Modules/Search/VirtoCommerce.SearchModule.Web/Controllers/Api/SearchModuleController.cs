@@ -8,6 +8,7 @@ using System.Text;
 using System.Web.Http;
 using System.Web.Http.Description;
 using System.Xml.Serialization;
+using CacheManager.Core;
 using VirtoCommerce.CatalogModule.Web.Converters;
 using VirtoCommerce.CatalogModule.Web.Model;
 using VirtoCommerce.CatalogModule.Web.Security;
@@ -25,6 +26,7 @@ using VirtoCommerce.Platform.Core.Asset;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Platform.Data.Common;
 using VirtoCommerce.SearchModule.Web.BackgroundJobs;
 using VirtoCommerce.SearchModule.Web.Security;
 using VirtoCommerce.SearchModule.Web.Services;
@@ -51,11 +53,12 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
         private readonly IInventoryService _inventoryService;
         private readonly IBlobUrlResolver _blobUrlResolver;
         private readonly ICatalogSearchService _catalogSearchService;
+        private readonly ICacheManager<object> _cacheManager;
 
         public SearchModuleController(ISearchProvider searchProvider, ISearchConnection searchConnection, SearchIndexJobsScheduler scheduler,
             IStoreService storeService, ISecurityService securityService, IPermissionScopeService permissionScopeService,
             IPropertyService propertyService, IBrowseFilterService browseFilterService, IItemBrowsingService browseService,
-            IInventoryService inventoryService, IBlobUrlResolver blobUrlResolver, ICatalogSearchService catalogSearchService)
+            IInventoryService inventoryService, IBlobUrlResolver blobUrlResolver, ICatalogSearchService catalogSearchService, ICacheManager<object> cacheManager)
         {
             _searchProvider = searchProvider;
             _searchConnection = searchConnection;
@@ -69,6 +72,7 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
             _inventoryService = inventoryService;
             _blobUrlResolver = blobUrlResolver;
             _catalogSearchService = catalogSearchService;
+            _cacheManager = cacheManager;
         }
 
         [HttpGet]
@@ -222,13 +226,7 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
                 { "StoreId", criteria.StoreId },
             };
 
-            var store = _storeService.GetById(criteria.StoreId);
-            if (store == null)
-            {
-                throw new NullReferenceException("Cannot find store '" + criteria.StoreId + "'");
-            }
-
-            var catalog = store.Catalog;
+            var catalog = criteria.CatalogId;
             var categoryId = criteria.CategoryId;
 
             var serviceCriteria = new CatalogIndexedSearchCriteria
@@ -258,7 +256,7 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
 
             #region Filters
             // Now fill in filters
-            var filters = _browseFilterService.GetFilters(context);
+            var filters = _cacheManager.Get("GetFilters-"+ criteria.StoreId, "SearchProducts", TimeSpan.FromMinutes(5), ()=> _browseFilterService.GetFilters(context));
 
             // Add all filters
             foreach (var filter in filters)
@@ -331,13 +329,13 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
 
             #region sorting
 
-            if (!string.IsNullOrEmpty(criteria.Sort))
+            if (!criteria.SortInfos.IsNullOrEmpty())
             {
-                var isDescending = "desc".Equals(criteria.SortOrder, StringComparison.OrdinalIgnoreCase);
-
+                var sortInfo = criteria.SortInfos.FirstOrDefault();
+                var isDescending = sortInfo.SortDirection == SortDirection.Descending;
                 SearchSort sortObject = null;
 
-                switch (criteria.Sort.ToLowerInvariant())
+                switch (sortInfo.SortColumn.ToLowerInvariant())
                 {
                     case "price":
                         if (serviceCriteria.Pricelists != null)
@@ -364,6 +362,7 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
                                 });
                         break;
                     case "name":
+                    case "title":
                         sortObject = new SearchSort("name", isDescending);
                         break;
                     case "rating":
@@ -397,12 +396,12 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
             //Load ALL products 
             var searchResults = _browseService.SearchItems(serviceCriteria, responseGroup);
 
-            // populate inventory
-            //if ((request.ResponseGroup & ItemResponseGroup.ItemProperties) == ItemResponseGroup.ItemProperties)
-            if ((criteria.ResponseGroup & SearchResponseGroup.WithProperties) == SearchResponseGroup.WithProperties)
-            {
-                PopulateInventory(store.FulfillmentCenter, searchResults.Products);
-            }
+            //// populate inventory
+            ////if ((request.ResponseGroup & ItemResponseGroup.ItemProperties) == ItemResponseGroup.ItemProperties)
+            //if ((criteria.ResponseGroup & SearchResponseGroup.WithProperties) == SearchResponseGroup.WithProperties)
+            //{
+            //    PopulateInventory(store.FulfillmentCenter, searchResults.Products);
+            //}
 
             return searchResults;
         }

@@ -25,7 +25,9 @@ namespace VirtoCommerce.Storefront.Controllers
             var catalogSearchCriteria = new CatalogSearchCriteria
             {
                 CatalogId = _workContext.CurrentStore.Catalog,
-                ResponseGroup = CatalogSearchResponseGroup.WithCategories
+                ResponseGroup = CatalogSearchResponseGroup.WithCategories,
+                SortBy = "Priority",
+                SearchInChildren = false
             };
             _workContext.CurrentCatalogSearchResult = await _catalogSearchService.SearchAsync(catalogSearchCriteria);
             return View("index", _workContext);

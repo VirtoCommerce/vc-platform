@@ -1,7 +1,10 @@
-﻿using System.Web.Http;
+﻿using System.Diagnostics;
+using System.Web;
+using System.Web.Http;
 using System.Web.Http.OData.Extensions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
 using VirtoCommerce.Platform.Core.Security;
 
 namespace VirtoCommerce.Platform.Web
@@ -16,9 +19,9 @@ namespace VirtoCommerce.Platform.Web
             config.MapHttpAttributeRoutes();
 
             config.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
-
+            
             var formatter = config.Formatters.JsonFormatter;
-            formatter.SerializerSettings.ContractResolver = new DeltaContractResolver(formatter);
+            formatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             formatter.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             formatter.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
             //formatter.SerializerSettings.DefaultValueHandling = DefaultValueHandling.Ignore;
@@ -34,6 +37,11 @@ namespace VirtoCommerce.Platform.Web
             var json = config.Formatters.JsonFormatter;
             json.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.None;
             json.SerializerSettings.Formatting = Formatting.Indented;
+            json.SerializerSettings.Error += (sender, args) =>
+            {
+                //Need escalate any JSON serialization exception as HTTP error
+                HttpContext.Current.AddError(args.ErrorContext.Error);
+            };
             config.Formatters.Remove(config.Formatters.XmlFormatter);
         }
     }

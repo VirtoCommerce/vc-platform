@@ -18,6 +18,33 @@ namespace VirtoCommerce.MarketingModule.Data.Promotions
 		public string PredicateVisualTreeSerialized { get; set; }
 		public string RewardsSerialized { get; set; }
 
+        private Func<IEvaluationContext, bool> _condition;
+        private Func<IEvaluationContext, bool> Condition
+        {
+            get
+            {
+                if (_condition == null)
+                {
+                    //deserealize dynamic condition
+                    _condition = SerializationUtil.DeserializeExpression<Func<IEvaluationContext, bool>>(PredicateSerialized);
+                }
+                return _condition;
+            }
+        }
+        private PromotionReward[] _rewards;
+        private PromotionReward[] Rewards
+        {
+            get
+            {
+                if (_rewards == null)
+                {
+                    //deserealize rewards
+                    _rewards = JsonConvert.DeserializeObject<PromotionReward[]>(RewardsSerialized, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
+                }
+                return _rewards;
+            }
+        }
+
 		public override PromotionReward[] EvaluatePromotion(IEvaluationContext context)
 		{
 			var retVal = new List<PromotionReward>();
@@ -30,19 +57,16 @@ namespace VirtoCommerce.MarketingModule.Data.Promotions
 			//Check coupon
 			var couponValid = (Coupons != null && Coupons.Any()) ? Coupons.Any(x=> String.Equals(x, promoContext.Coupon, StringComparison.InvariantCultureIgnoreCase)) : true;
 
-			//deserealize dynamic condition
-			var condition = SerializationUtil.DeserializeExpression<Func<IEvaluationContext, bool>>(PredicateSerialized);
-			//deserealize rewards
-			var rewards = JsonConvert.DeserializeObject<PromotionReward[]>(RewardsSerialized, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
+		
 			//Evaluate reward for all promoEntry in context
 			foreach (var promoEntry in promoContext.PromoEntries)
 			{
 				//Set current context promo entry for evaluation
 				promoContext.PromoEntry = promoEntry;
-				foreach (var reward in rewards.Select(x=>x.Clone()))
+				foreach (var reward in Rewards.Select(x=>x.Clone()))
 				{
 					reward.Promotion = this;
-					reward.IsValid = couponValid && condition(promoContext);
+					reward.IsValid = couponValid && Condition(promoContext);
 					var catalogItemReward = reward as CatalogItemAmountReward;
 					//Set productId for catalog item reward
 					if (catalogItemReward != null && catalogItemReward.ProductId == null)

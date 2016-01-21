@@ -3,10 +3,10 @@
     "main-menu-title": "Catalog",
     "main-blade-title": "Catalog",
     "properties": {
-          "catalog": "Catalog properties",
-          "product": "Product properties",
-          "variation": "Variation properties",
-          "category": "Category properties"
+      "catalog": "Catalog properties",
+      "product": "Product properties",
+      "variation": "Variation properties",
+      "category": "Category properties"
     },
     "blades": {
       "catalogs-list": {
@@ -60,10 +60,15 @@
         "title-mapping": "Choose Categories & Items for mapping",
         "subtitle-mapping": "Creating a Link inside virtual catalog",
         "labels": {
+          "new-filter": "Add new filter",
+          "unnamed-filter": "Unnamed filter",
           "inactive": "Inactive",
           "picture": "Pic",
           "name": "Name",
           "sku": "SKU"
+        },
+        "placeholders": {
+          "select-filter": "Select filter"
         }
       },
       "category-detail": {
@@ -114,6 +119,21 @@
         "subtitle": "Catalog properties",
         "labels": {
           "empty-list": "None"
+        }
+      },
+      "filter-detail": {
+        "subtitle": "Edit filter",
+        "new-title": "New filter",
+        "new-subtitle": "Create new filter",
+        "labels": {
+          "criteria": "Filter criteria",
+          "productType": "Product type",
+          "onlyBuyable": "Only buyable",
+          "onlyWithTrackingInventory": "Only with tracking inventory",
+          "name": "Filter name"
+        },
+        "placeholders": {
+          "all": "Not specified"
         }
       },
       "property-detail": {
@@ -411,7 +431,7 @@
       },
       "itemImage": {
         "blade-subtitle": "Manage images",
-          "no-images": "No images"
+        "no-images": "No images"
       },
       "itemProperty": {
         "blade-subtitle": "item properties",
@@ -616,6 +636,7 @@
       }
     },
     "commands": {
+      "apply-filter": "Apply filter",
       "start-export": "Start export",
       "start-import": "Start import",
       "clear-all": "Clear all",

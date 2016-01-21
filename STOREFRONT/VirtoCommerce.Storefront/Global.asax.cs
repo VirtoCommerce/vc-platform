@@ -19,26 +19,35 @@ namespace VirtoCommerce.Storefront
         /// <returns></returns>
         public override string GetVaryByCustomString(HttpContext context, string arg)
         {
+            var retVal = base.GetVaryByCustomString(context, arg);
             if (arg.Equals("User", StringComparison.InvariantCultureIgnoreCase))
             {
-                string userId = context.User.Identity.Name;
+                retVal = context.User.Identity.Name;
                 if (!context.User.Identity.IsAuthenticated)
                 {
                     var anonymousCookie = context.Request.Cookies.Get(StorefrontConstants.AnonymousCustomerIdCookie);
-                    if(anonymousCookie != null)
+                    if (anonymousCookie != null)
                     {
-                        userId = anonymousCookie.Value;
+                        retVal = anonymousCookie.Value;
                     }
                 }
-                return string.Format("{0}", userId);
             }
-            return base.GetVaryByCustomString(context, arg);
+            else if (arg.Equals("Currency", StringComparison.InvariantCultureIgnoreCase))
+            {
+                var currencyCookie = context.Request.Cookies.Get(StorefrontConstants.CurrencyCookie);
+                if (currencyCookie != null)
+                {
+                    retVal = currencyCookie.Value;
+                }
+            }
+
+            return retVal;
         }
 
         protected void Application_Start()
         {
         }
-     
+
         protected void Application_Error(Object sender, EventArgs e)
         {
             Exception exception = Server.GetLastError();
@@ -46,11 +55,11 @@ namespace VirtoCommerce.Storefront
             ApiException apiException = exception as ApiException;
 
             var isNotFound = false;
-            if(apiException != null)
+            if (apiException != null)
             {
                 isNotFound = apiException.ErrorCode == 404;
             }
-            else if(httpException != null)
+            else if (httpException != null)
             {
                 isNotFound = httpException.GetHttpCode() == 404;
             }

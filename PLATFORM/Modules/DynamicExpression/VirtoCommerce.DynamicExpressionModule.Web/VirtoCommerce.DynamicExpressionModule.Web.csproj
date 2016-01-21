@@ -108,6 +108,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <Content Include="Content\logo.png" />
     <Content Include="module.manifest">
       <SubType>Designer</SubType>
     </Content>

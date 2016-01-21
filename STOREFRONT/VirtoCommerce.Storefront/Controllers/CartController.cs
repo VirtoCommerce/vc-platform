@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.Client.Model;
+using VirtoCommerce.Storefront.Common;
 using VirtoCommerce.Storefront.Converters;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Cart.Services;
@@ -45,6 +47,7 @@ namespace VirtoCommerce.Storefront.Controllers
 
         // GET: /cart/json
         [HttpGet]
+        [HandleJsonErrorAttribute]
         public async Task<ActionResult> CartJson()
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
@@ -56,10 +59,10 @@ namespace VirtoCommerce.Storefront.Controllers
 
         // POST: /cart/additem?id=...&quantity=...
         [HttpPost]
+        [HandleJsonErrorAttribute]
         public async Task<ActionResult> AddItemJson(string id, int quantity = 1)
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
-
             var products = await _catalogService.GetProductsAsync(new string[] { id }, Model.Catalog.ItemResponseGroup.ItemLarge);
             if (products != null && products.Any())
             {
@@ -72,6 +75,7 @@ namespace VirtoCommerce.Storefront.Controllers
 
         // POST: /cart/changeitem?lineItemId=...&quantity=...
         [HttpPost]
+        [HandleJsonErrorAttribute]
         public async Task<ActionResult> ChangeItemJson(string lineItemId, int quantity)
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
@@ -88,6 +92,7 @@ namespace VirtoCommerce.Storefront.Controllers
 
         // POST: /cart/removeitem?lineItemId=...
         [HttpPost]
+        [HandleJsonErrorAttribute]
         public async Task<ActionResult> RemoveItemJson(string lineItemId)
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
@@ -100,6 +105,7 @@ namespace VirtoCommerce.Storefront.Controllers
 
         // POST: /cart/clear
         [HttpPost]
+        [HandleJsonErrorAttribute]
         public async Task<ActionResult> ClearJson()
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
@@ -121,6 +127,7 @@ namespace VirtoCommerce.Storefront.Controllers
 
         // GET: /cart/shippingmethods/json
         [HttpGet]
+        [HandleJsonErrorAttribute]
         public async Task<ActionResult> CartShippingMethodsJson(string shipmentId)
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
@@ -132,6 +139,7 @@ namespace VirtoCommerce.Storefront.Controllers
 
         // GET: /cart/paymentmethods/json
         [HttpGet]
+        [HandleJsonErrorAttribute]
         public async Task<ActionResult> CartPaymentMethodsJson()
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
@@ -143,6 +151,7 @@ namespace VirtoCommerce.Storefront.Controllers
 
         // POST: /cart/addcoupon/{couponCode}
         [HttpPost]
+        [HandleJsonErrorAttribute]
         public async Task<ActionResult> AddCouponJson(string couponCode)
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
@@ -155,6 +164,7 @@ namespace VirtoCommerce.Storefront.Controllers
 
         // POST: /cart/removecoupon
         [HttpPost]
+        [HandleJsonErrorAttribute]
         public async Task<ActionResult> RemoveCouponJson()
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
@@ -167,6 +177,7 @@ namespace VirtoCommerce.Storefront.Controllers
 
         // POST: /cart/addaddress
         [HttpPost]
+        [HandleJsonErrorAttribute]
         public async Task<ActionResult> AddAddressJson(Address address)
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
@@ -179,6 +190,7 @@ namespace VirtoCommerce.Storefront.Controllers
 
         // POST: /cart/shippingmethod?shippingMethodCode=...
         [HttpPost]
+        [HandleJsonErrorAttribute]
         public async Task<ActionResult> SetShippingMethodsJson(string shippingMethodCode)
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
@@ -196,6 +208,7 @@ namespace VirtoCommerce.Storefront.Controllers
 
         // POST: /cart/paymentmethod?paymentMethodCode=...
         [HttpPost]
+        [HandleJsonErrorAttribute]
         public async Task<ActionResult> SetPaymentMethodsJson(string paymentMethodCode)
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
@@ -213,6 +226,7 @@ namespace VirtoCommerce.Storefront.Controllers
 
         // POST: /cart/createorder
         [HttpPost]
+        [HandleJsonErrorAttribute]
         public async Task<ActionResult> CreateOrderJson(VirtoCommerceDomainPaymentModelBankCardInfo bankCardInfo)
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);

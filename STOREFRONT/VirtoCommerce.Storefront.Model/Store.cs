@@ -88,6 +88,8 @@ namespace VirtoCommerce.Storefront.Model
 
         public ICollection<SeoInfo> SeoInfos { get; set; }
 
+        public bool QuotesEnabled { get; set; }
+
         //Need sync store currencies with system avail currencies for specific language
         public void SyncCurrencies(IEnumerable<Currency> availCurrencies, Language language)
         {

@@ -135,6 +135,10 @@
     <Compile Include="Migrations\201511191415000_Fix.Designer.cs">
       <DependentUpon>201511191415000_Fix.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201601191551056_OptionalCategoryInLink.cs" />
+    <Compile Include="Migrations\201601191551056_OptionalCategoryInLink.Designer.cs">
+      <DependentUpon>201601191551056_OptionalCategoryInLink.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Asset.cs" />
     <Compile Include="Model\Association.cs" />
@@ -225,6 +229,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201511191415000_Fix.resx">
       <DependentUpon>201511191415000_Fix.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201601191551056_OptionalCategoryInLink.resx">
+      <DependentUpon>201601191551056_OptionalCategoryInLink.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
