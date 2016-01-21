@@ -289,7 +289,6 @@
     <Compile Include="ApplicationOAuthProvider.cs" />
     <Compile Include="App_Start\AuthConfig.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
-    <Compile Include="App_Start\DeltaContractResolver.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\OwinConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
