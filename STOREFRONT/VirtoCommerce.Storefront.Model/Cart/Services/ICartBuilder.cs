@@ -2,12 +2,13 @@
 using System.Threading.Tasks;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
+using VirtoCommerce.Storefront.Model.Customer;
 
 namespace VirtoCommerce.Storefront.Model.Cart.Services
 {
     public interface ICartBuilder
     {
-        Task<ICartBuilder> GetOrCreateNewTransientCartAsync(Store store, Customer customer, Language language, Currency currency);
+        Task<ICartBuilder> GetOrCreateNewTransientCartAsync(Store store, CustomerInfo customer, Language language, Currency currency);
 
         Task<ICartBuilder> AddItemAsync(Product product, int quantity);
 

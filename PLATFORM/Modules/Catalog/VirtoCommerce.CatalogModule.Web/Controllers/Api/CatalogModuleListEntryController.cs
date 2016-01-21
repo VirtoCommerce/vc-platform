@@ -53,6 +53,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             if(!string.IsNullOrEmpty(searchCriteria.Keyword))
             {
                 searchCriteria.SearchInChildren = true;
+                searchCriteria.SearchInVariations = true;
             }
             var serviceResult = _searchService.Search(searchCriteria);
 

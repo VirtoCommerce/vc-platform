@@ -11,6 +11,7 @@ using VirtoCommerce.Storefront.Model.Cart;
 using VirtoCommerce.Storefront.Model.Cart.Services;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
+using VirtoCommerce.Storefront.Model.Customer;
 using VirtoCommerce.Storefront.Model.Marketing;
 using VirtoCommerce.Storefront.Model.Marketing.Services;
 
@@ -23,14 +24,14 @@ namespace VirtoCommerce.Storefront.Builders
         private readonly ICacheManager<object> _cacheManager;
 
         private Store _store;
-        private Customer _customer;
+        private CustomerInfo _customer;
         private Currency _currency;
         private Language _language;
         private ShoppingCart _cart;
         private string _cartCacheKey;
         private const string _cartCacheRegion = "CartRegion";
 
-        [CLSCompliant(false)]
+       
         public CartBuilder(IShoppingCartModuleApi cartApi, IPromotionEvaluator promotionEvaluator, ICacheManager<object> cacheManager)
         {
             _cartApi = cartApi;
@@ -38,7 +39,7 @@ namespace VirtoCommerce.Storefront.Builders
             _cacheManager = cacheManager;
         }
 
-        public virtual async Task<ICartBuilder> GetOrCreateNewTransientCartAsync(Store store, Customer customer, Language language, Currency currency)
+        public virtual async Task<ICartBuilder> GetOrCreateNewTransientCartAsync(Store store, CustomerInfo customer, Language language, Currency currency)
         {
             _store = store;
             _customer = customer;
@@ -348,7 +349,7 @@ namespace VirtoCommerce.Storefront.Builders
             promotionContext.Coupon = _cart.Coupon != null ? _cart.Coupon.Code : null;
             promotionContext.Currency = _cart.Currency;
             promotionContext.CustomerId = _customer.Id;
-            promotionContext.IsRegisteredUser = _customer.HasAccount;
+            promotionContext.IsRegisteredUser = _customer.IsRegisteredUser;
             promotionContext.Language = _language;
             promotionContext.PromoEntries = promotionItems;
             promotionContext.StoreId = _store.Id;

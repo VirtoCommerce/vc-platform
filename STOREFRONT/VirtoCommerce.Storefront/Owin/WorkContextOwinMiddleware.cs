@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Hosting;
@@ -19,6 +20,8 @@ using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Cart.Services;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
+using VirtoCommerce.Storefront.Model.Customer;
+using VirtoCommerce.Storefront.Model.Customer.Services;
 using VirtoCommerce.Storefront.Model.Quote.Services;
 
 namespace VirtoCommerce.Storefront.Owin
@@ -38,6 +41,7 @@ namespace VirtoCommerce.Storefront.Owin
         private readonly ICartBuilder _cartBuilder;
         private readonly IQuoteRequestBuilder _quoteRequestBuilder;
         private readonly ICMSContentModuleApi _cmsApi;
+        private readonly ICustomerService _customerService;
         private readonly ICacheManager<object> _cacheManager;
 
         private readonly UnityContainer _container;
@@ -54,6 +58,7 @@ namespace VirtoCommerce.Storefront.Owin
             _pricingModuleApi = container.Resolve<IPricingModuleApi>();
             _commerceApi = container.Resolve<ICommerceCoreModuleApi>();
             _cacheManager = container.Resolve<ICacheManager<object>>();
+            _customerService = container.Resolve<ICustomerService>();
             _container = container;
         }
 
@@ -70,10 +75,6 @@ namespace VirtoCommerce.Storefront.Owin
                 workContext.AllStores = await _cacheManager.GetAsync("GetAllStores", "ApiRegion", async () => { return await GetAllStoresAsync(); });
                 if (workContext.AllStores != null && workContext.AllStores.Any())
                 {
-                    var currentCustomerId = GetCurrentCustomerId(context);
-                    workContext.CurrentCustomer = await _cacheManager.GetAsync("GetCustomer-" + currentCustomerId, "ApiRegion", async () => { return await GetCustomerAsync(context); });
-                    MaintainAnonymousCustomerCookie(context, workContext);
-
                     // Initialize request specific properties
                     workContext.CurrentStore = GetStore(context, workContext.AllStores);
                     workContext.CurrentLanguage = GetLanguage(context, workContext.AllStores, workContext.CurrentStore);
@@ -83,9 +84,12 @@ namespace VirtoCommerce.Storefront.Owin
                     {
                         store.SyncCurrencies(workContext.AllCurrencies, workContext.CurrentLanguage);
                     }
-
+                    
                     //Set current currency
                     workContext.CurrentCurrency = GetCurrency(context, workContext.CurrentStore);
+                    //Current customer
+                    workContext.CurrentCustomer = await GetCustomerAsync(context);
+                    MaintainAnonymousCustomerCookie(context, workContext);
 
                     //Do not load shopping cart and other for resource requests
                     if (!IsAssetRequest(context.Request.Uri))
@@ -158,49 +162,40 @@ namespace VirtoCommerce.Storefront.Owin
             return uri.AbsolutePath.Contains("themes/assets") || !string.IsNullOrEmpty(Path.GetExtension(uri.ToString()));
         }
 
-        private string GetCurrentCustomerId(IOwinContext context)
+        private async Task<CustomerInfo> GetCustomerAsync(IOwinContext context)
         {
-            var retVal = context.Authentication.User.Identity.Name;
-            if (!context.Authentication.User.Identity.IsAuthenticated)
-            {
-                retVal = context.Request.Cookies[StorefrontConstants.AnonymousCustomerIdCookie];
-            }
-            return retVal;
-        }
-
-        private async Task<Customer> GetCustomerAsync(IOwinContext context)
-        {
-            var customer = new Customer();
+            CustomerInfo retVal = new CustomerInfo();
 
             if (context.Authentication.User.Identity.IsAuthenticated)
             {
-                var user = await _platformApi.SecurityGetUserByNameAsync(context.Authentication.User.Identity.Name);
-                if (user != null)
+                var sidClaim = context.Authentication.User.Claims.FirstOrDefault(x=>x.Type == ClaimTypes.Sid);
+                var userId = sidClaim != null ? sidClaim.Value : null;
+                if (userId == null)
                 {
-                    var contact = await _customerApi.CustomerModuleGetContactByIdAsync(user.Id);
-                    if (contact != null)
-                    {
-                        customer = contact.ToWebModel(user.UserName);
-                        customer.HasAccount = true;
-                    }
+                    //If somehow claim not found in user cookies need load user by name from API
+                    var user = await _platformApi.SecurityGetUserByNameAsync(context.Authentication.User.Identity.Name);
+                    userId = user.Id;
                 }
+                retVal = await _customerService.GetCustomerByIdAsync(userId) ?? retVal;
+                retVal.UserName = context.Authentication.User.Identity.Name;
+                retVal.IsRegisteredUser = true;
             }
 
-            if (!customer.HasAccount)
+            if (!retVal.IsRegisteredUser)
             {
-                customer.Id = context.Request.Cookies[StorefrontConstants.AnonymousCustomerIdCookie];
-                customer.UserName = StorefrontConstants.AnonymousUsername;
-                customer.Name = StorefrontConstants.AnonymousUsername;
+                retVal.Id = context.Request.Cookies[StorefrontConstants.AnonymousCustomerIdCookie];
+                retVal.UserName = StorefrontConstants.AnonymousUsername;
+                retVal.Name = StorefrontConstants.AnonymousUsername;
             }
 
-            return customer;
+            return retVal;
         }
 
         private void MaintainAnonymousCustomerCookie(IOwinContext context, WorkContext workContext)
         {
             string anonymousCustomerId = context.Request.Cookies[StorefrontConstants.AnonymousCustomerIdCookie];
 
-            if (workContext.CurrentCustomer.HasAccount)
+            if (workContext.CurrentCustomer.IsRegisteredUser)
             {
                 if (!string.IsNullOrEmpty(anonymousCustomerId))
                 {

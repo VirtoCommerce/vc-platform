@@ -12,6 +12,7 @@ using VirtoCommerce.Storefront.Model.Marketing;
 using VirtoCommerce.Storefront.Model.Marketing.Services;
 using VirtoCommerce.Storefront.Model.Quote;
 using VirtoCommerce.Storefront.Model.Quote.Services;
+using VirtoCommerce.Storefront.Model.Customer;
 
 namespace VirtoCommerce.Storefront.Builders
 {
@@ -22,14 +23,14 @@ namespace VirtoCommerce.Storefront.Builders
         private readonly ICacheManager<object> _cacheManager;
 
         private Store _store;
-        private Customer _customer;
+        private CustomerInfo _customer;
         private Currency _currency;
         private Language _language;
         private QuoteRequest _quoteRequest;
         private string _quoteRequestCacheKey;
         private const string _quoteRequestCacheRegion = "QuoteRequestRegion";
 
-        [CLSCompliant(false)]
+        
         public QuoteRequestBuilder(IQuoteModuleApi quoteApi, IPromotionEvaluator promotionEvaluator, ICacheManager<object> cacheManager)
         {
             _quoteApi = quoteApi;
@@ -37,7 +38,7 @@ namespace VirtoCommerce.Storefront.Builders
             _cacheManager = cacheManager;
         }
 
-        public async Task<IQuoteRequestBuilder> GetOrCreateNewTransientQuoteRequestAsync(Store store, Customer customer, Language language, Currency currency)
+        public async Task<IQuoteRequestBuilder> GetOrCreateNewTransientQuoteRequestAsync(Store store, CustomerInfo customer, Language language, Currency currency)
         {
             _store = store;
             _customer = customer;

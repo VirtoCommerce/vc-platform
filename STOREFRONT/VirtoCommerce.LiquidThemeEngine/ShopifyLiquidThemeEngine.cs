@@ -48,7 +48,6 @@ namespace VirtoCommerce.LiquidThemeEngine
         private readonly FileSystemWatcher _fileSystemWatcher;
         private readonly SassCompilerProxy _saasCompiler = new SassCompilerProxy();
 
-        [CLSCompliant(false)]
         public ShopifyLiquidThemeEngine(ICacheManager<object> cacheManager, Func<WorkContext> workContextFactory, Func<IStorefrontUrlBuilder> storeFrontUrlBuilderFactory, string themesLocalPath, string themesAssetsRelativeUrl, string globalThemeAssetsRelativeUrl)
         {
             _workContextFactory = workContextFactory;

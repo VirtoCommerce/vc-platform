@@ -17,15 +17,14 @@ namespace VirtoCommerce.Storefront.Services
 
     public class CartValidator : ICartValidator
     {
-        private readonly WorkContext _workContext;
+        private readonly Func<WorkContext> _workContextFactory;
         private readonly IShoppingCartModuleApi _cartApi;
         private readonly ICatalogSearchService _catalogService;
         private readonly ICacheManager<object> _cacheManager;
 
-        [CLSCompliant(false)]
-        public CartValidator(WorkContext workContext, IShoppingCartModuleApi cartApi, ICatalogSearchService catalogService, ICacheManager<object> cacheManager)
+        public CartValidator(Func<WorkContext> workContextFaxtory, IShoppingCartModuleApi cartApi, ICatalogSearchService catalogService, ICacheManager<object> cacheManager)
         {
-            _workContext = workContext;
+            _workContextFactory = workContextFaxtory;
             _cartApi = cartApi;
             _catalogService = catalogService;
             _cacheManager = cacheManager;
@@ -42,8 +41,9 @@ namespace VirtoCommerce.Storefront.Services
 
         private async Task ValidateItemsAsync(ShoppingCart cart)
         {
+            var workContext = _workContextFactory();
             var productIds = cart.Items.Select(i => i.ProductId).ToArray();
-            var cacheKey = "CartValidator.ValidateItemsAsync-" + _workContext.CurrentCurrency.Code + ":" + _workContext.CurrentLanguage + ":" + string.Join(":", productIds);
+            var cacheKey = "CartValidator.ValidateItemsAsync-" + workContext.CurrentCurrency.Code + ":" + workContext.CurrentLanguage + ":" + string.Join(":", productIds);
             var products = await _cacheManager.GetAsync(cacheKey, "ApiRegion", async () => { return await _catalogService.GetProductsAsync(productIds, ItemResponseGroup.ItemLarge); });
             foreach (var lineItem in cart.Items)
             {
@@ -79,10 +79,11 @@ namespace VirtoCommerce.Storefront.Services
 
         private async Task ValidateShipmentsAsync(ShoppingCart cart)
         {
+            var workContext = _workContextFactory();
             foreach (var shipment in cart.Shipments)
             {
                 shipment.ValidationErrors.Clear();
-                var availableShippingMethods = await _cacheManager.GetAsync("CartValidator.ValidateShipmentsAsync-" + _workContext.CurrentCurrency + ":" + cart.Id, "ApiRegion", async () => { return await _cartApi.CartModuleGetShipmentMethodsAsync(cart.Id); });
+                var availableShippingMethods = await _cacheManager.GetAsync("CartValidator.ValidateShipmentsAsync-" + workContext.CurrentCurrency + ":" + cart.Id, "ApiRegion", async () => { return await _cartApi.CartModuleGetShipmentMethodsAsync(cart.Id); });
                 var existingShippingMethod = availableShippingMethods.FirstOrDefault(sm => sm.ShipmentMethodCode == shipment.ShipmentMethodCode);
                 if (existingShippingMethod == null)
                 {
@@ -90,7 +91,7 @@ namespace VirtoCommerce.Storefront.Services
                 }
                 if (existingShippingMethod != null)
                 {
-                    var shippingMethod = existingShippingMethod.ToWebModel(_workContext.AllCurrencies, _workContext.CurrentLanguage);
+                    var shippingMethod = existingShippingMethod.ToWebModel(workContext.AllCurrencies, workContext.CurrentLanguage);
                     if (shippingMethod.Price != shipment.ShippingPrice)
                     {
                         shipment.ValidationErrors.Add(new ShippingPriceError(shippingMethod.Price));
