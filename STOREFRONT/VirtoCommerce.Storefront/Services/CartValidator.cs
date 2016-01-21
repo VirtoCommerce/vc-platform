@@ -71,7 +71,7 @@ namespace VirtoCommerce.Storefront.Services
 
                     if (lineItem.PlacedPrice != product.Price.ActualPrice)
                     {
-                        var newLineItem = product.ToLineItem(_workContext.CurrentLanguage, lineItem.Quantity);
+                        var newLineItem = product.ToLineItem(workContext.CurrentLanguage, lineItem.Quantity);
                         newLineItem.ValidationWarnings.Add(new ProductPriceError(lineItem.PlacedPrice));
 
                         cart.Items.Remove(lineItem);
