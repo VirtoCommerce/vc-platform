@@ -16,6 +16,9 @@ namespace VirtoCommerce.Storefront
             filters.Add(new StorefrontValidationActionFilter { WorkContextFactory = workContextFactory });
         }
     }
+    /// <summary>
+    /// This filter сhecks stores and showed special page if any store found
+    /// </summary>
     public class StorefrontValidationActionFilter : ActionFilterAttribute
     {
         public Func<WorkContext> WorkContextFactory { get; set; }
