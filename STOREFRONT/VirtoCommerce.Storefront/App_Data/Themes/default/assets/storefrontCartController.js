@@ -9,13 +9,17 @@ storefrontApp.controller('cartController', ['$scope', '$timeout', 'cartService',
         $scope.recentCartItemModalVisible = !isVisible;
     }
 
-    $scope.addToCart = function (productId, quantity) {
+    $scope.addToCart = function (product, quantity) {
         $scope.recentCartItemModalVisible = true;
-        $scope.cart.RecentlyAddedItem = null;
-        cartService.addLineItem(productId, quantity).then(function (response) {
+        $scope.cart.RecentlyAddedItem = {
+            ImageUrl: product.PrimaryImage.Url,
+            ListPrice: product.Price.ListPrice,
+            Name: product.Name,
+            PlacedPrice: product.Price.ActualPrice,
+            Quantity: quantity
+        };
+        cartService.addLineItem(product.Id, quantity).then(function (response) {
             refreshCart();
-        }, function (response) {
-            showErrorMessage();
         });
     }
 
@@ -33,7 +37,6 @@ storefrontApp.controller('cartController', ['$scope', '$timeout', 'cartService',
                 refreshCart();
             }, function (response) {
                 lineItem.Quantity = initialQuantity;
-                showErrorMessage();
             });
         }, 300);
     }
@@ -51,22 +54,6 @@ storefrontApp.controller('cartController', ['$scope', '$timeout', 'cartService',
             refreshCart();
         }, function (response) {
             $scope.cart.Items = initialItems;
-            showErrorMessage();
-        });
-    }
-
-    $scope.reapplyLineItem = function (lineItemId) {
-        var lineItem = _.find($scope.cart.Items, function (i) { return i.Id == lineItemId });
-        if (!lineItem) {
-            return;
-        }
-        $scope.cartIsUpdating = true;
-        var quantity = lineItem.Quantity;
-        var productId = lineItem.ProductId;
-        cartService.removeLineItem(lineItemId).then(function (response) {
-            cartService.addLineItem(productId, quantity).then(function (response) {
-                refreshCart();
-            });
         });
     }
 
@@ -79,19 +66,9 @@ storefrontApp.controller('cartController', ['$scope', '$timeout', 'cartService',
 
     function refreshCart() {
         $scope.cartIsUpdating = true;
-        promises = [];
         cartService.getCart().then(function (response) {
             $scope.cart = response.data;
             $scope.cartIsUpdating = false;
-        }, function (response) {
-            showErrorMessage();
         });
-    }
-
-    function showErrorMessage(message) {
-        $scope.cartErrorOccured = true;
-        $scope.cartIsUpdating = false;
-        $scope.cartErrorMessage = message;
-        $scope.cartErrorDetails = message;
     }
 }]);

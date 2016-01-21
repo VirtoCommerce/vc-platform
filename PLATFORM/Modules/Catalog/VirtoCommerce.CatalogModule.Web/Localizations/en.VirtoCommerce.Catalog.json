@@ -61,6 +61,7 @@
         "subtitle-mapping": "Creating a Link inside virtual catalog",
         "labels": {
           "new-filter": "Add new filter",
+          "unnamed-filter": "Unnamed filter",
           "inactive": "Inactive",
           "picture": "Pic",
           "name": "Name",
@@ -129,7 +130,6 @@
           "productType": "Product type",
           "onlyBuyable": "Only buyable",
           "onlyWithTrackingInventory": "Only with tracking inventory",
-          "onlyWithEditorialReviews": "Only with descriptions",
           "name": "Filter name"
         },
         "placeholders": {

@@ -48,7 +48,8 @@ namespace VirtoCommerce.Storefront.Common
 
             filterContext.Result = new JsonResult()
             {
-                Data = errorData
+                Data = errorData,
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet
             };
 
             filterContext.ExceptionHandled = true;

@@ -7,7 +7,7 @@
                 <i class="btn-ico fa fa-times-circle" title="Clear" ng-click="filter.keyword=null;blade.refresh()"></i>
             </button>
             <ui-select ng-model="filter.current" ng-change="filter.change()" style="left: 220px;position: absolute;width: 190px;top: 0px;">
-                <ui-select-match allow-clear="true" placeholder="{{'catalog.blades.categories-items-list.placeholders.select-filter' | translate}}">{{$select.selected.name}}</ui-select-match>
+                <ui-select-match allow-clear="true" placeholder="{{'catalog.blades.categories-items-list.placeholders.select-filter' | translate}}">{{$select.selected.name?$select.selected.name:'catalog.blades.categories-items-list.labels.unnamed-filter' | translate}}</ui-select-match>
                 <ui-select-choices repeat="x in $localStorage.catalogSearchFilters | filter: $select.search">
                     <span ng-bind-html="x.name | translate | highlight: $select.search"></span>
                 </ui-select-choices>
@@ -27,7 +27,7 @@
                 rowTemplate: 'item-list.row.html',
                 rowHeight: 60,
                 columnDefs: [
-                        { name: 'path', displayName: 'Parent', visible: false, cellTemplate: 'item-list-path.cell.html'},
+                        { name: '$path', displayName: 'Parent', visible: false, cellTemplate: 'item-list-path.cell.html'},
                         { name: 'actions', displayName: '', enableColumnResizing: false, enableSorting: false, width: 30, cellTemplate: 'item-list-actions.cell.html', pinnedLeft:true },
                         {
                             name: 'imageUrl', displayName: 'catalog.blades.categories-items-list.labels.picture',

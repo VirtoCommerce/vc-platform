@@ -4,8 +4,11 @@ storefrontApp.factory('httpErrorInterceptor', ['$q', '$rootScope', function ($q,
 	var httpErrorInterceptor = {};
 
 	httpErrorInterceptor.responseError = function (rejection) {
-		//TODO: Add show generic script error form
-		alert(rejection.data.message + "\n" + rejection.data.stackTrace);
+	    //TODO: Add show generic script error form
+	    $rootScope.errorOccured = true;
+	    $rootScope.errorMessage = rejection.data.message;
+	    $rootScope.errorDetails = rejection.data.stackTrace;
+		//alert(rejection.data.message + "\n" + rejection.data.stackTrace);
 		return $q.reject(rejection);
 	};
 	httpErrorInterceptor.requestError = function (rejection) {

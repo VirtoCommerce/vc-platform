@@ -215,7 +215,7 @@
                 blade.setSelectedItem(listItem);
                 var newBlade;
                 if (listItem.type === 'category') {
-                    var openNewBlade = e.ctrlKey || filter.current;
+                    var openNewBlade = e.ctrlKey || filter.keyword;
                     newBlade = {
                         id: 'itemsList' + (blade.level + (openNewBlade ? 1 : 0)),
                         level: blade.level + (openNewBlade ? 1 : 0),
@@ -258,7 +258,7 @@
                 $scope.selectedNodeId = $id;
                 var listItem = {
                     id: listEntry.outline.slice(-1)[0],
-                    name: listEntry.$path.slice(-1)[0]
+                    name: listEntry.path.slice(-1)[0]
                 };
 
                 newBlade = {
@@ -301,7 +301,7 @@
                 for (var i = 0; i < count; i++) {
                     newBreadcrumbs.push({
                         id: listEntry.outline[i],
-                        name: listEntry.$path[i],
+                        name: listEntry.path[i],
                         navigate: function (breadcrumb) {
                             bladeNavigationService.closeBlade(newBlade,
                                 function () {
@@ -494,15 +494,15 @@
 
 
             // simple and advanced filtering
-            var groupingColumn;
+            //var groupingColumn;
             var filter = blade.filter = $scope.filter = {};
             $scope.$localStorage = $localStorage;
             if (!$localStorage.catalogSearchFilters) {
                 $localStorage.catalogSearchFilters = [{ name: 'catalog.blades.categories-items-list.labels.new-filter' }]
             }
-            //if ($localStorage.catalogSearchFilterId) {
-            //    filter.current = _.findWhere($localStorage.catalogSearchFilters, { id: $localStorage.catalogSearchFilterId });
-            //}
+            if ($localStorage.catalogSearchFilterId) {
+                filter.current = _.findWhere($localStorage.catalogSearchFilters, { id: $localStorage.catalogSearchFilterId });
+            }
 
             filter.change = function () {
                 $localStorage.catalogSearchFilterId = filter.current ? filter.current.id : null;
@@ -537,60 +537,47 @@
             };
 
             function transformByFilters(data) {
-                _.each(data, function (x) {
-                    x.$path = angular.copy(x.path);
-                    x.path = _.any(x.path) ? x.path.join(" \\ ") : '\\';
-                });
-
-                if (filter.current || filter.keyword) {
-                    //if (!_.contains($scope.gridOptions.columnDefs, groupingColumn)) {
-                    //    $scope.gridOptions.columnDefs.splice(1, 0, groupingColumn);
-                    //}
-                    //if ($scope.groupInfo)
-                    //    $scope.gridApi.grouping.setGrouping($scope.groupInfo);
-
-                    //groupingColumn.visible = true;
-                    if (!_.any($scope.gridApi.grouping.getGrouping().grouping)) {
-                        $scope.gridApi.grouping.groupColumn('path');
-                    }
-
-                    $timeout(function () {
-                        $scope.gridApi.treeBase.expandAllRows();
+                if (_.any(data)) {
+                    _.each(data, function (x) {
+                        x.$path = _.any(x.path) ? x.path.join(" \\ ") : '\\';
                     });
-                } else {
-                    //var idx = _.indexOf($scope.gridOptions.columnDefs, groupingColumn);
-                    //if (idx >= 0) {
-                    //    $scope.gridOptions.columnDefs.splice(idx, 1);
-                    //}
 
                     if ($scope.gridApi) {
-                        //groupingColumn.visible = false;
-                        $scope.gridApi.grouping.clearGrouping();
+                        if (filter.keyword) {
+                            //groupingColumn.visible = true;
+                            if (!_.any($scope.gridApi.grouping.getGrouping().grouping)) {
+                                $scope.gridApi.grouping.groupColumn('$path');
+                            }
+
+                            $timeout($scope.gridApi.treeBase.expandAllRows);
+                        } else {
+                            //groupingColumn.visible = false;
+                            $scope.gridApi.grouping.clearGrouping();
+                        }
                     }
-                }
+                } else
+                    $scope.gridApi = undefined;
             }
 
 
             // ui-grid
             $scope.setGridOptions = function (gridOptions) {
                 uiGridHelper.initialize($scope, gridOptions, function (gridApi) {
-                    groupingColumn = _.findWhere($scope.gridOptions.columnDefs, { name: 'path' });
-                    //$scope.groupInfo = gridApi.grouping.getGrouping();
+                    //groupingColumn = _.findWhere($scope.gridOptions.columnDefs, { name: '$path' });
 
-                    //if (filter.current) {
-                    //    groupingColumn.visible = true;
-                    //    // gridApi.grouping.groupColumn('path'); // crashes
-                    //} else {
-                    //    groupingColumn.visible = false;
-                    //    $timeout(function () {
-                    //        gridApi.grouping.clearGrouping();
-                    //    }, 25);
-                    //}
+                    if (filter.keyword) {
+                        $timeout(function () {
+                            gridApi.grouping.groupColumn('$path');
+                            $timeout(gridApi.treeBase.expandAllRows);
+                        });
+                    }
 
-                    gridApi.core.on.sortChanged($scope, function () {
-                        if (!blade.isLoading)
-                            blade.refresh();
-                    });
+                    $timeout(function () {
+                        gridApi.core.on.sortChanged($scope, function () {
+                            if (!blade.isLoading)
+                                blade.refresh();
+                        });
+                    }, 200);
                 });
 
                 $scope.$watch('pageSettings.currentPage', blade.refresh);
@@ -599,7 +586,7 @@
             function getSortExpression() {
                 var columnDefs = $scope.gridApi ? $scope.gridApi.grid.columns : $scope.gridOptions.columnDefs;
                 var sorts = _.filter(columnDefs, function (x) {
-                    return x.name !== 'path' && x.sort && (x.sort.direction === uiGridConstants.ASC || x.sort.direction === uiGridConstants.DESC);
+                    return x.name !== '$path' && x.sort && (x.sort.direction === uiGridConstants.ASC || x.sort.direction === uiGridConstants.DESC);
                 })
 
                 sorts = _.sortBy(sorts, function (x) {

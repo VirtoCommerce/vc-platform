@@ -101,7 +101,7 @@
                 <input type="number" id="quantity" name="quantity" value="1" min="1" class="quantity-selector">
                 {% endif %}
 
-                <button type="button" name="add" id="addToCart" class="btn" ng-disabled="!selectedVariation.Id" ng-click="addToCart(selectedVariation.Id, 1)">
+                <button type="button" name="add" id="addToCart" class="btn" ng-disabled="!selectedVariation.Id" ng-click="addToCart(selectedVariation, 1)">
                     <span class="icon icon-cart"></span>
                     <span id="addToCartText">{{ 'products.product.add_to_cart' | t }}</span>
                 </button>

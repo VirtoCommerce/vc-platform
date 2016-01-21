@@ -23,6 +23,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
             TaxDetails = new List<TaxDetail>();
             DynamicProperties = new List<DynamicProperty>();
             ValidationErrors = new List<ValidationError>();
+            ValidationWarnings = new List<ValidationError>();
         }
 
         /// <summary>
@@ -234,6 +235,8 @@ namespace VirtoCommerce.Storefront.Model.Cart
         public ICollection<DynamicProperty> DynamicProperties { get; set; }
 
         public ICollection<ValidationError> ValidationErrors { get; set; }
+
+        public ICollection<ValidationError> ValidationWarnings { get; set; }
 
         #region IDiscountable  Members
         public Currency Currency { get; }

@@ -45,7 +45,7 @@ namespace VirtoCommerce.Storefront.Services
             var productIds = cart.Items.Select(i => i.ProductId).ToArray();
             var cacheKey = "CartValidator.ValidateItemsAsync-" + workContext.CurrentCurrency.Code + ":" + workContext.CurrentLanguage + ":" + string.Join(":", productIds);
             var products = await _cacheManager.GetAsync(cacheKey, "ApiRegion", async () => { return await _catalogService.GetProductsAsync(productIds, ItemResponseGroup.ItemLarge); });
-            foreach (var lineItem in cart.Items)
+            foreach (var lineItem in cart.Items.ToList())
             {
                 var product = products.FirstOrDefault(x => x.Id == lineItem.ProductId);
 
@@ -71,7 +71,11 @@ namespace VirtoCommerce.Storefront.Services
 
                     if (lineItem.PlacedPrice != product.Price.ActualPrice)
                     {
-                        lineItem.ValidationErrors.Add(new ProductPriceError(product.Price.ActualPrice));
+                        var newLineItem = product.ToLineItem(_workContext.CurrentLanguage, lineItem.Quantity);
+                        newLineItem.ValidationWarnings.Add(new ProductPriceError(lineItem.PlacedPrice));
+
+                        cart.Items.Remove(lineItem);
+                        cart.Items.Add(newLineItem);
                     }
                 }
             }
@@ -94,7 +98,10 @@ namespace VirtoCommerce.Storefront.Services
                     var shippingMethod = existingShippingMethod.ToWebModel(workContext.AllCurrencies, workContext.CurrentLanguage);
                     if (shippingMethod.Price != shipment.ShippingPrice)
                     {
-                        shipment.ValidationErrors.Add(new ShippingPriceError(shippingMethod.Price));
+                        shipment.ValidationWarnings.Add(new ShippingPriceError(shipment.ShippingPrice));
+
+                        cart.Shipments.Clear();
+                        cart.Shipments.Add(shippingMethod.ToShipmentModel(cart.Currency));
                     }
                 }
             }
