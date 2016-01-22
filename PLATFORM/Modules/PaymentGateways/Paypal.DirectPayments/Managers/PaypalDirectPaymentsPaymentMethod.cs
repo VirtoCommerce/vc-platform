@@ -179,7 +179,7 @@ namespace Paypal.DirectPayments.Managers
             details.PaymentDetails.OrderTotal.value = FormatMoney(context.Payment.Sum);
             details.PaymentDetails.OrderTotal.currencyID = (CurrencyCodeType)Enum.Parse(typeof(CurrencyCodeType), context.Order.Currency.ToString());
             details.PaymentDetails.Custom = context.Order.Id;
-            details.PaymentDetails.ButtonSource = "virtoCommerceManagerCart";
+            details.PaymentDetails.ButtonSource = "Virto_SP";
 
             return retVal;
         }

@@ -35,6 +35,7 @@ using VirtoCommerce.Storefront.Model.Marketing.Services;
 using VirtoCommerce.Storefront.Model.Cart.Services;
 using VirtoCommerce.Storefront.Model.Pricing.Services;
 using VirtoCommerce.Storefront.Model.Quote.Services;
+using VirtoCommerce.Storefront.Model.Customer.Services;
 
 [assembly: OwinStartup(typeof(Startup))]
 [assembly: PreApplicationStartMethod(typeof(Startup), "PreApplicationStart")]
@@ -133,6 +134,7 @@ namespace VirtoCommerce.Storefront
             container.RegisterType<IPromotionEvaluator, PromotionEvaluator>();
             container.RegisterType<ICartValidator, CartValidator>();
             container.RegisterType<IPricingService, PricingServiceImpl>();
+            container.RegisterType<ICustomerService, CustomerServiceImpl>();
 
             container.RegisterType<ICartBuilder, CartBuilder>();
             container.RegisterType<IQuoteRequestBuilder, QuoteRequestBuilder>();
@@ -143,6 +145,9 @@ namespace VirtoCommerce.Storefront
 
             // Create new work context for each request
             container.RegisterType<WorkContext, WorkContext>(new PerRequestLifetimeManager());
+            Func<WorkContext> workContextFactory = () => container.Resolve<WorkContext>();
+            container.RegisterInstance(workContextFactory);
+
             var themesPath = ConfigurationManager.AppSettings["vc-public-themes"] ?? "~/App_data/Themes";
             var shopifyLiquidEngine = new ShopifyLiquidThemeEngine(cacheManager, () => container.Resolve<WorkContext>(), () => container.Resolve<IStorefrontUrlBuilder>(), ResolveLocalPath(themesPath), "~/themes/assets", "~/themes/global/assets");
             container.RegisterInstance(shopifyLiquidEngine);

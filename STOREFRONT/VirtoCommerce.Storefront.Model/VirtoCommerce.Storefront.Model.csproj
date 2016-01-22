@@ -31,8 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CacheManager.Core, Version=0.7.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CacheManager.Core.0.7.0\lib\net45\CacheManager.Core.dll</HintPath>
+    <Reference Include="CacheManager.Core, Version=0.7.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CacheManager.Core.0.7.1\lib\net45\CacheManager.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Omu.ValueInjecter, Version=2.3.3.0, Culture=neutral, PublicKeyToken=c7694541b0ac80e4, processorArchitecture=MSIL">
@@ -80,6 +80,7 @@
     <Compile Include="Catalog\CatalogSearchCriteria.cs" />
     <Compile Include="Catalog\Term.cs" />
     <Compile Include="Catalog\TermExtensions.cs" />
+    <Compile Include="Customer\Services\ICustomerService.cs" />
     <Compile Include="Quote\Services\IQuoteRequestBuilder.cs" />
     <Compile Include="TierPrice.cs" />
     <Compile Include="Common\AsyncLock.cs" />
@@ -121,7 +122,7 @@
     <Compile Include="Common\ReflectionExtension.cs" />
     <Compile Include="Common\StringExtensions.cs" />
     <Compile Include="Common\ValueObject.cs" />
-    <Compile Include="Customer.cs" />
+    <Compile Include="Customer\CustomerInfo.cs" />
     <Compile Include="DynamicProperty.cs" />
     <Compile Include="DynamicPropertyDictionaryItem.cs" />
     <Compile Include="ForgotPassword.cs" />
@@ -138,7 +139,6 @@
     <Compile Include="Order\ShipmentPackage.cs" />
     <Compile Include="PaymentMethod.cs" />
     <Compile Include="Pricing\Services\IPricingService.cs" />
-    <Compile Include="Profile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Quote\QuoteItem.cs" />
     <Compile Include="Quote\QuoteRequest.cs" />
@@ -168,7 +168,9 @@
     <Compile Include="WorkContext.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

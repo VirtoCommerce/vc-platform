@@ -7,7 +7,6 @@ using CacheManager.Core;
 
 namespace VirtoCommerce.Storefront.Model.Common
 {
-    [CLSCompliant(false)]
     public static class CacheManagerExtension
     {
         private static object _lockObject = new object();

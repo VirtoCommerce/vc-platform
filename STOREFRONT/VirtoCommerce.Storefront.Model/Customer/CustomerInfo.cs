@@ -2,11 +2,11 @@
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Order;
 
-namespace VirtoCommerce.Storefront.Model
+namespace VirtoCommerce.Storefront.Model.Customer
 {
-    public class Customer : Entity
+    public class CustomerInfo : Entity
     {
-        public Customer()
+        public CustomerInfo()
         {
             Addresses = new List<Address>();
             DynamicProperties = new List<DynamicProperty>();
@@ -63,7 +63,7 @@ namespace VirtoCommerce.Storefront.Model
         /// <summary>
         /// Returns true if user registered  returns false if it anonynous. 
         /// </summary>
-        public bool HasAccount { get; set; }
+        public bool IsRegisteredUser { get; set; }
 
         /// <summary>
         /// Returns the list of tags associated with the customer.

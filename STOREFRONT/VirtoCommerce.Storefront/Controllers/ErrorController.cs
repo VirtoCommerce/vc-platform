@@ -13,7 +13,7 @@ namespace VirtoCommerce.Storefront.Controllers
         /// Do not rename this method because it have references in Global.asax and SeoRoute.cs
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
+        [AcceptVerbs(HttpVerbs.Get | HttpVerbs.Post | HttpVerbs.Put)]
         public ActionResult Http404()
         {
             Response.StatusCode = (int)HttpStatusCode.NotFound;

@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
+using VirtoCommerce.Storefront.Model.Customer;
 using VirtoCommerce.Storefront.Model.Quote.Services;
 using VirtoCommerce.Storefront.Model.Services;
 
@@ -15,7 +16,7 @@ namespace VirtoCommerce.Storefront.Controllers
         private readonly ICatalogSearchService _catalogSearchService;
 
         private Store _store;
-        private Customer _customer;
+        private CustomerInfo _customer;
         private Language _language;
         private Currency _currency;
 

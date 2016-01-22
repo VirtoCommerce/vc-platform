@@ -100,7 +100,7 @@ namespace VirtoCommerce.Storefront.Converters
 
             serviceModel.InjectFrom(webModel);
 
-            serviceModel.Addresses = webModel.Addresses.Select(a => a.ToServiceModel()).ToList();
+            serviceModel.Addresses = webModel.Addresses.Select(a => a.ToCartServiceModel()).ToList();
             serviceModel.Coupon = webModel.Coupon != null && webModel.Coupon.AppliedSuccessfully ? webModel.Coupon.Code : null;
             serviceModel.Currency = webModel.Currency.Code;
             serviceModel.Discounts = webModel.Discounts.Select(d => d.ToServiceModel()).ToList();

@@ -424,8 +424,9 @@ namespace Paypal.ExpressCheckout.Managers
 		{
 			var paymentDetails = new PaymentDetailsType { PaymentAction = paymentAction };
 			paymentDetails.OrderTotal = new BasicAmountType(GetPaypalCurrency(currency), FormatMoney(payment.Sum));
+            paymentDetails.ButtonSource = "Virto_SP";
 
-			return paymentDetails;
+            return paymentDetails;
 		}
 
 		private Dictionary<string, string> GetConfigMap()

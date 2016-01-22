@@ -24,6 +24,10 @@ namespace VirtoCommerce.Domain.Catalog.Model
         /// Search  in all children categories for specified catalog or categories
         /// </summary>
         public bool SearchInChildren { get; set; }
+        /// <summary>
+        /// Also search in variations 
+        /// </summary>
+        public bool SearchInVariations { get; set; }
 
         public string CategoryId { get; set; }
 

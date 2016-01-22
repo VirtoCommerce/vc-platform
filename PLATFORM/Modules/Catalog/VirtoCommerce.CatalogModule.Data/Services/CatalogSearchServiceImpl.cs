@@ -186,8 +186,12 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                     }
                 }
 
-                //Do not search in variations
-                var query = repository.Items.Where(x => x.ParentId == null).Where(x => criteria.WithHidden ? true : x.IsActive);
+                var query = repository.Items.Where(x => criteria.WithHidden ? true : x.IsActive);
+
+                if(!criteria.SearchInVariations)
+                {
+                    query = query.Where(x => x.ParentId == null);
+                }
 
                 if (!searchCategoryIds.IsNullOrEmpty())
                 {
@@ -206,6 +210,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 				{
 					query = query.Where(x => x.Name.Contains(criteria.Keyword) || x.Code.Contains(criteria.Keyword));
 				}
+            
 
                 //Filter by property dictionary values
                 if (!criteria.PropertyValues.IsNullOrEmpty())

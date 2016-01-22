@@ -17,7 +17,7 @@ namespace VirtoCommerce.Storefront.Routing
 
         public static void MapLocalizedStorefrontRoute(this RouteCollection routes, string name, string url, object defaults, object constraints)
         {
-            routes.MapLocalizedStorefrontRoute(name, url, defaults, defaults, x => new Route(x, new MvcRouteHandler()));
+            routes.MapLocalizedStorefrontRoute(name, url, defaults, constraints, x => new Route(x, new MvcRouteHandler()));
         }
 
         /// <summary>

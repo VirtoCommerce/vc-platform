@@ -10,7 +10,7 @@
 
   <div class="grid-item one-half medium-down--one-whole">
       <h4>{{ 'customer.edit_profile.title' | t }}</h4>
-      <form action="{{'/account/profile' | absolute_url}}" method="post">
+      <form action="{{'/account' | absolute_url}}" method="post">
       {% include 'form-errors-custom' %}
 
       <label for="first_name" class="hidden-label">{{ 'customer.edit_profile.first_name' | t }}</label>

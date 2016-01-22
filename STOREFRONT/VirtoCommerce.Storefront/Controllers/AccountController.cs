@@ -16,6 +16,9 @@ using VirtoCommerce.Storefront.Model.Common;
 using shopifyModel = VirtoCommerce.LiquidThemeEngine.Objects;
 using VirtoCommerce.Storefront.Model.Cart;
 using VirtoCommerce.Storefront.Model.Cart.Services;
+using CacheManager.Core;
+using VirtoCommerce.Storefront.Model.Customer.Services;
+using VirtoCommerce.Storefront.Model.Customer;
 
 namespace VirtoCommerce.Storefront.Controllers
 {
@@ -23,34 +26,57 @@ namespace VirtoCommerce.Storefront.Controllers
     public class AccountController : StorefrontControllerBase
     {
         private readonly ICommerceCoreModuleApi _commerceCoreApi;
-        private readonly ICustomerManagementModuleApi _customerApi;
         private readonly IAuthenticationManager _authenticationManager;
         private readonly IVirtoCommercePlatformApi _platformApi;
-        private readonly IOrderModuleApi _orderApi;
         private readonly ICartBuilder _cartBuilder;
+        private readonly ICacheManager<object> _cacheManager;
+        private readonly ICustomerService _customerService;
+        private readonly IOrderModuleApi _orderApi;
 
         public AccountController(WorkContext workContext, IStorefrontUrlBuilder urlBuilder, ICommerceCoreModuleApi commerceCoreApi,
-            ICustomerManagementModuleApi customerApi, IAuthenticationManager authenticationManager, IVirtoCommercePlatformApi platformApi,
-            IOrderModuleApi orderApi, ICartBuilder cartBuilder)
+            IAuthenticationManager authenticationManager, IVirtoCommercePlatformApi platformApi,
+            ICartBuilder cartBuilder, ICustomerService customerService, IOrderModuleApi orderApi,  ICacheManager<object> cacheManager)
             : base(workContext, urlBuilder)
         {
             _commerceCoreApi = commerceCoreApi;
-            _customerApi = customerApi;
+            _customerService = customerService;
             _authenticationManager = authenticationManager;
             _platformApi = platformApi;
-            _orderApi = orderApi;
             _cartBuilder = cartBuilder;
+            _cacheManager = cacheManager;
+            _orderApi = orderApi;
         }
 
+        //GET: /account
         [HttpGet]
-        public async Task<ActionResult> Index(int page = 1)
+        public ActionResult GetAccount()
         {
-            if (page < 1)
-                page = 1;
+            //Customer should be already populated in WorkContext middleware
+            return View("customers/account", WorkContext);
+        }
 
-            var ordersResponse = await _orderApi.OrderModuleSearchAsync(criteriaCustomerId: WorkContext.CurrentCustomer.Id, criteriaResponseGroup: "full");
-            WorkContext.CurrentCustomer.OrdersCount = ordersResponse.TotalCount.Value;
-            WorkContext.CurrentCustomer.Orders = ordersResponse.CustomerOrders.Select(o => o.ToWebModel(WorkContext.AllCurrencies, WorkContext.CurrentLanguage)).ToList();
+
+        //POST: /account
+        [HttpPost]
+        public async Task<ActionResult> UpdateAccount(CustomerInfo customer)
+        {
+            customer.Id = WorkContext.CurrentCustomer.Id;
+
+            var fullName = string.Join(" ", customer.FirstName, customer.LastName).Trim();
+
+            if (string.IsNullOrEmpty(fullName))
+            {
+                fullName = customer.Email;
+            }
+
+            if (!string.IsNullOrWhiteSpace(fullName))
+            {
+                customer.Name = fullName;
+            }
+
+            await _customerService.UpdateCustomerAsync(customer);
+
+            WorkContext.CurrentCustomer = await _customerService.GetCustomerByIdAsync(customer.Id);
             return View("customers/account", WorkContext);
         }
 
@@ -77,7 +103,7 @@ namespace VirtoCommerce.Storefront.Controllers
         [HttpPost]
         public async Task<ActionResult> UpdateAddress(string id, shopifyModel.Address formModel)
         {
-            var contact = await _customerApi.CustomerModuleGetContactByIdAsync(WorkContext.CurrentCustomer.Id);
+            var contact = WorkContext.CurrentCustomer;
             var updateContact = false;
 
             if (contact != null)
@@ -85,7 +111,7 @@ namespace VirtoCommerce.Storefront.Controllers
                 if (string.IsNullOrEmpty(id))
                 {
                     // Add new address
-                    contact.Addresses.Add(formModel.ToServiceModel(WorkContext.AllCountries));
+                    contact.Addresses.Add(formModel.ToWebModel(WorkContext.AllCountries));
                     updateContact = true;
                 }
                 else
@@ -98,13 +124,13 @@ namespace VirtoCommerce.Storefront.Controllers
                             if (string.Equals(formModel.Method, "delete", StringComparison.OrdinalIgnoreCase))
                             {
                                 // Delete address
-                                contact.Addresses.RemoveAt(addressIndex - 1);
+                                ((List<Address>)contact.Addresses).RemoveAt(addressIndex - 1);
                                 updateContact = true;
                             }
                             else
                             {
                                 // Update address
-                                contact.Addresses[addressIndex].CopyFrom(formModel, WorkContext.AllCountries);
+                                ((List<Address>)contact.Addresses)[addressIndex].CopyFrom(formModel, WorkContext.AllCountries);
                                 updateContact = true;
                             }
                         }
@@ -113,7 +139,7 @@ namespace VirtoCommerce.Storefront.Controllers
 
                 if (updateContact)
                 {
-                    await _customerApi.CustomerModuleUpdateContactAsync(contact);
+                    await _customerService.UpdateCustomerAsync(contact);
                 }
             }
 
@@ -139,33 +165,26 @@ namespace VirtoCommerce.Storefront.Controllers
                 Password = formModel.Password,
                 UserName = formModel.Email,
             };
-
+            //Register user in VC Platform (create security account)
             var result = await _commerceCoreApi.StorefrontSecurityCreateAsync(user);
 
             if (result.Succeeded == true)
             {
+                //Load newly created account from API
                 user = await _commerceCoreApi.StorefrontSecurityGetUserByNameAsync(user.UserName);
 
-                var contact = new VirtoCommerceCustomerModuleWebModelContact
-                {
-                    Id = user.Id,
-                    Emails = new List<string> { formModel.Email },
-                    FullName = string.Join(" ", formModel.FirstName, formModel.LastName),
-                };
-
-                if (string.IsNullOrEmpty(contact.FullName))
-                {
-                    contact.FullName = formModel.Email;
-                }
-
-                contact = await _customerApi.CustomerModuleCreateContactAsync(contact);
+                //Next need create corresponding Customer contact in VC Customers (CRM) module
+                //Contacts and account has a same Id.
+                var contact = formModel.ToWebModel();
+                contact.Id = user.Id;
+                await _customerService.CreateCustomerAsync(contact);
 
                 await _commerceCoreApi.StorefrontSecurityPasswordSignInAsync(formModel.Email, formModel.Password);
 
-                var identity = CreateClaimsIdentity(formModel.Email);
+                var identity = CreateClaimsIdentity(formModel.Email, user.Id);
                 _authenticationManager.SignIn(identity);
 
-                await MergeShoppingCartsAsync(formModel.Email, anonymousShoppingCart);
+                await MergeShoppingCartsAsync(contact, anonymousShoppingCart);
 
                 return StoreFrontRedirect("~/account");
             }
@@ -202,9 +221,11 @@ namespace VirtoCommerce.Storefront.Controllers
             switch (loginResult.Status)
             {
                 case "success":
-                    var identity = CreateClaimsIdentity(formModel.Email);
+                    var user = await _platformApi.SecurityGetUserByNameAsync(formModel.Email);
+                    var customer = await _customerService.GetCustomerByIdAsync(user.Id);
+                    var identity = CreateClaimsIdentity(formModel.Email, user.Id);
                     _authenticationManager.SignIn(identity);
-                    await MergeShoppingCartsAsync(formModel.Email, anonymousShoppingCart);
+                    await MergeShoppingCartsAsync(customer, anonymousShoppingCart);
                     return StoreFrontRedirect(returnUrl);
                 case "lockedOut":
                     return View("lockedout", WorkContext);
@@ -307,35 +328,6 @@ namespace VirtoCommerce.Storefront.Controllers
             return View("customers/reset_password", WorkContext);
         }
 
-        [HttpPost]
-        public async Task<ActionResult> UpdateProfile(Profile formModel)
-        {
-            var contact = new VirtoCommerceCustomerModuleWebModelContact
-            {
-                Id = WorkContext.CurrentCustomer.Id
-            };
-
-            var fullName = string.Join(" ", formModel.FirstName, formModel.LastName).Trim();
-
-            if (string.IsNullOrEmpty(fullName))
-            {
-                fullName = formModel.Email;
-            }
-
-            if (!string.IsNullOrWhiteSpace(fullName))
-            {
-                contact.FullName = fullName;
-            }
-
-            if (!string.IsNullOrWhiteSpace(formModel.Email))
-            {
-                contact.Emails = new List<string> { formModel.Email };
-            }
-
-            await _customerApi.CustomerModuleUpdateContactAsync(contact);
-
-            return View("customers/account", WorkContext);
-        }
 
         [HttpPost]
         public async Task<ActionResult> ChangePassword(ChangePassword formModel)
@@ -367,26 +359,21 @@ namespace VirtoCommerce.Storefront.Controllers
             return Json(WorkContext.CurrentCustomer, JsonRequestBehavior.AllowGet);
         }
 
-        private async Task MergeShoppingCartsAsync(string username, ShoppingCart anonymousShoppingCart)
+        private async Task MergeShoppingCartsAsync(CustomerInfo customer, ShoppingCart anonymousShoppingCart)
         {
             if (anonymousShoppingCart.ItemsCount > 0)
             {
-                var user = await _commerceCoreApi.StorefrontSecurityGetUserByNameAsync(username);
-                if (user != null)
-                {
-                    var customer = await _customerApi.CustomerModuleGetContactByIdAsync(user.Id);
-
-                    await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, customer.ToWebModel(username), WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
-                    await _cartBuilder.MergeWithCartAsync(anonymousShoppingCart);
-                    await _cartBuilder.SaveAsync();
-                }
+                await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, customer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
+                await _cartBuilder.MergeWithCartAsync(anonymousShoppingCart);
+                await _cartBuilder.SaveAsync();
             }
         }
 
-        private ClaimsIdentity CreateClaimsIdentity(string userName)
+        private ClaimsIdentity CreateClaimsIdentity(string userName, string userId)
         {
             var claims = new List<Claim>();
             claims.Add(new Claim(ClaimTypes.Name, userName));
+            claims.Add(new Claim(ClaimTypes.Sid, userId));
 
             var identity = new ClaimsIdentity(claims, Microsoft.AspNet.Identity.DefaultAuthenticationTypes.ApplicationCookie);
 
