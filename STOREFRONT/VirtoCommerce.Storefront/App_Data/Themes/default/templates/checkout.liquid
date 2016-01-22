@@ -48,7 +48,7 @@
                             <div class="field--half field field--required" ng-class="{ 'field--show-floating-label': checkout.shippingAddress.FirstName.length, 'field--error': formCustomerInformation.FirstName.$dirty && formCustomerInformation.FirstName.$error.required }">
                                 <div class="field__input-wrapper">
                                     <label class="field__label" for="FirstName">{{ 'checkout.address.first_name' | t }}</label>
-                                    <input class="field__input" id="FirstName" name="FirstName" placeholder="{{ 'checkout.address.first_name' | t }}" required="required" size="30" type="text" ng-model="checkout.shippingAddress.FirstName || customer.FirstName" ng-disabled="checkout.customerInformationProcessing" />
+                                    <input class="field__input" id="FirstName" name="FirstName" placeholder="{{ 'checkout.address.first_name' | t }}" required="required" size="30" type="text" ng-model="checkout.shippingAddress.FirstName" ng-disabled="checkout.customerInformationProcessing" />
                                 </div>
                                 <p class="field__message field__message--error" ng-if="formCustomerInformation.FirstName.$dirty && formCustomerInformation.FirstName.$error.required">
                                     {{ 'checkout.first_name_required_message' | t }}
@@ -57,7 +57,7 @@
                             <div class="field--half field field--required" ng-class="{ 'field--show-floating-label': checkout.shippingAddress.LastName.length, 'field--error': formCustomerInformation.LastName.$dirty && formCustomerInformation.LastName.$error.required }">
                                 <div class="field__input-wrapper">
                                     <label class="field__label" for="LastName">{{ 'checkout.address.last_name' | t }}</label>
-                                    <input class="field__input" id="LastName" name="LastName" placeholder="{{ 'checkout.address.last_name' | t }}" required="required" size="30" type="text" ng-model="checkout.shippingAddress.LastName || customer.LastName" ng-disabled="checkout.customerInformationProcessing" />
+                                    <input class="field__input" id="LastName" name="LastName" placeholder="{{ 'checkout.address.last_name' | t }}" required="required" size="30" type="text" ng-model="checkout.shippingAddress.LastName" ng-disabled="checkout.customerInformationProcessing" />
                                 </div>
                                 <p class="field__message field__message--error" ng-if="formCustomerInformation.LastName.$dirty && formCustomerInformation.LastName.$error.required">
                                     {{ 'checkout.last_name_required_message' | t }}

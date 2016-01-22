@@ -109,7 +109,10 @@ storefrontApp.controller('checkoutController', ['$scope', '$location', '$window'
 
     function getCurrentCustomer() {
         customerService.getCurrentCustomer().then(function (response) {
+            var customer = response.data;
             $scope.customer = response.data;
+            $scope.checkout.shippingAddress.FirstName = customer.FirstName;
+            $scope.checkout.shippingAddress.LastName = customer.LastName;
             for (var i = 0; i < $scope.customer.Addresses.length; i++) {
                 $scope.customer.Addresses[i].Id = i + 1;
                 $scope.customer.Addresses[i].StringifiedAddress = stringifyAddress($scope.customer.Addresses[i]);
