@@ -215,7 +215,7 @@
                 blade.setSelectedItem(listItem);
                 var newBlade;
                 if (listItem.type === 'category') {
-                    var openNewBlade = e.ctrlKey || filter.keyword;
+                    var openNewBlade = e.ctrlKey || filter.keyword || filter.current;
                     newBlade = {
                         id: 'itemsList' + (blade.level + (openNewBlade ? 1 : 0)),
                         level: blade.level + (openNewBlade ? 1 : 0),
@@ -511,12 +511,15 @@
                     showFilterDetailBlade({ isNew: true });
                 } else {
                     bladeNavigationService.closeBlade({ id: 'filterDetail' });
+                    filter.criteriaChanged();
+                }
+            };
 
-                    if ($scope.pageSettings.currentPage > 1) {
-                        $scope.pageSettings.currentPage = 1;
-                    } else {
-                        blade.refresh();
-                    }
+            filter.criteriaChanged = function () {
+                if ($scope.pageSettings.currentPage > 1) {
+                    $scope.pageSettings.currentPage = 1;
+                } else {
+                    blade.refresh();
                 }
             };
 
@@ -543,7 +546,7 @@
                     });
 
                     if ($scope.gridApi) {
-                        if (filter.keyword) {
+                        if (filter.keyword || filter.current) {
                             //groupingColumn.visible = true;
                             if (!_.any($scope.gridApi.grouping.getGrouping().grouping)) {
                                 $scope.gridApi.grouping.groupColumn('$path');
@@ -565,7 +568,7 @@
                 uiGridHelper.initialize($scope, gridOptions, function (gridApi) {
                     //groupingColumn = _.findWhere($scope.gridOptions.columnDefs, { name: '$path' });
 
-                    if (filter.keyword) {
+                    if (filter.keyword || filter.current) {
                         $timeout(function () {
                             gridApi.grouping.groupColumn('$path');
                             $timeout(gridApi.treeBase.expandAllRows);

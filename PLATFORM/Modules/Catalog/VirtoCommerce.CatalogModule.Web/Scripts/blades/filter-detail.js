@@ -15,18 +15,19 @@
 
         $scope.saveChanges = function () {
             if (blade.isNew) {
-                // angular.copy(blade.currentEntity, blade.origEntity);
                 $localStorage.catalogSearchFilters.push(blade.currentEntity);
+                $localStorage.catalogSearchFilterId = blade.currentEntity.id;
                 blade.parentBlade.filter.current = blade.currentEntity;
+                blade.isNew = false;
             } else {
                 angular.copy(blade.currentEntity, blade.origEntity);
             }
-            $scope.bladeClose();
-            blade.parentBlade.refresh();
+            blade.parentBlade.filter.criteriaChanged();
+            // $scope.bladeClose();
         };
 
         function initializeBlade(data) {
-            if (blade.isNew) data = { id: new Date().getTime() };
+            if (blade.isNew) data = { id: new Date().getTime(), name: 'Unnamed filter' };
 
             blade.currentEntity = angular.copy(data);
             blade.origEntity = data;
@@ -51,38 +52,29 @@
                 {
                     name: "catalog.commands.apply-filter", icon: 'fa fa-filter',
                     executeMethod: function () {
-                        blade.parentBlade.filter.current = blade.currentEntity;
-                        blade.parentBlade.refresh();
+                        $scope.saveChanges();
                     },
-                    canExecuteMethod: function () { return true; }
+                    canExecuteMethod: function () {
+                        return formScope && formScope.$valid;
+                    }
+                },
+                {
+                    name: "platform.commands.reset", icon: 'fa fa-undo',
+                    executeMethod: function () {
+                        angular.copy(blade.origEntity, blade.currentEntity);
+                    },
+                    canExecuteMethod: function () {
+                        return isDirty();
+                    }
+                },
+                {
+                    name: "platform.commands.delete", icon: 'fa fa-trash-o',
+                    executeMethod: deleteEntry,
+                    canExecuteMethod: function () {
+                        return true;
+                    }
                 }];
 
-        if (!blade.isNew)
-            blade.toolbarCommands.splice(1, 0, {
-                name: "platform.commands.save", icon: 'fa fa-save',
-                executeMethod: function () {
-                    $scope.saveChanges();
-                },
-                canExecuteMethod: function () {
-                    return isDirty() && formScope && formScope.$valid;
-                }
-            },
-            {
-                name: "platform.commands.reset", icon: 'fa fa-undo',
-                executeMethod: function () {
-                    angular.copy(blade.origEntity, blade.currentEntity);
-                },
-                canExecuteMethod: function () {
-                    return isDirty();
-                }
-            },
-            {
-                name: "platform.commands.delete", icon: 'fa fa-trash-o',
-                executeMethod: deleteEntry,
-                canExecuteMethod: function () {
-                    return true;
-                }
-            });
 
         function deleteEntry() {
             //var dialog = {
@@ -102,26 +94,6 @@
             //}
             //dialogService.showConfirmationDialog(dialog);
         }
-
-        //blade.onClose = function (closeCallback) {
-        //    if (isDirty()) {
-        //        var dialog = {
-        //            id: "confirmItemChange",
-        //            title: "-save.title",
-        //            message: "-save.message",
-        //            callback: function (needSave) {
-        //                if (needSave) {
-        //                    $scope.saveChanges();
-        //                }
-        //                closeCallback();
-        //            }
-        //        };
-        //        dialogService.showConfirmationDialog(dialog);
-        //    }
-        //    else {
-        //        closeCallback();
-        //    }
-        //};
 
         // actions on load        
         initializeBlade(blade.data);
