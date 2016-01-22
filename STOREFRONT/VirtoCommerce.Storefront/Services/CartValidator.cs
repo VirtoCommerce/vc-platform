@@ -36,6 +36,7 @@ namespace VirtoCommerce.Storefront.Services
             {
                 return;
             }
+
             await Task.WhenAll(ValidateItemsAsync(cart), ValidateShipmentsAsync(cart));
         }
 

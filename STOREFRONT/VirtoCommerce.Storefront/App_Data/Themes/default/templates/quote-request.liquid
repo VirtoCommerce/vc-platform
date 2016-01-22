@@ -1,0 +1,65 @@
+﻿<div class="cart-row" ng-if="errorOccured">
+    <div class="note form-error">
+        <p style="font-weight: 600; margin-bottom: 20px;">Error occured!</p>
+        <p ng-bind="errorMessage" style="margin-bottom: 20px;"></p>
+        <p>
+            <a href="" style="color: #204a80; font-weight: 600;" ng-click="toggleErrorDetails(errorDetailsVisible)" ng-if="!errorDetailsVisible">
+                <i class="fa fa-angle-down"></i>
+                Show error full information
+            </a>
+            <a href="" style="color: #204a80; font-weight: 600;" ng-click="toggleErrorDetails(errorDetailsVisible)" ng-if="errorDetailsVisible">
+                <i class="fa fa-angle-up"></i>
+                Hide error full information
+            </a>
+        </p>
+        <p ng-bind="errorDetails" ng-show="errorDetailsVisible"></p>
+    </div>
+</div>
+
+<span ng-if="cart.ItemsCount == 0">
+    <h2>Quote request has no any items</h2>
+    <p>{{ 'cart.general.continue_browsing_html' | t }}</p>
+</span>
+
+<form name="formCart" novalidate="novalidate" ng-show="quoteRequest.ItemsCount > 0">
+    <div class="ajax-informer" ng-class="{ 'fade': quoteRequestIsUpdating }">
+        <div class="loader"></div>
+        <span>Updating quote request</span>
+    </div>
+    <h1 class="h2">Quote request</h1>
+    <div class="cart-row" ng-repeat="quoteItem in quoteRequest.Items">
+        <div class="grid">
+            <div class="grid-item large--seven-twelfths">
+                <div class="grid">
+                    <div class="grid-item one-third large--one-quarter">
+                        <span class="cart-image">
+                            <img ng-src="{( quoteItem.ImageUrl )}" />
+                        </span>
+                    </div>
+                    <div class="grid-item two-thirds large--three-quarters">
+                        <span ng-bind="quoteItem.Name"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="grid-item large--five-twelfths medium--two-thirds push--medium--one-third">
+                <div class="grid">
+                    <div class="grid-item one-half medium-down--one-third" style="text-align: center;">
+                        <div class="js-qty">
+                        </div>
+                    </div>
+                    <div class="grid-item one-third medium-down--one-third medium-down--text-left text-right">
+                        <span class="h2">
+                            <small></small>
+                        </span>
+                    </div>
+                    <div class="grid-item one-sixth medium-down--one-third text-right">
+                        <a class="icon-fallback-text btn-secondary remove" href="" ng-click="removeQuoteItem(quoteItem.Id)">
+                            <span class="icon icon-x" aria-hidden="true"></span>
+                            <span class="fallback-text">{{ 'cart.general.remove' | t }}</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

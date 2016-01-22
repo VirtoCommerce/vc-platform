@@ -88,7 +88,18 @@ namespace VirtoCommerce.Storefront.Model
 
         public ICollection<SeoInfo> SeoInfos { get; set; }
 
-        public bool QuotesEnabled { get; set; }
+        public bool QuotesEnabled
+        {
+            get
+            {
+                bool isEnabled = false;
+
+                var dynamicPropertyValue = DynamicProperties.GetDynamicPropertyValue("EnableQuotes");
+                bool.TryParse(dynamicPropertyValue, out isEnabled);
+
+                return isEnabled;
+            }
+        }
 
         //Need sync store currencies with system avail currencies for specific language
         public void SyncCurrencies(IEnumerable<Currency> availCurrencies, Language language)

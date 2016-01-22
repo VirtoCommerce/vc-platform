@@ -219,5 +219,8 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         /// </summary>
         [DataMember]
         public string Vendor { get; set; }
+
+        [DataMember]
+        public bool IsQuotable { get; set; }
     }
 }

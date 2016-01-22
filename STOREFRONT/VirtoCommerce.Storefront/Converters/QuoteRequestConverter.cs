@@ -73,6 +73,29 @@ namespace VirtoCommerce.Storefront.Converters
         {
             var serviceModel = new VirtoCommerceQuoteModuleWebModelQuoteRequest();
 
+            serviceModel.InjectFrom<NullableAndEnumValueInjecter>(webModel);
+
+            serviceModel.Currency = webModel.Currency.Code;
+            serviceModel.Addresses = webModel.Addresses.Select(a => a.ToQuoteServiceModel()).ToList();
+            serviceModel.Attachments = webModel.Attachments.Select(a => a.ToQuoteServiceModel()).ToList();
+            serviceModel.DynamicProperties = webModel.DynamicProperties.Select(dp => dp.ToServiceModel()).ToList();
+            serviceModel.Items = webModel.Items.Select(i => i.ToQuoteServiceModel()).ToList();
+            serviceModel.LanguageCode = webModel.Language.CultureName;
+            serviceModel.ManualRelDiscountAmount = webModel.ManualRelDiscountAmount != null ? (double?)webModel.ManualRelDiscountAmount.Amount : null;
+            serviceModel.ManualShippingTotal = webModel.ManualShippingTotal != null ? (double?)webModel.ManualShippingTotal.Amount : null;
+            serviceModel.ManualSubTotal = webModel.ManualSubTotal != null ? (double?)webModel.ManualSubTotal.Amount : null;
+            serviceModel.TaxDetails = webModel.TaxDetails.Select(td => td.ToServiceModel()).ToList();
+
+            if (webModel.Coupon != null && webModel.Coupon.AppliedSuccessfully)
+            {
+                serviceModel.Coupon = webModel.Coupon.Code;
+            }
+
+            if (webModel.Totals != null)
+            {
+                serviceModel.Totals = webModel.Totals.ToServiceModel();
+            }
+
             return serviceModel;
         }
     }

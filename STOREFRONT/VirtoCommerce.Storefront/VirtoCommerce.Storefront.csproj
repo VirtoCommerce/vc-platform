@@ -309,6 +309,7 @@
     <Content Include="App_Data\Themes\default\assets\storefrontDirectives.js" />
     <Content Include="App_Data\Themes\default\assets\storefrontMainController.js" />
     <Content Include="App_Data\Themes\default\assets\storefrontProductController.js" />
+    <Content Include="App_Data\Themes\default\assets\storefrontQuoteRequestController.js" />
     <Content Include="App_Data\Themes\default\assets\storefrontServices.js" />
     <Content Include="App_Data\Themes\default\assets\thumbs-bar.gif" />
     <Content Include="App_Data\Themes\default\assets\unionpay.svg" />
@@ -320,6 +321,7 @@
     <Content Include="App_Data\Themes\default\snippets\cart-modal.liquid" />
     <Content Include="App_Data\Themes\default\social\shopify-social.svg" />
     <Content Include="App_Data\Themes\default\social\social-icons.css" />
+    <None Include="App_Data\Themes\default\templates\quote-request.liquid" />
     <Content Include="App_Data\x64\LibSass.x64.dll" />
     <Content Include="App_Data\x64\libsassnet.dll" />
     <Content Include="App_Data\x86\LibSass.x86.dll" />
@@ -415,6 +417,7 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\Themes\default\snippets\quote-modal.liquid" />
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -522,8 +525,6 @@
     <Content Include="App_Data\Themes\default\templates\customers\reset_password_confirmation.liquid" />
     <Content Include="App_Data\Themes\default\templates\payment-form.liquid" />
     <Content Include="App_Data\Themes\default\templates\product.liquid" />
-    <Content Include="App_Data\Themes\default\templates\quote.liquid" />
-    <Content Include="App_Data\Themes\default\templates\quotes.liquid" />
     <Content Include="App_Data\Themes\default\templates\reset-password.liquid" />
     <Content Include="App_Data\Themes\default\templates\search.liquid" />
     <Content Include="App_Data\Themes\default\templates\send-code.liquid" />

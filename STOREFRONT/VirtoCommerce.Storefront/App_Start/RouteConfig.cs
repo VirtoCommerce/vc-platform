@@ -65,6 +65,11 @@ namespace VirtoCommerce.Storefront
             routes.MapLocalizedStorefrontRoute("ShopifyCart.ClearJs", "cart/clear.js", defaults: new { controller = "ShopifyCompatibility", action = "ClearJs" });
             routes.MapLocalizedStorefrontRoute("ShopifyCart.UpdateJs", "cart/update.js", defaults: new { controller = "ShopifyCompatibility", action = "UpdateJs" });
 
+            // QuoteRequest
+            routes.MapLocalizedStorefrontRoute("QuoteRequest.Index", "quoterequest", defaults: new { controller = "QuoteRequest", action = "Index" });
+            routes.MapLocalizedStorefrontRoute("QuoteRequest.Json", "quoterequest/json", defaults: new { controller = "QuoteRequest", action = "QuoteRequestJson" });
+            routes.MapLocalizedStorefrontRoute("QuoteRequest.AddItem", "quoterequest/additem", defaults: new { controller = "QuoteRequest", action = "AddItemJson" });
+
             //CatalogSearch
             routes.MapLocalizedStorefrontRoute("CatalogSearch.CategoryBrowsing", "search/{categoryId}", defaults: new { controller = "CatalogSearch", action = "CategoryBrowsing" });
             routes.MapLocalizedStorefrontRoute("CatalogSearch.SearchProducts", "search", defaults: new { controller = "CatalogSearch", action = "SearchProducts" });

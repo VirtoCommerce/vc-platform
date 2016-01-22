@@ -49,16 +49,16 @@ namespace VirtoCommerce.Storefront.Controllers
             return Json(_quoteRequestBuilder.QuoteRequest, JsonRequestBehavior.AllowGet);
         }
 
-        // POST: /quoterequest/additem?productId=...
+        // POST: /quoterequest/additem?productId=...&quantity=...
         [HttpPost]
-        public async Task<ActionResult> AddItemJson(string productId)
+        public async Task<ActionResult> AddItemJson(string productId, long quantity)
         {
             var products = await _catalogSearchService.GetProductsAsync(new string[] { productId }, ItemResponseGroup.ItemLarge);
             if (products != null && products.Any())
             {
                 await _quoteRequestBuilder.GetOrCreateNewTransientQuoteRequestAsync(_store, _customer, _language, _currency);
 
-                _quoteRequestBuilder.AddItem(products.First());
+                _quoteRequestBuilder.AddItem(products.First(), quantity);
                 await _quoteRequestBuilder.SaveAsync();
             }
 
