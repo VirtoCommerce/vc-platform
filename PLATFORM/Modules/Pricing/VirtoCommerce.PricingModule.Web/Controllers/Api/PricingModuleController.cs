@@ -177,14 +177,18 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
         [Route("api/products/{productId}/prices")]
         public IHttpActionResult GetProductPrices(string productId)
         {
-            var prices = _pricingService.EvaluateProductPrices(new coreModel.PriceEvaluationContext { ProductIds = new[] { productId } });
-            if (prices != null)
+            var product = _itemService.GetById(productId, Domain.Catalog.Model.ItemResponseGroup.ItemInfo);
+            if (product != null)
             {
-                var result = prices.GroupBy(x => x.Currency)
-                    .Select(x => x.First().ToWebModel())
-                    .ToArray();
+                var prices = _pricingService.EvaluateProductPrices(new coreModel.PriceEvaluationContext { CatalogId = product.CatalogId, ProductIds = new[] { productId } });
+                if (prices != null)
+                {
+                    var result = prices.GroupBy(x => x.Currency)
+                        .Select(x => x.First().ToWebModel())
+                        .ToArray();
 
-                return Ok(result);
+                    return Ok(result);
+                }
             }
             return NotFound();
         }
