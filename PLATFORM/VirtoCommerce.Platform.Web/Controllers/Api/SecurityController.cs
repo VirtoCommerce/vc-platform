@@ -51,7 +51,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         {
             if (await _signInManagerFactory().PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, true) == SignInStatus.Success)
             {
-                return Ok(await _securityService.FindByNameAsync(model.UserName, UserDetails.Full));
+                var retVal = await _securityService.FindByNameAsync(model.UserName, UserDetails.Full);
+                //Do not allow login to admin customers and rejected users
+                if (retVal.UserState != AccountState.Rejected && !String.Equals(retVal.UserType, AccountType.Customer.ToString(), StringComparison.InvariantCultureIgnoreCase))
+                {
+                    return Ok(retVal);
+                }
             }
 
             return StatusCode(HttpStatusCode.Unauthorized);

@@ -121,7 +121,16 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 
             var status = await SignInManager.PasswordSignInAsync(userName, password, false, shouldLockout: true);
             var result = new SignInResult { Status = status };
+            if(result.Status == Microsoft.AspNet.Identity.Owin.SignInStatus.Success)
+            {
+                var user = await _securityService.FindByNameAsync(userName, UserDetails.Full);
+                //Do not allow login rejected users
+                if(user != null && user.UserState == AccountState.Rejected)
+                {
+                    result.Status = Microsoft.AspNet.Identity.Owin.SignInStatus.LockedOut;
+                }
 
+            }
             return Ok(result);
         }
 
