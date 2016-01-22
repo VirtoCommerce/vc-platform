@@ -6,6 +6,6 @@ namespace VirtoCommerce.Storefront.Model
     {
         public Money Price { get; set; }
 
-        public int Quantity { get; set; }
+        public long Quantity { get; set; }
     }
 }

@@ -81,3 +81,14 @@ storefrontApp.service('cartService', ['$http', function ($http) {
         }
     }
 }]);
+
+storefrontApp.service('quoteRequestService', ['$http', function ($http) {
+    return {
+        getCurrentQuoteRequest: function () {
+            return $http.get('quoterequest/json?t=' + new Date().getTime());
+        },
+        addItem: function (productId, quantity) {
+            return $http.post('quoterequest/additem', { productId: productId, quantity: quantity });
+        }
+    }
+}]);

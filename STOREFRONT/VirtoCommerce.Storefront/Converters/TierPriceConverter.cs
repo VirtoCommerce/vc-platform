@@ -17,5 +17,16 @@ namespace VirtoCommerce.Storefront.Converters
 
             return webModel;
         }
+
+        public static VirtoCommerceQuoteModuleWebModelTierPrice ToQuoteServiceModel(this TierPrice webModel)
+        {
+            var serviceModel = new VirtoCommerceQuoteModuleWebModelTierPrice();
+
+            serviceModel.InjectFrom<NullableAndEnumValueInjecter>(webModel);
+
+            serviceModel.Price = (double)webModel.Price.Amount;
+
+            return serviceModel;
+        }
     }
 }

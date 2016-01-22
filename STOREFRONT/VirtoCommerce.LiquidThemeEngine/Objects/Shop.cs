@@ -89,6 +89,9 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         [DataMember]
         public string Catalog { get; set; }
 
+        [DataMember]
+        public bool QuotesEnabled { get; set; }
+
         /// <summary>
         /// Shop metafields
         /// </summary>

@@ -55,7 +55,7 @@ namespace VirtoCommerce.Storefront.Builders
                     criteriaStoreId: _store.Id,
                     criteriaTag: "actual");
 
-                if (searchResult == null && searchResult.QuoteRequests != null)
+                if (searchResult == null || searchResult.QuoteRequests == null || searchResult.TotalCount == 0)
                 {
                     quoteRequest = CreateNewTransientQuoteRequest();
                 }
@@ -75,9 +75,9 @@ namespace VirtoCommerce.Storefront.Builders
             return this;
         }
 
-        public IQuoteRequestBuilder AddItem(Product product)
+        public IQuoteRequestBuilder AddItem(Product product, long quantity)
         {
-            _quoteRequest.Items.Add(product.ToQuoteItem());
+            _quoteRequest.Items.Add(product.ToQuoteItem(quantity));
 
             return this;
         }
@@ -129,7 +129,9 @@ namespace VirtoCommerce.Storefront.Builders
             quoteRequest.Currency = _currency;
             quoteRequest.CustomerId = _customer.Id;
             quoteRequest.Language = _language;
+            quoteRequest.Status = "Processing";
             quoteRequest.StoreId = _store.Id;
+            quoteRequest.Tag = "actual";
 
             if (_customer.UserName.Equals(StorefrontConstants.AnonymousUsername, StringComparison.OrdinalIgnoreCase))
             {

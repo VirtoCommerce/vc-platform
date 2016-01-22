@@ -227,6 +227,14 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         /// </summary>
         public ICollection<Image> Images { get; set; }
 
+        public bool IsQuotable
+        {
+            get
+            {
+                return true;
+            }
+        }
+
         public ICollection<Discount> Discounts { get; }
 
         public Currency Currency { get; set; }

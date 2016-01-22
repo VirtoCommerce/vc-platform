@@ -8,7 +8,7 @@ namespace VirtoCommerce.Storefront.Model.Quote.Services
     {
         Task<IQuoteRequestBuilder> GetOrCreateNewTransientQuoteRequestAsync(Store store, Customer customer, Language language, Currency currency);
 
-        IQuoteRequestBuilder AddItem(Product product);
+        IQuoteRequestBuilder AddItem(Product product, long quantity);
 
         IQuoteRequestBuilder RemoveItem(string quoteItemId);
 

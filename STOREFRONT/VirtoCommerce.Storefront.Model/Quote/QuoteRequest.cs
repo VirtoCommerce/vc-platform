@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Marketing;
 
@@ -91,5 +92,21 @@ namespace VirtoCommerce.Storefront.Model.Quote
         public string CreatedBy { get; set; }
 
         public string ModifiedBy { get; set; }
+
+        public QuoteItem RecentlyAddedItem
+        {
+            get
+            {
+                return Items.OrderByDescending(i => i.CreatedDate).FirstOrDefault();
+            }
+        }
+
+        public int ItemsCount
+        {
+            get
+            {
+                return Items.Count;
+            }
+        }
     }
 }

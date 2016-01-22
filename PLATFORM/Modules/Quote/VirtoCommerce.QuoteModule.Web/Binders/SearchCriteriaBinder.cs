@@ -24,11 +24,11 @@ namespace VirtoCommerce.QuoteModule.Web.Controllers.Api
 
 			var result = new coreModel.QuoteRequestSearchCriteria();
 
-			result.Keyword = qs["q"].EmptyToNull();
-            result.Status = qs["status"].EmptyToNull();
-            result.Tag = qs["tag"].EmptyToNull();	
-			result.StoreId = qs["site"].EmptyToNull();
-			result.CustomerId = qs["customer"].EmptyToNull();
+			result.Keyword = qs["q"].EmptyToNull() ?? qs["criteria.keyword"].EmptyToNull();
+            result.Status = qs["status"].EmptyToNull() ?? qs["criteria.status"].EmptyToNull();
+            result.Tag = qs["tag"].EmptyToNull() ?? qs["criteria.tag"].EmptyToNull();
+			result.StoreId = qs["site"].EmptyToNull() ?? qs["criteria.storeId"].EmptyToNull();
+			result.CustomerId = qs["customer"].EmptyToNull() ?? qs["criteria.customerId"].EmptyToNull();
 			result.Count = qs["count"].TryParse(20);
 			result.Start = qs["start"].TryParse(0);
 			bindingContext.Model = result;

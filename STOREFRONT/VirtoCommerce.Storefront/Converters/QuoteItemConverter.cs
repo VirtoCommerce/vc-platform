@@ -30,5 +30,24 @@ namespace VirtoCommerce.Storefront.Converters
 
             return webModel;
         }
+
+        public static VirtoCommerceQuoteModuleWebModelQuoteItem ToQuoteServiceModel(this QuoteItem webModel)
+        {
+            var serviceModel = new VirtoCommerceQuoteModuleWebModelQuoteItem();
+
+            serviceModel.InjectFrom<NullableAndEnumValueInjecter>(webModel);
+
+            serviceModel.Currency = webModel.Currency.Code;
+            serviceModel.ListPrice = (double)webModel.ListPrice.Amount;
+            serviceModel.ProposalPrices = webModel.ProposalPrices.Select(pp => pp.ToQuoteServiceModel()).ToList();
+            serviceModel.SalePrice = (double)webModel.SalePrice.Amount;
+
+            if (webModel.SelectedTierPrice != null)
+            {
+                serviceModel.SelectedTierPrice = webModel.SelectedTierPrice.ToQuoteServiceModel();
+            }
+
+            return serviceModel;
+        }
     }
 }

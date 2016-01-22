@@ -68,14 +68,23 @@ namespace VirtoCommerce.Storefront.Converters
             return retVal;
         }
 
-        public static QuoteItem ToQuoteItem(this Product product)
+        public static QuoteItem ToQuoteItem(this Product product, long quantity)
         {
             var quoteItem = new QuoteItem();
 
             quoteItem.InjectFrom<NullableAndEnumValueInjecter>(product);
 
+            quoteItem.Id = null;
+            quoteItem.ImageUrl = product.PrimaryImage.Url;
             quoteItem.ListPrice = product.Price.ListPrice;
+            quoteItem.ProductId = product.Id;
             quoteItem.SalePrice = product.Price.SalePrice;
+            quoteItem.ProposalPrices.Add(new TierPrice
+            {
+                Price = product.Price.ActualPrice,
+                Quantity = quantity
+            });
+            quoteItem.SelectedTierPrice = quoteItem.ProposalPrices.First();
 
             return quoteItem;
         }
