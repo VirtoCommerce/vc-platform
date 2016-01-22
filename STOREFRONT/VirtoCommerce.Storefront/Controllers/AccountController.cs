@@ -164,6 +164,7 @@ namespace VirtoCommerce.Storefront.Controllers
                 Email = formModel.Email,
                 Password = formModel.Password,
                 UserName = formModel.Email,
+                UserType = "Customer"
             };
             //Register user in VC Platform (create security account)
             var result = await _commerceCoreApi.StorefrontSecurityCreateAsync(user);
