@@ -119,7 +119,7 @@ namespace VirtoCommerce.CustomerModule.Web.ExportImport
 
         private SearchResult GetOrganizations(string organizationId)
         {
-            return _customerSearchService.Search(new SearchCriteria { Count = int.MaxValue, OrganizationId = organizationId });
+            return _customerSearchService.Search(new SearchCriteria { Take = int.MaxValue, OrganizationId = organizationId });
         }
 
         #endregion

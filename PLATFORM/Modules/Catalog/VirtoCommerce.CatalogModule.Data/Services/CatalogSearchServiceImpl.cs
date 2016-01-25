@@ -208,8 +208,8 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 				}
                 else if (!string.IsNullOrEmpty(criteria.Keyword))
 				{
-					query = query.Where(x => x.Name.Contains(criteria.Keyword) || x.Code.Contains(criteria.Keyword));
-				}
+                    query = query.Where(x => x.Name.Contains(criteria.Keyword) || x.Code.Contains(criteria.Keyword) || x.ItemPropertyValues.Any(y => y.ShortTextValue == criteria.Keyword));
+                }
             
 
                 //Filter by property dictionary values
