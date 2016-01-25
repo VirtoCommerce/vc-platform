@@ -181,7 +181,6 @@
     <Compile Include="ShopifyLiquidThemeEngine.cs" />
     <Compile Include="Tags\LayoutTag.cs" />
     <Compile Include="Tags\PaginateTag.cs" />
-    <Compile Include="ToStringJsonConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Blocks\" />
