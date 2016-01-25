@@ -83,30 +83,7 @@ namespace VirtoCommerce.Domain.Catalog.Model
         {
             get
             {
-                if(!String.IsNullOrEmpty(Sort))
-                {
-                    var retVal = new List<SortInfo>();
-                    var sortInfoStrings = Sort.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-                    foreach(var sortInfoString in sortInfoStrings)
-                    {
-                        var parts = sortInfoString.Split(new[] { ':', '-' }, StringSplitOptions.RemoveEmptyEntries);
-                        if(parts.Any())
-                        {
-                            var sortInfo = new SortInfo
-                            {
-                                SortColumn = parts[0],
-                                SortDirection = SortDirection.Ascending
-                            };
-                            if (parts.Count() > 1)
-                            {
-                                sortInfo.SortDirection = parts[1].StartsWith("desc", StringComparison.InvariantCultureIgnoreCase) ? SortDirection.Descending : SortDirection.Ascending;
-                            }
-                            retVal.Add(sortInfo);
-                        }
-                        return retVal.ToArray();
-                    }
-                }
-                return null;
+                return SortInfo.Parse(Sort).ToArray();
             }
         }
 

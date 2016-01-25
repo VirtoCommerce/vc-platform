@@ -23,6 +23,33 @@ namespace VirtoCommerce.Platform.Core.Common
 
     public sealed class SortInfo : IEquatable<SortInfo>
     {
+        public static IEnumerable<SortInfo> Parse(string sortExpr)
+        {
+            var retVal = new List<SortInfo>();
+            if (String.IsNullOrEmpty(sortExpr))
+                return retVal;
+
+            var sortInfoStrings = sortExpr.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var sortInfoString in sortInfoStrings)
+            {
+                var parts = sortInfoString.Split(new[] { ':', '-' }, StringSplitOptions.RemoveEmptyEntries);
+                if (parts.Any())
+                {
+                    var sortInfo = new SortInfo
+                    {
+                        SortColumn = parts[0],
+                        SortDirection = SortDirection.Ascending
+                    };
+                    if (parts.Count() > 1)
+                    {
+                        sortInfo.SortDirection = parts[1].StartsWith("desc", StringComparison.InvariantCultureIgnoreCase) ? SortDirection.Descending : SortDirection.Ascending;
+                    }
+                    retVal.Add(sortInfo);
+                }
+            }
+            return retVal;
+        }
+
         public string SortColumn { get; set; }
 
         public SortDirection SortDirection { get; set; }
