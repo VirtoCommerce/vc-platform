@@ -82,6 +82,8 @@
     <Compile Include="Catalog\TermExtensions.cs" />
     <Compile Include="Customer\Services\ICustomerService.cs" />
     <Compile Include="Quote\Services\IQuoteRequestBuilder.cs" />
+    <Compile Include="StorefrontNotification.cs" />
+    <Compile Include="StorefrontNotificationType.cs" />
     <Compile Include="TierPrice.cs" />
     <Compile Include="Common\AsyncLock.cs" />
     <Compile Include="Common\CacheManagerExtension.cs" />

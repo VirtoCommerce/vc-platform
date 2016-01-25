@@ -312,6 +312,7 @@
     <Content Include="App_Data\Themes\default\assets\storefrontQuoteRequestController.js" />
     <Content Include="App_Data\Themes\default\assets\storefrontServices.js" />
     <Content Include="App_Data\Themes\default\assets\thumbs-bar.gif" />
+    <Content Include="App_Data\Themes\default\assets\toastr.css" />
     <Content Include="App_Data\Themes\default\assets\unionpay.svg" />
     <Content Include="App_Data\Themes\default\assets\vc-big.png" />
     <Content Include="App_Data\Themes\default\assets\visa.svg" />
@@ -321,6 +322,7 @@
     <Content Include="App_Data\Themes\default\snippets\cart-modal.liquid" />
     <Content Include="App_Data\Themes\default\social\shopify-social.svg" />
     <Content Include="App_Data\Themes\default\social\social-icons.css" />
+    <Content Include="App_Data\Themes\default\snippets\notification.liquid" />
     <None Include="App_Data\Themes\default\templates\quote-request.liquid" />
     <Content Include="App_Data\x64\LibSass.x64.dll" />
     <Content Include="App_Data\x64\libsassnet.dll" />

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Web;
+﻿using System.Net;
 using System.Web.Mvc;
 
 namespace VirtoCommerce.Storefront.Controllers
@@ -21,6 +17,5 @@ namespace VirtoCommerce.Storefront.Controllers
 
             return View("404");
         }
-
     }
 }

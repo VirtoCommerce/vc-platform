@@ -88,6 +88,8 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         /// </summary>
         public string Template { get; set; }
 
+        public Notification Notification { get; set; }
+
         public Order Order { get; set; }
         #endregion
 

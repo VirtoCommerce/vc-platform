@@ -90,6 +90,13 @@
     "date_formats": {
         "month_day_year": "%b %d, %Y"
     },
+    "notification": {
+        "error_title": "Ooops! An error is occured!",
+        "error_message": "Please tell us technical details for this error and we will be better!",
+        "show_error_details_link_text": "Show me the technical details!",
+        "hide_error_details_link_text": "Hide the technical details",
+        "adding_to_cart_title": "Adding product to cart..."
+    },
     "general": {
         "meta": {
             "tags": "Tagged \"{{ tags }}\"",

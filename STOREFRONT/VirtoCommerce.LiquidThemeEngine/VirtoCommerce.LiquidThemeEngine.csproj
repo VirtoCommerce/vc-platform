@@ -114,6 +114,7 @@
     <Compile Include="Converters\LineItemConverter.cs" />
     <Compile Include="Converters\LinkListConverter.cs" />
     <Compile Include="Converters\LoginFormConverter.cs" />
+    <Compile Include="Converters\NotificationConverter.cs" />
     <Compile Include="Converters\OrderConverter.cs" />
     <Compile Include="Converters\PageConverter.cs" />
     <Compile Include="Converters\ProductConverter.cs" />
@@ -162,6 +163,7 @@
     <Compile Include="Objects\Linklist.cs" />
     <Compile Include="Objects\Linklists.cs" />
     <Compile Include="Objects\MetafieldsCollections.cs" />
+    <Compile Include="Objects\Notification.cs" />
     <Compile Include="Objects\Order.cs" />
     <Compile Include="Objects\Page.cs" />
     <Compile Include="Objects\Paginate.cs" />

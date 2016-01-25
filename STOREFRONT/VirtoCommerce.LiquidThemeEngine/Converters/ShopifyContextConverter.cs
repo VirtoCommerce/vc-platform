@@ -84,6 +84,11 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                 result.Form = workContext.Login.ToShopifyModel();
             }
 
+            if (workContext.StorefrontNotification != null)
+            {
+                result.Notification = workContext.StorefrontNotification.ToShopifyModel();
+            }
+
             return result;
         }
     }

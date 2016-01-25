@@ -1,29 +1,32 @@
 ﻿var storefrontApp = angular.module('storefrontApp', ['ngRoute']);
 
 storefrontApp.factory('httpErrorInterceptor', ['$q', '$rootScope', function ($q, $rootScope) {
-	var httpErrorInterceptor = {};
+    var httpErrorInterceptor = {};
 
-	httpErrorInterceptor.responseError = function (rejection) {
-	    //TODO: Add show generic script error form
-	    $rootScope.errorOccured = true;
-	    $rootScope.errorMessage = rejection.data.message;
-	    $rootScope.errorDetails = rejection.data.stackTrace;
-		//alert(rejection.data.message + "\n" + rejection.data.stackTrace);
-		return $q.reject(rejection);
-	};
-	httpErrorInterceptor.requestError = function (rejection) {
-		//TODO: Add show generic script error form
-		alert(rejection.data.message + "\m" + rejection.data.stackTrace);
-		return $q.reject(rejection);
-	};
+    httpErrorInterceptor.responseError = function (rejection) {
+        $rootScope.$broadcast('storefrontError', {
+            type: 'error',
+            title: rejection.data.message,
+            message: rejection.data.stackTrace
+        });
+        return $q.reject(rejection);
+    };
+    httpErrorInterceptor.requestError = function (rejection) {
+        $rootScope.$broadcast('storefrontError', {
+            type: 'error',
+            title: rejection.data.message,
+            message: rejection.data.stackTrace
+        });
+        return $q.reject(rejection);
+    };
 
-	return httpErrorInterceptor;
+    return httpErrorInterceptor;
 }])
 
 storefrontApp.config(['$interpolateProvider', '$routeProvider', '$httpProvider', function ($interpolateProvider, $routeProvider, $httpProvider) {
+    //Add interceptor
+    $httpProvider.interceptors.push('httpErrorInterceptor');
 
-	//Add interceptor
-	$httpProvider.interceptors.push('httpErrorInterceptor');
     $routeProvider
         .when('/customer-information', {
             templateUrl: 'storefront.checkout.customerInformation.tpl'

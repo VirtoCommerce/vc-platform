@@ -1,12 +1,27 @@
 ﻿var storefrontApp = angular.module('storefrontApp');
 
-storefrontApp.controller('mainController', ['$scope', '$location', '$window', 'customerService', function ($scope, $location, $window, customerService) {
+storefrontApp.controller('mainController', ['$scope', '$location', '$window', 'customerService',
+    function ($scope, $location, $window, customerService) {
+
     getCustomer();
 
     //Base store url populated in layout and can be used for construction url inside controller
     $scope.baseUrl = {};
 
     $scope.currentPath = $location.$$path.replace('/', '');
+
+    $scope.$on('storefrontError', function (event, data) {
+        $scope.storefrontNotification = data;
+        $scope.storefrontNotification.detailsVisible = false;
+    });
+
+    $scope.toggleNotificationDetails = function (isVisible) {
+        $scope.storefrontNotification.detailsVisible = !isVisible;
+    }
+
+    $scope.closeNotification = function () {
+        $scope.storefrontNotification = null;
+    }
 
     //For outside app redirect (To reload the page after changing the URL, use the lower-level API)
     $scope.outerRedirect = function (absUrl) {
@@ -18,11 +33,6 @@ storefrontApp.controller('mainController', ['$scope', '$location', '$window', 'c
         $location.path(path);
         $scope.currentPath = $location.$$path.replace('/', '');
     };
-
-    $scope.errorDetailsVisible = false;
-    $scope.toggleErrorDetails = function (isVisible) {
-        $scope.errorDetailsVisible = !isVisible;
-    }
 
     $scope.getObjectSize = function (obj) {
         var size = 0, key;

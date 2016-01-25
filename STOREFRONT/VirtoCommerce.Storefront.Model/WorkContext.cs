@@ -146,6 +146,8 @@ namespace VirtoCommerce.Storefront.Model
 
         public ContactUsForm ContactUsForm { get; set; }
 
+        public StorefrontNotification StorefrontNotification { get; set; }
+
         #region IDisposable Implementation
 
         public void Dispose()

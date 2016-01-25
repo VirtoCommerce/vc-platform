@@ -29,6 +29,7 @@
     {{ 'storefront.css' | asset_url | stylesheet_tag }}
     {{ 'ideal-image-slider.css' | asset_url | stylesheet_tag }}
     {{ 'ideal-image-slider-default-theme.css' | asset_url | stylesheet_tag }}
+    {{ 'toastr.css' | asset_url | stylesheet_tag }}
     {% include 'google-fonts' %}
 
     {{ content_for_header }}
@@ -164,6 +165,7 @@
             {% endif %}
         </span>
     </span>
+    {% include 'notification' %}
     <script>
         window.quotesEnabled = {{ shop.quotes_enabled }};
     </script>
