@@ -53,6 +53,7 @@ namespace VirtoCommerce.Storefront.Controllers.Api
             WorkContext.CurrentCatalogSearchCriteria.CategoryId = categoryId;
 
             WorkContext.CurrentCatalogSearchResult = await _catalogSearchService.SearchAsync(WorkContext.CurrentCatalogSearchCriteria);
+            WorkContext.CurrentCatalogSearchResult.TotalItemCount = WorkContext.CurrentCatalogSearchResult.Products.TotalItemCount;
             return WorkContext.CurrentCatalogSearchResult;
         }
         
