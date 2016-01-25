@@ -284,7 +284,7 @@ namespace VirtoCommerce.Storefront.Builders
 
             if (_cart.IsTransient())
             {
-                await _cartApi.CartModuleCreateAsync(cart);
+                _cart = (await _cartApi.CartModuleCreateAsync(cart)).ToWebModel(_currency, _language);
             }
             else
             {
@@ -322,7 +322,7 @@ namespace VirtoCommerce.Storefront.Builders
             cart.Name = "Default";
             cart.StoreId = _store.Id;
 
-            if (_customer.UserName.Equals(StorefrontConstants.AnonymousUsername, StringComparison.OrdinalIgnoreCase))
+            if (!_customer.IsRegisteredUser)
             {
                 cart.CustomerName = StorefrontConstants.AnonymousUsername;
             }

@@ -12,10 +12,11 @@ using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Customer;
 using VirtoCommerce.Storefront.Model.Customer.Services;
+using VirtoCommerce.Storefront.Model.Order.Events;
 
 namespace VirtoCommerce.Storefront.Services
 {
-    public class CustomerServiceImpl : ICustomerService
+    public class CustomerServiceImpl : ICustomerService, IObserver<OrderPlacedEvent>
     {
         private readonly ICustomerManagementModuleApi _customerApi;
         private readonly IOrderModuleApi _orderApi;
@@ -63,9 +64,32 @@ namespace VirtoCommerce.Storefront.Services
         }
         #endregion
 
+        #region IObserver<CreateOrderEvent> Members
+        public void OnNext(OrderPlacedEvent value)
+        {
+           if(value.Order != null)
+            {
+                var cacheKey = GetCacheKey(value.Order.CustomerId);
+                _cacheManager.Remove(cacheKey, "ApiRegion");
+            }
+        }
+
+        public void OnError(Exception error)
+        {
+           //Nothing todo
+        }
+
+        public void OnCompleted()
+        {
+            //Nothing todo
+        }
+        #endregion
+
         private string GetCacheKey(string customerId)
         {
             return "GetCustomerById-" + customerId;
         }
+
+       
     }
 }
