@@ -1,4 +1,4 @@
-﻿<div class="toast-top-full-width" id="toast-container" ng-if="storefrontNotification">
+﻿<div class="toast-top-full-width" id="toast-container" ng-cloak ng-if="storefrontNotification">
     <div class="toast toast-error" ng-if="storefrontNotification.type == 'error'">
         <button class="toast-close-button" type="button" ng-click="closeNotification()">×</button>
         <div class="toast-title">{{ 'notification.error_title' | t }}</div>
