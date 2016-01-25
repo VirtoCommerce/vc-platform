@@ -1,4 +1,4 @@
-<div class="ajaxify-modal" id="ajaxifyModal" style="opacity: 1;" ng-class="{ 'is-visible': recentCartItemModalVisible }">
+<div class="ajaxify-modal" id="ajaxifyModal" style="opacity: 1;" ng-class="{ 'is-visible': recentCartItemModalVisible }" ng-cloak>
     <button class="ajaxifyCart--close" title="{{ 'cart.general.close_cart' | t }}" ng-click="toggleRecentCartItemModal(recentCartItemModalVisible)">{{ 'cart.general.close_cart' | t }}</button>
     <div class="ajaxifyCart--content" id="ajaxifyCart">
         <div class="ajax-informer" ng-class="{ 'fade': cartIsUpdating }" ng-if="!errorOccured && cartIsUpdating">

@@ -15,8 +15,8 @@ storefrontApp.controller('mainController', ['$scope', '$location', '$window', 'c
         $scope.storefrontNotification.detailsVisible = false;
     });
 
-    $scope.toggleNotificationDetails = function (isVisible) {
-        $scope.storefrontNotification.detailsVisible = !isVisible;
+    $scope.toggleNotificationDetails = function () {
+        $scope.storefrontNotification.detailsVisible = !$scope.storefrontNotification.detailsVisible;
     }
 
     $scope.closeNotification = function () {

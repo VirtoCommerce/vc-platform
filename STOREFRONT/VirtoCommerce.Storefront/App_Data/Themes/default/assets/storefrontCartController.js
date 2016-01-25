@@ -5,6 +5,10 @@ storefrontApp.controller('cartController', ['$scope', '$timeout', 'cartService',
 
     initialize();
 
+    $scope.setCartForm = function (form) {
+        $scope.formCart = form;
+    }
+
     $scope.toggleRecentCartItemModal = function (isVisible) {
         $scope.recentCartItemModalVisible = !isVisible;
     }
