@@ -36,6 +36,8 @@ using VirtoCommerce.Storefront.Model.Cart.Services;
 using VirtoCommerce.Storefront.Model.Pricing.Services;
 using VirtoCommerce.Storefront.Model.Quote.Services;
 using VirtoCommerce.Storefront.Model.Customer.Services;
+using VirtoCommerce.Storefront.Model.Common.Events;
+using VirtoCommerce.Storefront.Model.Order.Events;
 
 [assembly: OwinStartup(typeof(Startup))]
 [assembly: PreApplicationStartMethod(typeof(Startup), "PreApplicationStart")]
@@ -142,6 +144,11 @@ namespace VirtoCommerce.Storefront
             container.RegisterType<IAuthenticationManager>(new InjectionFactory((context) => HttpContext.Current.GetOwinContext().Authentication));
 
             container.RegisterType<IStorefrontUrlBuilder, StorefrontUrlBuilder>(new PerRequestLifetimeManager());
+
+            //Register domain events
+            container.RegisterType<IEventPublisher<OrderPlacedEvent>, EventPublisher<OrderPlacedEvent>>();
+            //Register event handlers (observers)
+            container.RegisterType<IObserver<OrderPlacedEvent>, CustomerServiceImpl>("CustomerServiceImpl");
 
             // Create new work context for each request
             container.RegisterType<WorkContext, WorkContext>(new PerRequestLifetimeManager());

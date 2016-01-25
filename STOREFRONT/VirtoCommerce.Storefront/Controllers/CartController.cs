@@ -10,6 +10,8 @@ using VirtoCommerce.Storefront.Converters;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Cart.Services;
 using VirtoCommerce.Storefront.Model.Common;
+using VirtoCommerce.Storefront.Model.Common.Events;
+using VirtoCommerce.Storefront.Model.Order.Events;
 using VirtoCommerce.Storefront.Model.Services;
 
 namespace VirtoCommerce.Storefront.Controllers
@@ -23,10 +25,11 @@ namespace VirtoCommerce.Storefront.Controllers
         private readonly ICommerceCoreModuleApi _commerceApi;
         private readonly ICustomerManagementModuleApi _customerApi;
         private readonly ICartValidator _cartValidator;
+        private readonly IEventPublisher<OrderPlacedEvent> _orderPlacedEventPublisher;
 
         public CartController(WorkContext workContext, IOrderModuleApi orderApi, IStorefrontUrlBuilder urlBuilder,
                               ICartBuilder cartBuilder, ICatalogSearchService catalogService, IMarketingModuleApi marketingApi, ICommerceCoreModuleApi commerceApi,
-                              ICustomerManagementModuleApi customerApi, ICartValidator cartValidator)
+                              ICustomerManagementModuleApi customerApi, ICartValidator cartValidator, IEventPublisher<OrderPlacedEvent> orderPlacedEventPublisher)
             : base(workContext, urlBuilder)
         {
             _cartBuilder = cartBuilder;
@@ -36,6 +39,7 @@ namespace VirtoCommerce.Storefront.Controllers
             _commerceApi = commerceApi;
             _customerApi = customerApi;
             _cartValidator = cartValidator;
+            _orderPlacedEventPublisher = orderPlacedEventPublisher;
         }
 
         // GET: /cart
@@ -232,6 +236,9 @@ namespace VirtoCommerce.Storefront.Controllers
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
 
             var order = await _orderApi.OrderModuleCreateOrderFromCartAsync(_cartBuilder.Cart.Id);
+
+            //Raise domain event
+            _orderPlacedEventPublisher.Publish(new OrderPlacedEvent(order.ToWebModel(base.WorkContext.AllCurrencies, base.WorkContext.CurrentLanguage), _cartBuilder.Cart));
 
             await _cartBuilder.RemoveCartAsync();
 
