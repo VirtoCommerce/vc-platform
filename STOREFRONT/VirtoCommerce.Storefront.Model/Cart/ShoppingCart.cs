@@ -184,8 +184,10 @@ namespace VirtoCommerce.Storefront.Model.Cart
             get
             {
                 var discountTotal = Discounts.Sum(d => d.Amount.Amount);
+                var itemDiscountTotal = Items.Sum(i => i.DiscountTotal.Amount);
+                var shipmentDiscountTotal = Shipments.Sum(s => s.DiscountTotal.Amount);
 
-                return new Money(discountTotal, Currency);
+                return new Money(discountTotal + itemDiscountTotal + shipmentDiscountTotal, Currency);
             }
         }
 
