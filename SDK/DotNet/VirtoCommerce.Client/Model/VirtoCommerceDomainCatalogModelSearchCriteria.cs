@@ -56,6 +56,13 @@ namespace VirtoCommerce.Client.Model
   
         
         /// <summary>
+        /// Gets or Sets SearchInVariations
+        /// </summary>
+        [DataMember(Name="searchInVariations", EmitDefaultValue=false)]
+        public bool? SearchInVariations { get; set; }
+  
+        
+        /// <summary>
         /// Gets or Sets CategoryId
         /// </summary>
         [DataMember(Name="categoryId", EmitDefaultValue=false)]
@@ -105,10 +112,10 @@ namespace VirtoCommerce.Client.Model
   
         
         /// <summary>
-        /// Gets or Sets SortOrder
+        /// Gets or Sets SortInfos
         /// </summary>
-        [DataMember(Name="sortOrder", EmitDefaultValue=false)]
-        public string SortOrder { get; set; }
+        [DataMember(Name="sortInfos", EmitDefaultValue=false)]
+        public List<VirtoCommercePlatformCoreCommonSortInfo> SortInfos { get; set; }
   
         
         /// <summary>
@@ -210,6 +217,34 @@ namespace VirtoCommerce.Client.Model
   
         
         /// <summary>
+        /// Gets or Sets OnlyBuyable
+        /// </summary>
+        [DataMember(Name="onlyBuyable", EmitDefaultValue=false)]
+        public bool? OnlyBuyable { get; set; }
+  
+        
+        /// <summary>
+        /// Gets or Sets OnlyWithTrackingInventory
+        /// </summary>
+        [DataMember(Name="onlyWithTrackingInventory", EmitDefaultValue=false)]
+        public bool? OnlyWithTrackingInventory { get; set; }
+  
+        
+        /// <summary>
+        /// Gets or Sets ProductType
+        /// </summary>
+        [DataMember(Name="productType", EmitDefaultValue=false)]
+        public string ProductType { get; set; }
+  
+        
+        /// <summary>
+        /// Gets or Sets ProductTypes
+        /// </summary>
+        [DataMember(Name="productTypes", EmitDefaultValue=false)]
+        public List<string> ProductTypes { get; set; }
+  
+        
+        /// <summary>
         /// Gets or Sets StartDateFrom
         /// </summary>
         [DataMember(Name="startDateFrom", EmitDefaultValue=false)]
@@ -229,6 +264,7 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  ResponseGroup: ").Append(ResponseGroup).Append("\n");
             sb.Append("  Keyword: ").Append(Keyword).Append("\n");
             sb.Append("  SearchInChildren: ").Append(SearchInChildren).Append("\n");
+            sb.Append("  SearchInVariations: ").Append(SearchInVariations).Append("\n");
             sb.Append("  CategoryId: ").Append(CategoryId).Append("\n");
             sb.Append("  CategoryIds: ").Append(CategoryIds).Append("\n");
             sb.Append("  CatalogId: ").Append(CatalogId).Append("\n");
@@ -236,7 +272,7 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  LanguageCode: ").Append(LanguageCode).Append("\n");
             sb.Append("  Code: ").Append(Code).Append("\n");
             sb.Append("  Sort: ").Append(Sort).Append("\n");
-            sb.Append("  SortOrder: ").Append(SortOrder).Append("\n");
+            sb.Append("  SortInfos: ").Append(SortInfos).Append("\n");
             sb.Append("  HideDirectLinkedCategories: ").Append(HideDirectLinkedCategories).Append("\n");
             sb.Append("  PropertyValues: ").Append(PropertyValues).Append("\n");
             sb.Append("  Currency: ").Append(Currency).Append("\n");
@@ -251,6 +287,10 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Facets: ").Append(Facets).Append("\n");
             sb.Append("  Outline: ").Append(Outline).Append("\n");
             sb.Append("  WithHidden: ").Append(WithHidden).Append("\n");
+            sb.Append("  OnlyBuyable: ").Append(OnlyBuyable).Append("\n");
+            sb.Append("  OnlyWithTrackingInventory: ").Append(OnlyWithTrackingInventory).Append("\n");
+            sb.Append("  ProductType: ").Append(ProductType).Append("\n");
+            sb.Append("  ProductTypes: ").Append(ProductTypes).Append("\n");
             sb.Append("  StartDateFrom: ").Append(StartDateFrom).Append("\n");
             
             sb.Append("}\n");
@@ -310,6 +350,11 @@ namespace VirtoCommerce.Client.Model
                     this.SearchInChildren.Equals(other.SearchInChildren)
                 ) && 
                 (
+                    this.SearchInVariations == other.SearchInVariations ||
+                    this.SearchInVariations != null &&
+                    this.SearchInVariations.Equals(other.SearchInVariations)
+                ) && 
+                (
                     this.CategoryId == other.CategoryId ||
                     this.CategoryId != null &&
                     this.CategoryId.Equals(other.CategoryId)
@@ -345,9 +390,9 @@ namespace VirtoCommerce.Client.Model
                     this.Sort.Equals(other.Sort)
                 ) && 
                 (
-                    this.SortOrder == other.SortOrder ||
-                    this.SortOrder != null &&
-                    this.SortOrder.Equals(other.SortOrder)
+                    this.SortInfos == other.SortInfos ||
+                    this.SortInfos != null &&
+                    this.SortInfos.SequenceEqual(other.SortInfos)
                 ) && 
                 (
                     this.HideDirectLinkedCategories == other.HideDirectLinkedCategories ||
@@ -420,6 +465,26 @@ namespace VirtoCommerce.Client.Model
                     this.WithHidden.Equals(other.WithHidden)
                 ) && 
                 (
+                    this.OnlyBuyable == other.OnlyBuyable ||
+                    this.OnlyBuyable != null &&
+                    this.OnlyBuyable.Equals(other.OnlyBuyable)
+                ) && 
+                (
+                    this.OnlyWithTrackingInventory == other.OnlyWithTrackingInventory ||
+                    this.OnlyWithTrackingInventory != null &&
+                    this.OnlyWithTrackingInventory.Equals(other.OnlyWithTrackingInventory)
+                ) && 
+                (
+                    this.ProductType == other.ProductType ||
+                    this.ProductType != null &&
+                    this.ProductType.Equals(other.ProductType)
+                ) && 
+                (
+                    this.ProductTypes == other.ProductTypes ||
+                    this.ProductTypes != null &&
+                    this.ProductTypes.SequenceEqual(other.ProductTypes)
+                ) && 
+                (
                     this.StartDateFrom == other.StartDateFrom ||
                     this.StartDateFrom != null &&
                     this.StartDateFrom.Equals(other.StartDateFrom)
@@ -450,6 +515,9 @@ namespace VirtoCommerce.Client.Model
                 if (this.SearchInChildren != null)
                     hash = hash * 57 + this.SearchInChildren.GetHashCode();
                 
+                if (this.SearchInVariations != null)
+                    hash = hash * 57 + this.SearchInVariations.GetHashCode();
+                
                 if (this.CategoryId != null)
                     hash = hash * 57 + this.CategoryId.GetHashCode();
                 
@@ -471,8 +539,8 @@ namespace VirtoCommerce.Client.Model
                 if (this.Sort != null)
                     hash = hash * 57 + this.Sort.GetHashCode();
                 
-                if (this.SortOrder != null)
-                    hash = hash * 57 + this.SortOrder.GetHashCode();
+                if (this.SortInfos != null)
+                    hash = hash * 57 + this.SortInfos.GetHashCode();
                 
                 if (this.HideDirectLinkedCategories != null)
                     hash = hash * 57 + this.HideDirectLinkedCategories.GetHashCode();
@@ -515,6 +583,18 @@ namespace VirtoCommerce.Client.Model
                 
                 if (this.WithHidden != null)
                     hash = hash * 57 + this.WithHidden.GetHashCode();
+                
+                if (this.OnlyBuyable != null)
+                    hash = hash * 57 + this.OnlyBuyable.GetHashCode();
+                
+                if (this.OnlyWithTrackingInventory != null)
+                    hash = hash * 57 + this.OnlyWithTrackingInventory.GetHashCode();
+                
+                if (this.ProductType != null)
+                    hash = hash * 57 + this.ProductType.GetHashCode();
+                
+                if (this.ProductTypes != null)
+                    hash = hash * 57 + this.ProductTypes.GetHashCode();
                 
                 if (this.StartDateFrom != null)
                     hash = hash * 57 + this.StartDateFrom.GetHashCode();

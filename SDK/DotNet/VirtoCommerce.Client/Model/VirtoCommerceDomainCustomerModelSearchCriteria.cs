@@ -16,47 +16,57 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommerceCustomerModuleWebModelSearchCriteria : IEquatable<VirtoCommerceCustomerModuleWebModelSearchCriteria>
+    public class VirtoCommerceDomainCustomerModelSearchCriteria : IEquatable<VirtoCommerceDomainCustomerModelSearchCriteria>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceCustomerModuleWebModelSearchCriteria" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCustomerModelSearchCriteria" /> class.
         /// </summary>
-        public VirtoCommerceCustomerModuleWebModelSearchCriteria()
+        public VirtoCommerceDomainCustomerModelSearchCriteria()
         {
             
         }
 
         
         /// <summary>
-        /// Word, part of word or phrase to search
+        /// Gets or Sets Keyword
         /// </summary>
-        /// <value>Word, part of word or phrase to search</value>
         [DataMember(Name="keyword", EmitDefaultValue=false)]
         public string Keyword { get; set; }
   
         
         /// <summary>
-        /// It used to limit search within an organization
+        /// Gets or Sets OrganizationId
         /// </summary>
-        /// <value>It used to limit search within an organization</value>
         [DataMember(Name="organizationId", EmitDefaultValue=false)]
         public string OrganizationId { get; set; }
   
         
         /// <summary>
-        /// It used to skip some first search results
+        /// Gets or Sets Sort
         /// </summary>
-        /// <value>It used to skip some first search results</value>
-        [DataMember(Name="start", EmitDefaultValue=false)]
-        public int? Start { get; set; }
+        [DataMember(Name="sort", EmitDefaultValue=false)]
+        public string Sort { get; set; }
   
         
         /// <summary>
-        /// It used to limit the number of search results
+        /// Gets or Sets SortInfos
         /// </summary>
-        /// <value>It used to limit the number of search results</value>
-        [DataMember(Name="count", EmitDefaultValue=false)]
-        public int? Count { get; set; }
+        [DataMember(Name="sortInfos", EmitDefaultValue=false)]
+        public List<VirtoCommercePlatformCoreCommonSortInfo> SortInfos { get; set; }
+  
+        
+        /// <summary>
+        /// Gets or Sets Skip
+        /// </summary>
+        [DataMember(Name="skip", EmitDefaultValue=false)]
+        public int? Skip { get; set; }
+  
+        
+        /// <summary>
+        /// Gets or Sets Take
+        /// </summary>
+        [DataMember(Name="take", EmitDefaultValue=false)]
+        public int? Take { get; set; }
   
         
   
@@ -67,11 +77,13 @@ namespace VirtoCommerce.Client.Model
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class VirtoCommerceCustomerModuleWebModelSearchCriteria {\n");
+            sb.Append("class VirtoCommerceDomainCustomerModelSearchCriteria {\n");
             sb.Append("  Keyword: ").Append(Keyword).Append("\n");
             sb.Append("  OrganizationId: ").Append(OrganizationId).Append("\n");
-            sb.Append("  Start: ").Append(Start).Append("\n");
-            sb.Append("  Count: ").Append(Count).Append("\n");
+            sb.Append("  Sort: ").Append(Sort).Append("\n");
+            sb.Append("  SortInfos: ").Append(SortInfos).Append("\n");
+            sb.Append("  Skip: ").Append(Skip).Append("\n");
+            sb.Append("  Take: ").Append(Take).Append("\n");
             
             sb.Append("}\n");
             return sb.ToString();
@@ -94,15 +106,15 @@ namespace VirtoCommerce.Client.Model
         public override bool Equals(object obj)
         {
             // credit: http://stackoverflow.com/a/10454552/677735
-            return this.Equals(obj as VirtoCommerceCustomerModuleWebModelSearchCriteria);
+            return this.Equals(obj as VirtoCommerceDomainCustomerModelSearchCriteria);
         }
 
         /// <summary>
-        /// Returns true if VirtoCommerceCustomerModuleWebModelSearchCriteria instances are equal
+        /// Returns true if VirtoCommerceDomainCustomerModelSearchCriteria instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommerceCustomerModuleWebModelSearchCriteria to be compared</param>
+        /// <param name="obj">Instance of VirtoCommerceDomainCustomerModelSearchCriteria to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(VirtoCommerceCustomerModuleWebModelSearchCriteria other)
+        public bool Equals(VirtoCommerceDomainCustomerModelSearchCriteria other)
         {
             // credit: http://stackoverflow.com/a/10454552/677735
             if (other == null)
@@ -120,14 +132,24 @@ namespace VirtoCommerce.Client.Model
                     this.OrganizationId.Equals(other.OrganizationId)
                 ) && 
                 (
-                    this.Start == other.Start ||
-                    this.Start != null &&
-                    this.Start.Equals(other.Start)
+                    this.Sort == other.Sort ||
+                    this.Sort != null &&
+                    this.Sort.Equals(other.Sort)
                 ) && 
                 (
-                    this.Count == other.Count ||
-                    this.Count != null &&
-                    this.Count.Equals(other.Count)
+                    this.SortInfos == other.SortInfos ||
+                    this.SortInfos != null &&
+                    this.SortInfos.SequenceEqual(other.SortInfos)
+                ) && 
+                (
+                    this.Skip == other.Skip ||
+                    this.Skip != null &&
+                    this.Skip.Equals(other.Skip)
+                ) && 
+                (
+                    this.Take == other.Take ||
+                    this.Take != null &&
+                    this.Take.Equals(other.Take)
                 );
         }
 
@@ -149,11 +171,17 @@ namespace VirtoCommerce.Client.Model
                 if (this.OrganizationId != null)
                     hash = hash * 57 + this.OrganizationId.GetHashCode();
                 
-                if (this.Start != null)
-                    hash = hash * 57 + this.Start.GetHashCode();
+                if (this.Sort != null)
+                    hash = hash * 57 + this.Sort.GetHashCode();
                 
-                if (this.Count != null)
-                    hash = hash * 57 + this.Count.GetHashCode();
+                if (this.SortInfos != null)
+                    hash = hash * 57 + this.SortInfos.GetHashCode();
+                
+                if (this.Skip != null)
+                    hash = hash * 57 + this.Skip.GetHashCode();
+                
+                if (this.Take != null)
+                    hash = hash * 57 + this.Take.GetHashCode();
                 
                 return hash;
             }

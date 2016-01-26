@@ -182,12 +182,13 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// Get array of members satisfied search criteria.
         /// </remarks>
-        /// <param name="criteriaKeyword">Word, part of word or phrase to search</param>
-        /// <param name="criteriaOrganizationId">It used to limit search within an organization</param>
-        /// <param name="criteriaStart">It used to skip some first search results</param>
-        /// <param name="criteriaCount">It used to limit the number of search results</param>
+        /// <param name="criteriaKeyword"></param>
+        /// <param name="criteriaOrganizationId"></param>
+        /// <param name="criteriaSort"></param>
+        /// <param name="criteriaSkip"></param>
+        /// <param name="criteriaTake"></param>
         /// <returns>VirtoCommerceCustomerModuleWebModelSearchResult</returns>
-        VirtoCommerceCustomerModuleWebModelSearchResult CustomerModuleSearch (string criteriaKeyword = null, string criteriaOrganizationId = null, int? criteriaStart = null, int? criteriaCount = null);
+        VirtoCommerceCustomerModuleWebModelSearchResult CustomerModuleSearch (string criteriaKeyword = null, string criteriaOrganizationId = null, string criteriaSort = null, int? criteriaSkip = null, int? criteriaTake = null);
   
         /// <summary>
         /// Get members
@@ -195,12 +196,13 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// Get array of members satisfied search criteria.
         /// </remarks>
-        /// <param name="criteriaKeyword">Word, part of word or phrase to search</param>
-        /// <param name="criteriaOrganizationId">It used to limit search within an organization</param>
-        /// <param name="criteriaStart">It used to skip some first search results</param>
-        /// <param name="criteriaCount">It used to limit the number of search results</param>
+        /// <param name="criteriaKeyword"></param>
+        /// <param name="criteriaOrganizationId"></param>
+        /// <param name="criteriaSort"></param>
+        /// <param name="criteriaSkip"></param>
+        /// <param name="criteriaTake"></param>
         /// <returns>ApiResponse of VirtoCommerceCustomerModuleWebModelSearchResult</returns>
-        ApiResponse<VirtoCommerceCustomerModuleWebModelSearchResult> CustomerModuleSearchWithHttpInfo (string criteriaKeyword = null, string criteriaOrganizationId = null, int? criteriaStart = null, int? criteriaCount = null);
+        ApiResponse<VirtoCommerceCustomerModuleWebModelSearchResult> CustomerModuleSearchWithHttpInfo (string criteriaKeyword = null, string criteriaOrganizationId = null, string criteriaSort = null, int? criteriaSkip = null, int? criteriaTake = null);
 
         /// <summary>
         /// Get members
@@ -208,12 +210,13 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// Get array of members satisfied search criteria.
         /// </remarks>
-        /// <param name="criteriaKeyword">Word, part of word or phrase to search</param>
-        /// <param name="criteriaOrganizationId">It used to limit search within an organization</param>
-        /// <param name="criteriaStart">It used to skip some first search results</param>
-        /// <param name="criteriaCount">It used to limit the number of search results</param>
+        /// <param name="criteriaKeyword"></param>
+        /// <param name="criteriaOrganizationId"></param>
+        /// <param name="criteriaSort"></param>
+        /// <param name="criteriaSkip"></param>
+        /// <param name="criteriaTake"></param>
         /// <returns>Task of VirtoCommerceCustomerModuleWebModelSearchResult</returns>
-        System.Threading.Tasks.Task<VirtoCommerceCustomerModuleWebModelSearchResult> CustomerModuleSearchAsync (string criteriaKeyword = null, string criteriaOrganizationId = null, int? criteriaStart = null, int? criteriaCount = null);
+        System.Threading.Tasks.Task<VirtoCommerceCustomerModuleWebModelSearchResult> CustomerModuleSearchAsync (string criteriaKeyword = null, string criteriaOrganizationId = null, string criteriaSort = null, int? criteriaSkip = null, int? criteriaTake = null);
 
         /// <summary>
         /// Get members
@@ -221,12 +224,13 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// Get array of members satisfied search criteria.
         /// </remarks>
-        /// <param name="criteriaKeyword">Word, part of word or phrase to search</param>
-        /// <param name="criteriaOrganizationId">It used to limit search within an organization</param>
-        /// <param name="criteriaStart">It used to skip some first search results</param>
-        /// <param name="criteriaCount">It used to limit the number of search results</param>
+        /// <param name="criteriaKeyword"></param>
+        /// <param name="criteriaOrganizationId"></param>
+        /// <param name="criteriaSort"></param>
+        /// <param name="criteriaSkip"></param>
+        /// <param name="criteriaTake"></param>
         /// <returns>Task of ApiResponse (VirtoCommerceCustomerModuleWebModelSearchResult)</returns>
-        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceCustomerModuleWebModelSearchResult>> CustomerModuleSearchAsyncWithHttpInfo (string criteriaKeyword = null, string criteriaOrganizationId = null, int? criteriaStart = null, int? criteriaCount = null);
+        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceCustomerModuleWebModelSearchResult>> CustomerModuleSearchAsyncWithHttpInfo (string criteriaKeyword = null, string criteriaOrganizationId = null, string criteriaSort = null, int? criteriaSkip = null, int? criteriaTake = null);
         
         /// <summary>
         /// Get organizations
@@ -1036,26 +1040,28 @@ namespace VirtoCommerce.Client.Api
         /// <summary>
         /// Get members Get array of members satisfied search criteria.
         /// </summary>
-        /// <param name="criteriaKeyword">Word, part of word or phrase to search</param> 
-        /// <param name="criteriaOrganizationId">It used to limit search within an organization</param> 
-        /// <param name="criteriaStart">It used to skip some first search results</param> 
-        /// <param name="criteriaCount">It used to limit the number of search results</param> 
+        /// <param name="criteriaKeyword"></param> 
+        /// <param name="criteriaOrganizationId"></param> 
+        /// <param name="criteriaSort"></param> 
+        /// <param name="criteriaSkip"></param> 
+        /// <param name="criteriaTake"></param> 
         /// <returns>VirtoCommerceCustomerModuleWebModelSearchResult</returns>
-        public VirtoCommerceCustomerModuleWebModelSearchResult CustomerModuleSearch (string criteriaKeyword = null, string criteriaOrganizationId = null, int? criteriaStart = null, int? criteriaCount = null)
+        public VirtoCommerceCustomerModuleWebModelSearchResult CustomerModuleSearch (string criteriaKeyword = null, string criteriaOrganizationId = null, string criteriaSort = null, int? criteriaSkip = null, int? criteriaTake = null)
         {
-             ApiResponse<VirtoCommerceCustomerModuleWebModelSearchResult> response = CustomerModuleSearchWithHttpInfo(criteriaKeyword, criteriaOrganizationId, criteriaStart, criteriaCount);
+             ApiResponse<VirtoCommerceCustomerModuleWebModelSearchResult> response = CustomerModuleSearchWithHttpInfo(criteriaKeyword, criteriaOrganizationId, criteriaSort, criteriaSkip, criteriaTake);
              return response.Data;
         }
 
         /// <summary>
         /// Get members Get array of members satisfied search criteria.
         /// </summary>
-        /// <param name="criteriaKeyword">Word, part of word or phrase to search</param> 
-        /// <param name="criteriaOrganizationId">It used to limit search within an organization</param> 
-        /// <param name="criteriaStart">It used to skip some first search results</param> 
-        /// <param name="criteriaCount">It used to limit the number of search results</param> 
+        /// <param name="criteriaKeyword"></param> 
+        /// <param name="criteriaOrganizationId"></param> 
+        /// <param name="criteriaSort"></param> 
+        /// <param name="criteriaSkip"></param> 
+        /// <param name="criteriaTake"></param> 
         /// <returns>ApiResponse of VirtoCommerceCustomerModuleWebModelSearchResult</returns>
-        public ApiResponse< VirtoCommerceCustomerModuleWebModelSearchResult > CustomerModuleSearchWithHttpInfo (string criteriaKeyword = null, string criteriaOrganizationId = null, int? criteriaStart = null, int? criteriaCount = null)
+        public ApiResponse< VirtoCommerceCustomerModuleWebModelSearchResult > CustomerModuleSearchWithHttpInfo (string criteriaKeyword = null, string criteriaOrganizationId = null, string criteriaSort = null, int? criteriaSkip = null, int? criteriaTake = null)
         {
             
     
@@ -1082,8 +1088,9 @@ namespace VirtoCommerce.Client.Api
             
             if (criteriaKeyword != null) queryParams.Add("criteria.keyword", Configuration.ApiClient.ParameterToString(criteriaKeyword)); // query parameter
             if (criteriaOrganizationId != null) queryParams.Add("criteria.organizationId", Configuration.ApiClient.ParameterToString(criteriaOrganizationId)); // query parameter
-            if (criteriaStart != null) queryParams.Add("criteria.start", Configuration.ApiClient.ParameterToString(criteriaStart)); // query parameter
-            if (criteriaCount != null) queryParams.Add("criteria.count", Configuration.ApiClient.ParameterToString(criteriaCount)); // query parameter
+            if (criteriaSort != null) queryParams.Add("criteria.sort", Configuration.ApiClient.ParameterToString(criteriaSort)); // query parameter
+            if (criteriaSkip != null) queryParams.Add("criteria.skip", Configuration.ApiClient.ParameterToString(criteriaSkip)); // query parameter
+            if (criteriaTake != null) queryParams.Add("criteria.take", Configuration.ApiClient.ParameterToString(criteriaTake)); // query parameter
             
             
             
@@ -1110,14 +1117,15 @@ namespace VirtoCommerce.Client.Api
         /// <summary>
         /// Get members Get array of members satisfied search criteria.
         /// </summary>
-        /// <param name="criteriaKeyword">Word, part of word or phrase to search</param>
-        /// <param name="criteriaOrganizationId">It used to limit search within an organization</param>
-        /// <param name="criteriaStart">It used to skip some first search results</param>
-        /// <param name="criteriaCount">It used to limit the number of search results</param>
+        /// <param name="criteriaKeyword"></param>
+        /// <param name="criteriaOrganizationId"></param>
+        /// <param name="criteriaSort"></param>
+        /// <param name="criteriaSkip"></param>
+        /// <param name="criteriaTake"></param>
         /// <returns>Task of VirtoCommerceCustomerModuleWebModelSearchResult</returns>
-        public async System.Threading.Tasks.Task<VirtoCommerceCustomerModuleWebModelSearchResult> CustomerModuleSearchAsync (string criteriaKeyword = null, string criteriaOrganizationId = null, int? criteriaStart = null, int? criteriaCount = null)
+        public async System.Threading.Tasks.Task<VirtoCommerceCustomerModuleWebModelSearchResult> CustomerModuleSearchAsync (string criteriaKeyword = null, string criteriaOrganizationId = null, string criteriaSort = null, int? criteriaSkip = null, int? criteriaTake = null)
         {
-             ApiResponse<VirtoCommerceCustomerModuleWebModelSearchResult> response = await CustomerModuleSearchAsyncWithHttpInfo(criteriaKeyword, criteriaOrganizationId, criteriaStart, criteriaCount);
+             ApiResponse<VirtoCommerceCustomerModuleWebModelSearchResult> response = await CustomerModuleSearchAsyncWithHttpInfo(criteriaKeyword, criteriaOrganizationId, criteriaSort, criteriaSkip, criteriaTake);
              return response.Data;
 
         }
@@ -1125,12 +1133,13 @@ namespace VirtoCommerce.Client.Api
         /// <summary>
         /// Get members Get array of members satisfied search criteria.
         /// </summary>
-        /// <param name="criteriaKeyword">Word, part of word or phrase to search</param>
-        /// <param name="criteriaOrganizationId">It used to limit search within an organization</param>
-        /// <param name="criteriaStart">It used to skip some first search results</param>
-        /// <param name="criteriaCount">It used to limit the number of search results</param>
+        /// <param name="criteriaKeyword"></param>
+        /// <param name="criteriaOrganizationId"></param>
+        /// <param name="criteriaSort"></param>
+        /// <param name="criteriaSkip"></param>
+        /// <param name="criteriaTake"></param>
         /// <returns>Task of ApiResponse (VirtoCommerceCustomerModuleWebModelSearchResult)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceCustomerModuleWebModelSearchResult>> CustomerModuleSearchAsyncWithHttpInfo (string criteriaKeyword = null, string criteriaOrganizationId = null, int? criteriaStart = null, int? criteriaCount = null)
+        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceCustomerModuleWebModelSearchResult>> CustomerModuleSearchAsyncWithHttpInfo (string criteriaKeyword = null, string criteriaOrganizationId = null, string criteriaSort = null, int? criteriaSkip = null, int? criteriaTake = null)
         {
             
     
@@ -1157,8 +1166,9 @@ namespace VirtoCommerce.Client.Api
             
             if (criteriaKeyword != null) queryParams.Add("criteria.keyword", Configuration.ApiClient.ParameterToString(criteriaKeyword)); // query parameter
             if (criteriaOrganizationId != null) queryParams.Add("criteria.organizationId", Configuration.ApiClient.ParameterToString(criteriaOrganizationId)); // query parameter
-            if (criteriaStart != null) queryParams.Add("criteria.start", Configuration.ApiClient.ParameterToString(criteriaStart)); // query parameter
-            if (criteriaCount != null) queryParams.Add("criteria.count", Configuration.ApiClient.ParameterToString(criteriaCount)); // query parameter
+            if (criteriaSort != null) queryParams.Add("criteria.sort", Configuration.ApiClient.ParameterToString(criteriaSort)); // query parameter
+            if (criteriaSkip != null) queryParams.Add("criteria.skip", Configuration.ApiClient.ParameterToString(criteriaSkip)); // query parameter
+            if (criteriaTake != null) queryParams.Add("criteria.take", Configuration.ApiClient.ParameterToString(criteriaTake)); // query parameter
             
             
             
