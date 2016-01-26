@@ -28,6 +28,10 @@
                     </label>
                 </div>
             </div>
+            <!--Global variable sets on _Layout.cshtml and defined in Web.config-->
+            <div class="note" ng-if="demoCredentials">
+                <p class="text">Demo access credentials - Login: <b>{{ demoCredentials[0] }} </b> Password: <b>{{ demoCredentials[1] }}</b></p>
+            </div>
             <div class="form-group">
                 <div class="form-error" ng-if="authError">
                     {{authError}}
