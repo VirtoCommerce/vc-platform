@@ -1,5 +1,8 @@
 ﻿{
   "core": {
+    "commands": {
+      "apply-filter": "Save & apply"
+    },
     "main-menu-title": "Shopping carts",
     "blades": {
       "address-list": {
@@ -43,19 +46,19 @@
         }
       },
       "currency-detail": {
-        "new-title" : "New currency",
-        "new-subtitle" : "Enter currency details",
-        "subtitle" : "Edit currency details",
+        "new-title": "New currency",
+        "new-subtitle": "Enter currency details",
+        "subtitle": "Edit currency details",
         "labels": {
-            "code": "Code",
-            "name": "Name",
-            "is-primary": "Is primary",
-            "exchange-rate": "Exchange rate",
-            "symbol": "Symbol",
-            "custom-formatting": "Currency custom formatting"
+          "code": "Code",
+          "name": "Name",
+          "is-primary": "Is primary",
+          "exchange-rate": "Exchange rate",
+          "symbol": "Symbol",
+          "custom-formatting": "Currency custom formatting"
         },
         "placeholders": {
-            "symbol": "Enter symbol or leave empty for culture default"
+          "symbol": "Enter symbol or leave empty for culture default"
         }
       },
       "fulfillment-center-contact": {

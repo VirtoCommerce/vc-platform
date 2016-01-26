@@ -50,7 +50,7 @@
 
         blade.toolbarCommands = [
                 {
-                    name: "catalog.commands.apply-filter", icon: 'fa fa-filter',
+                    name: "core.commands.apply-filter", icon: 'fa fa-filter',
                     executeMethod: function () {
                         $scope.saveChanges();
                     },

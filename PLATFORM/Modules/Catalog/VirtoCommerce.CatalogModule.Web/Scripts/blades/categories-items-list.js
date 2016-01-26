@@ -279,7 +279,7 @@
 
                 newBlade.breadcrumbs = generateBreadcrumbs(newBlade, listEntry, listEntry.outline.length);
                 bladeNavigationService.showBlade(newBlade, blade);
-            }
+            };
 
             function generateBreadcrumbs(newBlade, listEntry, count) {
                 var newBreadcrumbs = [{
@@ -601,8 +601,8 @@
                 return sorts.join(';');
             }
 
-            $scope.getGroupText = function (groupEntity) {
-                return _.values(groupEntity)[0].rendered;
+            $scope.getGroupInfo = function (groupEntity) {
+                return _.values(groupEntity)[0];
             };
 
 

@@ -2,7 +2,10 @@
     <va-breadcrumb ng-model="blade.breadcrumbs" blade-id="blade.id"></va-breadcrumb>
     <div class="form-group">
         <div class="form-input __search">
-            <input type="text" placeholder="{{ 'platform.placeholders.search-keyword' | translate }}" ng-model="filter.searchKeyword" ng-keyup="$event.which === 13 && blade.refresh()">
+            <input placeholder="{{'platform.placeholders.search-keyword' | translate}}" ng-model="filter.keyword" ng-keyup="$event.which === 13 && filter.criteriaChanged()" />
+            <button class="btn __other" style="position: relative;right: 45px;">
+                <i class="btn-ico fa fa-times-circle" title="Clear" ng-click="filter.keyword=null;filter.criteriaChanged()"></i>
+            </button>
         </div>
         <p class="form-count">{{ 'platform.list.count' | translate }}: <span class="count">{{pageSettings.totalItems}}</span></p>
     </div>
@@ -12,6 +15,7 @@
     <div class="blade-inner">
         <div class="inner-block">
             <div class="table-wrapper" ng-init="setGridOptions({
+                    useExternalSorting: true,
                     data: 'listEntries',
                     rowTemplate: 'member-list.row.html',
                     rowHeight: 61,
