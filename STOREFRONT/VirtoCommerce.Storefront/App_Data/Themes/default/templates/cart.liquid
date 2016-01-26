@@ -21,7 +21,7 @@
     <p>{{ 'cart.general.continue_browsing_html' | t }}</p>
 </span>
 
-<div ng-show="cart.ItemsCount > 0">
+<div ng-show="cart.ItemsCount > 0" ng-cloak>
     <form name="formCart" novalidate="novalidate">
         <div class="ajax-informer" ng-class="{ 'fade': cartIsUpdating }">
             <div class="loader"></div>
