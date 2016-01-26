@@ -72,6 +72,10 @@
     <Compile Include="Migrations\201507141452418_RemoveContactPropertyValue.Designer.cs">
       <DependentUpon>201507141452418_RemoveContactPropertyValue.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201601261223264_NewContactFields.cs" />
+    <Compile Include="Migrations\201601261223264_NewContactFields.Designer.cs">
+      <DependentUpon>201601261223264_NewContactFields.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Address.cs" />
     <Compile Include="Model\Contact.cs" />
@@ -112,6 +116,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201507141452418_RemoveContactPropertyValue.resx">
       <DependentUpon>201507141452418_RemoveContactPropertyValue.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201601261223264_NewContactFields.resx">
+      <DependentUpon>201601261223264_NewContactFields.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

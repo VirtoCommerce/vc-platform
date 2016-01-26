@@ -108,7 +108,7 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
             if (target == null)
                 throw new ArgumentNullException("target");
 
-            var patchInjection = new PatchInjection<dataModel.Contact>(x => x.BirthDate, x => x.DefaultLanguage,
+            var patchInjection = new PatchInjection<dataModel.Contact>(x => x.FirstName, x => x.MiddleName, x => x.LastName, x=> x.BirthDate, x => x.DefaultLanguage,
                                                                            x => x.FullName, x => x.Salutation,
                                                                            x => x.TimeZone);
             target.InjectFrom(patchInjection, source);
