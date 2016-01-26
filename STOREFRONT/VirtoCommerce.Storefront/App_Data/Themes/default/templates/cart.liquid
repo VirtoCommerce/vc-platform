@@ -1,4 +1,9 @@
-﻿<div class="cart-row" ng-if="errorOccured" ng-cloak>
+﻿<div class="ajax-informer fade" ng-if="!cart">
+    <div class="loader"></div>
+    <span>{{ 'cart.general.updating_cart_message' | t }}</span>
+</div>
+
+<div class="cart-row" ng-if="errorOccured" ng-cloak>
     <div class="note form-error">
         <p style="font-weight: 600; margin-bottom: 20px;">Error occured!</p>
         <p ng-bind="errorMessage" style="margin-bottom: 20px;"></p>
