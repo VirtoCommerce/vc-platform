@@ -1,5 +1,5 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.exportImport.exportMainController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.exportImport.resource', function ($scope, bladeNavigationService, exportImportResourse) {
+.controller('platformWebApp.exportImport.exportMainController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.exportImport.resource', 'platformWebApp.authService', function ($scope, bladeNavigationService, exportImportResourse, authService) {
     var blade = $scope.blade;
     blade.headIcon = 'fa-upload';
     blade.title = 'platform.blades.export-main.title';
@@ -28,7 +28,7 @@
     });
 
     $scope.canStartProcess = function () {
-        return ($scope.exportRequest.modules && $scope.exportRequest.modules.length > 0) || $scope.exportRequest.handleSecurity || $scope.exportRequest.handleSettings;
+    	return authService.checkPermission('platform:exportImport:export') && (($scope.exportRequest.modules && $scope.exportRequest.modules.length > 0) || $scope.exportRequest.handleSecurity || $scope.exportRequest.handleSettings);
     }
 
     $scope.updateModuleSelection = function () {

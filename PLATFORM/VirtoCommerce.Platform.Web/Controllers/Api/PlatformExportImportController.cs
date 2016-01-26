@@ -13,6 +13,7 @@ using VirtoCommerce.Platform.Core.Asset;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.PushNotifications;
+using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Common;
 using VirtoCommerce.Platform.Web.Converters.ExportImport;
@@ -140,6 +141,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [ResponseType(typeof(PushNotification))]
         [Route("export")]
+        [CheckPermission(Permission = PredefinedPermissions.PlatformExport)]
         public IHttpActionResult ProcessExport(PlatformImportExportRequest exportRequest)
         {
             var notification = new PlatformExportPushNotification(CurrentPrincipal.GetCurrentUserName())
@@ -158,6 +160,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [ResponseType(typeof(PushNotification))]
         [Route("import")]
+        [CheckPermission(Permission = PredefinedPermissions.PlatformImport)]
         public IHttpActionResult ProcessImport(PlatformImportExportRequest importRequest)
         {
             var notification = new PlatformImportPushNotification(CurrentPrincipal.GetCurrentUserName())
