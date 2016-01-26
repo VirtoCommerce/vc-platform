@@ -49,7 +49,7 @@
 
             // translate filter
             _.each(gridOptions.columnDefs, function (x) { x.headerCellFilter = 'translate'; })
-            
+
             $scope.gridOptions = angular.extend({
                 gridMenuTitleFilter: $translate,
                 onRegisterApi: function (gridApi) {
@@ -81,10 +81,13 @@
 
             function processMissingColumns(grid) {
                 var gridOptions = grid.options;
-                // gridOptions.minRowsToShow = grid.rows.length;
 
                 if (!gridOptions.columnDefsGenerated && _.any(grid.rows)) {
-                    var allKeysFromEntity = _.without(_.keys(grid.rows[0].entity), '$$hashKey');
+                    var filteredColumns = _.filter(_.pairs(grid.rows[0].entity), function (x) {
+                        return x[0] !== '$$hashKey' && !_.isArray(x[1]);
+                    });
+
+                    var allKeysFromEntity = _.map(filteredColumns, function (x) { return x[0]});
                     // remove non-existing columns
                     _.each(gridOptions.columnDefs.slice(), function (x) {
                         if (!_.contains(allKeysFromEntity, x.name) && !x.wasPredefined) {
@@ -102,6 +105,21 @@
                 }
             }
         };
+
+        retVal.getSortExpression = function ($scope) {
+            var columnDefs = $scope.gridApi ? $scope.gridApi.grid.columns : $scope.gridOptions.columnDefs;
+            var sorts = _.filter(columnDefs, function (x) {
+                return x.name !== '$path' && x.sort && (x.sort.direction === uiGridConstants.ASC || x.sort.direction === uiGridConstants.DESC);
+            });
+
+            sorts = _.sortBy(sorts, function (x) {
+                return x.sort.priority;
+            });
+            sorts = _.map(sorts, function (x) {
+                return x.name + ':' + (x.sort.direction === uiGridConstants.ASC ? 'asc' : 'desc');
+            });
+            return sorts.join(';');
+        }
 
         return retVal;
     }])
