@@ -22,13 +22,9 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// 
         /// </remarks>
-        /// <param name="criteriaKeyword">Gets or sets the value of search criteria keyword</param>
-        /// <param name="criteriaCustomerId">Gets or sets the value of search criteria customer id</param>
-        /// <param name="criteriaStoreId">Gets or sets the value of search criteria store id</param>
-        /// <param name="criteriaStart">Gets or sets the value of search criteria skip records count</param>
-        /// <param name="criteriaCount">Gets or sets the value of search criteria page size</param>
+        /// <param name="criteria">Search criteria</param>
         /// <returns>VirtoCommerceCartModuleWebModelSearchResult</returns>
-        VirtoCommerceCartModuleWebModelSearchResult CartModuleSearchCarts (string criteriaKeyword = null, string criteriaCustomerId = null, string criteriaStoreId = null, int? criteriaStart = null, int? criteriaCount = null);
+        VirtoCommerceCartModuleWebModelSearchResult CartModuleSearchCarts (VirtoCommerceCartModuleWebModelSearchCriteria criteria);
   
         /// <summary>
         /// Search for shopping carts by criteria
@@ -36,13 +32,9 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// 
         /// </remarks>
-        /// <param name="criteriaKeyword">Gets or sets the value of search criteria keyword</param>
-        /// <param name="criteriaCustomerId">Gets or sets the value of search criteria customer id</param>
-        /// <param name="criteriaStoreId">Gets or sets the value of search criteria store id</param>
-        /// <param name="criteriaStart">Gets or sets the value of search criteria skip records count</param>
-        /// <param name="criteriaCount">Gets or sets the value of search criteria page size</param>
+        /// <param name="criteria">Search criteria</param>
         /// <returns>ApiResponse of VirtoCommerceCartModuleWebModelSearchResult</returns>
-        ApiResponse<VirtoCommerceCartModuleWebModelSearchResult> CartModuleSearchCartsWithHttpInfo (string criteriaKeyword = null, string criteriaCustomerId = null, string criteriaStoreId = null, int? criteriaStart = null, int? criteriaCount = null);
+        ApiResponse<VirtoCommerceCartModuleWebModelSearchResult> CartModuleSearchCartsWithHttpInfo (VirtoCommerceCartModuleWebModelSearchCriteria criteria);
 
         /// <summary>
         /// Search for shopping carts by criteria
@@ -50,13 +42,9 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// 
         /// </remarks>
-        /// <param name="criteriaKeyword">Gets or sets the value of search criteria keyword</param>
-        /// <param name="criteriaCustomerId">Gets or sets the value of search criteria customer id</param>
-        /// <param name="criteriaStoreId">Gets or sets the value of search criteria store id</param>
-        /// <param name="criteriaStart">Gets or sets the value of search criteria skip records count</param>
-        /// <param name="criteriaCount">Gets or sets the value of search criteria page size</param>
+        /// <param name="criteria">Search criteria</param>
         /// <returns>Task of VirtoCommerceCartModuleWebModelSearchResult</returns>
-        System.Threading.Tasks.Task<VirtoCommerceCartModuleWebModelSearchResult> CartModuleSearchCartsAsync (string criteriaKeyword = null, string criteriaCustomerId = null, string criteriaStoreId = null, int? criteriaStart = null, int? criteriaCount = null);
+        System.Threading.Tasks.Task<VirtoCommerceCartModuleWebModelSearchResult> CartModuleSearchCartsAsync (VirtoCommerceCartModuleWebModelSearchCriteria criteria);
 
         /// <summary>
         /// Search for shopping carts by criteria
@@ -64,13 +52,9 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// 
         /// </remarks>
-        /// <param name="criteriaKeyword">Gets or sets the value of search criteria keyword</param>
-        /// <param name="criteriaCustomerId">Gets or sets the value of search criteria customer id</param>
-        /// <param name="criteriaStoreId">Gets or sets the value of search criteria store id</param>
-        /// <param name="criteriaStart">Gets or sets the value of search criteria skip records count</param>
-        /// <param name="criteriaCount">Gets or sets the value of search criteria page size</param>
+        /// <param name="criteria">Search criteria</param>
         /// <returns>Task of ApiResponse (VirtoCommerceCartModuleWebModelSearchResult)</returns>
-        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceCartModuleWebModelSearchResult>> CartModuleSearchCartsAsyncWithHttpInfo (string criteriaKeyword = null, string criteriaCustomerId = null, string criteriaStoreId = null, int? criteriaStart = null, int? criteriaCount = null);
+        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceCartModuleWebModelSearchResult>> CartModuleSearchCartsAsyncWithHttpInfo (VirtoCommerceCartModuleWebModelSearchCriteria criteria);
         
         /// <summary>
         /// Update shopping cart
@@ -468,29 +452,24 @@ namespace VirtoCommerce.Client.Api
         /// <summary>
         /// Search for shopping carts by criteria 
         /// </summary>
-        /// <param name="criteriaKeyword">Gets or sets the value of search criteria keyword</param> 
-        /// <param name="criteriaCustomerId">Gets or sets the value of search criteria customer id</param> 
-        /// <param name="criteriaStoreId">Gets or sets the value of search criteria store id</param> 
-        /// <param name="criteriaStart">Gets or sets the value of search criteria skip records count</param> 
-        /// <param name="criteriaCount">Gets or sets the value of search criteria page size</param> 
+        /// <param name="criteria">Search criteria</param> 
         /// <returns>VirtoCommerceCartModuleWebModelSearchResult</returns>
-        public VirtoCommerceCartModuleWebModelSearchResult CartModuleSearchCarts (string criteriaKeyword = null, string criteriaCustomerId = null, string criteriaStoreId = null, int? criteriaStart = null, int? criteriaCount = null)
+        public VirtoCommerceCartModuleWebModelSearchResult CartModuleSearchCarts (VirtoCommerceCartModuleWebModelSearchCriteria criteria)
         {
-             ApiResponse<VirtoCommerceCartModuleWebModelSearchResult> response = CartModuleSearchCartsWithHttpInfo(criteriaKeyword, criteriaCustomerId, criteriaStoreId, criteriaStart, criteriaCount);
+             ApiResponse<VirtoCommerceCartModuleWebModelSearchResult> response = CartModuleSearchCartsWithHttpInfo(criteria);
              return response.Data;
         }
 
         /// <summary>
         /// Search for shopping carts by criteria 
         /// </summary>
-        /// <param name="criteriaKeyword">Gets or sets the value of search criteria keyword</param> 
-        /// <param name="criteriaCustomerId">Gets or sets the value of search criteria customer id</param> 
-        /// <param name="criteriaStoreId">Gets or sets the value of search criteria store id</param> 
-        /// <param name="criteriaStart">Gets or sets the value of search criteria skip records count</param> 
-        /// <param name="criteriaCount">Gets or sets the value of search criteria page size</param> 
+        /// <param name="criteria">Search criteria</param> 
         /// <returns>ApiResponse of VirtoCommerceCartModuleWebModelSearchResult</returns>
-        public ApiResponse< VirtoCommerceCartModuleWebModelSearchResult > CartModuleSearchCartsWithHttpInfo (string criteriaKeyword = null, string criteriaCustomerId = null, string criteriaStoreId = null, int? criteriaStart = null, int? criteriaCount = null)
+        public ApiResponse< VirtoCommerceCartModuleWebModelSearchResult > CartModuleSearchCartsWithHttpInfo (VirtoCommerceCartModuleWebModelSearchCriteria criteria)
         {
+            
+            // verify the required parameter 'criteria' is set
+            if (criteria == null) throw new ApiException(400, "Missing required parameter 'criteria' when calling CartModuleSearchCarts");
             
     
             var path_ = "/api/cart/carts";
@@ -514,14 +493,10 @@ namespace VirtoCommerce.Client.Api
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
             
-            if (criteriaKeyword != null) queryParams.Add("criteria.keyword", Configuration.ApiClient.ParameterToString(criteriaKeyword)); // query parameter
-            if (criteriaCustomerId != null) queryParams.Add("criteria.customerId", Configuration.ApiClient.ParameterToString(criteriaCustomerId)); // query parameter
-            if (criteriaStoreId != null) queryParams.Add("criteria.storeId", Configuration.ApiClient.ParameterToString(criteriaStoreId)); // query parameter
-            if (criteriaStart != null) queryParams.Add("criteria.start", Configuration.ApiClient.ParameterToString(criteriaStart)); // query parameter
-            if (criteriaCount != null) queryParams.Add("criteria.count", Configuration.ApiClient.ParameterToString(criteriaCount)); // query parameter
             
             
             
+            postBody = Configuration.ApiClient.Serialize(criteria); // http body (model) parameter
             
 
             
@@ -545,15 +520,11 @@ namespace VirtoCommerce.Client.Api
         /// <summary>
         /// Search for shopping carts by criteria 
         /// </summary>
-        /// <param name="criteriaKeyword">Gets or sets the value of search criteria keyword</param>
-        /// <param name="criteriaCustomerId">Gets or sets the value of search criteria customer id</param>
-        /// <param name="criteriaStoreId">Gets or sets the value of search criteria store id</param>
-        /// <param name="criteriaStart">Gets or sets the value of search criteria skip records count</param>
-        /// <param name="criteriaCount">Gets or sets the value of search criteria page size</param>
+        /// <param name="criteria">Search criteria</param>
         /// <returns>Task of VirtoCommerceCartModuleWebModelSearchResult</returns>
-        public async System.Threading.Tasks.Task<VirtoCommerceCartModuleWebModelSearchResult> CartModuleSearchCartsAsync (string criteriaKeyword = null, string criteriaCustomerId = null, string criteriaStoreId = null, int? criteriaStart = null, int? criteriaCount = null)
+        public async System.Threading.Tasks.Task<VirtoCommerceCartModuleWebModelSearchResult> CartModuleSearchCartsAsync (VirtoCommerceCartModuleWebModelSearchCriteria criteria)
         {
-             ApiResponse<VirtoCommerceCartModuleWebModelSearchResult> response = await CartModuleSearchCartsAsyncWithHttpInfo(criteriaKeyword, criteriaCustomerId, criteriaStoreId, criteriaStart, criteriaCount);
+             ApiResponse<VirtoCommerceCartModuleWebModelSearchResult> response = await CartModuleSearchCartsAsyncWithHttpInfo(criteria);
              return response.Data;
 
         }
@@ -561,14 +532,12 @@ namespace VirtoCommerce.Client.Api
         /// <summary>
         /// Search for shopping carts by criteria 
         /// </summary>
-        /// <param name="criteriaKeyword">Gets or sets the value of search criteria keyword</param>
-        /// <param name="criteriaCustomerId">Gets or sets the value of search criteria customer id</param>
-        /// <param name="criteriaStoreId">Gets or sets the value of search criteria store id</param>
-        /// <param name="criteriaStart">Gets or sets the value of search criteria skip records count</param>
-        /// <param name="criteriaCount">Gets or sets the value of search criteria page size</param>
+        /// <param name="criteria">Search criteria</param>
         /// <returns>Task of ApiResponse (VirtoCommerceCartModuleWebModelSearchResult)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceCartModuleWebModelSearchResult>> CartModuleSearchCartsAsyncWithHttpInfo (string criteriaKeyword = null, string criteriaCustomerId = null, string criteriaStoreId = null, int? criteriaStart = null, int? criteriaCount = null)
+        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceCartModuleWebModelSearchResult>> CartModuleSearchCartsAsyncWithHttpInfo (VirtoCommerceCartModuleWebModelSearchCriteria criteria)
         {
+            // verify the required parameter 'criteria' is set
+            if (criteria == null) throw new ApiException(400, "Missing required parameter 'criteria' when calling CartModuleSearchCarts");
             
     
             var path_ = "/api/cart/carts";
@@ -592,14 +561,10 @@ namespace VirtoCommerce.Client.Api
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
             
-            if (criteriaKeyword != null) queryParams.Add("criteria.keyword", Configuration.ApiClient.ParameterToString(criteriaKeyword)); // query parameter
-            if (criteriaCustomerId != null) queryParams.Add("criteria.customerId", Configuration.ApiClient.ParameterToString(criteriaCustomerId)); // query parameter
-            if (criteriaStoreId != null) queryParams.Add("criteria.storeId", Configuration.ApiClient.ParameterToString(criteriaStoreId)); // query parameter
-            if (criteriaStart != null) queryParams.Add("criteria.start", Configuration.ApiClient.ParameterToString(criteriaStart)); // query parameter
-            if (criteriaCount != null) queryParams.Add("criteria.count", Configuration.ApiClient.ParameterToString(criteriaCount)); // query parameter
             
             
             
+            postBody = Configuration.ApiClient.Serialize(criteria); // http body (model) parameter
             
 
             

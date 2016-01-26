@@ -15,6 +15,10 @@ namespace VirtoCommerce.CustomerModule.Web.Model
             get { return FullName; }
         }
 
+        public string FirstName { get; set; }
+        public string MiddleName { get; set; }
+        public string LastName { get; set; }
+
         public string FullName { get; set; }
         public string TimeZone { get; set; }
 

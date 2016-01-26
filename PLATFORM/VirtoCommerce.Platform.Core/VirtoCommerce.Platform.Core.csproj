@@ -233,6 +233,7 @@
     <Compile Include="Security\ApiAccount.cs" />
     <Compile Include="Security\ApiAccountType.cs" />
     <Compile Include="Security\ApplicationUserExtended.cs" />
+    <Compile Include="Security\AuthentificationOptions.cs" />
     <Compile Include="Security\CheckPermissionAttribute.cs" />
     <Compile Include="Security\IPermissionScopeService.cs" />
     <Compile Include="Security\IRoleManagementService.cs" />

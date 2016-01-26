@@ -25,8 +25,11 @@
             SecurityUpdate = "platform:security:update",
             SecurityDelete = "platform:security:delete";
         public const string SecurityCallApi = "security:call_api";
-        public const string BackgroundJobsManage = "background_jobs:manage",
-                PlatformExportImport = "platform:exportImport";
+        public const string BackgroundJobsManage = "background_jobs:manage";
+        public const string PlatformExportImportAccess = "platform:exportImport:access",
+            PlatformImport = "platform:import",
+            PlatformExport = "platform:export";
+
 
         public static Permission[] Permissions { get; private set; }
 
@@ -216,6 +219,27 @@
                     Description = "Permission to update assets.",
                     ModuleId = "VirtoCommerce.Platform",
                     GroupName = "Asset management"
+                },
+                 new Permission
+                {
+                    Id = PlatformExportImportAccess,
+                    Name = "Platform export&import access",
+                    ModuleId = "VirtoCommerce.Platform",
+                    GroupName = "Platform export&import"
+                },
+                  new Permission
+                {
+                    Id = PlatformExport,
+                    Name = "Platform export",
+                    ModuleId = "VirtoCommerce.Platform",
+                    GroupName = "Platform export&import"
+                },
+                   new Permission
+                {
+                    Id = PlatformImport,
+                    Name = "Platform import",
+                    ModuleId = "VirtoCommerce.Platform",
+                    GroupName = "Platform export&import"
                 }
             };
         }

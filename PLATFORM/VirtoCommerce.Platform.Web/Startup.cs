@@ -160,7 +160,7 @@ namespace VirtoCommerce.Platform.Web
             AuthConfig.RegisterAuth();
 
             // Security OWIN configuration
-            var authenticationOptions = new AuthenticationOptions
+            var authenticationOptions = new Core.Security.AuthenticationOptions
             {
                 CookiesEnabled = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Authentication:Cookies.Enabled", true),
                 CookiesValidateInterval = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Authentication:Cookies.ValidateInterval", TimeSpan.FromDays(1)),
@@ -497,43 +497,9 @@ namespace VirtoCommerce.Platform.Web
             var relativePath = rootUri.MakeRelativeUri(fullUri).ToString();
             return relativePath;
         }
-
-
     }
 
-    public class AuthenticationOptions
-    {
-        public bool CookiesEnabled { get; set; }
-        public TimeSpan CookiesValidateInterval { get; set; }
+   
 
-        public bool BearerTokensEnabled { get; set; }
-        public TimeSpan BearerTokensExpireTimeSpan { get; set; }
-
-        public bool HmacEnabled { get; set; }
-        public TimeSpan HmacSignatureValidityPeriod { get; set; }
-
-        public bool ApiKeysEnabled { get; set; }
-        public string ApiKeysHttpHeaderName { get; set; }
-        public string ApiKeysQueryStringParameterName { get; set; }
-    }
-
-    public static class HtmlHelperExtensions
-    {
-        private static MvcHtmlString _version;
-        /// <summary>
-        /// Versions the specified HTML.
-        /// </summary>
-        /// <param name="html">The HTML.</param>
-        /// <returns>MvcHtmlString.</returns>
-        public static MvcHtmlString Version(this HtmlHelper html)
-        {
-            if (_version == null)
-            {
-                var assembly = Assembly.GetExecutingAssembly();
-                _version = new MvcHtmlString(String.Format("{0}.{1}", assembly.GetInformationalVersion(), assembly.GetFileVersion()));
-            }
-
-            return _version;
-        }
-    }
+  
 }

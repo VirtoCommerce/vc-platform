@@ -1,4 +1,5 @@
 ﻿@using VirtoCommerce.Platform.Web
+@using VirtoCommerce.Platform.Web.Extensions
 <!DOCTYPE html>
 <html lang="en" ng-app="platformWebApp">
 <head>
@@ -21,6 +22,7 @@
 <body ng-controller="platformWebApp.appCtrl">
     <script type="text/javascript">
         var platformVersion = '@Html.Version()';
+        var demoCredentials = @(Html.DemoCredentials());
     </script>
     @Html.Partial("_GoogleAnalyticsPartial")
     @RenderBody()

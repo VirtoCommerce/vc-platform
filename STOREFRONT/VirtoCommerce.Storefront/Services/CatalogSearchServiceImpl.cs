@@ -94,7 +94,7 @@ namespace VirtoCommerce.Storefront.Services
                 var category = await _catalogModuleApi.CatalogModuleCategoriesGetAsync(criteria.CategoryId);
                 if (category != null)
                 {
-                    retVal.Category = category.ToWebModel();
+                    retVal.Category = category.ToWebModel(workContext.CurrentLanguage);
                 }
             }
 
@@ -111,7 +111,7 @@ namespace VirtoCommerce.Storefront.Services
 
                 if (result.Categories != null && result.Categories.Any())
                 {
-                    retVal.Categories = result.Categories.Select(x => x.ToWebModel());
+                    retVal.Categories = result.Categories.Select(x => x.ToWebModel(workContext.CurrentLanguage));
                 }
 
                 if (result.Aggregations != null)
