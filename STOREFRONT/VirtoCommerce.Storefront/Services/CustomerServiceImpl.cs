@@ -10,6 +10,7 @@ using VirtoCommerce.Client.Api;
 using VirtoCommerce.Storefront.Converters;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Common;
+using VirtoCommerce.Storefront.Model.Common.Exceptions;
 using VirtoCommerce.Storefront.Model.Customer;
 using VirtoCommerce.Storefront.Model.Customer.Services;
 using VirtoCommerce.Storefront.Model.Order.Events;
@@ -37,9 +38,12 @@ namespace VirtoCommerce.Storefront.Services
         {
            var retVal = await _cacheManager.GetAsync(GetCacheKey(customerId), "ApiRegion", async () => 
            {
-               Debug.WriteLine("#" + Thread.CurrentThread.ManagedThreadId + " GetCustomerByIdAsync");
                //TODO: Make parallels call
                var contact =  await _customerApi.CustomerModuleGetContactByIdAsync(customerId);
+               if (contact == null)
+               {
+                   throw new StorefrontException("Contact with id " + customerId + " not found");
+               }
                var ordersResponse = await _orderApi.OrderModuleSearchAsync(criteriaCustomerId: customerId, criteriaResponseGroup: "full");
                var result = contact.ToWebModel();
                result.OrdersCount = ordersResponse.TotalCount.Value;

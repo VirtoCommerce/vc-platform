@@ -83,6 +83,7 @@ namespace VirtoCommerce.Storefront.Owin
                     foreach (var store in workContext.AllStores)
                     {
                         store.SyncCurrencies(workContext.AllCurrencies, workContext.CurrentLanguage);
+                        store.CurrentSeoInfo = store.SeoInfos.FirstOrDefault(x => x.Language == workContext.CurrentLanguage);
                     }
                     
                     //Set current currency

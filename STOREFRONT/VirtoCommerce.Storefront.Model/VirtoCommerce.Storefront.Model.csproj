@@ -83,6 +83,7 @@
     <Compile Include="Common\Events\EventPublisher.cs" />
     <Compile Include="Common\Events\IEventPublisher.cs" />
     <Compile Include="Common\Events\IPriorityObserver.cs" />
+    <Compile Include="Common\Exceptions\StorefrontException.cs" />
     <Compile Include="Customer\Services\ICustomerService.cs" />
     <Compile Include="Order\Events\OrderPlacedEvent.cs" />
     <Compile Include="Quote\Services\IQuoteRequestBuilder.cs" />
