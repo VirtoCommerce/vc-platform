@@ -168,7 +168,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
         public ICollection<ValidationError> ValidationWarnings { get; set; }
 
         #region IDiscountable Members
-        public ICollection<Discount> Discounts { get; }
+        public ICollection<Discount> Discounts { get; private set; }
 
         public Currency Currency { get; set; }
 
