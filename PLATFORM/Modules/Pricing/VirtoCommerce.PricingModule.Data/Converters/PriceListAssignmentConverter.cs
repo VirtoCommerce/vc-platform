@@ -26,6 +26,11 @@ namespace VirtoCommerce.PricingModule.Data.Converters
 
 			var retVal = new coreModel.PricelistAssignment();
 			retVal.InjectFrom(dbEntity);
+            if(dbEntity.Pricelist != null)
+            {
+                retVal.Pricelist = dbEntity.Pricelist.ToCoreModel();
+            }
+      
 			return retVal;
 
 		}
