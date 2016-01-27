@@ -1,15 +1,42 @@
+<div class="blade-static">
+    <div class="form-group">
+        <div class="form-input __search">
+            <input placeholder="{{'platform.placeholders.search-keyword' | translate}}" ng-model="filter.keyword" ng-keyup="$event.which === 13 && filter.criteriaChanged()" />
+            <button class="btn __other" style="position: relative;right: 45px;">
+                <i class="btn-ico fa fa-times-circle" title="Clear" ng-click="filter.keyword=null;filter.criteriaChanged()"></i>
+            </button>
+        </div>
+        <p class="form-count">{{ 'platform.list.count' | translate }}: <span class="count">{{pageSettings.totalItems}}</span></p>
+    </div>
+</div>
+<div class="blade-static __bottom" ng-if="pageSettings.itemsPerPageCount < pageSettings.totalItems" ng-include="'pagerTemplate.html'"></div>
 <div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
-            <ul class="list __items" ng-if="blade.currentEntities.length">
-                <li class="list-item" ng-click="blade.openBlade(data)" ng-repeat="data in blade.currentEntities | orderBy:name track by data.id" ng-class="{'__selected': data.id === selectedNodeId}">
-                    <i class="list-ico fa fa-archive"></i>
-                    <span class="list-name">
-                        {{data.name}}
-                    </span>
-                </li>
-            </ul>
+            <div class="table-wrapper" ng-init="setGridOptions({
+                    useExternalSorting: true,
+                    rowTemplate: 'list.row.html',
+                    columnDefs: [
+                                { name: 'actions', displayName: '', enableColumnResizing: false, enableSorting: false, width: 30, cellTemplate: 'list-actions.cell.html', pinnedLeft:true },
+                                { name: 'name', displayName: 'stores.blades.stores-list.labels.name', sort: { direction: uiGridConstants.ASC }}
+                        ]})">
+                <div ui-grid="gridOptions" ui-grid-auto-resize ui-grid-save-state ui-grid-resize-columns ui-grid-move-columns ui-grid-pinning ui-grid-height></div>
+                <ul class="menu __context" role="menu" id="sto_menu">
+                    <li class="menu-item" ng-click='blade.selectNode(contextMenuEntity)'>
+                        <i class="menu-ico fa fa-edit"></i> {{'platform.commands.manage' | translate}}
+                    </li>
+                </ul>
+            </div>
             <p class="text" ng-if="!blade.currentEntities.length">{{ 'stores.blades.stores-list.labels.no-stores' | translate }}</p>
         </div>
     </div>
 </div>
+
+<script type="text/ng-template" id="list.row.html">
+    <div ng-click="grid.appScope.blade.selectNode(row.entity)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + '-' + col.uid + '-cell'" class="ui-grid-cell" ng-class="{'ui-grid-row-header-cell': col.isRowHeader, '__hovered': grid.appScope.contextMenuEntity === row.entity, '__selected': row.entity.id===grid.appScope.selectedNodeId }" role="{{col.isRowHeader ? 'rowheader' : 'gridcell' }}" ui-grid-cell context-menu="grid.appScope.contextMenuEntity = row.entity" data-target="sto_menu"></div>
+</script>
+<script type="text/ng-template" id="list-actions.cell.html">
+    <div class="ui-grid-actions" left-click-menu="grid.appScope.contextMenuEntity = row.entity" data-target="sto_menu">
+        <i class="fa fa-ellipsis-v"></i>
+    </div>
+</script>
