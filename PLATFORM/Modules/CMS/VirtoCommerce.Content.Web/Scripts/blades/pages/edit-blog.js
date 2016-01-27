@@ -1,9 +1,9 @@
 ﻿angular.module('virtoCommerce.contentModule')
-.controller('virtoCommerce.contentModule.editBlogController', ['$scope', 'virtoCommerce.contentModule.pages', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', function ($scope, pages, bladeNavigationService, dialogService) {
-    $scope.setForm = function (form) {
-        $scope.formScope = form;
-    }
-
+.controller('virtoCommerce.contentModule.editBlogController', ['$scope', 'platformWebApp.validators', 'virtoCommerce.contentModule.pages', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', function ($scope, validators, pages, bladeNavigationService, dialogService) {
+    $scope.validators = validators;
+    var formScope;
+    $scope.setForm = function (form) { $scope.formScope = formScope = form; }
+    
     var blade = $scope.blade;
     blade.originalEntity = angular.copy(blade.entity);
 
@@ -16,7 +16,7 @@
 				        blade.saveChanges();
 				    },
 				    canExecuteMethod: function () {
-				        return !angular.equals(blade.originalEntity, blade.entity) && !$scope.formScope.$invalid;
+				        return !angular.equals(blade.originalEntity, blade.entity) && formScope.$valid;
 				    },
 				    permission: 'marketing:update'
 				},

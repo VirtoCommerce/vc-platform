@@ -35,25 +35,22 @@
         "title-new": "New {{name}}",
         "subtitle-new": "Create new {{name}}",
         "labels": {
+          "liquid-documentation": "Liquid Documentation",
           "asset-name": "Asset name",
           "upload-new-file": "Upload new file",
           "progress": "Progress"
         },
         "placeholders": {
           "asset-name": "Enter asset name"
+        },
+         "validations": {
+          "name-invalid": "Name can contain alphanumeric, \"_\", \"-\" and \".\" characters only."
         }
       },
       "edit-image-asset": {
         "subtitle": "Edit {{name}}",
         "title-new": "New {{name}}",
-        "subtitle-new": "Create new {{name}}",
-        "labels": {
-          "asset-name": "Asset name:",
-          "liquid-documentation": "Liquid Documentation"
-        },
-        "placeholders": {
-          "asset-name": "Enter asset name"
-        }
+        "subtitle-new": "Create new {{name}}"
       },
       "pages-list": {
         "title-pages": "{{name}} pages list",
@@ -106,6 +103,9 @@
           "name": "Enter name",
           "language": "Select...",
           "metadata": "Enter metadata"
+        },
+        "validations": {
+          "pageName-invalid": "Page name can contain alphanumeric, \"_\", \"-\" and \".\" characters only."
         }
       },
       "menu-link-list": {
@@ -133,6 +133,9 @@
         },
         "placeholders": {
           "blog-name": "Enter blog name"
+        },
+        "validations": {
+          "name-invalid": "Name can contain alphanumeric, \"_\", \"-\" and \".\" characters only."
         }
       },
       "theme-asset-list": {

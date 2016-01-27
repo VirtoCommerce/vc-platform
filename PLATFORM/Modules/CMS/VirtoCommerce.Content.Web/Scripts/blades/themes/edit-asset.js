@@ -1,7 +1,11 @@
 ﻿angular.module('virtoCommerce.contentModule')
-.controller('virtoCommerce.contentModule.editAssetController', ['$scope', 'platformWebApp.dialogService', 'virtoCommerce.contentModule.themes', '$timeout', 'platformWebApp.bladeNavigationService', function ($scope, dialogService, themes, $timeout, bladeNavigationService) {
+.controller('virtoCommerce.contentModule.editAssetController', ['$scope', 'platformWebApp.validators', 'platformWebApp.dialogService', 'virtoCommerce.contentModule.themes', '$timeout', 'platformWebApp.bladeNavigationService', function ($scope, validators, dialogService, themes, $timeout, bladeNavigationService) {
     var blade = $scope.blade;
     var codemirrorEditor;
+
+    $scope.validators = validators;
+    var formScope;
+    $scope.setForm = function (form) { formScope = form; }
 
     blade.initializeBlade = function () {
         blade.origEntity = angular.copy(blade.currentEntity);
@@ -48,11 +52,9 @@
             $scope.blade.toolbarCommands = [
 			{
 			    name: "platform.commands.save", icon: 'fa fa-save',
-			    executeMethod: function () {
-			        $scope.saveChanges();
-			    },
+			    executeMethod: $scope.saveChanges,
 			    canExecuteMethod: function () {
-			        return isDirty();
+			        return isDirty() && formScope.$valid;
 			    },
 			    permission: 'content:update'
 			},
@@ -81,11 +83,9 @@
             $scope.blade.toolbarCommands = [
 			{
 			    name: "platform.commands.create", icon: 'fa fa-save',
-			    executeMethod: function () {
-			        $scope.saveChanges();
-			    },
+			    executeMethod: $scope.saveChanges,
 			    canExecuteMethod: function () {
-			        return isDirty();
+			        return isDirty() && formScope.$valid;
 			    },
 			    permission: 'content:update'
 			}];
