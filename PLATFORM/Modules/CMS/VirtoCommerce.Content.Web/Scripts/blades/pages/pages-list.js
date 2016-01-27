@@ -60,7 +60,7 @@
                     body: body,
                     metadata: metadata,
                     title: 'content.blades.edit-page.title',
-                    titlevalues: { name: data.name },
+                    titleValues: { name: data.name },
                     subtitle: 'content.blades.edit-page.subtitle',
                     controller: 'virtoCommerce.contentModule.editPageController',
                     template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/pages/edit-page.tpl.html'
@@ -76,7 +76,7 @@
                     choosenPageLanguage: data.language,
                     newPage: false,
                     title: 'content.blades.edit-page.title',
-                    titlevalues: { name: data.name },
+                    titleValues: { name: data.name },
                     subtitle: 'content.blades.edit-page.subtitle',
                     controller: 'virtoCommerce.contentModule.editPageController',
                     template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/pages/edit-page.tpl.html'
