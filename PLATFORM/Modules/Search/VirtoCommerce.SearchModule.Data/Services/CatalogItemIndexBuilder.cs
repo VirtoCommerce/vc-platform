@@ -59,7 +59,7 @@ namespace VirtoCommerce.SearchModule.Data.Services
         public IEnumerable<IDocument> CreateDocuments(Partition partition)
         {
             if (partition == null)
-                throw new ArgumentNullException(nameof(partition));
+                throw new ArgumentNullException("partition");
 
             var documents = new ConcurrentBag<IDocument>();
 
