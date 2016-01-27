@@ -158,12 +158,9 @@ $RECYCLE.BIN/
 /PLATFORM/Modules/Catalog/VirtoCommerce.CatalogModule.Test/products.csv
 /PLATFORM/Modules/Marketing/VirtoCommerce.MarketingModule.Data/app.config
 /STOREFRONT/packages
-/STOREFRONT/Website/App_Data/Themes/SampleStore/Default
-/STOREFRONT/Website/App_Data/Themes/AppleStore/Default
-/STOREFRONT/Website/App_Data/Pages
-/STOREFRONT/Website/App_Data/Themes/*
-!/STOREFRONT/Website/App_Data/Themes/_**
-!/STOREFRONT/Website/App_Data/Themes/default/**
+/STOREFRONT/VirtoCommerce.Storefront/App_Data/Themes/*
+/STOREFRONT/VirtoCommerce.Storefront/App_Data/Pages/*
+!/STOREFRONT/VirtoCommerce.Storefront/App_Data/Themes/default/*
 .vs/
 /PLATFORM/VirtoCommerce.Platform.Web/client_packages
 /PLATFORM/VirtoCommerce.Platform.Web/node_modules
