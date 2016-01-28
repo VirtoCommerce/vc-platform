@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CacheManager.Core;
 using VirtoCommerce.Client.Api;
+using VirtoCommerce.Client.Model;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Services;
 
@@ -22,9 +23,16 @@ namespace VirtoCommerce.Storefront.Services
         public async Task<string> GetDynamicContentHtmlAsync(string storeId, string placeholderName)
         {
             string htmlContent = null;
+
             //TODO: make full context
+            var evaluationContext = new VirtoCommerceDomainMarketingModelDynamicContentDynamicContentEvaluationContext
+            {
+                StoreId = storeId,
+                PlaceName = placeholderName
+            };
+
             var cacheKey = "MarketingServiceImpl.GetDynamicContentHtmlAsync-" + storeId + "-" + placeholderName;
-            var dynamicContent = await _cacheManager.GetAsync(cacheKey, "ApiRegion", async() => await _marketingApi.MarketingModuleDynamicContentEvaluateDynamicContentAsync(evalContextStoreId: storeId, evalContextPlaceName: placeholderName));
+            var dynamicContent = await _cacheManager.GetAsync(cacheKey, "ApiRegion", async () => await _marketingApi.MarketingModuleDynamicContentEvaluateDynamicContentAsync(evaluationContext));
             if (dynamicContent != null)
             {
                 var htmlDynamicContent = dynamicContent.FirstOrDefault(dc => !string.IsNullOrEmpty(dc.ContentType) && dc.ContentType.Equals("Html", StringComparison.OrdinalIgnoreCase));
