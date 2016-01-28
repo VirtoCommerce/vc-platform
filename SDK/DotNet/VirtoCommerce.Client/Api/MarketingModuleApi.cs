@@ -974,13 +974,9 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// Allow to find all marketing module objects (Promotions, Dynamic content objects)
         /// </remarks>
-        /// <param name="criteriaFolderId"></param>
-        /// <param name="criteriaResponseGroup"></param>
-        /// <param name="criteriaKeyword"></param>
-        /// <param name="criteriaStart"></param>
-        /// <param name="criteriaCount"></param>
+        /// <param name="criteria">criteria</param>
         /// <returns>VirtoCommerceMarketingModuleWebModelMarketingSearchResult</returns>
-        VirtoCommerceMarketingModuleWebModelMarketingSearchResult MarketingModuleSearch (string criteriaFolderId = null, string criteriaResponseGroup = null, string criteriaKeyword = null, int? criteriaStart = null, int? criteriaCount = null);
+        VirtoCommerceMarketingModuleWebModelMarketingSearchResult MarketingModuleSearch (VirtoCommerceDomainMarketingModelMarketingSearchCriteria criteria);
   
         /// <summary>
         /// Search marketing objects by given criteria
@@ -988,13 +984,9 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// Allow to find all marketing module objects (Promotions, Dynamic content objects)
         /// </remarks>
-        /// <param name="criteriaFolderId"></param>
-        /// <param name="criteriaResponseGroup"></param>
-        /// <param name="criteriaKeyword"></param>
-        /// <param name="criteriaStart"></param>
-        /// <param name="criteriaCount"></param>
+        /// <param name="criteria">criteria</param>
         /// <returns>ApiResponse of VirtoCommerceMarketingModuleWebModelMarketingSearchResult</returns>
-        ApiResponse<VirtoCommerceMarketingModuleWebModelMarketingSearchResult> MarketingModuleSearchWithHttpInfo (string criteriaFolderId = null, string criteriaResponseGroup = null, string criteriaKeyword = null, int? criteriaStart = null, int? criteriaCount = null);
+        ApiResponse<VirtoCommerceMarketingModuleWebModelMarketingSearchResult> MarketingModuleSearchWithHttpInfo (VirtoCommerceDomainMarketingModelMarketingSearchCriteria criteria);
 
         /// <summary>
         /// Search marketing objects by given criteria
@@ -1002,13 +994,9 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// Allow to find all marketing module objects (Promotions, Dynamic content objects)
         /// </remarks>
-        /// <param name="criteriaFolderId"></param>
-        /// <param name="criteriaResponseGroup"></param>
-        /// <param name="criteriaKeyword"></param>
-        /// <param name="criteriaStart"></param>
-        /// <param name="criteriaCount"></param>
+        /// <param name="criteria">criteria</param>
         /// <returns>Task of VirtoCommerceMarketingModuleWebModelMarketingSearchResult</returns>
-        System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelMarketingSearchResult> MarketingModuleSearchAsync (string criteriaFolderId = null, string criteriaResponseGroup = null, string criteriaKeyword = null, int? criteriaStart = null, int? criteriaCount = null);
+        System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelMarketingSearchResult> MarketingModuleSearchAsync (VirtoCommerceDomainMarketingModelMarketingSearchCriteria criteria);
 
         /// <summary>
         /// Search marketing objects by given criteria
@@ -1016,13 +1004,9 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// Allow to find all marketing module objects (Promotions, Dynamic content objects)
         /// </remarks>
-        /// <param name="criteriaFolderId"></param>
-        /// <param name="criteriaResponseGroup"></param>
-        /// <param name="criteriaKeyword"></param>
-        /// <param name="criteriaStart"></param>
-        /// <param name="criteriaCount"></param>
+        /// <param name="criteria">criteria</param>
         /// <returns>Task of ApiResponse (VirtoCommerceMarketingModuleWebModelMarketingSearchResult)</returns>
-        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelMarketingSearchResult>> MarketingModuleSearchAsyncWithHttpInfo (string criteriaFolderId = null, string criteriaResponseGroup = null, string criteriaKeyword = null, int? criteriaStart = null, int? criteriaCount = null);
+        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelMarketingSearchResult>> MarketingModuleSearchAsyncWithHttpInfo (VirtoCommerceDomainMarketingModelMarketingSearchCriteria criteria);
         
     }
   
@@ -4318,29 +4302,24 @@ namespace VirtoCommerce.Client.Api
         /// <summary>
         /// Search marketing objects by given criteria Allow to find all marketing module objects (Promotions, Dynamic content objects)
         /// </summary>
-        /// <param name="criteriaFolderId"></param> 
-        /// <param name="criteriaResponseGroup"></param> 
-        /// <param name="criteriaKeyword"></param> 
-        /// <param name="criteriaStart"></param> 
-        /// <param name="criteriaCount"></param> 
+        /// <param name="criteria">criteria</param> 
         /// <returns>VirtoCommerceMarketingModuleWebModelMarketingSearchResult</returns>
-        public VirtoCommerceMarketingModuleWebModelMarketingSearchResult MarketingModuleSearch (string criteriaFolderId = null, string criteriaResponseGroup = null, string criteriaKeyword = null, int? criteriaStart = null, int? criteriaCount = null)
+        public VirtoCommerceMarketingModuleWebModelMarketingSearchResult MarketingModuleSearch (VirtoCommerceDomainMarketingModelMarketingSearchCriteria criteria)
         {
-             ApiResponse<VirtoCommerceMarketingModuleWebModelMarketingSearchResult> response = MarketingModuleSearchWithHttpInfo(criteriaFolderId, criteriaResponseGroup, criteriaKeyword, criteriaStart, criteriaCount);
+             ApiResponse<VirtoCommerceMarketingModuleWebModelMarketingSearchResult> response = MarketingModuleSearchWithHttpInfo(criteria);
              return response.Data;
         }
 
         /// <summary>
         /// Search marketing objects by given criteria Allow to find all marketing module objects (Promotions, Dynamic content objects)
         /// </summary>
-        /// <param name="criteriaFolderId"></param> 
-        /// <param name="criteriaResponseGroup"></param> 
-        /// <param name="criteriaKeyword"></param> 
-        /// <param name="criteriaStart"></param> 
-        /// <param name="criteriaCount"></param> 
+        /// <param name="criteria">criteria</param> 
         /// <returns>ApiResponse of VirtoCommerceMarketingModuleWebModelMarketingSearchResult</returns>
-        public ApiResponse< VirtoCommerceMarketingModuleWebModelMarketingSearchResult > MarketingModuleSearchWithHttpInfo (string criteriaFolderId = null, string criteriaResponseGroup = null, string criteriaKeyword = null, int? criteriaStart = null, int? criteriaCount = null)
+        public ApiResponse< VirtoCommerceMarketingModuleWebModelMarketingSearchResult > MarketingModuleSearchWithHttpInfo (VirtoCommerceDomainMarketingModelMarketingSearchCriteria criteria)
         {
+            
+            // verify the required parameter 'criteria' is set
+            if (criteria == null) throw new ApiException(400, "Missing required parameter 'criteria' when calling MarketingModuleSearch");
             
     
             var path_ = "/api/marketing/search";
@@ -4364,20 +4343,16 @@ namespace VirtoCommerce.Client.Api
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
             
-            if (criteriaFolderId != null) queryParams.Add("criteria.folderId", Configuration.ApiClient.ParameterToString(criteriaFolderId)); // query parameter
-            if (criteriaResponseGroup != null) queryParams.Add("criteria.responseGroup", Configuration.ApiClient.ParameterToString(criteriaResponseGroup)); // query parameter
-            if (criteriaKeyword != null) queryParams.Add("criteria.keyword", Configuration.ApiClient.ParameterToString(criteriaKeyword)); // query parameter
-            if (criteriaStart != null) queryParams.Add("criteria.start", Configuration.ApiClient.ParameterToString(criteriaStart)); // query parameter
-            if (criteriaCount != null) queryParams.Add("criteria.count", Configuration.ApiClient.ParameterToString(criteriaCount)); // query parameter
             
             
             
+            postBody = Configuration.ApiClient.Serialize(criteria); // http body (model) parameter
             
 
             
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
 
             int statusCode = (int) response.StatusCode;
     
@@ -4395,15 +4370,11 @@ namespace VirtoCommerce.Client.Api
         /// <summary>
         /// Search marketing objects by given criteria Allow to find all marketing module objects (Promotions, Dynamic content objects)
         /// </summary>
-        /// <param name="criteriaFolderId"></param>
-        /// <param name="criteriaResponseGroup"></param>
-        /// <param name="criteriaKeyword"></param>
-        /// <param name="criteriaStart"></param>
-        /// <param name="criteriaCount"></param>
+        /// <param name="criteria">criteria</param>
         /// <returns>Task of VirtoCommerceMarketingModuleWebModelMarketingSearchResult</returns>
-        public async System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelMarketingSearchResult> MarketingModuleSearchAsync (string criteriaFolderId = null, string criteriaResponseGroup = null, string criteriaKeyword = null, int? criteriaStart = null, int? criteriaCount = null)
+        public async System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelMarketingSearchResult> MarketingModuleSearchAsync (VirtoCommerceDomainMarketingModelMarketingSearchCriteria criteria)
         {
-             ApiResponse<VirtoCommerceMarketingModuleWebModelMarketingSearchResult> response = await MarketingModuleSearchAsyncWithHttpInfo(criteriaFolderId, criteriaResponseGroup, criteriaKeyword, criteriaStart, criteriaCount);
+             ApiResponse<VirtoCommerceMarketingModuleWebModelMarketingSearchResult> response = await MarketingModuleSearchAsyncWithHttpInfo(criteria);
              return response.Data;
 
         }
@@ -4411,14 +4382,12 @@ namespace VirtoCommerce.Client.Api
         /// <summary>
         /// Search marketing objects by given criteria Allow to find all marketing module objects (Promotions, Dynamic content objects)
         /// </summary>
-        /// <param name="criteriaFolderId"></param>
-        /// <param name="criteriaResponseGroup"></param>
-        /// <param name="criteriaKeyword"></param>
-        /// <param name="criteriaStart"></param>
-        /// <param name="criteriaCount"></param>
+        /// <param name="criteria">criteria</param>
         /// <returns>Task of ApiResponse (VirtoCommerceMarketingModuleWebModelMarketingSearchResult)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelMarketingSearchResult>> MarketingModuleSearchAsyncWithHttpInfo (string criteriaFolderId = null, string criteriaResponseGroup = null, string criteriaKeyword = null, int? criteriaStart = null, int? criteriaCount = null)
+        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelMarketingSearchResult>> MarketingModuleSearchAsyncWithHttpInfo (VirtoCommerceDomainMarketingModelMarketingSearchCriteria criteria)
         {
+            // verify the required parameter 'criteria' is set
+            if (criteria == null) throw new ApiException(400, "Missing required parameter 'criteria' when calling MarketingModuleSearch");
             
     
             var path_ = "/api/marketing/search";
@@ -4442,20 +4411,16 @@ namespace VirtoCommerce.Client.Api
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
             
-            if (criteriaFolderId != null) queryParams.Add("criteria.folderId", Configuration.ApiClient.ParameterToString(criteriaFolderId)); // query parameter
-            if (criteriaResponseGroup != null) queryParams.Add("criteria.responseGroup", Configuration.ApiClient.ParameterToString(criteriaResponseGroup)); // query parameter
-            if (criteriaKeyword != null) queryParams.Add("criteria.keyword", Configuration.ApiClient.ParameterToString(criteriaKeyword)); // query parameter
-            if (criteriaStart != null) queryParams.Add("criteria.start", Configuration.ApiClient.ParameterToString(criteriaStart)); // query parameter
-            if (criteriaCount != null) queryParams.Add("criteria.count", Configuration.ApiClient.ParameterToString(criteriaCount)); // query parameter
             
             
             
+            postBody = Configuration.ApiClient.Serialize(criteria); // http body (model) parameter
             
 
             
 
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
 
             int statusCode = (int) response.StatusCode;
  

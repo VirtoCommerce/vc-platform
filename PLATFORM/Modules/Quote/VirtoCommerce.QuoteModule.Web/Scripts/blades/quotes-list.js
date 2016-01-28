@@ -16,7 +16,7 @@
         blade.refresh = function () {
             blade.isLoading = true;
             quotes.search({
-                q: $scope.filter.searchKeyword,
+                keyword: $scope.filter.searchKeyword,
                 start: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
                 count: $scope.pageSettings.itemsPerPageCount
             }, function (data) {

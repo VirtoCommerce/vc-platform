@@ -19,6 +19,11 @@
             DynamicPropertiesAccess = "platform:dynamic_properties:access",
             DynamicPropertiesUpdate = "platform:dynamic_properties:update",
             DynamicPropertiesDelete = "platform:dynamic_properties:delete";
+        public const string NotificationQuery = "platform:notification:read",
+            NotificationCreate = "platform:notification:create",
+            NotificationAccess = "platform:notification:access",
+            NotificationUpdate = "platform:notification:update",
+            NotificationDelete = "platform:notification:delete";
         public const string SecurityQuery = "platform:security:read",
             SecurityCreate = "platform:security:create",
             SecurityAccess = "platform:security:access",
@@ -124,6 +129,45 @@
                     Description = "Permission to update dynamic properties data.",
                     ModuleId = "VirtoCommerce.Platform",
                     GroupName = "Settings"
+                },new Permission
+                {
+                    Id = NotificationAccess,
+                    Name = "Open notifications menu",
+                    Description = "Permission to open notifications menu.",
+                    ModuleId = "VirtoCommerce.Platform",
+                    GroupName = "Notifications"
+                },
+                new Permission
+                {
+                    Id = NotificationCreate,
+                    Name = "Create notification template",
+                    Description = "Permission to create notification templates.",
+                    ModuleId = "VirtoCommerce.Platform",
+                    GroupName = "Notifications"
+                },
+                new Permission
+                {
+                    Id = NotificationDelete,
+                    Name = "Delete notification template",
+                    Description = "Permission to delete notification templates.",
+                    ModuleId = "VirtoCommerce.Platform",
+                    GroupName = "Notifications"
+                },
+                new Permission
+                {
+                    Id = NotificationQuery,
+                    Name = "View notification templates",
+                    Description = "Permission to browse and view notification templates.",
+                    ModuleId = "VirtoCommerce.Platform",
+                    GroupName = "Notifications"
+                },
+                new Permission
+                {
+                    Id = NotificationUpdate,
+                    Name = "Update notification template",
+                    Description = "Permission to update notification templates.",
+                    ModuleId = "VirtoCommerce.Platform",
+                    GroupName = "Notifications"
                 },
                 new Permission
                 {

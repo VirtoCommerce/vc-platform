@@ -1,7 +1,7 @@
 ﻿angular.module('virtoCommerce.marketingModule')
 	.factory('virtoCommerce.marketingModule.dynamicContent.search', ['$resource', function ($resource) {
 	    return $resource('api/marketing/search', {}, {
-	        search: {}
+	        search: { method: 'POST' }
 	    });
 	}])
     .factory('virtoCommerce.marketingModule.dynamicContent.contentItems', ['$resource', function ($resource) {
