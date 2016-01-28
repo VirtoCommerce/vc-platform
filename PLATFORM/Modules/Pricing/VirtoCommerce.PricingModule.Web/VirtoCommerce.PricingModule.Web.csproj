@@ -155,7 +155,6 @@
     <None Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Binders\PriceEvaluationContextBinder.cs" />
     <Compile Include="Controllers\Api\PricingModuleController.cs" />
     <Compile Include="Security\PricingPredefinedPermissions.cs" />
     <Compile Include="Converters\PricelistAssignmentConverter.cs" />

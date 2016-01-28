@@ -14,6 +14,7 @@ using Microsoft.Practices.Unity;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using VirtoCommerce.Client.Api;
+using VirtoCommerce.Client.Model;
 using VirtoCommerce.Storefront.Common;
 using VirtoCommerce.Storefront.Converters;
 using VirtoCommerce.Storefront.Model;
@@ -85,7 +86,7 @@ namespace VirtoCommerce.Storefront.Owin
                         store.SyncCurrencies(workContext.AllCurrencies, workContext.CurrentLanguage);
                         store.CurrentSeoInfo = store.SeoInfos.FirstOrDefault(x => x.Language == workContext.CurrentLanguage);
                     }
-                    
+
                     //Set current currency
                     workContext.CurrentCurrency = GetCurrency(context, workContext.CurrentStore);
                     //Current customer
@@ -117,14 +118,17 @@ namespace VirtoCommerce.Storefront.Owin
                         //Pricelists
                         var priceListCachey = String.Join("-", "EvaluatePriceLists", workContext.CurrentStore.Id, workContext.CurrentCustomer.Id);
                         workContext.CurrentPriceListIds = await _cacheManager.GetAsync(priceListCachey, "ApiRegion", async () =>
+                        {
+                            var evalContext = new VirtoCommerceDomainPricingModelPriceEvaluationContext
                             {
-                                var pricingResult = await _pricingModuleApi.PricingModuleEvaluatePriceListsAsync(
-                                    evalContextStoreId: workContext.CurrentStore.Id,
-                                    evalContextCatalogId: workContext.CurrentStore.Catalog,
-                                    evalContextCustomerId: workContext.CurrentCustomer.Id,
-                                    evalContextQuantity: 1);
-                                return pricingResult.Select(p => p.Id).ToList();
-                            });
+                                StoreId = workContext.CurrentStore.Id,
+                                CatalogId = workContext.CurrentStore.Catalog,
+                                CustomerId = workContext.CurrentCustomer.Id,
+                                Quantity = 1
+                            };
+                            var pricingResult = await _pricingModuleApi.PricingModuleEvaluatePriceListsAsync(evalContext);
+                            return pricingResult.Select(p => p.Id).ToList();
+                        });
                     }
                 }
             }
@@ -169,7 +173,7 @@ namespace VirtoCommerce.Storefront.Owin
 
             if (context.Authentication.User.Identity.IsAuthenticated)
             {
-                var sidClaim = context.Authentication.User.Claims.FirstOrDefault(x=>x.Type == ClaimTypes.Sid);
+                var sidClaim = context.Authentication.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid);
                 var userId = sidClaim != null ? sidClaim.Value : null;
                 if (userId == null)
                 {
