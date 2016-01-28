@@ -41,6 +41,35 @@ namespace VirtoCommerce.StoreModule.Web.Controllers.Api
         }
 
         /// <summary>
+        /// Search stores
+        /// </summary>
+        [HttpPost]
+        [Route("search")]
+        [OverrideAuthorization]
+        public webModel.SearchResult SearchStores(coreModel.SearchCriteria criteria)
+        {
+            //Filter resulting stores correspond to current user permissions
+            //first check global permission
+            if (!_securityService.UserHasAnyPermission(User.Identity.Name, null, StorePredefinedPermissions.Read))
+            {
+                //Get user 'read' permission scopes
+                criteria.StoreIds = _securityService.GetUserPermissions(User.Identity.Name)
+                                                      .Where(x => x.Id.StartsWith(StorePredefinedPermissions.Read))
+                                                      .SelectMany(x => x.AssignedScopes)
+                                                      .OfType<StoreSelectedScope>()
+                                                      .Select(x => x.Scope)
+                                                      .ToArray();
+            }
+            var result = _storeService.SearchStores(criteria);
+            var retVal = new webModel.SearchResult
+            {
+                TotalCount = result.TotalCount,
+                Stores = result.Stores.Select(x => x.ToWebModel()).ToArray()
+            };
+            return retVal;
+        }
+
+        /// <summary>
         /// Get all stores
         /// </summary>
         [HttpGet]
@@ -49,21 +78,13 @@ namespace VirtoCommerce.StoreModule.Web.Controllers.Api
         [OverrideAuthorization]
         public IHttpActionResult GetStores()
         {
-            var retVal = _storeService.GetStoreList().Select(x => x.ToWebModel()).ToArray();
-            //Filter resulting stores correspond to current user permissions
-            //first check global permission
-            if (!_securityService.UserHasAnyPermission(User.Identity.Name, null, StorePredefinedPermissions.Read))
+            var criteria = new coreModel.SearchCriteria
             {
-                //Get user 'read' permission scopes
-                var selectedStoreScopes = _securityService.GetUserPermissions(User.Identity.Name)
-                                                      .Where(x => x.Id.StartsWith(StorePredefinedPermissions.Read))
-                                                      .SelectMany(x => x.AssignedScopes)
-                                                      .OfType<StoreSelectedScope>()
-                                                      .Select(x => x.Scope)
-                                                      .ToArray();
-                retVal = retVal.Where(x => selectedStoreScopes.Contains(x.Id)).ToArray();
-            }
-            return Ok(retVal);
+                 Skip = 0,
+                 Take = int.MaxValue
+            };
+            var retVal = SearchStores(criteria);
+            return Ok(retVal.Stores);
         }
 
         /// <summary>
@@ -173,5 +194,7 @@ namespace VirtoCommerce.StoreModule.Web.Controllers.Api
                 throw new HttpResponseException(HttpStatusCode.Unauthorized);
             }
         }
+
+     
     }
 }

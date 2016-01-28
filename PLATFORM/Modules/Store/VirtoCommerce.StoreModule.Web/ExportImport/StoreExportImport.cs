@@ -72,7 +72,7 @@ namespace VirtoCommerce.StoreModule.Web.ExportImport
 
             return new BackupObject
             {
-                Stores = _storeService.GetStoreList().Select(x => x.Id).Select(x => _storeService.GetById(x)).ToArray()
+                Stores = _storeService.SearchStores(new SearchCriteria { Take = int.MaxValue }).Stores
             };
         }
 

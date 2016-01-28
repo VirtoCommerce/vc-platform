@@ -192,13 +192,13 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
         [Route("")]
         [ResponseType(typeof(CatalogSearchResult))]
         [ClientCache(Duration = 30)]
-        public IHttpActionResult Search(SearchCriteria criteria)
+        public IHttpActionResult Search(Domain.Catalog.Model.SearchCriteria criteria)
         {
-            criteria = criteria ?? new SearchCriteria();
+            criteria = criteria ?? new Domain.Catalog.Model.SearchCriteria();
             criteria.Normalize();
             criteria.ApplyRestrictionsForUser(User.Identity.Name, _securityService);
 
-            var result = new SearchResult();
+            var result = new Domain.Catalog.Model.SearchResult();
 
             if ((criteria.ResponseGroup & SearchResponseGroup.WithProducts) == SearchResponseGroup.WithProducts)
             {
@@ -219,7 +219,7 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
         }
 
 
-        private SearchResult SearchProducts(SearchCriteria criteria)
+        private Domain.Catalog.Model.SearchResult SearchProducts(Domain.Catalog.Model.SearchCriteria criteria)
         {
             var context = new Dictionary<string, object>
             {

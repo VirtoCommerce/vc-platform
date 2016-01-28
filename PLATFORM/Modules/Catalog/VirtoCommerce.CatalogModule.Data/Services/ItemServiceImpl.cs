@@ -36,8 +36,6 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 
         public coreModel.CatalogProduct[] GetByIds(string[] itemIds, coreModel.ItemResponseGroup respGroup)
         {
-            Stopwatch main = Stopwatch.StartNew();
-
             var retVal = new List<coreModel.CatalogProduct>();
             using (var repository = _catalogRepositoryFactory())
             {
