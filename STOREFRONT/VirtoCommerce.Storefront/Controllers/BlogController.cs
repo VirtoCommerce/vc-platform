@@ -71,6 +71,12 @@ namespace VirtoCommerce.Storefront.Controllers
             {
                 //If default file not found need create manually
                 retVal = new Blog();
+                retVal.Name = blogName;
+                retVal.Title = blogName;
+            }
+            if(retVal.Title == "default")
+            {
+                retVal.Title = blogName;
             }
             retVal.Url = "blogs/" + blogName;
             return retVal;

@@ -60,26 +60,29 @@ namespace VirtoCommerce.Storefront.Services
         /// <param name="pageIndex"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public IPagedList<ContentItem> LoadContentItemsByUrl(string url, Store store, Language language, Func<ContentItem> contentItemFactory, string[] excludingNames = null, int pageIndex = 1, int pageSize = 10)
+        public IPagedList<ContentItem> LoadContentItemsByUrl(string url, Store store, Language language, Func<ContentItem> contentItemFactory, string[] excludingNames = null, int pageIndex = 1, int pageSize = 10, bool renderContent = true)
         {
             var retVal = new List<ContentItem>();
             var totalCount = 0;
             url = Uri.UnescapeDataString(url);
             //construct local path {base path}\{store}\{url}
-            var localPath = _baseLocalPath + "\\" + store.Id + "\\" + url.Replace('/', '\\');
-            var isDirectorySearch = Directory.Exists(localPath);
+            var baseStorePath = _baseLocalPath + "\\" + store.Id + "\\";
+            var localSearchPath = baseStorePath + url.Replace('/', '\\');
+            var isDirectorySearch = Directory.Exists(localSearchPath);
             var searchPattern = "*.*";
             if (!isDirectorySearch)
             {
-                searchPattern = Path.GetFileNameWithoutExtension(localPath) + ".*";
-                localPath = Path.GetDirectoryName(localPath);
+                searchPattern = Path.GetFileNameWithoutExtension(localSearchPath) + ".*";
+                //Get parent directory path
+                localSearchPath = Path.GetDirectoryName(localSearchPath);
             }
 
-            if (Directory.Exists(localPath))
+            if (Directory.Exists(localSearchPath))
             {
                 //Search files by requested search pattern
-                var files = Directory.GetFiles(localPath, searchPattern, SearchOption.AllDirectories)
-                                             .Where(x => _extensions.Any(y => x.EndsWith(y)));
+                var files = Directory.GetFiles(localSearchPath, searchPattern, SearchOption.AllDirectories)
+                                             .Where(x => _extensions.Any(y => x.EndsWith(y)))
+                                             .Select(x=>x.Replace("\\\\", "\\"));
                 //Because can be exist files with same name but for different languages
                 //need filter and leave only files for requested language in file extension or without it (default)
                 //each content file  has a name pattern {name}.{language?}.{ext}
@@ -98,10 +101,10 @@ namespace VirtoCommerce.Storefront.Services
                     var contentItem = contentItemFactory();
                     contentItem.Name = localizedFile.Name;
                     contentItem.Language = language;
-                    contentItem.Url = localizedFile.GetUrl(url);
+                    contentItem.Url = GetUrlFromPath(localizedFile.LocalPath.Replace(baseStorePath, string.Empty));
                     contentItem.LocalPath = localizedFile.LocalPath;
 
-                    LoadAndRenderContentItem(contentItem);
+                    LoadAndRenderContentItem(contentItem, renderContent);
                     retVal.Add(contentItem);
                 }
             }
@@ -109,8 +112,7 @@ namespace VirtoCommerce.Storefront.Services
             return new StaticPagedList<ContentItem>(retVal, pageIndex, pageSize, totalCount);
         }
         #endregion
-
-        private void LoadAndRenderContentItem(ContentItem contentItem)
+         private void LoadAndRenderContentItem(ContentItem contentItem, bool renderContent)
         {
             var fileInfo = new FileInfo(contentItem.LocalPath);
 
@@ -121,25 +123,33 @@ namespace VirtoCommerce.Storefront.Services
             var metaHeaders = ReadYamlHeader(content);
             content = RemoveYamlHeader(content);
 
-            var workContext = _workContextFactory();
-            if (workContext != null)
+            if (renderContent)
             {
-                var shopifyContext = workContext.ToShopifyModel(_urlBuilderFactory());
-                var parameters = shopifyContext.ToLiquid() as Dictionary<string, object>;
-                parameters.Add("settings", _liquidEngine.GetSettings());
-                //Render content by liquid engine
-                content = _liquidEngine.RenderTemplate(content, parameters);
-            }
+                var workContext = _workContextFactory();
+                if (workContext != null)
+                {
+                    var shopifyContext = workContext.ToShopifyModel(_urlBuilderFactory());
+                    var parameters = shopifyContext.ToLiquid() as Dictionary<string, object>;
+                    parameters.Add("settings", _liquidEngine.GetSettings());
+                    //Render content by liquid engine
+                    content = _liquidEngine.RenderTemplate(content, parameters);
+                }
 
-            //Render markdown content
-            if (String.Equals(Path.GetExtension(contentItem.LocalPath), ".md", StringComparison.InvariantCultureIgnoreCase))
-            {
-                content = _markdownRender.Transform(content);
+                //Render markdown content
+                if (String.Equals(Path.GetExtension(contentItem.LocalPath), ".md", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    content = _markdownRender.Transform(content);
+                }
             }
 
             contentItem.LoadContent(content, metaHeaders);
         }
 
+        private static string GetUrlFromPath(string path)
+        {
+            var retVal = Path.GetDirectoryName(path) + "/" + Path.GetFileName(path).Split('.').First();
+            return Uri.EscapeUriString(retVal.TrimStart('/'));
+        }
 
         private static string RemoveYamlHeader(string text)
         {
@@ -254,16 +264,7 @@ namespace VirtoCommerce.Storefront.Services
             public string Language { get; private set; }
             public string LocalPath { get; private set; }
 
-            public string GetUrl(string url)
-            {
-                var retVal = url;
-                var fileName = "/" + Name;
-                if (!retVal.EndsWith(fileName))
-                {
-                    retVal += fileName;
-                }
-                return Uri.EscapeUriString(retVal.TrimStart('/'));
-            }
+            
 
         }
 

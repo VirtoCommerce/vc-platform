@@ -123,13 +123,13 @@ namespace VirtoCommerce.Storefront.Routing
         {
             if (store == null)
                 return null;
-            var cacheKey = String.Join(":", "TryToFindContentPageWithUrl", url, store.Id, language.CultureName);
+            var cacheKey = String.Join(":", "AllStaticContentForLanguage", store.Id, language.CultureName);
             var retVal = _cacheManager.Get(cacheKey, "ContentRegion", () =>
             {
-                var allPages = _contentService.LoadContentItemsByUrl("/", store, language, () => new ContentPage(), null,  1, int.MaxValue);
-                return allPages.FirstOrDefault(x => url.EndsWith(x.Url)) as ContentPage;
+                return _contentService.LoadContentItemsByUrl("/", store, language, () => new ContentPage(), null,  1, int.MaxValue, renderContent: false).OfType<ContentPage>().ToArray();
             });
-            return retVal;
+            url = url.TrimStart('/');
+            return retVal.FirstOrDefault(x => string.Equals(x.Permalink, url, StringComparison.CurrentCultureIgnoreCase) || string.Equals(x.Url, url, StringComparison.InvariantCultureIgnoreCase));
         }
 
         private List<VirtoCommerceDomainCommerceModelSeoInfo> GetSeoRecords(string path)

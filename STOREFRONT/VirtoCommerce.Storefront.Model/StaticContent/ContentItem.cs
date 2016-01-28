@@ -25,6 +25,7 @@ namespace VirtoCommerce.Storefront.Model.StaticContent
         /// </summary>
         public string Url { get; set; }
       
+        public string Permalink { get; set; }
         public List<string> Tags { get; set; }
         public ContentPublicationStatus PublicationStatus { get; set; }
 
@@ -53,7 +54,7 @@ namespace VirtoCommerce.Storefront.Model.StaticContent
                 switch (setting.Key.ToLower())
                 {
                     case "permalink":
-                        this.Url = settingValue;
+                        this.Permalink = settingValue;
                         break;
 
                     case "title":
