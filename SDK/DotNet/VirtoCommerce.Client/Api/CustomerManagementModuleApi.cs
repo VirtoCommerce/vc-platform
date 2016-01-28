@@ -182,13 +182,9 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// Get array of members satisfied search criteria.
         /// </remarks>
-        /// <param name="criteriaKeyword"></param>
-        /// <param name="criteriaOrganizationId"></param>
-        /// <param name="criteriaSort"></param>
-        /// <param name="criteriaSkip"></param>
-        /// <param name="criteriaTake"></param>
+        /// <param name="criteria">Search criteria</param>
         /// <returns>VirtoCommerceCustomerModuleWebModelSearchResult</returns>
-        VirtoCommerceCustomerModuleWebModelSearchResult CustomerModuleSearch (string criteriaKeyword = null, string criteriaOrganizationId = null, string criteriaSort = null, int? criteriaSkip = null, int? criteriaTake = null);
+        VirtoCommerceCustomerModuleWebModelSearchResult CustomerModuleSearch (VirtoCommerceDomainCustomerModelSearchCriteria criteria);
   
         /// <summary>
         /// Get members
@@ -196,13 +192,9 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// Get array of members satisfied search criteria.
         /// </remarks>
-        /// <param name="criteriaKeyword"></param>
-        /// <param name="criteriaOrganizationId"></param>
-        /// <param name="criteriaSort"></param>
-        /// <param name="criteriaSkip"></param>
-        /// <param name="criteriaTake"></param>
+        /// <param name="criteria">Search criteria</param>
         /// <returns>ApiResponse of VirtoCommerceCustomerModuleWebModelSearchResult</returns>
-        ApiResponse<VirtoCommerceCustomerModuleWebModelSearchResult> CustomerModuleSearchWithHttpInfo (string criteriaKeyword = null, string criteriaOrganizationId = null, string criteriaSort = null, int? criteriaSkip = null, int? criteriaTake = null);
+        ApiResponse<VirtoCommerceCustomerModuleWebModelSearchResult> CustomerModuleSearchWithHttpInfo (VirtoCommerceDomainCustomerModelSearchCriteria criteria);
 
         /// <summary>
         /// Get members
@@ -210,13 +202,9 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// Get array of members satisfied search criteria.
         /// </remarks>
-        /// <param name="criteriaKeyword"></param>
-        /// <param name="criteriaOrganizationId"></param>
-        /// <param name="criteriaSort"></param>
-        /// <param name="criteriaSkip"></param>
-        /// <param name="criteriaTake"></param>
+        /// <param name="criteria">Search criteria</param>
         /// <returns>Task of VirtoCommerceCustomerModuleWebModelSearchResult</returns>
-        System.Threading.Tasks.Task<VirtoCommerceCustomerModuleWebModelSearchResult> CustomerModuleSearchAsync (string criteriaKeyword = null, string criteriaOrganizationId = null, string criteriaSort = null, int? criteriaSkip = null, int? criteriaTake = null);
+        System.Threading.Tasks.Task<VirtoCommerceCustomerModuleWebModelSearchResult> CustomerModuleSearchAsync (VirtoCommerceDomainCustomerModelSearchCriteria criteria);
 
         /// <summary>
         /// Get members
@@ -224,13 +212,9 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// Get array of members satisfied search criteria.
         /// </remarks>
-        /// <param name="criteriaKeyword"></param>
-        /// <param name="criteriaOrganizationId"></param>
-        /// <param name="criteriaSort"></param>
-        /// <param name="criteriaSkip"></param>
-        /// <param name="criteriaTake"></param>
+        /// <param name="criteria">Search criteria</param>
         /// <returns>Task of ApiResponse (VirtoCommerceCustomerModuleWebModelSearchResult)</returns>
-        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceCustomerModuleWebModelSearchResult>> CustomerModuleSearchAsyncWithHttpInfo (string criteriaKeyword = null, string criteriaOrganizationId = null, string criteriaSort = null, int? criteriaSkip = null, int? criteriaTake = null);
+        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceCustomerModuleWebModelSearchResult>> CustomerModuleSearchAsyncWithHttpInfo (VirtoCommerceDomainCustomerModelSearchCriteria criteria);
         
         /// <summary>
         /// Get organizations
@@ -1040,29 +1024,24 @@ namespace VirtoCommerce.Client.Api
         /// <summary>
         /// Get members Get array of members satisfied search criteria.
         /// </summary>
-        /// <param name="criteriaKeyword"></param> 
-        /// <param name="criteriaOrganizationId"></param> 
-        /// <param name="criteriaSort"></param> 
-        /// <param name="criteriaSkip"></param> 
-        /// <param name="criteriaTake"></param> 
+        /// <param name="criteria">Search criteria</param> 
         /// <returns>VirtoCommerceCustomerModuleWebModelSearchResult</returns>
-        public VirtoCommerceCustomerModuleWebModelSearchResult CustomerModuleSearch (string criteriaKeyword = null, string criteriaOrganizationId = null, string criteriaSort = null, int? criteriaSkip = null, int? criteriaTake = null)
+        public VirtoCommerceCustomerModuleWebModelSearchResult CustomerModuleSearch (VirtoCommerceDomainCustomerModelSearchCriteria criteria)
         {
-             ApiResponse<VirtoCommerceCustomerModuleWebModelSearchResult> response = CustomerModuleSearchWithHttpInfo(criteriaKeyword, criteriaOrganizationId, criteriaSort, criteriaSkip, criteriaTake);
+             ApiResponse<VirtoCommerceCustomerModuleWebModelSearchResult> response = CustomerModuleSearchWithHttpInfo(criteria);
              return response.Data;
         }
 
         /// <summary>
         /// Get members Get array of members satisfied search criteria.
         /// </summary>
-        /// <param name="criteriaKeyword"></param> 
-        /// <param name="criteriaOrganizationId"></param> 
-        /// <param name="criteriaSort"></param> 
-        /// <param name="criteriaSkip"></param> 
-        /// <param name="criteriaTake"></param> 
+        /// <param name="criteria">Search criteria</param> 
         /// <returns>ApiResponse of VirtoCommerceCustomerModuleWebModelSearchResult</returns>
-        public ApiResponse< VirtoCommerceCustomerModuleWebModelSearchResult > CustomerModuleSearchWithHttpInfo (string criteriaKeyword = null, string criteriaOrganizationId = null, string criteriaSort = null, int? criteriaSkip = null, int? criteriaTake = null)
+        public ApiResponse< VirtoCommerceCustomerModuleWebModelSearchResult > CustomerModuleSearchWithHttpInfo (VirtoCommerceDomainCustomerModelSearchCriteria criteria)
         {
+            
+            // verify the required parameter 'criteria' is set
+            if (criteria == null) throw new ApiException(400, "Missing required parameter 'criteria' when calling CustomerModuleSearch");
             
     
             var path_ = "/api/members";
@@ -1086,20 +1065,16 @@ namespace VirtoCommerce.Client.Api
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
             
-            if (criteriaKeyword != null) queryParams.Add("criteria.keyword", Configuration.ApiClient.ParameterToString(criteriaKeyword)); // query parameter
-            if (criteriaOrganizationId != null) queryParams.Add("criteria.organizationId", Configuration.ApiClient.ParameterToString(criteriaOrganizationId)); // query parameter
-            if (criteriaSort != null) queryParams.Add("criteria.sort", Configuration.ApiClient.ParameterToString(criteriaSort)); // query parameter
-            if (criteriaSkip != null) queryParams.Add("criteria.skip", Configuration.ApiClient.ParameterToString(criteriaSkip)); // query parameter
-            if (criteriaTake != null) queryParams.Add("criteria.take", Configuration.ApiClient.ParameterToString(criteriaTake)); // query parameter
             
             
             
+            postBody = Configuration.ApiClient.Serialize(criteria); // http body (model) parameter
             
 
             
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
 
             int statusCode = (int) response.StatusCode;
     
@@ -1117,15 +1092,11 @@ namespace VirtoCommerce.Client.Api
         /// <summary>
         /// Get members Get array of members satisfied search criteria.
         /// </summary>
-        /// <param name="criteriaKeyword"></param>
-        /// <param name="criteriaOrganizationId"></param>
-        /// <param name="criteriaSort"></param>
-        /// <param name="criteriaSkip"></param>
-        /// <param name="criteriaTake"></param>
+        /// <param name="criteria">Search criteria</param>
         /// <returns>Task of VirtoCommerceCustomerModuleWebModelSearchResult</returns>
-        public async System.Threading.Tasks.Task<VirtoCommerceCustomerModuleWebModelSearchResult> CustomerModuleSearchAsync (string criteriaKeyword = null, string criteriaOrganizationId = null, string criteriaSort = null, int? criteriaSkip = null, int? criteriaTake = null)
+        public async System.Threading.Tasks.Task<VirtoCommerceCustomerModuleWebModelSearchResult> CustomerModuleSearchAsync (VirtoCommerceDomainCustomerModelSearchCriteria criteria)
         {
-             ApiResponse<VirtoCommerceCustomerModuleWebModelSearchResult> response = await CustomerModuleSearchAsyncWithHttpInfo(criteriaKeyword, criteriaOrganizationId, criteriaSort, criteriaSkip, criteriaTake);
+             ApiResponse<VirtoCommerceCustomerModuleWebModelSearchResult> response = await CustomerModuleSearchAsyncWithHttpInfo(criteria);
              return response.Data;
 
         }
@@ -1133,14 +1104,12 @@ namespace VirtoCommerce.Client.Api
         /// <summary>
         /// Get members Get array of members satisfied search criteria.
         /// </summary>
-        /// <param name="criteriaKeyword"></param>
-        /// <param name="criteriaOrganizationId"></param>
-        /// <param name="criteriaSort"></param>
-        /// <param name="criteriaSkip"></param>
-        /// <param name="criteriaTake"></param>
+        /// <param name="criteria">Search criteria</param>
         /// <returns>Task of ApiResponse (VirtoCommerceCustomerModuleWebModelSearchResult)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceCustomerModuleWebModelSearchResult>> CustomerModuleSearchAsyncWithHttpInfo (string criteriaKeyword = null, string criteriaOrganizationId = null, string criteriaSort = null, int? criteriaSkip = null, int? criteriaTake = null)
+        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceCustomerModuleWebModelSearchResult>> CustomerModuleSearchAsyncWithHttpInfo (VirtoCommerceDomainCustomerModelSearchCriteria criteria)
         {
+            // verify the required parameter 'criteria' is set
+            if (criteria == null) throw new ApiException(400, "Missing required parameter 'criteria' when calling CustomerModuleSearch");
             
     
             var path_ = "/api/members";
@@ -1164,20 +1133,16 @@ namespace VirtoCommerce.Client.Api
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
             
-            if (criteriaKeyword != null) queryParams.Add("criteria.keyword", Configuration.ApiClient.ParameterToString(criteriaKeyword)); // query parameter
-            if (criteriaOrganizationId != null) queryParams.Add("criteria.organizationId", Configuration.ApiClient.ParameterToString(criteriaOrganizationId)); // query parameter
-            if (criteriaSort != null) queryParams.Add("criteria.sort", Configuration.ApiClient.ParameterToString(criteriaSort)); // query parameter
-            if (criteriaSkip != null) queryParams.Add("criteria.skip", Configuration.ApiClient.ParameterToString(criteriaSkip)); // query parameter
-            if (criteriaTake != null) queryParams.Add("criteria.take", Configuration.ApiClient.ParameterToString(criteriaTake)); // query parameter
             
             
             
+            postBody = Configuration.ApiClient.Serialize(criteria); // http body (model) parameter
             
 
             
 
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
 
             int statusCode = (int) response.StatusCode;
  

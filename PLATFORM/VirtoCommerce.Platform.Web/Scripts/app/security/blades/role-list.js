@@ -17,7 +17,7 @@ function ($scope, roles, bladeNavigationService, dialogService, uiGridConstants,
     blade.refresh = function () {
         blade.isLoading = true;
 
-        roles.get({
+        roles.search({
             keyword: $scope.filter.searchKeyword,
             skipCount: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
             takeCount: $scope.pageSettings.itemsPerPageCount

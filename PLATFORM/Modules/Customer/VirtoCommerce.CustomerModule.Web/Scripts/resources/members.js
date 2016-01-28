@@ -1,7 +1,7 @@
 ﻿angular.module('virtoCommerce.customerModule')
 .factory('virtoCommerce.customerModule.members', ['$resource', function ($resource) {
     return $resource('api/members', {}, {
-        search: {}
+        search: { method: 'POST' }
     });
 }])
 .factory('virtoCommerce.customerModule.organizations', ['$resource', function ($resource) {

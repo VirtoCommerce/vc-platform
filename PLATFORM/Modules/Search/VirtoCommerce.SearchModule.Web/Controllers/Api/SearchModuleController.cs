@@ -188,11 +188,11 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
         /// Search for products and categories
         /// </summary>
         /// <param name="criteria">Search parameters</param>
-        [HttpGet]
+        [HttpPost]
         [Route("")]
         [ResponseType(typeof(CatalogSearchResult))]
         [ClientCache(Duration = 30)]
-        public IHttpActionResult Search([FromUri] SearchCriteria criteria)
+        public IHttpActionResult Search(SearchCriteria criteria)
         {
             criteria = criteria ?? new SearchCriteria();
             criteria.Normalize();
@@ -256,7 +256,7 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
 
             #region Filters
             // Now fill in filters
-            var filters = _cacheManager.Get("GetFilters-"+ criteria.StoreId, "SearchProducts", TimeSpan.FromMinutes(5), ()=> _browseFilterService.GetFilters(context));
+            var filters = _cacheManager.Get("GetFilters-" + criteria.StoreId, "SearchProducts", TimeSpan.FromMinutes(5), () => _browseFilterService.GetFilters(context));
 
             // Add all filters
             foreach (var filter in filters)

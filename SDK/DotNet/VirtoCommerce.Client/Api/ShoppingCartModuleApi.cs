@@ -17,46 +17,6 @@ namespace VirtoCommerce.Client.Api
     {
         
         /// <summary>
-        /// Search for shopping carts by criteria
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <param name="criteria">Search criteria</param>
-        /// <returns>VirtoCommerceCartModuleWebModelSearchResult</returns>
-        VirtoCommerceCartModuleWebModelSearchResult CartModuleSearchCarts (VirtoCommerceCartModuleWebModelSearchCriteria criteria);
-  
-        /// <summary>
-        /// Search for shopping carts by criteria
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <param name="criteria">Search criteria</param>
-        /// <returns>ApiResponse of VirtoCommerceCartModuleWebModelSearchResult</returns>
-        ApiResponse<VirtoCommerceCartModuleWebModelSearchResult> CartModuleSearchCartsWithHttpInfo (VirtoCommerceCartModuleWebModelSearchCriteria criteria);
-
-        /// <summary>
-        /// Search for shopping carts by criteria
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <param name="criteria">Search criteria</param>
-        /// <returns>Task of VirtoCommerceCartModuleWebModelSearchResult</returns>
-        System.Threading.Tasks.Task<VirtoCommerceCartModuleWebModelSearchResult> CartModuleSearchCartsAsync (VirtoCommerceCartModuleWebModelSearchCriteria criteria);
-
-        /// <summary>
-        /// Search for shopping carts by criteria
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <param name="criteria">Search criteria</param>
-        /// <returns>Task of ApiResponse (VirtoCommerceCartModuleWebModelSearchResult)</returns>
-        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceCartModuleWebModelSearchResult>> CartModuleSearchCartsAsyncWithHttpInfo (VirtoCommerceCartModuleWebModelSearchCriteria criteria);
-        
-        /// <summary>
         /// Update shopping cart
         /// </summary>
         /// <remarks>
@@ -297,6 +257,46 @@ namespace VirtoCommerce.Client.Api
         System.Threading.Tasks.Task<ApiResponse<VirtoCommerceCartModuleWebModelShoppingCart>> CartModuleGetCartByIdAsyncWithHttpInfo (string id);
         
         /// <summary>
+        /// Search for shopping carts by criteria
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="criteria">Search criteria</param>
+        /// <returns>VirtoCommerceCartModuleWebModelSearchResult</returns>
+        VirtoCommerceCartModuleWebModelSearchResult CartModuleSearch (VirtoCommerceCartModuleWebModelSearchCriteria criteria);
+  
+        /// <summary>
+        /// Search for shopping carts by criteria
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="criteria">Search criteria</param>
+        /// <returns>ApiResponse of VirtoCommerceCartModuleWebModelSearchResult</returns>
+        ApiResponse<VirtoCommerceCartModuleWebModelSearchResult> CartModuleSearchWithHttpInfo (VirtoCommerceCartModuleWebModelSearchCriteria criteria);
+
+        /// <summary>
+        /// Search for shopping carts by criteria
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="criteria">Search criteria</param>
+        /// <returns>Task of VirtoCommerceCartModuleWebModelSearchResult</returns>
+        System.Threading.Tasks.Task<VirtoCommerceCartModuleWebModelSearchResult> CartModuleSearchAsync (VirtoCommerceCartModuleWebModelSearchCriteria criteria);
+
+        /// <summary>
+        /// Search for shopping carts by criteria
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="criteria">Search criteria</param>
+        /// <returns>Task of ApiResponse (VirtoCommerceCartModuleWebModelSearchResult)</returns>
+        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceCartModuleWebModelSearchResult>> CartModuleSearchAsyncWithHttpInfo (VirtoCommerceCartModuleWebModelSearchCriteria criteria);
+        
+        /// <summary>
         /// Get payment methods for store
         /// </summary>
         /// <remarks>
@@ -448,142 +448,6 @@ namespace VirtoCommerce.Client.Api
             this.Configuration.AddDefaultHeader(key, value);
         }
    
-        
-        /// <summary>
-        /// Search for shopping carts by criteria 
-        /// </summary>
-        /// <param name="criteria">Search criteria</param> 
-        /// <returns>VirtoCommerceCartModuleWebModelSearchResult</returns>
-        public VirtoCommerceCartModuleWebModelSearchResult CartModuleSearchCarts (VirtoCommerceCartModuleWebModelSearchCriteria criteria)
-        {
-             ApiResponse<VirtoCommerceCartModuleWebModelSearchResult> response = CartModuleSearchCartsWithHttpInfo(criteria);
-             return response.Data;
-        }
-
-        /// <summary>
-        /// Search for shopping carts by criteria 
-        /// </summary>
-        /// <param name="criteria">Search criteria</param> 
-        /// <returns>ApiResponse of VirtoCommerceCartModuleWebModelSearchResult</returns>
-        public ApiResponse< VirtoCommerceCartModuleWebModelSearchResult > CartModuleSearchCartsWithHttpInfo (VirtoCommerceCartModuleWebModelSearchCriteria criteria)
-        {
-            
-            // verify the required parameter 'criteria' is set
-            if (criteria == null) throw new ApiException(400, "Missing required parameter 'criteria' when calling CartModuleSearchCarts");
-            
-    
-            var path_ = "/api/cart/carts";
-    
-            var pathParams = new Dictionary<String, String>();
-            var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var formParams = new Dictionary<String, String>();
-            var fileParams = new Dictionary<String, FileParameter>();
-            String postBody = null;
-
-            // to determine the Accept header
-            String[] http_header_accepts = new String[] {
-                "application/json", "text/json"
-            };
-            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
-            if (http_header_accept != null)
-                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
-
-            // set "format" to json by default
-            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
-            pathParams.Add("format", "json");
-            
-            
-            
-            
-            postBody = Configuration.ApiClient.Serialize(criteria); // http body (model) parameter
-            
-
-            
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
-
-            int statusCode = (int) response.StatusCode;
-    
-            if (statusCode >= 400)
-                throw new ApiException (statusCode, "Error calling CartModuleSearchCarts: " + response.Content, response.Content);
-            else if (statusCode == 0)
-                throw new ApiException (statusCode, "Error calling CartModuleSearchCarts: " + response.ErrorMessage, response.ErrorMessage);
-    
-            return new ApiResponse<VirtoCommerceCartModuleWebModelSearchResult>(statusCode,
-                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommerceCartModuleWebModelSearchResult) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceCartModuleWebModelSearchResult)));
-            
-        }
-    
-        /// <summary>
-        /// Search for shopping carts by criteria 
-        /// </summary>
-        /// <param name="criteria">Search criteria</param>
-        /// <returns>Task of VirtoCommerceCartModuleWebModelSearchResult</returns>
-        public async System.Threading.Tasks.Task<VirtoCommerceCartModuleWebModelSearchResult> CartModuleSearchCartsAsync (VirtoCommerceCartModuleWebModelSearchCriteria criteria)
-        {
-             ApiResponse<VirtoCommerceCartModuleWebModelSearchResult> response = await CartModuleSearchCartsAsyncWithHttpInfo(criteria);
-             return response.Data;
-
-        }
-
-        /// <summary>
-        /// Search for shopping carts by criteria 
-        /// </summary>
-        /// <param name="criteria">Search criteria</param>
-        /// <returns>Task of ApiResponse (VirtoCommerceCartModuleWebModelSearchResult)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceCartModuleWebModelSearchResult>> CartModuleSearchCartsAsyncWithHttpInfo (VirtoCommerceCartModuleWebModelSearchCriteria criteria)
-        {
-            // verify the required parameter 'criteria' is set
-            if (criteria == null) throw new ApiException(400, "Missing required parameter 'criteria' when calling CartModuleSearchCarts");
-            
-    
-            var path_ = "/api/cart/carts";
-    
-            var pathParams = new Dictionary<String, String>();
-            var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
-            var formParams = new Dictionary<String, String>();
-            var fileParams = new Dictionary<String, FileParameter>();
-            String postBody = null;
-
-            // to determine the Accept header
-            String[] http_header_accepts = new String[] {
-                "application/json", "text/json"
-            };
-            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
-            if (http_header_accept != null)
-                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
-
-            // set "format" to json by default
-            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
-            pathParams.Add("format", "json");
-            
-            
-            
-            
-            postBody = Configuration.ApiClient.Serialize(criteria); // http body (model) parameter
-            
-
-            
-
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
-
-            int statusCode = (int) response.StatusCode;
- 
-            if (statusCode >= 400)
-                throw new ApiException (statusCode, "Error calling CartModuleSearchCarts: " + response.Content, response.Content);
-            else if (statusCode == 0)
-                throw new ApiException (statusCode, "Error calling CartModuleSearchCarts: " + response.ErrorMessage, response.ErrorMessage);
-
-            return new ApiResponse<VirtoCommerceCartModuleWebModelSearchResult>(statusCode,
-                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommerceCartModuleWebModelSearchResult) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceCartModuleWebModelSearchResult)));
-            
-        }
         
         /// <summary>
         /// Update shopping cart 
@@ -1396,6 +1260,142 @@ namespace VirtoCommerce.Client.Api
             return new ApiResponse<VirtoCommerceCartModuleWebModelShoppingCart>(statusCode,
                 response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 (VirtoCommerceCartModuleWebModelShoppingCart) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceCartModuleWebModelShoppingCart)));
+            
+        }
+        
+        /// <summary>
+        /// Search for shopping carts by criteria 
+        /// </summary>
+        /// <param name="criteria">Search criteria</param> 
+        /// <returns>VirtoCommerceCartModuleWebModelSearchResult</returns>
+        public VirtoCommerceCartModuleWebModelSearchResult CartModuleSearch (VirtoCommerceCartModuleWebModelSearchCriteria criteria)
+        {
+             ApiResponse<VirtoCommerceCartModuleWebModelSearchResult> response = CartModuleSearchWithHttpInfo(criteria);
+             return response.Data;
+        }
+
+        /// <summary>
+        /// Search for shopping carts by criteria 
+        /// </summary>
+        /// <param name="criteria">Search criteria</param> 
+        /// <returns>ApiResponse of VirtoCommerceCartModuleWebModelSearchResult</returns>
+        public ApiResponse< VirtoCommerceCartModuleWebModelSearchResult > CartModuleSearchWithHttpInfo (VirtoCommerceCartModuleWebModelSearchCriteria criteria)
+        {
+            
+            // verify the required parameter 'criteria' is set
+            if (criteria == null) throw new ApiException(400, "Missing required parameter 'criteria' when calling CartModuleSearch");
+            
+    
+            var path_ = "/api/cart/search";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                "application/json", "text/json"
+            };
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            
+            
+            
+            postBody = Configuration.ApiClient.Serialize(criteria); // http body (model) parameter
+            
+
+            
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+    
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling CartModuleSearch: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling CartModuleSearch: " + response.ErrorMessage, response.ErrorMessage);
+    
+            return new ApiResponse<VirtoCommerceCartModuleWebModelSearchResult>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (VirtoCommerceCartModuleWebModelSearchResult) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceCartModuleWebModelSearchResult)));
+            
+        }
+    
+        /// <summary>
+        /// Search for shopping carts by criteria 
+        /// </summary>
+        /// <param name="criteria">Search criteria</param>
+        /// <returns>Task of VirtoCommerceCartModuleWebModelSearchResult</returns>
+        public async System.Threading.Tasks.Task<VirtoCommerceCartModuleWebModelSearchResult> CartModuleSearchAsync (VirtoCommerceCartModuleWebModelSearchCriteria criteria)
+        {
+             ApiResponse<VirtoCommerceCartModuleWebModelSearchResult> response = await CartModuleSearchAsyncWithHttpInfo(criteria);
+             return response.Data;
+
+        }
+
+        /// <summary>
+        /// Search for shopping carts by criteria 
+        /// </summary>
+        /// <param name="criteria">Search criteria</param>
+        /// <returns>Task of ApiResponse (VirtoCommerceCartModuleWebModelSearchResult)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceCartModuleWebModelSearchResult>> CartModuleSearchAsyncWithHttpInfo (VirtoCommerceCartModuleWebModelSearchCriteria criteria)
+        {
+            // verify the required parameter 'criteria' is set
+            if (criteria == null) throw new ApiException(400, "Missing required parameter 'criteria' when calling CartModuleSearch");
+            
+    
+            var path_ = "/api/cart/search";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                "application/json", "text/json"
+            };
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            
+            
+            
+            postBody = Configuration.ApiClient.Serialize(criteria); // http body (model) parameter
+            
+
+            
+
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+ 
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling CartModuleSearch: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling CartModuleSearch: " + response.ErrorMessage, response.ErrorMessage);
+
+            return new ApiResponse<VirtoCommerceCartModuleWebModelSearchResult>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (VirtoCommerceCartModuleWebModelSearchResult) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceCartModuleWebModelSearchResult)));
             
         }
         

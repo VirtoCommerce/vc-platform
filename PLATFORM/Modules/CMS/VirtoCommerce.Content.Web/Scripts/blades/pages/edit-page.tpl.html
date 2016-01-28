@@ -5,8 +5,11 @@
 				<div class="form-group" ng-init="setForm(pageForm)">
 					<label class="form-label">{{ 'content.blades.edit-page.labels.name' | translate }}</label>
 					<div class="form-input">
-						<input focus-on="" required class="form-control" ng-model="blade.currentEntity.pageName" placeholder="{{ 'content.blades.edit-page.placeholders.name' | translate }}" />
+						<input focus-on="" required class="form-control" ng-model="blade.currentEntity.pageName" placeholder="{{ 'content.blades.edit-page.placeholders.name' | translate }}" name="pageName" ui-validate=" 'validators.webSafeFileNameValidator($value)' " />
 					</div>
+                    <div class="form-error" ng-show="pageForm.pageName.$dirty">
+                        <span ng-show="pageForm.pageName.$error.validator">{{ 'content.blades.edit-page.validations.pageName-invalid' | translate }}</span>
+                    </div>
 				</div>
 			</div>
 			<div class="column" ng-if="!blade.isByteContent">

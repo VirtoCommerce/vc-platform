@@ -5,7 +5,8 @@
       "stores-list": {
         "title": "Stores",
         "labels": {
-          "no-stores": "No Stores yet"
+          "no-stores": "No Stores yet",
+          "name": "Name"
         }
       },
       "paymentMethod-detail": {

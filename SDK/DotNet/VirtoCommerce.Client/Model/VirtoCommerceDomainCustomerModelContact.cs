@@ -28,6 +28,27 @@ namespace VirtoCommerce.Client.Model
 
         
         /// <summary>
+        /// Gets or Sets FirstName
+        /// </summary>
+        [DataMember(Name="firstName", EmitDefaultValue=false)]
+        public string FirstName { get; set; }
+  
+        
+        /// <summary>
+        /// Gets or Sets MiddleName
+        /// </summary>
+        [DataMember(Name="middleName", EmitDefaultValue=false)]
+        public string MiddleName { get; set; }
+  
+        
+        /// <summary>
+        /// Gets or Sets LastName
+        /// </summary>
+        [DataMember(Name="lastName", EmitDefaultValue=false)]
+        public string LastName { get; set; }
+  
+        
+        /// <summary>
         /// Gets or Sets FullName
         /// </summary>
         [DataMember(Name="fullName", EmitDefaultValue=false)]
@@ -176,6 +197,9 @@ namespace VirtoCommerce.Client.Model
         {
             var sb = new StringBuilder();
             sb.Append("class VirtoCommerceDomainCustomerModelContact {\n");
+            sb.Append("  FirstName: ").Append(FirstName).Append("\n");
+            sb.Append("  MiddleName: ").Append(MiddleName).Append("\n");
+            sb.Append("  LastName: ").Append(LastName).Append("\n");
             sb.Append("  FullName: ").Append(FullName).Append("\n");
             sb.Append("  TimeZone: ").Append(TimeZone).Append("\n");
             sb.Append("  DefaultLanguage: ").Append(DefaultLanguage).Append("\n");
@@ -233,6 +257,21 @@ namespace VirtoCommerce.Client.Model
                 return false;
 
             return 
+                (
+                    this.FirstName == other.FirstName ||
+                    this.FirstName != null &&
+                    this.FirstName.Equals(other.FirstName)
+                ) && 
+                (
+                    this.MiddleName == other.MiddleName ||
+                    this.MiddleName != null &&
+                    this.MiddleName.Equals(other.MiddleName)
+                ) && 
+                (
+                    this.LastName == other.LastName ||
+                    this.LastName != null &&
+                    this.LastName.Equals(other.LastName)
+                ) && 
                 (
                     this.FullName == other.FullName ||
                     this.FullName != null &&
@@ -346,6 +385,15 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
+                
+                if (this.FirstName != null)
+                    hash = hash * 57 + this.FirstName.GetHashCode();
+                
+                if (this.MiddleName != null)
+                    hash = hash * 57 + this.MiddleName.GetHashCode();
+                
+                if (this.LastName != null)
+                    hash = hash * 57 + this.LastName.GetHashCode();
                 
                 if (this.FullName != null)
                     hash = hash * 57 + this.FullName.GetHashCode();

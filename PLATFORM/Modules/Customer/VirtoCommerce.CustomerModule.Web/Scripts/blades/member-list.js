@@ -18,7 +18,7 @@
             {
                 organizationId: blade.currentEntity.id,
                 keyword: filter.keyword ? filter.keyword : undefined,
-                sort: getSortExpression(),
+                sort: uiGridHelper.getSortExpression($scope),
                 skip: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
                 take: $scope.pageSettings.itemsPerPageCount
             },
@@ -245,21 +245,6 @@
 
             $scope.$watch('pageSettings.currentPage', blade.refresh);
         };
-
-        function getSortExpression() {
-            var columnDefs = $scope.gridApi ? $scope.gridApi.grid.columns : $scope.gridOptions.columnDefs;
-            var sorts = _.filter(columnDefs, function (x) {
-                return x.sort && (x.sort.direction === uiGridConstants.ASC || x.sort.direction === uiGridConstants.DESC);
-            })
-
-            sorts = _.sortBy(sorts, function (x) {
-                return x.sort.priority;
-            });
-            sorts = _.map(sorts, function (x) {
-                return x.name + ':' + (x.sort.direction === uiGridConstants.ASC ? 'asc' : 'desc');
-            });
-            return sorts.join(';');
-        }
 
 
         //No need to call this because page 'pageSettings.currentPage' is watched!!! It would trigger subsequent duplicated req...

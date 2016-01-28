@@ -45,7 +45,7 @@
                 <div class="columns clearfix">
                     <div class="column">
                         <div class="form-group">
-                            <label class="form-label">{{ 'stores.blades.store-detail.labels.default-language' | translate }}</label>
+                            <label class="form-label">{{ 'stores.blades.store-detail.labels.default-language' | translate }} <a href="" ng-click="openLanguagesDictionarySettingManagement()" va-permission="platform:setting:update"><i class="form-ico fa fa-pencil"></i></a></label>
                             <div class="form-input">
                                 <ui-select ng-model="blade.currentEntity.defaultLanguage" required>
                                     <ui-select-match placeholder="{{ 'stores.blades.store-detail.placeholders.default-language' | translate }}">{{$select.selected}}</ui-select-match>
@@ -58,7 +58,7 @@
                     </div>
                     <div class="column">
                         <div class="form-group">
-                            <label class="form-label">{{ 'stores.blades.store-detail.labels.additional-languages' | translate }}</label>
+                            <label class="form-label">{{ 'stores.blades.store-detail.labels.additional-languages' | translate }} <a href="" ng-click="openLanguagesDictionarySettingManagement()" va-permission="platform:setting:update"><i class="form-ico fa fa-pencil"></i></a></label>
                             <div class="form-input" data-role="input-control">
                                 <ui-select multiple ng-model="blade.currentEntity.additionalLanguages">
                                     <ui-select-match placeholder="{{ 'stores.blades.store-detail.placeholders.additional-languages' | translate }}">{{$item}}</ui-select-match>

@@ -1,6 +1,10 @@
 ﻿angular.module('virtoCommerce.contentModule')
-.controller('virtoCommerce.contentModule.editImageAssetController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'virtoCommerce.contentModule.themes', 'FileUploader', function ($scope, dialogService, bladeNavigationService, themes, FileUploader) {
+.controller('virtoCommerce.contentModule.editImageAssetController', ['$scope', 'platformWebApp.validators', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'virtoCommerce.contentModule.themes', 'FileUploader', function ($scope, validators, dialogService, bladeNavigationService, themes, FileUploader) {
     var blade = $scope.blade;
+
+    $scope.validators = validators;
+    var formScope;
+    $scope.setForm = function (form) { formScope = form; }
 
     blade.initializeBlade = function () {
         if (!blade.newAsset) {
@@ -21,7 +25,7 @@
 			        blade.saveChanges();
 			    },
 			    canExecuteMethod: function () {
-			        return isDirty();
+			        return isDirty() && formScope.$valid;
 			    },
 			    permission: 'content:update'
 			},
@@ -134,7 +138,7 @@
 
     function isCanSave() {
         if (!angular.isUndefined(blade.currentEntity)) {
-            if (!angular.isUndefined(blade.currentEntity.id) && !angular.isUndefined(blade.currentEntity.assetUrl)) {
+            if (!angular.isUndefined(blade.currentEntity.id) && !angular.isUndefined(blade.currentEntity.assetUrl) && formScope.$valid) {
                 return true;
             }
             return false;

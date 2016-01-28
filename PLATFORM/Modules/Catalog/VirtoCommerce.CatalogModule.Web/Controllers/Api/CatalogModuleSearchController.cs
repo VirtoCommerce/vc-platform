@@ -28,10 +28,10 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         /// </summary>
         /// <param name="criteria">The search criteria.</param>
         /// <returns></returns>
-        [HttpGet]
+        [HttpPost]
         [Route("")]
         [ResponseType(typeof(CatalogSearchResult))]
-        public IHttpActionResult Search([FromUri] SearchCriteria criteria)
+        public IHttpActionResult Search(SearchCriteria criteria)
         {
             ApplyRestrictionsForCurrentUser(criteria);
             var serviceResult = _searchService.Search(criteria);

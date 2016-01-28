@@ -1,7 +1,7 @@
 ﻿angular.module('virtoCommerce.cartModule')
 .factory('virtoCommerce.cartModule.carts', ['$resource', function ($resource) {
     return $resource('api/cart/:id', { id: '@Id' }, {
-        cartsSearch: { url: 'api/cart/carts' },
+        cartsSearch: { method: 'POST', url: 'api/cart/search' },
         getCart: { url: 'api/cart/carts/:id' },
         update: { method: 'POST', url: 'api/cart' },
         remove: { method: 'DELETE', url: 'api/cart/carts' }

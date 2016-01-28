@@ -4,7 +4,6 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
-using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using VirtoCommerce.Platform.Core.Security;
@@ -106,11 +105,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// Search roles by keyword
         /// </summary>
         /// <param name="request">Search parameters.</param>
-        [HttpGet]
+        [HttpPost]
         [Route("roles")]
         [ResponseType(typeof(RoleSearchResponse))]
         [CheckPermission(Permission = PredefinedPermissions.SecurityQuery)]
-        public IHttpActionResult SearchRoles([FromUri]RoleSearchRequest request)
+        public IHttpActionResult SearchRoles(RoleSearchRequest request)
         {
             var result = _roleService.SearchRoles(request);
             return Ok(result);
@@ -187,11 +186,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// Search users by keyword
         /// </summary>
         /// <param name="request">Search parameters.</param>
-        [HttpGet]
+        [HttpPost]
         [Route("users")]
         [ResponseType(typeof(UserSearchResponse))]
         [CheckPermission(Permission = PredefinedPermissions.SecurityQuery)]
-        public async Task<IHttpActionResult> SearchUsersAsync([FromUri] UserSearchRequest request)
+        public async Task<IHttpActionResult> SearchUsersAsync(UserSearchRequest request)
         {
             var result = await _securityService.SearchUsersAsync(request);
             return Ok(result);
