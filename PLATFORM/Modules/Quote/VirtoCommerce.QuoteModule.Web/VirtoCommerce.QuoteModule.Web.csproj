@@ -145,7 +145,6 @@
     <None Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Binders\SearchCriteriaBinder.cs" />
     <Compile Include="Controllers\Api\QuoteModuleController.cs" />
     <Compile Include="Converters\QuoteAttachmentConverter.cs" />
     <Compile Include="Converters\QuoteRequestTotalsConverter.cs" />

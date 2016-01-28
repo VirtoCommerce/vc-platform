@@ -17,78 +17,6 @@ namespace VirtoCommerce.Client.Api
     {
         
         /// <summary>
-        /// Search customer orders by given criteria
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <param name="criteriaResponseGroup"></param>
-        /// <param name="criteriaKeyword"></param>
-        /// <param name="criteriaCustomerId"></param>
-        /// <param name="criteriaEmployeeId"></param>
-        /// <param name="criteriaStoreIds"></param>
-        /// <param name="criteriaStartDate"></param>
-        /// <param name="criteriaEndDate"></param>
-        /// <param name="criteriaStart"></param>
-        /// <param name="criteriaCount"></param>
-        /// <returns>VirtoCommerceOrderModuleWebModelSearchResult</returns>
-        VirtoCommerceOrderModuleWebModelSearchResult OrderModuleSearch (string criteriaResponseGroup = null, string criteriaKeyword = null, string criteriaCustomerId = null, string criteriaEmployeeId = null, List<string> criteriaStoreIds = null, DateTime? criteriaStartDate = null, DateTime? criteriaEndDate = null, int? criteriaStart = null, int? criteriaCount = null);
-  
-        /// <summary>
-        /// Search customer orders by given criteria
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <param name="criteriaResponseGroup"></param>
-        /// <param name="criteriaKeyword"></param>
-        /// <param name="criteriaCustomerId"></param>
-        /// <param name="criteriaEmployeeId"></param>
-        /// <param name="criteriaStoreIds"></param>
-        /// <param name="criteriaStartDate"></param>
-        /// <param name="criteriaEndDate"></param>
-        /// <param name="criteriaStart"></param>
-        /// <param name="criteriaCount"></param>
-        /// <returns>ApiResponse of VirtoCommerceOrderModuleWebModelSearchResult</returns>
-        ApiResponse<VirtoCommerceOrderModuleWebModelSearchResult> OrderModuleSearchWithHttpInfo (string criteriaResponseGroup = null, string criteriaKeyword = null, string criteriaCustomerId = null, string criteriaEmployeeId = null, List<string> criteriaStoreIds = null, DateTime? criteriaStartDate = null, DateTime? criteriaEndDate = null, int? criteriaStart = null, int? criteriaCount = null);
-
-        /// <summary>
-        /// Search customer orders by given criteria
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <param name="criteriaResponseGroup"></param>
-        /// <param name="criteriaKeyword"></param>
-        /// <param name="criteriaCustomerId"></param>
-        /// <param name="criteriaEmployeeId"></param>
-        /// <param name="criteriaStoreIds"></param>
-        /// <param name="criteriaStartDate"></param>
-        /// <param name="criteriaEndDate"></param>
-        /// <param name="criteriaStart"></param>
-        /// <param name="criteriaCount"></param>
-        /// <returns>Task of VirtoCommerceOrderModuleWebModelSearchResult</returns>
-        System.Threading.Tasks.Task<VirtoCommerceOrderModuleWebModelSearchResult> OrderModuleSearchAsync (string criteriaResponseGroup = null, string criteriaKeyword = null, string criteriaCustomerId = null, string criteriaEmployeeId = null, List<string> criteriaStoreIds = null, DateTime? criteriaStartDate = null, DateTime? criteriaEndDate = null, int? criteriaStart = null, int? criteriaCount = null);
-
-        /// <summary>
-        /// Search customer orders by given criteria
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <param name="criteriaResponseGroup"></param>
-        /// <param name="criteriaKeyword"></param>
-        /// <param name="criteriaCustomerId"></param>
-        /// <param name="criteriaEmployeeId"></param>
-        /// <param name="criteriaStoreIds"></param>
-        /// <param name="criteriaStartDate"></param>
-        /// <param name="criteriaEndDate"></param>
-        /// <param name="criteriaStart"></param>
-        /// <param name="criteriaCount"></param>
-        /// <returns>Task of ApiResponse (VirtoCommerceOrderModuleWebModelSearchResult)</returns>
-        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceOrderModuleWebModelSearchResult>> OrderModuleSearchAsyncWithHttpInfo (string criteriaResponseGroup = null, string criteriaKeyword = null, string criteriaCustomerId = null, string criteriaEmployeeId = null, List<string> criteriaStoreIds = null, DateTime? criteriaStartDate = null, DateTime? criteriaEndDate = null, int? criteriaStart = null, int? criteriaCount = null);
-        
-        /// <summary>
         /// Update a existing customer order
         /// </summary>
         /// <remarks>
@@ -247,6 +175,46 @@ namespace VirtoCommerce.Client.Api
         /// <param name="number">customer order number</param>
         /// <returns>Task of ApiResponse (VirtoCommerceOrderModuleWebModelCustomerOrder)</returns>
         System.Threading.Tasks.Task<ApiResponse<VirtoCommerceOrderModuleWebModelCustomerOrder>> OrderModuleGetByNumberAsyncWithHttpInfo (string number);
+        
+        /// <summary>
+        /// Search customer orders by given criteria
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="criteria">criteria</param>
+        /// <returns>VirtoCommerceOrderModuleWebModelSearchResult</returns>
+        VirtoCommerceOrderModuleWebModelSearchResult OrderModuleSearch (VirtoCommerceDomainOrderModelSearchCriteria criteria);
+  
+        /// <summary>
+        /// Search customer orders by given criteria
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="criteria">criteria</param>
+        /// <returns>ApiResponse of VirtoCommerceOrderModuleWebModelSearchResult</returns>
+        ApiResponse<VirtoCommerceOrderModuleWebModelSearchResult> OrderModuleSearchWithHttpInfo (VirtoCommerceDomainOrderModelSearchCriteria criteria);
+
+        /// <summary>
+        /// Search customer orders by given criteria
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="criteria">criteria</param>
+        /// <returns>Task of VirtoCommerceOrderModuleWebModelSearchResult</returns>
+        System.Threading.Tasks.Task<VirtoCommerceOrderModuleWebModelSearchResult> OrderModuleSearchAsync (VirtoCommerceDomainOrderModelSearchCriteria criteria);
+
+        /// <summary>
+        /// Search customer orders by given criteria
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="criteria">criteria</param>
+        /// <returns>Task of ApiResponse (VirtoCommerceOrderModuleWebModelSearchResult)</returns>
+        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceOrderModuleWebModelSearchResult>> OrderModuleSearchAsyncWithHttpInfo (VirtoCommerceDomainOrderModelSearchCriteria criteria);
         
         /// <summary>
         /// Find customer order by id
@@ -612,185 +580,6 @@ namespace VirtoCommerce.Client.Api
             this.Configuration.AddDefaultHeader(key, value);
         }
    
-        
-        /// <summary>
-        /// Search customer orders by given criteria 
-        /// </summary>
-        /// <param name="criteriaResponseGroup"></param> 
-        /// <param name="criteriaKeyword"></param> 
-        /// <param name="criteriaCustomerId"></param> 
-        /// <param name="criteriaEmployeeId"></param> 
-        /// <param name="criteriaStoreIds"></param> 
-        /// <param name="criteriaStartDate"></param> 
-        /// <param name="criteriaEndDate"></param> 
-        /// <param name="criteriaStart"></param> 
-        /// <param name="criteriaCount"></param> 
-        /// <returns>VirtoCommerceOrderModuleWebModelSearchResult</returns>
-        public VirtoCommerceOrderModuleWebModelSearchResult OrderModuleSearch (string criteriaResponseGroup = null, string criteriaKeyword = null, string criteriaCustomerId = null, string criteriaEmployeeId = null, List<string> criteriaStoreIds = null, DateTime? criteriaStartDate = null, DateTime? criteriaEndDate = null, int? criteriaStart = null, int? criteriaCount = null)
-        {
-             ApiResponse<VirtoCommerceOrderModuleWebModelSearchResult> response = OrderModuleSearchWithHttpInfo(criteriaResponseGroup, criteriaKeyword, criteriaCustomerId, criteriaEmployeeId, criteriaStoreIds, criteriaStartDate, criteriaEndDate, criteriaStart, criteriaCount);
-             return response.Data;
-        }
-
-        /// <summary>
-        /// Search customer orders by given criteria 
-        /// </summary>
-        /// <param name="criteriaResponseGroup"></param> 
-        /// <param name="criteriaKeyword"></param> 
-        /// <param name="criteriaCustomerId"></param> 
-        /// <param name="criteriaEmployeeId"></param> 
-        /// <param name="criteriaStoreIds"></param> 
-        /// <param name="criteriaStartDate"></param> 
-        /// <param name="criteriaEndDate"></param> 
-        /// <param name="criteriaStart"></param> 
-        /// <param name="criteriaCount"></param> 
-        /// <returns>ApiResponse of VirtoCommerceOrderModuleWebModelSearchResult</returns>
-        public ApiResponse< VirtoCommerceOrderModuleWebModelSearchResult > OrderModuleSearchWithHttpInfo (string criteriaResponseGroup = null, string criteriaKeyword = null, string criteriaCustomerId = null, string criteriaEmployeeId = null, List<string> criteriaStoreIds = null, DateTime? criteriaStartDate = null, DateTime? criteriaEndDate = null, int? criteriaStart = null, int? criteriaCount = null)
-        {
-            
-    
-            var path_ = "/api/order/customerOrders";
-    
-            var pathParams = new Dictionary<String, String>();
-            var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var formParams = new Dictionary<String, String>();
-            var fileParams = new Dictionary<String, FileParameter>();
-            String postBody = null;
-
-            // to determine the Accept header
-            String[] http_header_accepts = new String[] {
-                "application/json", "text/json"
-            };
-            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
-            if (http_header_accept != null)
-                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
-
-            // set "format" to json by default
-            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
-            pathParams.Add("format", "json");
-            
-            if (criteriaResponseGroup != null) queryParams.Add("criteria.responseGroup", Configuration.ApiClient.ParameterToString(criteriaResponseGroup)); // query parameter
-            if (criteriaKeyword != null) queryParams.Add("criteria.keyword", Configuration.ApiClient.ParameterToString(criteriaKeyword)); // query parameter
-            if (criteriaCustomerId != null) queryParams.Add("criteria.customerId", Configuration.ApiClient.ParameterToString(criteriaCustomerId)); // query parameter
-            if (criteriaEmployeeId != null) queryParams.Add("criteria.employeeId", Configuration.ApiClient.ParameterToString(criteriaEmployeeId)); // query parameter
-            if (criteriaStoreIds != null) queryParams.Add("criteria.storeIds", Configuration.ApiClient.ParameterToString(criteriaStoreIds)); // query parameter
-            if (criteriaStartDate != null) queryParams.Add("criteria.startDate", Configuration.ApiClient.ParameterToString(criteriaStartDate)); // query parameter
-            if (criteriaEndDate != null) queryParams.Add("criteria.endDate", Configuration.ApiClient.ParameterToString(criteriaEndDate)); // query parameter
-            if (criteriaStart != null) queryParams.Add("criteria.start", Configuration.ApiClient.ParameterToString(criteriaStart)); // query parameter
-            if (criteriaCount != null) queryParams.Add("criteria.count", Configuration.ApiClient.ParameterToString(criteriaCount)); // query parameter
-            
-            
-            
-            
-
-            
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
-
-            int statusCode = (int) response.StatusCode;
-    
-            if (statusCode >= 400)
-                throw new ApiException (statusCode, "Error calling OrderModuleSearch: " + response.Content, response.Content);
-            else if (statusCode == 0)
-                throw new ApiException (statusCode, "Error calling OrderModuleSearch: " + response.ErrorMessage, response.ErrorMessage);
-    
-            return new ApiResponse<VirtoCommerceOrderModuleWebModelSearchResult>(statusCode,
-                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommerceOrderModuleWebModelSearchResult) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceOrderModuleWebModelSearchResult)));
-            
-        }
-    
-        /// <summary>
-        /// Search customer orders by given criteria 
-        /// </summary>
-        /// <param name="criteriaResponseGroup"></param>
-        /// <param name="criteriaKeyword"></param>
-        /// <param name="criteriaCustomerId"></param>
-        /// <param name="criteriaEmployeeId"></param>
-        /// <param name="criteriaStoreIds"></param>
-        /// <param name="criteriaStartDate"></param>
-        /// <param name="criteriaEndDate"></param>
-        /// <param name="criteriaStart"></param>
-        /// <param name="criteriaCount"></param>
-        /// <returns>Task of VirtoCommerceOrderModuleWebModelSearchResult</returns>
-        public async System.Threading.Tasks.Task<VirtoCommerceOrderModuleWebModelSearchResult> OrderModuleSearchAsync (string criteriaResponseGroup = null, string criteriaKeyword = null, string criteriaCustomerId = null, string criteriaEmployeeId = null, List<string> criteriaStoreIds = null, DateTime? criteriaStartDate = null, DateTime? criteriaEndDate = null, int? criteriaStart = null, int? criteriaCount = null)
-        {
-             ApiResponse<VirtoCommerceOrderModuleWebModelSearchResult> response = await OrderModuleSearchAsyncWithHttpInfo(criteriaResponseGroup, criteriaKeyword, criteriaCustomerId, criteriaEmployeeId, criteriaStoreIds, criteriaStartDate, criteriaEndDate, criteriaStart, criteriaCount);
-             return response.Data;
-
-        }
-
-        /// <summary>
-        /// Search customer orders by given criteria 
-        /// </summary>
-        /// <param name="criteriaResponseGroup"></param>
-        /// <param name="criteriaKeyword"></param>
-        /// <param name="criteriaCustomerId"></param>
-        /// <param name="criteriaEmployeeId"></param>
-        /// <param name="criteriaStoreIds"></param>
-        /// <param name="criteriaStartDate"></param>
-        /// <param name="criteriaEndDate"></param>
-        /// <param name="criteriaStart"></param>
-        /// <param name="criteriaCount"></param>
-        /// <returns>Task of ApiResponse (VirtoCommerceOrderModuleWebModelSearchResult)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceOrderModuleWebModelSearchResult>> OrderModuleSearchAsyncWithHttpInfo (string criteriaResponseGroup = null, string criteriaKeyword = null, string criteriaCustomerId = null, string criteriaEmployeeId = null, List<string> criteriaStoreIds = null, DateTime? criteriaStartDate = null, DateTime? criteriaEndDate = null, int? criteriaStart = null, int? criteriaCount = null)
-        {
-            
-    
-            var path_ = "/api/order/customerOrders";
-    
-            var pathParams = new Dictionary<String, String>();
-            var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
-            var formParams = new Dictionary<String, String>();
-            var fileParams = new Dictionary<String, FileParameter>();
-            String postBody = null;
-
-            // to determine the Accept header
-            String[] http_header_accepts = new String[] {
-                "application/json", "text/json"
-            };
-            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
-            if (http_header_accept != null)
-                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
-
-            // set "format" to json by default
-            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
-            pathParams.Add("format", "json");
-            
-            if (criteriaResponseGroup != null) queryParams.Add("criteria.responseGroup", Configuration.ApiClient.ParameterToString(criteriaResponseGroup)); // query parameter
-            if (criteriaKeyword != null) queryParams.Add("criteria.keyword", Configuration.ApiClient.ParameterToString(criteriaKeyword)); // query parameter
-            if (criteriaCustomerId != null) queryParams.Add("criteria.customerId", Configuration.ApiClient.ParameterToString(criteriaCustomerId)); // query parameter
-            if (criteriaEmployeeId != null) queryParams.Add("criteria.employeeId", Configuration.ApiClient.ParameterToString(criteriaEmployeeId)); // query parameter
-            if (criteriaStoreIds != null) queryParams.Add("criteria.storeIds", Configuration.ApiClient.ParameterToString(criteriaStoreIds)); // query parameter
-            if (criteriaStartDate != null) queryParams.Add("criteria.startDate", Configuration.ApiClient.ParameterToString(criteriaStartDate)); // query parameter
-            if (criteriaEndDate != null) queryParams.Add("criteria.endDate", Configuration.ApiClient.ParameterToString(criteriaEndDate)); // query parameter
-            if (criteriaStart != null) queryParams.Add("criteria.start", Configuration.ApiClient.ParameterToString(criteriaStart)); // query parameter
-            if (criteriaCount != null) queryParams.Add("criteria.count", Configuration.ApiClient.ParameterToString(criteriaCount)); // query parameter
-            
-            
-            
-            
-
-            
-
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
-
-            int statusCode = (int) response.StatusCode;
- 
-            if (statusCode >= 400)
-                throw new ApiException (statusCode, "Error calling OrderModuleSearch: " + response.Content, response.Content);
-            else if (statusCode == 0)
-                throw new ApiException (statusCode, "Error calling OrderModuleSearch: " + response.ErrorMessage, response.ErrorMessage);
-
-            return new ApiResponse<VirtoCommerceOrderModuleWebModelSearchResult>(statusCode,
-                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommerceOrderModuleWebModelSearchResult) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceOrderModuleWebModelSearchResult)));
-            
-        }
         
         /// <summary>
         /// Update a existing customer order 
@@ -1329,6 +1118,142 @@ namespace VirtoCommerce.Client.Api
             return new ApiResponse<VirtoCommerceOrderModuleWebModelCustomerOrder>(statusCode,
                 response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 (VirtoCommerceOrderModuleWebModelCustomerOrder) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceOrderModuleWebModelCustomerOrder)));
+            
+        }
+        
+        /// <summary>
+        /// Search customer orders by given criteria 
+        /// </summary>
+        /// <param name="criteria">criteria</param> 
+        /// <returns>VirtoCommerceOrderModuleWebModelSearchResult</returns>
+        public VirtoCommerceOrderModuleWebModelSearchResult OrderModuleSearch (VirtoCommerceDomainOrderModelSearchCriteria criteria)
+        {
+             ApiResponse<VirtoCommerceOrderModuleWebModelSearchResult> response = OrderModuleSearchWithHttpInfo(criteria);
+             return response.Data;
+        }
+
+        /// <summary>
+        /// Search customer orders by given criteria 
+        /// </summary>
+        /// <param name="criteria">criteria</param> 
+        /// <returns>ApiResponse of VirtoCommerceOrderModuleWebModelSearchResult</returns>
+        public ApiResponse< VirtoCommerceOrderModuleWebModelSearchResult > OrderModuleSearchWithHttpInfo (VirtoCommerceDomainOrderModelSearchCriteria criteria)
+        {
+            
+            // verify the required parameter 'criteria' is set
+            if (criteria == null) throw new ApiException(400, "Missing required parameter 'criteria' when calling OrderModuleSearch");
+            
+    
+            var path_ = "/api/order/customerOrders/search";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                "application/json", "text/json"
+            };
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            
+            
+            
+            postBody = Configuration.ApiClient.Serialize(criteria); // http body (model) parameter
+            
+
+            
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+    
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling OrderModuleSearch: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling OrderModuleSearch: " + response.ErrorMessage, response.ErrorMessage);
+    
+            return new ApiResponse<VirtoCommerceOrderModuleWebModelSearchResult>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (VirtoCommerceOrderModuleWebModelSearchResult) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceOrderModuleWebModelSearchResult)));
+            
+        }
+    
+        /// <summary>
+        /// Search customer orders by given criteria 
+        /// </summary>
+        /// <param name="criteria">criteria</param>
+        /// <returns>Task of VirtoCommerceOrderModuleWebModelSearchResult</returns>
+        public async System.Threading.Tasks.Task<VirtoCommerceOrderModuleWebModelSearchResult> OrderModuleSearchAsync (VirtoCommerceDomainOrderModelSearchCriteria criteria)
+        {
+             ApiResponse<VirtoCommerceOrderModuleWebModelSearchResult> response = await OrderModuleSearchAsyncWithHttpInfo(criteria);
+             return response.Data;
+
+        }
+
+        /// <summary>
+        /// Search customer orders by given criteria 
+        /// </summary>
+        /// <param name="criteria">criteria</param>
+        /// <returns>Task of ApiResponse (VirtoCommerceOrderModuleWebModelSearchResult)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceOrderModuleWebModelSearchResult>> OrderModuleSearchAsyncWithHttpInfo (VirtoCommerceDomainOrderModelSearchCriteria criteria)
+        {
+            // verify the required parameter 'criteria' is set
+            if (criteria == null) throw new ApiException(400, "Missing required parameter 'criteria' when calling OrderModuleSearch");
+            
+    
+            var path_ = "/api/order/customerOrders/search";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                "application/json", "text/json"
+            };
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            
+            
+            
+            postBody = Configuration.ApiClient.Serialize(criteria); // http body (model) parameter
+            
+
+            
+
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+ 
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling OrderModuleSearch: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling OrderModuleSearch: " + response.ErrorMessage, response.ErrorMessage);
+
+            return new ApiResponse<VirtoCommerceOrderModuleWebModelSearchResult>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (VirtoCommerceOrderModuleWebModelSearchResult) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceOrderModuleWebModelSearchResult)));
             
         }
         
