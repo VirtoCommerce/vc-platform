@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Data.Model
@@ -17,6 +18,7 @@ namespace VirtoCommerce.Platform.Data.Model
         public string MemberId { get; set; }
         [Required]
         [StringLength(128)]
+        [Index]
         public string UserName { get; set; }
         public bool IsAdministrator { get; set; }
         [StringLength(128)]

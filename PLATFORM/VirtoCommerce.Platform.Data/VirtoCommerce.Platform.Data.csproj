@@ -286,6 +286,10 @@
     <Compile Include="Repositories\Migrations\201510071245053_AccountEntityEnumPropChanges.Designer.cs">
       <DependentUpon>201510071245053_AccountEntityEnumPropChanges.cs</DependentUpon>
     </Compile>
+    <Compile Include="Repositories\Migrations\201601281430196_NewIndexes.cs" />
+    <Compile Include="Repositories\Migrations\201601281430196_NewIndexes.Designer.cs">
+      <DependentUpon>201601281430196_NewIndexes.cs</DependentUpon>
+    </Compile>
     <Compile Include="Repositories\Migrations\Configuration.cs" />
     <Compile Include="Repositories\PlatformDatabaseInitializer.cs" />
     <Compile Include="Repositories\PlatformRepository.cs" />
@@ -399,6 +403,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Repositories\Migrations\201510071245053_AccountEntityEnumPropChanges.resx">
       <DependentUpon>201510071245053_AccountEntityEnumPropChanges.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Repositories\Migrations\201601281430196_NewIndexes.resx">
+      <DependentUpon>201601281430196_NewIndexes.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Security\Identity\Migrations\201411101625303_InitialCreate.resx">
       <DependentUpon>201411101625303_InitialCreate.cs</DependentUpon>
