@@ -11,9 +11,10 @@
             blade.parentBlade.initialize();
 
             if (!blade.newPage) {
-                pages.getPage({ storeId: blade.choosenStoreId, language: blade.choosenPageLanguage, pageName: blade.choosenPageName }, function (data) {
+            	pages.getPage({ storeId: blade.choosenStoreId, language: blade.choosenPageLanguage ? blade.choosenPageLanguage: "undef", pageName: blade.choosenPageName }, function (data) {
                     blade.isLoading = false;
                     blade.currentEntity = data;
+                   
                     blade.isByteContent = blade.isFile();
 
                     if (!blade.isFile()) {
@@ -287,7 +288,7 @@
     }
 
     function isCanSave() {
-        return (!(angular.isUndefined(blade.currentEntity.name) || blade.currentEntity.name === null) &&
+    	return blade.currentEntity && (!(angular.isUndefined(blade.currentEntity.name) || blade.currentEntity.name === null) &&
 			!(angular.isUndefined(blade.currentEntity.content) || blade.currentEntity.content === null));
     }
 

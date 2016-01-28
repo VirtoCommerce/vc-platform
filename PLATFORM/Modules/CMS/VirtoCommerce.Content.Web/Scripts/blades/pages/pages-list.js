@@ -38,7 +38,7 @@
     blade.openBlade = function (data) {
         $scope.selectedNodeId = data.pageName;
 
-        pages.getPage({ storeId: blade.storeId, language: data.language, pageName: data.id }, function (page) {
+        pages.getPage({ storeId: blade.storeId, language: data.language ? data.language : "undef", pageName: data.id }, function (page) {
             if (page.language !== 'files') {
                 var parts = page.content.split('---');
                 var body = '';

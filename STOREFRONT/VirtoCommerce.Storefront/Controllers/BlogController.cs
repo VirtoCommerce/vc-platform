@@ -26,25 +26,17 @@ namespace VirtoCommerce.Storefront.Controllers
         public ActionResult GetBlog(string blog)
         {
             var context = base.WorkContext;
-            Func<string, ContentItem> blogsFactory = contentUrl =>
-            {
-                if(contentUrl.EndsWith("default"))
-                {
-                    return new Blog(blog, context.CurrentLanguage);
-                }
-                return new BlogArticle(contentUrl, context.CurrentLanguage);
-            };
+            var pageNumber = context.CurrentBlogSearchCritera.PageNumber;
+            var pageSize = context.CurrentBlogSearchCritera.PageSize;
 
-            var blogContents = _contentService.LoadContentItemsByUrl("/blogs/" + blog, context.CurrentStore, context.CurrentLanguage,
-                                                                     blogsFactory, context.CurrentBlogSearchCritera.PageNumber, context.CurrentBlogSearchCritera.PageSize + 1);
-            var contentBlog = blogContents.OfType<Blog>().FirstOrDefault();
-            if (contentBlog != null)
-            {
-                contentBlog.Articles = new StorefrontPagedList<BlogArticle>(blogContents.OfType<BlogArticle>(), context.CurrentBlogSearchCritera.PageNumber, context.CurrentBlogSearchCritera.PageSize - 1, blogContents.TotalItemCount - 1, page => context.RequestUrl.SetQueryParameter("page", page.ToString()).ToString());
-                context.CurrentBlog = contentBlog;
-                return View("blog", base.WorkContext);
-            }
-            throw new HttpException(404, blog);
+            var contentBlog = LoadBlog(blog);
+
+            //Then need load all blog articles and exclude blog file from result
+            var blogArticles = _contentService.LoadContentItemsByUrl("/blogs/" + blog, context.CurrentStore, context.CurrentLanguage, () => new BlogArticle(), new[] { "default" }, pageNumber, pageSize);
+                                              
+            contentBlog.Articles = new StorefrontPagedList<BlogArticle>(blogArticles.OfType<BlogArticle>(), blogArticles, page => context.RequestUrl.SetQueryParameter("page", page.ToString()).ToString());
+            context.CurrentBlog = contentBlog;
+            return View("blog", base.WorkContext);
         }
 
         // GET: /blogs/{blog}/{article}
@@ -52,16 +44,37 @@ namespace VirtoCommerce.Storefront.Controllers
         {
             var context = base.WorkContext;
             var articleUrl = String.Join("/", "/blogs", blog, article);
-            var contentBlog = _contentService.LoadContentItemsByUrl("/blogs/" + blog + "/default", context.CurrentStore, context.CurrentLanguage, x => new Blog("blogs/" + blog, context.CurrentLanguage)).FirstOrDefault();
-            var blogArticle = _contentService.LoadContentItemsByUrl(articleUrl, context.CurrentStore, context.CurrentLanguage, x => new BlogArticle(x, context.CurrentLanguage)).FirstOrDefault();
+
+            var contentBlog = LoadBlog(blog);
+
+            var blogArticle = _contentService.LoadContentItemsByUrl(articleUrl, context.CurrentStore, context.CurrentLanguage, () => new BlogArticle()).FirstOrDefault();
+          
             if (blogArticle != null)
             {
-                base.WorkContext.CurrentBlog = contentBlog as Blog;
+                var recentArticles = _contentService.LoadContentItemsByUrl("/blogs/" + blog, context.CurrentStore, context.CurrentLanguage, () => new BlogArticle(), new[] { blogArticle.Name, "default" }, 1, 10);
+                contentBlog.Articles =  new StorefrontPagedList<BlogArticle>(recentArticles.OfType<BlogArticle>(), recentArticles, page => context.RequestUrl.SetQueryParameter("page", page.ToString()).ToString());
+                base.WorkContext.CurrentBlog = contentBlog;
                 base.WorkContext.CurrentBlogArticle = blogArticle as BlogArticle;
+                
                 return View("article", base.WorkContext);
 
             }
             throw new HttpException(404, articleUrl);
+        }
+
+        private Blog LoadBlog(string blogName)
+        {
+            var context = base.WorkContext;
+            var retVal = _contentService.LoadContentItemsByUrl("/blogs/" + blogName + "/default", context.CurrentStore, context.CurrentLanguage, () => new Blog())
+                                           .OfType<Blog>().FirstOrDefault();
+            if (retVal == null)
+            {
+                //If default file not found need create manually
+                retVal = new Blog();
+            }
+            retVal.Url = "blogs/" + blogName;
+            return retVal;
+
         }
     }
 }

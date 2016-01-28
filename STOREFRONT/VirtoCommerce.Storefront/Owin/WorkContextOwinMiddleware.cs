@@ -105,7 +105,7 @@ namespace VirtoCommerce.Storefront.Owin
                             workContext.CurrentQuoteRequest = _quoteRequestBuilder.QuoteRequest;
                         }
 
-                        var linkLists = await _cacheManager.GetAsync("GetLinkLists-" + workContext.CurrentStore.Id, "ApiRegion", async () => { return await _cmsApi.MenuGetListsAsync(workContext.CurrentStore.Id); });
+                        var linkLists = await _cacheManager.GetAsync("GetLinkLists-" + workContext.CurrentStore.Id, "ApiRegion", async () => { return await _cmsApi.MenuGetListsAsync(workContext.CurrentStore.Id) ?? new List<Client.Model.VirtoCommerceContentWebModelsMenuLinkList>(); });
                         workContext.CurrentLinkLists = linkLists != null ? linkLists.Select(ll => ll.ToWebModel(urlBuilder)).ToList() : null;
 
                         //Initialize catalog search criteria

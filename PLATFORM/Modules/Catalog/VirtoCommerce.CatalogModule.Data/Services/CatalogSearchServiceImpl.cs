@@ -79,7 +79,9 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                     else if (!criteria.CatalogIds.IsNullOrEmpty())
                     {
                         //If categories not specified need search in all catalog linked and children categories 
+                        //First need load all virtual catalog categories
                         searchCategoryIds = repository.Categories.Where(x => criteria.CatalogIds.Contains(x.CatalogId)).Select(x => x.Id).ToArray();
+                        //Then load all physical categories linked to catalog
                         var allCatalogLinkedCategories = repository.CategoryLinks.Where(x => criteria.CatalogIds.Contains(x.TargetCatalogId)).Select(x => x.SourceCategoryId).ToArray();
                         searchCategoryIds = searchCategoryIds.Concat(allCatalogLinkedCategories).Distinct().ToArray();
                     }

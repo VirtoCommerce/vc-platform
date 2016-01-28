@@ -9,11 +9,9 @@ namespace VirtoCommerce.Storefront.Model.StaticContent
 {
     public abstract class ContentItem
     {
-        public ContentItem(string url, Language language)
+        public ContentItem()
         {
             Tags = new List<string>();
-            Url = url;
-            Language = language;
         }
 
         public string Author { get; set; }
@@ -26,15 +24,25 @@ namespace VirtoCommerce.Storefront.Model.StaticContent
         /// Relative content url
         /// </summary>
         public string Url { get; set; }
+      
         public List<string> Tags { get; set; }
         public ContentPublicationStatus PublicationStatus { get; set; }
 
         public Language Language { get; set; }
         /// <summary>
+        /// Content file name without extension
+        /// </summary>
+        public string Name { get; set; }
+        /// <summary>
         /// Storage path in file system
         /// </summary>
         public string LocalPath { get; set; }
         public string Content { get; set; }
+
+        /// <summary>
+        /// Liquid layout from store theme used as master page for page rendering. If its null will be used default layout.
+        /// </summary>
+        public string Layout { get; set; }
 
         public virtual void LoadContent(string content, IDictionary<string, IEnumerable<string>> metaInfoMap)
         {
@@ -67,13 +75,18 @@ namespace VirtoCommerce.Storefront.Model.StaticContent
 
                         this.Tags = setting.Value.ToList();
                         break;
+
+                    case "layout":
+
+                        this.Layout = settingValue;
+                        break;
                 }
             }
 
             Content = content;
             if (Title == null)
             {
-                Title = Url;
+                Title = Name;
             }
         }
 

@@ -126,7 +126,7 @@ namespace VirtoCommerce.Storefront.Routing
             var cacheKey = String.Join(":", "TryToFindContentPageWithUrl", url, store.Id, language.CultureName);
             var retVal = _cacheManager.Get(cacheKey, "ContentRegion", () =>
             {
-                var allPages = _contentService.LoadContentItemsByUrl("/", store, language, x => new ContentPage(x, language), 1, int.MaxValue);
+                var allPages = _contentService.LoadContentItemsByUrl("/", store, language, () => new ContentPage(), null,  1, int.MaxValue);
                 return allPages.FirstOrDefault(x => url.EndsWith(x.Url)) as ContentPage;
             });
             return retVal;

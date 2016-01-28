@@ -11,7 +11,7 @@ namespace VirtoCommerce.Storefront.Model.StaticContent
         public BlogSearchCriteria()
         {
             PageNumber = 1;
-            PageSize = 20;
+            PageSize = 10;
         }
         public int PageNumber { get; set; }
         public int PageSize { get; set; }

@@ -20,8 +20,6 @@ using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.LiquidThemeEngine
 {
-    
-
     public class DotLiquidThemedViewEngine : IViewEngine
     {
         private ShopifyLiquidThemeEngine _themeEngine;

@@ -25,18 +25,18 @@ namespace VirtoCommerce.Storefront.Controllers
         public ActionResult GetContentPage(ContentPage page)
         {
             base.WorkContext.CurrentPage = page;
-            return View("page", base.WorkContext);
+            return View("page", page.Layout, base.WorkContext);
         }
 
         // GET: /pages/{page}
         public ActionResult GetContentPageByName(string page)
         {
-            var contentPage = _contentService.LoadContentItemsByUrl(page, base.WorkContext.CurrentStore, base.WorkContext.CurrentLanguage, x => new ContentPage(x, base.WorkContext.CurrentLanguage)).FirstOrDefault();
+            var contentPage = _contentService.LoadContentItemsByUrl(page, base.WorkContext.CurrentStore, base.WorkContext.CurrentLanguage, () => new ContentPage()).FirstOrDefault();
             if (contentPage != null)
             {
                 base.WorkContext.CurrentPage = contentPage as ContentPage;
 
-                return View("page", base.WorkContext);
+                return View("page", contentPage.Layout, base.WorkContext);
             }
             throw new HttpException(404, "Page with " + page + " not found.");
         }

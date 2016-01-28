@@ -42,8 +42,16 @@
       <HintPath>..\packages\DotLiquid.VirtoCommerce.1.8.3\lib\NET45\DotLiquid.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="MarkdownDeep, Version=1.5.4615.26275, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MarkdownDeep.NET.1.5\lib\.NetFramework 3.5\MarkdownDeep.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Moq, Version=4.2.1510.2205, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <HintPath>..\packages\Moq.4.2.1510.2205\lib\net40\Moq.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -75,11 +83,15 @@
   <ItemGroup>
     <Compile Include="ShoppingCartTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StaticContentTests.cs" />
     <Compile Include="StorefrontTestBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+    <None Include="Pages\TestStore\folder1\about_us.en-US.md" />
+    <None Include="Pages\TestStore\about_us.de-DE.md" />
+    <None Include="Pages\TestStore\about_us.md" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
@@ -101,6 +113,9 @@
       <Project>{89054b36-0e64-4101-8260-333e6286b94f}</Project>
       <Name>VirtoCommerce.Storefront</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Pages\TestStore\folder2\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
