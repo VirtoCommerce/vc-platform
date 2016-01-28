@@ -235,7 +235,7 @@ namespace VirtoCommerce.Storefront.Model.Catalog
             }
         }
 
-        public ICollection<Discount> Discounts { get; private set; }
+        public ICollection<Discount> Discounts { get; set; }
 
         public Currency Currency { get; set; }
 
