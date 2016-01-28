@@ -233,9 +233,9 @@ namespace VirtoCommerce.Storefront.Model.Cart
         public ICollection<DynamicProperty> DynamicProperties { get; set; }
 
         #region IDiscountable Members
-        public ICollection<Discount> Discounts { get; }
+        public ICollection<Discount> Discounts { get; set; }
 
-        public Currency Currency { get; }
+        public Currency Currency { get; set; }
 
         public void ApplyRewards(IEnumerable<PromotionReward> rewards)
         {
@@ -282,7 +282,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
                     }
                 }
             }
-        } 
+        }
         #endregion
     }
 }

@@ -206,7 +206,7 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         /// Product prices foe other currencies
         /// </summary>
         public ICollection<ProductPrice> Prices { get; set; }
-      
+
         /// <summary>
         /// Inventory info
         /// </summary>
@@ -227,7 +227,7 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         /// </summary>
         public ICollection<Image> Images { get; set; }
 
-        public ICollection<Discount> Discounts { get; }
+        public ICollection<Discount> Discounts { get; set; }
 
         public Currency Currency { get; set; }
 

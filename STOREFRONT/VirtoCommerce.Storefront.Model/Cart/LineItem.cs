@@ -212,9 +212,9 @@ namespace VirtoCommerce.Storefront.Model.Cart
 
 
         #region IDiscountable  Members
-        public Currency Currency { get; }
+        public Currency Currency { get; set; }
 
-        public ICollection<Discount> Discounts { get; }
+        public ICollection<Discount> Discounts { get; set; }
 
         public void ApplyRewards(IEnumerable<PromotionReward> rewards)
         {
@@ -235,7 +235,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
                     Discounts.Add(discount);
                 }
             }
-        } 
+        }
         #endregion
     }
 }
