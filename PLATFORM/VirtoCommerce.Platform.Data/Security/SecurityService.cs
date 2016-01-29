@@ -1,18 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using CacheManager.Core;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Common;
 using VirtoCommerce.Platform.Data.Infrastructure;
-using VirtoCommerce.Platform.Data.Model;
 using VirtoCommerce.Platform.Data.Repositories;
 using VirtoCommerce.Platform.Data.Security.Converters;
 using VirtoCommerce.Platform.Data.Security.Identity;
@@ -81,16 +77,21 @@ namespace VirtoCommerce.Platform.Data.Security
 
         public async Task<SecurityResult> CreateAsync(ApplicationUserExtended user)
         {
-            IdentityResult result = null;
+            IdentityResult result;
+
             if (user == null)
             {
                 throw new ArgumentNullException("user");
             }
+
+            NormalizeUser(user);
+
             //Update ASP.NET indentity user
             using (var userManager = _userManagerFactory())
             {
                 var dbUser = user.ToIdentityModel();
                 user.Id = dbUser.Id;
+
                 if (string.IsNullOrEmpty(user.Password))
                 {
                     result = await userManager.CreateAsync(dbUser);
@@ -113,17 +114,19 @@ namespace VirtoCommerce.Platform.Data.Security
                 }
             }
 
-            return result == null ? null : result.ToCoreModel();
+            return result.ToCoreModel();
         }
 
         public async Task<SecurityResult> UpdateAsync(ApplicationUserExtended user)
         {
-            SecurityResult result = null;
+            SecurityResult result;
 
             if (user == null)
             {
                 throw new ArgumentNullException("user");
             }
+
+            NormalizeUser(user);
 
             //Update ASP.NET indentity user
             using (var userManager = _userManagerFactory())
@@ -258,7 +261,7 @@ namespace VirtoCommerce.Platform.Data.Security
             request = request ?? new UserSearchRequest();
             var result = new UserSearchResponse();
 
-            using (var repository = _platformRepository() )
+            using (var repository = _platformRepository())
             {
                 var query = repository.Accounts;
 
@@ -267,7 +270,7 @@ namespace VirtoCommerce.Platform.Data.Security
                     query = query.Where(u => u.UserName.Contains(request.Keyword));
                 }
 
-                if(request.AccountTypes != null && request.AccountTypes.Any())
+                if (request.AccountTypes != null && request.AccountTypes.Any())
                 {
                     query = query.Where(x => request.AccountTypes.Contains(x.UserType));
                 }
@@ -307,11 +310,11 @@ namespace VirtoCommerce.Platform.Data.Security
         {
             return _cacheManager.Get("AllPermissions", "PlatformRegion", LoadAllPermissions);
         }
-    
+
         public bool UserHasAnyPermission(string userName, string[] scopes, params string[] permissionIds)
         {
             var user = Task.Run(async () => await FindByNameAsync(userName, UserDetails.Full)).Result;
-            if(user == null)
+            if (user == null)
             {
                 return false;
             }
@@ -320,13 +323,13 @@ namespace VirtoCommerce.Platform.Data.Security
             {
                 return true;
             }
-        
-            var retVal = user.UserState == Core.Security.AccountState.Approved;
+
+            var retVal = user.UserState == AccountState.Approved;
 
             //For managers always allow to call api
             if (retVal && permissionIds != null && permissionIds.Count() == 1 && permissionIds.Contains(PredefinedPermissions.SecurityCallApi)
-               && ( String.Equals(user.UserType, AccountType.Manager.ToString(), StringComparison.InvariantCultureIgnoreCase) ||
-                    String.Equals(user.UserType, AccountType.Administrator.ToString(), StringComparison.InvariantCultureIgnoreCase)))
+               && (string.Equals(user.UserType, AccountType.Manager.ToString(), StringComparison.InvariantCultureIgnoreCase) ||
+                    string.Equals(user.UserType, AccountType.Administrator.ToString(), StringComparison.InvariantCultureIgnoreCase)))
             {
                 return true;
             }
@@ -344,7 +347,7 @@ namespace VirtoCommerce.Platform.Data.Security
         {
             var user = Task.Run(async () => await FindByNameAsync(userName, UserDetails.Full)).Result;
             var retVal = Enumerable.Empty<Permission>().ToArray();
-            if(user != null)
+            if (user != null)
             {
                 retVal = user.Roles.SelectMany(x => x.Permissions).Distinct().ToArray();
             }
@@ -443,6 +446,16 @@ namespace VirtoCommerce.Platform.Data.Security
             return result;
         }
 
-   
+        private static void NormalizeUser(ApplicationUserExtended user)
+        {
+            if (user.UserName != null)
+                user.UserName = user.UserName.Trim();
+
+            if (user.Email != null)
+                user.Email = user.Email.Trim();
+
+            if (user.PhoneNumber != null)
+                user.PhoneNumber = user.PhoneNumber.Trim();
+        }
     }
 }
