@@ -32,7 +32,6 @@ namespace VirtoCommerce.Storefront.Converters
 
             retVal.InjectFrom<NullableAndEnumValueInjecter>(address);
             retVal.AddressType = address.Type.ToString();
-            retVal.RegionName = address.Re
 
             return retVal;
         }
