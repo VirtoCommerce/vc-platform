@@ -61,20 +61,17 @@ storefrontApp.service('cartService', ['$http', function ($http) {
         removeCoupon: function () {
             return $http.post('cart/removecoupon');
         },
-        addAddress: function (address) {
-            return $http.post('cart/addaddress', { address: address });
+        addOrUpdateShipment: function (shipmentId, shippingAddress, itemIds, shippingMethodCode) {
+            return $http.post('cart/addorupdateshipment', { shipmentId: shipmentId, shippingAddress: shippingAddress, itemIds: itemIds, shippingMethodCode: shippingMethodCode });
+        },
+        addOrUpdatePayment: function (paymentId, billingAddress, paymentMethodCode, outerId) {
+            return $http.post('cart/addorupdatepayment', { paymentId: paymentId, billingAddress: billingAddress, paymentMethodCode: paymentMethodCode, outerId: outerId });
         },
         getAvailableShippingMethods: function () {
             return $http.get('cart/shippingmethods/json?t=' + new Date().getTime());
         },
         getAvailablePaymentMethods: function () {
             return $http.get('cart/paymentmethods/json?t=' + new Date().getTime());
-        },
-        setShippingMethod: function (shippingMethodCode) {
-            return $http.post('cart/shippingmethod', { shippingMethodCode: shippingMethodCode });
-        },
-        setPaymentMethod: function (paymentMethodCode, billingAddress) {
-            return $http.post('cart/paymentmethod', { paymentMethodCode: paymentMethodCode, billingAddress: billingAddress });
         },
         createOrder: function (bankCardInfo) {
             return $http.post('cart/createorder', { bankCardInfo: bankCardInfo });

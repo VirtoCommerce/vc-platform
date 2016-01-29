@@ -8,9 +8,11 @@ using VirtoCommerce.Client.Model;
 using VirtoCommerce.Storefront.Common;
 using VirtoCommerce.Storefront.Converters;
 using VirtoCommerce.Storefront.Model;
+using VirtoCommerce.Storefront.Model.Cart;
 using VirtoCommerce.Storefront.Model.Cart.Services;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Common.Events;
+using VirtoCommerce.Storefront.Model.Order;
 using VirtoCommerce.Storefront.Model.Order.Events;
 using VirtoCommerce.Storefront.Model.Services;
 
@@ -179,51 +181,28 @@ namespace VirtoCommerce.Storefront.Controllers
             return Json(null, JsonRequestBehavior.AllowGet);
         }
 
-        // POST: /cart/addaddress
+        // POST: /cart/addorupdateshipment
         [HttpPost]
-        [HandleJsonErrorAttribute]
-        public async Task<ActionResult> AddAddressJson(Address address)
+        [HandleJsonError]
+        public async Task<ActionResult> AddOrUpdateShipmentJson(string shipmentId, Address shippingAddress, string[] itemIds, string shippingMethodCode)
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
 
-            await _cartBuilder.AddAddressAsync(address);
+            await _cartBuilder.AddOrUpdateShipmentAsync(shipmentId, shippingAddress, itemIds, shippingMethodCode);
             await _cartBuilder.SaveAsync();
 
             return Json(null, JsonRequestBehavior.AllowGet);
         }
 
-        // POST: /cart/shippingmethod?shippingMethodCode=...
+        // POST: /cart/addorupdatepayment
         [HttpPost]
-        [HandleJsonErrorAttribute]
-        public async Task<ActionResult> SetShippingMethodsJson(string shippingMethodCode)
+        [HandleJsonError]
+        public async Task<ActionResult> AddOrUpdatePaymentJson(string paymentId, Address billingAddress, string paymentMethodCode, string outerId)
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
 
-            var shippingMethods = await _cartBuilder.GetAvailableShippingMethodsAsync();
-            var shippingMethod = shippingMethods.FirstOrDefault(sm => sm.ShipmentMethodCode == shippingMethodCode);
-            if (shippingMethod != null)
-            {
-                await _cartBuilder.AddShipmentAsync(shippingMethod);
-                await _cartBuilder.SaveAsync();
-            }
-
-            return Json(null, JsonRequestBehavior.AllowGet);
-        }
-
-        // POST: /cart/paymentmethod?paymentMethodCode=...
-        [HttpPost]
-        [HandleJsonErrorAttribute]
-        public async Task<ActionResult> SetPaymentMethodsJson(string paymentMethodCode)
-        {
-            await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
-
-            var paymentMethods = await _cartBuilder.GetAvailablePaymentMethodsAsync();
-            var paymentMethod = paymentMethods.FirstOrDefault(pm => pm.GatewayCode == paymentMethodCode);
-            if (paymentMethod != null)
-            {
-                await _cartBuilder.AddPaymentAsync(paymentMethod);
-                await _cartBuilder.SaveAsync();
-            }
+            await _cartBuilder.AddOrUpdatePaymentAsync(paymentId, billingAddress, paymentMethodCode, outerId);
+            await _cartBuilder.SaveAsync();
 
             return Json(null, JsonRequestBehavior.AllowGet);
         }
@@ -246,7 +225,8 @@ namespace VirtoCommerce.Storefront.Controllers
             {
                 var contact = await _customerApi.CustomerModuleGetContactByIdAsync(WorkContext.CurrentCustomer.Id);
 
-                foreach (var orderAddress in order.Addresses)
+                var orderAddresses = GetOrderAddresses(order);
+                foreach (var orderAddress in orderAddresses)
                 {
                     contact.Addresses.Add(orderAddress.ToCustomerModel());
                 }
@@ -342,6 +322,24 @@ namespace VirtoCommerce.Storefront.Controllers
             }
 
             return processingResult;
+        }
+
+        private ICollection<VirtoCommerceOrderModuleWebModelAddress> GetOrderAddresses(VirtoCommerceOrderModuleWebModelCustomerOrder order)
+        {
+            var addresses = new List<VirtoCommerceOrderModuleWebModelAddress>();
+
+            foreach (var orderAddress in order.Addresses)
+            {
+                addresses.Add(orderAddress);
+            }
+
+            var orderShippingAddresses = order.Shipments.Select(s => s.DeliveryAddress);
+            foreach (var shippingAddress in orderShippingAddresses)
+            {
+                addresses.Add(shippingAddress);
+            }
+
+            return addresses;
         }
     }
 }

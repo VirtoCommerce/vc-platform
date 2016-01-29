@@ -178,6 +178,7 @@ namespace VirtoCommerce.Storefront.Controllers
                 //Contacts and account has a same Id.
                 var contact = formModel.ToWebModel();
                 contact.Id = user.Id;
+                contact.IsRegisteredUser = true;
                 await _customerService.CreateCustomerAsync(contact);
 
                 await _commerceCoreApi.StorefrontSecurityPasswordSignInAsync(formModel.Email, formModel.Password);

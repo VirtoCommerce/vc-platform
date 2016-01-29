@@ -372,7 +372,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Filters
                     break;
             }
 
-            var termsString = terms.Any() ? string.Join(";", terms.ToStrings()).ToLowerInvariant() : null;
+            var termsString = terms.Any() ? string.Join(";", terms.ToStrings()) : null;
             var url = workContext.RequestUrl.SetQueryParameter("terms", termsString);
 
             return url.AbsoluteUri;

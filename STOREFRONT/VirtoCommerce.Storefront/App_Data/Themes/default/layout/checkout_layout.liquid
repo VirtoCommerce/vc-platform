@@ -7,6 +7,7 @@
 
     <title>{{ shop.name }} - {{ 'checkout.title' | t }}</title>
 
+    {{ '//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css' | stylesheet_tag }}
     {{ 'checkout.css' | global_asset_url | stylesheet_tag }}
     <!--need for client notifications-->
     {{ 'toastr.css' | asset_url | stylesheet_tag }}

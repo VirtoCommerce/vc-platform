@@ -3,24 +3,6 @@
     <span>{{ 'cart.general.loading_cart_message' | t }}</span>
 </div>
 
-<div class="cart-row" ng-if="errorOccured" ng-cloak>
-    <div class="note form-error">
-        <p style="font-weight: 600; margin-bottom: 20px;">Error occured!</p>
-        <p ng-bind="errorMessage" style="margin-bottom: 20px;"></p>
-        <p>
-            <a href="" style="color: #204a80; font-weight: 600;" ng-click="toggleErrorDetails(errorDetailsVisible)" ng-if="!errorDetailsVisible">
-                <i class="fa fa-angle-down"></i>
-                Show error full information
-            </a>
-            <a href="" style="color: #204a80; font-weight: 600;" ng-click="toggleErrorDetails(errorDetailsVisible)" ng-if="errorDetailsVisible">
-                <i class="fa fa-angle-up"></i>
-                Hide error full information
-            </a>
-        </p>
-        <p ng-bind="errorDetails" ng-show="errorDetailsVisible"></p>
-    </div>
-</div>
-
 <span ng-if="cart.ItemsCount == 0" ng-cloak>
     <h2>{{ 'cart.general.empty' | t }}</h2>
     <p>{{ 'cart.general.continue_browsing_html' | t }}</p>
@@ -93,7 +75,11 @@
                             <small ng-bind="cart.SubTotal.FormatedAmount"></small>
                         </span>
                     </div>
-                    <button type="button" ng-class="{ 'btn': !cartIsUpdating, 'btn-secondary': cartIsUpdating || errorOccured || cart.HasValidationErrors }" ng-disabled="cartIsUpdating || cart.HasValidationErrors" ng-click="outerRedirect('{{ '/cart/checkout/#/customer-information' | absolute_url }}')">
+                    <button type="button" ng-if="cart.HasPhysicalProducts" ng-class="{ 'btn': !cartIsUpdating, 'btn-secondary': cartIsUpdating || errorOccured || cart.HasValidationErrors }" ng-disabled="cartIsUpdating || cart.HasValidationErrors" ng-click="outerRedirect('{{ '/cart/checkout/#/shipping-address' | absolute_url }}')">
+                        <span class="icon icon-cart"></span>
+                        {{ 'cart.general.checkout' | t }}
+                    </button>
+                    <button type="button" ng-if="!cart.HasPhysicalProducts" ng-class="{ 'btn': !cartIsUpdating, 'btn-secondary': cartIsUpdating || errorOccured || cart.HasValidationErrors }" ng-disabled="cartIsUpdating || cart.HasValidationErrors" ng-click="outerRedirect('{{ '/cart/checkout/#/payment-method' | absolute_url }}')">
                         <span class="icon icon-cart"></span>
                         {{ 'cart.general.checkout' | t }}
                     </button>

@@ -47,9 +47,8 @@ namespace VirtoCommerce.Storefront
             routes.MapLocalizedStorefrontRoute("Cart.PaymentMethods", "cart/paymentmethods/json", defaults: new { controller = "Cart", action = "CartPaymentMethodsJson" });
             routes.MapLocalizedStorefrontRoute("Cart.AddCoupon", "cart/addcoupon/{couponCode}", defaults: new { controller = "Cart", action = "AddCouponJson" });
             routes.MapLocalizedStorefrontRoute("Cart.RemoveCoupon", "cart/removecoupon", defaults: new { controller = "Cart", action = "RemoveCouponJson" });
-            routes.MapLocalizedStorefrontRoute("Cart.AddAddress", "cart/addaddress", defaults: new { controller = "Cart", action = "AddAddressJson" });
-            routes.MapLocalizedStorefrontRoute("Cart.SetShippingMethods", "cart/shippingmethod", defaults: new { controller = "Cart", action = "SetShippingMethodsJson" });
-            routes.MapLocalizedStorefrontRoute("Cart.SetPaymentMethods", "cart/paymentmethod", defaults: new { controller = "Cart", action = "SetPaymentMethodsJson" });
+            routes.MapLocalizedStorefrontRoute("Cart.AddOrUpdateShipment", "cart/addorupdateshipment", defaults: new { controller = "Cart", action = "AddOrUpdateShipmentJson" });
+            routes.MapLocalizedStorefrontRoute("Cart.AddOrUpdatePayment", "cart/addorupdatepayment", defaults: new { controller = "Cart", action = "AddOrUpdatePaymentJson" });
             routes.MapLocalizedStorefrontRoute("Cart.CreateOrder", "cart/createorder", defaults: new { controller = "Cart", action = "CreateOrderJson" });
             routes.MapLocalizedStorefrontRoute("Cart.ExternalPaymentCallback", "cart/externalpaymentcallback", defaults: new { controller = "Cart", action = "ExternalPaymentCallback" });
             routes.MapLocalizedStorefrontRoute("Cart.Thanks", "cart/thanks/{orderNumber}", defaults: new { controller = "Cart", action = "Thanks" });
