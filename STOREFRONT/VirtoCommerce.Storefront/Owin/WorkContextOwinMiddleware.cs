@@ -190,7 +190,7 @@ namespace VirtoCommerce.Storefront.Owin
             {
                 retVal.Id = context.Request.Cookies[StorefrontConstants.AnonymousCustomerIdCookie];
                 retVal.UserName = StorefrontConstants.AnonymousUsername;
-                retVal.Name = StorefrontConstants.AnonymousUsername;
+                retVal.FullName = StorefrontConstants.AnonymousUsername;
             }
 
             return retVal;

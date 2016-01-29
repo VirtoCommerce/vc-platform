@@ -12,6 +12,7 @@ using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Data.Common.ConventionInjections;
 using VirtoCommerce.Domain.Shipping.Model;
 using VirtoCommerce.Domain.Payment.Model;
+using VirtoCommerce.Domain.Commerce.Model;
 
 namespace VirtoCommerce.OrderModule.Data.Converters
 {
@@ -67,8 +68,9 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 				OrganizationId = cart.OrganizationId,
                 Status = "New"
 			};
-			
-			if(cart.Items != null)
+            retVal.Addresses = new List<Address>();
+
+            if (cart.Items != null)
 			{
 				retVal.Items = cart.Items.Select(x => x.ToOrderCoreModel()).ToList();
 			}
@@ -83,9 +85,11 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			if (cart.Shipments != null)
 			{
 				retVal.Shipments = cart.Shipments.Select(x => x.ToOrderCoreModel()).ToList();
-				//Redistribute order line items to shipment if cart shipment items empty 
-				var shipment = retVal.Shipments.FirstOrDefault();
-				if(shipment != null && (shipment.Items == null || !shipment.Items.Any()))
+                //Add shipping address to order
+                retVal.Addresses.AddRange(retVal.Shipments.Where(x=>x.DeliveryAddress != null).Select(x => x.DeliveryAddress));
+                //Redistribute order line items to shipment if cart shipment items empty 
+                var shipment = retVal.Shipments.FirstOrDefault();
+				if(shipment != null && shipment.Items.IsNullOrEmpty())
 				{
 					shipment.Items = retVal.Items.Select(x => new ShipmentItem { LineItem = x, Quantity = x.Quantity }).ToList();
 				}
@@ -96,10 +100,18 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 				foreach(var payment in cart.Payments)
 				{
 					var paymentIn = payment.ToOrderCoreModel();
-					paymentIn.CustomerId = cart.CustomerId;
+                    if (paymentIn.BillingAddress != null)
+                    {
+                        //Add billing address to order
+                        retVal.Addresses.Add(paymentIn.BillingAddress);
+                    }
+                    paymentIn.CustomerId = cart.CustomerId;
 					retVal.InPayments.Add(paymentIn);
 				}
 			}
+
+            //Save only disctinct addresses for order
+            retVal.Addresses = retVal.Addresses.Distinct().ToList();
 			retVal.TaxDetails = cart.TaxDetails;
 			return retVal;
 		}

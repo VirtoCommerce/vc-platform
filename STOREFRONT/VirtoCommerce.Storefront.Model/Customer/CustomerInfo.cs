@@ -18,7 +18,7 @@ namespace VirtoCommerce.Storefront.Model.Customer
         /// </summary>
         public string Email { get; set; }
 
-        public string Name { get; set; }
+        public string FullName { get; set; }
         /// <summary>
         /// Returns the first name of the customer.
         /// </summary>

@@ -18,14 +18,14 @@ namespace VirtoCommerce.Storefront.Converters
             var result = new CustomerInfo
             {
                 Email = formModel.Email,
-                Name = string.Join(" ", formModel.FirstName, formModel.LastName),
+                FullName = string.Join(" ", formModel.FirstName, formModel.LastName),
                 FirstName = formModel.FirstName,
                 LastName = formModel.LastName
             };
 
-            if (string.IsNullOrEmpty(result.Name) || string.IsNullOrWhiteSpace(result.Name))
+            if (string.IsNullOrEmpty(result.FullName) || string.IsNullOrWhiteSpace(result.FullName))
             {
-                result.Name = formModel.Email;
+                result.FullName = formModel.Email;
             }
             return result;
         }
@@ -80,7 +80,7 @@ namespace VirtoCommerce.Storefront.Converters
             {
                 retVal.Emails = new[] { customer.Email }.ToList();
             }
-            retVal.FullName = customer.Name;
+            retVal.FullName = customer.FullName;
        
             return retVal;
         }

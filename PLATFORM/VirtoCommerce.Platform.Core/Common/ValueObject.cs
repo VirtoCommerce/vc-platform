@@ -31,10 +31,10 @@ namespace VirtoCommerce.Platform.Core.Common
 			if (Object.ReferenceEquals(this, other))
 				return true;
 
-			//compare all public properties
-			PropertyInfo[] publicProperties = this.GetType().GetProperties();
+            //compare all public properties
+            PropertyInfo[] publicProperties = this.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
-			if ((object)publicProperties != null
+            if ((object)publicProperties != null
 				&&
 				publicProperties.Any())
 			{

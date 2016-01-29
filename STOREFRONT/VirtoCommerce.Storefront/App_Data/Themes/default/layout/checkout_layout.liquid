@@ -8,6 +8,8 @@
     <title>{{ shop.name }} - {{ 'checkout.title' | t }}</title>
 
     {{ 'checkout.css' | global_asset_url | stylesheet_tag }}
+    <!--need for client notifications-->
+    {{ 'toastr.css' | asset_url | stylesheet_tag }}
 
     <base href="{{ '/' | absolute_url }}" />
 
@@ -78,5 +80,6 @@
             </div>
         </div>
     </div>
+    {% include 'notification' %}
 </body>
 </html>

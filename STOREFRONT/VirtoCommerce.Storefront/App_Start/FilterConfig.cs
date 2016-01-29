@@ -70,7 +70,8 @@ namespace VirtoCommerce.Storefront
         {
             Settings = new JsonSerializerSettings
             {
-                ReferenceLoopHandling = ReferenceLoopHandling.Error
+                ReferenceLoopHandling = ReferenceLoopHandling.Error,
+                NullValueHandling = NullValueHandling.Ignore
             };
 
             Settings.Converters.Add(new StringEnumConverter
