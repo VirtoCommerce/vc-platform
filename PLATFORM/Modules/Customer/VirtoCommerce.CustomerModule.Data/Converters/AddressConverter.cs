@@ -8,6 +8,8 @@ using coreModel = VirtoCommerce.Domain.Customer.Model;
 using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Data.Common;
 using VirtoCommerce.Platform.Data.Common.ConventionInjections;
+using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Domain.Commerce.Model;
 
 namespace VirtoCommerce.CustomerModule.Data.Converters
 {
@@ -21,6 +23,7 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
             var retVal = new Domain.Commerce.Model.Address();
             retVal.InjectFrom(entity);
 			retVal.Phone = entity.DaytimePhoneNumber;
+            retVal.AddressType = EnumUtility.SafeParse(entity.Type, AddressType.BillingAndShipping);
 
             return retVal;
         }
@@ -33,6 +36,7 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
             var retVal = new dataModel.Address();
             retVal.InjectFrom(address);
             retVal.DaytimePhoneNumber = address.Phone;
+            retVal.Type = address.AddressType.ToString();
             return retVal;
         }
 
@@ -66,8 +70,10 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 
         public int GetHashCode(dataModel.Address obj)
         {
-            var result = String.Join(":", obj.Organization, obj.City, obj.CountryCode, obj.CountryName, obj.FaxNumber, obj.Name, obj.RegionName, obj.RegionId, obj.StateProvince,
-                                          obj.Email, obj.FirstName, obj.LastName, obj.Line1, obj.Line2, obj.DaytimePhoneNumber, obj.PostalCode);
+            var result = String.Join(":", obj.Organization, obj.City, obj.CountryCode, obj.CountryName, obj.FaxNumber, obj.Name, obj.RegionName,
+                                          obj.RegionId, obj.StateProvince, obj.Email, obj.FirstName, obj.LastName, obj.Line1, obj.Line2, 
+                                          obj.DaytimePhoneNumber, obj.PostalCode, obj.DaytimePhoneNumber, obj.EveningPhoneNumber, 
+                                          obj.Type);
             return result.GetHashCode();
         }
 

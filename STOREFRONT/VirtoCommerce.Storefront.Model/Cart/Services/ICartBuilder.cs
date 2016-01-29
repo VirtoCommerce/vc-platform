@@ -40,6 +40,8 @@ namespace VirtoCommerce.Storefront.Model.Cart.Services
 
         Task<ICollection<PaymentMethod>> GetAvailablePaymentMethodsAsync();
 
+        Task<ICartBuilder> EvaluatePromotionsAsync();
+
         Task SaveAsync();
 
         ShoppingCart Cart { get; }

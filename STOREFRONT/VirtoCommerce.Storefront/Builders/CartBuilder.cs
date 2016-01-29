@@ -61,13 +61,10 @@ namespace VirtoCommerce.Storefront.Builders
                     var detalizedCart = await _cartApi.CartModuleGetCartByIdAsync(cartSearchResult.Id);
                     retVal = detalizedCart.ToWebModel(_currency, _language);
                 }
-
                 return retVal;
             });
 
-            await EvaluatePromotionsAsync();
-
-            return this;
+             return this;
         }
 
         public virtual async Task<ICartBuilder> AddItemAsync(Product product, int quantity)
@@ -275,6 +272,26 @@ namespace VirtoCommerce.Storefront.Builders
             return availablePaymentMethods;
         }
 
+        public virtual async Task<ICartBuilder> EvaluatePromotionsAsync()
+        {
+            var promotionItems = _cart.Items.Select(i => i.ToPromotionItem()).ToList();
+
+            var promotionContext = new PromotionEvaluationContext();
+            promotionContext.CartPromoEntries = promotionItems;
+            promotionContext.CartTotal = _cart.Total;
+            promotionContext.Coupon = _cart.Coupon != null ? _cart.Coupon.Code : null;
+            promotionContext.Currency = _cart.Currency;
+            promotionContext.CustomerId = _customer.Id;
+            promotionContext.IsRegisteredUser = _customer.IsRegisteredUser;
+            promotionContext.Language = _language;
+            promotionContext.PromoEntries = promotionItems;
+            promotionContext.StoreId = _store.Id;
+
+            await _promotionEvaluator.EvaluateDiscountsAsync(promotionContext, new IDiscountable[] { _cart });
+
+            return this;
+        }
+
         public virtual async Task SaveAsync()
         {
             var cart = _cart.ToServiceModel();
@@ -339,22 +356,6 @@ namespace VirtoCommerce.Storefront.Builders
             return string.Format("Cart-{0}-{1}", storeId, customerId);
         }
 
-        private async Task EvaluatePromotionsAsync()
-        {
-            var promotionItems = _cart.Items.Select(i => i.ToPromotionItem()).ToList();
-
-            var promotionContext = new PromotionEvaluationContext();
-            promotionContext.CartPromoEntries = promotionItems;
-            promotionContext.CartTotal = _cart.Total;
-            promotionContext.Coupon = _cart.Coupon != null ? _cart.Coupon.Code : null;
-            promotionContext.Currency = _cart.Currency;
-            promotionContext.CustomerId = _customer.Id;
-            promotionContext.IsRegisteredUser = _customer.IsRegisteredUser;
-            promotionContext.Language = _language;
-            promotionContext.PromoEntries = promotionItems;
-            promotionContext.StoreId = _store.Id;
-
-            await _promotionEvaluator.EvaluateDiscountsAsync(promotionContext, new IDiscountable[] { _cart });
-        }
+        
     }
 }

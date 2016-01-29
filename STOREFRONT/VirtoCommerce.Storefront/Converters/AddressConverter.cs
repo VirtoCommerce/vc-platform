@@ -32,6 +32,7 @@ namespace VirtoCommerce.Storefront.Converters
 
             retVal.InjectFrom<NullableAndEnumValueInjecter>(address);
             retVal.AddressType = address.Type.ToString();
+            retVal.RegionName = address.Re
 
             return retVal;
         }
@@ -42,7 +43,7 @@ namespace VirtoCommerce.Storefront.Converters
             var customerAddress = new VirtoCommerceCustomerModuleWebModelAddress();
 
             customerAddress.InjectFrom<NullableAndEnumValueInjecter>(orderAddress);
-
+            customerAddress.AddressType = orderAddress.AddressType;
             customerAddress.Name = string.Format("{0} {1}", orderAddress.FirstName, orderAddress.LastName);
 
             return customerAddress;

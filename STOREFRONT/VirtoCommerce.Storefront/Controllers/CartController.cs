@@ -55,7 +55,7 @@ namespace VirtoCommerce.Storefront.Controllers
         public async Task<ActionResult> CartJson()
         {
             await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
-
+            await _cartBuilder.EvaluatePromotionsAsync();
             await _cartValidator.ValidateAsync(_cartBuilder.Cart);
 
             return Json(_cartBuilder.Cart, JsonRequestBehavior.AllowGet);
