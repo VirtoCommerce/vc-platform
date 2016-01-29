@@ -186,7 +186,27 @@ namespace VirtoCommerce.Platform.Core.Common
 			return str;
 		}
 
-		public static string RemoveAccent(this string txt)
+        /// <summary>
+        /// Only english characters,
+        /// Numbers are allowed,  
+        /// Dashes are allowed, 
+        /// Spaces are replaced by dashes, 
+        /// Nothing else is allowed,
+        /// Possibly you could replace ;amp by "-and-"
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        public static string MakeFileNameWebSafe(this string fileName)
+        {
+            string str = fileName.RemoveAccent().ToLower();
+            str = str.Replace("&", "-and-");
+            str = Regex.Replace(str, @"[^A-Za-z0-9_\-. ]", ""); // invalid chars           
+            str = Regex.Replace(str, @"\s+", "-").Trim(); // convert multiple spaces into one dash
+            str = str.Substring(0, str.Length <= 240 ? str.Length : 240).Trim(); // cut and trim it   
+            return str;
+        }
+
+        public static string RemoveAccent(this string txt)
 		{
 			byte[] bytes = System.Text.Encoding.GetEncoding("Cyrillic").GetBytes(txt);
 			return System.Text.Encoding.ASCII.GetString(bytes);

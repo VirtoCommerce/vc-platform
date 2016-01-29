@@ -71,7 +71,7 @@ namespace VirtoCommerce.Storefront.Controllers
 
             if (!string.IsNullOrWhiteSpace(fullName))
             {
-                customer.Name = fullName;
+                customer.FullName = fullName;
             }
 
             await _customerService.UpdateCustomerAsync(customer);

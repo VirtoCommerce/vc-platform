@@ -143,6 +143,17 @@
             }
         ];
 
+        $scope.openLanguagesDictionarySettingManagement = function () {
+            var newBlade = {
+                id: 'settingDetailChild',
+                isApiSave: true,
+                currentEntityId: 'VirtoCommerce.Core.General.Languages',
+                parentRefresh: function (data) { $scope.languages = data; },
+                controller: 'platformWebApp.settingDictionaryController',
+                template: '$(Platform)/Scripts/app/settings/blades/setting-dictionary.tpl.html'
+            };
+            bladeNavigationService.showBlade(newBlade, blade);
+        };
 
         blade.refresh(false);
         $scope.catalogs = catalogs.getCatalogs();

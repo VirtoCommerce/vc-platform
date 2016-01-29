@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,11 +19,13 @@ namespace VirtoCommerce.CoreModule.Data.Model
 		[StringLength(255)]
 		[Required]
 		[CustomValidation(typeof(SeoUrlKeyword), "ValidateKeywordUrl", ErrorMessage = @"Keyword can't contain $+;=%{}[]|\/@ ~#!^*&?:'<>, characters")]
-		public string Keyword { get; set; }
+        [Index]
+        public string Keyword { get; set; }
 
 		[StringLength(255)]
 		[Required]
-		public string ObjectId { get; set; }
+        [Index("ObjectIdAndObjectType", 1)]
+        public string ObjectId { get; set; }
 
 
 		[Required]
@@ -30,7 +33,8 @@ namespace VirtoCommerce.CoreModule.Data.Model
 
 		[StringLength(64)]
 		[Required]
-		public string ObjectType { get; set; }
+        [Index("ObjectIdAndObjectType", 2)]
+        public string ObjectType { get; set; }
 
 		[StringLength(255)]
 		public string Title { get; set; }

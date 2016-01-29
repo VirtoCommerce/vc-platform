@@ -10,21 +10,22 @@ using VirtoCommerce.Domain.Shipping.Model;
 using VirtoCommerce.Domain.Store.Services;
 using VirtoCommerce.Platform.Core.Security;
 using webModel = VirtoCommerce.CartModule.Web.Model;
+
 namespace VirtoCommerce.CartModule.Web.Controllers.Api
 {
     [RoutePrefix("api/cart")]
     [CheckPermission(Permission = PredefinedPermissions.Query)]
-	public class CartModuleController : ApiController
-	{
-		private readonly IShoppingCartService _shoppingCartService;
-		private readonly IShoppingCartSearchService _searchService;
-		private readonly IStoreService _storeService;
-		public CartModuleController(IShoppingCartService cartService, IShoppingCartSearchService searchService, IStoreService storeService)
-		{
-			this._shoppingCartService = cartService;
-			this._searchService = searchService;
-			_storeService = storeService;
-		}
+    public class CartModuleController : ApiController
+    {
+        private readonly IShoppingCartService _shoppingCartService;
+        private readonly IShoppingCartSearchService _searchService;
+        private readonly IStoreService _storeService;
+        public CartModuleController(IShoppingCartService cartService, IShoppingCartSearchService searchService, IStoreService storeService)
+        {
+            this._shoppingCartService = cartService;
+            this._searchService = searchService;
+            _storeService = storeService;
+        }
 
         /// <summary>
         /// Get shopping cart by store id and customer id
@@ -36,24 +37,24 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
         /// <param name="customerId">Customer id</param>
         /// <response code="200"></response>
         [HttpGet]
-		[ResponseType(typeof(webModel.ShoppingCart))]
-		[Route("{storeId}/{customerId}/carts/current")]
-		public IHttpActionResult GetCurrentCart(string storeId, string customerId)
-		{
-			if (String.IsNullOrEmpty(customerId))
-			{
-				customerId = "anonymous";
-			}
+        [ResponseType(typeof(webModel.ShoppingCart))]
+        [Route("{storeId}/{customerId}/carts/current")]
+        public IHttpActionResult GetCurrentCart(string storeId, string customerId)
+        {
+            if (String.IsNullOrEmpty(customerId))
+            {
+                customerId = "anonymous";
+            }
 
-			var criteria = new Domain.Cart.Model.SearchCriteria
-			{
-				CustomerId = customerId,
-				StoreId = storeId
-			};
+            var criteria = new Domain.Cart.Model.SearchCriteria
+            {
+                CustomerId = customerId,
+                StoreId = storeId
+            };
 
-			var searchResult = this._searchService.Search(criteria);
-			var retVal = searchResult.ShopingCarts.FirstOrDefault(x => !string.IsNullOrEmpty(x.Name) && x.Name.Equals("default", StringComparison.OrdinalIgnoreCase));
-            if(retVal == null)
+            var searchResult = this._searchService.Search(criteria);
+            var retVal = searchResult.ShopingCarts.FirstOrDefault(x => !string.IsNullOrEmpty(x.Name) && x.Name.Equals("default", StringComparison.OrdinalIgnoreCase));
+            if (retVal == null)
             {
                 retVal = searchResult.ShopingCarts.FirstOrDefault();
             }
@@ -62,8 +63,8 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
                 return Ok();
             }
 
-			return Ok(retVal.ToWebModel());
-		}
+            return Ok(retVal.ToWebModel());
+        }
 
         /// <summary>
         /// Get shopping cart by id
@@ -72,48 +73,48 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
         /// <response code="200"></response>
         /// <response code="404">Shopping cart not found</response>
         [HttpGet]
-		[ResponseType(typeof(webModel.ShoppingCart))]
-		[Route("carts/{id}")]
-		public IHttpActionResult GetCartById(string id)
-		{
-			var retVal = _shoppingCartService.GetById(id);
-			if(retVal == null)
-			{
-				return NotFound();
-			}
-			return Ok(retVal.ToWebModel());
-		}
+        [ResponseType(typeof(webModel.ShoppingCart))]
+        [Route("carts/{id}")]
+        public IHttpActionResult GetCartById(string id)
+        {
+            var retVal = _shoppingCartService.GetById(id);
+            if (retVal == null)
+            {
+                return NotFound();
+            }
+            return Ok(retVal.ToWebModel());
+        }
 
-		/// <summary>
+        /// <summary>
         /// Search for shopping carts by criteria
         /// </summary>
         /// <param name="criteria">Search criteria</param>
-		[HttpGet]
-		[ResponseType(typeof(webModel.SearchResult))]
-		[Route("carts")]
-		public IHttpActionResult SearchCarts(webModel.SearchCriteria criteria)
-		{
-			var retVal = _searchService.Search(criteria.ToCoreModel());
-			return Ok(retVal.ToWebModel());
-		}
+        [HttpPost]
+        [ResponseType(typeof(webModel.SearchResult))]
+        [Route("search")]
+        public IHttpActionResult Search(webModel.SearchCriteria criteria)
+        {
+            var retVal = _searchService.Search(criteria.ToCoreModel());
+            return Ok(retVal.ToWebModel());
+        }
 
-		/// <summary>
+        /// <summary>
         /// Create shopping cart
         /// </summary>
         /// <param name="cart">Shopping cart model</param>
         /// <response code="204">Operation completed</response>
-		[HttpPost]
-		[ResponseType(typeof(ShoppingCart))]
-		[Route("carts")]
+        [HttpPost]
+        [ResponseType(typeof(ShoppingCart))]
+        [Route("carts")]
         [CheckPermission(Permission = PredefinedPermissions.Create)]
-		public IHttpActionResult Create(webModel.ShoppingCart cart)
-		{
-			var coreCart = cart.ToCoreModel();
+        public IHttpActionResult Create(webModel.ShoppingCart cart)
+        {
+            var coreCart = cart.ToCoreModel();
             coreCart = _shoppingCartService.Create(coreCart);
             return Ok(coreCart.ToWebModel());
-		}
+        }
 
-		/// <summary>
+        /// <summary>
         /// Update shopping cart
         /// </summary>
         /// <param name="cart">Shopping cart model</param>
@@ -121,7 +122,7 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
         [ResponseType(typeof(ShoppingCart))]
         [Route("carts")]
         [CheckPermission(Permission = PredefinedPermissions.Update)]
-		public IHttpActionResult Update(webModel.ShoppingCart cart)
+        public IHttpActionResult Update(webModel.ShoppingCart cart)
         {
             var coreCart = cart.ToCoreModel();
             _shoppingCartService.Update(new[] { coreCart });
@@ -129,43 +130,43 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
             return Ok(retVal.ToWebModel());
         }
 
-		/// <summary>
+        /// <summary>
         /// Get shipping methods for shopping cart
         /// </summary>
         /// <param name="cartId">Shopping cart id</param>
-		[HttpGet]
-		[ResponseType(typeof(webModel.ShippingMethod[]))]
-		[Route("carts/{cartId}/shipmentMethods")]
-		public IHttpActionResult GetShipmentMethods(string cartId)
-		{
-			var cart = _shoppingCartService.GetById(cartId);
-			var store = _storeService.GetById(cart.StoreId);
-			var evalContext = new ShippingEvaluationContext(cart);
+        [HttpGet]
+        [ResponseType(typeof(webModel.ShippingMethod[]))]
+        [Route("carts/{cartId}/shipmentMethods")]
+        public IHttpActionResult GetShipmentMethods(string cartId)
+        {
+            var cart = _shoppingCartService.GetById(cartId);
+            var store = _storeService.GetById(cart.StoreId);
+            var evalContext = new ShippingEvaluationContext(cart);
 
             var retVal = store.ShippingMethods.Where(x => x.IsActive)
                                               .SelectMany(x => x.CalculateRates(evalContext))
                                               .Select(x => x.ToWebModel()).ToArray();
-			
-			return Ok(retVal);
-		}
 
-		/// <summary>
+            return Ok(retVal);
+        }
+
+        /// <summary>
         /// Get payment methods for shopping cart
         /// </summary>
         /// <param name="cartId">Shopping cart id</param>
-		[HttpGet]
-		[ResponseType(typeof(webModel.PaymentMethod[]))]
-		[Route("carts/{cartId}/paymentMethods")]
-		public IHttpActionResult GetPaymentMethods(string cartId)
-		{
-			var cart = _shoppingCartService.GetById(cartId);
+        [HttpGet]
+        [ResponseType(typeof(webModel.PaymentMethod[]))]
+        [Route("carts/{cartId}/paymentMethods")]
+        public IHttpActionResult GetPaymentMethods(string cartId)
+        {
+            var cart = _shoppingCartService.GetById(cartId);
 
-			var store = _storeService.GetById(cart.StoreId);
+            var store = _storeService.GetById(cart.StoreId);
 
-			var retVal = store.PaymentMethods.Where(x => x.IsActive).Select(x => x.ToWebModel()).ToArray();
+            var retVal = store.PaymentMethods.Where(x => x.IsActive).Select(x => x.ToWebModel()).ToArray();
 
-			return this.Ok(retVal);
-		}
+            return this.Ok(retVal);
+        }
 
         /// <summary>
         /// Get payment methods for store
@@ -183,20 +184,20 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
             return this.Ok(retVal);
         }
 
-		
-		/// <summary>
+
+        /// <summary>
         /// Delete shopping carts by ids
         /// </summary>
         /// <param name="ids">Array of shopping cart ids</param>
         /// <response code="204">Operation completed</response>
-		[HttpDelete]
-		[ResponseType(typeof(void))]
-		[Route("carts")]
+        [HttpDelete]
+        [ResponseType(typeof(void))]
+        [Route("carts")]
         [CheckPermission(Permission = PredefinedPermissions.Delete)]
-		public IHttpActionResult DeleteCarts([FromUri] string[] ids)
-		{
-			_shoppingCartService.Delete(ids);
-			return StatusCode(HttpStatusCode.NoContent);
-		}
+        public IHttpActionResult DeleteCarts([FromUri] string[] ids)
+        {
+            _shoppingCartService.Delete(ids);
+            return StatusCode(HttpStatusCode.NoContent);
+        }
     }
 }

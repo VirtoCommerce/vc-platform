@@ -1431,6 +1431,12 @@ fieldset + fieldset
                         border-radius: 50%;
             }
 
+            .form-input .btn.__other .btn-ico
+            {
+                font-size: 12px;
+                line-height: 24px;
+            }
+
     .form-control .form-label
     {
         display: inline-block;
@@ -3769,17 +3775,18 @@ button.btn
 
 .select2-container .select2-choice abbr
 {
-    top: 5px;
+    height: 100%;
+    padding: 0 10px;
+    right: 16px;
+    top: 0;
 }
 
 .select2-search-choice-close::after
 {
-    color: #a1c0d4;
-    content: '×';
-    font-family: caption;
-    font-size: 16px;
-    font-weight: bold;
-    line-height: 1;
+    color: #43b0e6;
+    content: '';
+    font-family: 'FontAwesome';
+    font-size: 12px;
     text-shadow: none;
     top: 0;
 }
@@ -5202,6 +5209,7 @@ tags-input .tags .tag-item .remove-button
 {
     overflow: visible;
     position: static;
+    width: 100%;
 }
 
 .ui-grid-scrollbar-placeholder
@@ -5229,6 +5237,23 @@ tags-input .tags .tag-item .remove-button
     text-shadow: 1px 1px #fff;
     vertical-align: middle;
     width: 100%;
+}
+
+.ui-grid-cell.__filters .ui-grid-cell-contents
+{
+    background: #f6f6f6;
+}
+
+.ui-grid-cell-contents .inner-t
+{
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.ui-grid-cell-contents .count
+{
+    color: #43b0e6;
+    font-weight: 600;
 }
 
 .ui-grid-cell-contents .inner-contents

@@ -1,6 +1,6 @@
 ﻿angular.module('platformWebApp')
 .controller('platformWebApp.accountDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.accounts', 'platformWebApp.roles', 'platformWebApp.dialogService', 'platformWebApp.settings', function ($scope, bladeNavigationService, accounts, roles, dialogService, settings) {
-    $scope.blade.promise = roles.get({ count: 10000 }).$promise;
+    $scope.blade.promise = roles.search({ count: 10000 }).$promise;
     $scope.accountTypes = [];
 
     $scope.blade.refresh = function (parentRefresh) {

@@ -191,6 +191,7 @@
     <Compile Include="ExportImport\StoreExportImport.cs" />
     <Compile Include="Model\FulfillmentCenter.cs" />
     <Compile Include="Model\PaymentMethod.cs" />
+    <Compile Include="Model\SearchResult.cs" />
     <Compile Include="Model\SendDynamicNotificationRequest.cs" />
     <Compile Include="Model\ShippingMethod.cs" />
     <Compile Include="Model\Store.cs" />

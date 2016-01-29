@@ -50,7 +50,7 @@ namespace VirtoCommerce.Storefront.Model
                 if (_seoInfo == null)
                 {
                     //TODO: next need detec seo from category or product or cart etc
-                    _seoInfo = CurrentStore.SeoInfos.FirstOrDefault();
+                    _seoInfo = CurrentStore.CurrentSeoInfo;
                 }
                 return _seoInfo;
             }

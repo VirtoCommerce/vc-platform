@@ -3,13 +3,11 @@
     var blade = $scope.blade;
     blade.headIcon = 'fa-plus-square-o';
     blade.title = 'platform.blades.dynamicProperty-detail.title';
-    $scope.languages = [];
     var localDictionaryValues = [];
 
     blade.refresh = function () {
         //Actualize displayed names to correspond to system languages
         settings.getValues({ id: 'VirtoCommerce.Core.General.Languages' }, function (languages) {
-            $scope.languages = languages;
             blade.currentEntity = blade.isNew ? { valueType: 'ShortText', displayNames: [] } : blade.currentEntity;
             blade.currentEntity.displayNames = _.map(languages, function (x) {
                 var retVal = { locale: x };

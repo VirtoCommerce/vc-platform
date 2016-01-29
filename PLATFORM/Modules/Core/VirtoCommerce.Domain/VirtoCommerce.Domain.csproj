@@ -60,9 +60,9 @@
     <Compile Include="Cart\Events\CartChangeEvent.cs" />
     <Compile Include="Cart\Model\LineItem.cs" />
     <Compile Include="Cart\Model\Payment.cs" />
-    <Compile Include="Cart\Model\SearchCriteria.cs" />
+    <Compile Include="Cart\Model\Search\SearchCriteria.cs" />
     <Compile Include="Cart\Model\Discount.cs" />
-    <Compile Include="Cart\Model\SearchResult.cs" />
+    <Compile Include="Cart\Model\Search\SearchResult.cs" />
     <Compile Include="Cart\Model\Shipment.cs" />
     <Compile Include="Cart\Model\PaymentMethod.cs" />
     <Compile Include="Cart\Model\ShipmentItem.cs" />
@@ -123,8 +123,8 @@
     <Compile Include="Customer\Model\Note.cs" />
     <Compile Include="Customer\Model\Organization.cs" />
     <Compile Include="Customer\Model\PropertyValueType.cs" />
-    <Compile Include="Customer\Model\SearchCriteria.cs" />
-    <Compile Include="Customer\Model\SearchResult.cs" />
+    <Compile Include="Customer\Model\Search\SearchCriteria.cs" />
+    <Compile Include="Customer\Model\Search\SearchResult.cs" />
     <Compile Include="Customer\Services\ICustomerSearchService.cs" />
     <Compile Include="Customer\Services\IContactService.cs" />
     <Compile Include="Customer\Services\IOrganizationService.cs" />
@@ -188,8 +188,8 @@
     <Compile Include="Order\Model\Discount.cs" />
     <Compile Include="Order\Model\Operation.cs" />
     <Compile Include="Order\Model\PaymentIn.cs" />
-    <Compile Include="Order\Model\SearchCriteria.cs" />
-    <Compile Include="Order\Model\SearchResult.cs" />
+    <Compile Include="Order\Model\Search\SearchCriteria.cs" />
+    <Compile Include="Order\Model\Search\SearchResult.cs" />
     <Compile Include="Order\Model\Shipment.cs" />
     <Compile Include="Order\Services\ICustomerOrderService.cs" />
     <Compile Include="Order\Services\ICustomerOrderSearchService.cs" />
@@ -225,8 +225,8 @@
     <Compile Include="Quote\Model\QuoteAttachment.cs" />
     <Compile Include="Quote\Model\QuoteItem.cs" />
     <Compile Include="Quote\Model\QuoteRequest.cs" />
-    <Compile Include="Quote\Model\QuoteRequestSearchCriteria.cs" />
-    <Compile Include="Quote\Model\QuoteRequestSearchResult.cs" />
+    <Compile Include="Quote\Model\Search\QuoteRequestSearchCriteria.cs" />
+    <Compile Include="Quote\Model\Search\QuoteRequestSearchResult.cs" />
     <Compile Include="Quote\Model\QuoteRequestTotals.cs" />
     <Compile Include="Quote\Model\ShipmentMethod.cs" />
     <Compile Include="Quote\Model\TierPrice.cs" />
@@ -283,6 +283,8 @@
     <Compile Include="Shipping\Model\ShippingRate.cs" />
     <Compile Include="Shipping\Services\IShippingMethodsService.cs" />
     <Compile Include="Shipping\Services\ShippingMethodsServiceImpl.cs" />
+    <Compile Include="Store\Model\Search\SearchCriteria.cs" />
+    <Compile Include="Store\Model\Search\SearchResult.cs" />
     <Compile Include="Store\Model\Store.cs" />
     <Compile Include="Store\Model\StoreState.cs" />
     <Compile Include="Store\Services\IStoreService.cs" />

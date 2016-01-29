@@ -23,10 +23,9 @@
                                 { name: 'actions', displayName: '', enableColumnResizing: false, enableSorting: false, width: 30, cellTemplate: 'list-actions.cell.html', pinnedLeft:true },
                                 {
                                     name: 'memberType', displayName: 'customer.blades.member-list.labels.type', headerTooltip: 'Organization or individual Customer',
-                                    sort: { direction: uiGridConstants.DESC, priority: 1 },
-                                    enableColumnResizing: false, width: 60, cellTemplate: 'member-list-icon.cell.html'
+                                    enableSorting: false, enableColumnResizing: false, width: 60, cellTemplate: 'member-list-icon.cell.html'
                                 },
-                                { name: 'displayName', displayName: 'customer.blades.member-list.labels.name', sort: { direction: uiGridConstants.ASC, priority: 2 } }
+                                { name: 'displayName', displayName: 'customer.blades.member-list.labels.name', sort: { direction: uiGridConstants.ASC }}
                         ]})">
                 <!--{ name: 'customAddress', displayName: 'customer.blades.member-list.labels.address', field: 'grid.appScope.getMainAddress(row)' },
                 { name: 'customEmail', displayName: 'customer.blades.member-list.labels.email' }-->

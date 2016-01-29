@@ -20,7 +20,7 @@
                     categoryId: blade.categoryId,
                     keyword: filter.keyword ? filter.keyword : undefined,
                     responseGroup: 'withCategories, withProducts',
-                    sort: getSortExpression(),
+                    sort: uiGridHelper.getSortExpression($scope),
                     skip: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
                     take: $scope.pageSettings.itemsPerPageCount
                 };
@@ -585,21 +585,6 @@
 
                 $scope.$watch('pageSettings.currentPage', blade.refresh);
             };
-
-            function getSortExpression() {
-                var columnDefs = $scope.gridApi ? $scope.gridApi.grid.columns : $scope.gridOptions.columnDefs;
-                var sorts = _.filter(columnDefs, function (x) {
-                    return x.name !== '$path' && x.sort && (x.sort.direction === uiGridConstants.ASC || x.sort.direction === uiGridConstants.DESC);
-                })
-
-                sorts = _.sortBy(sorts, function (x) {
-                    return x.sort.priority;
-                });
-                sorts = _.map(sorts, function (x) {
-                    return x.name + ':' + (x.sort.direction === uiGridConstants.ASC ? 'asc' : 'desc');
-                });
-                return sorts.join(';');
-            }
 
             $scope.getGroupInfo = function (groupEntity) {
                 return _.values(groupEntity)[0];

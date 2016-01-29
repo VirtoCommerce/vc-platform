@@ -5,7 +5,7 @@
     blade.currentEntity = {};
 
     function refresh() {
-        marketing_dynamicContents_res_search.search({ folder: blade.choosenFolder, respGroup: '18' }, function (data) {
+        marketing_dynamicContents_res_search.search({ folderId: blade.choosenFolder, responseGroup: '18' }, function (data) {
             blade.currentEntity.childrenFolders = data.contentFolders;
             blade.currentEntity.items = data.contentItems;
             setBreadcrumbs();

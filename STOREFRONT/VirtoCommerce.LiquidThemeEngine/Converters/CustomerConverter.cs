@@ -14,7 +14,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
         {
             var result = new Customer();
             result.InjectFrom<StorefrontModel.Common.NullableAndEnumValueInjecter>(customer);
-
+            result.Name = customer.FullName;
             result.DefaultAddress = customer.DefaultAddress.ToShopifyModel();
             result.DefaultBillingAddress = customer.DefaultBillingAddress.ToShopifyModel();
             result.DefaultShippingAddress = customer.DefaultShippingAddress.ToShopifyModel();

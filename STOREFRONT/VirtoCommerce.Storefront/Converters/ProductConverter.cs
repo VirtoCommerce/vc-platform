@@ -26,7 +26,7 @@ namespace VirtoCommerce.Storefront.Converters
 
             if(product.Category != null)
             {
-                retVal.Category = product.Category.ToWebModel();
+                retVal.Category = product.Category.ToWebModel(currentLanguage);
             }
 
             if (product.Properties != null)
@@ -55,7 +55,7 @@ namespace VirtoCommerce.Storefront.Converters
             }
 
             if (product.SeoInfos != null)
-                retVal.SeoInfo = product.SeoInfos.Select(s => s.ToWebModel()).FirstOrDefault();
+                retVal.SeoInfo = product.SeoInfos.Select(s => s.ToWebModel()).FirstOrDefault(x => x.Language == currentLanguage);
 
             if (product.Reviews != null)
             {

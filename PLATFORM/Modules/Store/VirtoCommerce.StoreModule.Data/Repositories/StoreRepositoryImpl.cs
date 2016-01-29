@@ -53,14 +53,14 @@ namespace VirtoCommerce.StoreModule.Data.Repositories
 
 		#region IStoreRepository Members
 
-		public Store GetStoreById(string id)
+		public Store[] GetStoresByIds(string[] ids)
 		{
-            var retVal = Stores.Where(x => x.Id == id).Include(x => x.Languages)
-                                                         .Include(x => x.Currencies)
-                                                         .Include(x => x.PaymentMethods)
-                                                         .Include(x => x.ShippingMethods)
-                                                         .Include(x => x.TaxProviders);
-            return retVal.FirstOrDefault();
+            var retVal = Stores.Where(x => ids.Contains(x.Id)).Include(x => x.Languages)
+                               .Include(x => x.Currencies)
+                               .Include(x => x.PaymentMethods)
+                               .Include(x => x.ShippingMethods)
+                               .Include(x => x.TaxProviders);
+            return retVal.ToArray();
 		}
 
 		public IQueryable<Store> Stores

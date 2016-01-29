@@ -140,6 +140,7 @@
     <Compile Include="Filters\TranslationFilter.cs" />
     <Compile Include="Filters\CommerceFilters.cs" />
     <Compile Include="Filters\CommonFilters.cs" />
+    <Compile Include="ILiquidThemeEngine.cs" />
     <Compile Include="Objects\Address.cs" />
     <Compile Include="Objects\Article.cs" />
     <Compile Include="Objects\ArticleUser.cs" />

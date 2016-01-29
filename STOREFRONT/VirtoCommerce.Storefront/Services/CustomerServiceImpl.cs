@@ -7,9 +7,11 @@ using System.Threading.Tasks;
 using System.Web;
 using CacheManager.Core;
 using VirtoCommerce.Client.Api;
+using VirtoCommerce.Client.Model;
 using VirtoCommerce.Storefront.Converters;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Common;
+using VirtoCommerce.Storefront.Model.Common.Exceptions;
 using VirtoCommerce.Storefront.Model.Customer;
 using VirtoCommerce.Storefront.Model.Customer.Services;
 using VirtoCommerce.Storefront.Model.Order.Events;
@@ -35,18 +37,28 @@ namespace VirtoCommerce.Storefront.Services
         #region ICustomerService Members
         public async Task<CustomerInfo> GetCustomerByIdAsync(string customerId)
         {
-           var retVal = await _cacheManager.GetAsync(GetCacheKey(customerId), "ApiRegion", async () => 
-           {
-               Debug.WriteLine("#" + Thread.CurrentThread.ManagedThreadId + " GetCustomerByIdAsync");
-               //TODO: Make parallels call
-               var contact =  await _customerApi.CustomerModuleGetContactByIdAsync(customerId);
-               var ordersResponse = await _orderApi.OrderModuleSearchAsync(criteriaCustomerId: customerId, criteriaResponseGroup: "full");
-               var result = contact.ToWebModel();
-               result.OrdersCount = ordersResponse.TotalCount.Value;
-               var workContext = _workContextFactory();
-               result.Orders = ordersResponse.CustomerOrders.Select(x => x.ToWebModel(workContext.AllCurrencies, workContext.CurrentLanguage)).ToList();
-               return result;
-           });
+            var retVal = await _cacheManager.GetAsync(GetCacheKey(customerId), "ApiRegion", async () =>
+            {
+                //TODO: Make parallels call
+                var contact = await _customerApi.CustomerModuleGetContactByIdAsync(customerId);
+                if (contact == null)
+                {
+                    throw new StorefrontException("Contact with id " + customerId + " not found");
+                }
+
+                var criteria = new VirtoCommerceDomainOrderModelSearchCriteria
+                {
+                    CustomerId = customerId,
+                    ResponseGroup = "full",
+                };
+
+                var ordersResponse = await _orderApi.OrderModuleSearchAsync(criteria);
+                var result = contact.ToWebModel();
+                result.OrdersCount = ordersResponse.TotalCount.Value;
+                var workContext = _workContextFactory();
+                result.Orders = ordersResponse.CustomerOrders.Select(x => x.ToWebModel(workContext.AllCurrencies, workContext.CurrentLanguage)).ToList();
+                return result;
+            });
             return retVal;
         }
 
@@ -67,7 +79,7 @@ namespace VirtoCommerce.Storefront.Services
         #region IObserver<CreateOrderEvent> Members
         public void OnNext(OrderPlacedEvent value)
         {
-           if(value.Order != null)
+            if (value.Order != null)
             {
                 var cacheKey = GetCacheKey(value.Order.CustomerId);
                 _cacheManager.Remove(cacheKey, "ApiRegion");
@@ -76,7 +88,7 @@ namespace VirtoCommerce.Storefront.Services
 
         public void OnError(Exception error)
         {
-           //Nothing todo
+            //Nothing todo
         }
 
         public void OnCompleted()
@@ -90,6 +102,6 @@ namespace VirtoCommerce.Storefront.Services
             return "GetCustomerById-" + customerId;
         }
 
-       
+
     }
 }

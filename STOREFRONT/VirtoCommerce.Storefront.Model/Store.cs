@@ -86,6 +86,13 @@ namespace VirtoCommerce.Storefront.Model
   
         public ICollection<DynamicProperty> DynamicProperties { get; set; }
 
+        /// <summary>
+        /// Seo info for current language
+        /// </summary>
+        public SeoInfo CurrentSeoInfo { get; set; }
+        /// <summary>
+        /// All store seo informations for all languages
+        /// </summary>
         public ICollection<SeoInfo> SeoInfos { get; set; }
 
         public bool QuotesEnabled

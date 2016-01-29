@@ -18,8 +18,8 @@ namespace VirtoCommerce.CatalogModule.Data.Services
         private readonly ICatalogService _catalogService;
         private readonly ICategoryService _categoryService;
 
-        private Dictionary<string, string> _productSortingPropReplacementMap = new Dictionary<string, string>();
-        private Dictionary<string, string> _categorySortingPropReplacementMap = new Dictionary<string, string>();
+        private Dictionary<string, string> _productSortingAliases = new Dictionary<string, string>();
+        private Dictionary<string, string> _categorySortingAliases = new Dictionary<string, string>();
 
         public CatalogSearchServiceImpl(Func<ICatalogRepository> catalogRepositoryFactory, IItemService itemService, ICatalogService catalogService, ICategoryService categoryService)
         {
@@ -28,8 +28,8 @@ namespace VirtoCommerce.CatalogModule.Data.Services
             _catalogService = catalogService;
             _categoryService = categoryService;
 
-             _productSortingPropReplacementMap["sku"] = ReflectionUtility.GetPropertyName<CatalogProduct>(x => x.Code);
-            _categorySortingPropReplacementMap["sku"] = ReflectionUtility.GetPropertyName<Category>(x => x.Code);
+             _productSortingAliases["sku"] = ReflectionUtility.GetPropertyName<CatalogProduct>(x => x.Code);
+            _categorySortingAliases["sku"] = ReflectionUtility.GetPropertyName<Category>(x => x.Code);
 
         }
 
@@ -79,7 +79,9 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                     else if (!criteria.CatalogIds.IsNullOrEmpty())
                     {
                         //If categories not specified need search in all catalog linked and children categories 
+                        //First need load all virtual catalog categories
                         searchCategoryIds = repository.Categories.Where(x => criteria.CatalogIds.Contains(x.CatalogId)).Select(x => x.Id).ToArray();
+                        //Then load all physical categories linked to catalog
                         var allCatalogLinkedCategories = repository.CategoryLinks.Where(x => criteria.CatalogIds.Contains(x.TargetCatalogId)).Select(x => x.SourceCategoryId).ToArray();
                         searchCategoryIds = searchCategoryIds.Concat(allCatalogLinkedCategories).Distinct().ToArray();
                     }
@@ -117,7 +119,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                     sortInfos = new[] { new SortInfo { SortColumn = "Name" } };
                 }
                 //Try to replace sorting columns names
-                TryTransformSortingInfoColumnNames(_categorySortingPropReplacementMap, sortInfos);
+                TryTransformSortingInfoColumnNames(_categorySortingAliases, sortInfos);
 
                 query = query.OrderBySortInfos(sortInfos);
 
@@ -242,7 +244,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                     sortInfos = new[] { new SortInfo { SortColumn = "Name" } };
                 }
                 //Try to replace sorting columns names
-                TryTransformSortingInfoColumnNames(_productSortingPropReplacementMap, sortInfos);
+                TryTransformSortingInfoColumnNames(_productSortingAliases, sortInfos);
 
                  query = query.OrderBySortInfos(sortInfos);
 

@@ -16,7 +16,7 @@
             blade.isLoading = true;
 
             promotions.search({
-                respGroup: 'withPromotions',
+                responseGroup: 'withPromotions',
                 keyword: $scope.filter.searchKeyword,
                 start: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
                 count: $scope.pageSettings.itemsPerPageCount

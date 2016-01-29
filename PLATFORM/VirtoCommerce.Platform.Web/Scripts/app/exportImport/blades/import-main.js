@@ -1,5 +1,5 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.exportImport.importMainController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.exportImport.resource', 'FileUploader', function ($scope, bladeNavigationService, exportImportResourse, FileUploader) {
+.controller('platformWebApp.exportImport.importMainController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.exportImport.resource', 'FileUploader', 'platformWebApp.authService', function ($scope, bladeNavigationService, exportImportResourse, FileUploader, authService) {
     var blade = $scope.blade;
     blade.headIcon = 'fa-download';
     blade.title = 'platform.blades.import-main.title';
@@ -18,7 +18,7 @@
     });
 
     $scope.canStartProcess = function () {
-        return ($scope.importRequest.modules && $scope.importRequest.modules.length > 0) || $scope.importRequest.handleSecurity || $scope.importRequest.handleSettings || $scope.importRequest.handleBinaryData;
+    	return authService.checkPermission('platform:exportImport:import') && (($scope.importRequest.modules && $scope.importRequest.modules.length > 0) || $scope.importRequest.handleSecurity || $scope.importRequest.handleSettings || $scope.importRequest.handleBinaryData);
     }
 
     $scope.startProcess = function () {

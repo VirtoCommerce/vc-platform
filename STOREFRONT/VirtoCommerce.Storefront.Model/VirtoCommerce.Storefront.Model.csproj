@@ -46,6 +46,7 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -83,6 +84,7 @@
     <Compile Include="Common\Events\EventPublisher.cs" />
     <Compile Include="Common\Events\IEventPublisher.cs" />
     <Compile Include="Common\Events\IPriorityObserver.cs" />
+    <Compile Include="Common\Exceptions\StorefrontException.cs" />
     <Compile Include="Customer\Services\ICustomerService.cs" />
     <Compile Include="Order\Events\OrderPlacedEvent.cs" />
     <Compile Include="Quote\Services\IQuoteRequestBuilder.cs" />

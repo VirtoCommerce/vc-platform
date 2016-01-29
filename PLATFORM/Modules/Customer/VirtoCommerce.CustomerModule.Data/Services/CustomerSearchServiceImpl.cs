@@ -18,10 +18,15 @@ namespace VirtoCommerce.CustomerModule.Data.Services
     public class CustomerSearchServiceImpl : ICustomerSearchService
     {
         private readonly Func<ICustomerRepository> _repositoryFactory;
+        private Dictionary<string, string> _contactSortingAliases = new Dictionary<string, string>();
+        private Dictionary<string, string> _organizationSortingAliases = new Dictionary<string, string>();
+
 
         public CustomerSearchServiceImpl(Func<ICustomerRepository> repositoryFactory)
         {
             _repositoryFactory = repositoryFactory;
+            _contactSortingAliases["displayname"] = ReflectionUtility.GetPropertyName<coreModel.Contact>(x => x.FullName);
+            _organizationSortingAliases["displayname"] = ReflectionUtility.GetPropertyName<coreModel.Organization>(x => x.Name);
         }
 
         #region IContactSearchService Members
@@ -71,12 +76,12 @@ namespace VirtoCommerce.CustomerModule.Data.Services
                 {
                     sortInfos = new[] { new SortInfo { SortColumn = "Name" } };
                 }
-
+                //Try to replace sorting columns names
+                TryTransformSortingInfoColumnNames(_organizationSortingAliases, sortInfos);
                 query = query.OrderBySortInfos(sortInfos);
 
 
-                result.Organizations = query.OrderByDescending(x => x.Name)
-                                            .ToArray()
+                result.Organizations = query.ToArray()
                                             .Select(x => x.ToCoreModel())
                                             .ToList();
             }
@@ -115,15 +120,28 @@ namespace VirtoCommerce.CustomerModule.Data.Services
                 {
                     sortInfos = new[] { new SortInfo { SortColumn = "FullName" } };
                 }
-
+                //Try to replace sorting columns names
+                TryTransformSortingInfoColumnNames(_contactSortingAliases, sortInfos);
                 query = query.OrderBySortInfos(sortInfos);
 
-                result.Contacts = query.OrderBy(x => x.FullName)
-                                   .Skip(criteria.Skip)
+                result.Contacts = query.Skip(criteria.Skip)
                                    .Take(criteria.Take)
                                    .ToArray()
                                    .Select(x => x.ToCoreModel())
                                    .ToList();
+            }
+        }
+
+        private static void TryTransformSortingInfoColumnNames(IDictionary<string, string> transformationMap, SortInfo[] sortingInfos)
+        {
+            //Try to replace sorting columns names
+            foreach (var sortInfo in sortingInfos)
+            {
+                string newColumnName;
+                if (transformationMap.TryGetValue(sortInfo.SortColumn.ToLowerInvariant(), out newColumnName))
+                {
+                    sortInfo.SortColumn = newColumnName;
+                }
             }
         }
     }

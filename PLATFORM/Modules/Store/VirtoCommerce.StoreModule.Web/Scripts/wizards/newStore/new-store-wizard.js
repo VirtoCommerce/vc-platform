@@ -18,7 +18,7 @@
 
             stores.save(blade.currentEntity, function (data) {
                 blade.parentBlade.refresh();
-                blade.parentBlade.openBlade(data);
+                blade.parentBlade.selectNode(data);
             },
             function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
         };
@@ -26,6 +26,18 @@
         $scope.setForm = function (form) {
             $scope.formScope = form;
         }
+
+        $scope.openLanguagesDictionarySettingManagement = function () {
+            var newBlade = {
+                id: 'settingDetailChild',
+                isApiSave: true,
+                currentEntityId: 'VirtoCommerce.Core.General.Languages',
+                parentRefresh: function (data) { $scope.languages = data; },
+                controller: 'platformWebApp.settingDictionaryController',
+                template: '$(Platform)/Scripts/app/settings/blades/setting-dictionary.tpl.html'
+            };
+            bladeNavigationService.showBlade(newBlade, blade);
+        };
 
         $scope.catalogs = catalogs.getCatalogs();
         $scope.languages = settings.getValues({ id: 'VirtoCommerce.Core.General.Languages' });

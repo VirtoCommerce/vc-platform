@@ -152,12 +152,16 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
                 data = Encoding.UTF8.GetBytes(page.Content);
             }
 
-            //add language to file name for new page
-            var pageFileNameParts = page.Id.Split('.');
-            if (pageFileNameParts.Length == 2)
+            if (!string.IsNullOrEmpty(page.Language))
             {
-                page.Id = pageFileNameParts[0] + "." + page.Language + "." + pageFileNameParts[1];
+                //add language to file name for new page
+                var pageFileNameParts = page.Id.Split('.');
+                if (pageFileNameParts.Length == 2)
+                {
+                    page.Id = pageFileNameParts[0] + "." + page.Language + "." + pageFileNameParts[1];
+                }
             }
+
             using (var stream = _contentStorageProvider.OpenWrite("/Pages/" + storeId + "/" + page.Id))
             using (var memStream = new MemoryStream(data))
             {
@@ -222,10 +226,9 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
         {
             var retVal = new Page
             {
-                Id = string.Format("blogs/{0}/default.{1}.md", blogName, "en-US"),
+                Id = string.Format("blogs/{0}/default.md", blogName),
                 Name = string.Format("blogs/{0}/default.md", blogName),
-                Language = "en-US",
-                Content = "<p>Default blog content</p>",
+                Content = string.Format("---title:  {0} --- ", blogName),
                 ContentType = "text/html"
             };
 

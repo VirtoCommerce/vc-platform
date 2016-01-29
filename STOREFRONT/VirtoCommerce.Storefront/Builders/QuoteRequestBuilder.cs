@@ -1,18 +1,18 @@
-﻿using CacheManager.Core;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using CacheManager.Core;
 using VirtoCommerce.Client.Api;
+using VirtoCommerce.Client.Model;
 using VirtoCommerce.Storefront.Common;
 using VirtoCommerce.Storefront.Converters;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
-using VirtoCommerce.Storefront.Model.Marketing;
+using VirtoCommerce.Storefront.Model.Customer;
 using VirtoCommerce.Storefront.Model.Marketing.Services;
 using VirtoCommerce.Storefront.Model.Quote;
 using VirtoCommerce.Storefront.Model.Quote.Services;
-using VirtoCommerce.Storefront.Model.Customer;
 
 namespace VirtoCommerce.Storefront.Builders
 {
@@ -30,7 +30,7 @@ namespace VirtoCommerce.Storefront.Builders
         private string _quoteRequestCacheKey;
         private const string _quoteRequestCacheRegion = "QuoteRequestRegion";
 
-        
+
         public QuoteRequestBuilder(IQuoteModuleApi quoteApi, IPromotionEvaluator promotionEvaluator, ICacheManager<object> cacheManager)
         {
             _quoteApi = quoteApi;
@@ -50,11 +50,15 @@ namespace VirtoCommerce.Storefront.Builders
             {
                 QuoteRequest quoteRequest = null;
 
-                var searchResult = await _quoteApi.QuoteModuleSearchAsync(
-                    criteriaCount: 1,
-                    criteriaCustomerId: _customer.Id,
-                    criteriaStoreId: _store.Id,
-                    criteriaTag: "actual");
+                var criteria = new VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria
+                {
+                    Count = 1,
+                    CustomerId = _customer.Id,
+                    StoreId = _store.Id,
+                    Tag = "actual",
+                };
+
+                var searchResult = await _quoteApi.QuoteModuleSearchAsync(criteria);
 
                 if (searchResult == null || searchResult.QuoteRequests == null || searchResult.TotalCount == 0)
                 {

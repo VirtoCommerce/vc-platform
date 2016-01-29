@@ -153,7 +153,7 @@ angular.module('platformWebApp')
         }
     };
 }])
-.factory('platformWebApp.bladeNavigationService', ['$rootScope', '$timeout', '$state', function ($rootScope, $timeout, $state) {
+.factory('platformWebApp.bladeNavigationService', ['platformWebApp.authService', '$timeout', '$state', function (authService, $timeout, $state) {
     var service = {
         blades: [],
         currentBlade: undefined,
@@ -277,6 +277,10 @@ angular.module('platformWebApp')
             else {
                 showBlade();
             }
+
+            blade.hasUpdatePermission = function () {
+                return authService.checkPermission(blade.updatePermission, blade.securityScopes);
+            };
         },
         setError: function (msg, blade) {
             blade.isLoading = false;

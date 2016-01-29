@@ -38,7 +38,7 @@
     blade.openBlade = function (data) {
         $scope.selectedNodeId = data.pageName;
 
-        pages.getPage({ storeId: blade.storeId, language: data.language, pageName: data.id }, function (page) {
+        pages.getPage({ storeId: blade.storeId, language: data.language ? data.language : "undef", pageName: data.id }, function (page) {
             if (page.language !== 'files') {
                 var parts = page.content.split('---');
                 var body = '';
@@ -60,7 +60,7 @@
                     body: body,
                     metadata: metadata,
                     title: 'content.blades.edit-page.title',
-                    titlevalues: { name: data.name },
+                    titleValues: { name: data.name },
                     subtitle: 'content.blades.edit-page.subtitle',
                     controller: 'virtoCommerce.contentModule.editPageController',
                     template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/pages/edit-page.tpl.html'
@@ -76,7 +76,7 @@
                     choosenPageLanguage: data.language,
                     newPage: false,
                     title: 'content.blades.edit-page.title',
-                    titlevalues: { name: data.name },
+                    titleValues: { name: data.name },
                     subtitle: 'content.blades.edit-page.subtitle',
                     controller: 'virtoCommerce.contentModule.editPageController',
                     template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/pages/edit-page.tpl.html'

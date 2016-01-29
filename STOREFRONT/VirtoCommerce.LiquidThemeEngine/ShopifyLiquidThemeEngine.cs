@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -32,7 +33,7 @@ namespace VirtoCommerce.LiquidThemeEngine
     /// snippets - snippets - partial views
     /// templates - view templates
     /// </summary>
-    public class ShopifyLiquidThemeEngine : IFileSystem
+    public class ShopifyLiquidThemeEngine : IFileSystem, ILiquidThemeEngine
     {
         private const string _globalThemeName = "default";
         private const string _defaultMasterView = "theme";
@@ -148,6 +149,7 @@ namespace VirtoCommerce.LiquidThemeEngine
         }
         #endregion
 
+        #region ILiquidThemeEngine Members
         /// <summary>
         /// Return stream for requested  asset file  (used for search current and base themes assets)
         /// </summary>
@@ -278,7 +280,7 @@ namespace VirtoCommerce.LiquidThemeEngine
             //Copy key values which were generated in rendering to out parameters
             if (parameters != null && parsedTemplate.Registers != null)
             {
-                foreach(var registerPair in parsedTemplate.Registers)
+                foreach (var registerPair in parsedTemplate.Registers)
                 {
                     parameters[registerPair.Key] = registerPair.Value;
                 }
@@ -291,7 +293,7 @@ namespace VirtoCommerce.LiquidThemeEngine
         /// </summary>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
-        public DefaultableDictionary GetSettings(string defaultValue = null)
+        public IDictionary GetSettings(string defaultValue = null)
         {
             return _cacheManager.Get(GetCacheKey("GetSettings", defaultValue), "LiquidThemeRegion", () =>
             {
@@ -366,7 +368,8 @@ namespace VirtoCommerce.LiquidThemeEngine
         public string GetGlobalAssetAbsoluteUrl(string assetName)
         {
             return UrlBuilder.ToAppAbsolute(_globalThemeAssetsRelativeUrl.TrimEnd('/') + "/" + assetName.TrimStart('/'), WorkContext.CurrentStore, WorkContext.CurrentLanguage);
-        }
+        } 
+        #endregion
 
 
         private JObject InnerReadLocalization(string themePath, Language language)

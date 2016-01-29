@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using VirtoCommerce.Client.Api;
+using VirtoCommerce.Client.Model;
 using VirtoCommerce.LiquidThemeEngine.Extensions;
 using VirtoCommerce.Storefront.Converters;
 using VirtoCommerce.Storefront.Model;
-using VirtoCommerce.Storefront.Model.Cart;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
-using VirtoCommerce.Storefront.Model.Marketing;
 using VirtoCommerce.Storefront.Model.Marketing.Services;
 using VirtoCommerce.Storefront.Model.Pricing.Services;
 using VirtoCommerce.Storefront.Model.Services;
@@ -40,7 +39,7 @@ namespace VirtoCommerce.Storefront.Services
         {
             var workContext = _workContextFactory();
 
-            var retVal = (await _catalogModuleApi.CatalogModuleProductsGetProductByIdsAsync(ids.ToList())).Select(x=>x.ToWebModel(workContext.CurrentLanguage, workContext.CurrentCurrency)).ToArray();
+            var retVal = (await _catalogModuleApi.CatalogModuleProductsGetProductByIdsAsync(ids.ToList())).Select(x => x.ToWebModel(workContext.CurrentLanguage, workContext.CurrentCurrency)).ToArray();
 
             var allProducts = retVal.Concat(retVal.SelectMany(x => x.Variations)).ToArray();
 
@@ -50,7 +49,7 @@ namespace VirtoCommerce.Storefront.Services
 
                 if ((responseGroup | ItemResponseGroup.ItemWithInventories) == responseGroup)
                 {
-                    taskList.Add(Task.Factory.StartNew(() => LoadProductsInventories(allProducts)));
+                    taskList.Add(LoadProductsInventoriesAsync(allProducts));
                 }
 
                 if ((responseGroup | ItemResponseGroup.ItemWithPrices) == responseGroup)
@@ -62,7 +61,7 @@ namespace VirtoCommerce.Storefront.Services
                     }
                 }
 
-                Task.WaitAll(taskList.ToArray());
+                await Task.WhenAll(taskList.ToArray());
             }
 
             return retVal;
@@ -74,29 +73,34 @@ namespace VirtoCommerce.Storefront.Services
 
             var workContext = _workContextFactory();
 
-            var result = await _searchApi.SearchModuleSearchAsync(
-                criteriaStoreId: workContext.CurrentStore.Id,
-                criteriaKeyword: criteria.Keyword,
-                criteriaResponseGroup: criteria.ResponseGroup.ToString(),
-                criteriaSearchInChildren: criteria.SearchInChildren,
-                criteriaCategoryId: criteria.CategoryId,
-                criteriaCatalogId: criteria.CatalogId,
-                criteriaCurrency: workContext.CurrentCurrency.Code,
-                criteriaHideDirectLinkedCategories: true,
-                criteriaTerms: criteria.Terms.ToStrings(),
-                criteriaPricelistIds: workContext.CurrentPriceListIds.ToList(),
-                criteriaSkip: criteria.PageSize * (criteria.PageNumber - 1),
-                criteriaTake: criteria.PageSize,
-                criteriaSort: criteria.SortBy);
+            var searchCriteria = new VirtoCommerceDomainCatalogModelSearchCriteria
+            {
+                StoreId = workContext.CurrentStore.Id,
+                Keyword = criteria.Keyword,
+                ResponseGroup = criteria.ResponseGroup.ToString(),
+                SearchInChildren = criteria.SearchInChildren,
+                CategoryId = criteria.CategoryId,
+                CatalogId = criteria.CatalogId,
+                Currency = workContext.CurrentCurrency.Code,
+                HideDirectLinkedCategories = true,
+                Terms = criteria.Terms.ToStrings(),
+                PricelistIds = workContext.CurrentPriceListIds.ToList(),
+                Skip = criteria.PageSize * (criteria.PageNumber - 1),
+                Take = criteria.PageSize,
+                Sort = criteria.SortBy
+            };
 
+            var searchTask = _searchApi.SearchModuleSearchAsync(searchCriteria);
             if (criteria.CategoryId != null)
             {
                 var category = await _catalogModuleApi.CatalogModuleCategoriesGetAsync(criteria.CategoryId);
                 if (category != null)
                 {
-                    retVal.Category = category.ToWebModel();
+                    retVal.Category = category.ToWebModel(workContext.CurrentLanguage);
                 }
             }
+            var result = await searchTask;
+           
 
             if (result != null)
             {
@@ -105,13 +109,12 @@ namespace VirtoCommerce.Storefront.Services
                     var products = result.Products.Select(x => x.ToWebModel(workContext.CurrentLanguage, workContext.CurrentCurrency)).ToArray();
                     retVal.Products = new StorefrontPagedList<Product>(products, criteria.PageNumber, criteria.PageSize, result.ProductsTotalCount.Value, page => workContext.RequestUrl.SetQueryParameter("page", page.ToString()).ToString());
 
-                    await _pricingService.EvaluateProductPricesAsync(retVal.Products.ToArray());
-                    LoadProductsInventories(retVal.Products.ToArray());
+                   await Task.WhenAll(_pricingService.EvaluateProductPricesAsync(retVal.Products), LoadProductsInventoriesAsync(retVal.Products));
                 }
 
                 if (result.Categories != null && result.Categories.Any())
                 {
-                    retVal.Categories = result.Categories.Select(x => x.ToWebModel());
+                    retVal.Categories = result.Categories.Select(x => x.ToWebModel(workContext.CurrentLanguage));
                 }
 
                 if (result.Aggregations != null)
@@ -122,8 +125,8 @@ namespace VirtoCommerce.Storefront.Services
 
             return retVal;
         }
-    
-        private async Task LoadProductsDiscountsAsync(Product[] products)
+
+        private async Task LoadProductsDiscountsAsync(IEnumerable<Product> products)
         {
             var workContext = _workContextFactory();
             var promotionContext = workContext.ToPromotionEvaluationContext();
@@ -132,9 +135,9 @@ namespace VirtoCommerce.Storefront.Services
         }
 
 
-        private void LoadProductsInventories(Product[] products)
+        private async Task LoadProductsInventoriesAsync(IEnumerable<Product> products)
         {
-            var inventories = _inventoryModuleApi.InventoryModuleGetProductsInventories(products.Select(x => x.Id).ToList());
+            var inventories = await _inventoryModuleApi.InventoryModuleGetProductsInventoriesAsync(products.Select(x => x.Id).ToList());
             foreach (var item in products)
             {
                 item.Inventory = inventories.Where(x => x.ProductId == item.Id).Select(x => x.ToWebModel()).FirstOrDefault();
