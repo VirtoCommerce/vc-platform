@@ -11,6 +11,10 @@ Virto Commerce is the second generation release and is the only enterprise level
 
 Documentation: http://docs.virtocommerce.com
 
+Want to chat with other members of the Virto Commerce community?
+
+[![Join the chat at https://gitter.im/VirtoCommerce/vc-community](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/VirtoCommerce/vc-community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 DEMO
 -----------
 http://virtocommerce.com/try-now/online-demo
