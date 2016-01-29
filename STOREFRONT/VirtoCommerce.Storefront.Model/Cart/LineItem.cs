@@ -198,7 +198,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
         {
             get
             {
-                var discountTotal = Discounts.Sum(d => d.Amount.Amount);
+                var discountTotal = Discounts.Where(d => d != null).Sum(d => d.Amount.Amount);
 
                 return new Money(discountTotal, Currency);
             }

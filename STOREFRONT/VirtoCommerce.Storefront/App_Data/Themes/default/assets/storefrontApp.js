@@ -28,14 +28,14 @@ storefrontApp.config(['$interpolateProvider', '$routeProvider', '$httpProvider',
     $httpProvider.interceptors.push('httpErrorInterceptor');
 
     $routeProvider
-        .when('/customer-information', {
-            templateUrl: 'storefront.checkout.customerInformation.tpl'
+        .when('/shipping-address', {
+            templateUrl: 'storefront.checkout.shipping-address.tpl'
         })
         .when('/shipping-method', {
-            templateUrl: 'storefront.checkout.shippingMethod.tpl'
+            templateUrl: 'storefront.checkout.shipping-method.tpl'
         })
         .when('/payment-method', {
-            templateUrl: 'storefront.checkout.paymentMethod.tpl'
+            templateUrl: 'storefront.checkout.payment-method.tpl'
         });
 
     return $interpolateProvider.startSymbol('{(').endSymbol(')}');

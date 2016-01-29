@@ -26,11 +26,11 @@ namespace VirtoCommerce.Storefront.Model.Cart.Services
 
         Task<ICartBuilder> ClearAsync();
 
-        Task<ICartBuilder> AddAddressAsync(Address address);
+        Task<ICartBuilder> AddOrUpdateShipmentAsync(string shipmentId, Address shippingAddress, ICollection<string> itemIds, string shippingMethodCode);
 
-        Task<ICartBuilder> AddShipmentAsync(ShippingMethod shippingMethod);
+        Task<ICartBuilder> RemoveShipmentAsync(string shipmentId);
 
-        Task<ICartBuilder> AddPaymentAsync(PaymentMethod paymentMethod);
+        Task<ICartBuilder> AddOrUpdatePaymentAsync(string paymentId, Address billingAddress, string paymentMethodCode, string outerId);
 
         Task<ICartBuilder> MergeWithCartAsync(ShoppingCart cart);
 

@@ -355,6 +355,7 @@ namespace VirtoCommerce.Storefront.Owin
                 Name = pair.Key,
                 Code2 = region != null ? region.TwoLetterISORegionName : String.Empty,
                 Code3 = region != null ? region.ThreeLetterISORegionName : String.Empty,
+                RegionType = pair.Value["label"] != null ? pair.Value["label"].ToString() : null
             };
 
             var provinceCodes = pair.Value["province_codes"].ToObject<Dictionary<string, string>>();

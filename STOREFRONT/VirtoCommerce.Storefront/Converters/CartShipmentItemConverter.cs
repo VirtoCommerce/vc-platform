@@ -1,25 +1,33 @@
-﻿using System.Linq;
-using Omu.ValueInjecter;
+﻿using Omu.ValueInjecter;
+using System.Linq;
+using VirtoCommerce.Client.Model;
 using VirtoCommerce.Storefront.Model.Cart;
+using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Converters
 {
     public static class CartShipmentItemConverter
     {
-        public static CartShipmentItem ToWebModel(this VirtoCommerce.Client.Model.VirtoCommerceCartModuleWebModelShipmentItem shipmentItemDto, ShoppingCart cart)
+        public static CartShipmentItem ToWebModel(this VirtoCommerceCartModuleWebModelShipmentItem serviceModel, ShoppingCart cart)
         {
-            var retVal = new CartShipmentItem();
-            retVal.InjectFrom(shipmentItemDto);
-            retVal.LineItem = cart.Items.FirstOrDefault(x => x.Id == shipmentItemDto.LineItemId);
+            var webModel = new CartShipmentItem();
 
-            return retVal;
+            webModel.InjectFrom<NullableAndEnumValueInjecter>(serviceModel);
+
+            webModel.LineItem = cart.Items.FirstOrDefault(x => x.Id == serviceModel.LineItemId);
+
+            return webModel;
         }
 
-        public static VirtoCommerce.Client.Model.VirtoCommerceCartModuleWebModelShipmentItem ToServiceModel(this CartShipmentItem shipmentItem)
+        public static VirtoCommerceCartModuleWebModelShipmentItem ToServiceModel(this CartShipmentItem webModel)
         {
-            var retVal = new VirtoCommerce.Client.Model.VirtoCommerceCartModuleWebModelShipmentItem();
-            retVal.LineItem = shipmentItem.LineItem.ToServiceModel();
-            return retVal;
+            var result = new VirtoCommerceCartModuleWebModelShipmentItem();
+
+            result.InjectFrom<NullableAndEnumValueInjecter>(webModel);
+
+            result.LineItem = webModel.LineItem.ToServiceModel();
+
+            return result;
         }
     }
 }

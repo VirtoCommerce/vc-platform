@@ -48,8 +48,6 @@ namespace VirtoCommerce.Storefront.Converters
             return customerAddress;
         }
 
-       
-
         public static Address CopyFrom(this Address result, ShopifyModel.Address address, Country[] countries)
         {
             result.InjectFrom<NullableAndEnumValueInjecter>(address);

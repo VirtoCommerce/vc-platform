@@ -178,41 +178,101 @@ namespace VirtoCommerce.Storefront.Builders
             return this;
         }
 
-        public virtual async Task<ICartBuilder> AddAddressAsync(Address address)
+        public virtual async Task<ICartBuilder> AddOrUpdateShipmentAsync(string shipmentId, Address shippingAddress, ICollection<string> itemIds, string shippingMethodCode)
         {
-            var existingAddress = _cart.Addresses.FirstOrDefault(a => a.Type == address.Type);
-            if (existingAddress != null)
+            var shipment = _cart.Shipments.FirstOrDefault(s => s.Id == shipmentId);
+            if (shipment == null)
             {
-                _cart.Addresses.Remove(existingAddress);
+                shipment = new Shipment(_currency);
             }
 
-            _cart.Addresses.Add(address);
+            if (shippingAddress != null)
+            {
+                shipment.DeliveryAddress = shippingAddress;
+            }
+
+            if (itemIds != null)
+            {
+                foreach (var itemId in itemIds)
+                {
+                    var cartItem = _cart.Items.FirstOrDefault(i => i.Id == itemId);
+                    if (cartItem != null)
+                    {
+                        var newShipmentItem = cartItem.ToShipmentItem();
+                        var shipmentItem = shipment.Items.FirstOrDefault(i => i.LineItem != null && i.LineItem.Id == itemId);
+                        if (shipmentItem != null)
+                        {
+                            shipmentItem = newShipmentItem;
+                        }
+                        else
+                        {
+                            shipment.Items.Add(newShipmentItem);
+                        }
+                    }
+                }
+            }
+
+            if (!string.IsNullOrEmpty(shippingMethodCode))
+            {
+                var availableShippingMethods = await GetAvailableShippingMethodsAsync();
+                var shippingMethod = availableShippingMethods.FirstOrDefault(sm => sm.ShipmentMethodCode == shippingMethodCode);
+                if (shippingMethod != null)
+                {
+                    shipment.ShipmentMethodCode = shippingMethod.ShipmentMethodCode;
+                    shipment.ShippingPrice = shippingMethod.Price;
+                    shipment.TaxType = shippingMethod.TaxType;
+                }
+            }
+
+            if (shipment.IsTransient())
+            {
+                _cart.Shipments.Add(shipment);
+            }
 
             await EvaluatePromotionsAsync();
 
             return this;
         }
 
-        public virtual async Task<ICartBuilder> AddShipmentAsync(ShippingMethod shippingMethod)
+        public virtual async Task<ICartBuilder> RemoveShipmentAsync(string shipmentId)
         {
-            var shipment = shippingMethod.ToShipmentModel(_currency);
-
-            _cart.Shipments.Clear();
-            _cart.Shipments.Add(shipment);
+            var shipment = _cart.Shipments.FirstOrDefault(s => s.Id == shipmentId);
+            if (shipment != null)
+            {
+                _cart.Shipments.Remove(shipment);
+            }
 
             await EvaluatePromotionsAsync();
 
             return this;
         }
 
-        public virtual async Task<ICartBuilder> AddPaymentAsync(PaymentMethod paymentMethod)
+        public virtual async Task<ICartBuilder> AddOrUpdatePaymentAsync(string paymentId, Address billingAddress, string paymentMethodCode, string outerId)
         {
-            var payment = paymentMethod.ToPaymentModel(_cart.Total, _currency);
+            var payment = _cart.Payments.FirstOrDefault(p => p.Id == paymentId);
+            if (payment == null)
+            {
+                payment = new Payment(_currency);
+            }
 
-            _cart.Payments.Clear();
-            _cart.Payments.Add(payment);
+            if (billingAddress != null)
+            {
+                payment.BillingAddress = billingAddress;
+            }
 
-            await EvaluatePromotionsAsync();
+            var availablePaymentMethods = await GetAvailablePaymentMethodsAsync();
+            var paymentMethod = availablePaymentMethods.FirstOrDefault(pm => pm.GatewayCode == paymentMethodCode);
+            if (paymentMethod != null)
+            {
+                payment.PaymentGatewayCode = paymentMethodCode;
+            }
+
+            payment.OuterId = outerId;
+
+            if (payment.IsTransient())
+            {
+                _cart.Payments.Add(payment);
+            }
 
             return this;
         }

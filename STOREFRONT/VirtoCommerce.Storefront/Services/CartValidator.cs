@@ -89,36 +89,32 @@ namespace VirtoCommerce.Storefront.Services
             {
                 shipment.ValidationErrors.Clear();
                 var availableShippingMethods = await _cacheManager.GetAsync("CartValidator.ValidateShipmentsAsync-" + workContext.CurrentCurrency + ":" + cart.Id, "ApiRegion", async () => { return await _cartApi.CartModuleGetShipmentMethodsAsync(cart.Id); });
-                var existingShippingMethod = availableShippingMethods.FirstOrDefault(sm => sm.ShipmentMethodCode == shipment.ShipmentMethodCode);
-                if (existingShippingMethod == null)
+                if (availableShippingMethods.Count == 0)
                 {
-                    shipment.ValidationErrors.Add(new ShippingUnavailableError());
+                    shipment.ValidationWarnings.Add(new ShippingUnavailableError());
+                    break;
                 }
-                if (existingShippingMethod != null)
+                if (!string.IsNullOrEmpty(shipment.ShipmentMethodCode))
                 {
-                    var shippingMethod = existingShippingMethod.ToWebModel(workContext.AllCurrencies, workContext.CurrentLanguage);
-                    if (shippingMethod.Price != shipment.ShippingPrice)
+                    var existingShippingMethod = availableShippingMethods.FirstOrDefault(sm => sm.ShipmentMethodCode == shipment.ShipmentMethodCode);
+                    if (existingShippingMethod == null)
                     {
-                        shipment.ValidationWarnings.Add(new ShippingPriceError(shipment.ShippingPrice));
+                        shipment.ValidationWarnings.Add(new ShippingUnavailableError());
+                        break;
+                    }
+                    if (existingShippingMethod != null)
+                    {
+                        var shippingMethod = existingShippingMethod.ToWebModel(workContext.AllCurrencies, workContext.CurrentLanguage);
+                        if (shippingMethod.Price != shipment.ShippingPrice)
+                        {
+                            shipment.ValidationWarnings.Add(new ShippingPriceError(shipment.ShippingPrice));
 
-                        cart.Shipments.Clear();
-                        cart.Shipments.Add(shippingMethod.ToShipmentModel(cart.Currency));
+                            cart.Shipments.Clear();
+                            cart.Shipments.Add(shippingMethod.ToShipmentModel(cart.Currency));
+                        }
                     }
                 }
             }
         }
-
-        //private async Task ValidateCartAsync(ShoppingCart cart)
-        //{
-        //    cart.ValidationErrors.Clear();
-
-        //    var actualCart = await _cartApi.CartModuleGetCartByIdAsync(_workContext.CurrentCart.Id);
-        //    var actualSubtotal = actualCart.SubTotal.HasValue ? (decimal)actualCart.SubTotal.Value : 0;
-
-        //    if (_workContext.CurrentCart.SubTotal.Amount != actualSubtotal)
-        //    {
-        //        cart.ValidationErrors.Add(new CartSubtotalError());
-        //    }
-        //}
     }
 }

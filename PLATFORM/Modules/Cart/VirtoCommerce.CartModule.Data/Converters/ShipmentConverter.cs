@@ -80,11 +80,12 @@ namespace VirtoCommerce.CartModule.Data.Converters
 			if (target == null)
 				throw new ArgumentNullException("target");
 
-			var patchInjection = new PatchInjection<ShipmentEntity>(x => x.ShippingPrice, x => x.TaxTotal,
-																		   x => x.TaxIncluded, x => x.Currency,
-																		   x => x.WeightUnit, x => x.WeightValue,
-																		   x => x.DimensionHeight, x => x.DimensionLength, x => x.DimensionUnit,
-																		   x => x.DimensionWidth, x => x.TaxType);
+			var patchInjection = new PatchInjection<ShipmentEntity>(x => x.ShipmentMethodCode,
+                                                                    x => x.ShippingPrice, x => x.TaxTotal,
+                                                                    x => x.TaxIncluded, x => x.Currency,
+                                                                    x => x.WeightUnit, x => x.WeightValue,
+                                                                    x => x.DimensionHeight, x => x.DimensionLength, x => x.DimensionUnit,
+                                                                    x => x.DimensionWidth, x => x.TaxType);
 			target.InjectFrom(patchInjection, source);
 
 		

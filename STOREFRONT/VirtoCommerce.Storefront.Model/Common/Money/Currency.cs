@@ -45,6 +45,7 @@ namespace VirtoCommerce.Storefront.Model.Common
         /// Currency code may be used ISO 4217
         /// </summary>
         public string Code { get; set; }
+
         public NumberFormatInfo NumberFormat { get; set; }
         public string Symbol { get; set; }
         public string EnglishName { get; set; }
