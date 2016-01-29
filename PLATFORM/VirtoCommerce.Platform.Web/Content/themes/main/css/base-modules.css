@@ -50,6 +50,20 @@ ui-codemirror > *:first-child {
     -ms-scrollbar-track-color: #c9d6df;
 }
 
+.demo
+{
+    background: #43b0e6;
+    color: #fff;
+    font-size: 14px;
+    left: 0;
+    padding: 10px 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+    text-align: center;
+    z-index: 9000;
+}
+
 
 
 /* Flags */
