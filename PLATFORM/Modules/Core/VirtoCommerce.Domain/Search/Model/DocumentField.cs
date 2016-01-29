@@ -1,58 +1,45 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace VirtoCommerce.Domain.Search.Model
 {
     public class DocumentField : IDocumentField
     {
-        private object[] _Values = null;
+        public string Name { get; set; }
 
-        public object[] Attributes
-        {
-            get;
-            set;
-        }
+        public object[] Values { get; set; }
 
-        public string Name
-        {
-            get;
-            set;
-        }
+        public object[] Attributes { get; set; }
 
         public object Value
         {
             get
             {
-                if (_Values != null && _Values.Length > 0)
-                    return _Values[0];
+                if (Values != null && Values.Length > 0)
+                    return Values[0];
 
                 return null;
             }
         }
 
-        public object[] Values
-        {
-            get { return _Values; }
-            set { _Values = value; }
-        }
-
         public DocumentField(string name, object value)
         {
-            this.Name = name;
-            this.Values = new object[] { value };
+            Name = name;
+            Values = new[] { value };
         }
 
         public DocumentField(string name, object[] value)
         {
-            this.Name = name;
-            this.Values = value;
+            Name = name;
+            Values = value;
         }
 
         public DocumentField(string name, object value, string[] attributes)
         {
-            this.Name = name;
-            this.Values = new object[] { value };
-            this.Attributes = attributes;
+            Name = name;
+            Values = new[] { value };
+            Attributes = attributes;
         }
 
         /// <summary>
@@ -64,10 +51,10 @@ namespace VirtoCommerce.Domain.Search.Model
         /// </returns>
         public bool ContainsValue(string value)
         {
-            if (this.Values == null || this.Values.Length == 0)
+            if (Values == null || Values.Length == 0)
                 return false;
 
-            foreach (object val in this.Values)
+            foreach (object val in Values)
             {
                 if (val == null)
                     continue;
@@ -88,10 +75,10 @@ namespace VirtoCommerce.Domain.Search.Model
         /// </returns>
         public bool ContainsAttribute(string value)
         {
-            if (this.Attributes == null || this.Attributes.Length == 0)
+            if (Attributes == null || Attributes.Length == 0)
                 return false;
 
-            foreach (object val in this.Attributes)
+            foreach (object val in Attributes)
             {
                 if (val == null)
                     continue;
@@ -107,11 +94,13 @@ namespace VirtoCommerce.Domain.Search.Model
         /// Adds the value.
         /// </summary>
         /// <param name="value">The value.</param>
-        public void AddValue(object value)
+        public virtual void AddValue(object value)
         {
-            List<object> vals = new List<object>(this.Values);
-            vals.Add(value);
-            _Values = vals.ToArray();
+            if (!Values.Contains(value))
+            {
+                var values = new List<object>(Values) { value };
+                Values = values.ToArray();
+            }
         }
     }
 }

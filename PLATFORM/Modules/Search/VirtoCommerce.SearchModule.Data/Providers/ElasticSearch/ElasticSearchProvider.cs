@@ -21,7 +21,8 @@ namespace VirtoCommerce.SearchModule.Data.Providers.ElasticSearch
         private readonly Dictionary<string, string> _mappings = new Dictionary<string, string>();
 
         private bool _settingsUpdated;
-        private const string SearchAnalyzer = "trigrams";
+        private const string _searchAnalyzer = "trigrams_search";
+        private const string _indexAnalyzer = "trigrams";
 
         #region Private Properties
         ElasticClient<ESDocument> _client;
@@ -200,14 +201,15 @@ namespace VirtoCommerce.SearchModule.Data.Providers.ElasticSearch
                         var attributeFilter = filter as AttributeFilter;
                         var myFilter = attributeFilter;
                         var values = myFilter.Values;
-                        if (values != null)
-                        {
-                            var key = filter.Key.ToLower();
-                            if (!resultDocs.facets.ContainsKey(key))
-                                continue;
 
-                            var facet = resultDocs.facets[key] as TermsFacetResult;
-                            if (facet != null)
+                        var key = filter.Key.ToLower();
+                        if (!resultDocs.facets.ContainsKey(key))
+                            continue;
+
+                        var facet = resultDocs.facets[key] as TermsFacetResult;
+                        if (facet != null)
+                        {
+                            if (values != null)
                             {
                                 foreach (var value in values)
                                 {
@@ -222,9 +224,17 @@ namespace VirtoCommerce.SearchModule.Data.Providers.ElasticSearch
                                     var newFacet = new Facet(@group, value.Id, GetDescription(value, criteria.Locale), enumerable.SingleOrDefault());
                                     @group.Facets.Add(newFacet);
                                 }
-
-                                groupCount++;
                             }
+                            else
+                            {
+                                foreach (var term in facet.terms)
+                                {
+                                    var newFacet = new Facet(@group, term.term, term.term, term.count);
+                                    @group.Facets.Add(newFacet);
+                                }
+                            }
+
+                            groupCount++;
                         }
                     }
                     else if (filter is PriceRangeFilter)
@@ -390,7 +400,7 @@ namespace VirtoCommerce.SearchModule.Data.Providers.ElasticSearch
                         var propertyMap = new CustomPropertyMap<ESDocument>(field.Name, type)
                         .Store(field.ContainsAttribute(IndexStore.Yes))
                         .When(field.ContainsAttribute(IndexType.NotAnalyzed), p => p.Index(IndexState.not_analyzed))
-                        .When(field.Name.StartsWith("__content", StringComparison.OrdinalIgnoreCase), p => p.Analyzer(SearchAnalyzer))
+                        .When(field.Name.StartsWith("__content", StringComparison.OrdinalIgnoreCase), p => p.Analyzer(_indexAnalyzer))
                         .When(Regex.Match(field.Name, "__content_en.*").Success, x => x.Analyzer("english"))
                         .When(Regex.Match(field.Name, "__content_de.*").Success, x => x.Analyzer("german"))
                         .When(Regex.Match(field.Name, "__content_ru.*").Success, x => x.Analyzer("russian"))
@@ -412,12 +422,19 @@ namespace VirtoCommerce.SearchModule.Data.Providers.ElasticSearch
                 //http://www.elasticsearch.org/guide/en/elasticsearch/guide/current/ngrams-compound-words.html
                 var settings = new IndexSettingsBuilder()
                     .Analysis(als => als
-                        .Analyzer(a => a.Custom(SearchAnalyzer, custom => custom
-                            .Tokenizer(DefaultTokenizers.standard)
-                            .Filter("trigrams_filter", DefaultTokenFilters.lowercase.ToString())))
+                        .Analyzer(a => a
+                            .Custom(_indexAnalyzer, custom => custom
+                                .Tokenizer(DefaultTokenizers.standard)
+                                .Filter("trigrams_filter", DefaultTokenFilters.lowercase.ToString())))
                         .Filter(f => f.NGram("trigrams_filter", ng => ng
-                                .MinGram(3)
-                                .MaxGram(3)))).Build();
+                            .MinGram(3)
+                            .MaxGram(20))))
+                    .Analysis(als => als
+                        .Analyzer(a => a
+                            .Custom(_searchAnalyzer, custom => custom
+                                .Tokenizer(DefaultTokenizers.standard)
+                                .Filter(DefaultTokenFilters.lowercase.ToString()))))
+                    .Build();
 
                 if (!Client.IndexExists(new IndexExistsCommand(scope)))
                 {

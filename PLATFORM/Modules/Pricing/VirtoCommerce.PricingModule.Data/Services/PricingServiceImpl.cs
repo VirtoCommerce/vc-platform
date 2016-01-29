@@ -63,8 +63,11 @@ namespace VirtoCommerce.PricingModule.Data.Services
                      }
                  }).AsQueryable();
 
-            //filter by catalog
-            query = query.Where(x => (x.CatalogId == evalContext.CatalogId));
+            if (evalContext.CatalogId != null)
+            {
+                //filter by catalog
+                query = query.Where(x => x.CatalogId == evalContext.CatalogId);
+            }
 
             if (evalContext.Currency != null)
             {

@@ -4,7 +4,6 @@ using System.Collections.Specialized;
 using System.Linq;
 using PlainElastic.Net;
 using PlainElastic.Net.Queries;
-using VirtoCommerce.Domain.Search;
 using VirtoCommerce.Domain.Search.Filters;
 using VirtoCommerce.Domain.Search.Model;
 using VirtoCommerce.Domain.Search.Services;
@@ -13,6 +12,8 @@ namespace VirtoCommerce.SearchModule.Data.Providers.ElasticSearch
 {
     public class ElasticSearchQueryBuilder : ISearchQueryBuilder
     {
+        private const string _searchAnalyzer = "trigrams_search";
+
         #region ISearchQueryBuilder Members
         public object BuildQuery(ISearchCriteria criteria)
         {
@@ -171,7 +172,7 @@ namespace VirtoCommerce.SearchModule.Data.Providers.ElasticSearch
                     q =>
                     q.MultiMatch(
                         x =>
-                        x.Fields(fields).Operator(Operator.AND).Fuzziness(filter.FuzzyMinSimilarity).Query(searchPhrase)));
+                        x.Fields(fields).Operator(Operator.AND).Fuzziness(filter.FuzzyMinSimilarity).Query(searchPhrase).Analyzer(_searchAnalyzer)));
             }
             else
             {
@@ -179,7 +180,7 @@ namespace VirtoCommerce.SearchModule.Data.Providers.ElasticSearch
                     q =>
                     q.MultiMatch(
                         x =>
-                        x.Fields(fields).Operator(Operator.AND).Query(searchPhrase)));
+                        x.Fields(fields).Operator(Operator.AND).Query(searchPhrase).Analyzer(_searchAnalyzer)));
             }
         }
 
@@ -197,7 +198,7 @@ namespace VirtoCommerce.SearchModule.Data.Providers.ElasticSearch
             {
                 if (filter is AttributeFilter)
                 {
-                    AddFacetQueries(facetParams, filter.Key, ((AttributeFilter)filter).Values, criteria);
+                    AddFacetQueries(facetParams, filter.Key, criteria);
                 }
                 else if (filter is RangeFilter)
                 {
@@ -245,13 +246,9 @@ namespace VirtoCommerce.SearchModule.Data.Providers.ElasticSearch
         /// </summary>
         /// <param name="param">The param.</param>
         /// <param name="fieldName">Name of the field.</param>
-        /// <param name="values">The values.</param>
-        private void AddFacetQueries(
-            Facets<ESDocument> param, string fieldName, IEnumerable<AttributeFilterValue> values, ISearchCriteria criteria)
+        /// <param name="criteria">Search criteria.</param>
+        private void AddFacetQueries(Facets<ESDocument> param, string fieldName, ISearchCriteria criteria)
         {
-            if (values == null)
-                return;
-
             var ffilter = new BoolFilter<ESDocument>();
             foreach (var f in criteria.CurrentFilters)
             {
@@ -265,11 +262,6 @@ namespace VirtoCommerce.SearchModule.Data.Providers.ElasticSearch
             var facetFilter = new FacetFilter<ESDocument>();
             facetFilter.Bool(f => ffilter);
 
-            //var filter = new FacetFilter<ESDocument>();
-            //facetFilter.Terms(x => x.Values(values.Select(y => y.Value).ToArray()));
-            //var filterFacet = new FilterFacet<ESDocument>();
-            //filterFacet.FacetName(fieldName.ToLower()).FacetFilter(f => facetFilter);
-
             param.Terms(t => t.FacetName(fieldName.ToLower()).Field(fieldName.ToLower()).FacetFilter(ff => facetFilter));
         }
 
@@ -279,6 +271,7 @@ namespace VirtoCommerce.SearchModule.Data.Providers.ElasticSearch
         /// <param name="param">The param.</param>
         /// <param name="fieldName">Name of the field.</param>
         /// <param name="values">The values.</param>
+        /// <param name="criteria">Search criteria.</param>
         private void AddFacetQueries(Facets<ESDocument> param, string fieldName, IEnumerable<RangeFilterValue> values, ISearchCriteria criteria)
         {
             if (values == null)
@@ -309,7 +302,7 @@ namespace VirtoCommerce.SearchModule.Data.Providers.ElasticSearch
         /// <param name="param">The param.</param>
         /// <param name="fieldName">Name of the field.</param>
         /// <param name="values">The values.</param>
-        /// <param name="criteria">The criteria.</param>
+        /// <param name="criteria">Search criteria.</param>
         private void AddFacetPriceQueries(Facets<ESDocument> param, string fieldName, IEnumerable<RangeFilterValue> values, ISearchCriteria criteria)
         {
             if (values == null)

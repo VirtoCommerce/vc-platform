@@ -297,6 +297,21 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
                     }
                     else
                     {
+                        var attributeFilter = filter as AttributeFilter;
+                        if (attributeFilter != null && attributeFilter.Values == null)
+                        {
+                            var dynamicValues = new List<AttributeFilterValue>();
+                            foreach (var value in term.Values)
+                            {
+                                dynamicValues.Add(new AttributeFilterValue()
+                                {
+                                    Id = value,
+                                    Value = value
+                                });
+                            }
+                            attributeFilter.Values = dynamicValues.ToArray();
+                        }
+
                         var appliedFilter = _browseFilterService.Convert(filter, term.Values);
                         serviceCriteria.Apply(appliedFilter);
                     }

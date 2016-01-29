@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace VirtoCommerce.Domain.Search.Model
 {
@@ -16,36 +17,31 @@ namespace VirtoCommerce.Domain.Search.Model
 
         public void Add(IDocumentField field)
         {
-            _fields.Add(field);
+            var existingField = this[field.Name];
+
+            if (existingField != null)
+            {
+                existingField.AddValue(field.Value);
+            }
+            else
+            {
+                _fields.Add(field);
+            }
         }
 
         public bool ContainsKey(string name)
         {
-            System.Collections.IEnumerator it = _fields.GetEnumerator();
-            while (it.MoveNext())
-            {
-                IDocumentField field = (IDocumentField)it.Current;
-                if (field.Name.Equals(name))
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return this[name] != null;
         }
 
 
         public void RemoveField(string name)
         {
-            System.Collections.IEnumerator it = _fields.GetEnumerator();
-            while (it.MoveNext())
+            var field = this[name];
+
+            if (field != null)
             {
-                IDocumentField field = (IDocumentField)it.Current;
-                if (field.Name.Equals(name))
-                {
-                    _fields.Remove(field);
-                    return;
-                }
+                _fields.Remove(field);
             }
         }
 
@@ -67,29 +63,8 @@ namespace VirtoCommerce.Domain.Search.Model
         {
             get
             {
-                foreach (IDocumentField field in _fields)
-                {
-                    if (field.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
-                        return field;
-                }
-
-                return null;
+                return _fields.FirstOrDefault(field => field.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
             }
-            private set
-            {
-                int index = 0;
-                foreach (IDocumentField field in _fields)
-                {
-                    if (field.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
-                    {
-                        _fields[index] = value;
-                        return;
-                    }
-
-                    index++;
-                }
-            }
-
         }
     }
 }
