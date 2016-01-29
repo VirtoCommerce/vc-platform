@@ -44,5 +44,31 @@ namespace VirtoCommerce.Platform.Web.Extensions
 
             return _demoCredentials;
         }
+
+        private static MvcHtmlString _resetTime;
+        public static MvcHtmlString DemoResetTime(this HtmlHelper html)
+        {
+
+            if (_resetTime == null)
+            {
+                var resetTimeStr = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:DemoResetTime", string.Empty);
+                if(!string.IsNullOrEmpty(resetTimeStr))
+                {
+                    TimeSpan timeSpan;
+                    if(TimeSpan.TryParse(resetTimeStr, out timeSpan))
+                    {
+                        var now = DateTime.UtcNow;
+                        var resetTime = new DateTime(now.Year, now.Month, now.Day, timeSpan.Hours, timeSpan.Minutes, timeSpan.Seconds);
+                        if(resetTime < now)
+                        {
+                            resetTime = resetTime.AddDays(1);
+                        }
+                        _resetTime = MvcHtmlString.Create(Newtonsoft.Json.JsonConvert.SerializeObject(resetTime)); 
+                    }
+                }
+            }
+
+            return _resetTime;
+        }
     }
 }

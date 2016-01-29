@@ -12,6 +12,7 @@
             });
         });
 
+
     </script>
 }
 
@@ -25,5 +26,8 @@
     </ul>
 </script>
 
+<div class="demo-warning" ng-if="demoResetTime" ng-cloak>
+    This is a demo VirtoCommerce manager. This site is reset to its original state every day. The next reset will be in about <b> {{ demoResetTime | amDifference : null : 'minute' | amDurationFormat : 'minute' }} </b>.
+</div>
 <ui-view></ui-view>
 

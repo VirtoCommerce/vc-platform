@@ -23,6 +23,7 @@
     <script type="text/javascript">
         var platformVersion = '@Html.Version()';
         var demoCredentials = @(Html.DemoCredentials());
+        var demoResetTime = @(Html.DemoResetTime());
     </script>
     @Html.Partial("_GoogleAnalyticsPartial")
     @RenderBody()
