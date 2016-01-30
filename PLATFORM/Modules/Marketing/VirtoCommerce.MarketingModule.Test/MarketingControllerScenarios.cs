@@ -24,6 +24,7 @@ namespace VirtoCommerce.MarketingModule.Test
 {
     public class MarketingControllerScenarios : FunctionalTestBase
 	{
+        //public readonly string DatabaseName = string.Format("MarketingTests_", Guid.NewGuid().ToString("N"));
         public const string DatabaseName = "MarketingTests";
 
         [Fact]
