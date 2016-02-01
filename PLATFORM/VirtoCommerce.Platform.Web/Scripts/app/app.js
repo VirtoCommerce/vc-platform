@@ -26,14 +26,7 @@
 
 angular.module('platformWebApp', AppDependencies).
   controller('platformWebApp.appCtrl', ['$scope', '$window', 'platformWebApp.pushNotificationService', function ($scope, $window, pushNotificationService) {
-	//Get platfrom version from main view
-  	$scope.platformVersion = $window.platformVersion;
-	//Demo credentials to display in login popup
-  	$scope.demoCredentials = $window.demoCredentials;
-	//Demo reset estimate time
-  	$scope.demoResetTime = $window.demoResetTime;
-
-  	pushNotificationService.run();
+	pushNotificationService.run();
   }])
 // Specify SignalR server URL (application URL)
 .factory('platformWebApp.signalRServerName', ['$location', function ($location) {

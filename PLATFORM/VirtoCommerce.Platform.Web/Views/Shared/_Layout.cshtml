@@ -1,5 +1,4 @@
 ﻿@using VirtoCommerce.Platform.Web
-@using VirtoCommerce.Platform.Web.Extensions
 <!DOCTYPE html>
 <html lang="en" ng-app="platformWebApp">
 <head>
@@ -19,12 +18,8 @@
     <base href="~/" />
 	@Html.Partial("_FacebookTrackerPartial")
 </head>
-<body ng-controller="platformWebApp.appCtrl">
-    <script type="text/javascript">
-        var platformVersion = '@Html.Version()';
-        var demoCredentials = @(Html.DemoCredentials());
-        var demoResetTime = @(Html.DemoResetTime());
-    </script>
+<body ng-controller="platformWebApp.appCtrl" ng-init="platformVersion ='@(Model.PlatformVersion)'; demoCredentials = @(Model.DemoCredentials);  demoResetTime = @(Model.DemoResetTime);">
+  
     @Html.Partial("_GoogleAnalyticsPartial")
     @RenderBody()
 
