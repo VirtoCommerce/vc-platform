@@ -179,11 +179,19 @@ namespace VirtoCommerce.Storefront.Owin
                 {
                     //If somehow claim not found in user cookies need load user by name from API
                     var user = await _platformApi.SecurityGetUserByNameAsync(context.Authentication.User.Identity.Name);
-                    userId = user.Id;
+                    if (user != null)
+                    {
+                        userId = user.Id;
+                    }
                 }
-                retVal = await _customerService.GetCustomerByIdAsync(userId) ?? retVal;
-                retVal.UserName = context.Authentication.User.Identity.Name;
-                retVal.IsRegisteredUser = true;
+
+                if (userId != null)
+                {
+                    retVal = await _customerService.GetCustomerByIdAsync(userId) ?? retVal;
+                    retVal.Id = userId;
+                    retVal.UserName = context.Authentication.User.Identity.Name;
+                    retVal.IsRegisteredUser = true;
+                }
             }
 
             if (!retVal.IsRegisteredUser)
