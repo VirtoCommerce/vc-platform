@@ -139,6 +139,10 @@
     <Compile Include="Migrations\201601191551056_OptionalCategoryInLink.Designer.cs">
       <DependentUpon>201601191551056_OptionalCategoryInLink.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201602010841250_NewCatalogIdAndParentIdIndex.cs" />
+    <Compile Include="Migrations\201602010841250_NewCatalogIdAndParentIdIndex.Designer.cs">
+      <DependentUpon>201602010841250_NewCatalogIdAndParentIdIndex.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Asset.cs" />
     <Compile Include="Model\Association.cs" />
@@ -232,6 +236,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201601191551056_OptionalCategoryInLink.resx">
       <DependentUpon>201601191551056_OptionalCategoryInLink.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201602010841250_NewCatalogIdAndParentIdIndex.resx">
+      <DependentUpon>201602010841250_NewCatalogIdAndParentIdIndex.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -115,7 +115,7 @@ namespace VirtoCommerce.Platform.Web
             });
 
 
-        
+
             // Register URL rewriter before modules initialization
             if (Directory.Exists(modulesPhysicalPath))
             {
@@ -216,8 +216,19 @@ namespace VirtoCommerce.Platform.Web
             var hubConfiguration = new HubConfiguration();
             hubConfiguration.EnableJavaScriptProxies = false;
             app.MapSignalR("/" + moduleInitializerOptions.RoutPrefix + "signalr", hubConfiguration);
-        }
 
+            //Start background sample data installation if in config set concrete zip path (need for demo)
+            var settingManager = container.Resolve<ISettingsManager>();
+            if (!settingManager.GetValue("VirtoCommerce:SampleDataInstalled", false))
+            {
+                var sampleDataUrl = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:SampleDataUrl", string.Empty);
+                if (!string.IsNullOrEmpty(sampleDataUrl) && sampleDataUrl.EndsWith(".zip"))
+                {
+                    var exportImportController = container.Resolve<PlatformExportImportController>();
+                    exportImportController.TryToImportSampleData(sampleDataUrl);
+                }
+            }
+        }
 
         private static Assembly CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs args)
         {
