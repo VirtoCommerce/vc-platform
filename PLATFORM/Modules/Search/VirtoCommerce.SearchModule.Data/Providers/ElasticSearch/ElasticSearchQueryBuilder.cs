@@ -12,8 +12,6 @@ namespace VirtoCommerce.SearchModule.Data.Providers.ElasticSearch
 {
     public class ElasticSearchQueryBuilder : ISearchQueryBuilder
     {
-        private const string _searchAnalyzer = "trigrams_search";
-
         #region ISearchQueryBuilder Members
         public object BuildQuery(ISearchCriteria criteria)
         {
@@ -172,7 +170,7 @@ namespace VirtoCommerce.SearchModule.Data.Providers.ElasticSearch
                     q =>
                     q.MultiMatch(
                         x =>
-                        x.Fields(fields).Operator(Operator.AND).Fuzziness(filter.FuzzyMinSimilarity).Query(searchPhrase).Analyzer(_searchAnalyzer)));
+                        x.Fields(fields).Operator(Operator.AND).Fuzziness(filter.FuzzyMinSimilarity).Query(searchPhrase).Analyzer(ElasticSearchProvider.SearchAnalyzer)));
             }
             else
             {
@@ -180,7 +178,7 @@ namespace VirtoCommerce.SearchModule.Data.Providers.ElasticSearch
                     q =>
                     q.MultiMatch(
                         x =>
-                        x.Fields(fields).Operator(Operator.AND).Query(searchPhrase).Analyzer(_searchAnalyzer)));
+                        x.Fields(fields).Operator(Operator.AND).Query(searchPhrase).Analyzer(ElasticSearchProvider.SearchAnalyzer)));
             }
         }
 

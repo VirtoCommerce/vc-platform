@@ -84,7 +84,7 @@ namespace VirtoCommerce.Storefront.Services
                 Currency = workContext.CurrentCurrency.Code,
                 HideDirectLinkedCategories = true,
                 Terms = criteria.Terms.ToStrings(),
-                PricelistIds = workContext.CurrentPriceListIds.ToList(),
+                PricelistIds = workContext.CurrentPricelists.Where(p => p.Currency == workContext.CurrentCurrency.Code).Select(p => p.Id).ToList(),
                 Skip = criteria.PageSize * (criteria.PageNumber - 1),
                 Take = criteria.PageSize,
                 Sort = criteria.SortBy
@@ -100,7 +100,7 @@ namespace VirtoCommerce.Storefront.Services
                 }
             }
             var result = await searchTask;
-           
+
 
             if (result != null)
             {
@@ -109,7 +109,7 @@ namespace VirtoCommerce.Storefront.Services
                     var products = result.Products.Select(x => x.ToWebModel(workContext.CurrentLanguage, workContext.CurrentCurrency)).ToArray();
                     retVal.Products = new StorefrontPagedList<Product>(products, criteria.PageNumber, criteria.PageSize, result.ProductsTotalCount.Value, page => workContext.RequestUrl.SetQueryParameter("page", page.ToString()).ToString());
 
-                   await Task.WhenAll(_pricingService.EvaluateProductPricesAsync(retVal.Products), LoadProductsInventoriesAsync(retVal.Products));
+                    await Task.WhenAll(_pricingService.EvaluateProductPricesAsync(retVal.Products), LoadProductsInventoriesAsync(retVal.Products));
                 }
 
                 if (result.Categories != null && result.Categories.Any())
