@@ -87,6 +87,7 @@
     <Compile Include="Common\Exceptions\StorefrontException.cs" />
     <Compile Include="Customer\Services\ICustomerService.cs" />
     <Compile Include="Order\Events\OrderPlacedEvent.cs" />
+    <Compile Include="Pricing\Pricelist.cs" />
     <Compile Include="Quote\Services\IQuoteRequestBuilder.cs" />
     <Compile Include="StorefrontNotification.cs" />
     <Compile Include="StorefrontNotificationType.cs" />

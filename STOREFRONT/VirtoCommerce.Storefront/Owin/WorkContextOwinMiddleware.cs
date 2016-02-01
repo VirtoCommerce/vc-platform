@@ -37,7 +37,6 @@ namespace VirtoCommerce.Storefront.Owin
         private readonly IStoreModuleApi _storeApi;
         private readonly IVirtoCommercePlatformApi _platformApi;
         private readonly ICommerceCoreModuleApi _commerceApi;
-        private readonly ICustomerManagementModuleApi _customerApi;
         private readonly IPricingModuleApi _pricingModuleApi;
         private readonly ICartBuilder _cartBuilder;
         private readonly IQuoteRequestBuilder _quoteRequestBuilder;
@@ -52,7 +51,6 @@ namespace VirtoCommerce.Storefront.Owin
         {
             _storeApi = container.Resolve<IStoreModuleApi>();
             _platformApi = container.Resolve<IVirtoCommercePlatformApi>();
-            _customerApi = container.Resolve<ICustomerManagementModuleApi>();
             _cartBuilder = container.Resolve<ICartBuilder>();
             _quoteRequestBuilder = container.Resolve<IQuoteRequestBuilder>();
             _cmsApi = container.Resolve<ICMSContentModuleApi>();
@@ -106,7 +104,7 @@ namespace VirtoCommerce.Storefront.Owin
                             workContext.CurrentQuoteRequest = _quoteRequestBuilder.QuoteRequest;
                         }
 
-                        var linkLists = await _cacheManager.GetAsync("GetLinkLists-" + workContext.CurrentStore.Id, "ApiRegion", async () => { return await _cmsApi.MenuGetListsAsync(workContext.CurrentStore.Id) ?? new List<Client.Model.VirtoCommerceContentWebModelsMenuLinkList>(); });
+                        var linkLists = await _cacheManager.GetAsync("GetLinkLists-" + workContext.CurrentStore.Id, "ApiRegion", async () => { return await _cmsApi.MenuGetListsAsync(workContext.CurrentStore.Id) ?? new List<VirtoCommerceContentWebModelsMenuLinkList>(); });
                         workContext.CurrentLinkLists = linkLists != null ? linkLists.Select(ll => ll.ToWebModel(urlBuilder)).ToList() : null;
 
                         //Initialize catalog search criteria
@@ -115,9 +113,10 @@ namespace VirtoCommerce.Storefront.Owin
                         //Initialize blogs search criteria 
                         //TODO: read from query string
                         workContext.CurrentBlogSearchCritera = new Model.StaticContent.BlogSearchCriteria();
+
                         //Pricelists
-                        var priceListCachey = String.Join("-", "EvaluatePriceLists", workContext.CurrentStore.Id, workContext.CurrentCustomer.Id);
-                        workContext.CurrentPriceListIds = await _cacheManager.GetAsync(priceListCachey, "ApiRegion", async () =>
+                        var pricelistCacheKey = string.Join("-", "EvaluatePriceLists", workContext.CurrentStore.Id, workContext.CurrentCustomer.Id);
+                        workContext.CurrentPricelists = await _cacheManager.GetAsync(pricelistCacheKey, "ApiRegion", async () =>
                         {
                             var evalContext = new VirtoCommerceDomainPricingModelPriceEvaluationContext
                             {
@@ -127,7 +126,7 @@ namespace VirtoCommerce.Storefront.Owin
                                 Quantity = 1
                             };
                             var pricingResult = await _pricingModuleApi.PricingModuleEvaluatePriceListsAsync(evalContext);
-                            return pricingResult.Select(p => p.Id).ToList();
+                            return pricingResult.Select(p => p.ToWebModel()).ToList();
                         });
                     }
                 }
@@ -294,11 +293,11 @@ namespace VirtoCommerce.Storefront.Owin
         private string GetLanguageFromUrl(IOwinContext context, string[] languages)
         {
             var requestPath = context.Request.Path.ToString();
-            var retVal = languages.FirstOrDefault(x => requestPath.Contains(String.Format("/{0}/", x)));
+            var retVal = languages.FirstOrDefault(x => requestPath.Contains(string.Format("/{0}/", x)));
             return retVal;
         }
 
-        private Currency GetCurrency(IOwinContext context, Store store)
+        private static Currency GetCurrency(IOwinContext context, Store store)
         {
             //Get currency from request url
             var currencyCode = context.Request.Query.Get("currency");
@@ -358,8 +357,8 @@ namespace VirtoCommerce.Storefront.Owin
             var country = new Country
             {
                 Name = pair.Key,
-                Code2 = region != null ? region.TwoLetterISORegionName : String.Empty,
-                Code3 = region != null ? region.ThreeLetterISORegionName : String.Empty,
+                Code2 = region != null ? region.TwoLetterISORegionName : string.Empty,
+                Code3 = region != null ? region.ThreeLetterISORegionName : string.Empty,
                 RegionType = pair.Value["label"] != null ? pair.Value["label"].ToString() : null
             };
 

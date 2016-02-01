@@ -88,7 +88,10 @@ namespace VirtoCommerce.PricingModule.Data.Services
                 {
                     if (assignment.Condition(evalContext))
                     {
-                        retVal.Add(assignment.Pricelist);
+                        if (!retVal.Any(p => p.Id == assignment.Pricelist.Id))
+                        {
+                            retVal.Add(assignment.Pricelist);
+                        }
                     }
                 }
                 catch (Exception ex)

@@ -6,6 +6,7 @@ using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Customer;
 using VirtoCommerce.Storefront.Model.Order;
+using VirtoCommerce.Storefront.Model.Pricing;
 using VirtoCommerce.Storefront.Model.Quote;
 using VirtoCommerce.Storefront.Model.StaticContent;
 
@@ -18,7 +19,7 @@ namespace VirtoCommerce.Storefront.Model
     {
         public WorkContext()
         {
-            CurrentPriceListIds = new List<string>();
+            CurrentPricelists = new List<Pricelist>();
             CurrentLinkLists = new List<MenuLinkList>();
         }
         /// <summary>
@@ -96,7 +97,7 @@ namespace VirtoCommerce.Storefront.Model
         /// <summary>
         /// List of active pricelists
         /// </summary>
-        public ICollection<string> CurrentPriceListIds { get; set; }
+        public ICollection<Pricelist> CurrentPricelists { get; set; }
 
         #region Catalog Properties
         /// <summary>
@@ -117,7 +118,7 @@ namespace VirtoCommerce.Storefront.Model
 
         #region Static Content Properties
         public ContentPage CurrentPage { get; set; }
-        
+
         public BlogSearchCriteria CurrentBlogSearchCritera { get; set; }
         public Blog CurrentBlog { get; set; }
 
