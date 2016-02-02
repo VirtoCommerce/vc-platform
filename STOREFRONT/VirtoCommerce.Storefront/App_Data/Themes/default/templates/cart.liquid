@@ -31,7 +31,7 @@
                                 <span ng-if="lineItem.ValidationErrors[0].ErrorCode == 'ProductQuantityError'" ng-bind="'Product quantity exceeded! Available quantity is: ' + lineItem.ValidationErrors[0].AvailableQuantity"></span>
                             </div>
                             <div class="note" ng-if="lineItem.ValidationWarnings.length">
-                                <span ng-if="lineItem.ValidationWarnings[0].ErrorCode == 'ProductPriceError'" ng-bind="'Product price has been changed. Old price is: ' + lineItem.ValidationWarnings[0].OldPrice.FormatedAmount"></span>
+                                <span ng-if="lineItem.ValidationWarnings[0].ErrorCode == 'ProductPriceError'" ng-bind="'Product price has been changed. Old price was: ' + lineItem.ValidationWarnings[0].OldPrice.FormatedAmount"></span>
                             </div>
                         </div>
                     </div>
