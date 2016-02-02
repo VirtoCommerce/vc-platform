@@ -30,7 +30,6 @@ namespace VirtoCommerce.Storefront.Builders
         private ShoppingCart _cart;
         private const string _cartCacheRegion = "CartRegion";
 
-       
         public CartBuilder(IShoppingCartModuleApi cartApi, IPromotionEvaluator promotionEvaluator, ICatalogSearchService catalogSearchService, ICacheManager<object> cacheManager)
         {
             _cartApi = cartApi;
@@ -45,7 +44,7 @@ namespace VirtoCommerce.Storefront.Builders
             {
                 if(_cart == null)
                 {
-                    throw new StorefrontException("Cart not set");
+                    throw new StorefrontException("Cart is not set");
                 }
                 return GetCartCacheKey(_cart.StoreId, _cart.CustomerId);
             }

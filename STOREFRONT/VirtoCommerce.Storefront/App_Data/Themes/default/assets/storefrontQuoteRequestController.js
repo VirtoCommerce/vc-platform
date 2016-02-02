@@ -166,11 +166,11 @@ storefrontApp.controller('quoteRequestController', ['$scope', '$window', 'quoteR
                 ProposalPrices: proposalPrices
             });
         }
-        quoteRequestService.update(quoteRequest).then(function (response) {
-            if ($scope.customer.IsRegisteredUser) {
+        if ($scope.customer.IsRegisteredUser) {
+            quoteRequestService.update(quoteRequest).then(function (response) {
                 $scope.outerRedirect($scope.baseUrl + 'account/quote-requests/');
-            }
-        });
+            });
+        }
     }
 
     function initialize() {

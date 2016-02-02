@@ -1,9 +1,6 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using CacheManager.Core;
-using VirtoCommerce.Client.Api;
-using VirtoCommerce.Client.Model;
 using VirtoCommerce.Storefront.Common;
 using VirtoCommerce.Storefront.Converters;
 using VirtoCommerce.Storefront.Model;
@@ -13,7 +10,7 @@ using VirtoCommerce.Storefront.Model.Customer;
 using VirtoCommerce.Storefront.Model.Marketing.Services;
 using VirtoCommerce.Storefront.Model.Quote;
 using VirtoCommerce.Storefront.Model.Quote.Services;
-using System.Collections.Generic;
+using VirtoCommerce.Storefront.Model.Common.Exceptions;
 
 namespace VirtoCommerce.Storefront.Builders
 {
@@ -23,14 +20,8 @@ namespace VirtoCommerce.Storefront.Builders
         private readonly IPromotionEvaluator _promotionEvaluator;
         private readonly ICacheManager<object> _cacheManager;
 
-        private Store _store;
-        private CustomerInfo _customer;
-        private Currency _currency;
-        private Language _language;
         private QuoteRequest _quoteRequest;
-        private string _quoteRequestCacheKey;
         private const string _quoteRequestCacheRegion = "QuoteRequestRegion";
-
 
         public QuoteRequestBuilder(IQuoteService quoteService, IPromotionEvaluator promotionEvaluator, ICacheManager<object> cacheManager)
         {
@@ -39,27 +30,67 @@ namespace VirtoCommerce.Storefront.Builders
             _cacheManager = cacheManager;
         }
 
+        public string QuoteRequestCacheKey
+        {
+            get
+            {
+                if (_quoteRequest == null)
+                {
+                    throw new StorefrontException("Quote request is not set");
+                }
+
+                return GetQuoteRequestCacheKey(_quoteRequest.StoreId, _quoteRequest.CustomerId);
+            }
+        }
+
+        public IQuoteRequestBuilder TakeQuoteRequest(QuoteRequest quoteRequest)
+        {
+            _quoteRequest = quoteRequest;
+
+            return this;
+        }
+
         public async Task<IQuoteRequestBuilder> GetOrCreateNewTransientQuoteRequestAsync(Store store, CustomerInfo customer, Language language, Currency currency)
         {
-            _store = store;
-            _customer = customer;
-            _currency = currency;
-            _language = language;
-            _quoteRequestCacheKey = GetQuoteRequestCacheKey(store.Id, customer.Id);
+            var cacheKey = GetQuoteRequestCacheKey(store.Id, customer.Id);
 
-            var quoteRequests = await _quoteService.GetQuoteRequestsAsync(_store.Id, _customer.Id, 0, 1, "actual");
-            if (!quoteRequests.Any())
+            _quoteRequest = await _cacheManager.GetAsync(cacheKey, _quoteRequestCacheRegion, async () =>
             {
-                _quoteRequest = CreateNewTransientQuoteRequest();
-            }
-            else
-            {
-                var matchedQuoteRequest = quoteRequests.FirstOrDefault();
-                if (matchedQuoteRequest != null)
+                QuoteRequest quoteRequest = null;
+
+                var quoteRequests = await _quoteService.GetQuoteRequestsAsync(store.Id, customer.Id, 0, 1, "actual");
+                if (!quoteRequests.Any())
                 {
-                    _quoteRequest = await _quoteService.GetQuoteRequestAsync(_customer.Id, matchedQuoteRequest.Id);
+                    quoteRequest = new QuoteRequest();
+                    quoteRequest.Currency = currency;
+                    quoteRequest.CustomerId = customer.Id;
+                    quoteRequest.Language = language;
+                    quoteRequest.Status = "Processing";
+                    quoteRequest.StoreId = store.Id;
+                    quoteRequest.Tag = "actual";
+
+                    if (!customer.IsRegisteredUser)
+                    {
+                        quoteRequest.CustomerName = StorefrontConstants.AnonymousUsername;
+                    }
+                    else
+                    {
+                        quoteRequest.CustomerName = string.Format("{0} {1}", customer.FirstName, customer.LastName);
+                    }
                 }
-            }
+                else
+                {
+                    var matchedQuoteRequest = quoteRequests.FirstOrDefault();
+                    if (matchedQuoteRequest != null)
+                    {
+                        quoteRequest = await _quoteService.GetQuoteRequestAsync(customer.Id, matchedQuoteRequest.Id);
+                    }
+                }
+
+                quoteRequest.Customer = customer;
+
+                return quoteRequest;
+            });
 
             return this;
         }
@@ -84,6 +115,8 @@ namespace VirtoCommerce.Storefront.Builders
 
         public IQuoteRequestBuilder Update(QuoteRequestFormModel quoteRequest)
         {
+            _cacheManager.Remove(QuoteRequestCacheKey, _quoteRequestCacheRegion);
+
             _quoteRequest.Comment = quoteRequest.Comment;
             _quoteRequest.Tag = quoteRequest.Tag;
 
@@ -128,15 +161,20 @@ namespace VirtoCommerce.Storefront.Builders
                 _quoteRequest.Items.Add(quoteItem);
             }
 
-            await _quoteService.RemoveQuoteRequestAsync(_customer.Id, quoteRequest.Id);
-            _cacheManager.Remove(_quoteRequestCacheKey, _quoteRequestCacheRegion);
+            if (quoteRequest.Addresses != null && quoteRequest.Addresses.Any())
+            {
+                _quoteRequest.Addresses = quoteRequest.Addresses;
+            }
+
+            await _quoteService.RemoveQuoteRequestAsync(quoteRequest.Id);
+            _cacheManager.Remove(QuoteRequestCacheKey, _quoteRequestCacheRegion);
 
             return this;
         }
 
         public async Task SaveAsync()
         {
-            _cacheManager.Remove(_quoteRequestCacheKey, _quoteRequestCacheRegion);
+            _cacheManager.Remove(QuoteRequestCacheKey, _quoteRequestCacheRegion);
 
             if (_quoteRequest.IsTransient())
             {
@@ -159,29 +197,6 @@ namespace VirtoCommerce.Storefront.Builders
         private string GetQuoteRequestCacheKey(string storeId, string customerId)
         {
             return string.Format("QuoteRequest-{0}-{1}", storeId, customerId);
-        }
-
-        private QuoteRequest CreateNewTransientQuoteRequest()
-        {
-            var quoteRequest = new QuoteRequest();
-
-            quoteRequest.Currency = _currency;
-            quoteRequest.CustomerId = _customer.Id;
-            quoteRequest.Language = _language;
-            quoteRequest.Status = "Processing";
-            quoteRequest.StoreId = _store.Id;
-            quoteRequest.Tag = "actual";
-
-            if (_customer.UserName.Equals(StorefrontConstants.AnonymousUsername, StringComparison.OrdinalIgnoreCase))
-            {
-                quoteRequest.CustomerName = StorefrontConstants.AnonymousUsername;
-            }
-            else
-            {
-                quoteRequest.CustomerName = string.Format("{0} {1}", _customer.FirstName, _customer.LastName);
-            }
-
-            return quoteRequest;
         }
     }
 }

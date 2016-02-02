@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using VirtoCommerce.Storefront.Model.Common;
+using VirtoCommerce.Storefront.Model.Customer;
 using VirtoCommerce.Storefront.Model.Marketing;
 
 namespace VirtoCommerce.Storefront.Model.Quote
@@ -28,6 +29,8 @@ namespace VirtoCommerce.Storefront.Model.Quote
         public string CustomerId { get; set; }
 
         public string CustomerName { get; set; }
+
+        public CustomerInfo Customer { get; set; }
 
         public string OrganizationName { get; set; }
 

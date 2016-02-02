@@ -13,6 +13,6 @@ namespace VirtoCommerce.Storefront.Model.Quote.Services
 
         Task UpdateQuoteRequestAsync(QuoteRequest quoteRequest);
 
-        Task RemoveQuoteRequestAsync(string customerId, string quoteRequestId);
+        Task RemoveQuoteRequestAsync(string quoteRequestId);
     }
 }

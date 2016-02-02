@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.Client.Model;
@@ -70,7 +69,7 @@ namespace VirtoCommerce.Storefront.Services
             await _quoteApi.QuoteModuleUpdateAsync(quoteRequest.ToServiceModel());
         }
 
-        public async Task RemoveQuoteRequestAsync(string customerId, string quoteRequestId)
+        public async Task RemoveQuoteRequestAsync(string quoteRequestId)
         {
             var quoteRequest = await _quoteApi.QuoteModuleGetByIdAsync(quoteRequestId);
             if (quoteRequest != null)

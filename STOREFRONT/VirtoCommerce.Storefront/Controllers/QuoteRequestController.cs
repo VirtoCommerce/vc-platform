@@ -4,7 +4,7 @@ using System.Web.Mvc;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
-using VirtoCommerce.Storefront.Model.Customer;
+using VirtoCommerce.Storefront.Model.Common.Exceptions;
 using VirtoCommerce.Storefront.Model.Quote;
 using VirtoCommerce.Storefront.Model.Quote.Services;
 using VirtoCommerce.Storefront.Model.Services;
@@ -16,22 +16,12 @@ namespace VirtoCommerce.Storefront.Controllers
         private readonly IQuoteRequestBuilder _quoteRequestBuilder;
         private readonly ICatalogSearchService _catalogSearchService;
 
-        private Store _store;
-        private CustomerInfo _customer;
-        private Language _language;
-        private Currency _currency;
-
         public QuoteRequestController(WorkContext workContext, IStorefrontUrlBuilder urlBuilder, IQuoteRequestBuilder quoteRequestBuilder,
             ICatalogSearchService catalogSearchService)
             : base(workContext, urlBuilder)
         {
             _quoteRequestBuilder = quoteRequestBuilder;
             _catalogSearchService = catalogSearchService;
-
-            _store = workContext.CurrentStore;
-            _customer = workContext.CurrentCustomer;
-            _language = workContext.CurrentLanguage;
-            _currency = workContext.CurrentCurrency;
         }
 
         // GET: /quoterequest
@@ -43,9 +33,9 @@ namespace VirtoCommerce.Storefront.Controllers
 
         // GET: /quoterequest/json
         [HttpGet]
-        public async Task<ActionResult> QuoteRequestJson()
+        public ActionResult QuoteRequestJson()
         {
-            await _quoteRequestBuilder.GetOrCreateNewTransientQuoteRequestAsync(_store, _customer, _language, _currency);
+            EnsureThatQuoteRequestExists();
 
             return Json(_quoteRequestBuilder.QuoteRequest, JsonRequestBehavior.AllowGet);
         }
@@ -54,10 +44,13 @@ namespace VirtoCommerce.Storefront.Controllers
         [HttpPost]
         public async Task<ActionResult> UpdateJson(QuoteRequestFormModel quoteRequest)
         {
-            await _quoteRequestBuilder.GetOrCreateNewTransientQuoteRequestAsync(_store, _customer, _language, _currency);
+            EnsureThatQuoteRequestExists();
 
-            _quoteRequestBuilder.Update(quoteRequest);
-            await _quoteRequestBuilder.SaveAsync();
+            using (var lockObject = await AsyncLock.GetLockByKey(WorkContext.CurrentQuoteRequest.Id).LockAsync())
+            {
+                _quoteRequestBuilder.Update(quoteRequest);
+                await _quoteRequestBuilder.SaveAsync();
+            }
 
             return Json(null, JsonRequestBehavior.AllowGet);
         }
@@ -66,13 +59,16 @@ namespace VirtoCommerce.Storefront.Controllers
         [HttpPost]
         public async Task<ActionResult> AddItemJson(string productId, long quantity)
         {
-            var products = await _catalogSearchService.GetProductsAsync(new string[] { productId }, ItemResponseGroup.ItemLarge);
-            if (products != null && products.Any())
-            {
-                await _quoteRequestBuilder.GetOrCreateNewTransientQuoteRequestAsync(_store, _customer, _language, _currency);
+            EnsureThatQuoteRequestExists();
 
-                _quoteRequestBuilder.AddItem(products.First(), quantity);
-                await _quoteRequestBuilder.SaveAsync();
+            using (var lockObject = await AsyncLock.GetLockByKey(productId).LockAsync())
+            {
+                var products = await _catalogSearchService.GetProductsAsync(new string[] { productId }, ItemResponseGroup.ItemLarge);
+                if (products != null && products.Any())
+                {
+                    _quoteRequestBuilder.AddItem(products.First(), quantity);
+                    await _quoteRequestBuilder.SaveAsync();
+                }
             }
 
             return Json(null, JsonRequestBehavior.AllowGet);
@@ -82,12 +78,25 @@ namespace VirtoCommerce.Storefront.Controllers
         [HttpPost]
         public async Task<ActionResult> RemoveItemJson(string quoteItemId)
         {
-            await _quoteRequestBuilder.GetOrCreateNewTransientQuoteRequestAsync(_store, _customer, _language, _currency);
+            EnsureThatQuoteRequestExists();
 
-            _quoteRequestBuilder.RemoveItem(quoteItemId);
-            await _quoteRequestBuilder.SaveAsync();
+            using (var lockObject = await AsyncLock.GetLockByKey(WorkContext.CurrentQuoteRequest.Id).LockAsync())
+            {
+                _quoteRequestBuilder.RemoveItem(quoteItemId);
+                await _quoteRequestBuilder.SaveAsync();
+            }
 
             return Json(null, JsonRequestBehavior.AllowGet);
+        }
+
+        private void EnsureThatQuoteRequestExists()
+        {
+            if (WorkContext.CurrentQuoteRequest == null)
+            {
+                throw new StorefrontException("Quote request is not found");
+            }
+
+            _quoteRequestBuilder.TakeQuoteRequest(WorkContext.CurrentQuoteRequest);
         }
     }
 }
