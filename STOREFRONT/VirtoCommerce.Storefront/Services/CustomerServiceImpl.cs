@@ -47,26 +47,27 @@ namespace VirtoCommerce.Storefront.Services
                 CustomerInfo result = null;
                 if (contact != null)
                 {
-                var criteria = new VirtoCommerceDomainOrderModelSearchCriteria
-                {
-                    CustomerId = customerId,
-                    ResponseGroup = "full",
-                };
+                    var criteria = new VirtoCommerceDomainOrderModelSearchCriteria
+                    {
+                        CustomerId = customerId,
+                        ResponseGroup = "full",
+                    };
 
-                var ordersResponse = await _orderApi.OrderModuleSearchAsync(criteria);
+                    var ordersResponse = await _orderApi.OrderModuleSearchAsync(criteria);
                     result = contact.ToWebModel();
-                result.OrdersCount = ordersResponse.TotalCount.Value;
-                var workContext = _workContextFactory();
-                result.Orders = ordersResponse.CustomerOrders.Select(x => x.ToWebModel(workContext.AllCurrencies, workContext.CurrentLanguage)).ToList();
+                    result.OrdersCount = ordersResponse.TotalCount.Value;
+                    var workContext = _workContextFactory();
+                    result.Orders = ordersResponse.CustomerOrders.Select(x => x.ToWebModel(workContext.AllCurrencies, workContext.CurrentLanguage)).ToList();
 
-                var quoteRequestsResponse = await _quoteApi.QuoteModuleSearchAsync(new VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria
-                {
-                    Count = 10,
-                    CustomerId = customerId,
-                    StoreId = workContext.CurrentStore.Id
-                });
-                result.QuoteRequests = quoteRequestsResponse.QuoteRequests.Select(qr => qr.ToWebModel()).ToList();
-                result.QuoteRequestsCount = quoteRequestsResponse.TotalCount.Value;
+                    var quoteRequestsResponse = await _quoteApi.QuoteModuleSearchAsync(new VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria
+                    {
+                        Count = 10,
+                        CustomerId = customerId,
+                        StoreId = workContext.CurrentStore.Id
+                    });
+                    result.QuoteRequests = quoteRequestsResponse.QuoteRequests.Select(qr => qr.ToWebModel()).ToList();
+                    result.QuoteRequestsCount = quoteRequestsResponse.TotalCount.Value;
+                }
 
                 return result;
             });
