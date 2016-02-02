@@ -297,7 +297,6 @@
     <Compile Include="Controllers\Api\LocalizationController.cs" />
     <Compile Include="Converters\Asset\AssetSearchResultConverter.cs" />
     <Compile Include="Converters\ExportImport\ExportImportRequestConverter.cs" />
-    <Compile Include="Extensions\HtmlHelperExtensions.cs" />
     <Compile Include="Model\Asset\AssetListItem.cs" />
     <Compile Include="Model\ExportImport\PushNotifications\SampleDataImportPushNotification.cs" />
     <Compile Include="Model\ExportImport\SampleDataInfo.cs" />
@@ -306,6 +305,7 @@
     <Compile Include="Model\Packaging\ModuleAction.cs" />
     <Compile Include="Model\Packaging\ModuleBackgroundJobOptions.cs" />
     <Compile Include="Model\Packaging\ModulePushNotification.cs" />
+    <Compile Include="Model\PlatformSetting.cs" />
     <Compile Include="SignalR\NoOpPerformanceCounter.cs" />
     <Compile Include="SignalR\NoOpPerformanceCounterManager.cs" />
     <Compile Include="VirtoCommercePlatformWebBootstrapper.cs" />

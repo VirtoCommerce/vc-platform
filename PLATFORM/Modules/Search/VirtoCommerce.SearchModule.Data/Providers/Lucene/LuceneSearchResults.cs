@@ -6,7 +6,6 @@ using Lucene.Net.Index;
 using Lucene.Net.Search;
 using Lucene.Net.Util;
 using SpellChecker.Net.Search.Spell;
-using VirtoCommerce.Domain.Search;
 using VirtoCommerce.Domain.Search.Filters;
 using VirtoCommerce.Domain.Search.Model;
 
@@ -90,7 +89,7 @@ namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
                 return v.Name;
             }
 
-            return String.Empty;
+            return string.Empty;
         }
 
         /// <summary>
@@ -222,18 +221,7 @@ namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
                         if (fi.Current != null)
                         {
                             var field = fi.Current;
-
-                            // make sure document field doens't exist, if it does, simply add another value
-                            if (doc.ContainsKey(field.Name))
-                            {
-                                var existingField = doc[field.Name] as DocumentField;
-                                if (existingField != null)
-                                    existingField.AddValue(field.StringValue);
-                            }
-                            else // add new
-                            {
-                                doc.Add(new DocumentField(field.Name, field.StringValue));
-                            }
+                            doc.Add(new DocumentField(field.Name, field.StringValue));
                         }
                     }
                 }
@@ -305,19 +293,16 @@ namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
                     var group = new FacetGroup(filter.Key);
                     var groupCount = 0;
 
-                    if (!String.IsNullOrEmpty(Results.SearchCriteria.Currency) && filter is PriceRangeFilter)
+                    if (!string.IsNullOrEmpty(Results.SearchCriteria.Currency) && filter is PriceRangeFilter)
                     {
                         var valCurrency = ((PriceRangeFilter)filter).Currency;
-                        if (
-                            !valCurrency.Equals(
-                                Results.SearchCriteria.Currency, StringComparison.OrdinalIgnoreCase))
+                        if (!valCurrency.Equals(Results.SearchCriteria.Currency, StringComparison.OrdinalIgnoreCase))
                         {
                             continue;
                         }
                     }
 
-                    groupCount += CalculateResultCount(reader, baseDocIdSet, group, filter,
-                        Results.SearchCriteria);
+                    groupCount += CalculateResultCount(reader, baseDocIdSet, group, filter, Results.SearchCriteria);
 
                     // Add only if items exist under
                     if (groupCount > 0)
@@ -341,7 +326,7 @@ namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
             {
                 var c = criteria as KeywordSearchCriteria;
                 var phrase = c.SearchPhrase;
-                if (!String.IsNullOrEmpty(phrase))
+                if (!string.IsNullOrEmpty(phrase))
                 {
                     Results.Suggestions = SuggestSimilar(reader, "_content", phrase);
                 }

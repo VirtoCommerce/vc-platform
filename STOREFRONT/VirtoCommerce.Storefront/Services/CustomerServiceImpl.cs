@@ -8,6 +8,7 @@ using System.Web;
 using CacheManager.Core;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.Client.Model;
+using VirtoCommerce.Storefront.Common;
 using VirtoCommerce.Storefront.Converters;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Common;
@@ -43,11 +44,9 @@ namespace VirtoCommerce.Storefront.Services
             {
                 //TODO: Make parallels call
                 var contact = await _customerApi.CustomerModuleGetContactByIdAsync(customerId);
-                if (contact == null)
+                CustomerInfo result = null;
+                if (contact != null)
                 {
-                    throw new StorefrontException("Contact with id " + customerId + " not found");
-                }
-
                 var criteria = new VirtoCommerceDomainOrderModelSearchCriteria
                 {
                     CustomerId = customerId,
@@ -55,7 +54,7 @@ namespace VirtoCommerce.Storefront.Services
                 };
 
                 var ordersResponse = await _orderApi.OrderModuleSearchAsync(criteria);
-                var result = contact.ToWebModel();
+                    result = contact.ToWebModel();
                 result.OrdersCount = ordersResponse.TotalCount.Value;
                 var workContext = _workContextFactory();
                 result.Orders = ordersResponse.CustomerOrders.Select(x => x.ToWebModel(workContext.AllCurrencies, workContext.CurrentLanguage)).ToList();

@@ -349,6 +349,7 @@
     <Compile Include="Controllers\QuoteRequestController.cs" />
     <Compile Include="Converters\AttachmentConverter.cs" />
     <Compile Include="Converters\CurrencyConverter.cs" />
+    <Compile Include="Converters\PricelistConverter.cs" />
     <Compile Include="Converters\QuoteItemConverter.cs" />
     <Compile Include="Converters\QuoteRequestConverter.cs" />
     <Compile Include="Converters\QuoteRequestTotalsConverter.cs" />

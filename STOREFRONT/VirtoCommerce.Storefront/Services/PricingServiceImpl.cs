@@ -31,7 +31,7 @@ namespace VirtoCommerce.Storefront.Services
             var evalContext = new VirtoCommerceDomainPricingModelPriceEvaluationContext
             {
                 ProductIds = products.Select(p => p.Id).ToList(),
-                PricelistIds = workContext.CurrentPriceListIds.ToList(),
+                PricelistIds = workContext.CurrentPricelists.Select(p => p.Id).ToList(),
                 CatalogId = workContext.CurrentStore.Catalog,
                 CustomerId = workContext.CurrentCustomer.Id,
                 Language = workContext.CurrentLanguage.CultureName,

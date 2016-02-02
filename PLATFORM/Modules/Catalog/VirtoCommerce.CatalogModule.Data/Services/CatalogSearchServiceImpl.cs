@@ -67,28 +67,16 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                 //Get list of search in categories
                 var searchCategoryIds = criteria.CategoryIds;
 
-                if (criteria.SearchInChildren)
+                if (!searchCategoryIds.IsNullOrEmpty())
                 {
-                    if (!searchCategoryIds.IsNullOrEmpty())
+                    if (criteria.SearchInChildren)
                     {
                         searchCategoryIds = searchCategoryIds.Concat(repository.GetAllChildrenCategoriesIds(searchCategoryIds)).ToArray();
                         //linked categories
                         var allLinkedCategories = repository.CategoryLinks.Where(x => searchCategoryIds.Contains(x.TargetCategoryId)).Select(x => x.SourceCategoryId).ToArray();
                         searchCategoryIds = searchCategoryIds.Concat(allLinkedCategories).Distinct().ToArray();
                     }
-                    else if (!criteria.CatalogIds.IsNullOrEmpty())
-                    {
-                        //If categories not specified need search in all catalog linked and children categories 
-                        //First need load all virtual catalog categories
-                        searchCategoryIds = repository.Categories.Where(x => criteria.CatalogIds.Contains(x.CatalogId)).Select(x => x.Id).ToArray();
-                        //Then load all physical categories linked to catalog
-                        var allCatalogLinkedCategories = repository.CategoryLinks.Where(x => criteria.CatalogIds.Contains(x.TargetCatalogId)).Select(x => x.SourceCategoryId).ToArray();
-                        searchCategoryIds = searchCategoryIds.Concat(allCatalogLinkedCategories).Distinct().ToArray();
-                    }
-                }
 
-                if (!searchCategoryIds.IsNullOrEmpty())
-                {
                     if (criteria.HideDirectLinkedCategories)
                     {
                         query = query.Where(x => searchCategoryIds.Contains(x.ParentCategoryId) || x.OutgoingLinks.Any(y => searchCategoryIds.Contains(y.TargetCategory.ParentCategoryId)));
@@ -100,8 +88,23 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                 }
                 else if (!criteria.CatalogIds.IsNullOrEmpty())
                 {
-                    query = query.Where(x => (criteria.CatalogIds.Contains(x.CatalogId) && (x.ParentCategoryId == null || criteria.SearchInChildren)) || (x.OutgoingLinks.Any(y => y.TargetCategoryId == null && criteria.CatalogIds.Contains(y.TargetCatalogId))));
-
+                    if (criteria.SearchInChildren)
+                    {
+                        //need search in all catalog linked and children categories 
+                        //First need load all categories belong to searched catalogs
+                        searchCategoryIds = repository.Categories.Where(x => criteria.CatalogIds.Contains(x.CatalogId)).Select(x => x.Id).ToArray();
+                        //Then load all physical categories linked to catalog
+                        var allCatalogLinkedCategories = repository.CategoryLinks.Where(x => criteria.CatalogIds.Contains(x.TargetCatalogId)).Select(x => x.SourceCategoryId).ToArray();
+                        searchCategoryIds = searchCategoryIds.Concat(allCatalogLinkedCategories).Distinct().ToArray();
+                        //Then exapand all categories, get all childrens
+                        searchCategoryIds = searchCategoryIds.Concat(repository.GetAllChildrenCategoriesIds(searchCategoryIds)).ToArray();
+                        //find all categories belong searched catalogs and all categories direct or implicitly linked to catalogs
+                        query = query.Where(x =>  searchCategoryIds.Contains(x.Id));
+                    }
+                    else
+                    {
+                        query = query.Where(x => (criteria.CatalogIds.Contains(x.CatalogId) && x.ParentCategoryId == null) || (x.OutgoingLinks.Any(y => y.TargetCategoryId == null && criteria.CatalogIds.Contains(y.TargetCatalogId))));
+                    }
                 }
 
                 if (!string.IsNullOrEmpty(criteria.Keyword))

@@ -63,8 +63,11 @@ namespace VirtoCommerce.PricingModule.Data.Services
                      }
                  }).AsQueryable();
 
-            //filter by catalog
-            query = query.Where(x => (x.CatalogId == evalContext.CatalogId));
+            if (evalContext.CatalogId != null)
+            {
+                //filter by catalog
+                query = query.Where(x => x.CatalogId == evalContext.CatalogId);
+            }
 
             if (evalContext.Currency != null)
             {
@@ -85,7 +88,10 @@ namespace VirtoCommerce.PricingModule.Data.Services
                 {
                     if (assignment.Condition(evalContext))
                     {
-                        retVal.Add(assignment.Pricelist);
+                        if (!retVal.Any(p => p.Id == assignment.Pricelist.Id))
+                        {
+                            retVal.Add(assignment.Pricelist);
+                        }
                     }
                 }
                 catch (Exception ex)

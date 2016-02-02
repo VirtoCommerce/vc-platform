@@ -89,6 +89,7 @@
     <Compile Include="Order\Events\OrderPlacedEvent.cs" />
     <Compile Include="Quote\QuoteItemFormModel.cs" />
     <Compile Include="Quote\QuoteRequestFormModel.cs" />
+    <Compile Include="Pricing\Pricelist.cs" />
     <Compile Include="Quote\Services\IQuoteRequestBuilder.cs" />
     <Compile Include="Quote\Services\IQuoteService.cs" />
     <Compile Include="Quote\TierPriceFormModel.cs" />

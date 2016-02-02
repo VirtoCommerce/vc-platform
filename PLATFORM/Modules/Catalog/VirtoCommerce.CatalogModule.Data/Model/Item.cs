@@ -101,14 +101,15 @@ namespace VirtoCommerce.CatalogModule.Data.Model
 
 		public virtual ObservableCollection<PropertyValue> ItemPropertyValues { get; set; }
 
-		
-		public string CatalogId { get; set; }
+        [Index("CatalogIdAndParentId", 1)]
+        public string CatalogId { get; set; }
         public virtual Catalog Catalog { get; set; }
 
 		public string CategoryId { get; set; }
 		public virtual Category Category { get; set; }
 
-		public string ParentId { get; set; }
+        [Index("CatalogIdAndParentId", 2)]
+        public string ParentId { get; set; }
 		public virtual Item Parent { get; set; }
 
 		public virtual ObservableCollection<Item> Childrens { get; set; }

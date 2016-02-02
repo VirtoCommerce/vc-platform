@@ -50,7 +50,20 @@ ui-codemirror > *:first-child {
     -ms-scrollbar-track-color: #c9d6df;
 }
 
-
+.demo-warning
+{
+    background: #43b0e6;
+    color: #fff;
+    font-size: 13px;
+    left: 0;
+    padding: 5px 0;
+    right: 0;
+    top: 0;
+    text-align: center;
+    z-index: 9000;
+	position: absolute;
+	font-family: 'Exo 2';
+}
 
 /* Flags */
 .flag
@@ -3890,6 +3903,10 @@ tags-input .tags .tag-item .remove-button
     top: 0;
 }
 
+.has-demo-warning .nav-bar,
+.has-demo-warning .cnt {
+	top: 28px;
+}
 /* Nav bar - Left navigation menu */
 .nav-bar
 {
@@ -6017,6 +6034,7 @@ input.ui-grid-filter-input[type="text"]
 {
     display: none;
 }
+
 
 .overlay.__loaded
 {
