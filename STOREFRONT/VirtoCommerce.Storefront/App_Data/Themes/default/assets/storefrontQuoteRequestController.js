@@ -269,11 +269,14 @@ storefrontApp.controller('quoteRequestController', ['$scope', '$window', 'quoteR
     }
 
     function addressesEqual(address1, address2) {
-        var address1Type = address1.Type; address1.Type = null;
-        var address2Type = address2.Type; address2.Type = null;
-        var isEqual = angular.equals(address1, address2);
-        address1.Type = address1Type;
-        address2.Type = address2Type;
+        var isEqual = false;
+        if (address1 && address2) {
+            var address1Type = address1.Type; address1.Type = null;
+            var address2Type = address2.Type; address2.Type = null;
+            isEqual = angular.equals(address1, address2);
+            address1.Type = address1Type;
+            address2.Type = address2Type;
+        }
         return isEqual;
     }
 }]);
