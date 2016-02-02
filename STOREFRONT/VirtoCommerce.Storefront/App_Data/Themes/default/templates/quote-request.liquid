@@ -184,8 +184,7 @@
             </div>
         </div>
         <div class="ublock text-right">
-            <button class="btn" id="btn-submit-quote-request" type="button" ng-click="submitQuoteRequest()" ng-class="{ 'btn-secondary': !customer.IsRegisteredUser || quoteRequestIsUpdating }" ng-disabled="!customer.IsRegisteredUser || quoteRequestIsUpdating">Submit quote request</button>
-            <p ng-if="!customer.IsRegisteredUser">Please login for submitting quote request</p>
+            <button class="btn" id="btn-submit-quote-request" type="button" ng-click="submitQuoteRequest()" ng-class="{ 'btn-secondary': quoteRequestIsUpdating }" ng-disabled="quoteRequestIsUpdating">Submit quote request</button>
         </div>
     </form>
 </div>

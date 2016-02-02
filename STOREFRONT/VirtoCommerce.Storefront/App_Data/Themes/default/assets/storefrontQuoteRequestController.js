@@ -141,7 +141,7 @@ storefrontApp.controller('quoteRequestController', ['$scope', '$window', 'quoteR
         }
         var quoteRequest = {
             Comment: $scope.quoteRequest.Comment,
-            Tag: null,
+            Tag: $scope.customer.IsRegisteredUser ? null : 'actual',
             BillingAddress: $scope.quoteRequest.BillingAddress,
             ShippingAddress: $scope.quoteRequest.ShippingAddress,
             Items: []
@@ -166,11 +166,13 @@ storefrontApp.controller('quoteRequestController', ['$scope', '$window', 'quoteR
         if ($scope.formQuoteRequest.$invalid) {
             return;
         }
-        if ($scope.customer.IsRegisteredUser) {
-            quoteRequestService.update(quoteRequest).then(function (response) {
+        quoteRequestService.update(quoteRequest).then(function (response) {
+            if ($scope.customer.IsRegisteredUser) {
                 $scope.outerRedirect($scope.baseUrl + 'account/quote-requests/');
-            });
-        }
+            } else {
+                $scope.outerRedirect($scope.baseUrl + 'account/login/');
+            }
+        });
     }
 
     function initialize() {
@@ -198,11 +200,6 @@ storefrontApp.controller('quoteRequestController', ['$scope', '$window', 'quoteR
         });
     }
 
-    //function proposalPricesAreUnique(proposalPrices) {
-    //    var uniqueProposalPrices = _.uniq(_.pluck(_.flatten(proposalPrices), 'Quantity'));
-    //    return proposalPrices.length == uniqueProposalPrices.length;
-    //}
-
     function setShippingAddressEqualsBilling() {
         $scope.quoteRequest.ShippingAddress = angular.copy($scope.quoteRequest.BillingAddress);
         $scope.quoteRequest.ShippingAddress.Type = shippingAddressType;
@@ -216,25 +213,10 @@ storefrontApp.controller('quoteRequestController', ['$scope', '$window', 'quoteR
         quoteRequestService.getCurrentQuoteRequest().then(function (response) {
             $scope.quoteRequestIsUpdating = false;
             var quoteRequest = response.data;
-            if (quoteRequest.Addresses.length) {
-                var billingAddress = _.find(quoteRequest.Addresses, function (a) { return a.Type == billingAddressType });
-                if (billingAddress) {
-                    quoteRequest.Email = billingAddress.Email;
-                    quoteRequest.BillingAddress = billingAddress;
-                    if (billingAddress.CountryCode) {
-                        getCountryRegions(billingAddressType, billingAddress.CountryCode);
-                    }
-                }
-                var shippingAddress = _.find(quoteRequest.Addresses, function (a) { return a.Type == shippingAddressType });
-                if (shippingAddress) {
-                    quoteRequest.ShippingAddress = shippingAddress;
-                    quoteRequest.RequestShippingQuote = true;
-                    if (shippingAddress.CountryCode) {
-                        getCountryRegions(shippingAddressType, shippingAddress.CountryCode);
-                    }
-                }
-                if (billingAddress && shippingAddress) {
-                    quoteRequest.ShippingAddressEqualsBilling = addressesEqual(billingAddress, shippingAddress);
+            if (quoteRequest.BillingAddress) {
+                quoteRequest.Email = quoteRequest.BillingAddress.Email;
+                if (quoteRequest.BillingAddress.CountryCode) {
+                    getCountryRegions(billingAddressType, quoteRequest.BillingAddress.CountryCode);
                 }
             } else {
                 quoteRequest.Email = $scope.customer.Email;
@@ -242,7 +224,10 @@ storefrontApp.controller('quoteRequestController', ['$scope', '$window', 'quoteR
                     Type: billingAddressType,
                     FirstName: $scope.customer.FirstName,
                     LastName: $scope.customer.LastName
-                }
+                };
+            }
+            if (quoteRequest.ShippingAddress && quoteRequest.ShippingAddress.CountryCode) {
+                getCountryRegions(shippingAddressType, quoteRequest.ShippingAddress.CountryCode);
             }
             for (var i = 0; i < quoteRequest.Items.length; i++) {
                 var quoteItem = quoteRequest.Items[i];
@@ -251,6 +236,7 @@ storefrontApp.controller('quoteRequestController', ['$scope', '$window', 'quoteR
                     proposalPrice.Id = j + 1;
                 }
             }
+            quoteRequest.ShippingAddressEqualsBilling = addressesEqual(quoteRequest.BillingAddress, quoteRequest.ShippingAddress);
             $scope.quoteRequest = quoteRequest;
             getCountries();
         });

@@ -96,6 +96,30 @@ namespace VirtoCommerce.Storefront.Model.Quote
 
         public string ModifiedBy { get; set; }
 
+        public Address BillingAddress
+        {
+            get
+            {
+                return Addresses.FirstOrDefault(a => a.Type == AddressType.Billing);
+            }
+        }
+
+        public Address ShippingAddress
+        {
+            get
+            {
+                return Addresses.FirstOrDefault(a => a.Type == AddressType.Shipping);
+            }
+        }
+
+        public bool RequestShippingQuote
+        {
+            get
+            {
+                return ShippingAddress != null;
+            }
+        }
+
         public QuoteItem RecentlyAddedItem
         {
             get
