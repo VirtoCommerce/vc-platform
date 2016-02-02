@@ -156,6 +156,8 @@ namespace VirtoCommerce.Storefront.Builders
 
         public async Task<IQuoteRequestBuilder> MergeWithQuoteRequest(QuoteRequest quoteRequest)
         {
+            _quoteRequest.Comment = quoteRequest.Comment;
+
             foreach (var quoteItem in quoteRequest.Items)
             {
                 _quoteRequest.Items.Add(quoteItem);
