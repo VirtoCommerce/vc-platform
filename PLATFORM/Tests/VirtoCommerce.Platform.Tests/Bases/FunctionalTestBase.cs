@@ -19,8 +19,9 @@ namespace VirtoCommerce.Platform.Tests.Bases
             {
                 if (_DefaultDatabaseName == null)
                 {
-                    _DefaultDatabaseName = String.Format("VCT_", Guid.NewGuid().ToString("N"));
+                    _DefaultDatabaseName = String.Format("VCT_{0}", Guid.NewGuid().ToString("N"));
                 }
+
                 return _DefaultDatabaseName;
             }
         }
