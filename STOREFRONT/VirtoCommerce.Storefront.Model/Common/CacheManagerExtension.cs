@@ -40,7 +40,7 @@ namespace VirtoCommerce.Storefront.Model.Common
             var result = cacheManager.Get<T>(cacheKey, region);
             if (result == null)
             {
-                using (var lockObject = asyncLockObject.LockAsync())
+                using (var releaser = await asyncLockObject.LockAsync())
                 {
                     result = cacheManager.Get<T>(cacheKey, region);
                     if (result == null)
@@ -64,7 +64,7 @@ namespace VirtoCommerce.Storefront.Model.Common
             {
                 //http://sanjeev.dwivedi.net/?p=292
                 var asyncLockObject = new AsyncLock();
-                using (var lockObject = asyncLockObject.LockAsync())
+                using (var releaser = await asyncLockObject.LockAsync())
                 {
                     result = cacheManager.Get<T>(cacheKey, region);
                     if (result == null)

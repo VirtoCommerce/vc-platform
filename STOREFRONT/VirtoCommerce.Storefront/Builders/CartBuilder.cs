@@ -11,6 +11,7 @@ using VirtoCommerce.Storefront.Model.Cart;
 using VirtoCommerce.Storefront.Model.Cart.Services;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
+using VirtoCommerce.Storefront.Model.Common.Exceptions;
 using VirtoCommerce.Storefront.Model.Customer;
 using VirtoCommerce.Storefront.Model.Marketing;
 using VirtoCommerce.Storefront.Model.Marketing.Services;
@@ -23,12 +24,7 @@ namespace VirtoCommerce.Storefront.Builders
         private readonly IPromotionEvaluator _promotionEvaluator;
         private readonly ICacheManager<object> _cacheManager;
 
-        private Store _store;
-        private CustomerInfo _customer;
-        private Currency _currency;
-        private Language _language;
         private ShoppingCart _cart;
-        private string _cartCacheKey;
         private const string _cartCacheRegion = "CartRegion";
 
        
@@ -39,37 +35,69 @@ namespace VirtoCommerce.Storefront.Builders
             _cacheManager = cacheManager;
         }
 
+        public string CartCaheKey
+        {
+            get
+            {
+                if(_cart == null)
+                {
+                    throw new StorefrontException("Cart not set");
+                }
+                return GetCartCacheKey(_cart.StoreId, _cart.CustomerId);
+            }
+        }
+
+        #region ICartBuilder Members
+        public ICartBuilder TakeCart(ShoppingCart cart)
+        {
+            _cart = cart;
+
+            return this;
+        }
+
         public virtual async Task<ICartBuilder> GetOrCreateNewTransientCartAsync(Store store, CustomerInfo customer, Language language, Currency currency)
         {
-            _store = store;
-            _customer = customer;
-            _currency = currency;
-            _language = language;
-            _cartCacheKey = GetCartCacheKey(store.Id, customer.Id);
+            var cacheKey = GetCartCacheKey(store.Id, customer.Id);
 
-            _cart = await _cacheManager.GetAsync(_cartCacheKey, _cartCacheRegion, async () =>
+            _cart = await _cacheManager.GetAsync(cacheKey, _cartCacheRegion, async () =>
             {
                 ShoppingCart retVal;
 
-                var cartSearchResult = await _cartApi.CartModuleGetCurrentCartAsync(_store.Id, _customer.Id);
+                var cartSearchResult = await _cartApi.CartModuleGetCurrentCartAsync(store.Id, customer.Id);
                 if (cartSearchResult == null)
                 {
-                    retVal = CreateNewTransientCart();
+                    retVal = new ShoppingCart(currency, language);
+
+                    retVal.CustomerId = customer.Id;
+                    retVal.Name = "Default";
+                    retVal.StoreId = store.Id;
+
+                    if (!customer.IsRegisteredUser)
+                    {
+                        retVal.CustomerName = StorefrontConstants.AnonymousUsername;
+                    }
+                    else
+                    {
+                        retVal.CustomerName = string.Format("{0} {1}", customer.FirstName, customer.LastName);
+                    }
+
                 }
                 else
                 {
                     var detalizedCart = await _cartApi.CartModuleGetCartByIdAsync(cartSearchResult.Id);
-                    retVal = detalizedCart.ToWebModel(_currency, _language);
+                    retVal = detalizedCart.ToWebModel(currency, language);
                 }
+                retVal.Customer = customer;
+
                 return retVal;
             });
 
-             return this;
+            return this;
         }
 
         public virtual async Task<ICartBuilder> AddItemAsync(Product product, int quantity)
         {
-            AddLineItem(product.ToLineItem(_language, quantity));
+            AddLineItem(product.ToLineItem(_cart.Language, quantity));
 
             await EvaluatePromotionsAsync();
 
@@ -180,7 +208,7 @@ namespace VirtoCommerce.Storefront.Builders
             var shipment = _cart.Shipments.FirstOrDefault(s => s.Id == shipmentId);
             if (shipment == null)
             {
-                shipment = new Shipment(_currency);
+                shipment = new Shipment(_cart.Currency);
             }
 
             if (shippingAddress != null)
@@ -249,7 +277,7 @@ namespace VirtoCommerce.Storefront.Builders
             var payment = _cart.Payments.FirstOrDefault(p => p.Id == paymentId);
             if (payment == null)
             {
-                payment = new Payment(_currency);
+                payment = new Payment(_cart.Currency);
             }
 
             if (billingAddress != null)
@@ -292,7 +320,7 @@ namespace VirtoCommerce.Storefront.Builders
             await EvaluatePromotionsAsync();
 
             await _cartApi.CartModuleDeleteCartsAsync(new List<string> { cart.Id });
-            _cacheManager.Remove(_cartCacheKey, _cartCacheRegion);
+             _cacheManager.Remove(CartCaheKey, _cartCacheRegion);
 
             return this;
         }
@@ -300,7 +328,7 @@ namespace VirtoCommerce.Storefront.Builders
         public virtual async Task<ICartBuilder> RemoveCartAsync()
         {
             await _cartApi.CartModuleDeleteCartsAsync(new List<string> { _cart.Id });
-            _cacheManager.Remove(_cartCacheKey, _cartCacheRegion);
+            _cacheManager.Remove(CartCaheKey, _cartCacheRegion);
 
             return this;
         }
@@ -313,7 +341,7 @@ namespace VirtoCommerce.Storefront.Builders
             var serviceModels = await _cartApi.CartModuleGetShipmentMethodsAsync(_cart.Id);
             foreach (var serviceModel in serviceModels)
             {
-                availableShippingMethods.Add(serviceModel.ToWebModel(new Currency[] { _currency }, _language));
+                availableShippingMethods.Add(serviceModel.ToWebModel(new Currency[] { _cart.Currency }, _cart.Language));
             }
 
             return availableShippingMethods;
@@ -341,11 +369,11 @@ namespace VirtoCommerce.Storefront.Builders
             promotionContext.CartTotal = _cart.Total;
             promotionContext.Coupon = _cart.Coupon != null ? _cart.Coupon.Code : null;
             promotionContext.Currency = _cart.Currency;
-            promotionContext.CustomerId = _customer.Id;
-            promotionContext.IsRegisteredUser = _customer.IsRegisteredUser;
-            promotionContext.Language = _language;
+            promotionContext.CustomerId = _cart.Customer.Id;
+            promotionContext.IsRegisteredUser = _cart.Customer.IsRegisteredUser;
+            promotionContext.Language = _cart.Language;
             promotionContext.PromoEntries = promotionItems;
-            promotionContext.StoreId = _store.Id;
+            promotionContext.StoreId = _cart.StoreId;
 
             await _promotionEvaluator.EvaluateDiscountsAsync(promotionContext, new IDiscountable[] { _cart });
 
@@ -357,11 +385,11 @@ namespace VirtoCommerce.Storefront.Builders
             var cart = _cart.ToServiceModel();
 
             //Invalidate cart in cache
-            _cacheManager.Remove(_cartCacheKey, _cartCacheRegion);
+            _cacheManager.Remove(CartCaheKey, _cartCacheRegion);
 
             if (_cart.IsTransient())
             {
-                _cart = (await _cartApi.CartModuleCreateAsync(cart)).ToWebModel(_currency, _language);
+                _cart = (await _cartApi.CartModuleCreateAsync(cart)).ToWebModel(_cart.Currency, _cart.Language);
             }
             else
             {
@@ -369,13 +397,14 @@ namespace VirtoCommerce.Storefront.Builders
             }
         }
 
-        public  ShoppingCart Cart
+        public ShoppingCart Cart
         {
             get
             {
                 return _cart;
             }
-        }
+        } 
+        #endregion
 
         private void AddLineItem(LineItem lineItem)
         {
@@ -391,25 +420,7 @@ namespace VirtoCommerce.Storefront.Builders
             }
         }
 
-        private ShoppingCart CreateNewTransientCart()
-        {
-            var cart = new ShoppingCart(_currency, _language);
-
-            cart.CustomerId = _customer.Id;
-            cart.Name = "Default";
-            cart.StoreId = _store.Id;
-
-            if (!_customer.IsRegisteredUser)
-            {
-                cart.CustomerName = StorefrontConstants.AnonymousUsername;
-            }
-            else
-            {
-                cart.CustomerName = string.Format("{0} {1}", _customer.FirstName, _customer.LastName);
-            }
-
-            return cart;
-        }
+       
 
         private string GetCartCacheKey(string storeId, string customerId)
         {
