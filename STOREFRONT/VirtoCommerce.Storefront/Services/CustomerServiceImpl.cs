@@ -24,14 +24,16 @@ namespace VirtoCommerce.Storefront.Services
         private readonly ICustomerManagementModuleApi _customerApi;
         private readonly IOrderModuleApi _orderApi;
         private readonly Func<WorkContext> _workContextFactory;
+        private readonly IQuoteModuleApi _quoteApi;
         private readonly ICacheManager<object> _cacheManager;
 
         public CustomerServiceImpl(Func<WorkContext> workContextFactory, ICustomerManagementModuleApi customerApi, IOrderModuleApi orderApi,
-                                   ICacheManager<object> cacheManager)
+                                   IQuoteModuleApi quoteApi, ICacheManager<object> cacheManager)
         {
             _workContextFactory = workContextFactory;
             _customerApi = customerApi;
             _orderApi = orderApi;
+            _quoteApi = quoteApi;
             _cacheManager = cacheManager;
         }
 
@@ -56,8 +58,17 @@ namespace VirtoCommerce.Storefront.Services
                     result.OrdersCount = ordersResponse.TotalCount.Value;
                     var workContext = _workContextFactory();
                     result.Orders = ordersResponse.CustomerOrders.Select(x => x.ToWebModel(workContext.AllCurrencies, workContext.CurrentLanguage)).ToList();
+
+                    var quoteRequestsResponse = await _quoteApi.QuoteModuleSearchAsync(new VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria
+                    {
+                        Count = 10,
+                        CustomerId = customerId,
+                        StoreId = workContext.CurrentStore.Id
+                    });
+                    result.QuoteRequests = quoteRequestsResponse.QuoteRequests.Select(qr => qr.ToWebModel()).ToList();
+                    result.QuoteRequestsCount = quoteRequestsResponse.TotalCount.Value;
                 }
-             
+
                 return result;
             });
             return retVal;

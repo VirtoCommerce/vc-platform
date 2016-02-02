@@ -5,6 +5,7 @@ using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Customer;
+using VirtoCommerce.Storefront.Model.Quote;
 using VirtoCommerce.Storefront.Model.Quote.Services;
 using VirtoCommerce.Storefront.Model.Services;
 
@@ -47,6 +48,18 @@ namespace VirtoCommerce.Storefront.Controllers
             await _quoteRequestBuilder.GetOrCreateNewTransientQuoteRequestAsync(_store, _customer, _language, _currency);
 
             return Json(_quoteRequestBuilder.QuoteRequest, JsonRequestBehavior.AllowGet);
+        }
+
+        // POST: /quoterequest/update?quoteRequest=...
+        [HttpPost]
+        public async Task<ActionResult> UpdateJson(QuoteRequestFormModel quoteRequest)
+        {
+            await _quoteRequestBuilder.GetOrCreateNewTransientQuoteRequestAsync(_store, _customer, _language, _currency);
+
+            _quoteRequestBuilder.Update(quoteRequest);
+            await _quoteRequestBuilder.SaveAsync();
+
+            return Json(null, JsonRequestBehavior.AllowGet);
         }
 
         // POST: /quoterequest/additem?productId=...&quantity=...

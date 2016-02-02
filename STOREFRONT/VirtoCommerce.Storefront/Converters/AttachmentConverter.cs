@@ -7,6 +7,15 @@ namespace VirtoCommerce.Storefront.Converters
 {
     public static class AttachmentConverter
     {
+        public static Attachment ToWebModel(this VirtoCommerceDomainQuoteModelQuoteAttachment serviceModel)
+        {
+            var webModel = new Attachment();
+
+            webModel.InjectFrom<NullableAndEnumValueInjecter>(serviceModel);
+
+            return webModel;
+        }
+
         public static Attachment ToWebModel(this VirtoCommerceQuoteModuleWebModelQuoteAttachment serviceModel)
         {
             var webModel = new Attachment();

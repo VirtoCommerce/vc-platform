@@ -520,6 +520,9 @@ namespace VirtoCommerce.SearchModule.Data.Providers.ElasticSearch
 
                 if (result.error != null && !result.acknowledged)
                     throw new IndexBuildException(result.error);
+
+                var core = GetCoreName(scope, documentType);
+                _mappings.Remove(core);
             }
             catch (OperationException ex)
             {

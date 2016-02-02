@@ -86,6 +86,12 @@ storefrontApp.service('quoteRequestService', ['$http', function ($http) {
         },
         addItem: function (productId, quantity) {
             return $http.post('quoterequest/additem', { productId: productId, quantity: quantity });
+        },
+        removeItem: function (quoteItemId) {
+            return $http.post('quoterequest/removeitem', { quoteItemId: quoteItemId });
+        },
+        update: function (quoteRequest) {
+            return $http.post('quoterequest/update', { quoteRequest: quoteRequest });
         }
     }
 }]);

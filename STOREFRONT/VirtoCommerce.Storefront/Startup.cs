@@ -137,6 +137,7 @@ namespace VirtoCommerce.Storefront
             container.RegisterType<ICartValidator, CartValidator>();
             container.RegisterType<IPricingService, PricingServiceImpl>();
             container.RegisterType<ICustomerService, CustomerServiceImpl>();
+            container.RegisterType<IQuoteService, QuoteService>();
 
             container.RegisterType<ICartBuilder, CartBuilder>();
             container.RegisterType<IQuoteRequestBuilder, QuoteRequestBuilder>();

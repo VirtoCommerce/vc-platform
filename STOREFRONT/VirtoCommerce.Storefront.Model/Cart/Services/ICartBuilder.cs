@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Customer;
+using VirtoCommerce.Storefront.Model.Quote;
 
 namespace VirtoCommerce.Storefront.Model.Cart.Services
 {
@@ -37,6 +38,8 @@ namespace VirtoCommerce.Storefront.Model.Cart.Services
         Task<ICartBuilder> MergeWithCartAsync(ShoppingCart cart);
 
         Task<ICartBuilder> RemoveCartAsync();
+
+        Task<ICartBuilder> FillFromQuoteRequest(QuoteRequest quoteRequest);
 
         Task<ICollection<ShippingMethod>> GetAvailableShippingMethodsAsync();
 

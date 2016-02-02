@@ -75,7 +75,7 @@ namespace VirtoCommerce.Storefront.Controllers
             //Need lock to prevent concurrent access to same cart
             using (var lockObject = await AsyncLock.GetLockByKey(id).LockAsync())
             {
-  
+
                 var products = await _catalogService.GetProductsAsync(new string[] { id }, Model.Catalog.ItemResponseGroup.ItemLarge);
                 if (products != null && products.Any())
                 {
@@ -96,7 +96,7 @@ namespace VirtoCommerce.Storefront.Controllers
             //Need lock to prevent concurrent access to same cart
             using (var lockObject = await AsyncLock.GetLockByKey(WorkContext.CurrentCart.Id).LockAsync())
             {
-      
+
                 var lineItem = _cartBuilder.Cart.Items.FirstOrDefault(i => i.Id == lineItemId);
                 if (lineItem != null)
                 {

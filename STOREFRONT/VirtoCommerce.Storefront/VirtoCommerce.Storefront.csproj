@@ -416,6 +416,7 @@
     <Compile Include="Routing\SeoRouteExtensions.cs" />
     <Compile Include="Services\CatalogSearchServiceImpl.cs" />
     <Compile Include="Services\MarketingServiceImpl.cs" />
+    <Compile Include="Services\QuoteService.cs" />
     <Compile Include="Services\StaticContentServiceImpl.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -512,8 +513,8 @@
     <Content Include="App_Data\Themes\default\templates\customers\addresses.liquid" />
     <Content Include="App_Data\Themes\default\templates\customers\login.liquid" />
     <Content Include="App_Data\Themes\default\templates\customers\order.liquid" />
-    <Content Include="App_Data\Themes\default\templates\customers\quote.liquid" />
-    <Content Include="App_Data\Themes\default\templates\customers\quotes.liquid" />
+    <Content Include="App_Data\Themes\default\templates\customers\quote-request.liquid" />
+    <Content Include="App_Data\Themes\default\templates\customers\quote-requests.liquid" />
     <Content Include="App_Data\Themes\default\templates\customers\register.liquid" />
     <Content Include="App_Data\Themes\default\templates\customers\reset_password.liquid" />
     <Content Include="App_Data\Themes\default\templates\error.liquid" />

@@ -132,7 +132,7 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
 
             // Keep the selected properties order
             var result = selectedPropertyNames
-                .SelectMany(n => filterProperties.Where(p => string.Equals(p.Name, n)))
+                .SelectMany(n => filterProperties.Where(p => string.Equals(p.Name, n, StringComparison.OrdinalIgnoreCase)))
                 .Union(filterProperties.Where(p => !selectedPropertyNames.Contains(p.Name, StringComparer.OrdinalIgnoreCase)))
                 .ToArray();
 

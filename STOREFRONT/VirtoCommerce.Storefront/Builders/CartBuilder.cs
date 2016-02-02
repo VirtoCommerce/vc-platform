@@ -15,6 +15,8 @@ using VirtoCommerce.Storefront.Model.Common.Exceptions;
 using VirtoCommerce.Storefront.Model.Customer;
 using VirtoCommerce.Storefront.Model.Marketing;
 using VirtoCommerce.Storefront.Model.Marketing.Services;
+using VirtoCommerce.Storefront.Model.Quote;
+using VirtoCommerce.Storefront.Model.Services;
 
 namespace VirtoCommerce.Storefront.Builders
 {
@@ -22,16 +24,18 @@ namespace VirtoCommerce.Storefront.Builders
     {
         private readonly IShoppingCartModuleApi _cartApi;
         private readonly IPromotionEvaluator _promotionEvaluator;
+        private readonly ICatalogSearchService _catalogSearchService;
         private readonly ICacheManager<object> _cacheManager;
 
         private ShoppingCart _cart;
         private const string _cartCacheRegion = "CartRegion";
 
        
-        public CartBuilder(IShoppingCartModuleApi cartApi, IPromotionEvaluator promotionEvaluator, ICacheManager<object> cacheManager)
+        public CartBuilder(IShoppingCartModuleApi cartApi, IPromotionEvaluator promotionEvaluator, ICatalogSearchService catalogSearchService, ICacheManager<object> cacheManager)
         {
             _cartApi = cartApi;
             _promotionEvaluator = promotionEvaluator;
+            _catalogSearchService = catalogSearchService;
             _cacheManager = cacheManager;
         }
 
@@ -329,6 +333,68 @@ namespace VirtoCommerce.Storefront.Builders
         {
             await _cartApi.CartModuleDeleteCartsAsync(new List<string> { _cart.Id });
             _cacheManager.Remove(CartCaheKey, _cartCacheRegion);
+
+            return this;
+        }
+
+        public virtual async Task<ICartBuilder> FillFromQuoteRequest(QuoteRequest quoteRequest)
+        {
+            var productIds = quoteRequest.Items.Select(i => i.ProductId);
+            var products = await _catalogSearchService.GetProductsAsync(productIds.ToArray(), ItemResponseGroup.ItemLarge);
+
+            _cart.Items.Clear();
+            foreach (var product in products)
+            {
+                var quoteItem = quoteRequest.Items.FirstOrDefault(i => i.ProductId == product.Id);
+                if (quoteItem != null)
+                {
+                    var lineItem = product.ToLineItem(_cart.Language, (int)quoteItem.SelectedTierPrice.Quantity);
+                    lineItem.ListPrice = quoteItem.SelectedTierPrice.Price;
+                    lineItem.SalePrice = quoteItem.SelectedTierPrice.Price;
+
+                    AddLineItem(lineItem);
+                }
+            }
+
+            _cart.Shipments.Clear();
+            var shipment = new Shipment(_cart.Currency);
+
+            foreach (var item in _cart.Items)
+            {
+                shipment.Items.Add(item.ToShipmentItem());
+            }
+
+            if (quoteRequest.ShipmentMethod != null)
+            {
+                var availableShippingMethods = await GetAvailableShippingMethodsAsync();
+                if (availableShippingMethods != null)
+                {
+                    var availableShippingMethod = availableShippingMethods.FirstOrDefault(sm => sm.ShipmentMethodCode == quoteRequest.ShipmentMethod.ShipmentMethodCode);
+                    if (availableShippingMethod != null)
+                    {
+                        shipment = quoteRequest.ShipmentMethod.ToShipmentModel(_cart.Currency);
+                        _cart.Shipments.Add(shipment);
+                    }
+                }
+            }
+
+            _cart.Payments.Clear();
+            var payment = new Payment(_cart.Currency);
+
+            if (quoteRequest.Addresses != null)
+            {
+                var shippingAddress = quoteRequest.Addresses.FirstOrDefault(a => a.Type == AddressType.Shipping);
+                if (shippingAddress != null)
+                {
+                    shipment.DeliveryAddress = shippingAddress;
+                }
+                var billingAddress = quoteRequest.Addresses.FirstOrDefault(a => a.Type == AddressType.Billing);
+                if (billingAddress != null)
+                {
+                    payment.BillingAddress = billingAddress;
+                    _cart.Payments.Add(payment);
+                }
+            }
 
             return this;
         }

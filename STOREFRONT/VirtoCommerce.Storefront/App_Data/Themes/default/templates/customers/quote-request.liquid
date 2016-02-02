@@ -10,7 +10,7 @@
             </p>
         {% endif %}
         <p>
-            {{ 'customer.quote.date' | t }} <b>{{ quote_request.created_at }}</b>
+            {{ 'customer.quote.date' | t }} <b>{{ quote_request.created_date | date: format: 'month_day_year' }}</b>
         </p>
         <p>
             {{ 'customer.quote.status' | t }} <b>{{ quote_request.status }}</b>
@@ -51,10 +51,10 @@
                     <div class="grid-item large--seven-twelfths">
                         <div class="grid">
                             <div class="grid-item one-third large--one-quarter">
-                                <img alt="{{ quote_item.title }}" src="{{ quote_item.image_url }}" />
+                                <img alt="{{ quote_item.name }}" src="{{ quote_item.image_url }}" />
                             </div>
                             <div class="grid-item one-third">
-                                {{ quote_item.title }}
+                                {{ quote_item.name }}
                             </div>
                             <div class="grid-item one-third">
                                 {{ quote_item.comment }}
@@ -96,12 +96,15 @@
                 <div class="grid-item three-thirds medium-down--one-whole">
                     <div class="cart-btn--block">
                         {% unless quote_request.status == 'Proposal sent' and quote_request.status == 'Rejected' %}
-                            <a class="btn-secondary" href="{{ '/account/quote/edit/' + quote_request.number | absolute_url }}" id="btn-edit-quote-request">Edit request</a>
+                            {% assign edit_quote_request_url = '/account/quote-request/' | append: quote_request.id | append: '/edit/' %}
+                            <a class="btn-secondary" href="{{ edit_quote_request_url | absolute_url }}">Edit request</a>
                         {% endunless %}
                         {% if quote_request.status == 'Proposal sent' %}
-                            <a class="btn-secondary" href="{{ '/account/quote/reject/' + quote_request.number | absolute_url }}" id="btn-reject-quote-proposal">Reject proposal</a>
+                            {% assign reject_quote_request_url = '/account/quote-request/' | append: quote_request.id | append: '/reject/' %}
+                            <a class="btn-secondary" href="{{ reject_quote_request_url | absolute_url }}">Reject proposal</a>
                             {% unless quote_request.status == 'On hold' and quote_request.status == 'Rejected' and quote_request.is_cancelled %}
-                                <button class="btn large--right" id="btn-checkout-quote-request">Confirm and checkout</button>
+                                {% assign confirm_quote_request_url = '/account/quote-request/' | append: quote_request.id | append: '/confirm/' %}
+                                <a class="btn large--right" href="{{ confirm_quote_request_url | absolute_url }}" style="color: #ffffff;">Confirm and checkout</a>
                             {% endunless %}
                         {% endif %}
                     </div>

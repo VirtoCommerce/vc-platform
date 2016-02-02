@@ -13,12 +13,13 @@ using VirtoCommerce.Storefront.Model.Customer;
 using VirtoCommerce.Storefront.Model.Marketing.Services;
 using VirtoCommerce.Storefront.Model.Quote;
 using VirtoCommerce.Storefront.Model.Quote.Services;
+using System.Collections.Generic;
 
 namespace VirtoCommerce.Storefront.Builders
 {
     public class QuoteRequestBuilder : IQuoteRequestBuilder
     {
-        private readonly IQuoteModuleApi _quoteApi;
+        private readonly IQuoteService _quoteService;
         private readonly IPromotionEvaluator _promotionEvaluator;
         private readonly ICacheManager<object> _cacheManager;
 
@@ -31,9 +32,9 @@ namespace VirtoCommerce.Storefront.Builders
         private const string _quoteRequestCacheRegion = "QuoteRequestRegion";
 
 
-        public QuoteRequestBuilder(IQuoteModuleApi quoteApi, IPromotionEvaluator promotionEvaluator, ICacheManager<object> cacheManager)
+        public QuoteRequestBuilder(IQuoteService quoteService, IPromotionEvaluator promotionEvaluator, ICacheManager<object> cacheManager)
         {
-            _quoteApi = quoteApi;
+            _quoteService = quoteService;
             _promotionEvaluator = promotionEvaluator;
             _cacheManager = cacheManager;
         }
@@ -46,36 +47,19 @@ namespace VirtoCommerce.Storefront.Builders
             _language = language;
             _quoteRequestCacheKey = GetQuoteRequestCacheKey(store.Id, customer.Id);
 
-            _quoteRequest = await _cacheManager.GetAsync(_quoteRequestCacheKey, _quoteRequestCacheRegion, async () =>
+            var quoteRequests = await _quoteService.GetQuoteRequestsAsync(_store.Id, _customer.Id, 0, 1, "actual");
+            if (!quoteRequests.Any())
             {
-                QuoteRequest quoteRequest = null;
-
-                var criteria = new VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria
+                _quoteRequest = CreateNewTransientQuoteRequest();
+            }
+            else
+            {
+                var matchedQuoteRequest = quoteRequests.FirstOrDefault();
+                if (matchedQuoteRequest != null)
                 {
-                    Count = 1,
-                    CustomerId = _customer.Id,
-                    StoreId = _store.Id,
-                    Tag = "actual",
-                };
-
-                var searchResult = await _quoteApi.QuoteModuleSearchAsync(criteria);
-
-                if (searchResult == null || searchResult.QuoteRequests == null || searchResult.TotalCount == 0)
-                {
-                    quoteRequest = CreateNewTransientQuoteRequest();
+                    _quoteRequest = await _quoteService.GetQuoteRequestAsync(_customer.Id, matchedQuoteRequest.Id);
                 }
-                else
-                {
-                    var matchedQuoteRequest = searchResult.QuoteRequests.FirstOrDefault();
-                    if (matchedQuoteRequest != null)
-                    {
-                        var detalizedQuoteRequest = await _quoteApi.QuoteModuleGetByIdAsync(matchedQuoteRequest.Id);
-                        quoteRequest = detalizedQuoteRequest.ToWebModel();
-                    }
-                }
-
-                return quoteRequest;
-            });
+            }
 
             return this;
         }
@@ -98,19 +82,69 @@ namespace VirtoCommerce.Storefront.Builders
             return this;
         }
 
+        public IQuoteRequestBuilder Update(QuoteRequestFormModel quoteRequest)
+        {
+            _quoteRequest.Comment = quoteRequest.Comment;
+            _quoteRequest.Tag = quoteRequest.Tag;
+
+            _quoteRequest.Addresses.Clear();
+            if (quoteRequest.BillingAddress != null)
+            {
+                _quoteRequest.Addresses.Add(quoteRequest.BillingAddress);
+            }
+            if (quoteRequest.ShippingAddress != null)
+            {
+                _quoteRequest.Addresses.Add(quoteRequest.ShippingAddress);
+            }
+
+            if (quoteRequest.Items != null)
+            {
+                foreach (var item in quoteRequest.Items)
+                {
+                    var existingItem = _quoteRequest.Items.FirstOrDefault(i => i.Id == item.Id);
+                    if (existingItem != null)
+                    {
+                        existingItem.Comment = item.Comment;
+                        existingItem.ProposalPrices.Clear();
+                        foreach (var proposalPrice in item.ProposalPrices)
+                        {
+                            existingItem.ProposalPrices.Add(new TierPrice
+                            {
+                                Price = existingItem.SalePrice,
+                                Quantity = proposalPrice.Quantity
+                            });
+                        }
+                    }
+                }
+            }
+
+            return this;
+        }
+
+        public async Task<IQuoteRequestBuilder> MergeWithQuoteRequest(QuoteRequest quoteRequest)
+        {
+            foreach (var quoteItem in quoteRequest.Items)
+            {
+                _quoteRequest.Items.Add(quoteItem);
+            }
+
+            await _quoteService.RemoveQuoteRequestAsync(_customer.Id, quoteRequest.Id);
+            _cacheManager.Remove(_quoteRequestCacheKey, _quoteRequestCacheRegion);
+
+            return this;
+        }
+
         public async Task SaveAsync()
         {
-            var quoteRequest = _quoteRequest.ToServiceModel();
-
             _cacheManager.Remove(_quoteRequestCacheKey, _quoteRequestCacheRegion);
 
             if (_quoteRequest.IsTransient())
             {
-                await _quoteApi.QuoteModuleCreateAsync(quoteRequest);
+                await _quoteService.CreateQuoteRequestAsync(_quoteRequest);
             }
             else
             {
-                await _quoteApi.QuoteModuleUpdateAsync(quoteRequest);
+                await _quoteService.UpdateQuoteRequestAsync(_quoteRequest);
             }
         }
 
