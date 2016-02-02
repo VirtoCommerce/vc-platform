@@ -399,8 +399,16 @@ namespace VirtoCommerce.SearchModule.Data.Providers.ElasticSearch
                 {
                     if (string.IsNullOrEmpty(mapping) || !mapping.Contains(string.Format("\"{0}\"", field.Name)))
                     {
-                        var type = field.Value != null ? field.Value.GetType() : null;
-                        var propertyMap = new CustomPropertyMap<ESDocument>(field.Name, type)
+                        var type = field.Value != null ? field.Value.GetType() : typeof(object);
+
+                        if (type == typeof(decimal))
+                        {
+                            type = typeof(double);
+                        }
+
+                        var elasticType = ElasticCoreTypeMapper.GetElasticType(type);
+
+                        var propertyMap = new CustomPropertyMap<ESDocument>(field.Name, elasticType)
                         .Store(field.ContainsAttribute(IndexStore.Yes))
                         .When(field.ContainsAttribute(IndexType.NotAnalyzed), p => p.Index(IndexState.not_analyzed))
                         .When(field.Name.StartsWith("__content", StringComparison.OrdinalIgnoreCase), p => p.Analyzer(_indexAnalyzer))
