@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Data.Entity;
 using System.IO;
 
@@ -7,9 +8,29 @@ namespace VirtoCommerce.Platform.Tests.Bases
 
     public abstract class FunctionalTestBase : TestBase, IDisposable
     {
-        public static string DatabaseConnectionString
+        private static readonly string ConnectionStringFormat
+            = "Server=(local);Database={0};Trusted_Connection=True";
+
+        private string _DefaultDatabaseName;
+
+        public string DefaultDatabaseName
         {
-            get { return @"Data Source=(LocalDb)\v11.0;Initial Catalog=VirtoCommerceTest;Integrated Security=SSPI;AttachDBFilename=|DataDirectory|\VirtoCommerceTest.mdf"; }
+            get
+            {
+                if (_DefaultDatabaseName == null)
+                {
+                    _DefaultDatabaseName = String.Format("VCT_", Guid.NewGuid().ToString("N"));
+                }
+                return _DefaultDatabaseName;
+            }
+        }
+
+        private string _DatabaseConnectionString;
+
+        public string ConnectionString
+        {
+            get { return _DatabaseConnectionString; }
+            set { _DatabaseConnectionString = value; }
         }
 
         public static string TempPath
@@ -27,8 +48,19 @@ namespace VirtoCommerce.Platform.Tests.Bases
 		{
 			_previousDataDirectory = AppDomain.CurrentDomain.GetData("DataDirectory");
 			AppDomain.CurrentDomain.SetData("DataDirectory", TempPath);
-		}
 
+            var setting = ConfigurationManager.ConnectionStrings["VirtoCommerce_MigrationTestsBase"];
+
+            var connectionStringFormat = ConnectionStringFormat;
+            if (setting != null)
+            {
+                connectionStringFormat = setting.ConnectionString;
+            }
+
+            ConnectionString = string.Format(connectionStringFormat, DefaultDatabaseName);//, Guid.NewGuid().ToString("N"));
+        }
+
+        /*
         protected virtual TRepository GetRepository<TRepository, TInitializer>()
             where TRepository : DbContext, new()
             where TInitializer : IDatabaseInitializer<TRepository>, new()
@@ -36,6 +68,7 @@ namespace VirtoCommerce.Platform.Tests.Bases
             EnsureDatabaseInitialized(() => (TRepository)Activator.CreateInstance(typeof(TRepository), DatabaseConnectionString), () => Database.SetInitializer(new TInitializer()));
             return (TRepository)Activator.CreateInstance(typeof(TRepository), DatabaseConnectionString);
         }
+        */
 
 
         /// <summary>
