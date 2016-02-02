@@ -10,7 +10,7 @@
 <div ng-if="quoteRequest.Items.length" ng-cloak>
     <form name="formQuoteRequest" novalidate="novalidate">
         <span ng-init="setQuoteRequestForm(formQuoteRequest)"></span>
-        <div class="ajax-informer" ng-class="{ 'fade': quoteRequestIsUpdating }">
+        <div class="ajax-informer" ng-class="{ 'fade': quoteRequestIsUpdating }" style="position: fixed; z-index: 999999;">
             <div class="loader"></div>
             <span>Updating quote request...</span>
         </div>

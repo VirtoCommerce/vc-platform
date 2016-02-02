@@ -85,10 +85,17 @@ storefrontApp.controller('quoteRequestController', ['$scope', '$window', 'quoteR
     }
 
     $scope.removeFromQuoteRequest = function (quoteItemId) {
+        var quoteItem = _.find($scope.quoteRequest.Items, function (i) { return i.Id == quoteItemId });
+        if (!quoteItem || $scope.quoteRequestIsUpdating) {
+            return;
+        }
         $scope.quoteRequestIsUpdating = true;
+        var initialItems = angular.copy($scope.quoteRequest.Items);
+        $scope.quoteRequest.Items = _.without($scope.quoteRequest.Items, quoteItem);
         quoteRequestService.removeItem(quoteItemId).then(function (response) {
             refreshCurrentQuoteRequest();
         }, function (response) {
+            $scope.quoteRequest.Items = initialItems;
             $scope.quoteRequestIsUpdating = false;
         });
     }
