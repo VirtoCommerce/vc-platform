@@ -137,7 +137,7 @@
                 </div>
             </div>
             <div class="step__footer">
-                <button class="btn step__foter__continue-btn" type="button" ng-class="{ 'btn--loading': checkout.ShippingAddressProcessing }" ng-click="submitShippingAddress()">
+                <button class="btn step__footer__continue-btn" type="button" ng-class="{ 'btn--loading': checkout.ShippingAddressProcessing }" ng-click="submitShippingAddress()" ng-disabled="checkout.ShippingAddressProcessing">
                     <span class="btn__content">Continue to shipping method</span>
                     <i class="btn__spinner icon icon--button-spinner"></i>
                 </button>

@@ -14,6 +14,7 @@ storefrontApp.controller('cartController', ['$scope', '$timeout', 'cartService',
     }
 
     $scope.addToCart = function (product, quantity) {
+        $scope.cartIsUpdating = true;
         $scope.recentCartItemModalVisible = true;
         $scope.cart.RecentlyAddedItem = {
             ImageUrl: product.PrimaryImage.Url,
@@ -58,6 +59,7 @@ storefrontApp.controller('cartController', ['$scope', '$timeout', 'cartService',
             refreshCart();
         }, function (response) {
             $scope.cart.Items = initialItems;
+            $scope.cartIsUpdating = false;
         });
     }
 

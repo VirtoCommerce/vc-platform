@@ -1,12 +1,12 @@
 ﻿<div class="ajaxify-modal" id="ajaxifyModal" style="opacity: 1;" ng-class="{ 'is-visible': recentQuoteItemModalVisible }" ng-cloak="">
     <button class="ajaxifyCart--close" title="Close" ng-click="toggleRecentQuoteItemModal(recentQuoteItemModalVisible)">Close</button>
     <div class="ajaxifyCart--content" id="ajaxifyCart">
-        <div class="ajax-informer" ng-class="{ 'fade': quoteRequestIsUpdating }" ng-if="!errorOccured && quoteRequestIsUpdating">
+        <div class="ajax-informer" ng-class="{ 'fade': quoteRequestIsUpdating }" ng-if="quoteRequestIsUpdating">
             <div class="loader"></div>
             <span>Quote request is updating</span>
         </div>
-        <h1 class="h2" ng-if="!errorOccured">Product is added to quote request</h1>
-        <div class="cart-row" ng-if="!errorOccured">
+        <h1 class="h2">Product is added to quote request</h1>
+        <div class="cart-row">
             <div class="grid">
                 <div class="grid-item large--seven-twelfths">
                     <div class="grid">
@@ -33,10 +33,10 @@
                 </div>
             </div>
         </div>
-        <div class="cart-row" ng-if="!errorOccured">
+        <div class="cart-row">
             <div class="grid">
                 <div class="grid-item text-right">
-                    <button class="btn" ng-click="outerRedirect('{{ 'quoterequest' | absolute_url }}')" ng-class="{ 'btn': !quoteRequestIsUpdating, 'btn-secondary': quoteRequestIsUpdating || errorOccured }" ng-disabled="quoteRequestIsUpdating">Go to quote request</button>
+                    <button class="btn" ng-class="{ 'btn-secondary': quoteRequestIsUpdating }" ng-click="outerRedirect('{{ 'quoterequest' | absolute_url }}')" ng-disabled="quoteRequestIsUpdating">Go to quote request</button>
                     <button class="btn" ng-click="toggleRecentQuoteItemModal(recentQuoteItemModalVisible)">Continue shopping</button>
                 </div>
             </div>

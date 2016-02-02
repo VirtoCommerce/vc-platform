@@ -68,6 +68,7 @@ storefrontApp.controller('quoteRequestController', ['$scope', '$window', 'quoteR
     }
 
     $scope.addToQuoteRequest = function (product, quantity) {
+        $scope.quoteRequestIsUpdating = true;
         $scope.recentQuoteItemModalVisible = true;
         $scope.quoteRequest.RecentlyAddedItem = {
             ImageUrl: product.PrimaryImage.Url,
@@ -84,6 +85,7 @@ storefrontApp.controller('quoteRequestController', ['$scope', '$window', 'quoteR
     }
 
     $scope.removeFromQuoteRequest = function (quoteItemId) {
+        $scope.quoteRequestIsUpdating = true;
         quoteRequestService.removeItem(quoteItemId).then(function (response) {
             refreshCurrentQuoteRequest();
         }, function (response) {
