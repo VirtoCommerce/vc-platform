@@ -118,6 +118,7 @@
   <ItemGroup>
     <Compile Include="Controllers\DibsController.cs" />
     <Compile Include="Managers\DibsPaymentMethod.cs" />
+    <Compile Include="Managers\Iso4217Lookup.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

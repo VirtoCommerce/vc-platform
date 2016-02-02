@@ -243,6 +243,12 @@ namespace DiBs.Managers
 
         private string CalculateResponseMD5Hash(string transact, string currency, string amount)
         {
+            var isoCurrency = Iso4217Lookup.LookupByCode(currency);
+            if (isoCurrency.Found)
+            {
+                currency = isoCurrency.Number.ToString();
+            }
+
             var md5 = string.Format(md5ResponseString, transact, amount, currency);
             md5 = GetMD5Hash(MD5Key2 + GetMD5Hash(MD5Key1 + md5));
 
