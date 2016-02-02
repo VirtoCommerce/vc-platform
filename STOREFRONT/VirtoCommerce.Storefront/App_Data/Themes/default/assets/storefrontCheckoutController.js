@@ -17,6 +17,10 @@ storefrontApp.controller('checkoutController', ['$rootScope', '$scope', '$window
         goToCheckoutStep(innerUrl);
     }
 
+    $scope.toggleOrderSummary = function (isVisible) {
+        $scope.checkout.OrderSummaryVisible = !isVisible;
+    }
+
     $scope.setShippingAddressForm = function (form) {
         $scope.formShippingAddress = form;
     }
