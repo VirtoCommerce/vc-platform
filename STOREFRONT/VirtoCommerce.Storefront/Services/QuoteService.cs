@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.Client.Model;
@@ -17,7 +18,7 @@ namespace VirtoCommerce.Storefront.Services
             _quoteApi = quoteApi;
         }
 
-        public async Task<ICollection<QuoteRequest>> GetQuoteRequestsAsync(string storeId, string customerId, int skip, int take)
+        public async Task<ICollection<QuoteRequest>> GetQuoteRequestsAsync(string storeId, string customerId, int skip, int take, string tag)
         {
             var quoteRequests = new List<QuoteRequest>();
 
@@ -26,7 +27,8 @@ namespace VirtoCommerce.Storefront.Services
                 Count = take,
                 CustomerId = customerId,
                 Start = skip,
-                StoreId = storeId
+                StoreId = storeId,
+                Tag = tag
             });
 
             if (quoteRequestsResponse != null && quoteRequestsResponse.TotalCount > 0)
@@ -56,6 +58,11 @@ namespace VirtoCommerce.Storefront.Services
             }
 
             return quoteRequest;
+        }
+
+        public async Task CreateQuoteRequestAsync(QuoteRequest quoteRequest)
+        {
+            await _quoteApi.QuoteModuleCreateAsync(quoteRequest.ToServiceModel());
         }
 
         public async Task UpdateQuoteRequestAsync(QuoteRequest quoteRequest)

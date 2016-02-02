@@ -69,7 +69,7 @@ namespace VirtoCommerce.Storefront.Controllers
             var page = p ?? 1;
             var pageSize = 10;
 
-            var quoteRequests = await _quoteService.GetQuoteRequestsAsync(WorkContext.CurrentStore.Id, WorkContext.CurrentCustomer.Id, (page - 1) * pageSize, pageSize);
+            var quoteRequests = await _quoteService.GetQuoteRequestsAsync(WorkContext.CurrentStore.Id, WorkContext.CurrentCustomer.Id, (page - 1) * pageSize, pageSize, null);
             WorkContext.CurrentCustomer.QuoteRequests = quoteRequests;
 
             return View("customers/quote-requests", WorkContext);
