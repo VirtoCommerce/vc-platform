@@ -112,6 +112,8 @@ namespace VirtoCommerce.Storefront.Controllers
             quoteRequest.Tag = "actual";
             await _quoteService.UpdateQuoteRequestAsync(quoteRequest);
 
+            RemoveCurrentQuoteRequestFromCache();
+
             return StoreFrontRedirect("~/quoterequest");
         }
 
@@ -156,6 +158,8 @@ namespace VirtoCommerce.Storefront.Controllers
 
             quoteRequest.Status = "Rejected";
             await _quoteService.UpdateQuoteRequestAsync(quoteRequest);
+
+            RemoveCurrentQuoteRequestFromCache();
 
             return StoreFrontRedirect("~/account/quote-requests");
         }
@@ -498,6 +502,13 @@ namespace VirtoCommerce.Storefront.Controllers
             var identity = new ClaimsIdentity(claims, Microsoft.AspNet.Identity.DefaultAuthenticationTypes.ApplicationCookie);
 
             return identity;
+        }
+
+        private void RemoveCurrentQuoteRequestFromCache()
+        {
+            var quoteRequestCacheKey = string.Format("QuoteRequest-{0}-{1}", WorkContext.CurrentStore.Id, WorkContext.CurrentCustomer.Id);
+            var quoteRequestCacheRegion = "QuoteRequestRegion";
+            _cacheManager.Remove(quoteRequestCacheKey, quoteRequestCacheRegion);
         }
     }
 }

@@ -139,10 +139,6 @@ storefrontApp.controller('quoteRequestController', ['$scope', '$window', 'quoteR
             $scope.quoteRequest.ShippingAddress.Type = shippingAddressType;
             $scope.quoteRequest.ShippingAddress.Email = angular.copy($scope.quoteRequest.Email);
         }
-        $scope.formQuoteRequest.$setSubmitted();
-        if ($scope.formQuoteRequest.$invalid) {
-            return;
-        }
         var quoteRequest = {
             Comment: $scope.quoteRequest.Comment,
             Tag: null,
@@ -165,6 +161,10 @@ storefrontApp.controller('quoteRequestController', ['$scope', '$window', 'quoteR
                 Comment: quoteItem.Comment,
                 ProposalPrices: proposalPrices
             });
+        }
+        $scope.formQuoteRequest.$setSubmitted();
+        if ($scope.formQuoteRequest.$invalid) {
+            return;
         }
         if ($scope.customer.IsRegisteredUser) {
             quoteRequestService.update(quoteRequest).then(function (response) {
@@ -197,6 +197,11 @@ storefrontApp.controller('quoteRequestController', ['$scope', '$window', 'quoteR
             $scope.customer = customer;
         });
     }
+
+    //function proposalPricesAreUnique(proposalPrices) {
+    //    var uniqueProposalPrices = _.uniq(_.pluck(_.flatten(proposalPrices), 'Quantity'));
+    //    return proposalPrices.length == uniqueProposalPrices.length;
+    //}
 
     function setShippingAddressEqualsBilling() {
         $scope.quoteRequest.ShippingAddress = angular.copy($scope.quoteRequest.BillingAddress);
