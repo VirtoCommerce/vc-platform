@@ -19,6 +19,8 @@ using VirtoCommerce.Storefront.Model.Cart.Services;
 using CacheManager.Core;
 using VirtoCommerce.Storefront.Model.Customer.Services;
 using VirtoCommerce.Storefront.Model.Customer;
+using VirtoCommerce.Storefront.Model.Quote.Services;
+using VirtoCommerce.Storefront.Model.Quote;
 
 namespace VirtoCommerce.Storefront.Controllers
 {
@@ -32,10 +34,13 @@ namespace VirtoCommerce.Storefront.Controllers
         private readonly ICacheManager<object> _cacheManager;
         private readonly ICustomerService _customerService;
         private readonly IOrderModuleApi _orderApi;
+        private readonly IQuoteService _quoteService;
+        private readonly IQuoteRequestBuilder _quoteRequestBuilder;
 
         public AccountController(WorkContext workContext, IStorefrontUrlBuilder urlBuilder, ICommerceCoreModuleApi commerceCoreApi,
             IAuthenticationManager authenticationManager, IVirtoCommercePlatformApi platformApi,
-            ICartBuilder cartBuilder, ICustomerService customerService, IOrderModuleApi orderApi,  ICacheManager<object> cacheManager)
+            ICartBuilder cartBuilder, ICustomerService customerService, IOrderModuleApi orderApi, IQuoteService quoteService,
+            IQuoteRequestBuilder quoteRequestBuilder, ICacheManager<object> cacheManager)
             : base(workContext, urlBuilder)
         {
             _commerceCoreApi = commerceCoreApi;
@@ -45,6 +50,8 @@ namespace VirtoCommerce.Storefront.Controllers
             _cartBuilder = cartBuilder;
             _cacheManager = cacheManager;
             _orderApi = orderApi;
+            _quoteService = quoteService;
+            _quoteRequestBuilder = quoteRequestBuilder;
         }
 
         //GET: /account
@@ -55,6 +62,103 @@ namespace VirtoCommerce.Storefront.Controllers
             return View("customers/account", WorkContext);
         }
 
+        // GET: /account/quote-requests
+        [HttpGet]
+        public async Task<ActionResult> QuoteRequests(int? p)
+        {
+            var page = p ?? 1;
+            var pageSize = 10;
+
+            var quoteRequests = await _quoteService.GetQuoteRequestsAsync(WorkContext.CurrentStore.Id, WorkContext.CurrentCustomer.Id, (page - 1) * pageSize, pageSize);
+            WorkContext.CurrentCustomer.QuoteRequests = quoteRequests;
+
+            return View("customers/quote-requests", WorkContext);
+        }
+
+        // GET: /account/quote-request/{number}
+        [HttpGet]
+        public async Task<ActionResult> QuoteRequest(string number)
+        {
+            if (string.IsNullOrEmpty(number))
+            {
+                return HttpNotFound();
+            }
+
+            WorkContext.QuoteRequest = await _quoteService.GetQuoteRequestAsync(WorkContext.CurrentStore.Id, number);
+
+            if (WorkContext.QuoteRequest == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View("customers/quote-request", WorkContext);
+        }
+
+        // GET: /account/quote-request/{number}/edit
+        [HttpGet]
+        public async Task<ActionResult> EditQuoteRequest(string number)
+        {
+            if (string.IsNullOrEmpty(number))
+            {
+                return HttpNotFound();
+            }
+
+            var quoteRequest = await _quoteService.GetQuoteRequestAsync(WorkContext.CurrentCustomer.Id, number);
+            if (quoteRequest == null)
+            {
+                return HttpNotFound();
+            }
+
+            quoteRequest.Tag = "actual";
+            await _quoteService.UpdateQuoteRequestAsync(quoteRequest);
+
+            return StoreFrontRedirect("~/quoterequest");
+        }
+
+        // GET: /account/quote-request/{number}/confirm
+        [HttpGet]
+        public async Task<ActionResult> ConfirmQuoteRequest(string number)
+        {
+            if (string.IsNullOrEmpty(number))
+            {
+                return HttpNotFound();
+            }
+
+            var quoteRequest = await _quoteService.GetQuoteRequestAsync(WorkContext.CurrentCustomer.Id, number);
+
+            if (quoteRequest == null)
+            {
+                return HttpNotFound();
+            }
+
+            await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
+            await _cartBuilder.FillFromQuoteRequest(quoteRequest);
+            await _cartBuilder.SaveAsync();
+
+            return StoreFrontRedirect("~/cart/checkout");
+        }
+
+        // GET: /account/quote-request/{number}/reject
+        [HttpGet]
+        public async Task<ActionResult> RejectQuoteRequest(string number)
+        {
+            if (string.IsNullOrEmpty(number))
+            {
+                return HttpNotFound();
+            }
+
+            var quoteRequest = await _quoteService.GetQuoteRequestAsync(WorkContext.CurrentCustomer.Id, number);
+
+            if (quoteRequest == null)
+            {
+                return HttpNotFound();
+            }
+
+            quoteRequest.Status = "Rejected";
+            await _quoteService.UpdateQuoteRequestAsync(quoteRequest);
+
+            return StoreFrontRedirect("~/account/quote-requests");
+        }
 
         //POST: /account
         [HttpPost]
@@ -158,6 +262,7 @@ namespace VirtoCommerce.Storefront.Controllers
         public async Task<ActionResult> Register(Register formModel)
         {
             var anonymousShoppingCart = WorkContext.CurrentCart;
+            var anonymousQuoteRequest = WorkContext.CurrentQuoteRequest;
 
             var user = new VirtoCommercePlatformCoreSecurityApplicationUserExtended
             {
@@ -187,6 +292,7 @@ namespace VirtoCommerce.Storefront.Controllers
                 _authenticationManager.SignIn(identity);
 
                 await MergeShoppingCartsAsync(contact, anonymousShoppingCart);
+                await MergeQuoteRequestsAsync(contact, anonymousQuoteRequest);
 
                 return StoreFrontRedirect("~/account");
             }
@@ -217,6 +323,7 @@ namespace VirtoCommerce.Storefront.Controllers
         public async Task<ActionResult> Login(Login formModel, string returnUrl)
         {
             var anonymousShoppingCart = WorkContext.CurrentCart;
+            var anonymousQuoteRequest = WorkContext.CurrentQuoteRequest;
 
             var loginResult = await _commerceCoreApi.StorefrontSecurityPasswordSignInAsync(formModel.Email, formModel.Password);
 
@@ -228,6 +335,7 @@ namespace VirtoCommerce.Storefront.Controllers
                     var identity = CreateClaimsIdentity(formModel.Email, user.Id);
                     _authenticationManager.SignIn(identity);
                     await MergeShoppingCartsAsync(customer, anonymousShoppingCart);
+                    await MergeQuoteRequestsAsync(customer, anonymousQuoteRequest);
                     return StoreFrontRedirect(returnUrl);
                 case "lockedOut":
                     return View("lockedout", WorkContext);
@@ -368,6 +476,16 @@ namespace VirtoCommerce.Storefront.Controllers
                 await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, customer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
                 await _cartBuilder.MergeWithCartAsync(anonymousShoppingCart);
                 await _cartBuilder.SaveAsync();
+            }
+        }
+
+        private async Task MergeQuoteRequestsAsync(CustomerInfo customer, QuoteRequest anonymousQuoteRequest)
+        {
+            if (anonymousQuoteRequest.ItemsCount > 0)
+            {
+                await _quoteRequestBuilder.GetOrCreateNewTransientQuoteRequestAsync(WorkContext.CurrentStore, customer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
+                await _quoteRequestBuilder.MergeWithQuoteRequest(anonymousQuoteRequest);
+                await _quoteRequestBuilder.SaveAsync();
             }
         }
 

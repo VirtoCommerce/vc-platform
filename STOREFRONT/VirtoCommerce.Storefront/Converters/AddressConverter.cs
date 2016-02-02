@@ -121,11 +121,24 @@ namespace VirtoCommerce.Storefront.Converters
             return webModel;
         }
 
+        public static Address ToWebModel(this VirtoCommerceDomainCommerceModelAddress serviceModel)
+        {
+            var webModel = new Address();
+
+            webModel.InjectFrom<NullableAndEnumValueInjecter>(serviceModel);
+
+            webModel.Type = EnumUtility.SafeParse(serviceModel.AddressType, AddressType.BillingAndShipping);
+
+            return webModel;
+        }
+
         public static VirtoCommerceQuoteModuleWebModelAddress ToQuoteServiceModel(this Address webModel)
         {
             var serviceModel = new VirtoCommerceQuoteModuleWebModelAddress();
 
             serviceModel.InjectFrom<NullableAndEnumValueInjecter>(webModel);
+
+            serviceModel.AddressType = webModel.Type.ToString();
 
             return serviceModel;
         }

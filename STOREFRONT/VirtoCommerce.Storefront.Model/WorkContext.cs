@@ -144,6 +144,8 @@ namespace VirtoCommerce.Storefront.Model
 
         public CustomerOrder Order { get; set; }
 
+        public QuoteRequest QuoteRequest { get; set; }
+
         public ContactUsForm ContactUsForm { get; set; }
 
         public StorefrontNotification StorefrontNotification { get; set; }

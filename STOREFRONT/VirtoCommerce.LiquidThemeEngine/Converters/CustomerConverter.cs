@@ -45,6 +45,12 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                 result.Orders = new StorefrontModel.Common.StorefrontPagedList<Order>(orders, 1, 10, customer.OrdersCount, page => workContext.RequestUrl.SetQueryParameter("page", page.ToString()).ToString());
             }
 
+            if (customer.QuoteRequests != null)
+            {
+                var quoteRequests = customer.QuoteRequests.Select(qr => qr.ToShopifyModel()).ToList();
+                result.QuoteRequests = new StorefrontModel.Common.StorefrontPagedList<QuoteRequest>(quoteRequests, 1, 10, customer.QuoteRequestsCount, page => workContext.RequestUrl.SetQueryParameter("page", page.ToString()).ToString());
+            }
+
             return result;
         }
     }

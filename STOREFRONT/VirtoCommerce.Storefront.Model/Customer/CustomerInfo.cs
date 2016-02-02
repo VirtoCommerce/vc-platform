@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Order;
+using VirtoCommerce.Storefront.Model.Quote;
 
 namespace VirtoCommerce.Storefront.Model.Customer
 {
@@ -10,6 +11,7 @@ namespace VirtoCommerce.Storefront.Model.Customer
         {
             Addresses = new List<Address>();
             DynamicProperties = new List<DynamicProperty>();
+            QuoteRequests = new List<QuoteRequest>();
         }
 
         public string UserName { get; set; }
@@ -71,5 +73,9 @@ namespace VirtoCommerce.Storefront.Model.Customer
         public ICollection<string> Tags { get; set; }
         public ICollection<CustomerOrder> Orders { get; set; }
         public int OrdersCount { get; set; }
+
+        public ICollection<QuoteRequest> QuoteRequests { get; set; }
+
+        public int QuoteRequestsCount { get; set; }
     }
 }
