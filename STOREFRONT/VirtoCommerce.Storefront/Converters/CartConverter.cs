@@ -81,7 +81,6 @@ namespace VirtoCommerce.Storefront.Converters
             webModel.Height = (decimal)(serviceModel.Height ?? 0);
             webModel.IsAnonymous = serviceModel.IsAnonymous == true;
             webModel.IsRecuring = serviceModel.IsRecuring == true;
-            webModel.ItemsCount = webModel.Items.Sum(i => i.Quantity);
             webModel.Length = (decimal)(serviceModel.Length ?? 0);
          
             webModel.TaxIncluded = serviceModel.TaxIncluded == true;
