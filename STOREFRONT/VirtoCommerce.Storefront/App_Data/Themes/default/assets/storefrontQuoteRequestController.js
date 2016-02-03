@@ -173,14 +173,29 @@ storefrontApp.controller('quoteRequestController', ['$scope', '$window', '$sce',
         if ($scope.formQuoteRequest.$invalid) {
             return;
         }
-            quoteRequestService.update(quoteRequest).then(function (response) {
+        for (var i = 0; i < $scope.quoteRequest.Items.length; i++) {
+            $scope.quoteRequest.Items[i].TierPricesAreUnique = true;
+            if (!tierPricesAreUnique(quoteRequest.Items[i].ProposalPrices)) {
+                $scope.quoteRequest.Items[i].TierPricesAreUnique = false;
+            }
+        }
+        var ununiqueItems = _.where($scope.quoteRequest.Items, { TierPricesAreUnique: false });
+        if (ununiqueItems.length) {
+            return;
+        }
+        quoteRequestService.update(quoteRequest).then(function (response) {
             if ($scope.customer.IsRegisteredUser) {
             	$scope.outerRedirect($scope.baseUrl + 'quoterequest/quote-requests/');
             } else {
                 $scope.outerRedirect($scope.baseUrl + 'account/login/');
             }
-            });
-        }
+        });
+    }
+
+    function tierPricesAreUnique(tierPrices) {
+        var uniqueTierPrices = _.uniq(tierPrices, 'Quantity');
+        return uniqueTierPrices.length == tierPrices.length;
+    }
 
     function initialize() {
         $scope.quoteRequest = {
@@ -252,7 +267,7 @@ storefrontApp.controller('quoteRequestController', ['$scope', '$window', '$sce',
                     FirstName: $scope.customer.FirstName,
                     LastName: $scope.customer.LastName
                 };
-                }
+            }
             if (quoteRequest.ShippingAddress && quoteRequest.ShippingAddress.CountryCode) {
                 getCountryRegions(shippingAddressType, quoteRequest.ShippingAddress.CountryCode);
             }
@@ -298,11 +313,11 @@ storefrontApp.controller('quoteRequestController', ['$scope', '$window', '$sce',
     function addressesEqual(address1, address2) {
         var isEqual = false;
         if (address1 && address2) {
-        var address1Type = address1.Type; address1.Type = null;
-        var address2Type = address2.Type; address2.Type = null;
+            var address1Type = address1.Type; address1.Type = null;
+            var address2Type = address2.Type; address2.Type = null;
             isEqual = angular.equals(address1, address2);
-        address1.Type = address1Type;
-        address2.Type = address2Type;
+            address1.Type = address1Type;
+            address2.Type = address2Type;
         }
         return isEqual;
     }
