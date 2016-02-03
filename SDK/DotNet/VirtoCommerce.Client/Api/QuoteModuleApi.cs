@@ -183,8 +183,8 @@ namespace VirtoCommerce.Client.Api
         /// 
         /// </remarks>
         /// <param name="criteria">criteria</param>
-        /// <returns>VirtoCommerceDomainQuoteModelQuoteRequestSearchResult</returns>
-        VirtoCommerceDomainQuoteModelQuoteRequestSearchResult QuoteModuleSearch (VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria criteria);
+        /// <returns>VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult</returns>
+        VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult QuoteModuleSearch (VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria criteria);
   
         /// <summary>
         /// Search RFQ by given criteria
@@ -193,8 +193,8 @@ namespace VirtoCommerce.Client.Api
         /// 
         /// </remarks>
         /// <param name="criteria">criteria</param>
-        /// <returns>ApiResponse of VirtoCommerceDomainQuoteModelQuoteRequestSearchResult</returns>
-        ApiResponse<VirtoCommerceDomainQuoteModelQuoteRequestSearchResult> QuoteModuleSearchWithHttpInfo (VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria criteria);
+        /// <returns>ApiResponse of VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult</returns>
+        ApiResponse<VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult> QuoteModuleSearchWithHttpInfo (VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria criteria);
 
         /// <summary>
         /// Search RFQ by given criteria
@@ -203,8 +203,8 @@ namespace VirtoCommerce.Client.Api
         /// 
         /// </remarks>
         /// <param name="criteria">criteria</param>
-        /// <returns>Task of VirtoCommerceDomainQuoteModelQuoteRequestSearchResult</returns>
-        System.Threading.Tasks.Task<VirtoCommerceDomainQuoteModelQuoteRequestSearchResult> QuoteModuleSearchAsync (VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria criteria);
+        /// <returns>Task of VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult</returns>
+        System.Threading.Tasks.Task<VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult> QuoteModuleSearchAsync (VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria criteria);
 
         /// <summary>
         /// Search RFQ by given criteria
@@ -213,8 +213,8 @@ namespace VirtoCommerce.Client.Api
         /// 
         /// </remarks>
         /// <param name="criteria">criteria</param>
-        /// <returns>Task of ApiResponse (VirtoCommerceDomainQuoteModelQuoteRequestSearchResult)</returns>
-        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceDomainQuoteModelQuoteRequestSearchResult>> QuoteModuleSearchAsyncWithHttpInfo (VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria criteria);
+        /// <returns>Task of ApiResponse (VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult)</returns>
+        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult>> QuoteModuleSearchAsyncWithHttpInfo (VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria criteria);
         
         /// <summary>
         /// Get RFQ by id
@@ -909,10 +909,10 @@ namespace VirtoCommerce.Client.Api
         /// Search RFQ by given criteria 
         /// </summary>
         /// <param name="criteria">criteria</param> 
-        /// <returns>VirtoCommerceDomainQuoteModelQuoteRequestSearchResult</returns>
-        public VirtoCommerceDomainQuoteModelQuoteRequestSearchResult QuoteModuleSearch (VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria criteria)
+        /// <returns>VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult</returns>
+        public VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult QuoteModuleSearch (VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria criteria)
         {
-             ApiResponse<VirtoCommerceDomainQuoteModelQuoteRequestSearchResult> response = QuoteModuleSearchWithHttpInfo(criteria);
+             ApiResponse<VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult> response = QuoteModuleSearchWithHttpInfo(criteria);
              return response.Data;
         }
 
@@ -920,8 +920,8 @@ namespace VirtoCommerce.Client.Api
         /// Search RFQ by given criteria 
         /// </summary>
         /// <param name="criteria">criteria</param> 
-        /// <returns>ApiResponse of VirtoCommerceDomainQuoteModelQuoteRequestSearchResult</returns>
-        public ApiResponse< VirtoCommerceDomainQuoteModelQuoteRequestSearchResult > QuoteModuleSearchWithHttpInfo (VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria criteria)
+        /// <returns>ApiResponse of VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult</returns>
+        public ApiResponse< VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult > QuoteModuleSearchWithHttpInfo (VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria criteria)
         {
             
             // verify the required parameter 'criteria' is set
@@ -967,9 +967,9 @@ namespace VirtoCommerce.Client.Api
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling QuoteModuleSearch: " + response.ErrorMessage, response.ErrorMessage);
     
-            return new ApiResponse<VirtoCommerceDomainQuoteModelQuoteRequestSearchResult>(statusCode,
+            return new ApiResponse<VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult>(statusCode,
                 response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommerceDomainQuoteModelQuoteRequestSearchResult) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceDomainQuoteModelQuoteRequestSearchResult)));
+                (VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult)));
             
         }
     
@@ -977,10 +977,10 @@ namespace VirtoCommerce.Client.Api
         /// Search RFQ by given criteria 
         /// </summary>
         /// <param name="criteria">criteria</param>
-        /// <returns>Task of VirtoCommerceDomainQuoteModelQuoteRequestSearchResult</returns>
-        public async System.Threading.Tasks.Task<VirtoCommerceDomainQuoteModelQuoteRequestSearchResult> QuoteModuleSearchAsync (VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria criteria)
+        /// <returns>Task of VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult</returns>
+        public async System.Threading.Tasks.Task<VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult> QuoteModuleSearchAsync (VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria criteria)
         {
-             ApiResponse<VirtoCommerceDomainQuoteModelQuoteRequestSearchResult> response = await QuoteModuleSearchAsyncWithHttpInfo(criteria);
+             ApiResponse<VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult> response = await QuoteModuleSearchAsyncWithHttpInfo(criteria);
              return response.Data;
 
         }
@@ -989,8 +989,8 @@ namespace VirtoCommerce.Client.Api
         /// Search RFQ by given criteria 
         /// </summary>
         /// <param name="criteria">criteria</param>
-        /// <returns>Task of ApiResponse (VirtoCommerceDomainQuoteModelQuoteRequestSearchResult)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceDomainQuoteModelQuoteRequestSearchResult>> QuoteModuleSearchAsyncWithHttpInfo (VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria criteria)
+        /// <returns>Task of ApiResponse (VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult>> QuoteModuleSearchAsyncWithHttpInfo (VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria criteria)
         {
             // verify the required parameter 'criteria' is set
             if (criteria == null) throw new ApiException(400, "Missing required parameter 'criteria' when calling QuoteModuleSearch");
@@ -1035,9 +1035,9 @@ namespace VirtoCommerce.Client.Api
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling QuoteModuleSearch: " + response.ErrorMessage, response.ErrorMessage);
 
-            return new ApiResponse<VirtoCommerceDomainQuoteModelQuoteRequestSearchResult>(statusCode,
+            return new ApiResponse<VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult>(statusCode,
                 response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommerceDomainQuoteModelQuoteRequestSearchResult) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceDomainQuoteModelQuoteRequestSearchResult)));
+                (VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult)));
             
         }
         

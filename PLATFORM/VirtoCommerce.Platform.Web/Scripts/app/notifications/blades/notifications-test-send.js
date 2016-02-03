@@ -14,47 +14,53 @@
 		    blade.isLoading = false;
 
 		    blade.currentParams = data;
-		    if (!angular.isUndefined($localStorage.notificationTestResolve)) {
-		        blade.obj = {
-		            notificationParameters: [{
-		                parameterName: "Recipient",
-		                parameterDescription: "Recipient email",
-		                isDictionary: false,
-		                isArray: false,
-		                type: "String"
-		            },
-		            {
-		                parameterName: "Sender",
-		                parameterDescription: "Sender email",
-		                isDictionary: false,
-		                isArray: false,
-		                type: "String"
-		            }]
-		        };
-		        for (var i = 0; i < blade.currentParams.length; i++) {
-		            var property = blade.currentParams[i];
-		            if (property.isDictionary) {
-		                blade.currentParams[i].value = [{ name: '', value: '' }];
-		                blade.obj.notificationParameters.push(blade.currentParams[i]);
-		            }
-		            else if (property.isArray) {
-		                if (property.type === 'Decimal')
-		                    blade.currentParams[i].value = [{ key: '0.00' }];
-		                else if (property.type === 'Integer')
-		                    blade.currentParams[i].value = [{ key: '0' }];
-		                else if (property.type === 'DateTime')
-		                    blade.currentParams[i].value = [{ key: undefined }];
-		                else if (property.type === 'Boolean')
-		                    blade.currentParams[i].value = [{ key: false }];
-		                else if (property.type === 'String')
-		                    blade.currentParams[i].value = [{ key: '' }];
-		                blade.obj.notificationParameters.push(blade.currentParams[i]);
-		            }
-		            else {
-		                var value = _.find($localStorage.notificationTestResolve, function (element) { return blade.currentParams[i].parameterName === element.parameterName; });
+
+		    blade.obj = {
+		        notificationParameters: [{
+		            parameterName: "Recipient",
+		            parameterDescription: "Recipient email",
+		            isDictionary: false,
+		            isArray: false,
+		            type: "String"
+		        },
+		        {
+		            parameterName: "Sender",
+		            parameterDescription: "Sender email",
+		            isDictionary: false,
+		            isArray: false,
+		            type: "String"
+		        }]
+		    };
+		    for (var i = 0; i < blade.currentParams.length; i++) {
+		        var property = blade.currentParams[i];
+		        if (property.isDictionary) {
+		            blade.currentParams[i].value = [{ name: '', value: '' }];
+		            blade.obj.notificationParameters.push(blade.currentParams[i]);
+		        }
+		        else if (property.isArray) {
+		            if (property.type === 'Decimal')
+		                blade.currentParams[i].value = [{ key: '0.00' }];
+		            else if (property.type === 'Integer')
+		                blade.currentParams[i].value = [{ key: '0' }];
+		            else if (property.type === 'DateTime')
+		                blade.currentParams[i].value = [{ key: undefined }];
+		            else if (property.type === 'Boolean')
+		                blade.currentParams[i].value = [{ key: false }];
+		            else if (property.type === 'String')
+		                blade.currentParams[i].value = [{ key: '' }];
+		            blade.obj.notificationParameters.push(blade.currentParams[i]);
+		        }
+		        else {
+		            if (!_.isEmpty($localStorage.notificationTestSend)) {
+		                var value = _.find($localStorage.notificationTestSend, function (element) { return blade.currentParams[i].parameterName === element.parameterName; });
 		                if (value) {
 		                    blade.currentParams[i].value = value.value;
 		                }
+		                else {
+		                    blade.obj.notificationParameters.push(blade.currentParams[i]);
+		                }
+		            }
+		            else {
 		                blade.obj.notificationParameters.push(blade.currentParams[i]);
 		            }
 		        }
