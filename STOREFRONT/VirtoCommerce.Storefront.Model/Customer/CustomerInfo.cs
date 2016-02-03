@@ -11,7 +11,6 @@ namespace VirtoCommerce.Storefront.Model.Customer
         {
             Addresses = new List<Address>();
             DynamicProperties = new List<DynamicProperty>();
-            QuoteRequests = new List<QuoteRequest>();
         }
 
         public string UserName { get; set; }
@@ -48,15 +47,7 @@ namespace VirtoCommerce.Storefront.Model.Customer
         /// </summary>
         public bool AcceptsMarketing { get; set; }
 
-        //Returns the number of addresses associated with a customer.
-        public int AddressesCount
-        {
-            get
-            {
-                return Addresses == null ? 0 : Addresses.Count;
-            }
-        }
-
+     
         /// <summary>
         /// Returns the default customer_address.
         /// </summary>
@@ -71,11 +62,7 @@ namespace VirtoCommerce.Storefront.Model.Customer
         /// Returns the list of tags associated with the customer.
         /// </summary>
         public ICollection<string> Tags { get; set; }
-        public ICollection<CustomerOrder> Orders { get; set; }
-        public int OrdersCount { get; set; }
-
-        public ICollection<QuoteRequest> QuoteRequests { get; set; }
-
-        public int QuoteRequestsCount { get; set; }
+        public IStorefrontPagedList<CustomerOrder> Orders { get; set; }
+        public IStorefrontPagedList<QuoteRequest> QuoteRequests { get; set; }
     }
 }

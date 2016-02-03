@@ -7,7 +7,7 @@ namespace VirtoCommerce.Storefront.Model.Quote.Services
 {
     public interface IQuoteRequestBuilder
     {
-        IQuoteRequestBuilder TakeQuoteRequest(QuoteRequest cart);
+        IQuoteRequestBuilder TakeQuoteRequest(QuoteRequest quoteRequest);
 
         Task<IQuoteRequestBuilder> GetOrCreateNewTransientQuoteRequestAsync(Store store, CustomerInfo customer, Language language, Currency currency);
 
@@ -15,9 +15,11 @@ namespace VirtoCommerce.Storefront.Model.Quote.Services
 
         IQuoteRequestBuilder AddItem(Product product, long quantity);
 
+        IQuoteRequestBuilder Reject();
+
         IQuoteRequestBuilder RemoveItem(string quoteItemId);
 
-        Task <IQuoteRequestBuilder> MergeWithQuoteRequest(QuoteRequest quoteRequest);
+        Task <IQuoteRequestBuilder> MergeWithQuoteRequest(QuoteRequest otherQuoteRequest);
 
         Task SaveAsync();
 

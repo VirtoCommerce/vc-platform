@@ -60,6 +60,10 @@ namespace VirtoCommerce.Storefront.Model
                 _seoInfo = value;
             }
         }
+        /// <summary>
+        /// Represent current account orders search criteria taken from request url
+        /// </summary>
+        public OrderSearchCriteria CurrentOrderSearchCriteria { get; set; }
 
         /// <summary>
         /// Current store
@@ -71,6 +75,10 @@ namespace VirtoCommerce.Storefront.Model
         /// </summary>
         public ShoppingCart CurrentCart { get; set; }
 
+        /// <summary>
+        /// Represent current quotes search criteria taken from request url
+        /// </summary>
+        public QuoteSearchCriteria CurrentQuoteSearchCriteria { get; set; }
         public QuoteRequest CurrentQuoteRequest { get; set; }
 
         /// <summary>
@@ -120,6 +128,7 @@ namespace VirtoCommerce.Storefront.Model
         public ContentPage CurrentPage { get; set; }
 
         public BlogSearchCriteria CurrentBlogSearchCritera { get; set; }
+
         public Blog CurrentBlog { get; set; }
 
         public BlogArticle CurrentBlogArticle { get; set; }

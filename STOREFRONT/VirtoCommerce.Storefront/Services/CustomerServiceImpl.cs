@@ -8,6 +8,7 @@ using System.Web;
 using CacheManager.Core;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.Client.Model;
+using VirtoCommerce.LiquidThemeEngine.Extensions;
 using VirtoCommerce.Storefront.Common;
 using VirtoCommerce.Storefront.Converters;
 using VirtoCommerce.Storefront.Model;
@@ -15,7 +16,9 @@ using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Common.Exceptions;
 using VirtoCommerce.Storefront.Model.Customer;
 using VirtoCommerce.Storefront.Model.Customer.Services;
+using VirtoCommerce.Storefront.Model.Order;
 using VirtoCommerce.Storefront.Model.Order.Events;
+using VirtoCommerce.Storefront.Model.Quote;
 
 namespace VirtoCommerce.Storefront.Services
 {
@@ -42,31 +45,39 @@ namespace VirtoCommerce.Storefront.Services
         {
             var retVal = await _cacheManager.GetAsync(GetCacheKey(customerId), "ApiRegion", async () =>
             {
+                var workContext = _workContextFactory();
+
                 //TODO: Make parallels call
                 var contact = await _customerApi.CustomerModuleGetContactByIdAsync(customerId);
                 CustomerInfo result = null;
                 if (contact != null)
                 {
-                    var criteria = new VirtoCommerceDomainOrderModelSearchCriteria
+                    result = contact.ToWebModel();
+
+                    var orderSearchcriteria = new VirtoCommerceDomainOrderModelSearchCriteria
                     {
                         CustomerId = customerId,
                         ResponseGroup = "full",
+                        Start = workContext.CurrentOrderSearchCriteria.PageNumber,
+                        Count = workContext.CurrentOrderSearchCriteria.PageSize
                     };
+                    var ordersResponse = await _orderApi.OrderModuleSearchAsync(orderSearchcriteria);
+                    result.Orders = new StorefrontPagedList<CustomerOrder>(ordersResponse.CustomerOrders.Select(x => x.ToWebModel(workContext.AllCurrencies, workContext.CurrentLanguage)), orderSearchcriteria.Start.Value, orderSearchcriteria.Count.Value,
+                                                                            ordersResponse.TotalCount.Value, page => workContext.RequestUrl.SetQueryParameter("page", page.ToString()).ToString());
 
-                    var ordersResponse = await _orderApi.OrderModuleSearchAsync(criteria);
-                    result = contact.ToWebModel();
-                    result.OrdersCount = ordersResponse.TotalCount.Value;
-                    var workContext = _workContextFactory();
-                    result.Orders = ordersResponse.CustomerOrders.Select(x => x.ToWebModel(workContext.AllCurrencies, workContext.CurrentLanguage)).ToList();
-
-                    var quoteRequestsResponse = await _quoteApi.QuoteModuleSearchAsync(new VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria
+                    if (workContext.CurrentStore.QuotesEnabled)
                     {
-                        Count = 10,
-                        CustomerId = customerId,
-                        StoreId = workContext.CurrentStore.Id
-                    });
-                    result.QuoteRequests = quoteRequestsResponse.QuoteRequests.Select(qr => qr.ToWebModel()).ToList();
-                    result.QuoteRequestsCount = quoteRequestsResponse.TotalCount.Value;
+                        var quoteSearchCriteria = new VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria
+                        {
+                            Count = workContext.CurrentOrderSearchCriteria.PageSize,
+                            CustomerId = customerId,
+                            Start = workContext.CurrentOrderSearchCriteria.PageNumber,
+                            StoreId = workContext.CurrentStore.Id
+                        };
+                        var quoteRequestsResponse = await _quoteApi.QuoteModuleSearchAsync(quoteSearchCriteria);
+                        result.QuoteRequests = new StorefrontPagedList<QuoteRequest>(quoteRequestsResponse.QuoteRequests.Select(x => x.ToWebModel()), quoteSearchCriteria.Start.Value, quoteSearchCriteria.Count.Value,
+                                                                                     quoteRequestsResponse.TotalCount.Value, page => workContext.RequestUrl.SetQueryParameter("page", page.ToString()).ToString());
+                    }
                 }
 
                 return result;

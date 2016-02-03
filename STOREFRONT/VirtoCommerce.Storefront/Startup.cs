@@ -137,7 +137,6 @@ namespace VirtoCommerce.Storefront
             container.RegisterType<ICartValidator, CartValidator>();
             container.RegisterType<IPricingService, PricingServiceImpl>();
             container.RegisterType<ICustomerService, CustomerServiceImpl>();
-            container.RegisterType<IQuoteService, QuoteService>();
 
             container.RegisterType<ICartBuilder, CartBuilder>();
             container.RegisterType<IQuoteRequestBuilder, QuoteRequestBuilder>();
@@ -148,8 +147,11 @@ namespace VirtoCommerce.Storefront
 
             //Register domain events
             container.RegisterType<IEventPublisher<OrderPlacedEvent>, EventPublisher<OrderPlacedEvent>>();
+            container.RegisterType<IEventPublisher<UserLoginEvent>, EventPublisher<UserLoginEvent>>();
             //Register event handlers (observers)
-            container.RegisterType<IObserver<OrderPlacedEvent>, CustomerServiceImpl>("CustomerServiceImpl");
+            container.RegisterType<IObserver<OrderPlacedEvent>, CustomerServiceImpl>("Invalidate customer cache when user placed new order");
+            container.RegisterType<IObserver<UserLoginEvent>, CartBuilder>("Merge anonymous cart with loggined user cart");
+            container.RegisterType<IObserver<UserLoginEvent>, QuoteRequestBuilder>("Merge anonymous quote request with loggined user quote");
 
             // Create new work context for each request
             container.RegisterType<WorkContext, WorkContext>(new PerRequestLifetimeManager());

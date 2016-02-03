@@ -107,12 +107,19 @@ namespace VirtoCommerce.Storefront.Owin
                         var linkLists = await _cacheManager.GetAsync("GetLinkLists-" + workContext.CurrentStore.Id, "ApiRegion", async () => { return await _cmsApi.MenuGetListsAsync(workContext.CurrentStore.Id) ?? new List<VirtoCommerceContentWebModelsMenuLinkList>(); });
                         workContext.CurrentLinkLists = linkLists != null ? linkLists.Select(ll => ll.ToWebModel(urlBuilder)).ToList() : null;
 
+                        var qs = HttpUtility.ParseQueryString(workContext.RequestUrl.Query);
                         //Initialize catalog search criteria
-                        workContext.CurrentCatalogSearchCriteria = GetSearchCriteria(workContext);
+                        workContext.CurrentCatalogSearchCriteria = new CatalogSearchCriteria(qs);
+                        workContext.CurrentCatalogSearchCriteria.CatalogId = workContext.CurrentStore.Catalog;
+                        workContext.CurrentCatalogSearchCriteria.Currency = workContext.CurrentCurrency;
+                        workContext.CurrentCatalogSearchCriteria.Language = workContext.CurrentLanguage;
+       
+                        workContext.CurrentOrderSearchCriteria = new Model.Order.OrderSearchCriteria(qs);
+                        workContext.CurrentQuoteSearchCriteria = new Model.Quote.QuoteSearchCriteria(qs);
 
                         //Initialize blogs search criteria 
                         //TODO: read from query string
-                        workContext.CurrentBlogSearchCritera = new Model.StaticContent.BlogSearchCriteria();
+                        workContext.CurrentBlogSearchCritera = new Model.StaticContent.BlogSearchCriteria(qs);
 
                         //Pricelists
                         var pricelistCacheKey = string.Join("-", "EvaluatePriceLists", workContext.CurrentStore.Id, workContext.CurrentCustomer.Id);
@@ -151,16 +158,7 @@ namespace VirtoCommerce.Storefront.Owin
             return result.Any() ? result : null;
         }
 
-        private CatalogSearchCriteria GetSearchCriteria(WorkContext workContext)
-        {
-            var qs = HttpUtility.ParseQueryString(workContext.RequestUrl.Query);
-            var retVal = CatalogSearchCriteria.Parse(qs);
-            retVal.CatalogId = workContext.CurrentStore.Catalog;
-            retVal.Currency = workContext.CurrentCurrency;
-            retVal.Language = workContext.CurrentLanguage;
-            return retVal;
-        }
-
+     
         private bool IsAssetRequest(Uri uri)
         {
             return uri.AbsolutePath.Contains("themes/assets") || !string.IsNullOrEmpty(Path.GetExtension(uri.ToString()));

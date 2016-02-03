@@ -22,7 +22,7 @@ namespace VirtoCommerce.Storefront.Controllers
         public async Task<ActionResult> Index()
         {
             //Load categories for main page (may be removed if it not necessary)
-            var catalogSearchCriteria = new CatalogSearchCriteria
+            var catalogSearchCriteria = new CatalogSearchCriteria()
             {
                 CatalogId = _workContext.CurrentStore.Catalog,
                 ResponseGroup = CatalogSearchResponseGroup.WithCategories,

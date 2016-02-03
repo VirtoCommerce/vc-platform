@@ -15,12 +15,13 @@ using VirtoCommerce.Storefront.Model.Common.Exceptions;
 using VirtoCommerce.Storefront.Model.Customer;
 using VirtoCommerce.Storefront.Model.Marketing;
 using VirtoCommerce.Storefront.Model.Marketing.Services;
+using VirtoCommerce.Storefront.Model.Order.Events;
 using VirtoCommerce.Storefront.Model.Quote;
 using VirtoCommerce.Storefront.Model.Services;
 
 namespace VirtoCommerce.Storefront.Builders
 {
-    public class CartBuilder : ICartBuilder
+    public class CartBuilder : ICartBuilder, IObserver<UserLoginEvent>
     {
         private readonly IShoppingCartModuleApi _cartApi;
         private readonly IPromotionEvaluator _promotionEvaluator;
@@ -468,7 +469,39 @@ namespace VirtoCommerce.Storefront.Builders
             {
                 return _cart;
             }
-        } 
+        }
+        #endregion
+
+        #region IObserver<UserLoginEvent> Members
+        /// <summary>
+        /// Merger anonymous cart by loging event
+        /// </summary>
+        /// <param name="userLoginEvent"></param>
+        public void OnNext(UserLoginEvent userLoginEvent)
+        {
+            //If previous user was anonymous and it has not empty cart need merge anonymous cart to personal
+           if(!userLoginEvent.PrevUser.IsRegisteredUser && userLoginEvent.WorkContext.CurrentCart != null && userLoginEvent.WorkContext.CurrentCart.Items.Any())
+            {
+                //Call async methods synchronously http://blog.stephencleary.com/2012/07/dont-block-on-async-code.html
+                var task = new TaskFactory().StartNew(async () =>
+                {
+                    await GetOrCreateNewTransientCartAsync(userLoginEvent.WorkContext.CurrentStore, userLoginEvent.NewUser, userLoginEvent.WorkContext.CurrentLanguage, userLoginEvent.WorkContext.CurrentCurrency).ConfigureAwait(false);
+                    await MergeWithCartAsync(userLoginEvent.WorkContext.CurrentCart).ConfigureAwait(false);
+                    await SaveAsync().ConfigureAwait(false);
+                });
+                task.Wait();
+            }
+        }
+
+        public void OnError(Exception error)
+        {
+            //Nothing todo
+        }
+
+        public void OnCompleted()
+        {
+            //Nothing todo
+        }
         #endregion
 
         private void AddLineItem(LineItem lineItem)
@@ -492,6 +525,6 @@ namespace VirtoCommerce.Storefront.Builders
             return string.Format("Cart-{0}-{1}", storeId, customerId);
         }
 
-        
+      
     }
 }

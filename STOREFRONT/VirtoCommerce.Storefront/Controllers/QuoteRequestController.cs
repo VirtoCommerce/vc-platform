@@ -1,7 +1,10 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using VirtoCommerce.Client.Api;
+using VirtoCommerce.Client.Model;
 using VirtoCommerce.Storefront.Model;
+using VirtoCommerce.Storefront.Model.Cart.Services;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Common.Exceptions;
@@ -13,15 +16,19 @@ namespace VirtoCommerce.Storefront.Controllers
 {
     public class QuoteRequestController : StorefrontControllerBase
     {
+        private readonly IQuoteModuleApi _quoteApi;
         private readonly IQuoteRequestBuilder _quoteRequestBuilder;
         private readonly ICatalogSearchService _catalogSearchService;
+        private readonly ICartBuilder _cartBuilder;
 
         public QuoteRequestController(WorkContext workContext, IStorefrontUrlBuilder urlBuilder, IQuoteRequestBuilder quoteRequestBuilder,
-            ICatalogSearchService catalogSearchService)
+            ICatalogSearchService catalogSearchService, IQuoteModuleApi quoteApi, ICartBuilder cartBuilder)
             : base(workContext, urlBuilder)
         {
+            _quoteApi = quoteApi;
             _quoteRequestBuilder = quoteRequestBuilder;
             _catalogSearchService = catalogSearchService;
+            _cartBuilder = cartBuilder;
         }
 
         // GET: /quoterequest
@@ -39,6 +46,105 @@ namespace VirtoCommerce.Storefront.Controllers
 
             return Json(_quoteRequestBuilder.QuoteRequest, JsonRequestBehavior.AllowGet);
         }
+
+        // GET: /quoterequest/quote-requests
+        [HttpGet]
+        public async Task<ActionResult> QuoteRequests()
+        {
+            var quoteSearchCriteria = new VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria
+            {
+                Start = base.WorkContext.CurrentQuoteSearchCriteria.PageNumber,
+                Count = base.WorkContext.CurrentQuoteSearchCriteria.PageSize,
+                StoreId = base.WorkContext.CurrentStore.Id,
+                CustomerId = base.WorkContext.CurrentCustomer.Id
+            };
+            var searchResult = await _quoteApi.QuoteModuleSearchAsync(quoteSearchCriteria);
+            WorkContext.CurrentCustomer.QuoteRequests = new StorefrontPagedList<QuoteRequest>(searchResult.QuoteRequests.Select(x => x.ToWebModel()), quoteSearchCriteria.Start.Value, quoteSearchCriteria.Count.Value,
+                                                                                              searchResult.TotalCount.Value, page => workContext.RequestUrl.SetQueryParameter("page", page.ToString()).ToString());
+
+            return View("customers/quote-requests", WorkContext);
+        }
+
+        // GET: /quoterequest/quote-request/{number}
+        [HttpGet]
+        public async Task<ActionResult> QuoteRequest(string number)
+        {
+            if (string.IsNullOrEmpty(number))
+            {
+                return HttpNotFound();
+            }
+            WorkContext.QuoteRequest = await GetCustomerQuoteRequestByNumberAsync(number);
+
+            if (WorkContext.QuoteRequest == null)
+            {
+                return HttpNotFound();
+            }
+            return View("customers/quote-request", WorkContext);
+        }
+
+        // GET: /quoterequest/quote-request/{number}/edit
+        [HttpGet]
+        public async Task<ActionResult> EditQuoteRequest(string number)
+        {
+            if (string.IsNullOrEmpty(number))
+            {
+                return HttpNotFound();
+            }
+
+            WorkContext.QuoteRequest = await GetCustomerQuoteRequestByNumberAsync(number);
+            if (WorkContext.QuoteRequest == null)
+            {
+                return HttpNotFound();
+            }
+            return View("quote-request", WorkContext);
+        }
+
+        // GET: /quoterequest/quote-request/{number}/confirm
+        [HttpGet]
+        public async Task<ActionResult> ConfirmQuoteRequest(string number)
+        {
+            if (string.IsNullOrEmpty(number))
+            {
+                return HttpNotFound();
+            }
+
+            var quoteRequest = await GetCustomerQuoteRequestByNumberAsync(number);
+
+            if (quoteRequest == null)
+            {
+                return HttpNotFound();
+            }
+
+            _cartBuilder.TakeCart(WorkContext.CurrentCart);
+            await _cartBuilder.FillFromQuoteRequest(quoteRequest);
+            await _cartBuilder.SaveAsync();
+
+            return StoreFrontRedirect("~/cart/checkout");
+        }
+
+        // GET: /quoterequest/quote-request/{number}/reject
+        [HttpGet]
+        public async Task<ActionResult> RejectQuoteRequest(string number)
+        {
+            if (string.IsNullOrEmpty(number))
+            {
+                return HttpNotFound();
+            }
+
+            var quoteRequest = await GetCustomerQuoteRequestByNumberAsync(number);
+
+            if (quoteRequest == null)
+            {
+                return HttpNotFound();
+            }
+
+            _quoteRequestBuilder.TakeQuoteRequest(quoteRequest);
+            _quoteRequestBuilder.Reject();
+            await _quoteRequestBuilder.SaveAsync();
+
+            return StoreFrontRedirect("~/account/quote-requests");
+        }
+
 
         // POST: /quoterequest/update?quoteRequest=...
         [HttpPost]
@@ -87,6 +193,19 @@ namespace VirtoCommerce.Storefront.Controllers
             }
 
             return Json(null, JsonRequestBehavior.AllowGet);
+        }
+
+
+        private async Task<QuoteRequest> GetCustomerQuoteRequestByNumberAsync(string number)
+        {
+            var quoteSearchCriteria = new VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria
+            {
+                Keyword = number,
+                StoreId = base.WorkContext.CurrentStore.Id,
+                CustomerId = base.WorkContext.CurrentCustomer.Id
+            };
+            var searchResult = await _quoteApi.QuoteModuleSearchAsync(quoteSearchCriteria);
+            return searchResult.QuoteRequests.Select(x => x.ToWebModel()).FirstOrDefault();
         }
 
         private void EnsureThatQuoteRequestExists()

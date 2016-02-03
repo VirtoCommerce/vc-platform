@@ -6,11 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.Storefront.Model.Common;
 
-namespace VirtoCommerce.Storefront.Model.StaticContent
+namespace VirtoCommerce.Storefront.Model.Order
 {
-    public class BlogSearchCriteria : PagedSearchCriteria
+    public class OrderSearchCriteria : PagedSearchCriteria
     {
-        public BlogSearchCriteria(NameValueCollection queryString)
+        public OrderSearchCriteria(NameValueCollection queryString)
             : base(queryString)
         {
         }

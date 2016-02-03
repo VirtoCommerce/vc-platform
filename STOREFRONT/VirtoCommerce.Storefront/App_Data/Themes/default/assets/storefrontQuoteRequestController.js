@@ -168,7 +168,7 @@ storefrontApp.controller('quoteRequestController', ['$scope', '$window', 'quoteR
         }
         if ($scope.customer.IsRegisteredUser) {
             quoteRequestService.update(quoteRequest).then(function (response) {
-                $scope.outerRedirect($scope.baseUrl + 'account/quote-requests/');
+            	$scope.outerRedirect($scope.baseUrl + 'quoterequest/quote-requests/');
             });
         }
     }

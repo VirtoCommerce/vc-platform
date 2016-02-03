@@ -123,7 +123,5 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         public int OrdersCount { get; set; }
 
         public IStorefrontPagedList<QuoteRequest> QuoteRequests { get; set; }
-
-        public int QuoteRequestsCount { get; set; }
     }
 }

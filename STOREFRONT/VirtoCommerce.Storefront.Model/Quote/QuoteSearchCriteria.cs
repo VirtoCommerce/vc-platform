@@ -6,13 +6,14 @@ using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.Storefront.Model.Common;
 
-namespace VirtoCommerce.Storefront.Model.StaticContent
+namespace VirtoCommerce.Storefront.Model.Quote
 {
-    public class BlogSearchCriteria : PagedSearchCriteria
+    public class QuoteSearchCriteria : PagedSearchCriteria
     {
-        public BlogSearchCriteria(NameValueCollection queryString)
-            : base(queryString)
+        public QuoteSearchCriteria(NameValueCollection queryString)
+            :base(queryString)
         {
+
         }
     }
 }

@@ -14,13 +14,12 @@ using VirtoCommerce.Storefront.Converters;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Common;
 using shopifyModel = VirtoCommerce.LiquidThemeEngine.Objects;
-using VirtoCommerce.Storefront.Model.Cart;
 using VirtoCommerce.Storefront.Model.Cart.Services;
 using CacheManager.Core;
 using VirtoCommerce.Storefront.Model.Customer.Services;
 using VirtoCommerce.Storefront.Model.Customer;
-using VirtoCommerce.Storefront.Model.Quote.Services;
-using VirtoCommerce.Storefront.Model.Quote;
+using VirtoCommerce.Storefront.Model.Common.Events;
+using VirtoCommerce.Storefront.Model.Order.Events;
 
 namespace VirtoCommerce.Storefront.Controllers
 {
@@ -34,13 +33,12 @@ namespace VirtoCommerce.Storefront.Controllers
         private readonly ICacheManager<object> _cacheManager;
         private readonly ICustomerService _customerService;
         private readonly IOrderModuleApi _orderApi;
-        private readonly IQuoteService _quoteService;
-        private readonly IQuoteRequestBuilder _quoteRequestBuilder;
+        private readonly IEventPublisher<UserLoginEvent> _userLoginEventPublisher;
 
         public AccountController(WorkContext workContext, IStorefrontUrlBuilder urlBuilder, ICommerceCoreModuleApi commerceCoreApi,
             IAuthenticationManager authenticationManager, IVirtoCommercePlatformApi platformApi,
-            ICartBuilder cartBuilder, ICustomerService customerService, IOrderModuleApi orderApi, IQuoteService quoteService,
-            IQuoteRequestBuilder quoteRequestBuilder, ICacheManager<object> cacheManager)
+            ICartBuilder cartBuilder, ICustomerService customerService, IOrderModuleApi orderApi, IEventPublisher<UserLoginEvent> userLoginEventPublisher,
+            ICacheManager<object> cacheManager)
             : base(workContext, urlBuilder)
         {
             _commerceCoreApi = commerceCoreApi;
@@ -50,9 +48,8 @@ namespace VirtoCommerce.Storefront.Controllers
             _cartBuilder = cartBuilder;
             _cacheManager = cacheManager;
             _orderApi = orderApi;
-            _quoteService = quoteService;
-            _quoteRequestBuilder = quoteRequestBuilder;
-        }
+            _userLoginEventPublisher = userLoginEventPublisher;
+         }
 
         //GET: /account
         [HttpGet]
@@ -62,108 +59,7 @@ namespace VirtoCommerce.Storefront.Controllers
             return View("customers/account", WorkContext);
         }
 
-        // GET: /account/quote-requests
-        [HttpGet]
-        public async Task<ActionResult> QuoteRequests(int? p)
-        {
-            var page = p ?? 1;
-            var pageSize = 10;
-
-            var quoteRequests = await _quoteService.GetQuoteRequestsAsync(WorkContext.CurrentStore.Id, WorkContext.CurrentCustomer.Id, (page - 1) * pageSize, pageSize, null);
-            WorkContext.CurrentCustomer.QuoteRequests = quoteRequests;
-
-            return View("customers/quote-requests", WorkContext);
-        }
-
-        // GET: /account/quote-request/{number}
-        [HttpGet]
-        public async Task<ActionResult> QuoteRequest(string number)
-        {
-            if (string.IsNullOrEmpty(number))
-            {
-                return HttpNotFound();
-            }
-
-            WorkContext.QuoteRequest = await _quoteService.GetQuoteRequestAsync(WorkContext.CurrentStore.Id, number);
-
-            if (WorkContext.QuoteRequest == null)
-            {
-                return HttpNotFound();
-            }
-
-            return View("customers/quote-request", WorkContext);
-        }
-
-        // GET: /account/quote-request/{number}/edit
-        [HttpGet]
-        public async Task<ActionResult> EditQuoteRequest(string number)
-        {
-            if (string.IsNullOrEmpty(number))
-            {
-                return HttpNotFound();
-            }
-
-            var quoteRequest = await _quoteService.GetQuoteRequestAsync(WorkContext.CurrentCustomer.Id, number);
-            if (quoteRequest == null)
-            {
-                return HttpNotFound();
-            }
-
-            quoteRequest.Tag = "actual";
-            await _quoteService.UpdateQuoteRequestAsync(quoteRequest);
-
-            RemoveCurrentQuoteRequestFromCache();
-
-            return StoreFrontRedirect("~/quoterequest");
-        }
-
-        // GET: /account/quote-request/{number}/confirm
-        [HttpGet]
-        public async Task<ActionResult> ConfirmQuoteRequest(string number)
-        {
-            if (string.IsNullOrEmpty(number))
-            {
-                return HttpNotFound();
-            }
-
-            var quoteRequest = await _quoteService.GetQuoteRequestAsync(WorkContext.CurrentCustomer.Id, number);
-
-            if (quoteRequest == null)
-            {
-                return HttpNotFound();
-            }
-
-            await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, WorkContext.CurrentCustomer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
-            await _cartBuilder.FillFromQuoteRequest(quoteRequest);
-            await _cartBuilder.SaveAsync();
-
-            return StoreFrontRedirect("~/cart/checkout");
-        }
-
-        // GET: /account/quote-request/{number}/reject
-        [HttpGet]
-        public async Task<ActionResult> RejectQuoteRequest(string number)
-        {
-            if (string.IsNullOrEmpty(number))
-            {
-                return HttpNotFound();
-            }
-
-            var quoteRequest = await _quoteService.GetQuoteRequestAsync(WorkContext.CurrentCustomer.Id, number);
-
-            if (quoteRequest == null)
-            {
-                return HttpNotFound();
-            }
-
-            quoteRequest.Status = "Rejected";
-            await _quoteService.UpdateQuoteRequestAsync(quoteRequest);
-
-            RemoveCurrentQuoteRequestFromCache();
-
-            return StoreFrontRedirect("~/account/quote-requests");
-        }
-
+      
         //POST: /account
         [HttpPost]
         public async Task<ActionResult> UpdateAccount(CustomerInfo customer)
@@ -265,7 +161,6 @@ namespace VirtoCommerce.Storefront.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> Register(Register formModel)
         {
-            var anonymousShoppingCart = WorkContext.CurrentCart;
             var anonymousQuoteRequest = WorkContext.CurrentQuoteRequest;
 
             var user = new VirtoCommercePlatformCoreSecurityApplicationUserExtended
@@ -295,8 +190,8 @@ namespace VirtoCommerce.Storefront.Controllers
                 var identity = CreateClaimsIdentity(formModel.Email, user.Id);
                 _authenticationManager.SignIn(identity);
 
-                await MergeShoppingCartsAsync(contact, anonymousShoppingCart);
-                await MergeQuoteRequestsAsync(contact, anonymousQuoteRequest);
+                //Publish user login event 
+                _userLoginEventPublisher.Publish(new UserLoginEvent(base.WorkContext, base.WorkContext.CurrentCustomer, contact));
 
                 return StoreFrontRedirect("~/account");
             }
@@ -326,7 +221,6 @@ namespace VirtoCommerce.Storefront.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> Login(Login formModel, string returnUrl)
         {
-            var anonymousShoppingCart = WorkContext.CurrentCart;
             var anonymousQuoteRequest = WorkContext.CurrentQuoteRequest;
 
             var loginResult = await _commerceCoreApi.StorefrontSecurityPasswordSignInAsync(formModel.Email, formModel.Password);
@@ -338,8 +232,8 @@ namespace VirtoCommerce.Storefront.Controllers
                     var customer = await _customerService.GetCustomerByIdAsync(user.Id);
                     var identity = CreateClaimsIdentity(formModel.Email, user.Id);
                     _authenticationManager.SignIn(identity);
-                    await MergeShoppingCartsAsync(customer, anonymousShoppingCart);
-                    await MergeQuoteRequestsAsync(customer, anonymousQuoteRequest);
+                    //Publish user login event 
+                    _userLoginEventPublisher.Publish(new UserLoginEvent(base.WorkContext, base.WorkContext.CurrentCustomer, customer));
                     return StoreFrontRedirect(returnUrl);
                 case "lockedOut":
                     return View("lockedout", WorkContext);
@@ -473,25 +367,7 @@ namespace VirtoCommerce.Storefront.Controllers
             return Json(WorkContext.CurrentCustomer, JsonRequestBehavior.AllowGet);
         }
 
-        private async Task MergeShoppingCartsAsync(CustomerInfo customer, ShoppingCart anonymousShoppingCart)
-        {
-            if (anonymousShoppingCart.ItemsCount > 0)
-            {
-                await _cartBuilder.GetOrCreateNewTransientCartAsync(WorkContext.CurrentStore, customer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
-                await _cartBuilder.MergeWithCartAsync(anonymousShoppingCart);
-                await _cartBuilder.SaveAsync();
-            }
-        }
-
-        private async Task MergeQuoteRequestsAsync(CustomerInfo customer, QuoteRequest anonymousQuoteRequest)
-        {
-            if (anonymousQuoteRequest.ItemsCount > 0)
-            {
-                await _quoteRequestBuilder.GetOrCreateNewTransientQuoteRequestAsync(WorkContext.CurrentStore, customer, WorkContext.CurrentLanguage, WorkContext.CurrentCurrency);
-                await _quoteRequestBuilder.MergeWithQuoteRequest(anonymousQuoteRequest);
-                await _quoteRequestBuilder.SaveAsync();
-            }
-        }
+       
 
         private ClaimsIdentity CreateClaimsIdentity(string userName, string userId)
         {
@@ -502,13 +378,6 @@ namespace VirtoCommerce.Storefront.Controllers
             var identity = new ClaimsIdentity(claims, Microsoft.AspNet.Identity.DefaultAuthenticationTypes.ApplicationCookie);
 
             return identity;
-        }
-
-        private void RemoveCurrentQuoteRequestFromCache()
-        {
-            var quoteRequestCacheKey = string.Format("QuoteRequest-{0}-{1}", WorkContext.CurrentStore.Id, WorkContext.CurrentCustomer.Id);
-            var quoteRequestCacheRegion = "QuoteRequestRegion";
-            _cacheManager.Remove(quoteRequestCacheKey, quoteRequestCacheRegion);
         }
     }
 }

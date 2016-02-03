@@ -416,7 +416,6 @@
     <Compile Include="Routing\SeoRouteExtensions.cs" />
     <Compile Include="Services\CatalogSearchServiceImpl.cs" />
     <Compile Include="Services\MarketingServiceImpl.cs" />
-    <Compile Include="Services\QuoteService.cs" />
     <Compile Include="Services\StaticContentServiceImpl.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>

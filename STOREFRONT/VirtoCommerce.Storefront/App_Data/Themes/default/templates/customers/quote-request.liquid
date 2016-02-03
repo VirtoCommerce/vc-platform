@@ -96,14 +96,14 @@
                 <div class="grid-item three-thirds medium-down--one-whole">
                     <div class="cart-btn--block">
                         {% unless quote_request.status == 'Proposal sent' and quote_request.status == 'Rejected' %}
-                            {% assign edit_quote_request_url = '/account/quote-request/' | append: quote_request.id | append: '/edit/' %}
+                            {% assign edit_quote_request_url = '/quoterequest/quote-request/' | append: quote_request.id | append: '/edit/' %}
                             <a class="btn-secondary" href="{{ edit_quote_request_url | absolute_url }}">Edit request</a>
                         {% endunless %}
                         {% if quote_request.status == 'Proposal sent' %}
-                            {% assign reject_quote_request_url = '/account/quote-request/' | append: quote_request.id | append: '/reject/' %}
+                            {% assign reject_quote_request_url = '/quoterequest/quote-request/' | append: quote_request.id | append: '/reject/' %}
                             <a class="btn-secondary" href="{{ reject_quote_request_url | absolute_url }}">Reject proposal</a>
                             {% unless quote_request.status == 'On hold' and quote_request.status == 'Rejected' and quote_request.is_cancelled %}
-                                {% assign confirm_quote_request_url = '/account/quote-request/' | append: quote_request.id | append: '/confirm/' %}
+                                {% assign confirm_quote_request_url = '/quoterequest/quote-request/' | append: quote_request.id | append: '/confirm/' %}
                                 <a class="btn large--right" href="{{ confirm_quote_request_url | absolute_url }}" style="color: #ffffff;">Confirm and checkout</a>
                             {% endunless %}
                         {% endif %}
