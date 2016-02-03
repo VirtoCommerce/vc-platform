@@ -81,7 +81,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LuceneScenarios.cs" />
     <Compile Include="OutlineBuilderTest.cs" />
+    <Compile Include="SearchHelper.cs" />
     <Compile Include="SearchTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
