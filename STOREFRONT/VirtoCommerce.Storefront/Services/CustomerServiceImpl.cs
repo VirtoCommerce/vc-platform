@@ -61,7 +61,6 @@ namespace VirtoCommerce.Storefront.Services
 
                     var quoteRequestsResponse = await _quoteApi.QuoteModuleSearchAsync(new VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria
                     {
-                        Count = 10,
                         CustomerId = customerId,
                         StoreId = workContext.CurrentStore.Id
                     });

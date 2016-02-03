@@ -41,13 +41,13 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
 
             if (customer.Orders != null)
             {
-                var orders = customer.Orders.Select(o => o.ToShopifyModel(urlBuilder)).ToList();
+                var orders = customer.Orders.OrderByDescending(o => o.CreatedDate).Select(o => o.ToShopifyModel(urlBuilder)).ToList();
                 result.Orders = new StorefrontModel.Common.StorefrontPagedList<Order>(orders, 1, 10, customer.OrdersCount, page => workContext.RequestUrl.SetQueryParameter("page", page.ToString()).ToString());
             }
 
             if (customer.QuoteRequests != null)
             {
-                var quoteRequests = customer.QuoteRequests.Select(qr => qr.ToShopifyModel()).ToList();
+                var quoteRequests = customer.QuoteRequests.OrderByDescending(qr => qr.CreatedDate).Select(qr => qr.ToShopifyModel()).ToList();
                 result.QuoteRequests = new StorefrontModel.Common.StorefrontPagedList<QuoteRequest>(quoteRequests, 1, 10, customer.QuoteRequestsCount, page => workContext.RequestUrl.SetQueryParameter("page", page.ToString()).ToString());
             }
 
