@@ -144,13 +144,19 @@ namespace VirtoCommerce.MarketingModule.Data.Services
             var totalCount = 0;
             using (var repository = _repositoryFactory())
             {
-                promotions = repository.Promotions.OrderBy(x => x.Id)
+                var query = repository.Promotions;
+                if (!string.IsNullOrEmpty(criteria.Keyword))
+                {
+                    query = query.Where(x => x.Name.Contains(criteria.Keyword) || x.Description.Contains(criteria.Keyword));
+                }
+
+                promotions = query.OrderBy(x => x.Id)
                                               .Skip(criteria.Start)
                                               .Take(criteria.Count)
                                               .ToArray()
                                               .Select(x => x.ToCoreModel())
                                               .ToList();
-                totalCount = repository.Promotions.Count();
+                totalCount = query.Count();
             }
 
 

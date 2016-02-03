@@ -3,21 +3,12 @@
     function ($scope, promotions, bladeNavigationService, dialogService, uiGridConstants, uiGridHelper) {
         var blade = $scope.blade;
 
-        //pagination settings
-        $scope.pageSettings = {};
-        $scope.pageSettings.totalItems = 0;
-        $scope.pageSettings.currentPage = 1;
-        $scope.pageSettings.numPages = 5;
-        $scope.pageSettings.itemsPerPageCount = 20;
-
-        $scope.filter = { searchKeyword: undefined };
-
         blade.refresh = function () {
             blade.isLoading = true;
 
             promotions.search({
                 responseGroup: 'withPromotions',
-                keyword: $scope.filter.searchKeyword,
+                keyword: filter.keyword,
                 start: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
                 count: $scope.pageSettings.itemsPerPageCount
             }, function (data) {
@@ -115,6 +106,22 @@
                 permission: 'marketing:delete'
             }
         ];
+
+        //pagination settings
+        $scope.pageSettings = {};
+        $scope.pageSettings.totalItems = 0;
+        $scope.pageSettings.currentPage = 1;
+        $scope.pageSettings.numPages = 5;
+        $scope.pageSettings.itemsPerPageCount = 20;
+
+        var filter = $scope.filter = {};
+        filter.criteriaChanged = function () {
+            if ($scope.pageSettings.currentPage > 1) {
+                $scope.pageSettings.currentPage = 1;
+            } else {
+                blade.refresh();
+            }
+        };
 
         // ui-grid
         $scope.setGridOptions = function (gridOptions) {
