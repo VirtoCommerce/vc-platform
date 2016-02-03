@@ -224,8 +224,13 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// <summary>
         /// Gets or sets shopping cart items quantity (sum of each line item quantity * items count)
         /// </summary>
-        public int ItemsCount { get; set; }
-
+        public int ItemsCount
+        {
+            get
+            {
+                return Items.Sum(i => i.Quantity);
+            }
+        }
         /// <summary>
         /// Gets or sets the collection of shopping cart payments
         /// </summary>
