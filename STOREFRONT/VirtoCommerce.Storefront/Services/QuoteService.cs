@@ -59,6 +59,19 @@ namespace VirtoCommerce.Storefront.Services
             return quoteRequest;
         }
 
+        public async Task<QuoteRequestTotals> GetQuoteRequestTotalsAsync(QuoteRequest quoteRequest)
+        {
+            var totals = quoteRequest.Totals;
+
+            var recalculatedQuoteRequest = await _quoteApi.QuoteModuleCalculateTotalsAsync(quoteRequest.ToServiceModel());
+            if (recalculatedQuoteRequest != null)
+            {
+                totals = recalculatedQuoteRequest.Totals.ToWebModel(quoteRequest.Currency);
+            }
+
+            return totals;
+        }
+
         public async Task CreateQuoteRequestAsync(QuoteRequest quoteRequest)
         {
             await _quoteApi.QuoteModuleCreateAsync(quoteRequest.ToServiceModel());

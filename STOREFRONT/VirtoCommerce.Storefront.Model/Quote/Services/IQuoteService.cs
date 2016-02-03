@@ -9,6 +9,8 @@ namespace VirtoCommerce.Storefront.Model.Quote.Services
 
         Task<QuoteRequest> GetQuoteRequestAsync(string customerId, string quoteRequestNumber);
 
+        Task<QuoteRequestTotals> GetQuoteRequestTotalsAsync(QuoteRequest quoteRequest);
+
         Task CreateQuoteRequestAsync(QuoteRequest quoteRequest);
 
         Task UpdateQuoteRequestAsync(QuoteRequest quoteRequest);

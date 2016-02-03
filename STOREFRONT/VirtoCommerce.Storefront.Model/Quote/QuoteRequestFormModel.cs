@@ -9,6 +9,8 @@ namespace VirtoCommerce.Storefront.Model.Quote
             Items = new List<QuoteItemFormModel>();
         }
 
+        public string Id { get; set; }
+
         public string Tag { get; set; }
 
         public string Comment { get; set; }
