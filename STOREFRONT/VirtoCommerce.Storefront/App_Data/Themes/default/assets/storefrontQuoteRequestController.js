@@ -1,11 +1,15 @@
 ﻿var storefrontApp = angular.module('storefrontApp');
 
-storefrontApp.controller('quoteRequestController', ['$scope', '$window', 'quoteRequestService', 'cartService', 'customerService',
-    function ($scope, $window, quoteRequestService, cartService, customerService) {
+storefrontApp.controller('quoteRequestController', ['$scope', '$window', '$sce', 'quoteRequestService', 'cartService', 'customerService',
+    function ($scope, $window, $sce, quoteRequestService, cartService, customerService) {
     const shippingAddressType = 'Shipping';
     const billingAddressType = 'Billing';
 
     initialize();
+
+    $scope.trustedHtml = function (html) {
+        return $sce.trustAsHtml(html);
+    }
 
     $scope.setQuoteRequestForm = function (form) {
         $scope.formQuoteRequest = form;
@@ -140,6 +144,21 @@ storefrontApp.controller('quoteRequestController', ['$scope', '$window', 'quoteR
         }
     }
 
+    $scope.getQuoteRequestTotals = function (quoteItemId, proposalPrice) {
+        var selectedQuoteItem = _.find($scope.customerQuoteRequest.Items, function (i) { return i.Id == quoteItemId});
+        if (selectedQuoteItem) {
+            var price = {
+                Price: proposalPrice.Price.Amount,
+                Quantity: proposalPrice.Quantity
+            };
+            quoteRequestService.getQuoteRequestTotals($scope.customerQuoteRequest.Id, quoteItemId, price).then(function (response) {
+                var quoteRequestTotals = response.data;
+                $scope.customerQuoteRequest.Totals = quoteRequestTotals;
+                selectedQuoteItem.SelectedTierPrice = proposalPrice;
+            });
+        }
+    }
+
     $scope.submitQuoteRequest = function () {
         $scope.quoteRequest.BillingAddress.Type = billingAddressType;
         $scope.quoteRequest.BillingAddress.Email = angular.copy($scope.quoteRequest.Email);
@@ -148,29 +167,8 @@ storefrontApp.controller('quoteRequestController', ['$scope', '$window', 'quoteR
             $scope.quoteRequest.ShippingAddress.Type = shippingAddressType;
             $scope.quoteRequest.ShippingAddress.Email = angular.copy($scope.quoteRequest.Email);
         }
-        var quoteRequest = {
-            Comment: $scope.quoteRequest.Comment,
-            Tag: $scope.customer.IsRegisteredUser ? null : 'actual',
-            BillingAddress: $scope.quoteRequest.BillingAddress,
-            ShippingAddress: $scope.quoteRequest.ShippingAddress,
-            Items: []
-        };
-        for (var i = 0; i < $scope.quoteRequest.Items.length; i++) {
-            var quoteItem = $scope.quoteRequest.Items[i];
-            var proposalPrices = [];
-            for (var j = 0; j < quoteItem.ProposalPrices.length; j++) {
-                var proposalPrice = quoteItem.ProposalPrices[j];
-                proposalPrices.push({
-                    Price: quoteItem.SalePrice.Amount,
-                    Quantity: proposalPrice.Quantity
-                });
-            }
-            quoteRequest.Items.push({
-                Id: quoteItem.Id,
-                Comment: quoteItem.Comment,
-                ProposalPrices: proposalPrices
-            });
-        }
+        var quoteRequest = toJsonModel($scope.quoteRequest);
+        quoteRequest.Tag = $scope.customer.IsRegisteredUser ? null : 'actual';
         $scope.formQuoteRequest.$setSubmitted();
         if ($scope.formQuoteRequest.$invalid) {
             return;
@@ -200,6 +198,7 @@ storefrontApp.controller('quoteRequestController', ['$scope', '$window', 'quoteR
             refreshCurrentQuoteRequest();
         }
         getCurrentCustomer();
+        getQuoteRequestByNumber($window.quoteRequestNumber);
     }
 
     function getCurrentCustomer() {
@@ -215,6 +214,25 @@ storefrontApp.controller('quoteRequestController', ['$scope', '$window', 'quoteR
         if ($scope.quoteRequest.ShippingAddress.CountryCode) {
             getCountryRegions(shippingAddressType, $scope.quoteRequest.ShippingAddress.CountryCode);
         }
+    }
+
+    function getQuoteRequestByNumber(quoteRequestNumber) {
+        if (!quoteRequestNumber) {
+            return;
+        }
+        quoteRequestService.getQuoteRequestByNumber(quoteRequestNumber).then(function (response) {
+            var quoteRequest = response.data;
+            for (var i = 0; i < quoteRequest.Items.length; i++) {
+                var quoteItem = quoteRequest.Items[i];
+                for (var j = 0; j < quoteItem.ProposalPrices.length; j++) {
+                    var proposalPrice = quoteItem.ProposalPrices[j];
+                    proposalPrice.Id = j + 1;
+                }
+                var selectedTierPrice = _.find(quoteItem.ProposalPrices, function (pp) { return pp.Quantity == quoteItem.SelectedTierPrice.Quantity });
+                quoteItem.SelectedTierPrice.Id = selectedTierPrice.Id;
+            }
+            $scope.customerQuoteRequest = quoteRequest;
+        });
     }
 
     function refreshCurrentQuoteRequest() {
@@ -287,5 +305,32 @@ storefrontApp.controller('quoteRequestController', ['$scope', '$window', 'quoteR
         address2.Type = address2Type;
         }
         return isEqual;
+    }
+
+    function toJsonModel(fullQuoteRequest) {
+        var quoteRequest = {
+            Id: fullQuoteRequest.Id,
+            Tag: fullQuoteRequest.Tag,
+            Comment: fullQuoteRequest.Comment,
+            BillingAddress: fullQuoteRequest.BillingAddress,
+            ShippingAddress: fullQuoteRequest.ShippingAddress,
+            Items: []
+        };
+        for (var i = 0; i < fullQuoteRequest.Items.length; i++) {
+            var quoteItem = {
+                Id: fullQuoteRequest.Items[i].Id,
+                Comment: fullQuoteRequest.Items[i].Comment,
+                SelectedTierPrice: fullQuoteRequest.Items[i].SelectedTierPrice,
+                ProposalPrices: []
+            };
+            for (var j = 0; j < fullQuoteRequest.Items[i].ProposalPrices.length; j++) {
+                quoteItem.ProposalPrices.push({
+                    Price: fullQuoteRequest.Items[i].ProposalPrices[j].Price,
+                    Quantity: fullQuoteRequest.Items[i].ProposalPrices[j].Quantity
+                });
+            }
+            quoteRequest.Items.push(quoteItem);
+        }
+        return quoteRequest;
     }
 }]);

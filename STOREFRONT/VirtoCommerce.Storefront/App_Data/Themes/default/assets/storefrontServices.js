@@ -92,6 +92,12 @@ storefrontApp.service('quoteRequestService', ['$http', function ($http) {
         },
         update: function (quoteRequest) {
             return $http.post('quoterequest/update', { quoteRequest: quoteRequest });
+        },
+        getQuoteRequestByNumber: function (quoteRequestNumber) {
+            return $http.get('quoterequest/' + quoteRequestNumber + '/json?t=' + new Date().getTime());
+        },
+        getQuoteRequestTotals: function (quoteRequestId, quoteItemId, tierPrice) {
+            return $http.post('quoterequest/totals/json', { quoteRequestId: quoteRequestId, quoteItemId: quoteItemId, tierPrice: tierPrice });
         }
     }
 }]);

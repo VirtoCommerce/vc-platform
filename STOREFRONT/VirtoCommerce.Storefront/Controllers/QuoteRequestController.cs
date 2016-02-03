@@ -205,6 +205,31 @@ namespace VirtoCommerce.Storefront.Controllers
             return Json(null, JsonRequestBehavior.AllowGet);
         }
 
+        // POST: /quoterequest/totals/json
+        [HttpPost]
+        public async Task<ActionResult> GetTotalsJson(string quoteRequestId, string quoteItemId, TierPriceFormModel tierPrice)
+        {
+            QuoteRequestTotals totals = null;
+
+            var quoteRequest = await GetCustomerQuoteRequestByIdAsync(quoteRequestId);
+            if (quoteRequest != null)
+            {
+                var quoteItem = quoteRequest.Items.FirstOrDefault(i => i.Id == quoteItemId);
+                if (quoteItem != null)
+                {
+                    quoteItem.SelectedTierPrice = new TierPrice
+                    {
+                        Price = new Money(tierPrice.Price, WorkContext.CurrentCurrency),
+                        Quantity = quoteItem.SelectedTierPrice.Quantity
+                    };
+                }
+                var quoteResult = await _quoteApi.QuoteModuleCalculateTotalsAsync(quoteRequest.ToServiceModel());
+                totals = quoteResult.Totals.ToWebModel(quoteRequest.Currency);
+            }
+
+            return Json(totals, JsonRequestBehavior.AllowGet);
+        }
+
 
         private async Task<QuoteRequest> GetCustomerQuoteRequestByIdAsync(string id)
         {

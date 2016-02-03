@@ -13,6 +13,8 @@ namespace VirtoCommerce.Storefront.Model.Quote
 
         public string Comment { get; set; }
 
+        public TierPriceFormModel SelectedTierPrice { get; set; }
+
         public ICollection<TierPriceFormModel> ProposalPrices { get; set; }
     }
 }

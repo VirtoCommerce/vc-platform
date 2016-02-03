@@ -33,7 +33,12 @@ namespace VirtoCommerce.OrderModule.Data.Services
 			using (var repository = _orderRepositoryFactory())
 			{
 				var query = repository.CustomerOrders;
-				if (criteria.CustomerId != null)
+                if (!string.IsNullOrEmpty(criteria.Keyword))
+                {
+                    query = query.Where(x => x.Number.Contains(criteria.Keyword) || x.CustomerName.Contains(criteria.Keyword));
+                }
+                
+                if (criteria.CustomerId != null)
 				{
 					query = query.Where(x => x.CustomerId == criteria.CustomerId);
 				}
