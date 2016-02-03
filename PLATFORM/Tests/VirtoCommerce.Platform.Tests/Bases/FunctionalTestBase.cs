@@ -58,7 +58,8 @@ namespace VirtoCommerce.Platform.Tests.Bases
                 connectionStringFormat = setting.ConnectionString;
             }
 
-            ConnectionString = string.Format(connectionStringFormat, DefaultDatabaseName);//, Guid.NewGuid().ToString("N"));
+            var file = @";AttachDBFilename=|DataDirectory|\{0}.mdf";
+            ConnectionString = string.Format(connectionStringFormat, DefaultDatabaseName) + String.Format(file, DefaultDatabaseName);
         }
 
         /*
