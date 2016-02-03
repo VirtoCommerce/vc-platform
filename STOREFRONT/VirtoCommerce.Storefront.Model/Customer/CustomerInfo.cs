@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.Serialization;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Order;
 using VirtoCommerce.Storefront.Model.Quote;
@@ -62,7 +63,10 @@ namespace VirtoCommerce.Storefront.Model.Customer
         /// Returns the list of tags associated with the customer.
         /// </summary>
         public ICollection<string> Tags { get; set; }
+
+        [IgnoreDataMember]
         public IStorefrontPagedList<CustomerOrder> Orders { get; set; }
+        [IgnoreDataMember]
         public IStorefrontPagedList<QuoteRequest> QuoteRequests { get; set; }
     }
 }
