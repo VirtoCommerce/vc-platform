@@ -15,7 +15,7 @@ namespace VirtoCommerce.Domain.Quote.Model
 
 		public int TotalCount { get; set; }
 
-		public List<QuoteRequest> QuoteRequests { get; set; }
+		public ICollection<QuoteRequest> QuoteRequests { get; set; }
 
 	}
 }

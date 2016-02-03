@@ -33,12 +33,16 @@ namespace VirtoCommerce.QuoteModule.Web.Controllers.Api
         /// </summary>
         /// <param name="criteria">criteria</param>
         [HttpPost]
-        [ResponseType(typeof(coreModel.QuoteRequestSearchResult))]
+        [ResponseType(typeof(webModel.QuoteRequestSearchResult))]
         [Route("search")]
         public IHttpActionResult Search(coreModel.QuoteRequestSearchCriteria criteria)
         {
             var retVal = _quoteRequestService.Search(criteria);
-            return Ok(retVal);
+            return Ok(new webModel.QuoteRequestSearchResult
+            {
+                QuoteRequests = retVal.QuoteRequests.Select(x => x.ToWebModel()).ToList(),
+                TotalCount = retVal.TotalCount
+            });
         }
 
 
