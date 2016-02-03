@@ -25,9 +25,6 @@ namespace VirtoCommerce.MarketingModule.Test
 {
     public class MarketingControllerScenarios : FunctionalTestBase
 	{
-        //public readonly string DatabaseName = string.Format("MarketingTests_", Guid.NewGuid().ToString("N"));
-        public const string DatabaseName = "MarketingTests";
-
         [Fact]
         [Trait("Category", "CI")]
         public void Can_create_marketing_contentitem()
@@ -236,8 +233,8 @@ namespace VirtoCommerce.MarketingModule.Test
 
         protected IMarketingRepository GetRepository()
         {
-            var repository = new MarketingRepositoryImpl(DatabaseName, new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor());
-            EnsureDatabaseInitialized(() => new MarketingRepositoryImpl(DatabaseName), () => Database.SetInitializer(new SetupDatabaseInitializer<MarketingRepositoryImpl, Configuration>()));
+            var repository = new MarketingRepositoryImpl(ConnectionString, new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor());
+            EnsureDatabaseInitialized(() => new MarketingRepositoryImpl(ConnectionString), () => Database.SetInitializer(new SetupDatabaseInitializer<MarketingRepositoryImpl, Configuration>()));
             return repository;
         }
 
@@ -247,7 +244,7 @@ namespace VirtoCommerce.MarketingModule.Test
             {
                 // Ensure LocalDb databases are deleted after use so that LocalDb doesn't throw if
                 // the temp location in which they are stored is later cleaned.
-                using (var context = new MarketingRepositoryImpl(DatabaseName))
+                using (var context = new MarketingRepositoryImpl(ConnectionString))
                 {
                     context.Database.Delete();
                 }
