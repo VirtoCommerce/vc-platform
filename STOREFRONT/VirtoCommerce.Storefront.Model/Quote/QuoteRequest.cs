@@ -9,13 +9,19 @@ namespace VirtoCommerce.Storefront.Model.Quote
 {
     public class QuoteRequest : Entity
     {
-        public QuoteRequest()
+        public QuoteRequest(Currency currency, Language language)
         {
             Addresses = new List<Address>();
             Attachments = new List<Attachment>();
             Items = new List<QuoteItem>();
             TaxDetails = new List<TaxDetail>();
             DynamicProperties = new List<DynamicProperty>();
+            Language = language;
+            Currency = currency;
+            ManualShippingTotal = new Money(currency);
+            Totals = new QuoteRequestTotals(currency);
+            ManualSubTotal = new Money(currency);
+            ManualRelDiscountAmount = new Money(currency);
         }
 
         public string Number { get; set; }
@@ -95,6 +101,30 @@ namespace VirtoCommerce.Storefront.Model.Quote
         public string CreatedBy { get; set; }
 
         public string ModifiedBy { get; set; }
+
+        public Address BillingAddress
+        {
+            get
+            {
+                return Addresses.FirstOrDefault(a => a.Type == AddressType.Billing);
+            }
+        }
+
+        public Address ShippingAddress
+        {
+            get
+            {
+                return Addresses.FirstOrDefault(a => a.Type == AddressType.Shipping);
+            }
+        }
+
+        public bool RequestShippingQuote
+        {
+            get
+            {
+                return ShippingAddress != null;
+            }
+        }
 
         public QuoteItem RecentlyAddedItem
         {

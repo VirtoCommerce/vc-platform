@@ -45,7 +45,6 @@ namespace VirtoCommerce.QuoteModule.Web.Controllers.Api
             });
         }
 
-
         /// <summary>
         /// Get RFQ by id
         /// </summary>

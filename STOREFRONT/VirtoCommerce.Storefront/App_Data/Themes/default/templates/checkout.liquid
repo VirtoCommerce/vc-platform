@@ -6,7 +6,7 @@
             <div class="step__sections">
                 <div class="section section--contact-information">
                     <div class="section__header">
-                        <h2 class="section__title">Customer infromation</h2>
+                        <h2 class="section__title">Customer information</h2>
                     </div>
                     <div class="section__content">
                         <div class="fieldset">
@@ -25,7 +25,7 @@
                         </div>
                         <p class="section__content__text" ng-if="!customer.IsRegisteredUser">
                             Already have an account with us?
-                            <a href="">Log in</a>
+                            <a href="{{ 'account/login' | absolute_url }}">Log in</a>
                         </p>
                     </div>
                 </div>
@@ -137,7 +137,7 @@
                 </div>
             </div>
             <div class="step__footer">
-                <button class="btn step__foter__continue-btn" type="button" ng-class="{ 'btn--loading': checkout.ShippingAddressProcessing }" ng-click="submitShippingAddress()">
+                <button class="btn step__footer__continue-btn" type="button" ng-class="{ 'btn--loading': checkout.ShippingAddressProcessing }" ng-click="submitShippingAddress()" ng-disabled="checkout.ShippingAddressProcessing">
                     <span class="btn__content">Continue to shipping method</span>
                     <i class="btn__spinner icon icon--button-spinner"></i>
                 </button>
@@ -178,7 +178,7 @@
                     <div class="section__content">
                         <div ng-if="checkout.Shipment.ValidationWarnings.length">
                             <div class="alert alert-error" ng-if="checkout.Shipment.ValidationWarnings[0].ErrorCode == 'ShippingUnavailableError'">
-                                There are no any available shipping methods for current shipping address and items!
+                              There is no shipping method for current shipping address and items available!
                             </div>
                         </div>
                         <div class="content-box" ng-repeat="availableShippingMethod in checkout.AvailableShippingMethods" ng-if="!checkout.Shipment.ValidationWarnings.length">
@@ -220,7 +220,7 @@
             <div class="step__sections">
                 <div class="section section--contact-information">
                     <div class="section__header">
-                        <h2 class="section__title">Customer infromation</h2>
+                        <h2 class="section__title">Customer information</h2>
                     </div>
                     <div class="section__content">
                         <div class="fieldset">
@@ -308,7 +308,7 @@
                                             Please enter expiration date in MM / YY format
                                         </p>
                                         <p class="field__message field__message--error" ng-if="(formPaymentMethod.BankCardExpirationDate.$dirty || formPaymentMethod.$submitted) && checkout.BankCardInfo.IsExpired">
-                                            Your bank card is expired
+                                            The card has expired
                                         </p>
                                     </div>
                                     <div class="field field--quarter field--required" ng-class="{ 'field--show-floating-label': !formPaymentMethod.BankCardCvv.$error.required, 'field--error': (formPaymentMethod.BankCardCvv.$dirty || formPaymentMethod.$submitted) && formPaymentMethod.BankCardCvv.$invalid }">
@@ -317,7 +317,7 @@
                                             <input class="field__input" id="BankCardCvv" name="BankCardCvv" placeholder="CVV" required="required" size="30" type="text" ng-model="checkout.BankCardInfo.Cvv" ng-pattern="checkout.BankCardInfo.CvvPattern" ng-disabled="checkout.OrderProcessing" />
                                             <span class="field__icon icon icon--question has-tooltip">
                                                 <span class="tooltip">
-                                                    3-digit security code usually found on the back of your card. American Express cards have a 4-digit code located on the front.
+                                                    3-digit security code usually found on the back of the card. American Express cards have a 4-digit code located on the front.
                                                 </span>
                                             </span>
                                         </div>
@@ -346,7 +346,7 @@
                                 <div class="checkbox__input">
                                     <input class="input-checkbox" id="BillingAddressEqualsShipping" name="BillingAddressEqualsShipping" type="checkbox" ng-model="checkout.BillingAddressEqualsShipping" ng-change="setBillingAddressEqualShipping()" ng-disabled="checkout.OrderProcessing" />
                                 </div>
-                                <label class="checkbox__label" for="BillingAddressEqualsShipping">Billing address is equals to shipping address</label>
+                                <label class="checkbox__label" for="BillingAddressEqualsShipping">Billing address is equal to shipping address</label>
                             </div>
                             <div class="radio-group__row content-box__row content-box__row--secondary" ng-if="!checkout.HasPhysicalProducts || checkout.HasPhysicalProducts && !checkout.BillingAddressEqualsShipping">
                                 <div class="fieldset">

@@ -292,6 +292,8 @@ audio, canvas, progress, video {
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
   height: auto;
+  margin: 0;
+  -webkit-appearance: none;
 }
 
 input[type="search"]::-webkit-search-cancel-button,
@@ -4642,4 +4644,21 @@ html[xmlns] .slides { display: block; }
 /* New common styles */
 .line-through {
     text-decoration:line-through;
+}
+
+.alert {
+    margin-bottom: 15px;
+    margin-top: -15px;
+}
+.alert.alert-success {
+    color: #3c763d;
+}
+.alert.alert-info {
+    color: #31708f;
+}
+.alert.alert-warning {
+    color: #8a6d3b;
+}
+.alert.alert-error {
+    color: #dc0000;
 }

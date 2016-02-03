@@ -53,29 +53,34 @@ namespace VirtoCommerce.Storefront.Services
                 if (contact != null)
                 {
                     result = contact.ToWebModel();
-
+                    var currentOrderCriteria = workContext.CurrentOrderSearchCriteria;
                     var orderSearchcriteria = new VirtoCommerceDomainOrderModelSearchCriteria
                     {
                         CustomerId = customerId,
                         ResponseGroup = "full",
-                        Start = workContext.CurrentOrderSearchCriteria.PageNumber,
-                        Count = workContext.CurrentOrderSearchCriteria.PageSize
+                        Start = currentOrderCriteria.Start,
+                        Count = currentOrderCriteria.PageSize
                     };
                     var ordersResponse = await _orderApi.OrderModuleSearchAsync(orderSearchcriteria);
-                    result.Orders = new StorefrontPagedList<CustomerOrder>(ordersResponse.CustomerOrders.Select(x => x.ToWebModel(workContext.AllCurrencies, workContext.CurrentLanguage)), orderSearchcriteria.Start.Value, orderSearchcriteria.Count.Value,
+                    result.Orders = new StorefrontPagedList<CustomerOrder>(ordersResponse.CustomerOrders.Select(x => x.ToWebModel(workContext.AllCurrencies, workContext.CurrentLanguage)),
+                                                                            currentOrderCriteria.PageNumber,
+                                                                            currentOrderCriteria.PageSize,
                                                                             ordersResponse.TotalCount.Value, page => workContext.RequestUrl.SetQueryParameter("page", page.ToString()).ToString());
 
                     if (workContext.CurrentStore.QuotesEnabled)
                     {
+                        var currentQuoteCriteria = workContext.CurrentQuoteSearchCriteria;
                         var quoteSearchCriteria = new VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria
                         {
-                            Count = workContext.CurrentOrderSearchCriteria.PageSize,
+                            Count = currentQuoteCriteria.PageSize,
                             CustomerId = customerId,
-                            Start = workContext.CurrentOrderSearchCriteria.PageNumber,
+                            Start = currentQuoteCriteria.Start,
                             StoreId = workContext.CurrentStore.Id
                         };
                         var quoteRequestsResponse = await _quoteApi.QuoteModuleSearchAsync(quoteSearchCriteria);
-                        result.QuoteRequests = new StorefrontPagedList<QuoteRequest>(quoteRequestsResponse.QuoteRequests.Select(x => x.ToWebModel()), quoteSearchCriteria.Start.Value, quoteSearchCriteria.Count.Value,
+                        result.QuoteRequests = new StorefrontPagedList<QuoteRequest>(quoteRequestsResponse.QuoteRequests.Select(x => x.ToWebModel(workContext.AllCurrencies, workContext.CurrentLanguage)),
+                                                                                     currentQuoteCriteria.PageNumber,
+                                                                                     currentQuoteCriteria.PageSize,
                                                                                      quoteRequestsResponse.TotalCount.Value, page => workContext.RequestUrl.SetQueryParameter("page", page.ToString()).ToString());
                     }
                 }

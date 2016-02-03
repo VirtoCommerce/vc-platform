@@ -152,9 +152,8 @@ namespace VirtoCommerce.Storefront.Model
 
         public Country[] AllCountries { get; set; }
 
-        public CustomerOrder Order { get; set; }
+        public CustomerOrder CurrentOrder { get; set; }
 
-        public QuoteRequest QuoteRequest { get; set; }
 
         public ContactUsForm ContactUsForm { get; set; }
 

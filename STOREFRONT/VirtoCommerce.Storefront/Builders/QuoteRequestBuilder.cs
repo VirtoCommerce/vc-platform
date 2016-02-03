@@ -64,15 +64,15 @@ namespace VirtoCommerce.Storefront.Builders
                 QuoteRequest quoteRequest = null;
                 var activeQuoteSearchCriteria = new VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria
                 {
-                    Tag = "active",
+                    Tag = "actual",
                     CustomerId = customer.Id,
                     StoreId = store.Id
                 };
                 var searchResult = await _quoteApi.QuoteModuleSearchAsync(activeQuoteSearchCriteria);
-                quoteRequest = searchResult.QuoteRequests.Select(x => x.ToWebModel()).FirstOrDefault();
+                quoteRequest = searchResult.QuoteRequests.Select(x => x.ToWebModel(store.Currencies, language)).FirstOrDefault();
                 if (quoteRequest == null)
                 {
-                    quoteRequest = new QuoteRequest();
+                    quoteRequest = new QuoteRequest(currency, language);
                     quoteRequest.Currency = currency;
                     quoteRequest.CustomerId = customer.Id;
                     quoteRequest.Language = language;
@@ -91,7 +91,7 @@ namespace VirtoCommerce.Storefront.Builders
                 }
                 else
                 {
-                    quoteRequest = (await _quoteApi.QuoteModuleGetByIdAsync(quoteRequest.Id)).ToWebModel();
+                    quoteRequest = (await _quoteApi.QuoteModuleGetByIdAsync(quoteRequest.Id)).ToWebModel(store.Currencies, language);
                 }
 
                 quoteRequest.Customer = customer;
@@ -169,6 +169,8 @@ namespace VirtoCommerce.Storefront.Builders
 
         public async Task<IQuoteRequestBuilder> MergeWithQuoteRequest(QuoteRequest quoteRequest)
         {
+            _quoteRequest.Comment = quoteRequest.Comment;
+
             foreach (var quoteItem in quoteRequest.Items)
             {
                 _quoteRequest.Items.Add(quoteItem);
@@ -218,13 +220,13 @@ namespace VirtoCommerce.Storefront.Builders
         public void OnNext(UserLoginEvent userLoginEvent)
         {
             //If previous user was anonymous and it has not empty cart need merge anonymous cart to personal
-            if (!userLoginEvent.PrevUser.IsRegisteredUser && userLoginEvent.WorkContext.QuoteRequest != null && userLoginEvent.WorkContext.QuoteRequest.Items.Any())
+            if (!userLoginEvent.PrevUser.IsRegisteredUser && userLoginEvent.WorkContext.CurrentQuoteRequest != null && userLoginEvent.WorkContext.CurrentQuoteRequest.Items.Any())
             {
                 //Call async methods synchronously http://blog.stephencleary.com/2012/07/dont-block-on-async-code.html
                 var task = new TaskFactory().StartNew(async () =>
                 {
                     await GetOrCreateNewTransientQuoteRequestAsync(userLoginEvent.WorkContext.CurrentStore, userLoginEvent.NewUser, userLoginEvent.WorkContext.CurrentLanguage, userLoginEvent.WorkContext.CurrentCurrency);
-                    await MergeWithQuoteRequest(userLoginEvent.WorkContext.QuoteRequest).ConfigureAwait(false);
+                    await MergeWithQuoteRequest(userLoginEvent.WorkContext.CurrentQuoteRequest).ConfigureAwait(false);
                     await SaveAsync().ConfigureAwait(false);
                 });
 

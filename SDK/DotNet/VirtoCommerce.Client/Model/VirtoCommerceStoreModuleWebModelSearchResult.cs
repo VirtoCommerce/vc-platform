@@ -16,12 +16,12 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommerceDomainQuoteModelQuoteRequestSearchResult : IEquatable<VirtoCommerceDomainQuoteModelQuoteRequestSearchResult>
+    public class VirtoCommerceStoreModuleWebModelSearchResult : IEquatable<VirtoCommerceStoreModuleWebModelSearchResult>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainQuoteModelQuoteRequestSearchResult" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceStoreModuleWebModelSearchResult" /> class.
         /// </summary>
-        public VirtoCommerceDomainQuoteModelQuoteRequestSearchResult()
+        public VirtoCommerceStoreModuleWebModelSearchResult()
         {
             
         }
@@ -35,10 +35,10 @@ namespace VirtoCommerce.Client.Model
   
         
         /// <summary>
-        /// Gets or Sets QuoteRequests
+        /// Gets or Sets Stores
         /// </summary>
-        [DataMember(Name="quoteRequests", EmitDefaultValue=false)]
-        public List<VirtoCommerceDomainQuoteModelQuoteRequest> QuoteRequests { get; set; }
+        [DataMember(Name="stores", EmitDefaultValue=false)]
+        public List<VirtoCommerceStoreModuleWebModelStore> Stores { get; set; }
   
         
   
@@ -49,9 +49,9 @@ namespace VirtoCommerce.Client.Model
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class VirtoCommerceDomainQuoteModelQuoteRequestSearchResult {\n");
+            sb.Append("class VirtoCommerceStoreModuleWebModelSearchResult {\n");
             sb.Append("  TotalCount: ").Append(TotalCount).Append("\n");
-            sb.Append("  QuoteRequests: ").Append(QuoteRequests).Append("\n");
+            sb.Append("  Stores: ").Append(Stores).Append("\n");
             
             sb.Append("}\n");
             return sb.ToString();
@@ -74,15 +74,15 @@ namespace VirtoCommerce.Client.Model
         public override bool Equals(object obj)
         {
             // credit: http://stackoverflow.com/a/10454552/677735
-            return this.Equals(obj as VirtoCommerceDomainQuoteModelQuoteRequestSearchResult);
+            return this.Equals(obj as VirtoCommerceStoreModuleWebModelSearchResult);
         }
 
         /// <summary>
-        /// Returns true if VirtoCommerceDomainQuoteModelQuoteRequestSearchResult instances are equal
+        /// Returns true if VirtoCommerceStoreModuleWebModelSearchResult instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommerceDomainQuoteModelQuoteRequestSearchResult to be compared</param>
+        /// <param name="obj">Instance of VirtoCommerceStoreModuleWebModelSearchResult to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(VirtoCommerceDomainQuoteModelQuoteRequestSearchResult other)
+        public bool Equals(VirtoCommerceStoreModuleWebModelSearchResult other)
         {
             // credit: http://stackoverflow.com/a/10454552/677735
             if (other == null)
@@ -95,9 +95,9 @@ namespace VirtoCommerce.Client.Model
                     this.TotalCount.Equals(other.TotalCount)
                 ) && 
                 (
-                    this.QuoteRequests == other.QuoteRequests ||
-                    this.QuoteRequests != null &&
-                    this.QuoteRequests.SequenceEqual(other.QuoteRequests)
+                    this.Stores == other.Stores ||
+                    this.Stores != null &&
+                    this.Stores.SequenceEqual(other.Stores)
                 );
         }
 
@@ -116,8 +116,8 @@ namespace VirtoCommerce.Client.Model
                 if (this.TotalCount != null)
                     hash = hash * 57 + this.TotalCount.GetHashCode();
                 
-                if (this.QuoteRequests != null)
-                    hash = hash * 57 + this.QuoteRequests.GetHashCode();
+                if (this.Stores != null)
+                    hash = hash * 57 + this.Stores.GetHashCode();
                 
                 return hash;
             }

@@ -16,29 +16,29 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommerceDomainQuoteModelTierPrice : IEquatable<VirtoCommerceDomainQuoteModelTierPrice>
+    public class VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult : IEquatable<VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainQuoteModelTierPrice" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult" /> class.
         /// </summary>
-        public VirtoCommerceDomainQuoteModelTierPrice()
+        public VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult()
         {
             
         }
 
         
         /// <summary>
-        /// Gets or Sets Price
+        /// Gets or Sets TotalCount
         /// </summary>
-        [DataMember(Name="price", EmitDefaultValue=false)]
-        public double? Price { get; set; }
+        [DataMember(Name="totalCount", EmitDefaultValue=false)]
+        public int? TotalCount { get; set; }
   
         
         /// <summary>
-        /// Gets or Sets Quantity
+        /// Gets or Sets QuoteRequests
         /// </summary>
-        [DataMember(Name="quantity", EmitDefaultValue=false)]
-        public long? Quantity { get; set; }
+        [DataMember(Name="quoteRequests", EmitDefaultValue=false)]
+        public List<VirtoCommerceQuoteModuleWebModelQuoteRequest> QuoteRequests { get; set; }
   
         
   
@@ -49,9 +49,9 @@ namespace VirtoCommerce.Client.Model
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class VirtoCommerceDomainQuoteModelTierPrice {\n");
-            sb.Append("  Price: ").Append(Price).Append("\n");
-            sb.Append("  Quantity: ").Append(Quantity).Append("\n");
+            sb.Append("class VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult {\n");
+            sb.Append("  TotalCount: ").Append(TotalCount).Append("\n");
+            sb.Append("  QuoteRequests: ").Append(QuoteRequests).Append("\n");
             
             sb.Append("}\n");
             return sb.ToString();
@@ -74,15 +74,15 @@ namespace VirtoCommerce.Client.Model
         public override bool Equals(object obj)
         {
             // credit: http://stackoverflow.com/a/10454552/677735
-            return this.Equals(obj as VirtoCommerceDomainQuoteModelTierPrice);
+            return this.Equals(obj as VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult);
         }
 
         /// <summary>
-        /// Returns true if VirtoCommerceDomainQuoteModelTierPrice instances are equal
+        /// Returns true if VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommerceDomainQuoteModelTierPrice to be compared</param>
+        /// <param name="obj">Instance of VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(VirtoCommerceDomainQuoteModelTierPrice other)
+        public bool Equals(VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult other)
         {
             // credit: http://stackoverflow.com/a/10454552/677735
             if (other == null)
@@ -90,14 +90,14 @@ namespace VirtoCommerce.Client.Model
 
             return 
                 (
-                    this.Price == other.Price ||
-                    this.Price != null &&
-                    this.Price.Equals(other.Price)
+                    this.TotalCount == other.TotalCount ||
+                    this.TotalCount != null &&
+                    this.TotalCount.Equals(other.TotalCount)
                 ) && 
                 (
-                    this.Quantity == other.Quantity ||
-                    this.Quantity != null &&
-                    this.Quantity.Equals(other.Quantity)
+                    this.QuoteRequests == other.QuoteRequests ||
+                    this.QuoteRequests != null &&
+                    this.QuoteRequests.SequenceEqual(other.QuoteRequests)
                 );
         }
 
@@ -113,11 +113,11 @@ namespace VirtoCommerce.Client.Model
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
                 
-                if (this.Price != null)
-                    hash = hash * 57 + this.Price.GetHashCode();
+                if (this.TotalCount != null)
+                    hash = hash * 57 + this.TotalCount.GetHashCode();
                 
-                if (this.Quantity != null)
-                    hash = hash * 57 + this.Quantity.GetHashCode();
+                if (this.QuoteRequests != null)
+                    hash = hash * 57 + this.QuoteRequests.GetHashCode();
                 
                 return hash;
             }

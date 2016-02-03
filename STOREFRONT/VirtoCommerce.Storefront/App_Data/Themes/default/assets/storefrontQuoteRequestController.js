@@ -68,6 +68,7 @@ storefrontApp.controller('quoteRequestController', ['$scope', '$window', 'quoteR
     }
 
     $scope.addToQuoteRequest = function (product, quantity) {
+        $scope.quoteRequestIsUpdating = true;
         $scope.recentQuoteItemModalVisible = true;
         $scope.quoteRequest.RecentlyAddedItem = {
             ImageUrl: product.PrimaryImage.Url,
@@ -84,9 +85,17 @@ storefrontApp.controller('quoteRequestController', ['$scope', '$window', 'quoteR
     }
 
     $scope.removeFromQuoteRequest = function (quoteItemId) {
+        var quoteItem = _.find($scope.quoteRequest.Items, function (i) { return i.Id == quoteItemId });
+        if (!quoteItem || $scope.quoteRequestIsUpdating) {
+            return;
+        }
+        $scope.quoteRequestIsUpdating = true;
+        var initialItems = angular.copy($scope.quoteRequest.Items);
+        $scope.quoteRequest.Items = _.without($scope.quoteRequest.Items, quoteItem);
         quoteRequestService.removeItem(quoteItemId).then(function (response) {
             refreshCurrentQuoteRequest();
         }, function (response) {
+            $scope.quoteRequest.Items = initialItems;
             $scope.quoteRequestIsUpdating = false;
         });
     }
@@ -141,7 +150,7 @@ storefrontApp.controller('quoteRequestController', ['$scope', '$window', 'quoteR
         }
         var quoteRequest = {
             Comment: $scope.quoteRequest.Comment,
-            Tag: null,
+            Tag: $scope.customer.IsRegisteredUser ? null : 'actual',
             BillingAddress: $scope.quoteRequest.BillingAddress,
             ShippingAddress: $scope.quoteRequest.ShippingAddress,
             Items: []
@@ -166,12 +175,14 @@ storefrontApp.controller('quoteRequestController', ['$scope', '$window', 'quoteR
         if ($scope.formQuoteRequest.$invalid) {
             return;
         }
-        if ($scope.customer.IsRegisteredUser) {
             quoteRequestService.update(quoteRequest).then(function (response) {
+            if ($scope.customer.IsRegisteredUser) {
             	$scope.outerRedirect($scope.baseUrl + 'quoterequest/quote-requests/');
+            } else {
+                $scope.outerRedirect($scope.baseUrl + 'account/login/');
+            }
             });
         }
-    }
 
     function initialize() {
         $scope.quoteRequest = {
@@ -198,11 +209,6 @@ storefrontApp.controller('quoteRequestController', ['$scope', '$window', 'quoteR
         });
     }
 
-    //function proposalPricesAreUnique(proposalPrices) {
-    //    var uniqueProposalPrices = _.uniq(_.pluck(_.flatten(proposalPrices), 'Quantity'));
-    //    return proposalPrices.length == uniqueProposalPrices.length;
-    //}
-
     function setShippingAddressEqualsBilling() {
         $scope.quoteRequest.ShippingAddress = angular.copy($scope.quoteRequest.BillingAddress);
         $scope.quoteRequest.ShippingAddress.Type = shippingAddressType;
@@ -216,25 +222,10 @@ storefrontApp.controller('quoteRequestController', ['$scope', '$window', 'quoteR
         quoteRequestService.getCurrentQuoteRequest().then(function (response) {
             $scope.quoteRequestIsUpdating = false;
             var quoteRequest = response.data;
-            if (quoteRequest.Addresses.length) {
-                var billingAddress = _.find(quoteRequest.Addresses, function (a) { return a.Type == billingAddressType });
-                if (billingAddress) {
-                    quoteRequest.Email = billingAddress.Email;
-                    quoteRequest.BillingAddress = billingAddress;
-                    if (billingAddress.CountryCode) {
-                        getCountryRegions(billingAddressType, billingAddress.CountryCode);
-                    }
-                }
-                var shippingAddress = _.find(quoteRequest.Addresses, function (a) { return a.Type == shippingAddressType });
-                if (shippingAddress) {
-                    quoteRequest.ShippingAddress = shippingAddress;
-                    quoteRequest.RequestShippingQuote = true;
-                    if (shippingAddress.CountryCode) {
-                        getCountryRegions(shippingAddressType, shippingAddress.CountryCode);
-                    }
-                }
-                if (billingAddress && shippingAddress) {
-                    quoteRequest.ShippingAddressEqualsBilling = addressesEqual(billingAddress, shippingAddress);
+            if (quoteRequest.BillingAddress) {
+                quoteRequest.Email = quoteRequest.BillingAddress.Email;
+                if (quoteRequest.BillingAddress.CountryCode) {
+                    getCountryRegions(billingAddressType, quoteRequest.BillingAddress.CountryCode);
                 }
             } else {
                 quoteRequest.Email = $scope.customer.Email;
@@ -242,7 +233,10 @@ storefrontApp.controller('quoteRequestController', ['$scope', '$window', 'quoteR
                     Type: billingAddressType,
                     FirstName: $scope.customer.FirstName,
                     LastName: $scope.customer.LastName
+                };
                 }
+            if (quoteRequest.ShippingAddress && quoteRequest.ShippingAddress.CountryCode) {
+                getCountryRegions(shippingAddressType, quoteRequest.ShippingAddress.CountryCode);
             }
             for (var i = 0; i < quoteRequest.Items.length; i++) {
                 var quoteItem = quoteRequest.Items[i];
@@ -251,6 +245,7 @@ storefrontApp.controller('quoteRequestController', ['$scope', '$window', 'quoteR
                     proposalPrice.Id = j + 1;
                 }
             }
+            quoteRequest.ShippingAddressEqualsBilling = addressesEqual(quoteRequest.BillingAddress, quoteRequest.ShippingAddress);
             $scope.quoteRequest = quoteRequest;
             getCountries();
         });
@@ -283,11 +278,14 @@ storefrontApp.controller('quoteRequestController', ['$scope', '$window', 'quoteR
     }
 
     function addressesEqual(address1, address2) {
+        var isEqual = false;
+        if (address1 && address2) {
         var address1Type = address1.Type; address1.Type = null;
         var address2Type = address2.Type; address2.Type = null;
-        var isEqual = angular.equals(address1, address2);
+            isEqual = angular.equals(address1, address2);
         address1.Type = address1Type;
         address2.Type = address2Type;
+        }
         return isEqual;
     }
 }]);

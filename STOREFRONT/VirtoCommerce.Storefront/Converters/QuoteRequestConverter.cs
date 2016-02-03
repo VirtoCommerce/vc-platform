@@ -5,21 +5,20 @@ using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Marketing;
 using VirtoCommerce.Storefront.Model.Quote;
+using System.Collections.Generic;
 
 namespace VirtoCommerce.Storefront.Converters
 {
     public static class QuoteRequestConverter
     {
 
-        public static QuoteRequest ToWebModel(this VirtoCommerceQuoteModuleWebModelQuoteRequest serviceModel)
+        public static QuoteRequest ToWebModel(this VirtoCommerceQuoteModuleWebModelQuoteRequest serviceModel, IEnumerable<Currency> availCurrencies, Language language)
         {
-            var webModel = new QuoteRequest();
+            var currency = availCurrencies.FirstOrDefault(x => x.Equals(serviceModel.Currency)) ?? new Currency(language, serviceModel.Currency);
+            var webModel = new QuoteRequest(currency, language);
 
             webModel.InjectFrom<NullableAndEnumValueInjecter>(serviceModel);
-
-            var language = new Language(serviceModel.LanguageCode);
-            var currency = new Currency(language, serviceModel.Currency);
-
+           
             webModel.Currency = currency;
             webModel.Language = language;
             webModel.ManualRelDiscountAmount = new Money(serviceModel.ManualRelDiscountAmount ?? 0, currency);

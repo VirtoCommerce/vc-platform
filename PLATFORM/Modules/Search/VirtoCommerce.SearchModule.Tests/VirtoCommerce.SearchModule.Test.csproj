@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>VirtoCommerce.SearchModule.Tests</RootNamespace>
-    <AssemblyName>VirtoCommerce.SearchModule.Tests</AssemblyName>
+    <AssemblyName>VirtoCommerce.SearchModule.Test</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -81,7 +81,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LuceneScenarios.cs" />
     <Compile Include="OutlineBuilderTest.cs" />
+    <Compile Include="SearchHelper.cs" />
     <Compile Include="SearchTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

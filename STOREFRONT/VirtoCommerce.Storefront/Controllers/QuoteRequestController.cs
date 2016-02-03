@@ -1,8 +1,11 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Mvc;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.Client.Model;
+using VirtoCommerce.LiquidThemeEngine.Extensions;
+using VirtoCommerce.Storefront.Converters;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Cart.Services;
 using VirtoCommerce.Storefront.Model.Catalog;
@@ -44,40 +47,41 @@ namespace VirtoCommerce.Storefront.Controllers
         {
             EnsureThatQuoteRequestExists();
 
-            return Json(_quoteRequestBuilder.QuoteRequest, JsonRequestBehavior.AllowGet);
+            return Json(WorkContext.CurrentQuoteRequest, JsonRequestBehavior.AllowGet);
         }
 
         // GET: /quoterequest/quote-requests
         [HttpGet]
         public async Task<ActionResult> QuoteRequests()
         {
+            var criteria = base.WorkContext.CurrentQuoteSearchCriteria;
             var quoteSearchCriteria = new VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria
             {
-                Start = base.WorkContext.CurrentQuoteSearchCriteria.PageNumber,
-                Count = base.WorkContext.CurrentQuoteSearchCriteria.PageSize,
+                Start = criteria.Start,
+                Count = criteria.PageSize,
                 StoreId = base.WorkContext.CurrentStore.Id,
                 CustomerId = base.WorkContext.CurrentCustomer.Id
             };
             var searchResult = await _quoteApi.QuoteModuleSearchAsync(quoteSearchCriteria);
-            WorkContext.CurrentCustomer.QuoteRequests = new StorefrontPagedList<QuoteRequest>(searchResult.QuoteRequests.Select(x => x.ToWebModel()), quoteSearchCriteria.Start.Value, quoteSearchCriteria.Count.Value,
-                                                                                              searchResult.TotalCount.Value, page => workContext.RequestUrl.SetQueryParameter("page", page.ToString()).ToString());
+            WorkContext.CurrentCustomer.QuoteRequests = new StorefrontPagedList<QuoteRequest>(searchResult.QuoteRequests.Select(x => x.ToWebModel(base.WorkContext.AllCurrencies, base.WorkContext.CurrentLanguage)), criteria.PageNumber, criteria.PageSize,
+                                                                                              searchResult.TotalCount.Value, page => WorkContext.RequestUrl.SetQueryParameter("page", page.ToString()).ToString());
 
             return View("customers/quote-requests", WorkContext);
         }
 
         // GET: /quoterequest/quote-request/{number}
         [HttpGet]
-        public async Task<ActionResult> QuoteRequest(string number)
+        public async Task<ActionResult> GetQuoteRequestByNumber(string number)
         {
             if (string.IsNullOrEmpty(number))
             {
-                return HttpNotFound();
+                throw new HttpException(404, string.Empty);
             }
-            WorkContext.QuoteRequest = await GetCustomerQuoteRequestByNumberAsync(number);
+            WorkContext.CurrentQuoteRequest = await GetCustomerQuoteRequestByIdAsync(number);
 
-            if (WorkContext.QuoteRequest == null)
+            if (WorkContext.CurrentQuoteRequest == null)
             {
-                return HttpNotFound();
+                throw new HttpException(404, string.Empty);
             }
             return View("customers/quote-request", WorkContext);
         }
@@ -88,13 +92,13 @@ namespace VirtoCommerce.Storefront.Controllers
         {
             if (string.IsNullOrEmpty(number))
             {
-                return HttpNotFound();
+                throw new HttpException(404, string.Empty);
             }
 
-            WorkContext.QuoteRequest = await GetCustomerQuoteRequestByNumberAsync(number);
-            if (WorkContext.QuoteRequest == null)
+            WorkContext.CurrentQuoteRequest = await GetCustomerQuoteRequestByIdAsync(number);
+            if (WorkContext.CurrentQuoteRequest == null)
             {
-                return HttpNotFound();
+                throw new HttpException(404, string.Empty);
             }
             return View("quote-request", WorkContext);
         }
@@ -105,19 +109,22 @@ namespace VirtoCommerce.Storefront.Controllers
         {
             if (string.IsNullOrEmpty(number))
             {
-                return HttpNotFound();
+                throw new HttpException(404, string.Empty);
             }
-
-            var quoteRequest = await GetCustomerQuoteRequestByNumberAsync(number);
-
-            if (quoteRequest == null)
+            //Need lock to prevent concurrent access to same quote
+            using (var lockObject = await AsyncLock.GetLockByKey("quote:" + number).LockAsync())
             {
-                return HttpNotFound();
-            }
+                var quoteRequest = await GetCustomerQuoteRequestByIdAsync(number);
 
-            _cartBuilder.TakeCart(WorkContext.CurrentCart);
-            await _cartBuilder.FillFromQuoteRequest(quoteRequest);
-            await _cartBuilder.SaveAsync();
+                if (quoteRequest == null)
+                {
+                    throw new HttpException(404, string.Empty);
+                }
+
+                _cartBuilder.TakeCart(WorkContext.CurrentCart);
+                await _cartBuilder.FillFromQuoteRequest(quoteRequest);
+                await _cartBuilder.SaveAsync();
+            }
 
             return StoreFrontRedirect("~/cart/checkout");
         }
@@ -128,19 +135,22 @@ namespace VirtoCommerce.Storefront.Controllers
         {
             if (string.IsNullOrEmpty(number))
             {
-                return HttpNotFound();
+                throw new HttpException(404, string.Empty);
             }
-
-            var quoteRequest = await GetCustomerQuoteRequestByNumberAsync(number);
-
-            if (quoteRequest == null)
+            //Need lock to prevent concurrent access to same quote
+            using (var lockObject = await AsyncLock.GetLockByKey("quote:" + number).LockAsync())
             {
-                return HttpNotFound();
-            }
+                var quoteRequest = await GetCustomerQuoteRequestByIdAsync(number);
 
-            _quoteRequestBuilder.TakeQuoteRequest(quoteRequest);
-            _quoteRequestBuilder.Reject();
-            await _quoteRequestBuilder.SaveAsync();
+                if (quoteRequest == null)
+                {
+                    throw new HttpException(404, string.Empty);
+                }
+
+                _quoteRequestBuilder.TakeQuoteRequest(quoteRequest);
+                _quoteRequestBuilder.Reject();
+                await _quoteRequestBuilder.SaveAsync();
+            }
 
             return StoreFrontRedirect("~/account/quote-requests");
         }
@@ -152,7 +162,7 @@ namespace VirtoCommerce.Storefront.Controllers
         {
             EnsureThatQuoteRequestExists();
 
-            using (var lockObject = await AsyncLock.GetLockByKey(WorkContext.CurrentQuoteRequest.Id).LockAsync())
+            using (var lockObject = await AsyncLock.GetLockByKey("quote:" + WorkContext.CurrentQuoteRequest.Id).LockAsync())
             {
                 _quoteRequestBuilder.Update(quoteRequest);
                 await _quoteRequestBuilder.SaveAsync();
@@ -167,7 +177,7 @@ namespace VirtoCommerce.Storefront.Controllers
         {
             EnsureThatQuoteRequestExists();
 
-            using (var lockObject = await AsyncLock.GetLockByKey(productId).LockAsync())
+            using (var lockObject = await AsyncLock.GetLockByKey("quote-product:" + productId).LockAsync())
             {
                 var products = await _catalogSearchService.GetProductsAsync(new string[] { productId }, ItemResponseGroup.ItemLarge);
                 if (products != null && products.Any())
@@ -186,7 +196,7 @@ namespace VirtoCommerce.Storefront.Controllers
         {
             EnsureThatQuoteRequestExists();
 
-            using (var lockObject = await AsyncLock.GetLockByKey(WorkContext.CurrentQuoteRequest.Id).LockAsync())
+            using (var lockObject = await AsyncLock.GetLockByKey("quote-item:" + WorkContext.CurrentQuoteRequest.Id).LockAsync())
             {
                 _quoteRequestBuilder.RemoveItem(quoteItemId);
                 await _quoteRequestBuilder.SaveAsync();
@@ -196,16 +206,14 @@ namespace VirtoCommerce.Storefront.Controllers
         }
 
 
-        private async Task<QuoteRequest> GetCustomerQuoteRequestByNumberAsync(string number)
+        private async Task<QuoteRequest> GetCustomerQuoteRequestByIdAsync(string id)
         {
-            var quoteSearchCriteria = new VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria
+            var result = await _quoteApi.QuoteModuleGetByIdAsync(id);
+            if(base.WorkContext.CurrentCustomer.Id != result.CustomerId)
             {
-                Keyword = number,
-                StoreId = base.WorkContext.CurrentStore.Id,
-                CustomerId = base.WorkContext.CurrentCustomer.Id
-            };
-            var searchResult = await _quoteApi.QuoteModuleSearchAsync(quoteSearchCriteria);
-            return searchResult.QuoteRequests.Select(x => x.ToWebModel()).FirstOrDefault();
+                throw new StorefrontException("Requested quote not belongs to current user");
+            }
+            return result != null ? result.ToWebModel(base.WorkContext.AllCurrencies, base.WorkContext.CurrentLanguage) : null;
         }
 
         private void EnsureThatQuoteRequestExists()

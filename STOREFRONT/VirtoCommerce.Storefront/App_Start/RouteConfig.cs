@@ -72,7 +72,7 @@ namespace VirtoCommerce.Storefront
             routes.MapLocalizedStorefrontRoute("QuoteRequest.AddItem", "quoterequest/additem", defaults: new { controller = "QuoteRequest", action = "AddItemJson" });
             routes.MapLocalizedStorefrontRoute("QuoteRequest.RemoveItem", "quoterequest/removeitem", defaults: new { controller = "QuoteRequest", action = "RemoveItemJson" });
             routes.MapLocalizedStorefrontRoute("QuoteRequest.QuoteRequests", "quoterequest/quote-requests", defaults: new { controller = "QuoteRequest", action = "QuoteRequests" });
-            routes.MapLocalizedStorefrontRoute("QuoteRequest.QuoteRequest", "quoterequest/quote-request/{number}", defaults: new { controller = "QuoteRequest", action = "QuoteRequest" });
+            routes.MapLocalizedStorefrontRoute("QuoteRequest.QuoteRequest", "quoterequest/quote-request/{number}", defaults: new { controller = "QuoteRequest", action = "GetQuoteRequestByNumber" });
             routes.MapLocalizedStorefrontRoute("QuoteRequest.EditQuoteRequest", "quoterequest/quote-request/{number}/edit", defaults: new { controller = "QuoteRequest", action = "EditQuoteRequest" });
             routes.MapLocalizedStorefrontRoute("QuoteRequest.ConfirmQuoteRequest", "quoterequest/quote-request/{number}/confirm", defaults: new { controller = "QuoteRequest", action = "ConfirmQuoteRequest" });
             routes.MapLocalizedStorefrontRoute("QuoteRequest.RejectQuoteRequest", "quoterequest/quote-request/{number}/reject", defaults: new { controller = "QuoteRequest", action = "RejectQuoteRequest" });

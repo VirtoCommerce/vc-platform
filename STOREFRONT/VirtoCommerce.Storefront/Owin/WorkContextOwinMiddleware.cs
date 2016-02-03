@@ -87,6 +87,17 @@ namespace VirtoCommerce.Storefront.Owin
 
                     //Set current currency
                     workContext.CurrentCurrency = GetCurrency(context, workContext.CurrentStore);
+
+                    var qs = HttpUtility.ParseQueryString(workContext.RequestUrl.Query);
+                    //Initialize catalog search criteria
+                    workContext.CurrentCatalogSearchCriteria = new CatalogSearchCriteria(qs);
+                    workContext.CurrentCatalogSearchCriteria.CatalogId = workContext.CurrentStore.Catalog;
+                    workContext.CurrentCatalogSearchCriteria.Currency = workContext.CurrentCurrency;
+                    workContext.CurrentCatalogSearchCriteria.Language = workContext.CurrentLanguage;
+
+                    workContext.CurrentOrderSearchCriteria = new Model.Order.OrderSearchCriteria(qs);
+                    workContext.CurrentQuoteSearchCriteria = new Model.Quote.QuoteSearchCriteria(qs);
+
                     //Current customer
                     workContext.CurrentCustomer = await GetCustomerAsync(context);
                     MaintainAnonymousCustomerCookie(context, workContext);
@@ -107,15 +118,6 @@ namespace VirtoCommerce.Storefront.Owin
                         var linkLists = await _cacheManager.GetAsync("GetLinkLists-" + workContext.CurrentStore.Id, "ApiRegion", async () => { return await _cmsApi.MenuGetListsAsync(workContext.CurrentStore.Id) ?? new List<VirtoCommerceContentWebModelsMenuLinkList>(); });
                         workContext.CurrentLinkLists = linkLists != null ? linkLists.Select(ll => ll.ToWebModel(urlBuilder)).ToList() : null;
 
-                        var qs = HttpUtility.ParseQueryString(workContext.RequestUrl.Query);
-                        //Initialize catalog search criteria
-                        workContext.CurrentCatalogSearchCriteria = new CatalogSearchCriteria(qs);
-                        workContext.CurrentCatalogSearchCriteria.CatalogId = workContext.CurrentStore.Catalog;
-                        workContext.CurrentCatalogSearchCriteria.Currency = workContext.CurrentCurrency;
-                        workContext.CurrentCatalogSearchCriteria.Language = workContext.CurrentLanguage;
-       
-                        workContext.CurrentOrderSearchCriteria = new Model.Order.OrderSearchCriteria(qs);
-                        workContext.CurrentQuoteSearchCriteria = new Model.Quote.QuoteSearchCriteria(qs);
 
                         //Initialize blogs search criteria 
                         //TODO: read from query string

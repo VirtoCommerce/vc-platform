@@ -85,7 +85,7 @@ namespace VirtoCommerce.Storefront.Services
                 HideDirectLinkedCategories = true,
                 Terms = criteria.Terms.ToStrings(),
                 PricelistIds = workContext.CurrentPricelists.Where(p => p.Currency == workContext.CurrentCurrency.Code).Select(p => p.Id).ToList(),
-                Skip = criteria.PageSize * (criteria.PageNumber - 1),
+                Skip = criteria.Start,
                 Take = criteria.PageSize,
                 Sort = criteria.SortBy
             };

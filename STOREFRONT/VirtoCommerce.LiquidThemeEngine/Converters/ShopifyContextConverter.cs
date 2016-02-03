@@ -52,14 +52,14 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                 result.Linklists = new Linklists(workContext.CurrentLinkLists.Select(x => x.ToShopifyModel()));
             }
 
-            if (workContext.Order != null)
+            if (workContext.CurrentOrder != null)
             {
-                result.Order = workContext.Order.ToShopifyModel(urlBuilder);
+                result.Order = workContext.CurrentOrder.ToShopifyModel(urlBuilder);
             }
 
-            if (workContext.QuoteRequest != null)
+            if (workContext.CurrentQuoteRequest != null)
             {
-                result.QuoteRequest = workContext.QuoteRequest.ToShopifyModel();
+                result.QuoteRequest = workContext.CurrentQuoteRequest.ToShopifyModel();
             }
 
             result.PaymentFormHtml = workContext.PaymentFormHtml;
