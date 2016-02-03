@@ -7,7 +7,7 @@ namespace VirtoCommerce.Storefront.Converters
 {
     public static class ShippingMethodConverter
     {
-        public static ShippingMethod ToWebModel(this VirtoCommerceDomainQuoteModelShipmentMethod serviceModel, Currency currency)
+        public static ShippingMethod ToWebModel(this VirtoCommerceQuoteModuleWebModelShipmentMethod serviceModel, Currency currency)
         {
             var webModel = new ShippingMethod();
 

@@ -173,6 +173,46 @@ namespace VirtoCommerce.Client.Api
         System.Threading.Tasks.Task<ApiResponse<Object>> StoreModuleDeleteAsyncWithHttpInfo (List<string> ids);
         
         /// <summary>
+        /// Search stores
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="criteria"></param>
+        /// <returns>VirtoCommerceStoreModuleWebModelSearchResult</returns>
+        VirtoCommerceStoreModuleWebModelSearchResult StoreModuleSearchStores (VirtoCommerceDomainStoreModelSearchCriteria criteria);
+  
+        /// <summary>
+        /// Search stores
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="criteria"></param>
+        /// <returns>ApiResponse of VirtoCommerceStoreModuleWebModelSearchResult</returns>
+        ApiResponse<VirtoCommerceStoreModuleWebModelSearchResult> StoreModuleSearchStoresWithHttpInfo (VirtoCommerceDomainStoreModelSearchCriteria criteria);
+
+        /// <summary>
+        /// Search stores
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="criteria"></param>
+        /// <returns>Task of VirtoCommerceStoreModuleWebModelSearchResult</returns>
+        System.Threading.Tasks.Task<VirtoCommerceStoreModuleWebModelSearchResult> StoreModuleSearchStoresAsync (VirtoCommerceDomainStoreModelSearchCriteria criteria);
+
+        /// <summary>
+        /// Search stores
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="criteria"></param>
+        /// <returns>Task of ApiResponse (VirtoCommerceStoreModuleWebModelSearchResult)</returns>
+        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceStoreModuleWebModelSearchResult>> StoreModuleSearchStoresAsyncWithHttpInfo (VirtoCommerceDomainStoreModelSearchCriteria criteria);
+        
+        /// <summary>
         /// Send dynamic notification (contains custom list of properties) an store or adminsitrator email
         /// </summary>
         /// <remarks>
@@ -848,6 +888,142 @@ namespace VirtoCommerce.Client.Api
             return new ApiResponse<Object>(statusCode,
                 response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 null);
+        }
+        
+        /// <summary>
+        /// Search stores 
+        /// </summary>
+        /// <param name="criteria"></param> 
+        /// <returns>VirtoCommerceStoreModuleWebModelSearchResult</returns>
+        public VirtoCommerceStoreModuleWebModelSearchResult StoreModuleSearchStores (VirtoCommerceDomainStoreModelSearchCriteria criteria)
+        {
+             ApiResponse<VirtoCommerceStoreModuleWebModelSearchResult> response = StoreModuleSearchStoresWithHttpInfo(criteria);
+             return response.Data;
+        }
+
+        /// <summary>
+        /// Search stores 
+        /// </summary>
+        /// <param name="criteria"></param> 
+        /// <returns>ApiResponse of VirtoCommerceStoreModuleWebModelSearchResult</returns>
+        public ApiResponse< VirtoCommerceStoreModuleWebModelSearchResult > StoreModuleSearchStoresWithHttpInfo (VirtoCommerceDomainStoreModelSearchCriteria criteria)
+        {
+            
+            // verify the required parameter 'criteria' is set
+            if (criteria == null) throw new ApiException(400, "Missing required parameter 'criteria' when calling StoreModuleSearchStores");
+            
+    
+            var path_ = "/api/stores/search";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                "application/json", "text/json"
+            };
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            
+            
+            
+            postBody = Configuration.ApiClient.Serialize(criteria); // http body (model) parameter
+            
+
+            
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+    
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling StoreModuleSearchStores: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling StoreModuleSearchStores: " + response.ErrorMessage, response.ErrorMessage);
+    
+            return new ApiResponse<VirtoCommerceStoreModuleWebModelSearchResult>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (VirtoCommerceStoreModuleWebModelSearchResult) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceStoreModuleWebModelSearchResult)));
+            
+        }
+    
+        /// <summary>
+        /// Search stores 
+        /// </summary>
+        /// <param name="criteria"></param>
+        /// <returns>Task of VirtoCommerceStoreModuleWebModelSearchResult</returns>
+        public async System.Threading.Tasks.Task<VirtoCommerceStoreModuleWebModelSearchResult> StoreModuleSearchStoresAsync (VirtoCommerceDomainStoreModelSearchCriteria criteria)
+        {
+             ApiResponse<VirtoCommerceStoreModuleWebModelSearchResult> response = await StoreModuleSearchStoresAsyncWithHttpInfo(criteria);
+             return response.Data;
+
+        }
+
+        /// <summary>
+        /// Search stores 
+        /// </summary>
+        /// <param name="criteria"></param>
+        /// <returns>Task of ApiResponse (VirtoCommerceStoreModuleWebModelSearchResult)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceStoreModuleWebModelSearchResult>> StoreModuleSearchStoresAsyncWithHttpInfo (VirtoCommerceDomainStoreModelSearchCriteria criteria)
+        {
+            // verify the required parameter 'criteria' is set
+            if (criteria == null) throw new ApiException(400, "Missing required parameter 'criteria' when calling StoreModuleSearchStores");
+            
+    
+            var path_ = "/api/stores/search";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                "application/json", "text/json"
+            };
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            
+            
+            
+            postBody = Configuration.ApiClient.Serialize(criteria); // http body (model) parameter
+            
+
+            
+
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+ 
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling StoreModuleSearchStores: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling StoreModuleSearchStores: " + response.ErrorMessage, response.ErrorMessage);
+
+            return new ApiResponse<VirtoCommerceStoreModuleWebModelSearchResult>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (VirtoCommerceStoreModuleWebModelSearchResult) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceStoreModuleWebModelSearchResult)));
+            
         }
         
         /// <summary>

@@ -157,6 +157,7 @@
     <Compile Include="Model\QuoteAttachment.cs" />
     <Compile Include="Model\QuoteItem.cs" />
     <Compile Include="Model\QuoteRequest.cs" />
+    <Compile Include="Model\QuoteRequestSearchResult.cs" />
     <Compile Include="Model\QuoteRequestTotals.cs" />
     <Compile Include="Model\ShipmentMethod.cs" />
     <Compile Include="Model\TierPrice.cs" />
