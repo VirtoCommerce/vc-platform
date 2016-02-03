@@ -173,6 +173,16 @@ storefrontApp.controller('quoteRequestController', ['$scope', '$window', '$sce',
         if ($scope.formQuoteRequest.$invalid) {
             return;
         }
+        for (var i = 0; i < $scope.quoteRequest.Items.length; i++) {
+            $scope.quoteRequest.Items[i].TierPricesAreUnique = true;
+            if (!tierPricesAreUnique(quoteRequest.Items[i].ProposalPrices)) {
+                $scope.quoteRequest.Items[i].TierPricesAreUnique = false;
+            }
+        }
+        var ununiqueItems = _.where($scope.quoteRequest.Items, { TierPricesAreUnique: false });
+        if (ununiqueItems.length) {
+            return;
+        }
         quoteRequestService.update(quoteRequest).then(function (response) {
             if ($scope.customer.IsRegisteredUser) {
                 $scope.outerRedirect($scope.baseUrl + 'account/quote-requests/');
@@ -180,6 +190,11 @@ storefrontApp.controller('quoteRequestController', ['$scope', '$window', '$sce',
                 $scope.outerRedirect($scope.baseUrl + 'account/login/');
             }
         });
+    }
+
+    function tierPricesAreUnique(tierPrices) {
+        var uniqueTierPrices = _.uniq(tierPrices, 'Quantity');
+        return uniqueTierPrices.length == tierPrices.length;
     }
 
     function initialize() {

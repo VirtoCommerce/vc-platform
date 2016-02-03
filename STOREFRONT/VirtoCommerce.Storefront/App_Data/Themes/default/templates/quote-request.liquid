@@ -64,9 +64,10 @@
                                     <span class="js--qty-adjuster js--add" ng-click="updateProposalPrice(quoteItem.Id, proposalPrice.Id, proposalPrice.Quantity + 1)">+</span>
                                     <span class="js--qty-adjuster js--minus" ng-click="updateProposalPrice(quoteItem.Id, proposalPrice.Id, proposalPrice.Quantity - 1)">-</span>
                                 </div>
-                                <div class="note form-error" ng-if="(formQuoteRequest['Quantity_' + quoteItem.Id + '_' + proposalPrice.Id].$dirty || formQuoteRequest.$submitted) && formQuoteRequest['Quantity_' + quoteItem.Id + '_' + proposalPrice.Id].$error.required">Please enter a quantity</div>
-                                <div class="note form-error" ng-if="(formQuoteRequest['Quantity_' + quoteItem.Id + '_' + proposalPrice.Id].$dirty || formQuoteRequest.$submitted) && formQuoteRequest['Quantity_' + quoteItem.Id + '_' + proposalPrice.Id].$error.number">Please enter a number</div>
-                                <div class="note form-error" ng-if="(formQuoteRequest['Quantity_' + quoteItem.Id + '_' + proposalPrice.Id].$dirty || formQuoteRequest.$submitted) && formQuoteRequest['Quantity_' + quoteItem.Id + '_' + proposalPrice.Id].$error.min">Quantity should be greater than 0</div>
+                                <div class="alert alert-error" style="margin-top: 5px;" ng-if="(formQuoteRequest['Quantity_' + quoteItem.Id + '_' + proposalPrice.Id].$dirty || formQuoteRequest.$submitted) && formQuoteRequest['Quantity_' + quoteItem.Id + '_' + proposalPrice.Id].$error.required">Please enter a quantity</div>
+                                <div class="alert alert-error" style="margin-top: 5px;" ng-if="(formQuoteRequest['Quantity_' + quoteItem.Id + '_' + proposalPrice.Id].$dirty || formQuoteRequest.$submitted) && formQuoteRequest['Quantity_' + quoteItem.Id + '_' + proposalPrice.Id].$error.number">Please enter a number</div>
+                                <div class="alert alert-error" style="margin-top: 5px;" ng-if="(formQuoteRequest['Quantity_' + quoteItem.Id + '_' + proposalPrice.Id].$dirty || formQuoteRequest.$submitted) && formQuoteRequest['Quantity_' + quoteItem.Id + '_' + proposalPrice.Id].$error.min">Quantity should be greater than 0</div>
+                                <div class="alert alert-error" style="margin-top: 5px;" ng-if="formQuoteRequest.$submitted && !quoteItem.TierPricesAreUnique">Quantites should be unique</div>
                                 <a class="link-action" ng-click="removeProposalPrice(quoteItem.Id, proposalPrice.Id)" ng-if="quoteItem.ProposalPrices.length > 1">Remove</a>
                             </div>
                             <div class="js-qty">
