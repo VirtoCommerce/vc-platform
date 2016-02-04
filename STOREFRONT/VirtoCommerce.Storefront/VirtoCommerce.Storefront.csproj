@@ -302,7 +302,7 @@
     <Content Include="App_Data\Themes\default\assets\status-sold-out.svg" />
     <Content Include="App_Data\Themes\default\assets\shopify_common.js" />
     <Content Include="App_Data\Themes\default\assets\storefront.css" />
-    <None Include="App_Data\Themes\default\snippets\checkout-footer.liquid" />
+    <Content Include="App_Data\Themes\default\snippets\checkout-footer.liquid" />
     <Content Include="App_Data\Themes\default\assets\storefrontApp.js" />
     <Content Include="App_Data\Themes\default\assets\storefrontCartController.js" />
     <Content Include="App_Data\Themes\default\assets\storefrontCategoryController.js" />
@@ -324,7 +324,7 @@
     <Content Include="App_Data\Themes\default\social\shopify-social.svg" />
     <Content Include="App_Data\Themes\default\social\social-icons.css" />
     <Content Include="App_Data\Themes\default\snippets\notification.liquid" />
-    <None Include="App_Data\Themes\default\templates\quote-request.liquid" />
+    <Content Include="App_Data\Themes\default\templates\quote-request.liquid" />
     <Content Include="App_Data\x64\LibSass.x64.dll" />
     <Content Include="App_Data\x64\libsassnet.dll" />
     <Content Include="App_Data\x86\LibSass.x86.dll" />

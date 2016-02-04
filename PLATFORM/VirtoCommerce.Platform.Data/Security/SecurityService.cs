@@ -162,6 +162,8 @@ namespace VirtoCommerce.Platform.Data.Security
 
                             changedDbAccount.Patch(targetDbAcount);
                             repository.UnitOfWork.Commit();
+                            //clear cache
+                            _cacheManager.ClearRegion(GetUserCacheRegion(changedDbAccount.Id));
                         }
                     }
                 }
@@ -174,7 +176,7 @@ namespace VirtoCommerce.Platform.Data.Security
         {
             using (var userManager = _userManagerFactory())
             {
-                foreach (var name in names.Where(IsEditableUser))
+                foreach (var name in names)
                 {
 
                     var dbUser = await userManager.FindByNameAsync(name);
@@ -190,6 +192,8 @@ namespace VirtoCommerce.Platform.Data.Security
                             {
                                 repository.Remove(account);
                                 repository.UnitOfWork.Commit();
+                                //clear cache
+                                _cacheManager.ClearRegion(GetUserCacheRegion(account.Id));
                             }
                         }
                     }
@@ -385,65 +389,56 @@ namespace VirtoCommerce.Platform.Data.Security
 
         private SecurityResult ValidateUser(ApplicationUser dbUser)
         {
-            SecurityResult result;
+            var result = new SecurityResult { Succeeded = true };
 
             if (dbUser == null)
             {
                 result = new SecurityResult { Errors = new[] { "User not found." } };
             }
-            else
-            {
-                if (!IsEditableUser(dbUser.UserName))
-                {
-                    result = new SecurityResult { Errors = new[] { "It is forbidden to edit this user." } };
-                }
-                else
-                {
-                    result = new SecurityResult { Succeeded = true };
-                }
-            }
+          
 
             return result;
         }
 
-        private bool IsEditableUser(string userName)
-        {
-            var result = true;
-
-            if (_securityOptions != null && _securityOptions.NonEditableUsers != null)
-                result = !_securityOptions.NonEditableUsers.Contains(userName);
-
-            return result;
-        }
+    
 
         private ApplicationUserExtended GetUserExtended(ApplicationUser applicationUser, UserDetails detailsLevel)
         {
             ApplicationUserExtended result = null;
-
             if (applicationUser != null)
             {
-                using (var repository = _platformRepository())
+                var cacheRegion = GetUserCacheRegion(applicationUser.Id);
+                result = _cacheManager.Get(cacheRegion + ":" + detailsLevel, cacheRegion, () =>
                 {
-                    var user = repository.GetAccountByName(applicationUser.UserName, detailsLevel);
-                    result = applicationUser.ToCoreModel(user, _permissionScopeService);
-                    //Populate available permission scopes
-                    if (result.Roles != null)
+                    ApplicationUserExtended retVal = null;
+                    using (var repository = _platformRepository())
                     {
-                        foreach (var permission in result.Roles.SelectMany(x => x.Permissions).Where(x => x != null))
+                        var user = repository.GetAccountByName(applicationUser.UserName, detailsLevel);
+                        retVal = applicationUser.ToCoreModel(user, _permissionScopeService);
+                        //Populate available permission scopes
+                        if (retVal.Roles != null)
                         {
-                            permission.AvailableScopes = _permissionScopeService.GetAvailablePermissionScopes(permission.Id).ToList();
+                            foreach (var permission in retVal.Roles.SelectMany(x => x.Permissions).Where(x => x != null))
+                            {
+                                permission.AvailableScopes = _permissionScopeService.GetAvailablePermissionScopes(permission.Id).ToList();
+                            }
                         }
                     }
 
-                }
-
-                if (detailsLevel != UserDetails.Export)
-                {
-                    result.PasswordHash = null;
-                    result.SecurityStamp = null;
-                }
+                    if (detailsLevel != UserDetails.Export)
+                    {
+                        retVal.PasswordHash = null;
+                        retVal.SecurityStamp = null;
+                    }
+                    return retVal;
+                });
             }
             return result;
+        }
+
+        private static string GetUserCacheRegion(string userId)
+        {
+            return "AppUserRegion:" + userId;
         }
 
         private static void NormalizeUser(ApplicationUserExtended user)
