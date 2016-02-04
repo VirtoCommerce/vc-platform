@@ -219,7 +219,8 @@ namespace VirtoCommerce.Storefront.Builders
         public void OnNext(UserLoginEvent userLoginEvent)
         {
             //If previous user was anonymous and it has not empty cart need merge anonymous cart to personal
-            if (!userLoginEvent.PrevUser.IsRegisteredUser && userLoginEvent.WorkContext.CurrentQuoteRequest != null && userLoginEvent.WorkContext.CurrentQuoteRequest.Items.Any())
+            if (userLoginEvent.WorkContext.CurrentStore.QuotesEnabled && !userLoginEvent.PrevUser.IsRegisteredUser 
+                 && userLoginEvent.WorkContext.CurrentQuoteRequest != null && userLoginEvent.WorkContext.CurrentQuoteRequest.Items.Any())
             {
                 //Call async methods synchronously 
                 var task = new TaskFactory().StartNew(async () =>

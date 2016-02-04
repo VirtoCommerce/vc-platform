@@ -36,14 +36,14 @@ namespace VirtoCommerce.Storefront.Controllers
 
         // GET: /quoterequest
         [HttpGet]
-        public ActionResult Index()
+        public ActionResult GetCustomerCurrentQuoteRequest()
         {
             return View("quote-request", WorkContext);
         }
 
         // GET: /account/quoterequests
         [HttpGet]
-        public async Task<ActionResult> QuoteRequests()
+        public async Task<ActionResult> GetCustomerQuoteRequests()
         {
             var criteria = WorkContext.CurrentQuoteSearchCriteria;
             var quoteSearchCriteria = new VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria
@@ -51,14 +51,14 @@ namespace VirtoCommerce.Storefront.Controllers
                 Start = criteria.Start,
                 Count = criteria.PageSize,
                 StoreId = WorkContext.CurrentStore.Id,
-                CustomerId = WorkContext.CurrentCustomer.Id
+                CustomerId = WorkContext.CurrentCustomer.Id,
             };
 
             var searchResult = await _quoteApi.QuoteModuleSearchAsync(quoteSearchCriteria);
             if (searchResult != null)
             {
                 WorkContext.CurrentCustomer.QuoteRequests = new StorefrontPagedList<QuoteRequest>(
-                    searchResult.QuoteRequests.Where(qr => qr.Status != "New").Select(x => x.ToWebModel(WorkContext.AllCurrencies, WorkContext.CurrentLanguage)),
+                    searchResult.QuoteRequests.Select(x => x.ToWebModel(WorkContext.AllCurrencies, WorkContext.CurrentLanguage)),
                     criteria.PageNumber, criteria.PageSize,
                     searchResult.TotalCount.Value,
                     page => WorkContext.RequestUrl.SetQueryParameter("page", page.ToString()).ToString());
@@ -159,13 +159,6 @@ namespace VirtoCommerce.Storefront.Controllers
         }
 
 
-
-
-
-
-
-
-
         // POST: /quoterequest/totals?quoteRequestId=...&quoteItemId=...&tierPrice=...
         [HttpPost]
         public async Task<ActionResult> GetTotalsJson(string quoteRequestId, string quoteItemId, TierPriceFormModel tierPrice)
@@ -191,32 +184,6 @@ namespace VirtoCommerce.Storefront.Controllers
 
             return Json(totals, JsonRequestBehavior.AllowGet);
         }
-
-        private void EnsureThatQuoteRequestExists()
-        {
-            if (WorkContext.CurrentQuoteRequest == null)
-            {
-                throw new StorefrontException("Quote request is not found");
-            }
-
-            _quoteRequestBuilder.TakeQuoteRequest(WorkContext.CurrentQuoteRequest);
-        }
-
-        private async Task<QuoteRequest> GetCustomerQuoteRequestByIdAsync(string id)
-        {
-            var result = await _quoteApi.QuoteModuleGetByIdAsync(id);
-
-            if (WorkContext.CurrentCustomer.Id != result.CustomerId)
-            {
-                throw new StorefrontException("Requested quote not belongs to current user");
-            }
-
-            return result != null ? result.ToWebModel(WorkContext.AllCurrencies, WorkContext.CurrentLanguage) : null;
-        }
-
-
-
-        /*
 
         // GET: /quoterequest/quote-request/{number}/edit
         [HttpGet]
@@ -286,6 +253,29 @@ namespace VirtoCommerce.Storefront.Controllers
 
             return StoreFrontRedirect("~/account/quote-requests");
         }
-        */
+
+        private void EnsureThatQuoteRequestExists()
+        {
+            if (WorkContext.CurrentQuoteRequest == null)
+            {
+                throw new StorefrontException("Quote request is not found");
+            }
+
+            _quoteRequestBuilder.TakeQuoteRequest(WorkContext.CurrentQuoteRequest);
+        }
+
+        private async Task<QuoteRequest> GetCustomerQuoteRequestByIdAsync(string id)
+        {
+            var result = await _quoteApi.QuoteModuleGetByIdAsync(id);
+
+            if (WorkContext.CurrentCustomer.Id != result.CustomerId)
+            {
+                throw new StorefrontException("Requested quote not belongs to current user");
+            }
+
+            return result != null ? result.ToWebModel(WorkContext.AllCurrencies, WorkContext.CurrentLanguage) : null;
+        }
+
+     
     }
 }

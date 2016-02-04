@@ -99,12 +99,14 @@ namespace VirtoCommerce.Storefront.Model
         {
             get
             {
-                bool isEnabled = false;
+                //Quotes unfinished then temporary disabled
+                return false;
+                //bool isEnabled = false;
 
-                var dynamicPropertyValue = DynamicProperties.GetDynamicPropertyValue("EnableQuotes");
-                bool.TryParse(dynamicPropertyValue, out isEnabled);
+                //var dynamicPropertyValue = DynamicProperties.GetDynamicPropertyValue("EnableQuotes");
+                //bool.TryParse(dynamicPropertyValue, out isEnabled);
 
-                return isEnabled;
+                //return isEnabled;
             }
         }
 
