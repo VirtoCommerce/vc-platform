@@ -63,6 +63,18 @@ storefrontApp.controller('cartController', ['$scope', '$timeout', 'cartService',
         });
     }
 
+    $scope.submitCart = function () {
+        $scope.formCart.$setSubmitted();
+        if ($scope.formCart.$invalid) {
+            return;
+        }
+        if ($scope.cart.HasPhysicalProducts) {
+            $scope.outerRedirect($scope.baseUrl + 'cart/checkout/#/shipping-address');
+        } else {
+            $scope.outerRedirect($scope.baseUrl + 'cart/checkout/#/payment-method');
+        }
+    }
+
     function initialize() {
         $scope.cart = {};
         $scope.recentCartItemModalVisible = false;
