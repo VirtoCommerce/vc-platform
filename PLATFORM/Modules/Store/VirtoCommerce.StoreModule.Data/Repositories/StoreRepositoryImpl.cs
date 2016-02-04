@@ -57,9 +57,9 @@ namespace VirtoCommerce.StoreModule.Data.Repositories
 		{
             var retVal = Stores.Where(x => ids.Contains(x.Id)).Include(x => x.Languages)
                                .Include(x => x.Currencies).ToArray();
-            var paymentMethods = StorePaymentMethods.Where(x => ids.Contains(x.Id)).ToArray();
-            var shipmentMethods = StoreShippingMethods.Where(x => ids.Contains(x.Id)).ToArray();
-            var taxProviders = StoreTaxProviders.Where(x => ids.Contains(x.Id)).ToArray();
+            var paymentMethods = StorePaymentMethods.Where(x => ids.Contains(x.StoreId)).ToArray();
+            var shipmentMethods = StoreShippingMethods.Where(x => ids.Contains(x.StoreId)).ToArray();
+            var taxProviders = StoreTaxProviders.Where(x => ids.Contains(x.StoreId)).ToArray();
                            
             return retVal;
 		}
