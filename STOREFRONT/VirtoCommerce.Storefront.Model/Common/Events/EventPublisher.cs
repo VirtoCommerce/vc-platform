@@ -10,52 +10,25 @@ namespace VirtoCommerce.Storefront.Model.Common.Events
     /// Common domain event publisher implementation
     /// </summary>
     /// <typeparam name="T"></typeparam>
-	public class EventPublisher<T>: IEventPublisher<T>
-	{
-		private readonly IObserver<T>[] _observers;
-		public EventPublisher(IObserver<T>[] observers)
-		{
-			_observers = observers;
-		}
+	public class EventPublisher<T> : IEventPublisher<T>
+    {
+        private readonly IAsyncObserver<T>[] _observers;
+        public EventPublisher(IAsyncObserver<T>[] observers)
+        {
+            _observers = observers;
+        }
 
-		#region IEventPublisher Members
+        #region IEventPublisher Members
 
-		public void Publish(T eventMessage)
-		{
-			var observers = _observers.OrderBy(x => x is IPriorityObserver ? ((IPriorityObserver)x).Priority : 0);
-			var errors = new List<Exception>();
-			foreach (var observer in observers)
-			{
-				try
-				{
-					observer.OnNext(eventMessage);
-				}
-				catch(Exception ex)
-				{
-					errors.Add(ex);
-				}
-			}
+        public async Task PublishAsync(T eventMessage)
+        {
+            foreach (var observer in _observers)
+            {
+                await observer.OnNextAsync(eventMessage);
+            }
+        }
 
-			if (errors.Any())
-			{
-				foreach (var observer in observers)
-				{
-					foreach(var error in errors)
-					{
-						observer.OnError(error);
-					}
-				}
-			}
-			else
-			{
-				foreach (var observer in observers)
-				{
-					observer.OnCompleted();
-				}
-			}
-		}
+        #endregion
 
-		#endregion
-	
-	}
+    }
 }

@@ -262,7 +262,12 @@ namespace VirtoCommerce.Storefront.Model.Cart
                     Discounts.Add(discount);
                 }
             }
-        } 
+        }
         #endregion
+
+        public override string ToString()
+        {
+            return string.Format("cart lineItem #{0} {1} qty: {2}", Id ?? "undef", Name ?? "undef", Quantity);
+        }
     }
 }

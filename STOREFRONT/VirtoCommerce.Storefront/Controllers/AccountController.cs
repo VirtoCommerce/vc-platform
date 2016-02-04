@@ -189,7 +189,7 @@ namespace VirtoCommerce.Storefront.Controllers
                 _authenticationManager.SignIn(identity);
 
                 //Publish user login event 
-                _userLoginEventPublisher.Publish(new UserLoginEvent(base.WorkContext, base.WorkContext.CurrentCustomer, contact));
+                await _userLoginEventPublisher.PublishAsync(new UserLoginEvent(base.WorkContext, base.WorkContext.CurrentCustomer, contact));
 
                 return StoreFrontRedirect("~/account");
             }
@@ -231,7 +231,7 @@ namespace VirtoCommerce.Storefront.Controllers
                     var identity = CreateClaimsIdentity(formModel.Email, user.Id);
                     _authenticationManager.SignIn(identity);
                     //Publish user login event 
-                    _userLoginEventPublisher.Publish(new UserLoginEvent(base.WorkContext, base.WorkContext.CurrentCustomer, customer));
+                    await _userLoginEventPublisher.PublishAsync(new UserLoginEvent(base.WorkContext, base.WorkContext.CurrentCustomer, customer));
                     return StoreFrontRedirect(returnUrl);
                 case "lockedOut":
                     return View("lockedout", WorkContext);

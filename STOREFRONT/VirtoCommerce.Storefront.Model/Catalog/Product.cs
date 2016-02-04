@@ -260,5 +260,10 @@ namespace VirtoCommerce.Storefront.Model.Catalog
                 }
             }
         }
+
+        public override string ToString()
+        {
+            return String.Format("product #{0} sku: {1} name: {2}", Id ?? "undef", Sku ?? "undef", Name ?? "undef");
+        }
     }
 }

@@ -15,10 +15,11 @@ using VirtoCommerce.Storefront.Model.Order.Events;
 using System;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.Client.Model;
+using VirtoCommerce.Storefront.Model.Common.Events;
 
 namespace VirtoCommerce.Storefront.Builders
 {
-    public class QuoteRequestBuilder : IQuoteRequestBuilder, IObserver<UserLoginEvent>
+    public class QuoteRequestBuilder : IQuoteRequestBuilder, IAsyncObserver<UserLoginEvent>
     {
         private readonly IQuoteModuleApi _quoteApi;
         private readonly IPromotionEvaluator _promotionEvaluator;
@@ -216,33 +217,18 @@ namespace VirtoCommerce.Storefront.Builders
         /// Merge anonymous user quote to newly logined user quote by loging event
         /// </summary>
         /// <param name="userLoginEvent"></param>
-        public void OnNext(UserLoginEvent userLoginEvent)
+        public async Task OnNextAsync(UserLoginEvent userLoginEvent)
         {
             //If previous user was anonymous and it has not empty cart need merge anonymous cart to personal
-            if (userLoginEvent.WorkContext.CurrentStore.QuotesEnabled && !userLoginEvent.PrevUser.IsRegisteredUser 
+            if (userLoginEvent.WorkContext.CurrentStore.QuotesEnabled && !userLoginEvent.PrevUser.IsRegisteredUser
                  && userLoginEvent.WorkContext.CurrentQuoteRequest != null && userLoginEvent.WorkContext.CurrentQuoteRequest.Items.Any())
             {
-                //Call async methods synchronously 
-                var task = new TaskFactory().StartNew(async () =>
-                {
-                    await GetOrCreateNewTransientQuoteRequestAsync(userLoginEvent.WorkContext.CurrentStore, userLoginEvent.NewUser, userLoginEvent.WorkContext.CurrentLanguage, userLoginEvent.WorkContext.CurrentCurrency);
-                    await MergeWithQuoteRequest(userLoginEvent.WorkContext.CurrentQuoteRequest);
-                    await SaveAsync();
-                });
-                //use Wait() we prevent deadlock because we running async job out of ASP.NET  worker thread
-                task.Wait();
+                await GetOrCreateNewTransientQuoteRequestAsync(userLoginEvent.WorkContext.CurrentStore, userLoginEvent.NewUser, userLoginEvent.WorkContext.CurrentLanguage, userLoginEvent.WorkContext.CurrentCurrency);
+                await MergeWithQuoteRequest(userLoginEvent.WorkContext.CurrentQuoteRequest);
+                await SaveAsync();
             }
         }
 
-        public void OnError(Exception error)
-        {
-            throw new StorefrontException("Quote merging error when user login event", error);
-        }
-
-        public void OnCompleted()
-        {
-            //Nothing todo
-        }
         #endregion
 
         private string GetQuoteRequestCacheKey(string storeId, string customerId)

@@ -12,6 +12,7 @@ using VirtoCommerce.Storefront.Model.Cart;
 using VirtoCommerce.Storefront.Model.Cart.Services;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
+using VirtoCommerce.Storefront.Model.Common.Events;
 using VirtoCommerce.Storefront.Model.Common.Exceptions;
 using VirtoCommerce.Storefront.Model.Customer;
 using VirtoCommerce.Storefront.Model.Marketing;
@@ -22,22 +23,25 @@ using VirtoCommerce.Storefront.Model.Services;
 
 namespace VirtoCommerce.Storefront.Builders
 {
-    public class CartBuilder : ICartBuilder, IObserver<UserLoginEvent>
+    public class CartBuilder : ICartBuilder, IAsyncObserver<UserLoginEvent>
     {
         private readonly IShoppingCartModuleApi _cartApi;
         private readonly IPromotionEvaluator _promotionEvaluator;
         private readonly ICatalogSearchService _catalogSearchService;
         private readonly ICacheManager<object> _cacheManager;
+        private readonly ILogger _logger;
 
         private ShoppingCart _cart;
         private const string _cartCacheRegion = "CartRegion";
 
-        public CartBuilder(IShoppingCartModuleApi cartApi, IPromotionEvaluator promotionEvaluator, ICatalogSearchService catalogSearchService, ICacheManager<object> cacheManager)
+        [CLSCompliant(false)]
+        public CartBuilder(IShoppingCartModuleApi cartApi, IPromotionEvaluator promotionEvaluator, ICatalogSearchService catalogSearchService, ICacheManager<object> cacheManager, ILogger logger)
         {
             _cartApi = cartApi;
             _promotionEvaluator = promotionEvaluator;
             _catalogSearchService = catalogSearchService;
             _cacheManager = cacheManager;
+            _logger = logger;
         }
 
         public string CartCaheKey
@@ -94,8 +98,7 @@ namespace VirtoCommerce.Storefront.Builders
                 }
                 retVal.Customer = customer;
 
-                var log = LogManager.GetCurrentClassLogger();
-                log.Trace(string.Format("GetOrCreateNewTransientCartAsync {0}", retVal));
+                _logger.Trace(string.Format("GetOrCreateNewTransientCartAsync: {0}", retVal));
 
                 return retVal;
             });
@@ -107,6 +110,8 @@ namespace VirtoCommerce.Storefront.Builders
         {
             AddLineItem(product.ToLineItem(_cart.Language, quantity));
 
+            _logger.Trace(string.Format("AddItemAsync:{0} {1} qty: {2}", _cart, product, quantity));
+
             await EvaluatePromotionsAsync();
 
             return this;
@@ -117,6 +122,8 @@ namespace VirtoCommerce.Storefront.Builders
             var lineItem = _cart.Items.FirstOrDefault(i => i.Id == id);
             if (lineItem != null)
             {
+                _logger.Trace(string.Format("ChangeItemQuantityAsync: {0} {1} new qty: {2}", _cart, lineItem, quantity));
+
                 if (quantity > 0)
                 {
                     lineItem.Quantity = quantity;
@@ -137,6 +144,7 @@ namespace VirtoCommerce.Storefront.Builders
             var lineItem = _cart.Items.ElementAt(lineItemIndex);
             if (lineItem != null)
             {
+                _logger.Trace(string.Format("ChangeItemQuantityAsync: {0} {1} new qty: {1}", _cart, lineItem, quantity));
                 if (quantity > 0)
                 {
                     lineItem.Quantity = quantity;
@@ -173,6 +181,8 @@ namespace VirtoCommerce.Storefront.Builders
             var lineItem = _cart.Items.FirstOrDefault(i => i.Id == id);
             if (lineItem != null)
             {
+                _logger.Trace(string.Format("RemoveItemAsync: {0} {1}", _cart, lineItem));
+
                 _cart.Items.Remove(lineItem);
 
                 await EvaluatePromotionsAsync();
@@ -192,6 +202,8 @@ namespace VirtoCommerce.Storefront.Builders
 
         public virtual async Task<ICartBuilder> AddCouponAsync(string couponCode)
         {
+            _logger.Trace(string.Format("AddCouponAsync: {0} {1}", _cart, couponCode));
+
             _cart.Coupon = new Coupon
             {
                 Code = couponCode
@@ -205,6 +217,8 @@ namespace VirtoCommerce.Storefront.Builders
         public virtual async Task<ICartBuilder> RemoveCouponAsync()
         {
             _cart.Coupon = null;
+
+            _logger.Trace(string.Format("RemoveCouponAsync: {0}", _cart));
 
             await EvaluatePromotionsAsync();
 
@@ -259,6 +273,8 @@ namespace VirtoCommerce.Storefront.Builders
 
             if (shipment.IsTransient())
             {
+                _logger.Trace(string.Format("AddOrUpdateShipmentAsync: {0} {1}", _cart, shipment.ShipmentMethodCode));
+
                 _cart.Shipments.Add(shipment);
             }
 
@@ -272,6 +288,8 @@ namespace VirtoCommerce.Storefront.Builders
             var shipment = _cart.Shipments.FirstOrDefault(s => s.Id == shipmentId);
             if (shipment != null)
             {
+                _logger.Trace(string.Format("RemoveShipmentAsync: {0} {1}", _cart, shipment.ShipmentMethodCode));
+
                 _cart.Shipments.Remove(shipment);
             }
 
@@ -304,6 +322,8 @@ namespace VirtoCommerce.Storefront.Builders
 
             if (payment.IsTransient())
             {
+                _logger.Trace(string.Format("AddOrUpdatePaymentAsync: {0} {1}", _cart, payment.PaymentGatewayCode));
+
                 _cart.Payments.Add(payment);
             }
 
@@ -312,6 +332,8 @@ namespace VirtoCommerce.Storefront.Builders
 
         public virtual async Task<ICartBuilder> MergeWithCartAsync(ShoppingCart cart)
         {
+
+            _logger.Trace(string.Format("MergeWithCartAsync: {0} -> {1}", cart, _cart));
             foreach (var lineItem in cart.Items)
             {
                 AddLineItem(lineItem);
@@ -461,7 +483,7 @@ namespace VirtoCommerce.Storefront.Builders
             //Invalidate cart in cache
             _cacheManager.Remove(CartCaheKey, _cartCacheRegion);
             var log = LogManager.GetCurrentClassLogger();
-            log.Trace(string.Format("SaveAsync {0}", _cart));
+            log.Trace(string.Format("SaveAsync: {0}", _cart));
 
             if (_cart.IsTransient())
             {
@@ -487,59 +509,27 @@ namespace VirtoCommerce.Storefront.Builders
         /// Merger anonymous cart by loging event
         /// </summary>
         /// <param name="userLoginEvent"></param>
-        public void OnNext(UserLoginEvent userLoginEvent)
+        public async Task OnNextAsync(UserLoginEvent userLoginEvent)
         {
             if (userLoginEvent == null)
                 return;
-
-            var log = LogManager.GetCurrentClassLogger();
          
             var workContext = userLoginEvent.WorkContext;
             var prevUser = userLoginEvent.PrevUser;
             var prevUserCart = userLoginEvent.WorkContext.CurrentCart;
             var newUser = userLoginEvent.NewUser;
 
-            log.Trace(string.Format("1. userLoginEvent: prevUser: {0}, newUser: {1}, prevCart: {2}", prevUser, newUser, prevUserCart));
-           
-                //If previous user was anonymous and it has not empty cart need merge anonymous cart to personal
-           if (!prevUser.IsRegisteredUser && prevUserCart != null && prevUserCart.Items.Any())
+            //If previous user was anonymous and it has not empty cart need merge anonymous cart to personal
+            if (!prevUser.IsRegisteredUser && prevUserCart != null && prevUserCart.Items.Any())
             {
-                //Call async methods synchronously 
-                var task = new TaskFactory().StartNew(async () =>
-                {
-                    try
-                    {
-                        log.Trace(string.Format("2. Do cart merging"));
 
-                        //we load or create cart for new user
-                        await GetOrCreateNewTransientCartAsync(workContext.CurrentStore, newUser, workContext.CurrentLanguage, workContext.CurrentCurrency);
-
-                        log.Trace(string.Format("3. Loaded or created user {0} cart {1}", newUser, _cart));
-
-                        await MergeWithCartAsync(prevUserCart);
-                        log.Trace(string.Format("4. Merged user {0} cart {1}", newUser, _cart));
-                        await SaveAsync();
-                    }
-                    catch(Exception ex)
-                    {
-                        log.Trace(ex);
-                    }
-
-                });
-                //use Wait() we prevent deadlock because we running async job out of ASP.NET  worker thread
-                task.Wait();
+                //we load or create cart for new user
+                await GetOrCreateNewTransientCartAsync(workContext.CurrentStore, newUser, workContext.CurrentLanguage, workContext.CurrentCurrency);
+                await MergeWithCartAsync(prevUserCart);
+                await SaveAsync();
             }
         }
 
-        public void OnError(Exception error)
-        {
-            throw new StorefrontException("Cart merging error when user login event", error);
-        }
-
-        public void OnCompleted()
-        {
-            //Nothing todo
-        }
         #endregion
 
         private void AddLineItem(LineItem lineItem)
@@ -555,7 +545,6 @@ namespace VirtoCommerce.Storefront.Builders
                 _cart.Items.Add(lineItem);
             }
         }
-
        
 
         private string GetCartCacheKey(string storeId, string customerId)

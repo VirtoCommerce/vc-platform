@@ -1,19 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
 using CacheManager.Core;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.Client.Model;
 using VirtoCommerce.LiquidThemeEngine.Extensions;
-using VirtoCommerce.Storefront.Common;
 using VirtoCommerce.Storefront.Converters;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Common;
-using VirtoCommerce.Storefront.Model.Common.Exceptions;
+using VirtoCommerce.Storefront.Model.Common.Events;
 using VirtoCommerce.Storefront.Model.Customer;
 using VirtoCommerce.Storefront.Model.Customer.Services;
 using VirtoCommerce.Storefront.Model.Order;
@@ -22,7 +17,7 @@ using VirtoCommerce.Storefront.Model.Quote;
 
 namespace VirtoCommerce.Storefront.Services
 {
-    public class CustomerServiceImpl : ICustomerService, IObserver<OrderPlacedEvent>
+    public class CustomerServiceImpl : ICustomerService, IAsyncObserver<OrderPlacedEvent>
     {
         private readonly ICustomerManagementModuleApi _customerApi;
         private readonly IOrderModuleApi _orderApi;
@@ -105,23 +100,14 @@ namespace VirtoCommerce.Storefront.Services
         #endregion
 
         #region IObserver<CreateOrderEvent> Members
-        public void OnNext(OrderPlacedEvent value)
+        public Task OnNextAsync(OrderPlacedEvent value)
         {
             if (value.Order != null)
             {
                 var cacheKey = GetCacheKey(value.Order.CustomerId);
                 _cacheManager.Remove(cacheKey, "ApiRegion");
             }
-        }
-
-        public void OnError(Exception error)
-        {
-            //Nothing todo
-        }
-
-        public void OnCompleted()
-        {
-            //Nothing todo
+            return Task.Factory.StartNew(() => { });
         }
         #endregion
 

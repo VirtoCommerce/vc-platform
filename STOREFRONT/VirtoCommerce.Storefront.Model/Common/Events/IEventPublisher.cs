@@ -16,6 +16,6 @@ namespace VirtoCommerce.Storefront.Model.Common.Events
         /// Publish event
         /// </summary>
         /// <param name="eventMessage">Event message</param>
-        void Publish(T eventMessage);
+        Task PublishAsync(T eventMessage);
     }
 }
