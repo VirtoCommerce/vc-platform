@@ -13,6 +13,8 @@ namespace VirtoCommerce.Storefront.Model.Quote
 
         public string Tag { get; set; }
 
+        public string Status { get; set; }
+
         public string Comment { get; set; }
 
         public Address BillingAddress { get; set; }
