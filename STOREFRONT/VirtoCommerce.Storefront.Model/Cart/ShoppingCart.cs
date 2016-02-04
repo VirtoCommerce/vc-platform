@@ -340,7 +340,12 @@ namespace VirtoCommerce.Storefront.Model.Cart
                     }
                 }
             }
-        } 
+        }
         #endregion
+
+        public override string ToString()
+        {
+            return string.Format("Cart #{0} Items({1}) {2}", Id ?? "undef", ItemsCount, Customer != null ? Customer.ToString() : "undef"); 
+        }
     }
 }

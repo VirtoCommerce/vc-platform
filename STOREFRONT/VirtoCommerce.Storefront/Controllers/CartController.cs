@@ -73,7 +73,7 @@ namespace VirtoCommerce.Storefront.Controllers
             EnsureThatCartExist();
 
             //Need lock to prevent concurrent access to same cart
-            using (var lockObject = await AsyncLock.GetLockByKey(id).LockAsync())
+            using (var lockObject = await AsyncLock.GetLockByKey(GetAsyncLockCartKey(id)).LockAsync())
             {
 
                 var products = await _catalogService.GetProductsAsync(new string[] { id }, Model.Catalog.ItemResponseGroup.ItemLarge);
@@ -94,7 +94,7 @@ namespace VirtoCommerce.Storefront.Controllers
             EnsureThatCartExist();
 
             //Need lock to prevent concurrent access to same cart
-            using (var lockObject = await AsyncLock.GetLockByKey(WorkContext.CurrentCart.Id).LockAsync())
+            using (var lockObject = await AsyncLock.GetLockByKey(GetAsyncLockCartKey(WorkContext.CurrentCart.Id)).LockAsync())
             {
 
                 var lineItem = _cartBuilder.Cart.Items.FirstOrDefault(i => i.Id == lineItemId);
@@ -115,7 +115,7 @@ namespace VirtoCommerce.Storefront.Controllers
             EnsureThatCartExist();
 
             //Need lock to prevent concurrent access to same cart
-            using (var lockObject = await AsyncLock.GetLockByKey(WorkContext.CurrentCart.Id).LockAsync())
+            using (var lockObject = await AsyncLock.GetLockByKey(GetAsyncLockCartKey(WorkContext.CurrentCart.Id)).LockAsync())
             {
                 await _cartBuilder.RemoveItemAsync(lineItemId);
                 await _cartBuilder.SaveAsync();
@@ -132,7 +132,7 @@ namespace VirtoCommerce.Storefront.Controllers
             EnsureThatCartExist();
 
             //Need lock to prevent concurrent access to same cart
-            using (var lockObject = await AsyncLock.GetLockByKey(WorkContext.CurrentCart.Id).LockAsync())
+            using (var lockObject = await AsyncLock.GetLockByKey(GetAsyncLockCartKey(WorkContext.CurrentCart.Id)).LockAsync())
             {
                 await _cartBuilder.ClearAsync();
                 await _cartBuilder.SaveAsync();
@@ -180,7 +180,7 @@ namespace VirtoCommerce.Storefront.Controllers
             EnsureThatCartExist();
 
             //Need lock to prevent concurrent access to same cart
-            using (var lockObject = await AsyncLock.GetLockByKey(WorkContext.CurrentCart.Id).LockAsync())
+            using (var lockObject = await AsyncLock.GetLockByKey(GetAsyncLockCartKey(WorkContext.CurrentCart.Id)).LockAsync())
             {
                 await _cartBuilder.AddCouponAsync(couponCode);
                 await _cartBuilder.SaveAsync();
@@ -196,7 +196,7 @@ namespace VirtoCommerce.Storefront.Controllers
             EnsureThatCartExist();
 
             //Need lock to prevent concurrent access to same cart
-            using (var lockObject = await AsyncLock.GetLockByKey(WorkContext.CurrentCart.Id).LockAsync())
+            using (var lockObject = await AsyncLock.GetLockByKey(GetAsyncLockCartKey(WorkContext.CurrentCart.Id)).LockAsync())
             {
                 await _cartBuilder.RemoveCouponAsync();
                 await _cartBuilder.SaveAsync();
@@ -213,7 +213,7 @@ namespace VirtoCommerce.Storefront.Controllers
             EnsureThatCartExist();
 
             //Need lock to prevent concurrent access to same cart
-            using (var lockObject = await AsyncLock.GetLockByKey(WorkContext.CurrentCart.Id).LockAsync())
+            using (var lockObject = await AsyncLock.GetLockByKey(GetAsyncLockCartKey(WorkContext.CurrentCart.Id)).LockAsync())
             {
                 await _cartBuilder.AddOrUpdateShipmentAsync(shipmentId, shippingAddress, itemIds, shippingMethodCode);
                 await _cartBuilder.SaveAsync();
@@ -230,7 +230,7 @@ namespace VirtoCommerce.Storefront.Controllers
             EnsureThatCartExist();
 
             //Need lock to prevent concurrent access to same cart
-            using (var lockObject = await AsyncLock.GetLockByKey(WorkContext.CurrentCart.Id).LockAsync())
+            using (var lockObject = await AsyncLock.GetLockByKey(GetAsyncLockCartKey(WorkContext.CurrentCart.Id)).LockAsync())
             {
                 await _cartBuilder.AddOrUpdatePaymentAsync(paymentId, billingAddress, paymentMethodCode, outerId);
                 await _cartBuilder.SaveAsync();
@@ -246,7 +246,7 @@ namespace VirtoCommerce.Storefront.Controllers
             EnsureThatCartExist();
 
             //Need lock to prevent concurrent access to same cart
-            using (var lockObject = await AsyncLock.GetLockByKey(WorkContext.CurrentCart.Id).LockAsync())
+            using (var lockObject = await AsyncLock.GetLockByKey(GetAsyncLockCartKey(WorkContext.CurrentCart.Id)).LockAsync())
             {
                 var order = await _orderApi.OrderModuleCreateOrderFromCartAsync(_cartBuilder.Cart.Id);
 
@@ -374,6 +374,11 @@ namespace VirtoCommerce.Storefront.Controllers
             }
 
             return addresses;
+        }
+
+        private static string GetAsyncLockCartKey(string cartId)
+        {
+            return "Cart:" + cartId;
         }
 
         private void EnsureThatCartExist()

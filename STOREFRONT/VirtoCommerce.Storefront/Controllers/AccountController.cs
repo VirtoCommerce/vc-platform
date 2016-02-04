@@ -161,8 +161,6 @@ namespace VirtoCommerce.Storefront.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> Register(Register formModel)
         {
-            var anonymousQuoteRequest = WorkContext.CurrentQuoteRequest;
-
             var user = new VirtoCommercePlatformCoreSecurityApplicationUserExtended
             {
                 Email = formModel.Email,

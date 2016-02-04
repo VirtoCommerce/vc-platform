@@ -68,5 +68,10 @@ namespace VirtoCommerce.Storefront.Model.Customer
         public IStorefrontPagedList<CustomerOrder> Orders { get; set; }
         [IgnoreDataMember]
         public IStorefrontPagedList<QuoteRequest> QuoteRequests { get; set; }
+
+        public override string ToString()
+        {
+            return string.Format("user#{0} {1} {2}", Id ?? "undef", UserName ?? "undef", IsRegisteredUser ? "registered" : "anonymous");
+        }
     }
 }

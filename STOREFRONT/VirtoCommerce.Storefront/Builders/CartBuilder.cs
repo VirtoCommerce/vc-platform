@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CacheManager.Core;
+using NLog;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.Storefront.Common;
 using VirtoCommerce.Storefront.Converters;
@@ -92,6 +93,9 @@ namespace VirtoCommerce.Storefront.Builders
                     retVal = detalizedCart.ToWebModel(currency, language);
                 }
                 retVal.Customer = customer;
+
+                var log = LogManager.GetCurrentClassLogger();
+                log.Trace(string.Format("GetOrCreateNewTransientCartAsync {0}", retVal));
 
                 return retVal;
             });
@@ -331,6 +335,10 @@ namespace VirtoCommerce.Storefront.Builders
 
         public virtual async Task<ICartBuilder> RemoveCartAsync()
         {
+            var log = LogManager.GetCurrentClassLogger();
+            log.Trace(string.Format("RemoveCartAsync {0}", _cart));
+
+
             await _cartApi.CartModuleDeleteCartsAsync(new List<string> { _cart.Id });
             _cacheManager.Remove(CartCaheKey, _cartCacheRegion);
 
@@ -452,6 +460,8 @@ namespace VirtoCommerce.Storefront.Builders
 
             //Invalidate cart in cache
             _cacheManager.Remove(CartCaheKey, _cartCacheRegion);
+            var log = LogManager.GetCurrentClassLogger();
+            log.Trace(string.Format("SaveAsync {0}", _cart));
 
             if (_cart.IsTransient())
             {
@@ -479,17 +489,37 @@ namespace VirtoCommerce.Storefront.Builders
         /// <param name="userLoginEvent"></param>
         public void OnNext(UserLoginEvent userLoginEvent)
         {
-            //If previous user was anonymous and it has not empty cart need merge anonymous cart to personal
-           if(!userLoginEvent.PrevUser.IsRegisteredUser && userLoginEvent.WorkContext.CurrentCart != null && userLoginEvent.WorkContext.CurrentCart.Items.Any())
+            if (userLoginEvent == null)
+                return;
+
+            var log = LogManager.GetCurrentClassLogger();
+         
+            var workContext = userLoginEvent.WorkContext;
+            var prevUser = userLoginEvent.PrevUser;
+            var prevUserCart = userLoginEvent.WorkContext.CurrentCart;
+            var newUser = userLoginEvent.NewUser;
+
+            log.Trace(string.Format("1. userLoginEvent: prevUser: {0}, newUser: {1}, prevCart: {2}", prevUser.Id + ":" + prevUser.FullName, newUser.Id + ":" + newUser.FullName, prevUserCart.Id + ":" + prevUserCart.ItemsCount));
+           
+                //If previous user was anonymous and it has not empty cart need merge anonymous cart to personal
+           if (!prevUser.IsRegisteredUser && prevUserCart != null && prevUserCart.Items.Any())
             {
                 //Call async methods synchronously 
                 var task = new TaskFactory().StartNew(async () =>
                 {
-                    await GetOrCreateNewTransientCartAsync(userLoginEvent.WorkContext.CurrentStore, userLoginEvent.NewUser, userLoginEvent.WorkContext.CurrentLanguage, userLoginEvent.WorkContext.CurrentCurrency);
-                    await MergeWithCartAsync(userLoginEvent.WorkContext.CurrentCart);
+
+                    log.Trace(string.Format("2. Do cart merging"));
+
+                    //we load or create cart for new user
+                    await GetOrCreateNewTransientCartAsync(workContext.CurrentStore, newUser, workContext.CurrentLanguage, workContext.CurrentCurrency);
+                    log.Trace(string.Format("3. Loaded or created user {0} cart {1}", newUser.Id + ":" + newUser.FullName, (_cart.Id ?? "none") + ":" + _cart.ItemsCount ));
+
+                    await MergeWithCartAsync(prevUserCart);
+                    log.Trace(string.Format("4. Merged user {0} cart {1}", newUser.Id + ":" + newUser.FullName, (_cart.Id ?? "none") + ":" + _cart.ItemsCount));
                     await SaveAsync();
+                    
                 });
-                //we prevent workink thread deadlock because we runing task in managed task
+                //use Wait() we prevent deadlock because we running async job out of ASP.NET  worker thread
                 task.Wait();
             }
         }

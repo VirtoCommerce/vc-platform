@@ -229,7 +229,7 @@ namespace VirtoCommerce.Storefront.Builders
                     await MergeWithQuoteRequest(userLoginEvent.WorkContext.CurrentQuoteRequest);
                     await SaveAsync();
                 });
-                //we prevent workink thread deadlock because we runing task in managed task
+                //use Wait() we prevent deadlock because we running async job out of ASP.NET  worker thread
                 task.Wait();
             }
         }
