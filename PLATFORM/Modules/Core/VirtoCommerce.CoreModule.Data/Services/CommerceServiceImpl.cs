@@ -13,63 +13,63 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.CoreModule.Data.Repositories
 {
-	public class CommerceServiceImpl : ServiceBase, ICommerceService
-	{
-		private readonly Func<IСommerceRepository> _repositoryFactory;
-		public CommerceServiceImpl(Func<IСommerceRepository> repositoryFactory)
-		{
-			_repositoryFactory = repositoryFactory;
-		}
+    public class CommerceServiceImpl : ServiceBase, ICommerceService
+    {
+        private readonly Func<IСommerceRepository> _repositoryFactory;
+        public CommerceServiceImpl(Func<IСommerceRepository> repositoryFactory)
+        {
+            _repositoryFactory = repositoryFactory;
+        }
 
-		#region ICommerceService Members
+        #region ICommerceService Members
 
-		public IEnumerable<coreModel.FulfillmentCenter> GetAllFulfillmentCenters()
-		{
-			var retVal = new List<coreModel.FulfillmentCenter>();
-			using (var repository = _repositoryFactory())
-			{
-				retVal = repository.FulfillmentCenters.ToArray().Select(x => x.ToCoreModel()).ToList();
-			}
-			return retVal;
-		}
+        public IEnumerable<coreModel.FulfillmentCenter> GetAllFulfillmentCenters()
+        {
+            var retVal = new List<coreModel.FulfillmentCenter>();
+            using (var repository = _repositoryFactory())
+            {
+                retVal = repository.FulfillmentCenters.ToArray().Select(x => x.ToCoreModel()).ToList();
+            }
+            return retVal;
+        }
 
-		public coreModel.FulfillmentCenter UpsertFulfillmentCenter(coreModel.FulfillmentCenter center)
-		{
-			if (center == null)
-				throw new ArgumentNullException("center");
+        public coreModel.FulfillmentCenter UpsertFulfillmentCenter(coreModel.FulfillmentCenter center)
+        {
+            if (center == null)
+                throw new ArgumentNullException("center");
 
-			coreModel.FulfillmentCenter retVal = null;
-			using (var repository = _repositoryFactory())
-			{
-				var sourceEntry = center.ToDataModel();
-				var targetEntry = repository.FulfillmentCenters.FirstOrDefault(x=>x.Id == center.Id);
-				if(targetEntry == null)
-				{
-					repository.Add(sourceEntry);
-				}
-				else
-				{
-					sourceEntry.Patch(targetEntry);
-				}
+            coreModel.FulfillmentCenter retVal = null;
+            using (var repository = _repositoryFactory())
+            {
+                var sourceEntry = center.ToDataModel();
+                var targetEntry = repository.FulfillmentCenters.FirstOrDefault(x => x.Id == center.Id);
+                if (targetEntry == null)
+                {
+                    repository.Add(sourceEntry);
+                }
+                else
+                {
+                    sourceEntry.Patch(targetEntry);
+                }
 
-				CommitChanges(repository);
+                CommitChanges(repository);
                 retVal = repository.FulfillmentCenters.First(x => x.Id == sourceEntry.Id).ToCoreModel();
-			}
-			return retVal;
-		}
+            }
+            return retVal;
+        }
 
 
-		public void DeleteFulfillmentCenter(string[] ids)
-		{
-			using (var repository = _repositoryFactory())
-			{
-				foreach(var center in repository.FulfillmentCenters.Where(x=>ids.Contains(x.Id)))
-				{
-					repository.Remove(center);
-				}
+        public void DeleteFulfillmentCenter(string[] ids)
+        {
+            using (var repository = _repositoryFactory())
+            {
+                foreach (var center in repository.FulfillmentCenters.Where(x => ids.Contains(x.Id)))
+                {
+                    repository.Remove(center);
+                }
                 CommitChanges(repository);
             }
-		}
+        }
 
 
         public void LoadSeoForObjects(coreModel.ISeoSupport[] seoSupportObjects)
@@ -77,11 +77,11 @@ namespace VirtoCommerce.CoreModule.Data.Repositories
             using (var repository = _repositoryFactory())
             {
                 var objectIds = seoSupportObjects.Where(x => x.Id != null).Select(x => x.Id).ToArray();
-                var seoInfos = repository.SeoUrlKeywords.Where(x=> objectIds.Contains(x.ObjectId))
+                var seoInfos = repository.SeoUrlKeywords.Where(x => objectIds.Contains(x.ObjectId))
                                                         .ToArray()
                                                         .Select(x => x.ToCoreModel())
                                                         .ToArray();
-                foreach(var seoSupportObject in seoSupportObjects)
+                foreach (var seoSupportObject in seoSupportObjects)
                 {
                     seoSupportObject.SeoInfos = seoInfos.Where(x => x.ObjectId == seoSupportObject.Id && x.ObjectType == seoSupportObject.GetType().Name).ToList();
                 }
@@ -155,30 +155,30 @@ namespace VirtoCommerce.CoreModule.Data.Repositories
 
 
         public IEnumerable<coreModel.SeoInfo> GetSeoByKeyword(string keyword)
-		{
-			var retVal = new List<coreModel.SeoInfo>();
-			using (var repository = _repositoryFactory())
-			{
+        {
+            var retVal = new List<coreModel.SeoInfo>();
+            using (var repository = _repositoryFactory())
+            {
                 //find seo entries for specified keyword
-				retVal = repository.SeoUrlKeywords.Where(x => x.Keyword == keyword).ToArray()
-								  .Select(x => x.ToCoreModel()).ToList();
+                retVal = repository.SeoUrlKeywords.Where(x => x.Keyword == keyword).ToArray()
+                                  .Select(x => x.ToCoreModel()).ToList();
                 //find other seo entries related to finding object
-                if(retVal.Any())
+                if (retVal.Any())
                 {
                     var objectIds = retVal.Select(x => x.ObjectId).Distinct().ToArray();
                     var objectsSeo = repository.SeoUrlKeywords.Where(x => objectIds.Contains(x.Id)).ToArray().Select(x => x.ToCoreModel());
                     retVal.AddRange(objectsSeo);
                 }
-			}
-			return retVal;
-		}
+            }
+            return retVal;
+        }
 
         public IEnumerable<coreModel.Currency> GetAllCurrencies()
         {
             var retVal = new List<coreModel.Currency>();
             using (var repository = _repositoryFactory())
             {
-                retVal = repository.Currencies.ToArray().Select(x => x.ToCoreModel()).ToList();
+                retVal = repository.Currencies.OrderByDescending(x => x.IsPrimary).ThenBy(x => x.Code).ToArray().Select(x => x.ToCoreModel()).ToList();
             }
             return retVal;
         }
@@ -194,7 +194,7 @@ namespace VirtoCommerce.CoreModule.Data.Repositories
                 if (currencies.Any(x => x.IsPrimary))
                 {
                     var oldPrimaryCurrency = repository.Currencies.FirstOrDefault(x => x.IsPrimary);
-                    if(oldPrimaryCurrency != null)
+                    if (oldPrimaryCurrency != null)
                     {
                         oldPrimaryCurrency.IsPrimary = false;
                     }
@@ -213,7 +213,7 @@ namespace VirtoCommerce.CoreModule.Data.Repositories
                         sourceEntry.Patch(targetEntry);
                     }
                 }
- 
+
                 CommitChanges(repository);
             }
         }
@@ -224,7 +224,7 @@ namespace VirtoCommerce.CoreModule.Data.Repositories
             {
                 foreach (var currency in repository.Currencies.Where(x => codes.Contains(x.Code)))
                 {
-                    if(currency.IsPrimary)
+                    if (currency.IsPrimary)
                     {
                         throw new ArgumentException("Unable to delete primary currency");
                     }
