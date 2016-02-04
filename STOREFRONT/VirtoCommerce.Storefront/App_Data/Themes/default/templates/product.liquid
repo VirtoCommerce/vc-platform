@@ -106,7 +106,7 @@
                     <span id="addToCartText">{{ 'products.product.add_to_cart' | t }}</span>
                 </button>
                 {% if shop.quotes_enabled %}
-                    <button class="btn" id="addToQuote" type="button" ng-if="quotesEnabled && selectedVariation.IsQuotable" ng-disabled="!selectedVariation.Id" ng-click="addToQuoteRequest(selectedVariation, 1)">
+                    <button class="btn" id="addToQuote" type="button" ng-disabled="!selectedVariation.Id" ng-click="addToQuoteRequest(selectedVariation, 1)">
                         <span class="fa fa-calculator"></span>
                         {{ 'products.general.add_to_quote' | t }}
                     </button>

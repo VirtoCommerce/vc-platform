@@ -222,21 +222,21 @@ namespace VirtoCommerce.Storefront.Builders
             //If previous user was anonymous and it has not empty cart need merge anonymous cart to personal
             if (!userLoginEvent.PrevUser.IsRegisteredUser && userLoginEvent.WorkContext.CurrentQuoteRequest != null && userLoginEvent.WorkContext.CurrentQuoteRequest.Items.Any())
             {
-                //Call async methods synchronously http://blog.stephencleary.com/2012/07/dont-block-on-async-code.html
+                //Call async methods synchronously 
                 var task = new TaskFactory().StartNew(async () =>
                 {
                     await GetOrCreateNewTransientQuoteRequestAsync(userLoginEvent.WorkContext.CurrentStore, userLoginEvent.NewUser, userLoginEvent.WorkContext.CurrentLanguage, userLoginEvent.WorkContext.CurrentCurrency);
-                    await MergeWithQuoteRequest(userLoginEvent.WorkContext.CurrentQuoteRequest).ConfigureAwait(false);
-                    await SaveAsync().ConfigureAwait(false);
+                    await MergeWithQuoteRequest(userLoginEvent.WorkContext.CurrentQuoteRequest);
+                    await SaveAsync();
                 });
-
+                //we prevent workink thread deadlock because we runing task in managed task
                 task.Wait();
             }
         }
 
         public void OnError(Exception error)
         {
-            //Nothing todo
+            throw new StorefrontException("Quote merging error when user login event", error);
         }
 
         public void OnCompleted()
