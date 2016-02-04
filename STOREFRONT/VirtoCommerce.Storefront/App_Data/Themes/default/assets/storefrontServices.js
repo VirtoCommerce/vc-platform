@@ -82,22 +82,35 @@ storefrontApp.service('cartService', ['$http', function ($http) {
 storefrontApp.service('quoteRequestService', ['$http', function ($http) {
     return {
         getCurrentQuoteRequest: function () {
-            return $http.get('quoterequest/json?t=' + new Date().getTime());
+            return $http.get('currentquoterequest/json?t=' + new Date().getTime());
+        },
+        getCustomerQuoteRequest: function (qouteRequestNumber) {
+            return $http.get('customerquoterequest/' + qouteRequestNumber + '/json?t=' + new Date().getTime());
         },
         addItem: function (productId, quantity) {
-            return $http.post('quoterequest/additem', { productId: productId, quantity: quantity });
+            return $http.post('quoterequest/additem/json', { productId: productId, quantity: quantity });
         },
         removeItem: function (quoteItemId) {
-            return $http.post('quoterequest/removeitem', { quoteItemId: quoteItemId });
+            return $http.post('quoterequest/removeitem/json', { quoteItemId: quoteItemId });
         },
         update: function (quoteRequest) {
-            return $http.post('quoterequest/update', { quoteRequest: quoteRequest });
-        },
-        getQuoteRequestByNumber: function (quoteRequestNumber) {
-            return $http.get('quoterequest/' + quoteRequestNumber + '/json?t=' + new Date().getTime());
-        },
-        getQuoteRequestTotals: function (quoteRequestId, quoteItemId, tierPrice) {
-            return $http.post('quoterequest/totals/json', { quoteRequestId: quoteRequestId, quoteItemId: quoteItemId, tierPrice: tierPrice });
+            return $http.post('quoterequest/update/json', { quoteRequest: quoteRequest });
         }
+
+        //getCurrentQuoteRequest: function () {
+        //    return $http.get('quoterequest/current/json?t=' + new Date().getTime());
+        //},
+        //addItem: function (productId, quantity) {
+        //    return $http.post('quoterequest/additem/json', { productId: productId, quantity: quantity });
+        //},
+        //removeItem: function (quoteItemId) {
+        //    return $http.post('quoterequest/removeitem/json', { quoteItemId: quoteItemId });
+        //},
+        //update: function (quoteRequest) {
+        //    return $http.post('quoterequest/update/json', { quoteRequest: quoteRequest });
+        //},
+        //getQuoteRequestTotals: function (quoteRequestId, quoteItemId, tierPrice) {
+        //    return $http.post('quoterequest/totals/json', { quoteRequestId: quoteRequestId, quoteItemId: quoteItemId, tierPrice: tierPrice });
+        //}
     }
 }]);

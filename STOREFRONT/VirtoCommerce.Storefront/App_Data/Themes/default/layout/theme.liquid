@@ -128,7 +128,7 @@
                             {% if shop.quotes_enabled %}
                                 <a class="header-cart-btn cart-toggle" href="{{ 'quoterequest' | absolute_url }}" id="btn-cart-toggle">
                                     <span class="fa fa-calculator"></span>
-                                    Quote <span id="cartCount" ng-class="{ 'visible-count': quoteRequest.ItemsCount > 0 }" ng-bind="quoteRequest.ItemsCount" ng-cloak></span>
+                                    Quote <span id="cartCount" ng-class="{ 'visible-count': actualQuoteItemsCount > 0 }" ng-bind="actualQuoteItemsCount" ng-cloak></span>
                                 </a>
                             {% endif %}
                             <a class="header-cart-btn cart-toggle" href="{{ 'cart' | absolute_url }}" id="btn-cart-toggle">

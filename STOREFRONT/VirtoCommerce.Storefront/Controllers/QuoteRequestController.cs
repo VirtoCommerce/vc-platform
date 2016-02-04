@@ -41,50 +41,182 @@ namespace VirtoCommerce.Storefront.Controllers
             return View("quote-request", WorkContext);
         }
 
-        // GET: /quoterequest/json
-        [HttpGet]
-        public ActionResult QuoteRequestJson()
-        {
-            EnsureThatQuoteRequestExists();
-
-            return Json(WorkContext.CurrentQuoteRequest, JsonRequestBehavior.AllowGet);
-        }
-
-        // GET: /quoterequest/quote-requests
+        // GET: /account/quoterequests
         [HttpGet]
         public async Task<ActionResult> QuoteRequests()
         {
-            var criteria = base.WorkContext.CurrentQuoteSearchCriteria;
+            var criteria = WorkContext.CurrentQuoteSearchCriteria;
             var quoteSearchCriteria = new VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria
             {
                 Start = criteria.Start,
                 Count = criteria.PageSize,
-                StoreId = base.WorkContext.CurrentStore.Id,
-                CustomerId = base.WorkContext.CurrentCustomer.Id
+                StoreId = WorkContext.CurrentStore.Id,
+                CustomerId = WorkContext.CurrentCustomer.Id
             };
+
             var searchResult = await _quoteApi.QuoteModuleSearchAsync(quoteSearchCriteria);
-            WorkContext.CurrentCustomer.QuoteRequests = new StorefrontPagedList<QuoteRequest>(searchResult.QuoteRequests.Select(x => x.ToWebModel(base.WorkContext.AllCurrencies, base.WorkContext.CurrentLanguage)), criteria.PageNumber, criteria.PageSize,
-                                                                                              searchResult.TotalCount.Value, page => WorkContext.RequestUrl.SetQueryParameter("page", page.ToString()).ToString());
+            if (searchResult != null)
+            {
+                WorkContext.CurrentCustomer.QuoteRequests = new StorefrontPagedList<QuoteRequest>(
+                    searchResult.QuoteRequests.Where(qr => qr.Status != "New").Select(x => x.ToWebModel(WorkContext.AllCurrencies, WorkContext.CurrentLanguage)),
+                    criteria.PageNumber, criteria.PageSize,
+                    searchResult.TotalCount.Value,
+                    page => WorkContext.RequestUrl.SetQueryParameter("page", page.ToString()).ToString());
+            }
 
             return View("customers/quote-requests", WorkContext);
         }
 
-        // GET: /quoterequest/quote-request/{number}
+        // GET: /quoterequest/{number}
         [HttpGet]
-        public async Task<ActionResult> GetQuoteRequestByNumber(string number)
+        public async Task<ActionResult> QuoteRequestByNumber(string number)
         {
             if (string.IsNullOrEmpty(number))
             {
                 throw new HttpException(404, string.Empty);
             }
+
             WorkContext.CurrentQuoteRequest = await GetCustomerQuoteRequestByIdAsync(number);
 
             if (WorkContext.CurrentQuoteRequest == null)
             {
                 throw new HttpException(404, string.Empty);
             }
-            return View("customers/quote-request", WorkContext);
+
+            return View("quote-request", WorkContext);
         }
+
+        // GET: /currentquoterequest/json
+        [HttpGet]
+        public ActionResult CurrentQuoteRequestJson()
+        {
+            EnsureThatQuoteRequestExists();
+
+            return Json(WorkContext.CurrentQuoteRequest, JsonRequestBehavior.AllowGet);
+        }
+
+        // GET: /customerquoterequest/{number}/json
+        [HttpGet]
+        public async Task<ActionResult> CustomerQuoteRequestJson(string number)
+        {
+            if (string.IsNullOrEmpty(number))
+            {
+                throw new HttpException(404, string.Empty);
+            }
+
+            var quoteRequest = await GetCustomerQuoteRequestByIdAsync(number);
+
+            return Json(quoteRequest, JsonRequestBehavior.AllowGet);
+        }
+
+        // POST: /quoterequest/additem?productId=...&quantity=...
+        [HttpPost]
+        public async Task<ActionResult> AddItemJson(string productId, long quantity)
+        {
+            EnsureThatQuoteRequestExists();
+
+            using (var lockObject = await AsyncLock.GetLockByKey("quote-product:" + productId).LockAsync())
+            {
+                var products = await _catalogSearchService.GetProductsAsync(new string[] { productId }, ItemResponseGroup.ItemLarge);
+                if (products != null && products.Any())
+                {
+                    _quoteRequestBuilder.AddItem(products.First(), quantity);
+                    await _quoteRequestBuilder.SaveAsync();
+                }
+            }
+
+            return Json(null, JsonRequestBehavior.AllowGet);
+        }
+
+        // POST: /quoterequest/removeitem?quoteItemId=...
+        [HttpPost]
+        public async Task<ActionResult> RemoveItemJson(string quoteItemId)
+        {
+            EnsureThatQuoteRequestExists();
+
+            using (var lockObject = await AsyncLock.GetLockByKey("quote-item:" + WorkContext.CurrentQuoteRequest.Id).LockAsync())
+            {
+                _quoteRequestBuilder.RemoveItem(quoteItemId);
+                await _quoteRequestBuilder.SaveAsync();
+            }
+
+            return Json(null, JsonRequestBehavior.AllowGet);
+        }
+
+        // POST: /quoterequest/update?quoteRequest=...
+        [HttpPost]
+        public async Task<ActionResult> UpdateJson(QuoteRequestFormModel quoteRequest)
+        {
+            EnsureThatQuoteRequestExists();
+
+            using (var lockObject = await AsyncLock.GetLockByKey("quote:" + WorkContext.CurrentQuoteRequest.Id).LockAsync())
+            {
+                _quoteRequestBuilder.Update(quoteRequest);
+                await _quoteRequestBuilder.SaveAsync();
+            }
+
+            return Json(null, JsonRequestBehavior.AllowGet);
+        }
+
+
+
+
+
+
+
+
+
+        // POST: /quoterequest/totals?quoteRequestId=...&quoteItemId=...&tierPrice=...
+        [HttpPost]
+        public async Task<ActionResult> GetTotalsJson(string quoteRequestId, string quoteItemId, TierPriceFormModel tierPrice)
+        {
+            QuoteRequestTotals totals = null;
+
+            var quoteRequest = await GetCustomerQuoteRequestByIdAsync(quoteRequestId);
+            if (quoteRequest != null)
+            {
+                var quoteItem = quoteRequest.Items.FirstOrDefault(i => i.Id == quoteItemId);
+                if (quoteItem != null)
+                {
+                    quoteItem.SelectedTierPrice = new TierPrice
+                    {
+                        Price = new Money(tierPrice.Price, WorkContext.CurrentCurrency),
+                        Quantity = quoteItem.SelectedTierPrice.Quantity
+                    };
+                }
+
+                var quoteResult = await _quoteApi.QuoteModuleCalculateTotalsAsync(quoteRequest.ToServiceModel());
+                totals = quoteResult.Totals.ToWebModel(quoteRequest.Currency);
+            }
+
+            return Json(totals, JsonRequestBehavior.AllowGet);
+        }
+
+        private void EnsureThatQuoteRequestExists()
+        {
+            if (WorkContext.CurrentQuoteRequest == null)
+            {
+                throw new StorefrontException("Quote request is not found");
+            }
+
+            _quoteRequestBuilder.TakeQuoteRequest(WorkContext.CurrentQuoteRequest);
+        }
+
+        private async Task<QuoteRequest> GetCustomerQuoteRequestByIdAsync(string id)
+        {
+            var result = await _quoteApi.QuoteModuleGetByIdAsync(id);
+
+            if (WorkContext.CurrentCustomer.Id != result.CustomerId)
+            {
+                throw new StorefrontException("Requested quote not belongs to current user");
+            }
+
+            return result != null ? result.ToWebModel(WorkContext.AllCurrencies, WorkContext.CurrentLanguage) : null;
+        }
+
+
+
+        /*
 
         // GET: /quoterequest/quote-request/{number}/edit
         [HttpGet]
@@ -154,101 +286,6 @@ namespace VirtoCommerce.Storefront.Controllers
 
             return StoreFrontRedirect("~/account/quote-requests");
         }
-
-
-        // POST: /quoterequest/update?quoteRequest=...
-        [HttpPost]
-        public async Task<ActionResult> UpdateJson(QuoteRequestFormModel quoteRequest)
-        {
-            EnsureThatQuoteRequestExists();
-
-            using (var lockObject = await AsyncLock.GetLockByKey("quote:" + WorkContext.CurrentQuoteRequest.Id).LockAsync())
-            {
-                _quoteRequestBuilder.Update(quoteRequest);
-                await _quoteRequestBuilder.SaveAsync();
-            }
-
-            return Json(null, JsonRequestBehavior.AllowGet);
-        }
-
-        // POST: /quoterequest/additem?productId=...&quantity=...
-        [HttpPost]
-        public async Task<ActionResult> AddItemJson(string productId, long quantity)
-        {
-            EnsureThatQuoteRequestExists();
-
-            using (var lockObject = await AsyncLock.GetLockByKey("quote-product:" + productId).LockAsync())
-            {
-                var products = await _catalogSearchService.GetProductsAsync(new string[] { productId }, ItemResponseGroup.ItemLarge);
-                if (products != null && products.Any())
-                {
-                    _quoteRequestBuilder.AddItem(products.First(), quantity);
-                    await _quoteRequestBuilder.SaveAsync();
-                }
-            }
-
-            return Json(null, JsonRequestBehavior.AllowGet);
-        }
-
-        // POST: /quoterequest/removeitem?quoteItemId=...
-        [HttpPost]
-        public async Task<ActionResult> RemoveItemJson(string quoteItemId)
-        {
-            EnsureThatQuoteRequestExists();
-
-            using (var lockObject = await AsyncLock.GetLockByKey("quote-item:" + WorkContext.CurrentQuoteRequest.Id).LockAsync())
-            {
-                _quoteRequestBuilder.RemoveItem(quoteItemId);
-                await _quoteRequestBuilder.SaveAsync();
-            }
-
-            return Json(null, JsonRequestBehavior.AllowGet);
-        }
-
-        // POST: /quoterequest/totals/json
-        [HttpPost]
-        public async Task<ActionResult> GetTotalsJson(string quoteRequestId, string quoteItemId, TierPriceFormModel tierPrice)
-        {
-            QuoteRequestTotals totals = null;
-
-            var quoteRequest = await GetCustomerQuoteRequestByIdAsync(quoteRequestId);
-            if (quoteRequest != null)
-            {
-                var quoteItem = quoteRequest.Items.FirstOrDefault(i => i.Id == quoteItemId);
-                if (quoteItem != null)
-                {
-                    quoteItem.SelectedTierPrice = new TierPrice
-                    {
-                        Price = new Money(tierPrice.Price, WorkContext.CurrentCurrency),
-                        Quantity = quoteItem.SelectedTierPrice.Quantity
-                    };
-                }
-                var quoteResult = await _quoteApi.QuoteModuleCalculateTotalsAsync(quoteRequest.ToServiceModel());
-                totals = quoteResult.Totals.ToWebModel(quoteRequest.Currency);
-            }
-
-            return Json(totals, JsonRequestBehavior.AllowGet);
-        }
-
-
-        private async Task<QuoteRequest> GetCustomerQuoteRequestByIdAsync(string id)
-        {
-            var result = await _quoteApi.QuoteModuleGetByIdAsync(id);
-            if(base.WorkContext.CurrentCustomer.Id != result.CustomerId)
-            {
-                throw new StorefrontException("Requested quote not belongs to current user");
-            }
-            return result != null ? result.ToWebModel(base.WorkContext.AllCurrencies, base.WorkContext.CurrentLanguage) : null;
-        }
-
-        private void EnsureThatQuoteRequestExists()
-        {
-            if (WorkContext.CurrentQuoteRequest == null)
-            {
-                throw new StorefrontException("Quote request is not found");
-            }
-
-            _quoteRequestBuilder.TakeQuoteRequest(WorkContext.CurrentQuoteRequest);
-        }
+        */
     }
 }

@@ -46,7 +46,6 @@ namespace VirtoCommerce.Storefront.Builders
                 return GetQuoteRequestCacheKey(_quoteRequest.StoreId, _quoteRequest.CustomerId);
             }
         }
-        #region IQuoteRequestBuilder Members
 
         public IQuoteRequestBuilder TakeQuoteRequest(QuoteRequest quoteRequest)
         {
@@ -76,7 +75,7 @@ namespace VirtoCommerce.Storefront.Builders
                     quoteRequest.Currency = currency;
                     quoteRequest.CustomerId = customer.Id;
                     quoteRequest.Language = language;
-                    quoteRequest.Status = "Processing";
+                    quoteRequest.Status = "New";
                     quoteRequest.StoreId = store.Id;
                     quoteRequest.Tag = "actual";
 
@@ -105,6 +104,7 @@ namespace VirtoCommerce.Storefront.Builders
         public IQuoteRequestBuilder Reject()
         {
             _quoteRequest.Status = "Rejected";
+
             return this;
         }
 
@@ -131,6 +131,7 @@ namespace VirtoCommerce.Storefront.Builders
             _cacheManager.Remove(QuoteRequestCacheKey, _quoteRequestCacheRegion);
 
             _quoteRequest.Comment = quoteRequest.Comment;
+            _quoteRequest.Status = quoteRequest.Status;
             _quoteRequest.Tag = quoteRequest.Tag;
 
             _quoteRequest.Addresses.Clear();
@@ -210,8 +211,6 @@ namespace VirtoCommerce.Storefront.Builders
             }
         }
 
-        #endregion
-
         #region IObserver<UserLoginEvent> Members
         /// <summary>
         /// Merge anonymous user quote to newly logined user quote by loging event
@@ -244,8 +243,6 @@ namespace VirtoCommerce.Storefront.Builders
             //Nothing todo
         }
         #endregion
-
-
 
         private string GetQuoteRequestCacheKey(string storeId, string customerId)
         {

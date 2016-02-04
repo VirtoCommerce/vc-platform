@@ -66,17 +66,34 @@ namespace VirtoCommerce.Storefront
             routes.MapLocalizedStorefrontRoute("ShopifyCart.UpdateJs", "cart/update.js", defaults: new { controller = "ShopifyCompatibility", action = "UpdateJs" });
 
             // QuoteRequest
-            routes.MapLocalizedStorefrontRoute("QuoteRequest.Index", "quoterequest", defaults: new { controller = "QuoteRequest", action = "Index" });
-            routes.MapLocalizedStorefrontRoute("QuoteRequest.Json", "quoterequest/json", defaults: new { controller = "QuoteRequest", action = "QuoteRequestJson" });
-            routes.MapLocalizedStorefrontRoute("QuoteRequest.Update", "quoterequest/update", defaults: new { controller = "QuoteRequest", action = "UpdateJson" });
-            routes.MapLocalizedStorefrontRoute("QuoteRequest.AddItem", "quoterequest/additem", defaults: new { controller = "QuoteRequest", action = "AddItemJson" });
-            routes.MapLocalizedStorefrontRoute("QuoteRequest.RemoveItem", "quoterequest/removeitem", defaults: new { controller = "QuoteRequest", action = "RemoveItemJson" });
-            routes.MapLocalizedStorefrontRoute("QuoteRequest.QuoteRequests", "quoterequest/quote-requests", defaults: new { controller = "QuoteRequest", action = "QuoteRequests" });
-            routes.MapLocalizedStorefrontRoute("QuoteRequest.QuoteRequest", "quoterequest/quote-request/{number}", defaults: new { controller = "QuoteRequest", action = "GetQuoteRequestByNumber" });
-            routes.MapLocalizedStorefrontRoute("QuoteRequest.EditQuoteRequest", "quoterequest/quote-request/{number}/edit", defaults: new { controller = "QuoteRequest", action = "EditQuoteRequest" });
-            routes.MapLocalizedStorefrontRoute("QuoteRequest.ConfirmQuoteRequest", "quoterequest/quote-request/{number}/confirm", defaults: new { controller = "QuoteRequest", action = "ConfirmQuoteRequest" });
-            routes.MapLocalizedStorefrontRoute("QuoteRequest.RejectQuoteRequest", "quoterequest/quote-request/{number}/reject", defaults: new { controller = "QuoteRequest", action = "RejectQuoteRequest" });
-            routes.MapLocalizedStorefrontRoute("QuoteRequest.GetTotalsJson", "quoterequest/totals/json", defaults: new { controller = "QuoteRequest", action = "GetTotalsJson" }, constraints: new { httpMethod = new HttpMethodConstraint(new string[] { "POST" }) });
+            routes.MapLocalizedStorefrontRoute("QuoteRequest.QuoteRequest", "quoterequest", defaults: new { controller = "QuoteRequest", action = "Index" });
+            routes.MapLocalizedStorefrontRoute("QuoteRequest.QuoteRequests", "account/quoterequests", defaults: new { controller = "QuoteRequest", action = "QuoteRequests" });
+            routes.MapLocalizedStorefrontRoute("QuoteRequest.QuoteRequestByNumber", "quoterequest/{number}", defaults: new { controller = "QuoteRequest", action = "QuoteRequestByNumber" });
+            routes.MapLocalizedStorefrontRoute("QuoteRequest.CurrentQuoteRequest", "currentquoterequest/json", defaults: new { controller = "QuoteRequest", action = "CurrentQuoteRequestJson" });
+            routes.MapLocalizedStorefrontRoute("QuoteRequest.CustomerQuoteRequest", "customerquoterequest/{number}/json", defaults: new { controller = "QuoteRequest", action = "CustomerQuoteRequestJson" });
+            routes.MapLocalizedStorefrontRoute("QuoteRequest.AddItem", "quoterequest/additem/json", defaults: new { controller = "QuoteRequest", action = "AddItemJson" });
+            routes.MapLocalizedStorefrontRoute("QuoteRequest.RemoveItem", "quoterequest/removeitem/json", defaults: new { controller = "QuoteRequest", action = "RemoveItemJson" });
+            routes.MapLocalizedStorefrontRoute("QuoteRequest.Update", "quoterequest/update/json", defaults: new { controller = "QuoteRequest", action = "UpdateJson" });
+
+            //routes.MapLocalizedStorefrontRoute("QuoteRequest.QuoteRequests", "account/quoterequests", defaults: new { controller = "QuoteRequest", action = "QuoteRequests" });
+            //routes.MapLocalizedStorefrontRoute("QuoteRequest.GetByNumber", "quoterequest/{number}/json", defaults: new { controller = "QuoteRequest", action = "GetByNumberJson" });
+            //routes.MapLocalizedStorefrontRoute("QuoteRequest.AddItem", "quoterequest/additem", defaults: new { controller = "QuoteRequest", action = "AddItemJson" });
+            //routes.MapLocalizedStorefrontRoute("QuoteRequest.RemoveItem", "quoterequest/removeitem", defaults: new { controller = "QuoteRequest", action = "RemoveItemJson" });
+            //routes.MapLocalizedStorefrontRoute("QuoteRequest.Update", "quoterequest/update", defaults: new { controller = "QuoteRequest", action = "UpdateJson" });
+            //routes.MapLocalizedStorefrontRoute("QuoteRequest.GetTotals", "quoterequest/totals", defaults: new { controller = "QuoteRequest", action = "GetTotalsJson" });
+
+
+
+            //routes.MapLocalizedStorefrontRoute("QuoteRequest.Json", "quoterequest/json", defaults: new { controller = "QuoteRequest", action = "QuoteRequestJson" });
+            //routes.MapLocalizedStorefrontRoute("QuoteRequest.Update", "quoterequest/update", defaults: new { controller = "QuoteRequest", action = "UpdateJson" });
+            //routes.MapLocalizedStorefrontRoute("QuoteRequest.AddItem", "quoterequest/additem", defaults: new { controller = "QuoteRequest", action = "AddItemJson" });
+            //routes.MapLocalizedStorefrontRoute("QuoteRequest.RemoveItem", "quoterequest/removeitem", defaults: new { controller = "QuoteRequest", action = "RemoveItemJson" });
+            //routes.MapLocalizedStorefrontRoute("QuoteRequest.QuoteRequests", "quoterequest/quote-requests", defaults: new { controller = "QuoteRequest", action = "QuoteRequests" });
+            //routes.MapLocalizedStorefrontRoute("QuoteRequest.QuoteRequest", "quoterequest/quote-request/{number}", defaults: new { controller = "QuoteRequest", action = "GetQuoteRequestByNumber" });
+            //routes.MapLocalizedStorefrontRoute("QuoteRequest.EditQuoteRequest", "quoterequest/quote-request/{number}/edit", defaults: new { controller = "QuoteRequest", action = "EditQuoteRequest" });
+            //routes.MapLocalizedStorefrontRoute("QuoteRequest.ConfirmQuoteRequest", "quoterequest/quote-request/{number}/confirm", defaults: new { controller = "QuoteRequest", action = "ConfirmQuoteRequest" });
+            //routes.MapLocalizedStorefrontRoute("QuoteRequest.RejectQuoteRequest", "quoterequest/quote-request/{number}/reject", defaults: new { controller = "QuoteRequest", action = "RejectQuoteRequest" });
+            //routes.MapLocalizedStorefrontRoute("QuoteRequest.GetTotalsJson", "quoterequest/totals/json", defaults: new { controller = "QuoteRequest", action = "GetTotalsJson" }, constraints: new { httpMethod = new HttpMethodConstraint(new string[] { "POST" }) });
 
             //CatalogSearch
             routes.MapLocalizedStorefrontRoute("CatalogSearch.CategoryBrowsing", "search/{categoryId}", defaults: new { controller = "CatalogSearch", action = "CategoryBrowsing" });
