@@ -499,7 +499,7 @@ namespace VirtoCommerce.Storefront.Builders
             var prevUserCart = userLoginEvent.WorkContext.CurrentCart;
             var newUser = userLoginEvent.NewUser;
 
-            log.Trace(string.Format("1. userLoginEvent: prevUser: {0}, newUser: {1}, prevCart: {2}", prevUser.Id + ":" + prevUser.FullName, newUser.Id + ":" + newUser.FullName, prevUserCart.Id + ":" + prevUserCart.ItemsCount));
+            log.Trace(string.Format("1. userLoginEvent: prevUser: {0}, newUser: {1}, prevCart: {2}", prevUser, newUser, prevUserCart));
            
                 //If previous user was anonymous and it has not empty cart need merge anonymous cart to personal
            if (!prevUser.IsRegisteredUser && prevUserCart != null && prevUserCart.Items.Any())
@@ -507,17 +507,24 @@ namespace VirtoCommerce.Storefront.Builders
                 //Call async methods synchronously 
                 var task = new TaskFactory().StartNew(async () =>
                 {
+                    try
+                    {
+                        log.Trace(string.Format("2. Do cart merging"));
 
-                    log.Trace(string.Format("2. Do cart merging"));
+                        //we load or create cart for new user
+                        await GetOrCreateNewTransientCartAsync(workContext.CurrentStore, newUser, workContext.CurrentLanguage, workContext.CurrentCurrency);
 
-                    //we load or create cart for new user
-                    await GetOrCreateNewTransientCartAsync(workContext.CurrentStore, newUser, workContext.CurrentLanguage, workContext.CurrentCurrency);
-                    log.Trace(string.Format("3. Loaded or created user {0} cart {1}", newUser.Id + ":" + newUser.FullName, (_cart.Id ?? "none") + ":" + _cart.ItemsCount ));
+                        log.Trace(string.Format("3. Loaded or created user {0} cart {1}", newUser, _cart));
 
-                    await MergeWithCartAsync(prevUserCart);
-                    log.Trace(string.Format("4. Merged user {0} cart {1}", newUser.Id + ":" + newUser.FullName, (_cart.Id ?? "none") + ":" + _cart.ItemsCount));
-                    await SaveAsync();
-                    
+                        await MergeWithCartAsync(prevUserCart);
+                        log.Trace(string.Format("4. Merged user {0} cart {1}", newUser, _cart));
+                        await SaveAsync();
+                    }
+                    catch(Exception ex)
+                    {
+                        log.Trace(ex);
+                    }
+
                 });
                 //use Wait() we prevent deadlock because we running async job out of ASP.NET  worker thread
                 task.Wait();
