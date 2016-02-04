@@ -26,12 +26,14 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     [ApiExplorerSettings(IgnoreApi = true)]
     public class PlatformExportImportController : ApiController
     {
+        private const string _sampledataStateSetting = "VirtoCommerce:SampleDataState";
+
         private readonly IPlatformExportImportManager _platformExportManager;
         private readonly IPushNotificationManager _pushNotifier;
         private readonly IBlobStorageProvider _blobStorageProvider;
         private readonly IBlobUrlResolver _blobUrlResolver;
         private readonly ISettingsManager _settingsManager;
-        private static object _lockObject = new object();
+        private static readonly object _lockObject = new object();
 
         public PlatformExportImportController(IPlatformExportImportManager platformExportManager, IPushNotificationManager pushNotifier, IBlobStorageProvider blobStorageProvider, IBlobUrlResolver blobUrlResolver, ISettingsManager settingManager)
         {
@@ -43,15 +45,15 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         [HttpGet]
-        [ResponseType(typeof(SampleDataInfo[]))]
         [Route("sampledata/discover")]
+        [ResponseType(typeof(SampleDataInfo[]))]
         public IHttpActionResult DiscoverSampleData()
         {
             var retVal = new List<SampleDataInfo>();
             if (!_settingsManager.GetValue("VirtoCommerce:SampleDataInstalled", false))
             {
                 var sampleDataUrl = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:SampleDataUrl", string.Empty);
-                if (!String.IsNullOrEmpty(sampleDataUrl))
+                if (!string.IsNullOrEmpty(sampleDataUrl))
                 {
                     //Discovery mode
                     if (!sampleDataUrl.EndsWith(".zip"))
@@ -64,7 +66,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                             retVal.Add(new SampleDataInfo { Name = "Empty" });
                             var sampleDataInfos = stream.DeserializeJson<List<SampleDataInfo>>();
                             //Need filter unsupported versions and take one most new sample data
-                            sampleDataInfos = sampleDataInfos.Select(x => new { Version = SemanticVersion.Parse(x.PlatformVersion), Name = x.Name, Data = x })
+                            sampleDataInfos = sampleDataInfos.Select(x => new { Version = SemanticVersion.Parse(x.PlatformVersion), x.Name, Data = x })
                                                              .Where(x => x.Version.IsCompatibleWith(PlatformVersion.CurrentVersion))
                                                              .GroupBy(x => x.Name)
                                                              .Select(x => x.OrderByDescending(y => y.Version).First().Data)
@@ -93,8 +95,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         [HttpPost]
-        [ResponseType(typeof(SampleDataImportPushNotification))]
         [Route("sampledata/import")]
+        [ResponseType(typeof(SampleDataImportPushNotification))]
         public IHttpActionResult TryToImportSampleData([FromUri]string url = null)
         {
             lock (_lockObject)
@@ -105,6 +107,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     //Sample data initialization
                     if (Uri.IsWellFormedUriString(url, UriKind.Absolute))
                     {
+                        _settingsManager.SetValue(_sampledataStateSetting, SampleDataState.Processing);
                         var pushNotification = new SampleDataImportPushNotification("System");
                         _pushNotifier.Upsert(pushNotification);
                         BackgroundJob.Enqueue(() => SampleDataImportBackground(new Uri(url), HostingEnvironment.MapPath(Startup.VirtualRoot + "/App_Data/Uploads/"), pushNotification));
@@ -118,19 +121,30 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         [HttpGet]
-        [ResponseType(typeof(PlatformExportManifest))]
+        [Route("sampledata/state")]
+        [ResponseType(typeof(SampleDataState))]
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [AllowAnonymous]
+        public IHttpActionResult GetSampleDataState()
+        {
+            var state = EnumUtility.SafeParse(_settingsManager.GetValue(_sampledataStateSetting, string.Empty), SampleDataState.Undefined);
+            return Ok(state);
+        }
+
+        [HttpGet]
         [Route("export/manifest/new")]
+        [ResponseType(typeof(PlatformExportManifest))]
         public IHttpActionResult GetNewExportManifest()
         {
             return Ok(_platformExportManager.GetNewExportManifest());
         }
 
         [HttpGet]
-        [ResponseType(typeof(PlatformExportManifest))]
         [Route("export/manifest/load")]
+        [ResponseType(typeof(PlatformExportManifest))]
         public IHttpActionResult LoadExportManifest([FromUri]string fileUrl)
         {
-            PlatformExportManifest retVal = null;
+            PlatformExportManifest retVal;
             using (var stream = _blobStorageProvider.OpenRead(fileUrl))
             {
                 retVal = _platformExportManager.ReadExportManifest(stream);
@@ -139,8 +153,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         [HttpPost]
-        [ResponseType(typeof(PushNotification))]
         [Route("export")]
+        [ResponseType(typeof(PushNotification))]
         [CheckPermission(Permission = PredefinedPermissions.PlatformExport)]
         public IHttpActionResult ProcessExport(PlatformImportExportRequest exportRequest)
         {
@@ -150,7 +164,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 Description = "starting export...."
             };
             _pushNotifier.Upsert(notification);
-            var now = DateTime.UtcNow;
 
             BackgroundJob.Enqueue(() => PlatformExportBackground(exportRequest, notification));
 
@@ -158,8 +171,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         [HttpPost]
-        [ResponseType(typeof(PushNotification))]
         [Route("import")]
+        [ResponseType(typeof(PushNotification))]
         [CheckPermission(Permission = PredefinedPermissions.PlatformImport)]
         public IHttpActionResult ProcessImport(PlatformImportExportRequest importRequest)
         {
@@ -169,7 +182,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 Description = "starting import...."
             };
             _pushNotifier.Upsert(notification);
-            var now = DateTime.UtcNow;
 
             BackgroundJob.Enqueue(() => PlatformImportBackground(importRequest, notification));
 
@@ -178,14 +190,14 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         public void SampleDataImportBackground(Uri url, string tmpPath, SampleDataImportPushNotification pushNotification)
         {
-            Action<ExportImportProgressInfo> progressCallback = (x) =>
+            Action<ExportImportProgressInfo> progressCallback = x =>
             {
                 pushNotification.InjectFrom(x);
                 _pushNotifier.Upsert(pushNotification);
             };
             try
             {
-                pushNotification.Description = "Start downloading from " + url.ToString();
+                pushNotification.Description = "Start downloading from " + url;
                 _pushNotifier.Upsert(pushNotification);
 
                 if (!Directory.Exists(tmpPath))
@@ -193,13 +205,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     Directory.CreateDirectory(tmpPath);
                 }
 
-                var fileName = System.IO.Path.GetFileName(url.ToString());
-                var tmpFilePath = Path.Combine(tmpPath, System.IO.Path.GetFileName(url.ToString()));
+                var tmpFilePath = Path.Combine(tmpPath, Path.GetFileName(url.ToString()));
                 using (var client = new WebClient())
                 {
                     client.DownloadProgressChanged += (sender, args) =>
                     {
-                        pushNotification.Description = String.Format("Sample data {0} of {1} downloading...", args.BytesReceived.ToHumanReadableSize(), args.TotalBytesToReceive.ToHumanReadableSize());
+                        pushNotification.Description = string.Format("Sample data {0} of {1} downloading...", args.BytesReceived.ToHumanReadableSize(), args.TotalBytesToReceive.ToHumanReadableSize());
                         _pushNotifier.Upsert(pushNotification);
                     };
                     var task = client.DownloadFileTaskAsync(url, tmpFilePath);
@@ -220,16 +231,15 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
             finally
             {
+                _settingsManager.SetValue(_sampledataStateSetting, SampleDataState.Completed);
                 pushNotification.Finished = DateTime.UtcNow;
                 _pushNotifier.Upsert(pushNotification);
-
             }
-
         }
 
         public void PlatformImportBackground(PlatformImportExportRequest importRequest, PlatformImportPushNotification pushNotification)
         {
-            Action<ExportImportProgressInfo> progressCallback = (x) =>
+            Action<ExportImportProgressInfo> progressCallback = x =>
             {
                 pushNotification.InjectFrom(x);
                 pushNotification.Errors = x.Errors;
@@ -256,12 +266,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 pushNotification.Finished = DateTime.UtcNow;
                 _pushNotifier.Upsert(pushNotification);
             }
-
         }
 
         public void PlatformExportBackground(PlatformImportExportRequest exportRequest, PlatformExportPushNotification pushNotification)
         {
-            Action<ExportImportProgressInfo> progressCallback = (x) =>
+            Action<ExportImportProgressInfo> progressCallback = x =>
             {
                 pushNotification.InjectFrom(x);
                 pushNotification.Errors = x.Errors;
@@ -294,8 +303,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 pushNotification.Finished = DateTime.UtcNow;
                 _pushNotifier.Upsert(pushNotification);
             }
-
         }
-
     }
 }
