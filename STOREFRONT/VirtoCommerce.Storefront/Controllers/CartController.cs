@@ -60,11 +60,9 @@ namespace VirtoCommerce.Storefront.Controllers
             EnsureThatCartExist();
 
             await _cartBuilder.EvaluatePromotionsAsync();
+            await _cartValidator.ValidateAsync(_cartBuilder.Cart);
 
-            throw new Exception("Test");
-            //await _cartValidator.ValidateAsync(_cartBuilder.Cart);
-
-            //return Json(_cartBuilder.Cart, JsonRequestBehavior.AllowGet);
+            return Json(_cartBuilder.Cart, JsonRequestBehavior.AllowGet);
         }
 
         // POST: /cart/additem?id=...&quantity=...
