@@ -1,4 +1,21 @@
-﻿<div class="toast-top-full-width" id="toast-container" ng-cloak ng-if="storefrontNotification">
+﻿<style>
+    .alert {
+        left: 50%;
+        margin-left: -45%;
+        position: fixed;
+        top: 0;
+        width: 90%;
+        z-index: 999999;
+    }
+</style>
+
+<uib-alert templateUrl="alert.tpl" type="{( storefrontNotification.type )}" close="closeNotification()" ng-if="storefrontNotification" ng-cloak>
+    <strong ng-bind="storefrontNotification.title"></strong>
+    <p ng-bind="storefrontNotification.message"></p>
+</uib-alert>
+
+{% comment %}
+<div class="toast-top-full-width" id="toast-container" ng-cloak ng-if="storefrontNotification">
     <div class="toast toast-error" ng-if="storefrontNotification.type == 'error'">
         <button class="toast-close-button" type="button" ng-click="closeNotification()">×</button>
         <div class="toast-title">{{ 'notification.error_title' | t }}</div>
@@ -11,3 +28,4 @@
         <div class="toast-message" style="margin-top: 20px;" ng-bind="storefrontNotification.message" ng-if="storefrontNotification.detailsVisible"></div>
     </div>
 </div>
+{% endcomment %}
