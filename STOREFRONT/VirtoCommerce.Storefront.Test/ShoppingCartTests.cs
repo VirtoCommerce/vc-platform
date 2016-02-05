@@ -11,7 +11,6 @@ using VirtoCommerce.Storefront.Model.Customer;
 using VirtoCommerce.Storefront.Services;
 using Xunit;
 using VirtoCommerce.Storefront.Model;
-using NLog;
 
 namespace VirtoCommerce.Storefront.Test
 {
@@ -72,7 +71,7 @@ namespace VirtoCommerce.Storefront.Test
             var inventoryApi = new InventoryModuleApi(apiClientCfg);
             var searchApi = new SearchModuleApi(apiClientCfg);
             var catalogSearchService = new CatalogSearchServiceImpl(workContextFactory, catalogModuleApi, pricingService, inventoryApi, searchApi, promotionEvaluator);
-            var retVal = new CartBuilder(cartApi, promotionEvaluator, catalogSearchService, cacheManager.Object, new Moq.Mock<ILogger>().Object);
+            var retVal = new CartBuilder(cartApi, promotionEvaluator, catalogSearchService, cacheManager.Object);
             return retVal;
         }
     }

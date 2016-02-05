@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CacheManager.Core;
-using NLog;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.Storefront.Common;
 using VirtoCommerce.Storefront.Converters;
@@ -29,19 +28,17 @@ namespace VirtoCommerce.Storefront.Builders
         private readonly IPromotionEvaluator _promotionEvaluator;
         private readonly ICatalogSearchService _catalogSearchService;
         private readonly ICacheManager<object> _cacheManager;
-        private readonly ILogger _logger;
 
         private ShoppingCart _cart;
         private const string _cartCacheRegion = "CartRegion";
 
         [CLSCompliant(false)]
-        public CartBuilder(IShoppingCartModuleApi cartApi, IPromotionEvaluator promotionEvaluator, ICatalogSearchService catalogSearchService, ICacheManager<object> cacheManager, ILogger logger)
+        public CartBuilder(IShoppingCartModuleApi cartApi, IPromotionEvaluator promotionEvaluator, ICatalogSearchService catalogSearchService, ICacheManager<object> cacheManager)
         {
             _cartApi = cartApi;
             _promotionEvaluator = promotionEvaluator;
             _catalogSearchService = catalogSearchService;
             _cacheManager = cacheManager;
-            _logger = logger;
         }
 
         public string CartCaheKey
@@ -98,8 +95,7 @@ namespace VirtoCommerce.Storefront.Builders
                 }
                 retVal.Customer = customer;
 
-                _logger.Trace(string.Format("GetOrCreateNewTransientCartAsync: {0}", retVal));
-
+        
                 return retVal;
             });
 
@@ -110,7 +106,6 @@ namespace VirtoCommerce.Storefront.Builders
         {
             AddLineItem(product.ToLineItem(_cart.Language, quantity));
 
-            _logger.Trace(string.Format("AddItemAsync:{0} {1} qty: {2}", _cart, product, quantity));
 
             await EvaluatePromotionsAsync();
 
@@ -122,7 +117,6 @@ namespace VirtoCommerce.Storefront.Builders
             var lineItem = _cart.Items.FirstOrDefault(i => i.Id == id);
             if (lineItem != null)
             {
-                _logger.Trace(string.Format("ChangeItemQuantityAsync: {0} {1} new qty: {2}", _cart, lineItem, quantity));
 
                 if (quantity > 0)
                 {
@@ -144,7 +138,6 @@ namespace VirtoCommerce.Storefront.Builders
             var lineItem = _cart.Items.ElementAt(lineItemIndex);
             if (lineItem != null)
             {
-                _logger.Trace(string.Format("ChangeItemQuantityAsync: {0} {1} new qty: {1}", _cart, lineItem, quantity));
                 if (quantity > 0)
                 {
                     lineItem.Quantity = quantity;
@@ -181,7 +174,6 @@ namespace VirtoCommerce.Storefront.Builders
             var lineItem = _cart.Items.FirstOrDefault(i => i.Id == id);
             if (lineItem != null)
             {
-                _logger.Trace(string.Format("RemoveItemAsync: {0} {1}", _cart, lineItem));
 
                 _cart.Items.Remove(lineItem);
 
@@ -202,7 +194,6 @@ namespace VirtoCommerce.Storefront.Builders
 
         public virtual async Task<ICartBuilder> AddCouponAsync(string couponCode)
         {
-            _logger.Trace(string.Format("AddCouponAsync: {0} {1}", _cart, couponCode));
 
             _cart.Coupon = new Coupon
             {
@@ -217,8 +208,6 @@ namespace VirtoCommerce.Storefront.Builders
         public virtual async Task<ICartBuilder> RemoveCouponAsync()
         {
             _cart.Coupon = null;
-
-            _logger.Trace(string.Format("RemoveCouponAsync: {0}", _cart));
 
             await EvaluatePromotionsAsync();
 
@@ -273,7 +262,6 @@ namespace VirtoCommerce.Storefront.Builders
 
             if (shipment.IsTransient())
             {
-                _logger.Trace(string.Format("AddOrUpdateShipmentAsync: {0} {1}", _cart, shipment.ShipmentMethodCode));
 
                 _cart.Shipments.Add(shipment);
             }
@@ -288,8 +276,6 @@ namespace VirtoCommerce.Storefront.Builders
             var shipment = _cart.Shipments.FirstOrDefault(s => s.Id == shipmentId);
             if (shipment != null)
             {
-                _logger.Trace(string.Format("RemoveShipmentAsync: {0} {1}", _cart, shipment.ShipmentMethodCode));
-
                 _cart.Shipments.Remove(shipment);
             }
 
@@ -322,8 +308,6 @@ namespace VirtoCommerce.Storefront.Builders
 
             if (payment.IsTransient())
             {
-                _logger.Trace(string.Format("AddOrUpdatePaymentAsync: {0} {1}", _cart, payment.PaymentGatewayCode));
-
                 _cart.Payments.Add(payment);
             }
 
@@ -333,7 +317,6 @@ namespace VirtoCommerce.Storefront.Builders
         public virtual async Task<ICartBuilder> MergeWithCartAsync(ShoppingCart cart)
         {
 
-            _logger.Trace(string.Format("MergeWithCartAsync: {0} -> {1}", cart, _cart));
             foreach (var lineItem in cart.Items)
             {
                 AddLineItem(lineItem);
@@ -357,10 +340,6 @@ namespace VirtoCommerce.Storefront.Builders
 
         public virtual async Task<ICartBuilder> RemoveCartAsync()
         {
-            var log = LogManager.GetCurrentClassLogger();
-            log.Trace(string.Format("RemoveCartAsync {0}", _cart));
-
-
             await _cartApi.CartModuleDeleteCartsAsync(new List<string> { _cart.Id });
             _cacheManager.Remove(CartCaheKey, _cartCacheRegion);
 
@@ -482,8 +461,6 @@ namespace VirtoCommerce.Storefront.Builders
 
             //Invalidate cart in cache
             _cacheManager.Remove(CartCaheKey, _cartCacheRegion);
-            var log = LogManager.GetCurrentClassLogger();
-            log.Trace(string.Format("SaveAsync: {0}", _cart));
 
             if (_cart.IsTransient())
             {
