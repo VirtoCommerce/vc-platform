@@ -26,7 +26,6 @@
     {{ '//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css' | stylesheet_tag }}
     {{ 'ajaxify.scss.css' | asset_url | stylesheet_tag }}
     {{ 'default.scss.css' | asset_url | stylesheet_tag }}
-    {{ '//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css' | stylesheet_tag }}
     {{ 'storefront.css' | asset_url | stylesheet_tag }}
     {{ 'ideal-image-slider.css' | asset_url | stylesheet_tag }}
     {{ 'ideal-image-slider-default-theme.css' | asset_url | stylesheet_tag }}
@@ -47,6 +46,7 @@
     {{ '//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/1.1.2/ui-bootstrap-tpls.min.js' | script_tag }}
     {{ 'storefrontApp.js' | asset_url | script_tag }}
     {{ 'storefrontServices.js' | asset_url | script_tag }}
+    {{ 'storefrontRecentlyAddedCartItemDialogController.js' | asset_url | script_tag }}
     {{ 'storefrontDirectives.js' | asset_url | script_tag }}
     {{ 'storefrontMainController.js' | asset_url | script_tag }}
     {{ 'storefrontCartController.js' | asset_url | script_tag }}
@@ -60,6 +60,7 @@
 </head>
 <body id="{{ page_title | handle }}" class="{% if customer %}customer-logged-in {% endif %}template-{{ template | replace: '.', ' ' | truncatewords: 1, '' | handle }}" ng-controller="mainController" ng-init="baseUrl='{{ '/' | absolute_url }}'">
     {% include 'notification' %}
+    {% include 'recently-added-cart-item-dialog' %}
     <span ng-controller="cartController">
         {% if settings.store_selector_enable %}
         {% include 'top-header-selector' %}
@@ -161,7 +162,6 @@
             {{ content_for_layout }}
         </main>
         {% include 'footer' %}
-        {% include 'cart-modal' %}
         {% if shop.quotes_enabled %}
         {% include 'quote-modal' %}
         {% endif %}
