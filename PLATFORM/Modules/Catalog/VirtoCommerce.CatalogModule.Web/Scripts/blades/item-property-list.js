@@ -121,9 +121,7 @@
             executeMethod: function () {
                 angular.copy(blade.origItem, blade.item);
             },
-            canExecuteMethod: function () {
-                return isDirty();
-            },
+            canExecuteMethod: isDirty,
             permission: 'catalog:update'
         },
 		{

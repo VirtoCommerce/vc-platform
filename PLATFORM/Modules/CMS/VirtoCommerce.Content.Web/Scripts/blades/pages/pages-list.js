@@ -132,18 +132,7 @@
             bladeNavigationService.showBlade(newBlade, $scope.blade);
         }
     }
-
-    $scope.blade.onClose = function (closeCallback) {
-        closeChildrenBlades();
-        closeCallback();
-    };
-
-    function closeChildrenBlades() {
-        angular.forEach($scope.blade.childrenBlades.slice(), function (child) {
-            bladeNavigationService.closeBlade(child);
-        });
-    }
-
+    
     blade.folderClick = function (data) {
         blade.steps.push(data.folderName);
 

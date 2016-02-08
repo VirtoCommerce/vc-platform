@@ -169,9 +169,7 @@
                     angular.copy(blade.origEntity, blade.currentEntity);
                     onHoldCommand.updateName();
                 },
-                canExecuteMethod: function () {
-                    return isDirty();
-                },
+                canExecuteMethod: isDirty,
                 permission: 'quote:update'
             },
             {
@@ -219,12 +217,8 @@
             },
             {
                 name: "platform.commands.delete", icon: 'fa fa-trash-o',
-                executeMethod: function () {
-                    deleteEntry();
-                },
-                canExecuteMethod: function () {
-                    return !isDirty();
-                },
+                executeMethod: deleteEntry,
+                canExecuteMethod: function () { return true; },
                 permission: 'quote:delete'
             }
         ];

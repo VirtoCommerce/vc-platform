@@ -45,12 +45,7 @@
 		};
 		bladeNavigationService.showBlade(newBlade, $scope.blade);
 	}
-
-	blade.onClose = function (closeCallback) {
-		closeChildrenBlades();
-		closeCallback();
-	};
-
+    
 	blade.getFlag = function (lang) {
 		switch (lang) {
 			case 'ru-RU':
@@ -74,12 +69,6 @@
 			case 'de-DE':
 				return 'de';
 		}
-	}
-
-	function closeChildrenBlades() {
-		angular.forEach(blade.childrenBlades.slice(), function (child) {
-			bladeNavigationService.closeBlade(child);
-		});
 	}
 
 	$scope.blade.headIcon = 'fa-archive';

@@ -138,23 +138,9 @@
 	            default:
 	                break;
 	        }
-	    }
-
-	    blade.onClose = function (closeCallback) {
-	        closeChildrenBlades();
-	        closeCallback();
 	    };
 
-	    function closeChildrenBlades() {
-	        angular.forEach(blade.childrenBlades.slice(), function (child) {
-	            bladeNavigationService.closeBlade(child);
-	        });
-	    }
-
-
 	    blade.openThemes = function (storeId, storeName) {
-	        closeChildrenBlades();
-
 	        var newBlade = {
 	            id: "themesListBlade",
 	            storeId: storeId,
@@ -165,11 +151,9 @@
 	            template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/themes-list.tpl.html',
 	        };
 	        bladeNavigationService.showBlade(newBlade, blade);
-	    }
+	    };
 
 	    blade.openPages = function (data) {
-	        closeChildrenBlades();
-
 	        var newBlade = {
 	            id: "pagesListBlade",
 	            storeId: data.store.id,
@@ -181,11 +165,9 @@
 	            template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/pages/pages-list.tpl.html',
 	        };
 	        bladeNavigationService.showBlade(newBlade, blade);
-	    }
+	    };
 
 	    blade.openLinkLists = function (data) {
-	        closeChildrenBlades();
-
 	        var newBlade = {
 	            id: "linkListBlade",
 	            storeId: data.store.id,
@@ -196,11 +178,9 @@
 	            template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/menu/link-lists.tpl.html',
 	        };
 	        bladeNavigationService.showBlade(newBlade, blade);
-	    }
+	    };
 
 	    blade.openBlogs = function (data) {
-	        closeChildrenBlades();
-
 	        var newBlade = {
 	            id: "blogsListBlade",
 	            storeId: data.store.id,
@@ -213,11 +193,9 @@
 	            template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/pages/pages-list.tpl.html',
 	        };
 	        bladeNavigationService.showBlade(newBlade, blade);
-	    }
+	    };
 
 	    blade.addNewTheme = function (data) {
-	        closeChildrenBlades();
-
 	        var newBlade = {
 	            id: 'addTheme',
 	            choosenStoreId: data.store.id,
@@ -228,11 +206,9 @@
 	            template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/add-theme.tpl.html',
 	        };
 	        bladeNavigationService.showBlade(newBlade, blade);
-	    }
+	    };
 
 	    blade.addNewPage = function (data) {
-	        closeChildrenBlades();
-
 	        var newBlade = {
 	            id: 'addPageBlade',
 	            choosenStoreId: data.store.id,
@@ -244,11 +220,9 @@
 	            template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/pages/edit-page.tpl.html',
 	        };
 	        bladeNavigationService.showBlade(newBlade, blade);
-	    }
+	    };
 
 	    blade.addNewLinkList = function (data) {
-	        closeChildrenBlades();
-
 	        var newBlade = {
 	            id: 'addMenuLinkListBlade',
 	            choosenStoreId: data.store.id,
@@ -259,11 +233,9 @@
 	            template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/menu/menu-link-list.tpl.html',
 	        };
 	        bladeNavigationService.showBlade(newBlade, blade);
-	    }
+	    };
 
 	    blade.addBlog = function (data) {
-	        closeChildrenBlades();
-
 	        var newBlade = {
 	            id: 'openBlogNew',
 	            choosenStoreId: data.store.id,
@@ -275,11 +247,9 @@
 	            template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/pages/edit-blog.tpl.html',
 	        };
 	        bladeNavigationService.showBlade(newBlade, blade);
-	    }
+	    };
 
 	    blade.openTheme = function (data) {
-	        closeChildrenBlades();
-
 	        var newBlade = {
 	            id: 'themeAssetListBlade',
 	            choosenThemeId: data.defaultTheme.name,
@@ -292,7 +262,7 @@
 	            template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/theme-asset-list.tpl.html',
 	        };
 	        bladeNavigationService.showBlade(newBlade, blade);
-	    }
+	    };
 
 	    blade.previewTheme = function (data) {
 	        if (data.store.url !== undefined) {
