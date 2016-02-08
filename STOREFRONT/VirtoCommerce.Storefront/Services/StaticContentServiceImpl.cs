@@ -34,6 +34,7 @@ namespace VirtoCommerce.Storefront.Services
         private readonly ICacheManager<object> _cacheManager;
         private readonly Func<WorkContext> _workContextFactory;
         private readonly Func<IStorefrontUrlBuilder> _urlBuilderFactory;
+        private readonly LinkHelper _linkHelper;
 
         [CLSCompliant(false)]
         public StaticContentServiceImpl(string baseLocalPath, Markdown markdownRender, ILiquidThemeEngine liquidEngine,
@@ -47,6 +48,7 @@ namespace VirtoCommerce.Storefront.Services
             _cacheManager = cacheManager;
             _workContextFactory = workContextFactory;
             _urlBuilderFactory = urlBuilderFactory;
+            _linkHelper = new LinkHelper();
         }
 
         #region IStaticContentService Members
@@ -101,10 +103,17 @@ namespace VirtoCommerce.Storefront.Services
                     var contentItem = contentItemFactory();
                     contentItem.Name = localizedFile.Name;
                     contentItem.Language = language;
-                    contentItem.Url = GetUrlFromPath(localizedFile.LocalPath.Replace(baseStorePath, string.Empty));
+                    contentItem.FileName = Path.GetFileName(localizedFile.LocalPath.Replace(baseStorePath, string.Empty));
                     contentItem.LocalPath = localizedFile.LocalPath;
 
                     LoadAndRenderContentItem(contentItem, renderContent);
+
+                    //if (contentItem.Type == "post")
+                    if(localizedFile.LocalPath.Replace(baseStorePath, string.Empty).StartsWith("blogs\\"))
+                        contentItem.Url = _linkHelper.EvaluatePermalink("none", contentItem); // TODO: replace with setting "permalink"
+                    else
+                        contentItem.Url = GetUrlFromPath(contentItem.FileName);
+
                     retVal.Add(contentItem);
                 }
             }
@@ -263,13 +272,6 @@ namespace VirtoCommerce.Storefront.Services
             public string Name { get; private set; }
             public string Language { get; private set; }
             public string LocalPath { get; private set; }
-
-            
-
         }
-
-
     }
-
-
 }
