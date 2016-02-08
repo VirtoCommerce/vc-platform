@@ -302,7 +302,6 @@
     <Content Include="App_Data\Themes\default\assets\status-sold-out.svg" />
     <Content Include="App_Data\Themes\default\assets\shopify_common.js" />
     <Content Include="App_Data\Themes\default\assets\storefront.css" />
-    <Content Include="App_Data\Themes\default\assets\storefrontRecentlyAddedCartItemDialogController.js" />
     <Content Include="App_Data\Themes\default\snippets\checkout-footer.liquid" />
     <Content Include="App_Data\Themes\default\assets\storefrontApp.js" />
     <Content Include="App_Data\Themes\default\assets\storefrontCartController.js" />
@@ -314,6 +313,7 @@
     <Content Include="App_Data\Themes\default\assets\storefrontQuoteRequestController.js" />
     <Content Include="App_Data\Themes\default\assets\storefrontServices.js" />
     <Content Include="App_Data\Themes\default\assets\thumbs-bar.gif" />
+    <Content Include="App_Data\Themes\default\assets\toastr.css" />
     <Content Include="App_Data\Themes\default\assets\unionpay.svg" />
     <Content Include="App_Data\Themes\default\assets\vc-big.png" />
     <Content Include="App_Data\Themes\default\assets\visa.svg" />
@@ -422,7 +422,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\Themes\default\snippets\quote-modal.liquid" />
-    <Content Include="App_Data\Themes\default\snippets\recently-added-cart-item-dialog.liquid" />
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
     </None>
