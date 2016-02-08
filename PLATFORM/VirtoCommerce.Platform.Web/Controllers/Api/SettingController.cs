@@ -102,6 +102,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpGet]
         [Route("values/{name}")]
         [ResponseType(typeof(object[]))]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public IHttpActionResult GetArray(string name)
         {
             var value = _settingsManager.GetArray<object>(name, null);
