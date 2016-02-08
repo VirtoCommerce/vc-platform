@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommerceContentWebModelsPageFolder : IEquatable<VirtoCommerceContentWebModelsPageFolder>
+    public partial class VirtoCommerceContentWebModelsPageFolder :  IEquatable<VirtoCommerceContentWebModelsPageFolder>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceContentWebModelsPageFolder" /> class.
@@ -99,7 +100,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommerceContentWebModelsPageFolder instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommerceContentWebModelsPageFolder to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceContentWebModelsPageFolder to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommerceContentWebModelsPageFolder other)
         {
@@ -143,16 +144,16 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.FolderName != null)
-                    hash = hash * 57 + this.FolderName.GetHashCode();
+                    hash = hash * 59 + this.FolderName.GetHashCode();
                 
                 if (this.Pages != null)
-                    hash = hash * 57 + this.Pages.GetHashCode();
+                    hash = hash * 59 + this.Pages.GetHashCode();
                 
                 if (this.Folders != null)
-                    hash = hash * 57 + this.Folders.GetHashCode();
+                    hash = hash * 59 + this.Folders.GetHashCode();
                 
                 if (this.SecurityScopes != null)
-                    hash = hash * 57 + this.SecurityScopes.GetHashCode();
+                    hash = hash * 59 + this.SecurityScopes.GetHashCode();
                 
                 return hash;
             }

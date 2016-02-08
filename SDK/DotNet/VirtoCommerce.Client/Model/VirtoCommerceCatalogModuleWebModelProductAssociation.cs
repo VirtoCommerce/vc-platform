@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// Class containing associated product information like &#39;Accessory&#39;, &#39;Related Item&#39;, etc.
     /// </summary>
     [DataContract]
-    public class VirtoCommerceCatalogModuleWebModelProductAssociation : IEquatable<VirtoCommerceCatalogModuleWebModelProductAssociation>
+    public partial class VirtoCommerceCatalogModuleWebModelProductAssociation :  IEquatable<VirtoCommerceCatalogModuleWebModelProductAssociation>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelProductAssociation" /> class.
@@ -126,7 +127,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommerceCatalogModuleWebModelProductAssociation instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommerceCatalogModuleWebModelProductAssociation to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceCatalogModuleWebModelProductAssociation to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommerceCatalogModuleWebModelProductAssociation other)
         {
@@ -185,25 +186,25 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.Name != null)
-                    hash = hash * 57 + this.Name.GetHashCode();
+                    hash = hash * 59 + this.Name.GetHashCode();
                 
                 if (this.Description != null)
-                    hash = hash * 57 + this.Description.GetHashCode();
+                    hash = hash * 59 + this.Description.GetHashCode();
                 
                 if (this.Priority != null)
-                    hash = hash * 57 + this.Priority.GetHashCode();
+                    hash = hash * 59 + this.Priority.GetHashCode();
                 
                 if (this.ProductId != null)
-                    hash = hash * 57 + this.ProductId.GetHashCode();
+                    hash = hash * 59 + this.ProductId.GetHashCode();
                 
                 if (this.ProductName != null)
-                    hash = hash * 57 + this.ProductName.GetHashCode();
+                    hash = hash * 59 + this.ProductName.GetHashCode();
                 
                 if (this.ProductCode != null)
-                    hash = hash * 57 + this.ProductCode.GetHashCode();
+                    hash = hash * 59 + this.ProductCode.GetHashCode();
                 
                 if (this.ProductImg != null)
-                    hash = hash * 57 + this.ProductImg.GetHashCode();
+                    hash = hash * 59 + this.ProductImg.GetHashCode();
                 
                 return hash;
             }

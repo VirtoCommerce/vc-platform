@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult : IEquatable<VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult>
+    public partial class VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult :  IEquatable<VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult" /> class.
@@ -88,7 +89,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult to be compared</param>
+        /// <param name="other">Instance of VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult other)
         {
@@ -127,13 +128,13 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.TotalCount != null)
-                    hash = hash * 57 + this.TotalCount.GetHashCode();
+                    hash = hash * 59 + this.TotalCount.GetHashCode();
                 
                 if (this.NewCount != null)
-                    hash = hash * 57 + this.NewCount.GetHashCode();
+                    hash = hash * 59 + this.NewCount.GetHashCode();
                 
                 if (this.NotifyEvents != null)
-                    hash = hash * 57 + this.NotifyEvents.GetHashCode();
+                    hash = hash * 59 + this.NotifyEvents.GetHashCode();
                 
                 return hash;
             }

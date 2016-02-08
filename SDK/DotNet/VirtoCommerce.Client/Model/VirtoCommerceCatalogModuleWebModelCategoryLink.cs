@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// Information to define linking information from item or category to category.
     /// </summary>
     [DataContract]
-    public class VirtoCommerceCatalogModuleWebModelCategoryLink : IEquatable<VirtoCommerceCatalogModuleWebModelCategoryLink>
+    public partial class VirtoCommerceCatalogModuleWebModelCategoryLink :  IEquatable<VirtoCommerceCatalogModuleWebModelCategoryLink>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelCategoryLink" /> class.
@@ -100,7 +101,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommerceCatalogModuleWebModelCategoryLink instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommerceCatalogModuleWebModelCategoryLink to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceCatalogModuleWebModelCategoryLink to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommerceCatalogModuleWebModelCategoryLink other)
         {
@@ -144,16 +145,16 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.SourceItemId != null)
-                    hash = hash * 57 + this.SourceItemId.GetHashCode();
+                    hash = hash * 59 + this.SourceItemId.GetHashCode();
                 
                 if (this.SourceCategoryId != null)
-                    hash = hash * 57 + this.SourceCategoryId.GetHashCode();
+                    hash = hash * 59 + this.SourceCategoryId.GetHashCode();
                 
                 if (this.CatalogId != null)
-                    hash = hash * 57 + this.CatalogId.GetHashCode();
+                    hash = hash * 59 + this.CatalogId.GetHashCode();
                 
                 if (this.CategoryId != null)
-                    hash = hash * 57 + this.CategoryId.GetHashCode();
+                    hash = hash * 59 + this.CategoryId.GetHashCode();
                 
                 return hash;
             }

@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommercePlatformWebModelNotificationsNotificationParameter : IEquatable<VirtoCommercePlatformWebModelNotificationsNotificationParameter>
+    public partial class VirtoCommercePlatformWebModelNotificationsNotificationParameter :  IEquatable<VirtoCommercePlatformWebModelNotificationsNotificationParameter>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelNotificationsNotificationParameter" /> class.
@@ -123,7 +124,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommercePlatformWebModelNotificationsNotificationParameter instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommercePlatformWebModelNotificationsNotificationParameter to be compared</param>
+        /// <param name="other">Instance of VirtoCommercePlatformWebModelNotificationsNotificationParameter to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommercePlatformWebModelNotificationsNotificationParameter other)
         {
@@ -182,25 +183,25 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.ParameterName != null)
-                    hash = hash * 57 + this.ParameterName.GetHashCode();
+                    hash = hash * 59 + this.ParameterName.GetHashCode();
                 
                 if (this.ParameterDescription != null)
-                    hash = hash * 57 + this.ParameterDescription.GetHashCode();
+                    hash = hash * 59 + this.ParameterDescription.GetHashCode();
                 
                 if (this.ParameterCodeInView != null)
-                    hash = hash * 57 + this.ParameterCodeInView.GetHashCode();
+                    hash = hash * 59 + this.ParameterCodeInView.GetHashCode();
                 
                 if (this.IsDictionary != null)
-                    hash = hash * 57 + this.IsDictionary.GetHashCode();
+                    hash = hash * 59 + this.IsDictionary.GetHashCode();
                 
                 if (this.IsArray != null)
-                    hash = hash * 57 + this.IsArray.GetHashCode();
+                    hash = hash * 59 + this.IsArray.GetHashCode();
                 
                 if (this.Type != null)
-                    hash = hash * 57 + this.Type.GetHashCode();
+                    hash = hash * 59 + this.Type.GetHashCode();
                 
                 if (this.Value != null)
-                    hash = hash * 57 + this.Value.GetHashCode();
+                    hash = hash * 59 + this.Value.GetHashCode();
                 
                 return hash;
             }

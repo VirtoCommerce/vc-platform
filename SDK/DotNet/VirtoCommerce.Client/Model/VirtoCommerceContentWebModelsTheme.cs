@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// Theme
     /// </summary>
     [DataContract]
-    public class VirtoCommerceContentWebModelsTheme : IEquatable<VirtoCommerceContentWebModelsTheme>
+    public partial class VirtoCommerceContentWebModelsTheme :  IEquatable<VirtoCommerceContentWebModelsTheme>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceContentWebModelsTheme" /> class.
@@ -98,7 +99,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommerceContentWebModelsTheme instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommerceContentWebModelsTheme to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceContentWebModelsTheme to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommerceContentWebModelsTheme other)
         {
@@ -142,16 +143,16 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.Name != null)
-                    hash = hash * 57 + this.Name.GetHashCode();
+                    hash = hash * 59 + this.Name.GetHashCode();
                 
                 if (this.Path != null)
-                    hash = hash * 57 + this.Path.GetHashCode();
+                    hash = hash * 59 + this.Path.GetHashCode();
                 
                 if (this.Modified != null)
-                    hash = hash * 57 + this.Modified.GetHashCode();
+                    hash = hash * 59 + this.Modified.GetHashCode();
                 
                 if (this.SecurityScopes != null)
-                    hash = hash * 57 + this.SecurityScopes.GetHashCode();
+                    hash = hash * 59 + this.SecurityScopes.GetHashCode();
                 
                 return hash;
             }

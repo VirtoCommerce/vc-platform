@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommercePlatformCoreSecurityPermission : IEquatable<VirtoCommercePlatformCoreSecurityPermission>
+    public partial class VirtoCommercePlatformCoreSecurityPermission :  IEquatable<VirtoCommercePlatformCoreSecurityPermission>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreSecurityPermission" /> class.
@@ -120,7 +121,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommercePlatformCoreSecurityPermission instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommercePlatformCoreSecurityPermission to be compared</param>
+        /// <param name="other">Instance of VirtoCommercePlatformCoreSecurityPermission to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommercePlatformCoreSecurityPermission other)
         {
@@ -179,25 +180,25 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.Name != null)
-                    hash = hash * 57 + this.Name.GetHashCode();
+                    hash = hash * 59 + this.Name.GetHashCode();
                 
                 if (this.Description != null)
-                    hash = hash * 57 + this.Description.GetHashCode();
+                    hash = hash * 59 + this.Description.GetHashCode();
                 
                 if (this.ModuleId != null)
-                    hash = hash * 57 + this.ModuleId.GetHashCode();
+                    hash = hash * 59 + this.ModuleId.GetHashCode();
                 
                 if (this.GroupName != null)
-                    hash = hash * 57 + this.GroupName.GetHashCode();
+                    hash = hash * 59 + this.GroupName.GetHashCode();
                 
                 if (this.AssignedScopes != null)
-                    hash = hash * 57 + this.AssignedScopes.GetHashCode();
+                    hash = hash * 59 + this.AssignedScopes.GetHashCode();
                 
                 if (this.AvailableScopes != null)
-                    hash = hash * 57 + this.AvailableScopes.GetHashCode();
+                    hash = hash * 59 + this.AvailableScopes.GetHashCode();
                 
                 if (this.Id != null)
-                    hash = hash * 57 + this.Id.GetHashCode();
+                    hash = hash * 59 + this.Id.GetHashCode();
                 
                 return hash;
             }

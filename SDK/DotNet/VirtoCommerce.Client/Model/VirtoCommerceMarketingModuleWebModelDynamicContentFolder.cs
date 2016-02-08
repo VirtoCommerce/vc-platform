@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// Represent folder contains dynamic content system entries, used for hierarchy storing and easy management
     /// </summary>
     [DataContract]
-    public class VirtoCommerceMarketingModuleWebModelDynamicContentFolder : IEquatable<VirtoCommerceMarketingModuleWebModelDynamicContentFolder>
+    public partial class VirtoCommerceMarketingModuleWebModelDynamicContentFolder :  IEquatable<VirtoCommerceMarketingModuleWebModelDynamicContentFolder>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceMarketingModuleWebModelDynamicContentFolder" /> class.
@@ -154,7 +155,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommerceMarketingModuleWebModelDynamicContentFolder instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommerceMarketingModuleWebModelDynamicContentFolder to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceMarketingModuleWebModelDynamicContentFolder to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommerceMarketingModuleWebModelDynamicContentFolder other)
         {
@@ -233,37 +234,37 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.Name != null)
-                    hash = hash * 57 + this.Name.GetHashCode();
+                    hash = hash * 59 + this.Name.GetHashCode();
                 
                 if (this.Description != null)
-                    hash = hash * 57 + this.Description.GetHashCode();
+                    hash = hash * 59 + this.Description.GetHashCode();
                 
                 if (this.Outline != null)
-                    hash = hash * 57 + this.Outline.GetHashCode();
+                    hash = hash * 59 + this.Outline.GetHashCode();
                 
                 if (this.Path != null)
-                    hash = hash * 57 + this.Path.GetHashCode();
+                    hash = hash * 59 + this.Path.GetHashCode();
                 
                 if (this.ParentFolderId != null)
-                    hash = hash * 57 + this.ParentFolderId.GetHashCode();
+                    hash = hash * 59 + this.ParentFolderId.GetHashCode();
                 
                 if (this.ImageUrl != null)
-                    hash = hash * 57 + this.ImageUrl.GetHashCode();
+                    hash = hash * 59 + this.ImageUrl.GetHashCode();
                 
                 if (this.CreatedDate != null)
-                    hash = hash * 57 + this.CreatedDate.GetHashCode();
+                    hash = hash * 59 + this.CreatedDate.GetHashCode();
                 
                 if (this.ModifiedDate != null)
-                    hash = hash * 57 + this.ModifiedDate.GetHashCode();
+                    hash = hash * 59 + this.ModifiedDate.GetHashCode();
                 
                 if (this.CreatedBy != null)
-                    hash = hash * 57 + this.CreatedBy.GetHashCode();
+                    hash = hash * 59 + this.CreatedBy.GetHashCode();
                 
                 if (this.ModifiedBy != null)
-                    hash = hash * 57 + this.ModifiedBy.GetHashCode();
+                    hash = hash * 59 + this.ModifiedBy.GetHashCode();
                 
                 if (this.Id != null)
-                    hash = hash * 57 + this.Id.GetHashCode();
+                    hash = hash * 59 + this.Id.GetHashCode();
                 
                 return hash;
             }

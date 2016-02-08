@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommercePlatformWebModelPackagingProgressMessage : IEquatable<VirtoCommercePlatformWebModelPackagingProgressMessage>
+    public partial class VirtoCommercePlatformWebModelPackagingProgressMessage :  IEquatable<VirtoCommercePlatformWebModelPackagingProgressMessage>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelPackagingProgressMessage" /> class.
@@ -80,7 +81,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommercePlatformWebModelPackagingProgressMessage instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommercePlatformWebModelPackagingProgressMessage to be compared</param>
+        /// <param name="other">Instance of VirtoCommercePlatformWebModelPackagingProgressMessage to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommercePlatformWebModelPackagingProgressMessage other)
         {
@@ -114,10 +115,10 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.Message != null)
-                    hash = hash * 57 + this.Message.GetHashCode();
+                    hash = hash * 59 + this.Message.GetHashCode();
                 
                 if (this.Level != null)
-                    hash = hash * 57 + this.Level.GetHashCode();
+                    hash = hash * 59 + this.Level.GetHashCode();
                 
                 return hash;
             }

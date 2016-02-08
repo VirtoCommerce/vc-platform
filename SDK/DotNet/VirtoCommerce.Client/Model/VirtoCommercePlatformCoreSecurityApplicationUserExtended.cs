@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommercePlatformCoreSecurityApplicationUserExtended : IEquatable<VirtoCommercePlatformCoreSecurityApplicationUserExtended>
+    public partial class VirtoCommercePlatformCoreSecurityApplicationUserExtended :  IEquatable<VirtoCommercePlatformCoreSecurityApplicationUserExtended>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreSecurityApplicationUserExtended" /> class.
@@ -200,7 +201,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommercePlatformCoreSecurityApplicationUserExtended instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommercePlatformCoreSecurityApplicationUserExtended to be compared</param>
+        /// <param name="other">Instance of VirtoCommercePlatformCoreSecurityApplicationUserExtended to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommercePlatformCoreSecurityApplicationUserExtended other)
         {
@@ -309,55 +310,55 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.Id != null)
-                    hash = hash * 57 + this.Id.GetHashCode();
+                    hash = hash * 59 + this.Id.GetHashCode();
                 
                 if (this.UserName != null)
-                    hash = hash * 57 + this.UserName.GetHashCode();
+                    hash = hash * 59 + this.UserName.GetHashCode();
                 
                 if (this.Email != null)
-                    hash = hash * 57 + this.Email.GetHashCode();
+                    hash = hash * 59 + this.Email.GetHashCode();
                 
                 if (this.PhoneNumber != null)
-                    hash = hash * 57 + this.PhoneNumber.GetHashCode();
+                    hash = hash * 59 + this.PhoneNumber.GetHashCode();
                 
                 if (this.StoreId != null)
-                    hash = hash * 57 + this.StoreId.GetHashCode();
+                    hash = hash * 59 + this.StoreId.GetHashCode();
                 
                 if (this.MemberId != null)
-                    hash = hash * 57 + this.MemberId.GetHashCode();
+                    hash = hash * 59 + this.MemberId.GetHashCode();
                 
                 if (this.Icon != null)
-                    hash = hash * 57 + this.Icon.GetHashCode();
+                    hash = hash * 59 + this.Icon.GetHashCode();
                 
                 if (this.IsAdministrator != null)
-                    hash = hash * 57 + this.IsAdministrator.GetHashCode();
+                    hash = hash * 59 + this.IsAdministrator.GetHashCode();
                 
                 if (this.UserType != null)
-                    hash = hash * 57 + this.UserType.GetHashCode();
+                    hash = hash * 59 + this.UserType.GetHashCode();
                 
                 if (this.UserState != null)
-                    hash = hash * 57 + this.UserState.GetHashCode();
+                    hash = hash * 59 + this.UserState.GetHashCode();
                 
                 if (this.Password != null)
-                    hash = hash * 57 + this.Password.GetHashCode();
+                    hash = hash * 59 + this.Password.GetHashCode();
                 
                 if (this.PasswordHash != null)
-                    hash = hash * 57 + this.PasswordHash.GetHashCode();
+                    hash = hash * 59 + this.PasswordHash.GetHashCode();
                 
                 if (this.SecurityStamp != null)
-                    hash = hash * 57 + this.SecurityStamp.GetHashCode();
+                    hash = hash * 59 + this.SecurityStamp.GetHashCode();
                 
                 if (this.Logins != null)
-                    hash = hash * 57 + this.Logins.GetHashCode();
+                    hash = hash * 59 + this.Logins.GetHashCode();
                 
                 if (this.Roles != null)
-                    hash = hash * 57 + this.Roles.GetHashCode();
+                    hash = hash * 59 + this.Roles.GetHashCode();
                 
                 if (this.Permissions != null)
-                    hash = hash * 57 + this.Permissions.GetHashCode();
+                    hash = hash * 59 + this.Permissions.GetHashCode();
                 
                 if (this.ApiAccounts != null)
-                    hash = hash * 57 + this.ApiAccounts.GetHashCode();
+                    hash = hash * 59 + this.ApiAccounts.GetHashCode();
                 
                 return hash;
             }

@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommerceDomainMarketingModelMarketingSearchCriteria : IEquatable<VirtoCommerceDomainMarketingModelMarketingSearchCriteria>
+    public partial class VirtoCommerceDomainMarketingModelMarketingSearchCriteria :  IEquatable<VirtoCommerceDomainMarketingModelMarketingSearchCriteria>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceDomainMarketingModelMarketingSearchCriteria" /> class.
@@ -104,7 +105,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommerceDomainMarketingModelMarketingSearchCriteria instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommerceDomainMarketingModelMarketingSearchCriteria to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceDomainMarketingModelMarketingSearchCriteria to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommerceDomainMarketingModelMarketingSearchCriteria other)
         {
@@ -153,19 +154,19 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.FolderId != null)
-                    hash = hash * 57 + this.FolderId.GetHashCode();
+                    hash = hash * 59 + this.FolderId.GetHashCode();
                 
                 if (this.ResponseGroup != null)
-                    hash = hash * 57 + this.ResponseGroup.GetHashCode();
+                    hash = hash * 59 + this.ResponseGroup.GetHashCode();
                 
                 if (this.Keyword != null)
-                    hash = hash * 57 + this.Keyword.GetHashCode();
+                    hash = hash * 59 + this.Keyword.GetHashCode();
                 
                 if (this.Start != null)
-                    hash = hash * 57 + this.Start.GetHashCode();
+                    hash = hash * 59 + this.Start.GetHashCode();
                 
                 if (this.Count != null)
-                    hash = hash * 57 + this.Count.GetHashCode();
+                    hash = hash * 59 + this.Count.GetHashCode();
                 
                 return hash;
             }

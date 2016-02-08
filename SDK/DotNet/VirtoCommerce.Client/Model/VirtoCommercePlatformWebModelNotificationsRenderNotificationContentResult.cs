@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommercePlatformWebModelNotificationsRenderNotificationContentResult : IEquatable<VirtoCommercePlatformWebModelNotificationsRenderNotificationContentResult>
+    public partial class VirtoCommercePlatformWebModelNotificationsRenderNotificationContentResult :  IEquatable<VirtoCommercePlatformWebModelNotificationsRenderNotificationContentResult>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelNotificationsRenderNotificationContentResult" /> class.
@@ -81,7 +82,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommercePlatformWebModelNotificationsRenderNotificationContentResult instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommercePlatformWebModelNotificationsRenderNotificationContentResult to be compared</param>
+        /// <param name="other">Instance of VirtoCommercePlatformWebModelNotificationsRenderNotificationContentResult to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommercePlatformWebModelNotificationsRenderNotificationContentResult other)
         {
@@ -115,10 +116,10 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.Subject != null)
-                    hash = hash * 57 + this.Subject.GetHashCode();
+                    hash = hash * 59 + this.Subject.GetHashCode();
                 
                 if (this.Body != null)
-                    hash = hash * 57 + this.Body.GetHashCode();
+                    hash = hash * 59 + this.Body.GetHashCode();
                 
                 return hash;
             }

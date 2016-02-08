@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// Represent marketing promotion, define applicable rules and rewards amount in marketing system
     /// </summary>
     [DataContract]
-    public class VirtoCommerceMarketingModuleWebModelPromotion : IEquatable<VirtoCommerceMarketingModuleWebModelPromotion>
+    public partial class VirtoCommerceMarketingModuleWebModelPromotion :  IEquatable<VirtoCommerceMarketingModuleWebModelPromotion>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceMarketingModuleWebModelPromotion" /> class.
@@ -215,7 +216,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommerceMarketingModuleWebModelPromotion instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommerceMarketingModuleWebModelPromotion to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceMarketingModuleWebModelPromotion to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommerceMarketingModuleWebModelPromotion other)
         {
@@ -329,58 +330,58 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.Type != null)
-                    hash = hash * 57 + this.Type.GetHashCode();
+                    hash = hash * 59 + this.Type.GetHashCode();
                 
                 if (this.Name != null)
-                    hash = hash * 57 + this.Name.GetHashCode();
+                    hash = hash * 59 + this.Name.GetHashCode();
                 
                 if (this.Store != null)
-                    hash = hash * 57 + this.Store.GetHashCode();
+                    hash = hash * 59 + this.Store.GetHashCode();
                 
                 if (this.Catalog != null)
-                    hash = hash * 57 + this.Catalog.GetHashCode();
+                    hash = hash * 59 + this.Catalog.GetHashCode();
                 
                 if (this.Description != null)
-                    hash = hash * 57 + this.Description.GetHashCode();
+                    hash = hash * 59 + this.Description.GetHashCode();
                 
                 if (this.IsActive != null)
-                    hash = hash * 57 + this.IsActive.GetHashCode();
+                    hash = hash * 59 + this.IsActive.GetHashCode();
                 
                 if (this.MaxUsageCount != null)
-                    hash = hash * 57 + this.MaxUsageCount.GetHashCode();
+                    hash = hash * 59 + this.MaxUsageCount.GetHashCode();
                 
                 if (this.MaxPersonalUsageCount != null)
-                    hash = hash * 57 + this.MaxPersonalUsageCount.GetHashCode();
+                    hash = hash * 59 + this.MaxPersonalUsageCount.GetHashCode();
                 
                 if (this.Coupons != null)
-                    hash = hash * 57 + this.Coupons.GetHashCode();
+                    hash = hash * 59 + this.Coupons.GetHashCode();
                 
                 if (this.Priority != null)
-                    hash = hash * 57 + this.Priority.GetHashCode();
+                    hash = hash * 59 + this.Priority.GetHashCode();
                 
                 if (this.StartDate != null)
-                    hash = hash * 57 + this.StartDate.GetHashCode();
+                    hash = hash * 59 + this.StartDate.GetHashCode();
                 
                 if (this.EndDate != null)
-                    hash = hash * 57 + this.EndDate.GetHashCode();
+                    hash = hash * 59 + this.EndDate.GetHashCode();
                 
                 if (this.DynamicExpression != null)
-                    hash = hash * 57 + this.DynamicExpression.GetHashCode();
+                    hash = hash * 59 + this.DynamicExpression.GetHashCode();
                 
                 if (this.CreatedDate != null)
-                    hash = hash * 57 + this.CreatedDate.GetHashCode();
+                    hash = hash * 59 + this.CreatedDate.GetHashCode();
                 
                 if (this.ModifiedDate != null)
-                    hash = hash * 57 + this.ModifiedDate.GetHashCode();
+                    hash = hash * 59 + this.ModifiedDate.GetHashCode();
                 
                 if (this.CreatedBy != null)
-                    hash = hash * 57 + this.CreatedBy.GetHashCode();
+                    hash = hash * 59 + this.CreatedBy.GetHashCode();
                 
                 if (this.ModifiedBy != null)
-                    hash = hash * 57 + this.ModifiedBy.GetHashCode();
+                    hash = hash * 59 + this.ModifiedBy.GetHashCode();
                 
                 if (this.Id != null)
-                    hash = hash * 57 + this.Id.GetHashCode();
+                    hash = hash * 59 + this.Id.GetHashCode();
                 
                 return hash;
             }

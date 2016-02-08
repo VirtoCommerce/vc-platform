@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// Represent move operation detail
     /// </summary>
     [DataContract]
-    public class VirtoCommerceCatalogModuleWebModelMoveInfo : IEquatable<VirtoCommerceCatalogModuleWebModelMoveInfo>
+    public partial class VirtoCommerceCatalogModuleWebModelMoveInfo :  IEquatable<VirtoCommerceCatalogModuleWebModelMoveInfo>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelMoveInfo" /> class.
@@ -88,7 +89,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommerceCatalogModuleWebModelMoveInfo instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommerceCatalogModuleWebModelMoveInfo to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceCatalogModuleWebModelMoveInfo to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommerceCatalogModuleWebModelMoveInfo other)
         {
@@ -127,13 +128,13 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.Catalog != null)
-                    hash = hash * 57 + this.Catalog.GetHashCode();
+                    hash = hash * 59 + this.Catalog.GetHashCode();
                 
                 if (this.Category != null)
-                    hash = hash * 57 + this.Category.GetHashCode();
+                    hash = hash * 59 + this.Category.GetHashCode();
                 
                 if (this.ListEntries != null)
-                    hash = hash * 57 + this.ListEntries.GetHashCode();
+                    hash = hash * 59 + this.ListEntries.GetHashCode();
                 
                 return hash;
             }

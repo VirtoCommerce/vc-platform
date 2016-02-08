@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommerceDomainCommerceModelTaxDetail : IEquatable<VirtoCommerceDomainCommerceModelTaxDetail>
+    public partial class VirtoCommerceDomainCommerceModelTaxDetail :  IEquatable<VirtoCommerceDomainCommerceModelTaxDetail>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceDomainCommerceModelTaxDetail" /> class.
@@ -88,7 +89,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommerceDomainCommerceModelTaxDetail instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommerceDomainCommerceModelTaxDetail to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceDomainCommerceModelTaxDetail to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommerceDomainCommerceModelTaxDetail other)
         {
@@ -127,13 +128,13 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.Rate != null)
-                    hash = hash * 57 + this.Rate.GetHashCode();
+                    hash = hash * 59 + this.Rate.GetHashCode();
                 
                 if (this.Amount != null)
-                    hash = hash * 57 + this.Amount.GetHashCode();
+                    hash = hash * 59 + this.Amount.GetHashCode();
                 
                 if (this.Name != null)
-                    hash = hash * 57 + this.Name.GetHashCode();
+                    hash = hash * 59 + this.Name.GetHashCode();
                 
                 return hash;
             }

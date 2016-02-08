@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommercePlatformCoreAssetBlobFolder : IEquatable<VirtoCommercePlatformCoreAssetBlobFolder>
+    public partial class VirtoCommercePlatformCoreAssetBlobFolder :  IEquatable<VirtoCommercePlatformCoreAssetBlobFolder>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreAssetBlobFolder" /> class.
@@ -88,7 +89,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommercePlatformCoreAssetBlobFolder instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommercePlatformCoreAssetBlobFolder to be compared</param>
+        /// <param name="other">Instance of VirtoCommercePlatformCoreAssetBlobFolder to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommercePlatformCoreAssetBlobFolder other)
         {
@@ -127,13 +128,13 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.Name != null)
-                    hash = hash * 57 + this.Name.GetHashCode();
+                    hash = hash * 59 + this.Name.GetHashCode();
                 
                 if (this.Url != null)
-                    hash = hash * 57 + this.Url.GetHashCode();
+                    hash = hash * 59 + this.Url.GetHashCode();
                 
                 if (this.ParentUrl != null)
-                    hash = hash * 57 + this.ParentUrl.GetHashCode();
+                    hash = hash * 59 + this.ParentUrl.GetHashCode();
                 
                 return hash;
             }
