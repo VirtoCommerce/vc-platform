@@ -77,9 +77,7 @@
         blade.toolbarCommands = [
             {
                 name: "platform.commands.refresh", icon: 'fa fa-refresh',
-                executeMethod: function () {
-                    blade.refresh();
-                },
+                executeMethod: blade.refresh,
                 canExecuteMethod: function () {
                     return true;
                 }
@@ -121,10 +119,7 @@
             uiGridHelper.initialize($scope, gridOptions);
         };
 
-
-        $scope.$watch('pageSettings.currentPage', function () {
-            blade.refresh();
-        });
+        $scope.$watch('pageSettings.currentPage', blade.refresh);
 
         // actions on load
         //No need to call this because page 'pageSettings.currentPage' is watched!!! It would trigger subsequent duplicated req...

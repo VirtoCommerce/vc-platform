@@ -34,9 +34,7 @@ function ($scope, order_res_customerOrders, bladeNavigationService, dialogServic
 	   });
     };
 
-    $scope.$watch('pageSettings.currentPage', function (newPage) {
-        blade.refresh();
-    });
+    $scope.$watch('pageSettings.currentPage', blade.refresh);
 
     $scope.selectNode = function (node) {
         $scope.selectedNodeId = node.id;
@@ -86,9 +84,7 @@ function ($scope, order_res_customerOrders, bladeNavigationService, dialogServic
     blade.toolbarCommands = [
     {
         name: "platform.commands.refresh", icon: 'fa fa-refresh',
-        executeMethod: function () {
-            blade.refresh();
-        },
+        executeMethod: blade.refresh,
         canExecuteMethod: function () {
             return true;
         }

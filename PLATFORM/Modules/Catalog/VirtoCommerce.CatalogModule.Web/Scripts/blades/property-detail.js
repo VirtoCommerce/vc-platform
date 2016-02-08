@@ -3,7 +3,7 @@
     var b = $scope.blade;
     var formScope;
     b.origEntity = {};
-    
+
     $scope.currentChild = undefined;
 
     b.refresh = function (parentRefresh) {
@@ -36,14 +36,14 @@
         switch (childType) {
             case 'attr':
                 newBlade.title = 'catalog.blades.property-attributes.title';
-                newBlade.titleValues = {name: b.origEntity.name ? b.origEntity.name : b.currentEntity.name};
+                newBlade.titleValues = { name: b.origEntity.name ? b.origEntity.name : b.currentEntity.name };
                 newBlade.subtitle = 'catalog.blades.property-attributes.subtitle';
                 newBlade.controller = 'virtoCommerce.catalogModule.propertyAttributesController';
                 newBlade.template = 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/property-attributes.tpl.html';
                 break;
             case 'valType':
                 newBlade.title = 'catalog.blades.property-valueType.title';
-                newBlade.titleValues = {name: b.origEntity.name ? b.origEntity.name : b.currentEntity.name};
+                newBlade.titleValues = { name: b.origEntity.name ? b.origEntity.name : b.currentEntity.name };
                 newBlade.subtitle = 'catalog.blades.property-valueType.subtitle';
                 newBlade.controller = 'virtoCommerce.catalogModule.propertyValueTypeController';
                 newBlade.template = 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/property-valueType.tpl.html';
@@ -58,7 +58,7 @@
                 break;
             case 'dict':
                 newBlade.title = 'catalog.blades.property-dictionary.title';
-                newBlade.titleValues = {name: b.origEntity.name ? b.origEntity.name : b.currentEntity.name};
+                newBlade.titleValues = { name: b.origEntity.name ? b.origEntity.name : b.currentEntity.name };
                 newBlade.subtitle = 'catalog.blades.property-dictionary.subtitle';
                 newBlade.controller = 'virtoCommerce.catalogModule.propertyDictionaryController';
                 newBlade.template = 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/property-dictionary.tpl.html';
@@ -159,9 +159,7 @@
             executeMethod: function () {
                 angular.copy(b.origEntity, b.currentEntity);
             },
-            canExecuteMethod: function () {
-                return isDirty();
-            }
+            canExecuteMethod: isDirty
         },
 		   {
 		       name: "platform.commands.delete", icon: 'fa fa-trash-o',
@@ -169,7 +167,7 @@
 		           removeProperty(b.origEntity);
 		       },
 		       canExecuteMethod: function () {
-		           return b.origEntity.isManageable && !(b.origEntity.isNew || isDirty());
+		           return b.origEntity.isManageable && !b.origEntity.isNew;
 		       }
 		   }
     ];

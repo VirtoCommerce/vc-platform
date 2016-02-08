@@ -1,6 +1,8 @@
 ﻿angular.module('virtoCommerce.cartModule')
 .controller('virtoCommerce.cartModule.cartListController', ['$scope', 'virtoCommerce.cartModule.carts', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService',
 function ($scope, carts, bladeNavigationService, dialogService) {
+    var blade = $scope.blade;
+
     //pagination settings
     $scope.pageSettings = {};
     $scope.pageSettings.totalItems = 0;
@@ -13,15 +15,15 @@ function ($scope, carts, bladeNavigationService, dialogService) {
     $scope.selectedAll = false;
     var selectedNode = null;
 
-    $scope.blade.refresh = function () {
-        $scope.blade.isLoading = true;
+    blade.refresh = function () {
+        blade.isLoading = true;
 
         carts.cartsSearch({
             keyword: $scope.filter.searchKeyword,
             start: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
             count: $scope.pageSettings.itemsPerPageCount
         }, function (data) {
-            $scope.blade.isLoading = false;
+            blade.isLoading = false;
             $scope.selectedAll = false;
 
             $scope.pageSettings.totalItems = angular.isDefined(data.totalCount) ? data.totalCount : 0;
@@ -36,12 +38,10 @@ function ($scope, carts, bladeNavigationService, dialogService) {
                 });
             }
         },
-        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+        function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
     };
 
-    $scope.$watch('pageSettings.currentPage', function (newPage) {
-        $scope.blade.refresh();
-    });
+    $scope.$watch('pageSettings.currentPage', blade.refresh);
 
     $scope.selectNode = function (node) {
         selectedNode = node;
@@ -50,13 +50,13 @@ function ($scope, carts, bladeNavigationService, dialogService) {
         var newBlade = {
             id: 'cartDetail',
             title: 'cart.blades.cart-detail.title',
-            titleValues: { name: selectedNode.customerName},
+            titleValues: { name: selectedNode.customerName },
             currentEntityId: selectedNode.id,
             controller: 'virtoCommerce.cartModule.cartDetailController',
             template: 'Modules/$(VirtoCommerce.Cart)/Scripts/blades/cart-detail.tpl.html'
         };
 
-        bladeNavigationService.showBlade(newBlade, $scope.blade);
+        bladeNavigationService.showBlade(newBlade, blade);
     };
 
     $scope.checkAll = function (selected) {
@@ -81,9 +81,9 @@ function ($scope, carts, bladeNavigationService, dialogService) {
                     var selection = _.where($scope.objects, { selected: true });
                     var itemIds = _.pluck(selection, 'id');
                     carts.remove({ ids: itemIds }, function (data, headers) {
-                        $scope.blade.refresh();
+                        blade.refresh();
                     },
-                    function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+                    function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
                 }
             }
         }
@@ -91,19 +91,17 @@ function ($scope, carts, bladeNavigationService, dialogService) {
     }
 
     function closeChildrenBlades() {
-        angular.forEach($scope.blade.childrenBlades.slice(), function (child) {
+        angular.forEach(blade.childrenBlades.slice(), function (child) {
             bladeNavigationService.closeBlade(child);
         });
     }
 
-    $scope.blade.headIcon = 'fa-shopping-cart';
+    blade.headIcon = 'fa-shopping-cart';
 
-    $scope.blade.toolbarCommands = [
+    blade.toolbarCommands = [
           {
               name: "platform.commands.refresh", icon: 'fa fa-refresh',
-              executeMethod: function () {
-                  $scope.blade.refresh();
-              },
+              executeMethod: blade.refresh,
               canExecuteMethod: function () {
                   return true;
               }
@@ -139,5 +137,5 @@ function ($scope, carts, bladeNavigationService, dialogService) {
 
     // actions on load
     //No need to call this because page 'pageSettings.currentPage' is watched!!! It would trigger subsequent duplicated req...
-    //$scope.blade.refresh();
+    //blade.refresh();
 }]);
