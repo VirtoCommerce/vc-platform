@@ -39,7 +39,12 @@ namespace VirtoCommerce.Platform.Core.DynamicProperties
             return result;
         }
 
-        public static void DeepCopyPropertyValues(this IHasDynamicProperties sourceOwner, IHasDynamicProperties targetOwner)
+        /// <summary>
+        /// Copies property values from one object to other using for comparison property name and type
+        /// </summary>
+        /// <param name="sourceOwner"></param>
+        /// <param name="targetOwner"></param>
+        public static void CopyPropertyValuesFrom(this IHasDynamicProperties targetOwner, IHasDynamicProperties sourceOwner)
         {
             if(sourceOwner == null)
             {
@@ -51,10 +56,8 @@ namespace VirtoCommerce.Platform.Core.DynamicProperties
             }
 
             var comparer = AnonymousComparer.Create((DynamicProperty x) => x.Name.ToLowerInvariant() + ":" + x.ValueType.ToString());
-            var allExpandedSourceProps = sourceOwner.GetFlatObjectsListWithInterface<IHasDynamicProperties>().SelectMany(x => x.DynamicProperties).ToList();
-            var allExpandedTargetProps = targetOwner.GetFlatObjectsListWithInterface<IHasDynamicProperties>().SelectMany(x => x.DynamicProperties).ToList();
-            //Copy  property values for same proeprties  from one object to other 
-            allExpandedSourceProps.CompareTo(allExpandedTargetProps, comparer, (state, sourceProp, targetProp) =>
+            //Copy  property values for same properties  from one object to other 
+            sourceOwner.DynamicProperties.CompareTo(targetOwner.DynamicProperties, comparer, (state, sourceProp, targetProp) =>
             {
                 if (state == EntryState.Modified)
                 {
