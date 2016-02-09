@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
@@ -8,12 +7,10 @@ using VirtoCommerce.Client.Model;
 using VirtoCommerce.Storefront.Common;
 using VirtoCommerce.Storefront.Converters;
 using VirtoCommerce.Storefront.Model;
-using VirtoCommerce.Storefront.Model.Cart;
 using VirtoCommerce.Storefront.Model.Cart.Services;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Common.Events;
 using VirtoCommerce.Storefront.Model.Common.Exceptions;
-using VirtoCommerce.Storefront.Model.Order;
 using VirtoCommerce.Storefront.Model.Order.Events;
 using VirtoCommerce.Storefront.Model.Services;
 
@@ -63,6 +60,16 @@ namespace VirtoCommerce.Storefront.Controllers
             await _cartValidator.ValidateAsync(_cartBuilder.Cart);
 
             return Json(_cartBuilder.Cart, JsonRequestBehavior.AllowGet);
+        }
+
+        // GET: /cart/totals/json
+        [HttpGet]
+        [HandleJsonError]
+        public ActionResult CartTotalsJson()
+        {
+            EnsureThatCartExist();
+
+            return Json(_cartBuilder.Cart.ItemsCount, JsonRequestBehavior.AllowGet);
         }
 
         // POST: /cart/additem?id=...&quantity=...

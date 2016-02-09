@@ -53,6 +53,9 @@ storefrontApp.service('cartService', ['$http', function ($http) {
         getCart: function () {
             return $http.get('cart/json?t=' + new Date().getTime());
         },
+        getCartItemsCount: function () {
+            return $http.get('cart/totals/json?t=' + new Date().getTime());
+        },
         addLineItem: function (productId, quantity) {
             return $http.post('cart/additem', { id: productId, quantity: quantity });
         },

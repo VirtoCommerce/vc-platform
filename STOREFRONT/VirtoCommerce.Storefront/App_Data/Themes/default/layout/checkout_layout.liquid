@@ -16,11 +16,11 @@
     {{ '//ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular.min.js' | script_tag }}
     {{ '//ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular-route.min.js' | script_tag }}
     {{ '//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/1.1.2/ui-bootstrap-tpls.min.js' | script_tag }}
-    {{ 'storefrontApp.js' | global_asset_url | script_tag }}
-    {{ 'storefrontServices.js' | global_asset_url | script_tag }}
-    {{ 'storefrontDirectives.js' | global_asset_url | script_tag }}
-    {{ 'storefrontMainController.js' | global_asset_url | script_tag }}
-    {{ 'storefrontCheckoutController.js' | global_asset_url | script_tag }}
+    {{ 'app.js' | global_asset_url | script_tag }}
+    {{ 'services.js' | global_asset_url | script_tag }}
+    {{ 'directives.js' | global_asset_url | script_tag }}
+    {{ 'main.js' | asset_url | script_tag }}
+    {{ 'checkout.js' | asset_url | script_tag }}
 
     {{ content_for_header }}
 </head>

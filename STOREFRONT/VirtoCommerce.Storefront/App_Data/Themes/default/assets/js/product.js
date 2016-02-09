@@ -1,6 +1,7 @@
 ﻿var storefrontApp = angular.module('storefrontApp');
 
-storefrontApp.controller('productController', ['$scope', '$window', 'dialogService', 'catalogService', 'cartService', function ($scope, $window, dialogService, catalogService, cartService) {
+storefrontApp.controller('productController', ['$rootScope', '$scope', '$window', 'dialogService', 'catalogService', 'cartService',
+    function ($rootScope, $scope, $window, dialogService, catalogService, cartService) {
     //TODO: prevent add to cart not selected variation
     // display validator please select property
     // display price range
@@ -20,7 +21,9 @@ storefrontApp.controller('productController', ['$scope', '$window', 'dialogServi
             Quantity: quantity
         };
         dialogService.showDialog(dialogData, 'recentlyAddedCartItemDialogController', 'storefront.recently-added-cart-item-dialog.tpl');
-        cartService.addLineItem(product.Id, quantity);
+        cartService.addLineItem(product.Id, quantity).then(function (response) {
+            $rootScope.$broadcast('cartItemsChanged');
+        });
     }
 
     function Initialize() {
