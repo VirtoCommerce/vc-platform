@@ -45,24 +45,11 @@ function ($scope, fulfillments, bladeNavigationService) {
         showDetailBlade(node, node.name);
     };
 
-    $scope.blade.onClose = function (closeCallback) {
-      closeChildrenBlades();
-      closeCallback();
-    };
-
-    function closeChildrenBlades() {
-        angular.forEach($scope.blade.childrenBlades.slice(), function (child) {
-            bladeNavigationService.closeBlade(child);
-            });
-    }
-
     $scope.blade.headIcon = 'fa-wrench';
     $scope.blade.toolbarCommands = [
       {
           name: "platform.commands.refresh", icon: 'fa fa-refresh',
-          executeMethod: function () {
-              $scope.blade.refresh();
-          },
+          executeMethod: blade.refresh,
           canExecuteMethod: function () {
               return true;
           }

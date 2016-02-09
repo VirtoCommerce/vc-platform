@@ -72,9 +72,7 @@
             executeMethod: function () {
                 angular.copy($scope.blade.origEntity, $scope.blade.currentEntities);
             },
-            canExecuteMethod: function () {
-                return isDirty();
-            },
+            canExecuteMethod: isDirty,
             permission: 'customer:update'
         },
         {

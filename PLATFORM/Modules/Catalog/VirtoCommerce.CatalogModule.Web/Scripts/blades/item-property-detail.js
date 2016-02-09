@@ -104,9 +104,7 @@
                 executeMethod: function () {
                     angular.copy(b.origEntity, b.currentEntity);
                 },
-                canExecuteMethod: function () {
-                    return isDirty();
-                }
+                canExecuteMethod: isDirty
             },
             {
                 name: "platform.commands.delete", icon: 'fa fa-trash-o',

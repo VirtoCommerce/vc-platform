@@ -120,7 +120,7 @@
         var dialog = {
             id: "confirmDelete",
             title: "content.dialogs.asset-delete.title",
-            message: "content.dialogs.asset-delete.meessage",
+            message: "content.dialogs.asset-delete.message",
             callback: function (remove) {
                 if (remove) {
                     $scope.blade.isLoading = true;

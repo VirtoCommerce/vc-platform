@@ -87,9 +87,7 @@
             executeMethod: function () {
                 angular.copy(blade.origEntity, blade.currentEntities);
             },
-            canExecuteMethod: function () {
-                return isDirty();
-            }
+            canExecuteMethod: isDirty
         },
 		{
 		    name: "platform.commands.manage-type-properties", icon: 'fa fa-edit',

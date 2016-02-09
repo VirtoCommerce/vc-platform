@@ -211,9 +211,7 @@
                     userStateCommand.updateName();
                 }
             },
-            canExecuteMethod: function () {
-                return isDirty();
-            },
+            canExecuteMethod: isDirty,
             permission: 'customer:update'
         }
     ];

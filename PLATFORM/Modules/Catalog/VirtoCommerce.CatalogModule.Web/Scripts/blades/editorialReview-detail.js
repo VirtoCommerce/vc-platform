@@ -96,16 +96,12 @@
             executeMethod: function () {
                 angular.copy(blade.origEntity, $scope.currentEntity);
             },
-            canExecuteMethod: function () {
-                return isDirty();
-            },
+            canExecuteMethod: isDirty,
             permission: 'catalog:update'
         },
         {
             name: "platform.commands.delete", icon: 'fa fa-trash-o',
-            executeMethod: function () {
-                deleteEntry();
-            },
+            executeMethod: deleteEntry,
             canExecuteMethod: function () {
                 return blade.parentBlade.currentEntities.indexOf(blade.origEntity) >= 0 && !isDirty();
             },

@@ -11,7 +11,7 @@
         $scope.pageSettings.itemsPerPageCount = 20;
 
         var blade = $scope.blade;
-    blade.title = 'platform.blades.asset-list.title';
+        blade.title = 'platform.blades.asset-list.title';
         if (!blade.currentEntity) {
             blade.currentEntity = {};
         }
@@ -125,8 +125,8 @@
             bladeNavigationService.closeChildrenBlades(blade, function () {
                 var dialog = {
                     id: "confirmDeleteItem",
-                title: "platform.dialogs.folders-delete.title",
-                message: "platform.dialogs.folders-delete.message",
+                    title: "platform.dialogs.folders-delete.title",
+                    message: "platform.dialogs.folders-delete.message",
                     callback: function (remove) {
                         if (remove) {
                             var listEntryIds = _.pluck(selection, 'url');
@@ -164,16 +164,14 @@
 
         blade.toolbarCommands = [
             {
-            name: "platform.commands.refresh", icon: 'fa fa-refresh',
-                executeMethod: function () {
-                    blade.refresh();
-                },
+                name: "platform.commands.refresh", icon: 'fa fa-refresh',
+                executeMethod: blade.refresh,
                 canExecuteMethod: function () {
                     return true;
                 }
             },
             {
-            name: "platform.commands.new-folder", icon: 'fa fa-folder-o',
+                name: "platform.commands.new-folder", icon: 'fa fa-folder-o',
                 executeMethod: function () { newFolder(); },
                 canExecuteMethod: function () {
                     return true;
@@ -181,12 +179,12 @@
                 permission: 'platform:asset:create'
             },
             {
-            name: "platform.commands.upload", icon: 'fa fa-upload',
+                name: "platform.commands.upload", icon: 'fa fa-upload',
                 executeMethod: function () {
                     var newBlade = {
                         id: "assetUpload",
                         currentEntityId: blade.currentEntity.url,
-                    title: 'platform.blades.asset-upload.title',
+                        title: 'platform.blades.asset-upload.title',
                         controller: 'platformWebApp.assets.assetUploadController',
                         template: '$(Platform)/Scripts/app/assets/blades/asset-upload.tpl.html'
                     };
@@ -206,7 +204,7 @@
             //    permission: 'platform:asset:update'
             //},
             {
-            name: "platform.commands.delete", icon: 'fa fa-trash-o',
+                name: "platform.commands.delete", icon: 'fa fa-trash-o',
                 executeMethod: function () { deleteList($scope.gridApi.selection.getSelectedRows()); },
                 canExecuteMethod: isItemsChecked,
                 permission: 'platform:asset:delete'
@@ -248,7 +246,7 @@
                 $scope.$watch('pageSettings.currentPage', gridApi.pagination.seek);
             });
         };
-        
+
 
         blade.refresh();
     }]);

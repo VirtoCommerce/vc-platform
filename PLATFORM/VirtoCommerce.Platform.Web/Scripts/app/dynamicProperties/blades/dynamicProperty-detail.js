@@ -133,18 +133,14 @@
             executeMethod: function () {
                 angular.copy(blade.origEntity, blade.currentEntity);
             },
-            canExecuteMethod: function () {
-                return isDirty();
-            },
+            canExecuteMethod: isDirty,
             permission: 'platform:dynamic_properties:update'
         },
         {
             name: "platform.commands.delete", icon: 'fa fa-trash-o',
-            executeMethod: function () {
-                deleteEntry();
-            },
+            executeMethod: deleteEntry,
             canExecuteMethod: function () {
-                return !isDirty() && !blade.isNew;
+                return !blade.isNew;
             },
             permission: 'platform:dynamic_properties:delete'
         }

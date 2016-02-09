@@ -111,9 +111,7 @@
                 executeMethod: function () {
                     angular.copy(blade.origItem, $scope.seoInfos);
                 },
-                canExecuteMethod: function () {
-                    return isDirty();
-                },
+                canExecuteMethod: isDirty,
                 permission: 'catalog:update'
             }
         ];

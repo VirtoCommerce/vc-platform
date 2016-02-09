@@ -170,9 +170,7 @@
             executeMethod: function () {
                 angular.copy(blade.origEntity, blade.currentEntities);
             },
-            canExecuteMethod: function () {
-                return isDirty();
-            },
+            canExecuteMethod: isDirty,
             permission: 'platform:dynamic_properties:update'
         },
         {

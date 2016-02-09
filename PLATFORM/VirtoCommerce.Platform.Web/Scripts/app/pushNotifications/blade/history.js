@@ -1,6 +1,7 @@
 angular.module('platformWebApp')
 .controller('platformWebApp.pushNotificationsHistoryController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.pushNotificationTemplateResolver', 'platformWebApp.pushNotifications',
 function ($scope, bladeNavigationService, eventTemplateResolver, notifications) {
+    var blade = $scope.blade;
 
     $scope.pageSettings = {};
     $scope.pageSettings.totalItems = 0;
@@ -16,8 +17,8 @@ function ($scope, bladeNavigationService, eventTemplateResolver, notifications) 
 
     ];
 	
-    $scope.blade.refresh = function () {
-        $scope.blade.isLoading = true;
+    blade.refresh = function () {
+        blade.isLoading = true;
         var start = $scope.pageSettings.currentPage * $scope.pageSettings.itemsPerPageCount - $scope.pageSettings.itemsPerPageCount;
         notifications.query({ start: start, count: $scope.pageSettings.itemsPerPageCount, orderBy: getOrderByExpression() }, function (data, status, headers, config) {
             angular.forEach(data.notifyEvents, function (x) {
@@ -27,9 +28,9 @@ function ($scope, bladeNavigationService, eventTemplateResolver, notifications) 
             });
             $scope.notifications = data.notifyEvents;
             $scope.pageSettings.totalItems = angular.isDefined(data.totalCount) ? data.totalCount : 0;
-            $scope.blade.isLoading = false;
+            blade.isLoading = false;
         }, function (error) {
-            bladeNavigationService.setError('Error ' + error.status, $scope.blade);
+            bladeNavigationService.setError('Error ' + error.status, blade);
         });
     };
 
@@ -53,26 +54,22 @@ function ($scope, bladeNavigationService, eventTemplateResolver, notifications) 
     	column.reverse = !column.reverse;
     	$scope.pageSettings.currentPage = 1;
 
-    	$scope.blade.refresh();
+    	blade.refresh();
     }
     
-    $scope.blade.toolbarCommands = [
+    blade.toolbarCommands = [
 			{
 				name: "platform.commands.refresh",
 				icon: 'fa fa-refresh',
-				executeMethod: function () {
-					$scope.blade.refresh();
-				},
+				executeMethod: blade.refresh,
 				canExecuteMethod: function () {
 					return true;
 				}
 			}];
 
-    $scope.$watch('pageSettings.currentPage', function () {
-        $scope.blade.refresh();
-    });
+    $scope.$watch('pageSettings.currentPage', blade.refresh);
 
     // actions on load
     //No need to call this because page 'pageSettings.currentPage' is watched!!! It would trigger subsequent duplicated req...
-    //$scope.blade.refresh();
+    //blade.refresh();
 }]);

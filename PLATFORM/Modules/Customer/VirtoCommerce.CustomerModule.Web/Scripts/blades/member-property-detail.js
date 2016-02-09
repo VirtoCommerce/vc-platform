@@ -100,9 +100,7 @@
             executeMethod: function () {
                 angular.copy(b.origEntity, b.currentEntity);
             },
-            canExecuteMethod: function () {
-                return isDirty();
-            },
+            canExecuteMethod: isDirty,
             permission: 'customer:update'
         },
 		{

@@ -13,6 +13,8 @@ namespace VirtoCommerce.Storefront.Model.StaticContent
     {
         private static string _excerpToken = "<!--excerpt-->";
 
+        public override string Type { get { return "post"; } }
+
         public string Excerpt { get; set; }
         public string ImageUrl { get; set; }
 

@@ -94,9 +94,7 @@ function ($scope, catalogs, listEntries, bladeNavigationService, uiGridConstants
         return !blade.catalogId;
     };
 
-    $scope.$watch('pageSettings.currentPage', function () {
-        blade.refresh();
-    });
+    $scope.$watch('pageSettings.currentPage', blade.refresh);
 
     $scope.selectItem = function (e, listItem) {
         if ($scope.selectedNodeId == listItem.id)
