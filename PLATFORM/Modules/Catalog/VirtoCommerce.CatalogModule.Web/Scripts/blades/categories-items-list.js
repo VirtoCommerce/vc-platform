@@ -1,17 +1,11 @@
 ﻿angular.module('virtoCommerce.catalogModule')
     .controller('virtoCommerce.catalogModule.categoriesItemsListController', [
-        '$sessionStorage', '$localStorage', '$timeout', '$scope', 'virtoCommerce.catalogModule.categories', 'virtoCommerce.catalogModule.items', 'virtoCommerce.catalogModule.listEntries', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.authService', 'uiGridConstants', 'platformWebApp.uiGridHelper',
-        function ($sessionStorage, $localStorage, $timeout, $scope, categories, items, listEntries, bladeNavigationService, dialogService, authService, uiGridConstants, uiGridHelper) {
-            $scope.uiGridConstants = uiGridConstants;
-
-            //pagination settings
-            $scope.pageSettings = {};
-            $scope.pageSettings.totalItems = 0;
-            $scope.pageSettings.currentPage = 1;
-            $scope.pageSettings.numPages = 5;
-            $scope.pageSettings.itemsPerPageCount = 20;
-
+        '$sessionStorage', '$localStorage', '$timeout', '$scope', 'virtoCommerce.catalogModule.categories', 'virtoCommerce.catalogModule.items', 'virtoCommerce.catalogModule.listEntries', 'platformWebApp.bladeUtils', 'platformWebApp.dialogService', 'platformWebApp.authService', 'platformWebApp.uiGridHelper',
+        function ($sessionStorage, $localStorage, $timeout, $scope, categories, items, listEntries, bladeUtils, dialogService, authService, uiGridHelper) {
+            $scope.uiGridConstants = uiGridHelper.uiGridConstants;
+            
             var blade = $scope.blade;
+            var bladeNavigationService = bladeUtils.bladeNavigationService;
 
             blade.refresh = function () {
                 blade.isLoading = true;
@@ -574,14 +568,10 @@
                     }
 
                     $timeout(function () {
-                        gridApi.core.on.sortChanged($scope, function () {
-                            if (!blade.isLoading)
-                                blade.refresh();
-                        });
+                        uiGridHelper.bindRefreshOnSortChanged($scope);
                     }, 200);
                 });
-
-                $scope.$watch('pageSettings.currentPage', blade.refresh);
+                bladeUtils.initializePagination($scope);
             };
 
             $scope.getGroupInfo = function (groupEntity) {

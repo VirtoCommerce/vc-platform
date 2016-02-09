@@ -1,7 +1,8 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.catalogItemSelectController', ['$scope', 'virtoCommerce.catalogModule.catalogs', 'virtoCommerce.catalogModule.listEntries', 'platformWebApp.bladeNavigationService', 'uiGridConstants', 'platformWebApp.uiGridHelper', '$timeout',
-function ($scope, catalogs, listEntries, bladeNavigationService, uiGridConstants, uiGridHelper, $timeout) {
+.controller('virtoCommerce.catalogModule.catalogItemSelectController', ['$scope', 'virtoCommerce.catalogModule.catalogs', 'virtoCommerce.catalogModule.listEntries', 'platformWebApp.bladeUtils', 'uiGridConstants', 'platformWebApp.uiGridHelper', '$timeout',
+function ($scope, catalogs, listEntries, bladeUtils, uiGridConstants, uiGridHelper, $timeout) {
     var blade = $scope.blade;
+    var bladeNavigationService = bladeUtils.bladeNavigationService;
 
     if (!blade.title) {
         blade.title = "Select Catalog items...";
@@ -148,13 +149,6 @@ function ($scope, catalogs, listEntries, bladeNavigationService, uiGridConstants
 
     };
 
-    //pagination settings
-    $scope.pageSettings = {};
-    $scope.pageSettings.totalItems = 0;
-    $scope.pageSettings.currentPage = 1;
-    $scope.pageSettings.numPages = 5;
-    $scope.pageSettings.itemsPerPageCount = 20;
-
     var filter = $scope.filter = {};
     filter.criteriaChanged = function () {
         if ($scope.pageSettings.currentPage > 1) {
@@ -172,6 +166,8 @@ function ($scope, catalogs, listEntries, bladeNavigationService, uiGridConstants
 
         uiGridHelper.initialize($scope, gridOptions, externalRegisterApiCallback);
     };
+
+    bladeUtils.initializePagination($scope);
 
     function externalRegisterApiCallback(gridApi) {
         gridApi.grid.registerDataChangeCallback(function (grid) {
@@ -198,6 +194,8 @@ function ($scope, catalogs, listEntries, bladeNavigationService, uiGridConstants
                 $scope.options.selectedItemIds = _.without($scope.options.selectedItemIds, row.entity.id);
             }
         });
+
+        uiGridHelper.bindRefreshOnSortChanged($scope);
     }
 
     //No need to call this because page 'pageSettings.currentPage' is watched!!! It would trigger subsequent duplicated req...

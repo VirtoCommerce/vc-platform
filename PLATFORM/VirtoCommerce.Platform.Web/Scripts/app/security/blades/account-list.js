@@ -1,14 +1,16 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.accountListController', ['$scope', 'platformWebApp.accounts', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'uiGridConstants', 'platformWebApp.uiGridHelper',
-function ($scope, accounts, bladeNavigationService, dialogService, uiGridConstants, uiGridHelper) {
-    $scope.uiGridConstants = uiGridConstants;
+.controller('platformWebApp.accountListController', ['$scope', 'platformWebApp.accounts', 'platformWebApp.dialogService', 'platformWebApp.uiGridHelper', 'platformWebApp.bladeUtils',
+function ($scope, accounts, dialogService, uiGridHelper, bladeUtils) {
+    $scope.uiGridConstants = uiGridHelper.uiGridConstants;
     var blade = $scope.blade;
+    var bladeNavigationService = bladeUtils.bladeNavigationService;
 
     blade.refresh = function () {
         blade.isLoading = true;
 
         accounts.search({
             keyword: filter.keyword,
+            sort: uiGridHelper.getSortExpression($scope),
             skipCount: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
             takeCount: $scope.pageSettings.itemsPerPageCount
         }, function (data) {
@@ -107,12 +109,6 @@ function ($scope, accounts, bladeNavigationService, dialogService, uiGridConstan
         }
     ];
 
-    //pagination settings
-    $scope.pageSettings = {};
-    $scope.pageSettings.totalItems = 0;
-    $scope.pageSettings.currentPage = 1;
-    $scope.pageSettings.numPages = 5;
-    $scope.pageSettings.itemsPerPageCount = 20;
 
     var filter = $scope.filter = {};
     filter.criteriaChanged = function () {
@@ -125,10 +121,11 @@ function ($scope, accounts, bladeNavigationService, dialogService, uiGridConstan
 
     // ui-grid
     $scope.setGridOptions = function (gridOptions) {
-        uiGridHelper.initialize($scope, gridOptions);
+        uiGridHelper.initialize($scope, gridOptions, function (gridApi) {
+            uiGridHelper.bindRefreshOnSortChanged($scope);
+        });
+        bladeUtils.initializePagination($scope);
     };
-
-    $scope.$watch('pageSettings.currentPage', blade.refresh);
 
     // actions on load
     //No need to call this because page 'pageSettings.currentPage' is watched!!! It would trigger subsequent duplicated req...
