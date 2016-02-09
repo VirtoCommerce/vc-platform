@@ -104,9 +104,7 @@
                 angular.copy(blade.origEntity, currentEntities);
                 blade.selectedAll = false;
             },
-            canExecuteMethod: function () {
-                return isDirty();
-            }
+            canExecuteMethod: isDirty,
         });
     }
 

@@ -9,6 +9,7 @@ using System.Data.Entity.ModelConfiguration.Conventions;
 using System;
 using System.Text;
 using System.Diagnostics;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.CatalogModule.Data.Repositories
 {
@@ -99,7 +100,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 
             #region Association
             modelBuilder.Entity<dataModel.Association>().ToTable("Association").HasKey(x => x.Id).Property(x => x.Id);
-            modelBuilder.Entity<dataModel.Association>().HasRequired(m => m.CatalogItem).WithMany(x => x.Assosiations).HasForeignKey(x=>x.ItemId).WillCascadeOnDelete(false);
+            modelBuilder.Entity<dataModel.Association>().HasRequired(m => m.CatalogItem).WithMany(x => x.Assosiations).HasForeignKey(x => x.ItemId).WillCascadeOnDelete(false);
             modelBuilder.Entity<dataModel.Association>().HasRequired(m => m.AssociationGroup).WithMany(x => x.Associations).HasForeignKey(x => x.AssociationGroupId).WillCascadeOnDelete(true);
             #endregion
 
@@ -228,15 +229,19 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 
         public string[] GetAllChildrenCategoriesIds(string[] categoryIds)
         {
-            const string queryPattern =
-                @"WITH cte AS  ( SELECT a.Id FROM Category a  WHERE Id IN ({0})
+            var retVal = new List<string>();
+            if (!categoryIds.IsNullOrEmpty())
+            {
+                const string queryPattern =
+                    @"WITH cte AS  ( SELECT a.Id FROM Category a  WHERE Id IN ({0})
                   UNION ALL
                   SELECT a.Id FROM Category a JOIN cte c ON a.ParentCategoryId = c.Id)
                   SELECT Id FROM cte WHERE Id NOT IN ({0})";
 
-            var query = String.Format(queryPattern, String.Join(", ", categoryIds.Select(x => String.Format("'{0}'", x))));
-            var retVal = ObjectContext.ExecuteStoreQuery<string>(query).ToArray();
-            return retVal;
+                var query = String.Format(queryPattern, String.Join(", ", categoryIds.Select(x => String.Format("'{0}'", x))));
+                retVal = ObjectContext.ExecuteStoreQuery<string>(query).ToList();
+            }
+            return retVal.ToArray();
         }
 
         public dataModel.Category[] GetCategoriesByIds(string[] categoriesIds, coreModel.CategoryResponseGroup respGroup)
@@ -287,11 +292,11 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
                 //Need load inherited from parents categories and catalogs
                 var allParents = result.SelectMany(x => x.AllParents).ToArray();
                 var allCategoriesTreeIds = allParents.Select(x => x.Id).Concat(categoriesIds).Distinct().ToArray();
-                var allCatalogsIds = result.Select(x=>x.CatalogId).Concat(allParents.Select(x => x.CatalogId)).Distinct().ToArray();
+                var allCatalogsIds = result.Select(x => x.CatalogId).Concat(allParents.Select(x => x.CatalogId)).Distinct().ToArray();
 
                 var categoriesProperties = Properties.Include(x => x.PropertyAttributes)
                                            .Include(x => x.DictionaryValues)
-                                           .Where(x=> allCategoriesTreeIds.Contains(x.CategoryId)).ToArray();
+                                           .Where(x => allCategoriesTreeIds.Contains(x.CategoryId)).ToArray();
 
                 var catalogProperties = Properties.Include(x => x.PropertyAttributes)
                                            .Include(x => x.DictionaryValues)
@@ -319,7 +324,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
             var catalogs = Catalogs.Include(x => x.CatalogLanguages).Where(x => catalogIds.Contains(x.Id)).ToArray();
 
             //Load product categories separately
-            var categoryIds = retVal.Select(x => x.CategoryId).Where(x=>!String.IsNullOrEmpty(x)).Distinct().ToArray();
+            var categoryIds = retVal.Select(x => x.CategoryId).Where(x => !String.IsNullOrEmpty(x)).Distinct().ToArray();
             var categories = GetCategoriesByIds(categoryIds, coreModel.CategoryResponseGroup.WithParents);
 
             if ((respGroup & coreModel.ItemResponseGroup.Links) == coreModel.ItemResponseGroup.Links)
@@ -349,7 +354,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
             {
                 var variationIds = Items.Where(x => itemIds.Contains(x.ParentId)).Select(x => x.Id).ToArray();
                 //For variations loads only info and images
-                var variations = Items.Include(x => x.Images).Include(x=>x.Assets).Where(x => variationIds.Contains(x.Id)).ToArray();
+                var variations = Items.Include(x => x.Images).Include(x => x.Assets).Where(x => variationIds.Contains(x.Id)).ToArray();
                 //load variations property values separately
                 var variationPropertyValues = PropertyValues.Where(x => variationIds.Contains(x.ItemId)).ToArray();
             }
@@ -401,7 +406,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
                 {
                     //get all category relations
                     var linkedCategoryIds = CategoryLinks.Where(x => x.TargetCatalogId == catalogId)
-                                                         .Select(x=>x.SourceCategoryId)
+                                                         .Select(x => x.SourceCategoryId)
                                                          .Distinct()
                                                          .ToArray();
                     //linked product categories links
@@ -412,7 +417,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
                                                              .ToArray();
                     linkedCategoryIds = linkedCategoryIds.Concat(linkedProductCategoryIds).Distinct().ToArray();
                     var expandedFlatLinkedCategoryIds = linkedCategoryIds.Concat(GetAllChildrenCategoriesIds(linkedCategoryIds)).Distinct().ToArray();
-                  
+
                     propertyIds = propertyIds.Concat(Properties.Where(x => expandedFlatLinkedCategoryIds.Contains(x.CategoryId)).Select(x => x.Id)).Distinct().ToArray();
                     var linkedCatalogIds = Categories.Where(x => expandedFlatLinkedCategoryIds.Contains(x.Id)).Select(x => x.CatalogId).Distinct().ToArray();
                     propertyIds = propertyIds.Concat(Properties.Where(x => linkedCatalogIds.Contains(x.CatalogId) && x.CategoryId == null).Select(x => x.Id)).Distinct().ToArray();

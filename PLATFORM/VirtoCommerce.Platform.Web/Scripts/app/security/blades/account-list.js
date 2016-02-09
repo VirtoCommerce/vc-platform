@@ -72,9 +72,7 @@ function ($scope, accounts, bladeNavigationService, dialogService, uiGridConstan
     blade.toolbarCommands = [
         {
             name: "platform.commands.refresh", icon: 'fa fa-refresh',
-            executeMethod: function () {
-                blade.refresh();
-            },
+            executeMethod: blade.refresh,
             canExecuteMethod: function () {
                 return true;
             }

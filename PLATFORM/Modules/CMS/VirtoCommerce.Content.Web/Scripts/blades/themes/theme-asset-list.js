@@ -1,200 +1,188 @@
 ﻿angular.module('virtoCommerce.contentModule')
 .controller('virtoCommerce.contentModule.themeAssetListController', ['$scope', 'virtoCommerce.contentModule.themes', 'virtoCommerce.contentModule.stores', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', function ($scope, themes, themesStores, bladeNavigationService, dialogService) {
-	var blade = $scope.blade;
+    var blade = $scope.blade;
 
-	blade.selectedAssetId = undefined;
+    blade.selectedAssetId = undefined;
 
-	blade.initialize = function () {
-		blade.isLoading = true;
-		themes.getAssets({ storeId: blade.choosenStoreId, themeId: blade.choosenThemeId }, function (data) {
-			blade.currentEntities = data;
-			themesStores.get({ id: blade.choosenStoreId }, function (data) {
-				blade.store = data;
-				blade.isLoading = false;
-			},
+    blade.initialize = function () {
+        blade.isLoading = true;
+        themes.getAssets({ storeId: blade.choosenStoreId, themeId: blade.choosenThemeId }, function (data) {
+            blade.currentEntities = data;
+            themesStores.get({ id: blade.choosenStoreId }, function (data) {
+                blade.store = data;
+                blade.isLoading = false;
+            },
             function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
-		},
+        },
         function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
-	}
+    }
 
-	blade.folderClick = function (data) {
-		var folder = _.find(blade.folders, function (folder) { return data.folderName === folder.name; });
-		if (folder.isOpen) {
-			folder.isOpen = false;
-		}
-		else {
-			folder.isOpen = true;
-		}
-	}
+    blade.folderClick = function (data) {
+        var folder = _.find(blade.folders, function (folder) { return data.folderName === folder.name; });
+        if (folder.isOpen) {
+            folder.isOpen = false;
+        }
+        else {
+            folder.isOpen = true;
+        }
+    }
 
-	blade.checkFolder = function (data) {
-		var folder = _.find(blade.folders, function (folder) { return data.folderName === folder.name; });
+    blade.checkFolder = function (data) {
+        var folder = _.find(blade.folders, function (folder) { return data.folderName === folder.name; });
 
-		if (angular.isUndefined(folder)) {
-		    return false;
-		}
+        if (angular.isUndefined(folder)) {
+            return false;
+        }
 
-		return folder.isOpen;
-	}
+        return folder.isOpen;
+    }
 
-	blade.checkAsset = function (data) {
-		return blade.selectedAssetId === data.id;
-	}
+    blade.checkAsset = function (data) {
+        return blade.selectedAssetId === data.id;
+    }
 
-	blade.getOneItemName = function (data) {
-		var folder = _.find(blade.folders, function (folder) { return data.folderName === folder.name; });
+    blade.getOneItemName = function (data) {
+        var folder = _.find(blade.folders, function (folder) { return data.folderName === folder.name; });
 
-		if (angular.isUndefined(folder)) {
-		    return false;
-		}
+        if (angular.isUndefined(folder)) {
+            return false;
+        }
 
-		return folder.oneItemName;
-	}
+        return folder.oneItemName;
+    }
 
-	blade.assetClass = function (asset) {
-		switch(asset.contentType)
-		{
-			case 'text/html':
-			case 'application/json':
-			case 'application/javascript':
-				return 'fa-file-text';
+    blade.assetClass = function (asset) {
+        switch (asset.contentType) {
+            case 'text/html':
+            case 'application/json':
+            case 'application/javascript':
+                return 'fa-file-text';
 
-			case 'image/png':
-			case 'image/jpeg':
-			case 'image/bmp':
-			case 'image/gif':
-				return 'fa-image';
+            case 'image/png':
+            case 'image/jpeg':
+            case 'image/bmp':
+            case 'image/gif':
+                return 'fa-image';
 
-			default:
-				return 'fa-file';
-		}
-	}
+            default:
+                return 'fa-file';
+        }
+    }
 
-	blade.openBlade = function (asset, data) {
-		blade.selectedAssetId = asset.id;
+    blade.openBlade = function (asset, data) {
+        blade.selectedAssetId = asset.id;
 
-		if (asset.contentType === 'text/html' || asset.contentType === 'application/json' || asset.contentType === 'application/javascript') {
-			var newBlade = {
-				id: 'editAssetBlade',
-				choosenStoreId: blade.choosenStoreId,
-				choosenThemeId: blade.choosenThemeId,
-				choosenAssetId: asset.id,
-				choosenFolder: data.folderName,
-				newAsset: false,
-				title: asset.id,
-				subtitle: 'content.blades.edit-asset.subtitle',
-				subtitleValues: { name: asset.name },
-				controller: 'virtoCommerce.contentModule.editAssetController',
-				template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/edit-asset.tpl.html'
-			};
-			bladeNavigationService.showBlade(newBlade, blade);
-		}
-		else {
-			var newBlade = {
-				id: 'editImageAssetBlade',
-				choosenStoreId: blade.choosenStoreId,
-				choosenThemeId: blade.choosenThemeId,
-				choosenAssetId: asset.id,
-				choosenFolder: data.folderName,
-				newAsset: false,
-				title: asset.id,
-				subtitle: 'content.blades.edit-image-asset.subtitle',
-				subtitleValues: { name: asset.name },
-				controller: 'virtoCommerce.contentModule.editImageAssetController',
-				template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/edit-image-asset.tpl.html'
-			};
-			bladeNavigationService.showBlade(newBlade, blade);
-		}
-	}
+        if (asset.contentType === 'text/html' || asset.contentType === 'application/json' || asset.contentType === 'application/javascript') {
+            var newBlade = {
+                id: 'editAssetBlade',
+                choosenStoreId: blade.choosenStoreId,
+                choosenThemeId: blade.choosenThemeId,
+                choosenAssetId: asset.id,
+                choosenFolder: data.folderName,
+                newAsset: false,
+                title: asset.id,
+                subtitle: 'content.blades.edit-asset.subtitle',
+                subtitleValues: { name: asset.name },
+                controller: 'virtoCommerce.contentModule.editAssetController',
+                template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/edit-asset.tpl.html'
+            };
+            bladeNavigationService.showBlade(newBlade, blade);
+        }
+        else {
+            var newBlade = {
+                id: 'editImageAssetBlade',
+                choosenStoreId: blade.choosenStoreId,
+                choosenThemeId: blade.choosenThemeId,
+                choosenAssetId: asset.id,
+                choosenFolder: data.folderName,
+                newAsset: false,
+                title: asset.id,
+                subtitle: 'content.blades.edit-image-asset.subtitle',
+                subtitleValues: { name: asset.name },
+                controller: 'virtoCommerce.contentModule.editImageAssetController',
+                template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/edit-image-asset.tpl.html'
+            };
+            bladeNavigationService.showBlade(newBlade, blade);
+        }
+    }
 
-	blade.folderSorting = function (entity) {
-	    if (entity.folderName == "layout")
-	        return 0;
-	    else if (entity.folderName == "templates")
-	        return 1;
-	    else if (entity.folderName == "snippets")
-	        return 2;
-	    else if (entity.folderName == "assets")
-	        return 3;
-	    else if (entity.folderName == "config")
-	        return 4;
-	    else if (entity.folderName == "locales")
-	        return 5;
+    blade.folderSorting = function (entity) {
+        if (entity.folderName == "layout")
+            return 0;
+        else if (entity.folderName == "templates")
+            return 1;
+        else if (entity.folderName == "snippets")
+            return 2;
+        else if (entity.folderName == "assets")
+            return 3;
+        else if (entity.folderName == "config")
+            return 4;
+        else if (entity.folderName == "locales")
+            return 5;
 
         return 10;
     }
 
-	blade.openBladeNew = function(data) {
-		var folder = blade.getFolder(data);
-		var contentType = folder.defaultContentType;
-		var name = folder.defaultItemName;
+    blade.openBladeNew = function (data) {
+        var folder = blade.getFolder(data);
+        var contentType = folder.defaultContentType;
+        var name = folder.defaultItemName;
 
-		if (contentType === 'text/html') {
-			var newBlade = {
-				id: 'addAsset',
-				choosenStoreId: blade.choosenStoreId,
-				choosenThemeId: blade.choosenThemeId,
-				choosenFolder: data.folderName,
-				newAsset: true,
-				currentEntity: { id: undefined, content: undefined, contentType: contentType, assetUrl: undefined, name: name },
-				titleValues: { name: folder.oneItemName },
-				subtitle: { name: folder.oneItemName },
-				title: 'content.blades.edit-asset.title-new',
-				subtitle: 'content.blades.edit-asset.subtitle-new',
-				controller: 'virtoCommerce.contentModule.editAssetController',
-				template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/edit-asset.tpl.html'
-			};
-			bladeNavigationService.showBlade(newBlade, blade);
-		}
-		else {
-			var newBlade = {
-				id: 'addImageAsset',
-				choosenStoreId: blade.choosenStoreId,
-				choosenThemeId: blade.choosenThemeId,
-				choosenFolder: data.folderName,
-				newAsset: true,
-				currentEntity: { id: undefined, content: undefined, contentType: undefined, assetUrl: undefined, name: undefined },
-				titleValues: { name: folder.oneItemName },
-				subtitle: { name: folder.oneItemName },
-				title: 'content.blades.edit-image-asset.title-new',
-				subtitle: 'content.blades.edit-image-asset.subtitle-new',
-				controller: 'virtoCommerce.contentModule.editImageAssetController',
-				template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/edit-image-asset.tpl.html'
-			};
-			bladeNavigationService.showBlade(newBlade, blade);
-		}
-	}
+        if (contentType === 'text/html') {
+            var newBlade = {
+                id: 'addAsset',
+                choosenStoreId: blade.choosenStoreId,
+                choosenThemeId: blade.choosenThemeId,
+                choosenFolder: data.folderName,
+                newAsset: true,
+                currentEntity: { id: undefined, content: undefined, contentType: contentType, assetUrl: undefined, name: name },
+                titleValues: { name: folder.oneItemName },
+                subtitle: { name: folder.oneItemName },
+                title: 'content.blades.edit-asset.title-new',
+                subtitle: 'content.blades.edit-asset.subtitle-new',
+                controller: 'virtoCommerce.contentModule.editAssetController',
+                template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/edit-asset.tpl.html'
+            };
+            bladeNavigationService.showBlade(newBlade, blade);
+        }
+        else {
+            var newBlade = {
+                id: 'addImageAsset',
+                choosenStoreId: blade.choosenStoreId,
+                choosenThemeId: blade.choosenThemeId,
+                choosenFolder: data.folderName,
+                newAsset: true,
+                currentEntity: { id: undefined, content: undefined, contentType: undefined, assetUrl: undefined, name: undefined },
+                titleValues: { name: folder.oneItemName },
+                subtitle: { name: folder.oneItemName },
+                title: 'content.blades.edit-image-asset.title-new',
+                subtitle: 'content.blades.edit-image-asset.subtitle-new',
+                controller: 'virtoCommerce.contentModule.editImageAssetController',
+                template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/edit-image-asset.tpl.html'
+            };
+            bladeNavigationService.showBlade(newBlade, blade);
+        }
+    }
 
-	blade.onClose = function (closeCallback) {
-		closeChildrenBlades();
-		closeCallback();
-	};
+    blade.getFolder = function (data) {
+        var folder = _.find(blade.folders, function (folder) { return folder.name === data.folderName });
 
-	function closeChildrenBlades() {
-		angular.forEach(blade.childrenBlades.slice(), function (child) {
-			bladeNavigationService.closeBlade(child);
-		});
-	}
+        if (folder !== undefined) {
+            return folder;
+        }
 
-	blade.getFolder = function (data) {
-		var folder = _.find(blade.folders, function (folder) { return folder.name === data.folderName });
-		
-		if(folder !== undefined){
-			return folder;
-		}
+        return null;
+    }
 
-		return null;
-	}
+    blade.isFolder = function (data) {
+        var folder = _.find(blade.folders, function (folder) { return folder.name === data.folderName });
 
-	blade.isFolder = function (data) {
-		var folder = _.find(blade.folders, function (folder) { return folder.name === data.folderName });
+        if (folder !== undefined) {
+            return true;
+        }
 
-		if (folder !== undefined) {
-			return true;
-		}
-
-		return false;
-	}
+        return false;
+    }
 
     $scope.blade.headIcon = 'fa-archive';
 
@@ -207,5 +195,5 @@
 		{ name: 'templates', oneItemName: 'template', defaultItemName: 'new_template.liquid', defaultContentType: 'text/html', isOpen: false }
     ];
 
-	blade.initialize();
+    blade.initialize();
 }]);

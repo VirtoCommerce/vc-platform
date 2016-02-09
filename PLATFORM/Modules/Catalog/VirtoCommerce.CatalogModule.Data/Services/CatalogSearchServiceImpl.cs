@@ -13,7 +13,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 {
     public class CatalogSearchServiceImpl : ICatalogSearchService
     {
-	    private readonly Func<ICatalogRepository> _catalogRepositoryFactory;
+        private readonly Func<ICatalogRepository> _catalogRepositoryFactory;
         private readonly IItemService _itemService;
         private readonly ICatalogService _catalogService;
         private readonly ICategoryService _categoryService;
@@ -28,40 +28,40 @@ namespace VirtoCommerce.CatalogModule.Data.Services
             _catalogService = catalogService;
             _categoryService = categoryService;
 
-             _productSortingAliases["sku"] = ReflectionUtility.GetPropertyName<CatalogProduct>(x => x.Code);
+            _productSortingAliases["sku"] = ReflectionUtility.GetPropertyName<CatalogProduct>(x => x.Code);
             _categorySortingAliases["sku"] = ReflectionUtility.GetPropertyName<Category>(x => x.Code);
 
         }
 
         public SearchResult Search(SearchCriteria criteria)
-		{
+        {
             var retVal = new SearchResult();
-			var taskList = new List<Task>();
+            var taskList = new List<Task>();
 
             if ((criteria.ResponseGroup & SearchResponseGroup.WithProducts) == SearchResponseGroup.WithProducts)
-			{
-				taskList.Add(Task.Factory.StartNew(() => SearchItems(criteria, retVal)));
-			}
+            {
+                taskList.Add(Task.Factory.StartNew(() => SearchItems(criteria, retVal)));
+            }
 
             if ((criteria.ResponseGroup & SearchResponseGroup.WithCatalogs) == SearchResponseGroup.WithCatalogs)
-			{
-				taskList.Add(Task.Factory.StartNew(() => SearchCatalogs(criteria, retVal)));
-			}
+            {
+                taskList.Add(Task.Factory.StartNew(() => SearchCatalogs(criteria, retVal)));
+            }
 
             if ((criteria.ResponseGroup & SearchResponseGroup.WithCategories) == SearchResponseGroup.WithCategories)
-			{
-				taskList.Add(Task.Factory.StartNew(() => SearchCategories(criteria, retVal)));
-			}
+            {
+                taskList.Add(Task.Factory.StartNew(() => SearchCategories(criteria, retVal)));
+            }
 
-			Task.WaitAll(taskList.ToArray());
+            Task.WaitAll(taskList.ToArray());
 
-			return retVal;
-		}
+            return retVal;
+        }
 
         private void SearchCategories(SearchCriteria criteria, SearchResult result)
-		{
-			using (var repository = _catalogRepositoryFactory())
-			{
+        {
+            using (var repository = _catalogRepositoryFactory())
+            {
                 var query = repository.Categories.Where(x => criteria.WithHidden ? true : x.IsActive);
 
                 //Get list of search in categories
@@ -98,8 +98,11 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                         searchCategoryIds = searchCategoryIds.Concat(allCatalogLinkedCategories).Distinct().ToArray();
                         //Then exapand all categories, get all childrens
                         searchCategoryIds = searchCategoryIds.Concat(repository.GetAllChildrenCategoriesIds(searchCategoryIds)).ToArray();
-                        //find all categories belong searched catalogs and all categories direct or implicitly linked to catalogs
-                        query = query.Where(x =>  searchCategoryIds.Contains(x.Id));
+                        if (!searchCategoryIds.IsNullOrEmpty())
+                        {
+                            //find all categories belong searched catalogs and all categories direct or implicitly linked to catalogs
+                            query = query.Where(x => searchCategoryIds.Contains(x.Id));
+                        }
                     }
                     else
                     {
@@ -137,9 +140,9 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                                                     .AsQueryable()
                                                     .OrderBySortInfos(sortInfos)
                                                     .ToList();
-            
-			}
-		}
+
+            }
+        }
 
         private void SearchCatalogs(SearchCriteria criteria, SearchResult result)
         {
@@ -193,29 +196,29 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 
                 var query = repository.Items.Where(x => criteria.WithHidden ? true : x.IsActive);
 
-                if(!criteria.SearchInVariations)
+                if (!criteria.SearchInVariations)
                 {
                     query = query.Where(x => x.ParentId == null);
                 }
 
                 if (!searchCategoryIds.IsNullOrEmpty())
                 {
-                   query = query.Where(x => searchCategoryIds.Contains(x.CategoryId) || x.CategoryLinks.Any(c => searchCategoryIds.Contains(c.CategoryId)));
+                    query = query.Where(x => searchCategoryIds.Contains(x.CategoryId) || x.CategoryLinks.Any(c => searchCategoryIds.Contains(c.CategoryId)));
                 }
-				else if (!criteria.CatalogIds.IsNullOrEmpty())
-				{
-					query = query.Where(x => criteria.CatalogIds.Contains(x.CatalogId) && (criteria.SearchInChildren || x.CategoryId == null));
-				}
+                else if (!criteria.CatalogIds.IsNullOrEmpty())
+                {
+                    query = query.Where(x => criteria.CatalogIds.Contains(x.CatalogId) && (criteria.SearchInChildren || x.CategoryId == null));
+                }
 
                 if (!string.IsNullOrEmpty(criteria.Code))
-				{
-					query = query.Where(x => x.Code == criteria.Code);
-				}
+                {
+                    query = query.Where(x => x.Code == criteria.Code);
+                }
                 else if (!string.IsNullOrEmpty(criteria.Keyword))
-				{
+                {
                     query = query.Where(x => x.Name.Contains(criteria.Keyword) || x.Code.Contains(criteria.Keyword) || x.ItemPropertyValues.Any(y => y.ShortTextValue == criteria.Keyword));
                 }
-            
+
 
                 //Filter by property dictionary values
                 if (!criteria.PropertyValues.IsNullOrEmpty())
@@ -224,12 +227,12 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                     query = query.Where(x => x.ItemPropertyValues.Any(y => propValueIds.Contains(y.KeyValue)));
                 }
 
-                if(!criteria.ProductTypes.IsNullOrEmpty())
+                if (!criteria.ProductTypes.IsNullOrEmpty())
                 {
                     query = query.Where(x => criteria.ProductTypes.Contains(x.ProductType));
                 }
 
-                if(criteria.OnlyBuyable != null)
+                if (criteria.OnlyBuyable != null)
                 {
                     query = query.Where(x => x.IsBuyable == criteria.OnlyBuyable);
                 }
@@ -240,7 +243,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                 }
 
                 result.ProductsTotalCount = query.Count();
-              
+
                 var sortInfos = criteria.SortInfos;
                 if (sortInfos.IsNullOrEmpty())
                 {
@@ -249,7 +252,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                 //Try to replace sorting columns names
                 TryTransformSortingInfoColumnNames(_productSortingAliases, sortInfos);
 
-                 query = query.OrderBySortInfos(sortInfos);
+                query = query.OrderBySortInfos(sortInfos);
 
                 var itemIds = query.Skip(criteria.Skip)
                                    .Take(criteria.Take)
@@ -259,16 +262,16 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                 var productResponseGroup = ItemResponseGroup.ItemInfo | ItemResponseGroup.ItemAssets | ItemResponseGroup.Links | ItemResponseGroup.Seo;
 
                 if ((criteria.ResponseGroup & SearchResponseGroup.WithProperties) == SearchResponseGroup.WithProperties)
-				{
+                {
                     productResponseGroup |= ItemResponseGroup.ItemProperties;
-				}
+                }
 
                 if ((criteria.ResponseGroup & SearchResponseGroup.WithVariations) == SearchResponseGroup.WithVariations)
-				{
+                {
                     productResponseGroup |= ItemResponseGroup.Variations;
-				}
+                }
 
-				var products = _itemService.GetByIds(itemIds, productResponseGroup);
+                var products = _itemService.GetByIds(itemIds, productResponseGroup);
                 result.Products = products.AsQueryable().OrderBySortInfos(sortInfos).ToList();
             }
 

@@ -54,7 +54,7 @@
 			    name: "platform.commands.save", icon: 'fa fa-save',
 			    executeMethod: $scope.saveChanges,
 			    canExecuteMethod: function () {
-			        return isDirty() && formScope.$valid;
+			        return isDirty();
 			    },
 			    permission: 'content:update'
 			},

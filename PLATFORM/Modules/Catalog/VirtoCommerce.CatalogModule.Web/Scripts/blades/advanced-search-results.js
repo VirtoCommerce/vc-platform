@@ -27,11 +27,7 @@
 		    bladeNavigationService.setError('Error ' + error.status, $scope.blade);
 		});
     }
-
-    $scope.$watch('pageSettings.currentPage', function (newPage) {
-        $scope.blade.refresh();
-    });
-    
+        
     function isItemsChecked() {
         return $scope.items && _.any($scope.items, function (x) { return x.selected; });
     }
@@ -60,9 +56,7 @@
     $scope.blade.toolbarCommands = [
       {
           name: "platform.commands.refresh", icon: 'fa fa-refresh',
-          executeMethod: function () {
-              $scope.blade.refresh();
-          },
+          executeMethod: blade.refresh,
           canExecuteMethod: function () {
               return true;
           }

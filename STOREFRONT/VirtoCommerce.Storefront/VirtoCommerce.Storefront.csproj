@@ -313,6 +313,7 @@
     <Content Include="App_Data\Themes\default\assets\storefrontQuoteRequestController.js" />
     <Content Include="App_Data\Themes\default\assets\js\services.js" />
     <Content Include="App_Data\Themes\default\assets\thumbs-bar.gif" />
+    <Content Include="App_Data\Themes\default\assets\toastr.css" />
     <Content Include="App_Data\Themes\default\assets\unionpay.svg" />
     <Content Include="App_Data\Themes\default\assets\vc-big.png" />
     <Content Include="App_Data\Themes\default\assets\visa.svg" />
@@ -357,6 +358,7 @@
     <Compile Include="Converters\TierPriceConverter.cs" />
     <Compile Include="Services\CartValidator.cs" />
     <Compile Include="Services\CustomerServiceImpl.cs" />
+    <Compile Include="Services\LinkHelper.cs" />
     <Compile Include="Services\PricingServiceImpl.cs" />
     <Compile Include="Services\PromotionEvaluator.cs" />
     <Compile Include="Common\StorefrontConstants.cs" />
@@ -421,7 +423,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\Themes\default\snippets\quote-modal.liquid" />
-    <Content Include="App_Data\Themes\default\snippets\recently-added-cart-item-dialog.liquid" />
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
     </None>
