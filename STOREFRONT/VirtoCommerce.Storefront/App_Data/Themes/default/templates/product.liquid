@@ -1,5 +1,4 @@
 ﻿{% include 'breadcrumb' %}
-{% include 'quote-informer' %}
 <div class="grid" itemscope itemtype="http://schema.org/Product" ng-controller="productController">
     <meta itemprop="url" content="{{ product.url | absolute_url}}">
     <meta itemprop="image" content="{{ product.featured_image.src | img_url: 'grande' }}">
@@ -101,7 +100,7 @@
                 <input type="number" id="quantity" name="quantity" value="1" min="1" class="quantity-selector">
                 {% endif %}
 
-                <button type="button" name="add" id="addToCart" class="btn" ng-disabled="!selectedVariation.Id" ng-click="addToCart(selectedVariation, 1)">
+                <button type="button" name="add" id="addToCart" class="btn" ng-disabled="!selectedVariation.Id" ng-click="addProductToCart(selectedVariation, 1)">
                     <span class="icon icon-cart"></span>
                     <span id="addToCartText">{{ 'products.product.add_to_cart' | t }}</span>
                 </button>

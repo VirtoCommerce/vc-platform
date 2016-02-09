@@ -1,11 +1,11 @@
-﻿var storefrontApp = angular.module('storefrontApp', ['ngRoute']);
+﻿var storefrontApp = angular.module('storefrontApp', ['ngRoute', 'ui.bootstrap']);
 
 storefrontApp.factory('httpErrorInterceptor', ['$q', '$rootScope', function ($q, $rootScope) {
     var httpErrorInterceptor = {};
 
     httpErrorInterceptor.responseError = function (rejection) {
         $rootScope.$broadcast('storefrontError', {
-            type: 'error',
+            type: 'danger',
             title: rejection.data.message,
             message: rejection.data.stackTrace
         });
@@ -13,7 +13,7 @@ storefrontApp.factory('httpErrorInterceptor', ['$q', '$rootScope', function ($q,
     };
     httpErrorInterceptor.requestError = function (rejection) {
         $rootScope.$broadcast('storefrontError', {
-            type: 'error',
+            type: 'danger',
             title: rejection.data.message,
             message: rejection.data.stackTrace
         });
