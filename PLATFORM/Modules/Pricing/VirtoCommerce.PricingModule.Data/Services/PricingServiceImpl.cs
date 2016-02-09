@@ -141,7 +141,7 @@ namespace VirtoCommerce.PricingModule.Data.Services
                         groupPrices = groupPrices.OrderBy(x => Array.IndexOf(evalContext.PricelistIds, x.PricelistId));
                     }
                     //Order by  price value
-                    var orderedPrices = groupPrices.OrderBy(x => Math.Min(x.Sale.HasValue ? x.Sale.Value : x.List, x.List));
+                    var orderedPrices = groupPrices.ThenBy(x => Math.Min(x.Sale.HasValue ? x.Sale.Value : x.List, x.List));
                     retVal.AddRange(orderedPrices);
                 }
 
