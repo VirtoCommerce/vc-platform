@@ -20,6 +20,10 @@ namespace VirtoCommerce.Platform.Core.Common
 
         public static bool IsAbsoluteUrl(this string url)
         {
+            if(url == null)
+            {
+                throw new ArgumentNullException(url);
+            }
             var shemes = new string[] { Uri.UriSchemeFile, Uri.UriSchemeFtp, Uri.UriSchemeHttp, Uri.UriSchemeHttps, Uri.UriSchemeMailto, Uri.UriSchemeNetPipe, Uri.UriSchemeNetTcp };
             var retVal = shemes.Any(x=> url.StartsWith(x, StringComparison.InvariantCultureIgnoreCase));
             return retVal;
