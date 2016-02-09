@@ -26,10 +26,10 @@ namespace VirtoCommerce.Storefront.Services
 
         private static readonly Dictionary<string, string> BuiltInPermalinks = new Dictionary<string, string>
         {
-            { "date", ":categories/:year/:month/:day/:title" },
-            { "pretty", ":categories/:year/:month/:day/:title/" },
-            { "ordinal", ":categories/:year/:y_day/:title" },
-            { "none", ":categories/:title" },
+            { "date", ":folder/:categories/:year/:month/:day/:title" },
+            { "pretty", ":folder/:categories/:year/:month/:day/:title/" },
+            { "ordinal", ":folder/:categories/:year/:y_day/:title" },
+            { "none", ":folder/:categories/:title" },
         };
 
         // http://jekyllrb.com/docs/permalinks/
@@ -42,7 +42,9 @@ namespace VirtoCommerce.Storefront.Services
 
             var date = page.PublishedDate ?? page.CreatedDate;
 
-            if(!String.IsNullOrEmpty(page.Category))
+            permalink = permalink.Replace(":folder", Path.GetDirectoryName(page.RelativePath));
+
+            if (!String.IsNullOrEmpty(page.Category))
                 permalink = permalink.Replace(":categories", string.Join("/", page.Category));
             else
                 permalink = permalink.Replace(":categories", string.Join("/", page.Categories.ToArray()));
@@ -58,7 +60,7 @@ namespace VirtoCommerce.Storefront.Services
             permalink = permalink.Replace(":i_day", date.Day.ToString());
 
             permalink = SlashesRegex.Replace(permalink, "/");
-
+        
             permalink = permalink.TrimStart('/');
 
             return permalink;

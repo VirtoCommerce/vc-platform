@@ -100,19 +100,18 @@ namespace VirtoCommerce.Storefront.Services
                 totalCount = localizedFiles.Count();
                 foreach (var localizedFile in localizedFiles.OrderBy(x => x.Name).Skip((pageIndex - 1) * pageSize).Take(pageSize))
                 {
+                    var relativePath = localizedFile.LocalPath.Replace(baseStorePath, string.Empty);
                     var contentItem = contentItemFactory();
                     contentItem.Name = localizedFile.Name;
                     contentItem.Language = language;
-                    contentItem.FileName = Path.GetFileName(localizedFile.LocalPath.Replace(baseStorePath, string.Empty));
+                    contentItem.RelativePath = relativePath;
+                    contentItem.FileName = Path.GetFileName(relativePath);
                     contentItem.LocalPath = localizedFile.LocalPath;
 
                     LoadAndRenderContentItem(contentItem, renderContent);
 
-                    //if (contentItem.Type == "post")
-                    if(localizedFile.LocalPath.Replace(baseStorePath, string.Empty).StartsWith("blogs\\"))
-                        contentItem.Url = _linkHelper.EvaluatePermalink("none", contentItem); // TODO: replace with setting "permalink"
-                    else
-                        contentItem.Url = GetUrlFromPath(contentItem.FileName);
+                    contentItem.Url = _linkHelper.EvaluatePermalink("none", contentItem); // TODO: replace with setting "permalink"
+
 
                     retVal.Add(contentItem);
                 }
@@ -152,12 +151,6 @@ namespace VirtoCommerce.Storefront.Services
             }
 
             contentItem.LoadContent(content, metaHeaders);
-        }
-
-        private static string GetUrlFromPath(string path)
-        {
-            var retVal = Path.GetDirectoryName(path) + "/" + Path.GetFileName(path).Split('.').First();
-            return Uri.EscapeUriString(retVal.TrimStart('/'));
         }
 
         private static string RemoveYamlHeader(string text)

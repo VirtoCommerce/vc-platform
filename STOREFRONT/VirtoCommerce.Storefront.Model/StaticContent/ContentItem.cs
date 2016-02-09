@@ -46,7 +46,7 @@ namespace VirtoCommerce.Storefront.Model.StaticContent
         /// Content file name without extension
         /// </summary>
         public string Name { get; set; }
-        
+
         /// <summary>
         /// Storage path in file system
         /// </summary>
@@ -60,6 +60,8 @@ namespace VirtoCommerce.Storefront.Model.StaticContent
         public string Layout { get; set; }
 
         public string FileName { get; set; }
+
+        public string RelativePath { get; set; }
 
         public virtual void LoadContent(string content, IDictionary<string, IEnumerable<string>> metaInfoMap)
         {
