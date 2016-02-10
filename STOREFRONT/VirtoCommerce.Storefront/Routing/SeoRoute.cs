@@ -127,15 +127,14 @@ namespace VirtoCommerce.Storefront.Routing
             return data;
         }
 
-        private ContentPage TryToFindContentPageWithUrl(string url, Store store, Language language)
+        private ContentItem TryToFindContentPageWithUrl(string url, Store store, Language language)
         {
             if (store == null)
                 return null;
-            var cacheKey = String.Join(":", "AllStaticContentForLanguage", store.Id, language.CultureName);
-            var retVal = _cacheManager.Get(cacheKey, "ContentRegion", () =>
-            {
-                return _contentService.LoadContentItemsByUrl("/", store, language, () => new ContentPage(), null,  1, int.MaxValue, renderContent: false).OfType<ContentPage>().ToArray();
-            });
+
+            var cacheKey = string.Join(":", "AllStaticContentForLanguage", store.Id, language.CultureName);
+            var retVal = _contentService.LoadContentItems(store, () => new ContentPage(), () => new BlogArticle());
+
             url = url.TrimStart('/');
             return retVal.FirstOrDefault(x => string.Equals(x.Permalink, url, StringComparison.CurrentCultureIgnoreCase) || string.Equals(x.Url, url, StringComparison.InvariantCultureIgnoreCase));
         }

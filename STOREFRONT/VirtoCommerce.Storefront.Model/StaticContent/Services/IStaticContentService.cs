@@ -10,11 +10,10 @@ using VirtoCommerce.Storefront.Model.StaticContent;
 namespace VirtoCommerce.Storefront.Model.Services
 {
     /// <summary>
-    /// Represent a search and rendering static content pages (pages and blogs etc)
+    /// Loads all static content pages and blogs
     /// </summary>
     public interface IStaticContentService
     {
-        IPagedList<ContentItem> LoadContentItemsByUrl(string url, Store store, Language language, Func<ContentItem> contentItemFactory, string[] excludingNames = null, int pageIndex = 1, int pageSize = 10, bool renderContent = true);
-
+        IPagedList<ContentItem> LoadContentItems(Store store, Func<ContentItem> pageItemFactory, Func<ContentItem> blogItemFactory);
     }
 }

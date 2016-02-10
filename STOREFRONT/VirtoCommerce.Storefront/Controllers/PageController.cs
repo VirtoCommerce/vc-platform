@@ -28,17 +28,17 @@ namespace VirtoCommerce.Storefront.Controllers
             return View("page", page.Layout, base.WorkContext);
         }
 
-        // GET: /pages/{page}
-        public ActionResult GetContentPageByName(string page)
-        {
-            var contentPage = _contentService.LoadContentItemsByUrl(page, base.WorkContext.CurrentStore, base.WorkContext.CurrentLanguage, () => new ContentPage()).FirstOrDefault();
-            if (contentPage != null)
-            {
-                base.WorkContext.CurrentPage = contentPage as ContentPage;
+        //// GET: /pages/{page}
+        //public ActionResult GetContentPageByName(string page)
+        //{
+        //    var contentPage = _contentService.LoadContentItemsByUrl(page, base.WorkContext.CurrentStore, base.WorkContext.CurrentLanguage, () => new ContentPage()).FirstOrDefault();
+        //    if (contentPage != null)
+        //    {
+        //        base.WorkContext.CurrentPage = contentPage as ContentPage;
 
-                return View("page", contentPage.Layout, base.WorkContext);
-            }
-            throw new HttpException(404, "Page with " + page + " not found.");
-        }
+        //        return View("page", contentPage.Layout, base.WorkContext);
+        //    }
+        //    throw new HttpException(404, "Page with " + page + " not found.");
+        //}
     }
 }

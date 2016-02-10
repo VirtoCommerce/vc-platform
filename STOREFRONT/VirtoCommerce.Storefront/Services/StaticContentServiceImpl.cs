@@ -53,7 +53,7 @@ namespace VirtoCommerce.Storefront.Services
 
         #region IStaticContentService Members
         /// <summary>
-        /// Search store static contents by path and for specified language
+        /// Loads all static content
         /// </summary>
         /// <param name="url"></param>
         /// <param name="store"></param>
@@ -62,64 +62,74 @@ namespace VirtoCommerce.Storefront.Services
         /// <param name="pageIndex"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public IPagedList<ContentItem> LoadContentItemsByUrl(string url, Store store, Language language, Func<ContentItem> contentItemFactory, string[] excludingNames = null, int pageIndex = 1, int pageSize = 10, bool renderContent = true)
+        public IPagedList<ContentItem> LoadContentItems(Store store, Func<ContentItem> contentItemFactory, Func<ContentItem> blogItemFactory)
+        {
+            var cacheKey = string.Join(":", "AllStaticContentForLanguage", store.Id);
+            var retVal = _cacheManager.Get(cacheKey, "ContentRegion", () => LoadAllContentItems(store, contentItemFactory, blogItemFactory));
+            return retVal;
+        }
+        #endregion
+
+        private IPagedList<ContentItem> LoadAllContentItems(Store store, Func<ContentItem> contentItemFactory, Func<ContentItem> blogItemFactory, bool renderContent = true)
         {
             var retVal = new List<ContentItem>();
             var totalCount = 0;
-            url = Uri.UnescapeDataString(url);
-            //construct local path {base path}\{store}\{url}
             var baseStorePath = _baseLocalPath + "\\" + store.Id + "\\";
-            var localSearchPath = baseStorePath + url.Replace('/', '\\');
+            var localSearchPath = baseStorePath;
             var isDirectorySearch = Directory.Exists(localSearchPath);
             var searchPattern = "*.*";
+
             if (!isDirectorySearch)
             {
                 searchPattern = Path.GetFileNameWithoutExtension(localSearchPath) + ".*";
+
                 //Get parent directory path
                 localSearchPath = Path.GetDirectoryName(localSearchPath);
             }
 
             if (Directory.Exists(localSearchPath))
             {
+                var config = _liquidEngine.GetSettings();
+
                 //Search files by requested search pattern
                 var files = Directory.GetFiles(localSearchPath, searchPattern, SearchOption.AllDirectories)
                                              .Where(x => _extensions.Any(y => x.EndsWith(y)))
-                                             .Select(x=>x.Replace("\\\\", "\\"));
+                                             .Select(x => x.Replace("\\\\", "\\"));
+
                 //Because can be exist files with same name but for different languages
                 //need filter and leave only files for requested language in file extension or without it (default)
                 //each content file  has a name pattern {name}.{language?}.{ext}
-                var localizedFiles = files.Select(x => new LocalizedFileInfo(x))
-                             .GroupBy(x => x.Name).Select(x => x.OrderByDescending(y => y.Language).FirstOrDefault(y => language.Equals(y.Language) || String.IsNullOrEmpty(y.Language)))
-                             .Where(x => x != null);
-
-                if(excludingNames != null && excludingNames.Any())
-                {
-                    localizedFiles = localizedFiles.Where(x => !excludingNames.Contains(x.Name.ToLowerInvariant()));
-                }
+                var localizedFiles = files.Select(x => new LocalizedFileInfo(x)).Where(x => x != null);
 
                 totalCount = localizedFiles.Count();
-                foreach (var localizedFile in localizedFiles.OrderBy(x => x.Name).Skip((pageIndex - 1) * pageSize).Take(pageSize))
+                foreach (var localizedFile in localizedFiles.OrderBy(x => x.Name))
                 {
                     var relativePath = localizedFile.LocalPath.Replace(baseStorePath, string.Empty);
                     var contentItem = contentItemFactory();
                     contentItem.Name = localizedFile.Name;
-                    contentItem.Language = language;
+                    //contentItem.Language = language;
                     contentItem.RelativePath = relativePath;
                     contentItem.FileName = Path.GetFileName(relativePath);
                     contentItem.LocalPath = localizedFile.LocalPath;
 
                     LoadAndRenderContentItem(contentItem, renderContent);
 
-                    contentItem.Url = _linkHelper.EvaluatePermalink("none", contentItem); // TODO: replace with setting "permalink"
+                    // Load template permalink from settings
+                    var permalinkTemplate = "none";
+                    if (!String.IsNullOrEmpty(contentItem.Permalink))
+                        permalinkTemplate = contentItem.Permalink;
+                    else if (config != null && config.Contains("permalink"))
+                        permalinkTemplate = (string)config["permalink"];
 
+                    contentItem.Url = _linkHelper.EvaluatePermalink(permalinkTemplate, contentItem);
 
                     retVal.Add(contentItem);
                 }
             }
 
-            return new StaticPagedList<ContentItem>(retVal, pageIndex, pageSize, totalCount);
+            return new StaticPagedList<ContentItem>(retVal, 0, 100, totalCount);
         }
-        #endregion
+
          private void LoadAndRenderContentItem(ContentItem contentItem, bool renderContent)
         {
             var fileInfo = new FileInfo(contentItem.LocalPath);
@@ -138,7 +148,9 @@ namespace VirtoCommerce.Storefront.Services
                 {
                     var shopifyContext = workContext.ToShopifyModel(_urlBuilderFactory());
                     var parameters = shopifyContext.ToLiquid() as Dictionary<string, object>;
+
                     parameters.Add("settings", _liquidEngine.GetSettings());
+
                     //Render content by liquid engine
                     content = _liquidEngine.RenderTemplate(content, parameters);
                 }

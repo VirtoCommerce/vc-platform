@@ -20,6 +20,9 @@ namespace VirtoCommerce.Storefront.Services
        Regex.Escape(Path.DirectorySeparatorChar.ToString())),
    RegexOptions.Compiled);
 
+
+        private static readonly Regex CategoryRegex = new Regex(@":category(\d*)", RegexOptions.Compiled);
+
         private static readonly Regex SlashesRegex = new Regex(@"/{1,}", RegexOptions.Compiled);
 
         private static readonly string[] HtmlExtensions = new[] { ".markdown", ".mdown", ".mkdn", ".mkd", ".md", ".textile", ".cshtml" };
@@ -40,12 +43,16 @@ namespace VirtoCommerce.Storefront.Services
                 permalink = BuiltInPermalinks[permalink];
             }
 
-            var date = page.PublishedDate ?? page.CreatedDate;
+            var removeLeadingSlash = true;
+            if (permalink.StartsWith("/"))
+                removeLeadingSlash = false;
+
+                var date = page.PublishedDate ?? page.CreatedDate;
 
             permalink = permalink.Replace(":folder", Path.GetDirectoryName(page.RelativePath));
 
             if (!String.IsNullOrEmpty(page.Category))
-                permalink = permalink.Replace(":categories", string.Join("/", page.Category));
+                permalink = permalink.Replace(":categories", page.Category);
             else
                 permalink = permalink.Replace(":categories", string.Join("/", page.Categories.ToArray()));
 
@@ -59,9 +66,36 @@ namespace VirtoCommerce.Storefront.Services
             permalink = permalink.Replace(":i_month", date.Month.ToString());
             permalink = permalink.Replace(":i_day", date.Day.ToString());
 
+            if (permalink.Contains(":category"))
+            {
+                var matches = CategoryRegex.Matches(permalink);
+                if (matches != null && matches.Count > 0)
+                {
+                    foreach (Match match in matches)
+                    {
+                        var replacementValue = string.Empty;
+                        int categoryIndex;
+                        if (match.Success)
+                        {
+                            if (int.TryParse(match.Groups[1].Value, out categoryIndex) && categoryIndex > 0)
+                            {
+                                replacementValue = page.Categories.Skip(categoryIndex - 1).FirstOrDefault();
+                            }
+                            else if (page.Categories.Any())
+                            {
+                                replacementValue = page.Categories.First();
+                            }
+                        }
+
+                        permalink = permalink.Replace(match.Value, replacementValue);
+                    }
+                }
+            }
+
             permalink = SlashesRegex.Replace(permalink, "/");
-        
-            permalink = permalink.TrimStart('/');
+
+            if(removeLeadingSlash)
+                permalink = permalink.TrimStart('/');
 
             return permalink;
         }
