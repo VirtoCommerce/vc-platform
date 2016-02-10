@@ -39,7 +39,7 @@ namespace VirtoCommerce.Storefront.Services
         {
             var workContext = _workContextFactory();
 
-            var retVal = (await _catalogModuleApi.CatalogModuleProductsGetProductByIdsAsync(ids.ToList())).Select(x => x.ToWebModel(workContext.CurrentLanguage, workContext.CurrentCurrency)).ToArray();
+            var retVal = (await _catalogModuleApi.CatalogModuleProductsGetProductByIdsAsync(ids.ToList(), ((int)responseGroup).ToString())).Select(x => x.ToWebModel(workContext.CurrentLanguage, workContext.CurrentCurrency)).ToArray();
 
             var allProducts = retVal.Concat(retVal.SelectMany(x => x.Variations)).ToArray();
 
@@ -47,7 +47,7 @@ namespace VirtoCommerce.Storefront.Services
             {
                 var taskList = new List<Task>();
 
-                if ((responseGroup | ItemResponseGroup.ItemWithInventories) == responseGroup)
+                if ((responseGroup | ItemResponseGroup.Inventory) == responseGroup)
                 {
                     taskList.Add(LoadProductsInventoriesAsync(allProducts));
                 }
