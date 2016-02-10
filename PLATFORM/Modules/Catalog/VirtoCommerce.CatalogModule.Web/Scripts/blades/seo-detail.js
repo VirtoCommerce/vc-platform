@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.seoDetailController', ['$scope', 'virtoCommerce.catalogModule.categories', 'virtoCommerce.catalogModule.items', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', function ($scope, categories, items, dialogService, bladeNavigationService) {
+.controller('virtoCommerce.catalogModule.seoDetailController', ['$scope', 'virtoCommerce.catalogModule.categories', 'virtoCommerce.catalogModule.items', 'platformWebApp.bladeUtils', 'platformWebApp.bladeNavigationService', function ($scope, categories, items, bladeUtils, bladeNavigationService) {
     var blade = $scope.blade;
     
     function initializeBlade(parentEntity) {
@@ -62,30 +62,18 @@
         //var pattern = /^([a-zA-Z0-9\(\)_\-]+)*$/;
         var pattern = /[$+;=%{}[\]|\\\/@ ~#!^*&?:'<>,]/;
         return !pattern.test(value);
-    }
+    };
 
     function isDirty() {
         return !angular.equals($scope.seoInfos, blade.origItem);
-    };
+    }
+
+    function canSave() {
+        return isDirty() && _.every(_.filter($scope.seoInfos, function (data) { return !data.isNew; }), isValid) && _.some($scope.seoInfos, isValid); // isValid formScope && formScope.$valid;
+    }
 
     blade.onClose = function (closeCallback) {
-        if (isDirty()) {
-            var dialog = {
-                id: "confirmItemChange",
-                title: "catalog.dialogs.seo-save.title",
-                message: "catalog.dialogs.seo-save.message"
-            };
-            dialog.callback = function (needSave) {
-                if (needSave) {
-                    $scope.saveChanges();
-                }
-                closeCallback();
-            };
-            dialogService.showConfirmationDialog(dialog);
-        }
-        else {
-            closeCallback();
-        }
+        bladeUtils.showConfirmationIfNeeded(isDirty(), canSave(), blade, $scope.saveChanges, closeCallback, "catalog.dialogs.seo-save.title", "catalog.dialogs.seo-save.message");
     };
 
     var formScope;
@@ -98,12 +86,8 @@
         blade.toolbarCommands = [
             {
                 name: "platform.commands.save", icon: 'fa fa-save',
-                executeMethod: function () {
-                    $scope.saveChanges();
-                },
-                canExecuteMethod: function () {
-                    return isDirty() && _.every(_.filter($scope.seoInfos, function (data) { return !data.isNew; }), isValid) && _.some($scope.seoInfos, isValid); // isValid formScope && formScope.$valid;
-                },
+                executeMethod: $scope.saveChanges,
+                canExecuteMethod: canSave,
                 permission: 'catalog:update'
             },
             {

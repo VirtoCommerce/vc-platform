@@ -76,7 +76,7 @@
                 <div class="form columns clearfix">
                     <div class="column">
                         <div class="form-group">
-                            <label class="form-label">{{ 'stores.blades.store-advanced.labels.fulfillment-center' | translate }} <a href="" ng-click="openFulfillmentCentersList()"><i class="form-ico fa fa-pencil"></i></a></label>
+                            <label class="form-label">{{ 'stores.blades.store-advanced.labels.fulfillment-center' | translate }} <a href="" ng-click="openFulfillmentCentersList()" class="form-edit"><i class="form-ico fa fa-pencil"></i></a></label>
                             <div class="form-input">
                                 <ui-select ng-model="blade.currentEntity.fulfillmentCenter">
                                     <ui-select-match placeholder="{{ 'stores.blades.store-advanced.placeholders.fulfillment-center' | translate }}">{{$select.selected.name}}</ui-select-match>
@@ -89,7 +89,7 @@
                     </div>
                     <div class="column">
                         <div class="form-group">
-                            <label class="form-label">{{ 'stores.blades.store-advanced.labels.returns-fulfillment-center' | translate }} <a href="" ng-click="openFulfillmentCentersList()"><i class="form-ico fa fa-pencil"></i></a></label>
+                            <label class="form-label">{{ 'stores.blades.store-advanced.labels.returns-fulfillment-center' | translate }} <a href="" ng-click="openFulfillmentCentersList()" class="form-edit"><i class="form-ico fa fa-pencil"></i></a></label>
                             <div class="form-input">
                                 <ui-select ng-model="blade.currentEntity.returnsFulfillmentCenter">
                                     <ui-select-match placeholder="{{ 'stores.blades.store-advanced.placeholders.returns-fulfillment-center' | translate }}">{{$select.selected.name}}</ui-select-match>

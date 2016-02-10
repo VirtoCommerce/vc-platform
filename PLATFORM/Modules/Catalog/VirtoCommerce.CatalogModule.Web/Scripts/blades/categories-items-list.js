@@ -73,8 +73,6 @@
             }
 
             $scope.edit = function (listItem) {
-                closeChildrenBlades();
-
                 if (listItem.type === 'category') {
                     blade.setSelectedItem(listItem);
                     blade.showCategoryBlade(listItem);
@@ -149,7 +147,7 @@
                     listItemLinkCount: listEntryLinks.length - listCategoryLinkCount,
                     callback: function (remove) {
                         if (remove) {
-                            closeChildrenBlades();
+                            bladeNavigationService.closeChildrenBlades(blade);
                             blade.isLoading = true;
                             if (listEntryLinks.length > 0) {
                                 listEntries.deletelinks(listEntryLinks, function (data, headers) {
@@ -181,7 +179,7 @@
             }
 
             function mapChecked() {
-                closeChildrenBlades();
+                bladeNavigationService.closeChildrenBlades(blade);
 
                 var selection = $scope.gridApi.selection.getSelectedRows();
                 var listEntryLinks = [];
@@ -315,18 +313,7 @@
             $scope.hasLinks = function (listEntry) {
                 return blade.catalog.virtual && listEntry.links && (listEntry.type === 'category' ? listEntry.links.length > 0 : listEntry.links.length > 1);
             }
-
-            blade.onClose = function (closeCallback) {
-                closeChildrenBlades();
-                closeCallback();
-            };
-
-            function closeChildrenBlades() {
-                angular.forEach(blade.childrenBlades.slice(), function (child) {
-                    bladeNavigationService.closeBlade(child);
-                });
-            }
-
+            
             blade.toolbarCommands = [
                 {
                     name: "platform.commands.refresh",
@@ -450,8 +437,6 @@
                     name: "platform.commands.add",
                     icon: 'fa fa-plus',
                     executeMethod: function () {
-                        closeChildrenBlades();
-
                         var newBlade = {
                             id: 'listItemChild',
                             title: 'catalog.blades.categories-items-add.title',

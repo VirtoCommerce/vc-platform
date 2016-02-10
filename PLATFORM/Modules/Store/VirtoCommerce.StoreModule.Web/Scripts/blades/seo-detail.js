@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.storeModule')
-.controller('virtoCommerce.storeModule.seoDetailController', ['$scope', 'virtoCommerce.storeModule.stores', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'platformWebApp.authService', function ($scope, stores, dialogService, bladeNavigationService, authService) {
+.controller('virtoCommerce.storeModule.seoDetailController', ['$scope', 'virtoCommerce.storeModule.stores', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', function ($scope, stores, dialogService, bladeNavigationService) {
     var blade = $scope.blade;
 
     function initializeBlade(parentEntity) {
@@ -22,7 +22,7 @@
             blade.isLoading = false;
         }
     };
-    
+
     $scope.saveChanges = function () {
         var seoInfos = _.filter($scope.seoInfos, function (data) {
             return isValid(data);
@@ -41,7 +41,7 @@
                 });
         }
     }
-    
+
     function isValid(data) {
         // check required and valid Url requirements
         return data.semanticUrl && $scope.semanticUrlValidator(data.semanticUrl);
@@ -54,7 +54,7 @@
     }
 
     function isDirty() {
-    	return authService.checkPermission('store:update', blade.securityScopes) && !angular.equals($scope.seoInfos, blade.origItem);
+        return blade.hasUpdatePermission() && !angular.equals($scope.seoInfos, blade.origItem);
     };
 
     blade.onClose = function (closeCallback) {
@@ -92,17 +92,15 @@
                 canExecuteMethod: function () {
                     return isDirty() && _.every(_.filter($scope.seoInfos, function (data) { return !data.isNew; }), isValid) && _.some($scope.seoInfos, isValid); // isValid formScope && formScope.$valid;
                 },
-                permission: 'store:update'
+                permission: blade.updatePermission
             },
             {
                 name: "platform.commands.reset", icon: 'fa fa-undo',
                 executeMethod: function () {
                     angular.copy(blade.origItem, $scope.seoInfos);
                 },
-                canExecuteMethod: function () {
-                    return isDirty();
-                },
-                permission: 'store:update'
+                canExecuteMethod: isDirty,
+                permission: blade.updatePermission
             }
         ];
     }

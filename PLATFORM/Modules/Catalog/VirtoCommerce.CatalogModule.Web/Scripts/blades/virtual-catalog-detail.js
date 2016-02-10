@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.virtualCatalogDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.catalogModule.catalogs', 'platformWebApp.dialogService', function ($scope, bladeNavigationService, catalogs, dialogService) {
+.controller('virtoCommerce.catalogModule.virtualCatalogDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.catalogModule.catalogs', 'platformWebApp.bladeUtils', function ($scope, bladeNavigationService, catalogs, bladeUtils) {
     var blade = $scope.blade;
 
     blade.refresh = function (parentRefresh) {
@@ -29,7 +29,14 @@
 
     function isDirty() {
         return !angular.equals(blade.currentEntity, blade.origEntity);
-    };
+    }
+
+    function canSave() {
+        return isDirty() && formScope && formScope.$valid;
+    }
+
+    var formScope;
+    $scope.setForm = function (form) { formScope = form; }
 
     $scope.cancelChanges = function () {
         angular.copy(blade.origEntity, blade.currentEntity);
@@ -59,32 +66,9 @@
     };
 
     blade.onClose = function (closeCallback) {
-        closeChildrenBlades();
-        if (isDirty()) {
-            var dialog = {
-                id: "confirmCurrentBladeClose",
-                title: "catalog.dialogs.virtual-catalog-save.title",
-                message: "catalog.dialogs.virtual-catalog-save.message"
-            };
-            dialog.callback = function (needSave) {
-                if (needSave) {
-                    $scope.saveChanges();
-                }
-                closeCallback();
-            };
-            dialogService.showConfirmationDialog(dialog);
-        }
-        else {
-            closeCallback();
-        }
+        bladeUtils.showConfirmationIfNeeded(isDirty(), canSave(), blade, $scope.saveChanges, closeCallback, "catalog.dialogs.virtual-catalog-save.title", "catalog.dialogs.virtual-catalog-save.message");
     };
-
-    function closeChildrenBlades() {
-        angular.forEach(blade.childrenBlades.slice(), function (child) {
-            bladeNavigationService.closeBlade(child);
-        });
-    }
-
+    
     function initializeToolbar() {
         if (!blade.isNew) {
             blade.toolbarCommands = [
@@ -93,9 +77,7 @@
                     executeMethod: function () {
                         $scope.saveChanges();
                     },
-                    canExecuteMethod: function () {
-                        return isDirty();
-                    },
+                    canExecuteMethod: canSave,
                     permission: 'catalog:update'
                 },
                 {

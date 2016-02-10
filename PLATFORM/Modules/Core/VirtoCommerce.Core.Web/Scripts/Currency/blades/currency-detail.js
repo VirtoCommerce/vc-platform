@@ -2,6 +2,7 @@
 .controller('virtoCommerce.coreModule.currency.currencyDetailController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'virtoCommerce.coreModule.currency.currencyApi',
     function ($scope, dialogService, bladeNavigationService, currencyApi) {
         var blade = $scope.blade;
+        blade.updatePermission = 'core:currency:update';
 
         $scope.saveChanges = function () {
             blade.isLoading = true;
@@ -44,8 +45,12 @@
         }
 
         function isDirty() {
-            return !angular.equals(blade.currentEntity, blade.origEntity);
-        };
+            return !angular.equals(blade.currentEntity, blade.origEntity) && blade.hasUpdatePermission();
+        }
+
+        function canSave() {
+            return isDirty() && formScope && formScope.$valid;
+        }
 
         blade.headIcon = 'fa-money';
 
@@ -56,26 +61,20 @@
                     executeMethod: function () {
                         $scope.saveChanges();
                     },
-                    canExecuteMethod: function () {
-                        return isDirty() && formScope && formScope.$valid;
-                    },
-                    permission: 'core:currency:update'
+                    canExecuteMethod: canSave,
+                    permission: blade.updatePermission
                 },
                 {
                     name: "platform.commands.reset", icon: 'fa fa-undo',
                     executeMethod: function () {
                         angular.copy(blade.origEntity, blade.currentEntity);
                     },
-                    canExecuteMethod: function () {
-                        return isDirty();
-                    },
-                    permission: 'core:currency:update'
+                    canExecuteMethod: isDirty,
+                    permission: blade.updatePermission
                 },
                 {
                     name: "platform.commands.delete", icon: 'fa fa-trash-o',
-                    executeMethod: function () {
-                        deleteEntry();
-                    },
+                    executeMethod: deleteEntry,
                     canExecuteMethod: function () {
                         return !blade.origEntity.isPrimary;
                     },
@@ -107,7 +106,7 @@
         }
 
         blade.onClose = function (closeCallback) {
-            if (isDirty()) {
+            if (canSave()) {
                 var dialog = {
                     id: "confirmItemChange",
                     title: "core.dialogs.currency-save.title",

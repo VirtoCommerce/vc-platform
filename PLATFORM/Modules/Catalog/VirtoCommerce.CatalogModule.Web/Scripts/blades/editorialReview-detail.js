@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.editorialReviewDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'virtoCommerce.catalogModule.items', 'platformWebApp.settings', function ($scope, bladeNavigationService, dialogService, items, settings) {
+.controller('virtoCommerce.catalogModule.editorialReviewDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'virtoCommerce.catalogModule.items', 'platformWebApp.settings', 'platformWebApp.bladeUtils', function ($scope, bladeNavigationService, dialogService, items, settings, bladeUtils) {
     var blade = $scope.blade;
     var promise = settings.getValues({ id: 'Catalog.EditorialReviewTypes' }).$promise;
 
@@ -19,7 +19,11 @@
 
     function isDirty() {
         return !angular.equals($scope.currentEntity, blade.origEntity);
-    };
+    }
+
+    function canSave() {
+        return isDirty() && $scope.currentEntity.content;
+    }
 
     function saveChanges() {
         blade.isLoading = true;
@@ -34,23 +38,7 @@
     };
 
     blade.onClose = function (closeCallback) {
-        if (isDirty() && $scope.currentEntity.content) {
-            var dialog = {
-                id: "confirmCurrentBladeClose",
-                title: "catalog.dialogs.review-save.title",
-                message: "catalog.dialogs.review-save.message",
-                callback: function (needSave) {
-                    if (needSave) {
-                        saveChanges();
-                    }
-                    closeCallback();
-                }
-            }
-            dialogService.showConfirmationDialog(dialog);
-        }
-        else {
-            closeCallback();
-        }
+        bladeUtils.showConfirmationIfNeeded(isDirty(), canSave(), blade, saveChanges, closeCallback, "catalog.dialogs.review-save.title", "catalog.dialogs.review-save.message");
     };
 
     function deleteEntry() {
@@ -83,12 +71,8 @@
     blade.toolbarCommands = [
         {
             name: "platform.commands.save", icon: 'fa fa-save',
-            executeMethod: function () {
-                saveChanges();
-            },
-            canExecuteMethod: function () {
-                return isDirty() && $scope.currentEntity.content;
-            },
+            executeMethod: saveChanges,
+            canExecuteMethod: canSave,
             permission: 'catalog:update'
         },
         {

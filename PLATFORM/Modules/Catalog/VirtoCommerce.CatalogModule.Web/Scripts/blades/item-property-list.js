@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.itemPropertyListController', ['$scope', 'virtoCommerce.catalogModule.items', 'virtoCommerce.catalogModule.properties', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', function ($scope, items, properties, bladeNavigationService, dialogService) {
+.controller('virtoCommerce.catalogModule.itemPropertyListController', ['$scope', 'virtoCommerce.catalogModule.items', 'virtoCommerce.catalogModule.properties', 'platformWebApp.bladeNavigationService', 'platformWebApp.bladeUtils', function ($scope, items, properties, bladeNavigationService, bladeUtils) {
     var blade = $scope.blade;
 
     blade.refresh = function (parentRefresh) {
@@ -30,7 +30,11 @@
 
     function isDirty() {
         return !angular.equals(blade.item, blade.origItem);
-    };
+    }
+
+    function canSave() {
+        return isDirty() && formScope && formScope.$valid;
+    }
 
     function saveChanges() {
         blade.isLoading = true;
@@ -42,23 +46,7 @@
     };
 
     blade.onClose = function (closeCallback) {
-        if (isDirty()) {
-            var dialog = {
-                id: "confirmItemChange",
-                title: "catalog.dialogs.item-save.title",
-                message: "catalog.dialogs.item-save.message"
-            };
-            dialog.callback = function (needSave) {
-                if (needSave) {
-                    saveChanges();
-                }
-                closeCallback();
-            };
-            dialogService.showConfirmationDialog(dialog);
-        }
-        else {
-            closeCallback();
-        }
+        bladeUtils.showConfirmationIfNeeded(isDirty(), canSave(), blade, saveChanges, closeCallback, "catalog.dialogs.item-save.title", "catalog.dialogs.item-save.message");
     };
 
     $scope.editProperty = function (prop) {
@@ -111,9 +99,7 @@
 		    executeMethod: function () {
 		        saveChanges();
 		    },
-		    canExecuteMethod: function () {
-		        return isDirty() && formScope && formScope.$valid;
-		    },
+		    canExecuteMethod: canSave,
 		    permission: 'catalog:update'
 		},
         {

@@ -59,9 +59,7 @@
         $scope.currentChild = childType;
     }
 
-    $scope.setForm = function (form) {
-        $scope.formScope = form;
-    }
+    $scope.setForm = function (form) { $scope.formScope = form; }
 
     function isDirty() {
         return !angular.equals(blade.currentEntity, blade.origEntity);

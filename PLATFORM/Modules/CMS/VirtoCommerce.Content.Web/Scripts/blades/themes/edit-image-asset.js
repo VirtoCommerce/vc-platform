@@ -1,6 +1,7 @@
 ﻿angular.module('virtoCommerce.contentModule')
 .controller('virtoCommerce.contentModule.editImageAssetController', ['$scope', 'platformWebApp.validators', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'virtoCommerce.contentModule.themes', 'FileUploader', function ($scope, validators, dialogService, bladeNavigationService, themes, FileUploader) {
     var blade = $scope.blade;
+    blade.updatePermission = 'content:update';
 
     $scope.validators = validators;
     var formScope;
@@ -27,26 +28,20 @@
 			    canExecuteMethod: function () {
 			        return isDirty() && formScope.$valid;
 			    },
-			    permission: 'content:update'
+			    permission: blade.updatePermission
 			},
 			{
 			    name: "platform.commands.reset", icon: 'fa fa-undo',
 			    executeMethod: function () {
 			        angular.copy(blade.origEntity, blade.currentEntity);
 			    },
-			    canExecuteMethod: function () {
-			        return isDirty();
-			    },
-			    permission: 'content:update'
+			    canExecuteMethod: isDirty,
+			    permission: blade.updatePermission
 			},
 			{
 			    name: "platform.commands.delete", icon: 'fa fa-trash-o',
-			    executeMethod: function () {
-			        deleteEntry();
-			    },
-			    canExecuteMethod: function () {
-			        return !isDirty();
-			    },
+			    executeMethod: deleteEntry,
+			    canExecuteMethod: function () { return true; },
 			    permission: 'content:delete'
 			}];
         }
@@ -63,7 +58,7 @@
 			    canExecuteMethod: function () {
 			        return isDirty() && isCanSave();
 			    },
-			    permission: 'content:update'
+			    permission: 'content:create'
 			}];
 
             blade.isLoading = false;
@@ -113,7 +108,7 @@
     };
 
     function isDirty() {
-        return !angular.equals(blade.currentEntity, blade.origEntity);
+        return !angular.equals(blade.currentEntity, blade.origEntity) && blade.hasUpdatePermission();
     };
 
     function deleteEntry() {

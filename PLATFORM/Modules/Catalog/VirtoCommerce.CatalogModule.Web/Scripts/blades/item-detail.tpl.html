@@ -14,7 +14,7 @@
                 <div class="form-group">
                     <label class="form-label">{{ 'catalog.blades.item-detail.labels.name' | translate }}</label>
                     <div class="form-input">
-                        <textarea class="__small" ng-class="{'error': detailForm.itemName.$invalid && !detailForm.itemName.$pristine}" cols="30" rows="2" ng-model="blade.item.name" name="itemName" placeholder="{{ 'catalog.blades.item-detail.placeholders.sku' | translate }}"></textarea>
+                        <textarea class="__small" ng-class="{'error': detailForm.itemName.$invalid && !detailForm.itemName.$pristine}" required cols="30" rows="2" ng-model="blade.item.name" name="itemName" placeholder="{{ 'catalog.blades.item-detail.placeholders.sku' | translate }}"></textarea>
                     </div>
                 </div>
                 <div class="form-group">
@@ -85,7 +85,7 @@
                         </div>
                         <div class="column">
                             <div class="form-group">
-                                <label class="form-label">{{ 'catalog.blades.item-detail.labels.tax-type' | translate }} <a href="" ng-click="openDictionarySettingManagement()" va-permission="platform:setting:update"><i class="form-ico fa fa-pencil"></i></a></label>
+                                <label class="form-label">{{ 'catalog.blades.item-detail.labels.tax-type' | translate }} <a href="" ng-click="openDictionarySettingManagement()" class="form-edit" va-permission="platform:setting:update"><i class="form-ico fa fa-pencil"></i></a></label>
                                 <div class="form-input">
                                     <ui-select ng-model="blade.item.taxType">
                                         <ui-select-match allow-clear="true" placeholder="{{ 'catalog.blades.item-detail.placeholders.tax-type' | translate }}">{{$select.selected}}</ui-select-match>
@@ -138,7 +138,7 @@
                         </div>
                         <div class="column">
                             <div class="form-group">
-                                <label class="form-label">{{ 'catalog.blades.item-detail.labels.tax-type' | translate }} <a href="" ng-click="openDictionarySettingManagement()" va-permission="platform:setting:update"><i class="form-ico fa fa-pencil"></i></a></label>
+                                <label class="form-label">{{ 'catalog.blades.item-detail.labels.tax-type' | translate }} <a href="" ng-click="openDictionarySettingManagement()" class="form-edit" va-permission="platform:setting:update"><i class="form-ico fa fa-pencil"></i></a></label>
                                 <div class="form-input">
                                     <ui-select ng-model="blade.item.taxType">
                                         <ui-select-match allow-clear="true" placeholder="{{ 'catalog.blades.item-detail.placeholders.tax-type' | translate }}">{{$select.selected}}</ui-select-match>

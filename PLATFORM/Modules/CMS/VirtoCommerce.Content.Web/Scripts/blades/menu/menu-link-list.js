@@ -1,6 +1,7 @@
 ﻿angular.module('virtoCommerce.contentModule')
 .controller('virtoCommerce.contentModule.menuLinkListController', ['$scope', 'virtoCommerce.contentModule.menus', 'virtoCommerce.contentModule.stores', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', function ($scope, menus, menusStores, bladeNavigationService, dialogService) {
     var blade = $scope.blade;
+    blade.updatePermission = 'content:update';
     blade.selectedItemIds = [];
 
     blade.initialize = function () {
@@ -25,12 +26,8 @@
                 },
 				{
 				    name: "content.commands.save-list", icon: 'fa fa-save',
-				    executeMethod: function () {
-				        blade.saveChanges();
-				    },
-				    canExecuteMethod: function () {
-				        return canSave();
-				    },
+				    executeMethod: blade.saveChanges,
+				    canExecuteMethod: canSave,
 				    permission: 'content:update'
 				}];
 
@@ -51,19 +48,13 @@
                             blade.currentEntity.menuLinks.push(newEntity);
                             blade.recalculatePriority();
                         },
-                        canExecuteMethod: function () {
-                            return true;
-                        },
+                        canExecuteMethod: function () { return true; },
                         permission: 'content:update'
                     },
 					{
 					    name: "content.commands.save-list", icon: 'fa fa-save',
-					    executeMethod: function () {
-					        blade.saveChanges();
-					    },
-					    canExecuteMethod: function () {
-					        return canSave();
-					    },
+					    executeMethod: blade.saveChanges,
+					    canExecuteMethod: canSave,
 					    permission: 'content:update'
 					},
 					{
@@ -72,7 +63,7 @@
 					        angular.copy(blade.origEntity, blade.currentEntity);
 					    },
 					    canExecuteMethod: function () {
-					        return !angular.equals(blade.origEntity, blade.currentEntity);
+					        return !angular.equals(blade.origEntity, blade.currentEntity) && blade.hasUpdatePermission();
 					    },
 					    permission: 'content:update'
 					},
@@ -115,10 +106,10 @@
         menus.checkList({ storeId: blade.choosenStoreId, id: blade.currentEntity.id, name: blade.currentEntity.name, language: blade.currentEntity.language }, function (data) {
             if (Boolean(data.result)) {
                 menus.update({ storeId: blade.choosenStoreId }, blade.currentEntity, function (data) {
-                	blade.parentBlade.initialize();
-                	blade.newList = false;
-                	blade.isLoading = false;
-                	blade.origEntity = angular.copy(blade.currentEntity);
+                    blade.parentBlade.initialize();
+                    blade.newList = false;
+                    blade.isLoading = false;
+                    blade.origEntity = angular.copy(blade.currentEntity);
                 },
                 function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
             }
@@ -146,7 +137,7 @@
 				    return !(!(angular.isUndefined(link.title) || link.title === null) &&
 						!(angular.isUndefined(link.url) || link.url === null));
 				}).length;
-        return listNameIsRight && linksIsRight && blade.currentEntity.menuLinks.length > 0;
+        return listNameIsRight && linksIsRight && blade.currentEntity.menuLinks.length > 0 && blade.hasUpdatePermission();
     }
 
     blade.deleteList = function () {

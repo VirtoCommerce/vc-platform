@@ -1,7 +1,8 @@
 ﻿angular.module('virtoCommerce.storeModule')
-.controller('virtoCommerce.storeModule.storeDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.storeModule.stores', 'virtoCommerce.catalogModule.catalogs', 'platformWebApp.settings', 'platformWebApp.settings.helper', 'platformWebApp.dialogService', 'platformWebApp.authService', 'virtoCommerce.coreModule.currency.currencyUtils',
-    function ($scope, bladeNavigationService, stores, catalogs, settings, settingsHelper, dialogService, authService, currencyUtils) {
+.controller('virtoCommerce.storeModule.storeDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.storeModule.stores', 'virtoCommerce.catalogModule.catalogs', 'platformWebApp.settings', 'platformWebApp.settings.helper', 'platformWebApp.dialogService', 'virtoCommerce.coreModule.currency.currencyUtils',
+    function ($scope, bladeNavigationService, stores, catalogs, settings, settingsHelper, dialogService, currencyUtils) {
         var blade = $scope.blade;
+        blade.updatePermission = 'store:update';
 
         blade.refresh = function (parentRefresh) {
             stores.get({ id: blade.currentEntityId }, function (data) {
@@ -32,13 +33,13 @@
             blade.isLoading = false;
 
             //sets security scopes for scope bounded ACL
-            if (blade.currentEntity && blade.currentEntity.securityScopes && angular.isArray(blade.currentEntity.securityScopes)) {
+            if (blade.currentEntity.securityScopes && angular.isArray(blade.currentEntity.securityScopes)) {
                 blade.securityScopes = blade.currentEntity.securityScopes;
             }
         };
 
         function isDirty() {
-            return authService.checkPermission('store:update', blade.securityScopes) && !angular.equals(blade.currentEntity, blade.origEntity);
+            return blade.hasUpdatePermission() && !angular.equals(blade.currentEntity, blade.origEntity);
         };
 
         $scope.saveChanges = function () {
@@ -126,19 +127,13 @@
                 executeMethod: function () {
                     angular.copy(blade.origEntity, blade.currentEntity);
                 },
-                canExecuteMethod: function () {
-                    return isDirty();
-                },
+                canExecuteMethod: isDirty,
                 permission: 'store:update'
             },
             {
                 name: "platform.commands.delete", icon: 'fa fa-trash-o',
-                executeMethod: function () {
-                    deleteEntry();
-                },
-                canExecuteMethod: function () {
-                    return !isDirty();
-                },
+                executeMethod: deleteEntry,
+                canExecuteMethod: function () { return true; },
                 permission: 'store:delete'
             }
         ];

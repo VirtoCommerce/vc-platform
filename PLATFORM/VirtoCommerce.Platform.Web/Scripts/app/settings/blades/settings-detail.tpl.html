@@ -5,7 +5,7 @@
                 <fieldset ng-repeat="groupName in blade.groupNames" ng-init="setForm(objectsForm)">
                     <legend>{{groupName==='undefined'?'General':groupName}}</legend>
                     <div class="form-group" ng-repeat="data in blade.currentEntities[groupName]" title="{{data.description}}">
-                        <label class="form-label">{{data.title}} <a href="" ng-click="editArray(data);" ng-if="data.isArray"><i class="form-ico fa fa-pencil"></i></a></label>
+                        <label class="form-label">{{data.title}} <a href="" ng-click="editArray(data);" ng-if="data.isArray" class="form-edit"><i class="form-ico fa fa-pencil"></i></a></label>
                         <va-generic-value-input ng-model="data" ng-if="!data.isArray" get-dictionary-values="getDictionaryValues" />
                     </div>
                 </fieldset>

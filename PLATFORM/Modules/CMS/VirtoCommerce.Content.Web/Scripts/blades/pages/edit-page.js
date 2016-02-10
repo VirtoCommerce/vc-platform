@@ -5,6 +5,7 @@
     $scope.setForm = function (form) { formScope = form; }
 
     var blade = $scope.blade;
+    blade.updatePermission = 'content:update';
     blade.editAsMarkdown = true;
     blade.editAsHtml = false;
 
@@ -15,10 +16,10 @@
             blade.parentBlade.initialize();
 
             if (!blade.newPage) {
-            	pages.getPage({ storeId: blade.choosenStoreId, language: blade.choosenPageLanguage ? blade.choosenPageLanguage: "undef", pageName: blade.choosenPageName }, function (data) {
+                pages.getPage({ storeId: blade.choosenStoreId, language: blade.choosenPageLanguage ? blade.choosenPageLanguage : "undef", pageName: blade.choosenPageName }, function (data) {
                     blade.isLoading = false;
                     blade.currentEntity = data;
-                   
+
                     blade.isByteContent = blade.isFile();
 
                     if (!blade.isFile()) {
@@ -109,9 +110,9 @@
             $scope.blade.toolbarCommands.push(
 				{
 				    name: "content.commands.save-page", icon: 'fa fa-save',
-				    executeMethod: function () { $scope.saveChanges(); },
-				    canExecuteMethod: function () { return blade.isDirty() && formScope.$valid; },
-				    permission: 'content:update'
+				    executeMethod: $scope.saveChanges,
+				    canExecuteMethod: function () { return isDirty() && formScope.$valid; },
+				    permission: blade.updatePermission
 				});
             $scope.blade.toolbarCommands.push(
 				{
@@ -128,13 +129,15 @@
 				        }
 				        $scope.$broadcast('resetContent', { body: blade.body });
 				    },
-				    canExecuteMethod: function () { return blade.isDirty(); },
-				    permission: 'content:update'
+				    canExecuteMethod: isDirty,
+				    permission: blade.updatePermission
 				});
             $scope.blade.toolbarCommands.push(
 				{
 				    name: "content.commands.delete-page", icon: 'fa fa-trash-o',
-				    executeMethod: function () { blade.deleteEntry(); }, canExecuteMethod: function () { return true; }, permission: 'content:delete'
+				    executeMethod: deleteEntry,
+				    canExecuteMethod: function () { return true; },
+				    permission: 'content:delete'
 				});
             $scope.blade.toolbarCommands.push(
                 {
@@ -163,14 +166,14 @@
             $scope.blade.toolbarCommands.push(
 				{
 				    name: "platform.commands.create", icon: 'fa fa-save',
-				    executeMethod: function () { $scope.saveChanges(); },
-				    canExecuteMethod: function () { return blade.isDirty() && formScope.$valid; },
-				    permission: 'content:update'
+				    executeMethod: $scope.saveChanges,
+				    canExecuteMethod: function () { return isDirty() && formScope.$valid; },
+				    permission: 'content:create'
 				});
         }
     }
 
-    blade.isDirty = function () {
+    function isDirty() {
         if (!angular.isUndefined(blade.currentEntity) && !blade.isFile()) {
             if (blade.currentEntity.content.indexOf('---\n') !== -1 || blade.metadata !== '') {
                 blade.currentEntity.content = '---\n' + blade.metadata.trim() + '\n---\n' + blade.body.trim();
@@ -179,9 +182,9 @@
                 blade.currentEntity.content = blade.body;
             }
         }
-        var retVal = !angular.equals(blade.currentEntity, blade.origEntity);
+        var retVal = !angular.equals(blade.currentEntity, blade.origEntity) && blade.hasUpdatePermission();
         return retVal;
-    };
+    }
 
     blade.isFile = function () {
         if (!angular.isUndefined(blade.currentEntity)) {
@@ -283,21 +286,12 @@
         dialogService.showConfirmationDialog(dialog);
     }
 
-    blade.closeChildrenBlades = function () {
-        if ($scope.blade.childrenBlades) {
-            angular.forEach($scope.blade.childrenBlades.slice(), function (child) {
-                bladeNavigationService.closeBlade(child);
-            });
-        }
-    }
-
     function isCanSave() {
-    	return blade.currentEntity && (!(angular.isUndefined(blade.currentEntity.name) || blade.currentEntity.name === null) &&
-			!(angular.isUndefined(blade.currentEntity.content) || blade.currentEntity.content === null));
+        return blade.currentEntity && blade.currentEntity.name && blade.currentEntity.content;
     }
 
     blade.onClose = function (closeCallback) {
-        if ((blade.isDirty() && !blade.newPage) || (isCanSave() && blade.newPage)) {
+        if ((isDirty() && !blade.newPage) || (isCanSave() && blade.newPage)) {
             var dialog = {
                 id: "confirmCurrentBladeClose",
                 title: "content.dialogs.page-save.title",

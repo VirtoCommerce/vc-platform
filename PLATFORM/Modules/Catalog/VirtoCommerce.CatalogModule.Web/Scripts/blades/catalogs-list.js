@@ -1,6 +1,6 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.catalogsListController', ['$scope', 'virtoCommerce.catalogModule.catalogs', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.authService', 'platformWebApp.uiGridHelper', 'filterFilter',
-function ($scope, catalogs, bladeNavigationService, dialogService, authService, uiGridHelper, filterFilter) {
+.controller('virtoCommerce.catalogModule.catalogsListController', ['$scope', 'virtoCommerce.catalogModule.catalogs', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.authService', 'platformWebApp.uiGridHelper', 'filterFilter', 'platformWebApp.bladeUtils',
+function ($scope, catalogs, bladeNavigationService, dialogService, authService, uiGridHelper, filterFilter, bladeUtils) {
     $scope.uiGridConstants = uiGridHelper.uiGridConstants;
     var blade = $scope.blade;
     var selectedNode = null;
@@ -9,7 +9,11 @@ function ($scope, catalogs, bladeNavigationService, dialogService, authService, 
     blade.refresh = function () {
         blade.isLoading = true;
 
-        catalogs.getCatalogs({}, function (results) {
+        catalogs.getCatalogs({
+            sort: uiGridHelper.getSortExpression($scope),
+            start: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
+            count: $scope.pageSettings.itemsPerPageCount
+        }, function (results) {
             blade.isLoading = false;
             //filter the catalogs in which we not have access
             blade.currentEntities = results;
@@ -153,10 +157,12 @@ function ($scope, catalogs, bladeNavigationService, dialogService, authService, 
 
     // ui-grid
     $scope.setGridOptions = function (gridOptions) {
-        uiGridHelper.initialize($scope, gridOptions,
-        function (gridApi) {
+        uiGridHelper.initialize($scope, gridOptions, function (gridApi) {
             gridApi.grid.registerRowsProcessor($scope.singleFilter, 90);
+            uiGridHelper.bindRefreshOnSortChanged($scope);
         });
+
+        bladeUtils.initializePagination($scope);
     };
 
     $scope.singleFilter = function (renderableRows) {
@@ -171,5 +177,5 @@ function ($scope, catalogs, bladeNavigationService, dialogService, authService, 
     };
 
     // actions on load
-    blade.refresh();
+    // blade.refresh();
 }]);

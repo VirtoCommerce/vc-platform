@@ -1,6 +1,7 @@
 ﻿angular.module('virtoCommerce.contentModule')
 .controller('virtoCommerce.contentModule.editAssetController', ['$scope', 'platformWebApp.validators', 'platformWebApp.dialogService', 'virtoCommerce.contentModule.themes', '$timeout', 'platformWebApp.bladeNavigationService', function ($scope, validators, dialogService, themes, $timeout, bladeNavigationService) {
     var blade = $scope.blade;
+    blade.updatePermission = 'content:update';
     var codemirrorEditor;
 
     $scope.validators = validators;
@@ -47,7 +48,7 @@
                     blade.origEntity = angular.copy(blade.currentEntity);
                 }, 1);
             },
-            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+            function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
 
             $scope.blade.toolbarCommands = [
 			{
@@ -56,25 +57,21 @@
 			    canExecuteMethod: function () {
 			        return isDirty();
 			    },
-			    permission: 'content:update'
+			    permission: blade.updatePermission
 			},
 			{
 			    name: "platform.commands.reset", icon: 'fa fa-undo',
 			    executeMethod: function () {
 			        angular.copy(blade.origEntity, blade.currentEntity);
 			    },
-			    canExecuteMethod: function () {
-			        return isDirty();
-			    },
-			    permission: 'content:update'
+			    canExecuteMethod: isDirty,
+			    permission: blade.updatePermission
 			},
 			{
 			    name: "platform.commands.delete", icon: 'fa fa-trash-o',
-			    executeMethod: function () {
-			        deleteEntry();
-			    },
+			    executeMethod: deleteEntry,
 			    canExecuteMethod: function () {
-			        return !isDirty();
+			        return true;
 			    },
 			    permission: 'content:delete'
 			}];
@@ -87,15 +84,21 @@
 			    canExecuteMethod: function () {
 			        return isDirty() && formScope.$valid;
 			    },
-			    permission: 'content:update'
+			    permission: 'content:create'
 			}];
 
             blade.isLoading = false;
         }
     };
 
+    function isCanSave() {
+        return blade.currentEntity && blade.currentEntity.name && blade.currentEntity.content;
+    }
+
     function isDirty() {
-        return !angular.equals(blade.currentEntity, blade.origEntity) && !angular.isUndefined(blade.currentEntity.name) && !angular.isUndefined(blade.currentEntity.content);
+        return !angular.equals(blade.currentEntity, blade.origEntity)
+            && isCanSave()
+            && (blade.newAsset || blade.hasUpdatePermission());
     };
 
     $scope.saveChanges = function () {
@@ -118,7 +121,7 @@
                 blade.initializeBlade();
             }
         },
-        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+        function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
     };
 
     function deleteEntry() {
@@ -134,23 +137,11 @@
                         $scope.bladeClose();
                         $scope.blade.parentBlade.initialize(true);
                     },
-                    function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+                    function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
                 }
             }
         }
         dialogService.showConfirmationDialog(dialog);
-    }
-
-    function isCanSave() {
-        if (!angular.isUndefined(blade.currentEntity)) {
-            if (!angular.isUndefined(blade.currentEntity.name) && !angular.isUndefined(blade.currentEntity.content)) {
-                return true;
-            }
-            return false;
-        }
-        else {
-            return false;
-        }
     }
 
     function endsWith(str, suffix) {

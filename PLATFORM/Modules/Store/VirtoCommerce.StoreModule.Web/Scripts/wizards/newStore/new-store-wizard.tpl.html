@@ -31,7 +31,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">{{ 'stores.blades.store-detail.labels.default-language' | translate }} <a href="" ng-click="openLanguagesDictionarySettingManagement()" va-permission="platform:setting:update"><i class="form-ico fa fa-pencil"></i></a></label>
+                    <label class="form-label">{{ 'stores.blades.store-detail.labels.default-language' | translate }} <a href="" ng-click="openLanguagesDictionarySettingManagement()" class="form-edit" va-permission="platform:setting:update"><i class="form-ico fa fa-pencil"></i></a></label>
                     <div class="form-input">
                         <ui-select ng-model="blade.currentEntity.defaultLanguage" required>
                             <ui-select-match placeholder="{{ 'stores.blades.store-detail.placeholders.default-language' | translate }}">{{$select.selected}}</ui-select-match>
@@ -42,7 +42,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">{{ 'stores.blades.store-detail.labels.default-currency' | translate }} <a href="" ng-click="currencyUtils.editCurrencies(blade)"><i class="form-ico fa fa-pencil"></i></a></label>
+                    <label class="form-label">{{ 'stores.blades.store-detail.labels.default-currency' | translate }} <a href="" ng-click="currencyUtils.editCurrencies(blade)" class="form-edit"><i class="form-ico fa fa-pencil"></i></a></label>
                     <div class="form-input" ng-init="currencies = currencyUtils.getCurrencies()">
                         <ui-select ng-model="blade.currentEntity.defaultCurrency" required>
                             <ui-select-match placeholder="{{ 'stores.blades.store-detail.placeholders.default-currency' | translate }}">{{$select.selected.code}}</ui-select-match>
