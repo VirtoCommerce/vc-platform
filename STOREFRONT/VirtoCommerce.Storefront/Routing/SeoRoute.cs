@@ -109,7 +109,7 @@ namespace VirtoCommerce.Storefront.Routing
                 }
                 else if(!String.IsNullOrEmpty(path))
                 {
-                    var contentPage = TryToFindContentPageWithUrl(path, workContext.CurrentStore, workContext.CurrentLanguage);
+                    var contentPage = TryToFindContentPageWithUrl(workContext, path);
                     if(contentPage != null)
                     {
                         data.Values["controller"] = "Page";
@@ -127,13 +127,9 @@ namespace VirtoCommerce.Storefront.Routing
             return data;
         }
 
-        private ContentItem TryToFindContentPageWithUrl(string url, Store store, Language language)
+        private ContentItem TryToFindContentPageWithUrl(WorkContext workContext, string url)
         {
-            if (store == null)
-                return null;
-
-            var cacheKey = string.Join(":", "AllStaticContentForLanguage", store.Id, language.CultureName);
-            var retVal = _contentService.LoadContentItems(store, () => new ContentPage(), () => new BlogArticle());
+            var retVal = workContext.Pages;
 
             url = url.TrimStart('/');
             return retVal.FirstOrDefault(x => string.Equals(x.Permalink, url, StringComparison.CurrentCultureIgnoreCase) || string.Equals(x.Url, url, StringComparison.InvariantCultureIgnoreCase));

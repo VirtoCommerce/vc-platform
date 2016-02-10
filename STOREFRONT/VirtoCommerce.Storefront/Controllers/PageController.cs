@@ -22,10 +22,18 @@ namespace VirtoCommerce.Storefront.Controllers
         }
 
         //Called from SEO route by page permalink
-        public ActionResult GetContentPage(ContentPage page)
+        public ActionResult GetContentPage(ContentItem page)
         {
-            base.WorkContext.CurrentPage = page;
-            return View("page", page.Layout, base.WorkContext);
+            if (page is BlogArticle)
+            {
+                base.WorkContext.CurrentBlogArticle = page as BlogArticle;
+                return View("article", page.Layout, base.WorkContext);
+            }
+            else
+            {
+                base.WorkContext.CurrentPage = page as ContentPage;
+                return View("page", page.Layout, base.WorkContext);
+            }
         }
 
         //// GET: /pages/{page}

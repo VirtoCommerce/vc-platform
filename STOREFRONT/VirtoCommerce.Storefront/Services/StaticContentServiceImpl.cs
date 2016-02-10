@@ -36,6 +36,14 @@ namespace VirtoCommerce.Storefront.Services
         private readonly Func<IStorefrontUrlBuilder> _urlBuilderFactory;
         private readonly LinkHelper _linkHelper;
 
+        private static readonly Regex TitleAndLanguageFromPathRegex = new Regex(
+   string.Format(@"(?<title>[^{0}]*)\.(?<language>[A-z]{{2}}-[A-z]{{2}})\.[^\.]+$",
+       Regex.Escape(Path.DirectorySeparatorChar.ToString())),
+   RegexOptions.Compiled);
+
+        private static readonly Regex BlogFromPathRegex = new Regex((@"blogs\/(?<blog>[^\/]*)\/([^\/]*)\.[^\.]+$"),
+            RegexOptions.Compiled);
+
         [CLSCompliant(false)]
         public StaticContentServiceImpl(string baseLocalPath, Markdown markdownRender, ILiquidThemeEngine liquidEngine,
                                         ICacheManager<object> cacheManager, Func<WorkContext> workContextFactory,
@@ -62,15 +70,15 @@ namespace VirtoCommerce.Storefront.Services
         /// <param name="pageIndex"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        public IPagedList<ContentItem> LoadContentItems(Store store, Func<ContentItem> contentItemFactory, Func<ContentItem> blogItemFactory)
+        public ContentItem[] LoadContentItems(Store store)
         {
             var cacheKey = string.Join(":", "AllStaticContentForLanguage", store.Id);
-            var retVal = _cacheManager.Get(cacheKey, "ContentRegion", () => LoadAllContentItems(store, contentItemFactory, blogItemFactory));
+            var retVal = _cacheManager.Get(cacheKey, "ContentRegion", () => LoadAllContentItems(store));
             return retVal;
         }
         #endregion
 
-        private IPagedList<ContentItem> LoadAllContentItems(Store store, Func<ContentItem> contentItemFactory, Func<ContentItem> blogItemFactory, bool renderContent = true)
+        private ContentItem[] LoadAllContentItems(Store store, bool renderContent = true)
         {
             var retVal = new List<ContentItem>();
             var totalCount = 0;
@@ -104,10 +112,22 @@ namespace VirtoCommerce.Storefront.Services
                 totalCount = localizedFiles.Count();
                 foreach (var localizedFile in localizedFiles.OrderBy(x => x.Name))
                 {
-                    var relativePath = localizedFile.LocalPath.Replace(baseStorePath, string.Empty);
-                    var contentItem = contentItemFactory();
+                    var relativePath = localizedFile.LocalPath.Replace(baseStorePath, string.Empty).Replace("\\", "/");
+
+                    ContentItem contentItem;
+                    if (relativePath.StartsWith("blogs/"))
+                    {
+                        contentItem = new BlogArticle() {  BlogName = GetBlog(relativePath) };
+                    }
+                    else
+                        contentItem = new ContentPage();
+
                     contentItem.Name = localizedFile.Name;
-                    //contentItem.Language = language;
+
+                    var languageCode = GetLanguage(Path.GetFileName(relativePath));
+
+                    contentItem.Language = new Language(languageCode);
+
                     contentItem.RelativePath = relativePath;
                     contentItem.FileName = Path.GetFileName(relativePath);
                     contentItem.LocalPath = localizedFile.LocalPath;
@@ -115,11 +135,14 @@ namespace VirtoCommerce.Storefront.Services
                     LoadAndRenderContentItem(contentItem, renderContent);
 
                     // Load template permalink from settings
-                    var permalinkTemplate = "none";
+                    var permalinkTemplate = string.Empty;
                     if (!String.IsNullOrEmpty(contentItem.Permalink))
                         permalinkTemplate = contentItem.Permalink;
                     else if (config != null && config.Contains("permalink"))
                         permalinkTemplate = (string)config["permalink"];
+
+                    if (String.IsNullOrEmpty(permalinkTemplate))
+                        permalinkTemplate = "none";
 
                     contentItem.Url = _linkHelper.EvaluatePermalink(permalinkTemplate, contentItem);
 
@@ -127,10 +150,23 @@ namespace VirtoCommerce.Storefront.Services
                 }
             }
 
-            return new StaticPagedList<ContentItem>(retVal, 0, 100, totalCount);
+            return retVal.ToArray();
         }
 
-         private void LoadAndRenderContentItem(ContentItem contentItem, bool renderContent)
+        public string GetLanguage(string file)
+        {
+          var lang = TitleAndLanguageFromPathRegex.Match(file).Groups["language"].Value;
+          return lang;
+         
+        }
+
+        public string GetBlog(string file)
+        {
+            var blog = BlogFromPathRegex.Match(file).Groups["blog"].Value;
+            return blog;
+        }
+
+        private void LoadAndRenderContentItem(ContentItem contentItem, bool renderContent)
         {
             var fileInfo = new FileInfo(contentItem.LocalPath);
 

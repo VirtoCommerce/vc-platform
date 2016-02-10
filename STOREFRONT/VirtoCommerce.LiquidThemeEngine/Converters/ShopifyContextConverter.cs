@@ -1,6 +1,8 @@
-﻿using System.Linq;
+﻿using PagedList;
+using System.Linq;
 using VirtoCommerce.LiquidThemeEngine.Objects;
 using VirtoCommerce.Storefront.Model.Common;
+using VirtoCommerce.Storefront.Model.StaticContent;
 using storefrontModel = VirtoCommerce.Storefront.Model;
 
 namespace VirtoCommerce.LiquidThemeEngine.Converters
@@ -50,6 +52,21 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             if (workContext.CurrentLinkLists != null)
             {
                 result.Linklists = new Linklists(workContext.CurrentLinkLists.Select(x => x.ToShopifyModel()));
+            }
+
+            if (workContext.Pages != null)
+            {
+                result.Pages = new Pages(workContext.Pages.OfType<ContentPage>().Select(x => x.ToShopifyModel()));
+
+                var blogs = workContext.Pages.OfType<BlogArticle>().GroupBy(x => x.BlogName, x=>x).Select(x => 
+                        new storefrontModel.StaticContent.Blog()
+                        {
+                            Name = x.Key,
+                            Title = x.Key,
+                            Articles = new StorefrontPagedList<BlogArticle>(x, 1, 1000, x.Count(), null)
+                        });
+
+                result.Blogs = new Blogs(blogs.Select(x=>x.ToShopifyModel()));
             }
 
             if (workContext.CurrentOrder != null)

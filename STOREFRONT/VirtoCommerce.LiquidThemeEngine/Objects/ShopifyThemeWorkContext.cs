@@ -44,6 +44,16 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         /// </summary>
         public Linklists Linklists { get; set; }
 
+        /// <summary>
+        /// Contains a collection of all pages
+        /// </summary>
+        public Pages Pages { get; set; }
+
+        /// <summary>
+        /// Contains collection of all blogs
+        /// </summary>
+        public Blogs Blogs { get; set; }
+
         public Product Product { get; set; }
 
         public Page Page { get; set; }

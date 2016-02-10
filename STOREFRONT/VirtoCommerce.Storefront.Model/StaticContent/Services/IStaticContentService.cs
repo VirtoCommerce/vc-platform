@@ -14,6 +14,6 @@ namespace VirtoCommerce.Storefront.Model.Services
     /// </summary>
     public interface IStaticContentService
     {
-        IPagedList<ContentItem> LoadContentItems(Store store, Func<ContentItem> pageItemFactory, Func<ContentItem> blogItemFactory);
+        ContentItem[] LoadContentItems(Store store);
     }
 }

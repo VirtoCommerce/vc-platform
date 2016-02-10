@@ -16,6 +16,9 @@ namespace VirtoCommerce.Storefront.Model.StaticContent
         public override string Type { get { return "post"; } }
 
         public string Excerpt { get; set; }
+
+        public string BlogName { get; set; }
+
         public string ImageUrl { get; set; }
 
         public override void LoadContent(string content, IDictionary<string, IEnumerable<string>> metaInfoMap)

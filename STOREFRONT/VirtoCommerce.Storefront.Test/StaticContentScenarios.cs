@@ -11,60 +11,79 @@ using VirtoCommerce.Storefront.Model.Services;
 using VirtoCommerce.Storefront.Model.StaticContent;
 using VirtoCommerce.Storefront.Services;
 using Xunit;
+using Moq;
 
 namespace VirtoCommerce.Storefront.Test
 {
     public class StaticContentScenarios
     {
         [Fact]
-        //public void LoadPageForLanguage_PageLoadedFromFolder()
-        //{
-        //    var language = new Model.Language("en-US");
-        //    var service = GetStaticContentService();
-        //    var result = service.LoadContentItemsByUrl("/about_us", new Model.Store { Id = "TestStore" }, language, () => new ContentPage());
+        public void LoadPageForLanguage_PageLoadedFromFolder()
+        {
+            var language = new Model.Language("en-US");
+            var service = GetStaticContentService();
+            var result = service.LoadContentItems(new Model.Store { Id = "TestStore" });
 
-        //    var page = result.Single();
-        //    Assert.IsType<ContentPage>(page);
-        //    Assert.Equal(page.Language, language);
-        //    Assert.NotEmpty(page.Content);
-        //    Assert.Equal(page.Url, "folder1/about_us");
-        //    Assert.Equal(Path.GetFileName(page.LocalPath), "about_us.en-US.md");
-        //}
+            var page = result.Where(x=>x.Url.Equals("folder1/about_us") && x.Language == language).Single();
+            Assert.IsType<ContentPage>(page);
+            Assert.Equal(page.Language, language);
+            Assert.NotEmpty(page.Content);
+            Assert.Equal(page.Url, "folder1/about_us");
+            Assert.Equal(Path.GetFileName(page.LocalPath), "about_us.en-US.md");
+        }
 
+        [Fact]
+        public void LoadPageForMissedLanguage_PageLoadedWithDefaultLanguage()
+        {
+            var language = new Model.Language("es-ES");
+            var service = GetStaticContentService();
+            var result = service.LoadContentItems(new Model.Store { Id = "TestStore" });
 
-        //[Fact]
-        //public void LoadPageForMissedLanguage_PageLoadedWithDefaultLanguage()
-        //{
-        //    var language = new Model.Language("es-ES");
-        //    var service = GetStaticContentService();
-        //    var result = service.LoadContentItemsByUrl("/about_us", new Model.Store { Id = "TestStore" }, language, () => new ContentPage());
+            var page = result.Where(x => x.Url.Equals("about_us") && (x.Language == language || x.Language.IsInvariant)).Single();
+            Assert.IsType<ContentPage>(page);
+            Assert.NotEmpty(page.Content);
+            Assert.Equal(page.Url, "about_us");
+            Assert.Equal(Path.GetFileName(page.LocalPath), "about_us.md");
+        }
 
-        //    var page = result.Single();
-        //    Assert.IsType<ContentPage>(page);
-        //    Assert.Equal(page.Language, language);
-        //    Assert.NotEmpty(page.Content);
-        //    Assert.Equal(page.Url, "about_us");
-        //    Assert.Equal(Path.GetFileName(page.LocalPath), "about_us.md");
-        //}
+        [Fact]
+        public void StaticContent_get_formatted_permalink()
+        {
+            var language = new Model.Language("en-US");
+            var service = GetStaticContentService();
 
-        //[Fact]
-        //public void StaticContent_get_formatted_permalink()
-        //{
-        //    var language = new Model.Language("en-US");
-        //    var service = GetStaticContentService();
-        //    var result = service.LoadContentItemsByUrl("blogs/news/about_us_permalink", new Model.Store { Id = "TestStore" }, language, () => new ContentPage());
+            var result = service.LoadContentItems(new Model.Store { Id = "TestStore" });
 
-        //    var page = result.Single();
-        //    Assert.IsType<ContentPage>(page);
-        //    Assert.Equal(page.Language, language);
-        //    Assert.NotEmpty(page.Content);
-        //    Assert.Equal(page.Url, "blogs/news/about_us_permalink");
-        //    Assert.Equal(Path.GetFileName(page.LocalPath), "about_us_permalink");
-        //}
+            var page = result.Where(x => x.Url.Equals("blogs/news/about_us_permalink") && (x.Language == language 
+                        || x.Language.IsInvariant)).Single();
+
+            Assert.IsType<ContentPage>(page);
+            Assert.NotEmpty(page.Content);
+            Assert.Equal(page.Url, "blogs/news/about_us_permalink");
+            Assert.Equal(Path.GetFileName(page.LocalPath), "about_us_permalink.md");
+        }
+
+        [Fact]
+        public void StaticContent_get_blogs()
+        {
+            var language = new Model.Language("en-US");
+            var service = GetStaticContentService();
+
+            var result = service.LoadContentItems(new Model.Store { Id = "TestStore" });
+
+            var page = result.Where(x => x.Url.Equals("blogs/news/post1") && (x.Language == language
+                        || x.Language.IsInvariant)).Single();
+
+            Assert.IsType<BlogArticle>(page);
+            Assert.NotEmpty(page.Content);
+            Assert.Equal(page.Url, "blogs/news/post1");
+            Assert.Equal(((BlogArticle)page).BlogName, "news");
+        }
 
         private IStaticContentService GetStaticContentService()
         {
             var cacheManager = new Moq.Mock<ICacheManager<object>>();
+            cacheManager.Setup(cache => cache.Get<ContentItem[]>(It.IsAny<string>(), It.IsAny<string>())).Returns<ContentItem[]>(null);
             var urlBuilder = new Moq.Mock<IStorefrontUrlBuilder>();
             var liquidEngine = new Moq.Mock<ILiquidThemeEngine>();
             var markdown = new Moq.Mock<MarkdownDeep.Markdown>();

@@ -49,7 +49,7 @@ namespace VirtoCommerce.Storefront.Services
 
                 var date = page.PublishedDate ?? page.CreatedDate;
 
-            permalink = permalink.Replace(":folder", Path.GetDirectoryName(page.RelativePath));
+            permalink = permalink.Replace(":folder", Path.GetDirectoryName(page.RelativePath).Replace("\\", "/"));
 
             if (!String.IsNullOrEmpty(page.Category))
                 permalink = permalink.Replace(":categories", page.Category);

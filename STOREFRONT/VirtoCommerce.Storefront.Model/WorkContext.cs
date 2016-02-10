@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using PagedList;
 using VirtoCommerce.Storefront.Model.Cart;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
@@ -79,6 +80,7 @@ namespace VirtoCommerce.Storefront.Model
         /// Represent current quotes search criteria taken from request url
         /// </summary>
         public QuoteSearchCriteria CurrentQuoteSearchCriteria { get; set; }
+
         public QuoteRequest CurrentQuoteRequest { get; set; }
 
         /// <summary>
@@ -158,6 +160,10 @@ namespace VirtoCommerce.Storefront.Model
         public ContactUsForm ContactUsForm { get; set; }
 
         public StorefrontNotification StorefrontNotification { get; set; }
+
+        public ContentItem[] Pages { get; set; }
+
+        public Blog[] Blogs { get; set; }
 
         #region IDisposable Implementation
 

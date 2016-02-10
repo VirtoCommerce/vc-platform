@@ -24,6 +24,9 @@ using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Customer;
 using VirtoCommerce.Storefront.Model.Customer.Services;
 using VirtoCommerce.Storefront.Model.Quote.Services;
+using VirtoCommerce.Storefront.Model.Services;
+using VirtoCommerce.Storefront.Model.StaticContent;
+using VirtoCommerce.LiquidThemeEngine.Extensions;
 
 namespace VirtoCommerce.Storefront.Owin
 {
@@ -43,6 +46,7 @@ namespace VirtoCommerce.Storefront.Owin
         private readonly ICMSContentModuleApi _cmsApi;
         private readonly ICustomerService _customerService;
         private readonly ICacheManager<object> _cacheManager;
+        private readonly IStaticContentService _staticContentService;
 
         private readonly UnityContainer _container;
 
@@ -58,6 +62,7 @@ namespace VirtoCommerce.Storefront.Owin
             _commerceApi = container.Resolve<ICommerceCoreModuleApi>();
             _cacheManager = container.Resolve<ICacheManager<object>>();
             _customerService = container.Resolve<ICustomerService>();
+            _staticContentService = container.Resolve<IStaticContentService>();
             _container = container;
         }
 
@@ -118,6 +123,21 @@ namespace VirtoCommerce.Storefront.Owin
                         var linkLists = await _cacheManager.GetAsync("GetLinkLists-" + workContext.CurrentStore.Id, "ApiRegion", async () => { return await _cmsApi.MenuGetListsAsync(workContext.CurrentStore.Id) ?? new List<VirtoCommerceContentWebModelsMenuLinkList>(); });
                         workContext.CurrentLinkLists = linkLists != null ? linkLists.Select(ll => ll.ToWebModel(urlBuilder)).ToList() : null;
 
+                        // load all static pages
+                        var ret = _cacheManager.Get(string.Join(":", "AllStaticContentForLanguage", workContext.CurrentStore.Id), "ContentRegion", () =>
+                        {
+                            var pages = _staticContentService.LoadContentItems(workContext.CurrentStore);
+                            workContext.Pages = pages.OfType<ContentPage>().ToArray();
+                            workContext.Blogs = pages.OfType<BlogArticle>().GroupBy(x => x.BlogName, x => x).Select(x =>
+                                   new Blog()
+                                   {
+                                       Name = x.Key,
+                                       Title = x.Key,
+                                       Articles = new StorefrontPagedList<BlogArticle>(x, 1, 1000, x.Count(), page => workContext.RequestUrl.SetQueryParameter("page", page.ToString()).ToString())
+                                   }).ToArray();
+
+                            return pages;
+                        });
 
                         //Initialize blogs search criteria 
                         //TODO: read from query string

@@ -17,7 +17,6 @@ namespace VirtoCommerce.Storefront.Model
             Currencies = new List<Currency>();
             SeoInfos = new List<SeoInfo>();
             DynamicProperties = new List<DynamicProperty>();
-
         }
 
         public string Name { get; set; }

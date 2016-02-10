@@ -96,6 +96,8 @@
     <None Include="App.config" />
     <None Include="packages.config" />
     <None Include="Pages\TestStore\about_us_permalink.md" />
+    <None Include="Pages\TestStore\blogs\news\2015-11-11-post1.md" />
+    <None Include="Pages\TestStore\blogs\news\2016-01-01-post2.md" />
     <None Include="Pages\TestStore\folder1\about_us.en-US.md" />
     <None Include="Pages\TestStore\about_us.de-DE.md" />
     <None Include="Pages\TestStore\about_us.md" />
