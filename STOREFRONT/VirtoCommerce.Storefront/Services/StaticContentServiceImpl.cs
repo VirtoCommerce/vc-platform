@@ -72,9 +72,7 @@ namespace VirtoCommerce.Storefront.Services
         /// <returns></returns>
         public ContentItem[] LoadContentItems(Store store)
         {
-            var cacheKey = string.Join(":", "AllStaticContentForLanguage", store.Id);
-            var retVal = _cacheManager.Get(cacheKey, "ContentRegion", () => LoadAllContentItems(store));
-            return retVal;
+            return LoadAllContentItems(store);
         }
         #endregion
 
