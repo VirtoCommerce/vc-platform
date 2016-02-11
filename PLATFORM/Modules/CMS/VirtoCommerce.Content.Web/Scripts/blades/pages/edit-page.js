@@ -45,7 +45,7 @@
 
                     blade.origEntity = angular.copy(blade.currentEntity);
                 },
-                function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+                function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
             }
             else {
                 blade.currentEntity.language = blade.defaultStoreLanguage;
@@ -62,7 +62,7 @@
             blade.initializeUploader();
             blade.initializeButtons();
         },
-        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+        function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
     };
 
     blade.initializeUploader = function () {
@@ -104,17 +104,17 @@
     }
 
     blade.initializeButtons = function () {
-        $scope.blade.toolbarCommands = [];
+        blade.toolbarCommands = [];
 
         if (!blade.newPage) {
-            $scope.blade.toolbarCommands.push(
+            blade.toolbarCommands.push(
 				{
 				    name: "content.commands.save-page", icon: 'fa fa-save',
 				    executeMethod: $scope.saveChanges,
 				    canExecuteMethod: function () { return isDirty() && formScope.$valid; },
 				    permission: blade.updatePermission
 				});
-            $scope.blade.toolbarCommands.push(
+            blade.toolbarCommands.push(
 				{
 				    name: "content.commands.reset-page", icon: 'fa fa-undo',
 				    executeMethod: function () {
@@ -132,14 +132,14 @@
 				    canExecuteMethod: isDirty,
 				    permission: blade.updatePermission
 				});
-            $scope.blade.toolbarCommands.push(
+            blade.toolbarCommands.push(
 				{
 				    name: "content.commands.delete-page", icon: 'fa fa-trash-o',
-				    executeMethod: deleteEntry,
+				    executeMethod: blade.deleteEntry,
 				    canExecuteMethod: function () { return true; },
 				    permission: 'content:delete'
 				});
-            $scope.blade.toolbarCommands.push(
+            blade.toolbarCommands.push(
                 {
                     name: "content.commands.edit-as-markdown", icon: 'fa fa-code',
                     executeMethod: function () {
@@ -150,7 +150,7 @@
                     canExecuteMethod: function () { return !blade.editAsMarkdown; },
                     permission: 'content:manage'
                 });
-            $scope.blade.toolbarCommands.push(
+            blade.toolbarCommands.push(
                 {
                     name: "content.commands.edit-as-html", icon: 'fa fa-code',
                     executeMethod: function () {
@@ -163,7 +163,7 @@
                 });
         }
         else {
-            $scope.blade.toolbarCommands.push(
+            blade.toolbarCommands.push(
 				{
 				    name: "platform.commands.create", icon: 'fa fa-save',
 				    executeMethod: $scope.saveChanges,
@@ -231,7 +231,7 @@
                         blade.parentBlade.initialize();
                         bladeNavigationService.closeBlade(blade);
                     },
-                    function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+                    function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
                 }
                 else {
                     blade.isLoading = false;
@@ -246,19 +246,19 @@
                     dialogService.showNotificationDialog(dialog);
                 }
             },
-            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+            function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
         }
         else {
             if (blade.origEntity.pageName !== blade.currentEntity.pageName) {
                 pages.delete({ storeId: blade.choosenStoreId, pageNamesAndLanguges: blade.choosenPageLanguage + '^' + blade.choosenPageName }, function () {
                     blade.setNewName(blade.choosenPageName);
                     blade.update();
-                }, function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+                }, function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
             }
             else if (blade.origEntity.language !== blade.currentEntity.language) {
                 pages.delete({ storeId: blade.choosenStoreId, pageNamesAndLanguges: blade.choosenPageLanguage + '^' + blade.choosenPageName }, function () {
                     blade.update();
-                }, function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+                }, function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
             }
             else {
                 blade.update();
@@ -279,45 +279,25 @@
                         $scope.bladeClose();
                         blade.parentBlade.initialize();
                     },
-                    function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+                    function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
                 }
             }
         }
         dialogService.showConfirmationDialog(dialog);
-    }
+    };
 
-    function isCanSave() {
-        return blade.currentEntity && blade.currentEntity.name && blade.currentEntity.content;
+    function canSave() {
+        return blade.currentEntity && blade.currentEntity.name && ((isDirty() && !blade.newPage) || (blade.currentEntity.content && blade.newPage));
     }
 
     blade.onClose = function (closeCallback) {
-        if ((isDirty() && !blade.newPage) || (isCanSave() && blade.newPage)) {
-            var dialog = {
-                id: "confirmCurrentBladeClose",
-                title: "content.dialogs.page-save.title",
-                message: "content.dialogs.page-save.message"
-            };
-
-            dialog.callback = function (needSave) {
-                if (needSave) {
-                    $scope.saveChanges();
-                }
-                closeCallback();
-            };
-            dialogService.showConfirmationDialog(dialog);
-        }
-        else {
-            closeCallback();
-        }
+        bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, $scope.saveChanges, closeCallback, "content.dialogs.page-save.title", "content.dialogs.page-save.message");
     };
 
-    $scope.blade.headIcon = 'fa-archive';
+    blade.headIcon = 'fa-archive';
 
     blade.getFlag = function (lang) {
         switch (lang) {
-            case 'ru-RU':
-                return 'ru';
-
             case 'en-US':
                 return 'us';
 
@@ -349,8 +329,8 @@
             blade.isLoading = false,
             blade.origEntity = angular.copy(blade.currentEntity);
         },
-        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
-    }
+        function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
+    };
 
     blade.setNewName = function (pageName) {
         var pathParts = [];

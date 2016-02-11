@@ -34,17 +34,6 @@
         bladeNavigationService.showBlade(newBlade, blade);
     };
 
-    blade.onClose = function (closeCallback) {
-        closeChildrenBlades();
-        closeCallback();
-    };
-
-    function closeChildrenBlades() {
-        angular.forEach(blade.childrenBlades.slice(), function (child) {
-            bladeNavigationService.closeBlade(child);
-        });
-    }
-
     function openAddEntityWizard() {
         var selectedProducts = [];
         var newBlade = {
@@ -108,7 +97,6 @@
     {
         name: "platform.commands.add", icon: 'fa fa-plus',
         executeMethod: function () {
-            closeChildrenBlades();
             openAddEntityWizard();
         },
         canExecuteMethod: function () {

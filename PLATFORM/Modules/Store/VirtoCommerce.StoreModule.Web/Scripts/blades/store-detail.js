@@ -36,11 +36,15 @@
             if (blade.currentEntity.securityScopes && angular.isArray(blade.currentEntity.securityScopes)) {
                 blade.securityScopes = blade.currentEntity.securityScopes;
             }
-        };
+        }
 
         function isDirty() {
             return blade.hasUpdatePermission() && !angular.equals(blade.currentEntity, blade.origEntity);
-        };
+        }
+
+        function canSave() {
+            return isDirty() && $scope.formScope && $scope.formScope.$valid;
+        }
 
         $scope.saveChanges = function () {
             blade.isLoading = true;
@@ -76,49 +80,19 @@
             dialogService.showConfirmationDialog(dialog);
         }
 
-        $scope.setForm = function (form) {
-            $scope.formScope = form;
-        }
+        $scope.setForm = function (form) { $scope.formScope = form; };
 
         blade.onClose = function (closeCallback) {
-            closeChildrenBlades();
-            if (isDirty()) {
-                var dialog = {
-                    id: "confirmCurrentBladeClose",
-                    title: "stores.dialogs.store-save.title",
-                    message: "stores.dialogs.store-save.message"
-                };
-                dialog.callback = function (needSave) {
-                    if (needSave) {
-                        $scope.saveChanges();
-                    }
-                    closeCallback();
-                };
-                dialogService.showConfirmationDialog(dialog);
-            }
-            else {
-                closeCallback();
-            }
+            bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, $scope.saveChanges, closeCallback, "stores.dialogs.store-save.title", "stores.dialogs.store-save.message");
         };
 
-        function closeChildrenBlades() {
-            angular.forEach(blade.childrenBlades.slice(), function (child) {
-                bladeNavigationService.closeBlade(child);
-            });
-        }
-
         blade.headIcon = 'fa-archive';
-
         blade.toolbarCommands = [
             {
                 name: "platform.commands.save",
                 icon: 'fa fa-save',
-                executeMethod: function () {
-                    $scope.saveChanges();
-                },
-                canExecuteMethod: function () {
-                    return isDirty() && $scope.formScope && $scope.formScope.$valid;
-                },
+                executeMethod: $scope.saveChanges,
+                canExecuteMethod: canSave,
                 permission: 'store:update'
             },
             {

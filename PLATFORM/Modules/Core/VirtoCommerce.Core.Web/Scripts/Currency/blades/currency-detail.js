@@ -58,9 +58,7 @@
             blade.toolbarCommands = [
                 {
                     name: "platform.commands.save", icon: 'fa fa-save',
-                    executeMethod: function () {
-                        $scope.saveChanges();
-                    },
+                    executeMethod: $scope.saveChanges,
                     canExecuteMethod: canSave,
                     permission: blade.updatePermission
                 },
@@ -106,25 +104,9 @@
         }
 
         blade.onClose = function (closeCallback) {
-            if (canSave()) {
-                var dialog = {
-                    id: "confirmItemChange",
-                    title: "core.dialogs.currency-save.title",
-                    message: "core.dialogs.currency-save.message",
-                    callback: function (needSave) {
-                        if (needSave) {
-                            $scope.saveChanges();
-                        }
-                        closeCallback();
-                    }
-                };
-                dialogService.showConfirmationDialog(dialog);
-            }
-            else {
-                closeCallback();
-            }
+            bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, $scope.saveChanges, closeCallback, "core.dialogs.currency-save.title", "core.dialogs.currency-save.message");
         };
-        
+
         // actions on load        
         initializeBlade(blade.data);
     }]);

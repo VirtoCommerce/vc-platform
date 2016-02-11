@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.itemAssetController', ['$scope', '$translate', 'virtoCommerce.catalogModule.items', 'platformWebApp.bladeNavigationService', '$filter', 'FileUploader', 'platformWebApp.bladeUtils', function ($scope, $translate, items, bladeNavigationService, $filter, FileUploader, bladeUtils) {
+.controller('virtoCommerce.catalogModule.itemAssetController', ['$scope', '$translate', 'virtoCommerce.catalogModule.items', 'platformWebApp.bladeNavigationService', '$filter', 'FileUploader', function ($scope, $translate, items, bladeNavigationService, $filter, FileUploader) {
     var blade = $scope.blade;
     $scope.item = {};
     $scope.origItem = {};
@@ -26,7 +26,7 @@
     };
 
     blade.onClose = function (closeCallback) {
-        bladeUtils.showConfirmationIfNeeded($scope.isDirty(), true, blade, $scope.saveChanges, closeCallback, "catalog.dialogs.asset-save.title", "catalog.dialogs.asset-save.message");
+        bladeNavigationService.showConfirmationIfNeeded($scope.isDirty(), true, blade, $scope.saveChanges, closeCallback, "catalog.dialogs.asset-save.title", "catalog.dialogs.asset-save.message");
     };
 
     $scope.saveChanges = function () {

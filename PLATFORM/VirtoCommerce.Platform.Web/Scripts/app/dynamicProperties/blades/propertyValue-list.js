@@ -29,6 +29,10 @@
         return !angular.equals(blade.currentEntities, blade.origEntity);
     }
 
+    function canSave() {
+        return isDirty() && formScope && formScope.$valid;
+    }
+
     $scope.cancelChanges = function () {
         angular.copy(blade.origEntity, blade.currentEntities);
         $scope.bladeClose();
@@ -43,9 +47,7 @@
     };
 
     var formScope;
-    $scope.setForm = function (form) {
-        formScope = form;
-    }
+    $scope.setForm = function (form) { formScope = form; }
 
     $scope.editDictionary = function (property) {
         var newBlade = {
@@ -62,23 +64,7 @@
     };
 
     blade.onClose = function (closeCallback) {
-        if (isDirty()) {
-            var dialog = {
-                id: "confirmItemChange",
-                title: "platform.dialogs.properties-save.title",
-                message: "platform.dialogs.properties-save.message",
-                callback: function (needSave) {
-                    if (needSave) {
-                        $scope.saveChanges();
-                    }
-                    closeCallback();
-                }
-            };
-            dialogService.showConfirmationDialog(dialog);
-        }
-        else {
-            closeCallback();
-        }
+        bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, $scope.saveChanges, closeCallback, "platform.dialogs.properties-save.title", "platform.dialogs.properties-save.message");
     };
 
     blade.toolbarCommands = [

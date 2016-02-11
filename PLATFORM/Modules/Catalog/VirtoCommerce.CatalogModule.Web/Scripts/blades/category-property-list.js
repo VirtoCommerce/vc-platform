@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.categoryPropertyListController', ['$scope', 'virtoCommerce.catalogModule.categories', 'virtoCommerce.catalogModule.properties', 'platformWebApp.bladeNavigationService', 'platformWebApp.bladeUtils', function ($scope, categories, properties, bladeNavigationService, bladeUtils) {
+.controller('virtoCommerce.catalogModule.categoryPropertyListController', ['$scope', 'virtoCommerce.catalogModule.categories', 'virtoCommerce.catalogModule.properties', 'platformWebApp.bladeNavigationService', function ($scope, categories, properties, bladeNavigationService) {
     var blade = $scope.blade;
     blade.origEntity = {};
 
@@ -46,7 +46,7 @@
     };
 
     blade.onClose = function (closeCallback) {
-        bladeUtils.showConfirmationIfNeeded(isDirty(), canSave(), blade, saveChanges, closeCallback, "catalog.dialogs.category-save.title", "catalog.dialogs.category-save.message");
+        bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, saveChanges, closeCallback, "catalog.dialogs.category-save.title", "catalog.dialogs.category-save.message");
     };
 
     $scope.editProperty = function (prop) {

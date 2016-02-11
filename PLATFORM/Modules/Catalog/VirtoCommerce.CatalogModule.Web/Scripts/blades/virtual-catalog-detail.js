@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.virtualCatalogDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.catalogModule.catalogs', 'platformWebApp.bladeUtils', function ($scope, bladeNavigationService, catalogs, bladeUtils) {
+.controller('virtoCommerce.catalogModule.virtualCatalogDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.catalogModule.catalogs', function ($scope, bladeNavigationService, catalogs) {
     var blade = $scope.blade;
 
     blade.refresh = function (parentRefresh) {
@@ -66,7 +66,7 @@
     };
 
     blade.onClose = function (closeCallback) {
-        bladeUtils.showConfirmationIfNeeded(isDirty(), canSave(), blade, $scope.saveChanges, closeCallback, "catalog.dialogs.virtual-catalog-save.title", "catalog.dialogs.virtual-catalog-save.message");
+        bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, $scope.saveChanges, closeCallback, "catalog.dialogs.virtual-catalog-save.title", "catalog.dialogs.virtual-catalog-save.message");
     };
     
     function initializeToolbar() {

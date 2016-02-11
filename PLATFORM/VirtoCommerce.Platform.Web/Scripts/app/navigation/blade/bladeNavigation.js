@@ -153,10 +153,42 @@ angular.module('platformWebApp')
         }
     };
 }])
-.factory('platformWebApp.bladeNavigationService', ['platformWebApp.authService', '$timeout', '$state', function (authService, $timeout, $state) {
+.factory('platformWebApp.bladeNavigationService', ['platformWebApp.authService', '$timeout', '$state', 'platformWebApp.dialogService', function (authService, $timeout, $state, dialogService) {
+
+    function showConfirmationIfNeeded(showConfirmation, canSave, blade, saveChangesCallback, closeCallback, saveTitle, saveMessage) {
+        if (showConfirmation) {
+            var dialog = { id: "confirmCurrentBladeClose" };
+
+            if (canSave) {
+                dialog.title = saveTitle;
+                dialog.message = saveMessage;
+            } else {
+                dialog.title = "Warning";
+                dialog.message = "Validation failed for this object. Will you continue editing and save later?";
+            }
+
+            dialog.callback = function (userChoseYes) {
+                if (canSave) {
+                    if (userChoseYes) {
+                        saveChangesCallback();
+                    }
+                    closeCallback();
+                } else if (!userChoseYes) {
+                    closeCallback();
+                }
+            };
+
+            dialogService.showConfirmationDialog(dialog);
+        }
+        else {
+            closeCallback();
+        }
+    }
+
     var service = {
         blades: [],
         currentBlade: undefined,
+        showConfirmationIfNeeded: showConfirmationIfNeeded,
         closeBlade: function (blade, callback, onBeforeClosing) {
             //Need in case a copy was passed
             blade = service.findBlade(blade.id);

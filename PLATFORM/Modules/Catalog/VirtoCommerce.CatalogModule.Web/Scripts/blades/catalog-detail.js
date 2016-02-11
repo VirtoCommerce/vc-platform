@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.catalogDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.catalogModule.catalogs', 'platformWebApp.bladeUtils', function ($scope, bladeNavigationService, catalogs, bladeUtils) {
+.controller('virtoCommerce.catalogModule.catalogDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.catalogModule.catalogs', function ($scope, bladeNavigationService, catalogs) {
     var blade = $scope.blade;
     blade.updatePermission = 'catalog:update';
 
@@ -28,11 +28,11 @@
         blade.securityScopes = data.securityScopes;
     };
 
-    function isDirty() {
+    function x() {
         return !angular.equals(blade.currentEntity, blade.origEntity) && blade.hasUpdatePermission();
     }
 
-    function canSave() {
+    function y() {
         return isDirty() && formScope && formScope.$valid;
     }
 
@@ -68,7 +68,7 @@
     };
 
     blade.onClose = function (closeCallback) {
-        bladeUtils.showConfirmationIfNeeded(isDirty(), canSave(), blade, $scope.saveChanges, closeCallback, "catalog.dialogs.catalog-save.title", "catalog.dialogs.catalog-save.message");
+        bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, $scope.saveChanges, closeCallback, "catalog.dialogs.catalog-save.title", "catalog.dialogs.catalog-save.message");
     };
 
     function initializeToolbar() {

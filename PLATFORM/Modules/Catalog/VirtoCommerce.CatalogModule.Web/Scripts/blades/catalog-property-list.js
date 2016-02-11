@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.catalogPropertyListController', ['$scope', 'virtoCommerce.catalogModule.catalogs', 'virtoCommerce.catalogModule.properties', 'platformWebApp.bladeNavigationService', 'platformWebApp.bladeUtils', function ($scope, catalogs, properties, bladeNavigationService, bladeUtils) {
+.controller('virtoCommerce.catalogModule.catalogPropertyListController', ['$scope', 'virtoCommerce.catalogModule.catalogs', 'virtoCommerce.catalogModule.properties', 'platformWebApp.bladeNavigationService', function ($scope, catalogs, properties, bladeNavigationService) {
     var blade = $scope.blade;
     blade.updatePermission = 'catalog:update';
     blade.origEntity = {};
@@ -47,7 +47,7 @@
     };
 
     blade.onClose = function (closeCallback) {
-        bladeUtils.showConfirmationIfNeeded(isDirty(), canSave(), blade, saveChanges, closeCallback, "catalog.dialogs.catalog-save.title", "catalog.dialogs.catalog-save.message");
+        bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, saveChanges, closeCallback, "catalog.dialogs.catalog-save.title", "catalog.dialogs.catalog-save.message");
     };
 
     $scope.editProperty = function (prop) {

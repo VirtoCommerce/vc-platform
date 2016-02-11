@@ -1,9 +1,8 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.roleListController', ['$scope', 'platformWebApp.roles', 'platformWebApp.bladeUtils', 'platformWebApp.dialogService', 'platformWebApp.uiGridHelper',
-function ($scope, roles, bladeUtils, dialogService, uiGridHelper) {
+.controller('platformWebApp.roleListController', ['$scope', 'platformWebApp.roles', 'platformWebApp.bladeUtils', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.uiGridHelper',
+function ($scope, roles, bladeUtils, bladeNavigationService, dialogService, uiGridHelper) {
     $scope.uiGridConstants = uiGridHelper.uiGridConstants;
     var blade = $scope.blade;
-    var bladeNavigationService = bladeUtils.bladeNavigationService;
 
     blade.refresh = function () {
         blade.isLoading = true;

@@ -1,9 +1,8 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.accountListController', ['$scope', 'platformWebApp.accounts', 'platformWebApp.dialogService', 'platformWebApp.uiGridHelper', 'platformWebApp.bladeUtils',
-function ($scope, accounts, dialogService, uiGridHelper, bladeUtils) {
+.controller('platformWebApp.accountListController', ['$scope', 'platformWebApp.accounts', 'platformWebApp.dialogService', 'platformWebApp.uiGridHelper', 'platformWebApp.bladeNavigationService', 'platformWebApp.bladeUtils',
+function ($scope, accounts, dialogService, uiGridHelper, bladeNavigationService, bladeUtils) {
     $scope.uiGridConstants = uiGridHelper.uiGridConstants;
     var blade = $scope.blade;
-    var bladeNavigationService = bladeUtils.bladeNavigationService;
 
     blade.refresh = function () {
         blade.isLoading = true;

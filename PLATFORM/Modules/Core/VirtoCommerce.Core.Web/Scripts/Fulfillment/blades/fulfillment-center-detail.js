@@ -26,13 +26,22 @@
     };
 
     var formScope;
-    $scope.setForm = function (form) {
-        formScope = form;
-    }
+    $scope.setForm = function (form) { formScope = form; };
 
     function isDirty() {
         return !angular.equals(blade.currentEntity, blade.origEntity) && blade.hasUpdatePermission();
-    };
+    }
+
+    function canSave() {
+        return isDirty() && formScope && formScope.$valid &&
+                blade.currentEntity.daytimePhoneNumber &&
+                blade.currentEntity.line1 &&
+                blade.currentEntity.city &&
+                blade.currentEntity.stateProvince &&
+                blade.currentEntity.countryCode &&
+                blade.currentEntity.countryName &&
+                blade.currentEntity.postalCode;;
+    }
 
     function saveChanges() {
         blade.isLoading = true;
@@ -61,9 +70,7 @@
         {
             name: "platform.commands.save", icon: 'fa fa-save',
             executeMethod: saveChanges,
-            canExecuteMethod: function () {
-                return isDirty() && isValid();
-            },
+            canExecuteMethod: canSave,
             permission: blade.updatePermission
         },
         {
@@ -104,34 +111,7 @@
     }
 
     blade.onClose = function (closeCallback) {
-        if (isDirty() && isValid()) {
-            var dialog = {
-                id: "confirmItemChange",
-                title: "core.dialogs.fulfillments-save.title",
-                message: "core.dialogs.fulfillments-save.message",
-                callback: function (needSave) {
-                    if (needSave) {
-                        saveChanges();
-                    }
-                    closeCallback();
-                }
-            };
-            dialogService.showConfirmationDialog(dialog);
-        }
-        else {
-            closeCallback();
-        }
-    };
-
-    function isValid() {
-        return formScope && formScope.$valid &&
-                blade.currentEntity.daytimePhoneNumber &&
-                blade.currentEntity.line1 &&
-                blade.currentEntity.city &&
-                blade.currentEntity.stateProvince &&
-                blade.currentEntity.countryCode &&
-                blade.currentEntity.countryName &&
-                blade.currentEntity.postalCode;
+        bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, saveChanges, closeCallback, "core.dialogs.fulfillments-save.title", "core.dialogs.fulfillments-save.message");
     };
 
     // actions on load

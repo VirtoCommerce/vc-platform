@@ -22,7 +22,7 @@
                         codemirrorEditor.refresh();
                         codemirrorEditor.focus();
 
-                        $scope.blade.toolbarCommands.push(
+                        blade.toolbarCommands.push(
                             {
                                 name: "platform.commands.undo", icon: 'fa fa-rotate-left',
                                 executeMethod: function () {
@@ -33,7 +33,7 @@
                                     return history.undo > 1;
                                 }
                             });
-                        $scope.blade.toolbarCommands.push(
+                        blade.toolbarCommands.push(
                             {
                                 name: "platform.commands.redo", icon: 'fa fa-rotate-right',
                                 executeMethod: function () {
@@ -50,7 +50,7 @@
             },
             function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
 
-            $scope.blade.toolbarCommands = [
+            blade.toolbarCommands = [
 			{
 			    name: "platform.commands.save", icon: 'fa fa-save',
 			    executeMethod: $scope.saveChanges,
@@ -77,7 +77,7 @@
 			}];
         }
         else {
-            $scope.blade.toolbarCommands = [
+            blade.toolbarCommands = [
 			{
 			    name: "platform.commands.create", icon: 'fa fa-save',
 			    executeMethod: $scope.saveChanges,
@@ -131,11 +131,11 @@
             message: "content.dialogs.asset-delete.message",
             callback: function (remove) {
                 if (remove) {
-                    $scope.blade.isLoading = true;
+                    blade.isLoading = true;
 
                     themes.deleteAsset({ storeId: blade.choosenStoreId, themeId: blade.choosenThemeId, assetIds: blade.choosenAssetId }, function () {
                         $scope.bladeClose();
-                        $scope.blade.parentBlade.initialize(true);
+                        blade.parentBlade.initialize(true);
                     },
                     function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
                 }
@@ -184,26 +184,11 @@
     }
 
     blade.onClose = function (closeCallback) {
-        if ((isDirty() && !blade.newAsset) || (isCanSave() && blade.newAsset)) {
-            var dialog = {
-                id: "confirmCurrentBladeClose",
-                title: "content.dialogs.asset-save.title",
-                message: "content.dialogs.asset-save.message",
-                callback: function (needSave) {
-                    if (needSave) {
-                        $scope.saveChanges();
-                    }
-                    closeCallback();
-                }
-            }
-            dialogService.showConfirmationDialog(dialog);
-        }
-        else {
-            closeCallback();
-        }
+        bladeNavigationService.showConfirmationIfNeeded((isDirty() && !blade.newAsset) || (isCanSave() && blade.newAsset),
+            true, blade, $scope.saveChanges, closeCallback, "content.dialogs.asset-save.title", "content.dialogs.asset-save.message");
     };
 
-    $scope.blade.headIcon = 'fa-archive';
+    blade.headIcon = 'fa-archive';
 
     // Codemirror configuration
     $scope.editorOptions = {

@@ -51,25 +51,7 @@
     };
 
     blade.onClose = function (closeCallback) {
-        if (isDirty()) {
-            bladeNavigationService.closeChildrenBlades(blade, function () {
-                var dialog = {
-                    id: "confirmCurrentBladeClose",
-                    title: "platform.dialogs.account-save.title",
-                    message: "platform.dialogs.account-save.message"
-                };
-                dialog.callback = function (needSave) {
-                    if (needSave) {
-                        $scope.saveChanges();
-                    }
-                    closeCallback();
-                };
-                dialogService.showConfirmationDialog(dialog);
-            });
-        }
-        else {
-            closeCallback();
-        }
+        bladeNavigationService.showConfirmationIfNeeded(isDirty(), true, blade, $scope.saveChanges, closeCallback, "platform.dialogs.account-save.title", "platform.dialogs.account-save.message");
     };
 
     blade.headIcon = 'fa-key';

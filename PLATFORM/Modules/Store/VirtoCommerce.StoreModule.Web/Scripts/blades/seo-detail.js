@@ -51,30 +51,18 @@
         //var pattern = /^([a-zA-Z0-9\(\)_\-]+)*$/;
         var pattern = /[$+;=%{}[\]|\\\/@ ~#!^*&?:'<>,]/;
         return !pattern.test(value);
-    }
+    };
 
     function isDirty() {
         return blade.hasUpdatePermission() && !angular.equals($scope.seoInfos, blade.origItem);
-    };
+    }
+
+    function canSave() {
+        return isDirty() && _.every(_.filter($scope.seoInfos, function (data) { return !data.isNew; }), isValid) && _.some($scope.seoInfos, isValid); // isValid formScope && formScope.$valid;
+    }
 
     blade.onClose = function (closeCallback) {
-        if (isDirty()) {
-            var dialog = {
-                id: "confirmItemChange",
-                title: "stores.dialogs.seo-save.title",
-                message: "stores.dialogs.seo-save.message"
-            };
-            dialog.callback = function (needSave) {
-                if (needSave) {
-                    $scope.saveChanges();
-                }
-                closeCallback();
-            };
-            dialogService.showConfirmationDialog(dialog);
-        }
-        else {
-            closeCallback();
-        }
+        bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, $scope.saveChanges, closeCallback, "stores.dialogs.seo-save.title", "stores.dialogs.seo-save.message");
     };
 
     var formScope;
@@ -86,12 +74,8 @@
         blade.toolbarCommands = [
             {
                 name: "platform.commands.save", icon: 'fa fa-save',
-                executeMethod: function () {
-                    $scope.saveChanges();
-                },
-                canExecuteMethod: function () {
-                    return isDirty() && _.every(_.filter($scope.seoInfos, function (data) { return !data.isNew; }), isValid) && _.some($scope.seoInfos, isValid); // isValid formScope && formScope.$valid;
-                },
+                executeMethod: $scope.saveChanges,
+                canExecuteMethod: canSave,
                 permission: blade.updatePermission
             },
             {

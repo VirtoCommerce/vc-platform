@@ -129,15 +129,19 @@
         function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
     };
 
+    function isDirty() {
+        return !angular.equals(blade.currentEntity, blade.origEntity) && blade.hasUpdatePermission();
+    }
+
     function canSave() {
-        var listNameIsRight = !((angular.isUndefined(blade.currentEntity.name)) || (blade.currentEntity.name === null)) && !angular.equals(blade.currentEntity, blade.origEntity);
+        var listNameIsRight = !((angular.isUndefined(blade.currentEntity.name)) || (blade.currentEntity.name === null));
         var linksIsRight = blade.currentEntity.menuLinks.length == _.reject(
 				blade.currentEntity.menuLinks,
 				function (link) {
 				    return !(!(angular.isUndefined(link.title) || link.title === null) &&
 						!(angular.isUndefined(link.url) || link.url === null));
 				}).length;
-        return listNameIsRight && linksIsRight && blade.currentEntity.menuLinks.length > 0 && blade.hasUpdatePermission();
+        return isDirty() && listNameIsRight && linksIsRight && blade.currentEntity.menuLinks.length > 0;
     }
 
     blade.deleteList = function () {
@@ -158,7 +162,7 @@
             }
         }
         dialogService.showConfirmationDialog(dialog);
-    }
+    };
 
     blade.deleteLinks = function () {
         var dialog = {
@@ -178,26 +182,10 @@
             }
         }
         dialogService.showConfirmationDialog(dialog);
-    }
+    };
 
     blade.onClose = function (closeCallback) {
-        if (canSave()) {
-            var dialog = {
-                id: "confirmCurrentBladeClose",
-                title: "content.dialogs.link-list-save.title",
-                message: "content.dialogs.link-list-save.message",
-                callback: function (needSave) {
-                    if (needSave) {
-                        blade.saveChanges();
-                    }
-                    closeCallback();
-                }
-            }
-            dialogService.showConfirmationDialog(dialog);
-        }
-        else {
-            closeCallback();
-        }
+        bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, blade.saveChanges, closeCallback, "content.dialogs.link-list-save.title", "content.dialogs.link-list-save.message");
     };
 
     blade.selectItem = function (id) {

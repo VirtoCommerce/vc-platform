@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.catalogLanguagesController', ['$scope', 'platformWebApp.settings', 'platformWebApp.bladeUtils', 'platformWebApp.bladeNavigationService', function ($scope, settings, bladeUtils, bladeNavigationService) {
+.controller('virtoCommerce.catalogModule.catalogLanguagesController', ['$scope', 'platformWebApp.settings', 'platformWebApp.bladeNavigationService', function ($scope, settings, bladeNavigationService) {
     var blade = $scope.blade;
     blade.updatePermission = 'catalog:update';
     var promise = settings.getValues({ id: 'VirtoCommerce.Core.General.Languages' }).$promise;
@@ -26,7 +26,7 @@
     }
 
     blade.onClose = function (closeCallback) {
-        bladeUtils.showConfirmationIfNeeded(isDirty(), true, blade, $scope.saveChanges, closeCallback, "catalog.dialogs.language-save.title", "catalog.dialogs.language-save.message");
+        bladeNavigationService.showConfirmationIfNeeded(isDirty(), true, blade, $scope.saveChanges, closeCallback, "catalog.dialogs.language-save.title", "catalog.dialogs.language-save.message");
     };
 
     function isDirty() {

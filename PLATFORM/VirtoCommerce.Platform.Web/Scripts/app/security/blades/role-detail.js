@@ -31,11 +31,15 @@
         } else {
             blade.isLoading = false;
         }
-    };
+    }
 
     function isDirty() {
         return !angular.equals(blade.currentEntity, blade.origEntity) && blade.hasUpdatePermission();
-    };
+    }
+
+    function canSave() {
+        return isDirty() && $scope.formScope && $scope.formScope.$valid;
+    }
 
     $scope.saveChanges = function () {
         blade.isLoading = true;
@@ -80,25 +84,7 @@
     }
 
     blade.onClose = function (closeCallback) {
-        if (isDirty()) {
-            bladeNavigationService.closeChildrenBlades(blade, function () {
-                var dialog = {
-                    id: "confirmCurrentBladeClose",
-                    title: "platform.dialogs.role-save.title",
-                    message: "platform.dialogs.role-save.message"
-                };
-                dialog.callback = function (needSave) {
-                    if (needSave) {
-                        $scope.saveChanges();
-                    }
-                    closeCallback();
-                };
-                dialogService.showConfirmationDialog(dialog);
-            });
-        }
-        else {
-            closeCallback();
-        }
+        bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, $scope.saveChanges, closeCallback, "platform.dialogs.role-save.title", "platform.dialogs.role-save.message");
     };
 
     $scope.toggleAll = function () {
@@ -132,12 +118,8 @@
                 {
                     name: "platform.commands.save",
                     icon: 'fa fa-save',
-                    executeMethod: function () {
-                        $scope.saveChanges();
-                    },
-                    canExecuteMethod: function () {
-                        return isDirty() && $scope.formScope && $scope.formScope.$valid;
-                    },
+                    executeMethod: $scope.saveChanges,
+                    canExecuteMethod: canSave,                    
                     permission: blade.updatePermission
                 },
                 {

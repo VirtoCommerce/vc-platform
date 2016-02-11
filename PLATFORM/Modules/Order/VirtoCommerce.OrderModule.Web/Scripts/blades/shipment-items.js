@@ -16,18 +16,7 @@
 		$scope.blade.isLoading = false;
 		$scope.blade.selectedAll = false;
 	};
-
-	$scope.blade.onClose = function (closeCallback) {
-		closeChildrenBlades();
-		closeCallback();
-	};
-
-	function closeChildrenBlades() {
-		angular.forEach($scope.blade.childrenBlades.slice(), function (child) {
-			bladeNavigationService.closeBlade(child);
-		});
-	}
-
+        
 	$scope.blade.toolbarCommands = [
         {
             name: "orders.commands.add-item", icon: 'fa fa-plus',

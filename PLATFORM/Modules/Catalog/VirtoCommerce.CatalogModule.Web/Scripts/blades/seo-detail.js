@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.seoDetailController', ['$scope', 'virtoCommerce.catalogModule.categories', 'virtoCommerce.catalogModule.items', 'platformWebApp.bladeUtils', 'platformWebApp.bladeNavigationService', function ($scope, categories, items, bladeUtils, bladeNavigationService) {
+.controller('virtoCommerce.catalogModule.seoDetailController', ['$scope', 'virtoCommerce.catalogModule.categories', 'virtoCommerce.catalogModule.items', 'platformWebApp.bladeNavigationService', function ($scope, categories, items, bladeNavigationService) {
     var blade = $scope.blade;
     
     function initializeBlade(parentEntity) {
@@ -73,7 +73,7 @@
     }
 
     blade.onClose = function (closeCallback) {
-        bladeUtils.showConfirmationIfNeeded(isDirty(), canSave(), blade, $scope.saveChanges, closeCallback, "catalog.dialogs.seo-save.title", "catalog.dialogs.seo-save.message");
+        bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, $scope.saveChanges, closeCallback, "catalog.dialogs.seo-save.title", "catalog.dialogs.seo-save.message");
     };
 
     var formScope;

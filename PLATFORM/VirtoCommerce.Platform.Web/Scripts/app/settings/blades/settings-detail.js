@@ -61,6 +61,10 @@
         return !angular.equals(blade.currentEntities, blade.origEntity) && blade.hasUpdatePermission();
     }
 
+    function canSave() {
+        return isDirty() && formScope && formScope.$valid;
+    }
+
     function saveChanges() {
         blade.isLoading = true;
         var objects = _.flatten(_.map(blade.currentEntities, _.values));
@@ -95,9 +99,7 @@
         {
             name: "platform.commands.save", icon: 'fa fa-save',
             executeMethod: saveChanges,
-            canExecuteMethod: function () {
-                return isDirty() && formScope && formScope.$valid;
-            }
+            canExecuteMethod: canSave            
         },
         {
             name: "platform.commands.reset", icon: 'fa fa-undo',
@@ -107,25 +109,9 @@
             canExecuteMethod: isDirty
         }
     ];
-
+    
     blade.onClose = function (closeCallback) {
-        if (isDirty()) {
-            var dialog = {
-                id: "confirmItemChange",
-                title: "platform.dialogs.settings-delete.title",
-                message: "platform.dialogs.settings-delete.message",
-                callback: function (needSave) {
-                    if (needSave) {
-                        saveChanges();
-                    }
-                    closeCallback();
-                }
-            };
-            dialogService.showConfirmationDialog(dialog);
-        }
-        else {
-            closeCallback();
-        }
+        bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, saveChanges, closeCallback, "platform.dialogs.settings-delete.title", "platform.dialogs.settings-delete.message");
     };
 
     $scope.getDictionaryValues = function (setting, callback) {

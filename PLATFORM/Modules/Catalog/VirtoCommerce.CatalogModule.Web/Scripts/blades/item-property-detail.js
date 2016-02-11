@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.itemPropertyDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.bladeUtils', function ($scope, bladeNavigationService, dialogService, bladeUtils) {
+.controller('virtoCommerce.catalogModule.itemPropertyDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', function ($scope, bladeNavigationService, dialogService) {
     var blade = $scope.blade;
     $scope.currentChild = undefined;
 
@@ -68,7 +68,7 @@
     }
 
     blade.onClose = function (closeCallback) {
-        bladeUtils.showConfirmationIfNeeded(isDirty(), $scope.formScope && $scope.formScope.$valid, blade, $scope.saveChanges, closeCallback, "catalog.dialogs.property-save.title", "catalog.dialogs.property-save.message");
+        bladeNavigationService.showConfirmationIfNeeded(isDirty(), $scope.formScope && $scope.formScope.$valid, blade, $scope.saveChanges, closeCallback, "catalog.dialogs.property-save.title", "catalog.dialogs.property-save.message");
     };
 
     $scope.setForm = function (form) { $scope.formScope = form; };
