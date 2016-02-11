@@ -194,7 +194,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ShopifyLiquidThemeEngine.cs" />
     <Compile Include="Tags\LayoutTag.cs" />
+    <Compile Include="Tags\Paginate.cs" />
     <Compile Include="Tags\PaginateTag.cs" />
+    <Compile Include="Tags\Part.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Blocks\" />

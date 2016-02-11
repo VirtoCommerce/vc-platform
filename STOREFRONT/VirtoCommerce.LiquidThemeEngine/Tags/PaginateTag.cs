@@ -49,12 +49,12 @@ namespace VirtoCommerce.LiquidThemeEngine.Tags
             var themeEngine = (ShopifyLiquidThemeEngine)Template.FileSystem;
             var workContext = themeEngine.WorkContext;
 
-            var paginate = new Paginate(pagedList);
+            var paginate = new Objects.Paginate(pagedList);
             context["paginate"] = paginate;
 
             for (int i = 1; i <= pagedList.PageCount; i++)
             {
-                paginate.Parts.Add(new Part { IsLink = i != pagedList.PageNumber, Title = i.ToString(), Url = pagedList.GetPageUrl(i) });
+                paginate.Parts.Add(new Objects.Part { IsLink = i != pagedList.PageNumber, Title = i.ToString(), Url = pagedList.GetPageUrl(i) });
             }
             RenderAll(NodeList, context, result);
         }

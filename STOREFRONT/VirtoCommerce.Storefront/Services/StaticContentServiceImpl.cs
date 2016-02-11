@@ -172,7 +172,17 @@ namespace VirtoCommerce.Storefront.Services
 
             //Load raw content with metadata
             var content = File.ReadAllText(contentItem.LocalPath);
-            var metaHeaders = ReadYamlHeader(content);
+            IDictionary<string, IEnumerable<string>> metaHeaders = null;
+
+            try
+            {
+                metaHeaders = ReadYamlHeader(content);
+            }
+            catch(Exception ex)
+            {
+                throw new ApplicationException(String.Format("Failed to read yaml header from \"{0}\"", contentItem.RelativePath), ex);
+            }
+
             content = RemoveYamlHeader(content);
 
             if (renderContent)
@@ -190,7 +200,7 @@ namespace VirtoCommerce.Storefront.Services
                 }
 
                 //Render markdown content
-                if (String.Equals(Path.GetExtension(contentItem.LocalPath), ".md", StringComparison.InvariantCultureIgnoreCase))
+                if (string.Equals(Path.GetExtension(contentItem.LocalPath), ".md", StringComparison.InvariantCultureIgnoreCase))
                 {
                     content = _markdownRender.Transform(content);
                 }

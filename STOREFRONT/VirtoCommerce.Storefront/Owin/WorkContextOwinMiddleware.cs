@@ -124,11 +124,11 @@ namespace VirtoCommerce.Storefront.Owin
                         workContext.CurrentLinkLists = linkLists != null ? linkLists.Select(ll => ll.ToWebModel(urlBuilder)).ToList() : null;
 
                         // load all static pages
-                        var ret = _cacheManager.Get(string.Join(":", "AllStaticContentForLanguage", workContext.CurrentStore.Id), "ContentRegion", () =>
+                        var staticContents = _cacheManager.Get(string.Join(":", "AllStaticContentForLanguage", workContext.CurrentStore.Id), "ContentRegion", () =>
                         {
                             var pages = _staticContentService.LoadContentItems(workContext.CurrentStore);
-                            workContext.Pages = pages.OfType<ContentPage>().ToArray();
-                            workContext.Blogs = pages.OfType<BlogArticle>().GroupBy(x => x.BlogName, x => x).Select(x =>
+                            var staticPages = pages.OfType<ContentPage>().ToArray();
+                            var blogs = pages.OfType<BlogArticle>().GroupBy(x => x.BlogName, x => x).Select(x =>
                                    new Blog()
                                    {
                                        Name = x.Key,
@@ -136,8 +136,11 @@ namespace VirtoCommerce.Storefront.Owin
                                        Articles = new StorefrontPagedList<BlogArticle>(x, 1, 1000, x.Count(), page => workContext.RequestUrl.SetQueryParameter("page", page.ToString()).ToString())
                                    }).ToArray();
 
-                            return pages;
+                            return new { Pages = pages, Blogs = blogs };
                         });
+
+                        workContext.Pages = staticContents.Pages;
+                        workContext.Blogs = staticContents.Blogs;
 
                         //Initialize blogs search criteria 
                         //TODO: read from query string

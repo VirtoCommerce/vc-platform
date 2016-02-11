@@ -74,6 +74,7 @@ namespace VirtoCommerce.LiquidThemeEngine
             Template.RegisterTag<LayoutTag>("layout");
             Template.RegisterTag<FormTag>("form");
             Template.RegisterTag<PaginateTag>("paginate");
+
             //Observe themes file system changes to invalidate cache if changes occur
             _fileSystemWatcher = MonitorThemeFileSystemChanges();
         }
@@ -269,14 +270,23 @@ namespace VirtoCommerce.LiquidThemeEngine
                 parameters = new Dictionary<string, object>();
             }
 
+            // Add request url, that can be then used by liquid tags like paginate
+            if(parameters.ContainsKey("path"))
+            {
+                parameters.Add("path", WorkContext.RequestUrl);
+            }
+
             Template.FileSystem = this;
 
             var renderParams = new RenderParameters()
             {
                 LocalVariables = Hash.FromDictionary(parameters)
             };
+
             var parsedTemplate = _cacheManager.Get(GetCacheKey("ParseTemplate", templateContent.GetHashCode().ToString()), "LiquidTheme", () => { return Template.Parse(templateContent); });
+
             var retVal = parsedTemplate.RenderWithTracing(renderParams);
+            
             //Copy key values which were generated in rendering to out parameters
             if (parameters != null && parsedTemplate.Registers != null)
             {
