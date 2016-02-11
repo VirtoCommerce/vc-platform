@@ -1,7 +1,7 @@
 ﻿var storefrontApp = angular.module('storefrontApp');
 
-storefrontApp.controller('productController', ['$rootScope', '$scope', '$window', 'dialogService', 'catalogService', 'cartService',
-    function ($rootScope, $scope, $window, dialogService, catalogService, cartService) {
+storefrontApp.controller('productController', ['$rootScope', '$scope', '$window', 'dialogService', 'catalogService', 'cartService', 'quoteRequestService',
+    function ($rootScope, $scope, $window, dialogService, catalogService, cartService, quoteRequestService) {
     //TODO: prevent add to cart not selected variation
     // display validator please select property
     // display price range
@@ -23,6 +23,20 @@ storefrontApp.controller('productController', ['$rootScope', '$scope', '$window'
         dialogService.showDialog(dialogData, 'recentlyAddedCartItemDialogController', 'storefront.recently-added-cart-item-dialog.tpl');
         cartService.addLineItem(product.Id, quantity).then(function (response) {
             $rootScope.$broadcast('cartItemsChanged');
+        });
+    }
+
+    $scope.addProductToActualQuoteRequest = function (product, quantity) {
+        var dialogData = {
+            ImageUrl: product.PrimaryImage.Url,
+            ListPrice: product.Price.ListPrice,
+            Name: product.Name,
+            PlacedPrice: product.Price.ActualPrice,
+            Quantity: quantity
+        };
+        dialogService.showDialog(dialogData, 'recentlyAddedActualQuoteRequestItemDialogController', 'storefront.recently-added-actual-quote-request-item-dialog.tpl');
+        quoteRequestService.addProductToQuoteRequest(product.Id, quantity).then(function (response) {
+            $rootScope.$broadcast('actualQuoteRequestItemsChanged');
         });
     }
 

@@ -270,6 +270,7 @@
     <Content Include="App_Data\Themes\default\assets\jcb.svg" />
     <Content Include="App_Data\Themes\default\assets\jquery.zoom.min.js" />
     <Content Include="App_Data\Themes\default\assets\js\cart.js" />
+    <Content Include="App_Data\Themes\default\assets\js\quote-request.js" />
     <Content Include="App_Data\Themes\default\assets\klarna-big.png" />
     <Content Include="App_Data\Themes\default\assets\laser.svg" />
     <Content Include="App_Data\Themes\default\assets\litecoin.svg" />
@@ -310,7 +311,6 @@
     <Content Include="App_Data\Themes\default\assets\js\directives.js" />
     <Content Include="App_Data\Themes\default\assets\js\main.js" />
     <Content Include="App_Data\Themes\default\assets\js\product.js" />
-    <Content Include="App_Data\Themes\default\assets\storefrontQuoteRequestController.js" />
     <Content Include="App_Data\Themes\default\assets\js\services.js" />
     <Content Include="App_Data\Themes\default\assets\thumbs-bar.gif" />
     <Content Include="App_Data\Themes\default\assets\toastr.css" />
@@ -323,7 +323,9 @@
     <Content Include="App_Data\Themes\default\social\shopify-social.svg" />
     <Content Include="App_Data\Themes\default\social\social-icons.css" />
     <Content Include="App_Data\Themes\default\snippets\notification.liquid" />
-    <Content Include="App_Data\Themes\default\templates\quote-request.liquid" />
+    <Content Include="App_Data\Themes\default\templates\quote-request.liquid">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="App_Data\x64\LibSass.x64.dll" />
     <Content Include="App_Data\x64\libsassnet.dll" />
     <Content Include="App_Data\x86\LibSass.x86.dll" />
@@ -421,8 +423,10 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\Themes\default\snippets\quote-modal.liquid" />
     <Content Include="App_Data\Themes\default\snippets\recently-added-cart-item-dialog.liquid" />
+    <Content Include="App_Data\Themes\default\snippets\recently-added-actual-quote-request-item-dialog.liquid">
+      <SubType>Designer</SubType>
+    </Content>
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -475,7 +479,6 @@
     <Content Include="App_Data\Themes\default\snippets\price.liquid" />
     <Content Include="App_Data\Themes\default\snippets\product-grid-item.liquid" />
     <Content Include="App_Data\Themes\default\snippets\product-list-item.liquid" />
-    <Content Include="App_Data\Themes\default\snippets\quote-informer.liquid" />
     <Content Include="App_Data\Themes\default\snippets\quote-totals.liquid" />
     <Content Include="App_Data\Themes\default\snippets\related-products.liquid" />
     <Content Include="App_Data\Themes\default\snippets\respond.liquid" />
@@ -514,7 +517,6 @@
     <Content Include="App_Data\Themes\default\templates\customers\addresses.liquid" />
     <Content Include="App_Data\Themes\default\templates\customers\login.liquid" />
     <Content Include="App_Data\Themes\default\templates\customers\order.liquid" />
-    <Content Include="App_Data\Themes\default\templates\customers\quote-request.liquid" />
     <Content Include="App_Data\Themes\default\templates\customers\quote-requests.liquid" />
     <Content Include="App_Data\Themes\default\templates\customers\register.liquid" />
     <Content Include="App_Data\Themes\default\templates\customers\reset_password.liquid" />

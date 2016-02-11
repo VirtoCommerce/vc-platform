@@ -62,10 +62,10 @@ namespace VirtoCommerce.Storefront.Controllers
             return Json(_cartBuilder.Cart, JsonRequestBehavior.AllowGet);
         }
 
-        // GET: /cart/totals/json
+        // GET: /cart/itemscount/json
         [HttpGet]
         [HandleJsonError]
-        public ActionResult CartTotalsJson()
+        public ActionResult ItemsCountJson()
         {
             EnsureThatCartExist();
 

@@ -43,6 +43,12 @@ namespace VirtoCommerce.Storefront.Model.Quote.Services
         IQuoteRequestBuilder AddItem(Product product, long quantity);
 
         /// <summary>
+        /// Submit captured RFQ
+        /// </summary>
+        /// <returns></returns>
+        IQuoteRequestBuilder Submit();
+
+        /// <summary>
         /// Reject captured RFQ
         /// </summary>
         /// <returns></returns>

@@ -49,6 +49,7 @@
     {{ 'directives.js' | asset_url | script_tag }}
     {{ 'main.js' | asset_url | script_tag }}
     {{ 'cart.js' | asset_url | script_tag }}
+    {{ 'quote-request.js' | asset_url | script_tag }}
     {{ 'category.js' | asset_url | script_tag }}
     {{ 'product.js' | asset_url | script_tag }}
 
@@ -59,6 +60,7 @@
 <body id="{{ page_title | handle }}" class="{% if customer %}customer-logged-in {% endif %}template-{{ template | replace: '.', ' ' | truncatewords: 1, '' | handle }}" ng-controller="mainController" ng-init="baseUrl='{{ '/' | absolute_url }}'">
     {% include 'notification' %}
     {% include 'recently-added-cart-item-dialog' %}
+    {% include 'recently-added-actual-quote-request-item-dialog' %}
     {% if settings.store_selector_enable %}
     {% include 'top-header-selector' %}
     {% endif %}
@@ -110,10 +112,10 @@
                     {% endcomment %}
 
                     <span class="site-header--meta-links medium-down--hide">
-                        <span ng-if="customer && customer.UserName != 'Anonymous'" ng-cloak>
+                        <span ng-if="customer && customer.IsRegisteredUser" ng-cloak>
                             {{ 'layout.customer.logged_in_as_label' | t }} <a href="{{ 'account' | absolute_url }}" ng-bind="customer.FirstName"></a> &middot; {{ 'layout.customer.log_out' | t | customer_logout_link }}
                         </span>
-                        <span ng-if="customer && customer.UserName == 'Anonymous'" ng-cloak>
+                        <span ng-if="customer && !customer.IsRegisteredUser" ng-cloak>
                             {{ 'layout.customer.sign_in' | t | customer_login_link }}
                             <span class="site-header--spacer">{{ 'layout.customer.or' | t }}</span>
                             {{ 'layout.customer.create_account' | t | customer_register_link }}
@@ -125,12 +127,12 @@
                 {% endif %}
                 {% include 'search-bar' %}
                 {% if shop.quotes_enabled %}
-                <a class="header-cart-btn cart-toggle" href="{{ 'quoterequest' | absolute_url }}" id="btn-cart-toggle">
-                    <span class="fa fa-calculator"></span>
-                    Quote <span id="cartCount" ng-class="{ 'visible-count': actualQuoteItemsCount > 0 }" ng-bind="actualQuoteItemsCount" ng-cloak></span>
-                </a>
+                    <a class="header-cart-btn cart-toggle" ng-controller="actualQuoteRequestBarController" ng-click="outerRedirect(baseUrl + 'quoterequest/#/' + actualQuoteRequest.Id)">
+                        <span class="fa fa-calculator"></span>
+                        Quote <span id="quoteRequestCount" ng-class="{ 'visible-count': actualQuoteRequest.ItemsCount > 0 }" ng-bind="actualQuoteRequest.ItemsCount" ng-cloak></span>
+                    </a>
                 {% endif %}
-                <a class="header-cart-btn cart-toggle" href="{{ 'cart' | absolute_url }}" id="btn-cart-toggle" ng-controller="cartBarController">
+                <a class="header-cart-btn cart-toggle" href="{{ 'cart' | absolute_url }}" ng-controller="cartBarController">
                     <span class="icon icon-cart"></span>
                     {{ 'layout.cart.cart' | t }} <span id="cartCount" ng-class="{ 'visible-count': cartItemsCount > 0 }" ng-bind="cartItemsCount" ng-cloak></span>
                 </a>
@@ -149,7 +151,7 @@
             <a class="menu-toggle mobileNavBar-link">{{ 'layout.navigation.mobile_menu' | t }}</a>
         </div>
         <div class="display-table-cell">
-            <a class="cart-toggle mobileNavBar-link" href="" ng-click="toggleCartModal(isCartModalVisible)">
+            <a class="cart-toggle mobileNavBar-link" href="{{ 'cart' | absolute_url }}" ng-click="toggleCartModal(isCartModalVisible)">
                 <span class="icon icon-cart"></span>
                 {{ 'layout.cart.cart' | t }} <span class="cartCount" ng-bind="cart.ItemsCount" ng-if="cart.ItemsCount > 0"></span>
             </a>
@@ -159,9 +161,6 @@
         {{ content_for_layout }}
     </main>
     {% include 'footer' %}
-    {% if shop.quotes_enabled %}
-    {% include 'quote-modal' %}
-    {% endif %}
     <script>
         window.quotesEnabled = {{ shop.quotes_enabled }};
     </script>

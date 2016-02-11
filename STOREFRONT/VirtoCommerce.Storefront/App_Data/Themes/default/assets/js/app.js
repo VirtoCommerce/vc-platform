@@ -23,8 +23,11 @@ storefrontApp.factory('httpErrorInterceptor', ['$q', '$rootScope', function ($q,
     return httpErrorInterceptor;
 }])
 
+storefrontApp.controller('testController', ['$routeParams', function ($routeParams) {
+    alert(1);
+}]);
+
 storefrontApp.config(['$interpolateProvider', '$routeProvider', '$httpProvider', function ($interpolateProvider, $routeProvider, $httpProvider) {
-    //Add interceptor
     $httpProvider.interceptors.push('httpErrorInterceptor');
 
     $routeProvider
