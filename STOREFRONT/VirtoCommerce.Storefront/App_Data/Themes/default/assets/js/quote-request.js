@@ -175,6 +175,7 @@ storefrontApp.controller('quoteRequestController', ['$rootScope', '$scope', '$lo
                     i++;
                 });
             });
+            quoteRequest.RequestShippingQuote = true;
             $scope.quoteRequest = quoteRequest;
         });
     }
