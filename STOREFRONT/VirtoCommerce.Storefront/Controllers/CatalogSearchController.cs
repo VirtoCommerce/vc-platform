@@ -27,9 +27,10 @@ namespace VirtoCommerce.Storefront.Controllers
         /// This method used for search products by given criteria 
         /// </summary>
         /// <returns></returns>
-        public async Task<ActionResult> SearchProducts()
+        public ActionResult SearchProducts()
         {
-            WorkContext.CurrentCatalogSearchResult = await _searchService.SearchAsync(WorkContext.CurrentCatalogSearchCriteria);
+            //WorkContext.CurrentCatalogSearchResult = await _searchService.SearchAsync(WorkContext.CurrentCatalogSearchCriteria);
+            WorkContext.CurrentCatalogSearchResult = new ProxyCatalogSearchResult(() => _searchService.SearchAsync(WorkContext.CurrentCatalogSearchCriteria));
 
             return View("collection", WorkContext);
         }

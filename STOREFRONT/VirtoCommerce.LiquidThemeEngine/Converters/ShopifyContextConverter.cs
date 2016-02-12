@@ -41,7 +41,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             var searchResult = workContext.CurrentCatalogSearchResult;
             if (searchResult != null)
             {
-                result.Collection = searchResult.ToShopifyModel(workContext);
+                result.Search = searchResult.ToShopifyModel(workContext);
 
                 if (searchResult.Categories != null)
                 {

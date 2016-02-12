@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace VirtoCommerce.Storefront.Model.Common
 {
@@ -14,6 +10,7 @@ namespace VirtoCommerce.Storefront.Model.Common
             PageNumber = Convert.ToInt32(queryString.Get("page") ?? 1.ToString());
             PageSize = Convert.ToInt32(queryString.Get("count") ?? 10.ToString());
         }
+
         public int Start
         {
             get
@@ -23,8 +20,7 @@ namespace VirtoCommerce.Storefront.Model.Common
         }
                 
         public int PageNumber { get; set; }
+
         public int PageSize { get; set; }
-
-
     }
 }

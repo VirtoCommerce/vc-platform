@@ -86,6 +86,7 @@
     <Compile Include="Common\Events\IEventPublisher.cs" />
     <Compile Include="Common\Exceptions\StorefrontException.cs" />
     <Compile Include="Common\PagedSearchCriteria.cs" />
+    <Compile Include="Common\ProxyCatalogSearchResult.cs" />
     <Compile Include="Customer\Events\UserLoginEvent.cs" />
     <Compile Include="Customer\Services\ICustomerService.cs" />
     <Compile Include="Order\Events\OrderPlacedEvent.cs" />

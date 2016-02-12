@@ -8,10 +8,11 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
 {
     public static class CollectionConverter
     {
-        public static Collection ToShopifyModel(this storefrontModel.Catalog.CatalogSearchResult searchResult, storefrontModel.WorkContext workContext)
+        public static Search ToShopifyModel(this storefrontModel.Catalog.CatalogSearchResult searchResult, storefrontModel.WorkContext workContext)
         {
-            var result = new Collection();
+            var result = new Search();
 
+            /*
             if (searchResult.Category != null)
             {
                 result = searchResult.Category.ToShopifyModel(workContext);
@@ -39,6 +40,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             {
                 result.SortBy = workContext.CurrentCatalogSearchCriteria.SortBy;
             }
+            */
 
             return result;
         }

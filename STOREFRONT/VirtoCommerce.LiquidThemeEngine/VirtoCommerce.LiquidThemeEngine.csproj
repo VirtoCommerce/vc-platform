@@ -181,6 +181,7 @@
     <Compile Include="Objects\QuoteItem.cs" />
     <Compile Include="Objects\QuoteRequest.cs" />
     <Compile Include="Objects\QuoteRequestTotals.cs" />
+    <Compile Include="Objects\Search.cs" />
     <Compile Include="Objects\ShippingMethod.cs" />
     <Compile Include="Objects\Shop.cs" />
     <Compile Include="Objects\ShopifyThemeWorkContext.cs" />
