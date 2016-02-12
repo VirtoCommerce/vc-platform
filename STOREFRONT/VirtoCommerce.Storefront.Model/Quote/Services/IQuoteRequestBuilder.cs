@@ -55,6 +55,12 @@ namespace VirtoCommerce.Storefront.Model.Quote.Services
         IQuoteRequestBuilder Reject();
 
         /// <summary>
+        /// Confirm captured RFQ
+        /// </summary>
+        /// <returns></returns>
+        IQuoteRequestBuilder Confirm();
+
+        /// <summary>
         /// Remove item from captured RFQ
         /// </summary>
         /// <param name="quoteItemId"></param>

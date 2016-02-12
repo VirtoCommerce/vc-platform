@@ -1,10 +1,10 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.Storefront.Converters;
 using VirtoCommerce.Storefront.Model;
+using VirtoCommerce.Storefront.Model.Cart.Services;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Common.Exceptions;
@@ -18,14 +18,16 @@ namespace VirtoCommerce.Storefront.Controllers
     {
         private readonly IQuoteModuleApi _quoteApi;
         private readonly IQuoteRequestBuilder _quoteRequestBuilder;
+        private readonly ICartBuilder _cartBuilder;
         private readonly ICatalogSearchService _catalogSearchService;
 
-        public QuoteRequestController(WorkContext workContext, IStorefrontUrlBuilder urlBuilder, IQuoteModuleApi quoteApi, IQuoteRequestBuilder quoteRequestBuilder,
-            ICatalogSearchService catalogSearchService)
+        public QuoteRequestController(WorkContext workContext, IStorefrontUrlBuilder urlBuilder, ICartBuilder cartBuilder,
+            IQuoteModuleApi quoteApi, IQuoteRequestBuilder quoteRequestBuilder, ICatalogSearchService catalogSearchService)
             : base(workContext, urlBuilder)
         {
             _quoteApi = quoteApi;
             _quoteRequestBuilder = quoteRequestBuilder;
+            _cartBuilder = cartBuilder;
             _catalogSearchService = catalogSearchService;
         }
 
@@ -144,6 +146,41 @@ namespace VirtoCommerce.Storefront.Controllers
             {
                 _quoteRequestBuilder.Update(quoteRequest);
                 await _quoteRequestBuilder.SaveAsync();
+            }
+
+            return Json(null, JsonRequestBehavior.AllowGet);
+        }
+
+        // POST: /quoterequest/totals
+        [HttpPost]
+        public async Task<ActionResult> TotalsJson(QuoteRequestFormModel quoteRequest)
+        {
+            QuoteRequestTotals totals = null;
+
+            var foundedQuoteRequest = await GetQuoteRequestByNumberAsync(quoteRequest.Id);
+            if (foundedQuoteRequest != null)
+            {
+                _quoteRequestBuilder.TakeQuoteRequest(foundedQuoteRequest).Update(quoteRequest);
+                var quoteResult = await _quoteApi.QuoteModuleCalculateTotalsAsync(_quoteRequestBuilder.QuoteRequest.ToServiceModel());
+                totals = quoteResult.Totals.ToWebModel(WorkContext.CurrentCurrency);
+            }
+
+            return Json(totals, JsonRequestBehavior.AllowGet);
+        }
+
+        // POST: /quoterequest/confirm
+        [HttpPost]
+        public async Task<ActionResult> ConfirmJson(QuoteRequestFormModel quoteRequest)
+        {
+            var foundedQuoteRequest = await GetQuoteRequestByNumberAsync(quoteRequest.Id);
+            if (foundedQuoteRequest != null)
+            {
+                _quoteRequestBuilder.TakeQuoteRequest(foundedQuoteRequest).Update(quoteRequest).Confirm();
+                await _quoteRequestBuilder.SaveAsync();
+
+                _cartBuilder.TakeCart(WorkContext.CurrentCart);
+                await _cartBuilder.FillFromQuoteRequest(foundedQuoteRequest);
+                await _cartBuilder.SaveAsync();
             }
 
             return Json(null, JsonRequestBehavior.AllowGet);

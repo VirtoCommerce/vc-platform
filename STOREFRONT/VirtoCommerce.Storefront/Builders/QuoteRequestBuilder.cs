@@ -103,6 +103,14 @@ namespace VirtoCommerce.Storefront.Builders
             return this;
         }
 
+        public IQuoteRequestBuilder Confirm()
+        {
+            _quoteRequest.Tag = null;
+            _quoteRequest.Status = "Ordered";
+
+            return this;
+        }
+
         public IQuoteRequestBuilder AddItem(Product product, long quantity)
         {
             _quoteRequest.Items.Add(product.ToQuoteItem(quantity));
@@ -147,6 +155,11 @@ namespace VirtoCommerce.Storefront.Builders
                     if (existingItem != null)
                     {
                         existingItem.Comment = item.Comment;
+                        existingItem.SelectedTierPrice = new TierPrice
+                        {
+                            Price = new Money(item.SelectedTierPrice.Price, _quoteRequest.Currency),
+                            Quantity = item.SelectedTierPrice.Quantity
+                        };
                         existingItem.ProposalPrices.Clear();
                         foreach (var proposalPrice in item.ProposalPrices)
                         {

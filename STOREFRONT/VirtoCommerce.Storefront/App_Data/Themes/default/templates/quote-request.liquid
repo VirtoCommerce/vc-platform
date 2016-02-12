@@ -104,7 +104,7 @@
                                 <small ng-bind="tierPrice.Price.FormatedAmount"></small>
                             </span>
                             <span class="h2 tier-price" ng-repeat="tierPrice in quoteItem.ProposalPrices" ng-if="displayForStatuses(['Proposal sent'])">
-                                <input id="{('QuoteItem_' + quoteItem.Id + '_' + tierPrice.Id )}" name="{('QuoteItem_' + quoteItem.Id + '_SelectedTierPrice' )}" style="display: inline-block;" type="radio" ng-model="quoteItem.SelectedTierPrice" ng-value="tierPrice" />
+                                <input id="{('QuoteItem_' + quoteItem.Id + '_' + tierPrice.Id )}" name="{('QuoteItem_' + quoteItem.Id + '_SelectedTierPrice' )}" style="display: inline-block;" type="radio" ng-model="quoteItem.SelectedTierPrice" ng-value="tierPrice" ng-change="selectTierPrice()" />
                                 <label for="{('QuoteItem_' + quoteItem.Id + '_' + tierPrice.Id )}" style="display: inline-block;" ng-bind="tierPrice.Price.FormatedAmount"></label>
                             </span>
                         </div>
@@ -118,6 +118,37 @@
                 </div>
             </div>
         </div>
+        <div class="cart-row" id="quote-totals" ng-if="displayForStatuses(['Proposal sent'])">
+            <div class="grid">
+                <div class="grid-item text-right">
+                    <div class="cart-total">
+                        Subtotal
+                        <span class="h1 cart-subtotal--price">
+                            <small id="quote-subtotal" ng-bind="quoteRequest.Totals.SubTotalExlTax.FormatedAmount"></small>
+                        </span>
+                    </div>
+                    <div class="cart-total" ng-if="quoteRequest.Totals.DiscountTotal.Amount > 0">
+                        Discount
+                        <span class="h1 cart-subtotal--price">
+                            <small id="quote-subtotal" ng-bind="quoteRequest.Totals.DiscountTotal.FormatedAmount"></small>
+                        </span>
+                    </div>
+                    <div class="cart-total">
+                        Tax
+                        <span class="h1 cart-subtotal--price">
+                            <small id="quote-tax-total" ng-bind="quoteRequest.Totals.TaxTotal.FormatedAmount"></small>
+                        </span>
+                    </div>
+                    <div class="cart-total">
+                        Grand total
+                        <span class="h1 cart-subtotal--price">
+                            <small id="quote-grand-total" ng-bind="quoteRequest.Totals.GrandTotalInclTax.FormatedAmount"></small>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="grid" ng-if="displayForStatuses(['New'])">
             <div class="grid-item">
                 <div class="ublock">

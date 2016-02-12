@@ -75,6 +75,8 @@ namespace VirtoCommerce.Storefront
             routes.MapLocalizedStorefrontRoute("QuoteRequest.Update", "quoterequest/update", defaults: new { controller = "QuoteRequest", action = "UpdateJson" });
             routes.MapLocalizedStorefrontRoute("QuoteRequest.Submit", "quoterequest/submit", defaults: new { controller = "QuoteRequest", action = "SubmitJson" });
             routes.MapLocalizedStorefrontRoute("QuoteRequest.Reject", "quoterequest/reject", defaults: new { controller = "QuoteRequest", action = "RejectJson" });
+            routes.MapLocalizedStorefrontRoute("QuoteRequest.Totals", "quoterequest/totals", defaults: new { controller = "QuoteRequest", action = "TotalsJson" });
+            routes.MapLocalizedStorefrontRoute("QuoteRequest.Confirm", "quoterequest/confirm", defaults: new { controller = "QuoteRequest", action = "ConfirmJson" });
             routes.MapLocalizedStorefrontRoute("Account.QuoteRequests", "account/quoterequests", defaults: new { controller = "QuoteRequest", action = "QuoteRequests" });
 
             //CatalogSearch

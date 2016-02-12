@@ -213,10 +213,11 @@ storefrontApp.controller('checkoutController', ['$rootScope', '$scope', '$window
             $scope.customer.Addresses[i].Id = i + 1;
             $scope.customer.Addresses[i].StringifiedAddress = stringifyAddress($scope.customer.Addresses[i]);
         }
-        if ($scope.currentPath == shippingAddressStepInnerUrl) {
+
+        if ((!$scope.checkout.Shipment || !$scope.checkout.Shipment.DeliveryAddress) && $scope.currentPath == shippingAddressStepInnerUrl) {
             selectAddress(shippingAddressType);
         }
-        if ($scope.currentPath == paymentMethodStepInnerUrl) {
+        if ((!$scope.checkout.Payment || !$scope.checkout.Shipment.BillingAddress) && $scope.currentPath == paymentMethodStepInnerUrl) {
             selectAddress(billingAddressType);
         }
     }
@@ -241,7 +242,7 @@ storefrontApp.controller('checkoutController', ['$rootScope', '$scope', '$window
         var stringifiedAddress = address.FirstName + ' ' + address.LastName + ', ';
         stringifiedAddress += address.Organization ? address.Organization + ', ' : '';
         stringifiedAddress += address.CountryName + ', ';
-        stringifiedAddress += address.RegionName ? address.RegionName : '';
+        stringifiedAddress += address.RegionName ? address.RegionName + ', ' : '';
         stringifiedAddress += address.City;
         stringifiedAddress += address.Line1 + ', '
         stringifiedAddress += address.Line2 ? address.Line2 : '';

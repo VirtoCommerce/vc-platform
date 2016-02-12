@@ -120,6 +120,12 @@ storefrontApp.service('quoteRequestService', ['$http', function ($http) {
         },
         updateQuoteRequest: function (quoteRequest) {
             return $http.post('quoterequest/update', { quoteRequest: quoteRequest });
+        },
+        getTotals: function (quoteRequest) {
+            return $http.post('quoterequest/totals', { quoteRequest: quoteRequest });
+        },
+        confirmQuoteRequest: function (quoteRequest) {
+            return $http.post('quoterequest/confirm', { quoteRequest: quoteRequest });
         }
     }
 }]);
