@@ -1,22 +1,17 @@
 ﻿using System.Collections.Generic;
+using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Model
 {
     /// <summary>
     /// Represents site navigation menu link list object
     /// </summary>
-    public class MenuLinkList
+    public class MenuLinkList : Entity
     {
         public MenuLinkList()
         {
             MenuLinks = new List<MenuLink>();
-            SecurityScopes = new List<string>();
         }
-
-        /// <summary>
-        /// Gets or sets the ID of site navigation menu link list
-        /// </summary>
-        public string Id { get; set; }
 
         /// <summary>
         /// Gets or sets the name of site navigation menu link list
@@ -31,16 +26,12 @@ namespace VirtoCommerce.Storefront.Model
         /// <summary>
         /// Gets or sets the locale of site navigation menu link list
         /// </summary>
-        public string Language { get; set; }
+        public Language Language { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of site navigation menu link for link list
         /// </summary>
         public ICollection<MenuLink> MenuLinks { get; set; }
 
-        /// <summary>
-        /// Gets or sets the collection of security scopes for site navigation menu link list
-        /// </summary>
-        public ICollection<string> SecurityScopes { get; set; }
     }
 }

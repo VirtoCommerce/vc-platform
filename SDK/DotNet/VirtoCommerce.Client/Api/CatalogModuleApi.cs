@@ -5,7 +5,7 @@ using System.Linq;
 using RestSharp;
 using VirtoCommerce.Client.Client;
 using VirtoCommerce.Client.Model;
-
+using System.Threading.Tasks;
 
 namespace VirtoCommerce.Client.Api
 {
@@ -1307,7 +1307,8 @@ namespace VirtoCommerce.Client.Api
         /// <param name="catalogId">The catalog id.</param>
         /// <returns>Task of ApiResponse (VirtoCommerceCatalogModuleWebModelProperty)</returns>
         System.Threading.Tasks.Task<ApiResponse<VirtoCommerceCatalogModuleWebModelProperty>> CatalogModulePropertiesGetNewCatalogPropertyAsyncWithHttpInfo (string catalogId);
-        
+
+        System.Threading.Tasks.Task<List<VirtoCommerceCatalogModuleWebModelCategory>> CatalogModuleCategoriesGetCategoriesByIdsAsync(List<string> ids, string respGroup = null);
     }
   
     /// <summary>
@@ -2831,7 +2832,14 @@ namespace VirtoCommerce.Client.Api
                 (VirtoCommerceCatalogModuleWebModelCategory) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceCatalogModuleWebModelCategory)));
             
         }
-        
+
+        public async System.Threading.Tasks.Task<List<VirtoCommerceCatalogModuleWebModelCategory>> CatalogModuleCategoriesGetCategoriesByIdsAsync(List<string> ids, string respGroup = null)
+        {
+            await new TaskFactory().StartNew(() => { });
+            throw new NotImplementedException();
+
+        }
+
         /// <summary>
         /// Start catalog data export process. Data export is an async process. An ExportNotification is returned for progress reporting.
         /// </summary>

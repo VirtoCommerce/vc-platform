@@ -24,20 +24,15 @@ namespace VirtoCommerce.Content.Web
 {
     public class Module : ModuleBase, ISupportExportImportModule
     {
-        #region Fields
 
         private readonly IUnityContainer _container;
 
-        #endregion
-
-        #region Constructors and Destructors
 
         public Module(IUnityContainer container)
         {
             _container = container;
         }
 
-        #endregion
 
         #region Public Methods and Operators
 
@@ -59,7 +54,7 @@ namespace VirtoCommerce.Content.Web
         public override void PostInitialize()
         {
             base.PostInitialize();
-            //Create EnableQuote dynamic propertiy for  Store 
+            //Create EnableQuote dynamic property for  Store 
             var dynamicPropertyService = _container.Resolve<IDynamicPropertyService>();
 
             var defaultThemeNameProperty = new DynamicProperty

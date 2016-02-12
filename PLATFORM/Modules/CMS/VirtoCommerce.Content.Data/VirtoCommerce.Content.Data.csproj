@@ -74,6 +74,10 @@
     <Compile Include="Migrations\201512121533016_RemovePagesAndThemes.Designer.cs">
       <DependentUpon>201512121533016_RemovePagesAndThemes.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201602120950514_LinkAssociationObject.cs" />
+    <Compile Include="Migrations\201602120950514_LinkAssociationObject.Designer.cs">
+      <DependentUpon>201602120950514_LinkAssociationObject.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\MenuLink.cs" />
     <Compile Include="Models\MenuLinkList.cs" />
@@ -109,6 +113,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201512121533016_RemovePagesAndThemes.resx">
       <DependentUpon>201512121533016_RemovePagesAndThemes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201602120950514_LinkAssociationObject.resx">
+      <DependentUpon>201602120950514_LinkAssociationObject.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
