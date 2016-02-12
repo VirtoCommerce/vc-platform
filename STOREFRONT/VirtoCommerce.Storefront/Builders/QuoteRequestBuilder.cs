@@ -21,18 +21,16 @@ namespace VirtoCommerce.Storefront.Builders
     public class QuoteRequestBuilder : IQuoteRequestBuilder, IAsyncObserver<UserLoginEvent>
     {
         private readonly IQuoteModuleApi _quoteApi;
-        private readonly IPromotionEvaluator _promotionEvaluator;
         private readonly ICacheManager<object> _cacheManager;
         private readonly IEventPublisher<QuoteRequestUpdatedEvent> _quoteRequestUpdatedEventPublisher;
 
         private QuoteRequest _quoteRequest;
         private const string _quoteRequestCacheRegion = "QuoteRequestRegion";
 
-        public QuoteRequestBuilder(IQuoteModuleApi quoteApi, IPromotionEvaluator promotionEvaluator, ICacheManager<object> cacheManager,
+        public QuoteRequestBuilder(IQuoteModuleApi quoteApi, ICacheManager<object> cacheManager,
             IEventPublisher<QuoteRequestUpdatedEvent> quoteRequestUpdatedEventPublisher)
         {
             _quoteApi = quoteApi;
-            _promotionEvaluator = promotionEvaluator;
             _cacheManager = cacheManager;
             _quoteRequestUpdatedEventPublisher = quoteRequestUpdatedEventPublisher;
         }
