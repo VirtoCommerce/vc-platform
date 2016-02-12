@@ -1,13 +1,17 @@
 ﻿using DotLiquid;
+using System.Threading.Tasks;
+using VirtoCommerce.Storefront.Model.Catalog;
 
 namespace VirtoCommerce.LiquidThemeEngine.Objects
 {
     public class Search : Drop
     {
+        CatalogSearchResult _proxyResults = null;
         //private bool _productsLoaded = false;
         #region Constructors and Destructors
-        public Search()
+        public Search(CatalogSearchResult results)
         {
+            _proxyResults = results;
             this.Performed = true;
         }
         #endregion
@@ -48,6 +52,8 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
                 return;
             }
 
+            var response = Task.Run(() => _proxyResults.Products).Result;
+            //var products = _proxyResults.Products;
             //var pageSize = this.Context == null ? 20 : this.Context["paginate.page_size"].ToInt(20);
             //var skip = this.Context == null ? 0 : this.Context["paginate.current_offset"].ToInt();
             //var terms = this.Terms; //this.Context["current_query"] as string;

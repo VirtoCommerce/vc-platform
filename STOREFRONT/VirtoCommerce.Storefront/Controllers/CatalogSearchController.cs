@@ -32,7 +32,7 @@ namespace VirtoCommerce.Storefront.Controllers
             //WorkContext.CurrentCatalogSearchResult = await _searchService.SearchAsync(WorkContext.CurrentCatalogSearchCriteria);
             WorkContext.CurrentCatalogSearchResult = new ProxyCatalogSearchResult(() => _searchService.SearchAsync(WorkContext.CurrentCatalogSearchCriteria));
 
-            return View("collection", WorkContext);
+            return View("search", WorkContext);
         }
 
         /// <summary>

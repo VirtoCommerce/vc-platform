@@ -10,7 +10,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
     {
         public static Search ToShopifyModel(this storefrontModel.Catalog.CatalogSearchResult searchResult, storefrontModel.WorkContext workContext)
         {
-            var result = new Search();
+            var result = new Search(searchResult);
 
             /*
             if (searchResult.Category != null)
