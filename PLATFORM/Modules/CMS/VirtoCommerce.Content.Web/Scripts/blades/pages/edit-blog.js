@@ -18,7 +18,7 @@
 				    canExecuteMethod: function () {
 				        return !angular.equals(blade.originalEntity, blade.entity) && formScope.$valid;
 				    },
-				    permission: 'marketing:update'
+				    permission: 'content:update'
 				},
 				{
 				    name: "platform.commands.reset", icon: 'fa fa-undo',
@@ -28,7 +28,7 @@
 				    canExecuteMethod: function () {
 				        return blade.entity.name !== blade.originalEntity.name;
 				    },
-				    permission: 'marketing:update'
+				    permission: 'content:update'
 				},
                 {
                     name: "platform.commands.delete", icon: 'fa fa-trash',
@@ -50,7 +50,7 @@
                     canExecuteMethod: function () {
                         return true;
                     },
-                    permission: 'marketing:update'
+                    permission: 'content:update'
                 }
             ];
         }

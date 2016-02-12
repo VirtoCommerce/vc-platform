@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.contentModule')
-.controller('virtoCommerce.contentModule.menuLinkListController', ['$scope', 'virtoCommerce.contentModule.menus', 'virtoCommerce.contentModule.stores', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', function ($scope, menus, menusStores, bladeNavigationService, dialogService) {
+.controller('virtoCommerce.contentModule.menuLinkListController', ['$scope', 'virtoCommerce.contentModule.menus', 'virtoCommerce.contentModule.stores', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'virtoCommerce.contentModule.menuLinkList-associationTypesService', function ($scope, menus, menusStores, bladeNavigationService, dialogService, associationTypesService) {
     var blade = $scope.blade;
     blade.selectedItemIds = [];
 
@@ -105,9 +105,7 @@
 
     $scope.selected = function (id) {
         return _.contains(blade.selectedItemIds, id);
-    }
-
-    blade.initialize();
+    };
 
     blade.saveChanges = function () {
         //checkForNull();
@@ -115,10 +113,10 @@
         menus.checkList({ storeId: blade.choosenStoreId, id: blade.currentEntity.id, name: blade.currentEntity.name, language: blade.currentEntity.language }, function (data) {
             if (Boolean(data.result)) {
                 menus.update({ storeId: blade.choosenStoreId }, blade.currentEntity, function (data) {
-                	blade.parentBlade.initialize();
-                	blade.newList = false;
-                	blade.isLoading = false;
-                	blade.origEntity = angular.copy(blade.currentEntity);
+                    blade.parentBlade.initialize();
+                    blade.newList = false;
+                    blade.isLoading = false;
+                    blade.origEntity = angular.copy(blade.currentEntity);
                 },
                 function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
             }
@@ -261,14 +259,13 @@
 
     $scope.blade.headIcon = 'fa-archive';
 
-
-
     $scope.sortableOptions = {
-        update: function (e, ui) {
-
-        },
         stop: function (e, ui) {
             blade.recalculatePriority();
-        }
+        },
+        axis: 'y'
     };
+    
+    $scope.associatedObjectTypes = associationTypesService.objects;
+    blade.initialize();
 }]);

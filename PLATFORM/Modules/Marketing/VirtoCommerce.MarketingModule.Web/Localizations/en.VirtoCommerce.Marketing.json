@@ -269,8 +269,7 @@
     },
     "commands": {
       "manage-type-properties": "Manage type properties",
-      "edit-folder": "Edit folder",
-      "pick-selected": "Pick selected"
+      "edit-folder": "Edit folder"
     }
   }
 }

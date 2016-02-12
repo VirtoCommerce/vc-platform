@@ -28,8 +28,8 @@
 		public string MenuLinkListId { get; set; }
 
         /// <summary>
-        /// Each link element can has a associated object like a Product, Category, Promotion etc.
-        /// Is a primary key for associated object
+        /// Each link element can have an associated object like Product, Category, Promotion, etc.
+        /// Is a primary key of associated object
         /// </summary>
         public string AssociatedObjectId { get; set; }
         /// <summary>
