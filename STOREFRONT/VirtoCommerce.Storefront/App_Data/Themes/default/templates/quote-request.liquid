@@ -207,7 +207,7 @@
                 </div>
                 <div class="ublock" ng-if="quoteRequest.RequestShippingQuote">
                     <div class="h3">Shipping address</div>
-                    <input id="ShippingAddressEqualsBilling" name="ShippingAddressEqualsBilling" type="checkbox" style="display: inline-block;" ng-model="quoteRequest.ShippingAddressEqualsBilling" />
+                    <input id="ShippingAddressEqualsBilling" name="ShippingAddressEqualsBilling" type="checkbox" style="display: inline-block;" ng-model="quoteRequest.ShippingAddressEqualsBilling" ng-change="setShippingAddressEqualsBilling()" />
                     <label for="ShippingAddressEqualsBilling" style="display: inline-block;">Billing Address is same as Shipping Address</label>
                     <input id="ShippingAddressType" name="ShippingAddressType" type="hidden" value="Shipping" ng-model="quoteRequest.ShippingAddress.Type" ng-init="quoteRequest.ShippingAddress.Type = 'Shipping'" />
                     <div class="grid">

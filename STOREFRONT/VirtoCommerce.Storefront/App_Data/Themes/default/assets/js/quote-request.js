@@ -134,6 +134,17 @@ storefrontApp.controller('quoteRequestController', ['$rootScope', '$scope', '$lo
         });
     }
 
+    $scope.setShippingAddressEqualsBilling = function () {
+        if ($scope.quoteRequest.ShippingAddressEqualsBilling) {
+            $scope.quoteRequest.ShippingAddress = angular.copy($scope.quoteRequest.BillingAddress);
+            $scope.quoteRequest.ShippingAddress.Type = 'Shipping';
+            if ($scope.quoteRequest.ShippingAddress.CountryCode) {
+                $scope.shippingCountry = $scope.billingCountry;
+                getCountryRegions('Shipping', $scope.quoteRequest.ShippingAddress.CountryCode);
+            }
+        }
+    }
+
     function initialize() {
         var quoteRequestNumber = $location.url().replace('/', '');
         $scope.quoteRequest = { ItemsCount: 0 };
@@ -158,6 +169,9 @@ storefrontApp.controller('quoteRequestController', ['$rootScope', '$scope', '$lo
                 var i = 1;
                 _.each(quoteItem.ProposalPrices, function (tierPrice) {
                     tierPrice.Id = i;
+                    if (quoteItem.SelectedTierPrice.Quantity == tierPrice.Quantity) {
+                        quoteItem.SelectedTierPrice.Id = i;
+                    }
                     i++;
                 });
             });
