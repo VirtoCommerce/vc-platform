@@ -39,6 +39,7 @@ using VirtoCommerce.Storefront.Model.Customer.Services;
 using VirtoCommerce.Storefront.Model.Common.Events;
 using VirtoCommerce.Storefront.Model.Order.Events;
 using NLog;
+using VirtoCommerce.Storefront.Model.Quote.Events;
 
 [assembly: OwinStartup(typeof(Startup))]
 [assembly: PreApplicationStartMethod(typeof(Startup), "PreApplicationStart")]
@@ -153,8 +154,10 @@ namespace VirtoCommerce.Storefront
             //Register domain events
             container.RegisterType<IEventPublisher<OrderPlacedEvent>, EventPublisher<OrderPlacedEvent>>();
             container.RegisterType<IEventPublisher<UserLoginEvent>, EventPublisher<UserLoginEvent>>();
+            container.RegisterType<IEventPublisher<QuoteRequestUpdatedEvent>, EventPublisher<QuoteRequestUpdatedEvent>>();
             //Register event handlers (observers)
             container.RegisterType<IAsyncObserver<OrderPlacedEvent>, CustomerServiceImpl>("Invalidate customer cache when user placed new order");
+            container.RegisterType<IAsyncObserver<QuoteRequestUpdatedEvent>, CustomerServiceImpl>("Invalidate customer cache when quote request was updated");
             container.RegisterType<IAsyncObserver<UserLoginEvent>, CartBuilder>("Merge anonymous cart with loggined user cart");
             container.RegisterType<IAsyncObserver<UserLoginEvent>, QuoteRequestBuilder>("Merge anonymous quote request with loggined user quote");
 

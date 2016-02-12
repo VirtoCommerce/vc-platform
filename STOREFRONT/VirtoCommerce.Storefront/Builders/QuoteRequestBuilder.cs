@@ -14,6 +14,7 @@ using VirtoCommerce.Storefront.Model.Order.Events;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.Client.Model;
 using VirtoCommerce.Storefront.Model.Common.Events;
+using VirtoCommerce.Storefront.Model.Quote.Events;
 
 namespace VirtoCommerce.Storefront.Builders
 {
@@ -22,15 +23,18 @@ namespace VirtoCommerce.Storefront.Builders
         private readonly IQuoteModuleApi _quoteApi;
         private readonly IPromotionEvaluator _promotionEvaluator;
         private readonly ICacheManager<object> _cacheManager;
+        private readonly IEventPublisher<QuoteRequestUpdatedEvent> _quoteRequestUpdatedEventPublisher;
 
         private QuoteRequest _quoteRequest;
         private const string _quoteRequestCacheRegion = "QuoteRequestRegion";
 
-        public QuoteRequestBuilder(IQuoteModuleApi quoteApi, IPromotionEvaluator promotionEvaluator, ICacheManager<object> cacheManager)
+        public QuoteRequestBuilder(IQuoteModuleApi quoteApi, IPromotionEvaluator promotionEvaluator, ICacheManager<object> cacheManager,
+            IEventPublisher<QuoteRequestUpdatedEvent> quoteRequestUpdatedEventPublisher)
         {
             _quoteApi = quoteApi;
             _promotionEvaluator = promotionEvaluator;
             _cacheManager = cacheManager;
+            _quoteRequestUpdatedEventPublisher = quoteRequestUpdatedEventPublisher;
         }
 
         public IQuoteRequestBuilder TakeQuoteRequest(QuoteRequest quoteRequest)
@@ -87,26 +91,32 @@ namespace VirtoCommerce.Storefront.Builders
             return this;
         }
 
-        public IQuoteRequestBuilder Submit()
+        public async Task<IQuoteRequestBuilder> SubmitAsync()
         {
             _quoteRequest.Tag = null;
             _quoteRequest.Status = "Processing";
 
+            await _quoteRequestUpdatedEventPublisher.PublishAsync(new QuoteRequestUpdatedEvent(_quoteRequest));
+
             return this;
         }
 
-        public IQuoteRequestBuilder Reject()
+        public async Task<IQuoteRequestBuilder> RejectAsync()
         {
             _quoteRequest.Tag = null;
             _quoteRequest.Status = "Rejected";
 
+            await _quoteRequestUpdatedEventPublisher.PublishAsync(new QuoteRequestUpdatedEvent(_quoteRequest));
+
             return this;
         }
 
-        public IQuoteRequestBuilder Confirm()
+        public async Task<IQuoteRequestBuilder> ConfirmAsync()
         {
             _quoteRequest.Tag = null;
             _quoteRequest.Status = "Ordered";
+
+            await _quoteRequestUpdatedEventPublisher.PublishAsync(new QuoteRequestUpdatedEvent(_quoteRequest));
 
             return this;
         }

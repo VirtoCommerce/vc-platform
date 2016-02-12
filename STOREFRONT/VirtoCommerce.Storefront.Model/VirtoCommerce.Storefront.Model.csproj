@@ -90,6 +90,7 @@
     <Compile Include="Customer\Services\ICustomerService.cs" />
     <Compile Include="Order\Events\OrderPlacedEvent.cs" />
     <Compile Include="Order\OrderSearchCriteria.cs" />
+    <Compile Include="Quote\Events\QuoteRequestUpdatedEvent.cs" />
     <Compile Include="Quote\QuoteItemFormModel.cs" />
     <Compile Include="Quote\QuoteRequestFormModel.cs" />
     <Compile Include="Pricing\Pricelist.cs" />

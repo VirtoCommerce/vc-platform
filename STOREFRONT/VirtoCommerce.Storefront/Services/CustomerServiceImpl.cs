@@ -14,10 +14,11 @@ using VirtoCommerce.Storefront.Model.Customer.Services;
 using VirtoCommerce.Storefront.Model.Order;
 using VirtoCommerce.Storefront.Model.Order.Events;
 using VirtoCommerce.Storefront.Model.Quote;
+using VirtoCommerce.Storefront.Model.Quote.Events;
 
 namespace VirtoCommerce.Storefront.Services
 {
-    public class CustomerServiceImpl : ICustomerService, IAsyncObserver<OrderPlacedEvent>
+    public class CustomerServiceImpl : ICustomerService, IAsyncObserver<OrderPlacedEvent>, IAsyncObserver<QuoteRequestUpdatedEvent>
     {
         private readonly ICustomerManagementModuleApi _customerApi;
         private readonly IOrderModuleApi _orderApi;
@@ -110,6 +111,17 @@ namespace VirtoCommerce.Storefront.Services
             return Task.Factory.StartNew(() => { });
         }
         #endregion
+
+        public Task OnNextAsync(QuoteRequestUpdatedEvent quoteRequestCreatedEvent)
+        {
+            if (quoteRequestCreatedEvent.QuoteRequest != null)
+            {
+                var cacheKey = GetCacheKey(quoteRequestCreatedEvent.QuoteRequest.CustomerId);
+                _cacheManager.Remove(cacheKey, "ApiRegion");
+            }
+
+            return Task.Factory.StartNew(() => { });
+        }
 
         private string GetCacheKey(string customerId)
         {
