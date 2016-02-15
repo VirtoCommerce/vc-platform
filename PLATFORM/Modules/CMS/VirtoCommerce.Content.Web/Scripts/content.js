@@ -143,8 +143,8 @@ angular.module(moduleName, [])
 	        bladeNavigationService.showBlade(newBlade, blade);
 	    }
 
-	    associationTypesService.registerType({ id: 'catalog:item', name: 'Product', openSelectWizard: openItemSelectWizard });
-	    associationTypesService.registerType({ id: 'catalog:category', name: 'Catalog category', openSelectWizard: openCategorySelectWizard });
+	    associationTypesService.registerType({ id: 'product', name: 'Product', openSelectWizard: openItemSelectWizard });
+	    associationTypesService.registerType({ id: 'category', name: 'Category', openSelectWizard: openCategorySelectWizard });
 	}])
 .config(['$stateProvider', function ($stateProvider) {
     $stateProvider

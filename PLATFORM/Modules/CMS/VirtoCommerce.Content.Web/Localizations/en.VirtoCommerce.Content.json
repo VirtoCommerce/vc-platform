@@ -126,7 +126,7 @@
         "placeholders": {
           "name": "Enter page name",
           "language": "Select...",
-          "associated-object-type": "Associated object type"
+          "associated-object-type": "Select type"
         }
       },
       "catalog-items-select": {
