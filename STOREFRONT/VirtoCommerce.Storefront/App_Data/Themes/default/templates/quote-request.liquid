@@ -81,7 +81,7 @@
                 <div class="grid-item large--five-twelfths medium--two-thirds push--medium--one-third">
                     <div class="grid">
                         <div class="grid-item one-half medium-down--one-third text-right" ng-if="displayForStatuses(['New'])">
-                            <div class="js-qty fixed" ng-repeat="tierPrice in quoteItem.ProposalPrices">
+                            <div class="js-qty" ng-repeat="tierPrice in quoteItem.ProposalPrices">
                                 <div class="js-qty--inner">
                                     <input class="js--num" id="{( 'QuoteItem_' + quoteItemId + '_' + tierPrice.Id )}" min="1" name="{( 'QuoteItem_' + quoteItemId + '_' + tierPrice.Id )}" required="required" type="number" ng-class="{ 'error': (formQuoteRequest.$submitted || formQuoteRequest['QuoteItem_' + quoteItemId + '_' + tierPrice.Id].$dirty) && formQuoteRequest['QuoteItem_' + quoteItemId + '_' + tierPrice.Id].$invalid }" ng-model="tierPrice.Quantity" />
                                     <span class="js--qty-adjuster js--add" ng-click="changeTierPriceQuantity(tierPrice, tierPrice.Quantity + 1)">+</span>
@@ -93,6 +93,7 @@
                                 <div class="alert alert-error tier-price" ng-if="(formQuoteRequest.$submitted || formQuoteRequest['QuoteItem_' + quoteItemId + '_' + tierPrice.Id].$dirty) && formQuoteRequest['QuoteItem_' + quoteItemId + '_' + tierPrice.Id].$error.min">Please enter a positive value</div>
                             </div>
                             <div class="js-qty">
+                                <div class="alert alert-error tier-price" ng-if="formQuoteRequest.$submitted && !tierPricesUnique(quoteItem)">Please enter an unique quantities</div>
                                 <a class="add-tier" style="cursor: pointer;" ng-click="addTierPrice(quoteItem)">Add tier</a>
                             </div>
                         </div>

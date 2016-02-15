@@ -156,6 +156,14 @@
                 {{ 'layout.cart.cart' | t }} <span class="cartCount" ng-bind="cart.ItemsCount" ng-if="cart.ItemsCount > 0"></span>
             </a>
         </div>
+        {% if shop.quotes_enabled %}
+            <div class="display-table-cell">
+                <a class="cart-toggle mobileNavBar-link" ng-controller="actualQuoteRequestBarController" ng-click="outerRedirect(baseUrl + 'quoterequest/#/' + actualQuoteRequest.Id)">
+                    <span class="fa fa-calculator"></span>
+                    Quote <span class="cartCount" ng-class="{ 'visible-count': actualQuoteRequest.ItemsCount > 0 }" ng-bind="actualQuoteRequest.ItemsCount"></span>
+                </a>
+            </div>
+        {% endif %}
     </div>
     <main class="wrapper main-content" role="main">
         {{ content_for_layout }}

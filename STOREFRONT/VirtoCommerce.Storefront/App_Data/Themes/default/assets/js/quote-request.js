@@ -103,6 +103,11 @@ storefrontApp.controller('quoteRequestController', ['$rootScope', '$scope', '$lo
         if ($scope.formQuoteRequest.$invalid) {
             return;
         }
+        _.each($scope.quoteRequest.Items, function (item) {
+            if (!$scope.tierPricesUnique(item)) {
+                return;
+            }
+        });
         $scope.quoteRequest.BillingAddress.Email = $scope.quoteRequest.Email;
         if ($scope.quoteRequest.ShippingAddress) {
             $scope.quoteRequest.ShippingAddress.Email = $scope.quoteRequest.Email;
@@ -143,6 +148,11 @@ storefrontApp.controller('quoteRequestController', ['$rootScope', '$scope', '$lo
                 getCountryRegions('Shipping', $scope.quoteRequest.ShippingAddress.CountryCode);
             }
         }
+    }
+
+    $scope.tierPricesUnique = function (quoteItem) {
+        var quantities = _.map(quoteItem.ProposalPrices, function (p) { return p.Quantity });
+        return _.uniq(quantities).length == quoteItem.ProposalPrices.length;
     }
 
     function initialize() {
