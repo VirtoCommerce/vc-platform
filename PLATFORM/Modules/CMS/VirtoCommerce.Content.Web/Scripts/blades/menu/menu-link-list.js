@@ -36,6 +36,11 @@
             else {
                 blade.isLoading = true;
                 menus.getList({ storeId: blade.choosenStoreId, listId: blade.choosenListId }, function (data) {
+                    _.each(data.menuLinks, function (x) {
+                        if (x.associatedObjectType) {
+                            x.associatedObject = _.findWhere($scope.associatedObjectTypes, { id: x.associatedObjectType });
+                        }
+                    });
                     data.menuLinks = _.sortBy(data.menuLinks, 'priority').reverse();
                     blade.origEntity = data;
                     blade.currentEntity = angular.copy(data);
@@ -133,13 +138,10 @@
 
     function canSave() {
         var listNameIsRight = !((angular.isUndefined(blade.currentEntity.name)) || (blade.currentEntity.name === null));
-        var linksIsRight = blade.currentEntity.menuLinks.length == _.reject(
-				blade.currentEntity.menuLinks,
-				function (link) {
-				    return !(!(angular.isUndefined(link.title) || link.title === null) &&
-						!(angular.isUndefined(link.url) || link.url === null));
-				}).length;
-        return isDirty() && listNameIsRight && linksIsRight && blade.currentEntity.menuLinks.length > 0;
+        var linksAreRight = _.all(blade.currentEntity.menuLinks, function (x) {
+            return x.title && x.url && (!x.associatedObjectType || x.associatedObjectId);
+        });
+        return isDirty() && listNameIsRight && linksAreRight && _.any(blade.currentEntity.menuLinks);
     }
 
     blade.deleteList = function () {
@@ -244,7 +246,7 @@
         },
         axis: 'y'
     };
-    
+
     $scope.associatedObjectTypes = associationTypesService.objects;
     blade.initialize();
 }]);

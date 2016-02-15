@@ -63,8 +63,8 @@
                                 </div>
                             </td>
                             <td class="table-col">
-                                <div class="form-input">                                    
-                                    <ui-select ng-model="data.associatedObjectType" ng-init="data.associatedObject = $select.selected" ng-change="data.associatedObject = $select.selected;data.associatedObjectId=data.associatedObjectName=undefined" style="width:122px" >
+                                <div class="form-input">
+                                    <ui-select ng-model="data.associatedObjectType" ng-change="data.associatedObject = $select.selected;data.associatedObjectId=data.associatedObjectName=undefined" style="width:122px">
                                         <ui-select-match allow-clear placeholder="{{'content.blades.menu-link-list.placeholders.associated-object-type' | translate}}">{{$select.selected.name}}</ui-select-match>
                                         <ui-select-choices repeat="x.id as x in associatedObjectTypes | filter: $select.search">
                                             <span ng-bind-html="x.name | highlight: $select.search"></span>
@@ -76,6 +76,7 @@
                                 <div class="form-input">
                                     <ng-include src='data.associatedObject.templateURL'></ng-include>
                                 </div>
+                                <span class="error" ng-if="data.associatedObjectType && !data.associatedObjectId">Select linked object</span>
                             </td>
                         </tr>
                     </tbody>
