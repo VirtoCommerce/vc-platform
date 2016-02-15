@@ -34,8 +34,9 @@ namespace VirtoCommerce.Storefront.Services
             if (linkLists != null)
             {
                 retVal.AddRange(linkLists.Select(x => x.ToWebModel(_urlBuilder)));
-                var productLinks = retVal.OfType<ProductMenuLink>();
-                var categoryLinks = retVal.OfType<CategoryMenuLink>();
+                var allMenuLinks = retVal.SelectMany(x => x.MenuLinks);
+                var productLinks = allMenuLinks.OfType<ProductMenuLink>();
+                var categoryLinks = allMenuLinks.OfType<CategoryMenuLink>();
                 Task<Product[]> productsLoadingTask = null;
                 Task<Category[]> categoriesLoadingTask = null;
 

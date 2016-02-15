@@ -24,6 +24,9 @@ namespace VirtoCommerce.Content.Data.Models
         [StringLength(254)]
         public string AssociatedObjectType { get; set; }
 
+        [StringLength(254)]
+        public string AssociatedObjectName { get; set; }
+
         [StringLength(128)]
         public string AssociatedObjectId { get; set; }
 

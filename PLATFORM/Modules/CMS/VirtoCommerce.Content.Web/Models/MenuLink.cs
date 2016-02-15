@@ -33,6 +33,10 @@
         /// </summary>
         public string AssociatedObjectId { get; set; }
         /// <summary>
+        /// Display name for associated object
+        /// </summary>
+        public string AssociatedObjectName { get; set; }
+        /// <summary>
         /// Associated object type
         /// </summary>
         public string AssociatedObjectType { get; set; }

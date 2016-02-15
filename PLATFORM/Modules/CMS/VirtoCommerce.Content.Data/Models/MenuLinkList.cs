@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using VirtoCommerce.Platform.Core.Common;
@@ -10,7 +11,7 @@ namespace VirtoCommerce.Content.Data.Models
     {
         public MenuLinkList()
         {
-            MenuLinks = new NullCollection<MenuLink>();
+            MenuLinks = new ObservableCollection<MenuLink>();
         }
 
         [Required]
@@ -21,28 +22,8 @@ namespace VirtoCommerce.Content.Data.Models
         [Required]
         public string Language { get; set; }
 
-        public virtual ICollection<MenuLink> MenuLinks { get; set; }
+        public virtual ObservableCollection<MenuLink> MenuLinks { get; set; }
 
-        public void Attach(MenuLinkList list)
-        {
-            this.Name = list.Name;
-            this.Language = list.Language;
-
-            foreach (var link in list.MenuLinks)
-            {
-                if (string.IsNullOrEmpty(link.Id) || !this.MenuLinks.Any(l => l.Id == link.Id))
-                {
-                    this.MenuLinks.Add(link);
-                }
-                else
-                {
-                    var existingLink = this.MenuLinks.First(l => l.Id == link.Id);
-                    existingLink.Url = link.Url;
-                    existingLink.Title = link.Title;
-                    existingLink.IsActive = link.IsActive;
-                    existingLink.Priority = link.Priority;
-                }
-            }
-        }
+        
     }
 }
