@@ -33,9 +33,9 @@ namespace VirtoCommerce.Storefront.Controllers
         /// <returns></returns>
         [HttpGet]
         [AllowAnonymous]
-        public ActionResult СontactUs()
+        public ActionResult СontactUs(string viewName = "page.contact")
         {
-            return View("page.contact", base.WorkContext);
+            return View(viewName, base.WorkContext);
         }
 
         /// <summary>
