@@ -46,11 +46,11 @@ namespace VirtoCommerce.Storefront.Controllers
         [HttpPost]
         [AllowAnonymous]
         [OutputCache(NoStore = true, Duration = 0, VaryByParam = "None")]
-        public async Task<ActionResult> СontactUs(ContactUsForm model)
+        public async Task<ActionResult> СontactUs(ContactUsForm model, string viewName = "page.contact")
         {
             await _storeModuleApi.StoreModuleSendDynamicNotificationAnStoreEmailAsync(model.ToServiceModel(base.WorkContext));
             WorkContext.ContactUsForm = model;
-            return View("page.contact", base.WorkContext);
+            return View(viewName, base.WorkContext);
         }
 
         /// <summary>
