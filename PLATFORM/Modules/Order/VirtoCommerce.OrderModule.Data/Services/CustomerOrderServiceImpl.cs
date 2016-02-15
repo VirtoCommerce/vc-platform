@@ -123,8 +123,17 @@ namespace VirtoCommerce.OrderModule.Data.Services
             }
             var customerOrder = shoppingCart.ToCustomerOrder();
             _dynamicPropertyService.LoadDynamicPropertyValues(customerOrder);
-            //Copy same name properties values  from cart to order
-            shoppingCart.DeepCopyPropertyValues(customerOrder);
+
+            //Copy properties values with same name  from cart lineItems to order lineItems
+            foreach (var cartItem in shoppingCart.Items)
+            {
+                var orderItem = customerOrder.Items.FirstOrDefault(x => x.ProductId == cartItem.ProductId && x.Quantity == cartItem.Quantity);
+                if(orderItem != null)
+                {
+                    orderItem.CopyPropertyValuesFrom(cartItem);
+                }
+            }
+         
             var retVal = Create(customerOrder);
    
             return retVal;
