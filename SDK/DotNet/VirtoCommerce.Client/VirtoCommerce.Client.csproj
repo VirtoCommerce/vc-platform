@@ -261,6 +261,7 @@
     <Compile Include="Model\VirtoCommerceStoreModuleWebModelStore.cs" />
     <Compile Include="Model\VirtoCommerceStoreModuleWebModelTaxProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SimpleKeyApiClient.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="codegen-config.json" />
