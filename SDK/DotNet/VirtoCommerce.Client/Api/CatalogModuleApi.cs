@@ -6,7 +6,7 @@ using System.Linq;
 using RestSharp;
 using VirtoCommerce.Client.Client;
 using VirtoCommerce.Client.Model;
-using System.Threading.Tasks;
+
 
 namespace VirtoCommerce.Client.Api
 {
@@ -284,6 +284,50 @@ namespace VirtoCommerce.Client.Api
         /// <param name="id">Catalog id.</param>
         /// <returns>Task of ApiResponse</returns>
         System.Threading.Tasks.Task<ApiResponse<Object>> CatalogModuleCatalogsDeleteAsyncWithHttpInfo (string id);
+        
+        /// <summary>
+        /// Gets categories by ids
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="ids">Categories ids</param>
+        /// <param name="respGroup">Response group.</param>
+        /// <returns>List&lt;VirtoCommerceCatalogModuleWebModelCategory&gt;</returns>
+        List<VirtoCommerceCatalogModuleWebModelCategory> CatalogModuleCategoriesGetCategoriesByIds (List<string> ids, string respGroup = null);
+  
+        /// <summary>
+        /// Gets categories by ids
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="ids">Categories ids</param>
+        /// <param name="respGroup">Response group.</param>
+        /// <returns>ApiResponse of List&lt;VirtoCommerceCatalogModuleWebModelCategory&gt;</returns>
+        ApiResponse<List<VirtoCommerceCatalogModuleWebModelCategory>> CatalogModuleCategoriesGetCategoriesByIdsWithHttpInfo (List<string> ids, string respGroup = null);
+
+        /// <summary>
+        /// Gets categories by ids
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="ids">Categories ids</param>
+        /// <param name="respGroup">Response group.</param>
+        /// <returns>Task of List&lt;VirtoCommerceCatalogModuleWebModelCategory&gt;</returns>
+        System.Threading.Tasks.Task<List<VirtoCommerceCatalogModuleWebModelCategory>> CatalogModuleCategoriesGetCategoriesByIdsAsync (List<string> ids, string respGroup = null);
+
+        /// <summary>
+        /// Gets categories by ids
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="ids">Categories ids</param>
+        /// <param name="respGroup">Response group.</param>
+        /// <returns>Task of ApiResponse (List&lt;VirtoCommerceCatalogModuleWebModelCategory&gt;)</returns>
+        System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceCatalogModuleWebModelCategory>>> CatalogModuleCategoriesGetCategoriesByIdsAsyncWithHttpInfo (List<string> ids, string respGroup = null);
         
         /// <summary>
         /// Creates or updates the specified category.
@@ -1308,8 +1352,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="catalogId">The catalog id.</param>
         /// <returns>Task of ApiResponse (VirtoCommerceCatalogModuleWebModelProperty)</returns>
         System.Threading.Tasks.Task<ApiResponse<VirtoCommerceCatalogModuleWebModelProperty>> CatalogModulePropertiesGetNewCatalogPropertyAsyncWithHttpInfo (string catalogId);
-
-        System.Threading.Tasks.Task<List<VirtoCommerceCatalogModuleWebModelCategory>> CatalogModuleCategoriesGetCategoriesByIdsAsync(List<string> ids, string respGroup = null);
+        
     }
   
     /// <summary>
@@ -2423,6 +2466,165 @@ namespace VirtoCommerce.Client.Api
         }
         
         /// <summary>
+        /// Gets categories by ids 
+        /// </summary>
+        /// <param name="ids">Categories ids</param> 
+        /// <param name="respGroup">Response group.</param> 
+        /// <returns>List&lt;VirtoCommerceCatalogModuleWebModelCategory&gt;</returns>
+        public List<VirtoCommerceCatalogModuleWebModelCategory> CatalogModuleCategoriesGetCategoriesByIds (List<string> ids, string respGroup = null)
+        {
+             ApiResponse<List<VirtoCommerceCatalogModuleWebModelCategory>> response = CatalogModuleCategoriesGetCategoriesByIdsWithHttpInfo(ids, respGroup);
+             return response.Data;
+        }
+
+        /// <summary>
+        /// Gets categories by ids 
+        /// </summary>
+        /// <param name="ids">Categories ids</param> 
+        /// <param name="respGroup">Response group.</param> 
+        /// <returns>ApiResponse of List&lt;VirtoCommerceCatalogModuleWebModelCategory&gt;</returns>
+        public ApiResponse< List<VirtoCommerceCatalogModuleWebModelCategory> > CatalogModuleCategoriesGetCategoriesByIdsWithHttpInfo (List<string> ids, string respGroup = null)
+        {
+            
+            // verify the required parameter 'ids' is set
+            if (ids == null)
+                throw new ApiException(400, "Missing required parameter 'ids' when calling CatalogModuleApi->CatalogModuleCategoriesGetCategoriesByIds");
+            
+    
+            var path_ = "/api/catalog/categories";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            Object postBody = null;
+
+            // to determine the Content-Type header
+            String[] httpContentTypes = new String[] {
+                
+            };
+            String httpContentType = Configuration.ApiClient.SelectHeaderContentType(httpContentTypes);
+
+            // to determine the Accept header
+            String[] httpHeaderAccepts = new String[] {
+                "application/json", "text/json"
+            };
+            String httpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(httpHeaderAccepts);
+            if (httpHeaderAccept != null)
+                headerParams.Add("Accept", httpHeaderAccept);
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            if (ids != null) queryParams.Add("ids", Configuration.ApiClient.ParameterToString(ids)); // query parameter
+            if (respGroup != null) queryParams.Add("respGroup", Configuration.ApiClient.ParameterToString(respGroup)); // query parameter
+            
+            
+            
+            
+
+            
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, 
+                Method.GET, queryParams, postBody, headerParams, formParams, fileParams,
+                pathParams, httpContentType);
+
+            int statusCode = (int) response.StatusCode;
+    
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling CatalogModuleCategoriesGetCategoriesByIds: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling CatalogModuleCategoriesGetCategoriesByIds: " + response.ErrorMessage, response.ErrorMessage);
+    
+            return new ApiResponse<List<VirtoCommerceCatalogModuleWebModelCategory>>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (List<VirtoCommerceCatalogModuleWebModelCategory>) Configuration.ApiClient.Deserialize(response, typeof(List<VirtoCommerceCatalogModuleWebModelCategory>)));
+            
+        }
+    
+        /// <summary>
+        /// Gets categories by ids 
+        /// </summary>
+        /// <param name="ids">Categories ids</param>
+        /// <param name="respGroup">Response group.</param>
+        /// <returns>Task of List&lt;VirtoCommerceCatalogModuleWebModelCategory&gt;</returns>
+        public async System.Threading.Tasks.Task<List<VirtoCommerceCatalogModuleWebModelCategory>> CatalogModuleCategoriesGetCategoriesByIdsAsync (List<string> ids, string respGroup = null)
+        {
+             ApiResponse<List<VirtoCommerceCatalogModuleWebModelCategory>> response = await CatalogModuleCategoriesGetCategoriesByIdsAsyncWithHttpInfo(ids, respGroup);
+             return response.Data;
+
+        }
+
+        /// <summary>
+        /// Gets categories by ids 
+        /// </summary>
+        /// <param name="ids">Categories ids</param>
+        /// <param name="respGroup">Response group.</param>
+        /// <returns>Task of ApiResponse (List&lt;VirtoCommerceCatalogModuleWebModelCategory&gt;)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceCatalogModuleWebModelCategory>>> CatalogModuleCategoriesGetCategoriesByIdsAsyncWithHttpInfo (List<string> ids, string respGroup = null)
+        {
+            // verify the required parameter 'ids' is set
+            if (ids == null) throw new ApiException(400, "Missing required parameter 'ids' when calling CatalogModuleCategoriesGetCategoriesByIds");
+            
+    
+            var path_ = "/api/catalog/categories";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            Object postBody = null;
+
+            // to determine the Content-Type header
+            String[] httpContentTypes = new String[] {
+                
+            };
+            String httpContentType = Configuration.ApiClient.SelectHeaderContentType(httpContentTypes);
+
+            // to determine the Accept header
+            String[] httpHeaderAccepts = new String[] {
+                "application/json", "text/json"
+            };
+            String httpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(httpHeaderAccepts);
+            if (httpHeaderAccept != null)
+                headerParams.Add("Accept", httpHeaderAccept);
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            if (ids != null) queryParams.Add("ids", Configuration.ApiClient.ParameterToString(ids)); // query parameter
+            if (respGroup != null) queryParams.Add("respGroup", Configuration.ApiClient.ParameterToString(respGroup)); // query parameter
+            
+            
+            
+            
+
+            
+
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, 
+                Method.GET, queryParams, postBody, headerParams, formParams, fileParams, 
+                pathParams, httpContentType);
+
+            int statusCode = (int) response.StatusCode;
+ 
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling CatalogModuleCategoriesGetCategoriesByIds: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling CatalogModuleCategoriesGetCategoriesByIds: " + response.ErrorMessage, response.ErrorMessage);
+
+            return new ApiResponse<List<VirtoCommerceCatalogModuleWebModelCategory>>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (List<VirtoCommerceCatalogModuleWebModelCategory>) Configuration.ApiClient.Deserialize(response, typeof(List<VirtoCommerceCatalogModuleWebModelCategory>)));
+            
+        }
+        
+        /// <summary>
         /// Creates or updates the specified category. If category.id is null, a new category is created. It&#39;s updated otherwise
         /// </summary>
         /// <param name="category">The category.</param> 
@@ -3035,14 +3237,7 @@ namespace VirtoCommerce.Client.Api
                 (VirtoCommerceCatalogModuleWebModelCategory) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceCatalogModuleWebModelCategory)));
             
         }
-
-        public async System.Threading.Tasks.Task<List<VirtoCommerceCatalogModuleWebModelCategory>> CatalogModuleCategoriesGetCategoriesByIdsAsync(List<string> ids, string respGroup = null)
-        {
-            await new TaskFactory().StartNew(() => { });
-            throw new NotImplementedException();
-
-        }
-
+        
         /// <summary>
         /// Start catalog data export process. Data export is an async process. An ExportNotification is returned for progress reporting.
         /// </summary>
