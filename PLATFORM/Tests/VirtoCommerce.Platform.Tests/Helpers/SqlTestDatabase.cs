@@ -14,24 +14,24 @@ namespace VirtoCommerce.Platform.Tests.Helpers
     {
         private readonly string _name;
 
-        private static readonly string ConnectionStringFormat
+        private string ConnectionStringFormat
             = "Server=(local);Database={0};Trusted_Connection=True";
         //= "Data Source=(local);Initial Catalog={0};Integrated Security=True;Pooling=false;";
 
 
         public SqlTestDatabase(string name)
         {
+            var file = @";AttachDBFilename=|DataDirectory|\{0}.mdf";
             _name = name;
 
             var setting = ConfigurationManager.ConnectionStrings["VirtoCommerce_MigrationTestsBase"];
 
-            var connectionStringFormat = ConnectionStringFormat;
             if (setting != null)
             {
-                connectionStringFormat = setting.ConnectionString;
+                ConnectionStringFormat = setting.ConnectionString;
             }
 
-            ConnectionString = string.Format(connectionStringFormat, name, Guid.NewGuid().ToString("N"));
+            ConnectionString = string.Format(ConnectionStringFormat, name) + String.Format(file, name);
             ProviderName = "System.Data.SqlClient";
             //Info = CreateInfoContext(new SqlConnection(ConnectionString));
         }
@@ -131,13 +131,28 @@ namespace VirtoCommerce.Platform.Tests.Helpers
 
         public override bool Exists()
         {
+            return Exists(string.Format(ConnectionStringFormat, "master"), _name);
+            /*
             var sql
                 = "SELECT count(name) FROM sys.databases WHERE name = N'" + _name + "'";
 
             var count = ExecuteScalar<int>(sql, string.Format(ConnectionStringFormat, "master"));
 
             return count > 0;
-            //return Database.Exists(ConnectionString);
+            */
+        }
+
+        private static bool Exists(string connectionString, string databaseName)
+        {
+            using (var connection = new SqlConnection(connectionString))
+            {
+                using (var command = new SqlCommand(string.Format(
+                       "SELECT db_id('{0}')", databaseName), connection))
+                {
+                    connection.Open();
+                    return (command.ExecuteScalar() != DBNull.Value);
+                }
+            }
         }
 
         public override DbConnection CreateConnection(string connectionString)

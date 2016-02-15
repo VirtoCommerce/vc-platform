@@ -8,10 +8,5 @@ namespace VirtoCommerce.Storefront.Model.StaticContent
 {
     public class ContentPage : ContentItem
     {
-        public ContentPage(string url, Language language)
-            :base(url, language)
-        {
-
-        }
     }
 }

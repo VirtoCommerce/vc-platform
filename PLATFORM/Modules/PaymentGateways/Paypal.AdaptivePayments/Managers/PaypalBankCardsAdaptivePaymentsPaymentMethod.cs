@@ -126,12 +126,14 @@ namespace Paypal.AdaptivePayments.Managers
 
 			var request = CreatePaypalRequest(context.Order, context.Payment, url);
 
-			var response = service.Pay(request);
+			var payResponse = service.Pay(request);
+            var setPaymentOptionsResponse = service.SetPaymentOptions(new SetPaymentOptionsRequest { payKey = payResponse.payKey, senderOptions = new SenderOptions { referrerCode = "Virto_SP" } });
+            var executePaymentResponse = service.ExecutePayment(new ExecutePaymentRequest { payKey = payResponse.payKey, actionType = "PAY", requestEnvelope = new RequestEnvelope { errorLanguage = "en_US" } });
 
-			if (response.error != null && response.error.Count > 0)
+			if (executePaymentResponse.error != null && executePaymentResponse.error.Count > 0)
 			{
 				var sb = new StringBuilder();
-				foreach (var error in response.error)
+				foreach (var error in executePaymentResponse.error)
 				{
 					sb.AppendLine(error.message);
 				}
@@ -140,7 +142,7 @@ namespace Paypal.AdaptivePayments.Managers
 			}
 			else
 			{
-				retVal.OuterId = response.payKey;
+				retVal.OuterId = payResponse.payKey;
 				retVal.IsSuccess = true;
 				var redirectBaseUrl = GetBaseUrl(Mode);
 				retVal.RedirectUrl = string.Format(redirectBaseUrl, retVal.OuterId);
@@ -218,14 +220,14 @@ namespace Paypal.AdaptivePayments.Managers
 		private PayRequest CreatePaypalRequest(CustomerOrder order, PaymentIn payment, string url)
 		{
 			var receivers = new List<Receiver>();
-			receivers.Add(new Receiver { amount = payment.Sum, email = "evgokhrimenko@gmail.com", invoiceId = payment.Id });
+			receivers.Add(new Receiver { amount = payment.Sum, invoiceId = payment.Id });
 
 			PayRequest retVal = new PayRequest
 			{
 				requestEnvelope = new RequestEnvelope { errorLanguage = "en_US" },
 				currencyCode = order.Currency.ToString(),
 				receiverList = new ReceiverList(receivers),
-				actionType = "PAY",
+				actionType = "CREATE",
 				cancelUrl = string.Format("{0}/{1}?cancel=true&orderId={2}", url, PaypalPaymentRedirectRelativePath, order.Id) + "&paykey=${paykey}",
 				returnUrl = string.Format("{0}/{1}?cancel=false&orderId={2}", url, PaypalPaymentRedirectRelativePath, order.Id) + "&paykey=${paykey}"
 			};

@@ -3,6 +3,7 @@ using System.Linq;
 using VirtoCommerce.Storefront.Model.Cart.Services;
 using VirtoCommerce.Storefront.Model.Cart.ValidationErrors;
 using VirtoCommerce.Storefront.Model.Common;
+using VirtoCommerce.Storefront.Model.Customer;
 using VirtoCommerce.Storefront.Model.Marketing;
 
 namespace VirtoCommerce.Storefront.Model.Cart
@@ -12,7 +13,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
         public ShoppingCart(Currency currency, Language language)
         {
             Currency = currency;
-            LanguageCode = language.CultureName;
+            Language = language;
             HandlingTotal = new Money(currency);
             TaxTotal = new Money(currency);
 
@@ -53,6 +54,8 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// </summary>
         public bool IsAnonymous { get; set; }
 
+        public CustomerInfo Customer { get; set; }
+
         /// <summary>
         /// Gets or sets the value of shopping cart customer id
         /// </summary>
@@ -76,14 +79,8 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// </value>
         public Coupon Coupon { get; set; }
 
-        /// <summary>
-        /// Gets or sets the value of shopping cart language code
-        /// </summary>
-        /// <value>
-        /// Culture name in ISO 3166-1 alpha-3 format
-        /// </value>
-        public string LanguageCode { get; private set; }
-
+        public Language Language { get; set; }
+     
         /// <summary>
         /// Gets or sets the flag of shopping cart has tax
         /// </summary>
@@ -141,7 +138,9 @@ namespace VirtoCommerce.Storefront.Model.Cart
         {
             get
             {
-                return SubTotal + TaxTotal + ShippingTotal - DiscountTotal;
+                var cartDiscounts = Discounts.Sum(d => d.Amount.Amount);
+
+                return SubTotal + TaxTotal + ShippingTotal - new Money(cartDiscounts, Currency);
             }
         }
 
@@ -184,8 +183,10 @@ namespace VirtoCommerce.Storefront.Model.Cart
             get
             {
                 var discountTotal = Discounts.Sum(d => d.Amount.Amount);
+                var itemDiscountTotal = Items.Sum(i => i.DiscountTotal.Amount);
+                var shipmentDiscountTotal = Shipments.Sum(s => s.DiscountTotal.Amount);
 
-                return new Money(discountTotal, Currency);
+                return new Money(discountTotal + itemDiscountTotal + shipmentDiscountTotal, Currency);
             }
         }
 
@@ -223,8 +224,13 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// <summary>
         /// Gets or sets shopping cart items quantity (sum of each line item quantity * items count)
         /// </summary>
-        public int ItemsCount { get; set; }
-
+        public int ItemsCount
+        {
+            get
+            {
+                return Items.Sum(i => i.Quantity);
+            }
+        }
         /// <summary>
         /// Gets or sets the collection of shopping cart payments
         /// </summary>
@@ -285,9 +291,9 @@ namespace VirtoCommerce.Storefront.Model.Cart
         public ICollection<ValidationError> ValidationWarnings { get; set; }
 
         #region IDiscountable Members
-        public ICollection<Discount> Discounts { get; }
+        public ICollection<Discount> Discounts { get; private set; }
 
-        public Currency Currency { get; }
+        public Currency Currency { get; private set; }
 
         public void ApplyRewards(IEnumerable<PromotionReward> rewards)
         {
@@ -334,7 +340,12 @@ namespace VirtoCommerce.Storefront.Model.Cart
                     }
                 }
             }
-        } 
+        }
         #endregion
+
+        public override string ToString()
+        {
+            return string.Format("Cart #{0} Items({1}) {2}", Id ?? "undef", ItemsCount, Customer != null ? Customer.ToString() : "undef"); 
+        }
     }
 }

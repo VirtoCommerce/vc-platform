@@ -1,19 +1,76 @@
 ﻿using System.Threading.Tasks;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
+using VirtoCommerce.Storefront.Model.Customer;
 
 namespace VirtoCommerce.Storefront.Model.Quote.Services
 {
+    /// <summary>
+    /// Represent abstraction for constructing and working with request for quote (RFQ)
+    /// </summary>
     public interface IQuoteRequestBuilder
     {
-        Task<IQuoteRequestBuilder> GetOrCreateNewTransientQuoteRequestAsync(Store store, Customer customer, Language language, Currency currency);
+        /// <summary>
+        /// Capture passed RFQ and all next changes will be implemented on it
+        /// </summary>
+        /// <param name="quoteRequest"></param>
+        /// <returns></returns>
+        IQuoteRequestBuilder TakeQuoteRequest(QuoteRequest quoteRequest);
 
-        IQuoteRequestBuilder AddItem(Product product);
+        /// <summary>
+        /// Load or created new RFQ for current user and capture it
+        /// </summary>
+        /// <param name="store"></param>
+        /// <param name="customer"></param>
+        /// <param name="language"></param>
+        /// <param name="currency"></param>
+        /// <returns></returns>
+        Task<IQuoteRequestBuilder> GetOrCreateNewTransientQuoteRequestAsync(Store store, CustomerInfo customer, Language language, Currency currency);
 
+        /// <summary>
+        /// Update captured RFQ
+        /// </summary>
+        /// <param name="quoteRequest"></param>
+        /// <returns></returns>
+        IQuoteRequestBuilder Update(QuoteRequestFormModel quoteRequest);
+
+        /// <summary>
+        /// Adding new item to captured RFQ
+        /// </summary>
+        /// <param name="product"></param>
+        /// <param name="quantity"></param>
+        /// <returns></returns>
+        IQuoteRequestBuilder AddItem(Product product, long quantity);
+
+        /// <summary>
+        /// Reject captured RFQ
+        /// </summary>
+        /// <returns></returns>
+        IQuoteRequestBuilder Reject();
+
+        /// <summary>
+        /// Remove item from captured RFQ
+        /// </summary>
+        /// <param name="quoteItemId"></param>
+        /// <returns></returns>
         IQuoteRequestBuilder RemoveItem(string quoteItemId);
 
+        /// <summary>
+        /// Merge captured RFQ by other RFQ
+        /// </summary>
+        /// <param name="otherQuoteRequest"></param>
+        /// <returns></returns>
+        Task <IQuoteRequestBuilder> MergeWithQuoteRequest(QuoteRequest otherQuoteRequest);
+
+        /// <summary>
+        /// Save captured RFQ changes
+        /// </summary>
+        /// <returns></returns>
         Task SaveAsync();
 
+        /// <summary>
+        /// Return captured RFQ
+        /// </summary>
         QuoteRequest QuoteRequest { get; }
     }
 }

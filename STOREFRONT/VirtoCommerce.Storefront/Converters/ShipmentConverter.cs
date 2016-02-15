@@ -50,7 +50,7 @@ namespace VirtoCommerce.Storefront.Converters
 
             if (shipment.DeliveryAddress != null)
             {
-                serviceModel.DeliveryAddress = shipment.DeliveryAddress.ToServiceModel();
+                serviceModel.DeliveryAddress = shipment.DeliveryAddress.ToCartServiceModel();
             }
 
             if (shipment.Discounts != null)

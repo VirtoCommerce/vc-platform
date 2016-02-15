@@ -133,9 +133,7 @@
                 angular.copy($scope.blade.origEntity, $scope.blade.currentEntities);
                 $scope.blade.selectedAll = false;
             },
-            canExecuteMethod: function () {
-                return isDirty();
-            },
+            canExecuteMethod: isDirty,
             permission: 'pricing:update'
         },
         {

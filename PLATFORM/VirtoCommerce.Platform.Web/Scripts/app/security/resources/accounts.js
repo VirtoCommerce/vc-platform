@@ -1,7 +1,7 @@
 ﻿angular.module('platformWebApp')
 .factory('platformWebApp.accounts', ['$resource', function ($resource) {
     return $resource('api/platform/security/users/:id', { id: '@Id' }, {
-        search: {},
+        search: { method: 'POST' },
         generateNewApiAccount: { url: 'api/platform/security/apiaccounts/new' },
         save: { url: 'api/platform/security/users/create', method: 'POST' },
         changepassword: { url: 'api/platform/security/users/:id/changepassword', method: 'POST' },

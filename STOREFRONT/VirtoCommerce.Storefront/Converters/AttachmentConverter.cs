@@ -15,5 +15,14 @@ namespace VirtoCommerce.Storefront.Converters
 
             return webModel;
         }
+
+        public static VirtoCommerceQuoteModuleWebModelQuoteAttachment ToQuoteServiceModel(this Attachment webModel)
+        {
+            var serviceModel = new VirtoCommerceQuoteModuleWebModelQuoteAttachment();
+
+            serviceModel.InjectFrom<NullableAndEnumValueInjecter>(webModel);
+
+            return serviceModel;
+        }
     }
 }

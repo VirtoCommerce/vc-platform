@@ -1358,15 +1358,9 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// 
         /// </remarks>
-        /// <param name="criteriaIds"></param>
-        /// <param name="criteriaOnlyNew"></param>
-        /// <param name="criteriaStartDate"></param>
-        /// <param name="criteriaEndDate"></param>
-        /// <param name="criteriaStart"></param>
-        /// <param name="criteriaCount"></param>
-        /// <param name="criteriaOrderBy"></param>
+        /// <param name="criteria">Search parameters.</param>
         /// <returns>VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult</returns>
-        VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult PushNotificationSearch (List<string> criteriaIds = null, bool? criteriaOnlyNew = null, DateTime? criteriaStartDate = null, DateTime? criteriaEndDate = null, int? criteriaStart = null, int? criteriaCount = null, string criteriaOrderBy = null);
+        VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult PushNotificationSearch (VirtoCommercePlatformCorePushNotificationsPushNotificationSearchCriteria criteria);
   
         /// <summary>
         /// Search push notifications
@@ -1374,15 +1368,9 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// 
         /// </remarks>
-        /// <param name="criteriaIds"></param>
-        /// <param name="criteriaOnlyNew"></param>
-        /// <param name="criteriaStartDate"></param>
-        /// <param name="criteriaEndDate"></param>
-        /// <param name="criteriaStart"></param>
-        /// <param name="criteriaCount"></param>
-        /// <param name="criteriaOrderBy"></param>
+        /// <param name="criteria">Search parameters.</param>
         /// <returns>ApiResponse of VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult</returns>
-        ApiResponse<VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult> PushNotificationSearchWithHttpInfo (List<string> criteriaIds = null, bool? criteriaOnlyNew = null, DateTime? criteriaStartDate = null, DateTime? criteriaEndDate = null, int? criteriaStart = null, int? criteriaCount = null, string criteriaOrderBy = null);
+        ApiResponse<VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult> PushNotificationSearchWithHttpInfo (VirtoCommercePlatformCorePushNotificationsPushNotificationSearchCriteria criteria);
 
         /// <summary>
         /// Search push notifications
@@ -1390,15 +1378,9 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// 
         /// </remarks>
-        /// <param name="criteriaIds"></param>
-        /// <param name="criteriaOnlyNew"></param>
-        /// <param name="criteriaStartDate"></param>
-        /// <param name="criteriaEndDate"></param>
-        /// <param name="criteriaStart"></param>
-        /// <param name="criteriaCount"></param>
-        /// <param name="criteriaOrderBy"></param>
+        /// <param name="criteria">Search parameters.</param>
         /// <returns>Task of VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult</returns>
-        System.Threading.Tasks.Task<VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult> PushNotificationSearchAsync (List<string> criteriaIds = null, bool? criteriaOnlyNew = null, DateTime? criteriaStartDate = null, DateTime? criteriaEndDate = null, int? criteriaStart = null, int? criteriaCount = null, string criteriaOrderBy = null);
+        System.Threading.Tasks.Task<VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult> PushNotificationSearchAsync (VirtoCommercePlatformCorePushNotificationsPushNotificationSearchCriteria criteria);
 
         /// <summary>
         /// Search push notifications
@@ -1406,15 +1388,9 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// 
         /// </remarks>
-        /// <param name="criteriaIds"></param>
-        /// <param name="criteriaOnlyNew"></param>
-        /// <param name="criteriaStartDate"></param>
-        /// <param name="criteriaEndDate"></param>
-        /// <param name="criteriaStart"></param>
-        /// <param name="criteriaCount"></param>
-        /// <param name="criteriaOrderBy"></param>
+        /// <param name="criteria">Search parameters.</param>
         /// <returns>Task of ApiResponse (VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult)</returns>
-        System.Threading.Tasks.Task<ApiResponse<VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult>> PushNotificationSearchAsyncWithHttpInfo (List<string> criteriaIds = null, bool? criteriaOnlyNew = null, DateTime? criteriaStartDate = null, DateTime? criteriaEndDate = null, int? criteriaStart = null, int? criteriaCount = null, string criteriaOrderBy = null);
+        System.Threading.Tasks.Task<ApiResponse<VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult>> PushNotificationSearchAsyncWithHttpInfo (VirtoCommercePlatformCorePushNotificationsPushNotificationSearchCriteria criteria);
         
         /// <summary>
         /// Mark all notifications as read
@@ -1641,54 +1617,6 @@ namespace VirtoCommerce.Client.Api
         System.Threading.Tasks.Task<ApiResponse<List<VirtoCommercePlatformCoreSecurityPermission>>> SecurityGetPermissionsAsyncWithHttpInfo ();
         
         /// <summary>
-        /// Search roles by keyword
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <param name="requestKeyword"></param>
-        /// <param name="requestSkipCount"></param>
-        /// <param name="requestTakeCount"></param>
-        /// <returns>VirtoCommercePlatformCoreSecurityRoleSearchResponse</returns>
-        VirtoCommercePlatformCoreSecurityRoleSearchResponse SecuritySearchRoles (string requestKeyword = null, int? requestSkipCount = null, int? requestTakeCount = null);
-  
-        /// <summary>
-        /// Search roles by keyword
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <param name="requestKeyword"></param>
-        /// <param name="requestSkipCount"></param>
-        /// <param name="requestTakeCount"></param>
-        /// <returns>ApiResponse of VirtoCommercePlatformCoreSecurityRoleSearchResponse</returns>
-        ApiResponse<VirtoCommercePlatformCoreSecurityRoleSearchResponse> SecuritySearchRolesWithHttpInfo (string requestKeyword = null, int? requestSkipCount = null, int? requestTakeCount = null);
-
-        /// <summary>
-        /// Search roles by keyword
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <param name="requestKeyword"></param>
-        /// <param name="requestSkipCount"></param>
-        /// <param name="requestTakeCount"></param>
-        /// <returns>Task of VirtoCommercePlatformCoreSecurityRoleSearchResponse</returns>
-        System.Threading.Tasks.Task<VirtoCommercePlatformCoreSecurityRoleSearchResponse> SecuritySearchRolesAsync (string requestKeyword = null, int? requestSkipCount = null, int? requestTakeCount = null);
-
-        /// <summary>
-        /// Search roles by keyword
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <param name="requestKeyword"></param>
-        /// <param name="requestSkipCount"></param>
-        /// <param name="requestTakeCount"></param>
-        /// <returns>Task of ApiResponse (VirtoCommercePlatformCoreSecurityRoleSearchResponse)</returns>
-        System.Threading.Tasks.Task<ApiResponse<VirtoCommercePlatformCoreSecurityRoleSearchResponse>> SecuritySearchRolesAsyncWithHttpInfo (string requestKeyword = null, int? requestSkipCount = null, int? requestTakeCount = null);
-        
-        /// <summary>
         /// Add a new role or update an existing role
         /// </summary>
         /// <remarks>
@@ -1727,6 +1655,46 @@ namespace VirtoCommerce.Client.Api
         /// <param name="role"></param>
         /// <returns>Task of ApiResponse (VirtoCommercePlatformCoreSecurityRole)</returns>
         System.Threading.Tasks.Task<ApiResponse<VirtoCommercePlatformCoreSecurityRole>> SecurityUpdateRoleAsyncWithHttpInfo (VirtoCommercePlatformCoreSecurityRole role);
+        
+        /// <summary>
+        /// Search roles by keyword
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="request">Search parameters.</param>
+        /// <returns>VirtoCommercePlatformCoreSecurityRoleSearchResponse</returns>
+        VirtoCommercePlatformCoreSecurityRoleSearchResponse SecuritySearchRoles (VirtoCommercePlatformCoreSecurityRoleSearchRequest request);
+  
+        /// <summary>
+        /// Search roles by keyword
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="request">Search parameters.</param>
+        /// <returns>ApiResponse of VirtoCommercePlatformCoreSecurityRoleSearchResponse</returns>
+        ApiResponse<VirtoCommercePlatformCoreSecurityRoleSearchResponse> SecuritySearchRolesWithHttpInfo (VirtoCommercePlatformCoreSecurityRoleSearchRequest request);
+
+        /// <summary>
+        /// Search roles by keyword
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="request">Search parameters.</param>
+        /// <returns>Task of VirtoCommercePlatformCoreSecurityRoleSearchResponse</returns>
+        System.Threading.Tasks.Task<VirtoCommercePlatformCoreSecurityRoleSearchResponse> SecuritySearchRolesAsync (VirtoCommercePlatformCoreSecurityRoleSearchRequest request);
+
+        /// <summary>
+        /// Search roles by keyword
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="request">Search parameters.</param>
+        /// <returns>Task of ApiResponse (VirtoCommercePlatformCoreSecurityRoleSearchResponse)</returns>
+        System.Threading.Tasks.Task<ApiResponse<VirtoCommercePlatformCoreSecurityRoleSearchResponse>> SecuritySearchRolesAsyncWithHttpInfo (VirtoCommercePlatformCoreSecurityRoleSearchRequest request);
         
         /// <summary>
         /// Delete roles by ID
@@ -1809,58 +1777,6 @@ namespace VirtoCommerce.Client.Api
         System.Threading.Tasks.Task<ApiResponse<VirtoCommercePlatformCoreSecurityRole>> SecurityGetRoleAsyncWithHttpInfo (string roleId);
         
         /// <summary>
-        /// Search users by keyword
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <param name="requestAccountTypes"></param>
-        /// <param name="requestKeyword"></param>
-        /// <param name="requestSkipCount"></param>
-        /// <param name="requestTakeCount"></param>
-        /// <returns>VirtoCommercePlatformCoreSecurityUserSearchResponse</returns>
-        VirtoCommercePlatformCoreSecurityUserSearchResponse SecuritySearchUsersAsync (List<string> requestAccountTypes = null, string requestKeyword = null, int? requestSkipCount = null, int? requestTakeCount = null);
-  
-        /// <summary>
-        /// Search users by keyword
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <param name="requestAccountTypes"></param>
-        /// <param name="requestKeyword"></param>
-        /// <param name="requestSkipCount"></param>
-        /// <param name="requestTakeCount"></param>
-        /// <returns>ApiResponse of VirtoCommercePlatformCoreSecurityUserSearchResponse</returns>
-        ApiResponse<VirtoCommercePlatformCoreSecurityUserSearchResponse> SecuritySearchUsersAsyncWithHttpInfo (List<string> requestAccountTypes = null, string requestKeyword = null, int? requestSkipCount = null, int? requestTakeCount = null);
-
-        /// <summary>
-        /// Search users by keyword
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <param name="requestAccountTypes"></param>
-        /// <param name="requestKeyword"></param>
-        /// <param name="requestSkipCount"></param>
-        /// <param name="requestTakeCount"></param>
-        /// <returns>Task of VirtoCommercePlatformCoreSecurityUserSearchResponse</returns>
-        System.Threading.Tasks.Task<VirtoCommercePlatformCoreSecurityUserSearchResponse> SecuritySearchUsersAsyncAsync (List<string> requestAccountTypes = null, string requestKeyword = null, int? requestSkipCount = null, int? requestTakeCount = null);
-
-        /// <summary>
-        /// Search users by keyword
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <param name="requestAccountTypes"></param>
-        /// <param name="requestKeyword"></param>
-        /// <param name="requestSkipCount"></param>
-        /// <param name="requestTakeCount"></param>
-        /// <returns>Task of ApiResponse (VirtoCommercePlatformCoreSecurityUserSearchResponse)</returns>
-        System.Threading.Tasks.Task<ApiResponse<VirtoCommercePlatformCoreSecurityUserSearchResponse>> SecuritySearchUsersAsyncAsyncWithHttpInfo (List<string> requestAccountTypes = null, string requestKeyword = null, int? requestSkipCount = null, int? requestTakeCount = null);
-        
-        /// <summary>
         /// Update user details by user ID
         /// </summary>
         /// <remarks>
@@ -1899,6 +1815,46 @@ namespace VirtoCommerce.Client.Api
         /// <param name="user">User details.</param>
         /// <returns>Task of ApiResponse (VirtoCommercePlatformCoreSecuritySecurityResult)</returns>
         System.Threading.Tasks.Task<ApiResponse<VirtoCommercePlatformCoreSecuritySecurityResult>> SecurityUpdateAsyncAsyncWithHttpInfo (VirtoCommercePlatformCoreSecurityApplicationUserExtended user);
+        
+        /// <summary>
+        /// Search users by keyword
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="request">Search parameters.</param>
+        /// <returns>VirtoCommercePlatformCoreSecurityUserSearchResponse</returns>
+        VirtoCommercePlatformCoreSecurityUserSearchResponse SecuritySearchUsersAsync (VirtoCommercePlatformCoreSecurityUserSearchRequest request);
+  
+        /// <summary>
+        /// Search users by keyword
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="request">Search parameters.</param>
+        /// <returns>ApiResponse of VirtoCommercePlatformCoreSecurityUserSearchResponse</returns>
+        ApiResponse<VirtoCommercePlatformCoreSecurityUserSearchResponse> SecuritySearchUsersAsyncWithHttpInfo (VirtoCommercePlatformCoreSecurityUserSearchRequest request);
+
+        /// <summary>
+        /// Search users by keyword
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="request">Search parameters.</param>
+        /// <returns>Task of VirtoCommercePlatformCoreSecurityUserSearchResponse</returns>
+        System.Threading.Tasks.Task<VirtoCommercePlatformCoreSecurityUserSearchResponse> SecuritySearchUsersAsyncAsync (VirtoCommercePlatformCoreSecurityUserSearchRequest request);
+
+        /// <summary>
+        /// Search users by keyword
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="request">Search parameters.</param>
+        /// <returns>Task of ApiResponse (VirtoCommercePlatformCoreSecurityUserSearchResponse)</returns>
+        System.Threading.Tasks.Task<ApiResponse<VirtoCommercePlatformCoreSecurityUserSearchResponse>> SecuritySearchUsersAsyncAsyncWithHttpInfo (VirtoCommercePlatformCoreSecurityUserSearchRequest request);
         
         /// <summary>
         /// Delete users by name
@@ -6847,33 +6803,24 @@ namespace VirtoCommerce.Client.Api
         /// <summary>
         /// Search push notifications 
         /// </summary>
-        /// <param name="criteriaIds"></param> 
-        /// <param name="criteriaOnlyNew"></param> 
-        /// <param name="criteriaStartDate"></param> 
-        /// <param name="criteriaEndDate"></param> 
-        /// <param name="criteriaStart"></param> 
-        /// <param name="criteriaCount"></param> 
-        /// <param name="criteriaOrderBy"></param> 
+        /// <param name="criteria">Search parameters.</param> 
         /// <returns>VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult</returns>
-        public VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult PushNotificationSearch (List<string> criteriaIds = null, bool? criteriaOnlyNew = null, DateTime? criteriaStartDate = null, DateTime? criteriaEndDate = null, int? criteriaStart = null, int? criteriaCount = null, string criteriaOrderBy = null)
+        public VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult PushNotificationSearch (VirtoCommercePlatformCorePushNotificationsPushNotificationSearchCriteria criteria)
         {
-             ApiResponse<VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult> response = PushNotificationSearchWithHttpInfo(criteriaIds, criteriaOnlyNew, criteriaStartDate, criteriaEndDate, criteriaStart, criteriaCount, criteriaOrderBy);
+             ApiResponse<VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult> response = PushNotificationSearchWithHttpInfo(criteria);
              return response.Data;
         }
 
         /// <summary>
         /// Search push notifications 
         /// </summary>
-        /// <param name="criteriaIds"></param> 
-        /// <param name="criteriaOnlyNew"></param> 
-        /// <param name="criteriaStartDate"></param> 
-        /// <param name="criteriaEndDate"></param> 
-        /// <param name="criteriaStart"></param> 
-        /// <param name="criteriaCount"></param> 
-        /// <param name="criteriaOrderBy"></param> 
+        /// <param name="criteria">Search parameters.</param> 
         /// <returns>ApiResponse of VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult</returns>
-        public ApiResponse< VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult > PushNotificationSearchWithHttpInfo (List<string> criteriaIds = null, bool? criteriaOnlyNew = null, DateTime? criteriaStartDate = null, DateTime? criteriaEndDate = null, int? criteriaStart = null, int? criteriaCount = null, string criteriaOrderBy = null)
+        public ApiResponse< VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult > PushNotificationSearchWithHttpInfo (VirtoCommercePlatformCorePushNotificationsPushNotificationSearchCriteria criteria)
         {
+            
+            // verify the required parameter 'criteria' is set
+            if (criteria == null) throw new ApiException(400, "Missing required parameter 'criteria' when calling PushNotificationSearch");
             
     
             var path_ = "/api/platform/pushnotifications";
@@ -6897,22 +6844,16 @@ namespace VirtoCommerce.Client.Api
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
             
-            if (criteriaIds != null) queryParams.Add("criteria.ids", Configuration.ApiClient.ParameterToString(criteriaIds)); // query parameter
-            if (criteriaOnlyNew != null) queryParams.Add("criteria.onlyNew", Configuration.ApiClient.ParameterToString(criteriaOnlyNew)); // query parameter
-            if (criteriaStartDate != null) queryParams.Add("criteria.startDate", Configuration.ApiClient.ParameterToString(criteriaStartDate)); // query parameter
-            if (criteriaEndDate != null) queryParams.Add("criteria.endDate", Configuration.ApiClient.ParameterToString(criteriaEndDate)); // query parameter
-            if (criteriaStart != null) queryParams.Add("criteria.start", Configuration.ApiClient.ParameterToString(criteriaStart)); // query parameter
-            if (criteriaCount != null) queryParams.Add("criteria.count", Configuration.ApiClient.ParameterToString(criteriaCount)); // query parameter
-            if (criteriaOrderBy != null) queryParams.Add("criteria.orderBy", Configuration.ApiClient.ParameterToString(criteriaOrderBy)); // query parameter
             
             
             
+            postBody = Configuration.ApiClient.Serialize(criteria); // http body (model) parameter
             
 
             
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
 
             int statusCode = (int) response.StatusCode;
     
@@ -6930,17 +6871,11 @@ namespace VirtoCommerce.Client.Api
         /// <summary>
         /// Search push notifications 
         /// </summary>
-        /// <param name="criteriaIds"></param>
-        /// <param name="criteriaOnlyNew"></param>
-        /// <param name="criteriaStartDate"></param>
-        /// <param name="criteriaEndDate"></param>
-        /// <param name="criteriaStart"></param>
-        /// <param name="criteriaCount"></param>
-        /// <param name="criteriaOrderBy"></param>
+        /// <param name="criteria">Search parameters.</param>
         /// <returns>Task of VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult</returns>
-        public async System.Threading.Tasks.Task<VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult> PushNotificationSearchAsync (List<string> criteriaIds = null, bool? criteriaOnlyNew = null, DateTime? criteriaStartDate = null, DateTime? criteriaEndDate = null, int? criteriaStart = null, int? criteriaCount = null, string criteriaOrderBy = null)
+        public async System.Threading.Tasks.Task<VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult> PushNotificationSearchAsync (VirtoCommercePlatformCorePushNotificationsPushNotificationSearchCriteria criteria)
         {
-             ApiResponse<VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult> response = await PushNotificationSearchAsyncWithHttpInfo(criteriaIds, criteriaOnlyNew, criteriaStartDate, criteriaEndDate, criteriaStart, criteriaCount, criteriaOrderBy);
+             ApiResponse<VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult> response = await PushNotificationSearchAsyncWithHttpInfo(criteria);
              return response.Data;
 
         }
@@ -6948,16 +6883,12 @@ namespace VirtoCommerce.Client.Api
         /// <summary>
         /// Search push notifications 
         /// </summary>
-        /// <param name="criteriaIds"></param>
-        /// <param name="criteriaOnlyNew"></param>
-        /// <param name="criteriaStartDate"></param>
-        /// <param name="criteriaEndDate"></param>
-        /// <param name="criteriaStart"></param>
-        /// <param name="criteriaCount"></param>
-        /// <param name="criteriaOrderBy"></param>
+        /// <param name="criteria">Search parameters.</param>
         /// <returns>Task of ApiResponse (VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult>> PushNotificationSearchAsyncWithHttpInfo (List<string> criteriaIds = null, bool? criteriaOnlyNew = null, DateTime? criteriaStartDate = null, DateTime? criteriaEndDate = null, int? criteriaStart = null, int? criteriaCount = null, string criteriaOrderBy = null)
+        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult>> PushNotificationSearchAsyncWithHttpInfo (VirtoCommercePlatformCorePushNotificationsPushNotificationSearchCriteria criteria)
         {
+            // verify the required parameter 'criteria' is set
+            if (criteria == null) throw new ApiException(400, "Missing required parameter 'criteria' when calling PushNotificationSearch");
             
     
             var path_ = "/api/platform/pushnotifications";
@@ -6981,22 +6912,16 @@ namespace VirtoCommerce.Client.Api
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
             
-            if (criteriaIds != null) queryParams.Add("criteria.ids", Configuration.ApiClient.ParameterToString(criteriaIds)); // query parameter
-            if (criteriaOnlyNew != null) queryParams.Add("criteria.onlyNew", Configuration.ApiClient.ParameterToString(criteriaOnlyNew)); // query parameter
-            if (criteriaStartDate != null) queryParams.Add("criteria.startDate", Configuration.ApiClient.ParameterToString(criteriaStartDate)); // query parameter
-            if (criteriaEndDate != null) queryParams.Add("criteria.endDate", Configuration.ApiClient.ParameterToString(criteriaEndDate)); // query parameter
-            if (criteriaStart != null) queryParams.Add("criteria.start", Configuration.ApiClient.ParameterToString(criteriaStart)); // query parameter
-            if (criteriaCount != null) queryParams.Add("criteria.count", Configuration.ApiClient.ParameterToString(criteriaCount)); // query parameter
-            if (criteriaOrderBy != null) queryParams.Add("criteria.orderBy", Configuration.ApiClient.ParameterToString(criteriaOrderBy)); // query parameter
             
             
             
+            postBody = Configuration.ApiClient.Serialize(criteria); // http body (model) parameter
             
 
             
 
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
 
             int statusCode = (int) response.StatusCode;
  
@@ -7058,7 +6983,7 @@ namespace VirtoCommerce.Client.Api
             
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
 
             int statusCode = (int) response.StatusCode;
     
@@ -7121,7 +7046,7 @@ namespace VirtoCommerce.Client.Api
             
 
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
 
             int statusCode = (int) response.StatusCode;
  
@@ -7782,149 +7707,6 @@ namespace VirtoCommerce.Client.Api
         }
         
         /// <summary>
-        /// Search roles by keyword 
-        /// </summary>
-        /// <param name="requestKeyword"></param> 
-        /// <param name="requestSkipCount"></param> 
-        /// <param name="requestTakeCount"></param> 
-        /// <returns>VirtoCommercePlatformCoreSecurityRoleSearchResponse</returns>
-        public VirtoCommercePlatformCoreSecurityRoleSearchResponse SecuritySearchRoles (string requestKeyword = null, int? requestSkipCount = null, int? requestTakeCount = null)
-        {
-             ApiResponse<VirtoCommercePlatformCoreSecurityRoleSearchResponse> response = SecuritySearchRolesWithHttpInfo(requestKeyword, requestSkipCount, requestTakeCount);
-             return response.Data;
-        }
-
-        /// <summary>
-        /// Search roles by keyword 
-        /// </summary>
-        /// <param name="requestKeyword"></param> 
-        /// <param name="requestSkipCount"></param> 
-        /// <param name="requestTakeCount"></param> 
-        /// <returns>ApiResponse of VirtoCommercePlatformCoreSecurityRoleSearchResponse</returns>
-        public ApiResponse< VirtoCommercePlatformCoreSecurityRoleSearchResponse > SecuritySearchRolesWithHttpInfo (string requestKeyword = null, int? requestSkipCount = null, int? requestTakeCount = null)
-        {
-            
-    
-            var path_ = "/api/platform/security/roles";
-    
-            var pathParams = new Dictionary<String, String>();
-            var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var formParams = new Dictionary<String, String>();
-            var fileParams = new Dictionary<String, FileParameter>();
-            String postBody = null;
-
-            // to determine the Accept header
-            String[] http_header_accepts = new String[] {
-                "application/json", "text/json"
-            };
-            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
-            if (http_header_accept != null)
-                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
-
-            // set "format" to json by default
-            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
-            pathParams.Add("format", "json");
-            
-            if (requestKeyword != null) queryParams.Add("request.keyword", Configuration.ApiClient.ParameterToString(requestKeyword)); // query parameter
-            if (requestSkipCount != null) queryParams.Add("request.skipCount", Configuration.ApiClient.ParameterToString(requestSkipCount)); // query parameter
-            if (requestTakeCount != null) queryParams.Add("request.takeCount", Configuration.ApiClient.ParameterToString(requestTakeCount)); // query parameter
-            
-            
-            
-            
-
-            
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
-
-            int statusCode = (int) response.StatusCode;
-    
-            if (statusCode >= 400)
-                throw new ApiException (statusCode, "Error calling SecuritySearchRoles: " + response.Content, response.Content);
-            else if (statusCode == 0)
-                throw new ApiException (statusCode, "Error calling SecuritySearchRoles: " + response.ErrorMessage, response.ErrorMessage);
-    
-            return new ApiResponse<VirtoCommercePlatformCoreSecurityRoleSearchResponse>(statusCode,
-                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommercePlatformCoreSecurityRoleSearchResponse) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommercePlatformCoreSecurityRoleSearchResponse)));
-            
-        }
-    
-        /// <summary>
-        /// Search roles by keyword 
-        /// </summary>
-        /// <param name="requestKeyword"></param>
-        /// <param name="requestSkipCount"></param>
-        /// <param name="requestTakeCount"></param>
-        /// <returns>Task of VirtoCommercePlatformCoreSecurityRoleSearchResponse</returns>
-        public async System.Threading.Tasks.Task<VirtoCommercePlatformCoreSecurityRoleSearchResponse> SecuritySearchRolesAsync (string requestKeyword = null, int? requestSkipCount = null, int? requestTakeCount = null)
-        {
-             ApiResponse<VirtoCommercePlatformCoreSecurityRoleSearchResponse> response = await SecuritySearchRolesAsyncWithHttpInfo(requestKeyword, requestSkipCount, requestTakeCount);
-             return response.Data;
-
-        }
-
-        /// <summary>
-        /// Search roles by keyword 
-        /// </summary>
-        /// <param name="requestKeyword"></param>
-        /// <param name="requestSkipCount"></param>
-        /// <param name="requestTakeCount"></param>
-        /// <returns>Task of ApiResponse (VirtoCommercePlatformCoreSecurityRoleSearchResponse)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommercePlatformCoreSecurityRoleSearchResponse>> SecuritySearchRolesAsyncWithHttpInfo (string requestKeyword = null, int? requestSkipCount = null, int? requestTakeCount = null)
-        {
-            
-    
-            var path_ = "/api/platform/security/roles";
-    
-            var pathParams = new Dictionary<String, String>();
-            var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
-            var formParams = new Dictionary<String, String>();
-            var fileParams = new Dictionary<String, FileParameter>();
-            String postBody = null;
-
-            // to determine the Accept header
-            String[] http_header_accepts = new String[] {
-                "application/json", "text/json"
-            };
-            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
-            if (http_header_accept != null)
-                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
-
-            // set "format" to json by default
-            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
-            pathParams.Add("format", "json");
-            
-            if (requestKeyword != null) queryParams.Add("request.keyword", Configuration.ApiClient.ParameterToString(requestKeyword)); // query parameter
-            if (requestSkipCount != null) queryParams.Add("request.skipCount", Configuration.ApiClient.ParameterToString(requestSkipCount)); // query parameter
-            if (requestTakeCount != null) queryParams.Add("request.takeCount", Configuration.ApiClient.ParameterToString(requestTakeCount)); // query parameter
-            
-            
-            
-            
-
-            
-
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
-
-            int statusCode = (int) response.StatusCode;
- 
-            if (statusCode >= 400)
-                throw new ApiException (statusCode, "Error calling SecuritySearchRoles: " + response.Content, response.Content);
-            else if (statusCode == 0)
-                throw new ApiException (statusCode, "Error calling SecuritySearchRoles: " + response.ErrorMessage, response.ErrorMessage);
-
-            return new ApiResponse<VirtoCommercePlatformCoreSecurityRoleSearchResponse>(statusCode,
-                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommercePlatformCoreSecurityRoleSearchResponse) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommercePlatformCoreSecurityRoleSearchResponse)));
-            
-        }
-        
-        /// <summary>
         /// Add a new role or update an existing role 
         /// </summary>
         /// <param name="role"></param> 
@@ -8057,6 +7839,142 @@ namespace VirtoCommerce.Client.Api
             return new ApiResponse<VirtoCommercePlatformCoreSecurityRole>(statusCode,
                 response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 (VirtoCommercePlatformCoreSecurityRole) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommercePlatformCoreSecurityRole)));
+            
+        }
+        
+        /// <summary>
+        /// Search roles by keyword 
+        /// </summary>
+        /// <param name="request">Search parameters.</param> 
+        /// <returns>VirtoCommercePlatformCoreSecurityRoleSearchResponse</returns>
+        public VirtoCommercePlatformCoreSecurityRoleSearchResponse SecuritySearchRoles (VirtoCommercePlatformCoreSecurityRoleSearchRequest request)
+        {
+             ApiResponse<VirtoCommercePlatformCoreSecurityRoleSearchResponse> response = SecuritySearchRolesWithHttpInfo(request);
+             return response.Data;
+        }
+
+        /// <summary>
+        /// Search roles by keyword 
+        /// </summary>
+        /// <param name="request">Search parameters.</param> 
+        /// <returns>ApiResponse of VirtoCommercePlatformCoreSecurityRoleSearchResponse</returns>
+        public ApiResponse< VirtoCommercePlatformCoreSecurityRoleSearchResponse > SecuritySearchRolesWithHttpInfo (VirtoCommercePlatformCoreSecurityRoleSearchRequest request)
+        {
+            
+            // verify the required parameter 'request' is set
+            if (request == null) throw new ApiException(400, "Missing required parameter 'request' when calling SecuritySearchRoles");
+            
+    
+            var path_ = "/api/platform/security/roles";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                "application/json", "text/json"
+            };
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            
+            
+            
+            postBody = Configuration.ApiClient.Serialize(request); // http body (model) parameter
+            
+
+            
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+    
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling SecuritySearchRoles: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling SecuritySearchRoles: " + response.ErrorMessage, response.ErrorMessage);
+    
+            return new ApiResponse<VirtoCommercePlatformCoreSecurityRoleSearchResponse>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (VirtoCommercePlatformCoreSecurityRoleSearchResponse) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommercePlatformCoreSecurityRoleSearchResponse)));
+            
+        }
+    
+        /// <summary>
+        /// Search roles by keyword 
+        /// </summary>
+        /// <param name="request">Search parameters.</param>
+        /// <returns>Task of VirtoCommercePlatformCoreSecurityRoleSearchResponse</returns>
+        public async System.Threading.Tasks.Task<VirtoCommercePlatformCoreSecurityRoleSearchResponse> SecuritySearchRolesAsync (VirtoCommercePlatformCoreSecurityRoleSearchRequest request)
+        {
+             ApiResponse<VirtoCommercePlatformCoreSecurityRoleSearchResponse> response = await SecuritySearchRolesAsyncWithHttpInfo(request);
+             return response.Data;
+
+        }
+
+        /// <summary>
+        /// Search roles by keyword 
+        /// </summary>
+        /// <param name="request">Search parameters.</param>
+        /// <returns>Task of ApiResponse (VirtoCommercePlatformCoreSecurityRoleSearchResponse)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommercePlatformCoreSecurityRoleSearchResponse>> SecuritySearchRolesAsyncWithHttpInfo (VirtoCommercePlatformCoreSecurityRoleSearchRequest request)
+        {
+            // verify the required parameter 'request' is set
+            if (request == null) throw new ApiException(400, "Missing required parameter 'request' when calling SecuritySearchRoles");
+            
+    
+            var path_ = "/api/platform/security/roles";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                "application/json", "text/json"
+            };
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            
+            
+            
+            postBody = Configuration.ApiClient.Serialize(request); // http body (model) parameter
+            
+
+            
+
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+ 
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling SecuritySearchRoles: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling SecuritySearchRoles: " + response.ErrorMessage, response.ErrorMessage);
+
+            return new ApiResponse<VirtoCommercePlatformCoreSecurityRoleSearchResponse>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (VirtoCommercePlatformCoreSecurityRoleSearchResponse) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommercePlatformCoreSecurityRoleSearchResponse)));
             
         }
         
@@ -8331,155 +8249,6 @@ namespace VirtoCommerce.Client.Api
         }
         
         /// <summary>
-        /// Search users by keyword 
-        /// </summary>
-        /// <param name="requestAccountTypes"></param> 
-        /// <param name="requestKeyword"></param> 
-        /// <param name="requestSkipCount"></param> 
-        /// <param name="requestTakeCount"></param> 
-        /// <returns>VirtoCommercePlatformCoreSecurityUserSearchResponse</returns>
-        public VirtoCommercePlatformCoreSecurityUserSearchResponse SecuritySearchUsersAsync (List<string> requestAccountTypes = null, string requestKeyword = null, int? requestSkipCount = null, int? requestTakeCount = null)
-        {
-             ApiResponse<VirtoCommercePlatformCoreSecurityUserSearchResponse> response = SecuritySearchUsersAsyncWithHttpInfo(requestAccountTypes, requestKeyword, requestSkipCount, requestTakeCount);
-             return response.Data;
-        }
-
-        /// <summary>
-        /// Search users by keyword 
-        /// </summary>
-        /// <param name="requestAccountTypes"></param> 
-        /// <param name="requestKeyword"></param> 
-        /// <param name="requestSkipCount"></param> 
-        /// <param name="requestTakeCount"></param> 
-        /// <returns>ApiResponse of VirtoCommercePlatformCoreSecurityUserSearchResponse</returns>
-        public ApiResponse< VirtoCommercePlatformCoreSecurityUserSearchResponse > SecuritySearchUsersAsyncWithHttpInfo (List<string> requestAccountTypes = null, string requestKeyword = null, int? requestSkipCount = null, int? requestTakeCount = null)
-        {
-            
-    
-            var path_ = "/api/platform/security/users";
-    
-            var pathParams = new Dictionary<String, String>();
-            var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var formParams = new Dictionary<String, String>();
-            var fileParams = new Dictionary<String, FileParameter>();
-            String postBody = null;
-
-            // to determine the Accept header
-            String[] http_header_accepts = new String[] {
-                "application/json", "text/json"
-            };
-            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
-            if (http_header_accept != null)
-                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
-
-            // set "format" to json by default
-            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
-            pathParams.Add("format", "json");
-            
-            if (requestAccountTypes != null) queryParams.Add("request.accountTypes", Configuration.ApiClient.ParameterToString(requestAccountTypes)); // query parameter
-            if (requestKeyword != null) queryParams.Add("request.keyword", Configuration.ApiClient.ParameterToString(requestKeyword)); // query parameter
-            if (requestSkipCount != null) queryParams.Add("request.skipCount", Configuration.ApiClient.ParameterToString(requestSkipCount)); // query parameter
-            if (requestTakeCount != null) queryParams.Add("request.takeCount", Configuration.ApiClient.ParameterToString(requestTakeCount)); // query parameter
-            
-            
-            
-            
-
-            
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
-
-            int statusCode = (int) response.StatusCode;
-    
-            if (statusCode >= 400)
-                throw new ApiException (statusCode, "Error calling SecuritySearchUsersAsync: " + response.Content, response.Content);
-            else if (statusCode == 0)
-                throw new ApiException (statusCode, "Error calling SecuritySearchUsersAsync: " + response.ErrorMessage, response.ErrorMessage);
-    
-            return new ApiResponse<VirtoCommercePlatformCoreSecurityUserSearchResponse>(statusCode,
-                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommercePlatformCoreSecurityUserSearchResponse) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommercePlatformCoreSecurityUserSearchResponse)));
-            
-        }
-    
-        /// <summary>
-        /// Search users by keyword 
-        /// </summary>
-        /// <param name="requestAccountTypes"></param>
-        /// <param name="requestKeyword"></param>
-        /// <param name="requestSkipCount"></param>
-        /// <param name="requestTakeCount"></param>
-        /// <returns>Task of VirtoCommercePlatformCoreSecurityUserSearchResponse</returns>
-        public async System.Threading.Tasks.Task<VirtoCommercePlatformCoreSecurityUserSearchResponse> SecuritySearchUsersAsyncAsync (List<string> requestAccountTypes = null, string requestKeyword = null, int? requestSkipCount = null, int? requestTakeCount = null)
-        {
-             ApiResponse<VirtoCommercePlatformCoreSecurityUserSearchResponse> response = await SecuritySearchUsersAsyncAsyncWithHttpInfo(requestAccountTypes, requestKeyword, requestSkipCount, requestTakeCount);
-             return response.Data;
-
-        }
-
-        /// <summary>
-        /// Search users by keyword 
-        /// </summary>
-        /// <param name="requestAccountTypes"></param>
-        /// <param name="requestKeyword"></param>
-        /// <param name="requestSkipCount"></param>
-        /// <param name="requestTakeCount"></param>
-        /// <returns>Task of ApiResponse (VirtoCommercePlatformCoreSecurityUserSearchResponse)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommercePlatformCoreSecurityUserSearchResponse>> SecuritySearchUsersAsyncAsyncWithHttpInfo (List<string> requestAccountTypes = null, string requestKeyword = null, int? requestSkipCount = null, int? requestTakeCount = null)
-        {
-            
-    
-            var path_ = "/api/platform/security/users";
-    
-            var pathParams = new Dictionary<String, String>();
-            var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
-            var formParams = new Dictionary<String, String>();
-            var fileParams = new Dictionary<String, FileParameter>();
-            String postBody = null;
-
-            // to determine the Accept header
-            String[] http_header_accepts = new String[] {
-                "application/json", "text/json"
-            };
-            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
-            if (http_header_accept != null)
-                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
-
-            // set "format" to json by default
-            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
-            pathParams.Add("format", "json");
-            
-            if (requestAccountTypes != null) queryParams.Add("request.accountTypes", Configuration.ApiClient.ParameterToString(requestAccountTypes)); // query parameter
-            if (requestKeyword != null) queryParams.Add("request.keyword", Configuration.ApiClient.ParameterToString(requestKeyword)); // query parameter
-            if (requestSkipCount != null) queryParams.Add("request.skipCount", Configuration.ApiClient.ParameterToString(requestSkipCount)); // query parameter
-            if (requestTakeCount != null) queryParams.Add("request.takeCount", Configuration.ApiClient.ParameterToString(requestTakeCount)); // query parameter
-            
-            
-            
-            
-
-            
-
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
-
-            int statusCode = (int) response.StatusCode;
- 
-            if (statusCode >= 400)
-                throw new ApiException (statusCode, "Error calling SecuritySearchUsersAsync: " + response.Content, response.Content);
-            else if (statusCode == 0)
-                throw new ApiException (statusCode, "Error calling SecuritySearchUsersAsync: " + response.ErrorMessage, response.ErrorMessage);
-
-            return new ApiResponse<VirtoCommercePlatformCoreSecurityUserSearchResponse>(statusCode,
-                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommercePlatformCoreSecurityUserSearchResponse) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommercePlatformCoreSecurityUserSearchResponse)));
-            
-        }
-        
-        /// <summary>
         /// Update user details by user ID 
         /// </summary>
         /// <param name="user">User details.</param> 
@@ -8612,6 +8381,142 @@ namespace VirtoCommerce.Client.Api
             return new ApiResponse<VirtoCommercePlatformCoreSecuritySecurityResult>(statusCode,
                 response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 (VirtoCommercePlatformCoreSecuritySecurityResult) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommercePlatformCoreSecuritySecurityResult)));
+            
+        }
+        
+        /// <summary>
+        /// Search users by keyword 
+        /// </summary>
+        /// <param name="request">Search parameters.</param> 
+        /// <returns>VirtoCommercePlatformCoreSecurityUserSearchResponse</returns>
+        public VirtoCommercePlatformCoreSecurityUserSearchResponse SecuritySearchUsersAsync (VirtoCommercePlatformCoreSecurityUserSearchRequest request)
+        {
+             ApiResponse<VirtoCommercePlatformCoreSecurityUserSearchResponse> response = SecuritySearchUsersAsyncWithHttpInfo(request);
+             return response.Data;
+        }
+
+        /// <summary>
+        /// Search users by keyword 
+        /// </summary>
+        /// <param name="request">Search parameters.</param> 
+        /// <returns>ApiResponse of VirtoCommercePlatformCoreSecurityUserSearchResponse</returns>
+        public ApiResponse< VirtoCommercePlatformCoreSecurityUserSearchResponse > SecuritySearchUsersAsyncWithHttpInfo (VirtoCommercePlatformCoreSecurityUserSearchRequest request)
+        {
+            
+            // verify the required parameter 'request' is set
+            if (request == null) throw new ApiException(400, "Missing required parameter 'request' when calling SecuritySearchUsersAsync");
+            
+    
+            var path_ = "/api/platform/security/users";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                "application/json", "text/json"
+            };
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            
+            
+            
+            postBody = Configuration.ApiClient.Serialize(request); // http body (model) parameter
+            
+
+            
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+    
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling SecuritySearchUsersAsync: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling SecuritySearchUsersAsync: " + response.ErrorMessage, response.ErrorMessage);
+    
+            return new ApiResponse<VirtoCommercePlatformCoreSecurityUserSearchResponse>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (VirtoCommercePlatformCoreSecurityUserSearchResponse) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommercePlatformCoreSecurityUserSearchResponse)));
+            
+        }
+    
+        /// <summary>
+        /// Search users by keyword 
+        /// </summary>
+        /// <param name="request">Search parameters.</param>
+        /// <returns>Task of VirtoCommercePlatformCoreSecurityUserSearchResponse</returns>
+        public async System.Threading.Tasks.Task<VirtoCommercePlatformCoreSecurityUserSearchResponse> SecuritySearchUsersAsyncAsync (VirtoCommercePlatformCoreSecurityUserSearchRequest request)
+        {
+             ApiResponse<VirtoCommercePlatformCoreSecurityUserSearchResponse> response = await SecuritySearchUsersAsyncAsyncWithHttpInfo(request);
+             return response.Data;
+
+        }
+
+        /// <summary>
+        /// Search users by keyword 
+        /// </summary>
+        /// <param name="request">Search parameters.</param>
+        /// <returns>Task of ApiResponse (VirtoCommercePlatformCoreSecurityUserSearchResponse)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommercePlatformCoreSecurityUserSearchResponse>> SecuritySearchUsersAsyncAsyncWithHttpInfo (VirtoCommercePlatformCoreSecurityUserSearchRequest request)
+        {
+            // verify the required parameter 'request' is set
+            if (request == null) throw new ApiException(400, "Missing required parameter 'request' when calling SecuritySearchUsersAsync");
+            
+    
+            var path_ = "/api/platform/security/users";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                "application/json", "text/json"
+            };
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            
+            
+            
+            postBody = Configuration.ApiClient.Serialize(request); // http body (model) parameter
+            
+
+            
+
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+ 
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling SecuritySearchUsersAsync: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling SecuritySearchUsersAsync: " + response.ErrorMessage, response.ErrorMessage);
+
+            return new ApiResponse<VirtoCommercePlatformCoreSecurityUserSearchResponse>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (VirtoCommercePlatformCoreSecurityUserSearchResponse) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommercePlatformCoreSecurityUserSearchResponse)));
             
         }
         

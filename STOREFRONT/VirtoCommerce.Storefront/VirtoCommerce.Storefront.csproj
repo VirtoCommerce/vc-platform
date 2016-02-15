@@ -47,16 +47,16 @@
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CacheManager.Core, Version=0.7.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CacheManager.Core.0.7.0\lib\net45\CacheManager.Core.dll</HintPath>
+    <Reference Include="CacheManager.Core, Version=0.7.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CacheManager.Core.0.7.1\lib\net45\CacheManager.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CacheManager.SystemRuntimeCaching, Version=0.7.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CacheManager.SystemRuntimeCaching.0.7.0\lib\net45\CacheManager.SystemRuntimeCaching.dll</HintPath>
+    <Reference Include="CacheManager.SystemRuntimeCaching, Version=0.7.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CacheManager.SystemRuntimeCaching.0.7.1\lib\net45\CacheManager.SystemRuntimeCaching.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CacheManager.Web, Version=0.7.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CacheManager.Web.0.7.0\lib\net45\CacheManager.Web.dll</HintPath>
+    <Reference Include="CacheManager.Web, Version=0.7.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CacheManager.Web.0.7.1\lib\net45\CacheManager.Web.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="DotLiquid, Version=1.0.0.0, Culture=neutral, PublicKeyToken=82e46016ecf9f07c, processorArchitecture=MSIL">
@@ -241,6 +241,7 @@
     <Content Include="App_Data\Themes\default\assets\amazon.svg" />
     <Content Include="App_Data\Themes\default\assets\american-express.svg" />
     <Content Include="App_Data\Themes\default\assets\api.jquery.js" />
+    <Content Include="App_Data\Themes\default\assets\arrow-down.svg" />
     <Content Include="App_Data\Themes\default\assets\arrow-left.svg" />
     <Content Include="App_Data\Themes\default\assets\arrow-right.svg" />
     <Content Include="App_Data\Themes\default\assets\arrow.svg" />
@@ -329,7 +330,7 @@
     <Content Include="App_Data\Themes\default\assets\status-sold-out.svg" />
     <Content Include="App_Data\Themes\default\assets\shopify_common.js" />
     <Content Include="App_Data\Themes\default\assets\storefront.css" />
-    <None Include="App_Data\Themes\default\snippets\checkout-footer.liquid" />
+    <Content Include="App_Data\Themes\default\snippets\checkout-footer.liquid" />
     <Content Include="App_Data\Themes\default\assets\storefrontApp.js" />
     <Content Include="App_Data\Themes\default\assets\storefrontCartController.js" />
     <Content Include="App_Data\Themes\default\assets\storefrontCategoryController.js" />
@@ -337,8 +338,10 @@
     <Content Include="App_Data\Themes\default\assets\storefrontDirectives.js" />
     <Content Include="App_Data\Themes\default\assets\storefrontMainController.js" />
     <Content Include="App_Data\Themes\default\assets\storefrontProductController.js" />
+    <Content Include="App_Data\Themes\default\assets\storefrontQuoteRequestController.js" />
     <Content Include="App_Data\Themes\default\assets\storefrontServices.js" />
     <Content Include="App_Data\Themes\default\assets\thumbs-bar.gif" />
+    <Content Include="App_Data\Themes\default\assets\toastr.css" />
     <Content Include="App_Data\Themes\default\assets\unionpay.svg" />
     <Content Include="App_Data\Themes\default\assets\vc-big.png" />
     <Content Include="App_Data\Themes\default\assets\visa.svg" />
@@ -348,6 +351,8 @@
     <Content Include="App_Data\Themes\default\snippets\cart-modal.liquid" />
     <Content Include="App_Data\Themes\default\social\shopify-social.svg" />
     <Content Include="App_Data\Themes\default\social\social-icons.css" />
+    <Content Include="App_Data\Themes\default\snippets\notification.liquid" />
+    <Content Include="App_Data\Themes\default\templates\quote-request.liquid" />
     <Content Include="App_Data\x64\LibSass.x64.dll" />
     <Content Include="App_Data\x64\libsassnet.dll" />
     <Content Include="App_Data\x86\LibSass.x86.dll" />
@@ -360,7 +365,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\AdminAreaRegistration.cs" />
-    <Compile Include="App_Start\DeltaContractResolver.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\AuthConfig.cs" />
@@ -375,12 +379,15 @@
     <Compile Include="Controllers\QuoteRequestController.cs" />
     <Compile Include="Converters\AttachmentConverter.cs" />
     <Compile Include="Converters\CurrencyConverter.cs" />
+    <Compile Include="Converters\PricelistConverter.cs" />
     <Compile Include="Converters\QuoteItemConverter.cs" />
     <Compile Include="Converters\QuoteRequestConverter.cs" />
     <Compile Include="Converters\QuoteRequestTotalsConverter.cs" />
     <Compile Include="Converters\ShippingMethodConverter.cs" />
     <Compile Include="Converters\TierPriceConverter.cs" />
     <Compile Include="Services\CartValidator.cs" />
+    <Compile Include="Services\CustomerServiceImpl.cs" />
+    <Compile Include="Services\LinkHelper.cs" />
     <Compile Include="Services\PricingServiceImpl.cs" />
     <Compile Include="Controllers\Api\ApiControllerBase.cs" />
     <Compile Include="Controllers\Api\ApiCartController.cs" />
@@ -447,6 +454,7 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\Themes\default\snippets\quote-modal.liquid" />
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -538,8 +546,8 @@
     <Content Include="App_Data\Themes\default\templates\customers\addresses.liquid" />
     <Content Include="App_Data\Themes\default\templates\customers\login.liquid" />
     <Content Include="App_Data\Themes\default\templates\customers\order.liquid" />
-    <Content Include="App_Data\Themes\default\templates\customers\quote.liquid" />
-    <Content Include="App_Data\Themes\default\templates\customers\quotes.liquid" />
+    <Content Include="App_Data\Themes\default\templates\customers\quote-request.liquid" />
+    <Content Include="App_Data\Themes\default\templates\customers\quote-requests.liquid" />
     <Content Include="App_Data\Themes\default\templates\customers\register.liquid" />
     <Content Include="App_Data\Themes\default\templates\customers\reset_password.liquid" />
     <Content Include="App_Data\Themes\default\templates\error.liquid" />
@@ -554,8 +562,6 @@
     <Content Include="App_Data\Themes\default\templates\customers\reset_password_confirmation.liquid" />
     <Content Include="App_Data\Themes\default\templates\payment-form.liquid" />
     <Content Include="App_Data\Themes\default\templates\product.liquid" />
-    <Content Include="App_Data\Themes\default\templates\quote.liquid" />
-    <Content Include="App_Data\Themes\default\templates\quotes.liquid" />
     <Content Include="App_Data\Themes\default\templates\reset-password.liquid" />
     <Content Include="App_Data\Themes\default\templates\search.liquid" />
     <Content Include="App_Data\Themes\default\templates\send-code.liquid" />

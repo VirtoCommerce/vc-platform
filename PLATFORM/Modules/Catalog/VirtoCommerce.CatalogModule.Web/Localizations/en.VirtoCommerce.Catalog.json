@@ -636,7 +636,6 @@
       }
     },
     "commands": {
-      "apply-filter": "Apply filter",
       "start-export": "Start export",
       "start-import": "Start import",
       "clear-all": "Clear all",

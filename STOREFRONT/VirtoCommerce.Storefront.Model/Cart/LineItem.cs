@@ -198,7 +198,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
         {
             get
             {
-                var discountTotal = Discounts.Sum(d => d.Amount.Amount);
+                var discountTotal = Discounts.Where(d => d != null).Sum(d => d.Amount.Amount);
 
                 return new Money(discountTotal, Currency);
             }
@@ -239,9 +239,9 @@ namespace VirtoCommerce.Storefront.Model.Cart
         public ICollection<ValidationError> ValidationWarnings { get; set; }
 
         #region IDiscountable  Members
-        public Currency Currency { get; }
+        public Currency Currency { get; private set; }
 
-        public ICollection<Discount> Discounts { get; }
+        public ICollection<Discount> Discounts { get; private set; }
 
         public void ApplyRewards(IEnumerable<PromotionReward> rewards)
         {
@@ -262,7 +262,12 @@ namespace VirtoCommerce.Storefront.Model.Cart
                     Discounts.Add(discount);
                 }
             }
-        } 
+        }
         #endregion
+
+        public override string ToString()
+        {
+            return string.Format("cart lineItem #{0} {1} qty: {2}", Id ?? "undef", Name ?? "undef", Quantity);
+        }
     }
 }

@@ -302,30 +302,9 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// 
         /// </remarks>
-        /// <param name="evalContextStoreId"></param>
-        /// <param name="evalContextPlaceName"></param>
-        /// <param name="evalContextTags"></param>
-        /// <param name="evalContextToDate"></param>
-        /// <param name="evalContextContextObject"></param>
-        /// <param name="evalContextGeoCity"></param>
-        /// <param name="evalContextGeoState"></param>
-        /// <param name="evalContextGeoCountry"></param>
-        /// <param name="evalContextGeoContinent"></param>
-        /// <param name="evalContextGeoZipCode"></param>
-        /// <param name="evalContextGeoConnectionType"></param>
-        /// <param name="evalContextGeoTimeZone"></param>
-        /// <param name="evalContextGeoIpRoutingType"></param>
-        /// <param name="evalContextGeoIspSecondLevel"></param>
-        /// <param name="evalContextGeoIspTopLevel"></param>
-        /// <param name="evalContextShopperAge"></param>
-        /// <param name="evalContextShopperGender"></param>
-        /// <param name="evalContextLanguage"></param>
-        /// <param name="evalContextShopperSearchedPhraseInStore"></param>
-        /// <param name="evalContextShopperSearchedPhraseOnInternet"></param>
-        /// <param name="evalContextCurrentUrl"></param>
-        /// <param name="evalContextReferredUrl"></param>
+        /// <param name="evalContext"></param>
         /// <returns>List&lt;VirtoCommerceMarketingModuleWebModelDynamicContentItem&gt;</returns>
-        List<VirtoCommerceMarketingModuleWebModelDynamicContentItem> MarketingModuleDynamicContentEvaluateDynamicContent (string evalContextStoreId = null, string evalContextPlaceName = null, List<string> evalContextTags = null, DateTime? evalContextToDate = null, Dictionary<string, string> evalContextContextObject = null, string evalContextGeoCity = null, string evalContextGeoState = null, string evalContextGeoCountry = null, string evalContextGeoContinent = null, string evalContextGeoZipCode = null, string evalContextGeoConnectionType = null, string evalContextGeoTimeZone = null, string evalContextGeoIpRoutingType = null, string evalContextGeoIspSecondLevel = null, string evalContextGeoIspTopLevel = null, int? evalContextShopperAge = null, string evalContextShopperGender = null, string evalContextLanguage = null, string evalContextShopperSearchedPhraseInStore = null, string evalContextShopperSearchedPhraseOnInternet = null, string evalContextCurrentUrl = null, string evalContextReferredUrl = null);
+        List<VirtoCommerceMarketingModuleWebModelDynamicContentItem> MarketingModuleDynamicContentEvaluateDynamicContent (VirtoCommerceDomainMarketingModelDynamicContentDynamicContentEvaluationContext evalContext);
   
         /// <summary>
         /// Get dynamic content for given placeholders
@@ -333,30 +312,9 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// 
         /// </remarks>
-        /// <param name="evalContextStoreId"></param>
-        /// <param name="evalContextPlaceName"></param>
-        /// <param name="evalContextTags"></param>
-        /// <param name="evalContextToDate"></param>
-        /// <param name="evalContextContextObject"></param>
-        /// <param name="evalContextGeoCity"></param>
-        /// <param name="evalContextGeoState"></param>
-        /// <param name="evalContextGeoCountry"></param>
-        /// <param name="evalContextGeoContinent"></param>
-        /// <param name="evalContextGeoZipCode"></param>
-        /// <param name="evalContextGeoConnectionType"></param>
-        /// <param name="evalContextGeoTimeZone"></param>
-        /// <param name="evalContextGeoIpRoutingType"></param>
-        /// <param name="evalContextGeoIspSecondLevel"></param>
-        /// <param name="evalContextGeoIspTopLevel"></param>
-        /// <param name="evalContextShopperAge"></param>
-        /// <param name="evalContextShopperGender"></param>
-        /// <param name="evalContextLanguage"></param>
-        /// <param name="evalContextShopperSearchedPhraseInStore"></param>
-        /// <param name="evalContextShopperSearchedPhraseOnInternet"></param>
-        /// <param name="evalContextCurrentUrl"></param>
-        /// <param name="evalContextReferredUrl"></param>
+        /// <param name="evalContext"></param>
         /// <returns>ApiResponse of List&lt;VirtoCommerceMarketingModuleWebModelDynamicContentItem&gt;</returns>
-        ApiResponse<List<VirtoCommerceMarketingModuleWebModelDynamicContentItem>> MarketingModuleDynamicContentEvaluateDynamicContentWithHttpInfo (string evalContextStoreId = null, string evalContextPlaceName = null, List<string> evalContextTags = null, DateTime? evalContextToDate = null, Dictionary<string, string> evalContextContextObject = null, string evalContextGeoCity = null, string evalContextGeoState = null, string evalContextGeoCountry = null, string evalContextGeoContinent = null, string evalContextGeoZipCode = null, string evalContextGeoConnectionType = null, string evalContextGeoTimeZone = null, string evalContextGeoIpRoutingType = null, string evalContextGeoIspSecondLevel = null, string evalContextGeoIspTopLevel = null, int? evalContextShopperAge = null, string evalContextShopperGender = null, string evalContextLanguage = null, string evalContextShopperSearchedPhraseInStore = null, string evalContextShopperSearchedPhraseOnInternet = null, string evalContextCurrentUrl = null, string evalContextReferredUrl = null);
+        ApiResponse<List<VirtoCommerceMarketingModuleWebModelDynamicContentItem>> MarketingModuleDynamicContentEvaluateDynamicContentWithHttpInfo (VirtoCommerceDomainMarketingModelDynamicContentDynamicContentEvaluationContext evalContext);
 
         /// <summary>
         /// Get dynamic content for given placeholders
@@ -364,30 +322,9 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// 
         /// </remarks>
-        /// <param name="evalContextStoreId"></param>
-        /// <param name="evalContextPlaceName"></param>
-        /// <param name="evalContextTags"></param>
-        /// <param name="evalContextToDate"></param>
-        /// <param name="evalContextContextObject"></param>
-        /// <param name="evalContextGeoCity"></param>
-        /// <param name="evalContextGeoState"></param>
-        /// <param name="evalContextGeoCountry"></param>
-        /// <param name="evalContextGeoContinent"></param>
-        /// <param name="evalContextGeoZipCode"></param>
-        /// <param name="evalContextGeoConnectionType"></param>
-        /// <param name="evalContextGeoTimeZone"></param>
-        /// <param name="evalContextGeoIpRoutingType"></param>
-        /// <param name="evalContextGeoIspSecondLevel"></param>
-        /// <param name="evalContextGeoIspTopLevel"></param>
-        /// <param name="evalContextShopperAge"></param>
-        /// <param name="evalContextShopperGender"></param>
-        /// <param name="evalContextLanguage"></param>
-        /// <param name="evalContextShopperSearchedPhraseInStore"></param>
-        /// <param name="evalContextShopperSearchedPhraseOnInternet"></param>
-        /// <param name="evalContextCurrentUrl"></param>
-        /// <param name="evalContextReferredUrl"></param>
+        /// <param name="evalContext"></param>
         /// <returns>Task of List&lt;VirtoCommerceMarketingModuleWebModelDynamicContentItem&gt;</returns>
-        System.Threading.Tasks.Task<List<VirtoCommerceMarketingModuleWebModelDynamicContentItem>> MarketingModuleDynamicContentEvaluateDynamicContentAsync (string evalContextStoreId = null, string evalContextPlaceName = null, List<string> evalContextTags = null, DateTime? evalContextToDate = null, Dictionary<string, string> evalContextContextObject = null, string evalContextGeoCity = null, string evalContextGeoState = null, string evalContextGeoCountry = null, string evalContextGeoContinent = null, string evalContextGeoZipCode = null, string evalContextGeoConnectionType = null, string evalContextGeoTimeZone = null, string evalContextGeoIpRoutingType = null, string evalContextGeoIspSecondLevel = null, string evalContextGeoIspTopLevel = null, int? evalContextShopperAge = null, string evalContextShopperGender = null, string evalContextLanguage = null, string evalContextShopperSearchedPhraseInStore = null, string evalContextShopperSearchedPhraseOnInternet = null, string evalContextCurrentUrl = null, string evalContextReferredUrl = null);
+        System.Threading.Tasks.Task<List<VirtoCommerceMarketingModuleWebModelDynamicContentItem>> MarketingModuleDynamicContentEvaluateDynamicContentAsync (VirtoCommerceDomainMarketingModelDynamicContentDynamicContentEvaluationContext evalContext);
 
         /// <summary>
         /// Get dynamic content for given placeholders
@@ -395,30 +332,9 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// 
         /// </remarks>
-        /// <param name="evalContextStoreId"></param>
-        /// <param name="evalContextPlaceName"></param>
-        /// <param name="evalContextTags"></param>
-        /// <param name="evalContextToDate"></param>
-        /// <param name="evalContextContextObject"></param>
-        /// <param name="evalContextGeoCity"></param>
-        /// <param name="evalContextGeoState"></param>
-        /// <param name="evalContextGeoCountry"></param>
-        /// <param name="evalContextGeoContinent"></param>
-        /// <param name="evalContextGeoZipCode"></param>
-        /// <param name="evalContextGeoConnectionType"></param>
-        /// <param name="evalContextGeoTimeZone"></param>
-        /// <param name="evalContextGeoIpRoutingType"></param>
-        /// <param name="evalContextGeoIspSecondLevel"></param>
-        /// <param name="evalContextGeoIspTopLevel"></param>
-        /// <param name="evalContextShopperAge"></param>
-        /// <param name="evalContextShopperGender"></param>
-        /// <param name="evalContextLanguage"></param>
-        /// <param name="evalContextShopperSearchedPhraseInStore"></param>
-        /// <param name="evalContextShopperSearchedPhraseOnInternet"></param>
-        /// <param name="evalContextCurrentUrl"></param>
-        /// <param name="evalContextReferredUrl"></param>
+        /// <param name="evalContext"></param>
         /// <returns>Task of ApiResponse (List&lt;VirtoCommerceMarketingModuleWebModelDynamicContentItem&gt;)</returns>
-        System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceMarketingModuleWebModelDynamicContentItem>>> MarketingModuleDynamicContentEvaluateDynamicContentAsyncWithHttpInfo (string evalContextStoreId = null, string evalContextPlaceName = null, List<string> evalContextTags = null, DateTime? evalContextToDate = null, Dictionary<string, string> evalContextContextObject = null, string evalContextGeoCity = null, string evalContextGeoState = null, string evalContextGeoCountry = null, string evalContextGeoContinent = null, string evalContextGeoZipCode = null, string evalContextGeoConnectionType = null, string evalContextGeoTimeZone = null, string evalContextGeoIpRoutingType = null, string evalContextGeoIspSecondLevel = null, string evalContextGeoIspTopLevel = null, int? evalContextShopperAge = null, string evalContextShopperGender = null, string evalContextLanguage = null, string evalContextShopperSearchedPhraseInStore = null, string evalContextShopperSearchedPhraseOnInternet = null, string evalContextCurrentUrl = null, string evalContextReferredUrl = null);
+        System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceMarketingModuleWebModelDynamicContentItem>>> MarketingModuleDynamicContentEvaluateDynamicContentAsyncWithHttpInfo (VirtoCommerceDomainMarketingModelDynamicContentDynamicContentEvaluationContext evalContext);
         
         /// <summary>
         /// Find dynamic content item object by id
@@ -1058,13 +974,9 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// Allow to find all marketing module objects (Promotions, Dynamic content objects)
         /// </remarks>
-        /// <param name="criteriaFolderId"></param>
-        /// <param name="criteriaResponseGroup"></param>
-        /// <param name="criteriaKeyword"></param>
-        /// <param name="criteriaStart"></param>
-        /// <param name="criteriaCount"></param>
+        /// <param name="criteria">criteria</param>
         /// <returns>VirtoCommerceMarketingModuleWebModelMarketingSearchResult</returns>
-        VirtoCommerceMarketingModuleWebModelMarketingSearchResult MarketingModuleSearch (string criteriaFolderId = null, string criteriaResponseGroup = null, string criteriaKeyword = null, int? criteriaStart = null, int? criteriaCount = null);
+        VirtoCommerceMarketingModuleWebModelMarketingSearchResult MarketingModuleSearch (VirtoCommerceDomainMarketingModelMarketingSearchCriteria criteria);
   
         /// <summary>
         /// Search marketing objects by given criteria
@@ -1072,13 +984,9 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// Allow to find all marketing module objects (Promotions, Dynamic content objects)
         /// </remarks>
-        /// <param name="criteriaFolderId"></param>
-        /// <param name="criteriaResponseGroup"></param>
-        /// <param name="criteriaKeyword"></param>
-        /// <param name="criteriaStart"></param>
-        /// <param name="criteriaCount"></param>
+        /// <param name="criteria">criteria</param>
         /// <returns>ApiResponse of VirtoCommerceMarketingModuleWebModelMarketingSearchResult</returns>
-        ApiResponse<VirtoCommerceMarketingModuleWebModelMarketingSearchResult> MarketingModuleSearchWithHttpInfo (string criteriaFolderId = null, string criteriaResponseGroup = null, string criteriaKeyword = null, int? criteriaStart = null, int? criteriaCount = null);
+        ApiResponse<VirtoCommerceMarketingModuleWebModelMarketingSearchResult> MarketingModuleSearchWithHttpInfo (VirtoCommerceDomainMarketingModelMarketingSearchCriteria criteria);
 
         /// <summary>
         /// Search marketing objects by given criteria
@@ -1086,13 +994,9 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// Allow to find all marketing module objects (Promotions, Dynamic content objects)
         /// </remarks>
-        /// <param name="criteriaFolderId"></param>
-        /// <param name="criteriaResponseGroup"></param>
-        /// <param name="criteriaKeyword"></param>
-        /// <param name="criteriaStart"></param>
-        /// <param name="criteriaCount"></param>
+        /// <param name="criteria">criteria</param>
         /// <returns>Task of VirtoCommerceMarketingModuleWebModelMarketingSearchResult</returns>
-        System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelMarketingSearchResult> MarketingModuleSearchAsync (string criteriaFolderId = null, string criteriaResponseGroup = null, string criteriaKeyword = null, int? criteriaStart = null, int? criteriaCount = null);
+        System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelMarketingSearchResult> MarketingModuleSearchAsync (VirtoCommerceDomainMarketingModelMarketingSearchCriteria criteria);
 
         /// <summary>
         /// Search marketing objects by given criteria
@@ -1100,13 +1004,9 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// Allow to find all marketing module objects (Promotions, Dynamic content objects)
         /// </remarks>
-        /// <param name="criteriaFolderId"></param>
-        /// <param name="criteriaResponseGroup"></param>
-        /// <param name="criteriaKeyword"></param>
-        /// <param name="criteriaStart"></param>
-        /// <param name="criteriaCount"></param>
+        /// <param name="criteria">criteria</param>
         /// <returns>Task of ApiResponse (VirtoCommerceMarketingModuleWebModelMarketingSearchResult)</returns>
-        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelMarketingSearchResult>> MarketingModuleSearchAsyncWithHttpInfo (string criteriaFolderId = null, string criteriaResponseGroup = null, string criteriaKeyword = null, int? criteriaStart = null, int? criteriaCount = null);
+        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelMarketingSearchResult>> MarketingModuleSearchAsyncWithHttpInfo (VirtoCommerceDomainMarketingModelMarketingSearchCriteria criteria);
         
     }
   
@@ -2124,63 +2024,24 @@ namespace VirtoCommerce.Client.Api
         /// <summary>
         /// Get dynamic content for given placeholders 
         /// </summary>
-        /// <param name="evalContextStoreId"></param> 
-        /// <param name="evalContextPlaceName"></param> 
-        /// <param name="evalContextTags"></param> 
-        /// <param name="evalContextToDate"></param> 
-        /// <param name="evalContextContextObject"></param> 
-        /// <param name="evalContextGeoCity"></param> 
-        /// <param name="evalContextGeoState"></param> 
-        /// <param name="evalContextGeoCountry"></param> 
-        /// <param name="evalContextGeoContinent"></param> 
-        /// <param name="evalContextGeoZipCode"></param> 
-        /// <param name="evalContextGeoConnectionType"></param> 
-        /// <param name="evalContextGeoTimeZone"></param> 
-        /// <param name="evalContextGeoIpRoutingType"></param> 
-        /// <param name="evalContextGeoIspSecondLevel"></param> 
-        /// <param name="evalContextGeoIspTopLevel"></param> 
-        /// <param name="evalContextShopperAge"></param> 
-        /// <param name="evalContextShopperGender"></param> 
-        /// <param name="evalContextLanguage"></param> 
-        /// <param name="evalContextShopperSearchedPhraseInStore"></param> 
-        /// <param name="evalContextShopperSearchedPhraseOnInternet"></param> 
-        /// <param name="evalContextCurrentUrl"></param> 
-        /// <param name="evalContextReferredUrl"></param> 
+        /// <param name="evalContext"></param> 
         /// <returns>List&lt;VirtoCommerceMarketingModuleWebModelDynamicContentItem&gt;</returns>
-        public List<VirtoCommerceMarketingModuleWebModelDynamicContentItem> MarketingModuleDynamicContentEvaluateDynamicContent (string evalContextStoreId = null, string evalContextPlaceName = null, List<string> evalContextTags = null, DateTime? evalContextToDate = null, Dictionary<string, string> evalContextContextObject = null, string evalContextGeoCity = null, string evalContextGeoState = null, string evalContextGeoCountry = null, string evalContextGeoContinent = null, string evalContextGeoZipCode = null, string evalContextGeoConnectionType = null, string evalContextGeoTimeZone = null, string evalContextGeoIpRoutingType = null, string evalContextGeoIspSecondLevel = null, string evalContextGeoIspTopLevel = null, int? evalContextShopperAge = null, string evalContextShopperGender = null, string evalContextLanguage = null, string evalContextShopperSearchedPhraseInStore = null, string evalContextShopperSearchedPhraseOnInternet = null, string evalContextCurrentUrl = null, string evalContextReferredUrl = null)
+        public List<VirtoCommerceMarketingModuleWebModelDynamicContentItem> MarketingModuleDynamicContentEvaluateDynamicContent (VirtoCommerceDomainMarketingModelDynamicContentDynamicContentEvaluationContext evalContext)
         {
-             ApiResponse<List<VirtoCommerceMarketingModuleWebModelDynamicContentItem>> response = MarketingModuleDynamicContentEvaluateDynamicContentWithHttpInfo(evalContextStoreId, evalContextPlaceName, evalContextTags, evalContextToDate, evalContextContextObject, evalContextGeoCity, evalContextGeoState, evalContextGeoCountry, evalContextGeoContinent, evalContextGeoZipCode, evalContextGeoConnectionType, evalContextGeoTimeZone, evalContextGeoIpRoutingType, evalContextGeoIspSecondLevel, evalContextGeoIspTopLevel, evalContextShopperAge, evalContextShopperGender, evalContextLanguage, evalContextShopperSearchedPhraseInStore, evalContextShopperSearchedPhraseOnInternet, evalContextCurrentUrl, evalContextReferredUrl);
+             ApiResponse<List<VirtoCommerceMarketingModuleWebModelDynamicContentItem>> response = MarketingModuleDynamicContentEvaluateDynamicContentWithHttpInfo(evalContext);
              return response.Data;
         }
 
         /// <summary>
         /// Get dynamic content for given placeholders 
         /// </summary>
-        /// <param name="evalContextStoreId"></param> 
-        /// <param name="evalContextPlaceName"></param> 
-        /// <param name="evalContextTags"></param> 
-        /// <param name="evalContextToDate"></param> 
-        /// <param name="evalContextContextObject"></param> 
-        /// <param name="evalContextGeoCity"></param> 
-        /// <param name="evalContextGeoState"></param> 
-        /// <param name="evalContextGeoCountry"></param> 
-        /// <param name="evalContextGeoContinent"></param> 
-        /// <param name="evalContextGeoZipCode"></param> 
-        /// <param name="evalContextGeoConnectionType"></param> 
-        /// <param name="evalContextGeoTimeZone"></param> 
-        /// <param name="evalContextGeoIpRoutingType"></param> 
-        /// <param name="evalContextGeoIspSecondLevel"></param> 
-        /// <param name="evalContextGeoIspTopLevel"></param> 
-        /// <param name="evalContextShopperAge"></param> 
-        /// <param name="evalContextShopperGender"></param> 
-        /// <param name="evalContextLanguage"></param> 
-        /// <param name="evalContextShopperSearchedPhraseInStore"></param> 
-        /// <param name="evalContextShopperSearchedPhraseOnInternet"></param> 
-        /// <param name="evalContextCurrentUrl"></param> 
-        /// <param name="evalContextReferredUrl"></param> 
+        /// <param name="evalContext"></param> 
         /// <returns>ApiResponse of List&lt;VirtoCommerceMarketingModuleWebModelDynamicContentItem&gt;</returns>
-        public ApiResponse< List<VirtoCommerceMarketingModuleWebModelDynamicContentItem> > MarketingModuleDynamicContentEvaluateDynamicContentWithHttpInfo (string evalContextStoreId = null, string evalContextPlaceName = null, List<string> evalContextTags = null, DateTime? evalContextToDate = null, Dictionary<string, string> evalContextContextObject = null, string evalContextGeoCity = null, string evalContextGeoState = null, string evalContextGeoCountry = null, string evalContextGeoContinent = null, string evalContextGeoZipCode = null, string evalContextGeoConnectionType = null, string evalContextGeoTimeZone = null, string evalContextGeoIpRoutingType = null, string evalContextGeoIspSecondLevel = null, string evalContextGeoIspTopLevel = null, int? evalContextShopperAge = null, string evalContextShopperGender = null, string evalContextLanguage = null, string evalContextShopperSearchedPhraseInStore = null, string evalContextShopperSearchedPhraseOnInternet = null, string evalContextCurrentUrl = null, string evalContextReferredUrl = null)
+        public ApiResponse< List<VirtoCommerceMarketingModuleWebModelDynamicContentItem> > MarketingModuleDynamicContentEvaluateDynamicContentWithHttpInfo (VirtoCommerceDomainMarketingModelDynamicContentDynamicContentEvaluationContext evalContext)
         {
+            
+            // verify the required parameter 'evalContext' is set
+            if (evalContext == null) throw new ApiException(400, "Missing required parameter 'evalContext' when calling MarketingModuleDynamicContentEvaluateDynamicContent");
             
     
             var path_ = "/api/marketing/contentitems/evaluate";
@@ -2204,37 +2065,16 @@ namespace VirtoCommerce.Client.Api
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
             
-            if (evalContextStoreId != null) queryParams.Add("evalContext.storeId", Configuration.ApiClient.ParameterToString(evalContextStoreId)); // query parameter
-            if (evalContextPlaceName != null) queryParams.Add("evalContext.placeName", Configuration.ApiClient.ParameterToString(evalContextPlaceName)); // query parameter
-            if (evalContextTags != null) queryParams.Add("evalContext.tags", Configuration.ApiClient.ParameterToString(evalContextTags)); // query parameter
-            if (evalContextToDate != null) queryParams.Add("evalContext.toDate", Configuration.ApiClient.ParameterToString(evalContextToDate)); // query parameter
-            if (evalContextContextObject != null) queryParams.Add("evalContext.contextObject", Configuration.ApiClient.ParameterToString(evalContextContextObject)); // query parameter
-            if (evalContextGeoCity != null) queryParams.Add("evalContext.geoCity", Configuration.ApiClient.ParameterToString(evalContextGeoCity)); // query parameter
-            if (evalContextGeoState != null) queryParams.Add("evalContext.geoState", Configuration.ApiClient.ParameterToString(evalContextGeoState)); // query parameter
-            if (evalContextGeoCountry != null) queryParams.Add("evalContext.geoCountry", Configuration.ApiClient.ParameterToString(evalContextGeoCountry)); // query parameter
-            if (evalContextGeoContinent != null) queryParams.Add("evalContext.geoContinent", Configuration.ApiClient.ParameterToString(evalContextGeoContinent)); // query parameter
-            if (evalContextGeoZipCode != null) queryParams.Add("evalContext.geoZipCode", Configuration.ApiClient.ParameterToString(evalContextGeoZipCode)); // query parameter
-            if (evalContextGeoConnectionType != null) queryParams.Add("evalContext.geoConnectionType", Configuration.ApiClient.ParameterToString(evalContextGeoConnectionType)); // query parameter
-            if (evalContextGeoTimeZone != null) queryParams.Add("evalContext.geoTimeZone", Configuration.ApiClient.ParameterToString(evalContextGeoTimeZone)); // query parameter
-            if (evalContextGeoIpRoutingType != null) queryParams.Add("evalContext.geoIpRoutingType", Configuration.ApiClient.ParameterToString(evalContextGeoIpRoutingType)); // query parameter
-            if (evalContextGeoIspSecondLevel != null) queryParams.Add("evalContext.geoIspSecondLevel", Configuration.ApiClient.ParameterToString(evalContextGeoIspSecondLevel)); // query parameter
-            if (evalContextGeoIspTopLevel != null) queryParams.Add("evalContext.geoIspTopLevel", Configuration.ApiClient.ParameterToString(evalContextGeoIspTopLevel)); // query parameter
-            if (evalContextShopperAge != null) queryParams.Add("evalContext.shopperAge", Configuration.ApiClient.ParameterToString(evalContextShopperAge)); // query parameter
-            if (evalContextShopperGender != null) queryParams.Add("evalContext.shopperGender", Configuration.ApiClient.ParameterToString(evalContextShopperGender)); // query parameter
-            if (evalContextLanguage != null) queryParams.Add("evalContext.language", Configuration.ApiClient.ParameterToString(evalContextLanguage)); // query parameter
-            if (evalContextShopperSearchedPhraseInStore != null) queryParams.Add("evalContext.shopperSearchedPhraseInStore", Configuration.ApiClient.ParameterToString(evalContextShopperSearchedPhraseInStore)); // query parameter
-            if (evalContextShopperSearchedPhraseOnInternet != null) queryParams.Add("evalContext.shopperSearchedPhraseOnInternet", Configuration.ApiClient.ParameterToString(evalContextShopperSearchedPhraseOnInternet)); // query parameter
-            if (evalContextCurrentUrl != null) queryParams.Add("evalContext.currentUrl", Configuration.ApiClient.ParameterToString(evalContextCurrentUrl)); // query parameter
-            if (evalContextReferredUrl != null) queryParams.Add("evalContext.referredUrl", Configuration.ApiClient.ParameterToString(evalContextReferredUrl)); // query parameter
             
             
             
+            postBody = Configuration.ApiClient.Serialize(evalContext); // http body (model) parameter
             
 
             
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
 
             int statusCode = (int) response.StatusCode;
     
@@ -2252,32 +2092,11 @@ namespace VirtoCommerce.Client.Api
         /// <summary>
         /// Get dynamic content for given placeholders 
         /// </summary>
-        /// <param name="evalContextStoreId"></param>
-        /// <param name="evalContextPlaceName"></param>
-        /// <param name="evalContextTags"></param>
-        /// <param name="evalContextToDate"></param>
-        /// <param name="evalContextContextObject"></param>
-        /// <param name="evalContextGeoCity"></param>
-        /// <param name="evalContextGeoState"></param>
-        /// <param name="evalContextGeoCountry"></param>
-        /// <param name="evalContextGeoContinent"></param>
-        /// <param name="evalContextGeoZipCode"></param>
-        /// <param name="evalContextGeoConnectionType"></param>
-        /// <param name="evalContextGeoTimeZone"></param>
-        /// <param name="evalContextGeoIpRoutingType"></param>
-        /// <param name="evalContextGeoIspSecondLevel"></param>
-        /// <param name="evalContextGeoIspTopLevel"></param>
-        /// <param name="evalContextShopperAge"></param>
-        /// <param name="evalContextShopperGender"></param>
-        /// <param name="evalContextLanguage"></param>
-        /// <param name="evalContextShopperSearchedPhraseInStore"></param>
-        /// <param name="evalContextShopperSearchedPhraseOnInternet"></param>
-        /// <param name="evalContextCurrentUrl"></param>
-        /// <param name="evalContextReferredUrl"></param>
+        /// <param name="evalContext"></param>
         /// <returns>Task of List&lt;VirtoCommerceMarketingModuleWebModelDynamicContentItem&gt;</returns>
-        public async System.Threading.Tasks.Task<List<VirtoCommerceMarketingModuleWebModelDynamicContentItem>> MarketingModuleDynamicContentEvaluateDynamicContentAsync (string evalContextStoreId = null, string evalContextPlaceName = null, List<string> evalContextTags = null, DateTime? evalContextToDate = null, Dictionary<string, string> evalContextContextObject = null, string evalContextGeoCity = null, string evalContextGeoState = null, string evalContextGeoCountry = null, string evalContextGeoContinent = null, string evalContextGeoZipCode = null, string evalContextGeoConnectionType = null, string evalContextGeoTimeZone = null, string evalContextGeoIpRoutingType = null, string evalContextGeoIspSecondLevel = null, string evalContextGeoIspTopLevel = null, int? evalContextShopperAge = null, string evalContextShopperGender = null, string evalContextLanguage = null, string evalContextShopperSearchedPhraseInStore = null, string evalContextShopperSearchedPhraseOnInternet = null, string evalContextCurrentUrl = null, string evalContextReferredUrl = null)
+        public async System.Threading.Tasks.Task<List<VirtoCommerceMarketingModuleWebModelDynamicContentItem>> MarketingModuleDynamicContentEvaluateDynamicContentAsync (VirtoCommerceDomainMarketingModelDynamicContentDynamicContentEvaluationContext evalContext)
         {
-             ApiResponse<List<VirtoCommerceMarketingModuleWebModelDynamicContentItem>> response = await MarketingModuleDynamicContentEvaluateDynamicContentAsyncWithHttpInfo(evalContextStoreId, evalContextPlaceName, evalContextTags, evalContextToDate, evalContextContextObject, evalContextGeoCity, evalContextGeoState, evalContextGeoCountry, evalContextGeoContinent, evalContextGeoZipCode, evalContextGeoConnectionType, evalContextGeoTimeZone, evalContextGeoIpRoutingType, evalContextGeoIspSecondLevel, evalContextGeoIspTopLevel, evalContextShopperAge, evalContextShopperGender, evalContextLanguage, evalContextShopperSearchedPhraseInStore, evalContextShopperSearchedPhraseOnInternet, evalContextCurrentUrl, evalContextReferredUrl);
+             ApiResponse<List<VirtoCommerceMarketingModuleWebModelDynamicContentItem>> response = await MarketingModuleDynamicContentEvaluateDynamicContentAsyncWithHttpInfo(evalContext);
              return response.Data;
 
         }
@@ -2285,31 +2104,12 @@ namespace VirtoCommerce.Client.Api
         /// <summary>
         /// Get dynamic content for given placeholders 
         /// </summary>
-        /// <param name="evalContextStoreId"></param>
-        /// <param name="evalContextPlaceName"></param>
-        /// <param name="evalContextTags"></param>
-        /// <param name="evalContextToDate"></param>
-        /// <param name="evalContextContextObject"></param>
-        /// <param name="evalContextGeoCity"></param>
-        /// <param name="evalContextGeoState"></param>
-        /// <param name="evalContextGeoCountry"></param>
-        /// <param name="evalContextGeoContinent"></param>
-        /// <param name="evalContextGeoZipCode"></param>
-        /// <param name="evalContextGeoConnectionType"></param>
-        /// <param name="evalContextGeoTimeZone"></param>
-        /// <param name="evalContextGeoIpRoutingType"></param>
-        /// <param name="evalContextGeoIspSecondLevel"></param>
-        /// <param name="evalContextGeoIspTopLevel"></param>
-        /// <param name="evalContextShopperAge"></param>
-        /// <param name="evalContextShopperGender"></param>
-        /// <param name="evalContextLanguage"></param>
-        /// <param name="evalContextShopperSearchedPhraseInStore"></param>
-        /// <param name="evalContextShopperSearchedPhraseOnInternet"></param>
-        /// <param name="evalContextCurrentUrl"></param>
-        /// <param name="evalContextReferredUrl"></param>
+        /// <param name="evalContext"></param>
         /// <returns>Task of ApiResponse (List&lt;VirtoCommerceMarketingModuleWebModelDynamicContentItem&gt;)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceMarketingModuleWebModelDynamicContentItem>>> MarketingModuleDynamicContentEvaluateDynamicContentAsyncWithHttpInfo (string evalContextStoreId = null, string evalContextPlaceName = null, List<string> evalContextTags = null, DateTime? evalContextToDate = null, Dictionary<string, string> evalContextContextObject = null, string evalContextGeoCity = null, string evalContextGeoState = null, string evalContextGeoCountry = null, string evalContextGeoContinent = null, string evalContextGeoZipCode = null, string evalContextGeoConnectionType = null, string evalContextGeoTimeZone = null, string evalContextGeoIpRoutingType = null, string evalContextGeoIspSecondLevel = null, string evalContextGeoIspTopLevel = null, int? evalContextShopperAge = null, string evalContextShopperGender = null, string evalContextLanguage = null, string evalContextShopperSearchedPhraseInStore = null, string evalContextShopperSearchedPhraseOnInternet = null, string evalContextCurrentUrl = null, string evalContextReferredUrl = null)
+        public async System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceMarketingModuleWebModelDynamicContentItem>>> MarketingModuleDynamicContentEvaluateDynamicContentAsyncWithHttpInfo (VirtoCommerceDomainMarketingModelDynamicContentDynamicContentEvaluationContext evalContext)
         {
+            // verify the required parameter 'evalContext' is set
+            if (evalContext == null) throw new ApiException(400, "Missing required parameter 'evalContext' when calling MarketingModuleDynamicContentEvaluateDynamicContent");
             
     
             var path_ = "/api/marketing/contentitems/evaluate";
@@ -2333,37 +2133,16 @@ namespace VirtoCommerce.Client.Api
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
             
-            if (evalContextStoreId != null) queryParams.Add("evalContext.storeId", Configuration.ApiClient.ParameterToString(evalContextStoreId)); // query parameter
-            if (evalContextPlaceName != null) queryParams.Add("evalContext.placeName", Configuration.ApiClient.ParameterToString(evalContextPlaceName)); // query parameter
-            if (evalContextTags != null) queryParams.Add("evalContext.tags", Configuration.ApiClient.ParameterToString(evalContextTags)); // query parameter
-            if (evalContextToDate != null) queryParams.Add("evalContext.toDate", Configuration.ApiClient.ParameterToString(evalContextToDate)); // query parameter
-            if (evalContextContextObject != null) queryParams.Add("evalContext.contextObject", Configuration.ApiClient.ParameterToString(evalContextContextObject)); // query parameter
-            if (evalContextGeoCity != null) queryParams.Add("evalContext.geoCity", Configuration.ApiClient.ParameterToString(evalContextGeoCity)); // query parameter
-            if (evalContextGeoState != null) queryParams.Add("evalContext.geoState", Configuration.ApiClient.ParameterToString(evalContextGeoState)); // query parameter
-            if (evalContextGeoCountry != null) queryParams.Add("evalContext.geoCountry", Configuration.ApiClient.ParameterToString(evalContextGeoCountry)); // query parameter
-            if (evalContextGeoContinent != null) queryParams.Add("evalContext.geoContinent", Configuration.ApiClient.ParameterToString(evalContextGeoContinent)); // query parameter
-            if (evalContextGeoZipCode != null) queryParams.Add("evalContext.geoZipCode", Configuration.ApiClient.ParameterToString(evalContextGeoZipCode)); // query parameter
-            if (evalContextGeoConnectionType != null) queryParams.Add("evalContext.geoConnectionType", Configuration.ApiClient.ParameterToString(evalContextGeoConnectionType)); // query parameter
-            if (evalContextGeoTimeZone != null) queryParams.Add("evalContext.geoTimeZone", Configuration.ApiClient.ParameterToString(evalContextGeoTimeZone)); // query parameter
-            if (evalContextGeoIpRoutingType != null) queryParams.Add("evalContext.geoIpRoutingType", Configuration.ApiClient.ParameterToString(evalContextGeoIpRoutingType)); // query parameter
-            if (evalContextGeoIspSecondLevel != null) queryParams.Add("evalContext.geoIspSecondLevel", Configuration.ApiClient.ParameterToString(evalContextGeoIspSecondLevel)); // query parameter
-            if (evalContextGeoIspTopLevel != null) queryParams.Add("evalContext.geoIspTopLevel", Configuration.ApiClient.ParameterToString(evalContextGeoIspTopLevel)); // query parameter
-            if (evalContextShopperAge != null) queryParams.Add("evalContext.shopperAge", Configuration.ApiClient.ParameterToString(evalContextShopperAge)); // query parameter
-            if (evalContextShopperGender != null) queryParams.Add("evalContext.shopperGender", Configuration.ApiClient.ParameterToString(evalContextShopperGender)); // query parameter
-            if (evalContextLanguage != null) queryParams.Add("evalContext.language", Configuration.ApiClient.ParameterToString(evalContextLanguage)); // query parameter
-            if (evalContextShopperSearchedPhraseInStore != null) queryParams.Add("evalContext.shopperSearchedPhraseInStore", Configuration.ApiClient.ParameterToString(evalContextShopperSearchedPhraseInStore)); // query parameter
-            if (evalContextShopperSearchedPhraseOnInternet != null) queryParams.Add("evalContext.shopperSearchedPhraseOnInternet", Configuration.ApiClient.ParameterToString(evalContextShopperSearchedPhraseOnInternet)); // query parameter
-            if (evalContextCurrentUrl != null) queryParams.Add("evalContext.currentUrl", Configuration.ApiClient.ParameterToString(evalContextCurrentUrl)); // query parameter
-            if (evalContextReferredUrl != null) queryParams.Add("evalContext.referredUrl", Configuration.ApiClient.ParameterToString(evalContextReferredUrl)); // query parameter
             
             
             
+            postBody = Configuration.ApiClient.Serialize(evalContext); // http body (model) parameter
             
 
             
 
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
 
             int statusCode = (int) response.StatusCode;
  
@@ -4523,29 +4302,24 @@ namespace VirtoCommerce.Client.Api
         /// <summary>
         /// Search marketing objects by given criteria Allow to find all marketing module objects (Promotions, Dynamic content objects)
         /// </summary>
-        /// <param name="criteriaFolderId"></param> 
-        /// <param name="criteriaResponseGroup"></param> 
-        /// <param name="criteriaKeyword"></param> 
-        /// <param name="criteriaStart"></param> 
-        /// <param name="criteriaCount"></param> 
+        /// <param name="criteria">criteria</param> 
         /// <returns>VirtoCommerceMarketingModuleWebModelMarketingSearchResult</returns>
-        public VirtoCommerceMarketingModuleWebModelMarketingSearchResult MarketingModuleSearch (string criteriaFolderId = null, string criteriaResponseGroup = null, string criteriaKeyword = null, int? criteriaStart = null, int? criteriaCount = null)
+        public VirtoCommerceMarketingModuleWebModelMarketingSearchResult MarketingModuleSearch (VirtoCommerceDomainMarketingModelMarketingSearchCriteria criteria)
         {
-             ApiResponse<VirtoCommerceMarketingModuleWebModelMarketingSearchResult> response = MarketingModuleSearchWithHttpInfo(criteriaFolderId, criteriaResponseGroup, criteriaKeyword, criteriaStart, criteriaCount);
+             ApiResponse<VirtoCommerceMarketingModuleWebModelMarketingSearchResult> response = MarketingModuleSearchWithHttpInfo(criteria);
              return response.Data;
         }
 
         /// <summary>
         /// Search marketing objects by given criteria Allow to find all marketing module objects (Promotions, Dynamic content objects)
         /// </summary>
-        /// <param name="criteriaFolderId"></param> 
-        /// <param name="criteriaResponseGroup"></param> 
-        /// <param name="criteriaKeyword"></param> 
-        /// <param name="criteriaStart"></param> 
-        /// <param name="criteriaCount"></param> 
+        /// <param name="criteria">criteria</param> 
         /// <returns>ApiResponse of VirtoCommerceMarketingModuleWebModelMarketingSearchResult</returns>
-        public ApiResponse< VirtoCommerceMarketingModuleWebModelMarketingSearchResult > MarketingModuleSearchWithHttpInfo (string criteriaFolderId = null, string criteriaResponseGroup = null, string criteriaKeyword = null, int? criteriaStart = null, int? criteriaCount = null)
+        public ApiResponse< VirtoCommerceMarketingModuleWebModelMarketingSearchResult > MarketingModuleSearchWithHttpInfo (VirtoCommerceDomainMarketingModelMarketingSearchCriteria criteria)
         {
+            
+            // verify the required parameter 'criteria' is set
+            if (criteria == null) throw new ApiException(400, "Missing required parameter 'criteria' when calling MarketingModuleSearch");
             
     
             var path_ = "/api/marketing/search";
@@ -4569,20 +4343,16 @@ namespace VirtoCommerce.Client.Api
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
             
-            if (criteriaFolderId != null) queryParams.Add("criteria.folderId", Configuration.ApiClient.ParameterToString(criteriaFolderId)); // query parameter
-            if (criteriaResponseGroup != null) queryParams.Add("criteria.responseGroup", Configuration.ApiClient.ParameterToString(criteriaResponseGroup)); // query parameter
-            if (criteriaKeyword != null) queryParams.Add("criteria.keyword", Configuration.ApiClient.ParameterToString(criteriaKeyword)); // query parameter
-            if (criteriaStart != null) queryParams.Add("criteria.start", Configuration.ApiClient.ParameterToString(criteriaStart)); // query parameter
-            if (criteriaCount != null) queryParams.Add("criteria.count", Configuration.ApiClient.ParameterToString(criteriaCount)); // query parameter
             
             
             
+            postBody = Configuration.ApiClient.Serialize(criteria); // http body (model) parameter
             
 
             
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
 
             int statusCode = (int) response.StatusCode;
     
@@ -4600,15 +4370,11 @@ namespace VirtoCommerce.Client.Api
         /// <summary>
         /// Search marketing objects by given criteria Allow to find all marketing module objects (Promotions, Dynamic content objects)
         /// </summary>
-        /// <param name="criteriaFolderId"></param>
-        /// <param name="criteriaResponseGroup"></param>
-        /// <param name="criteriaKeyword"></param>
-        /// <param name="criteriaStart"></param>
-        /// <param name="criteriaCount"></param>
+        /// <param name="criteria">criteria</param>
         /// <returns>Task of VirtoCommerceMarketingModuleWebModelMarketingSearchResult</returns>
-        public async System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelMarketingSearchResult> MarketingModuleSearchAsync (string criteriaFolderId = null, string criteriaResponseGroup = null, string criteriaKeyword = null, int? criteriaStart = null, int? criteriaCount = null)
+        public async System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelMarketingSearchResult> MarketingModuleSearchAsync (VirtoCommerceDomainMarketingModelMarketingSearchCriteria criteria)
         {
-             ApiResponse<VirtoCommerceMarketingModuleWebModelMarketingSearchResult> response = await MarketingModuleSearchAsyncWithHttpInfo(criteriaFolderId, criteriaResponseGroup, criteriaKeyword, criteriaStart, criteriaCount);
+             ApiResponse<VirtoCommerceMarketingModuleWebModelMarketingSearchResult> response = await MarketingModuleSearchAsyncWithHttpInfo(criteria);
              return response.Data;
 
         }
@@ -4616,14 +4382,12 @@ namespace VirtoCommerce.Client.Api
         /// <summary>
         /// Search marketing objects by given criteria Allow to find all marketing module objects (Promotions, Dynamic content objects)
         /// </summary>
-        /// <param name="criteriaFolderId"></param>
-        /// <param name="criteriaResponseGroup"></param>
-        /// <param name="criteriaKeyword"></param>
-        /// <param name="criteriaStart"></param>
-        /// <param name="criteriaCount"></param>
+        /// <param name="criteria">criteria</param>
         /// <returns>Task of ApiResponse (VirtoCommerceMarketingModuleWebModelMarketingSearchResult)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelMarketingSearchResult>> MarketingModuleSearchAsyncWithHttpInfo (string criteriaFolderId = null, string criteriaResponseGroup = null, string criteriaKeyword = null, int? criteriaStart = null, int? criteriaCount = null)
+        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelMarketingSearchResult>> MarketingModuleSearchAsyncWithHttpInfo (VirtoCommerceDomainMarketingModelMarketingSearchCriteria criteria)
         {
+            // verify the required parameter 'criteria' is set
+            if (criteria == null) throw new ApiException(400, "Missing required parameter 'criteria' when calling MarketingModuleSearch");
             
     
             var path_ = "/api/marketing/search";
@@ -4647,20 +4411,16 @@ namespace VirtoCommerce.Client.Api
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
             
-            if (criteriaFolderId != null) queryParams.Add("criteria.folderId", Configuration.ApiClient.ParameterToString(criteriaFolderId)); // query parameter
-            if (criteriaResponseGroup != null) queryParams.Add("criteria.responseGroup", Configuration.ApiClient.ParameterToString(criteriaResponseGroup)); // query parameter
-            if (criteriaKeyword != null) queryParams.Add("criteria.keyword", Configuration.ApiClient.ParameterToString(criteriaKeyword)); // query parameter
-            if (criteriaStart != null) queryParams.Add("criteria.start", Configuration.ApiClient.ParameterToString(criteriaStart)); // query parameter
-            if (criteriaCount != null) queryParams.Add("criteria.count", Configuration.ApiClient.ParameterToString(criteriaCount)); // query parameter
             
             
             
+            postBody = Configuration.ApiClient.Serialize(criteria); // http body (model) parameter
             
 
             
 
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
 
             int statusCode = (int) response.StatusCode;
  

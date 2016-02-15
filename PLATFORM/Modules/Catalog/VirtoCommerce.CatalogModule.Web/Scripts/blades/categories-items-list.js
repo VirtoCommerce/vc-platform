@@ -20,7 +20,7 @@
                     categoryId: blade.categoryId,
                     keyword: filter.keyword ? filter.keyword : undefined,
                     responseGroup: 'withCategories, withProducts',
-                    sort: getSortExpression(),
+                    sort: uiGridHelper.getSortExpression($scope),
                     skip: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
                     take: $scope.pageSettings.itemsPerPageCount
                 };
@@ -215,7 +215,7 @@
                 blade.setSelectedItem(listItem);
                 var newBlade;
                 if (listItem.type === 'category') {
-                    var openNewBlade = e.ctrlKey || filter.keyword;
+                    var openNewBlade = e.ctrlKey || filter.keyword || filter.current;
                     newBlade = {
                         id: 'itemsList' + (blade.level + (openNewBlade ? 1 : 0)),
                         level: blade.level + (openNewBlade ? 1 : 0),
@@ -279,7 +279,7 @@
 
                 newBlade.breadcrumbs = generateBreadcrumbs(newBlade, listEntry, listEntry.outline.length);
                 bladeNavigationService.showBlade(newBlade, blade);
-            }
+            };
 
             function generateBreadcrumbs(newBlade, listEntry, count) {
                 var newBreadcrumbs = [{
@@ -337,9 +337,7 @@
                 {
                     name: "platform.commands.refresh",
                     icon: 'fa fa-refresh',
-                    executeMethod: function () {
-                        blade.refresh();
-                    },
+                    executeMethod: blade.refresh,
                     canExecuteMethod: function () {
                         return true;
                     }
@@ -511,12 +509,15 @@
                     showFilterDetailBlade({ isNew: true });
                 } else {
                     bladeNavigationService.closeBlade({ id: 'filterDetail' });
+                    filter.criteriaChanged();
+                }
+            };
 
-                    if ($scope.pageSettings.currentPage > 1) {
-                        $scope.pageSettings.currentPage = 1;
-                    } else {
-                        blade.refresh();
-                    }
+            filter.criteriaChanged = function () {
+                if ($scope.pageSettings.currentPage > 1) {
+                    $scope.pageSettings.currentPage = 1;
+                } else {
+                    blade.refresh();
                 }
             };
 
@@ -543,7 +544,7 @@
                     });
 
                     if ($scope.gridApi) {
-                        if (filter.keyword) {
+                        if (filter.keyword || filter.current) {
                             //groupingColumn.visible = true;
                             if (!_.any($scope.gridApi.grouping.getGrouping().grouping)) {
                                 $scope.gridApi.grouping.groupColumn('$path');
@@ -565,7 +566,7 @@
                 uiGridHelper.initialize($scope, gridOptions, function (gridApi) {
                     //groupingColumn = _.findWhere($scope.gridOptions.columnDefs, { name: '$path' });
 
-                    if (filter.keyword) {
+                    if (filter.keyword || filter.current) {
                         $timeout(function () {
                             gridApi.grouping.groupColumn('$path');
                             $timeout(gridApi.treeBase.expandAllRows);
@@ -583,23 +584,8 @@
                 $scope.$watch('pageSettings.currentPage', blade.refresh);
             };
 
-            function getSortExpression() {
-                var columnDefs = $scope.gridApi ? $scope.gridApi.grid.columns : $scope.gridOptions.columnDefs;
-                var sorts = _.filter(columnDefs, function (x) {
-                    return x.name !== '$path' && x.sort && (x.sort.direction === uiGridConstants.ASC || x.sort.direction === uiGridConstants.DESC);
-                })
-
-                sorts = _.sortBy(sorts, function (x) {
-                    return x.sort.priority;
-                });
-                sorts = _.map(sorts, function (x) {
-                    return x.name + ':' + (x.sort.direction === uiGridConstants.ASC ? 'asc' : 'desc');
-                });
-                return sorts.join(';');
-            }
-
-            $scope.getGroupText = function (groupEntity) {
-                return _.values(groupEntity)[0].rendered;
+            $scope.getGroupInfo = function (groupEntity) {
+                return _.values(groupEntity)[0];
             };
 
 

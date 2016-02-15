@@ -52,6 +52,7 @@
           "shipping": "Shipping",
           "discount": "Discount",
           "grand-total": "Grand Total",
+          "taxes": "Taxes",
           "grand-total-incl-tax": "Grand Total (Incl. Taxes)",
           "picture": "Pic",
           "comment": "Comment with product",

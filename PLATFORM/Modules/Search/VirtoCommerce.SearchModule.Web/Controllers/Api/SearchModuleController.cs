@@ -132,7 +132,7 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
 
             // Keep the selected properties order
             var result = selectedPropertyNames
-                .SelectMany(n => filterProperties.Where(p => string.Equals(p.Name, n)))
+                .SelectMany(n => filterProperties.Where(p => string.Equals(p.Name, n, StringComparison.OrdinalIgnoreCase)))
                 .Union(filterProperties.Where(p => !selectedPropertyNames.Contains(p.Name, StringComparer.OrdinalIgnoreCase)))
                 .ToArray();
 
@@ -188,17 +188,17 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
         /// Search for products and categories
         /// </summary>
         /// <param name="criteria">Search parameters</param>
-        [HttpGet]
+        [HttpPost]
         [Route("")]
         [ResponseType(typeof(CatalogSearchResult))]
         [ClientCache(Duration = 30)]
-        public IHttpActionResult Search([FromUri] SearchCriteria criteria)
+        public IHttpActionResult Search(Domain.Catalog.Model.SearchCriteria criteria)
         {
-            criteria = criteria ?? new SearchCriteria();
+            criteria = criteria ?? new Domain.Catalog.Model.SearchCriteria();
             criteria.Normalize();
             criteria.ApplyRestrictionsForUser(User.Identity.Name, _securityService);
 
-            var result = new SearchResult();
+            var result = new Domain.Catalog.Model.SearchResult();
 
             if ((criteria.ResponseGroup & SearchResponseGroup.WithProducts) == SearchResponseGroup.WithProducts)
             {
@@ -219,7 +219,7 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
         }
 
 
-        private SearchResult SearchProducts(SearchCriteria criteria)
+        private Domain.Catalog.Model.SearchResult SearchProducts(Domain.Catalog.Model.SearchCriteria criteria)
         {
             var context = new Dictionary<string, object>
             {
@@ -256,7 +256,7 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
 
             #region Filters
             // Now fill in filters
-            var filters = _cacheManager.Get("GetFilters-"+ criteria.StoreId, "SearchProducts", TimeSpan.FromMinutes(5), ()=> _browseFilterService.GetFilters(context));
+            var filters = _cacheManager.Get("GetFilters-" + criteria.StoreId, "SearchProducts", TimeSpan.FromMinutes(5), () => _browseFilterService.GetFilters(context));
 
             // Add all filters
             foreach (var filter in filters)
@@ -297,6 +297,21 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
                     }
                     else
                     {
+                        var attributeFilter = filter as AttributeFilter;
+                        if (attributeFilter != null && attributeFilter.Values == null)
+                        {
+                            var dynamicValues = new List<AttributeFilterValue>();
+                            foreach (var value in term.Values)
+                            {
+                                dynamicValues.Add(new AttributeFilterValue()
+                                {
+                                    Id = value,
+                                    Value = value
+                                });
+                            }
+                            attributeFilter.Values = dynamicValues.ToArray();
+                        }
+
                         var appliedFilter = _browseFilterService.Convert(filter, term.Values);
                         serviceCriteria.Apply(appliedFilter);
                     }

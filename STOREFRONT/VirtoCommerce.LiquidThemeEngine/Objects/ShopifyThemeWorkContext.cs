@@ -88,7 +88,11 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         /// </summary>
         public string Template { get; set; }
 
+        public Notification Notification { get; set; }
+
         public Order Order { get; set; }
+
+        public QuoteRequest QuoteRequest { get; set; }
         #endregion
 
         #region ILiquidizable members

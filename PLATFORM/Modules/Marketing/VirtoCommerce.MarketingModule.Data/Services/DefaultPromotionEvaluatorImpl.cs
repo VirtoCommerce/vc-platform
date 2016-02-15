@@ -31,12 +31,18 @@ namespace VirtoCommerce.MarketingModule.Data.Services
 
             var promotions = _cacheManager.Get("IPromotionService.GetActivePromotions", "MarketingModuleRegion", () => _promotionService.GetActivePromotions());
 
+            //filter by store
+            if (!string.IsNullOrEmpty(promoContext.StoreId))
+            {
+                promotions = promotions.Where(x => string.Equals(x.Store, promoContext.StoreId, StringComparison.InvariantCultureIgnoreCase)).ToArray();
+            }
+
             var retVal = new PromotionResult();
 
-			var rewards = promotions.SelectMany(x => x.EvaluatePromotion(context)).ToArray();
+            var rewards = promotions.SelectMany(x => x.EvaluatePromotion(context)).ToArray();
 
-			//best shipment promotion
-			var curShipmentAmount = promoContext.ShipmentMethodCode != null ? promoContext.ShipmentMethodPrice : 0m;
+            //best shipment promotion
+            var curShipmentAmount = promoContext.ShipmentMethodCode != null ? promoContext.ShipmentMethodPrice : 0m;
 			var allShipmentRewards = rewards.OfType<ShipmentReward>().ToArray();
 			EvaluteBestAmountRewards(curShipmentAmount, allShipmentRewards).ToList().ForEach(x => retVal.Rewards.Add(x));
 

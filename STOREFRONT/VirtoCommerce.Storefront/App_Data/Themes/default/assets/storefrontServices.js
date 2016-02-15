@@ -61,8 +61,11 @@ storefrontApp.service('cartService', ['$http', function ($http) {
         removeCoupon: function () {
             return $http.post('cart/removecoupon');
         },
-        addAddress: function (address) {
-            return $http.post('cart/addaddress', { address: address });
+        addOrUpdateShipment: function (shipmentId, shippingAddress, itemIds, shippingMethodCode) {
+            return $http.post('cart/addorupdateshipment', { shipmentId: shipmentId, shippingAddress: shippingAddress, itemIds: itemIds, shippingMethodCode: shippingMethodCode });
+        },
+        addOrUpdatePayment: function (paymentId, billingAddress, paymentMethodCode, outerId) {
+            return $http.post('cart/addorupdatepayment', { paymentId: paymentId, billingAddress: billingAddress, paymentMethodCode: paymentMethodCode, outerId: outerId });
         },
         getAvailableShippingMethods: function () {
             return $http.get('cart/shippingmethods/json?t=' + new Date().getTime());
@@ -70,14 +73,44 @@ storefrontApp.service('cartService', ['$http', function ($http) {
         getAvailablePaymentMethods: function () {
             return $http.get('cart/paymentmethods/json?t=' + new Date().getTime());
         },
-        setShippingMethod: function (shippingMethodCode) {
-            return $http.post('cart/shippingmethod', { shippingMethodCode: shippingMethodCode });
-        },
-        setPaymentMethod: function (paymentMethodCode, billingAddress) {
-            return $http.post('cart/paymentmethod', { paymentMethodCode: paymentMethodCode, billingAddress: billingAddress });
-        },
         createOrder: function (bankCardInfo) {
             return $http.post('cart/createorder', { bankCardInfo: bankCardInfo });
         }
+    }
+}]);
+
+storefrontApp.service('quoteRequestService', ['$http', function ($http) {
+    return {
+        getCurrentQuoteRequest: function () {
+            return $http.get('currentquoterequest/json?t=' + new Date().getTime());
+        },
+        getCustomerQuoteRequest: function (qouteRequestNumber) {
+            return $http.get('customerquoterequest/' + qouteRequestNumber + '/json?t=' + new Date().getTime());
+        },
+        addItem: function (productId, quantity) {
+            return $http.post('quoterequest/additem/json', { productId: productId, quantity: quantity });
+        },
+        removeItem: function (quoteItemId) {
+            return $http.post('quoterequest/removeitem/json', { quoteItemId: quoteItemId });
+        },
+        update: function (quoteRequest) {
+            return $http.post('quoterequest/update/json', { quoteRequest: quoteRequest });
+        }
+
+        //getCurrentQuoteRequest: function () {
+        //    return $http.get('quoterequest/current/json?t=' + new Date().getTime());
+        //},
+        //addItem: function (productId, quantity) {
+        //    return $http.post('quoterequest/additem/json', { productId: productId, quantity: quantity });
+        //},
+        //removeItem: function (quoteItemId) {
+        //    return $http.post('quoterequest/removeitem/json', { quoteItemId: quoteItemId });
+        //},
+        //update: function (quoteRequest) {
+        //    return $http.post('quoterequest/update/json', { quoteRequest: quoteRequest });
+        //},
+        //getQuoteRequestTotals: function (quoteRequestId, quoteItemId, tierPrice) {
+        //    return $http.post('quoterequest/totals/json', { quoteRequestId: quoteRequestId, quoteItemId: quoteItemId, tierPrice: tierPrice });
+        //}
     }
 }]);

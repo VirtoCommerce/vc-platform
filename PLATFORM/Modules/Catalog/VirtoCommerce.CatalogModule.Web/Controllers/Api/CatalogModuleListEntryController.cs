@@ -4,7 +4,6 @@ using System.Linq;
 using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
-using System.Web.Http.ModelBinding;
 using VirtoCommerce.CatalogModule.Web.Converters;
 using VirtoCommerce.CatalogModule.Web.Security;
 using VirtoCommerce.Domain.Catalog.Services;
@@ -41,18 +40,19 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         /// </summary>
         /// <param name="searchCriteria">The search criteria.</param>
         /// <returns></returns>
-        [HttpGet]
+        [HttpPost]
         [Route("")]
         [ResponseType(typeof(webModel.ListEntrySearchResult))]
-        public IHttpActionResult ListItemsSearch([FromUri]coreModel.SearchCriteria searchCriteria)
+        public IHttpActionResult ListItemsSearch(coreModel.SearchCriteria searchCriteria)
         {
             ApplyRestrictionsForCurrentUser(searchCriteria);
 
             searchCriteria.WithHidden = true;
             //Need search in children categories if user specify keyword
-            if(!string.IsNullOrEmpty(searchCriteria.Keyword))
+            if (!string.IsNullOrEmpty(searchCriteria.Keyword))
             {
                 searchCriteria.SearchInChildren = true;
+                searchCriteria.SearchInVariations = true;
             }
             var serviceResult = _searchService.Search(searchCriteria);
 
@@ -175,7 +175,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                     }
                 }
                 products.Add(product);
-                products.AddRange(product.Variations);                
+                products.AddRange(product.Variations);
             }
 
             //Scope bound security check

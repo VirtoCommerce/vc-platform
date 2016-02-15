@@ -81,7 +81,6 @@ namespace VirtoCommerce.Storefront.Converters
             webModel.Height = (decimal)(serviceModel.Height ?? 0);
             webModel.IsAnonymous = serviceModel.IsAnonymous == true;
             webModel.IsRecuring = serviceModel.IsRecuring == true;
-            webModel.ItemsCount = webModel.Items.Sum(i => i.Quantity);
             webModel.Length = (decimal)(serviceModel.Length ?? 0);
          
             webModel.TaxIncluded = serviceModel.TaxIncluded == true;
@@ -100,7 +99,7 @@ namespace VirtoCommerce.Storefront.Converters
 
             serviceModel.InjectFrom(webModel);
 
-            serviceModel.Addresses = webModel.Addresses.Select(a => a.ToServiceModel()).ToList();
+            serviceModel.Addresses = webModel.Addresses.Select(a => a.ToCartServiceModel()).ToList();
             serviceModel.Coupon = webModel.Coupon != null && webModel.Coupon.AppliedSuccessfully ? webModel.Coupon.Code : null;
             serviceModel.Currency = webModel.Currency.Code;
             serviceModel.Discounts = webModel.Discounts.Select(d => d.ToServiceModel()).ToList();

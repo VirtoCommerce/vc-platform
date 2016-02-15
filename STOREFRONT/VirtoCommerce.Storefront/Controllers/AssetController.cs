@@ -16,10 +16,10 @@ namespace VirtoCommerce.Storefront.Controllers
     [OutputCache(CacheProfile = "AssetsCachingProfile")]
     public class AssetController : Controller
     {
-        private readonly ShopifyLiquidThemeEngine _themeAdaptor;
-        public AssetController(ShopifyLiquidThemeEngine themeAdaptor)
+        private readonly ILiquidThemeEngine _themeEngine;
+        public AssetController(ILiquidThemeEngine themeEngine)
         {
-            _themeAdaptor = themeAdaptor;
+            _themeEngine = themeEngine;
         }
 
         #region Public Methods and Operators
@@ -34,7 +34,7 @@ namespace VirtoCommerce.Storefront.Controllers
         [HttpGet]
         public ActionResult GetAssets(string asset)
         {
-            var stream = _themeAdaptor.GetAssetStream(asset);
+            var stream = _themeEngine.GetAssetStream(asset);
             if(stream != null)
             {
                 return base.File(stream, MimeMapping.GetMimeMapping(asset));
@@ -48,7 +48,7 @@ namespace VirtoCommerce.Storefront.Controllers
         [HttpGet]
         public ActionResult GetGlobalAssets(string asset)
         {
-            var stream = _themeAdaptor.GetAssetStream(asset, searchInGlobalThemeOnly: true);
+            var stream = _themeEngine.GetAssetStream(asset, searchInGlobalThemeOnly: true);
             if (stream != null)
             {
                 return base.File(stream, MimeMapping.GetMimeMapping(asset));

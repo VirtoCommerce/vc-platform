@@ -7,15 +7,6 @@ function ($scope, catalogs, listEntries, bladeNavigationService, uiGridConstants
         blade.title = "Select Catalog items...";
     }
 
-    //pagination settings
-    $scope.pageSettings = {};
-    $scope.pageSettings.totalItems = 0;
-    $scope.pageSettings.currentPage = 1;
-    $scope.pageSettings.numPages = 5;
-    $scope.pageSettings.itemsPerPageCount = 20;
-
-    $scope.filter = { searchKeyword: undefined };
-
     $scope.options = angular.extend({
         showCheckingMultiple: true,
         allowCheckingItem: true,
@@ -31,7 +22,7 @@ function ($scope, catalogs, listEntries, bladeNavigationService, uiGridConstants
                 {
                     catalogId: blade.catalogId,
                     categoryId: blade.categoryId,
-                    keyword: $scope.filter.searchKeyword,
+                    keyword: filter.keyword,
                     // propertyValues: ,
                     responseGroup: 'withCategories, withProducts',
                     skip: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
@@ -103,9 +94,7 @@ function ($scope, catalogs, listEntries, bladeNavigationService, uiGridConstants
         return !blade.catalogId;
     };
 
-    $scope.$watch('pageSettings.currentPage', function () {
-        blade.refresh();
-    });
+    $scope.$watch('pageSettings.currentPage', blade.refresh);
 
     $scope.selectItem = function (e, listItem) {
         if ($scope.selectedNodeId == listItem.id)
@@ -157,6 +146,22 @@ function ($scope, catalogs, listEntries, bladeNavigationService, uiGridConstants
             bladeNavigationService.showBlade(newBlade, blade);
         }
 
+    };
+
+    //pagination settings
+    $scope.pageSettings = {};
+    $scope.pageSettings.totalItems = 0;
+    $scope.pageSettings.currentPage = 1;
+    $scope.pageSettings.numPages = 5;
+    $scope.pageSettings.itemsPerPageCount = 20;
+
+    var filter = $scope.filter = {};
+    filter.criteriaChanged = function () {
+        if ($scope.pageSettings.currentPage > 1) {
+            $scope.pageSettings.currentPage = 1;
+        } else {
+            blade.refresh();
+        }
     };
 
     // ui-grid

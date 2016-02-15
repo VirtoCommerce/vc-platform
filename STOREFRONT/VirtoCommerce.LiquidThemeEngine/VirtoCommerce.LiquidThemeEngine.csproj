@@ -31,8 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CacheManager.Core, Version=0.7.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CacheManager.Core.0.7.0\lib\net45\CacheManager.Core.dll</HintPath>
+    <Reference Include="CacheManager.Core, Version=0.7.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CacheManager.Core.0.7.1\lib\net45\CacheManager.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="DotLiquid, Version=1.0.0.0, Culture=neutral, PublicKeyToken=82e46016ecf9f07c, processorArchitecture=MSIL">
@@ -103,6 +103,7 @@
     <Compile Include="Binders\ResetPasswordModelBinder.cs" />
     <Compile Include="Binders\ShopifyModelBinderProvider.cs" />
     <Compile Include="Converters\ArticleConverter.cs" />
+    <Compile Include="Converters\AttachmentConverter.cs" />
     <Compile Include="Converters\BlogConverter.cs" />
     <Compile Include="Converters\CartConverter.cs" />
     <Compile Include="Converters\CollectionConverter.cs" />
@@ -114,10 +115,12 @@
     <Compile Include="Converters\LineItemConverter.cs" />
     <Compile Include="Converters\LinkListConverter.cs" />
     <Compile Include="Converters\LoginFormConverter.cs" />
+    <Compile Include="Converters\NotificationConverter.cs" />
     <Compile Include="Converters\OrderConverter.cs" />
     <Compile Include="Converters\PageConverter.cs" />
     <Compile Include="Converters\ProductConverter.cs" />
     <Compile Include="Converters\ProductPropertyConverter.cs" />
+    <Compile Include="Converters\QuoteRequestConverter.cs" />
     <Compile Include="Converters\ShippingMethodConverter.cs" />
     <Compile Include="Converters\ShopConverter.cs" />
     <Compile Include="Converters\ShopifyContextConverter.cs" />
@@ -125,6 +128,8 @@
     <Compile Include="Converters\CountryConverter.cs" />
     <Compile Include="Converters\CustomerConverter.cs" />
     <Compile Include="Converters\TagConverter.cs" />
+    <Compile Include="Converters\TaxLineConverter.cs" />
+    <Compile Include="Converters\TierPriceConverter.cs" />
     <Compile Include="DotLiquidThemedView.cs" />
     <Compile Include="DotLiquidThemedViewEngine.cs" />
     <Compile Include="Exceptions\SaasCompileException.cs" />
@@ -139,9 +144,11 @@
     <Compile Include="Filters\TranslationFilter.cs" />
     <Compile Include="Filters\CommerceFilters.cs" />
     <Compile Include="Filters\CommonFilters.cs" />
+    <Compile Include="ILiquidThemeEngine.cs" />
     <Compile Include="Objects\Address.cs" />
     <Compile Include="Objects\Article.cs" />
     <Compile Include="Objects\ArticleUser.cs" />
+    <Compile Include="Objects\Attachment.cs" />
     <Compile Include="Objects\Blog.cs" />
     <Compile Include="Objects\Cart.cs" />
     <Compile Include="Objects\Collection.cs" />
@@ -162,18 +169,23 @@
     <Compile Include="Objects\Linklist.cs" />
     <Compile Include="Objects\Linklists.cs" />
     <Compile Include="Objects\MetafieldsCollections.cs" />
+    <Compile Include="Objects\Notification.cs" />
     <Compile Include="Objects\Order.cs" />
     <Compile Include="Objects\Page.cs" />
     <Compile Include="Objects\Paginate.cs" />
     <Compile Include="Objects\Part.cs" />
     <Compile Include="Objects\Product.cs" />
     <Compile Include="Objects\ProductProperty.cs" />
+    <Compile Include="Objects\QuoteItem.cs" />
+    <Compile Include="Objects\QuoteRequest.cs" />
+    <Compile Include="Objects\QuoteRequestTotals.cs" />
     <Compile Include="Objects\ShippingMethod.cs" />
     <Compile Include="Objects\Shop.cs" />
     <Compile Include="Objects\ShopifyThemeWorkContext.cs" />
     <Compile Include="Objects\Tag.cs" />
     <Compile Include="Objects\TagCollection.cs" />
     <Compile Include="Objects\TaxLine.cs" />
+    <Compile Include="Objects\TierPrice.cs" />
     <Compile Include="Objects\Variant.cs" />
     <Compile Include="Tags\FormTag.cs" />
     <Compile Include="Operators\CommonOperators.cs" />
@@ -181,7 +193,6 @@
     <Compile Include="ShopifyLiquidThemeEngine.cs" />
     <Compile Include="Tags\LayoutTag.cs" />
     <Compile Include="Tags\PaginateTag.cs" />
-    <Compile Include="ToStringJsonConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Blocks\" />

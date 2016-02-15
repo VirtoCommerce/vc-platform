@@ -100,5 +100,15 @@ namespace VirtoCommerce.Storefront.Converters
 
             return promoItem;
         }
+
+        public static CartShipmentItem ToShipmentItem(this LineItem lineItem)
+        {
+            var shipmentItem = new CartShipmentItem();
+
+            shipmentItem.LineItem = lineItem;
+            shipmentItem.Quantity = lineItem.Quantity;
+
+            return shipmentItem;
+        }
     }
 }

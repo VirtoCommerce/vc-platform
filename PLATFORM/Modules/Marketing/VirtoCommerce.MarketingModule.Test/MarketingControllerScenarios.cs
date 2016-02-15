@@ -19,13 +19,12 @@ using webModel = VirtoCommerce.MarketingModule.Web.Model;
 using VirtoCommerce.Domain.Common;
 using VirtoCommerce.MarketingModule.Data.Migrations;
 using VirtoCommerce.Platform.Data.Infrastructure;
+using CacheManager.Core;
 
 namespace VirtoCommerce.MarketingModule.Test
 {
     public class MarketingControllerScenarios : FunctionalTestBase
 	{
-        public const string DatabaseName = "MarketingTests";
-
         [Fact]
         [Trait("Category", "CI")]
         public void Can_create_marketing_contentitem()
@@ -77,8 +76,9 @@ namespace VirtoCommerce.MarketingModule.Test
 
 				promotion = (marketingController.CreatePromotion(promotion) as OkNegotiatedContentResult<webModel.Promotion>).Content;
 			}
-		
-			var marketingEval = new DefaultPromotionEvaluatorImpl(GetMarketingService(), null);
+
+            var cacheManager = new Moq.Mock<ICacheManager<object>>();
+            var marketingEval = new DefaultPromotionEvaluatorImpl(GetMarketingService(), cacheManager.Object);
 			var context = GetPromotionEvaluationContext();
 			var result = marketingEval.EvaluatePromotion(context);
 		}
@@ -126,7 +126,8 @@ namespace VirtoCommerce.MarketingModule.Test
 				promotion = (marketingController.CreatePromotion(promotion) as OkNegotiatedContentResult<webModel.Promotion>).Content;
 			}
 
-			var marketingEval = new DefaultPromotionEvaluatorImpl(GetMarketingService(), null);
+            var cacheManager = new Moq.Mock<ICacheManager<object>>();
+            var marketingEval = new DefaultPromotionEvaluatorImpl(GetMarketingService(), cacheManager.Object);
 			var context = GetPromotionEvaluationContext();
 			context.PromoEntries.First().Attributes["tag"] = "#FOOTBAL";
 			var result = marketingEval.EvaluatePromotion(context);
@@ -183,7 +184,8 @@ namespace VirtoCommerce.MarketingModule.Test
 		{
 			Func<IMarketingRepository> foundationRepositoryFactory = () => GetRepository();
 			var promotionExtensionManager = new DefaultMarketingExtensionManagerImpl();
-			var retVal = new PromotionServiceImpl(foundationRepositoryFactory, promotionExtensionManager, null);
+            var cacheManager = new Moq.Mock<ICacheManager<object>>();
+            var retVal = new PromotionServiceImpl(foundationRepositoryFactory, promotionExtensionManager, cacheManager.Object);
 			return retVal;
 		}
 
@@ -231,8 +233,8 @@ namespace VirtoCommerce.MarketingModule.Test
 
         protected IMarketingRepository GetRepository()
         {
-            var repository = new MarketingRepositoryImpl(DatabaseName, new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor());
-            EnsureDatabaseInitialized(() => new MarketingRepositoryImpl(DatabaseName), () => Database.SetInitializer(new SetupDatabaseInitializer<MarketingRepositoryImpl, Configuration>()));
+            var repository = new MarketingRepositoryImpl(ConnectionString, new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor());
+            EnsureDatabaseInitialized(() => new MarketingRepositoryImpl(ConnectionString), () => Database.SetInitializer(new SetupDatabaseInitializer<MarketingRepositoryImpl, Configuration>()));
             return repository;
         }
 
@@ -242,7 +244,7 @@ namespace VirtoCommerce.MarketingModule.Test
             {
                 // Ensure LocalDb databases are deleted after use so that LocalDb doesn't throw if
                 // the temp location in which they are stored is later cleaned.
-                using (var context = new MarketingRepositoryImpl(DatabaseName))
+                using (var context = new MarketingRepositoryImpl(ConnectionString))
                 {
                     context.Database.Delete();
                 }

@@ -4,21 +4,11 @@ function ($scope, accounts, bladeNavigationService, dialogService, uiGridConstan
     $scope.uiGridConstants = uiGridConstants;
     var blade = $scope.blade;
 
-    //pagination settings
-    $scope.pageSettings = {};
-    $scope.pageSettings.totalItems = 0;
-    $scope.pageSettings.currentPage = 1;
-    $scope.pageSettings.numPages = 5;
-    $scope.pageSettings.itemsPerPageCount = 20;
-
-    $scope.filter = { searchKeyword: undefined };
-    var selectedNode = null;
-
     blade.refresh = function () {
         blade.isLoading = true;
 
         accounts.search({
-            keyword: $scope.filter.searchKeyword,
+            keyword: filter.keyword,
             skipCount: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
             takeCount: $scope.pageSettings.itemsPerPageCount
         }, function (data) {
@@ -26,28 +16,18 @@ function ($scope, accounts, bladeNavigationService, dialogService, uiGridConstan
 
             $scope.pageSettings.totalItems = angular.isDefined(data.totalCount) ? data.totalCount : 0;
             blade.currentEntities = data.users;
-
-            if (selectedNode != null) {
-                //select the node in the new list
-                angular.forEach(blade.currentEntities, function (node) {
-                    if (selectedNode.id === node.id) {
-                        selectedNode = node;
-                    }
-                });
-            }
         }, function (error) {
             bladeNavigationService.setError('Error ' + error.status, blade);
         });
     };
 
     blade.selectNode = function (node) {
-        selectedNode = node;
-        $scope.selectedNodeId = selectedNode.userName;
+        $scope.selectedNodeId = node.userName;
 
         var newBlade = {
             id: 'listItemChild',
-            data: selectedNode,
-            title: selectedNode.userName,
+            data: node,
+            title: node.userName,
             subtitle: blade.subtitle,
             controller: 'platformWebApp.accountDetailController',
             template: '$(Platform)/Scripts/app/security/blades/account-detail.tpl.html'
@@ -55,7 +35,7 @@ function ($scope, accounts, bladeNavigationService, dialogService, uiGridConstan
 
         bladeNavigationService.showBlade(newBlade, blade);
     };
-    
+
     $scope.delete = function (data) {
         deleteList([data]);
     };
@@ -92,9 +72,7 @@ function ($scope, accounts, bladeNavigationService, dialogService, uiGridConstan
     blade.toolbarCommands = [
         {
             name: "platform.commands.refresh", icon: 'fa fa-refresh',
-            executeMethod: function () {
-                blade.refresh();
-            },
+            executeMethod: blade.refresh,
             canExecuteMethod: function () {
                 return true;
             }
@@ -129,11 +107,27 @@ function ($scope, accounts, bladeNavigationService, dialogService, uiGridConstan
         }
     ];
 
+    //pagination settings
+    $scope.pageSettings = {};
+    $scope.pageSettings.totalItems = 0;
+    $scope.pageSettings.currentPage = 1;
+    $scope.pageSettings.numPages = 5;
+    $scope.pageSettings.itemsPerPageCount = 20;
+
+    var filter = $scope.filter = {};
+    filter.criteriaChanged = function () {
+        if ($scope.pageSettings.currentPage > 1) {
+            $scope.pageSettings.currentPage = 1;
+        } else {
+            blade.refresh();
+        }
+    };
+
     // ui-grid
     $scope.setGridOptions = function (gridOptions) {
         uiGridHelper.initialize($scope, gridOptions);
     };
-        
+
     $scope.$watch('pageSettings.currentPage', blade.refresh);
 
     // actions on load

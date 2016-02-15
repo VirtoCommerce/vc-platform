@@ -61,7 +61,6 @@ namespace VirtoCommerce.LiquidThemeEngine
             {
                 parameters.Add(Template.NamingConvention.GetMemberName(item.Key), item.Value);
             }
-
             foreach (var item in viewContext.TempData)
             {
                 parameters.Add(Template.NamingConvention.GetMemberName(item.Key), item.Value);

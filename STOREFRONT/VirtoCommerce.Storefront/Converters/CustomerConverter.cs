@@ -1,7 +1,10 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Omu.ValueInjecter;
 using VirtoCommerce.Client.Model;
 using VirtoCommerce.Storefront.Model;
+using VirtoCommerce.Storefront.Model.Common;
+using VirtoCommerce.Storefront.Model.Customer;
 
 namespace VirtoCommerce.Storefront.Converters
 {
@@ -9,19 +12,37 @@ namespace VirtoCommerce.Storefront.Converters
     {
         private static readonly char[] _nameSeparator = { ' ' };
 
-        public static Customer ToWebModel(this VirtoCommerceCustomerModuleWebModelContact contact, string userName)
+   
+        public static CustomerInfo ToWebModel(this Register formModel)
         {
-            var customer = new Customer();
-            customer.InjectFrom(contact);
-            customer.UserName = userName;
+            var result = new CustomerInfo
+            {
+                Email = formModel.Email,
+                FullName = string.Join(" ", formModel.FirstName, formModel.LastName),
+                FirstName = formModel.FirstName,
+                LastName = formModel.LastName
+            };
 
+            if (string.IsNullOrEmpty(result.FullName) || string.IsNullOrWhiteSpace(result.FullName))
+            {
+                result.FullName = formModel.Email;
+            }
+            return result;
+        }
+
+        public static CustomerInfo ToWebModel(this VirtoCommerceCustomerModuleWebModelContact contact)
+        {
+            var retVal = new CustomerInfo();
+            retVal.InjectFrom(contact);
+
+            retVal.IsRegisteredUser = true;
             if (contact.Addresses != null)
             {
-                customer.Addresses = contact.Addresses.Select(a => a.ToWebModel()).ToList();
+                retVal.Addresses = contact.Addresses.Select(a => a.ToWebModel()).ToList();
             }
 
-            customer.DefaultBillingAddress = customer.Addresses.FirstOrDefault(a => (a.Type & AddressType.Billing) == AddressType.Billing);
-            customer.DefaultShippingAddress = customer.Addresses.FirstOrDefault(a => (a.Type & AddressType.Shipping) == AddressType.Shipping);
+            retVal.DefaultBillingAddress = retVal.Addresses.FirstOrDefault(a => (a.Type & AddressType.Billing) == AddressType.Billing);
+            retVal.DefaultShippingAddress = retVal.Addresses.FirstOrDefault(a => (a.Type & AddressType.Shipping) == AddressType.Shipping);
 
             // TODO: Need separate properties for first, middle and last name
             if (!string.IsNullOrEmpty(contact.FullName))
@@ -30,21 +51,38 @@ namespace VirtoCommerce.Storefront.Converters
 
                 if (nameParts.Length > 0)
                 {
-                    customer.FirstName = nameParts[0];
+                    retVal.FirstName = nameParts[0];
                 }
 
                 if (nameParts.Length > 1)
                 {
-                    customer.LastName = nameParts[1];
+                    retVal.LastName = nameParts[1];
                 }
             }
 
             if (contact.Emails != null)
             {
-                customer.Email = contact.Emails.FirstOrDefault();
+                retVal.Email = contact.Emails.FirstOrDefault();
             }
 
-            return customer;
+            return retVal;
+        }
+
+        public static VirtoCommerceCustomerModuleWebModelContact ToServiceModel(this CustomerInfo customer)
+        {
+            var retVal = new VirtoCommerceCustomerModuleWebModelContact();
+            retVal.InjectFrom<NullableAndEnumValueInjecter>(customer);
+            if (customer.Addresses != null)
+            {
+                retVal.Addresses = customer.Addresses.Select(x => x.ToServiceModel()).ToList();
+            }
+            if (!string.IsNullOrEmpty(customer.Email))
+            {
+                retVal.Emails = new[] { customer.Email }.ToList();
+            }
+            retVal.FullName = customer.FullName;
+       
+            return retVal;
         }
     }
 }

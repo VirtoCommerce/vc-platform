@@ -14,30 +14,41 @@ namespace VirtoCommerce.Storefront.Converters
         {
             var customerAddress = new Address();
 
-            customerAddress.InjectFrom(address);
+            customerAddress.InjectFrom<NullableAndEnumValueInjecter>(address);
 
             return customerAddress;
         }
 
-        public static VirtoCommerceCustomerModuleWebModelAddress ToServiceModel(this ShopifyModel.Address address, Country[] countries)
+        public static Address ToWebModel(this ShopifyModel.Address address, Country[] countries)
         {
-            var result = new VirtoCommerceCustomerModuleWebModelAddress();
+            var result = new Address();
             result.CopyFrom(address, countries);
             return result;
         }
+
+        public static VirtoCommerceCustomerModuleWebModelAddress ToServiceModel(this Address address)
+        {
+            var retVal = new VirtoCommerceCustomerModuleWebModelAddress();
+
+            retVal.InjectFrom<NullableAndEnumValueInjecter>(address);
+            retVal.AddressType = address.Type.ToString();
+
+            return retVal;
+        }
+
 
         public static VirtoCommerceCustomerModuleWebModelAddress ToCustomerModel(this VirtoCommerceOrderModuleWebModelAddress orderAddress)
         {
             var customerAddress = new VirtoCommerceCustomerModuleWebModelAddress();
 
-            customerAddress.InjectFrom(orderAddress);
-
+            customerAddress.InjectFrom<NullableAndEnumValueInjecter>(orderAddress);
+            customerAddress.AddressType = orderAddress.AddressType;
             customerAddress.Name = string.Format("{0} {1}", orderAddress.FirstName, orderAddress.LastName);
 
             return customerAddress;
         }
 
-        public static VirtoCommerceCustomerModuleWebModelAddress CopyFrom(this VirtoCommerceCustomerModuleWebModelAddress result, ShopifyModel.Address address, Country[] countries)
+        public static Address CopyFrom(this Address result, ShopifyModel.Address address, Country[] countries)
         {
             result.InjectFrom<NullableAndEnumValueInjecter>(address);
 
@@ -79,7 +90,7 @@ namespace VirtoCommerce.Storefront.Converters
             return addressWebModel;
         }
 
-        public static VirtoCommerceCartModuleWebModelAddress ToServiceModel(this Address address)
+        public static VirtoCommerceCartModuleWebModelAddress ToCartServiceModel(this Address address)
         {
             var addressServiceModel = new VirtoCommerceCartModuleWebModelAddress();
 
@@ -108,6 +119,28 @@ namespace VirtoCommerce.Storefront.Converters
             webModel.Type = EnumUtility.SafeParse(serviceModel.AddressType, AddressType.BillingAndShipping );
 
             return webModel;
+        }
+
+        public static Address ToWebModel(this VirtoCommerceDomainCommerceModelAddress serviceModel)
+        {
+            var webModel = new Address();
+
+            webModel.InjectFrom<NullableAndEnumValueInjecter>(serviceModel);
+
+            webModel.Type = EnumUtility.SafeParse(serviceModel.AddressType, AddressType.BillingAndShipping);
+
+            return webModel;
+        }
+
+        public static VirtoCommerceQuoteModuleWebModelAddress ToQuoteServiceModel(this Address webModel)
+        {
+            var serviceModel = new VirtoCommerceQuoteModuleWebModelAddress();
+
+            serviceModel.InjectFrom<NullableAndEnumValueInjecter>(webModel);
+
+            serviceModel.AddressType = webModel.Type.ToString();
+
+            return serviceModel;
         }
     }
 }

@@ -508,7 +508,7 @@
           "assign-roles": "Assign roles"
         },
         "placeholders": {
-          "login": "Enter login",
+          "login": "Enter email address",
           "password": "Enter new password",
           "repeat-password": "Repeat new password"
         }

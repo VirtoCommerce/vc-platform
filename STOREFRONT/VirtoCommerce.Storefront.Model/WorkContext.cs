@@ -4,7 +4,9 @@ using System.Linq;
 using VirtoCommerce.Storefront.Model.Cart;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
+using VirtoCommerce.Storefront.Model.Customer;
 using VirtoCommerce.Storefront.Model.Order;
+using VirtoCommerce.Storefront.Model.Pricing;
 using VirtoCommerce.Storefront.Model.Quote;
 using VirtoCommerce.Storefront.Model.StaticContent;
 
@@ -17,7 +19,7 @@ namespace VirtoCommerce.Storefront.Model
     {
         public WorkContext()
         {
-            CurrentPriceListIds = new List<string>();
+            CurrentPricelists = new List<Pricelist>();
             CurrentLinkLists = new List<MenuLinkList>();
         }
         /// <summary>
@@ -29,7 +31,7 @@ namespace VirtoCommerce.Storefront.Model
         /// <summary>
         /// Current customer
         /// </summary>
-        public Customer CurrentCustomer { get; set; }
+        public CustomerInfo CurrentCustomer { get; set; }
 
         /// <summary>
         /// Current language and culture
@@ -49,7 +51,7 @@ namespace VirtoCommerce.Storefront.Model
                 if (_seoInfo == null)
                 {
                     //TODO: next need detec seo from category or product or cart etc
-                    _seoInfo = CurrentStore.SeoInfos.FirstOrDefault();
+                    _seoInfo = CurrentStore.CurrentSeoInfo;
                 }
                 return _seoInfo;
             }
@@ -58,6 +60,10 @@ namespace VirtoCommerce.Storefront.Model
                 _seoInfo = value;
             }
         }
+        /// <summary>
+        /// Represent current account orders search criteria taken from request url
+        /// </summary>
+        public OrderSearchCriteria CurrentOrderSearchCriteria { get; set; }
 
         /// <summary>
         /// Current store
@@ -69,6 +75,10 @@ namespace VirtoCommerce.Storefront.Model
         /// </summary>
         public ShoppingCart CurrentCart { get; set; }
 
+        /// <summary>
+        /// Represent current quotes search criteria taken from request url
+        /// </summary>
+        public QuoteSearchCriteria CurrentQuoteSearchCriteria { get; set; }
         public QuoteRequest CurrentQuoteRequest { get; set; }
 
         /// <summary>
@@ -95,7 +105,7 @@ namespace VirtoCommerce.Storefront.Model
         /// <summary>
         /// List of active pricelists
         /// </summary>
-        public ICollection<string> CurrentPriceListIds { get; set; }
+        public ICollection<Pricelist> CurrentPricelists { get; set; }
 
         #region Catalog Properties
         /// <summary>
@@ -116,8 +126,9 @@ namespace VirtoCommerce.Storefront.Model
 
         #region Static Content Properties
         public ContentPage CurrentPage { get; set; }
-        
+
         public BlogSearchCriteria CurrentBlogSearchCritera { get; set; }
+
         public Blog CurrentBlog { get; set; }
 
         public BlogArticle CurrentBlogArticle { get; set; }
@@ -141,9 +152,12 @@ namespace VirtoCommerce.Storefront.Model
 
         public Country[] AllCountries { get; set; }
 
-        public CustomerOrder Order { get; set; }
+        public CustomerOrder CurrentOrder { get; set; }
+
 
         public ContactUsForm ContactUsForm { get; set; }
+
+        public StorefrontNotification StorefrontNotification { get; set; }
 
         #region IDisposable Implementation
 

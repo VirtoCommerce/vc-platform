@@ -7,7 +7,7 @@
     $scope.selectedNodeId = null;
 
     blade.initialize = function () {
-        marketing_dynamicContents_res_search.search({ respGroup: '8' }, function (data) {
+        marketing_dynamicContents_res_search.search({ responseGroup: '8' }, function (data) {
             blade.currentEntities = data.contentPublications;
             blade.isLoading = false;
         },

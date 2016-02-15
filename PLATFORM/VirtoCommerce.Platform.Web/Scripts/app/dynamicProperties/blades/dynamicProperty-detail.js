@@ -3,13 +3,11 @@
     var blade = $scope.blade;
     blade.headIcon = 'fa-plus-square-o';
     blade.title = 'platform.blades.dynamicProperty-detail.title';
-    $scope.languages = [];
     var localDictionaryValues = [];
 
     blade.refresh = function () {
         //Actualize displayed names to correspond to system languages
         settings.getValues({ id: 'VirtoCommerce.Core.General.Languages' }, function (languages) {
-            $scope.languages = languages;
             blade.currentEntity = blade.isNew ? { valueType: 'ShortText', displayNames: [] } : blade.currentEntity;
             blade.currentEntity.displayNames = _.map(languages, function (x) {
                 var retVal = { locale: x };
@@ -135,18 +133,14 @@
             executeMethod: function () {
                 angular.copy(blade.origEntity, blade.currentEntity);
             },
-            canExecuteMethod: function () {
-                return isDirty();
-            },
+            canExecuteMethod: isDirty,
             permission: 'platform:dynamic_properties:update'
         },
         {
             name: "platform.commands.delete", icon: 'fa fa-trash-o',
-            executeMethod: function () {
-                deleteEntry();
-            },
+            executeMethod: deleteEntry,
             canExecuteMethod: function () {
-                return !isDirty() && !blade.isNew;
+                return !blade.isNew;
             },
             permission: 'platform:dynamic_properties:delete'
         }

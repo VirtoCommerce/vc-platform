@@ -59,7 +59,7 @@ namespace VirtoCommerce.SearchModule.Data.Services
         public IEnumerable<IDocument> CreateDocuments(Partition partition)
         {
             if (partition == null)
-                throw new ArgumentNullException(nameof(partition));
+                throw new ArgumentNullException("partition");
 
             var documents = new ConcurrentBag<IDocument>();
 
@@ -108,7 +108,7 @@ namespace VirtoCommerce.SearchModule.Data.Services
 
         protected virtual void IndexItem(ref ResultDocument doc, string productId)
         {
-            var item = _itemService.GetById(productId, ItemResponseGroup.ItemProperties | ItemResponseGroup.Links);
+            var item = _itemService.GetById(productId, ItemResponseGroup.ItemProperties | ItemResponseGroup.Links | ItemResponseGroup.Variations);
             if (item == null)
                 return;
 
@@ -161,6 +161,24 @@ namespace VirtoCommerce.SearchModule.Data.Services
             // Index custom properties
             IndexItemCustomProperties(ref doc, item);
 
+            if (item.Variations != null)
+            {
+                if (item.Variations.Any(c => c.ProductType == "Physical"))
+                {
+                    doc.Add(new DocumentField("producttype", "Physical", new[] { IndexStore.Yes, IndexType.NotAnalyzed, IndexDataType.StringCollection }));
+                }
+
+                if (item.Variations.Any(c => c.ProductType == "Digital"))
+                {
+                    doc.Add(new DocumentField("producttype", "Digital", new[] { IndexStore.Yes, IndexType.NotAnalyzed, IndexDataType.StringCollection }));
+                }
+
+                foreach (var variation in item.Variations)
+                {
+                    IndexItemCustomProperties(ref doc, variation);
+                }
+            }
+
             // Index item prices
             IndexItemPrices(ref doc, item);
 
@@ -178,8 +196,9 @@ namespace VirtoCommerce.SearchModule.Data.Services
 
             foreach (var propValue in item.PropertyValues.Where(x => x.Value != null))
             {
+                var propertyName = propValue.PropertyName.ToLower();
                 var property = properties.FirstOrDefault(x => string.Equals(x.Name, propValue.PropertyName, StringComparison.InvariantCultureIgnoreCase) && x.ValueType == propValue.ValueType);
-                var contentField = string.Concat("__content", property != null && (property.Multilanguage && !string.IsNullOrWhiteSpace(propValue.LanguageCode)) ? "_" + propValue.LanguageCode.ToLower() : string.Empty);
+                var contentField = string.Concat("__content", property != null && property.Multilanguage && !string.IsNullOrWhiteSpace(propValue.LanguageCode) ? "_" + propValue.LanguageCode.ToLower() : string.Empty);
 
                 switch (propValue.ValueType)
                 {
@@ -195,22 +214,18 @@ namespace VirtoCommerce.SearchModule.Data.Services
                         break;
                 }
 
-                if (doc.ContainsKey(propValue.PropertyName))
-                    continue;
-
-
                 switch (propValue.ValueType)
                 {
                     case PropertyValueType.Boolean:
                     case PropertyValueType.DateTime:
                     case PropertyValueType.Number:
-                        doc.Add(new DocumentField(propValue.PropertyName, propValue.Value, new[] { IndexStore.Yes, IndexType.Analyzed }));
+                        doc.Add(new DocumentField(propertyName, propValue.Value, new[] { IndexStore.Yes, IndexType.Analyzed }));
                         break;
                     case PropertyValueType.LongText:
-                        doc.Add(new DocumentField(propValue.PropertyName, propValue.Value.ToString().ToLowerInvariant(), new[] { IndexStore.Yes, IndexType.Analyzed }));
+                        doc.Add(new DocumentField(propertyName, propValue.Value.ToString().ToLowerInvariant(), new[] { IndexStore.Yes, IndexType.Analyzed }));
                         break;
                     case PropertyValueType.ShortText: // do not tokenize small values as they will be used for lookups and filters
-                        doc.Add(new DocumentField(propValue.PropertyName, propValue.Value.ToString().ToLowerInvariant(), new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
+                        doc.Add(new DocumentField(propertyName, propValue.Value.ToString(), new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
                         break;
                 }
             }
@@ -228,14 +243,12 @@ namespace VirtoCommerce.SearchModule.Data.Services
 
             var prices = _pricingService.EvaluateProductPrices(evalContext);
 
-
             foreach (var price in prices)
             {
                 //var priceList = price.Pricelist;
-                doc.Add(new DocumentField(string.Format("price_{0}_{1}", price.Currency, price.PricelistId), price.EffectiveValue, new[] { IndexStore.No, IndexType.NotAnalyzed }));
-                doc.Add(new DocumentField(string.Format("price_{0}_{1}_value", price.Currency, price.PricelistId), (price.EffectiveValue).ToString(CultureInfo.InvariantCulture), new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
+                doc.Add(new DocumentField(string.Format("price_{0}_{1}", price.Currency, price.PricelistId).ToLower(), price.EffectiveValue, new[] { IndexStore.No, IndexType.NotAnalyzed }));
+                doc.Add(new DocumentField(string.Format("price_{0}_{1}_value", price.Currency, price.PricelistId).ToLower(), (price.EffectiveValue).ToString(CultureInfo.InvariantCulture), new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
             }
-
         }
 
         #endregion

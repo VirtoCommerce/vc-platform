@@ -1,0 +1,38 @@
+﻿<h1>{{ 'customer.account.title' | t }}</h1>
+{% include 'customer-menu' %}
+<hr class="hr--small" />
+<div class="grid">
+    <div class="grid-item two-thirds medium-down--one-whole">
+        <h4>{{ 'customer.quotes.title' | t }}</h4>
+        {% paginate customer.quote_requests by 2 %}
+        {% if customer.quote_requests.size > 0 %}
+            <table class="full">
+                <thead>
+                    <tr>
+                        <th>{{ 'customer.quotes.quote_number' | t }}</th>
+                        <th>{{ 'customer.quotes.date' | t }}</th>
+                        <th>{{ 'customer.quotes.status' | t }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for quote_request in customer.quote_requests %}
+                        <tr>
+                            <td>
+                                {% assign quote_request_url = '/quoterequest/' | append: quote_request.id %}
+                                <a href="{{ quote_request_url | absolute_url }}">{{ quote_request.number }}</a>
+                            </td>
+                            <td>{{ quote_request.created_date | date: format: 'month_day_year' }}</td>
+                            <td>{{ quote_request.status }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+                {% if paginate.pages > 1 %}
+                    {% include 'pagination-custom' %}
+                {% endif %}
+        {% else %}
+            <p>{{ 'customer.quotes.none' | t }}</p>
+        {% endif %}
+        {% endpaginate %}
+    </div>
+</div>

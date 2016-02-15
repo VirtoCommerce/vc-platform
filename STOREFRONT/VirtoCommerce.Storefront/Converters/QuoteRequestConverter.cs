@@ -5,20 +5,20 @@ using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Marketing;
 using VirtoCommerce.Storefront.Model.Quote;
+using System.Collections.Generic;
 
 namespace VirtoCommerce.Storefront.Converters
 {
     public static class QuoteRequestConverter
     {
-        public static QuoteRequest ToWebModel(this VirtoCommerceQuoteModuleWebModelQuoteRequest serviceModel)
+
+        public static QuoteRequest ToWebModel(this VirtoCommerceQuoteModuleWebModelQuoteRequest serviceModel, IEnumerable<Currency> availCurrencies, Language language)
         {
-            var webModel = new QuoteRequest();
+            var currency = availCurrencies.FirstOrDefault(x => x.Equals(serviceModel.Currency)) ?? new Currency(language, serviceModel.Currency);
+            var webModel = new QuoteRequest(currency, language);
 
             webModel.InjectFrom<NullableAndEnumValueInjecter>(serviceModel);
-
-            var language = new Language(serviceModel.LanguageCode);
-            var currency = new Currency(language, serviceModel.Currency);
-
+           
             webModel.Currency = currency;
             webModel.Language = language;
             webModel.ManualRelDiscountAmount = new Money(serviceModel.ManualRelDiscountAmount ?? 0, currency);
@@ -72,6 +72,29 @@ namespace VirtoCommerce.Storefront.Converters
         public static VirtoCommerceQuoteModuleWebModelQuoteRequest ToServiceModel(this QuoteRequest webModel)
         {
             var serviceModel = new VirtoCommerceQuoteModuleWebModelQuoteRequest();
+
+            serviceModel.InjectFrom<NullableAndEnumValueInjecter>(webModel);
+
+            serviceModel.Currency = webModel.Currency.Code;
+            serviceModel.Addresses = webModel.Addresses.Select(a => a.ToQuoteServiceModel()).ToList();
+            serviceModel.Attachments = webModel.Attachments.Select(a => a.ToQuoteServiceModel()).ToList();
+            serviceModel.DynamicProperties = webModel.DynamicProperties.Select(dp => dp.ToServiceModel()).ToList();
+            serviceModel.Items = webModel.Items.Select(i => i.ToQuoteServiceModel()).ToList();
+            serviceModel.LanguageCode = webModel.Language.CultureName;
+            serviceModel.ManualRelDiscountAmount = webModel.ManualRelDiscountAmount != null ? (double?)webModel.ManualRelDiscountAmount.Amount : null;
+            serviceModel.ManualShippingTotal = webModel.ManualShippingTotal != null ? (double?)webModel.ManualShippingTotal.Amount : null;
+            serviceModel.ManualSubTotal = webModel.ManualSubTotal != null ? (double?)webModel.ManualSubTotal.Amount : null;
+            serviceModel.TaxDetails = webModel.TaxDetails.Select(td => td.ToServiceModel()).ToList();
+
+            if (webModel.Coupon != null && webModel.Coupon.AppliedSuccessfully)
+            {
+                serviceModel.Coupon = webModel.Coupon.Code;
+            }
+
+            if (webModel.Totals != null)
+            {
+                serviceModel.Totals = webModel.Totals.ToServiceModel();
+            }
 
             return serviceModel;
         }

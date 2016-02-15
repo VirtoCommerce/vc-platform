@@ -292,6 +292,8 @@ audio, canvas, progress, video {
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
   height: auto;
+  margin: 0;
+  -webkit-appearance: none;
 }
 
 input[type="search"]::-webkit-search-cancel-button,
@@ -719,6 +721,10 @@ html {
 
 body {
   background-color: $colorBody;
+}
+
+[ng-cloak] {
+    display: none;
 }
 
 .sk-folding-cube {
@@ -4638,4 +4644,47 @@ html[xmlns] .slides { display: block; }
 /* New common styles */
 .line-through {
     text-decoration:line-through;
+}
+
+.alert {
+    margin-bottom: 15px;
+    margin-top: -15px;
+}
+.alert.alert-success {
+    color: #3c763d;
+}
+.alert.alert-info {
+    color: #31708f;
+}
+.alert.alert-warning {
+    color: #8a6d3b;
+}
+.alert.alert-error {
+    color: #dc0000;
+}
+.h2.tier-price {
+  height: 33px;
+  margin-bottom: 15px;
+}
+dl {
+  margin-bottom: 20px;
+  margin-top: 0;
+}
+dd, dt {
+  line-height: 1.4285;
+}
+dt {
+  font-weight: 700;
+}
+dd {
+  margin-left: 180px;
+}
+.dl-horizontal dt {
+    float: left;
+    width: 160px;
+    overflow: hidden;
+    clear: left;
+    text-align: right;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }

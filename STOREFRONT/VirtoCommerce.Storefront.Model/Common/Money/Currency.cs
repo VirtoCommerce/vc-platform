@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Runtime.Serialization;
 
 namespace VirtoCommerce.Storefront.Model.Common
 {
+    /// <summary>
+    /// Represent currency information in storefront. Contains some extra informations as exchnage rate, symbol, formating. 
+    /// </summary>
     public class Currency
     {
         public Currency(Language language, string code, string name, string symbol, decimal exchangeRate)
@@ -45,6 +49,7 @@ namespace VirtoCommerce.Storefront.Model.Common
         /// Currency code may be used ISO 4217
         /// </summary>
         public string Code { get; set; }
+        [IgnoreDataMember]
         public NumberFormatInfo NumberFormat { get; set; }
         public string Symbol { get; set; }
         public string EnglishName { get; set; }

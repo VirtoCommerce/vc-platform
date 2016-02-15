@@ -5,11 +5,16 @@ storefrontApp.controller('cartController', ['$scope', '$timeout', 'cartService',
 
     initialize();
 
+    $scope.setCartForm = function (form) {
+        $scope.formCart = form;
+    }
+
     $scope.toggleRecentCartItemModal = function (isVisible) {
         $scope.recentCartItemModalVisible = !isVisible;
     }
 
     $scope.addToCart = function (product, quantity) {
+        $scope.cartIsUpdating = true;
         $scope.recentCartItemModalVisible = true;
         $scope.cart.RecentlyAddedItem = {
             ImageUrl: product.PrimaryImage.Url,
@@ -54,7 +59,20 @@ storefrontApp.controller('cartController', ['$scope', '$timeout', 'cartService',
             refreshCart();
         }, function (response) {
             $scope.cart.Items = initialItems;
+            $scope.cartIsUpdating = false;
         });
+    }
+
+    $scope.submitCart = function () {
+        $scope.formCart.$setSubmitted();
+        if ($scope.formCart.$invalid) {
+            return;
+        }
+        if ($scope.cart.HasPhysicalProducts) {
+            $scope.outerRedirect($scope.baseUrl + 'cart/checkout/#/shipping-address');
+        } else {
+            $scope.outerRedirect($scope.baseUrl + 'cart/checkout/#/payment-method');
+        }
     }
 
     function initialize() {

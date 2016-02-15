@@ -128,7 +128,6 @@
     <Compile Include="Model\VirtoCommerceCustomerModuleWebModelMember.cs" />
     <Compile Include="Model\VirtoCommerceCustomerModuleWebModelNote.cs" />
     <Compile Include="Model\VirtoCommerceCustomerModuleWebModelOrganization.cs" />
-    <Compile Include="Model\VirtoCommerceCustomerModuleWebModelSearchCriteria.cs" />
     <Compile Include="Model\VirtoCommerceCustomerModuleWebModelSearchResult.cs" />
     <Compile Include="Model\VirtoCommerceDomainCatalogModelAsset.cs" />
     <Compile Include="Model\VirtoCommerceDomainCatalogModelCatalog.cs" />
@@ -151,6 +150,10 @@
     <Compile Include="Model\VirtoCommerceDomainCommerceModelTaxDetail.cs" />
     <Compile Include="Model\VirtoCommerceDomainCommonConditionExpressionTree.cs" />
     <Compile Include="Model\VirtoCommerceDomainCommonDynamicExpression.cs" />
+    <Compile Include="Model\VirtoCommerceDomainCustomerModelContact.cs" />
+    <Compile Include="Model\VirtoCommerceDomainCustomerModelNote.cs" />
+    <Compile Include="Model\VirtoCommerceDomainCustomerModelOrganization.cs" />
+    <Compile Include="Model\VirtoCommerceDomainCustomerModelSearchCriteria.cs" />
     <Compile Include="Model\VirtoCommerceDomainInventoryModelInventoryInfo.cs" />
     <Compile Include="Model\VirtoCommerceDomainMarketingModelDynamicContentDynamicContentEvaluationContext.cs" />
     <Compile Include="Model\VirtoCommerceDomainMarketingModelMarketingSearchCriteria.cs" />
@@ -162,14 +165,12 @@
     <Compile Include="Model\VirtoCommerceDomainPaymentModelPostProcessPaymentResult.cs" />
     <Compile Include="Model\VirtoCommerceDomainPricingModelPrice.cs" />
     <Compile Include="Model\VirtoCommerceDomainPricingModelPriceEvaluationContext.cs" />
-    <Compile Include="Model\VirtoCommerceDomainQuoteModelQuoteAttachment.cs" />
-    <Compile Include="Model\VirtoCommerceDomainQuoteModelQuoteItem.cs" />
-    <Compile Include="Model\VirtoCommerceDomainQuoteModelQuoteRequest.cs" />
     <Compile Include="Model\VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria.cs" />
-    <Compile Include="Model\VirtoCommerceDomainQuoteModelQuoteRequestSearchResult.cs" />
-    <Compile Include="Model\VirtoCommerceDomainQuoteModelQuoteRequestTotals.cs" />
-    <Compile Include="Model\VirtoCommerceDomainQuoteModelShipmentMethod.cs" />
-    <Compile Include="Model\VirtoCommerceDomainQuoteModelTierPrice.cs" />
+    <Compile Include="Model\VirtoCommerceDomainStoreModelSearchCriteria.cs" />
+    <Compile Include="Model\VirtoCommerceDomainTaxModelTaxEvaluationContext.cs" />
+    <Compile Include="Model\VirtoCommerceDomainTaxModelTaxLine.cs" />
+    <Compile Include="Model\VirtoCommerceDomainTaxModelTaxProvider.cs" />
+    <Compile Include="Model\VirtoCommerceDomainTaxModelTaxRate.cs" />
     <Compile Include="Model\VirtoCommerceInventoryModuleWebModelFulfillmentCenter.cs" />
     <Compile Include="Model\VirtoCommerceInventoryModuleWebModelInventoryInfo.cs" />
     <Compile Include="Model\VirtoCommerceMarketingModuleWebModelDynamicContentFolder.cs" />
@@ -198,6 +199,7 @@
     <Compile Include="Model\VirtoCommerceOrderModuleWebModelShippingMethod.cs" />
     <Compile Include="Model\VirtoCommercePlatformCoreAssetBlobFolder.cs" />
     <Compile Include="Model\VirtoCommercePlatformCoreChangeLogOperationLog.cs" />
+    <Compile Include="Model\VirtoCommercePlatformCoreCommonSortInfo.cs" />
     <Compile Include="Model\VirtoCommercePlatformCoreDynamicPropertiesDynamicObjectProperty.cs" />
     <Compile Include="Model\VirtoCommercePlatformCoreDynamicPropertiesDynamicProperty.cs" />
     <Compile Include="Model\VirtoCommercePlatformCoreDynamicPropertiesDynamicPropertyDictionaryItem.cs" />
@@ -245,18 +247,21 @@
     <Compile Include="Model\VirtoCommerceQuoteModuleWebModelQuoteAttachment.cs" />
     <Compile Include="Model\VirtoCommerceQuoteModuleWebModelQuoteItem.cs" />
     <Compile Include="Model\VirtoCommerceQuoteModuleWebModelQuoteRequest.cs" />
+    <Compile Include="Model\VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult.cs" />
     <Compile Include="Model\VirtoCommerceQuoteModuleWebModelQuoteRequestTotals.cs" />
     <Compile Include="Model\VirtoCommerceQuoteModuleWebModelShipmentMethod.cs" />
     <Compile Include="Model\VirtoCommerceQuoteModuleWebModelTierPrice.cs" />
     <Compile Include="Model\VirtoCommerceSearchModuleWebModelFilterProperty.cs" />
     <Compile Include="Model\VirtoCommerceStoreModuleWebModelFulfillmentCenter.cs" />
     <Compile Include="Model\VirtoCommerceStoreModuleWebModelPaymentMethod.cs" />
+    <Compile Include="Model\VirtoCommerceStoreModuleWebModelSearchResult.cs" />
     <Compile Include="Model\VirtoCommerceStoreModuleWebModelSendDynamicNotificationRequest.cs" />
     <Compile Include="Model\VirtoCommerceStoreModuleWebModelSetting.cs" />
     <Compile Include="Model\VirtoCommerceStoreModuleWebModelShippingMethod.cs" />
     <Compile Include="Model\VirtoCommerceStoreModuleWebModelStore.cs" />
     <Compile Include="Model\VirtoCommerceStoreModuleWebModelTaxProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SimpleKeyApiClient.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="codegen-config.json" />

@@ -9,6 +9,7 @@ using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Platform.Core.Asset;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.ExportImport;
+using VirtoCommerce.Platform.Data.Common;
 
 namespace VirtoCommerce.CatalogModule.Web.ExportImport
 {
@@ -102,19 +103,30 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
                 var allOrigImages = originalObject.Products.SelectMany(x => x.Images);
                 allOrigImages = allOrigImages.Concat(originalObject.Categories.SelectMany(x => x.Images));
                 allOrigImages = allOrigImages.Concat(originalObject.Products.SelectMany(x => x.Variations).SelectMany(x => x.Images));
-
-                var allNewImages = allBackupImages.Where(x => !allOrigImages.Contains(x)).Where(x => x.BinaryData != null);
+                //Import only new images
+                var allNewImages = allBackupImages.Where(x => !allOrigImages.Contains(x));
                 var index = 0;
                 var progressTemplate = "{0} of " + allNewImages.Count() + " images uploading";
                 foreach (var image in allNewImages)
                 {
                     progressInfo.Description = String.Format(progressTemplate, index);
                     progressCallback(progressInfo);
-                    image.Url = "catalog/" + image.Name;
-                    using (var sourceStream = new MemoryStream(image.BinaryData))
-                    using (var targetStream = _blobStorageProvider.OpenWrite(image.Url))
+                    try
                     {
-                        sourceStream.CopyTo(targetStream);
+                        //do not save images with external url
+                        if (image.Url != null && !image.Url.IsAbsoluteUrl())
+                        {
+                            using (var sourceStream = new MemoryStream(image.BinaryData))
+                            using (var targetStream = _blobStorageProvider.OpenWrite(image.Url))
+                            {
+                                sourceStream.CopyTo(targetStream);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        progressInfo.Errors.Add(String.Format("{0}: {1}", "CatalogModule", ex.ExpandExceptionMessage()));
+                        progressCallback(progressInfo);
                     }
 
                     index++;
@@ -210,7 +222,7 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 
 
             const SearchResponseGroup responseGroup = SearchResponseGroup.WithCatalogs | SearchResponseGroup.WithCategories | SearchResponseGroup.WithProducts;
-            var searchResponse = _catalogSearchService.Search(new SearchCriteria { Take = int.MaxValue, Skip = 0, ResponseGroup = responseGroup });
+            var searchResponse = _catalogSearchService.Search(new SearchCriteria { WithHidden = true, Take = int.MaxValue, Skip = 0, ResponseGroup = responseGroup });
 
             var retVal = new BackupObject();
 

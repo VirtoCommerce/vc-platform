@@ -76,7 +76,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 
             var retVal = catalog.ToWebModel();
 
-            retVal.SecurityScopes = GetObjectPermissionScopeStrings(retVal);
+            retVal.SecurityScopes = GetObjectPermissionScopeStrings(catalog);
 
             return Ok(retVal);
         }

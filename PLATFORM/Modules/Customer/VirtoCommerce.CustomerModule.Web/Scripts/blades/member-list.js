@@ -9,30 +9,29 @@
         $scope.pageSettings.numPages = 5;
         $scope.pageSettings.itemsPerPageCount = 20;
 
-        $scope.filter = { searchKeyword: undefined };
-
         var blade = $scope.blade;
         blade.title = 'customer.blades.member-list.title';
 
         blade.refresh = function () {
             blade.isLoading = true;
             members.search(
-                {
-                    organization: blade.currentEntity.id,
-                    keyword: $scope.filter.searchKeyword,
-                    start: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
-                    count: $scope.pageSettings.itemsPerPageCount
-                },
-            function (data) {
-                blade.isLoading = false;
-                $scope.pageSettings.totalItems = angular.isDefined(data.totalCount) ? data.totalCount : 0;
-                $scope.listEntries = data.members;
+            {
+                organizationId: blade.currentEntity.id,
+                keyword: filter.keyword ? filter.keyword : undefined,
+                sort: uiGridHelper.getSortExpression($scope),
+                skip: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
+                take: $scope.pageSettings.itemsPerPageCount
+            },
+                function (data) {
+                    blade.isLoading = false;
+                    $scope.pageSettings.totalItems = angular.isDefined(data.totalCount) ? data.totalCount : 0;
+                    $scope.listEntries = data.members;
 
-                //Set navigation breadcrumbs
-                setBreadcrumbs();
-            }, function (error) {
-                bladeNavigationService.setError('Error ' + error.status, blade);
-            });
+                    //Set navigation breadcrumbs
+                    setBreadcrumbs();
+                }, function (error) {
+                    bladeNavigationService.setError('Error ' + error.status, blade);
+                });
         }
 
         //Breadcrumbs
@@ -67,10 +66,6 @@
                 }
             }
         }
-
-        $scope.$watch('pageSettings.currentPage', function (newPage) {
-            blade.refresh();
-        });
 
         $scope.getMainAddress = function (data) {
             var retVal;
@@ -182,9 +177,7 @@
         blade.toolbarCommands = [
             {
                 name: "platform.commands.refresh", icon: 'fa fa-refresh',
-                executeMethod: function () {
-                    blade.refresh();
-                },
+                executeMethod: blade.refresh,
                 canExecuteMethod: function () {
                     return true;
                 }
@@ -216,9 +209,39 @@
             }
         ];
 
+
+        // simple and advanced filtering
+        var filter = $scope.filter = {};
+
+        filter.criteriaChanged = function () {
+            if ($scope.pageSettings.currentPage > 1) {
+                $scope.pageSettings.currentPage = 1;
+            } else {
+                blade.refresh();
+            }
+        };
+
+        //function showFilterDetailBlade(bladeData) {
+        //    var newBlade = {
+        //        id: 'filterDetail',
+        //        controller: 'virtoCommerce.customerModule.filterDetailController',
+        //        template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/filter-detail.tpl.html',
+        //    };
+        //    angular.extend(newBlade, bladeData);
+        //    bladeNavigationService.showBlade(newBlade, blade);
+        //};
+
+
         // ui-grid
         $scope.setGridOptions = function (gridOptions) {
-            uiGridHelper.initialize($scope, gridOptions);
+            uiGridHelper.initialize($scope, gridOptions, function (gridApi) {
+                gridApi.core.on.sortChanged($scope, function () {
+                    if (!blade.isLoading)
+                        blade.refresh();
+                });
+            });
+
+            $scope.$watch('pageSettings.currentPage', blade.refresh);
         };
 
 

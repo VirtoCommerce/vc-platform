@@ -46,30 +46,33 @@ namespace VirtoCommerce.StoreModule.Data.Services
 
         #region IStoreService Members
 
-        public coreModel.Store GetById(string id)
+        public coreModel.Store[] GetByIds(string[] ids)
         {
-
-            coreModel.Store retVal = null;
+            var retVal = new List<coreModel.Store>();
             using (var repository = _repositoryFactory())
             {
-                var entity = repository.GetStoreById(id);
-
-                if (entity != null)
+                var fulfillmentCenters = _commerceService.GetAllFulfillmentCenters().ToList();
+                var dbStores = repository.GetStoresByIds(ids);
+                foreach(var dbStore in dbStores)
                 {
                     //Load original typed shipping method and populate it  personalized information from db
-                    retVal = entity.ToCoreModel(_shippingService.GetAllShippingMethods(), _paymentService.GetAllPaymentMethods(), _taxService.GetAllTaxProviders());
+                    var store = dbStore.ToCoreModel(_shippingService.GetAllShippingMethods(), _paymentService.GetAllPaymentMethods(), _taxService.GetAllTaxProviders());
 
-                    var fulfillmentCenters = _commerceService.GetAllFulfillmentCenters().ToList();
-                    retVal.ReturnsFulfillmentCenter = fulfillmentCenters.FirstOrDefault(x => x.Id == entity.ReturnsFulfillmentCenterId);
-                    retVal.FulfillmentCenter = fulfillmentCenters.FirstOrDefault(x => x.Id == entity.FulfillmentCenterId);
-
-                    _commerceService.LoadSeoForObjects(new[] { retVal });
-                    _settingManager.LoadEntitySettingsValues(retVal);
-                    _dynamicPropertyService.LoadDynamicPropertyValues(retVal);
+                    store.ReturnsFulfillmentCenter = fulfillmentCenters.FirstOrDefault(x => x.Id == dbStore.ReturnsFulfillmentCenterId);
+                    store.FulfillmentCenter = fulfillmentCenters.FirstOrDefault(x => x.Id == dbStore.FulfillmentCenterId);
+                   
+                    _settingManager.LoadEntitySettingsValues(store);
+                    _dynamicPropertyService.LoadDynamicPropertyValues(store);
+                    retVal.Add(store);
                 }
             }
-            return retVal;
+            _commerceService.LoadSeoForObjects(retVal.ToArray());
+            return retVal.ToArray();
+        }
 
+        public coreModel.Store GetById(string id)
+        {
+            return GetByIds(new[] { id }).FirstOrDefault();
         }
 
         public coreModel.Store Create(coreModel.Store store)
@@ -103,10 +106,11 @@ namespace VirtoCommerce.StoreModule.Data.Services
             using (var repository = _repositoryFactory())
             using (var changeTracker = base.GetChangeTracker(repository))
             {
+                var dbStores = repository.GetStoresByIds(stores.Select(x => x.Id).ToArray());
                 foreach (var store in stores)
                 {
                     var sourceEntity = store.ToDataModel();
-                    var targetEntity = repository.GetStoreById(store.Id);
+                    var targetEntity = dbStores.First(x=>x.Id == store.Id);
 
                     if (targetEntity == null)
                     {
@@ -136,37 +140,60 @@ namespace VirtoCommerce.StoreModule.Data.Services
         {
             using (var repository = _repositoryFactory())
             {
-                foreach (var id in ids)
+                var stores = GetByIds(ids);
+                var dbStores = repository.GetStoresByIds(ids);
+
+                foreach (var store in stores)
                 {
-                    var store = GetById(id);
                     _commerceService.DeleteSeoForObject(store);
                     _dynamicPropertyService.DeleteDynamicPropertyValues(store);
                     //Deep remove settings
                     _settingManager.RemoveEntitySettings(store);
 
-                    var entity = repository.GetStoreById(id);
-                    repository.Remove(entity);
+                    var dbStore = dbStores.FirstOrDefault(x => x.Id == store.Id);
+                    if (dbStore != null)
+                    {
+                        repository.Remove(dbStore);
+                    }
                 }
-
                 CommitChanges(repository);
                 //Invalidate module cache region
                 _cacheManager.ClearRegion("StoreModuleRegion");
             }
         }
 
-		public IEnumerable<coreModel.Store> GetStoreList()
-		{
-			var retVal = new List<coreModel.Store>();
-			using (var repository = _repositoryFactory())
-			{
-				foreach (var storeId in repository.Stores.Select(x => x.Id).ToArray())
-				{
-					var store = GetById(storeId);
-					retVal.Add(store);
-				}
-			}
-			return retVal;
-		}
+        public coreModel.SearchResult SearchStores(coreModel.SearchCriteria criteria)
+        {
+            var retVal = new coreModel.SearchResult();
+            using (var repository = _repositoryFactory())
+            {
+                var query = repository.Stores;
+                if(!string.IsNullOrEmpty(criteria.Keyword))
+                {
+                    query = query.Where(x => x.Name.Contains(criteria.Keyword) || x.Id.Contains(criteria.Keyword));
+                }
+                if(!criteria.StoreIds.IsNullOrEmpty())
+                {
+                    query = query.Where(x => criteria.StoreIds.Contains(x.Id));
+                }
+                var sortInfos = criteria.SortInfos;
+                if (sortInfos.IsNullOrEmpty())
+                {
+                    sortInfos = new[] { new SortInfo { SortColumn = "Name" } };
+                }
+              
+                query = query.OrderBySortInfos(sortInfos);
+
+                retVal.TotalCount = query.Count();
+                var storeIds = query.Skip(criteria.Skip)
+                                 .Take(criteria.Take)
+                                 .Select(x => x.Id)
+                                 .ToArray();
+
+                retVal.Stores = GetByIds(storeIds).AsQueryable().OrderBySortInfos(sortInfos).ToList(); 
+            }
+            return retVal;
+        }
 
         #endregion
     }

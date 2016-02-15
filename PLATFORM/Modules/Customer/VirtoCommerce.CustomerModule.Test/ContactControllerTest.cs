@@ -10,6 +10,7 @@ using VirtoCommerce.Platform.Data.DynamicProperties;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Platform.Data.Repositories;
 using webModel = VirtoCommerce.CustomerModule.Web.Model;
+using coreModel = VirtoCommerce.Domain.Customer.Model;
 using VirtoCommerce.Domain.Commerce.Model;
 
 namespace VirtoCommerce.CustomerModule.Test
@@ -21,7 +22,7 @@ namespace VirtoCommerce.CustomerModule.Test
         public void SearchContactsTest()
         {
             var controller = GetContactController();
-            var result = controller.Search(new SearchCriteria()) as OkNegotiatedContentResult<SearchResult>;
+            var result = controller.Search(new coreModel.SearchCriteria()) as OkNegotiatedContentResult<SearchResult>;
             Assert.IsNotNull(result.Content);
         }
 
@@ -46,7 +47,7 @@ namespace VirtoCommerce.CustomerModule.Test
         public void SearchTest()
         {
             var controller = GetContactController();
-            var result = controller.Search(new webModel.SearchCriteria { OrganizationId = "org1" }) as OkNegotiatedContentResult<webModel.SearchResult>;
+            var result = controller.Search(new coreModel.SearchCriteria { OrganizationId = "org1" }) as OkNegotiatedContentResult<webModel.SearchResult>;
         }
 
         [TestMethod]

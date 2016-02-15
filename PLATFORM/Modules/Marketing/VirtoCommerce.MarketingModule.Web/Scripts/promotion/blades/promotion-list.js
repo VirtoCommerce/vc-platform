@@ -3,21 +3,12 @@
     function ($scope, promotions, bladeNavigationService, dialogService, uiGridConstants, uiGridHelper) {
         var blade = $scope.blade;
 
-        //pagination settings
-        $scope.pageSettings = {};
-        $scope.pageSettings.totalItems = 0;
-        $scope.pageSettings.currentPage = 1;
-        $scope.pageSettings.numPages = 5;
-        $scope.pageSettings.itemsPerPageCount = 20;
-
-        $scope.filter = { searchKeyword: undefined };
-
         blade.refresh = function () {
             blade.isLoading = true;
 
             promotions.search({
-                respGroup: 'withPromotions',
-                keyword: $scope.filter.searchKeyword,
+                responseGroup: 'withPromotions',
+                keyword: filter.keyword,
                 start: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
                 count: $scope.pageSettings.itemsPerPageCount
             }, function (data) {
@@ -77,9 +68,7 @@
         blade.toolbarCommands = [
             {
                 name: "platform.commands.refresh", icon: 'fa fa-refresh',
-                executeMethod: function () {
-                    blade.refresh();
-                },
+                executeMethod: blade.refresh,
                 canExecuteMethod: function () {
                     return true;
                 }
@@ -116,15 +105,28 @@
             }
         ];
 
+        //pagination settings
+        $scope.pageSettings = {};
+        $scope.pageSettings.totalItems = 0;
+        $scope.pageSettings.currentPage = 1;
+        $scope.pageSettings.numPages = 5;
+        $scope.pageSettings.itemsPerPageCount = 20;
+
+        var filter = $scope.filter = {};
+        filter.criteriaChanged = function () {
+            if ($scope.pageSettings.currentPage > 1) {
+                $scope.pageSettings.currentPage = 1;
+            } else {
+                blade.refresh();
+            }
+        };
+
         // ui-grid
         $scope.setGridOptions = function (gridOptions) {
             uiGridHelper.initialize($scope, gridOptions);
         };
 
-
-        $scope.$watch('pageSettings.currentPage', function () {
-            blade.refresh();
-        });
+        $scope.$watch('pageSettings.currentPage', blade.refresh);
 
         // actions on load
         //No need to call this because page 'pageSettings.currentPage' is watched!!! It would trigger subsequent duplicated req...

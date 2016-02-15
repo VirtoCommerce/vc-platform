@@ -64,7 +64,7 @@
   		title: 'platform.menu.export-import',
   		priority: 10,
   		action: function () { $state.go('workspace.exportImport'); },
-  		permission: 'platform:exportImport'
+  		permission: 'platform:exportImport:access'
   	};
   	mainMenuService.addMenuItem(menuItem);
 

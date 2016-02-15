@@ -21,7 +21,6 @@ namespace VirtoCommerce.Storefront.Routing
         private readonly IStaticContentService _contentService;
         private readonly ICacheManager<object> _cacheManager;
 
-        [CLSCompliant(false)]
         public SeoRoute(string url, IRouteHandler routeHandler, Func<WorkContext> workContextFactory, ICommerceCoreModuleApi commerceCoreApi, IStaticContentService staticContentService, ICacheManager<object> cacheManager)
             : base(url, routeHandler)
         {
@@ -37,14 +36,23 @@ namespace VirtoCommerce.Storefront.Routing
 
             if (data != null)
             {
+                //get workContext
+                var workContext = _workContextFactory();
+
                 var path = data.Values["path"] as string;
+                var store = data.Values["store"] as string;
+                //Special workaround for case when url contains only slug without store (one store case)
+                if(string.IsNullOrEmpty(path) && !string.IsNullOrEmpty(store))
+                {
+                    //use {store} as {path} if not exist any store with name {store} 
+                    path = workContext.AllStores.Any(x => string.Equals(store, x.Id, StringComparison.InvariantCultureIgnoreCase)) ? null : store;
+                }
+               
                 var seoRecords = GetSeoRecords(path);
                 var seoRecord = seoRecords.FirstOrDefault();
              
                 if(seoRecord != null)
                 {
-                    var workContext = _workContextFactory();
-
                     // Ensure the slug is active
                     if (seoRecord.IsActive == null || !seoRecord.IsActive.Value)
                     {
@@ -101,7 +109,6 @@ namespace VirtoCommerce.Storefront.Routing
                 }
                 else if(!String.IsNullOrEmpty(path))
                 {
-                    var workContext = _workContextFactory();
                     var contentPage = TryToFindContentPageWithUrl(path, workContext.CurrentStore, workContext.CurrentLanguage);
                     if(contentPage != null)
                     {
@@ -124,13 +131,13 @@ namespace VirtoCommerce.Storefront.Routing
         {
             if (store == null)
                 return null;
-            var cacheKey = String.Join(":", "TryToFindContentPageWithUrl", url, store.Id, language.CultureName);
+            var cacheKey = String.Join(":", "AllStaticContentForLanguage", store.Id, language.CultureName);
             var retVal = _cacheManager.Get(cacheKey, "ContentRegion", () =>
             {
-                var allPages = _contentService.LoadContentItemsByUrl("/", store, language, x => new ContentPage(x, language), 1, int.MaxValue);
-                return allPages.FirstOrDefault(x => url.EndsWith(x.Url)) as ContentPage;
+                return _contentService.LoadContentItemsByUrl("/", store, language, () => new ContentPage(), null,  1, int.MaxValue, renderContent: false).OfType<ContentPage>().ToArray();
             });
-            return retVal;
+            url = url.TrimStart('/');
+            return retVal.FirstOrDefault(x => string.Equals(x.Permalink, url, StringComparison.CurrentCultureIgnoreCase) || string.Equals(x.Url, url, StringComparison.InvariantCultureIgnoreCase));
         }
 
         private List<VirtoCommerceDomainCommerceModelSeoInfo> GetSeoRecords(string path)

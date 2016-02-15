@@ -18,7 +18,7 @@ namespace VirtoCommerce.Storefront.Converters
                 Coupon = workContext.CurrentCart.Coupon != null ? workContext.CurrentCart.Coupon.Code : null,
                 Currency = workContext.CurrentCurrency,
                 CustomerId = workContext.CurrentCustomer.Id,
-                IsRegisteredUser = workContext.CurrentCustomer.HasAccount,
+                IsRegisteredUser = workContext.CurrentCustomer.IsRegisteredUser,
                 Language = workContext.CurrentLanguage,
                 StoreId = workContext.CurrentStore.Id
             };

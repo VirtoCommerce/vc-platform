@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Web;
+﻿using System.Net;
 using System.Web.Mvc;
 
 namespace VirtoCommerce.Storefront.Controllers
@@ -13,7 +9,7 @@ namespace VirtoCommerce.Storefront.Controllers
         /// Do not rename this method because it have references in Global.asax and SeoRoute.cs
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
+        [AcceptVerbs(HttpVerbs.Get | HttpVerbs.Post | HttpVerbs.Put)]
         public ActionResult Http404()
         {
             Response.StatusCode = (int)HttpStatusCode.NotFound;
@@ -21,6 +17,5 @@ namespace VirtoCommerce.Storefront.Controllers
 
             return View("404");
         }
-
     }
 }

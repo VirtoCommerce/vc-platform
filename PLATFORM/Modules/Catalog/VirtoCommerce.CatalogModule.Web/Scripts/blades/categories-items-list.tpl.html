@@ -2,9 +2,9 @@
     <va-breadcrumb ng-model="blade.breadcrumbs" blade-id="blade.id"></va-breadcrumb>
     <div class="form-group">
         <div class="form-input">
-            <input placeholder="{{'platform.placeholders.search-keyword' | translate}}" ng-model="filter.keyword" ng-keyup="$event.which === 13 && blade.refresh()" style="width: 190px">
+            <input placeholder="{{'platform.placeholders.search-keyword' | translate}}" ng-model="filter.keyword" ng-keyup="$event.which === 13 && filter.criteriaChanged()" style="width: 190px">
             <button class="btn __other" style="position: relative;right: 45px;">
-                <i class="btn-ico fa fa-times-circle" title="Clear" ng-click="filter.keyword=null;blade.refresh()"></i>
+                <i class="btn-ico fa fa-remove" title="Clear" ng-click="filter.keyword=null;filter.criteriaChanged()"></i>
             </button>
             <ui-select ng-model="filter.current" ng-change="filter.change()" style="left: 220px;position: absolute;width: 190px;top: 0px;">
                 <ui-select-match allow-clear="true" placeholder="{{'catalog.blades.categories-items-list.placeholders.select-filter' | translate}}">{{$select.selected.name?$select.selected.name:'catalog.blades.categories-items-list.labels.unnamed-filter' | translate}}</ui-select-match>
@@ -57,11 +57,17 @@
 </div>
 
 <script type="text/ng-template" id="item-list.row.html">
-    <div ng-if="row.groupHeader && !col.isRowHeader" ng-click='grid.appScope.selectGroupByItem(row.treeNode.children[0].row.entity, $id)' ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns | limitTo:1 track by col.uid" class="ui-grid-cell" ng-class="{'__selected': $id===grid.appScope.selectedNodeId}">{{grid.appScope.getGroupText(row.treeNode.row.entity)}}</div>
+    <div ng-if="row.groupHeader && !col.isRowHeader" ng-click='grid.appScope.selectGroupByItem(row.treeNode.children[0].row.entity, $id)' ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns | limitTo:1 track by col.uid" class="ui-grid-cell __filters" ng-class="{'__selected': $id===grid.appScope.selectedNodeId}">
+        <div class="ui-grid-cell-contents">
+            <div class="inner-contents"><span class="inner-t">{{grid.appScope.getGroupInfo(row.treeNode.row.entity).groupVal}}: <span class="count">{{grid.appScope.getGroupInfo(row.treeNode.row.entity).value}}</span></span></div>
+        </div>
+    </div>
     <div ng-if="!row.groupHeader" ng-click='col.isRowHeader || grid.appScope.selectItem($event, row.entity)' ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + '-' + col.uid + '-cell'" class="ui-grid-cell" ng-class="{'ui-grid-row-header-cell': col.isRowHeader, '__hovered': grid.appScope.contextMenuEntity === row.entity, '__selected': row.entity.id===grid.appScope.selectedNodeId }" role="{{col.isRowHeader ? 'rowheader' : 'gridcell' }}" ui-grid-cell context-menu="grid.appScope.contextMenuEntity = row.entity" data-target="cil_menu_{{grid.appScope.blade.level}}"></div>
 </script>
 <script type="text/ng-template" id="item-list-path.cell.html">
-    <div ng-if="!col.grouping || col.grouping.groupPriority === undefined || col.grouping.groupPriority === null || ( row.groupHeader && col.grouping.groupPriority === row.treeLevel )" class="ui-grid-cell-contents" title="TOOLTIP">{{COL_FIELD CUSTOM_FILTERS}}</div>
+    <div ng-if="!col.grouping || col.grouping.groupPriority === undefined || col.grouping.groupPriority === null || ( row.groupHeader && col.grouping.groupPriority === row.treeLevel )" class="ui-grid-cell-contents" title="TOOLTIP">
+        <div class="inner-contents">{{COL_FIELD CUSTOM_FILTERS}}</div>
+    </div>
 </script>
 <script type="text/ng-template" id="item-list-actions.cell.html">
     <div class="ui-grid-actions" left-click-menu="grid.appScope.contextMenuEntity = row.entity" data-target="cil_menu_{{grid.appScope.blade.level}}" ng-if="!row.groupHeader">

@@ -2,14 +2,12 @@
 using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
-using System.Web.Http.ModelBinding;
-using VirtoCommerce.CustomerModule.Web.Binders;
-using VirtoCommerce.Domain.Customer.Services;
 using VirtoCommerce.CustomerModule.Web.Converters;
+using VirtoCommerce.CustomerModule.Web.Security;
+using VirtoCommerce.Domain.Customer.Services;
 using VirtoCommerce.Platform.Core.Security;
 using coreModel = VirtoCommerce.Domain.Customer.Model;
 using webModel = VirtoCommerce.CustomerModule.Web.Model;
-using VirtoCommerce.CustomerModule.Web.Security;
 
 namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
 {
@@ -45,17 +43,17 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
         /// </summary>
         /// <remarks>Get array of members satisfied search criteria.</remarks>
         /// <param name="criteria">Search criteria</param>
-        [HttpGet]
+        [HttpPost]
         [ResponseType(typeof(webModel.SearchResult))]
         [Route("members")]
-        public IHttpActionResult Search([ModelBinder(typeof(SearchCriteriaBinder))] webModel.SearchCriteria criteria)
+        public IHttpActionResult Search(coreModel.SearchCriteria criteria)
         {
-            var result = _contactSearchService.Search(criteria.ToCoreModel());
+            var result = _contactSearchService.Search(criteria);
 
             var retVal = new webModel.SearchResult();
 
-            var start = criteria.Start;
-            var count = criteria.Count;
+            var start = criteria.Skip;
+            var count = criteria.Take;
 
             // all organizations
             var organizations = result.Organizations.Select(x => x.ToWebModel());

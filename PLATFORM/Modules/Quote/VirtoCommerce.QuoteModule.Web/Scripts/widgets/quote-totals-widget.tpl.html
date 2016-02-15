@@ -1,7 +1,7 @@
 ﻿<ul class="list __prices" ng-click="blade.openItemsBlade()">
-    <li class="list-item">{{ 'quotes.widgets.quote-totals.sub-total' | translate }} <span class="list-price">{{blade.currentEntity.totals.subTotalExlTax | number:2}}</span></li>
-    <li class="list-item">{{ 'quotes.widgets.quote-totals.shipping' | translate }} <span class="list-price">{{blade.currentEntity.totals.shippingTotal | number:2}}</span></li>
-    <li class="list-item">{{ 'quotes.widgets.quote-totals.discount' | translate }} <span class="list-price">{{blade.currentEntity.totals.discountTotal | number:2}}</span></li>
-   <!-- <li class="list-item">Taxes <span class="list-price">{{blade.currentEntity.totals.taxTotal | number:2}}</span></li>-->
-    <li class="list-item __total">{{ 'quotes.widgets.quote-totals.grand-total' | translate }} <span class="list-price">{{blade.currentEntity.totals.grandTotalInclTax | number:2}}</span></li>
+    <li class="list-item">{{ 'quotes.widgets.quote-totals.sub-total' | translate }} <span class="list-price">{{blade.currentEntity.totals.subTotalExlTax | number:2}}&nbsp;{{blade.currentEntity.currency}}</span></li>
+    <li class="list-item">{{ 'quotes.widgets.quote-totals.shipping' | translate }} <span class="list-price">{{blade.currentEntity.totals.shippingTotal | number:2}}&nbsp;{{blade.currentEntity.currency}}</span></li>
+    <li class="list-item">{{ 'quotes.widgets.quote-totals.discount' | translate }} <span class="list-price">{{blade.currentEntity.totals.discountTotal | number:2}}&nbsp;{{blade.currentEntity.currency}}</span></li>
+   <!-- <li class="list-item">Taxes <span class="list-price">{{blade.currentEntity.totals.taxTotal | number:2}}&nbsp;{{blade.currentEntity.currency}}</span></li>-->
+    <li class="list-item __total">{{ 'quotes.widgets.quote-totals.grand-total' | translate }} <span class="list-price">{{blade.currentEntity.totals.grandTotalInclTax | number:2}}&nbsp;{{blade.currentEntity.currency}}</span></li>
 </ul>

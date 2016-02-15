@@ -36,6 +36,10 @@ using VirtoCommerce.Storefront.Model.Marketing.Services;
 using VirtoCommerce.Storefront.Model.Cart.Services;
 using VirtoCommerce.Storefront.Model.Pricing.Services;
 using VirtoCommerce.Storefront.Model.Quote.Services;
+using VirtoCommerce.Storefront.Model.Customer.Services;
+using VirtoCommerce.Storefront.Model.Common.Events;
+using VirtoCommerce.Storefront.Model.Order.Events;
+using NLog;
 
 [assembly: OwinStartup(typeof(Startup))]
 [assembly: PreApplicationStartMethod(typeof(Startup), "PreApplicationStart")]
@@ -102,6 +106,9 @@ namespace VirtoCommerce.Storefront
                 }
             };
 
+            var logger = LogManager.GetLogger("default");
+            container.RegisterInstance<ILogger>(logger);
+
             // Workaround for old storefront base URL: remove /api/ suffix since it is already included in every resource address in VirtoCommerce.Client library.
             var baseUrl = ConfigurationManager.ConnectionStrings["VirtoCommerceBaseUrl"].ConnectionString;
             if (baseUrl != null && baseUrl.EndsWith("/api/", StringComparison.OrdinalIgnoreCase))
@@ -134,28 +141,41 @@ namespace VirtoCommerce.Storefront
             container.RegisterType<IPromotionEvaluator, PromotionEvaluator>();
             container.RegisterType<ICartValidator, CartValidator>();
             container.RegisterType<IPricingService, PricingServiceImpl>();
+            container.RegisterType<ICustomerService, CustomerServiceImpl>();
 
             container.RegisterType<ICartBuilder, CartBuilder>();
             container.RegisterType<IQuoteRequestBuilder, QuoteRequestBuilder>();
             container.RegisterType<ICatalogSearchService, CatalogSearchServiceImpl>();
             container.RegisterType<IAuthenticationManager>(new InjectionFactory((context) => HttpContext.Current.GetOwinContext().Authentication));
 
+
             container.RegisterType<IStorefrontUrlBuilder, StorefrontUrlBuilder>(new PerRequestLifetimeManager());
+
+            //Register domain events
+            container.RegisterType<IEventPublisher<OrderPlacedEvent>, EventPublisher<OrderPlacedEvent>>();
+            container.RegisterType<IEventPublisher<UserLoginEvent>, EventPublisher<UserLoginEvent>>();
+            //Register event handlers (observers)
+            container.RegisterType<IAsyncObserver<OrderPlacedEvent>, CustomerServiceImpl>("Invalidate customer cache when user placed new order");
+            container.RegisterType<IAsyncObserver<UserLoginEvent>, CartBuilder>("Merge anonymous cart with loggined user cart");
+            container.RegisterType<IAsyncObserver<UserLoginEvent>, QuoteRequestBuilder>("Merge anonymous quote request with loggined user quote");
 
             // Create new work context for each request
             container.RegisterType<WorkContext, WorkContext>(new PerRequestLifetimeManager());
+            Func<WorkContext> workContextFactory = () => container.Resolve<WorkContext>();
+            container.RegisterInstance(workContextFactory);
+
             var themesPath = ConfigurationManager.AppSettings["vc-public-themes"] ?? "~/App_data/Themes";
-            var shopifyLiquidEngine = new ShopifyLiquidThemeEngine(cacheManager, () => container.Resolve<WorkContext>(), () => container.Resolve<IStorefrontUrlBuilder>(), ResolveLocalPath(themesPath), "~/themes/assets", "~/themes/global/assets");
-            container.RegisterInstance(shopifyLiquidEngine);
+            var shopifyLiquidEngine = new ShopifyLiquidThemeEngine(cacheManager, workContextFactory, () => container.Resolve<IStorefrontUrlBuilder>(), ResolveLocalPath(themesPath), "~/themes/assets", "~/themes/global/assets");
+            container.RegisterInstance<ILiquidThemeEngine>(shopifyLiquidEngine);
             //Register liquid engine
-            ViewEngines.Engines.Add(new DotLiquidThemedViewEngine(container.Resolve<ShopifyLiquidThemeEngine>()));
+            ViewEngines.Engines.Add(new DotLiquidThemedViewEngine(shopifyLiquidEngine));
 
             // Shopify model binders convert Shopify form fields with bad names to VirtoCommerce model properties.
             container.RegisterType<IModelBinderProvider, ShopifyModelBinderProvider>("shopify");
 
             var staticContentPath = ConfigurationManager.AppSettings["vc-public-pages"] ?? "~/App_data/Pages";
             //Static content service
-            var staticContentService = new StaticContentServiceImpl(ResolveLocalPath(staticContentPath), new Markdown(), shopifyLiquidEngine, cacheManager);
+            var staticContentService = new StaticContentServiceImpl(ResolveLocalPath(staticContentPath), new Markdown(), shopifyLiquidEngine, cacheManager, workContextFactory, () => container.Resolve<IStorefrontUrlBuilder>());
             container.RegisterInstance<IStaticContentService>(staticContentService);
 
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters, () => container.Resolve<WorkContext>());

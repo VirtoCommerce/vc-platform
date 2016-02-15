@@ -56,10 +56,10 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         /// Search customer orders by given criteria
         /// </summary>
         /// <param name="criteria">criteria</param>
-        [HttpGet]
+        [HttpPost]
         [ResponseType(typeof(webModel.SearchResult))]
-        [Route("")]
-        public IHttpActionResult Search([FromUri]coreModel.SearchCriteria criteria)
+        [Route("search")]
+        public IHttpActionResult Search(coreModel.SearchCriteria criteria)
         {
             //Scope bound ACL filtration
             criteria = FilterOrderSearchCriteria(HttpContext.Current.User.Identity.Name, criteria);
@@ -161,7 +161,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
             //if not found by order number search by order id
             if (order == null)
                 order = _customerOrderService.GetById(orderId, coreModel.CustomerOrderResponseGroup.Full);
-            
+
             if (order == null)
             {
                 throw new NullReferenceException("order");

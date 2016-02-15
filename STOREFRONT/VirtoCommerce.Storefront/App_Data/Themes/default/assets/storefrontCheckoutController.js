@@ -1,120 +1,240 @@
 ﻿var storefrontApp = angular.module('storefrontApp');
 
-storefrontApp.controller('checkoutController', ['$scope', '$location', '$window', 'customerService', 'cartService', function ($scope, $location, $window, customerService, cartService) {
-    $scope.checkout = {};
+storefrontApp.controller('checkoutController', ['$rootScope', '$scope', '$window', 'customerService', 'cartService', function ($rootScope, $scope, $window, customerService, cartService) {
+    const shippingAddressStepInnerUrl = 'shipping-address';
+    const shippingMethodStepInnerUrl = 'shipping-method';
+    const paymentMethodStepInnerUrl = 'payment-method';
+
+    const shippingAddressType = 'Shipping';
+    const billingAddressType = 'Billing';
+
+    var newShipment = { DeliveryAddress: { Type: shippingAddressType } };
+    var newPayment = { BillingAddress: { Type: billingAddressType } };
 
     initialize();
 
-    $scope.toggleOrderSummary = function (orderSummaryExpanded) {
-        $scope.checkout.orderSummaryExpanded = !orderSummaryExpanded;
+    $scope.goToCheckoutStep = function (innerUrl) {
+        goToCheckoutStep(innerUrl);
     }
 
-    $scope.setCountry = function (addressType, countryName) {
-        var country = _.find($scope.checkout.countries, function (c) { return c.Name == countryName; });
-        if (country) {
-            if (addressType == 'Shipping') {
-                $scope.checkout.shippingAddress.CountryCode = country.Code3;
-                $scope.checkout.shippingAddress.RegionId = null;
-                $scope.checkout.shippingAddress.RegionName = null;
-            }
-            if (addressType == 'Billing') {
-                $scope.checkout.billingAddress.CountryCode = country.Code3;
-                $scope.checkout.billingAddress.RegionId = null;
-                $scope.checkout.billingAddress.RegionName = null;
-            }
-            getRegions(country.Code3);
-        }
+    $scope.toggleOrderSummary = function (isVisible) {
+        $scope.checkout.OrderSummaryVisible = !isVisible;
     }
 
-    $scope.setCountryRegion = function (addressType, countryRegionName) {
-        var countryRegion = _.find($scope.checkout.countryRegions, function (c) { return c.Name == countryRegionName; });
-        if (countryRegion) {
-            if (addressType == 'Shipping') {
-                $scope.checkout.shippingAddress.RegionId = countryRegion.Code;
-            }
-            if (addressType == 'Billing') {
-                $scope.checkout.billingAddress.RegionId = countryRegion.Code;
-            }
-        }
+    $scope.setShippingAddressForm = function (form) {
+        $scope.formShippingAddress = form;
+    }
+
+    $scope.setShippingMethodForm = function (form) {
+        $scope.formShippingMethod = form;
+    }
+
+    $scope.setPaymentMethodForm = function (form) {
+        $scope.formPaymentMethod = form;
     }
 
     $scope.selectAddress = function (addressType) {
         selectAddress(addressType);
     }
 
-    $scope.setCustomerInformation = function () {
-        $scope.checkout.customerInformationProcessing = true;
-        cartService.addAddress($scope.checkout.shippingAddress).then(function (response) {
-            refreshCheckout();
-            $scope.innerRedirect('shipping-method');
-        });
-    }
-
     $scope.addCoupon = function (event) {
         event.preventDefault();
-        $scope.checkout.couponProcessing = true;
-        cartService.addCoupon($scope.checkout.coupon.Code).then(function (response) {
-            $scope.checkout.coupon = response.data;
-            refreshCheckout();
+        $scope.checkout.CouponProcessing = true;
+        cartService.addCoupon($scope.checkout.Coupon.Code).then(function (response) {
+            var coupon = response.data;
+            $scope.checkout.CouponProcessing = false;
+            $scope.checkout.Coupon = coupon;
+            getCart(true);
+        }, function (response) {
+            $scope.checkout.CouponProcessing = false;
         });
     }
 
     $scope.removeCoupon = function () {
-        $scope.checkout.couponProcessing = true;
+        $scope.checkout.CouponProcessing = true;
         cartService.removeCoupon().then(function (response) {
-            $scope.checkout.coupon = null;
-            refreshCheckout();
+            $scope.checkout.CouponProcessing = false;
+            $scope.checkout.Coupon = null;
+            getCart(true);
+        }, function (response) {
+            $scope.checkout.CouponProcessing = false;
         });
     }
 
-    $scope.validateBankCardNumber = function () {
-        if ($scope.checkout.bankCardInfo.BankCardNumber) {
-            validateBankCardNumber($scope.checkout.bankCardInfo.BankCardNumber);
+    $scope.setCountry = function (addressType, countryName) {
+        var country = _.find($scope.checkout.Countries, function (c) { return c.Name == countryName });
+        if (country) {
+            var countryCode = country.Code3 || country.Code2;
+            if (addressType == shippingAddressType) {
+                $scope.checkout.Shipment.DeliveryAddress.RegionId = null;
+                $scope.checkout.Shipment.DeliveryAddress.RegionName = null;
+                $scope.checkout.Shipment.DeliveryAddress.CountryCode = countryCode;
+            }
+            if (addressType == billingAddressType) {
+                $scope.checkout.Payment.BillingAddress.RegionId = null;
+                $scope.checkout.Payment.BillingAddress.RegionName = null;
+                $scope.checkout.Payment.BillingAddress.CountryCode = countryCode;
+            }
+            if (countryCode) {
+                getCountryRegions(country.Code3);
+            }
         }
     }
 
+    $scope.setCountryRegion = function (addressType, countryRegionName) {
+        var countryRegion = _.find($scope.checkout.CountryRegions, function (r) { return r.Name == countryRegionName });
+        if (countryRegion) {
+            if (addressType == shippingAddressType) {
+                $scope.checkout.Shipment.DeliveryAddress.RegionId = countryRegion.Code;
+            }
+            if (addressType == billingAddressType) {
+                $scope.checkout.Payment.BillingAddress.RegionId = countryRegion.Code;
+            }
+        }
+    }
+
+    $scope.setShippingMethod = function (shipmentId, shippingMethodCode)
+    {
+        setShippingMethod(shipmentId, shippingMethodCode);
+    }
+
+    $scope.setBillingAddressEqualShipping = function () {
+        if ($scope.checkout.BillingAddressEqualsShipping) {
+            setBillingAddressEqualShipping();
+        }
+    }
+
+    $scope.validateBankCardNumber = function () {
+        validateBankCardNumber();
+    }
+
     $scope.capitalizeCardholderName = function () {
-        $scope.checkout.bankCardInfo.CardholderName = $scope.checkout.bankCardInfo.CardholderName.toUpperCase();
+        $scope.checkout.BankCardInfo.CardholderName = $scope.checkout.BankCardInfo.CardholderName.toUpperCase();
     }
 
-    $scope.setBillingAddressEqualsShipping = function () {
-        setBillingAddressEqualsShipping();
+    $scope.validateBankCardExpirationDate = function () {
+        var expirationDate = $scope.checkout.BankCardInfo.ExpirationDate;
+        if (!expirationDate) {
+            return;
+        }
+        var currentDate = new Date();
+        var currentYear = currentDate.getYear() - 100;
+        var currentMonth = currentDate.getMonth() + 1;
+        var expirationMonth = parseInt(expirationDate.substr(0, 2));
+        var expirationYear = parseInt(expirationDate.substr(expirationDate.indexOf('/') + 2, 2));
+        if (!expirationMonth.isNaN && !expirationYear.isNaN &&
+            (currentYear > expirationYear || currentYear <= expirationYear && currentMonth > expirationMonth)) {
+            $scope.formPaymentMethod.BankCardExpirationDate.$invalid = true;
+            $scope.checkout.BankCardInfo.IsExpired = true;
+        }
     }
 
-    $scope.completeOrder = function () {
-        $scope.checkout.orderProcessing = true;
-        cartService.setPaymentMethod($scope.checkout.selectedPaymentMethod.GatewayCode).then(function (response) {
-            cartService.addAddress($scope.checkout.billingAddress).then(function (response) {
-                cartService.createOrder($scope.checkout.bankCardInfo).then(function (response) {
-                    handlePaymentProcessingResult(response.data.orderProcessingResult, response.data.order.number);
-                    $scope.checkout.orderProcessing = false;
-                });
-            });
+    $scope.submitShippingAddress = function () {
+        $scope.checkout.Shipment.DeliveryAddress.Email = angular.copy($scope.checkout.Email);
+        $scope.formShippingAddress.$setSubmitted();
+        if ($scope.formShippingAddress.$invalid) {
+            return;
+        }
+        var shipmentId = $scope.checkout.Shipment.Id;
+        var shipmentAddress = $scope.checkout.Shipment.DeliveryAddress;
+        var itemIds = _.map($scope.checkout.Items, function (i) { return i.Id });
+        $scope.checkout.ShippingAddressProcessing = true;
+        cartService.addOrUpdateShipment(shipmentId, shipmentAddress, itemIds, null).then(function (response) {
+            $scope.checkout.ShippingAddressProcessing = false;
+            $scope.innerRedirect(shippingMethodStepInnerUrl);
+            getCart();
+        }, function (response) {
+            $scope.checkout.ShippingAddressProcessing = false;
+        });
+    }
+
+    $scope.submitShippingMethod = function () {
+        $scope.formShippingMethod.$setSubmitted();
+        if ($scope.formShippingMethod.$invalid) {
+            return;
+        }
+        $scope.checkout.ShippingAddressProcessing = true;
+        $scope.innerRedirect(paymentMethodStepInnerUrl);
+        $scope.checkout.ShippingAddressProcessing = false;
+    }
+
+    $scope.submitOrder = function () {
+        $scope.checkout.Payment.BillingAddress.Email = angular.copy($scope.checkout.Email);
+        $scope.formPaymentMethod.$setSubmitted();
+        if ($scope.formPaymentMethod.$invalid) {
+            return;
+        }
+        var payment = $scope.checkout.Payment;
+        $scope.checkout.OrderProcessing = true;
+        cartService.addOrUpdatePayment(payment.Id, payment.BillingAddress, payment.PaymentGatewayCode, payment.OuterId).then(function (response) {
+            createOrder();
+        }, function (response) {
+            $scope.checkout.OrderProcessing = false;
         });
     }
 
     function initialize() {
-        $scope.checkout.orderSummaryExpanded = false;
-        $scope.checkout.billingAddressEqualsShipping = true;
-        $scope.checkout.shippingAddress = { Type: 'Shipping' };
-        $scope.checkout.billingAddress = { Type: 'Billing' };
-        $scope.checkout.bankCardInfo = {};
-        $scope.checkout.selectedAddressId = 1;
-        getCurrentCustomer();
+        $scope.checkout = {
+            ShippingAddressIsFilled: false,
+            ShippingMethodIsFilled: false,
+            SelectedCustomerAddressId: 1,
+            Steps: [],
+            Countries: [],
+            CountryRegions: [],
+            CouponProcessing: false,
+            ShippingAddressProcessing: false,
+            ShippingMethodProcessing: false,
+            OrderProcessing: false,
+            BillingAddressEqualsShipping: true,
+            BankCardInfo: {
+                Type: 'Unknown',
+                CardNumberPattern: /^\d{12,19}$/,
+                CvvPattern: /^\d{3,3}$/
+            }
+        };
+        getCart();
         getCountries();
-        getAvailableShippingMethods();
         getAvailablePaymentMethods();
-        refreshCheckout();
     }
 
     function getCurrentCustomer() {
         customerService.getCurrentCustomer().then(function (response) {
-            $scope.customer = response.data;
-            for (var i = 0; i < $scope.customer.Addresses.length; i++) {
-                $scope.customer.Addresses[i].Id = i + 1;
-                $scope.customer.Addresses[i].StringifiedAddress = stringifyAddress($scope.customer.Addresses[i]);
-            }
+            var customer = response.data;
+            $scope.customer = customer;
+            getCustomerAddresses();
         });
+    }
+
+    function getCustomerAddresses() {
+        if (!$scope.customer.Addresses) {
+            return;
+        }
+        for (var i = 0; i < $scope.customer.Addresses.length; i++) {
+            $scope.customer.Addresses[i].Id = i + 1;
+            $scope.customer.Addresses[i].StringifiedAddress = stringifyAddress($scope.customer.Addresses[i]);
+        }
+        if ($scope.currentPath == shippingAddressStepInnerUrl) {
+            selectAddress(shippingAddressType);
+        }
+        if ($scope.currentPath == paymentMethodStepInnerUrl) {
+            selectAddress(billingAddressType);
+        }
+    }
+
+    function selectAddress(addressType) {
+        var address = _.find($scope.customer.Addresses, function (a) { return a.Id == $scope.checkout.SelectedCustomerAddressId });
+        if (!address) {
+            return;
+        }
+        if (addressType == shippingAddressType) {
+            address.Type = shippingAddressType;
+            $scope.checkout.Shipment.DeliveryAddress = address;
+        }
+        if (addressType == billingAddressType) {
+            address.Type = billingAddressType;
+            $scope.checkout.Payment.BillingAddress = address;
+        }
+        getCountryRegions(address.CountryCode);
     }
 
     function stringifyAddress(address) {
@@ -129,52 +249,139 @@ storefrontApp.controller('checkoutController', ['$scope', '$location', '$window'
         return stringifiedAddress;
     }
 
-    function refreshCheckout() {
-        $scope.checkout.couponProcessing = false;
-        $scope.checkout.customerInformationProcessing = false;
-        $scope.checkout.shippingMethodProcessing = false;
+    function getCart(updateOnlyTotals) {
         cartService.getCart().then(function (response) {
             var cart = response.data;
-            $scope.checkout.id = cart.Id;
-            $scope.checkout.lineItems = cart.Items;
-            $scope.checkout.coupon = $scope.checkout.coupon || cart.Coupon;
-            $scope.checkout.subtotal = cart.SubTotal;
-            $scope.checkout.shippingTotal = cart.ShippingTotal;
-            $scope.checkout.taxTotal = cart.TaxTotal;
-            $scope.checkout.discountTotal = cart.DiscountTotal;
-            $scope.checkout.total = cart.Total;
-            $scope.checkout.hasPhysicalProducts = cart.HasPhysicalProducts;
-            if ($scope.checkout.hasPhysicalProducts) {
-                getShippingAddress(cart.DefaultShippingAddress);
+            if (updateOnlyTotals) {
+                updateTotals(cart);
+                return;
             }
-            if (!$scope.checkout.hasPhysicalProducts) {
-                $scope.innerRedirect('payment-method');
+            updateTotals(cart);
+            var shipment = cart.Shipments.length ? cart.Shipments[0] : newShipment;
+            if (!shipment.DeliveryAddress.FirstName) {
+                shipment.DeliveryAddress.FirstName = $scope.customer.FirstName;
             }
-            getBillingAddress(cart.DefaultBillingAddress);
-            $scope.checkout.hasCustomerInformation = checkAddress($scope.checkout.shippingAddress, $scope.checkout.countryRegions && $scope.checkout.countryRegions.length);
-            $scope.checkout.hasShippingMethod = cart.Shipments.length > 0;
+            if (!shipment.DeliveryAddress.LastName) {
+                shipment.DeliveryAddress.LastName = $scope.customer.LastName;
+            }
+            var payment = cart.Payments.length ? cart.Payments[0] : newPayment;
+            if (!payment.BillingAddress.FirstName) {
+                payment.BillingAddress.FirstName = $scope.customer.FirstName;
+            }
+            if (!payment.BillingAddress.LastName) {
+                payment.BillingAddress.LastName = $scope.customer.LastName;
+            }
+            $scope.checkout.Email = shipment.DeliveryAddress.Email || $scope.customer.Email;
+            $scope.checkout.Items = cart.Items;
+            $scope.checkout.HasPhysicalProducts = cart.HasPhysicalProducts;
+            $scope.checkout.Shipment = shipment;
+            $scope.checkout.Payment = payment;
+            if (shipment.DeliveryAddress.CountryCode) {
+                getCountryRegions(shipment.DeliveryAddress.CountryCode);
+            }
+            if (payment.BillingAddress.CountryCode) {
+                getCountryRegions(payment.BillingAddress.CountryCode);
+            }
+            getAvailableShippingMethods(shipment.Id);
+            if (!payment.Id) {
+                setBillingAddressEqualShipping();
+            }
+            $scope.checkout.BillingAddressEqualsShipping = addressesEqual(shipment.DeliveryAddress, payment.BillingAddress);
+            if (cart.HasPhysicalProducts) {
+                $scope.checkout.ShippingAddressIsFilled = addressIsValid($scope.checkout.Shipment.DeliveryAddress);
+                $scope.checkout.ShippingMethodIsFilled = !_.isEmpty($scope.checkout.Shipment.ShipmentMethodCode);
+            }
+            getCheckoutSteps(cart);
+            handleCheckoutRedirects(cart);
+            getCurrentCustomer();
         });
+    }
+
+    function getCheckoutSteps(cart) {
+        var steps = [];
+        if (cart.HasPhysicalProducts) {
+            steps.push({
+                Code: 'shippingAddress',
+                Weight: 1,
+                InnerUrl: shippingAddressStepInnerUrl,
+                Current: $scope.currentPath == shippingAddressStepInnerUrl,
+                Enabled: true,
+                Completed: $scope.checkout.ShippingAddressIsFilled
+            });
+            steps.push({
+                Code: 'shippingMethod',
+                Weight: 2,
+                InnerUrl: shippingMethodStepInnerUrl,
+                Current: $scope.currentPath == shippingMethodStepInnerUrl,
+                Enabled: $scope.checkout.ShippingAddressIsFilled,
+                Completed: $scope.checkout.ShippingAddressIsFilled && $scope.checkout.ShippingMethodIsFilled
+            });
+        }
+        steps.push({
+            Code: 'paymentMethod',
+            Weight: 3,
+            InnerUrl: paymentMethodStepInnerUrl,
+            Current: $scope.currentPath == paymentMethodStepInnerUrl,
+            Enabled: !cart.HasPhysicalProducts || $scope.checkout.ShippingAddressIsFilled && $scope.checkout.ShippingMethodIsFilled,
+            Completed: false
+        });
+        $scope.checkout.Steps = _.sortBy(steps, 'Weight');
+    }
+
+    function handleCheckoutRedirects(cart) {
+        if (cart.HasValidationErrors) {
+            $scope.outerRedirect($scope.baseUrl + 'cart');
+        }
+        if (cart.HasPhysicalProducts) {
+            if (!$scope.checkout.ShippingAddressIsFilled) {
+                goToCheckoutStep(shippingAddressStepInnerUrl);
+            }
+            if ($scope.checkout.ShippingAddressIsFilled && !$scope.checkout.ShippingMethodIsFilled) {
+                goToCheckoutStep(shippingMethodStepInnerUrl);
+            }
+        }
+    }
+
+    function goToCheckoutStep(innerUrl) {
+        var step = _.find($scope.checkout.Steps, function (s) { return s.InnerUrl == innerUrl });
+        if (step) {
+            _.each($scope.checkout.Steps, function (s) { s.Current = false; });
+            $scope.innerRedirect(innerUrl);
+            step.Current = true;
+        }
+    }
+
+    function updateTotals(cart) {
+        $scope.checkout.Coupon = $scope.checkout.Coupon || cart.Coupon;
+        $scope.checkout.Subtotal = cart.SubTotal;
+        $scope.checkout.DiscountTotal = cart.DiscountTotal;
+        $scope.checkout.ShippingTotal = cart.ShippingTotal;
+        $scope.checkout.TaxTotal = cart.TaxTotal;
+        $scope.checkout.Total = cart.Total;
     }
 
     function getCountries() {
         cartService.getCountries().then(function (response) {
-            $scope.checkout.countries = response.data;
+            var countries = response.data;
+            $scope.checkout.Countries = countries;
         });
     }
 
-    function getRegions(countryCode3) {
-        cartService.getCountryRegions(countryCode3).then(function (response) {
-            $scope.checkout.countryRegions = response.data;
+    function getCountryRegions(countryCode) {
+        $scope.checkout.SelectedCountry = _.find($scope.checkout.Countries, function (c) { return c.Code3 == countryCode });
+        cartService.getCountryRegions(countryCode).then(function (response) {
+            var countryRegions = response.data;
+            $scope.checkout.CountryRegions = countryRegions || [];
         });
     }
 
-    function getAvailableShippingMethods() {
+    function getAvailableShippingMethods(shipmentId) {
         cartService.getAvailableShippingMethods().then(function (response) {
             var availableShippingMethods = response.data;
-            $scope.checkout.availableShippingMethods = availableShippingMethods;
-            if (availableShippingMethods.length == 1) {
-                $scope.checkout.selectedShippingMethod = availableShippingMethods[0];
-                setShippingMethod();
+            $scope.checkout.AvailableShippingMethods = availableShippingMethods;
+            if ($scope.checkout.Shipment && !$scope.checkout.Shipment.ShipmentMethodCode &&
+                addressIsValid($scope.checkout.Shipment.DeliveryAddress) && availableShippingMethods.length == 1) {
+                setShippingMethod(shipmentId, availableShippingMethods[0].ShipmentMethodCode);
             }
         });
     }
@@ -182,110 +389,57 @@ storefrontApp.controller('checkoutController', ['$scope', '$location', '$window'
     function getAvailablePaymentMethods() {
         cartService.getAvailablePaymentMethods().then(function (response) {
             var availablePaymentMethods = response.data;
-            $scope.checkout.availablePaymentMethods = availablePaymentMethods;
+            $scope.checkout.AvailablePaymentMethods = availablePaymentMethods;
             if (availablePaymentMethods.length == 1) {
-                $scope.checkout.selectedPaymentMethod = availablePaymentMethods[0];
+                $scope.checkout.Payment.PaymentGatewayCode = availablePaymentMethods[0].GatewayCode;
             }
         });
     }
 
-    function setShippingMethod() {
-        $scope.checkout.shippingMethodProcessing = true;
-        cartService.setShippingMethod($scope.checkout.selectedShippingMethod.ShipmentMethodCode).then(function (response) {
-            refreshCheckout();
+    function setShippingMethod(shipmentId, shippingMethodCode) {
+        $scope.checkout.ShippingMethodProcessing = true;
+        cartService.addOrUpdateShipment(shipmentId, null, null, shippingMethodCode).then(function (response) {
+            $scope.checkout.ShippingMethodProcessing = false;
+            getCart();
+        }, function (response) {
+            $scope.checkout.ShippingMethodProcessing = false;
         });
     }
 
-    function getShippingAddress(cartAddress) {
-        $scope.checkout.shippingAddress.Email = $scope.checkout.shippingAddress.Email || $scope.customer.Email || cartAddress.Email;
-        $scope.checkout.shippingAddress.FirstName = $scope.checkout.shippingAddress.FirstName || cartAddress.FirstName;
-        $scope.checkout.shippingAddress.LastName = $scope.checkout.shippingAddress.LastName || cartAddress.LastName;
-        $scope.checkout.shippingAddress.Organization = $scope.checkout.shippingAddress.Organization || cartAddress.Organization;
-        $scope.checkout.shippingAddress.Line1 = $scope.checkout.shippingAddress.Line1 || cartAddress.Line1;
-        $scope.checkout.shippingAddress.Line2 = $scope.checkout.shippingAddress.Line2 || cartAddress.Line2;
-        $scope.checkout.shippingAddress.City = $scope.checkout.shippingAddress.City || cartAddress.City;
-        $scope.checkout.shippingAddress.CountryCode = $scope.checkout.shippingAddress.CountryCode || cartAddress.CountryCode;
-        $scope.checkout.shippingAddress.CountryName = $scope.checkout.shippingAddress.CountryName || cartAddress.CountryName;
-        $scope.checkout.shippingAddress.RegionId = $scope.checkout.shippingAddress.RegionId || cartAddress.RegionId;
-        $scope.checkout.shippingAddress.RegionName = $scope.checkout.shippingAddress.RegionName || cartAddress.RegionName;
-        $scope.checkout.shippingAddress.PostalCode = $scope.checkout.shippingAddress.PostalCode || cartAddress.PostalCode;
-        $scope.checkout.shippingAddress.Phone = $scope.checkout.shippingAddress.Phone || cartAddress.Phone;
-        if ($scope.checkout.shippingAddress.CountryCode) {
-            getRegions($scope.checkout.shippingAddress.CountryCode);
-        }
-        selectAddress('Shipping');
+    function setBillingAddressEqualShipping() {
+        $scope.checkout.Payment.BillingAddress = angular.copy($scope.checkout.Shipment.DeliveryAddress);
+        $scope.checkout.Payment.BillingAddress.Type = billingAddressType;
     }
 
-    function getBillingAddress(cartAddress) {
-        $scope.checkout.billingAddress.Email = $scope.checkout.billingAddress.Email || $scope.customer.Email || cartAddress.Email;
-        $scope.checkout.billingAddress.FirstName = $scope.checkout.billingAddress.FirstName || cartAddress.FirstName;
-        $scope.checkout.billingAddress.LastName = $scope.checkout.billingAddress.LastName || cartAddress.LastName;
-        $scope.checkout.billingAddress.Organization = $scope.checkout.billingAddress.Organization || cartAddress.Organization;
-        $scope.checkout.billingAddress.Line1 = $scope.checkout.billingAddress.Line1 || cartAddress.Line1;
-        $scope.checkout.billingAddress.Line2 = $scope.checkout.billingAddress.Line2 || cartAddress.Line2;
-        $scope.checkout.billingAddress.City = $scope.checkout.billingAddress.City || cartAddress.City;
-        $scope.checkout.billingAddress.CountryCode = $scope.checkout.billingAddress.CountryCode || cartAddress.CountryCode;
-        $scope.checkout.billingAddress.CountryName = $scope.checkout.billingAddress.CountryName || cartAddress.CountryName;
-        $scope.checkout.billingAddress.RegionId = $scope.checkout.billingAddress.RegionId || cartAddress.RegionId;
-        $scope.checkout.billingAddress.RegionName = $scope.checkout.billingAddress.RegionName || cartAddress.RegionName;
-        $scope.checkout.billingAddress.PostalCode = $scope.checkout.billingAddress.PostalCode || cartAddress.PostalCode;
-        $scope.checkout.billingAddress.Phone = $scope.checkout.billingAddress.Phone || cartAddress.Phone;
-        if ($scope.checkout.billingAddress.CountryCode) {
-            getRegions($scope.checkout.billingAddress.CountryCode);
-        }
-        setBillingAddressEqualsShipping();
-        selectAddress('Billing');
+    function createOrder() {
+        cartService.createOrder($scope.checkout.BankCardInfo).then(function (response) {
+            var order = response.data.order;
+            var orderProcessingResult = response.data.orderProcessingResult;
+            handlePostPaymentResult(order, orderProcessingResult);
+            $scope.checkout.OrderProcessing = false;
+        }, function (response) {
+            $scope.checkout.OrderProcessing = false;
+        });
     }
 
-    function selectAddress(addressType) {
-        var address = _.find($scope.customer.Addresses, function (a) { return a.Id == $scope.checkout.selectedAddressId });
-        if (address) {
-            if (addressType == 'Shipping') {
-                $scope.checkout.shippingAddress = address;
-                $scope.checkout.shippingAddress.Type = 'Shipping';
-            }
-            if (addressType == 'Billing') {
-                $scope.checkout.billingAddress = address;
-                $scope.checkout.billingAddress.Type = 'Billing';
-            }
-        }
+    function addressesEqual(address1, address2) {
+        var address1Type = address1.Type; address1.Type = null;
+        var address2Type = address2.Type; address2.Type = null;
+        var isEqual = angular.equals(address1, address2);
+        address1.Type = address1Type;
+        address2.Type = address2Type;
+        return isEqual;
     }
 
-    function setBillingAddressEqualsShipping() {
-        $scope.checkout.billingAddress.Name = $scope.checkout.shippingAddress.Name;
-        $scope.checkout.billingAddress.Organization = $scope.checkout.shippingAddress.Organization;
-        $scope.checkout.billingAddress.CountryCode = $scope.checkout.shippingAddress.CountryCode;
-        $scope.checkout.billingAddress.CountryName = $scope.checkout.shippingAddress.CountryName;
-        $scope.checkout.billingAddress.City = $scope.checkout.shippingAddress.City;
-        $scope.checkout.billingAddress.PostalCode = $scope.checkout.shippingAddress.PostalCode;
-        $scope.checkout.billingAddress.Zip = $scope.checkout.shippingAddress.Zip;
-        $scope.checkout.billingAddress.Line1 = $scope.checkout.shippingAddress.Line1;
-        $scope.checkout.billingAddress.Line2 = $scope.checkout.shippingAddress.Line2;
-        $scope.checkout.billingAddress.RegionId = $scope.checkout.shippingAddress.RegionId;
-        $scope.checkout.billingAddress.RegionName = $scope.checkout.shippingAddress.RegionName;
-        $scope.checkout.billingAddress.FirstName = $scope.checkout.shippingAddress.FirstName;
-        $scope.checkout.billingAddress.MiddleName = $scope.checkout.shippingAddress.MiddleName;
-        $scope.checkout.billingAddress.LastName = $scope.checkout.shippingAddress.LastName;
-        $scope.checkout.billingAddress.Phone = $scope.checkout.shippingAddress.Phone;
-        $scope.checkout.billingAddress.Email = $scope.checkout.shippingAddress.Email;
-        $scope.checkout.billingAddressEqualsShipping = true;
-    }
-
-    function checkAddress(address, provinceRequired) {
-        var isValid = false;
-        if (address.Email && address.FirstName && address.LastName && address.Line1 &&
-            address.City && address.CountryCode && address.CountryName && address.PostalCode) {
-            if (!provinceRequired || provinceRequired && address.RegionId && address.RegionName) {
-                isValid = true;
-            }
-        }
-        return isValid;
-    }
-
-    function validateBankCardNumber(bankCardNumber) {
-        var type = 'Unknown';
+    function validateBankCardNumber() {
+        var bankCardNumber = $scope.checkout.BankCardInfo.CardNumber;
+        var cardType = 'Unknown';
         var cardNumberPattern = /^\d{12,19}$/;
         var cvvPattern = /^\d{3,3}$/;
+
+        if (!bankCardNumber) {
+            return;
+        }
 
         var firstOneSymbol = bankCardNumber.substring(0, 1);
         var firstTwoSymbols = bankCardNumber.substring(0, 2);
@@ -294,102 +448,87 @@ storefrontApp.controller('checkoutController', ['$scope', '$location', '$window'
         var firstSixSymbols = bankCardNumber.substring(0, 6);
 
         if (firstTwoSymbols == '34' || firstTwoSymbols == '37') {
-            type = 'AmericanExpress';
+            cardType = 'AmericanExpress';
             cardNumberPattern = /^\d{15}$/;
             cvvPattern = /^\d{4,4}$/;
         }
         if (firstTwoSymbols == '62' || firstTwoSymbols == '88') {
-            type = 'UnionPay';
+            cardType = 'UnionPay';
             cardNumberPattern = /^\d{16,19}$/;
             cvvPattern = /^\d{3,3}$/;
         }
         if (firstThreeSymbols >= '300' && firstThreeSymbols <= '305' || firstThreeSymbols == '309' || firstTwoSymbols == '36' || firstTwoSymbols == '38' || firstTwoSymbols == '39') {
-            type = 'Diners';
+            cardType = 'Diners';
             cardNumberPattern = /^\d{14,16}$/;
             cvvPattern = /^\d{3,3}$/;
         }
         if (firstFourSymbols == '6011' || firstSixSymbols >= '622126' && firstSixSymbols <= '622925' || firstThreeSymbols >= '644' && firstThreeSymbols <= '649' || firstTwoSymbols == '65') {
-            type = 'Discover';
+            cardType = 'Discover';
             cardNumberPattern = /^\d{16}$/;
             cvvPattern = /^\d{3,3}$/;
         }
         if (firstFourSymbols >= '3528' && firstFourSymbols <= '3589') {
-            type = 'Jcb';
+            cardType = 'Jcb';
             cardNumberPattern = /^\d{16}$/;
             cvvPattern = /^\d{3,3}$/;
         }
         if (firstFourSymbols == '6304' || firstFourSymbols == '6706' || firstFourSymbols == '6771' || firstFourSymbols == '6709') {
-            type = 'Laser';
+            cardType = 'Laser';
             cardNumberPattern = /^\d{16,19}$/;
             cvvPattern = /^\d{3,3}$/;
         }
         if (firstFourSymbols == '5018' || firstFourSymbols == '5020' || firstFourSymbols == '5038' || firstFourSymbols == '5612' || firstFourSymbols == '5893' || firstFourSymbols == '6304' ||
             firstFourSymbols >= '6759' && firstFourSymbols <= '6763' || firstFourSymbols == '0604' || firstFourSymbols == '6390') {
-            type = 'Maestro';
+            cardType = 'Maestro';
             cardNumberPattern = /^\d{12,19}$/;
             cvvPattern = /^\d{3,3}$/;
         }
         if (firstFourSymbols == '5019') {
-            type = 'Dankort';
+            cardType = 'Dankort';
             cardNumberPattern = /^\d{16}$/;
             cvvPattern = /^\d{3,3}$/;
         }
         if (firstTwoSymbols >= '51' && firstTwoSymbols <= '55') {
-            type = 'MasterCard';
+            cardType = 'MasterCard';
             cardNumberPattern = /^\d{16}$/;
             cvvPattern = /^\d{3,3}$/;
         }
         if (firstOneSymbol == '4') {
-            type = 'Visa';
+            cardType = 'Visa';
             cardNumberPattern = /^\d{13,16}$/;
             cvvPattern = /^\d{3,3}$/;
         }
 
-        $scope.checkout.bankCardInfo.Type = type;
-        $scope.checkout.bankCardInfo.CardNumberPattern = cardNumberPattern;
-        $scope.checkout.bankCardInfo.CvvPattern = cvvPattern;
+        $scope.checkout.BankCardInfo.Type = cardType;
+        $scope.checkout.BankCardInfo.CardNumberPattern = cardNumberPattern;
+        $scope.checkout.BankCardInfo.CvvPattern = cvvPattern;
     }
 
-    //function validateBankCardExpirationDate(bankCardExpidationDate) {
-    //    $scope.checkout.bankCardInfo.BankCardMonth = null;
-    //    $scope.checkout.bankCardInfo.BankCardYear = null;
-    //    var separator = ' / ';
-    //    $scope.checkout.bankCardInfo.ExpirationDate = bankCardExpidationDate;
-    //    if (date.length == 2) {
-    //        $scope.checkout.bankCardInfo.ExpirationDate += separator;
-    //    }
-    //    var dateParts = date.split(separator);
-    //    if (dateParts.length == 2) {
-    //        var currentYear = (new Date()).getFullYear();
-    //        var currentMonth = (new Date()).getMonth() + 1;
-    //        var expirationMonth = parseInt(dateParts[0]);
-    //        var expirationYear = parseInt(dateParts[1]) + 2000;
-    //        if (expirationMonth >= 1 && expirationMonth <= 12) {
-    //            if (expirationYear > currentYear || expirationYear == currentYear && expirationMonth >= currentMonth) {
-    //                alert(expirationMonth + ' ' + expirationYear);
-    //                $scope.checkout.bankCardInfo.BankCardMonth = expirationMonth;
-    //                $scope.checkout.bankCardInfo.BankCardYear = expirationYear;
-    //            }
-    //        }
-    //    }
-    //}
-
-    function handlePaymentProcessingResult(paymentProcessingResult, orderNumber) {
-        if (!paymentProcessingResult.isSuccess) {
+    function handlePostPaymentResult(order, orderProcessingResult) {
+        if (!orderProcessingResult.isSuccess) {
             return;
         }
-        if (paymentProcessingResult.paymentMethodType == 'PreparedForm' && paymentProcessingResult.htmlForm) {
-            $scope.outerRedirect($scope.baseUrl + 'cart/checkout/paymentform?orderNumber=' + orderNumber);
+        if (orderProcessingResult.paymentMethodType == 'PreparedForm' && orderProcessingResult.htmlForm) {
+            $scope.outerRedirect($scope.baseUrl + 'cart/checkout/paymentform?orderNumber=' + order.number);
         }
-        if (paymentProcessingResult.paymentMethodType == 'Standard' || paymentProcessingResult.paymentMethodType == 'Unknown') {
-            if ($scope.customer.UserName == 'Anonymous') {
-                $scope.outerRedirect($scope.baseUrl + 'cart/thanks/' + orderNumber);
+        if (orderProcessingResult.paymentMethodType == 'Standard' || orderProcessingResult.paymentMethodType == 'Unknown') {
+            if (!$scope.customer.HasAccount) {
+                $scope.outerRedirect($scope.baseUrl + 'cart/thanks/' + order.number);
             } else {
-                $scope.outerRedirect($scope.baseUrl + 'account/order/' + orderNumber);
+                $scope.outerRedirect($scope.baseUrl + 'account/order/' + order.number);
             }
         }
-        if (paymentProcessingResult.paymentMethodType == 'Redirection' && paymentProcessingResult.redirectUrl) {
-            $window.location.href = paymentProcessingResult.redirectUrl;
+        if (orderProcessingResult.paymentMethodType == 'Redirection' && orderProcessingResult.redirectUrl) {
+            $window.location.href = orderProcessingResult.redirectUrl;
         }
+    }
+
+    function addressIsValid(address) {
+        var isValid = false;
+        if (address && address.Email && address.FirstName && address.LastName && address.Line1 &&
+            address.City && address.CountryName && address.PostalCode) {
+            isValid = true;
+        }
+        return isValid;
     }
 }]);

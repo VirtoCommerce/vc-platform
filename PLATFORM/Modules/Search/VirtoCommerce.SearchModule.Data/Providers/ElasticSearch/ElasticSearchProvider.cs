@@ -16,12 +16,14 @@ namespace VirtoCommerce.SearchModule.Data.Providers.ElasticSearch
 {
     public class ElasticSearchProvider : ISearchProvider
     {
+        public const string SearchAnalyzer = "search_analyzer";
+        private const string _indexAnalyzer = "index_analyzer";
+
         private readonly ISearchConnection _connection;
         private readonly Dictionary<string, List<ESDocument>> _pendingDocuments = new Dictionary<string, List<ESDocument>>();
         private readonly Dictionary<string, string> _mappings = new Dictionary<string, string>();
 
         private bool _settingsUpdated;
-        private const string SearchAnalyzer = "trigrams";
 
         #region Private Properties
         ElasticClient<ESDocument> _client;
@@ -54,7 +56,7 @@ namespace VirtoCommerce.SearchModule.Data.Providers.ElasticSearch
                     if (arr.Length > 1)
                         port = arr[1];
 
-                    _client = new ElasticClient<ESDocument>(host, Int32.Parse(port));
+                    _client = new ElasticClient<ESDocument>(host, int.Parse(port));
                 }
 
                 return _client;
@@ -97,7 +99,7 @@ namespace VirtoCommerce.SearchModule.Data.Providers.ElasticSearch
             set { _autoCommitCount = value; }
         }
 
-        private string _elasticServerUrl = String.Empty;
+        private string _elasticServerUrl = string.Empty;
 
         /// <summary>
         /// Gets or sets the solr server URL without Core secified.
@@ -128,7 +130,7 @@ namespace VirtoCommerce.SearchModule.Data.Providers.ElasticSearch
         {
             if (!_isInitialized)
             {
-                if (_connection != null && !String.IsNullOrEmpty(_connection.DataSource))
+                if (_connection != null && !string.IsNullOrEmpty(_connection.DataSource))
                 {
                     _elasticServerUrl = _connection.DataSource;
                 }
@@ -200,14 +202,15 @@ namespace VirtoCommerce.SearchModule.Data.Providers.ElasticSearch
                         var attributeFilter = filter as AttributeFilter;
                         var myFilter = attributeFilter;
                         var values = myFilter.Values;
-                        if (values != null)
-                        {
-                            var key = filter.Key.ToLower();
-                            if (!resultDocs.facets.ContainsKey(key))
-                                continue;
 
-                            var facet = resultDocs.facets[key] as TermsFacetResult;
-                            if (facet != null)
+                        var key = filter.Key.ToLower();
+                        if (!resultDocs.facets.ContainsKey(key))
+                            continue;
+
+                        var facet = resultDocs.facets[key] as TermsFacetResult;
+                        if (facet != null)
+                        {
+                            if (values != null)
                             {
                                 foreach (var value in values)
                                 {
@@ -222,9 +225,17 @@ namespace VirtoCommerce.SearchModule.Data.Providers.ElasticSearch
                                     var newFacet = new Facet(@group, value.Id, GetDescription(value, criteria.Locale), enumerable.SingleOrDefault());
                                     @group.Facets.Add(newFacet);
                                 }
-
-                                groupCount++;
                             }
+                            else
+                            {
+                                foreach (var term in facet.terms)
+                                {
+                                    var newFacet = new Facet(@group, term.term, term.term, term.count);
+                                    @group.Facets.Add(newFacet);
+                                }
+                            }
+
+                            groupCount++;
                         }
                     }
                     else if (filter is PriceRangeFilter)
@@ -242,7 +253,7 @@ namespace VirtoCommerce.SearchModule.Data.Providers.ElasticSearch
 
                                 foreach (var value in values)
                                 {
-                                    var key = String.Format("{0}-{1}", myFilter.Key, value.Id).ToLower();
+                                    var key = string.Format("{0}-{1}", myFilter.Key, value.Id).ToLower();
 
                                     if (!resultDocs.facets.ContainsKey(key))
                                         continue;
@@ -302,7 +313,7 @@ namespace VirtoCommerce.SearchModule.Data.Providers.ElasticSearch
                             {
                                 foreach (var value in values)
                                 {
-                                    var key = String.Format("{0}-{1}", myFilter.Key.ToLower(), value.Id.ToLower()).ToLower();
+                                    var key = string.Format("{0}-{1}", myFilter.Key.ToLower(), value.Id.ToLower()).ToLower();
                                     var facet = resultDocs.facets[key] as FilterFacetResult;
 
                                     if (facet == null || facet.count <= 0)
@@ -367,30 +378,40 @@ namespace VirtoCommerce.SearchModule.Data.Providers.ElasticSearch
 
                 if (localDocument.ContainsKey(key))
                 {
-                    var objTemp = localDocument[key];
-                    object[] objListTemp;
-                    var temp = objTemp as object[];
-                    if (temp != null)
+                    var newValues = new List<object>();
+
+                    var currentValue = localDocument[key];
+                    var currentValues = currentValue as object[];
+
+                    if (currentValues != null)
                     {
-                        var objList = new List<object>(temp) { field.Value };
-                        objListTemp = objList.ToArray();
+                        newValues.AddRange(currentValues);
                     }
                     else
                     {
-                        objListTemp = new[] { objTemp, field.Value };
+                        newValues.Add(currentValue);
                     }
 
-                    localDocument[key] = objListTemp;
+                    newValues.AddRange(field.Values);
+                    localDocument[key] = newValues.ToArray();
                 }
                 else
                 {
-                    if (String.IsNullOrEmpty(mapping) || !mapping.Contains(String.Format("\"{0}\"", field.Name)))
+                    if (string.IsNullOrEmpty(mapping) || !mapping.Contains(string.Format("\"{0}\"", field.Name)))
                     {
-                        var type = field.Value != null ? field.Value.GetType() : null;
-                        var propertyMap = new CustomPropertyMap<ESDocument>(field.Name, type)
+                        var type = field.Value != null ? field.Value.GetType() : typeof(object);
+
+                        if (type == typeof(decimal))
+                        {
+                            type = typeof(double);
+                        }
+
+                        var elasticType = ElasticCoreTypeMapper.GetElasticType(type);
+
+                        var propertyMap = new CustomPropertyMap<ESDocument>(field.Name, elasticType)
                         .Store(field.ContainsAttribute(IndexStore.Yes))
                         .When(field.ContainsAttribute(IndexType.NotAnalyzed), p => p.Index(IndexState.not_analyzed))
-                        .When(field.Name.StartsWith("__content", StringComparison.OrdinalIgnoreCase), p => p.Analyzer(SearchAnalyzer))
+                        .When(field.Name.StartsWith("__content", StringComparison.OrdinalIgnoreCase), p => p.Analyzer(_indexAnalyzer))
                         .When(Regex.Match(field.Name, "__content_en.*").Success, x => x.Analyzer("english"))
                         .When(Regex.Match(field.Name, "__content_de.*").Success, x => x.Analyzer("german"))
                         .When(Regex.Match(field.Name, "__content_ru.*").Success, x => x.Analyzer("russian"))
@@ -401,7 +422,14 @@ namespace VirtoCommerce.SearchModule.Data.Providers.ElasticSearch
                         submitMapping = true;
                     }
 
-                    localDocument.Add(key, field.Value);
+                    if (field.Values.Length > 1)
+                    {
+                        localDocument.Add(key, field.Values);
+                    }
+                    else
+                    {
+                        localDocument.Add(key, field.Value);
+                    }
                 }
             }
 
@@ -412,12 +440,17 @@ namespace VirtoCommerce.SearchModule.Data.Providers.ElasticSearch
                 //http://www.elasticsearch.org/guide/en/elasticsearch/guide/current/ngrams-compound-words.html
                 var settings = new IndexSettingsBuilder()
                     .Analysis(als => als
-                        .Analyzer(a => a.Custom(SearchAnalyzer, custom => custom
-                            .Tokenizer(DefaultTokenizers.standard)
-                            .Filter("trigrams_filter", DefaultTokenFilters.lowercase.ToString())))
                         .Filter(f => f.NGram("trigrams_filter", ng => ng
                                 .MinGram(3)
-                                .MaxGram(3)))).Build();
+                                .MaxGram(20)))
+                        .Analyzer(a => a
+                            .Custom(_indexAnalyzer, custom => custom
+                                .Tokenizer(DefaultTokenizers.standard)
+                                .Filter(DefaultTokenFilters.lowercase.ToString(), "trigrams_filter"))
+                            .Custom(SearchAnalyzer, custom => custom
+                                .Tokenizer(DefaultTokenizers.standard)
+                                .Filter(DefaultTokenFilters.lowercase.ToString()))))
+                    .Build();
 
                 if (!Client.IndexExists(new IndexExistsCommand(scope)))
                 {
@@ -495,6 +528,9 @@ namespace VirtoCommerce.SearchModule.Data.Providers.ElasticSearch
 
                 if (result.error != null && !result.acknowledged)
                     throw new IndexBuildException(result.error);
+
+                var core = GetCoreName(scope, documentType);
+                _mappings.Remove(core);
             }
             catch (OperationException ex)
             {
@@ -549,7 +585,7 @@ namespace VirtoCommerce.SearchModule.Data.Providers.ElasticSearch
 
         private string GetCoreName(string scope, string documentType)
         {
-            return String.Format("{0}.{1}", scope.ToLower(), documentType);
+            return string.Format("{0}.{1}", scope.ToLower(), documentType);
         }
 
         private string GetDescription(ISearchFilterValue value, string locale)
@@ -591,12 +627,12 @@ namespace VirtoCommerce.SearchModule.Data.Providers.ElasticSearch
                 return v.Name;
             }
 
-            return String.Empty;
+            return string.Empty;
         }
 
         private void ThrowException(string message, Exception innerException)
         {
-            throw new ElasticSearchException(String.Format("{0}. URL:{1}", message, ElasticServerUrl), innerException);
+            throw new ElasticSearchException(string.Format("{0}. URL:{1}", message, ElasticServerUrl), innerException);
         }
     }
 }

@@ -58,16 +58,16 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
-    <Reference Include="CacheManager.Core, Version=0.7.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CacheManager.Core.0.7.0\lib\net45\CacheManager.Core.dll</HintPath>
+    <Reference Include="CacheManager.Core, Version=0.7.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CacheManager.Core.0.7.1\lib\net45\CacheManager.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CacheManager.SystemRuntimeCaching, Version=0.7.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CacheManager.SystemRuntimeCaching.0.7.0\lib\net45\CacheManager.SystemRuntimeCaching.dll</HintPath>
+    <Reference Include="CacheManager.SystemRuntimeCaching, Version=0.7.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CacheManager.SystemRuntimeCaching.0.7.1\lib\net45\CacheManager.SystemRuntimeCaching.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CacheManager.Web, Version=0.7.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CacheManager.Web.0.7.0\lib\net45\CacheManager.Web.dll</HintPath>
+    <Reference Include="CacheManager.Web, Version=0.7.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CacheManager.Web.0.7.1\lib\net45\CacheManager.Web.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Common.Logging">
@@ -300,11 +300,13 @@
     <Compile Include="Model\Asset\AssetListItem.cs" />
     <Compile Include="Model\ExportImport\PushNotifications\SampleDataImportPushNotification.cs" />
     <Compile Include="Model\ExportImport\SampleDataInfo.cs" />
+    <Compile Include="Model\ExportImport\SampleDataState.cs" />
     <Compile Include="Model\Notifications\RenderNotificationContentResult.cs" />
     <Compile Include="Model\Notifications\RenderNotificationRequest.cs" />
     <Compile Include="Model\Packaging\ModuleAction.cs" />
     <Compile Include="Model\Packaging\ModuleBackgroundJobOptions.cs" />
     <Compile Include="Model\Packaging\ModulePushNotification.cs" />
+    <Compile Include="Model\PlatformSetting.cs" />
     <Compile Include="SignalR\NoOpPerformanceCounter.cs" />
     <Compile Include="SignalR\NoOpPerformanceCounterManager.cs" />
     <Compile Include="VirtoCommercePlatformWebBootstrapper.cs" />
@@ -404,6 +406,7 @@
     <Content Include="Scripts\codemirror\gfm.js" />
     <Content Include="Scripts\codemirror\markdown.js" />
     <Content Include="Scripts\codemirror\overlay.js" />
+    <Content Include="Scripts\common\validators.js" />
     <Content Include="Scripts\common\uiGridUtils.js" />
     <Content Include="Scripts\common\worldLanguages.js" />
     <Content Include="Scripts\common\dialogs\galleryDialog.js" />

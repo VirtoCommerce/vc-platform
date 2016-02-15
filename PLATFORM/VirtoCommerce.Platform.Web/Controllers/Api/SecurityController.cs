@@ -2,9 +2,9 @@
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
-using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using VirtoCommerce.Platform.Core.Security;
@@ -22,16 +22,18 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly Func<ApplicationSignInManager> _signInManagerFactory;
         private readonly IRoleManagementService _roleService;
         private readonly ISecurityService _securityService;
+        private readonly ISecurityOptions _securityOptions;
 
         /// <summary>
         /// </summary>
         public SecurityController(Func<ApplicationSignInManager> signInManagerFactory, Func<IAuthenticationManager> authManagerFactory,
-                                  IRoleManagementService roleService, ISecurityService securityService)
+                                  IRoleManagementService roleService, ISecurityService securityService, ISecurityOptions securityOptions)
         {
             _signInManagerFactory = signInManagerFactory;
             _authenticationManagerFactory = authManagerFactory;
             _roleService = roleService;
             _securityService = securityService;
+            _securityOptions = securityOptions;
         }
 
         /// <summary>
@@ -51,7 +53,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         {
             if (await _signInManagerFactory().PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, true) == SignInStatus.Success)
             {
-                return Ok(await _securityService.FindByNameAsync(model.UserName, UserDetails.Full));
+                var retVal = await _securityService.FindByNameAsync(model.UserName, UserDetails.Full);
+                //Do not allow login to admin customers and rejected users
+                if (retVal.UserState != AccountState.Rejected && !String.Equals(retVal.UserType, AccountType.Customer.ToString(), StringComparison.InvariantCultureIgnoreCase))
+                {
+                    return Ok(retVal);
+                }
             }
 
             return StatusCode(HttpStatusCode.Unauthorized);
@@ -101,11 +108,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// Search roles by keyword
         /// </summary>
         /// <param name="request">Search parameters.</param>
-        [HttpGet]
+        [HttpPost]
         [Route("roles")]
         [ResponseType(typeof(RoleSearchResponse))]
         [CheckPermission(Permission = PredefinedPermissions.SecurityQuery)]
-        public IHttpActionResult SearchRoles([FromUri]RoleSearchRequest request)
+        public IHttpActionResult SearchRoles(RoleSearchRequest request)
         {
             var result = _roleService.SearchRoles(request);
             return Ok(result);
@@ -182,11 +189,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// Search users by keyword
         /// </summary>
         /// <param name="request">Search parameters.</param>
-        [HttpGet]
+        [HttpPost]
         [Route("users")]
         [ResponseType(typeof(UserSearchResponse))]
         [CheckPermission(Permission = PredefinedPermissions.SecurityQuery)]
-        public async Task<IHttpActionResult> SearchUsersAsync([FromUri] UserSearchRequest request)
+        public async Task<IHttpActionResult> SearchUsersAsync(UserSearchRequest request)
         {
             var result = await _securityService.SearchUsersAsync(request);
             return Ok(result);
@@ -234,7 +241,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [CheckPermission(Permission = PredefinedPermissions.SecurityQuery)]
         public async Task<IHttpActionResult> ChangePassword(string userName, [FromBody] ChangePasswordInfo changePassword)
         {
-            var result = await _securityService.ChangePasswordAsync(userName, changePassword.OldPassword, changePassword.NewPassword);
+            EnsureThatUsersEditable(userName);
+
+             var result = await _securityService.ChangePasswordAsync(userName, changePassword.OldPassword, changePassword.NewPassword);
 
             if (result == null)
                 return NotFound();
@@ -253,6 +262,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [CheckPermission(Permission = PredefinedPermissions.SecurityUpdate)]
         public async Task<IHttpActionResult> ResetPassword(string userName, [FromBody] ResetPasswordInfo resetPassword)
         {
+            EnsureThatUsersEditable(userName);
+
             var result = await _securityService.ResetPasswordAsync(userName, resetPassword.NewPassword);
             return ProcessSecurityResult(result);
         }
@@ -267,6 +278,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [CheckPermission(Permission = PredefinedPermissions.SecurityUpdate)]
         public async Task<IHttpActionResult> UpdateAsync(ApplicationUserExtended user)
         {
+            EnsureThatUsersEditable(user.UserName);
+
             ClearSecurityProperties(user);
             var result = await _securityService.UpdateAsync(user);
             return ProcessSecurityResult(result);
@@ -282,10 +295,24 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [CheckPermission(Permission = PredefinedPermissions.SecurityDelete)]
         public async Task<IHttpActionResult> DeleteAsync([FromUri] string[] names)
         {
+            EnsureThatUsersEditable(names);
+
             await _securityService.DeleteAsync(names);
             return StatusCode(HttpStatusCode.NoContent);
         }
 
+      
+        private void EnsureThatUsersEditable(params string[] userNames)
+        {
+            if (_securityOptions != null && _securityOptions.NonEditableUsers != null)
+            {
+                if(userNames.Any(x => _securityOptions.NonEditableUsers.Contains(x)))
+                {
+                    throw new HttpException((int)HttpStatusCode.InternalServerError, "It is forbidden to edit this user.");
+                }
+            }
+
+        }
 
         private void ClearSecurityProperties(ApplicationUserExtended user)
         {

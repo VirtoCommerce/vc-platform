@@ -2,7 +2,6 @@
 using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
-using System.Web.Http.ModelBinding;
 using VirtoCommerce.Domain.Quote.Services;
 using VirtoCommerce.Domain.Shipping.Model;
 using VirtoCommerce.Domain.Store.Services;
@@ -33,15 +32,18 @@ namespace VirtoCommerce.QuoteModule.Web.Controllers.Api
         /// Search RFQ by given criteria
         /// </summary>
         /// <param name="criteria">criteria</param>
-        [HttpGet]
-        [ResponseType(typeof(coreModel.QuoteRequestSearchResult))]
-        [Route("")]
-        public IHttpActionResult Search([ModelBinder(typeof(SearchCriteriaBinder))] coreModel.QuoteRequestSearchCriteria criteria)
+        [HttpPost]
+        [ResponseType(typeof(webModel.QuoteRequestSearchResult))]
+        [Route("search")]
+        public IHttpActionResult Search(coreModel.QuoteRequestSearchCriteria criteria)
         {
             var retVal = _quoteRequestService.Search(criteria);
-            return Ok(retVal);
+            return Ok(new webModel.QuoteRequestSearchResult
+            {
+                QuoteRequests = retVal.QuoteRequests.Select(x => x.ToWebModel()).ToList(),
+                TotalCount = retVal.TotalCount
+            });
         }
-
 
         /// <summary>
         /// Get RFQ by id

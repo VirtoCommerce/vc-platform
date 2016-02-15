@@ -9,11 +9,6 @@ namespace VirtoCommerce.Storefront.Model.StaticContent
 {
     public class Blog : ContentItem
     {
-        public Blog(string url, Language language)
-            : base(url, language)
-        {
-        }
-
         public IStorefrontPagedList<BlogArticle> Articles { get; set; }
     }
 }

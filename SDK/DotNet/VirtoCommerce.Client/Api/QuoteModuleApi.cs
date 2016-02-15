@@ -17,78 +17,6 @@ namespace VirtoCommerce.Client.Api
     {
         
         /// <summary>
-        /// Search RFQ by given criteria
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <param name="criteriaKeyword"></param>
-        /// <param name="criteriaCustomerId"></param>
-        /// <param name="criteriaStoreId"></param>
-        /// <param name="criteriaStartDate"></param>
-        /// <param name="criteriaEndDate"></param>
-        /// <param name="criteriaStatus"></param>
-        /// <param name="criteriaTag"></param>
-        /// <param name="criteriaStart"></param>
-        /// <param name="criteriaCount"></param>
-        /// <returns>VirtoCommerceDomainQuoteModelQuoteRequestSearchResult</returns>
-        VirtoCommerceDomainQuoteModelQuoteRequestSearchResult QuoteModuleSearch (string criteriaKeyword = null, string criteriaCustomerId = null, string criteriaStoreId = null, DateTime? criteriaStartDate = null, DateTime? criteriaEndDate = null, string criteriaStatus = null, string criteriaTag = null, int? criteriaStart = null, int? criteriaCount = null);
-  
-        /// <summary>
-        /// Search RFQ by given criteria
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <param name="criteriaKeyword"></param>
-        /// <param name="criteriaCustomerId"></param>
-        /// <param name="criteriaStoreId"></param>
-        /// <param name="criteriaStartDate"></param>
-        /// <param name="criteriaEndDate"></param>
-        /// <param name="criteriaStatus"></param>
-        /// <param name="criteriaTag"></param>
-        /// <param name="criteriaStart"></param>
-        /// <param name="criteriaCount"></param>
-        /// <returns>ApiResponse of VirtoCommerceDomainQuoteModelQuoteRequestSearchResult</returns>
-        ApiResponse<VirtoCommerceDomainQuoteModelQuoteRequestSearchResult> QuoteModuleSearchWithHttpInfo (string criteriaKeyword = null, string criteriaCustomerId = null, string criteriaStoreId = null, DateTime? criteriaStartDate = null, DateTime? criteriaEndDate = null, string criteriaStatus = null, string criteriaTag = null, int? criteriaStart = null, int? criteriaCount = null);
-
-        /// <summary>
-        /// Search RFQ by given criteria
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <param name="criteriaKeyword"></param>
-        /// <param name="criteriaCustomerId"></param>
-        /// <param name="criteriaStoreId"></param>
-        /// <param name="criteriaStartDate"></param>
-        /// <param name="criteriaEndDate"></param>
-        /// <param name="criteriaStatus"></param>
-        /// <param name="criteriaTag"></param>
-        /// <param name="criteriaStart"></param>
-        /// <param name="criteriaCount"></param>
-        /// <returns>Task of VirtoCommerceDomainQuoteModelQuoteRequestSearchResult</returns>
-        System.Threading.Tasks.Task<VirtoCommerceDomainQuoteModelQuoteRequestSearchResult> QuoteModuleSearchAsync (string criteriaKeyword = null, string criteriaCustomerId = null, string criteriaStoreId = null, DateTime? criteriaStartDate = null, DateTime? criteriaEndDate = null, string criteriaStatus = null, string criteriaTag = null, int? criteriaStart = null, int? criteriaCount = null);
-
-        /// <summary>
-        /// Search RFQ by given criteria
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <param name="criteriaKeyword"></param>
-        /// <param name="criteriaCustomerId"></param>
-        /// <param name="criteriaStoreId"></param>
-        /// <param name="criteriaStartDate"></param>
-        /// <param name="criteriaEndDate"></param>
-        /// <param name="criteriaStatus"></param>
-        /// <param name="criteriaTag"></param>
-        /// <param name="criteriaStart"></param>
-        /// <param name="criteriaCount"></param>
-        /// <returns>Task of ApiResponse (VirtoCommerceDomainQuoteModelQuoteRequestSearchResult)</returns>
-        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceDomainQuoteModelQuoteRequestSearchResult>> QuoteModuleSearchAsyncWithHttpInfo (string criteriaKeyword = null, string criteriaCustomerId = null, string criteriaStoreId = null, DateTime? criteriaStartDate = null, DateTime? criteriaEndDate = null, string criteriaStatus = null, string criteriaTag = null, int? criteriaStart = null, int? criteriaCount = null);
-        
-        /// <summary>
         /// Update a existing RFQ
         /// </summary>
         /// <remarks>
@@ -249,6 +177,46 @@ namespace VirtoCommerce.Client.Api
         System.Threading.Tasks.Task<ApiResponse<VirtoCommerceQuoteModuleWebModelQuoteRequest>> QuoteModuleCalculateTotalsAsyncWithHttpInfo (VirtoCommerceQuoteModuleWebModelQuoteRequest quoteRequest);
         
         /// <summary>
+        /// Search RFQ by given criteria
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="criteria">criteria</param>
+        /// <returns>VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult</returns>
+        VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult QuoteModuleSearch (VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria criteria);
+  
+        /// <summary>
+        /// Search RFQ by given criteria
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="criteria">criteria</param>
+        /// <returns>ApiResponse of VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult</returns>
+        ApiResponse<VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult> QuoteModuleSearchWithHttpInfo (VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria criteria);
+
+        /// <summary>
+        /// Search RFQ by given criteria
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="criteria">criteria</param>
+        /// <returns>Task of VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult</returns>
+        System.Threading.Tasks.Task<VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult> QuoteModuleSearchAsync (VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria criteria);
+
+        /// <summary>
+        /// Search RFQ by given criteria
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="criteria">criteria</param>
+        /// <returns>Task of ApiResponse (VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult)</returns>
+        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult>> QuoteModuleSearchAsyncWithHttpInfo (VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria criteria);
+        
+        /// <summary>
         /// Get RFQ by id
         /// </summary>
         /// <remarks>
@@ -396,185 +364,6 @@ namespace VirtoCommerce.Client.Api
             this.Configuration.AddDefaultHeader(key, value);
         }
    
-        
-        /// <summary>
-        /// Search RFQ by given criteria 
-        /// </summary>
-        /// <param name="criteriaKeyword"></param> 
-        /// <param name="criteriaCustomerId"></param> 
-        /// <param name="criteriaStoreId"></param> 
-        /// <param name="criteriaStartDate"></param> 
-        /// <param name="criteriaEndDate"></param> 
-        /// <param name="criteriaStatus"></param> 
-        /// <param name="criteriaTag"></param> 
-        /// <param name="criteriaStart"></param> 
-        /// <param name="criteriaCount"></param> 
-        /// <returns>VirtoCommerceDomainQuoteModelQuoteRequestSearchResult</returns>
-        public VirtoCommerceDomainQuoteModelQuoteRequestSearchResult QuoteModuleSearch (string criteriaKeyword = null, string criteriaCustomerId = null, string criteriaStoreId = null, DateTime? criteriaStartDate = null, DateTime? criteriaEndDate = null, string criteriaStatus = null, string criteriaTag = null, int? criteriaStart = null, int? criteriaCount = null)
-        {
-             ApiResponse<VirtoCommerceDomainQuoteModelQuoteRequestSearchResult> response = QuoteModuleSearchWithHttpInfo(criteriaKeyword, criteriaCustomerId, criteriaStoreId, criteriaStartDate, criteriaEndDate, criteriaStatus, criteriaTag, criteriaStart, criteriaCount);
-             return response.Data;
-        }
-
-        /// <summary>
-        /// Search RFQ by given criteria 
-        /// </summary>
-        /// <param name="criteriaKeyword"></param> 
-        /// <param name="criteriaCustomerId"></param> 
-        /// <param name="criteriaStoreId"></param> 
-        /// <param name="criteriaStartDate"></param> 
-        /// <param name="criteriaEndDate"></param> 
-        /// <param name="criteriaStatus"></param> 
-        /// <param name="criteriaTag"></param> 
-        /// <param name="criteriaStart"></param> 
-        /// <param name="criteriaCount"></param> 
-        /// <returns>ApiResponse of VirtoCommerceDomainQuoteModelQuoteRequestSearchResult</returns>
-        public ApiResponse< VirtoCommerceDomainQuoteModelQuoteRequestSearchResult > QuoteModuleSearchWithHttpInfo (string criteriaKeyword = null, string criteriaCustomerId = null, string criteriaStoreId = null, DateTime? criteriaStartDate = null, DateTime? criteriaEndDate = null, string criteriaStatus = null, string criteriaTag = null, int? criteriaStart = null, int? criteriaCount = null)
-        {
-            
-    
-            var path_ = "/api/quote/requests";
-    
-            var pathParams = new Dictionary<String, String>();
-            var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var formParams = new Dictionary<String, String>();
-            var fileParams = new Dictionary<String, FileParameter>();
-            String postBody = null;
-
-            // to determine the Accept header
-            String[] http_header_accepts = new String[] {
-                "application/json", "text/json"
-            };
-            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
-            if (http_header_accept != null)
-                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
-
-            // set "format" to json by default
-            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
-            pathParams.Add("format", "json");
-            
-            if (criteriaKeyword != null) queryParams.Add("criteria.keyword", Configuration.ApiClient.ParameterToString(criteriaKeyword)); // query parameter
-            if (criteriaCustomerId != null) queryParams.Add("criteria.customerId", Configuration.ApiClient.ParameterToString(criteriaCustomerId)); // query parameter
-            if (criteriaStoreId != null) queryParams.Add("criteria.storeId", Configuration.ApiClient.ParameterToString(criteriaStoreId)); // query parameter
-            if (criteriaStartDate != null) queryParams.Add("criteria.startDate", Configuration.ApiClient.ParameterToString(criteriaStartDate)); // query parameter
-            if (criteriaEndDate != null) queryParams.Add("criteria.endDate", Configuration.ApiClient.ParameterToString(criteriaEndDate)); // query parameter
-            if (criteriaStatus != null) queryParams.Add("criteria.status", Configuration.ApiClient.ParameterToString(criteriaStatus)); // query parameter
-            if (criteriaTag != null) queryParams.Add("criteria.tag", Configuration.ApiClient.ParameterToString(criteriaTag)); // query parameter
-            if (criteriaStart != null) queryParams.Add("criteria.start", Configuration.ApiClient.ParameterToString(criteriaStart)); // query parameter
-            if (criteriaCount != null) queryParams.Add("criteria.count", Configuration.ApiClient.ParameterToString(criteriaCount)); // query parameter
-            
-            
-            
-            
-
-            
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
-
-            int statusCode = (int) response.StatusCode;
-    
-            if (statusCode >= 400)
-                throw new ApiException (statusCode, "Error calling QuoteModuleSearch: " + response.Content, response.Content);
-            else if (statusCode == 0)
-                throw new ApiException (statusCode, "Error calling QuoteModuleSearch: " + response.ErrorMessage, response.ErrorMessage);
-    
-            return new ApiResponse<VirtoCommerceDomainQuoteModelQuoteRequestSearchResult>(statusCode,
-                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommerceDomainQuoteModelQuoteRequestSearchResult) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceDomainQuoteModelQuoteRequestSearchResult)));
-            
-        }
-    
-        /// <summary>
-        /// Search RFQ by given criteria 
-        /// </summary>
-        /// <param name="criteriaKeyword"></param>
-        /// <param name="criteriaCustomerId"></param>
-        /// <param name="criteriaStoreId"></param>
-        /// <param name="criteriaStartDate"></param>
-        /// <param name="criteriaEndDate"></param>
-        /// <param name="criteriaStatus"></param>
-        /// <param name="criteriaTag"></param>
-        /// <param name="criteriaStart"></param>
-        /// <param name="criteriaCount"></param>
-        /// <returns>Task of VirtoCommerceDomainQuoteModelQuoteRequestSearchResult</returns>
-        public async System.Threading.Tasks.Task<VirtoCommerceDomainQuoteModelQuoteRequestSearchResult> QuoteModuleSearchAsync (string criteriaKeyword = null, string criteriaCustomerId = null, string criteriaStoreId = null, DateTime? criteriaStartDate = null, DateTime? criteriaEndDate = null, string criteriaStatus = null, string criteriaTag = null, int? criteriaStart = null, int? criteriaCount = null)
-        {
-             ApiResponse<VirtoCommerceDomainQuoteModelQuoteRequestSearchResult> response = await QuoteModuleSearchAsyncWithHttpInfo(criteriaKeyword, criteriaCustomerId, criteriaStoreId, criteriaStartDate, criteriaEndDate, criteriaStatus, criteriaTag, criteriaStart, criteriaCount);
-             return response.Data;
-
-        }
-
-        /// <summary>
-        /// Search RFQ by given criteria 
-        /// </summary>
-        /// <param name="criteriaKeyword"></param>
-        /// <param name="criteriaCustomerId"></param>
-        /// <param name="criteriaStoreId"></param>
-        /// <param name="criteriaStartDate"></param>
-        /// <param name="criteriaEndDate"></param>
-        /// <param name="criteriaStatus"></param>
-        /// <param name="criteriaTag"></param>
-        /// <param name="criteriaStart"></param>
-        /// <param name="criteriaCount"></param>
-        /// <returns>Task of ApiResponse (VirtoCommerceDomainQuoteModelQuoteRequestSearchResult)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceDomainQuoteModelQuoteRequestSearchResult>> QuoteModuleSearchAsyncWithHttpInfo (string criteriaKeyword = null, string criteriaCustomerId = null, string criteriaStoreId = null, DateTime? criteriaStartDate = null, DateTime? criteriaEndDate = null, string criteriaStatus = null, string criteriaTag = null, int? criteriaStart = null, int? criteriaCount = null)
-        {
-            
-    
-            var path_ = "/api/quote/requests";
-    
-            var pathParams = new Dictionary<String, String>();
-            var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
-            var formParams = new Dictionary<String, String>();
-            var fileParams = new Dictionary<String, FileParameter>();
-            String postBody = null;
-
-            // to determine the Accept header
-            String[] http_header_accepts = new String[] {
-                "application/json", "text/json"
-            };
-            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
-            if (http_header_accept != null)
-                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
-
-            // set "format" to json by default
-            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
-            pathParams.Add("format", "json");
-            
-            if (criteriaKeyword != null) queryParams.Add("criteria.keyword", Configuration.ApiClient.ParameterToString(criteriaKeyword)); // query parameter
-            if (criteriaCustomerId != null) queryParams.Add("criteria.customerId", Configuration.ApiClient.ParameterToString(criteriaCustomerId)); // query parameter
-            if (criteriaStoreId != null) queryParams.Add("criteria.storeId", Configuration.ApiClient.ParameterToString(criteriaStoreId)); // query parameter
-            if (criteriaStartDate != null) queryParams.Add("criteria.startDate", Configuration.ApiClient.ParameterToString(criteriaStartDate)); // query parameter
-            if (criteriaEndDate != null) queryParams.Add("criteria.endDate", Configuration.ApiClient.ParameterToString(criteriaEndDate)); // query parameter
-            if (criteriaStatus != null) queryParams.Add("criteria.status", Configuration.ApiClient.ParameterToString(criteriaStatus)); // query parameter
-            if (criteriaTag != null) queryParams.Add("criteria.tag", Configuration.ApiClient.ParameterToString(criteriaTag)); // query parameter
-            if (criteriaStart != null) queryParams.Add("criteria.start", Configuration.ApiClient.ParameterToString(criteriaStart)); // query parameter
-            if (criteriaCount != null) queryParams.Add("criteria.count", Configuration.ApiClient.ParameterToString(criteriaCount)); // query parameter
-            
-            
-            
-            
-
-            
-
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
-
-            int statusCode = (int) response.StatusCode;
- 
-            if (statusCode >= 400)
-                throw new ApiException (statusCode, "Error calling QuoteModuleSearch: " + response.Content, response.Content);
-            else if (statusCode == 0)
-                throw new ApiException (statusCode, "Error calling QuoteModuleSearch: " + response.ErrorMessage, response.ErrorMessage);
-
-            return new ApiResponse<VirtoCommerceDomainQuoteModelQuoteRequestSearchResult>(statusCode,
-                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommerceDomainQuoteModelQuoteRequestSearchResult) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceDomainQuoteModelQuoteRequestSearchResult)));
-            
-        }
         
         /// <summary>
         /// Update a existing RFQ 
@@ -1113,6 +902,142 @@ namespace VirtoCommerce.Client.Api
             return new ApiResponse<VirtoCommerceQuoteModuleWebModelQuoteRequest>(statusCode,
                 response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 (VirtoCommerceQuoteModuleWebModelQuoteRequest) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceQuoteModuleWebModelQuoteRequest)));
+            
+        }
+        
+        /// <summary>
+        /// Search RFQ by given criteria 
+        /// </summary>
+        /// <param name="criteria">criteria</param> 
+        /// <returns>VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult</returns>
+        public VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult QuoteModuleSearch (VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria criteria)
+        {
+             ApiResponse<VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult> response = QuoteModuleSearchWithHttpInfo(criteria);
+             return response.Data;
+        }
+
+        /// <summary>
+        /// Search RFQ by given criteria 
+        /// </summary>
+        /// <param name="criteria">criteria</param> 
+        /// <returns>ApiResponse of VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult</returns>
+        public ApiResponse< VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult > QuoteModuleSearchWithHttpInfo (VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria criteria)
+        {
+            
+            // verify the required parameter 'criteria' is set
+            if (criteria == null) throw new ApiException(400, "Missing required parameter 'criteria' when calling QuoteModuleSearch");
+            
+    
+            var path_ = "/api/quote/requests/search";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                "application/json", "text/json"
+            };
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            
+            
+            
+            postBody = Configuration.ApiClient.Serialize(criteria); // http body (model) parameter
+            
+
+            
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+    
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling QuoteModuleSearch: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling QuoteModuleSearch: " + response.ErrorMessage, response.ErrorMessage);
+    
+            return new ApiResponse<VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult)));
+            
+        }
+    
+        /// <summary>
+        /// Search RFQ by given criteria 
+        /// </summary>
+        /// <param name="criteria">criteria</param>
+        /// <returns>Task of VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult</returns>
+        public async System.Threading.Tasks.Task<VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult> QuoteModuleSearchAsync (VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria criteria)
+        {
+             ApiResponse<VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult> response = await QuoteModuleSearchAsyncWithHttpInfo(criteria);
+             return response.Data;
+
+        }
+
+        /// <summary>
+        /// Search RFQ by given criteria 
+        /// </summary>
+        /// <param name="criteria">criteria</param>
+        /// <returns>Task of ApiResponse (VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult>> QuoteModuleSearchAsyncWithHttpInfo (VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria criteria)
+        {
+            // verify the required parameter 'criteria' is set
+            if (criteria == null) throw new ApiException(400, "Missing required parameter 'criteria' when calling QuoteModuleSearch");
+            
+    
+            var path_ = "/api/quote/requests/search";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                "application/json", "text/json"
+            };
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            
+            
+            
+            postBody = Configuration.ApiClient.Serialize(criteria); // http body (model) parameter
+            
+
+            
+
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+ 
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling QuoteModuleSearch: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling QuoteModuleSearch: " + response.ErrorMessage, response.ErrorMessage);
+
+            return new ApiResponse<VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult)));
             
         }
         

@@ -22,7 +22,7 @@ namespace VirtoCommerce.Storefront.Controllers
         {
             _storeModuleApi = storeModuleApi;
             _countriesWithoutRegions = workContext.AllCountries
-                .Select(c => new Country { Name = c.Name, Code2 = c.Code2, Code3 = c.Code3 })
+                .Select(c => new Country { Name = c.Name, Code2 = c.Code2, Code3 = c.Code3, RegionType = c.RegionType })
                 .ToArray();
         }
 
@@ -33,9 +33,9 @@ namespace VirtoCommerce.Storefront.Controllers
         /// <returns></returns>
         [HttpGet]
         [AllowAnonymous]
-        public ActionResult СontactUs()
+        public ActionResult СontactUs(string viewName = "page.contact")
         {
-            return View("page.contact", base.WorkContext);
+            return View(viewName, base.WorkContext);
         }
 
         /// <summary>

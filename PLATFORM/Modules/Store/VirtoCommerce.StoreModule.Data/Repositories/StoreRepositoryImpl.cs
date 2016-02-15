@@ -53,24 +53,36 @@ namespace VirtoCommerce.StoreModule.Data.Repositories
 
 		#region IStoreRepository Members
 
-		public Store GetStoreById(string id)
+		public Store[] GetStoresByIds(string[] ids)
 		{
-            var retVal = Stores.Where(x => x.Id == id).Include(x => x.Languages)
-                                                         .Include(x => x.Currencies)
-                                                         .Include(x => x.PaymentMethods)
-                                                         .Include(x => x.ShippingMethods)
-                                                         .Include(x => x.TaxProviders);
-            return retVal.FirstOrDefault();
+            var retVal = Stores.Where(x => ids.Contains(x.Id)).Include(x => x.Languages)
+                               .Include(x => x.Currencies).ToArray();
+            var paymentMethods = StorePaymentMethods.Where(x => ids.Contains(x.StoreId)).ToArray();
+            var shipmentMethods = StoreShippingMethods.Where(x => ids.Contains(x.StoreId)).ToArray();
+            var taxProviders = StoreTaxProviders.Where(x => ids.Contains(x.StoreId)).ToArray();
+                           
+            return retVal;
 		}
 
 		public IQueryable<Store> Stores
 		{
 			get { return GetAsQueryable<Store>(); }
 		}
+        public IQueryable<StorePaymentMethod> StorePaymentMethods
+        {
+            get { return GetAsQueryable<StorePaymentMethod>(); }
+        }
+        public IQueryable<StoreShippingMethod> StoreShippingMethods
+        {
+            get { return GetAsQueryable<StoreShippingMethod>(); }
+        }
+        public IQueryable<StoreTaxProvider> StoreTaxProviders
+        {
+            get { return GetAsQueryable<StoreTaxProvider>(); }
+        }
+        #endregion
 
-		#endregion
 
-
-	}
+    }
 
 }

@@ -69,18 +69,14 @@
             executeMethod: function () {
                 angular.copy($scope.blade.origEntity, $scope.blade.currentEntity);
             },
-            canExecuteMethod: function () {
-                return isDirty();
-            },
+            canExecuteMethod: isDirty,
             permission: 'platform:security:update'
         },
         {
             name: "platform.commands.delete", icon: 'fa fa-trash-o',
-            executeMethod: function () {
-                deleteEntry();
-            },
+            executeMethod: deleteEntry,
             canExecuteMethod: function () {
-                return !isDirty() && !$scope.blade.isNew;
+                return !$scope.blade.isNew;
             },
             permission: 'platform:security:update'
         }

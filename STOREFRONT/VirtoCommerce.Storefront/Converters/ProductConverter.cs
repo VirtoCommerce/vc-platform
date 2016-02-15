@@ -26,7 +26,7 @@ namespace VirtoCommerce.Storefront.Converters
 
             if(product.Category != null)
             {
-                retVal.Category = product.Category.ToWebModel();
+                retVal.Category = product.Category.ToWebModel(currentLanguage);
             }
 
             if (product.Properties != null)
@@ -55,7 +55,7 @@ namespace VirtoCommerce.Storefront.Converters
             }
 
             if (product.SeoInfos != null)
-                retVal.SeoInfo = product.SeoInfos.Select(s => s.ToWebModel()).FirstOrDefault();
+                retVal.SeoInfo = product.SeoInfos.Select(s => s.ToWebModel()).FirstOrDefault(x => x.Language == currentLanguage);
 
             if (product.Reviews != null)
             {
@@ -68,14 +68,23 @@ namespace VirtoCommerce.Storefront.Converters
             return retVal;
         }
 
-        public static QuoteItem ToQuoteItem(this Product product)
+        public static QuoteItem ToQuoteItem(this Product product, long quantity)
         {
             var quoteItem = new QuoteItem();
 
             quoteItem.InjectFrom<NullableAndEnumValueInjecter>(product);
 
+            quoteItem.Id = null;
+            quoteItem.ImageUrl = product.PrimaryImage.Url;
             quoteItem.ListPrice = product.Price.ListPrice;
+            quoteItem.ProductId = product.Id;
             quoteItem.SalePrice = product.Price.SalePrice;
+            quoteItem.ProposalPrices.Add(new TierPrice
+            {
+                Price = product.Price.ActualPrice,
+                Quantity = quantity
+            });
+            quoteItem.SelectedTierPrice = quoteItem.ProposalPrices.First();
 
             return quoteItem;
         }

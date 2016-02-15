@@ -1,35 +1,33 @@
-﻿using CacheManager.Core;
-using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
-using VirtoCommerce.Client.Api;
+using CacheManager.Core;
 using VirtoCommerce.Storefront.Common;
 using VirtoCommerce.Storefront.Converters;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
-using VirtoCommerce.Storefront.Model.Marketing;
+using VirtoCommerce.Storefront.Model.Customer;
 using VirtoCommerce.Storefront.Model.Marketing.Services;
 using VirtoCommerce.Storefront.Model.Quote;
 using VirtoCommerce.Storefront.Model.Quote.Services;
+using VirtoCommerce.Storefront.Model.Common.Exceptions;
+using VirtoCommerce.Storefront.Model.Order.Events;
+using System;
+using VirtoCommerce.Client.Api;
+using VirtoCommerce.Client.Model;
+using VirtoCommerce.Storefront.Model.Common.Events;
 
 namespace VirtoCommerce.Storefront.Builders
 {
-    public class QuoteRequestBuilder : IQuoteRequestBuilder
+    public class QuoteRequestBuilder : IQuoteRequestBuilder, IAsyncObserver<UserLoginEvent>
     {
         private readonly IQuoteModuleApi _quoteApi;
         private readonly IPromotionEvaluator _promotionEvaluator;
         private readonly ICacheManager<object> _cacheManager;
 
-        private Store _store;
-        private Customer _customer;
-        private Currency _currency;
-        private Language _language;
         private QuoteRequest _quoteRequest;
-        private string _quoteRequestCacheKey;
         private const string _quoteRequestCacheRegion = "QuoteRequestRegion";
 
-        [CLSCompliant(false)]
         public QuoteRequestBuilder(IQuoteModuleApi quoteApi, IPromotionEvaluator promotionEvaluator, ICacheManager<object> cacheManager)
         {
             _quoteApi = quoteApi;
@@ -37,37 +35,66 @@ namespace VirtoCommerce.Storefront.Builders
             _cacheManager = cacheManager;
         }
 
-        public async Task<IQuoteRequestBuilder> GetOrCreateNewTransientQuoteRequestAsync(Store store, Customer customer, Language language, Currency currency)
+        public string QuoteRequestCacheKey
         {
-            _store = store;
-            _customer = customer;
-            _currency = currency;
-            _language = language;
-            _quoteRequestCacheKey = GetQuoteRequestCacheKey(store.Id, customer.Id);
+            get
+            {
+                if (_quoteRequest == null)
+                {
+                    throw new StorefrontException("Quote request is not set");
+                }
 
-            _quoteRequest = await _cacheManager.GetAsync(_quoteRequestCacheKey, _quoteRequestCacheRegion, async () =>
+                return GetQuoteRequestCacheKey(_quoteRequest.StoreId, _quoteRequest.CustomerId);
+            }
+        }
+
+        public IQuoteRequestBuilder TakeQuoteRequest(QuoteRequest quoteRequest)
+        {
+            _quoteRequest = quoteRequest;
+
+            return this;
+        }
+
+        public async Task<IQuoteRequestBuilder> GetOrCreateNewTransientQuoteRequestAsync(Store store, CustomerInfo customer, Language language, Currency currency)
+        {
+            var cacheKey = GetQuoteRequestCacheKey(store.Id, customer.Id);
+
+            _quoteRequest = await _cacheManager.GetAsync(cacheKey, _quoteRequestCacheRegion, async () =>
             {
                 QuoteRequest quoteRequest = null;
-
-                var searchResult = await _quoteApi.QuoteModuleSearchAsync(
-                    criteriaCount: 1,
-                    criteriaCustomerId: _customer.Id,
-                    criteriaStoreId: _store.Id,
-                    criteriaTag: "actual");
-
-                if (searchResult == null && searchResult.QuoteRequests != null)
+                var activeQuoteSearchCriteria = new VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria
                 {
-                    quoteRequest = CreateNewTransientQuoteRequest();
+                    Tag = "actual",
+                    CustomerId = customer.Id,
+                    StoreId = store.Id
+                };
+                var searchResult = await _quoteApi.QuoteModuleSearchAsync(activeQuoteSearchCriteria);
+                quoteRequest = searchResult.QuoteRequests.Select(x => x.ToWebModel(store.Currencies, language)).FirstOrDefault();
+                if (quoteRequest == null)
+                {
+                    quoteRequest = new QuoteRequest(currency, language);
+                    quoteRequest.Currency = currency;
+                    quoteRequest.CustomerId = customer.Id;
+                    quoteRequest.Language = language;
+                    quoteRequest.Status = "New";
+                    quoteRequest.StoreId = store.Id;
+                    quoteRequest.Tag = "actual";
+
+                    if (!customer.IsRegisteredUser)
+                    {
+                        quoteRequest.CustomerName = StorefrontConstants.AnonymousUsername;
+                    }
+                    else
+                    {
+                        quoteRequest.CustomerName = string.Format("{0} {1}", customer.FirstName, customer.LastName);
+                    }
                 }
                 else
                 {
-                    var matchedQuoteRequest = searchResult.QuoteRequests.FirstOrDefault();
-                    if (matchedQuoteRequest != null)
-                    {
-                        var detalizedQuoteRequest = await _quoteApi.QuoteModuleGetByIdAsync(matchedQuoteRequest.Id);
-                        quoteRequest = detalizedQuoteRequest.ToWebModel();
-                    }
+                    quoteRequest = (await _quoteApi.QuoteModuleGetByIdAsync(quoteRequest.Id)).ToWebModel(store.Currencies, language);
                 }
+
+                quoteRequest.Customer = customer;
 
                 return quoteRequest;
             });
@@ -75,9 +102,16 @@ namespace VirtoCommerce.Storefront.Builders
             return this;
         }
 
-        public IQuoteRequestBuilder AddItem(Product product)
+        public IQuoteRequestBuilder Reject()
         {
-            _quoteRequest.Items.Add(product.ToQuoteItem());
+            _quoteRequest.Status = "Rejected";
+
+            return this;
+        }
+
+        public IQuoteRequestBuilder AddItem(Product product, long quantity)
+        {
+            _quoteRequest.Items.Add(product.ToQuoteItem(quantity));
 
             return this;
         }
@@ -93,19 +127,80 @@ namespace VirtoCommerce.Storefront.Builders
             return this;
         }
 
+        public IQuoteRequestBuilder Update(QuoteRequestFormModel quoteRequest)
+        {
+            _cacheManager.Remove(QuoteRequestCacheKey, _quoteRequestCacheRegion);
+
+            _quoteRequest.Comment = quoteRequest.Comment;
+            _quoteRequest.Status = quoteRequest.Status;
+            _quoteRequest.Tag = quoteRequest.Tag;
+
+            _quoteRequest.Addresses.Clear();
+            if (quoteRequest.BillingAddress != null)
+            {
+                _quoteRequest.Addresses.Add(quoteRequest.BillingAddress);
+            }
+            if (quoteRequest.ShippingAddress != null)
+            {
+                _quoteRequest.Addresses.Add(quoteRequest.ShippingAddress);
+            }
+
+            if (quoteRequest.Items != null)
+            {
+                foreach (var item in quoteRequest.Items)
+                {
+                    var existingItem = _quoteRequest.Items.FirstOrDefault(i => i.Id == item.Id);
+                    if (existingItem != null)
+                    {
+                        existingItem.Comment = item.Comment;
+                        existingItem.ProposalPrices.Clear();
+                        foreach (var proposalPrice in item.ProposalPrices)
+                        {
+                            existingItem.ProposalPrices.Add(new TierPrice
+                            {
+                                Price = existingItem.SalePrice,
+                                Quantity = proposalPrice.Quantity
+                            });
+                        }
+                    }
+                }
+            }
+
+            return this;
+        }
+
+        public async Task<IQuoteRequestBuilder> MergeWithQuoteRequest(QuoteRequest quoteRequest)
+        {
+            _quoteRequest.Comment = quoteRequest.Comment;
+
+            foreach (var quoteItem in quoteRequest.Items)
+            {
+                _quoteRequest.Items.Add(quoteItem);
+            }
+
+            if (quoteRequest.Addresses != null && quoteRequest.Addresses.Any())
+            {
+                _quoteRequest.Addresses = quoteRequest.Addresses;
+            }
+
+            await _quoteApi.QuoteModuleDeleteAsync(new string[] { quoteRequest.Id }.ToList());
+            _cacheManager.Remove(QuoteRequestCacheKey, _quoteRequestCacheRegion);
+
+            return this;
+        }
+
         public async Task SaveAsync()
         {
-            var quoteRequest = _quoteRequest.ToServiceModel();
+            _cacheManager.Remove(QuoteRequestCacheKey, _quoteRequestCacheRegion);
 
-            _cacheManager.Remove(_quoteRequestCacheKey, _quoteRequestCacheRegion);
-
+            var quoteDto = _quoteRequest.ToServiceModel();
             if (_quoteRequest.IsTransient())
             {
-                await _quoteApi.QuoteModuleCreateAsync(quoteRequest);
+                await _quoteApi.QuoteModuleCreateAsync(quoteDto);
             }
             else
             {
-                await _quoteApi.QuoteModuleUpdateAsync(quoteRequest);
+                await _quoteApi.QuoteModuleUpdateAsync(quoteDto);
             }
         }
 
@@ -117,30 +212,28 @@ namespace VirtoCommerce.Storefront.Builders
             }
         }
 
+        #region IObserver<UserLoginEvent> Members
+        /// <summary>
+        /// Merge anonymous user quote to newly logined user quote by loging event
+        /// </summary>
+        /// <param name="userLoginEvent"></param>
+        public async Task OnNextAsync(UserLoginEvent userLoginEvent)
+        {
+            //If previous user was anonymous and it has not empty cart need merge anonymous cart to personal
+            if (userLoginEvent.WorkContext.CurrentStore.QuotesEnabled && !userLoginEvent.PrevUser.IsRegisteredUser
+                 && userLoginEvent.WorkContext.CurrentQuoteRequest != null && userLoginEvent.WorkContext.CurrentQuoteRequest.Items.Any())
+            {
+                await GetOrCreateNewTransientQuoteRequestAsync(userLoginEvent.WorkContext.CurrentStore, userLoginEvent.NewUser, userLoginEvent.WorkContext.CurrentLanguage, userLoginEvent.WorkContext.CurrentCurrency);
+                await MergeWithQuoteRequest(userLoginEvent.WorkContext.CurrentQuoteRequest);
+                await SaveAsync();
+            }
+        }
+
+        #endregion
+
         private string GetQuoteRequestCacheKey(string storeId, string customerId)
         {
             return string.Format("QuoteRequest-{0}-{1}", storeId, customerId);
-        }
-
-        private QuoteRequest CreateNewTransientQuoteRequest()
-        {
-            var quoteRequest = new QuoteRequest();
-
-            quoteRequest.Currency = _currency;
-            quoteRequest.CustomerId = _customer.Id;
-            quoteRequest.Language = _language;
-            quoteRequest.StoreId = _store.Id;
-
-            if (_customer.UserName.Equals(StorefrontConstants.AnonymousUsername, StringComparison.OrdinalIgnoreCase))
-            {
-                quoteRequest.CustomerName = StorefrontConstants.AnonymousUsername;
-            }
-            else
-            {
-                quoteRequest.CustomerName = string.Format("{0} {1}", _customer.FirstName, _customer.LastName);
-            }
-
-            return quoteRequest;
         }
     }
 }

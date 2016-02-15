@@ -8,11 +8,17 @@ namespace VirtoCommerce.Platform.Tests.Bases
 {
     public class MigrationsTestBase : TestBase
     {
-        public static string DefaultDatabaseName
+        private string _DefaultDatabaseName;
+
+        public string DefaultDatabaseName
         {
             get
             {
-                return "VCMigrationsTest";
+                if(_DefaultDatabaseName == null)
+                {
+                    _DefaultDatabaseName = String.Format("VCM_{0}", Guid.NewGuid().ToString("N"));
+                }
+                return _DefaultDatabaseName;
             }
         }
 

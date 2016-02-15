@@ -27,5 +27,7 @@
         object[] Values { get; set; }
 
         bool ContainsAttribute(string value);
+
+        void AddValue(object value);
     }
 }

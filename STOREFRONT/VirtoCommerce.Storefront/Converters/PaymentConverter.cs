@@ -35,7 +35,7 @@ namespace VirtoCommerce.Storefront.Converters
 
             if (payment.BillingAddress != null)
             {
-                serviceModel.BillingAddress = payment.BillingAddress.ToServiceModel();
+                serviceModel.BillingAddress = payment.BillingAddress.ToCartServiceModel();
             }
 
             serviceModel.Currency = payment.Currency.Code;

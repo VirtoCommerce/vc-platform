@@ -90,6 +90,13 @@
     "date_formats": {
         "month_day_year": "%b %d, %Y"
     },
+    "notification": {
+        "error_title": "Ooops! An error is occured!",
+        "error_message": "Please tell us technical details for this error and we will be better!",
+        "show_error_details_link_text": "Show me the technical details!",
+        "hide_error_details_link_text": "Hide the technical details",
+        "adding_to_cart_title": "Adding product to cart..."
+    },
     "general": {
         "meta": {
             "tags": "Tagged \"{{ tags }}\"",
@@ -151,6 +158,7 @@
             "subtotal": "Subtotal",
             "update": "Update cart",
             "updating_cart_message": "Updating cart...",
+            "loading_cart_message": "Loading cart...",
             "updating_cart_error_message": "An error occured while updating cart",
             "checkout": "Checkout",
             "empty": "Your cart is currently empty.",

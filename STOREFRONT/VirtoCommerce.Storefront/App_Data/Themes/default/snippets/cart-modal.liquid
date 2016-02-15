@@ -1,4 +1,4 @@
-<div class="ajaxify-modal" id="ajaxifyModal" style="opacity: 1;" ng-class="{ 'is-visible': recentCartItemModalVisible }">
+<div class="ajaxify-modal" id="ajaxifyModal" style="opacity: 1;" ng-class="{ 'is-visible': recentCartItemModalVisible }" ng-cloak>
     <button class="ajaxifyCart--close" title="{{ 'cart.general.close_cart' | t }}" ng-click="toggleRecentCartItemModal(recentCartItemModalVisible)">{{ 'cart.general.close_cart' | t }}</button>
     <div class="ajaxifyCart--content" id="ajaxifyCart">
         <div class="ajax-informer" ng-class="{ 'fade': cartIsUpdating }" ng-if="!errorOccured && cartIsUpdating">
@@ -12,7 +12,7 @@
                     <div class="grid">
                         <div class="grid-item one-third large--one-quarter">
                             <span class="cart-image">
-                                <img src="{( cart.RecentlyAddedItem.ImageUrl )}" />
+                                <img ng-src="{( cart.RecentlyAddedItem.ImageUrl )}" />
                             </span>
                         </div>
                         <div class="grid-item two-thirds large--three-quarters">
@@ -36,27 +36,9 @@
         <div class="cart-row" ng-if="!errorOccured">
             <div class="grid">
                 <div class="grid-item text-right">
-                    <button class="btn" ng-click="outerRedirect('{{ 'cart' | absolute_url }}')">Go to cart</button>
+                    <button class="btn" ng-click="outerRedirect('{{ 'cart' | absolute_url }}')" ng-class="{ 'btn': !cartIsUpdating, 'btn-secondary': cartIsUpdating || errorOccured || cart.HasValidationErrors }" ng-disabled="cartIsUpdating || cart.HasValidationErrors">Go to cart</button>
                     <button class="btn" ng-click="toggleRecentCartItemModal(recentCartItemModalVisible)">Continue shopping</button>
                 </div>
-            </div>
-        </div>
-
-        <h1 class="h2" ng-if="errorOccured">Error occured</h1>
-        <div class="cart-row" ng-if="errorOccured">
-            <div class="note form-error">
-                <p ng-bind="errorMessage" style="margin-bottom: 20px;"></p>
-                <p>
-                    <a href="" style="color: #204a80; font-weight: 600;" ng-click="toggleErrorDetails(errorDetailsVisible)" ng-if="!errorDetailsVisible">
-                        <i class="fa fa-angle-down"></i>
-                        Show error full information
-                    </a>
-                    <a href="" style="color: #204a80; font-weight: 600;" ng-click="toggleErrorDetails(errorDetailsVisible)" ng-if="errorDetailsVisible">
-                        <i class="fa fa-angle-up"></i>
-                        Hide error full information
-                    </a>
-                </p>
-                <p ng-bind="errorDetails" ng-show="errorDetailsVisible"></p>
             </div>
         </div>
     </div>

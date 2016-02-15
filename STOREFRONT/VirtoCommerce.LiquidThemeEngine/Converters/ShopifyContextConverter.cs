@@ -18,7 +18,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             result.Shop = workContext.CurrentStore != null ? workContext.CurrentStore.ToShopifyModel(workContext) : null;
             result.Cart = workContext.CurrentCart != null ? workContext.CurrentCart.ToShopifyModel(workContext) : null;
             result.Product = workContext.CurrentProduct != null ? workContext.CurrentProduct.ToShopifyModel(workContext) : null;
-            result.Customer = workContext.CurrentCustomer != null && workContext.CurrentCustomer.HasAccount ? workContext.CurrentCustomer.ToShopifyModel(workContext, urlBuilder) : null;
+            result.Customer = workContext.CurrentCustomer != null && workContext.CurrentCustomer.IsRegisteredUser ? workContext.CurrentCustomer.ToShopifyModel(workContext, urlBuilder) : null;
             result.AllStores = workContext.AllStores.Select(x => x.ToShopifyModel(workContext)).ToArray();
 
             result.CurrentCurrency = workContext.CurrentCurrency != null ? workContext.CurrentCurrency.ToShopifyModel() : null;
@@ -52,9 +52,14 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                 result.Linklists = new Linklists(workContext.CurrentLinkLists.Select(x => x.ToShopifyModel()));
             }
 
-            if (workContext.Order != null)
+            if (workContext.CurrentOrder != null)
             {
-                result.Order = workContext.Order.ToShopifyModel(urlBuilder);
+                result.Order = workContext.CurrentOrder.ToShopifyModel(urlBuilder);
+            }
+
+            if (workContext.CurrentQuoteRequest != null)
+            {
+                result.QuoteRequest = workContext.CurrentQuoteRequest.ToShopifyModel();
             }
 
             result.PaymentFormHtml = workContext.PaymentFormHtml;
@@ -82,6 +87,11 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             if (workContext.Login != null)
             {
                 result.Form = workContext.Login.ToShopifyModel();
+            }
+
+            if (workContext.StorefrontNotification != null)
+            {
+                result.Notification = workContext.StorefrontNotification.ToShopifyModel();
             }
 
             return result;

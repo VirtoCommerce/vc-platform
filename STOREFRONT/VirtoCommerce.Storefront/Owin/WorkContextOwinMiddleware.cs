@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Hosting;
@@ -13,12 +14,15 @@ using Microsoft.Practices.Unity;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using VirtoCommerce.Client.Api;
+using VirtoCommerce.Client.Model;
 using VirtoCommerce.Storefront.Common;
 using VirtoCommerce.Storefront.Converters;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Cart.Services;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
+using VirtoCommerce.Storefront.Model.Customer;
+using VirtoCommerce.Storefront.Model.Customer.Services;
 using VirtoCommerce.Storefront.Model.Quote.Services;
 
 namespace VirtoCommerce.Storefront.Owin
@@ -33,11 +37,11 @@ namespace VirtoCommerce.Storefront.Owin
         private readonly IStoreModuleApi _storeApi;
         private readonly IVirtoCommercePlatformApi _platformApi;
         private readonly ICommerceCoreModuleApi _commerceApi;
-        private readonly ICustomerManagementModuleApi _customerApi;
         private readonly IPricingModuleApi _pricingModuleApi;
         private readonly ICartBuilder _cartBuilder;
         private readonly IQuoteRequestBuilder _quoteRequestBuilder;
         private readonly ICMSContentModuleApi _cmsApi;
+        private readonly ICustomerService _customerService;
         private readonly ICacheManager<object> _cacheManager;
 
         private readonly UnityContainer _container;
@@ -47,13 +51,13 @@ namespace VirtoCommerce.Storefront.Owin
         {
             _storeApi = container.Resolve<IStoreModuleApi>();
             _platformApi = container.Resolve<IVirtoCommercePlatformApi>();
-            _customerApi = container.Resolve<ICustomerManagementModuleApi>();
             _cartBuilder = container.Resolve<ICartBuilder>();
             _quoteRequestBuilder = container.Resolve<IQuoteRequestBuilder>();
             _cmsApi = container.Resolve<ICMSContentModuleApi>();
             _pricingModuleApi = container.Resolve<IPricingModuleApi>();
             _commerceApi = container.Resolve<ICommerceCoreModuleApi>();
             _cacheManager = container.Resolve<ICacheManager<object>>();
+            _customerService = container.Resolve<ICustomerService>();
             _container = container;
         }
 
@@ -70,10 +74,6 @@ namespace VirtoCommerce.Storefront.Owin
                 workContext.AllStores = await _cacheManager.GetAsync("GetAllStores", "ApiRegion", async () => { return await GetAllStoresAsync(); });
                 if (workContext.AllStores != null && workContext.AllStores.Any())
                 {
-                    var currentCustomerId = GetCurrentCustomerId(context);
-                    workContext.CurrentCustomer = await _cacheManager.GetAsync("GetCustomer-" + currentCustomerId, "ApiRegion", async () => { return await GetCustomerAsync(context); });
-                    MaintainAnonymousCustomerCookie(context, workContext);
-
                     // Initialize request specific properties
                     workContext.CurrentStore = GetStore(context, workContext.AllStores);
                     workContext.CurrentLanguage = GetLanguage(context, workContext.AllStores, workContext.CurrentStore);
@@ -82,10 +82,25 @@ namespace VirtoCommerce.Storefront.Owin
                     foreach (var store in workContext.AllStores)
                     {
                         store.SyncCurrencies(workContext.AllCurrencies, workContext.CurrentLanguage);
+                        store.CurrentSeoInfo = store.SeoInfos.FirstOrDefault(x => x.Language == workContext.CurrentLanguage);
                     }
 
                     //Set current currency
                     workContext.CurrentCurrency = GetCurrency(context, workContext.CurrentStore);
+
+                    var qs = HttpUtility.ParseQueryString(workContext.RequestUrl.Query);
+                    //Initialize catalog search criteria
+                    workContext.CurrentCatalogSearchCriteria = new CatalogSearchCriteria(qs);
+                    workContext.CurrentCatalogSearchCriteria.CatalogId = workContext.CurrentStore.Catalog;
+                    workContext.CurrentCatalogSearchCriteria.Currency = workContext.CurrentCurrency;
+                    workContext.CurrentCatalogSearchCriteria.Language = workContext.CurrentLanguage;
+
+                    workContext.CurrentOrderSearchCriteria = new Model.Order.OrderSearchCriteria(qs);
+                    workContext.CurrentQuoteSearchCriteria = new Model.Quote.QuoteSearchCriteria(qs);
+
+                    //Current customer
+                    workContext.CurrentCustomer = await GetCustomerAsync(context);
+                    MaintainAnonymousCustomerCookie(context, workContext);
 
                     //Do not load shopping cart and other for resource requests
                     if (!IsAssetRequest(context.Request.Uri))
@@ -100,26 +115,28 @@ namespace VirtoCommerce.Storefront.Owin
                             workContext.CurrentQuoteRequest = _quoteRequestBuilder.QuoteRequest;
                         }
 
-                        var linkLists = await _cacheManager.GetAsync("GetLinkLists-" + workContext.CurrentStore.Id, "ApiRegion", async () => { return await _cmsApi.MenuGetListsAsync(workContext.CurrentStore.Id); });
+                        var linkLists = await _cacheManager.GetAsync("GetLinkLists-" + workContext.CurrentStore.Id, "ApiRegion", async () => { return await _cmsApi.MenuGetListsAsync(workContext.CurrentStore.Id) ?? new List<VirtoCommerceContentWebModelsMenuLinkList>(); });
                         workContext.CurrentLinkLists = linkLists != null ? linkLists.Select(ll => ll.ToWebModel(urlBuilder)).ToList() : null;
 
-                        //Initialize catalog search criteria
-                        workContext.CurrentCatalogSearchCriteria = GetSearchCriteria(workContext);
 
                         //Initialize blogs search criteria 
                         //TODO: read from query string
-                        workContext.CurrentBlogSearchCritera = new Model.StaticContent.BlogSearchCriteria();
+                        workContext.CurrentBlogSearchCritera = new Model.StaticContent.BlogSearchCriteria(qs);
+
                         //Pricelists
-                        var priceListCachey = String.Join("-", "EvaluatePriceLists", workContext.CurrentStore.Id, workContext.CurrentCustomer.Id);
-                        workContext.CurrentPriceListIds = await _cacheManager.GetAsync(priceListCachey, "ApiRegion", async () =>
+                        var pricelistCacheKey = string.Join("-", "EvaluatePriceLists", workContext.CurrentStore.Id, workContext.CurrentCustomer.Id);
+                        workContext.CurrentPricelists = await _cacheManager.GetAsync(pricelistCacheKey, "ApiRegion", async () =>
+                        {
+                            var evalContext = new VirtoCommerceDomainPricingModelPriceEvaluationContext
                             {
-                                var pricingResult = await _pricingModuleApi.PricingModuleEvaluatePriceListsAsync(
-                                    evalContextStoreId: workContext.CurrentStore.Id,
-                                    evalContextCatalogId: workContext.CurrentStore.Catalog,
-                                    evalContextCustomerId: workContext.CurrentCustomer.Id,
-                                    evalContextQuantity: 1);
-                                return pricingResult.Select(p => p.Id).ToList();
-                            });
+                                StoreId = workContext.CurrentStore.Id,
+                                CatalogId = workContext.CurrentStore.Catalog,
+                                CustomerId = workContext.CurrentCustomer.Id,
+                                Quantity = 1
+                            };
+                            var pricingResult = await _pricingModuleApi.PricingModuleEvaluatePriceListsAsync(evalContext);
+                            return pricingResult.Select(p => p.ToWebModel()).ToList();
+                        });
                     }
                 }
             }
@@ -143,64 +160,54 @@ namespace VirtoCommerce.Storefront.Owin
             return result.Any() ? result : null;
         }
 
-        private CatalogSearchCriteria GetSearchCriteria(WorkContext workContext)
-        {
-            var qs = HttpUtility.ParseQueryString(workContext.RequestUrl.Query);
-            var retVal = CatalogSearchCriteria.Parse(qs);
-            retVal.CatalogId = workContext.CurrentStore.Catalog;
-            retVal.Currency = workContext.CurrentCurrency;
-            retVal.Language = workContext.CurrentLanguage;
-            return retVal;
-        }
-
+     
         private bool IsAssetRequest(Uri uri)
         {
             return uri.AbsolutePath.Contains("themes/assets") || !string.IsNullOrEmpty(Path.GetExtension(uri.ToString()));
         }
 
-        private string GetCurrentCustomerId(IOwinContext context)
+        private async Task<CustomerInfo> GetCustomerAsync(IOwinContext context)
         {
-            var retVal = context.Authentication.User.Identity.Name;
-            if (!context.Authentication.User.Identity.IsAuthenticated)
-            {
-                retVal = context.Request.Cookies[StorefrontConstants.AnonymousCustomerIdCookie];
-            }
-            return retVal;
-        }
-
-        private async Task<Customer> GetCustomerAsync(IOwinContext context)
-        {
-            var customer = new Customer();
+            CustomerInfo retVal = new CustomerInfo();
 
             if (context.Authentication.User.Identity.IsAuthenticated)
             {
-                var user = await _platformApi.SecurityGetUserByNameAsync(context.Authentication.User.Identity.Name);
-                if (user != null)
+                var sidClaim = context.Authentication.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid);
+                var userId = sidClaim != null ? sidClaim.Value : null;
+                if (userId == null)
                 {
-                    var contact = await _customerApi.CustomerModuleGetContactByIdAsync(user.Id);
-                    if (contact != null)
+                    //If somehow claim not found in user cookies need load user by name from API
+                    var user = await _platformApi.SecurityGetUserByNameAsync(context.Authentication.User.Identity.Name);
+                    if (user != null)
                     {
-                        customer = contact.ToWebModel(user.UserName);
-                        customer.HasAccount = true;
+                        userId = user.Id;
                     }
+                }
+
+                if (userId != null)
+                {
+                    retVal = await _customerService.GetCustomerByIdAsync(userId) ?? retVal;
+                    retVal.Id = userId;
+                    retVal.UserName = context.Authentication.User.Identity.Name;
+                    retVal.IsRegisteredUser = true;
                 }
             }
 
-            if (!customer.HasAccount)
+            if (!retVal.IsRegisteredUser)
             {
-                customer.Id = context.Request.Cookies[StorefrontConstants.AnonymousCustomerIdCookie];
-                customer.UserName = StorefrontConstants.AnonymousUsername;
-                customer.Name = StorefrontConstants.AnonymousUsername;
+                retVal.Id = context.Request.Cookies[StorefrontConstants.AnonymousCustomerIdCookie];
+                retVal.UserName = StorefrontConstants.AnonymousUsername;
+                retVal.FullName = StorefrontConstants.AnonymousUsername;
             }
 
-            return customer;
+            return retVal;
         }
 
         private void MaintainAnonymousCustomerCookie(IOwinContext context, WorkContext workContext)
         {
             string anonymousCustomerId = context.Request.Cookies[StorefrontConstants.AnonymousCustomerIdCookie];
 
-            if (workContext.CurrentCustomer.HasAccount)
+            if (workContext.CurrentCustomer.IsRegisteredUser)
             {
                 if (!string.IsNullOrEmpty(anonymousCustomerId))
                 {
@@ -294,11 +301,11 @@ namespace VirtoCommerce.Storefront.Owin
         private string GetLanguageFromUrl(IOwinContext context, string[] languages)
         {
             var requestPath = context.Request.Path.ToString();
-            var retVal = languages.FirstOrDefault(x => requestPath.Contains(String.Format("/{0}/", x)));
+            var retVal = languages.FirstOrDefault(x => requestPath.Contains(string.Format("/{0}/", x)));
             return retVal;
         }
 
-        private Currency GetCurrency(IOwinContext context, Store store)
+        private static Currency GetCurrency(IOwinContext context, Store store)
         {
             //Get currency from request url
             var currencyCode = context.Request.Query.Get("currency");
@@ -358,8 +365,9 @@ namespace VirtoCommerce.Storefront.Owin
             var country = new Country
             {
                 Name = pair.Key,
-                Code2 = region != null ? region.TwoLetterISORegionName : String.Empty,
-                Code3 = region != null ? region.ThreeLetterISORegionName : String.Empty,
+                Code2 = region != null ? region.TwoLetterISORegionName : string.Empty,
+                Code3 = region != null ? region.ThreeLetterISORegionName : string.Empty,
+                RegionType = pair.Value["label"] != null ? pair.Value["label"].ToString() : null
             };
 
             var provinceCodes = pair.Value["province_codes"].ToObject<Dictionary<string, string>>();

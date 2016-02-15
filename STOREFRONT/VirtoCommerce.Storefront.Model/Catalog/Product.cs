@@ -227,7 +227,15 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         /// </summary>
         public ICollection<Image> Images { get; set; }
 
-        public ICollection<Discount> Discounts { get; }
+        public bool IsQuotable
+        {
+            get
+            {
+                return true;
+            }
+        }
+
+        public ICollection<Discount> Discounts { get; private set; }
 
         public Currency Currency { get; set; }
 
@@ -251,6 +259,11 @@ namespace VirtoCommerce.Storefront.Model.Catalog
                     Price.ActiveDiscount = discount;
                 }
             }
+        }
+
+        public override string ToString()
+        {
+            return String.Format("product #{0} sku: {1} name: {2}", Id ?? "undef", Sku ?? "undef", Name ?? "undef");
         }
     }
 }

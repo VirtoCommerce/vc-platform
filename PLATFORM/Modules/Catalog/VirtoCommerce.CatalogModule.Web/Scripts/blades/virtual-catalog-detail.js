@@ -103,9 +103,7 @@
                     executeMethod: function () {
                         angular.copy(blade.origEntity, blade.currentEntity);
                     },
-                    canExecuteMethod: function () {
-                        return isDirty();
-                    },
+                    canExecuteMethod: isDirty,
                     permission: 'catalog:update'
                 }
             ];

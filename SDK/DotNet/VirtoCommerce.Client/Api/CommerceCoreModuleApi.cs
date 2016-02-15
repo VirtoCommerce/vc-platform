@@ -676,6 +676,50 @@ namespace VirtoCommerce.Client.Api
         /// <returns>Task of ApiResponse (VirtoCommerceCoreModuleWebModelSignInResult)</returns>
         System.Threading.Tasks.Task<ApiResponse<VirtoCommerceCoreModuleWebModelSignInResult>> StorefrontSecurityPasswordSignInAsyncWithHttpInfo (string userName, string password);
         
+        /// <summary>
+        /// Evaluate and return all tax rates for specified store and evaluation context
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="storeId"></param>
+        /// <param name="evalContext"></param>
+        /// <returns>List&lt;VirtoCommerceDomainTaxModelTaxRate&gt;</returns>
+        List<VirtoCommerceDomainTaxModelTaxRate> CommerceEvaluateTaxes (string storeId, VirtoCommerceDomainTaxModelTaxEvaluationContext evalContext);
+  
+        /// <summary>
+        /// Evaluate and return all tax rates for specified store and evaluation context
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="storeId"></param>
+        /// <param name="evalContext"></param>
+        /// <returns>ApiResponse of List&lt;VirtoCommerceDomainTaxModelTaxRate&gt;</returns>
+        ApiResponse<List<VirtoCommerceDomainTaxModelTaxRate>> CommerceEvaluateTaxesWithHttpInfo (string storeId, VirtoCommerceDomainTaxModelTaxEvaluationContext evalContext);
+
+        /// <summary>
+        /// Evaluate and return all tax rates for specified store and evaluation context
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="storeId"></param>
+        /// <param name="evalContext"></param>
+        /// <returns>Task of List&lt;VirtoCommerceDomainTaxModelTaxRate&gt;</returns>
+        System.Threading.Tasks.Task<List<VirtoCommerceDomainTaxModelTaxRate>> CommerceEvaluateTaxesAsync (string storeId, VirtoCommerceDomainTaxModelTaxEvaluationContext evalContext);
+
+        /// <summary>
+        /// Evaluate and return all tax rates for specified store and evaluation context
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="storeId"></param>
+        /// <param name="evalContext"></param>
+        /// <returns>Task of ApiResponse (List&lt;VirtoCommerceDomainTaxModelTaxRate&gt;)</returns>
+        System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceDomainTaxModelTaxRate>>> CommerceEvaluateTaxesAsyncWithHttpInfo (string storeId, VirtoCommerceDomainTaxModelTaxEvaluationContext evalContext);
+        
     }
   
     /// <summary>
@@ -2965,6 +3009,153 @@ namespace VirtoCommerce.Client.Api
             return new ApiResponse<VirtoCommerceCoreModuleWebModelSignInResult>(statusCode,
                 response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 (VirtoCommerceCoreModuleWebModelSignInResult) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceCoreModuleWebModelSignInResult)));
+            
+        }
+        
+        /// <summary>
+        /// Evaluate and return all tax rates for specified store and evaluation context 
+        /// </summary>
+        /// <param name="storeId"></param> 
+        /// <param name="evalContext"></param> 
+        /// <returns>List&lt;VirtoCommerceDomainTaxModelTaxRate&gt;</returns>
+        public List<VirtoCommerceDomainTaxModelTaxRate> CommerceEvaluateTaxes (string storeId, VirtoCommerceDomainTaxModelTaxEvaluationContext evalContext)
+        {
+             ApiResponse<List<VirtoCommerceDomainTaxModelTaxRate>> response = CommerceEvaluateTaxesWithHttpInfo(storeId, evalContext);
+             return response.Data;
+        }
+
+        /// <summary>
+        /// Evaluate and return all tax rates for specified store and evaluation context 
+        /// </summary>
+        /// <param name="storeId"></param> 
+        /// <param name="evalContext"></param> 
+        /// <returns>ApiResponse of List&lt;VirtoCommerceDomainTaxModelTaxRate&gt;</returns>
+        public ApiResponse< List<VirtoCommerceDomainTaxModelTaxRate> > CommerceEvaluateTaxesWithHttpInfo (string storeId, VirtoCommerceDomainTaxModelTaxEvaluationContext evalContext)
+        {
+            
+            // verify the required parameter 'storeId' is set
+            if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling CommerceEvaluateTaxes");
+            
+            // verify the required parameter 'evalContext' is set
+            if (evalContext == null) throw new ApiException(400, "Missing required parameter 'evalContext' when calling CommerceEvaluateTaxes");
+            
+    
+            var path_ = "/api/taxes/{storeId}/evaluate";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                "application/json", "text/json"
+            };
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            if (storeId != null) pathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
+            
+            
+            
+            
+            postBody = Configuration.ApiClient.Serialize(evalContext); // http body (model) parameter
+            
+
+            
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+    
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling CommerceEvaluateTaxes: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling CommerceEvaluateTaxes: " + response.ErrorMessage, response.ErrorMessage);
+    
+            return new ApiResponse<List<VirtoCommerceDomainTaxModelTaxRate>>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (List<VirtoCommerceDomainTaxModelTaxRate>) Configuration.ApiClient.Deserialize(response, typeof(List<VirtoCommerceDomainTaxModelTaxRate>)));
+            
+        }
+    
+        /// <summary>
+        /// Evaluate and return all tax rates for specified store and evaluation context 
+        /// </summary>
+        /// <param name="storeId"></param>
+        /// <param name="evalContext"></param>
+        /// <returns>Task of List&lt;VirtoCommerceDomainTaxModelTaxRate&gt;</returns>
+        public async System.Threading.Tasks.Task<List<VirtoCommerceDomainTaxModelTaxRate>> CommerceEvaluateTaxesAsync (string storeId, VirtoCommerceDomainTaxModelTaxEvaluationContext evalContext)
+        {
+             ApiResponse<List<VirtoCommerceDomainTaxModelTaxRate>> response = await CommerceEvaluateTaxesAsyncWithHttpInfo(storeId, evalContext);
+             return response.Data;
+
+        }
+
+        /// <summary>
+        /// Evaluate and return all tax rates for specified store and evaluation context 
+        /// </summary>
+        /// <param name="storeId"></param>
+        /// <param name="evalContext"></param>
+        /// <returns>Task of ApiResponse (List&lt;VirtoCommerceDomainTaxModelTaxRate&gt;)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceDomainTaxModelTaxRate>>> CommerceEvaluateTaxesAsyncWithHttpInfo (string storeId, VirtoCommerceDomainTaxModelTaxEvaluationContext evalContext)
+        {
+            // verify the required parameter 'storeId' is set
+            if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling CommerceEvaluateTaxes");
+            // verify the required parameter 'evalContext' is set
+            if (evalContext == null) throw new ApiException(400, "Missing required parameter 'evalContext' when calling CommerceEvaluateTaxes");
+            
+    
+            var path_ = "/api/taxes/{storeId}/evaluate";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            // to determine the Accept header
+            String[] http_header_accepts = new String[] {
+                "application/json", "text/json"
+            };
+            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
+            if (http_header_accept != null)
+                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            if (storeId != null) pathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
+            
+            
+            
+            
+            postBody = Configuration.ApiClient.Serialize(evalContext); // http body (model) parameter
+            
+
+            
+
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+
+            int statusCode = (int) response.StatusCode;
+ 
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling CommerceEvaluateTaxes: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling CommerceEvaluateTaxes: " + response.ErrorMessage, response.ErrorMessage);
+
+            return new ApiResponse<List<VirtoCommerceDomainTaxModelTaxRate>>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (List<VirtoCommerceDomainTaxModelTaxRate>) Configuration.ApiClient.Deserialize(response, typeof(List<VirtoCommerceDomainTaxModelTaxRate>)));
             
         }
         

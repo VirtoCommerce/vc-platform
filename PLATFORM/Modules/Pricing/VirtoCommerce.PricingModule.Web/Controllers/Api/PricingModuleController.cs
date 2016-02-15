@@ -3,8 +3,6 @@ using System.Linq;
 using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
-using System.Web.Http.ModelBinding;
-using VirtoCommerce.CatalogModule.Web.Binders;
 using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Domain.Pricing.Services;
 using VirtoCommerce.Platform.Core.Common;
@@ -24,6 +22,7 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
         private readonly IItemService _itemService;
         private readonly ICatalogService _catalogService;
         private readonly IPricingExtensionManager _extensionManager;
+
         public PricingModuleController(IPricingService pricingService, IItemService itemService, ICatalogService catalogService, IPricingExtensionManager extensionManager)
         {
             _extensionManager = extensionManager;
@@ -37,10 +36,10 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
         /// </summary>
         /// <param name="evalContext">Pricing evaluation context</param>
         /// <returns>Prices array</returns>
-        [HttpGet]
+        [HttpPost]
         [ResponseType(typeof(webModel.Price[]))]
         [Route("api/pricing/evaluate")]
-        public IHttpActionResult EvaluatePrices([ModelBinder(typeof(PriceEvaluationContextBinder))] coreModel.PriceEvaluationContext evalContext)
+        public IHttpActionResult EvaluatePrices(coreModel.PriceEvaluationContext evalContext)
         {
             var retVal = _pricingService.EvaluateProductPrices(evalContext)
                                         .Select(x => x.ToWebModel())
@@ -55,10 +54,10 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
         /// </summary>
         /// <param name="evalContext">Pricing evaluation context</param>
         /// <returns>Pricelist array</returns>
-        [HttpGet]
+        [HttpPost]
         [ResponseType(typeof(webModel.Pricelist[]))]
         [Route("api/pricing/pricelists/evaluate")]
-        public IHttpActionResult EvaluatePriceLists([ModelBinder(typeof(PriceEvaluationContextBinder))] coreModel.PriceEvaluationContext evalContext)
+        public IHttpActionResult EvaluatePriceLists(coreModel.PriceEvaluationContext evalContext)
         {
             var retVal = _pricingService.EvaluatePriceLists(evalContext)
                                         .Select(x => x.ToWebModel())
@@ -177,14 +176,18 @@ namespace VirtoCommerce.PricingModule.Web.Controllers.Api
         [Route("api/products/{productId}/prices")]
         public IHttpActionResult GetProductPrices(string productId)
         {
-            var prices = _pricingService.EvaluateProductPrices(new coreModel.PriceEvaluationContext { ProductIds = new[] { productId } });
-            if (prices != null)
+            var product = _itemService.GetById(productId, Domain.Catalog.Model.ItemResponseGroup.ItemInfo);
+            if (product != null)
             {
-                var result = prices.GroupBy(x => x.Currency)
-                    .Select(x => x.First().ToWebModel())
-                    .ToArray();
+                var prices = _pricingService.EvaluateProductPrices(new coreModel.PriceEvaluationContext { CatalogId = product.CatalogId, ProductIds = new[] { productId } });
+                if (prices != null)
+                {
+                    var result = prices.GroupBy(x => x.Currency)
+                        .Select(x => x.First().ToWebModel())
+                        .ToArray();
 
-                return Ok(result);
+                    return Ok(result);
+                }
             }
             return NotFound();
         }

@@ -10,7 +10,7 @@ namespace VirtoCommerce.CustomerModule.Web.Model
         /// <summary>
         /// Type of address.
         /// </summary>
-        /// <value>0: Billing, 1: Shipping, 3: BillingAndShipping</value>
+        /// <value>1: Billing, 2: Shipping, 3: BillingAndShipping</value>
         [JsonConverter(typeof(StringEnumConverter))]
         public AddressType AddressType { get; set; }
 

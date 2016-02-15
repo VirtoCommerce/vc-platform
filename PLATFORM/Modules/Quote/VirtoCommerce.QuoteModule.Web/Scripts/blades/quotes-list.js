@@ -4,19 +4,10 @@
         $scope.uiGridConstants = uiGridConstants;
         var blade = $scope.blade;
 
-        //pagination settings
-        $scope.pageSettings = {};
-        $scope.pageSettings.totalItems = 0;
-        $scope.pageSettings.currentPage = 1;
-        $scope.pageSettings.numPages = 5;
-        $scope.pageSettings.itemsPerPageCount = 20;
-
-        $scope.filter = { searchKeyword: undefined };
-
         blade.refresh = function () {
             blade.isLoading = true;
             quotes.search({
-                q: $scope.filter.searchKeyword,
+                keyword: filter.keyword,
                 start: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
                 count: $scope.pageSettings.itemsPerPageCount
             }, function (data) {
@@ -69,9 +60,7 @@
         blade.toolbarCommands = [
             {
                 name: "platform.commands.refresh", icon: 'fa fa-refresh',
-                executeMethod: function () {
-                    blade.refresh();
-                },
+                executeMethod: blade.refresh,
                 canExecuteMethod: function () {
                     return true;
                 }
@@ -97,6 +86,22 @@
                 permission: 'quote:update'
             }
         ];
+
+        //pagination settings
+        $scope.pageSettings = {};
+        $scope.pageSettings.totalItems = 0;
+        $scope.pageSettings.currentPage = 1;
+        $scope.pageSettings.numPages = 5;
+        $scope.pageSettings.itemsPerPageCount = 20;
+
+        var filter = $scope.filter = {};
+        filter.criteriaChanged = function () {
+            if ($scope.pageSettings.currentPage > 1) {
+                $scope.pageSettings.currentPage = 1;
+            } else {
+                blade.refresh();
+            }
+        };
 
         // ui-grid
         $scope.setGridOptions = function (gridOptions) {

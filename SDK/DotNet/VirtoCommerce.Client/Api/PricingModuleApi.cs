@@ -338,36 +338,9 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// 
         /// </remarks>
-        /// <param name="evalContextStoreId"></param>
-        /// <param name="evalContextCatalogId"></param>
-        /// <param name="evalContextProductIds"></param>
-        /// <param name="evalContextPricelistIds"></param>
-        /// <param name="evalContextQuantity"></param>
-        /// <param name="evalContextCustomerId"></param>
-        /// <param name="evalContextOrganizationId"></param>
-        /// <param name="evalContextCertainDate"></param>
-        /// <param name="evalContextCurrency"></param>
-        /// <param name="evalContextTags"></param>
-        /// <param name="evalContextContextObject"></param>
-        /// <param name="evalContextGeoCity"></param>
-        /// <param name="evalContextGeoState"></param>
-        /// <param name="evalContextGeoCountry"></param>
-        /// <param name="evalContextGeoContinent"></param>
-        /// <param name="evalContextGeoZipCode"></param>
-        /// <param name="evalContextGeoConnectionType"></param>
-        /// <param name="evalContextGeoTimeZone"></param>
-        /// <param name="evalContextGeoIpRoutingType"></param>
-        /// <param name="evalContextGeoIspSecondLevel"></param>
-        /// <param name="evalContextGeoIspTopLevel"></param>
-        /// <param name="evalContextShopperAge"></param>
-        /// <param name="evalContextShopperGender"></param>
-        /// <param name="evalContextLanguage"></param>
-        /// <param name="evalContextShopperSearchedPhraseInStore"></param>
-        /// <param name="evalContextShopperSearchedPhraseOnInternet"></param>
-        /// <param name="evalContextCurrentUrl"></param>
-        /// <param name="evalContextReferredUrl"></param>
+        /// <param name="evalContext">Pricing evaluation context</param>
         /// <returns>List&lt;VirtoCommercePricingModuleWebModelPrice&gt;</returns>
-        List<VirtoCommercePricingModuleWebModelPrice> PricingModuleEvaluatePrices (string evalContextStoreId = null, string evalContextCatalogId = null, List<string> evalContextProductIds = null, List<string> evalContextPricelistIds = null, double? evalContextQuantity = null, string evalContextCustomerId = null, string evalContextOrganizationId = null, DateTime? evalContextCertainDate = null, string evalContextCurrency = null, List<string> evalContextTags = null, Dictionary<string, string> evalContextContextObject = null, string evalContextGeoCity = null, string evalContextGeoState = null, string evalContextGeoCountry = null, string evalContextGeoContinent = null, string evalContextGeoZipCode = null, string evalContextGeoConnectionType = null, string evalContextGeoTimeZone = null, string evalContextGeoIpRoutingType = null, string evalContextGeoIspSecondLevel = null, string evalContextGeoIspTopLevel = null, int? evalContextShopperAge = null, string evalContextShopperGender = null, string evalContextLanguage = null, string evalContextShopperSearchedPhraseInStore = null, string evalContextShopperSearchedPhraseOnInternet = null, string evalContextCurrentUrl = null, string evalContextReferredUrl = null);
+        List<VirtoCommercePricingModuleWebModelPrice> PricingModuleEvaluatePrices (VirtoCommerceDomainPricingModelPriceEvaluationContext evalContext);
   
         /// <summary>
         /// Evaluate prices by given context
@@ -375,36 +348,9 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// 
         /// </remarks>
-        /// <param name="evalContextStoreId"></param>
-        /// <param name="evalContextCatalogId"></param>
-        /// <param name="evalContextProductIds"></param>
-        /// <param name="evalContextPricelistIds"></param>
-        /// <param name="evalContextQuantity"></param>
-        /// <param name="evalContextCustomerId"></param>
-        /// <param name="evalContextOrganizationId"></param>
-        /// <param name="evalContextCertainDate"></param>
-        /// <param name="evalContextCurrency"></param>
-        /// <param name="evalContextTags"></param>
-        /// <param name="evalContextContextObject"></param>
-        /// <param name="evalContextGeoCity"></param>
-        /// <param name="evalContextGeoState"></param>
-        /// <param name="evalContextGeoCountry"></param>
-        /// <param name="evalContextGeoContinent"></param>
-        /// <param name="evalContextGeoZipCode"></param>
-        /// <param name="evalContextGeoConnectionType"></param>
-        /// <param name="evalContextGeoTimeZone"></param>
-        /// <param name="evalContextGeoIpRoutingType"></param>
-        /// <param name="evalContextGeoIspSecondLevel"></param>
-        /// <param name="evalContextGeoIspTopLevel"></param>
-        /// <param name="evalContextShopperAge"></param>
-        /// <param name="evalContextShopperGender"></param>
-        /// <param name="evalContextLanguage"></param>
-        /// <param name="evalContextShopperSearchedPhraseInStore"></param>
-        /// <param name="evalContextShopperSearchedPhraseOnInternet"></param>
-        /// <param name="evalContextCurrentUrl"></param>
-        /// <param name="evalContextReferredUrl"></param>
+        /// <param name="evalContext">Pricing evaluation context</param>
         /// <returns>ApiResponse of List&lt;VirtoCommercePricingModuleWebModelPrice&gt;</returns>
-        ApiResponse<List<VirtoCommercePricingModuleWebModelPrice>> PricingModuleEvaluatePricesWithHttpInfo (string evalContextStoreId = null, string evalContextCatalogId = null, List<string> evalContextProductIds = null, List<string> evalContextPricelistIds = null, double? evalContextQuantity = null, string evalContextCustomerId = null, string evalContextOrganizationId = null, DateTime? evalContextCertainDate = null, string evalContextCurrency = null, List<string> evalContextTags = null, Dictionary<string, string> evalContextContextObject = null, string evalContextGeoCity = null, string evalContextGeoState = null, string evalContextGeoCountry = null, string evalContextGeoContinent = null, string evalContextGeoZipCode = null, string evalContextGeoConnectionType = null, string evalContextGeoTimeZone = null, string evalContextGeoIpRoutingType = null, string evalContextGeoIspSecondLevel = null, string evalContextGeoIspTopLevel = null, int? evalContextShopperAge = null, string evalContextShopperGender = null, string evalContextLanguage = null, string evalContextShopperSearchedPhraseInStore = null, string evalContextShopperSearchedPhraseOnInternet = null, string evalContextCurrentUrl = null, string evalContextReferredUrl = null);
+        ApiResponse<List<VirtoCommercePricingModuleWebModelPrice>> PricingModuleEvaluatePricesWithHttpInfo (VirtoCommerceDomainPricingModelPriceEvaluationContext evalContext);
 
         /// <summary>
         /// Evaluate prices by given context
@@ -412,36 +358,9 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// 
         /// </remarks>
-        /// <param name="evalContextStoreId"></param>
-        /// <param name="evalContextCatalogId"></param>
-        /// <param name="evalContextProductIds"></param>
-        /// <param name="evalContextPricelistIds"></param>
-        /// <param name="evalContextQuantity"></param>
-        /// <param name="evalContextCustomerId"></param>
-        /// <param name="evalContextOrganizationId"></param>
-        /// <param name="evalContextCertainDate"></param>
-        /// <param name="evalContextCurrency"></param>
-        /// <param name="evalContextTags"></param>
-        /// <param name="evalContextContextObject"></param>
-        /// <param name="evalContextGeoCity"></param>
-        /// <param name="evalContextGeoState"></param>
-        /// <param name="evalContextGeoCountry"></param>
-        /// <param name="evalContextGeoContinent"></param>
-        /// <param name="evalContextGeoZipCode"></param>
-        /// <param name="evalContextGeoConnectionType"></param>
-        /// <param name="evalContextGeoTimeZone"></param>
-        /// <param name="evalContextGeoIpRoutingType"></param>
-        /// <param name="evalContextGeoIspSecondLevel"></param>
-        /// <param name="evalContextGeoIspTopLevel"></param>
-        /// <param name="evalContextShopperAge"></param>
-        /// <param name="evalContextShopperGender"></param>
-        /// <param name="evalContextLanguage"></param>
-        /// <param name="evalContextShopperSearchedPhraseInStore"></param>
-        /// <param name="evalContextShopperSearchedPhraseOnInternet"></param>
-        /// <param name="evalContextCurrentUrl"></param>
-        /// <param name="evalContextReferredUrl"></param>
+        /// <param name="evalContext">Pricing evaluation context</param>
         /// <returns>Task of List&lt;VirtoCommercePricingModuleWebModelPrice&gt;</returns>
-        System.Threading.Tasks.Task<List<VirtoCommercePricingModuleWebModelPrice>> PricingModuleEvaluatePricesAsync (string evalContextStoreId = null, string evalContextCatalogId = null, List<string> evalContextProductIds = null, List<string> evalContextPricelistIds = null, double? evalContextQuantity = null, string evalContextCustomerId = null, string evalContextOrganizationId = null, DateTime? evalContextCertainDate = null, string evalContextCurrency = null, List<string> evalContextTags = null, Dictionary<string, string> evalContextContextObject = null, string evalContextGeoCity = null, string evalContextGeoState = null, string evalContextGeoCountry = null, string evalContextGeoContinent = null, string evalContextGeoZipCode = null, string evalContextGeoConnectionType = null, string evalContextGeoTimeZone = null, string evalContextGeoIpRoutingType = null, string evalContextGeoIspSecondLevel = null, string evalContextGeoIspTopLevel = null, int? evalContextShopperAge = null, string evalContextShopperGender = null, string evalContextLanguage = null, string evalContextShopperSearchedPhraseInStore = null, string evalContextShopperSearchedPhraseOnInternet = null, string evalContextCurrentUrl = null, string evalContextReferredUrl = null);
+        System.Threading.Tasks.Task<List<VirtoCommercePricingModuleWebModelPrice>> PricingModuleEvaluatePricesAsync (VirtoCommerceDomainPricingModelPriceEvaluationContext evalContext);
 
         /// <summary>
         /// Evaluate prices by given context
@@ -449,36 +368,9 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// 
         /// </remarks>
-        /// <param name="evalContextStoreId"></param>
-        /// <param name="evalContextCatalogId"></param>
-        /// <param name="evalContextProductIds"></param>
-        /// <param name="evalContextPricelistIds"></param>
-        /// <param name="evalContextQuantity"></param>
-        /// <param name="evalContextCustomerId"></param>
-        /// <param name="evalContextOrganizationId"></param>
-        /// <param name="evalContextCertainDate"></param>
-        /// <param name="evalContextCurrency"></param>
-        /// <param name="evalContextTags"></param>
-        /// <param name="evalContextContextObject"></param>
-        /// <param name="evalContextGeoCity"></param>
-        /// <param name="evalContextGeoState"></param>
-        /// <param name="evalContextGeoCountry"></param>
-        /// <param name="evalContextGeoContinent"></param>
-        /// <param name="evalContextGeoZipCode"></param>
-        /// <param name="evalContextGeoConnectionType"></param>
-        /// <param name="evalContextGeoTimeZone"></param>
-        /// <param name="evalContextGeoIpRoutingType"></param>
-        /// <param name="evalContextGeoIspSecondLevel"></param>
-        /// <param name="evalContextGeoIspTopLevel"></param>
-        /// <param name="evalContextShopperAge"></param>
-        /// <param name="evalContextShopperGender"></param>
-        /// <param name="evalContextLanguage"></param>
-        /// <param name="evalContextShopperSearchedPhraseInStore"></param>
-        /// <param name="evalContextShopperSearchedPhraseOnInternet"></param>
-        /// <param name="evalContextCurrentUrl"></param>
-        /// <param name="evalContextReferredUrl"></param>
+        /// <param name="evalContext">Pricing evaluation context</param>
         /// <returns>Task of ApiResponse (List&lt;VirtoCommercePricingModuleWebModelPrice&gt;)</returns>
-        System.Threading.Tasks.Task<ApiResponse<List<VirtoCommercePricingModuleWebModelPrice>>> PricingModuleEvaluatePricesAsyncWithHttpInfo (string evalContextStoreId = null, string evalContextCatalogId = null, List<string> evalContextProductIds = null, List<string> evalContextPricelistIds = null, double? evalContextQuantity = null, string evalContextCustomerId = null, string evalContextOrganizationId = null, DateTime? evalContextCertainDate = null, string evalContextCurrency = null, List<string> evalContextTags = null, Dictionary<string, string> evalContextContextObject = null, string evalContextGeoCity = null, string evalContextGeoState = null, string evalContextGeoCountry = null, string evalContextGeoContinent = null, string evalContextGeoZipCode = null, string evalContextGeoConnectionType = null, string evalContextGeoTimeZone = null, string evalContextGeoIpRoutingType = null, string evalContextGeoIspSecondLevel = null, string evalContextGeoIspTopLevel = null, int? evalContextShopperAge = null, string evalContextShopperGender = null, string evalContextLanguage = null, string evalContextShopperSearchedPhraseInStore = null, string evalContextShopperSearchedPhraseOnInternet = null, string evalContextCurrentUrl = null, string evalContextReferredUrl = null);
+        System.Threading.Tasks.Task<ApiResponse<List<VirtoCommercePricingModuleWebModelPrice>>> PricingModuleEvaluatePricesAsyncWithHttpInfo (VirtoCommerceDomainPricingModelPriceEvaluationContext evalContext);
         
         /// <summary>
         /// Get pricelists
@@ -642,36 +534,9 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// 
         /// </remarks>
-        /// <param name="evalContextStoreId"></param>
-        /// <param name="evalContextCatalogId"></param>
-        /// <param name="evalContextProductIds"></param>
-        /// <param name="evalContextPricelistIds"></param>
-        /// <param name="evalContextQuantity"></param>
-        /// <param name="evalContextCustomerId"></param>
-        /// <param name="evalContextOrganizationId"></param>
-        /// <param name="evalContextCertainDate"></param>
-        /// <param name="evalContextCurrency"></param>
-        /// <param name="evalContextTags"></param>
-        /// <param name="evalContextContextObject"></param>
-        /// <param name="evalContextGeoCity"></param>
-        /// <param name="evalContextGeoState"></param>
-        /// <param name="evalContextGeoCountry"></param>
-        /// <param name="evalContextGeoContinent"></param>
-        /// <param name="evalContextGeoZipCode"></param>
-        /// <param name="evalContextGeoConnectionType"></param>
-        /// <param name="evalContextGeoTimeZone"></param>
-        /// <param name="evalContextGeoIpRoutingType"></param>
-        /// <param name="evalContextGeoIspSecondLevel"></param>
-        /// <param name="evalContextGeoIspTopLevel"></param>
-        /// <param name="evalContextShopperAge"></param>
-        /// <param name="evalContextShopperGender"></param>
-        /// <param name="evalContextLanguage"></param>
-        /// <param name="evalContextShopperSearchedPhraseInStore"></param>
-        /// <param name="evalContextShopperSearchedPhraseOnInternet"></param>
-        /// <param name="evalContextCurrentUrl"></param>
-        /// <param name="evalContextReferredUrl"></param>
+        /// <param name="evalContext">Pricing evaluation context</param>
         /// <returns>List&lt;VirtoCommercePricingModuleWebModelPricelist&gt;</returns>
-        List<VirtoCommercePricingModuleWebModelPricelist> PricingModuleEvaluatePriceLists (string evalContextStoreId = null, string evalContextCatalogId = null, List<string> evalContextProductIds = null, List<string> evalContextPricelistIds = null, double? evalContextQuantity = null, string evalContextCustomerId = null, string evalContextOrganizationId = null, DateTime? evalContextCertainDate = null, string evalContextCurrency = null, List<string> evalContextTags = null, Dictionary<string, string> evalContextContextObject = null, string evalContextGeoCity = null, string evalContextGeoState = null, string evalContextGeoCountry = null, string evalContextGeoContinent = null, string evalContextGeoZipCode = null, string evalContextGeoConnectionType = null, string evalContextGeoTimeZone = null, string evalContextGeoIpRoutingType = null, string evalContextGeoIspSecondLevel = null, string evalContextGeoIspTopLevel = null, int? evalContextShopperAge = null, string evalContextShopperGender = null, string evalContextLanguage = null, string evalContextShopperSearchedPhraseInStore = null, string evalContextShopperSearchedPhraseOnInternet = null, string evalContextCurrentUrl = null, string evalContextReferredUrl = null);
+        List<VirtoCommercePricingModuleWebModelPricelist> PricingModuleEvaluatePriceLists (VirtoCommerceDomainPricingModelPriceEvaluationContext evalContext);
   
         /// <summary>
         /// Evaluate pricelists by given context
@@ -679,36 +544,9 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// 
         /// </remarks>
-        /// <param name="evalContextStoreId"></param>
-        /// <param name="evalContextCatalogId"></param>
-        /// <param name="evalContextProductIds"></param>
-        /// <param name="evalContextPricelistIds"></param>
-        /// <param name="evalContextQuantity"></param>
-        /// <param name="evalContextCustomerId"></param>
-        /// <param name="evalContextOrganizationId"></param>
-        /// <param name="evalContextCertainDate"></param>
-        /// <param name="evalContextCurrency"></param>
-        /// <param name="evalContextTags"></param>
-        /// <param name="evalContextContextObject"></param>
-        /// <param name="evalContextGeoCity"></param>
-        /// <param name="evalContextGeoState"></param>
-        /// <param name="evalContextGeoCountry"></param>
-        /// <param name="evalContextGeoContinent"></param>
-        /// <param name="evalContextGeoZipCode"></param>
-        /// <param name="evalContextGeoConnectionType"></param>
-        /// <param name="evalContextGeoTimeZone"></param>
-        /// <param name="evalContextGeoIpRoutingType"></param>
-        /// <param name="evalContextGeoIspSecondLevel"></param>
-        /// <param name="evalContextGeoIspTopLevel"></param>
-        /// <param name="evalContextShopperAge"></param>
-        /// <param name="evalContextShopperGender"></param>
-        /// <param name="evalContextLanguage"></param>
-        /// <param name="evalContextShopperSearchedPhraseInStore"></param>
-        /// <param name="evalContextShopperSearchedPhraseOnInternet"></param>
-        /// <param name="evalContextCurrentUrl"></param>
-        /// <param name="evalContextReferredUrl"></param>
+        /// <param name="evalContext">Pricing evaluation context</param>
         /// <returns>ApiResponse of List&lt;VirtoCommercePricingModuleWebModelPricelist&gt;</returns>
-        ApiResponse<List<VirtoCommercePricingModuleWebModelPricelist>> PricingModuleEvaluatePriceListsWithHttpInfo (string evalContextStoreId = null, string evalContextCatalogId = null, List<string> evalContextProductIds = null, List<string> evalContextPricelistIds = null, double? evalContextQuantity = null, string evalContextCustomerId = null, string evalContextOrganizationId = null, DateTime? evalContextCertainDate = null, string evalContextCurrency = null, List<string> evalContextTags = null, Dictionary<string, string> evalContextContextObject = null, string evalContextGeoCity = null, string evalContextGeoState = null, string evalContextGeoCountry = null, string evalContextGeoContinent = null, string evalContextGeoZipCode = null, string evalContextGeoConnectionType = null, string evalContextGeoTimeZone = null, string evalContextGeoIpRoutingType = null, string evalContextGeoIspSecondLevel = null, string evalContextGeoIspTopLevel = null, int? evalContextShopperAge = null, string evalContextShopperGender = null, string evalContextLanguage = null, string evalContextShopperSearchedPhraseInStore = null, string evalContextShopperSearchedPhraseOnInternet = null, string evalContextCurrentUrl = null, string evalContextReferredUrl = null);
+        ApiResponse<List<VirtoCommercePricingModuleWebModelPricelist>> PricingModuleEvaluatePriceListsWithHttpInfo (VirtoCommerceDomainPricingModelPriceEvaluationContext evalContext);
 
         /// <summary>
         /// Evaluate pricelists by given context
@@ -716,36 +554,9 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// 
         /// </remarks>
-        /// <param name="evalContextStoreId"></param>
-        /// <param name="evalContextCatalogId"></param>
-        /// <param name="evalContextProductIds"></param>
-        /// <param name="evalContextPricelistIds"></param>
-        /// <param name="evalContextQuantity"></param>
-        /// <param name="evalContextCustomerId"></param>
-        /// <param name="evalContextOrganizationId"></param>
-        /// <param name="evalContextCertainDate"></param>
-        /// <param name="evalContextCurrency"></param>
-        /// <param name="evalContextTags"></param>
-        /// <param name="evalContextContextObject"></param>
-        /// <param name="evalContextGeoCity"></param>
-        /// <param name="evalContextGeoState"></param>
-        /// <param name="evalContextGeoCountry"></param>
-        /// <param name="evalContextGeoContinent"></param>
-        /// <param name="evalContextGeoZipCode"></param>
-        /// <param name="evalContextGeoConnectionType"></param>
-        /// <param name="evalContextGeoTimeZone"></param>
-        /// <param name="evalContextGeoIpRoutingType"></param>
-        /// <param name="evalContextGeoIspSecondLevel"></param>
-        /// <param name="evalContextGeoIspTopLevel"></param>
-        /// <param name="evalContextShopperAge"></param>
-        /// <param name="evalContextShopperGender"></param>
-        /// <param name="evalContextLanguage"></param>
-        /// <param name="evalContextShopperSearchedPhraseInStore"></param>
-        /// <param name="evalContextShopperSearchedPhraseOnInternet"></param>
-        /// <param name="evalContextCurrentUrl"></param>
-        /// <param name="evalContextReferredUrl"></param>
+        /// <param name="evalContext">Pricing evaluation context</param>
         /// <returns>Task of List&lt;VirtoCommercePricingModuleWebModelPricelist&gt;</returns>
-        System.Threading.Tasks.Task<List<VirtoCommercePricingModuleWebModelPricelist>> PricingModuleEvaluatePriceListsAsync (string evalContextStoreId = null, string evalContextCatalogId = null, List<string> evalContextProductIds = null, List<string> evalContextPricelistIds = null, double? evalContextQuantity = null, string evalContextCustomerId = null, string evalContextOrganizationId = null, DateTime? evalContextCertainDate = null, string evalContextCurrency = null, List<string> evalContextTags = null, Dictionary<string, string> evalContextContextObject = null, string evalContextGeoCity = null, string evalContextGeoState = null, string evalContextGeoCountry = null, string evalContextGeoContinent = null, string evalContextGeoZipCode = null, string evalContextGeoConnectionType = null, string evalContextGeoTimeZone = null, string evalContextGeoIpRoutingType = null, string evalContextGeoIspSecondLevel = null, string evalContextGeoIspTopLevel = null, int? evalContextShopperAge = null, string evalContextShopperGender = null, string evalContextLanguage = null, string evalContextShopperSearchedPhraseInStore = null, string evalContextShopperSearchedPhraseOnInternet = null, string evalContextCurrentUrl = null, string evalContextReferredUrl = null);
+        System.Threading.Tasks.Task<List<VirtoCommercePricingModuleWebModelPricelist>> PricingModuleEvaluatePriceListsAsync (VirtoCommerceDomainPricingModelPriceEvaluationContext evalContext);
 
         /// <summary>
         /// Evaluate pricelists by given context
@@ -753,36 +564,9 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// 
         /// </remarks>
-        /// <param name="evalContextStoreId"></param>
-        /// <param name="evalContextCatalogId"></param>
-        /// <param name="evalContextProductIds"></param>
-        /// <param name="evalContextPricelistIds"></param>
-        /// <param name="evalContextQuantity"></param>
-        /// <param name="evalContextCustomerId"></param>
-        /// <param name="evalContextOrganizationId"></param>
-        /// <param name="evalContextCertainDate"></param>
-        /// <param name="evalContextCurrency"></param>
-        /// <param name="evalContextTags"></param>
-        /// <param name="evalContextContextObject"></param>
-        /// <param name="evalContextGeoCity"></param>
-        /// <param name="evalContextGeoState"></param>
-        /// <param name="evalContextGeoCountry"></param>
-        /// <param name="evalContextGeoContinent"></param>
-        /// <param name="evalContextGeoZipCode"></param>
-        /// <param name="evalContextGeoConnectionType"></param>
-        /// <param name="evalContextGeoTimeZone"></param>
-        /// <param name="evalContextGeoIpRoutingType"></param>
-        /// <param name="evalContextGeoIspSecondLevel"></param>
-        /// <param name="evalContextGeoIspTopLevel"></param>
-        /// <param name="evalContextShopperAge"></param>
-        /// <param name="evalContextShopperGender"></param>
-        /// <param name="evalContextLanguage"></param>
-        /// <param name="evalContextShopperSearchedPhraseInStore"></param>
-        /// <param name="evalContextShopperSearchedPhraseOnInternet"></param>
-        /// <param name="evalContextCurrentUrl"></param>
-        /// <param name="evalContextReferredUrl"></param>
+        /// <param name="evalContext">Pricing evaluation context</param>
         /// <returns>Task of ApiResponse (List&lt;VirtoCommercePricingModuleWebModelPricelist&gt;)</returns>
-        System.Threading.Tasks.Task<ApiResponse<List<VirtoCommercePricingModuleWebModelPricelist>>> PricingModuleEvaluatePriceListsAsyncWithHttpInfo (string evalContextStoreId = null, string evalContextCatalogId = null, List<string> evalContextProductIds = null, List<string> evalContextPricelistIds = null, double? evalContextQuantity = null, string evalContextCustomerId = null, string evalContextOrganizationId = null, DateTime? evalContextCertainDate = null, string evalContextCurrency = null, List<string> evalContextTags = null, Dictionary<string, string> evalContextContextObject = null, string evalContextGeoCity = null, string evalContextGeoState = null, string evalContextGeoCountry = null, string evalContextGeoContinent = null, string evalContextGeoZipCode = null, string evalContextGeoConnectionType = null, string evalContextGeoTimeZone = null, string evalContextGeoIpRoutingType = null, string evalContextGeoIspSecondLevel = null, string evalContextGeoIspTopLevel = null, int? evalContextShopperAge = null, string evalContextShopperGender = null, string evalContextLanguage = null, string evalContextShopperSearchedPhraseInStore = null, string evalContextShopperSearchedPhraseOnInternet = null, string evalContextCurrentUrl = null, string evalContextReferredUrl = null);
+        System.Threading.Tasks.Task<ApiResponse<List<VirtoCommercePricingModuleWebModelPricelist>>> PricingModuleEvaluatePriceListsAsyncWithHttpInfo (VirtoCommerceDomainPricingModelPriceEvaluationContext evalContext);
         
         /// <summary>
         /// Get pricelist
@@ -2007,75 +1791,24 @@ namespace VirtoCommerce.Client.Api
         /// <summary>
         /// Evaluate prices by given context 
         /// </summary>
-        /// <param name="evalContextStoreId"></param> 
-        /// <param name="evalContextCatalogId"></param> 
-        /// <param name="evalContextProductIds"></param> 
-        /// <param name="evalContextPricelistIds"></param> 
-        /// <param name="evalContextQuantity"></param> 
-        /// <param name="evalContextCustomerId"></param> 
-        /// <param name="evalContextOrganizationId"></param> 
-        /// <param name="evalContextCertainDate"></param> 
-        /// <param name="evalContextCurrency"></param> 
-        /// <param name="evalContextTags"></param> 
-        /// <param name="evalContextContextObject"></param> 
-        /// <param name="evalContextGeoCity"></param> 
-        /// <param name="evalContextGeoState"></param> 
-        /// <param name="evalContextGeoCountry"></param> 
-        /// <param name="evalContextGeoContinent"></param> 
-        /// <param name="evalContextGeoZipCode"></param> 
-        /// <param name="evalContextGeoConnectionType"></param> 
-        /// <param name="evalContextGeoTimeZone"></param> 
-        /// <param name="evalContextGeoIpRoutingType"></param> 
-        /// <param name="evalContextGeoIspSecondLevel"></param> 
-        /// <param name="evalContextGeoIspTopLevel"></param> 
-        /// <param name="evalContextShopperAge"></param> 
-        /// <param name="evalContextShopperGender"></param> 
-        /// <param name="evalContextLanguage"></param> 
-        /// <param name="evalContextShopperSearchedPhraseInStore"></param> 
-        /// <param name="evalContextShopperSearchedPhraseOnInternet"></param> 
-        /// <param name="evalContextCurrentUrl"></param> 
-        /// <param name="evalContextReferredUrl"></param> 
+        /// <param name="evalContext">Pricing evaluation context</param> 
         /// <returns>List&lt;VirtoCommercePricingModuleWebModelPrice&gt;</returns>
-        public List<VirtoCommercePricingModuleWebModelPrice> PricingModuleEvaluatePrices (string evalContextStoreId = null, string evalContextCatalogId = null, List<string> evalContextProductIds = null, List<string> evalContextPricelistIds = null, double? evalContextQuantity = null, string evalContextCustomerId = null, string evalContextOrganizationId = null, DateTime? evalContextCertainDate = null, string evalContextCurrency = null, List<string> evalContextTags = null, Dictionary<string, string> evalContextContextObject = null, string evalContextGeoCity = null, string evalContextGeoState = null, string evalContextGeoCountry = null, string evalContextGeoContinent = null, string evalContextGeoZipCode = null, string evalContextGeoConnectionType = null, string evalContextGeoTimeZone = null, string evalContextGeoIpRoutingType = null, string evalContextGeoIspSecondLevel = null, string evalContextGeoIspTopLevel = null, int? evalContextShopperAge = null, string evalContextShopperGender = null, string evalContextLanguage = null, string evalContextShopperSearchedPhraseInStore = null, string evalContextShopperSearchedPhraseOnInternet = null, string evalContextCurrentUrl = null, string evalContextReferredUrl = null)
+        public List<VirtoCommercePricingModuleWebModelPrice> PricingModuleEvaluatePrices (VirtoCommerceDomainPricingModelPriceEvaluationContext evalContext)
         {
-             ApiResponse<List<VirtoCommercePricingModuleWebModelPrice>> response = PricingModuleEvaluatePricesWithHttpInfo(evalContextStoreId, evalContextCatalogId, evalContextProductIds, evalContextPricelistIds, evalContextQuantity, evalContextCustomerId, evalContextOrganizationId, evalContextCertainDate, evalContextCurrency, evalContextTags, evalContextContextObject, evalContextGeoCity, evalContextGeoState, evalContextGeoCountry, evalContextGeoContinent, evalContextGeoZipCode, evalContextGeoConnectionType, evalContextGeoTimeZone, evalContextGeoIpRoutingType, evalContextGeoIspSecondLevel, evalContextGeoIspTopLevel, evalContextShopperAge, evalContextShopperGender, evalContextLanguage, evalContextShopperSearchedPhraseInStore, evalContextShopperSearchedPhraseOnInternet, evalContextCurrentUrl, evalContextReferredUrl);
+             ApiResponse<List<VirtoCommercePricingModuleWebModelPrice>> response = PricingModuleEvaluatePricesWithHttpInfo(evalContext);
              return response.Data;
         }
 
         /// <summary>
         /// Evaluate prices by given context 
         /// </summary>
-        /// <param name="evalContextStoreId"></param> 
-        /// <param name="evalContextCatalogId"></param> 
-        /// <param name="evalContextProductIds"></param> 
-        /// <param name="evalContextPricelistIds"></param> 
-        /// <param name="evalContextQuantity"></param> 
-        /// <param name="evalContextCustomerId"></param> 
-        /// <param name="evalContextOrganizationId"></param> 
-        /// <param name="evalContextCertainDate"></param> 
-        /// <param name="evalContextCurrency"></param> 
-        /// <param name="evalContextTags"></param> 
-        /// <param name="evalContextContextObject"></param> 
-        /// <param name="evalContextGeoCity"></param> 
-        /// <param name="evalContextGeoState"></param> 
-        /// <param name="evalContextGeoCountry"></param> 
-        /// <param name="evalContextGeoContinent"></param> 
-        /// <param name="evalContextGeoZipCode"></param> 
-        /// <param name="evalContextGeoConnectionType"></param> 
-        /// <param name="evalContextGeoTimeZone"></param> 
-        /// <param name="evalContextGeoIpRoutingType"></param> 
-        /// <param name="evalContextGeoIspSecondLevel"></param> 
-        /// <param name="evalContextGeoIspTopLevel"></param> 
-        /// <param name="evalContextShopperAge"></param> 
-        /// <param name="evalContextShopperGender"></param> 
-        /// <param name="evalContextLanguage"></param> 
-        /// <param name="evalContextShopperSearchedPhraseInStore"></param> 
-        /// <param name="evalContextShopperSearchedPhraseOnInternet"></param> 
-        /// <param name="evalContextCurrentUrl"></param> 
-        /// <param name="evalContextReferredUrl"></param> 
+        /// <param name="evalContext">Pricing evaluation context</param> 
         /// <returns>ApiResponse of List&lt;VirtoCommercePricingModuleWebModelPrice&gt;</returns>
-        public ApiResponse< List<VirtoCommercePricingModuleWebModelPrice> > PricingModuleEvaluatePricesWithHttpInfo (string evalContextStoreId = null, string evalContextCatalogId = null, List<string> evalContextProductIds = null, List<string> evalContextPricelistIds = null, double? evalContextQuantity = null, string evalContextCustomerId = null, string evalContextOrganizationId = null, DateTime? evalContextCertainDate = null, string evalContextCurrency = null, List<string> evalContextTags = null, Dictionary<string, string> evalContextContextObject = null, string evalContextGeoCity = null, string evalContextGeoState = null, string evalContextGeoCountry = null, string evalContextGeoContinent = null, string evalContextGeoZipCode = null, string evalContextGeoConnectionType = null, string evalContextGeoTimeZone = null, string evalContextGeoIpRoutingType = null, string evalContextGeoIspSecondLevel = null, string evalContextGeoIspTopLevel = null, int? evalContextShopperAge = null, string evalContextShopperGender = null, string evalContextLanguage = null, string evalContextShopperSearchedPhraseInStore = null, string evalContextShopperSearchedPhraseOnInternet = null, string evalContextCurrentUrl = null, string evalContextReferredUrl = null)
+        public ApiResponse< List<VirtoCommercePricingModuleWebModelPrice> > PricingModuleEvaluatePricesWithHttpInfo (VirtoCommerceDomainPricingModelPriceEvaluationContext evalContext)
         {
+            
+            // verify the required parameter 'evalContext' is set
+            if (evalContext == null) throw new ApiException(400, "Missing required parameter 'evalContext' when calling PricingModuleEvaluatePrices");
             
     
             var path_ = "/api/pricing/evaluate";
@@ -2099,43 +1832,16 @@ namespace VirtoCommerce.Client.Api
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
             
-            if (evalContextStoreId != null) queryParams.Add("evalContext.storeId", Configuration.ApiClient.ParameterToString(evalContextStoreId)); // query parameter
-            if (evalContextCatalogId != null) queryParams.Add("evalContext.catalogId", Configuration.ApiClient.ParameterToString(evalContextCatalogId)); // query parameter
-            if (evalContextProductIds != null) queryParams.Add("evalContext.productIds", Configuration.ApiClient.ParameterToString(evalContextProductIds)); // query parameter
-            if (evalContextPricelistIds != null) queryParams.Add("evalContext.pricelistIds", Configuration.ApiClient.ParameterToString(evalContextPricelistIds)); // query parameter
-            if (evalContextQuantity != null) queryParams.Add("evalContext.quantity", Configuration.ApiClient.ParameterToString(evalContextQuantity)); // query parameter
-            if (evalContextCustomerId != null) queryParams.Add("evalContext.customerId", Configuration.ApiClient.ParameterToString(evalContextCustomerId)); // query parameter
-            if (evalContextOrganizationId != null) queryParams.Add("evalContext.organizationId", Configuration.ApiClient.ParameterToString(evalContextOrganizationId)); // query parameter
-            if (evalContextCertainDate != null) queryParams.Add("evalContext.certainDate", Configuration.ApiClient.ParameterToString(evalContextCertainDate)); // query parameter
-            if (evalContextCurrency != null) queryParams.Add("evalContext.currency", Configuration.ApiClient.ParameterToString(evalContextCurrency)); // query parameter
-            if (evalContextTags != null) queryParams.Add("evalContext.tags", Configuration.ApiClient.ParameterToString(evalContextTags)); // query parameter
-            if (evalContextContextObject != null) queryParams.Add("evalContext.contextObject", Configuration.ApiClient.ParameterToString(evalContextContextObject)); // query parameter
-            if (evalContextGeoCity != null) queryParams.Add("evalContext.geoCity", Configuration.ApiClient.ParameterToString(evalContextGeoCity)); // query parameter
-            if (evalContextGeoState != null) queryParams.Add("evalContext.geoState", Configuration.ApiClient.ParameterToString(evalContextGeoState)); // query parameter
-            if (evalContextGeoCountry != null) queryParams.Add("evalContext.geoCountry", Configuration.ApiClient.ParameterToString(evalContextGeoCountry)); // query parameter
-            if (evalContextGeoContinent != null) queryParams.Add("evalContext.geoContinent", Configuration.ApiClient.ParameterToString(evalContextGeoContinent)); // query parameter
-            if (evalContextGeoZipCode != null) queryParams.Add("evalContext.geoZipCode", Configuration.ApiClient.ParameterToString(evalContextGeoZipCode)); // query parameter
-            if (evalContextGeoConnectionType != null) queryParams.Add("evalContext.geoConnectionType", Configuration.ApiClient.ParameterToString(evalContextGeoConnectionType)); // query parameter
-            if (evalContextGeoTimeZone != null) queryParams.Add("evalContext.geoTimeZone", Configuration.ApiClient.ParameterToString(evalContextGeoTimeZone)); // query parameter
-            if (evalContextGeoIpRoutingType != null) queryParams.Add("evalContext.geoIpRoutingType", Configuration.ApiClient.ParameterToString(evalContextGeoIpRoutingType)); // query parameter
-            if (evalContextGeoIspSecondLevel != null) queryParams.Add("evalContext.geoIspSecondLevel", Configuration.ApiClient.ParameterToString(evalContextGeoIspSecondLevel)); // query parameter
-            if (evalContextGeoIspTopLevel != null) queryParams.Add("evalContext.geoIspTopLevel", Configuration.ApiClient.ParameterToString(evalContextGeoIspTopLevel)); // query parameter
-            if (evalContextShopperAge != null) queryParams.Add("evalContext.shopperAge", Configuration.ApiClient.ParameterToString(evalContextShopperAge)); // query parameter
-            if (evalContextShopperGender != null) queryParams.Add("evalContext.shopperGender", Configuration.ApiClient.ParameterToString(evalContextShopperGender)); // query parameter
-            if (evalContextLanguage != null) queryParams.Add("evalContext.language", Configuration.ApiClient.ParameterToString(evalContextLanguage)); // query parameter
-            if (evalContextShopperSearchedPhraseInStore != null) queryParams.Add("evalContext.shopperSearchedPhraseInStore", Configuration.ApiClient.ParameterToString(evalContextShopperSearchedPhraseInStore)); // query parameter
-            if (evalContextShopperSearchedPhraseOnInternet != null) queryParams.Add("evalContext.shopperSearchedPhraseOnInternet", Configuration.ApiClient.ParameterToString(evalContextShopperSearchedPhraseOnInternet)); // query parameter
-            if (evalContextCurrentUrl != null) queryParams.Add("evalContext.currentUrl", Configuration.ApiClient.ParameterToString(evalContextCurrentUrl)); // query parameter
-            if (evalContextReferredUrl != null) queryParams.Add("evalContext.referredUrl", Configuration.ApiClient.ParameterToString(evalContextReferredUrl)); // query parameter
             
             
             
+            postBody = Configuration.ApiClient.Serialize(evalContext); // http body (model) parameter
             
 
             
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
 
             int statusCode = (int) response.StatusCode;
     
@@ -2153,38 +1859,11 @@ namespace VirtoCommerce.Client.Api
         /// <summary>
         /// Evaluate prices by given context 
         /// </summary>
-        /// <param name="evalContextStoreId"></param>
-        /// <param name="evalContextCatalogId"></param>
-        /// <param name="evalContextProductIds"></param>
-        /// <param name="evalContextPricelistIds"></param>
-        /// <param name="evalContextQuantity"></param>
-        /// <param name="evalContextCustomerId"></param>
-        /// <param name="evalContextOrganizationId"></param>
-        /// <param name="evalContextCertainDate"></param>
-        /// <param name="evalContextCurrency"></param>
-        /// <param name="evalContextTags"></param>
-        /// <param name="evalContextContextObject"></param>
-        /// <param name="evalContextGeoCity"></param>
-        /// <param name="evalContextGeoState"></param>
-        /// <param name="evalContextGeoCountry"></param>
-        /// <param name="evalContextGeoContinent"></param>
-        /// <param name="evalContextGeoZipCode"></param>
-        /// <param name="evalContextGeoConnectionType"></param>
-        /// <param name="evalContextGeoTimeZone"></param>
-        /// <param name="evalContextGeoIpRoutingType"></param>
-        /// <param name="evalContextGeoIspSecondLevel"></param>
-        /// <param name="evalContextGeoIspTopLevel"></param>
-        /// <param name="evalContextShopperAge"></param>
-        /// <param name="evalContextShopperGender"></param>
-        /// <param name="evalContextLanguage"></param>
-        /// <param name="evalContextShopperSearchedPhraseInStore"></param>
-        /// <param name="evalContextShopperSearchedPhraseOnInternet"></param>
-        /// <param name="evalContextCurrentUrl"></param>
-        /// <param name="evalContextReferredUrl"></param>
+        /// <param name="evalContext">Pricing evaluation context</param>
         /// <returns>Task of List&lt;VirtoCommercePricingModuleWebModelPrice&gt;</returns>
-        public async System.Threading.Tasks.Task<List<VirtoCommercePricingModuleWebModelPrice>> PricingModuleEvaluatePricesAsync (string evalContextStoreId = null, string evalContextCatalogId = null, List<string> evalContextProductIds = null, List<string> evalContextPricelistIds = null, double? evalContextQuantity = null, string evalContextCustomerId = null, string evalContextOrganizationId = null, DateTime? evalContextCertainDate = null, string evalContextCurrency = null, List<string> evalContextTags = null, Dictionary<string, string> evalContextContextObject = null, string evalContextGeoCity = null, string evalContextGeoState = null, string evalContextGeoCountry = null, string evalContextGeoContinent = null, string evalContextGeoZipCode = null, string evalContextGeoConnectionType = null, string evalContextGeoTimeZone = null, string evalContextGeoIpRoutingType = null, string evalContextGeoIspSecondLevel = null, string evalContextGeoIspTopLevel = null, int? evalContextShopperAge = null, string evalContextShopperGender = null, string evalContextLanguage = null, string evalContextShopperSearchedPhraseInStore = null, string evalContextShopperSearchedPhraseOnInternet = null, string evalContextCurrentUrl = null, string evalContextReferredUrl = null)
+        public async System.Threading.Tasks.Task<List<VirtoCommercePricingModuleWebModelPrice>> PricingModuleEvaluatePricesAsync (VirtoCommerceDomainPricingModelPriceEvaluationContext evalContext)
         {
-             ApiResponse<List<VirtoCommercePricingModuleWebModelPrice>> response = await PricingModuleEvaluatePricesAsyncWithHttpInfo(evalContextStoreId, evalContextCatalogId, evalContextProductIds, evalContextPricelistIds, evalContextQuantity, evalContextCustomerId, evalContextOrganizationId, evalContextCertainDate, evalContextCurrency, evalContextTags, evalContextContextObject, evalContextGeoCity, evalContextGeoState, evalContextGeoCountry, evalContextGeoContinent, evalContextGeoZipCode, evalContextGeoConnectionType, evalContextGeoTimeZone, evalContextGeoIpRoutingType, evalContextGeoIspSecondLevel, evalContextGeoIspTopLevel, evalContextShopperAge, evalContextShopperGender, evalContextLanguage, evalContextShopperSearchedPhraseInStore, evalContextShopperSearchedPhraseOnInternet, evalContextCurrentUrl, evalContextReferredUrl);
+             ApiResponse<List<VirtoCommercePricingModuleWebModelPrice>> response = await PricingModuleEvaluatePricesAsyncWithHttpInfo(evalContext);
              return response.Data;
 
         }
@@ -2192,37 +1871,12 @@ namespace VirtoCommerce.Client.Api
         /// <summary>
         /// Evaluate prices by given context 
         /// </summary>
-        /// <param name="evalContextStoreId"></param>
-        /// <param name="evalContextCatalogId"></param>
-        /// <param name="evalContextProductIds"></param>
-        /// <param name="evalContextPricelistIds"></param>
-        /// <param name="evalContextQuantity"></param>
-        /// <param name="evalContextCustomerId"></param>
-        /// <param name="evalContextOrganizationId"></param>
-        /// <param name="evalContextCertainDate"></param>
-        /// <param name="evalContextCurrency"></param>
-        /// <param name="evalContextTags"></param>
-        /// <param name="evalContextContextObject"></param>
-        /// <param name="evalContextGeoCity"></param>
-        /// <param name="evalContextGeoState"></param>
-        /// <param name="evalContextGeoCountry"></param>
-        /// <param name="evalContextGeoContinent"></param>
-        /// <param name="evalContextGeoZipCode"></param>
-        /// <param name="evalContextGeoConnectionType"></param>
-        /// <param name="evalContextGeoTimeZone"></param>
-        /// <param name="evalContextGeoIpRoutingType"></param>
-        /// <param name="evalContextGeoIspSecondLevel"></param>
-        /// <param name="evalContextGeoIspTopLevel"></param>
-        /// <param name="evalContextShopperAge"></param>
-        /// <param name="evalContextShopperGender"></param>
-        /// <param name="evalContextLanguage"></param>
-        /// <param name="evalContextShopperSearchedPhraseInStore"></param>
-        /// <param name="evalContextShopperSearchedPhraseOnInternet"></param>
-        /// <param name="evalContextCurrentUrl"></param>
-        /// <param name="evalContextReferredUrl"></param>
+        /// <param name="evalContext">Pricing evaluation context</param>
         /// <returns>Task of ApiResponse (List&lt;VirtoCommercePricingModuleWebModelPrice&gt;)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<List<VirtoCommercePricingModuleWebModelPrice>>> PricingModuleEvaluatePricesAsyncWithHttpInfo (string evalContextStoreId = null, string evalContextCatalogId = null, List<string> evalContextProductIds = null, List<string> evalContextPricelistIds = null, double? evalContextQuantity = null, string evalContextCustomerId = null, string evalContextOrganizationId = null, DateTime? evalContextCertainDate = null, string evalContextCurrency = null, List<string> evalContextTags = null, Dictionary<string, string> evalContextContextObject = null, string evalContextGeoCity = null, string evalContextGeoState = null, string evalContextGeoCountry = null, string evalContextGeoContinent = null, string evalContextGeoZipCode = null, string evalContextGeoConnectionType = null, string evalContextGeoTimeZone = null, string evalContextGeoIpRoutingType = null, string evalContextGeoIspSecondLevel = null, string evalContextGeoIspTopLevel = null, int? evalContextShopperAge = null, string evalContextShopperGender = null, string evalContextLanguage = null, string evalContextShopperSearchedPhraseInStore = null, string evalContextShopperSearchedPhraseOnInternet = null, string evalContextCurrentUrl = null, string evalContextReferredUrl = null)
+        public async System.Threading.Tasks.Task<ApiResponse<List<VirtoCommercePricingModuleWebModelPrice>>> PricingModuleEvaluatePricesAsyncWithHttpInfo (VirtoCommerceDomainPricingModelPriceEvaluationContext evalContext)
         {
+            // verify the required parameter 'evalContext' is set
+            if (evalContext == null) throw new ApiException(400, "Missing required parameter 'evalContext' when calling PricingModuleEvaluatePrices");
             
     
             var path_ = "/api/pricing/evaluate";
@@ -2246,43 +1900,16 @@ namespace VirtoCommerce.Client.Api
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
             
-            if (evalContextStoreId != null) queryParams.Add("evalContext.storeId", Configuration.ApiClient.ParameterToString(evalContextStoreId)); // query parameter
-            if (evalContextCatalogId != null) queryParams.Add("evalContext.catalogId", Configuration.ApiClient.ParameterToString(evalContextCatalogId)); // query parameter
-            if (evalContextProductIds != null) queryParams.Add("evalContext.productIds", Configuration.ApiClient.ParameterToString(evalContextProductIds)); // query parameter
-            if (evalContextPricelistIds != null) queryParams.Add("evalContext.pricelistIds", Configuration.ApiClient.ParameterToString(evalContextPricelistIds)); // query parameter
-            if (evalContextQuantity != null) queryParams.Add("evalContext.quantity", Configuration.ApiClient.ParameterToString(evalContextQuantity)); // query parameter
-            if (evalContextCustomerId != null) queryParams.Add("evalContext.customerId", Configuration.ApiClient.ParameterToString(evalContextCustomerId)); // query parameter
-            if (evalContextOrganizationId != null) queryParams.Add("evalContext.organizationId", Configuration.ApiClient.ParameterToString(evalContextOrganizationId)); // query parameter
-            if (evalContextCertainDate != null) queryParams.Add("evalContext.certainDate", Configuration.ApiClient.ParameterToString(evalContextCertainDate)); // query parameter
-            if (evalContextCurrency != null) queryParams.Add("evalContext.currency", Configuration.ApiClient.ParameterToString(evalContextCurrency)); // query parameter
-            if (evalContextTags != null) queryParams.Add("evalContext.tags", Configuration.ApiClient.ParameterToString(evalContextTags)); // query parameter
-            if (evalContextContextObject != null) queryParams.Add("evalContext.contextObject", Configuration.ApiClient.ParameterToString(evalContextContextObject)); // query parameter
-            if (evalContextGeoCity != null) queryParams.Add("evalContext.geoCity", Configuration.ApiClient.ParameterToString(evalContextGeoCity)); // query parameter
-            if (evalContextGeoState != null) queryParams.Add("evalContext.geoState", Configuration.ApiClient.ParameterToString(evalContextGeoState)); // query parameter
-            if (evalContextGeoCountry != null) queryParams.Add("evalContext.geoCountry", Configuration.ApiClient.ParameterToString(evalContextGeoCountry)); // query parameter
-            if (evalContextGeoContinent != null) queryParams.Add("evalContext.geoContinent", Configuration.ApiClient.ParameterToString(evalContextGeoContinent)); // query parameter
-            if (evalContextGeoZipCode != null) queryParams.Add("evalContext.geoZipCode", Configuration.ApiClient.ParameterToString(evalContextGeoZipCode)); // query parameter
-            if (evalContextGeoConnectionType != null) queryParams.Add("evalContext.geoConnectionType", Configuration.ApiClient.ParameterToString(evalContextGeoConnectionType)); // query parameter
-            if (evalContextGeoTimeZone != null) queryParams.Add("evalContext.geoTimeZone", Configuration.ApiClient.ParameterToString(evalContextGeoTimeZone)); // query parameter
-            if (evalContextGeoIpRoutingType != null) queryParams.Add("evalContext.geoIpRoutingType", Configuration.ApiClient.ParameterToString(evalContextGeoIpRoutingType)); // query parameter
-            if (evalContextGeoIspSecondLevel != null) queryParams.Add("evalContext.geoIspSecondLevel", Configuration.ApiClient.ParameterToString(evalContextGeoIspSecondLevel)); // query parameter
-            if (evalContextGeoIspTopLevel != null) queryParams.Add("evalContext.geoIspTopLevel", Configuration.ApiClient.ParameterToString(evalContextGeoIspTopLevel)); // query parameter
-            if (evalContextShopperAge != null) queryParams.Add("evalContext.shopperAge", Configuration.ApiClient.ParameterToString(evalContextShopperAge)); // query parameter
-            if (evalContextShopperGender != null) queryParams.Add("evalContext.shopperGender", Configuration.ApiClient.ParameterToString(evalContextShopperGender)); // query parameter
-            if (evalContextLanguage != null) queryParams.Add("evalContext.language", Configuration.ApiClient.ParameterToString(evalContextLanguage)); // query parameter
-            if (evalContextShopperSearchedPhraseInStore != null) queryParams.Add("evalContext.shopperSearchedPhraseInStore", Configuration.ApiClient.ParameterToString(evalContextShopperSearchedPhraseInStore)); // query parameter
-            if (evalContextShopperSearchedPhraseOnInternet != null) queryParams.Add("evalContext.shopperSearchedPhraseOnInternet", Configuration.ApiClient.ParameterToString(evalContextShopperSearchedPhraseOnInternet)); // query parameter
-            if (evalContextCurrentUrl != null) queryParams.Add("evalContext.currentUrl", Configuration.ApiClient.ParameterToString(evalContextCurrentUrl)); // query parameter
-            if (evalContextReferredUrl != null) queryParams.Add("evalContext.referredUrl", Configuration.ApiClient.ParameterToString(evalContextReferredUrl)); // query parameter
             
             
             
+            postBody = Configuration.ApiClient.Serialize(evalContext); // http body (model) parameter
             
 
             
 
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
 
             int statusCode = (int) response.StatusCode;
  
@@ -2829,75 +2456,24 @@ namespace VirtoCommerce.Client.Api
         /// <summary>
         /// Evaluate pricelists by given context 
         /// </summary>
-        /// <param name="evalContextStoreId"></param> 
-        /// <param name="evalContextCatalogId"></param> 
-        /// <param name="evalContextProductIds"></param> 
-        /// <param name="evalContextPricelistIds"></param> 
-        /// <param name="evalContextQuantity"></param> 
-        /// <param name="evalContextCustomerId"></param> 
-        /// <param name="evalContextOrganizationId"></param> 
-        /// <param name="evalContextCertainDate"></param> 
-        /// <param name="evalContextCurrency"></param> 
-        /// <param name="evalContextTags"></param> 
-        /// <param name="evalContextContextObject"></param> 
-        /// <param name="evalContextGeoCity"></param> 
-        /// <param name="evalContextGeoState"></param> 
-        /// <param name="evalContextGeoCountry"></param> 
-        /// <param name="evalContextGeoContinent"></param> 
-        /// <param name="evalContextGeoZipCode"></param> 
-        /// <param name="evalContextGeoConnectionType"></param> 
-        /// <param name="evalContextGeoTimeZone"></param> 
-        /// <param name="evalContextGeoIpRoutingType"></param> 
-        /// <param name="evalContextGeoIspSecondLevel"></param> 
-        /// <param name="evalContextGeoIspTopLevel"></param> 
-        /// <param name="evalContextShopperAge"></param> 
-        /// <param name="evalContextShopperGender"></param> 
-        /// <param name="evalContextLanguage"></param> 
-        /// <param name="evalContextShopperSearchedPhraseInStore"></param> 
-        /// <param name="evalContextShopperSearchedPhraseOnInternet"></param> 
-        /// <param name="evalContextCurrentUrl"></param> 
-        /// <param name="evalContextReferredUrl"></param> 
+        /// <param name="evalContext">Pricing evaluation context</param> 
         /// <returns>List&lt;VirtoCommercePricingModuleWebModelPricelist&gt;</returns>
-        public List<VirtoCommercePricingModuleWebModelPricelist> PricingModuleEvaluatePriceLists (string evalContextStoreId = null, string evalContextCatalogId = null, List<string> evalContextProductIds = null, List<string> evalContextPricelistIds = null, double? evalContextQuantity = null, string evalContextCustomerId = null, string evalContextOrganizationId = null, DateTime? evalContextCertainDate = null, string evalContextCurrency = null, List<string> evalContextTags = null, Dictionary<string, string> evalContextContextObject = null, string evalContextGeoCity = null, string evalContextGeoState = null, string evalContextGeoCountry = null, string evalContextGeoContinent = null, string evalContextGeoZipCode = null, string evalContextGeoConnectionType = null, string evalContextGeoTimeZone = null, string evalContextGeoIpRoutingType = null, string evalContextGeoIspSecondLevel = null, string evalContextGeoIspTopLevel = null, int? evalContextShopperAge = null, string evalContextShopperGender = null, string evalContextLanguage = null, string evalContextShopperSearchedPhraseInStore = null, string evalContextShopperSearchedPhraseOnInternet = null, string evalContextCurrentUrl = null, string evalContextReferredUrl = null)
+        public List<VirtoCommercePricingModuleWebModelPricelist> PricingModuleEvaluatePriceLists (VirtoCommerceDomainPricingModelPriceEvaluationContext evalContext)
         {
-             ApiResponse<List<VirtoCommercePricingModuleWebModelPricelist>> response = PricingModuleEvaluatePriceListsWithHttpInfo(evalContextStoreId, evalContextCatalogId, evalContextProductIds, evalContextPricelistIds, evalContextQuantity, evalContextCustomerId, evalContextOrganizationId, evalContextCertainDate, evalContextCurrency, evalContextTags, evalContextContextObject, evalContextGeoCity, evalContextGeoState, evalContextGeoCountry, evalContextGeoContinent, evalContextGeoZipCode, evalContextGeoConnectionType, evalContextGeoTimeZone, evalContextGeoIpRoutingType, evalContextGeoIspSecondLevel, evalContextGeoIspTopLevel, evalContextShopperAge, evalContextShopperGender, evalContextLanguage, evalContextShopperSearchedPhraseInStore, evalContextShopperSearchedPhraseOnInternet, evalContextCurrentUrl, evalContextReferredUrl);
+             ApiResponse<List<VirtoCommercePricingModuleWebModelPricelist>> response = PricingModuleEvaluatePriceListsWithHttpInfo(evalContext);
              return response.Data;
         }
 
         /// <summary>
         /// Evaluate pricelists by given context 
         /// </summary>
-        /// <param name="evalContextStoreId"></param> 
-        /// <param name="evalContextCatalogId"></param> 
-        /// <param name="evalContextProductIds"></param> 
-        /// <param name="evalContextPricelistIds"></param> 
-        /// <param name="evalContextQuantity"></param> 
-        /// <param name="evalContextCustomerId"></param> 
-        /// <param name="evalContextOrganizationId"></param> 
-        /// <param name="evalContextCertainDate"></param> 
-        /// <param name="evalContextCurrency"></param> 
-        /// <param name="evalContextTags"></param> 
-        /// <param name="evalContextContextObject"></param> 
-        /// <param name="evalContextGeoCity"></param> 
-        /// <param name="evalContextGeoState"></param> 
-        /// <param name="evalContextGeoCountry"></param> 
-        /// <param name="evalContextGeoContinent"></param> 
-        /// <param name="evalContextGeoZipCode"></param> 
-        /// <param name="evalContextGeoConnectionType"></param> 
-        /// <param name="evalContextGeoTimeZone"></param> 
-        /// <param name="evalContextGeoIpRoutingType"></param> 
-        /// <param name="evalContextGeoIspSecondLevel"></param> 
-        /// <param name="evalContextGeoIspTopLevel"></param> 
-        /// <param name="evalContextShopperAge"></param> 
-        /// <param name="evalContextShopperGender"></param> 
-        /// <param name="evalContextLanguage"></param> 
-        /// <param name="evalContextShopperSearchedPhraseInStore"></param> 
-        /// <param name="evalContextShopperSearchedPhraseOnInternet"></param> 
-        /// <param name="evalContextCurrentUrl"></param> 
-        /// <param name="evalContextReferredUrl"></param> 
+        /// <param name="evalContext">Pricing evaluation context</param> 
         /// <returns>ApiResponse of List&lt;VirtoCommercePricingModuleWebModelPricelist&gt;</returns>
-        public ApiResponse< List<VirtoCommercePricingModuleWebModelPricelist> > PricingModuleEvaluatePriceListsWithHttpInfo (string evalContextStoreId = null, string evalContextCatalogId = null, List<string> evalContextProductIds = null, List<string> evalContextPricelistIds = null, double? evalContextQuantity = null, string evalContextCustomerId = null, string evalContextOrganizationId = null, DateTime? evalContextCertainDate = null, string evalContextCurrency = null, List<string> evalContextTags = null, Dictionary<string, string> evalContextContextObject = null, string evalContextGeoCity = null, string evalContextGeoState = null, string evalContextGeoCountry = null, string evalContextGeoContinent = null, string evalContextGeoZipCode = null, string evalContextGeoConnectionType = null, string evalContextGeoTimeZone = null, string evalContextGeoIpRoutingType = null, string evalContextGeoIspSecondLevel = null, string evalContextGeoIspTopLevel = null, int? evalContextShopperAge = null, string evalContextShopperGender = null, string evalContextLanguage = null, string evalContextShopperSearchedPhraseInStore = null, string evalContextShopperSearchedPhraseOnInternet = null, string evalContextCurrentUrl = null, string evalContextReferredUrl = null)
+        public ApiResponse< List<VirtoCommercePricingModuleWebModelPricelist> > PricingModuleEvaluatePriceListsWithHttpInfo (VirtoCommerceDomainPricingModelPriceEvaluationContext evalContext)
         {
+            
+            // verify the required parameter 'evalContext' is set
+            if (evalContext == null) throw new ApiException(400, "Missing required parameter 'evalContext' when calling PricingModuleEvaluatePriceLists");
             
     
             var path_ = "/api/pricing/pricelists/evaluate";
@@ -2921,43 +2497,16 @@ namespace VirtoCommerce.Client.Api
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
             
-            if (evalContextStoreId != null) queryParams.Add("evalContext.storeId", Configuration.ApiClient.ParameterToString(evalContextStoreId)); // query parameter
-            if (evalContextCatalogId != null) queryParams.Add("evalContext.catalogId", Configuration.ApiClient.ParameterToString(evalContextCatalogId)); // query parameter
-            if (evalContextProductIds != null) queryParams.Add("evalContext.productIds", Configuration.ApiClient.ParameterToString(evalContextProductIds)); // query parameter
-            if (evalContextPricelistIds != null) queryParams.Add("evalContext.pricelistIds", Configuration.ApiClient.ParameterToString(evalContextPricelistIds)); // query parameter
-            if (evalContextQuantity != null) queryParams.Add("evalContext.quantity", Configuration.ApiClient.ParameterToString(evalContextQuantity)); // query parameter
-            if (evalContextCustomerId != null) queryParams.Add("evalContext.customerId", Configuration.ApiClient.ParameterToString(evalContextCustomerId)); // query parameter
-            if (evalContextOrganizationId != null) queryParams.Add("evalContext.organizationId", Configuration.ApiClient.ParameterToString(evalContextOrganizationId)); // query parameter
-            if (evalContextCertainDate != null) queryParams.Add("evalContext.certainDate", Configuration.ApiClient.ParameterToString(evalContextCertainDate)); // query parameter
-            if (evalContextCurrency != null) queryParams.Add("evalContext.currency", Configuration.ApiClient.ParameterToString(evalContextCurrency)); // query parameter
-            if (evalContextTags != null) queryParams.Add("evalContext.tags", Configuration.ApiClient.ParameterToString(evalContextTags)); // query parameter
-            if (evalContextContextObject != null) queryParams.Add("evalContext.contextObject", Configuration.ApiClient.ParameterToString(evalContextContextObject)); // query parameter
-            if (evalContextGeoCity != null) queryParams.Add("evalContext.geoCity", Configuration.ApiClient.ParameterToString(evalContextGeoCity)); // query parameter
-            if (evalContextGeoState != null) queryParams.Add("evalContext.geoState", Configuration.ApiClient.ParameterToString(evalContextGeoState)); // query parameter
-            if (evalContextGeoCountry != null) queryParams.Add("evalContext.geoCountry", Configuration.ApiClient.ParameterToString(evalContextGeoCountry)); // query parameter
-            if (evalContextGeoContinent != null) queryParams.Add("evalContext.geoContinent", Configuration.ApiClient.ParameterToString(evalContextGeoContinent)); // query parameter
-            if (evalContextGeoZipCode != null) queryParams.Add("evalContext.geoZipCode", Configuration.ApiClient.ParameterToString(evalContextGeoZipCode)); // query parameter
-            if (evalContextGeoConnectionType != null) queryParams.Add("evalContext.geoConnectionType", Configuration.ApiClient.ParameterToString(evalContextGeoConnectionType)); // query parameter
-            if (evalContextGeoTimeZone != null) queryParams.Add("evalContext.geoTimeZone", Configuration.ApiClient.ParameterToString(evalContextGeoTimeZone)); // query parameter
-            if (evalContextGeoIpRoutingType != null) queryParams.Add("evalContext.geoIpRoutingType", Configuration.ApiClient.ParameterToString(evalContextGeoIpRoutingType)); // query parameter
-            if (evalContextGeoIspSecondLevel != null) queryParams.Add("evalContext.geoIspSecondLevel", Configuration.ApiClient.ParameterToString(evalContextGeoIspSecondLevel)); // query parameter
-            if (evalContextGeoIspTopLevel != null) queryParams.Add("evalContext.geoIspTopLevel", Configuration.ApiClient.ParameterToString(evalContextGeoIspTopLevel)); // query parameter
-            if (evalContextShopperAge != null) queryParams.Add("evalContext.shopperAge", Configuration.ApiClient.ParameterToString(evalContextShopperAge)); // query parameter
-            if (evalContextShopperGender != null) queryParams.Add("evalContext.shopperGender", Configuration.ApiClient.ParameterToString(evalContextShopperGender)); // query parameter
-            if (evalContextLanguage != null) queryParams.Add("evalContext.language", Configuration.ApiClient.ParameterToString(evalContextLanguage)); // query parameter
-            if (evalContextShopperSearchedPhraseInStore != null) queryParams.Add("evalContext.shopperSearchedPhraseInStore", Configuration.ApiClient.ParameterToString(evalContextShopperSearchedPhraseInStore)); // query parameter
-            if (evalContextShopperSearchedPhraseOnInternet != null) queryParams.Add("evalContext.shopperSearchedPhraseOnInternet", Configuration.ApiClient.ParameterToString(evalContextShopperSearchedPhraseOnInternet)); // query parameter
-            if (evalContextCurrentUrl != null) queryParams.Add("evalContext.currentUrl", Configuration.ApiClient.ParameterToString(evalContextCurrentUrl)); // query parameter
-            if (evalContextReferredUrl != null) queryParams.Add("evalContext.referredUrl", Configuration.ApiClient.ParameterToString(evalContextReferredUrl)); // query parameter
             
             
             
+            postBody = Configuration.ApiClient.Serialize(evalContext); // http body (model) parameter
             
 
             
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
 
             int statusCode = (int) response.StatusCode;
     
@@ -2975,38 +2524,11 @@ namespace VirtoCommerce.Client.Api
         /// <summary>
         /// Evaluate pricelists by given context 
         /// </summary>
-        /// <param name="evalContextStoreId"></param>
-        /// <param name="evalContextCatalogId"></param>
-        /// <param name="evalContextProductIds"></param>
-        /// <param name="evalContextPricelistIds"></param>
-        /// <param name="evalContextQuantity"></param>
-        /// <param name="evalContextCustomerId"></param>
-        /// <param name="evalContextOrganizationId"></param>
-        /// <param name="evalContextCertainDate"></param>
-        /// <param name="evalContextCurrency"></param>
-        /// <param name="evalContextTags"></param>
-        /// <param name="evalContextContextObject"></param>
-        /// <param name="evalContextGeoCity"></param>
-        /// <param name="evalContextGeoState"></param>
-        /// <param name="evalContextGeoCountry"></param>
-        /// <param name="evalContextGeoContinent"></param>
-        /// <param name="evalContextGeoZipCode"></param>
-        /// <param name="evalContextGeoConnectionType"></param>
-        /// <param name="evalContextGeoTimeZone"></param>
-        /// <param name="evalContextGeoIpRoutingType"></param>
-        /// <param name="evalContextGeoIspSecondLevel"></param>
-        /// <param name="evalContextGeoIspTopLevel"></param>
-        /// <param name="evalContextShopperAge"></param>
-        /// <param name="evalContextShopperGender"></param>
-        /// <param name="evalContextLanguage"></param>
-        /// <param name="evalContextShopperSearchedPhraseInStore"></param>
-        /// <param name="evalContextShopperSearchedPhraseOnInternet"></param>
-        /// <param name="evalContextCurrentUrl"></param>
-        /// <param name="evalContextReferredUrl"></param>
+        /// <param name="evalContext">Pricing evaluation context</param>
         /// <returns>Task of List&lt;VirtoCommercePricingModuleWebModelPricelist&gt;</returns>
-        public async System.Threading.Tasks.Task<List<VirtoCommercePricingModuleWebModelPricelist>> PricingModuleEvaluatePriceListsAsync (string evalContextStoreId = null, string evalContextCatalogId = null, List<string> evalContextProductIds = null, List<string> evalContextPricelistIds = null, double? evalContextQuantity = null, string evalContextCustomerId = null, string evalContextOrganizationId = null, DateTime? evalContextCertainDate = null, string evalContextCurrency = null, List<string> evalContextTags = null, Dictionary<string, string> evalContextContextObject = null, string evalContextGeoCity = null, string evalContextGeoState = null, string evalContextGeoCountry = null, string evalContextGeoContinent = null, string evalContextGeoZipCode = null, string evalContextGeoConnectionType = null, string evalContextGeoTimeZone = null, string evalContextGeoIpRoutingType = null, string evalContextGeoIspSecondLevel = null, string evalContextGeoIspTopLevel = null, int? evalContextShopperAge = null, string evalContextShopperGender = null, string evalContextLanguage = null, string evalContextShopperSearchedPhraseInStore = null, string evalContextShopperSearchedPhraseOnInternet = null, string evalContextCurrentUrl = null, string evalContextReferredUrl = null)
+        public async System.Threading.Tasks.Task<List<VirtoCommercePricingModuleWebModelPricelist>> PricingModuleEvaluatePriceListsAsync (VirtoCommerceDomainPricingModelPriceEvaluationContext evalContext)
         {
-             ApiResponse<List<VirtoCommercePricingModuleWebModelPricelist>> response = await PricingModuleEvaluatePriceListsAsyncWithHttpInfo(evalContextStoreId, evalContextCatalogId, evalContextProductIds, evalContextPricelistIds, evalContextQuantity, evalContextCustomerId, evalContextOrganizationId, evalContextCertainDate, evalContextCurrency, evalContextTags, evalContextContextObject, evalContextGeoCity, evalContextGeoState, evalContextGeoCountry, evalContextGeoContinent, evalContextGeoZipCode, evalContextGeoConnectionType, evalContextGeoTimeZone, evalContextGeoIpRoutingType, evalContextGeoIspSecondLevel, evalContextGeoIspTopLevel, evalContextShopperAge, evalContextShopperGender, evalContextLanguage, evalContextShopperSearchedPhraseInStore, evalContextShopperSearchedPhraseOnInternet, evalContextCurrentUrl, evalContextReferredUrl);
+             ApiResponse<List<VirtoCommercePricingModuleWebModelPricelist>> response = await PricingModuleEvaluatePriceListsAsyncWithHttpInfo(evalContext);
              return response.Data;
 
         }
@@ -3014,37 +2536,12 @@ namespace VirtoCommerce.Client.Api
         /// <summary>
         /// Evaluate pricelists by given context 
         /// </summary>
-        /// <param name="evalContextStoreId"></param>
-        /// <param name="evalContextCatalogId"></param>
-        /// <param name="evalContextProductIds"></param>
-        /// <param name="evalContextPricelistIds"></param>
-        /// <param name="evalContextQuantity"></param>
-        /// <param name="evalContextCustomerId"></param>
-        /// <param name="evalContextOrganizationId"></param>
-        /// <param name="evalContextCertainDate"></param>
-        /// <param name="evalContextCurrency"></param>
-        /// <param name="evalContextTags"></param>
-        /// <param name="evalContextContextObject"></param>
-        /// <param name="evalContextGeoCity"></param>
-        /// <param name="evalContextGeoState"></param>
-        /// <param name="evalContextGeoCountry"></param>
-        /// <param name="evalContextGeoContinent"></param>
-        /// <param name="evalContextGeoZipCode"></param>
-        /// <param name="evalContextGeoConnectionType"></param>
-        /// <param name="evalContextGeoTimeZone"></param>
-        /// <param name="evalContextGeoIpRoutingType"></param>
-        /// <param name="evalContextGeoIspSecondLevel"></param>
-        /// <param name="evalContextGeoIspTopLevel"></param>
-        /// <param name="evalContextShopperAge"></param>
-        /// <param name="evalContextShopperGender"></param>
-        /// <param name="evalContextLanguage"></param>
-        /// <param name="evalContextShopperSearchedPhraseInStore"></param>
-        /// <param name="evalContextShopperSearchedPhraseOnInternet"></param>
-        /// <param name="evalContextCurrentUrl"></param>
-        /// <param name="evalContextReferredUrl"></param>
+        /// <param name="evalContext">Pricing evaluation context</param>
         /// <returns>Task of ApiResponse (List&lt;VirtoCommercePricingModuleWebModelPricelist&gt;)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<List<VirtoCommercePricingModuleWebModelPricelist>>> PricingModuleEvaluatePriceListsAsyncWithHttpInfo (string evalContextStoreId = null, string evalContextCatalogId = null, List<string> evalContextProductIds = null, List<string> evalContextPricelistIds = null, double? evalContextQuantity = null, string evalContextCustomerId = null, string evalContextOrganizationId = null, DateTime? evalContextCertainDate = null, string evalContextCurrency = null, List<string> evalContextTags = null, Dictionary<string, string> evalContextContextObject = null, string evalContextGeoCity = null, string evalContextGeoState = null, string evalContextGeoCountry = null, string evalContextGeoContinent = null, string evalContextGeoZipCode = null, string evalContextGeoConnectionType = null, string evalContextGeoTimeZone = null, string evalContextGeoIpRoutingType = null, string evalContextGeoIspSecondLevel = null, string evalContextGeoIspTopLevel = null, int? evalContextShopperAge = null, string evalContextShopperGender = null, string evalContextLanguage = null, string evalContextShopperSearchedPhraseInStore = null, string evalContextShopperSearchedPhraseOnInternet = null, string evalContextCurrentUrl = null, string evalContextReferredUrl = null)
+        public async System.Threading.Tasks.Task<ApiResponse<List<VirtoCommercePricingModuleWebModelPricelist>>> PricingModuleEvaluatePriceListsAsyncWithHttpInfo (VirtoCommerceDomainPricingModelPriceEvaluationContext evalContext)
         {
+            // verify the required parameter 'evalContext' is set
+            if (evalContext == null) throw new ApiException(400, "Missing required parameter 'evalContext' when calling PricingModuleEvaluatePriceLists");
             
     
             var path_ = "/api/pricing/pricelists/evaluate";
@@ -3068,43 +2565,16 @@ namespace VirtoCommerce.Client.Api
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             pathParams.Add("format", "json");
             
-            if (evalContextStoreId != null) queryParams.Add("evalContext.storeId", Configuration.ApiClient.ParameterToString(evalContextStoreId)); // query parameter
-            if (evalContextCatalogId != null) queryParams.Add("evalContext.catalogId", Configuration.ApiClient.ParameterToString(evalContextCatalogId)); // query parameter
-            if (evalContextProductIds != null) queryParams.Add("evalContext.productIds", Configuration.ApiClient.ParameterToString(evalContextProductIds)); // query parameter
-            if (evalContextPricelistIds != null) queryParams.Add("evalContext.pricelistIds", Configuration.ApiClient.ParameterToString(evalContextPricelistIds)); // query parameter
-            if (evalContextQuantity != null) queryParams.Add("evalContext.quantity", Configuration.ApiClient.ParameterToString(evalContextQuantity)); // query parameter
-            if (evalContextCustomerId != null) queryParams.Add("evalContext.customerId", Configuration.ApiClient.ParameterToString(evalContextCustomerId)); // query parameter
-            if (evalContextOrganizationId != null) queryParams.Add("evalContext.organizationId", Configuration.ApiClient.ParameterToString(evalContextOrganizationId)); // query parameter
-            if (evalContextCertainDate != null) queryParams.Add("evalContext.certainDate", Configuration.ApiClient.ParameterToString(evalContextCertainDate)); // query parameter
-            if (evalContextCurrency != null) queryParams.Add("evalContext.currency", Configuration.ApiClient.ParameterToString(evalContextCurrency)); // query parameter
-            if (evalContextTags != null) queryParams.Add("evalContext.tags", Configuration.ApiClient.ParameterToString(evalContextTags)); // query parameter
-            if (evalContextContextObject != null) queryParams.Add("evalContext.contextObject", Configuration.ApiClient.ParameterToString(evalContextContextObject)); // query parameter
-            if (evalContextGeoCity != null) queryParams.Add("evalContext.geoCity", Configuration.ApiClient.ParameterToString(evalContextGeoCity)); // query parameter
-            if (evalContextGeoState != null) queryParams.Add("evalContext.geoState", Configuration.ApiClient.ParameterToString(evalContextGeoState)); // query parameter
-            if (evalContextGeoCountry != null) queryParams.Add("evalContext.geoCountry", Configuration.ApiClient.ParameterToString(evalContextGeoCountry)); // query parameter
-            if (evalContextGeoContinent != null) queryParams.Add("evalContext.geoContinent", Configuration.ApiClient.ParameterToString(evalContextGeoContinent)); // query parameter
-            if (evalContextGeoZipCode != null) queryParams.Add("evalContext.geoZipCode", Configuration.ApiClient.ParameterToString(evalContextGeoZipCode)); // query parameter
-            if (evalContextGeoConnectionType != null) queryParams.Add("evalContext.geoConnectionType", Configuration.ApiClient.ParameterToString(evalContextGeoConnectionType)); // query parameter
-            if (evalContextGeoTimeZone != null) queryParams.Add("evalContext.geoTimeZone", Configuration.ApiClient.ParameterToString(evalContextGeoTimeZone)); // query parameter
-            if (evalContextGeoIpRoutingType != null) queryParams.Add("evalContext.geoIpRoutingType", Configuration.ApiClient.ParameterToString(evalContextGeoIpRoutingType)); // query parameter
-            if (evalContextGeoIspSecondLevel != null) queryParams.Add("evalContext.geoIspSecondLevel", Configuration.ApiClient.ParameterToString(evalContextGeoIspSecondLevel)); // query parameter
-            if (evalContextGeoIspTopLevel != null) queryParams.Add("evalContext.geoIspTopLevel", Configuration.ApiClient.ParameterToString(evalContextGeoIspTopLevel)); // query parameter
-            if (evalContextShopperAge != null) queryParams.Add("evalContext.shopperAge", Configuration.ApiClient.ParameterToString(evalContextShopperAge)); // query parameter
-            if (evalContextShopperGender != null) queryParams.Add("evalContext.shopperGender", Configuration.ApiClient.ParameterToString(evalContextShopperGender)); // query parameter
-            if (evalContextLanguage != null) queryParams.Add("evalContext.language", Configuration.ApiClient.ParameterToString(evalContextLanguage)); // query parameter
-            if (evalContextShopperSearchedPhraseInStore != null) queryParams.Add("evalContext.shopperSearchedPhraseInStore", Configuration.ApiClient.ParameterToString(evalContextShopperSearchedPhraseInStore)); // query parameter
-            if (evalContextShopperSearchedPhraseOnInternet != null) queryParams.Add("evalContext.shopperSearchedPhraseOnInternet", Configuration.ApiClient.ParameterToString(evalContextShopperSearchedPhraseOnInternet)); // query parameter
-            if (evalContextCurrentUrl != null) queryParams.Add("evalContext.currentUrl", Configuration.ApiClient.ParameterToString(evalContextCurrentUrl)); // query parameter
-            if (evalContextReferredUrl != null) queryParams.Add("evalContext.referredUrl", Configuration.ApiClient.ParameterToString(evalContextReferredUrl)); // query parameter
             
             
             
+            postBody = Configuration.ApiClient.Serialize(evalContext); // http body (model) parameter
             
 
             
 
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
 
             int statusCode = (int) response.StatusCode;
  
