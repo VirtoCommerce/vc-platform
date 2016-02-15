@@ -117,7 +117,7 @@ namespace VirtoCommerce.Storefront.Controllers
 
             using (var lockObject = await AsyncLock.GetLockByKey("quote:" + WorkContext.CurrentQuoteRequest.Id).LockAsync())
             {
-                await _quoteRequestBuilder.Update(quoteRequest).SubmitAsync();
+                _quoteRequestBuilder.Update(quoteRequest).Submit();
                 await _quoteRequestBuilder.SaveAsync();
             }
 
@@ -131,7 +131,7 @@ namespace VirtoCommerce.Storefront.Controllers
             var quoteRequest = await GetQuoteRequestByNumberAsync(number);
             if (quoteRequest != null)
             {
-                await _quoteRequestBuilder.TakeQuoteRequest(quoteRequest).RejectAsync();
+                _quoteRequestBuilder.TakeQuoteRequest(quoteRequest).Reject();
                 await _quoteRequestBuilder.SaveAsync();
             }
 
@@ -177,8 +177,7 @@ namespace VirtoCommerce.Storefront.Controllers
             var foundedQuoteRequest = await GetQuoteRequestByNumberAsync(quoteRequest.Id);
             if (foundedQuoteRequest != null)
             {
-                _quoteRequestBuilder.TakeQuoteRequest(foundedQuoteRequest).Update(quoteRequest);
-                await _quoteRequestBuilder.ConfirmAsync();
+                _quoteRequestBuilder.TakeQuoteRequest(foundedQuoteRequest).Update(quoteRequest).Confirm();
                 await _quoteRequestBuilder.SaveAsync();
 
                 _cartBuilder.TakeCart(WorkContext.CurrentCart);

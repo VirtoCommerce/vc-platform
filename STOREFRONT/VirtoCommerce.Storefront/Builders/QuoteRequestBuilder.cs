@@ -15,6 +15,7 @@ using VirtoCommerce.Client.Api;
 using VirtoCommerce.Client.Model;
 using VirtoCommerce.Storefront.Model.Common.Events;
 using VirtoCommerce.Storefront.Model.Quote.Events;
+using VirtoCommerce.Storefront.Model.Common.Exceptions;
 
 namespace VirtoCommerce.Storefront.Builders
 {
@@ -89,32 +90,46 @@ namespace VirtoCommerce.Storefront.Builders
             return this;
         }
 
-        public async Task<IQuoteRequestBuilder> SubmitAsync()
+        public IQuoteRequestBuilder Submit()
         {
+            if (_quoteRequest.ItemsCount == 0)
+            {
+                throw new StorefrontException("Can not submit an empty quote request");
+            }
+
+            if (_quoteRequest.Status == "Ordered")
+            {
+                throw new StorefrontException("Can not submit an ordered quote request");
+            }
+
             _quoteRequest.Tag = null;
             _quoteRequest.Status = "Processing";
 
-            await _quoteRequestUpdatedEventPublisher.PublishAsync(new QuoteRequestUpdatedEvent(_quoteRequest));
-
             return this;
         }
 
-        public async Task<IQuoteRequestBuilder> RejectAsync()
+        public IQuoteRequestBuilder Reject()
         {
+            if (_quoteRequest.Status == "New" || _quoteRequest.Status == "Ordered")
+            {
+                throw new StorefrontException("Can not reject new or ordered quote request");
+            }
+
             _quoteRequest.Tag = null;
             _quoteRequest.Status = "Rejected";
 
-            await _quoteRequestUpdatedEventPublisher.PublishAsync(new QuoteRequestUpdatedEvent(_quoteRequest));
-
             return this;
         }
 
-        public async Task<IQuoteRequestBuilder> ConfirmAsync()
+        public IQuoteRequestBuilder Confirm()
         {
+            if (_quoteRequest.Status != "Proposal sent")
+            {
+                throw new StorefrontException("Can not confirm an quote request");
+            }
+
             _quoteRequest.Tag = null;
             _quoteRequest.Status = "Ordered";
-
-            await _quoteRequestUpdatedEventPublisher.PublishAsync(new QuoteRequestUpdatedEvent(_quoteRequest));
 
             return this;
         }
@@ -217,6 +232,8 @@ namespace VirtoCommerce.Storefront.Builders
             {
                 await _quoteApi.QuoteModuleUpdateAsync(quoteDto);
             }
+
+            await _quoteRequestUpdatedEventPublisher.PublishAsync(new QuoteRequestUpdatedEvent(_quoteRequest));
         }
 
         public QuoteRequest QuoteRequest

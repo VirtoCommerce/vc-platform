@@ -46,19 +46,19 @@ namespace VirtoCommerce.Storefront.Model.Quote.Services
         /// Submit captured RFQ
         /// </summary>
         /// <returns></returns>
-        Task<IQuoteRequestBuilder> SubmitAsync();
+        IQuoteRequestBuilder Submit();
 
         /// <summary>
         /// Reject captured RFQ
         /// </summary>
         /// <returns></returns>
-        Task<IQuoteRequestBuilder> RejectAsync();
+        IQuoteRequestBuilder Reject();
 
         /// <summary>
         /// Confirm captured RFQ
         /// </summary>
         /// <returns></returns>
-        Task<IQuoteRequestBuilder> ConfirmAsync();
+        IQuoteRequestBuilder Confirm();
 
         /// <summary>
         /// Remove item from captured RFQ
