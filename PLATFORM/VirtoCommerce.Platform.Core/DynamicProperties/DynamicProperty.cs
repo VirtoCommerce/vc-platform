@@ -31,6 +31,11 @@ namespace VirtoCommerce.Platform.Core.DynamicProperties
         /// </summary>
         public DynamicPropertyName[] DisplayNames { get; set; }
 
+        public override string ToString()
+        {
+            return string.Format("{0}", Name ?? "n/a");
+        }
+
         public DynamicProperty Clone()
         {
             return new DynamicProperty
