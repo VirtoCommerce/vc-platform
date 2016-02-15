@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.storeModule')
-.controller('virtoCommerce.storeModule.seoDetailController', ['$scope', 'virtoCommerce.storeModule.stores', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'platformWebApp.authService', function ($scope, stores, dialogService, bladeNavigationService, authService) {
+.controller('virtoCommerce.storeModule.seoDetailController', ['$scope', 'virtoCommerce.storeModule.stores', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', function ($scope, stores, dialogService, bladeNavigationService) {
     var blade = $scope.blade;
 
     function initializeBlade(parentEntity) {
@@ -22,7 +22,7 @@
             blade.isLoading = false;
         }
     };
-    
+
     $scope.saveChanges = function () {
         var seoInfos = _.filter($scope.seoInfos, function (data) {
             return isValid(data);
@@ -41,7 +41,7 @@
                 });
         }
     }
-    
+
     function isValid(data) {
         // check required and valid Url requirements
         return data.semanticUrl && $scope.semanticUrlValidator(data.semanticUrl);
@@ -51,30 +51,18 @@
         //var pattern = /^([a-zA-Z0-9\(\)_\-]+)*$/;
         var pattern = /[$+;=%{}[\]|\\\/@ ~#!^*&?:'<>,]/;
         return !pattern.test(value);
-    }
-
-    function isDirty() {
-    	return authService.checkPermission('store:update', blade.securityScopes) && !angular.equals($scope.seoInfos, blade.origItem);
     };
 
+    function isDirty() {
+        return blade.hasUpdatePermission() && !angular.equals($scope.seoInfos, blade.origItem);
+    }
+
+    function canSave() {
+        return isDirty() && _.every(_.filter($scope.seoInfos, function (data) { return !data.isNew; }), isValid) && _.some($scope.seoInfos, isValid); // isValid formScope && formScope.$valid;
+    }
+
     blade.onClose = function (closeCallback) {
-        if (isDirty()) {
-            var dialog = {
-                id: "confirmItemChange",
-                title: "stores.dialogs.seo-save.title",
-                message: "stores.dialogs.seo-save.message"
-            };
-            dialog.callback = function (needSave) {
-                if (needSave) {
-                    $scope.saveChanges();
-                }
-                closeCallback();
-            };
-            dialogService.showConfirmationDialog(dialog);
-        }
-        else {
-            closeCallback();
-        }
+        bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, $scope.saveChanges, closeCallback, "stores.dialogs.seo-save.title", "stores.dialogs.seo-save.message");
     };
 
     var formScope;
@@ -86,23 +74,17 @@
         blade.toolbarCommands = [
             {
                 name: "platform.commands.save", icon: 'fa fa-save',
-                executeMethod: function () {
-                    $scope.saveChanges();
-                },
-                canExecuteMethod: function () {
-                    return isDirty() && _.every(_.filter($scope.seoInfos, function (data) { return !data.isNew; }), isValid) && _.some($scope.seoInfos, isValid); // isValid formScope && formScope.$valid;
-                },
-                permission: 'store:update'
+                executeMethod: $scope.saveChanges,
+                canExecuteMethod: canSave,
+                permission: blade.updatePermission
             },
             {
                 name: "platform.commands.reset", icon: 'fa fa-undo',
                 executeMethod: function () {
                     angular.copy(blade.origItem, $scope.seoInfos);
                 },
-                canExecuteMethod: function () {
-                    return isDirty();
-                },
-                permission: 'store:update'
+                canExecuteMethod: isDirty,
+                permission: blade.updatePermission
             }
         ];
     }

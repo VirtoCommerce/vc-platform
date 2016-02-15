@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommercePlatformWebModelNotificationsNotification : IEquatable<VirtoCommercePlatformWebModelNotificationsNotification>
+    public partial class VirtoCommercePlatformWebModelNotificationsNotification :  IEquatable<VirtoCommercePlatformWebModelNotificationsNotification>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelNotificationsNotification" /> class.
@@ -246,7 +247,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommercePlatformWebModelNotificationsNotification instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommercePlatformWebModelNotificationsNotification to be compared</param>
+        /// <param name="other">Instance of VirtoCommercePlatformWebModelNotificationsNotification to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommercePlatformWebModelNotificationsNotification other)
         {
@@ -380,70 +381,70 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.Id != null)
-                    hash = hash * 57 + this.Id.GetHashCode();
+                    hash = hash * 59 + this.Id.GetHashCode();
                 
                 if (this.DisplayName != null)
-                    hash = hash * 57 + this.DisplayName.GetHashCode();
+                    hash = hash * 59 + this.DisplayName.GetHashCode();
                 
                 if (this.Description != null)
-                    hash = hash * 57 + this.Description.GetHashCode();
+                    hash = hash * 59 + this.Description.GetHashCode();
                 
                 if (this.IsEmail != null)
-                    hash = hash * 57 + this.IsEmail.GetHashCode();
+                    hash = hash * 59 + this.IsEmail.GetHashCode();
                 
                 if (this.IsSms != null)
-                    hash = hash * 57 + this.IsSms.GetHashCode();
+                    hash = hash * 59 + this.IsSms.GetHashCode();
                 
                 if (this.Type != null)
-                    hash = hash * 57 + this.Type.GetHashCode();
+                    hash = hash * 59 + this.Type.GetHashCode();
                 
                 if (this.IsActive != null)
-                    hash = hash * 57 + this.IsActive.GetHashCode();
+                    hash = hash * 59 + this.IsActive.GetHashCode();
                 
                 if (this.IsSuccessSend != null)
-                    hash = hash * 57 + this.IsSuccessSend.GetHashCode();
+                    hash = hash * 59 + this.IsSuccessSend.GetHashCode();
                 
                 if (this.ObjectId != null)
-                    hash = hash * 57 + this.ObjectId.GetHashCode();
+                    hash = hash * 59 + this.ObjectId.GetHashCode();
                 
                 if (this.ObjectTypeId != null)
-                    hash = hash * 57 + this.ObjectTypeId.GetHashCode();
+                    hash = hash * 59 + this.ObjectTypeId.GetHashCode();
                 
                 if (this.Language != null)
-                    hash = hash * 57 + this.Language.GetHashCode();
+                    hash = hash * 59 + this.Language.GetHashCode();
                 
                 if (this.SendingGateway != null)
-                    hash = hash * 57 + this.SendingGateway.GetHashCode();
+                    hash = hash * 59 + this.SendingGateway.GetHashCode();
                 
                 if (this.Subject != null)
-                    hash = hash * 57 + this.Subject.GetHashCode();
+                    hash = hash * 59 + this.Subject.GetHashCode();
                 
                 if (this.Body != null)
-                    hash = hash * 57 + this.Body.GetHashCode();
+                    hash = hash * 59 + this.Body.GetHashCode();
                 
                 if (this.Sender != null)
-                    hash = hash * 57 + this.Sender.GetHashCode();
+                    hash = hash * 59 + this.Sender.GetHashCode();
                 
                 if (this.Recipient != null)
-                    hash = hash * 57 + this.Recipient.GetHashCode();
+                    hash = hash * 59 + this.Recipient.GetHashCode();
                 
                 if (this.AttemptCount != null)
-                    hash = hash * 57 + this.AttemptCount.GetHashCode();
+                    hash = hash * 59 + this.AttemptCount.GetHashCode();
                 
                 if (this.MaxAttemptCount != null)
-                    hash = hash * 57 + this.MaxAttemptCount.GetHashCode();
+                    hash = hash * 59 + this.MaxAttemptCount.GetHashCode();
                 
                 if (this.LastFailAttemptMessage != null)
-                    hash = hash * 57 + this.LastFailAttemptMessage.GetHashCode();
+                    hash = hash * 59 + this.LastFailAttemptMessage.GetHashCode();
                 
                 if (this.LastFailAttemptDate != null)
-                    hash = hash * 57 + this.LastFailAttemptDate.GetHashCode();
+                    hash = hash * 59 + this.LastFailAttemptDate.GetHashCode();
                 
                 if (this.StartSendingDate != null)
-                    hash = hash * 57 + this.StartSendingDate.GetHashCode();
+                    hash = hash * 59 + this.StartSendingDate.GetHashCode();
                 
                 if (this.SentDate != null)
-                    hash = hash * 57 + this.SentDate.GetHashCode();
+                    hash = hash * 59 + this.SentDate.GetHashCode();
                 
                 return hash;
             }

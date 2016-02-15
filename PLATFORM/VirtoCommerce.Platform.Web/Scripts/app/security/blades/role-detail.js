@@ -1,12 +1,13 @@
 ﻿angular.module('platformWebApp')
 .controller('platformWebApp.roleDetailController', ['$q', '$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.roles', 'platformWebApp.dialogService', function ($q, $scope, bladeNavigationService, roles, dialogService) {
     var blade = $scope.blade;
+    blade.updatePermission = 'platform:security:update';
     var promise = roles.queryPermissions().$promise;
 
     blade.refresh = function (parentRefresh) {
         if (blade.isNew) {
             initializeBlade({});
-        } else {            
+        } else {
             roles.get({ id: blade.data.id }, function (data) {
                 initializeBlade(data);
                 if (parentRefresh && blade.parentBlade.refresh) {
@@ -29,12 +30,16 @@
             });
         } else {
             blade.isLoading = false;
-        }        
-    };
+        }
+    }
 
     function isDirty() {
-        return !angular.equals(blade.currentEntity, blade.origEntity);
-    };
+        return !angular.equals(blade.currentEntity, blade.origEntity) && blade.hasUpdatePermission();
+    }
+
+    function canSave() {
+        return isDirty() && $scope.formScope && $scope.formScope.$valid;
+    }
 
     $scope.saveChanges = function () {
         blade.isLoading = true;
@@ -79,31 +84,8 @@
     }
 
     blade.onClose = function (closeCallback) {
-        closeChildrenBlades();
-        if (isDirty()) {
-            var dialog = {
-                id: "confirmCurrentBladeClose",
-                title: "platform.dialogs.role-save.title",
-                message: "platform.dialogs.role-save.message"
-            };
-            dialog.callback = function (needSave) {
-                if (needSave) {
-                    $scope.saveChanges();
-                }
-                closeCallback();
-            };
-            dialogService.showConfirmationDialog(dialog);
-        }
-        else {
-            closeCallback();
-        }
+        bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, $scope.saveChanges, closeCallback, "platform.dialogs.role-save.title", "platform.dialogs.role-save.message");
     };
-
-    function closeChildrenBlades() {
-        angular.forEach(blade.childrenBlades.slice(), function (child) {
-            bladeNavigationService.closeBlade(child);
-        });
-    }
 
     $scope.toggleAll = function () {
         angular.forEach(blade.currentEntity.permissions, function (item) {
@@ -136,13 +118,9 @@
                 {
                     name: "platform.commands.save",
                     icon: 'fa fa-save',
-                    executeMethod: function () {
-                        $scope.saveChanges();
-                    },
-                    canExecuteMethod: function () {
-                        return isDirty() && $scope.formScope && $scope.formScope.$valid;
-                    },
-                    permission: 'platform:security:update'
+                    executeMethod: $scope.saveChanges,
+                    canExecuteMethod: canSave,                    
+                    permission: blade.updatePermission
                 },
                 {
                     name: "platform.commands.reset",
@@ -150,10 +128,8 @@
                     executeMethod: function () {
                         angular.copy(blade.origEntity, blade.currentEntity);
                     },
-                    canExecuteMethod: function () {
-                        return isDirty();
-                    },
-                    permission: 'platform:security:update'
+                    canExecuteMethod: isDirty,
+                    permission: blade.updatePermission
                 },
                 {
                     name: "platform.commands.assign", icon: 'fa fa-plus',
@@ -172,7 +148,7 @@
                     canExecuteMethod: function () {
                         return true;
                     },
-                    permission: 'platform:security:update'
+                    permission: blade.updatePermission
                 },
                 {
                     name: "platform.commands.remove", icon: 'fa fa-trash-o',
@@ -182,7 +158,7 @@
                     canExecuteMethod: function () {
                         return isItemsChecked();
                     },
-                    permission: 'platform:security:update'
+                    permission: blade.updatePermission
                 }
             ];
         }

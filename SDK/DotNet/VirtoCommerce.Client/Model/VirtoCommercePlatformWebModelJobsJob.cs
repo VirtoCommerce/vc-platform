@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommercePlatformWebModelJobsJob : IEquatable<VirtoCommercePlatformWebModelJobsJob>
+    public partial class VirtoCommercePlatformWebModelJobsJob :  IEquatable<VirtoCommercePlatformWebModelJobsJob>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelJobsJob" /> class.
@@ -88,7 +89,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommercePlatformWebModelJobsJob instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommercePlatformWebModelJobsJob to be compared</param>
+        /// <param name="other">Instance of VirtoCommercePlatformWebModelJobsJob to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommercePlatformWebModelJobsJob other)
         {
@@ -127,13 +128,13 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.Id != null)
-                    hash = hash * 57 + this.Id.GetHashCode();
+                    hash = hash * 59 + this.Id.GetHashCode();
                 
                 if (this.State != null)
-                    hash = hash * 57 + this.State.GetHashCode();
+                    hash = hash * 59 + this.State.GetHashCode();
                 
                 if (this.Completed != null)
-                    hash = hash * 57 + this.Completed.GetHashCode();
+                    hash = hash * 59 + this.Completed.GetHashCode();
                 
                 return hash;
             }

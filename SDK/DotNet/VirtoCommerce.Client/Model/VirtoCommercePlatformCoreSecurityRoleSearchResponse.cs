@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommercePlatformCoreSecurityRoleSearchResponse : IEquatable<VirtoCommercePlatformCoreSecurityRoleSearchResponse>
+    public partial class VirtoCommercePlatformCoreSecurityRoleSearchResponse :  IEquatable<VirtoCommercePlatformCoreSecurityRoleSearchResponse>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreSecurityRoleSearchResponse" /> class.
@@ -80,7 +81,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommercePlatformCoreSecurityRoleSearchResponse instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommercePlatformCoreSecurityRoleSearchResponse to be compared</param>
+        /// <param name="other">Instance of VirtoCommercePlatformCoreSecurityRoleSearchResponse to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommercePlatformCoreSecurityRoleSearchResponse other)
         {
@@ -114,10 +115,10 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.Roles != null)
-                    hash = hash * 57 + this.Roles.GetHashCode();
+                    hash = hash * 59 + this.Roles.GetHashCode();
                 
                 if (this.TotalCount != null)
-                    hash = hash * 57 + this.TotalCount.GetHashCode();
+                    hash = hash * 59 + this.TotalCount.GetHashCode();
                 
                 return hash;
             }

@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommerceStoreModuleWebModelFulfillmentCenter : IEquatable<VirtoCommerceStoreModuleWebModelFulfillmentCenter>
+    public partial class VirtoCommerceStoreModuleWebModelFulfillmentCenter :  IEquatable<VirtoCommerceStoreModuleWebModelFulfillmentCenter>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceStoreModuleWebModelFulfillmentCenter" /> class.
@@ -207,7 +208,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommerceStoreModuleWebModelFulfillmentCenter instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommerceStoreModuleWebModelFulfillmentCenter to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceStoreModuleWebModelFulfillmentCenter to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommerceStoreModuleWebModelFulfillmentCenter other)
         {
@@ -316,55 +317,55 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.Name != null)
-                    hash = hash * 57 + this.Name.GetHashCode();
+                    hash = hash * 59 + this.Name.GetHashCode();
                 
                 if (this.Description != null)
-                    hash = hash * 57 + this.Description.GetHashCode();
+                    hash = hash * 59 + this.Description.GetHashCode();
                 
                 if (this.MaxReleasesPerPickBatch != null)
-                    hash = hash * 57 + this.MaxReleasesPerPickBatch.GetHashCode();
+                    hash = hash * 59 + this.MaxReleasesPerPickBatch.GetHashCode();
                 
                 if (this.PickDelay != null)
-                    hash = hash * 57 + this.PickDelay.GetHashCode();
+                    hash = hash * 59 + this.PickDelay.GetHashCode();
                 
                 if (this.DaytimePhoneNumber != null)
-                    hash = hash * 57 + this.DaytimePhoneNumber.GetHashCode();
+                    hash = hash * 59 + this.DaytimePhoneNumber.GetHashCode();
                 
                 if (this.Line1 != null)
-                    hash = hash * 57 + this.Line1.GetHashCode();
+                    hash = hash * 59 + this.Line1.GetHashCode();
                 
                 if (this.Line2 != null)
-                    hash = hash * 57 + this.Line2.GetHashCode();
+                    hash = hash * 59 + this.Line2.GetHashCode();
                 
                 if (this.City != null)
-                    hash = hash * 57 + this.City.GetHashCode();
+                    hash = hash * 59 + this.City.GetHashCode();
                 
                 if (this.StateProvince != null)
-                    hash = hash * 57 + this.StateProvince.GetHashCode();
+                    hash = hash * 59 + this.StateProvince.GetHashCode();
                 
                 if (this.CountryCode != null)
-                    hash = hash * 57 + this.CountryCode.GetHashCode();
+                    hash = hash * 59 + this.CountryCode.GetHashCode();
                 
                 if (this.CountryName != null)
-                    hash = hash * 57 + this.CountryName.GetHashCode();
+                    hash = hash * 59 + this.CountryName.GetHashCode();
                 
                 if (this.PostalCode != null)
-                    hash = hash * 57 + this.PostalCode.GetHashCode();
+                    hash = hash * 59 + this.PostalCode.GetHashCode();
                 
                 if (this.CreatedDate != null)
-                    hash = hash * 57 + this.CreatedDate.GetHashCode();
+                    hash = hash * 59 + this.CreatedDate.GetHashCode();
                 
                 if (this.ModifiedDate != null)
-                    hash = hash * 57 + this.ModifiedDate.GetHashCode();
+                    hash = hash * 59 + this.ModifiedDate.GetHashCode();
                 
                 if (this.CreatedBy != null)
-                    hash = hash * 57 + this.CreatedBy.GetHashCode();
+                    hash = hash * 59 + this.CreatedBy.GetHashCode();
                 
                 if (this.ModifiedBy != null)
-                    hash = hash * 57 + this.ModifiedBy.GetHashCode();
+                    hash = hash * 59 + this.ModifiedBy.GetHashCode();
                 
                 if (this.Id != null)
-                    hash = hash * 57 + this.Id.GetHashCode();
+                    hash = hash * 59 + this.Id.GetHashCode();
                 
                 return hash;
             }

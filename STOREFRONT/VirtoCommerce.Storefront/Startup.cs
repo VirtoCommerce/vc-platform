@@ -122,6 +122,7 @@ namespace VirtoCommerce.Storefront
 
             var apiClient = new HmacApiClient(baseUrl, ConfigurationManager.AppSettings["vc-public-ApiAppId"], ConfigurationManager.AppSettings["vc-public-ApiSecretKey"]);
             container.RegisterInstance<ApiClient>(apiClient);
+            container.RegisterInstance(new VirtoCommerce.Client.Client.Configuration(apiClient));
 
             container.RegisterType<IStoreModuleApi, StoreModuleApi>();
             container.RegisterType<IVirtoCommercePlatformApi, VirtoCommercePlatformApi>();

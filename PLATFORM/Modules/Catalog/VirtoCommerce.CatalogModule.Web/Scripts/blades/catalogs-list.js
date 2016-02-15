@@ -1,6 +1,7 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.catalogsListController', ['$injector', '$rootScope', '$scope', 'virtoCommerce.catalogModule.catalogs', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.authService',
-function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialogService, authService) {
+.controller('virtoCommerce.catalogModule.catalogsListController', ['$scope', 'virtoCommerce.catalogModule.catalogs', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.authService', 'platformWebApp.uiGridHelper', 'filterFilter', 'platformWebApp.bladeUtils',
+function ($scope, catalogs, bladeNavigationService, dialogService, authService, uiGridHelper, filterFilter, bladeUtils) {
+    $scope.uiGridConstants = uiGridHelper.uiGridConstants;
     var blade = $scope.blade;
     var selectedNode = null;
     var preventCategoryListingOnce;
@@ -8,10 +9,14 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
     blade.refresh = function () {
         blade.isLoading = true;
 
-        catalogs.getCatalogs({}, function (results) {
+        catalogs.getCatalogs({
+            sort: uiGridHelper.getSortExpression($scope),
+            start: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
+            count: $scope.pageSettings.itemsPerPageCount
+        }, function (results) {
             blade.isLoading = false;
             //filter the catalogs in which we not have access
-            $scope.objects = results;
+            blade.currentEntities = results;
 
             if (selectedNode != null) {
                 //select the node in the new list
@@ -99,7 +104,7 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
             currentEntityId: id,
             currentEntity: data,
             title: title,
-            subtitle: 'catalog.blades.virtual-catalog.subtitle-virtual',
+            subtitle: 'catalog.blades.catalog-detail.subtitle-virtual',
             id: 'catalogEdit',
             controller: 'virtoCommerce.catalogModule.virtualCatalogDetailController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/catalog-detail.tpl.html',
@@ -150,6 +155,27 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
         });
     }
 
+    // ui-grid
+    $scope.setGridOptions = function (gridOptions) {
+        uiGridHelper.initialize($scope, gridOptions, function (gridApi) {
+            gridApi.grid.registerRowsProcessor($scope.singleFilter, 90);
+            uiGridHelper.bindRefreshOnSortChanged($scope);
+        });
+
+        bladeUtils.initializePagination($scope);
+    };
+
+    $scope.singleFilter = function (renderableRows) {
+        var visibleCount = 0;
+        renderableRows.forEach(function (row) {
+            row.visible = _.any(filterFilter([row.entity], blade.searchText));
+            if (row.visible) visibleCount++;
+        });
+
+        $scope.filteredEntitiesCount = visibleCount;
+        return renderableRows;
+    };
+
     // actions on load
-    blade.refresh();
+    // blade.refresh();
 }]);

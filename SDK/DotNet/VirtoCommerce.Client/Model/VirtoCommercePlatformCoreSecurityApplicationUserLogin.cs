@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommercePlatformCoreSecurityApplicationUserLogin : IEquatable<VirtoCommercePlatformCoreSecurityApplicationUserLogin>
+    public partial class VirtoCommercePlatformCoreSecurityApplicationUserLogin :  IEquatable<VirtoCommercePlatformCoreSecurityApplicationUserLogin>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreSecurityApplicationUserLogin" /> class.
@@ -80,7 +81,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommercePlatformCoreSecurityApplicationUserLogin instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommercePlatformCoreSecurityApplicationUserLogin to be compared</param>
+        /// <param name="other">Instance of VirtoCommercePlatformCoreSecurityApplicationUserLogin to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommercePlatformCoreSecurityApplicationUserLogin other)
         {
@@ -114,10 +115,10 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.LoginProvider != null)
-                    hash = hash * 57 + this.LoginProvider.GetHashCode();
+                    hash = hash * 59 + this.LoginProvider.GetHashCode();
                 
                 if (this.ProviderKey != null)
-                    hash = hash * 57 + this.ProviderKey.GetHashCode();
+                    hash = hash * 59 + this.ProviderKey.GetHashCode();
                 
                 return hash;
             }

@@ -27,11 +27,7 @@
 		$scope.blade.origEntity = $scope.blade.currentEntity.comment;
 		$scope.bladeClose();
 	};
-
-	$scope.blade.onClose = function (closeCallback) {
-		closeCallback();
-	};
-
+    
 	$scope.blade.headIcon = 'fa-file-text';
 
 	initializeBlade();

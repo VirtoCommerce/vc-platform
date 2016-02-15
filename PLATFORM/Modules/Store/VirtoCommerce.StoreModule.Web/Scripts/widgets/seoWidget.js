@@ -10,6 +10,7 @@
             title: blade.title,
             controller: 'virtoCommerce.storeModule.seoDetailController',
             template: 'Modules/$(VirtoCommerce.Store)/Scripts/blades/seo-detail.tpl.html',
+            updatePermission: blade.updatePermission,
             securityScopes: blade.securityScopes
         };
 

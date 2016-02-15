@@ -14,6 +14,7 @@
     <div class="blade-inner">
         <div class="inner-block">
             <div class="table-wrapper" ng-init="setGridOptions({
+                useExternalSorting: true,
                 rowTemplate: 'quotes-list.row.html',
                 columnDefs: [
                     { name: 'actions', displayName: '', enableColumnResizing: false, enableSorting: false, width: 30, cellTemplate: 'list-actions.cell.html', pinnedLeft:true },
@@ -34,7 +35,7 @@
                     </li>
                 </ul>
             </div>
-            <p class="text" ng-if="!blade.currentEntities.length">{{ 'quotes.blades.quotes-list.labels.no-quotes' | translate }}</p>
+            <p class="note" ng-if="!blade.currentEntities.length">{{ 'quotes.blades.quotes-list.labels.no-quotes' | translate }}</p>
         </div>
     </div>
 </div>

@@ -10,7 +10,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">{{'pricing.blades.pricelist-detail.labels.currency' | translate }} <a href="" ng-click="currencyUtils.editCurrencies(blade)"><i class="form-ico fa fa-pencil"></i></a></label>
+                    <label class="form-label">{{'pricing.blades.pricelist-detail.labels.currency' | translate }} <a href="" ng-click="currencyUtils.editCurrencies(blade)" class="form-edit"><i class="form-ico fa fa-pencil"></i></a></label>
                     <div class="form-input" ng-init="currencies = currencyUtils.getCurrencies()">
                         <ui-select ng-model="blade.currentEntity.currency" required>
                             <ui-select-match placeholder="{{'pricing.blades.pricelist-detail.placeholders.currency' | translate}}">{{$select.selected.code}}</ui-select-match>

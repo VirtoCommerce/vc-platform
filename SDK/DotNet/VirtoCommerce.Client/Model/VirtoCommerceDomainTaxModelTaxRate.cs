@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommerceDomainTaxModelTaxRate : IEquatable<VirtoCommerceDomainTaxModelTaxRate>
+    public partial class VirtoCommerceDomainTaxModelTaxRate :  IEquatable<VirtoCommerceDomainTaxModelTaxRate>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceDomainTaxModelTaxRate" /> class.
@@ -96,7 +97,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommerceDomainTaxModelTaxRate instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommerceDomainTaxModelTaxRate to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceDomainTaxModelTaxRate to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommerceDomainTaxModelTaxRate other)
         {
@@ -140,16 +141,16 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.Rate != null)
-                    hash = hash * 57 + this.Rate.GetHashCode();
+                    hash = hash * 59 + this.Rate.GetHashCode();
                 
                 if (this.Currency != null)
-                    hash = hash * 57 + this.Currency.GetHashCode();
+                    hash = hash * 59 + this.Currency.GetHashCode();
                 
                 if (this.Line != null)
-                    hash = hash * 57 + this.Line.GetHashCode();
+                    hash = hash * 59 + this.Line.GetHashCode();
                 
                 if (this.TaxProvider != null)
-                    hash = hash * 57 + this.TaxProvider.GetHashCode();
+                    hash = hash * 59 + this.TaxProvider.GetHashCode();
                 
                 return hash;
             }

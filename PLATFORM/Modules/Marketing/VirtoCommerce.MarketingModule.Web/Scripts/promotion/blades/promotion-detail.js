@@ -1,22 +1,24 @@
 ﻿angular.module('virtoCommerce.marketingModule')
-.controller('virtoCommerce.marketingModule.promotionDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.marketingModule.promotions', 'virtoCommerce.catalogModule.catalogs', 'virtoCommerce.storeModule.stores', 'platformWebApp.settings', 'platformWebApp.dialogService', 'virtoCommerce.coreModule.common.dynamicExpressionService', function ($scope, bladeNavigationService, marketing_res_promotions, catalogs, stores, settings, dialogService, dynamicExpressionService) {
-    $scope.blade.refresh = function (parentRefresh) {
-        if ($scope.blade.isNew) {
-            marketing_res_promotions.getNew({}, initializeBlade, function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+.controller('virtoCommerce.marketingModule.promotionDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.marketingModule.promotions', 'virtoCommerce.catalogModule.catalogs', 'virtoCommerce.storeModule.stores', 'platformWebApp.settings', 'virtoCommerce.coreModule.common.dynamicExpressionService', function ($scope, bladeNavigationService, marketing_res_promotions, catalogs, stores, settings, dynamicExpressionService) {
+    var blade = $scope.blade;
+
+    blade.refresh = function (parentRefresh) {
+        if (blade.isNew) {
+            marketing_res_promotions.getNew({}, initializeBlade, function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
         } else {
-            marketing_res_promotions.get({ id: $scope.blade.currentEntityId }, function (data) {
+            marketing_res_promotions.get({ id: blade.currentEntityId }, function (data) {
                 initializeBlade(data);
                 if (parentRefresh) {
-                    $scope.blade.parentBlade.refresh();
+                    blade.parentBlade.refresh();
                 }
             },
-            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+            function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
         }
     };
 
     function initializeBlade(data) {
-        if (!$scope.blade.isNew) {
-            $scope.blade.title = data.name;
+        if (!blade.isNew) {
+            blade.title = data.name;
         }
 
         // transform simple string to complex object. Simple string isn't editable.
@@ -26,98 +28,72 @@
             _.each(data.dynamicExpression.children, extendElementBlock);
         }
 
-        $scope.blade.currentEntity = angular.copy(data);
-        $scope.blade.origEntity = data;
-        $scope.blade.isLoading = false;
-    };
+        blade.currentEntity = angular.copy(data);
+        blade.origEntity = data;
+        blade.isLoading = false;
+    }
 
     function isDirty() {
-        return !angular.equals($scope.blade.currentEntity, $scope.blade.origEntity);
-    };
+        return !angular.equals(blade.currentEntity, blade.origEntity);
+    }
 
     $scope.cancelChanges = function () {
-        //angular.copy($scope.blade.origEntity, $scope.blade.currentEntity);
+        //angular.copy(blade.origEntity, blade.currentEntity);
         $scope.bladeClose();
     };
 
     $scope.saveChanges = function () {
-        bladeNavigationService.setError(null, $scope.blade);
-        $scope.blade.isLoading = true;
+        bladeNavigationService.setError(null, blade);
+        blade.isLoading = true;
 
-        $scope.blade.currentEntity.coupons = _.pluck($scope.blade.currentEntity.coupons, 'text');
+        blade.currentEntity.coupons = _.pluck(blade.currentEntity.coupons, 'text');
 
-        if ($scope.blade.currentEntity.dynamicExpression) {
-            _.each($scope.blade.currentEntity.dynamicExpression.children, stripOffUiInformation);
+        if (blade.currentEntity.dynamicExpression) {
+            _.each(blade.currentEntity.dynamicExpression.children, stripOffUiInformation);
         }
 
-        if ($scope.blade.isNew) {
-            marketing_res_promotions.save({}, $scope.blade.currentEntity, function (data) {
-                $scope.blade.isNew = undefined;
-                $scope.blade.currentEntityId = data.id;
+        if (blade.isNew) {
+            marketing_res_promotions.save({}, blade.currentEntity, function (data) {
+                blade.isNew = undefined;
+                blade.currentEntityId = data.id;
                 initializeToolbar();
-                $scope.blade.refresh(true);
+                blade.refresh(true);
             }, function (error) {
-                bladeNavigationService.setError('Error ' + error.status, $scope.blade);
+                bladeNavigationService.setError('Error ' + error.status, blade);
             });
         } else {
-            marketing_res_promotions.update({}, $scope.blade.currentEntity, function (data) {
-                $scope.blade.refresh(true);
+            marketing_res_promotions.update({}, blade.currentEntity, function (data) {
+                blade.refresh(true);
             }, function (error) {
-                bladeNavigationService.setError('Error ' + error.status, $scope.blade);
+                bladeNavigationService.setError('Error ' + error.status, blade);
             });
         }
     };
 
-    $scope.setForm = function (form) {
-        $scope.formScope = form;
-    }
+    $scope.setForm = function (form) { $scope.formScope = form; };
+
     $scope.isValid = function () {
         return isDirty()
             && $scope.formScope
             && $scope.formScope.$valid
-            && (!$scope.blade.currentEntity.dynamicExpression
-             || ($scope.blade.currentEntity.dynamicExpression.children[0].children.length > 0
-              && $scope.blade.currentEntity.dynamicExpression.children[3].children.length > 0));
+            && (!blade.currentEntity.dynamicExpression
+             || (blade.currentEntity.dynamicExpression.children[0].children.length > 0
+              && blade.currentEntity.dynamicExpression.children[3].children.length > 0));
     }
 
-    $scope.blade.onClose = function (closeCallback) {
-        closeChildrenBlades();
-        if (isDirty() && !$scope.blade.isNew) {
-            var dialog = {
-                id: "confirmCurrentBladeClose",
-                title: "marketing.dialogs.promotion-save.title",
-                message: "marketing.dialogs.promotion-save.message"
-            };
-            dialog.callback = function (needSave) {
-                if (needSave) {
-                    $scope.saveChanges();
-                }
-                closeCallback();
-            };
-            dialogService.showConfirmationDialog(dialog);
-        }
-        else {
-            closeCallback();
-        }
+    blade.onClose = function (closeCallback) {
+        bladeNavigationService.showConfirmationIfNeeded(isDirty() && !blade.isNew, $scope.isValid(), blade, $scope.saveChanges, closeCallback, "marketing.dialogs.promotion-save.title", "marketing.dialogs.promotion-save.message");
     };
 
-    function closeChildrenBlades() {
-        angular.forEach($scope.blade.childrenBlades.slice(), function (child) {
-            bladeNavigationService.closeBlade(child);
-        });
-    }
-
-    $scope.blade.headIcon = 'fa-area-chart';
+    blade.headIcon = 'fa-area-chart';
 
     function initializeToolbar() {
-        if (!$scope.blade.isNew) {
-            $scope.blade.toolbarCommands = [
+        if (!blade.isNew) {
+            blade.toolbarCommands = [
                 {
                     name: "platform.commands.save",
                     icon: 'fa fa-save',
-                    executeMethod: function () {
-                        $scope.saveChanges();
-                    },
+                    executeMethod: $scope.saveChanges,
                     canExecuteMethod: $scope.isValid,
                     permission: 'marketing:update'
                 },
@@ -125,7 +101,7 @@
                     name: "platform.commands.reset",
                     icon: 'fa fa-undo',
                     executeMethod: function () {
-                        angular.copy($scope.blade.origEntity, $scope.blade.currentEntity);
+                        angular.copy(blade.origEntity, blade.currentEntity);
                     },
                     canExecuteMethod: isDirty,
                     permission: 'marketing:update'
@@ -198,6 +174,6 @@
 
 
     initializeToolbar();
-    $scope.blade.refresh(false);
+    blade.refresh(false);
     $scope.stores = stores.query();
 }]);

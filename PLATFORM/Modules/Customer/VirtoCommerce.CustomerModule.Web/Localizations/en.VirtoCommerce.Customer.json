@@ -94,19 +94,6 @@
         "placeholders": {
           "phone": "Enter phone number"
         }
-      },
-      "member-property-valueType": {
-        "title": "{{name}} value type",
-        "subtitle": "Change value type"
-      },
-      "member-property-detail": {
-        "labels": {
-          "property-name": "Property name",
-          "value-type": "Value Type"
-        },
-        "placeholders": {
-          "property-name": "Enter name"
-        }
       }
     },
     "widgets": {

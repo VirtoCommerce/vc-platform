@@ -115,24 +115,6 @@
 
     $scope.setForm = function (form) {
         $scope.formScope = form;
-    }
-
-    blade.onClose = function (closeCallback) {
-
-        if (blade.childrenBlades.length > 0) {
-            var callback = function () {
-                if (blade.childrenBlades.length == 0) {
-                    closeCallback();
-                };
-            };
-            angular.forEach(blade.childrenBlades, function (child) {
-                bladeNavigationService.closeBlade(child, callback);
-            });
-        }
-        else {
-            closeCallback();
-        }
     };
-
-
+    
 }]);

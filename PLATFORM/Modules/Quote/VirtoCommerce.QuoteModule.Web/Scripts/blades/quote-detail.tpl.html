@@ -46,7 +46,7 @@
                     <div class="clearfix">
                         <div class="column">
                             <div class="form-group">
-                                <label class="form-label">{{ 'quotes.blades.quote-detail.labels.status' | translate }} <a href="" ng-click="openDictionarySettingManagement()" va-permission="platform:setting:update"><i class="form-ico fa fa-pencil"></i></a></label>
+                                <label class="form-label">{{ 'quotes.blades.quote-detail.labels.status' | translate }} <a href="" ng-click="openDictionarySettingManagement()" class="form-edit" va-permission="platform:setting:update"><i class="form-ico fa fa-pencil"></i></a></label>
                                 <div class="form-input">
                                     <ui-select ng-model="blade.currentEntity.status" required ng-disabled="blade.isLocked()">
                                         <ui-select-match placeholder="{{ 'quotes.blades.quote-detail.placeholders.status' | translate }}">{{$select.selected}}</ui-select-match>

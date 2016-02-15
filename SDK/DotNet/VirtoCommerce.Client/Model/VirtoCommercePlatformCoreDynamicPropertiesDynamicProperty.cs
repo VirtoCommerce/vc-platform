@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommercePlatformCoreDynamicPropertiesDynamicProperty : IEquatable<VirtoCommercePlatformCoreDynamicPropertiesDynamicProperty>
+    public partial class VirtoCommercePlatformCoreDynamicPropertiesDynamicProperty :  IEquatable<VirtoCommercePlatformCoreDynamicPropertiesDynamicProperty>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreDynamicPropertiesDynamicProperty" /> class.
@@ -168,7 +169,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommercePlatformCoreDynamicPropertiesDynamicProperty instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommercePlatformCoreDynamicPropertiesDynamicProperty to be compared</param>
+        /// <param name="other">Instance of VirtoCommercePlatformCoreDynamicPropertiesDynamicProperty to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommercePlatformCoreDynamicPropertiesDynamicProperty other)
         {
@@ -257,43 +258,43 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.Name != null)
-                    hash = hash * 57 + this.Name.GetHashCode();
+                    hash = hash * 59 + this.Name.GetHashCode();
                 
                 if (this.ObjectType != null)
-                    hash = hash * 57 + this.ObjectType.GetHashCode();
+                    hash = hash * 59 + this.ObjectType.GetHashCode();
                 
                 if (this.IsArray != null)
-                    hash = hash * 57 + this.IsArray.GetHashCode();
+                    hash = hash * 59 + this.IsArray.GetHashCode();
                 
                 if (this.IsDictionary != null)
-                    hash = hash * 57 + this.IsDictionary.GetHashCode();
+                    hash = hash * 59 + this.IsDictionary.GetHashCode();
                 
                 if (this.IsMultilingual != null)
-                    hash = hash * 57 + this.IsMultilingual.GetHashCode();
+                    hash = hash * 59 + this.IsMultilingual.GetHashCode();
                 
                 if (this.IsRequired != null)
-                    hash = hash * 57 + this.IsRequired.GetHashCode();
+                    hash = hash * 59 + this.IsRequired.GetHashCode();
                 
                 if (this.ValueType != null)
-                    hash = hash * 57 + this.ValueType.GetHashCode();
+                    hash = hash * 59 + this.ValueType.GetHashCode();
                 
                 if (this.DisplayNames != null)
-                    hash = hash * 57 + this.DisplayNames.GetHashCode();
+                    hash = hash * 59 + this.DisplayNames.GetHashCode();
                 
                 if (this.CreatedDate != null)
-                    hash = hash * 57 + this.CreatedDate.GetHashCode();
+                    hash = hash * 59 + this.CreatedDate.GetHashCode();
                 
                 if (this.ModifiedDate != null)
-                    hash = hash * 57 + this.ModifiedDate.GetHashCode();
+                    hash = hash * 59 + this.ModifiedDate.GetHashCode();
                 
                 if (this.CreatedBy != null)
-                    hash = hash * 57 + this.CreatedBy.GetHashCode();
+                    hash = hash * 59 + this.CreatedBy.GetHashCode();
                 
                 if (this.ModifiedBy != null)
-                    hash = hash * 57 + this.ModifiedBy.GetHashCode();
+                    hash = hash * 59 + this.ModifiedBy.GetHashCode();
                 
                 if (this.Id != null)
-                    hash = hash * 57 + this.Id.GetHashCode();
+                    hash = hash * 59 + this.Id.GetHashCode();
                 
                 return hash;
             }

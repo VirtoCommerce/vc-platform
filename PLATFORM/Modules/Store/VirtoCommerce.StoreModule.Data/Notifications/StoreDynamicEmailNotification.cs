@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using VirtoCommerce.Platform.Core.Notifications;
 using VirtoCommerce.Platform.Data.Infrastructure;
 
@@ -17,8 +12,6 @@ namespace VirtoCommerce.StoreModule.Data.Notifications
         public string FormType { get; set; }
 
         [NotificationParameter("Form fields of notification")]
-        public IDictionary Fields { get; set; }
+        public IDictionary<string, string> Fields { get; set; }
     }
-
-
 }

@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommerceDomainCustomerModelContact : IEquatable<VirtoCommerceDomainCustomerModelContact>
+    public partial class VirtoCommerceDomainCustomerModelContact :  IEquatable<VirtoCommerceDomainCustomerModelContact>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceDomainCustomerModelContact" /> class.
@@ -248,7 +249,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommerceDomainCustomerModelContact instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommerceDomainCustomerModelContact to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceDomainCustomerModelContact to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommerceDomainCustomerModelContact other)
         {
@@ -387,73 +388,73 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.FirstName != null)
-                    hash = hash * 57 + this.FirstName.GetHashCode();
+                    hash = hash * 59 + this.FirstName.GetHashCode();
                 
                 if (this.MiddleName != null)
-                    hash = hash * 57 + this.MiddleName.GetHashCode();
+                    hash = hash * 59 + this.MiddleName.GetHashCode();
                 
                 if (this.LastName != null)
-                    hash = hash * 57 + this.LastName.GetHashCode();
+                    hash = hash * 59 + this.LastName.GetHashCode();
                 
                 if (this.FullName != null)
-                    hash = hash * 57 + this.FullName.GetHashCode();
+                    hash = hash * 59 + this.FullName.GetHashCode();
                 
                 if (this.TimeZone != null)
-                    hash = hash * 57 + this.TimeZone.GetHashCode();
+                    hash = hash * 59 + this.TimeZone.GetHashCode();
                 
                 if (this.DefaultLanguage != null)
-                    hash = hash * 57 + this.DefaultLanguage.GetHashCode();
+                    hash = hash * 59 + this.DefaultLanguage.GetHashCode();
                 
                 if (this.BirthDate != null)
-                    hash = hash * 57 + this.BirthDate.GetHashCode();
+                    hash = hash * 59 + this.BirthDate.GetHashCode();
                 
                 if (this.TaxpayerId != null)
-                    hash = hash * 57 + this.TaxpayerId.GetHashCode();
+                    hash = hash * 59 + this.TaxpayerId.GetHashCode();
                 
                 if (this.PreferredDelivery != null)
-                    hash = hash * 57 + this.PreferredDelivery.GetHashCode();
+                    hash = hash * 59 + this.PreferredDelivery.GetHashCode();
                 
                 if (this.PreferredCommunication != null)
-                    hash = hash * 57 + this.PreferredCommunication.GetHashCode();
+                    hash = hash * 59 + this.PreferredCommunication.GetHashCode();
                 
                 if (this.Salutation != null)
-                    hash = hash * 57 + this.Salutation.GetHashCode();
+                    hash = hash * 59 + this.Salutation.GetHashCode();
                 
                 if (this.Organizations != null)
-                    hash = hash * 57 + this.Organizations.GetHashCode();
+                    hash = hash * 59 + this.Organizations.GetHashCode();
                 
                 if (this.Addresses != null)
-                    hash = hash * 57 + this.Addresses.GetHashCode();
+                    hash = hash * 59 + this.Addresses.GetHashCode();
                 
                 if (this.Phones != null)
-                    hash = hash * 57 + this.Phones.GetHashCode();
+                    hash = hash * 59 + this.Phones.GetHashCode();
                 
                 if (this.Emails != null)
-                    hash = hash * 57 + this.Emails.GetHashCode();
+                    hash = hash * 59 + this.Emails.GetHashCode();
                 
                 if (this.Notes != null)
-                    hash = hash * 57 + this.Notes.GetHashCode();
+                    hash = hash * 59 + this.Notes.GetHashCode();
                 
                 if (this.ObjectType != null)
-                    hash = hash * 57 + this.ObjectType.GetHashCode();
+                    hash = hash * 59 + this.ObjectType.GetHashCode();
                 
                 if (this.DynamicProperties != null)
-                    hash = hash * 57 + this.DynamicProperties.GetHashCode();
+                    hash = hash * 59 + this.DynamicProperties.GetHashCode();
                 
                 if (this.CreatedDate != null)
-                    hash = hash * 57 + this.CreatedDate.GetHashCode();
+                    hash = hash * 59 + this.CreatedDate.GetHashCode();
                 
                 if (this.ModifiedDate != null)
-                    hash = hash * 57 + this.ModifiedDate.GetHashCode();
+                    hash = hash * 59 + this.ModifiedDate.GetHashCode();
                 
                 if (this.CreatedBy != null)
-                    hash = hash * 57 + this.CreatedBy.GetHashCode();
+                    hash = hash * 59 + this.CreatedBy.GetHashCode();
                 
                 if (this.ModifiedBy != null)
-                    hash = hash * 57 + this.ModifiedBy.GetHashCode();
+                    hash = hash * 59 + this.ModifiedBy.GetHashCode();
                 
                 if (this.Id != null)
-                    hash = hash * 57 + this.Id.GetHashCode();
+                    hash = hash * 59 + this.Id.GetHashCode();
                 
                 return hash;
             }

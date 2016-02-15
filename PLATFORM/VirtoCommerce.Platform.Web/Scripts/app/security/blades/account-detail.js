@@ -1,125 +1,100 @@
 ﻿angular.module('platformWebApp')
 .controller('platformWebApp.accountDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.accounts', 'platformWebApp.roles', 'platformWebApp.dialogService', 'platformWebApp.settings', function ($scope, bladeNavigationService, accounts, roles, dialogService, settings) {
-    $scope.blade.promise = roles.search({ count: 10000 }).$promise;
+    var blade = $scope.blade;
+    blade.updatePermission = 'platform:security:update';
+    blade.promise = roles.search({ count: 10000 }).$promise;
     $scope.accountTypes = [];
 
-    $scope.blade.refresh = function (parentRefresh) {
-        accounts.get({ id: $scope.blade.data.userName }, function (data) {
+    blade.refresh = function (parentRefresh) {
+        accounts.get({ id: blade.data.userName }, function (data) {
             initializeBlade(data);
             if (parentRefresh) {
-                $scope.blade.parentBlade.refresh();
+                blade.parentBlade.refresh();
             }
         },
-        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+        function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
     }
 
     function initializeBlade(data) {
-        $scope.blade.currentEntity = angular.copy(data);
-        $scope.blade.origEntity = data;
-        $scope.blade.isLoading = false;
+        blade.currentEntity = angular.copy(data);
+        blade.origEntity = data;
+        blade.isLoading = false;
         $scope.accountTypes = settings.getValues({ id: 'VirtoCommerce.Platform.Security.AccountTypes' });
         userStateCommand.updateName();
     };
 
     function isDirty() {
-        return !angular.equals($scope.blade.currentEntity, $scope.blade.origEntity);
+        return !angular.equals(blade.currentEntity, blade.origEntity) && blade.hasUpdatePermission();;
     };
 
     $scope.openAccountTypeSettingManagement = function () {
-    	var newBlade = {
-    		id: 'accountTypesDictionary',
-    		isApiSave: true,
-    		currentEntityId: 'VirtoCommerce.Platform.Security.AccountTypes',
-    		parentRefresh: function (data) { $scope.accountTypes = data; },
-    		controller: 'platformWebApp.settingDictionaryController',
-    		template: '$(Platform)/Scripts/app/settings/blades/setting-dictionary.tpl.html'
-    	};
-    	bladeNavigationService.showBlade(newBlade, $scope.blade);
-   
+        var newBlade = {
+            id: 'accountTypesDictionary',
+            isApiSave: true,
+            currentEntityId: 'VirtoCommerce.Platform.Security.AccountTypes',
+            parentRefresh: function (data) { $scope.accountTypes = data; },
+            controller: 'platformWebApp.settingDictionaryController',
+            template: '$(Platform)/Scripts/app/settings/blades/setting-dictionary.tpl.html'
+        };
+        bladeNavigationService.showBlade(newBlade, blade);
+
     };
 
     $scope.saveChanges = function () {
-        $scope.blade.isLoading = true;
+        blade.isLoading = true;
 
-        accounts.update({}, $scope.blade.currentEntity, function (data) {
-            $scope.blade.refresh(true);
+        accounts.update({}, blade.currentEntity, function (data) {
+            blade.refresh(true);
         }, function (error) {
-            bladeNavigationService.setError('Error ' + error.status, $scope.blade);
+            bladeNavigationService.setError('Error ' + error.status, blade);
         });
     };
 
-    $scope.blade.onClose = function (closeCallback) {
-        closeChildrenBlades();
-        if (isDirty()) {
-            var dialog = {
-                id: "confirmCurrentBladeClose",
-                title: "platform.dialogs.account-save.title",
-                message: "platform.dialogs.account-save.message"
-            };
-            dialog.callback = function (needSave) {
-                if (needSave) {
-                    $scope.saveChanges();
-                }
-                closeCallback();
-            };
-            dialogService.showConfirmationDialog(dialog);
-        }
-        else {
-            closeCallback();
-        }
+    blade.onClose = function (closeCallback) {
+        bladeNavigationService.showConfirmationIfNeeded(isDirty(), true, blade, $scope.saveChanges, closeCallback, "platform.dialogs.account-save.title", "platform.dialogs.account-save.message");
     };
 
-    function closeChildrenBlades() {
-        angular.forEach($scope.blade.childrenBlades.slice(), function (child) {
-            bladeNavigationService.closeBlade(child);
-        });
-    }
-
-    $scope.blade.headIcon = 'fa-key';
+    blade.headIcon = 'fa-key';
 
     var userStateCommand = {
         updateName: function () {
-            return this.name = ($scope.blade.currentEntity && $scope.blade.currentEntity.userState === 'Approved') ? 'platform.commands.reject-user' : 'platform.commands.approve-user';
+            return this.name = (blade.currentEntity && blade.currentEntity.userState === 'Approved') ? 'platform.commands.reject-user' : 'platform.commands.approve-user';
         },
         // name: this.updateName(),
         icon: 'fa fa-dot-circle-o',
         executeMethod: function () {
-            if ($scope.blade.currentEntity.userState === 'Approved') {
-                $scope.blade.currentEntity.userState = 'Rejected';
+            if (blade.currentEntity.userState === 'Approved') {
+                blade.currentEntity.userState = 'Rejected';
             } else {
-                $scope.blade.currentEntity.userState = 'Approved';
+                blade.currentEntity.userState = 'Approved';
             }
             this.updateName();
         },
         canExecuteMethod: function () {
             return true;
         },
-        permission: 'platform:security:update'
+        permission: blade.updatePermission
     };
 
-    $scope.blade.toolbarCommands = [
+    blade.toolbarCommands = [
         {
             name: "platform.commands.save",
             icon: 'fa fa-save',
             executeMethod: function () {
                 $scope.saveChanges();
             },
-            canExecuteMethod: function () {
-                return isDirty();
-            },
-            permission: 'platform:security:update'
+            canExecuteMethod: isDirty,
+            permission: blade.updatePermission
         },
         {
             name: "platform.commands.reset",
             icon: 'fa fa-undo',
             executeMethod: function () {
-                angular.copy($scope.blade.origEntity, $scope.blade.currentEntity);
+                angular.copy(blade.origEntity, blade.currentEntity);
                 userStateCommand.updateName();
             },
-            canExecuteMethod: function () {
-                return isDirty();
-            },
-            permission: 'platform:security:update'
+            canExecuteMethod: isDirty,
+            permission: blade.updatePermission
         },
         userStateCommand,
         {
@@ -128,21 +103,21 @@
             executeMethod: function () {
                 var newBlade = {
                     id: 'accountDetailChild',
-                    currentEntityId: $scope.blade.currentEntity.userName,
-                    title: $scope.blade.title,
+                    currentEntityId: blade.currentEntity.userName,
+                    title: blade.title,
                     subtitle: "platform.blades.account-resetPassword.subtitle",
                     controller: 'platformWebApp.accountResetPasswordController',
                     template: '$(Platform)/Scripts/app/security/blades/account-resetPassword.tpl.html'
                 };
-                bladeNavigationService.showBlade(newBlade, $scope.blade);
+                bladeNavigationService.showBlade(newBlade, blade);
             },
             canExecuteMethod: function () {
                 return true;
             },
-            permission: 'platform:security:update'
+            permission: blade.updatePermission
         }
     ];
 
     // actions on load
-    $scope.blade.refresh(false);
+    blade.refresh(false);
 }]);

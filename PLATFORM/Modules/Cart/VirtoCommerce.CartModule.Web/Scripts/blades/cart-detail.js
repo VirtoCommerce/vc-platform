@@ -1,72 +1,54 @@
 ﻿angular.module('virtoCommerce.cartModule')
 .controller('virtoCommerce.cartModule.cartDetailController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'virtoCommerce.cartModule.carts', function ($scope, dialogService, bladeNavigationService, carts) {
+    var blade = $scope.blade;
 
-    $scope.blade.refresh = function () {
-        $scope.blade.isLoading = true;
+    blade.refresh = function () {
+        blade.isLoading = true;
 
-        carts.getCart({ id: $scope.blade.currentEntityId }, function (results) {
-            $scope.blade.currentEntity = angular.copy(results);
-            $scope.blade.origEntity = results;
-            $scope.blade.isLoading = false;
+        carts.getCart({ id: blade.currentEntityId }, function (results) {
+            blade.currentEntity = angular.copy(results);
+            blade.origEntity = results;
+            blade.isLoading = false;
         },
         function (error) {
             bladeNavigationService.setError('Error ' + error.status, $scope.blade);
         });
-    }
+    };
 
     function isDirty() {
-        return !angular.equals($scope.blade.currentEntity, $scope.blade.origEntity);
-    };
+        return !angular.equals(blade.currentEntity, blade.origEntity);
+    }
 
     function saveChanges() {
-        $scope.blade.isLoading = true;
-        carts.update({}, $scope.blade.currentEntity, function (data, headers) {
-            $scope.blade.refresh();
+        blade.isLoading = true;
+        carts.update({}, blade.currentEntity, function (data, headers) {
+            blade.refresh();
         },
         function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
-    };
+    }
 
-    $scope.blade.headIcon = 'fa-shopping-cart';
-
-    $scope.blade.toolbarCommands = [
+    blade.headIcon = 'fa-shopping-cart';
+    blade.toolbarCommands = [
         {
             name: "platform.commands.save", icon: 'fa fa-save',
-            executeMethod: function () {
-                saveChanges();
-            },
+            executeMethod: saveChanges,
             canExecuteMethod: isDirty,
             permission: 'cart:update'
         },
         {
             name: "platform.commands.reset", icon: 'fa fa-undo',
             executeMethod: function () {
-                angular.copy($scope.blade.origEntity, $scope.blade.currentEntity);
+                angular.copy(blade.origEntity, blade.currentEntity);
             },
             canExecuteMethod: isDirty,
             permission: 'cart:update'
         }
     ];
 
-    $scope.blade.onClose = function (closeCallback) {
-        if (isDirty()) {
-            var dialog = {
-                id: "confirmItemChange",
-                title: "cart.dialogs.cart-save.title",
-                message: "cart.dialogs.cart-save.message",
-                callback: function (needSave) {
-                    if (needSave) {
-                        saveChanges();
-                    }
-                    closeCallback();
-                }
-            };
-            dialogService.showConfirmationDialog(dialog);
-        }
-        else {
-            closeCallback();
-        }
+    blade.onClose = function (closeCallback) {
+        bladeNavigationService.showConfirmationIfNeeded(isDirty(), true, blade, saveChanges, closeCallback, "cart.dialogs.cart-save.title", "cart.dialogs.cart-save.message");
     };
 
     // actions on load
-    $scope.blade.refresh();
+    blade.refresh();
 }]);

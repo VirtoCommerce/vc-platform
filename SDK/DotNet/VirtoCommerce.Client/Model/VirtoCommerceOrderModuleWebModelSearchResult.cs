@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommerceOrderModuleWebModelSearchResult : IEquatable<VirtoCommerceOrderModuleWebModelSearchResult>
+    public partial class VirtoCommerceOrderModuleWebModelSearchResult :  IEquatable<VirtoCommerceOrderModuleWebModelSearchResult>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceOrderModuleWebModelSearchResult" /> class.
@@ -80,7 +81,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommerceOrderModuleWebModelSearchResult instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommerceOrderModuleWebModelSearchResult to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceOrderModuleWebModelSearchResult to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommerceOrderModuleWebModelSearchResult other)
         {
@@ -114,10 +115,10 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.TotalCount != null)
-                    hash = hash * 57 + this.TotalCount.GetHashCode();
+                    hash = hash * 59 + this.TotalCount.GetHashCode();
                 
                 if (this.CustomerOrders != null)
-                    hash = hash * 57 + this.CustomerOrders.GetHashCode();
+                    hash = hash * 59 + this.CustomerOrders.GetHashCode();
                 
                 return hash;
             }

@@ -1,7 +1,8 @@
 ﻿angular.module('virtoCommerce.storeModule')
-.controller('virtoCommerce.storeModule.storeDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.storeModule.stores', 'virtoCommerce.catalogModule.catalogs', 'platformWebApp.settings', 'platformWebApp.settings.helper', 'platformWebApp.dialogService', 'platformWebApp.authService', 'virtoCommerce.coreModule.currency.currencyUtils',
-    function ($scope, bladeNavigationService, stores, catalogs, settings, settingsHelper, dialogService, authService, currencyUtils) {
+.controller('virtoCommerce.storeModule.storeDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.storeModule.stores', 'virtoCommerce.catalogModule.catalogs', 'platformWebApp.settings', 'platformWebApp.settings.helper', 'platformWebApp.dialogService', 'virtoCommerce.coreModule.currency.currencyUtils',
+    function ($scope, bladeNavigationService, stores, catalogs, settings, settingsHelper, dialogService, currencyUtils) {
         var blade = $scope.blade;
+        blade.updatePermission = 'store:update';
 
         blade.refresh = function (parentRefresh) {
             stores.get({ id: blade.currentEntityId }, function (data) {
@@ -32,14 +33,18 @@
             blade.isLoading = false;
 
             //sets security scopes for scope bounded ACL
-            if (blade.currentEntity && blade.currentEntity.securityScopes && angular.isArray(blade.currentEntity.securityScopes)) {
+            if (blade.currentEntity.securityScopes && angular.isArray(blade.currentEntity.securityScopes)) {
                 blade.securityScopes = blade.currentEntity.securityScopes;
             }
-        };
+        }
 
         function isDirty() {
-            return authService.checkPermission('store:update', blade.securityScopes) && !angular.equals(blade.currentEntity, blade.origEntity);
-        };
+            return blade.hasUpdatePermission() && !angular.equals(blade.currentEntity, blade.origEntity);
+        }
+
+        function canSave() {
+            return isDirty() && $scope.formScope && $scope.formScope.$valid;
+        }
 
         $scope.saveChanges = function () {
             blade.isLoading = true;
@@ -75,49 +80,19 @@
             dialogService.showConfirmationDialog(dialog);
         }
 
-        $scope.setForm = function (form) {
-            $scope.formScope = form;
-        }
+        $scope.setForm = function (form) { $scope.formScope = form; };
 
         blade.onClose = function (closeCallback) {
-            closeChildrenBlades();
-            if (isDirty()) {
-                var dialog = {
-                    id: "confirmCurrentBladeClose",
-                    title: "stores.dialogs.store-save.title",
-                    message: "stores.dialogs.store-save.message"
-                };
-                dialog.callback = function (needSave) {
-                    if (needSave) {
-                        $scope.saveChanges();
-                    }
-                    closeCallback();
-                };
-                dialogService.showConfirmationDialog(dialog);
-            }
-            else {
-                closeCallback();
-            }
+            bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, $scope.saveChanges, closeCallback, "stores.dialogs.store-save.title", "stores.dialogs.store-save.message");
         };
 
-        function closeChildrenBlades() {
-            angular.forEach(blade.childrenBlades.slice(), function (child) {
-                bladeNavigationService.closeBlade(child);
-            });
-        }
-
         blade.headIcon = 'fa-archive';
-
         blade.toolbarCommands = [
             {
                 name: "platform.commands.save",
                 icon: 'fa fa-save',
-                executeMethod: function () {
-                    $scope.saveChanges();
-                },
-                canExecuteMethod: function () {
-                    return isDirty() && $scope.formScope && $scope.formScope.$valid;
-                },
+                executeMethod: $scope.saveChanges,
+                canExecuteMethod: canSave,
                 permission: 'store:update'
             },
             {
@@ -126,19 +101,13 @@
                 executeMethod: function () {
                     angular.copy(blade.origEntity, blade.currentEntity);
                 },
-                canExecuteMethod: function () {
-                    return isDirty();
-                },
+                canExecuteMethod: isDirty,
                 permission: 'store:update'
             },
             {
                 name: "platform.commands.delete", icon: 'fa fa-trash-o',
-                executeMethod: function () {
-                    deleteEntry();
-                },
-                canExecuteMethod: function () {
-                    return !isDirty();
-                },
+                executeMethod: deleteEntry,
+                canExecuteMethod: function () { return true; },
                 permission: 'store:delete'
             }
         ];

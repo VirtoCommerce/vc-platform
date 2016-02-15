@@ -9,7 +9,7 @@
                     <div class="form-group" ng-repeat="prop in properties = (blade.currentEntity.properties | filter: {type:propGroup.type})">
                         <label class="form-label">
                             {{prop.name}}
-                            <a ng-show="prop.isManageable" href="" ng-click="editProperty(prop)" class="form-edit">
+                            <a ng-show="prop.isManageable" href="" ng-click="editProperty(prop)" class="form-edit" va-permission="catalog:update">
                                 <i class="form-ico fa fa-pencil"></i>
                             </a>
                         </label>

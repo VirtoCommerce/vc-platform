@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommerceContentWebModelsMenuLink : IEquatable<VirtoCommerceContentWebModelsMenuLink>
+    public partial class VirtoCommerceContentWebModelsMenuLink :  IEquatable<VirtoCommerceContentWebModelsMenuLink>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceContentWebModelsMenuLink" /> class.
@@ -78,11 +79,11 @@ namespace VirtoCommerce.Client.Model
         /// </summary>
         [DataMember(Name="securityScopes", EmitDefaultValue=false)]
         public List<string> SecurityScopes { get; set; }
-
-      
+  
+        
         [DataMember(Name = "imageUrl", EmitDefaultValue = false)]
         public string ImageUrl { get; set; }
-
+  
         /// <summary>
         /// Each link element can has a associated object like a Product, Category, Promotion etc.
         /// Is a primary key for associated object
@@ -113,7 +114,7 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  ImageUrl: ").Append(ImageUrl).Append("\n");
             sb.Append("  AssociatedObjectId: ").Append(AssociatedObjectId).Append("\n");
             sb.Append("  AssociatedObjectType: ").Append(AssociatedObjectType).Append("\n");
-
+            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -141,7 +142,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommerceContentWebModelsMenuLink instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommerceContentWebModelsMenuLink to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceContentWebModelsMenuLink to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommerceContentWebModelsMenuLink other)
         {
@@ -218,26 +219,26 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.Id != null)
-                    hash = hash * 57 + this.Id.GetHashCode();
+                    hash = hash * 59 + this.Id.GetHashCode();
                 
                 if (this.Title != null)
-                    hash = hash * 57 + this.Title.GetHashCode();
+                    hash = hash * 59 + this.Title.GetHashCode();
                 
                 if (this.Url != null)
-                    hash = hash * 57 + this.Url.GetHashCode();
+                    hash = hash * 59 + this.Url.GetHashCode();
                 
                 if (this.Priority != null)
-                    hash = hash * 57 + this.Priority.GetHashCode();
+                    hash = hash * 59 + this.Priority.GetHashCode();
                 
                 if (this.IsActive != null)
-                    hash = hash * 57 + this.IsActive.GetHashCode();
+                    hash = hash * 59 + this.IsActive.GetHashCode();
                 
                 if (this.MenuLinkListId != null)
-                    hash = hash * 57 + this.MenuLinkListId.GetHashCode();
+                    hash = hash * 59 + this.MenuLinkListId.GetHashCode();
                 
                 if (this.SecurityScopes != null)
-                    hash = hash * 57 + this.SecurityScopes.GetHashCode();
-
+                    hash = hash * 59 + this.SecurityScopes.GetHashCode();
+                
                 if (this.ImageUrl != null)
                     hash = hash * 57 + this.ImageUrl.GetHashCode();
                 if (this.AssociatedObjectId != null)

@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommerceOrderModuleWebModelAddress : IEquatable<VirtoCommerceOrderModuleWebModelAddress>
+    public partial class VirtoCommerceOrderModuleWebModelAddress :  IEquatable<VirtoCommerceOrderModuleWebModelAddress>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceOrderModuleWebModelAddress" /> class.
@@ -192,7 +193,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommerceOrderModuleWebModelAddress instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommerceOrderModuleWebModelAddress to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceOrderModuleWebModelAddress to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommerceOrderModuleWebModelAddress other)
         {
@@ -296,52 +297,52 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.AddressType != null)
-                    hash = hash * 57 + this.AddressType.GetHashCode();
+                    hash = hash * 59 + this.AddressType.GetHashCode();
                 
                 if (this.Organization != null)
-                    hash = hash * 57 + this.Organization.GetHashCode();
+                    hash = hash * 59 + this.Organization.GetHashCode();
                 
                 if (this.CountryCode != null)
-                    hash = hash * 57 + this.CountryCode.GetHashCode();
+                    hash = hash * 59 + this.CountryCode.GetHashCode();
                 
                 if (this.CountryName != null)
-                    hash = hash * 57 + this.CountryName.GetHashCode();
+                    hash = hash * 59 + this.CountryName.GetHashCode();
                 
                 if (this.City != null)
-                    hash = hash * 57 + this.City.GetHashCode();
+                    hash = hash * 59 + this.City.GetHashCode();
                 
                 if (this.PostalCode != null)
-                    hash = hash * 57 + this.PostalCode.GetHashCode();
+                    hash = hash * 59 + this.PostalCode.GetHashCode();
                 
                 if (this.Zip != null)
-                    hash = hash * 57 + this.Zip.GetHashCode();
+                    hash = hash * 59 + this.Zip.GetHashCode();
                 
                 if (this.Line1 != null)
-                    hash = hash * 57 + this.Line1.GetHashCode();
+                    hash = hash * 59 + this.Line1.GetHashCode();
                 
                 if (this.Line2 != null)
-                    hash = hash * 57 + this.Line2.GetHashCode();
+                    hash = hash * 59 + this.Line2.GetHashCode();
                 
                 if (this.RegionId != null)
-                    hash = hash * 57 + this.RegionId.GetHashCode();
+                    hash = hash * 59 + this.RegionId.GetHashCode();
                 
                 if (this.RegionName != null)
-                    hash = hash * 57 + this.RegionName.GetHashCode();
+                    hash = hash * 59 + this.RegionName.GetHashCode();
                 
                 if (this.FirstName != null)
-                    hash = hash * 57 + this.FirstName.GetHashCode();
+                    hash = hash * 59 + this.FirstName.GetHashCode();
                 
                 if (this.MiddleName != null)
-                    hash = hash * 57 + this.MiddleName.GetHashCode();
+                    hash = hash * 59 + this.MiddleName.GetHashCode();
                 
                 if (this.LastName != null)
-                    hash = hash * 57 + this.LastName.GetHashCode();
+                    hash = hash * 59 + this.LastName.GetHashCode();
                 
                 if (this.Phone != null)
-                    hash = hash * 57 + this.Phone.GetHashCode();
+                    hash = hash * 59 + this.Phone.GetHashCode();
                 
                 if (this.Email != null)
-                    hash = hash * 57 + this.Email.GetHashCode();
+                    hash = hash * 59 + this.Email.GetHashCode();
                 
                 return hash;
             }

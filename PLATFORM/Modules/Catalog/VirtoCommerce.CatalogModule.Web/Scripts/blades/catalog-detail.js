@@ -1,6 +1,7 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.catalogDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.catalogModule.catalogs', 'platformWebApp.dialogService', function ($scope, bladeNavigationService, catalogs, dialogService) {
+.controller('virtoCommerce.catalogModule.catalogDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.catalogModule.catalogs', function ($scope, bladeNavigationService, catalogs) {
     var blade = $scope.blade;
+    blade.updatePermission = 'catalog:update';
 
     blade.refresh = function (parentRefresh) {
         if (blade.isNew) {
@@ -27,9 +28,16 @@
         blade.securityScopes = data.securityScopes;
     };
 
-    function isDirty() {
-        return !angular.equals(blade.currentEntity, blade.origEntity);
-    };
+    function x() {
+        return !angular.equals(blade.currentEntity, blade.origEntity) && blade.hasUpdatePermission();
+    }
+
+    function y() {
+        return isDirty() && formScope && formScope.$valid;
+    }
+
+    var formScope;
+    $scope.setForm = function (form) { formScope = form; }
 
     $scope.cancelChanges = function () {
         angular.copy(blade.origEntity, blade.currentEntity);
@@ -60,61 +68,34 @@
     };
 
     blade.onClose = function (closeCallback) {
-        closeChildrenBlades();
-        if (isDirty()) {
-            var dialog = {
-                id: "confirmCurrentBladeClose",
-                title: "catalog.dialogs.catalog-save.title",
-                message: "catalog.dialogs.catalog-save.message"
-            };
-            dialog.callback = function (needSave) {
-                if (needSave) {
-                    $scope.saveChanges();
-                }
-                closeCallback();
-            };
-            dialogService.showConfirmationDialog(dialog);
-        }
-        else {
-            closeCallback();
-        }
+        bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, $scope.saveChanges, closeCallback, "catalog.dialogs.catalog-save.title", "catalog.dialogs.catalog-save.message");
     };
 
-    function closeChildrenBlades() {
-        angular.forEach(blade.childrenBlades.slice(), function (child) {
-            bladeNavigationService.closeBlade(child);
-        });
-    }
-
     function initializeToolbar() {
-        if (!blade.isNew) {
-            blade.toolbarCommands = [
+        if(!blade.isNew) {
+            blade.toolbarCommands =[
                 {
-                    name: "platform.commands.save", icon: 'fa fa-save',
-                    executeMethod: function () {
-                        $scope.saveChanges();
+                        name: "platform.commands.save", icon: 'fa fa-save',
+                        executeMethod: function () {
+                            $scope.saveChanges();
+                        },
+                        canExecuteMethod: canSave,
+                        permission: blade.updatePermission
                     },
-                    canExecuteMethod: function () {
-                        return isDirty();
-                    },
-                    permission: 'catalog:update'
-                },
                 {
-                    name: "platform.commands.reset", icon: 'fa fa-undo',
-                    executeMethod: function () {
-                        angular.copy(blade.origEntity, blade.currentEntity);
-                    },
-                    canExecuteMethod: function () {
-                        return isDirty();
-                    },
-                    permission: 'catalog:update'
-                }
-            ];
+                        name: "platform.commands.reset", icon: 'fa fa-undo',
+                        executeMethod: function () {
+                            angular.copy(blade.origEntity, blade.currentEntity);
+                        },
+                        canExecuteMethod: isDirty,
+                        permission: blade.updatePermission
+                    }
+                ];
         }
     }
 
-    $scope.gridsterOpts = { width: 396 };
+    $scope.gridsterOpts = { width : 396 };
 
     initializeToolbar();
     blade.refresh(false);
-}]);
+    }]);

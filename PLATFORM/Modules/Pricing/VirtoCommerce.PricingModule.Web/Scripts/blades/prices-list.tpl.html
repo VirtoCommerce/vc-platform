@@ -21,7 +21,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="table-item" ng-repeat="data in blade.currentEntities track by $index" ng-class="{'__selected': data.id === selectedItem.id}" context-menu data-target="pril_menu_{{$index}}" ng-click='selectItem(data)'>
+                            <tr class="table-item" ng-repeat="data in blade.currentEntities track by $index" ng-class="{'__selected': data.id === selectedItemId}" context-menu data-target="pril_menu_{{$index}}" ng-click='selectItem(data)'>
                                 <td class="table-col">
                                     <label class="form-control __checkbox">
                                         <input type="checkbox" ng-model="data._selected">

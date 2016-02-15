@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommerceDomainTaxModelTaxEvaluationContext : IEquatable<VirtoCommerceDomainTaxModelTaxEvaluationContext>
+    public partial class VirtoCommerceDomainTaxModelTaxEvaluationContext :  IEquatable<VirtoCommerceDomainTaxModelTaxEvaluationContext>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceDomainTaxModelTaxEvaluationContext" /> class.
@@ -128,7 +129,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommerceDomainTaxModelTaxEvaluationContext instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommerceDomainTaxModelTaxEvaluationContext to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceDomainTaxModelTaxEvaluationContext to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommerceDomainTaxModelTaxEvaluationContext other)
         {
@@ -192,28 +193,28 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.Code != null)
-                    hash = hash * 57 + this.Code.GetHashCode();
+                    hash = hash * 59 + this.Code.GetHashCode();
                 
                 if (this.Type != null)
-                    hash = hash * 57 + this.Type.GetHashCode();
+                    hash = hash * 59 + this.Type.GetHashCode();
                 
                 if (this.Customer != null)
-                    hash = hash * 57 + this.Customer.GetHashCode();
+                    hash = hash * 59 + this.Customer.GetHashCode();
                 
                 if (this.Organization != null)
-                    hash = hash * 57 + this.Organization.GetHashCode();
+                    hash = hash * 59 + this.Organization.GetHashCode();
                 
                 if (this.Address != null)
-                    hash = hash * 57 + this.Address.GetHashCode();
+                    hash = hash * 59 + this.Address.GetHashCode();
                 
                 if (this.Currency != null)
-                    hash = hash * 57 + this.Currency.GetHashCode();
+                    hash = hash * 59 + this.Currency.GetHashCode();
                 
                 if (this.Lines != null)
-                    hash = hash * 57 + this.Lines.GetHashCode();
+                    hash = hash * 59 + this.Lines.GetHashCode();
                 
                 if (this.Id != null)
-                    hash = hash * 57 + this.Id.GetHashCode();
+                    hash = hash * 59 + this.Id.GetHashCode();
                 
                 return hash;
             }

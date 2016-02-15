@@ -1,9 +1,10 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.itemDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings', 'virtoCommerce.catalogModule.items', 'platformWebApp.dialogService', function ($scope, bladeNavigationService, settings, items, dialogService) {
+.controller('virtoCommerce.catalogModule.itemDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings', 'virtoCommerce.catalogModule.items', function ($scope, bladeNavigationService, settings, items) {
     var blade = $scope.blade;
     blade.origItem = {};
     blade.item = {};
     blade.currentEntityId = blade.itemId;
+    blade.updatePermission = 'catalog:update';
 
     blade.refresh = function (parentRefresh) {
         blade.isLoading = true;
@@ -44,9 +45,12 @@
     };
 
     function isDirty() {
-        var retVal = !angular.equals(blade.item, blade.origItem);
-        return retVal;
+        return !angular.equals(blade.item, blade.origItem) && blade.hasUpdatePermission();
     };
+
+    function canSave() {
+        return isDirty() && formScope && formScope.$valid;
+    }
 
     function saveChanges() {
         blade.isLoading = true;
@@ -57,42 +61,20 @@
     };
 
     blade.onClose = function (closeCallback) {
-        if (isDirty()) {
-            var dialog = {
-                id: "confirmItemChange",
-                title: "catalog.dialogs.item-save.title",
-                message: "catalog.dialogs.item-save.message"
-            };
-            dialog.callback = function (needSave) {
-                if (needSave) {
-                    saveChanges();
-                }
-                closeCallback();
-            };
-            dialogService.showConfirmationDialog(dialog);
-        }
-        else {
-            closeCallback();
-        }
+        bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, saveChanges, closeCallback, "catalog.dialogs.item-save.title", "catalog.dialogs.item-save.message");
     };
 
     var formScope;
-    $scope.setForm = function (form) {
-        formScope = form;
-    }
+    $scope.setForm = function (form) { formScope = form; }
 
     blade.headIcon = blade.productType === 'Digital' ? 'fa-file-zip-o' : 'fa-dropbox';
 
     blade.toolbarCommands = [
 	    {
 	        name: "platform.commands.save", icon: 'fa fa-save',
-	        executeMethod: function () {
-	            saveChanges();
-	        },
-	        canExecuteMethod: function () {
-	            return isDirty() && formScope && formScope.$valid;
-	        },
-	        permission: 'catalog:update'
+	        executeMethod: saveChanges,
+	        canExecuteMethod: canSave,
+	        permission: blade.updatePermission
 	    },
         {
             name: "platform.commands.reset", icon: 'fa fa-undo',
@@ -100,10 +82,8 @@
                 angular.copy(blade.origItem, blade.item);
                 $scope.isTitular = blade.item.titularItemId == null;
             },
-            canExecuteMethod: function () {
-                return isDirty();
-            },
-            permission: 'catalog:update'
+            canExecuteMethod: isDirty,
+            permission: blade.updatePermission
         }
     ];
 
@@ -121,7 +101,7 @@
             id: 'settingDetailChild',
             isApiSave: true,
             currentEntityId: 'VirtoCommerce.Core.General.TaxTypes',
-            parentRefresh: function(data) { $scope.taxTypes = data; },
+            parentRefresh: function (data) { $scope.taxTypes = data; },
             controller: 'platformWebApp.settingDictionaryController',
             template: '$(Platform)/Scripts/app/settings/blades/setting-dictionary.tpl.html'
         };
