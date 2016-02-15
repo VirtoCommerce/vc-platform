@@ -20,19 +20,17 @@ namespace VirtoCommerce.Platform.Data.Security
         private readonly Func<IPlatformRepository> _platformRepository;
         private readonly Func<ApplicationUserManager> _userManagerFactory;
         private readonly IApiAccountProvider _apiAccountProvider;
-        private readonly ISecurityOptions _securityOptions;
         private readonly ICacheManager<object> _cacheManager;
         private readonly IModuleManifestProvider _manifestProvider;
         private readonly IPermissionScopeService _permissionScopeService;
 
         [CLSCompliant(false)]
         public SecurityService(Func<IPlatformRepository> platformRepository, Func<ApplicationUserManager> userManagerFactory, IApiAccountProvider apiAccountProvider,
-                               ISecurityOptions securityOptions, IModuleManifestProvider manifestProvider, IPermissionScopeService permissionScopeService, ICacheManager<object> cacheManager)
+                               IModuleManifestProvider manifestProvider, IPermissionScopeService permissionScopeService, ICacheManager<object> cacheManager)
         {
             _platformRepository = platformRepository;
             _userManagerFactory = userManagerFactory;
             _apiAccountProvider = apiAccountProvider;
-            _securityOptions = securityOptions;
             _cacheManager = cacheManager;
             _manifestProvider = manifestProvider;
             _permissionScopeService = permissionScopeService;
@@ -41,20 +39,14 @@ namespace VirtoCommerce.Platform.Data.Security
         #region ISecurityService Members
         public async Task<ApplicationUserExtended> FindByNameAsync(string userName, UserDetails detailsLevel)
         {
-            using (var userManager = _userManagerFactory())
-            {
-                var user = await userManager.FindByNameAsync(userName);
-                return GetUserExtended(user, detailsLevel);
-            }
+            var user = await GetApplicationUserByNameAsync(userName);
+            return GetUserExtended(user, detailsLevel);
         }
 
         public async Task<ApplicationUserExtended> FindByIdAsync(string userId, UserDetails detailsLevel)
         {
-            using (var userManager = _userManagerFactory())
-            {
-                var user = await userManager.FindByIdAsync(userId);
-                return GetUserExtended(user, detailsLevel);
-            }
+            var user = await GetApplicationUserByIdAsync(userId);
+            return GetUserExtended(user, detailsLevel);
         }
 
         public async Task<ApplicationUserExtended> FindByEmailAsync(string email, UserDetails detailsLevel)
@@ -133,12 +125,18 @@ namespace VirtoCommerce.Platform.Data.Security
             {
                 var dbUser = await userManager.FindByIdAsync(user.Id);
                 result = ValidateUser(dbUser);
+
                 if (result.Succeeded)
                 {
+                    var userName = dbUser.UserName;
+
                     //Update ASP.NET indentity user
                     user.Patch(dbUser);
                     var identityResult = await userManager.UpdateAsync(dbUser);
                     result = identityResult.ToCoreModel();
+
+                    //clear cache
+                    RemoveUserFromCache(user.Id, userName);
                 }
             }
 
@@ -162,8 +160,6 @@ namespace VirtoCommerce.Platform.Data.Security
 
                             changedDbAccount.Patch(targetDbAcount);
                             repository.UnitOfWork.Commit();
-                            //clear cache
-                            _cacheManager.ClearRegion(GetUserCacheRegion(changedDbAccount.Id));
                         }
                     }
                 }
@@ -178,7 +174,6 @@ namespace VirtoCommerce.Platform.Data.Security
             {
                 foreach (var name in names)
                 {
-
                     var dbUser = await userManager.FindByNameAsync(name);
 
                     if (dbUser != null)
@@ -192,10 +187,11 @@ namespace VirtoCommerce.Platform.Data.Security
                             {
                                 repository.Remove(account);
                                 repository.UnitOfWork.Commit();
-                                //clear cache
-                                _cacheManager.ClearRegion(GetUserCacheRegion(account.Id));
                             }
                         }
+
+                        //clear cache
+                        RemoveUserFromCache(dbUser.Id, name);
                     }
                 }
             }
@@ -212,7 +208,7 @@ namespace VirtoCommerce.Platform.Data.Security
         {
             using (var userManager = _userManagerFactory())
             {
-                var dbUser = await userManager.FindByNameAsync(name);
+                var dbUser = await GetApplicationUserByNameAsync(name);
                 var result = ValidateUser(dbUser);
 
                 if (result.Succeeded)
@@ -229,7 +225,7 @@ namespace VirtoCommerce.Platform.Data.Security
         {
             using (var userManager = _userManagerFactory())
             {
-                var dbUser = await userManager.FindByNameAsync(name);
+                var dbUser = await GetApplicationUserByNameAsync(name);
                 var result = ValidateUser(dbUser);
 
                 if (result.Succeeded)
@@ -247,7 +243,7 @@ namespace VirtoCommerce.Platform.Data.Security
         {
             using (var userManager = _userManagerFactory())
             {
-                var dbUser = await userManager.FindByIdAsync(userId);
+                var dbUser = await GetApplicationUserByIdAsync(userId);
                 var result = ValidateUser(dbUser);
 
                 if (result.Succeeded)
@@ -317,48 +313,51 @@ namespace VirtoCommerce.Platform.Data.Security
 
         public bool UserHasAnyPermission(string userName, string[] scopes, params string[] permissionIds)
         {
-            var user = Task.Run(async () => await FindByNameAsync(userName, UserDetails.Full)).Result;
-            if (user == null)
+            if (permissionIds == null)
             {
-                return false;
+                throw new ArgumentNullException("permissionIds");
             }
 
-            if (user.IsAdministrator)
+            var user = FindByName(userName, UserDetails.Full);
+
+            var result = user != null && user.UserState == AccountState.Approved;
+
+            if (result && user.IsAdministrator)
             {
                 return true;
             }
 
-            var retVal = user.UserState == AccountState.Approved;
-
             //For managers always allow to call api
-            if (retVal && permissionIds != null && permissionIds.Count() == 1 && permissionIds.Contains(PredefinedPermissions.SecurityCallApi)
+            if (result && permissionIds.Length == 1 && permissionIds.Contains(PredefinedPermissions.SecurityCallApi)
                && (string.Equals(user.UserType, AccountType.Manager.ToString(), StringComparison.InvariantCultureIgnoreCase) ||
                     string.Equals(user.UserType, AccountType.Administrator.ToString(), StringComparison.InvariantCultureIgnoreCase)))
             {
                 return true;
             }
 
-            if (retVal)
+            if (result)
             {
                 var fqUserPermissions = user.Roles.SelectMany(x => x.Permissions).SelectMany(x => x.GetPermissionWithScopeCombinationNames()).Distinct();
                 var fqCheckPermissions = permissionIds.Concat(permissionIds.LeftJoin(scopes, ":"));
-                retVal = fqUserPermissions.Intersect(fqCheckPermissions, StringComparer.OrdinalIgnoreCase).Any();
+                result = fqUserPermissions.Intersect(fqCheckPermissions, StringComparer.OrdinalIgnoreCase).Any();
             }
-            return retVal;
+
+            return result;
         }
 
         public Permission[] GetUserPermissions(string userName)
         {
-            var user = Task.Run(async () => await FindByNameAsync(userName, UserDetails.Full)).Result;
-            var retVal = Enumerable.Empty<Permission>().ToArray();
-            if (user != null)
-            {
-                retVal = user.Roles.SelectMany(x => x.Permissions).Distinct().ToArray();
-            }
-            return retVal;
+            var user = FindByName(userName, UserDetails.Full);
+            var result = user != null ? user.Roles.SelectMany(x => x.Permissions).Distinct().ToArray() : Enumerable.Empty<Permission>().ToArray();
+            return result;
         }
         #endregion
 
+        private ApplicationUserExtended FindByName(string userName, UserDetails detailsLevel)
+        {
+            var user = GetApplicationUserByName(userName);
+            return GetUserExtended(user, detailsLevel);
+        }
 
         private Permission[] LoadAllPermissions()
         {
@@ -395,12 +394,60 @@ namespace VirtoCommerce.Platform.Data.Security
             {
                 result = new SecurityResult { Errors = new[] { "User not found." } };
             }
-          
 
             return result;
         }
 
-    
+        private async Task<ApplicationUser> GetApplicationUserByIdAsync(string userId)
+        {
+            var cacheRegion = GetUserCacheRegion(userId);
+
+            var result = await _cacheManager.GetAsync(cacheRegion, cacheRegion, async () =>
+            {
+                using (var userManager = _userManagerFactory())
+                {
+                    return await userManager.FindByIdAsync(userId);
+                }
+            });
+
+            return result;
+        }
+
+        private ApplicationUser GetApplicationUserByName(string userName)
+        {
+            var cacheRegion = GetUserCacheRegion(userName);
+
+            var result = _cacheManager.Get(cacheRegion, cacheRegion, () =>
+            {
+                using (var userManager = _userManagerFactory())
+                {
+                    return Task.Run(async () => await userManager.FindByNameAsync(userName)).Result;
+                }
+            });
+
+            return result;
+        }
+
+        private async Task<ApplicationUser> GetApplicationUserByNameAsync(string userName)
+        {
+            var cacheRegion = GetUserCacheRegion(userName);
+
+            var result = await _cacheManager.GetAsync(cacheRegion, cacheRegion, async () =>
+            {
+                using (var userManager = _userManagerFactory())
+                {
+                    return await userManager.FindByNameAsync(userName);
+                }
+            });
+
+            return result;
+        }
+
+        private void RemoveUserFromCache(string userId, string userName)
+        {
+            _cacheManager.ClearRegion(GetUserCacheRegion(userId));
+            _cacheManager.ClearRegion(GetUserCacheRegion(userName));
+        }
 
         private ApplicationUserExtended GetUserExtended(ApplicationUser applicationUser, UserDetails detailsLevel)
         {
@@ -410,7 +457,7 @@ namespace VirtoCommerce.Platform.Data.Security
                 var cacheRegion = GetUserCacheRegion(applicationUser.Id);
                 result = _cacheManager.Get(cacheRegion + ":" + detailsLevel, cacheRegion, () =>
                 {
-                    ApplicationUserExtended retVal = null;
+                    ApplicationUserExtended retVal;
                     using (var repository = _platformRepository())
                     {
                         var user = repository.GetAccountByName(applicationUser.UserName, detailsLevel);
