@@ -22,7 +22,7 @@ namespace VirtoCommerce.Content.Data.Converters
             if (target == null)
                 throw new ArgumentNullException("target");
 
-            var patchInjectionPolicy = new PatchInjection<MenuLink>(x => x.AssociatedObjectId, x => x.AssociatedObjectType, x=>x.IsActive, x=>x.Priority, x=>x.Title, x=>x.Url);
+            var patchInjectionPolicy = new PatchInjection<MenuLink>(x => x.AssociatedObjectId, x=> x.AssociatedObjectName, x => x.AssociatedObjectType, x=>x.IsActive, x=>x.Priority, x=>x.Title, x=>x.Url);
             target.InjectFrom(patchInjectionPolicy, source);
         }
     }
