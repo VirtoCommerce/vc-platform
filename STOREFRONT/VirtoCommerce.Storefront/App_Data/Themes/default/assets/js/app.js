@@ -1,4 +1,4 @@
-﻿var storefrontApp = angular.module('storefrontApp', ['ngRoute']);
+﻿var storefrontApp = angular.module('storefrontApp', ['ngRoute', 'ui.bootstrap']);
 
 storefrontApp.factory('httpErrorInterceptor', ['$q', '$rootScope', function ($q, $rootScope) {
     var httpErrorInterceptor = {};
@@ -24,7 +24,6 @@ storefrontApp.factory('httpErrorInterceptor', ['$q', '$rootScope', function ($q,
 }])
 
 storefrontApp.config(['$interpolateProvider', '$routeProvider', '$httpProvider', function ($interpolateProvider, $routeProvider, $httpProvider) {
-    //Add interceptor
     $httpProvider.interceptors.push('httpErrorInterceptor');
 
     $routeProvider

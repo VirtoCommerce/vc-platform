@@ -1,6 +1,6 @@
 ﻿var storefrontApp = angular.module('storefrontApp');
 
-storefrontApp.controller('cartController', ['$scope', '$timeout', 'cartService', function ($scope, $timeout, cartService) {
+storefrontApp.controller('cartController', ['$rootScope', '$scope', '$timeout', 'cartService', function ($rootScope, $scope, $timeout, cartService) {
     var timer;
 
     initialize();
@@ -9,39 +9,22 @@ storefrontApp.controller('cartController', ['$scope', '$timeout', 'cartService',
         $scope.formCart = form;
     }
 
-    $scope.toggleRecentCartItemModal = function (isVisible) {
-        $scope.recentCartItemModalVisible = !isVisible;
-    }
-
-    $scope.addToCart = function (product, quantity) {
-        $scope.cartIsUpdating = true;
-        $scope.recentCartItemModalVisible = true;
-        $scope.cart.RecentlyAddedItem = {
-            ImageUrl: product.PrimaryImage.Url,
-            ListPrice: product.Price.ListPrice,
-            Name: product.Name,
-            PlacedPrice: product.Price.ActualPrice,
-            Quantity: quantity
-        };
-        cartService.addLineItem(product.Id, quantity).then(function (response) {
-            refreshCart();
-        });
-    }
-
     $scope.changeLineItemQuantity = function (lineItemId, quantity) {
         var lineItem = _.find($scope.cart.Items, function (i) { return i.Id == lineItemId });
         if (!lineItem || quantity < 1 || $scope.cartIsUpdating || $scope.formCart.$invalid) {
             return;
         }
-        var initialQuantity = angular.copy(lineItem.Quantity);
+        var initialQuantity = lineItem.Quantity;
         lineItem.Quantity = quantity;
         $timeout.cancel(timer);
         timer = $timeout(function () {
             $scope.cartIsUpdating = true;
             cartService.changeLineItemQuantity(lineItemId, quantity).then(function (response) {
-                refreshCart();
+                getCart();
+                $rootScope.$broadcast('cartItemsChanged');
             }, function (response) {
                 lineItem.Quantity = initialQuantity;
+                $scope.cartIsUpdating = false;
             });
         }, 300);
     }
@@ -56,7 +39,8 @@ storefrontApp.controller('cartController', ['$scope', '$timeout', 'cartService',
         $scope.recentCartItemModalVisible = false;
         $scope.cart.Items = _.without($scope.cart.Items, lineItem);
         cartService.removeLineItem(lineItemId).then(function (response) {
-            refreshCart();
+            getCart();
+            $rootScope.$broadcast('cartItemsChanged');
         }, function (response) {
             $scope.cart.Items = initialItems;
             $scope.cartIsUpdating = false;
@@ -76,17 +60,42 @@ storefrontApp.controller('cartController', ['$scope', '$timeout', 'cartService',
     }
 
     function initialize() {
-        $scope.cart = {};
-        $scope.recentCartItemModalVisible = false;
-        $scope.cartErrorOccured = false;
-        refreshCart();
+        getCart();
     }
 
-    function refreshCart() {
+    function getCart() {
         $scope.cartIsUpdating = true;
         cartService.getCart().then(function (response) {
             $scope.cart = response.data;
             $scope.cartIsUpdating = false;
+        }, function (response) {
+            $scope.cartIsUpdating = false;
         });
+    }
+}]);
+
+storefrontApp.controller('cartBarController', ['$scope', 'cartService', function ($scope, cartService) {
+    getCartItemsCount();
+
+    $scope.$on('cartItemsChanged', function (event, data) {
+        getCartItemsCount();
+    });
+
+    function getCartItemsCount() {
+        cartService.getCartItemsCount().then(function (response) {
+            $scope.cartItemsCount = response.data;
+        });
+    }
+}]);
+
+storefrontApp.controller('recentlyAddedCartItemDialogController', ['$scope', '$window', '$uibModalInstance', 'dialogData', function ($scope, $window, $uibModalInstance, dialogData) {
+    $scope.dialogData = dialogData;
+
+    $scope.close = function () {
+        $uibModalInstance.close();
+    }
+
+    $scope.redirect = function (url) {
+        $window.location = url;
     }
 }]);
