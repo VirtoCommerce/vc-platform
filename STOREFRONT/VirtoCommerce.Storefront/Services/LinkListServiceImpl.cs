@@ -44,12 +44,12 @@ namespace VirtoCommerce.Storefront.Services
                 var productIds = productLinks.Select(x => x.AssociatedObjectId).ToArray();
                 if (productIds.Any())
                 {
-                    productsLoadingTask = _catalogSearchService.GetProductsAsync(productIds, ItemResponseGroup.ItemInfo);
+                    productsLoadingTask = _catalogSearchService.GetProductsAsync(productIds, ItemResponseGroup.ItemSmall);
                 }
                 var categoriesIds = categoryLinks.Select(x => x.AssociatedObjectId).ToArray();
                 if (categoriesIds.Any())
                 {
-                    categoriesLoadingTask = _catalogSearchService.GetCategoriesAsync(categoriesIds, CategoryResponseGroup.Info);
+                    categoriesLoadingTask = _catalogSearchService.GetCategoriesAsync(categoriesIds, CategoryResponseGroup.Info | CategoryResponseGroup.WithImages);
                 }
                 //Populate link by associated product
                 if (productsLoadingTask != null)
