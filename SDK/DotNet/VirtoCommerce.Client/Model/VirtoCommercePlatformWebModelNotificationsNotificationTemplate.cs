@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommercePlatformWebModelNotificationsNotificationTemplate : IEquatable<VirtoCommercePlatformWebModelNotificationsNotificationTemplate>
+    public partial class VirtoCommercePlatformWebModelNotificationsNotificationTemplate :  IEquatable<VirtoCommercePlatformWebModelNotificationsNotificationTemplate>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelNotificationsNotificationTemplate" /> class.
@@ -132,7 +133,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommercePlatformWebModelNotificationsNotificationTemplate instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommercePlatformWebModelNotificationsNotificationTemplate to be compared</param>
+        /// <param name="other">Instance of VirtoCommercePlatformWebModelNotificationsNotificationTemplate to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommercePlatformWebModelNotificationsNotificationTemplate other)
         {
@@ -196,28 +197,28 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.Id != null)
-                    hash = hash * 57 + this.Id.GetHashCode();
+                    hash = hash * 59 + this.Id.GetHashCode();
                 
                 if (this.Body != null)
-                    hash = hash * 57 + this.Body.GetHashCode();
+                    hash = hash * 59 + this.Body.GetHashCode();
                 
                 if (this.Subject != null)
-                    hash = hash * 57 + this.Subject.GetHashCode();
+                    hash = hash * 59 + this.Subject.GetHashCode();
                 
                 if (this.NotificationTypeId != null)
-                    hash = hash * 57 + this.NotificationTypeId.GetHashCode();
+                    hash = hash * 59 + this.NotificationTypeId.GetHashCode();
                 
                 if (this.ObjectId != null)
-                    hash = hash * 57 + this.ObjectId.GetHashCode();
+                    hash = hash * 59 + this.ObjectId.GetHashCode();
                 
                 if (this.ObjectTypeId != null)
-                    hash = hash * 57 + this.ObjectTypeId.GetHashCode();
+                    hash = hash * 59 + this.ObjectTypeId.GetHashCode();
                 
                 if (this.Language != null)
-                    hash = hash * 57 + this.Language.GetHashCode();
+                    hash = hash * 59 + this.Language.GetHashCode();
                 
                 if (this.IsDefault != null)
-                    hash = hash * 57 + this.IsDefault.GetHashCode();
+                    hash = hash * 59 + this.IsDefault.GetHashCode();
                 
                 return hash;
             }

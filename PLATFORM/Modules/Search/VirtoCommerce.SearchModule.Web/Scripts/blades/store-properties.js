@@ -29,26 +29,10 @@
 
     function isDirty() {
         return !angular.equals(blade.selectedEntities, blade.origSelected);
-    };
-
+    }
+    
     blade.onClose = function (closeCallback) {
-        if (isDirty()) {
-            var dialog = {
-                id: "confirmItemChange",
-                title: "Save changes",
-                message: "The properties selection has been modified. Do you want to confirm changes?",
-                callback: function (needSave) {
-                    if (needSave) {
-                        $scope.saveChanges();
-                    }
-                    closeCallback();
-                }
-            };
-            dialogService.showConfirmationDialog(dialog);
-        }
-        else {
-            closeCallback();
-        }
+        bladeNavigationService.showConfirmationIfNeeded(isDirty(), true, blade, $scope.saveChanges, closeCallback, "Save changes", "The properties selection has been modified. Do you want to confirm changes?");
     };
 
     $scope.saveChanges = function () {
@@ -67,9 +51,7 @@
     blade.toolbarCommands = [
         {
             name: "Save", icon: 'fa fa-save',
-            executeMethod: function () {
-                $scope.saveChanges();
-            },
+            executeMethod: $scope.saveChanges,
             canExecuteMethod: isDirty
         },
         {

@@ -223,26 +223,35 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
 
                             //When creating DynamicProperty manually, many properties remain unfilled (except Name, ValueType and ObjectValues).
                             //We have to set them with data from the repository.
-                            var transistentProperties = sourceCollection.Where(x => x.IsTransient());
+                            var transistentProperties = source.Properties.Where(x => x.IsTransient());
                             if (transistentProperties.Any())
                             {
                                 var allTypeProperties = repository.GetDynamicPropertiesForType(objectType);
                                 foreach (var transistentPropery in transistentProperties)
                                 {
-                                    var property = allTypeProperties.FirstOrDefault(x => String.Equals(x.Name, transistentPropery.Name, StringComparison.InvariantCultureIgnoreCase) && x.ValueType == transistentPropery.ValueType);
+                                    var property = allTypeProperties.FirstOrDefault(x => String.Equals(x.Name, transistentPropery.Name, StringComparison.InvariantCultureIgnoreCase));
                                     if (property != null)
                                     {
                                         transistentPropery.Id = property.Id;
                                         transistentPropery.ObjectType = property.ObjectType;
                                         transistentPropery.IsArray = property.IsArray;
                                         transistentPropery.IsRequired = property.IsRequired;
-
+                                        transistentPropery.ValueType = property.ValueType;
                                     }
                                 }
                             }
                             changeTracker.Attach(target);
-
-                            source.Properties.Patch(target.Properties, (sourcePop, targetProp) => sourcePop.Patch(targetProp));
+                            foreach(var sourceProperty in source.Properties)
+                            {
+                                var targetProperty = target.Properties.FirstOrDefault(x => x.Id == sourceProperty.Id);
+                                if(targetProperty != null)
+                                {
+                                    if (!sourceProperty.ObjectValues.IsNullCollection())
+                                    {
+                                        sourceProperty.ObjectValues.Patch(targetProperty.ObjectValues, new DynamicPropertyObjectValueComparer(), (sourceValue, targetValue) => sourceValue.Patch(targetValue));
+                                    }
+                                }
+                            }                            
                         }
                     }
 

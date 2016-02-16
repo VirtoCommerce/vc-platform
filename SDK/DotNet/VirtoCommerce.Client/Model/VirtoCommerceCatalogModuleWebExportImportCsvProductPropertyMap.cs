@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommerceCatalogModuleWebExportImportCsvProductPropertyMap : IEquatable<VirtoCommerceCatalogModuleWebExportImportCsvProductPropertyMap>
+    public partial class VirtoCommerceCatalogModuleWebExportImportCsvProductPropertyMap :  IEquatable<VirtoCommerceCatalogModuleWebExportImportCsvProductPropertyMap>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebExportImportCsvProductPropertyMap" /> class.
@@ -120,7 +121,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommerceCatalogModuleWebExportImportCsvProductPropertyMap instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommerceCatalogModuleWebExportImportCsvProductPropertyMap to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceCatalogModuleWebExportImportCsvProductPropertyMap to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommerceCatalogModuleWebExportImportCsvProductPropertyMap other)
         {
@@ -179,25 +180,25 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.EntityColumnName != null)
-                    hash = hash * 57 + this.EntityColumnName.GetHashCode();
+                    hash = hash * 59 + this.EntityColumnName.GetHashCode();
                 
                 if (this.CsvColumnName != null)
-                    hash = hash * 57 + this.CsvColumnName.GetHashCode();
+                    hash = hash * 59 + this.CsvColumnName.GetHashCode();
                 
                 if (this.IsSystemProperty != null)
-                    hash = hash * 57 + this.IsSystemProperty.GetHashCode();
+                    hash = hash * 59 + this.IsSystemProperty.GetHashCode();
                 
                 if (this.IsRequired != null)
-                    hash = hash * 57 + this.IsRequired.GetHashCode();
+                    hash = hash * 59 + this.IsRequired.GetHashCode();
                 
                 if (this.CustomValue != null)
-                    hash = hash * 57 + this.CustomValue.GetHashCode();
+                    hash = hash * 59 + this.CustomValue.GetHashCode();
                 
                 if (this.StringFormat != null)
-                    hash = hash * 57 + this.StringFormat.GetHashCode();
+                    hash = hash * 59 + this.StringFormat.GetHashCode();
                 
                 if (this.Locale != null)
-                    hash = hash * 57 + this.Locale.GetHashCode();
+                    hash = hash * 59 + this.Locale.GetHashCode();
                 
                 return hash;
             }

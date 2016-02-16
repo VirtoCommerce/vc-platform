@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommerceDomainPaymentModelBankCardInfo : IEquatable<VirtoCommerceDomainPaymentModelBankCardInfo>
+    public partial class VirtoCommerceDomainPaymentModelBankCardInfo :  IEquatable<VirtoCommerceDomainPaymentModelBankCardInfo>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceDomainPaymentModelBankCardInfo" /> class.
@@ -104,7 +105,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommerceDomainPaymentModelBankCardInfo instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommerceDomainPaymentModelBankCardInfo to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceDomainPaymentModelBankCardInfo to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommerceDomainPaymentModelBankCardInfo other)
         {
@@ -153,19 +154,19 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.BankCardNumber != null)
-                    hash = hash * 57 + this.BankCardNumber.GetHashCode();
+                    hash = hash * 59 + this.BankCardNumber.GetHashCode();
                 
                 if (this.BankCardType != null)
-                    hash = hash * 57 + this.BankCardType.GetHashCode();
+                    hash = hash * 59 + this.BankCardType.GetHashCode();
                 
                 if (this.BankCardMonth != null)
-                    hash = hash * 57 + this.BankCardMonth.GetHashCode();
+                    hash = hash * 59 + this.BankCardMonth.GetHashCode();
                 
                 if (this.BankCardYear != null)
-                    hash = hash * 57 + this.BankCardYear.GetHashCode();
+                    hash = hash * 59 + this.BankCardYear.GetHashCode();
                 
                 if (this.BankCardCVV2 != null)
-                    hash = hash * 57 + this.BankCardCVV2.GetHashCode();
+                    hash = hash * 59 + this.BankCardCVV2.GetHashCode();
                 
                 return hash;
             }

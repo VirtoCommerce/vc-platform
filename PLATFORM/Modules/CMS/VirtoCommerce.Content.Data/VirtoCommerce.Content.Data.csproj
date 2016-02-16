@@ -48,6 +48,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="Omu.ValueInjecter, Version=2.3.3.0, Culture=neutral, PublicKeyToken=c7694541b0ac80e4, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\valueinjecter.2.3.3\lib\net35\Omu.ValueInjecter.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -62,6 +66,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converters\MenuLinkConverter.cs" />
+    <Compile Include="Converters\MenuLinkListConverter.cs" />
     <Compile Include="Migrations\201505050857414_Initial.cs" />
     <Compile Include="Migrations\201505050857414_Initial.Designer.cs">
       <DependentUpon>201505050857414_Initial.cs</DependentUpon>
@@ -73,6 +79,14 @@
     <Compile Include="Migrations\201512121533016_RemovePagesAndThemes.cs" />
     <Compile Include="Migrations\201512121533016_RemovePagesAndThemes.Designer.cs">
       <DependentUpon>201512121533016_RemovePagesAndThemes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201602120950514_LinkAssociationObject.cs" />
+    <Compile Include="Migrations\201602120950514_LinkAssociationObject.Designer.cs">
+      <DependentUpon>201602120950514_LinkAssociationObject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201602150959294_AssociatedObjectNameField.cs" />
+    <Compile Include="Migrations\201602150959294_AssociatedObjectNameField.Designer.cs">
+      <DependentUpon>201602150959294_AssociatedObjectNameField.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\MenuLink.cs" />
@@ -110,10 +124,14 @@
     <EmbeddedResource Include="Migrations\201512121533016_RemovePagesAndThemes.resx">
       <DependentUpon>201512121533016_RemovePagesAndThemes.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201602120950514_LinkAssociationObject.resx">
+      <DependentUpon>201602120950514_LinkAssociationObject.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201602150959294_AssociatedObjectNameField.resx">
+      <DependentUpon>201602150959294_AssociatedObjectNameField.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Converters\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -1,70 +1,69 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.propertyDetailController', ['$scope', 'virtoCommerce.catalogModule.categories', 'virtoCommerce.catalogModule.properties', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', function ($scope, categories, properties, bladeNavigationService, dialogService) {
-    var b = $scope.blade;
-    var formScope;
-    b.origEntity = {};
+.controller('virtoCommerce.catalogModule.propertyDetailController', ['$scope', 'virtoCommerce.catalogModule.properties', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', function ($scope, properties, bladeNavigationService, dialogService) {
+    var blade = $scope.blade;
+    blade.origEntity = {};
 
     $scope.currentChild = undefined;
 
-    b.refresh = function (parentRefresh) {
-        if (b.currentEntityId) {
-            properties.get({ propertyId: b.currentEntityId }, function (data) {
+    blade.refresh = function (parentRefresh) {
+        if (blade.currentEntityId) {
+            properties.get({ propertyId: blade.currentEntityId }, function (data) {
                 initializeBlade(data);
                 if (parentRefresh) {
-                    b.parentBlade.refresh(data);
+                    blade.parentBlade.refresh(data);
                 }
             },
-            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
-        } else if (b.categoryId) {
-            properties.newCategoryProperty({ categoryId: b.categoryId }, function (data) {
+            function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
+        } else if (blade.categoryId) {
+            properties.newCategoryProperty({ categoryId: blade.categoryId }, function (data) {
                 initializeBlade(data);
             },
-            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+            function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
         }
-        else if (b.catalogId) {
-            properties.newCatalogProperty({ catalogId: b.catalogId }, function (data) {
+        else if (blade.catalogId) {
+            properties.newCatalogProperty({ catalogId: blade.catalogId }, function (data) {
                 initializeBlade(data);
             },
-            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+            function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
         }
     };
 
     $scope.openChild = function (childType) {
         var newBlade = { id: "propertyChild" };
-        newBlade.property = b.currentEntity;
+        newBlade.property = blade.currentEntity;
 
         switch (childType) {
             case 'attr':
                 newBlade.title = 'catalog.blades.property-attributes.title';
-                newBlade.titleValues = { name: b.origEntity.name ? b.origEntity.name : b.currentEntity.name };
+                newBlade.titleValues = { name: blade.origEntity.name ? blade.origEntity.name : blade.currentEntity.name };
                 newBlade.subtitle = 'catalog.blades.property-attributes.subtitle';
                 newBlade.controller = 'virtoCommerce.catalogModule.propertyAttributesController';
                 newBlade.template = 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/property-attributes.tpl.html';
                 break;
             case 'valType':
                 newBlade.title = 'catalog.blades.property-valueType.title';
-                newBlade.titleValues = { name: b.origEntity.name ? b.origEntity.name : b.currentEntity.name };
+                newBlade.titleValues = { name: blade.origEntity.name ? blade.origEntity.name : blade.currentEntity.name };
                 newBlade.subtitle = 'catalog.blades.property-valueType.subtitle';
                 newBlade.controller = 'virtoCommerce.catalogModule.propertyValueTypeController';
                 newBlade.template = 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/property-valueType.tpl.html';
                 break;
             case 'appliesto':
                 newBlade.title = 'catalog.blades.property-type.title';
-                newBlade.titleValues = { name: b.origEntity.name ? b.origEntity.name : b.currentEntity.name };
+                newBlade.titleValues = { name: blade.origEntity.name ? blade.origEntity.name : blade.currentEntity.name };
                 newBlade.subtitle = 'catalog.blades.property-type.subtitle';
                 newBlade.controller = 'virtoCommerce.catalogModule.propertyTypeController';
                 newBlade.template = 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/property-type.tpl.html';
-                newBlade.availablePropertyTypes = b.catalogId ? ['Product', 'Variation', 'Category', 'Catalog'] : ['Product', 'Variation', 'Category'];
+                newBlade.availablePropertyTypes = blade.catalogId ? ['Product', 'Variation', 'Category', 'Catalog'] : ['Product', 'Variation', 'Category'];
                 break;
             case 'dict':
                 newBlade.title = 'catalog.blades.property-dictionary.title';
-                newBlade.titleValues = { name: b.origEntity.name ? b.origEntity.name : b.currentEntity.name };
+                newBlade.titleValues = { name: blade.origEntity.name ? blade.origEntity.name : blade.currentEntity.name };
                 newBlade.subtitle = 'catalog.blades.property-dictionary.subtitle';
                 newBlade.controller = 'virtoCommerce.catalogModule.propertyDictionaryController';
                 newBlade.template = 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/property-dictionary.tpl.html';
                 break;
         }
-        bladeNavigationService.showBlade(newBlade, $scope.blade);
+        bladeNavigationService.showBlade(newBlade, blade);
         $scope.currentChild = childType;
     }
 
@@ -75,103 +74,82 @@
             });
         }
 
-        b.currentEntity = angular.copy(data);
-        b.origEntity = data;
-        b.isLoading = false;
+        blade.currentEntity = angular.copy(data);
+        blade.origEntity = data;
+        blade.isLoading = false;
     };
 
     function isDirty() {
-        return !angular.equals(b.currentEntity, b.origEntity);
-    };
+        return !angular.equals(blade.currentEntity, blade.origEntity);
+    }
+
+    function canSave() {
+        return (blade.origEntity.isNew || isDirty()) && formScope && formScope.$valid;
+    }
 
     function saveChanges() {
-        b.isLoading = true;
-        properties.update(b.currentEntity, function (data, headers) {
-            b.currentEntityId = data.id;
-            b.refresh(true);
+        blade.isLoading = true;
+        properties.update(blade.currentEntity, function (data, headers) {
+            blade.currentEntityId = data.id;
+            blade.refresh(true);
         },
-        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+        function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
     };
 
     function removeProperty(prop) {
         var dialog = {
             id: "confirmDelete",
             title: "catalog.dialogs.property-delete.title",
-            message: "catalog.dialogs.property-delete.subtitle",
+            message: "catalog.dialogs.property-delete.message",
             messageValues: { name: prop.name },
             callback: function (remove) {
                 if (remove) {
-                    $scope.blade.isLoading = true;
+                    blade.isLoading = true;
 
                     properties.remove({ id: prop.id }, function () {
                         $scope.bladeClose();
-                        b.parentBlade.refresh();
+                        blade.parentBlade.refresh();
                     },
-                    function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+                    function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
                 }
             }
         }
         dialogService.showConfirmationDialog(dialog);
     }
 
-    b.onClose = function (closeCallback) {
-        angular.forEach($scope.blade.childrenBlades.slice(), function (child) {
-            bladeNavigationService.closeBlade(child);
-        });
-
-        if (isDirty()) {
-            var dialog = {
-                id: "confirmItemChange",
-                title: "catalog.dialogs.property-save.title",
-                message: "catalog.dialogs.property-save.message",
-                callback: function (needSave) {
-                    if (needSave) {
-                        saveChanges();
-                    }
-                    closeCallback();
-                }
-            };
-            dialogService.showConfirmationDialog(dialog);
-        }
-        else {
-            closeCallback();
-        }
+    blade.onClose = function (closeCallback) {
+        bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, saveChanges, closeCallback, "catalog.dialogs.property-save.title", "catalog.dialogs.property-save.message");
     };
 
-    $scope.setForm = function (form) {
-        formScope = form;
-    }
+    var formScope;
+    $scope.setForm = function (form) { formScope = form; }
 
-    $scope.blade.headIcon = 'fa-gear';
+    blade.headIcon = 'fa-gear';
 
-    $scope.blade.toolbarCommands = [
+    blade.toolbarCommands = [
 		{
 		    name: "platform.commands.save", icon: 'fa fa-save',
-		    executeMethod: function () {
-		        saveChanges();
-		    },
-		    canExecuteMethod: function () {
-		        return (b.origEntity.isNew || isDirty()) && formScope && formScope.$valid;
-		    }
+		    executeMethod: saveChanges,
+		    canExecuteMethod: canSave
 		},
         {
             name: "platform.commands.reset", icon: 'fa fa-undo',
             executeMethod: function () {
-                angular.copy(b.origEntity, b.currentEntity);
+                angular.copy(blade.origEntity, blade.currentEntity);
             },
             canExecuteMethod: isDirty
         },
 		   {
 		       name: "platform.commands.delete", icon: 'fa fa-trash-o',
 		       executeMethod: function () {
-		           removeProperty(b.origEntity);
+		           removeProperty(blade.origEntity);
 		       },
 		       canExecuteMethod: function () {
-		           return b.origEntity.isManageable && !b.origEntity.isNew;
+		           return blade.origEntity.isManageable && !blade.origEntity.isNew;
 		       }
 		   }
     ];
 
     // actions on load    
-    b.refresh();
+    blade.refresh();
 }]);

@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommerceCatalogModuleWebExportImportCsvImportInfo : IEquatable<VirtoCommerceCatalogModuleWebExportImportCsvImportInfo>
+    public partial class VirtoCommerceCatalogModuleWebExportImportCsvImportInfo :  IEquatable<VirtoCommerceCatalogModuleWebExportImportCsvImportInfo>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebExportImportCsvImportInfo" /> class.
@@ -88,7 +89,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommerceCatalogModuleWebExportImportCsvImportInfo instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommerceCatalogModuleWebExportImportCsvImportInfo to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceCatalogModuleWebExportImportCsvImportInfo to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommerceCatalogModuleWebExportImportCsvImportInfo other)
         {
@@ -127,13 +128,13 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.CatalogId != null)
-                    hash = hash * 57 + this.CatalogId.GetHashCode();
+                    hash = hash * 59 + this.CatalogId.GetHashCode();
                 
                 if (this.FileUrl != null)
-                    hash = hash * 57 + this.FileUrl.GetHashCode();
+                    hash = hash * 59 + this.FileUrl.GetHashCode();
                 
                 if (this.Configuration != null)
-                    hash = hash * 57 + this.Configuration.GetHashCode();
+                    hash = hash * 59 + this.Configuration.GetHashCode();
                 
                 return hash;
             }

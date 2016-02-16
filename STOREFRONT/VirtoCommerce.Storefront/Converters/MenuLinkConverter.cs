@@ -14,15 +14,13 @@ namespace VirtoCommerce.Storefront.Converters
 
             webModel.InjectFrom(serviceModel);
 
+            webModel.Language = string.IsNullOrEmpty(serviceModel.Language) ? Language.InvariantLanguage : new Language(serviceModel.Language);
+
             if (serviceModel.MenuLinks != null)
             {
                 webModel.MenuLinks = serviceModel.MenuLinks.Select(ml => ml.ToWebModel(urlBuilder)).ToList();
             }
-            if (serviceModel.SecurityScopes != null)
-            {
-                webModel.SecurityScopes = serviceModel.SecurityScopes.Select(ss => ss).ToList();
-            }
-
+          
             return webModel;
         }
 
@@ -30,12 +28,19 @@ namespace VirtoCommerce.Storefront.Converters
         {
             var webModel = new MenuLink();
 
-            webModel.InjectFrom(serviceModel);
-
-            if (serviceModel.SecurityScopes != null)
+            if (serviceModel.AssociatedObjectType != null)
             {
-                webModel.SecurityScopes = serviceModel.SecurityScopes.Select(ss => ss).ToList();
+                if ("product" == serviceModel.AssociatedObjectType.ToLowerInvariant())
+                {
+                    webModel = new ProductMenuLink();
+                }
+                else if ("category" == serviceModel.AssociatedObjectType.ToLowerInvariant())
+                {
+                    webModel = new CategoryMenuLink();
+                }
             }
+
+            webModel.InjectFrom(serviceModel);
 
             webModel.Url = urlBuilder.ToAppAbsolute("/" + serviceModel.Url);
 

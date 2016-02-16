@@ -76,11 +76,13 @@
     <Compile Include="Catalog\Asset.cs" />
     <Compile Include="Catalog\CatalogSearchResponseGroup.cs" />
     <Compile Include="Catalog\CatalogSearchResult.cs" />
+    <Compile Include="Catalog\CategoryResponseGroup.cs" />
     <Compile Include="Catalog\InventoryStatus.cs" />
     <Compile Include="Catalog\ItemResponseGroup.cs" />
     <Compile Include="Catalog\CatalogSearchCriteria.cs" />
     <Compile Include="Catalog\Term.cs" />
     <Compile Include="Catalog\TermExtensions.cs" />
+    <Compile Include="LinkList\CategoryMenuLink.cs" />
     <Compile Include="Common\Events\EventPublisher.cs" />
     <Compile Include="Common\Events\IAsyncObserver.cs" />
     <Compile Include="Common\Events\IEventPublisher.cs" />
@@ -88,8 +90,10 @@
     <Compile Include="Common\PagedSearchCriteria.cs" />
     <Compile Include="Customer\Events\UserLoginEvent.cs" />
     <Compile Include="Customer\Services\ICustomerService.cs" />
+    <Compile Include="LinkList\Services\ILinkListService.cs" />
     <Compile Include="Order\Events\OrderPlacedEvent.cs" />
     <Compile Include="Order\OrderSearchCriteria.cs" />
+    <Compile Include="LinkList\ProductMenuLink.cs" />
     <Compile Include="Quote\QuoteItemFormModel.cs" />
     <Compile Include="Quote\QuoteRequestFormModel.cs" />
     <Compile Include="Pricing\Pricelist.cs" />
@@ -115,8 +119,8 @@
     <Compile Include="CountryRegion.cs" />
     <Compile Include="DynamicContentItem.cs" />
     <Compile Include="Marketing\Coupon.cs" />
-    <Compile Include="MenuLink.cs" />
-    <Compile Include="MenuLinkList.cs" />
+    <Compile Include="LinkList\MenuLink.cs" />
+    <Compile Include="LinkList\MenuLinkList.cs" />
     <Compile Include="Marketing\Promotion.cs" />
     <Compile Include="Marketing\PromotionProductEntry.cs" />
     <Compile Include="Marketing\PromotionEvaluationContext.cs" />

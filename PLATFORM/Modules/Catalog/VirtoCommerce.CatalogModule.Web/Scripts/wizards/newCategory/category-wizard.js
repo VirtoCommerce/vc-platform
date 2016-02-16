@@ -59,18 +59,6 @@
     $scope.setForm = function (form) {
         $scope.formScope = form;
     }
-
-
-    blade.onClose = function (closeCallback) {
-        closeChildrenBlades();
-        closeCallback();
-    };
-
-    function closeChildrenBlades() {
-        angular.forEach(blade.childrenBlades.slice(), function (child) {
-            bladeNavigationService.closeBlade(child);
-        });
-    }
-
+    
     blade.isLoading = false;
 }]);

@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommerceCatalogModuleWebExportImportCsvExportInfo : IEquatable<VirtoCommerceCatalogModuleWebExportImportCsvExportInfo>
+    public partial class VirtoCommerceCatalogModuleWebExportImportCsvExportInfo :  IEquatable<VirtoCommerceCatalogModuleWebExportImportCsvExportInfo>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebExportImportCsvExportInfo" /> class.
@@ -120,7 +121,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommerceCatalogModuleWebExportImportCsvExportInfo instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommerceCatalogModuleWebExportImportCsvExportInfo to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceCatalogModuleWebExportImportCsvExportInfo to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommerceCatalogModuleWebExportImportCsvExportInfo other)
         {
@@ -179,25 +180,25 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.CatalogId != null)
-                    hash = hash * 57 + this.CatalogId.GetHashCode();
+                    hash = hash * 59 + this.CatalogId.GetHashCode();
                 
                 if (this.ProductIds != null)
-                    hash = hash * 57 + this.ProductIds.GetHashCode();
+                    hash = hash * 59 + this.ProductIds.GetHashCode();
                 
                 if (this.CategoryIds != null)
-                    hash = hash * 57 + this.CategoryIds.GetHashCode();
+                    hash = hash * 59 + this.CategoryIds.GetHashCode();
                 
                 if (this.PriceListId != null)
-                    hash = hash * 57 + this.PriceListId.GetHashCode();
+                    hash = hash * 59 + this.PriceListId.GetHashCode();
                 
                 if (this.FulfilmentCenterId != null)
-                    hash = hash * 57 + this.FulfilmentCenterId.GetHashCode();
+                    hash = hash * 59 + this.FulfilmentCenterId.GetHashCode();
                 
                 if (this.Currency != null)
-                    hash = hash * 57 + this.Currency.GetHashCode();
+                    hash = hash * 59 + this.Currency.GetHashCode();
                 
                 if (this.Configuration != null)
-                    hash = hash * 57 + this.Configuration.GetHashCode();
+                    hash = hash * 59 + this.Configuration.GetHashCode();
                 
                 return hash;
             }

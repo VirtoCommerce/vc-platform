@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// The actual property value assigned to concrete merchandising entity.
     /// </summary>
     [DataContract]
-    public class VirtoCommerceCatalogModuleWebModelPropertyValue : IEquatable<VirtoCommerceCatalogModuleWebModelPropertyValue>
+    public partial class VirtoCommerceCatalogModuleWebModelPropertyValue :  IEquatable<VirtoCommerceCatalogModuleWebModelPropertyValue>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelPropertyValue" /> class.
@@ -144,7 +145,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommerceCatalogModuleWebModelPropertyValue instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommerceCatalogModuleWebModelPropertyValue to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceCatalogModuleWebModelPropertyValue to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommerceCatalogModuleWebModelPropertyValue other)
         {
@@ -213,31 +214,31 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.Id != null)
-                    hash = hash * 57 + this.Id.GetHashCode();
+                    hash = hash * 59 + this.Id.GetHashCode();
                 
                 if (this.PropertyName != null)
-                    hash = hash * 57 + this.PropertyName.GetHashCode();
+                    hash = hash * 59 + this.PropertyName.GetHashCode();
                 
                 if (this.PropertyId != null)
-                    hash = hash * 57 + this.PropertyId.GetHashCode();
+                    hash = hash * 59 + this.PropertyId.GetHashCode();
                 
                 if (this.LanguageCode != null)
-                    hash = hash * 57 + this.LanguageCode.GetHashCode();
+                    hash = hash * 59 + this.LanguageCode.GetHashCode();
                 
                 if (this.Alias != null)
-                    hash = hash * 57 + this.Alias.GetHashCode();
+                    hash = hash * 59 + this.Alias.GetHashCode();
                 
                 if (this.ValueType != null)
-                    hash = hash * 57 + this.ValueType.GetHashCode();
+                    hash = hash * 59 + this.ValueType.GetHashCode();
                 
                 if (this.ValueId != null)
-                    hash = hash * 57 + this.ValueId.GetHashCode();
+                    hash = hash * 59 + this.ValueId.GetHashCode();
                 
                 if (this.Value != null)
-                    hash = hash * 57 + this.Value.GetHashCode();
+                    hash = hash * 59 + this.Value.GetHashCode();
                 
                 if (this.IsInherited != null)
-                    hash = hash * 57 + this.IsInherited.GetHashCode();
+                    hash = hash * 59 + this.IsInherited.GetHashCode();
                 
                 return hash;
             }

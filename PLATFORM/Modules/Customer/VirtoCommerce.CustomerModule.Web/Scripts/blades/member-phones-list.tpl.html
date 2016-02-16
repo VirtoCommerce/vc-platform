@@ -4,7 +4,7 @@
         <div class="inner-block">
             <div class="table-wrapper">
                 <form name="formScope" class="form">
-                    <table class="table">
+                    <table class="table" ng-init="setForm(formScope)">
                         <tbody>
                             <tr class="table-item" ng-repeat="data in blade.currentEntities" ng-class="{'__selected': data === selectedItem}" context-menu data-target="cel_menu_{{data}}" ng-click='selectItem(data)'>
                                 <td class="table-col">
@@ -22,7 +22,7 @@
                     </table>
                 </form>
             </div>
-            <p class="text" ng-if="!blade.currentEntities.length">{{ 'customer.blades.member-phones-list.labels.no-phones' | translate }}</p>
+            <p class="note" ng-if="!blade.currentEntities.length">{{ 'customer.blades.member-phones-list.labels.no-phones' | translate }}</p>
         </div>
     </div>
 </div>

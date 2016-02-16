@@ -13,6 +13,8 @@ using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Domain.Commerce.Model;
 using VirtoCommerce.Platform.Core.Asset;
 using VirtoCommerce.CatalogModule.Web.Security;
+using System.Web.Http.ModelBinding;
+using VirtoCommerce.CatalogModule.Web.Binders;
 
 namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 {
@@ -43,20 +45,37 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         [Route("{id}")]
         public IHttpActionResult Get(string id)
         {
-            var category = _categoryService.GetById(id, Domain.Catalog.Model.CategoryResponseGroup.Full);
+            var category = GetCategoriesByIds(new[] { id }).FirstOrDefault();
 
             if (category == null)
             {
                 return NotFound();
             }
 
-            base.CheckCurrentUserHasPermissionForObjects(CatalogPredefinedPermissions.Read, category);
+            return Ok(category);
+        }
 
-            var retVal = category.ToWebModel(_blobUrlResolver);
+        /// <summary>
+        /// Gets categories by ids
+        /// </summary>
+        /// <param name="ids">Categories ids</param>
+        ///<param name="respGroup">Response group.</param>
+        //Because Swagger generated API client passed arrays as joined string need parse query string by binder
+        [HttpGet]
+        [Route("")]
+        public webModel.Category[] GetCategoriesByIds([ModelBinder(typeof(IdsStringArrayBinder))] string[] ids, [FromUri] coreModel.CategoryResponseGroup respGroup = coreModel.CategoryResponseGroup.Full)
+        {
+            var categories = _categoryService.GetByIds(ids, respGroup);
 
-            retVal.SecurityScopes = base.GetObjectPermissionScopeStrings(category);
+            base.CheckCurrentUserHasPermissionForObjects(CatalogPredefinedPermissions.Read, categories);
 
-            return Ok(retVal);
+            var retVal = categories.Select(x => x.ToWebModel(_blobUrlResolver));
+            foreach (var category in retVal)
+            {
+                category.SecurityScopes = base.GetObjectPermissionScopeStrings(category);
+            }
+
+            return retVal.ToArray();
         }
 
         /// <summary>

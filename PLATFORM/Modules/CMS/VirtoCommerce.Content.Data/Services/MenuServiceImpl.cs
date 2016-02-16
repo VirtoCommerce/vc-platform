@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using VirtoCommerce.Content.Data.Converters;
 using VirtoCommerce.Content.Data.Repositories;
+using VirtoCommerce.Platform.Data.Infrastructure;
 
 namespace VirtoCommerce.Content.Data.Services
 {
-	public class MenuServiceImpl : IMenuService
+	public class MenuServiceImpl : ServiceBase, IMenuService
 	{
         private readonly Func<IMenuRepository> _menuRepositoryFactory;
 
@@ -32,14 +34,38 @@ namespace VirtoCommerce.Content.Data.Services
 	        return _menuRepositoryFactory().GetListById(listId);
 	    }
 
-	    public void Update(Models.MenuLinkList list)
-	    {
-	        _menuRepositoryFactory().UpdateList(list);
-	    }
+        public void AddOrUpdate(Models.MenuLinkList list)
+        {
+            using (var repository = _menuRepositoryFactory())
+            using (var changeTracker = base.GetChangeTracker(repository))
+            {
+                if (!list.IsTransient())
+                {
+                    var existList = repository.GetListById(list.Id);
+                    if (existList != null)
+                    {
+                        changeTracker.Attach(existList);
+                        list.Patch(existList);
+                    }
+                }
+                else
+                {
+                    repository.Add(list);
+                }
+                repository.UnitOfWork.Commit();
+            }
+        }
 
 	    public void DeleteList(string listId)
 	    {
-	        _menuRepositoryFactory().DeleteList(listId);
+            using (var repository = _menuRepositoryFactory())
+            {
+                var existList = repository.GetListById(listId);
+                if(existList != null)
+                {
+                    repository.Remove(existList);
+                }
+            }
 	    }
 
 	    public bool CheckList(string storeId, string name, string language, string id)

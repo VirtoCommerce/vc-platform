@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommerceContentWebModelsMenuLinkList : IEquatable<VirtoCommerceContentWebModelsMenuLinkList>
+    public partial class VirtoCommerceContentWebModelsMenuLinkList :  IEquatable<VirtoCommerceContentWebModelsMenuLinkList>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceContentWebModelsMenuLinkList" /> class.
@@ -115,7 +116,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommerceContentWebModelsMenuLinkList instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommerceContentWebModelsMenuLinkList to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceContentWebModelsMenuLinkList to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommerceContentWebModelsMenuLinkList other)
         {
@@ -169,22 +170,22 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.Id != null)
-                    hash = hash * 57 + this.Id.GetHashCode();
+                    hash = hash * 59 + this.Id.GetHashCode();
                 
                 if (this.Name != null)
-                    hash = hash * 57 + this.Name.GetHashCode();
+                    hash = hash * 59 + this.Name.GetHashCode();
                 
                 if (this.StoreId != null)
-                    hash = hash * 57 + this.StoreId.GetHashCode();
+                    hash = hash * 59 + this.StoreId.GetHashCode();
                 
                 if (this.Language != null)
-                    hash = hash * 57 + this.Language.GetHashCode();
+                    hash = hash * 59 + this.Language.GetHashCode();
                 
                 if (this.MenuLinks != null)
-                    hash = hash * 57 + this.MenuLinks.GetHashCode();
+                    hash = hash * 59 + this.MenuLinks.GetHashCode();
                 
                 if (this.SecurityScopes != null)
-                    hash = hash * 57 + this.SecurityScopes.GetHashCode();
+                    hash = hash * 59 + this.SecurityScopes.GetHashCode();
                 
                 return hash;
             }

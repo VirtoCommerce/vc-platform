@@ -5,6 +5,7 @@
     $scope.setForm = function (form) { formScope = form; }
 
     var blade = $scope.blade;
+    blade.updatePermission = 'content:update';
     blade.editAsMarkdown = true;
     blade.editAsHtml = false;
 
@@ -15,10 +16,10 @@
             blade.parentBlade.initialize();
 
             if (!blade.newPage) {
-            	pages.getPage({ storeId: blade.choosenStoreId, language: blade.choosenPageLanguage ? blade.choosenPageLanguage: "undef", pageName: blade.choosenPageName }, function (data) {
+                pages.getPage({ storeId: blade.choosenStoreId, language: blade.choosenPageLanguage ? blade.choosenPageLanguage : "undef", pageName: blade.choosenPageName }, function (data) {
                     blade.isLoading = false;
                     blade.currentEntity = data;
-                   
+
                     blade.isByteContent = blade.isFile();
 
                     if (!blade.isFile()) {
@@ -44,7 +45,7 @@
 
                     blade.origEntity = angular.copy(blade.currentEntity);
                 },
-                function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+                function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
             }
             else {
                 blade.currentEntity.language = blade.defaultStoreLanguage;
@@ -61,7 +62,7 @@
             blade.initializeUploader();
             blade.initializeButtons();
         },
-        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+        function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
     };
 
     blade.initializeUploader = function () {
@@ -103,17 +104,17 @@
     }
 
     blade.initializeButtons = function () {
-        $scope.blade.toolbarCommands = [];
+        blade.toolbarCommands = [];
 
         if (!blade.newPage) {
-            $scope.blade.toolbarCommands.push(
+            blade.toolbarCommands.push(
 				{
 				    name: "content.commands.save-page", icon: 'fa fa-save',
-				    executeMethod: function () { $scope.saveChanges(); },
-				    canExecuteMethod: function () { return blade.isDirty() && formScope.$valid; },
-				    permission: 'content:update'
+				    executeMethod: $scope.saveChanges,
+				    canExecuteMethod: function () { return isDirty() && formScope.$valid; },
+				    permission: blade.updatePermission
 				});
-            $scope.blade.toolbarCommands.push(
+            blade.toolbarCommands.push(
 				{
 				    name: "content.commands.reset-page", icon: 'fa fa-undo',
 				    executeMethod: function () {
@@ -128,15 +129,17 @@
 				        }
 				        $scope.$broadcast('resetContent', { body: blade.body });
 				    },
-				    canExecuteMethod: function () { return blade.isDirty(); },
-				    permission: 'content:update'
+				    canExecuteMethod: isDirty,
+				    permission: blade.updatePermission
 				});
-            $scope.blade.toolbarCommands.push(
+            blade.toolbarCommands.push(
 				{
 				    name: "content.commands.delete-page", icon: 'fa fa-trash-o',
-				    executeMethod: function () { blade.deleteEntry(); }, canExecuteMethod: function () { return true; }, permission: 'content:delete'
+				    executeMethod: blade.deleteEntry,
+				    canExecuteMethod: function () { return true; },
+				    permission: 'content:delete'
 				});
-            $scope.blade.toolbarCommands.push(
+            blade.toolbarCommands.push(
                 {
                     name: "content.commands.edit-as-markdown", icon: 'fa fa-code',
                     executeMethod: function () {
@@ -147,7 +150,7 @@
                     canExecuteMethod: function () { return !blade.editAsMarkdown; },
                     permission: 'content:manage'
                 });
-            $scope.blade.toolbarCommands.push(
+            blade.toolbarCommands.push(
                 {
                     name: "content.commands.edit-as-html", icon: 'fa fa-code',
                     executeMethod: function () {
@@ -160,17 +163,17 @@
                 });
         }
         else {
-            $scope.blade.toolbarCommands.push(
+            blade.toolbarCommands.push(
 				{
 				    name: "platform.commands.create", icon: 'fa fa-save',
-				    executeMethod: function () { $scope.saveChanges(); },
-				    canExecuteMethod: function () { return blade.isDirty() && formScope.$valid; },
-				    permission: 'content:update'
+				    executeMethod: $scope.saveChanges,
+				    canExecuteMethod: function () { return isDirty() && formScope.$valid; },
+				    permission: 'content:create'
 				});
         }
     }
 
-    blade.isDirty = function () {
+    function isDirty() {
         if (!angular.isUndefined(blade.currentEntity) && !blade.isFile()) {
             if (blade.currentEntity.content.indexOf('---\n') !== -1 || blade.metadata !== '') {
                 blade.currentEntity.content = '---\n' + blade.metadata.trim() + '\n---\n' + blade.body.trim();
@@ -179,9 +182,9 @@
                 blade.currentEntity.content = blade.body;
             }
         }
-        var retVal = !angular.equals(blade.currentEntity, blade.origEntity);
+        var retVal = !angular.equals(blade.currentEntity, blade.origEntity) && blade.hasUpdatePermission();
         return retVal;
-    };
+    }
 
     blade.isFile = function () {
         if (!angular.isUndefined(blade.currentEntity)) {
@@ -228,7 +231,7 @@
                         blade.parentBlade.initialize();
                         bladeNavigationService.closeBlade(blade);
                     },
-                    function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+                    function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
                 }
                 else {
                     blade.isLoading = false;
@@ -243,19 +246,19 @@
                     dialogService.showNotificationDialog(dialog);
                 }
             },
-            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+            function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
         }
         else {
             if (blade.origEntity.pageName !== blade.currentEntity.pageName) {
                 pages.delete({ storeId: blade.choosenStoreId, pageNamesAndLanguges: blade.choosenPageLanguage + '^' + blade.choosenPageName }, function () {
                     blade.setNewName(blade.choosenPageName);
                     blade.update();
-                }, function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+                }, function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
             }
             else if (blade.origEntity.language !== blade.currentEntity.language) {
                 pages.delete({ storeId: blade.choosenStoreId, pageNamesAndLanguges: blade.choosenPageLanguage + '^' + blade.choosenPageName }, function () {
                     blade.update();
-                }, function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+                }, function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
             }
             else {
                 blade.update();
@@ -276,54 +279,25 @@
                         $scope.bladeClose();
                         blade.parentBlade.initialize();
                     },
-                    function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+                    function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
                 }
             }
         }
         dialogService.showConfirmationDialog(dialog);
-    }
+    };
 
-    blade.closeChildrenBlades = function () {
-        if ($scope.blade.childrenBlades) {
-            angular.forEach($scope.blade.childrenBlades.slice(), function (child) {
-                bladeNavigationService.closeBlade(child);
-            });
-        }
-    }
-
-    function isCanSave() {
-    	return blade.currentEntity && (!(angular.isUndefined(blade.currentEntity.name) || blade.currentEntity.name === null) &&
-			!(angular.isUndefined(blade.currentEntity.content) || blade.currentEntity.content === null));
+    function canSave() {
+        return blade.currentEntity && blade.currentEntity.name && ((isDirty() && !blade.newPage) || (blade.currentEntity.content && blade.newPage));
     }
 
     blade.onClose = function (closeCallback) {
-        if ((blade.isDirty() && !blade.newPage) || (isCanSave() && blade.newPage)) {
-            var dialog = {
-                id: "confirmCurrentBladeClose",
-                title: "content.dialogs.page-save.title",
-                message: "content.dialogs.page-save.message"
-            };
-
-            dialog.callback = function (needSave) {
-                if (needSave) {
-                    $scope.saveChanges();
-                }
-                closeCallback();
-            };
-            dialogService.showConfirmationDialog(dialog);
-        }
-        else {
-            closeCallback();
-        }
+        bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, $scope.saveChanges, closeCallback, "content.dialogs.page-save.title", "content.dialogs.page-save.message");
     };
 
-    $scope.blade.headIcon = 'fa-archive';
+    blade.headIcon = 'fa-archive';
 
     blade.getFlag = function (lang) {
         switch (lang) {
-            case 'ru-RU':
-                return 'ru';
-
             case 'en-US':
                 return 'us';
 
@@ -355,8 +329,8 @@
             blade.isLoading = false,
             blade.origEntity = angular.copy(blade.currentEntity);
         },
-        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
-    }
+        function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
+    };
 
     blade.setNewName = function (pageName) {
         var pathParts = [];

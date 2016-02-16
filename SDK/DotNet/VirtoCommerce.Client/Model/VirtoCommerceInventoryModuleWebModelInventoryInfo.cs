@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommerceInventoryModuleWebModelInventoryInfo : IEquatable<VirtoCommerceInventoryModuleWebModelInventoryInfo>
+    public partial class VirtoCommerceInventoryModuleWebModelInventoryInfo :  IEquatable<VirtoCommerceInventoryModuleWebModelInventoryInfo>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceInventoryModuleWebModelInventoryInfo" /> class.
@@ -208,7 +209,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommerceInventoryModuleWebModelInventoryInfo instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommerceInventoryModuleWebModelInventoryInfo to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceInventoryModuleWebModelInventoryInfo to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommerceInventoryModuleWebModelInventoryInfo other)
         {
@@ -322,58 +323,58 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.CreatedDate != null)
-                    hash = hash * 57 + this.CreatedDate.GetHashCode();
+                    hash = hash * 59 + this.CreatedDate.GetHashCode();
                 
                 if (this.CreatedBy != null)
-                    hash = hash * 57 + this.CreatedBy.GetHashCode();
+                    hash = hash * 59 + this.CreatedBy.GetHashCode();
                 
                 if (this.ModifiedDate != null)
-                    hash = hash * 57 + this.ModifiedDate.GetHashCode();
+                    hash = hash * 59 + this.ModifiedDate.GetHashCode();
                 
                 if (this.ModifiedBy != null)
-                    hash = hash * 57 + this.ModifiedBy.GetHashCode();
+                    hash = hash * 59 + this.ModifiedBy.GetHashCode();
                 
                 if (this.FulfillmentCenter != null)
-                    hash = hash * 57 + this.FulfillmentCenter.GetHashCode();
+                    hash = hash * 59 + this.FulfillmentCenter.GetHashCode();
                 
                 if (this.FulfillmentCenterId != null)
-                    hash = hash * 57 + this.FulfillmentCenterId.GetHashCode();
+                    hash = hash * 59 + this.FulfillmentCenterId.GetHashCode();
                 
                 if (this.ProductId != null)
-                    hash = hash * 57 + this.ProductId.GetHashCode();
+                    hash = hash * 59 + this.ProductId.GetHashCode();
                 
                 if (this.InStockQuantity != null)
-                    hash = hash * 57 + this.InStockQuantity.GetHashCode();
+                    hash = hash * 59 + this.InStockQuantity.GetHashCode();
                 
                 if (this.ReservedQuantity != null)
-                    hash = hash * 57 + this.ReservedQuantity.GetHashCode();
+                    hash = hash * 59 + this.ReservedQuantity.GetHashCode();
                 
                 if (this.ReorderMinQuantity != null)
-                    hash = hash * 57 + this.ReorderMinQuantity.GetHashCode();
+                    hash = hash * 59 + this.ReorderMinQuantity.GetHashCode();
                 
                 if (this.PreorderQuantity != null)
-                    hash = hash * 57 + this.PreorderQuantity.GetHashCode();
+                    hash = hash * 59 + this.PreorderQuantity.GetHashCode();
                 
                 if (this.BackorderQuantity != null)
-                    hash = hash * 57 + this.BackorderQuantity.GetHashCode();
+                    hash = hash * 59 + this.BackorderQuantity.GetHashCode();
                 
                 if (this.AllowBackorder != null)
-                    hash = hash * 57 + this.AllowBackorder.GetHashCode();
+                    hash = hash * 59 + this.AllowBackorder.GetHashCode();
                 
                 if (this.AllowPreorder != null)
-                    hash = hash * 57 + this.AllowPreorder.GetHashCode();
+                    hash = hash * 59 + this.AllowPreorder.GetHashCode();
                 
                 if (this.InTransit != null)
-                    hash = hash * 57 + this.InTransit.GetHashCode();
+                    hash = hash * 59 + this.InTransit.GetHashCode();
                 
                 if (this.PreorderAvailabilityDate != null)
-                    hash = hash * 57 + this.PreorderAvailabilityDate.GetHashCode();
+                    hash = hash * 59 + this.PreorderAvailabilityDate.GetHashCode();
                 
                 if (this.BackorderAvailabilityDate != null)
-                    hash = hash * 57 + this.BackorderAvailabilityDate.GetHashCode();
+                    hash = hash * 59 + this.BackorderAvailabilityDate.GetHashCode();
                 
                 if (this.Status != null)
-                    hash = hash * 57 + this.Status.GetHashCode();
+                    hash = hash * 59 + this.Status.GetHashCode();
                 
                 return hash;
             }

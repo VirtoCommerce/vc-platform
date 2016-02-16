@@ -1,16 +1,18 @@
 ﻿angular.module('platformWebApp')
 .controller('platformWebApp.settingsDetailController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.settings.helper', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings', function ($scope, dialogService, settingsHelper, bladeNavigationService, settings) {
+    var blade = $scope.blade;
+    blade.updatePermission = 'platform:setting:update';
 
-    $scope.blade.refresh = function () {
-        if ($scope.blade.moduleId) {
-            $scope.blade.isLoading = true;
+    blade.refresh = function () {
+        if (blade.moduleId) {
+            blade.isLoading = true;
 
-            settings.getSettings({ id: $scope.blade.moduleId }, initializeBlade,
+            settings.getSettings({ id: blade.moduleId }, initializeBlade,
             function (error) {
-                bladeNavigationService.setError('Error ' + error.status, $scope.blade);
+                bladeNavigationService.setError('Error ' + error.status, blade);
             });
         } else {
-            initializeBlade(angular.copy($scope.blade.data));
+            initializeBlade(angular.copy(blade.data));
         }
     }
 
@@ -36,10 +38,10 @@
 
 
         results = _.groupBy(results, 'groupName');
-        $scope.blade.groupNames = _.keys(results);
-        $scope.blade.currentEntities = angular.copy(results);
-        $scope.blade.origEntity = results;
-        $scope.blade.isLoading = false;
+        blade.groupNames = _.keys(results);
+        blade.currentEntities = angular.copy(results);
+        blade.origEntity = results;
+        blade.isLoading = false;
     }
 
     $scope.editArray = function (node) {
@@ -49,21 +51,23 @@
             controller: 'platformWebApp.settingDictionaryController',
             template: '$(Platform)/Scripts/app/settings/blades/setting-dictionary.tpl.html'
         };
-        bladeNavigationService.showBlade(newBlade, $scope.blade);
+        bladeNavigationService.showBlade(newBlade, blade);
     }
 
     var formScope;
-    $scope.setForm = function (form) {
-        formScope = form;
-    }
+    $scope.setForm = function (form) { formScope = form; };
 
     function isDirty() {
-        return !angular.equals($scope.blade.currentEntities, $scope.blade.origEntity);
-    };
+        return !angular.equals(blade.currentEntities, blade.origEntity) && blade.hasUpdatePermission();
+    }
+
+    function canSave() {
+        return isDirty() && formScope && formScope.$valid;
+    }
 
     function saveChanges() {
-        $scope.blade.isLoading = true;
-        var objects = _.flatten(_.map($scope.blade.currentEntities, _.values));
+        blade.isLoading = true;
+        var objects = _.flatten(_.map(blade.currentEntities, _.values));
         objects = _.map(objects, function (x) {
             x.value = x.isDictionary ? x.values[0].value.id : x.values[0].value;
             x.values = undefined;
@@ -79,59 +83,35 @@
 
         //console.log('saveChanges3: ' + angular.toJson(objects, true));
         settings.update({}, objects, function (data, headers) {
-            if ($scope.blade.moduleId) {
-                $scope.blade.refresh();
+            if (blade.moduleId) {
+                blade.refresh();
             } else {
-                $scope.blade.origEntity = $scope.blade.currentEntities;
-                $scope.blade.parentBlade.refresh(true);
+                blade.origEntity = blade.currentEntities;
+                blade.parentBlade.refresh(true);
             }
         }, function (error) {
-            bladeNavigationService.setError('Error ' + error.status, $scope.blade);
+            bladeNavigationService.setError('Error ' + error.status, blade);
         });
     };
 
-    $scope.blade.headIcon = 'fa-wrench';
-    $scope.blade.toolbarCommands = [
+    blade.headIcon = 'fa-wrench';
+    blade.toolbarCommands = [
         {
             name: "platform.commands.save", icon: 'fa fa-save',
-            executeMethod: function () {
-                saveChanges();
-            },
-            canExecuteMethod: function () {
-                return isDirty() && formScope && formScope.$valid;
-            },
-            permission: 'platform:setting:update'
+            executeMethod: saveChanges,
+            canExecuteMethod: canSave            
         },
         {
             name: "platform.commands.reset", icon: 'fa fa-undo',
             executeMethod: function () {
-                $scope.blade.currentEntities = angular.copy($scope.blade.origEntity);
+                blade.currentEntities = angular.copy(blade.origEntity);
             },
-            canExecuteMethod: function () {
-                return isDirty();
-            },
-            permission: 'platform:setting:update'
+            canExecuteMethod: isDirty
         }
     ];
-
-    $scope.blade.onClose = function (closeCallback) {
-        if (isDirty()) {
-            var dialog = {
-                id: "confirmItemChange",
-                title: "platform.dialogs.settings-delete.title",
-                message: "platform.dialogs.settings-delete.message",
-                callback: function (needSave) {
-                    if (needSave) {
-                        saveChanges();
-                    }
-                    closeCallback();
-                }
-            };
-            dialogService.showConfirmationDialog(dialog);
-        }
-        else {
-            closeCallback();
-        }
+    
+    blade.onClose = function (closeCallback) {
+        bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, saveChanges, closeCallback, "platform.dialogs.settings-delete.title", "platform.dialogs.settings-delete.message");
     };
 
     $scope.getDictionaryValues = function (setting, callback) {
@@ -139,5 +119,5 @@
     }
 
     // actions on load
-    $scope.blade.refresh();
+    blade.refresh();
 }]);

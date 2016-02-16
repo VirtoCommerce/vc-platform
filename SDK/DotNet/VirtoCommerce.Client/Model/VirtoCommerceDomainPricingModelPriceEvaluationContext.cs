@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommerceDomainPricingModelPriceEvaluationContext : IEquatable<VirtoCommerceDomainPricingModelPriceEvaluationContext>
+    public partial class VirtoCommerceDomainPricingModelPriceEvaluationContext :  IEquatable<VirtoCommerceDomainPricingModelPriceEvaluationContext>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceDomainPricingModelPriceEvaluationContext" /> class.
@@ -288,7 +289,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommerceDomainPricingModelPriceEvaluationContext instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommerceDomainPricingModelPriceEvaluationContext to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceDomainPricingModelPriceEvaluationContext to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommerceDomainPricingModelPriceEvaluationContext other)
         {
@@ -452,88 +453,88 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.StoreId != null)
-                    hash = hash * 57 + this.StoreId.GetHashCode();
+                    hash = hash * 59 + this.StoreId.GetHashCode();
                 
                 if (this.CatalogId != null)
-                    hash = hash * 57 + this.CatalogId.GetHashCode();
+                    hash = hash * 59 + this.CatalogId.GetHashCode();
                 
                 if (this.ProductIds != null)
-                    hash = hash * 57 + this.ProductIds.GetHashCode();
+                    hash = hash * 59 + this.ProductIds.GetHashCode();
                 
                 if (this.PricelistIds != null)
-                    hash = hash * 57 + this.PricelistIds.GetHashCode();
+                    hash = hash * 59 + this.PricelistIds.GetHashCode();
                 
                 if (this.Quantity != null)
-                    hash = hash * 57 + this.Quantity.GetHashCode();
+                    hash = hash * 59 + this.Quantity.GetHashCode();
                 
                 if (this.CustomerId != null)
-                    hash = hash * 57 + this.CustomerId.GetHashCode();
+                    hash = hash * 59 + this.CustomerId.GetHashCode();
                 
                 if (this.OrganizationId != null)
-                    hash = hash * 57 + this.OrganizationId.GetHashCode();
+                    hash = hash * 59 + this.OrganizationId.GetHashCode();
                 
                 if (this.CertainDate != null)
-                    hash = hash * 57 + this.CertainDate.GetHashCode();
+                    hash = hash * 59 + this.CertainDate.GetHashCode();
                 
                 if (this.Currency != null)
-                    hash = hash * 57 + this.Currency.GetHashCode();
+                    hash = hash * 59 + this.Currency.GetHashCode();
                 
                 if (this.Tags != null)
-                    hash = hash * 57 + this.Tags.GetHashCode();
+                    hash = hash * 59 + this.Tags.GetHashCode();
                 
                 if (this.ContextObject != null)
-                    hash = hash * 57 + this.ContextObject.GetHashCode();
+                    hash = hash * 59 + this.ContextObject.GetHashCode();
                 
                 if (this.GeoCity != null)
-                    hash = hash * 57 + this.GeoCity.GetHashCode();
+                    hash = hash * 59 + this.GeoCity.GetHashCode();
                 
                 if (this.GeoState != null)
-                    hash = hash * 57 + this.GeoState.GetHashCode();
+                    hash = hash * 59 + this.GeoState.GetHashCode();
                 
                 if (this.GeoCountry != null)
-                    hash = hash * 57 + this.GeoCountry.GetHashCode();
+                    hash = hash * 59 + this.GeoCountry.GetHashCode();
                 
                 if (this.GeoContinent != null)
-                    hash = hash * 57 + this.GeoContinent.GetHashCode();
+                    hash = hash * 59 + this.GeoContinent.GetHashCode();
                 
                 if (this.GeoZipCode != null)
-                    hash = hash * 57 + this.GeoZipCode.GetHashCode();
+                    hash = hash * 59 + this.GeoZipCode.GetHashCode();
                 
                 if (this.GeoConnectionType != null)
-                    hash = hash * 57 + this.GeoConnectionType.GetHashCode();
+                    hash = hash * 59 + this.GeoConnectionType.GetHashCode();
                 
                 if (this.GeoTimeZone != null)
-                    hash = hash * 57 + this.GeoTimeZone.GetHashCode();
+                    hash = hash * 59 + this.GeoTimeZone.GetHashCode();
                 
                 if (this.GeoIpRoutingType != null)
-                    hash = hash * 57 + this.GeoIpRoutingType.GetHashCode();
+                    hash = hash * 59 + this.GeoIpRoutingType.GetHashCode();
                 
                 if (this.GeoIspSecondLevel != null)
-                    hash = hash * 57 + this.GeoIspSecondLevel.GetHashCode();
+                    hash = hash * 59 + this.GeoIspSecondLevel.GetHashCode();
                 
                 if (this.GeoIspTopLevel != null)
-                    hash = hash * 57 + this.GeoIspTopLevel.GetHashCode();
+                    hash = hash * 59 + this.GeoIspTopLevel.GetHashCode();
                 
                 if (this.ShopperAge != null)
-                    hash = hash * 57 + this.ShopperAge.GetHashCode();
+                    hash = hash * 59 + this.ShopperAge.GetHashCode();
                 
                 if (this.ShopperGender != null)
-                    hash = hash * 57 + this.ShopperGender.GetHashCode();
+                    hash = hash * 59 + this.ShopperGender.GetHashCode();
                 
                 if (this.Language != null)
-                    hash = hash * 57 + this.Language.GetHashCode();
+                    hash = hash * 59 + this.Language.GetHashCode();
                 
                 if (this.ShopperSearchedPhraseInStore != null)
-                    hash = hash * 57 + this.ShopperSearchedPhraseInStore.GetHashCode();
+                    hash = hash * 59 + this.ShopperSearchedPhraseInStore.GetHashCode();
                 
                 if (this.ShopperSearchedPhraseOnInternet != null)
-                    hash = hash * 57 + this.ShopperSearchedPhraseOnInternet.GetHashCode();
+                    hash = hash * 59 + this.ShopperSearchedPhraseOnInternet.GetHashCode();
                 
                 if (this.CurrentUrl != null)
-                    hash = hash * 57 + this.CurrentUrl.GetHashCode();
+                    hash = hash * 59 + this.CurrentUrl.GetHashCode();
                 
                 if (this.ReferredUrl != null)
-                    hash = hash * 57 + this.ReferredUrl.GetHashCode();
+                    hash = hash * 59 + this.ReferredUrl.GetHashCode();
                 
                 return hash;
             }

@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// Property is metainformation record about what additional information merchandising item can be characterized. It&#39;s unheritable and can be defined in catalog, category, product or variation level.
     /// </summary>
     [DataContract]
-    public class VirtoCommerceCatalogModuleWebModelProperty : IEquatable<VirtoCommerceCatalogModuleWebModelProperty>
+    public partial class VirtoCommerceCatalogModuleWebModelProperty :  IEquatable<VirtoCommerceCatalogModuleWebModelProperty>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelProperty" /> class.
@@ -243,7 +244,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommerceCatalogModuleWebModelProperty instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommerceCatalogModuleWebModelProperty to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceCatalogModuleWebModelProperty to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommerceCatalogModuleWebModelProperty other)
         {
@@ -367,64 +368,64 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.IsReadOnly != null)
-                    hash = hash * 57 + this.IsReadOnly.GetHashCode();
+                    hash = hash * 59 + this.IsReadOnly.GetHashCode();
                 
                 if (this.IsManageable != null)
-                    hash = hash * 57 + this.IsManageable.GetHashCode();
+                    hash = hash * 59 + this.IsManageable.GetHashCode();
                 
                 if (this.IsNew != null)
-                    hash = hash * 57 + this.IsNew.GetHashCode();
+                    hash = hash * 59 + this.IsNew.GetHashCode();
                 
                 if (this.Id != null)
-                    hash = hash * 57 + this.Id.GetHashCode();
+                    hash = hash * 59 + this.Id.GetHashCode();
                 
                 if (this.CatalogId != null)
-                    hash = hash * 57 + this.CatalogId.GetHashCode();
+                    hash = hash * 59 + this.CatalogId.GetHashCode();
                 
                 if (this.Catalog != null)
-                    hash = hash * 57 + this.Catalog.GetHashCode();
+                    hash = hash * 59 + this.Catalog.GetHashCode();
                 
                 if (this.CategoryId != null)
-                    hash = hash * 57 + this.CategoryId.GetHashCode();
+                    hash = hash * 59 + this.CategoryId.GetHashCode();
                 
                 if (this.Category != null)
-                    hash = hash * 57 + this.Category.GetHashCode();
+                    hash = hash * 59 + this.Category.GetHashCode();
                 
                 if (this.Name != null)
-                    hash = hash * 57 + this.Name.GetHashCode();
+                    hash = hash * 59 + this.Name.GetHashCode();
                 
                 if (this.Required != null)
-                    hash = hash * 57 + this.Required.GetHashCode();
+                    hash = hash * 59 + this.Required.GetHashCode();
                 
                 if (this.Dictionary != null)
-                    hash = hash * 57 + this.Dictionary.GetHashCode();
+                    hash = hash * 59 + this.Dictionary.GetHashCode();
                 
                 if (this.Multivalue != null)
-                    hash = hash * 57 + this.Multivalue.GetHashCode();
+                    hash = hash * 59 + this.Multivalue.GetHashCode();
                 
                 if (this.Multilanguage != null)
-                    hash = hash * 57 + this.Multilanguage.GetHashCode();
+                    hash = hash * 59 + this.Multilanguage.GetHashCode();
                 
                 if (this.ValueType != null)
-                    hash = hash * 57 + this.ValueType.GetHashCode();
+                    hash = hash * 59 + this.ValueType.GetHashCode();
                 
                 if (this.Type != null)
-                    hash = hash * 57 + this.Type.GetHashCode();
+                    hash = hash * 59 + this.Type.GetHashCode();
                 
                 if (this.Values != null)
-                    hash = hash * 57 + this.Values.GetHashCode();
+                    hash = hash * 59 + this.Values.GetHashCode();
                 
                 if (this.DictionaryValues != null)
-                    hash = hash * 57 + this.DictionaryValues.GetHashCode();
+                    hash = hash * 59 + this.DictionaryValues.GetHashCode();
                 
                 if (this.Attributes != null)
-                    hash = hash * 57 + this.Attributes.GetHashCode();
+                    hash = hash * 59 + this.Attributes.GetHashCode();
                 
                 if (this.DisplayNames != null)
-                    hash = hash * 57 + this.DisplayNames.GetHashCode();
+                    hash = hash * 59 + this.DisplayNames.GetHashCode();
                 
                 if (this.IsInherited != null)
-                    hash = hash * 57 + this.IsInherited.GetHashCode();
+                    hash = hash * 59 + this.IsInherited.GetHashCode();
                 
                 return hash;
             }

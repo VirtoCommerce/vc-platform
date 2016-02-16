@@ -11,7 +11,7 @@ namespace VirtoCommerce.Storefront.Model.Services
     public interface ICatalogSearchService
     {
         Task<Product[]> GetProductsAsync(string[] ids, ItemResponseGroup responseGroup);
-
+        Task<Category[]> GetCategoriesAsync(string[] ids, CategoryResponseGroup responseGroup);
         Task<CatalogSearchResult> SearchAsync(CatalogSearchCriteria criteria);
     }
 }

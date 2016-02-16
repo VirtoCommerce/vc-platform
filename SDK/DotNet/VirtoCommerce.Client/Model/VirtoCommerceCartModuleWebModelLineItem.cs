@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommerceCartModuleWebModelLineItem : IEquatable<VirtoCommerceCartModuleWebModelLineItem>
+    public partial class VirtoCommerceCartModuleWebModelLineItem :  IEquatable<VirtoCommerceCartModuleWebModelLineItem>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceCartModuleWebModelLineItem" /> class.
@@ -437,7 +438,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommerceCartModuleWebModelLineItem instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommerceCartModuleWebModelLineItem to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceCartModuleWebModelLineItem to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommerceCartModuleWebModelLineItem other)
         {
@@ -671,130 +672,130 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.ProductId != null)
-                    hash = hash * 57 + this.ProductId.GetHashCode();
+                    hash = hash * 59 + this.ProductId.GetHashCode();
                 
                 if (this.CatalogId != null)
-                    hash = hash * 57 + this.CatalogId.GetHashCode();
+                    hash = hash * 59 + this.CatalogId.GetHashCode();
                 
                 if (this.CategoryId != null)
-                    hash = hash * 57 + this.CategoryId.GetHashCode();
+                    hash = hash * 59 + this.CategoryId.GetHashCode();
                 
                 if (this.Sku != null)
-                    hash = hash * 57 + this.Sku.GetHashCode();
+                    hash = hash * 59 + this.Sku.GetHashCode();
                 
                 if (this.ProductType != null)
-                    hash = hash * 57 + this.ProductType.GetHashCode();
+                    hash = hash * 59 + this.ProductType.GetHashCode();
                 
                 if (this.Name != null)
-                    hash = hash * 57 + this.Name.GetHashCode();
+                    hash = hash * 59 + this.Name.GetHashCode();
                 
                 if (this.Quantity != null)
-                    hash = hash * 57 + this.Quantity.GetHashCode();
+                    hash = hash * 59 + this.Quantity.GetHashCode();
                 
                 if (this.Currency != null)
-                    hash = hash * 57 + this.Currency.GetHashCode();
+                    hash = hash * 59 + this.Currency.GetHashCode();
                 
                 if (this.WarehouseLocation != null)
-                    hash = hash * 57 + this.WarehouseLocation.GetHashCode();
+                    hash = hash * 59 + this.WarehouseLocation.GetHashCode();
                 
                 if (this.ShipmentMethodCode != null)
-                    hash = hash * 57 + this.ShipmentMethodCode.GetHashCode();
+                    hash = hash * 59 + this.ShipmentMethodCode.GetHashCode();
                 
                 if (this.RequiredShipping != null)
-                    hash = hash * 57 + this.RequiredShipping.GetHashCode();
+                    hash = hash * 59 + this.RequiredShipping.GetHashCode();
                 
                 if (this.ThumbnailImageUrl != null)
-                    hash = hash * 57 + this.ThumbnailImageUrl.GetHashCode();
+                    hash = hash * 59 + this.ThumbnailImageUrl.GetHashCode();
                 
                 if (this.ImageUrl != null)
-                    hash = hash * 57 + this.ImageUrl.GetHashCode();
+                    hash = hash * 59 + this.ImageUrl.GetHashCode();
                 
                 if (this.IsGift != null)
-                    hash = hash * 57 + this.IsGift.GetHashCode();
+                    hash = hash * 59 + this.IsGift.GetHashCode();
                 
                 if (this.Discounts != null)
-                    hash = hash * 57 + this.Discounts.GetHashCode();
+                    hash = hash * 59 + this.Discounts.GetHashCode();
                 
                 if (this.LanguageCode != null)
-                    hash = hash * 57 + this.LanguageCode.GetHashCode();
+                    hash = hash * 59 + this.LanguageCode.GetHashCode();
                 
                 if (this.Comment != null)
-                    hash = hash * 57 + this.Comment.GetHashCode();
+                    hash = hash * 59 + this.Comment.GetHashCode();
                 
                 if (this.IsReccuring != null)
-                    hash = hash * 57 + this.IsReccuring.GetHashCode();
+                    hash = hash * 59 + this.IsReccuring.GetHashCode();
                 
                 if (this.TaxIncluded != null)
-                    hash = hash * 57 + this.TaxIncluded.GetHashCode();
+                    hash = hash * 59 + this.TaxIncluded.GetHashCode();
                 
                 if (this.VolumetricWeight != null)
-                    hash = hash * 57 + this.VolumetricWeight.GetHashCode();
+                    hash = hash * 59 + this.VolumetricWeight.GetHashCode();
                 
                 if (this.WeightUnit != null)
-                    hash = hash * 57 + this.WeightUnit.GetHashCode();
+                    hash = hash * 59 + this.WeightUnit.GetHashCode();
                 
                 if (this.Weight != null)
-                    hash = hash * 57 + this.Weight.GetHashCode();
+                    hash = hash * 59 + this.Weight.GetHashCode();
                 
                 if (this.MeasureUnit != null)
-                    hash = hash * 57 + this.MeasureUnit.GetHashCode();
+                    hash = hash * 59 + this.MeasureUnit.GetHashCode();
                 
                 if (this.Height != null)
-                    hash = hash * 57 + this.Height.GetHashCode();
+                    hash = hash * 59 + this.Height.GetHashCode();
                 
                 if (this.Length != null)
-                    hash = hash * 57 + this.Length.GetHashCode();
+                    hash = hash * 59 + this.Length.GetHashCode();
                 
                 if (this.Width != null)
-                    hash = hash * 57 + this.Width.GetHashCode();
+                    hash = hash * 59 + this.Width.GetHashCode();
                 
                 if (this.PriceId != null)
-                    hash = hash * 57 + this.PriceId.GetHashCode();
+                    hash = hash * 59 + this.PriceId.GetHashCode();
                 
                 if (this.ListPrice != null)
-                    hash = hash * 57 + this.ListPrice.GetHashCode();
+                    hash = hash * 59 + this.ListPrice.GetHashCode();
                 
                 if (this.SalePrice != null)
-                    hash = hash * 57 + this.SalePrice.GetHashCode();
+                    hash = hash * 59 + this.SalePrice.GetHashCode();
                 
                 if (this.PlacedPrice != null)
-                    hash = hash * 57 + this.PlacedPrice.GetHashCode();
+                    hash = hash * 59 + this.PlacedPrice.GetHashCode();
                 
                 if (this.ExtendedPrice != null)
-                    hash = hash * 57 + this.ExtendedPrice.GetHashCode();
+                    hash = hash * 59 + this.ExtendedPrice.GetHashCode();
                 
                 if (this.DiscountTotal != null)
-                    hash = hash * 57 + this.DiscountTotal.GetHashCode();
+                    hash = hash * 59 + this.DiscountTotal.GetHashCode();
                 
                 if (this.TaxTotal != null)
-                    hash = hash * 57 + this.TaxTotal.GetHashCode();
+                    hash = hash * 59 + this.TaxTotal.GetHashCode();
                 
                 if (this.TaxType != null)
-                    hash = hash * 57 + this.TaxType.GetHashCode();
+                    hash = hash * 59 + this.TaxType.GetHashCode();
                 
                 if (this.TaxDetails != null)
-                    hash = hash * 57 + this.TaxDetails.GetHashCode();
+                    hash = hash * 59 + this.TaxDetails.GetHashCode();
                 
                 if (this.ObjectType != null)
-                    hash = hash * 57 + this.ObjectType.GetHashCode();
+                    hash = hash * 59 + this.ObjectType.GetHashCode();
                 
                 if (this.DynamicProperties != null)
-                    hash = hash * 57 + this.DynamicProperties.GetHashCode();
+                    hash = hash * 59 + this.DynamicProperties.GetHashCode();
                 
                 if (this.CreatedDate != null)
-                    hash = hash * 57 + this.CreatedDate.GetHashCode();
+                    hash = hash * 59 + this.CreatedDate.GetHashCode();
                 
                 if (this.ModifiedDate != null)
-                    hash = hash * 57 + this.ModifiedDate.GetHashCode();
+                    hash = hash * 59 + this.ModifiedDate.GetHashCode();
                 
                 if (this.CreatedBy != null)
-                    hash = hash * 57 + this.CreatedBy.GetHashCode();
+                    hash = hash * 59 + this.CreatedBy.GetHashCode();
                 
                 if (this.ModifiedBy != null)
-                    hash = hash * 57 + this.ModifiedBy.GetHashCode();
+                    hash = hash * 59 + this.ModifiedBy.GetHashCode();
                 
                 if (this.Id != null)
-                    hash = hash * 57 + this.Id.GetHashCode();
+                    hash = hash * 59 + this.Id.GetHashCode();
                 
                 return hash;
             }

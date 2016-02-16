@@ -15,8 +15,8 @@
             subtitle: 'core.blades.address-detail.subtitle',
             controller: 'virtoCommerce.coreModule.common.coreAddressDetailController',
             confirmChangesFn: function (address) {
+                address.name = $scope.getAddressName(address);
                 if (address.isNew) {
-                    address.name = $scope.getAddressName(address);
                     address.isNew = undefined;
                     $scope.blade.currentEntities.push(address);
                     if ($scope.blade.confirmChangesFn) {
@@ -41,11 +41,7 @@
     }
 
     $scope.getAddressName = function (address) {
-        var retVal = address.name;
-        if (!retVal) {
-            retVal = [address.countryCode, address.regionName, address.city, address.line1].join(",");
-        }
-        return retVal;
+        return [address.countryCode, address.regionName, address.city, address.line1].join(",");
     };
 
     $scope.blade.headIcon = 'fa-user';

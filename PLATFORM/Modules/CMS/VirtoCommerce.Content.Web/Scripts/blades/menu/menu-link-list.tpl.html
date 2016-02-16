@@ -1,68 +1,91 @@
-﻿<div class="blade-content __medium-wide">
-	<div class="blade-inner">
-		<div class="inner-block">
-			<form class="form">
-				<div class="columns clearfix">
-					<div class="column">
-						<div class="form-group">
-							<label class="form-label">{{ 'content.blades.menu-link-list.labels.name' | translate }}</label>
-							<div class="form-input">
-								<input focus-on="" required class="form-control" ng-model="blade.currentEntity.name" placeholder="{{ 'content.blades.menu-link-list.placeholders.name' | translate }}" />
-							</div>
-						</div>
-					</div>
-					<div class="column">
-						<div class="form-group">
-							<label class="form-label">{{ 'content.blades.menu-link-list.labels.language' | translate }}</label>
-							<div class="form-input">
-								<ui-select ng-model="blade.currentEntity.language">
-									<ui-select-match placeholder="{{ 'content.blades.menu-link-list.placeholders.language' | translate }}">{{$select.selected}}</ui-select-match>
-									<ui-select-choices repeat="x in blade.languages">
-										<span class="flag flag-{{blade.getFlag(x)}}"></span>
-										<span ng-bind-html="x"></span>
-									</ui-select-choices>
-								</ui-select>
-							</div>
-						</div>
-					</div>
-				</div>
-			</form>
-			<div class="table-wrapper" ng-show="blade.currentEntity.menuLinks.length > 0">
-				<table class="table __normal">
-					<thead>
-						<tr>
-							<th class="table-col">{{ 'content.blades.menu-link-list.labels.is-active' | translate }}</th>
-							<th class="table-col">{{ 'content.blades.menu-link-list.labels.link-title' | translate }}</th>
-							<th class="table-col">{{ 'content.blades.menu-link-list.labels.links-to' | translate }}</th>
-						</tr>
-					</thead>
-					<tbody ui-sortable="sortableOptions" ng-model="blade.currentEntity.menuLinks">
-						<tr class="table-item" ng-repeat="data in blade.currentEntity.menuLinks" ng-class="{'__selected': selected(data.id)}" context-menu data-target="ipl_menu_{{data.id}}" ng-click='blade.selectItem(data.id)'>
-							<td class="table-col">
-								<label class="form-control __checkbox">
-									<input type="checkbox" ng-model="data.isActive">
-									<span class="check"></span>
-								</label>
-								<ul class="menu __context" role="menu" id="ipl_menu_{{data.id}}">
-									<li class="menu-item" ng-click='deleteLink(data)'>
-										<i class="menu-ico fa fa-trash-o"></i> {{ 'platform.commands.delete' | translate }}
-									</li>
-								</ul>
-							</td>
-							<td class="table-col">
-								<div data-step="any" class="form-input">
-									<input type="text" ng-model="data.title" required>
-								</div>
-							</td>
-							<td class="table-col">
-								<div class="form-input">
-									<input type="text" ng-model="data.url" required>
-								</div>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-		</div>
-	</div>
+﻿<div class="blade-content __large-wide">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <form class="form">
+                <div class="columns clearfix">
+                    <div class="column">
+                        <div class="form-group">
+                            <label class="form-label">{{ 'content.blades.menu-link-list.labels.name' | translate }}</label>
+                            <div class="form-input">
+                                <input focus-on="" required class="form-control" ng-model="blade.currentEntity.name" placeholder="{{ 'content.blades.menu-link-list.placeholders.name' | translate }}" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="form-group">
+                            <label class="form-label">{{ 'content.blades.menu-link-list.labels.language' | translate }}</label>
+                            <div class="form-input">
+                                <ui-select ng-model="blade.currentEntity.language">
+                                    <ui-select-match placeholder="{{ 'content.blades.menu-link-list.placeholders.language' | translate }}">{{$select.selected}}</ui-select-match>
+                                    <ui-select-choices repeat="x in blade.languages">
+                                        <span class="flag flag-{{blade.getFlag(x)}}"></span>
+                                        <span ng-bind-html="x"></span>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <p class="note">{{'content.blades.menu-link-list.labels.list-note' | translate}}</p>
+            <div class="table-wrapper" ng-show="blade.currentEntity.menuLinks.length > 0">
+                <table class="table __normal">
+                    <thead>
+                        <tr>
+                            <th class="table-col">{{ 'content.blades.menu-link-list.labels.is-active' | translate }}</th>
+                            <th class="table-col">{{ 'content.blades.menu-link-list.labels.link-title' | translate }}</th>
+                            <th class="table-col">{{ 'content.blades.menu-link-list.labels.link-url' | translate }}</th>
+                            <th class="table-col">{{ 'content.blades.menu-link-list.labels.links-to' | translate }}</th>
+                            <th class="table-col">{{ 'content.blades.menu-link-list.labels.linked-object' | translate }}</th>
+                        </tr>
+                    </thead>
+                    <tbody ui-sortable="sortableOptions" ng-model="blade.currentEntity.menuLinks">
+                        <tr class="table-item" ng-repeat="data in blade.currentEntity.menuLinks" ng-class="{'__selected': selected(data.id)}" context-menu data-target="ipl_menu_{{data.id}}" ng-click='blade.selectItem(data.id)'>
+                            <td class="table-col">
+                                <label class="form-control __checkbox">
+                                    <input type="checkbox" ng-model="data.isActive">
+                                    <span class="check"></span>
+                                </label>
+                                <ul class="menu __context" role="menu" id="ipl_menu_{{data.id}}">
+                                    <li class="menu-item" ng-click='deleteLink(data)'>
+                                        <i class="menu-ico fa fa-trash-o"></i> {{ 'platform.commands.delete' | translate }}
+                                    </li>
+                                </ul>
+                            </td>
+                            <td class="table-col">
+                                <div data-step="any" class="form-input">
+                                    <input type="text" ng-model="data.title" required>
+                                </div>
+                            </td>
+                            <td class="table-col">
+                                <div class="form-input">
+                                    <input type="text" ng-model="data.url" required>
+                                </div>
+                            </td>
+                            <td class="table-col">
+                                <div class="form-input">
+                                    <ui-select ng-model="data.associatedObjectType" ng-change="data.associatedObject = $select.selected;data.associatedObjectId=data.associatedObjectName=undefined" style="width:122px">
+                                        <ui-select-match allow-clear placeholder="{{'content.blades.menu-link-list.placeholders.associated-object-type' | translate}}">{{$select.selected.name}}</ui-select-match>
+                                        <ui-select-choices repeat="x.id as x in associatedObjectTypes | filter: $select.search">
+                                            <span ng-bind-html="x.name | highlight: $select.search"></span>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                            </td>
+                            <td class="table-col">
+                                <div class="form-input">
+                                    <ng-include src='data.associatedObject.templateURL'></ng-include>
+                                </div>
+                                <span class="error" ng-if="data.associatedObjectType && !data.associatedObjectId">Select linked object</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
+
+<script type="text/ng-template" id="linkListSelectObject.tpl">
+    <a class="__link" ng-click="data.associatedObject.openSelectWizard(data, blade)">{{data.associatedObjectName?data.associatedObjectName: 'select'}}</a>
+</script>

@@ -406,6 +406,7 @@
     <Content Include="Scripts\codemirror\gfm.js" />
     <Content Include="Scripts\codemirror\markdown.js" />
     <Content Include="Scripts\codemirror\overlay.js" />
+    <Content Include="Scripts\common\bladeUtils.js" />
     <Content Include="Scripts\common\validators.js" />
     <Content Include="Scripts\common\uiGridUtils.js" />
     <Content Include="Scripts\common\worldLanguages.js" />

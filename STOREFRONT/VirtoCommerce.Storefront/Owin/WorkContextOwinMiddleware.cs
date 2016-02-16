@@ -23,6 +23,7 @@ using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Customer;
 using VirtoCommerce.Storefront.Model.Customer.Services;
+using VirtoCommerce.Storefront.Model.LinkList.Services;
 using VirtoCommerce.Storefront.Model.Quote.Services;
 
 namespace VirtoCommerce.Storefront.Owin
@@ -42,6 +43,7 @@ namespace VirtoCommerce.Storefront.Owin
         private readonly IQuoteRequestBuilder _quoteRequestBuilder;
         private readonly ICMSContentModuleApi _cmsApi;
         private readonly ICustomerService _customerService;
+        private readonly IMenuLinkListService _linkListService;
         private readonly ICacheManager<object> _cacheManager;
 
         private readonly UnityContainer _container;
@@ -58,6 +60,7 @@ namespace VirtoCommerce.Storefront.Owin
             _commerceApi = container.Resolve<ICommerceCoreModuleApi>();
             _cacheManager = container.Resolve<ICacheManager<object>>();
             _customerService = container.Resolve<ICustomerService>();
+            _linkListService = container.Resolve<IMenuLinkListService>();
             _container = container;
         }
 
@@ -115,8 +118,8 @@ namespace VirtoCommerce.Storefront.Owin
                             workContext.CurrentQuoteRequest = _quoteRequestBuilder.QuoteRequest;
                         }
 
-                        var linkLists = await _cacheManager.GetAsync("GetLinkLists-" + workContext.CurrentStore.Id, "ApiRegion", async () => { return await _cmsApi.MenuGetListsAsync(workContext.CurrentStore.Id) ?? new List<VirtoCommerceContentWebModelsMenuLinkList>(); });
-                        workContext.CurrentLinkLists = linkLists != null ? linkLists.Select(ll => ll.ToWebModel(urlBuilder)).ToList() : null;
+                        var linkLists = await _cacheManager.GetAsync("GetAllStoreLinkLists-" + workContext.CurrentStore.Id, "ApiRegion", async () => await _linkListService.LoadAllStoreLinkListsAsync(workContext.CurrentStore.Id) );
+                        workContext.CurrentLinkLists = linkLists.Where(x => x.Language == workContext.CurrentLanguage).ToList();
 
 
                         //Initialize blogs search criteria 

@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommerceCatalogModuleWebModelCatalogSearchResult : IEquatable<VirtoCommerceCatalogModuleWebModelCatalogSearchResult>
+    public partial class VirtoCommerceCatalogModuleWebModelCatalogSearchResult :  IEquatable<VirtoCommerceCatalogModuleWebModelCatalogSearchResult>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelCatalogSearchResult" /> class.
@@ -104,7 +105,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommerceCatalogModuleWebModelCatalogSearchResult instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommerceCatalogModuleWebModelCatalogSearchResult to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceCatalogModuleWebModelCatalogSearchResult to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommerceCatalogModuleWebModelCatalogSearchResult other)
         {
@@ -153,19 +154,19 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.ProductsTotalCount != null)
-                    hash = hash * 57 + this.ProductsTotalCount.GetHashCode();
+                    hash = hash * 59 + this.ProductsTotalCount.GetHashCode();
                 
                 if (this.Products != null)
-                    hash = hash * 57 + this.Products.GetHashCode();
+                    hash = hash * 59 + this.Products.GetHashCode();
                 
                 if (this.Categories != null)
-                    hash = hash * 57 + this.Categories.GetHashCode();
+                    hash = hash * 59 + this.Categories.GetHashCode();
                 
                 if (this.Catalogs != null)
-                    hash = hash * 57 + this.Catalogs.GetHashCode();
+                    hash = hash * 59 + this.Catalogs.GetHashCode();
                 
                 if (this.Aggregations != null)
-                    hash = hash * 57 + this.Aggregations.GetHashCode();
+                    hash = hash * 59 + this.Aggregations.GetHashCode();
                 
                 return hash;
             }

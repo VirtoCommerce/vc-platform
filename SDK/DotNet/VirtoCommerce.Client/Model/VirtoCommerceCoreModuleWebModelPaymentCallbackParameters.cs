@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommerceCoreModuleWebModelPaymentCallbackParameters : IEquatable<VirtoCommerceCoreModuleWebModelPaymentCallbackParameters>
+    public partial class VirtoCommerceCoreModuleWebModelPaymentCallbackParameters :  IEquatable<VirtoCommerceCoreModuleWebModelPaymentCallbackParameters>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceCoreModuleWebModelPaymentCallbackParameters" /> class.
@@ -72,7 +73,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommerceCoreModuleWebModelPaymentCallbackParameters instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommerceCoreModuleWebModelPaymentCallbackParameters to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceCoreModuleWebModelPaymentCallbackParameters to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommerceCoreModuleWebModelPaymentCallbackParameters other)
         {
@@ -101,7 +102,7 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.Parameters != null)
-                    hash = hash * 57 + this.Parameters.GetHashCode();
+                    hash = hash * 59 + this.Parameters.GetHashCode();
                 
                 return hash;
             }

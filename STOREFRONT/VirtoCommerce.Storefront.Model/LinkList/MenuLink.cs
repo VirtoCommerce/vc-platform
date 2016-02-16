@@ -1,22 +1,14 @@
 ﻿using System.Collections.Generic;
+using VirtoCommerce.Storefront.Model.Catalog;
+using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Model
 {
     /// <summary>
     /// Represents site navigation menu link object
     /// </summary>
-    public class MenuLink
+    public class MenuLink : Entity
     {
-        public MenuLink()
-        {
-            SecurityScopes = new List<string>();
-        }
-
-        /// <summary>
-        /// Gets or sets the ID of site navigation menu link
-        /// </summary>
-        public string Id { get; set; }
-
         /// <summary>
         /// Gets or sets the title of site navigation menu link
         /// </summary>
@@ -38,13 +30,15 @@ namespace VirtoCommerce.Storefront.Model
         public bool IsActive { get; set; }
 
         /// <summary>
-        /// Gets or sets the ID of site navigation menu link list
+        /// Each link element can has a associated object like a Product, Category, Promotion etc.
+        /// Is a primary key for associated object
         /// </summary>
-        public string MenuLinkListId { get; set; }
+        public string AssociatedObjectId { get; set; }
 
         /// <summary>
-        /// Gets or sets the collection of security scopes for site navigation menu link
+        /// Associated object type
         /// </summary>
-        public ICollection<string> SecurityScopes { get; set; }
+        public string AssociatedObjectType { get; set; }
+
     }
 }

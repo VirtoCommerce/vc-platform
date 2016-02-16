@@ -1,11 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
 .controller('virtoCommerce.catalogModule.advancedSearchResultsController', ['$rootScope', '$scope', '$filter', 'virtoCommerce.catalogModule.categories', 'virtoCommerce.catalogModule.items', 'virtoCommerce.catalogModule.listEntries', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', function ($rootScope, $scope, $filter, categories, items, listEntries, bladeNavigationService, dialogService) {
-    //pagination settings
-    $scope.pageSettings = {};
-    $scope.pageSettings.totalItems = 0;
-    $scope.pageSettings.currentPage = 1;
-    $scope.pageSettings.numPages = 5;
-    $scope.pageSettings.itemsPerPageCount = 20;
     
     $scope.blade.refresh = function () {
         $scope.blade.isLoading = true;
@@ -37,22 +31,6 @@
         $scope.selectedItem = listItem;
     };
     
-    $scope.blade.onClose = function (closeCallback) {
-        if ($scope.blade.childrenBlades.length > 0) {
-            var callback = function () {
-                if ($scope.blade.childrenBlades.length == 0) {
-                    closeCallback();
-                };
-            };
-            angular.forEach($scope.blade.childrenBlades, function (child) {
-                bladeNavigationService.closeBlade(child, callback);
-            });
-        }
-        else {
-            closeCallback();
-        }
-    };
-
     $scope.blade.toolbarCommands = [
       {
           name: "platform.commands.refresh", icon: 'fa fa-refresh',

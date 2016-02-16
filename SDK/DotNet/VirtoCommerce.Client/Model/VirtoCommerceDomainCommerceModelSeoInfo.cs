@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommerceDomainCommerceModelSeoInfo : IEquatable<VirtoCommerceDomainCommerceModelSeoInfo>
+    public partial class VirtoCommerceDomainCommerceModelSeoInfo :  IEquatable<VirtoCommerceDomainCommerceModelSeoInfo>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceDomainCommerceModelSeoInfo" /> class.
@@ -176,7 +177,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommerceDomainCommerceModelSeoInfo instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommerceDomainCommerceModelSeoInfo to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceDomainCommerceModelSeoInfo to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommerceDomainCommerceModelSeoInfo other)
         {
@@ -270,46 +271,46 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.SemanticUrl != null)
-                    hash = hash * 57 + this.SemanticUrl.GetHashCode();
+                    hash = hash * 59 + this.SemanticUrl.GetHashCode();
                 
                 if (this.PageTitle != null)
-                    hash = hash * 57 + this.PageTitle.GetHashCode();
+                    hash = hash * 59 + this.PageTitle.GetHashCode();
                 
                 if (this.MetaDescription != null)
-                    hash = hash * 57 + this.MetaDescription.GetHashCode();
+                    hash = hash * 59 + this.MetaDescription.GetHashCode();
                 
                 if (this.ImageAltDescription != null)
-                    hash = hash * 57 + this.ImageAltDescription.GetHashCode();
+                    hash = hash * 59 + this.ImageAltDescription.GetHashCode();
                 
                 if (this.MetaKeywords != null)
-                    hash = hash * 57 + this.MetaKeywords.GetHashCode();
+                    hash = hash * 59 + this.MetaKeywords.GetHashCode();
                 
                 if (this.ObjectId != null)
-                    hash = hash * 57 + this.ObjectId.GetHashCode();
+                    hash = hash * 59 + this.ObjectId.GetHashCode();
                 
                 if (this.ObjectType != null)
-                    hash = hash * 57 + this.ObjectType.GetHashCode();
+                    hash = hash * 59 + this.ObjectType.GetHashCode();
                 
                 if (this.IsActive != null)
-                    hash = hash * 57 + this.IsActive.GetHashCode();
+                    hash = hash * 59 + this.IsActive.GetHashCode();
                 
                 if (this.LanguageCode != null)
-                    hash = hash * 57 + this.LanguageCode.GetHashCode();
+                    hash = hash * 59 + this.LanguageCode.GetHashCode();
                 
                 if (this.CreatedDate != null)
-                    hash = hash * 57 + this.CreatedDate.GetHashCode();
+                    hash = hash * 59 + this.CreatedDate.GetHashCode();
                 
                 if (this.ModifiedDate != null)
-                    hash = hash * 57 + this.ModifiedDate.GetHashCode();
+                    hash = hash * 59 + this.ModifiedDate.GetHashCode();
                 
                 if (this.CreatedBy != null)
-                    hash = hash * 57 + this.CreatedBy.GetHashCode();
+                    hash = hash * 59 + this.CreatedBy.GetHashCode();
                 
                 if (this.ModifiedBy != null)
-                    hash = hash * 57 + this.ModifiedBy.GetHashCode();
+                    hash = hash * 59 + this.ModifiedBy.GetHashCode();
                 
                 if (this.Id != null)
-                    hash = hash * 57 + this.Id.GetHashCode();
+                    hash = hash * 59 + this.Id.GetHashCode();
                 
                 return hash;
             }

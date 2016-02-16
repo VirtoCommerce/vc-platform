@@ -19,19 +19,7 @@
         $scope.blade.isLoading = false;
         $scope.blade.selectedAll = false;
     };
-
-
-    $scope.blade.onClose = function (closeCallback) {
-        closeChildrenBlades();
-        closeCallback();
-    };
-
-    function closeChildrenBlades() {
-        angular.forEach($scope.blade.childrenBlades.slice(), function (child) {
-            bladeNavigationService.closeBlade(child);
-        });
-    }
-
+    
     function addProductsToOrder(products) {
         angular.forEach(products, function (product) {
             items.get({ id: product.id }, function (data) {

@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommerceDomainCatalogModelCatalog : IEquatable<VirtoCommerceDomainCatalogModelCatalog>
+    public partial class VirtoCommerceDomainCatalogModelCatalog :  IEquatable<VirtoCommerceDomainCatalogModelCatalog>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceDomainCatalogModelCatalog" /> class.
@@ -120,7 +121,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommerceDomainCatalogModelCatalog instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommerceDomainCatalogModelCatalog to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceDomainCatalogModelCatalog to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommerceDomainCatalogModelCatalog other)
         {
@@ -179,25 +180,25 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.Name != null)
-                    hash = hash * 57 + this.Name.GetHashCode();
+                    hash = hash * 59 + this.Name.GetHashCode();
                 
                 if (this.Virtual != null)
-                    hash = hash * 57 + this.Virtual.GetHashCode();
+                    hash = hash * 59 + this.Virtual.GetHashCode();
                 
                 if (this.DefaultLanguage != null)
-                    hash = hash * 57 + this.DefaultLanguage.GetHashCode();
+                    hash = hash * 59 + this.DefaultLanguage.GetHashCode();
                 
                 if (this.Languages != null)
-                    hash = hash * 57 + this.Languages.GetHashCode();
+                    hash = hash * 59 + this.Languages.GetHashCode();
                 
                 if (this.Properties != null)
-                    hash = hash * 57 + this.Properties.GetHashCode();
+                    hash = hash * 59 + this.Properties.GetHashCode();
                 
                 if (this.PropertyValues != null)
-                    hash = hash * 57 + this.PropertyValues.GetHashCode();
+                    hash = hash * 59 + this.PropertyValues.GetHashCode();
                 
                 if (this.Id != null)
-                    hash = hash * 57 + this.Id.GetHashCode();
+                    hash = hash * 59 + this.Id.GetHashCode();
                 
                 return hash;
             }

@@ -13,6 +13,7 @@
         "title": "Catalog",
         "subtitle": "Manage catalogs",
         "labels": {
+          "name": "Name",
           "virtual": "{{name}} (virtual)"
         }
       },

@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommerceDomainMarketingModelPromoDynamicExpressionTree : IEquatable<VirtoCommerceDomainMarketingModelPromoDynamicExpressionTree>
+    public partial class VirtoCommerceDomainMarketingModelPromoDynamicExpressionTree :  IEquatable<VirtoCommerceDomainMarketingModelPromoDynamicExpressionTree>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceDomainMarketingModelPromoDynamicExpressionTree" /> class.
@@ -88,7 +89,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommerceDomainMarketingModelPromoDynamicExpressionTree instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommerceDomainMarketingModelPromoDynamicExpressionTree to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceDomainMarketingModelPromoDynamicExpressionTree to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommerceDomainMarketingModelPromoDynamicExpressionTree other)
         {
@@ -127,13 +128,13 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.Id != null)
-                    hash = hash * 57 + this.Id.GetHashCode();
+                    hash = hash * 59 + this.Id.GetHashCode();
                 
                 if (this.AvailableChildren != null)
-                    hash = hash * 57 + this.AvailableChildren.GetHashCode();
+                    hash = hash * 59 + this.AvailableChildren.GetHashCode();
                 
                 if (this.Children != null)
-                    hash = hash * 57 + this.Children.GetHashCode();
+                    hash = hash * 59 + this.Children.GetHashCode();
                 
                 return hash;
             }

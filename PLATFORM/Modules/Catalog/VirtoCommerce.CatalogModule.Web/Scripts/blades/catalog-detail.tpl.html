@@ -3,7 +3,7 @@
     <div class="blade-inner">
         <div class="inner-block">
             <form class="form" name="formScope">
-                <div>
+                <div ng-init="setForm(formScope)">
                     <label class="form-label">{{'catalog.blades.catalog-detail.labels.catalog-name' | translate}}</label>
                     <div class="form-input">
                         <input ng-model="blade.currentEntity.name" placeholder="{{'catalog.blades.catalog-detail.placeholders.enter-name' | translate}}" focus-on="" required>

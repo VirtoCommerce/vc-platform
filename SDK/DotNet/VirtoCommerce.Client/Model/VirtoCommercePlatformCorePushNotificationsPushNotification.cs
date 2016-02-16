@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommercePlatformCorePushNotificationsPushNotification : IEquatable<VirtoCommercePlatformCorePushNotificationsPushNotification>
+    public partial class VirtoCommercePlatformCorePushNotificationsPushNotification :  IEquatable<VirtoCommercePlatformCorePushNotificationsPushNotification>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePlatformCorePushNotificationsPushNotification" /> class.
@@ -128,7 +129,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommercePlatformCorePushNotificationsPushNotification instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommercePlatformCorePushNotificationsPushNotification to be compared</param>
+        /// <param name="other">Instance of VirtoCommercePlatformCorePushNotificationsPushNotification to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommercePlatformCorePushNotificationsPushNotification other)
         {
@@ -192,28 +193,28 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.Id != null)
-                    hash = hash * 57 + this.Id.GetHashCode();
+                    hash = hash * 59 + this.Id.GetHashCode();
                 
                 if (this.Creator != null)
-                    hash = hash * 57 + this.Creator.GetHashCode();
+                    hash = hash * 59 + this.Creator.GetHashCode();
                 
                 if (this.Created != null)
-                    hash = hash * 57 + this.Created.GetHashCode();
+                    hash = hash * 59 + this.Created.GetHashCode();
                 
                 if (this.New != null)
-                    hash = hash * 57 + this.New.GetHashCode();
+                    hash = hash * 59 + this.New.GetHashCode();
                 
                 if (this.NotifyType != null)
-                    hash = hash * 57 + this.NotifyType.GetHashCode();
+                    hash = hash * 59 + this.NotifyType.GetHashCode();
                 
                 if (this.Description != null)
-                    hash = hash * 57 + this.Description.GetHashCode();
+                    hash = hash * 59 + this.Description.GetHashCode();
                 
                 if (this.Title != null)
-                    hash = hash * 57 + this.Title.GetHashCode();
+                    hash = hash * 59 + this.Title.GetHashCode();
                 
                 if (this.RepeatCount != null)
-                    hash = hash * 57 + this.RepeatCount.GetHashCode();
+                    hash = hash * 59 + this.RepeatCount.GetHashCode();
                 
                 return hash;
             }
