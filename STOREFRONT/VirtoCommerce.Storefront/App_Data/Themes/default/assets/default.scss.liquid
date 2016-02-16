@@ -3713,7 +3713,7 @@ html[xmlns] .slides { display: block; }
 	background: $headerBackgroundTop;
     height: 30px;
     position: relative;
-    z-index: 999999;
+    z-index: 99998;
 }
 
 @include at-query ($max, $medium) {
@@ -4648,9 +4648,37 @@ html[xmlns] .slides { display: block; }
     text-decoration:line-through;
 }
 
-.alert {
-    margin-bottom: 15px;
-    margin-top: -15px;
+.alert.fixed {
+    border: 1px solid transparent;
+    border-radius: 4px;
+    left: 5%;
+    margin-bottom: 20px;
+    padding: 15px;
+    position: fixed;
+    width: 90%;
+    z-index: 99999;
+}
+.alert .close {
+    background: 0 0;
+    border: 0;
+    color: inherit;
+    cursor: pointer;
+    filter: alpha(opacity=20);
+    float: right;
+    font-size: 21px;
+    font-weight: 700;
+    line-height: 1;
+    opacity: .2;
+    padding: 0;
+    position: relative;
+    right: -5px;
+    text-shadow: 0 1px 0 #fff;
+    top: -2px;
+    -webkit-appearance: none;
+}
+.alert .close:hover {
+    filter: alpha(opacity=0);
+    opacity: 1;
 }
 .alert.alert-success {
     color: #3c763d;
@@ -4661,8 +4689,10 @@ html[xmlns] .slides { display: block; }
 .alert.alert-warning {
     color: #8a6d3b;
 }
-.alert.alert-error {
-    color: #dc0000;
+.alert.alert-danger {
+    background-color: #f2dede;
+    border-color: #ebccd1;
+    color: #a94442;
 }
 .alert.alert-error.tier-price {
     margin-top: 0;

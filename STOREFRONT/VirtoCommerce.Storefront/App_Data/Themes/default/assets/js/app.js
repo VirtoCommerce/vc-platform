@@ -5,7 +5,7 @@ storefrontApp.factory('httpErrorInterceptor', ['$q', '$rootScope', function ($q,
 
     httpErrorInterceptor.responseError = function (rejection) {
         $rootScope.$broadcast('storefrontError', {
-            type: 'danger',
+            type: 'error',
             title: rejection.data.message,
             message: rejection.data.stackTrace
         });
@@ -13,7 +13,7 @@ storefrontApp.factory('httpErrorInterceptor', ['$q', '$rootScope', function ($q,
     };
     httpErrorInterceptor.requestError = function (rejection) {
         $rootScope.$broadcast('storefrontError', {
-            type: 'danger',
+            type: 'error',
             title: rejection.data.message,
             message: rejection.data.stackTrace
         });
@@ -22,10 +22,6 @@ storefrontApp.factory('httpErrorInterceptor', ['$q', '$rootScope', function ($q,
 
     return httpErrorInterceptor;
 }])
-
-storefrontApp.controller('testController', ['$routeParams', function ($routeParams) {
-    alert(1);
-}]);
 
 storefrontApp.config(['$interpolateProvider', '$routeProvider', '$httpProvider', function ($interpolateProvider, $routeProvider, $httpProvider) {
     $httpProvider.interceptors.push('httpErrorInterceptor');

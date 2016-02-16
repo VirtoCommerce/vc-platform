@@ -313,7 +313,6 @@
     <Content Include="App_Data\Themes\default\assets\js\product.js" />
     <Content Include="App_Data\Themes\default\assets\js\services.js" />
     <Content Include="App_Data\Themes\default\assets\thumbs-bar.gif" />
-    <Content Include="App_Data\Themes\default\assets\toastr.css" />
     <Content Include="App_Data\Themes\default\assets\unionpay.svg" />
     <Content Include="App_Data\Themes\default\assets\vc-big.png" />
     <Content Include="App_Data\Themes\default\assets\visa.svg" />
