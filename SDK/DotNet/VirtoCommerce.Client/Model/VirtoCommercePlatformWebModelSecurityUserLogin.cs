@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommercePlatformWebModelSecurityUserLogin : IEquatable<VirtoCommercePlatformWebModelSecurityUserLogin>
+    public partial class VirtoCommercePlatformWebModelSecurityUserLogin :  IEquatable<VirtoCommercePlatformWebModelSecurityUserLogin>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelSecurityUserLogin" /> class.
@@ -88,7 +89,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommercePlatformWebModelSecurityUserLogin instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommercePlatformWebModelSecurityUserLogin to be compared</param>
+        /// <param name="other">Instance of VirtoCommercePlatformWebModelSecurityUserLogin to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommercePlatformWebModelSecurityUserLogin other)
         {
@@ -127,13 +128,13 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.UserName != null)
-                    hash = hash * 57 + this.UserName.GetHashCode();
+                    hash = hash * 59 + this.UserName.GetHashCode();
                 
                 if (this.Password != null)
-                    hash = hash * 57 + this.Password.GetHashCode();
+                    hash = hash * 59 + this.Password.GetHashCode();
                 
                 if (this.RememberMe != null)
-                    hash = hash * 57 + this.RememberMe.GetHashCode();
+                    hash = hash * 59 + this.RememberMe.GetHashCode();
                 
                 return hash;
             }

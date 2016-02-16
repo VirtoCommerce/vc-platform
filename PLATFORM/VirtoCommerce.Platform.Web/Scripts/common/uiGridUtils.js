@@ -24,6 +24,7 @@
 
     .factory('platformWebApp.uiGridHelper', ['$localStorage', '$timeout', 'uiGridConstants', '$translate', function ($localStorage, $timeout, uiGridConstants, $translate) {
         var retVal = {};
+        retVal.uiGridConstants = uiGridConstants;
         retVal.initialize = function ($scope, gridOptions, externalRegisterApiCallback) {
             var savedState = $localStorage['gridState:' + $scope.blade.template];
             if (savedState) {
@@ -87,7 +88,7 @@
                         return x[0] !== '$$hashKey' && !_.isArray(x[1]);
                     });
 
-                    var allKeysFromEntity = _.map(filteredColumns, function (x) { return x[0]});
+                    var allKeysFromEntity = _.map(filteredColumns, function (x) { return x[0]; });
                     // remove non-existing columns
                     _.each(gridOptions.columnDefs.slice(), function (x) {
                         if (!_.contains(allKeysFromEntity, x.name) && !x.wasPredefined) {
@@ -116,10 +117,16 @@
                 return x.sort.priority;
             });
             sorts = _.map(sorts, function (x) {
-                return x.name + ':' + (x.sort.direction === uiGridConstants.ASC ? 'asc' : 'desc');
+                return (x.field ? x.field : x.name) + ':' + (x.sort.direction === uiGridConstants.ASC ? 'asc' : 'desc');
             });
             return sorts.join(';');
-        }
+        };
+
+        retVal.bindRefreshOnSortChanged = function ($scope) {
+            $scope.gridApi.core.on.sortChanged($scope, function () {
+                if (!$scope.blade.isLoading) $scope.blade.refresh();
+            });
+        };
 
         return retVal;
     }])

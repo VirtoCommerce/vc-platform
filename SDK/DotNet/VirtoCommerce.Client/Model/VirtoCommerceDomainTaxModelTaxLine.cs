@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommerceDomainTaxModelTaxLine : IEquatable<VirtoCommerceDomainTaxModelTaxLine>
+    public partial class VirtoCommerceDomainTaxModelTaxLine :  IEquatable<VirtoCommerceDomainTaxModelTaxLine>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceDomainTaxModelTaxLine" /> class.
@@ -112,7 +113,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommerceDomainTaxModelTaxLine instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommerceDomainTaxModelTaxLine to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceDomainTaxModelTaxLine to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommerceDomainTaxModelTaxLine other)
         {
@@ -166,22 +167,22 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.Code != null)
-                    hash = hash * 57 + this.Code.GetHashCode();
+                    hash = hash * 59 + this.Code.GetHashCode();
                 
                 if (this.Name != null)
-                    hash = hash * 57 + this.Name.GetHashCode();
+                    hash = hash * 59 + this.Name.GetHashCode();
                 
                 if (this.Amount != null)
-                    hash = hash * 57 + this.Amount.GetHashCode();
+                    hash = hash * 59 + this.Amount.GetHashCode();
                 
                 if (this.Price != null)
-                    hash = hash * 57 + this.Price.GetHashCode();
+                    hash = hash * 59 + this.Price.GetHashCode();
                 
                 if (this.TaxType != null)
-                    hash = hash * 57 + this.TaxType.GetHashCode();
+                    hash = hash * 59 + this.TaxType.GetHashCode();
                 
                 if (this.Id != null)
-                    hash = hash * 57 + this.Id.GetHashCode();
+                    hash = hash * 59 + this.Id.GetHashCode();
                 
                 return hash;
             }

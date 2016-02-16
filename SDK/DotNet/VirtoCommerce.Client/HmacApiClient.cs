@@ -17,10 +17,10 @@ namespace VirtoCommerce.Client
             _secretKey = secretKey;
         }
 
-        protected override RestRequest PrepareRequest(string path, Method method, Dictionary<string, string> queryParams, string postBody, Dictionary<string, string> headerParams,
-            Dictionary<string, string> formParams, Dictionary<string, FileParameter> fileParams, Dictionary<string, string> pathParams)
+        protected override RestRequest PrepareRequest(string path, Method method, Dictionary<string, string> queryParams, object postBody, Dictionary<string, string> headerParams,
+            Dictionary<string, string> formParams, Dictionary<string, FileParameter> fileParams, Dictionary<string, string> pathParams, string contentType)
         {
-            var request = base.PrepareRequest(path, method, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+            var request = base.PrepareRequest(path, method, queryParams, postBody, headerParams, formParams, fileParams, pathParams, contentType);
 
             var signature = new ApiRequestSignature { AppId = _appId };
 

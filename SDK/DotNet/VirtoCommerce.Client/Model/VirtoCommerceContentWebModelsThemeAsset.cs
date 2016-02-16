@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommerceContentWebModelsThemeAsset : IEquatable<VirtoCommerceContentWebModelsThemeAsset>
+    public partial class VirtoCommerceContentWebModelsThemeAsset :  IEquatable<VirtoCommerceContentWebModelsThemeAsset>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceContentWebModelsThemeAsset" /> class.
@@ -132,7 +133,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommerceContentWebModelsThemeAsset instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommerceContentWebModelsThemeAsset to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceContentWebModelsThemeAsset to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommerceContentWebModelsThemeAsset other)
         {
@@ -196,28 +197,28 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.Id != null)
-                    hash = hash * 57 + this.Id.GetHashCode();
+                    hash = hash * 59 + this.Id.GetHashCode();
                 
                 if (this.Name != null)
-                    hash = hash * 57 + this.Name.GetHashCode();
+                    hash = hash * 59 + this.Name.GetHashCode();
                 
                 if (this.Content != null)
-                    hash = hash * 57 + this.Content.GetHashCode();
+                    hash = hash * 59 + this.Content.GetHashCode();
                 
                 if (this.ByteContent != null)
-                    hash = hash * 57 + this.ByteContent.GetHashCode();
+                    hash = hash * 59 + this.ByteContent.GetHashCode();
                 
                 if (this.AssetUrl != null)
-                    hash = hash * 57 + this.AssetUrl.GetHashCode();
+                    hash = hash * 59 + this.AssetUrl.GetHashCode();
                 
                 if (this.ContentType != null)
-                    hash = hash * 57 + this.ContentType.GetHashCode();
+                    hash = hash * 59 + this.ContentType.GetHashCode();
                 
                 if (this.Updated != null)
-                    hash = hash * 57 + this.Updated.GetHashCode();
+                    hash = hash * 59 + this.Updated.GetHashCode();
                 
                 if (this.SecurityScopes != null)
-                    hash = hash * 57 + this.SecurityScopes.GetHashCode();
+                    hash = hash * 59 + this.SecurityScopes.GetHashCode();
                 
                 return hash;
             }

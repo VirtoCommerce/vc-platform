@@ -52,23 +52,7 @@
     $scope.updateSelectedPropValues = function () {
         $scope.checkedPropValues = getAllCheckedPropValues(propertyValues);
     };
-
-    $scope.blade.onClose = function (closeCallback) {
-        if ($scope.blade.childrenBlades.length > 0) {
-            var callback = function () {
-                if ($scope.blade.childrenBlades.length == 0) {
-                    closeCallback();
-                };
-            };
-            angular.forEach($scope.blade.childrenBlades, function (child) {
-                bladeNavigationService.closeBlade(child, callback);
-            });
-        }
-        else {
-            closeCallback();
-        }
-    };
-
+    
     function prepareFilter() {
         //Set filters
         //if (selectedNode != null) {

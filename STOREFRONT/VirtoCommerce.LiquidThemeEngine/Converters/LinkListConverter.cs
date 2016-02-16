@@ -7,19 +7,19 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
 {
     public static class LinkListConverter
     {
-        public static Linklist ToShopifyModel(this StorefrontModel.MenuLinkList storefrontModel)
+        public static Linklist ToShopifyModel(this StorefrontModel.MenuLinkList storefrontModel, StorefrontModel.WorkContext workContext)
         {
             var shopifyModel = new Linklist();
 
             shopifyModel.Handle = storefrontModel.Name;
             shopifyModel.Id = storefrontModel.Id;
-            shopifyModel.Links = storefrontModel.MenuLinks.Select(ml => ml.ToShopfiyModel()).ToList();
+            shopifyModel.Links = storefrontModel.MenuLinks.Select(ml => ml.ToShopfiyModel(workContext)).ToList();
             shopifyModel.Title = storefrontModel.Name;
 
             return shopifyModel;
         }
 
-        public static Link ToShopfiyModel(this StorefrontModel.MenuLink storefrontModel)
+        public static Link ToShopfiyModel(this StorefrontModel.MenuLink storefrontModel, StorefrontModel.WorkContext workContext)
         {
             var shopifyModel = new Link();
 
@@ -29,6 +29,24 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             shopifyModel.Type = "";
             shopifyModel.Url = storefrontModel.Url;
 
+            var productLink = storefrontModel as StorefrontModel.ProductMenuLink;
+            var categoryLink = storefrontModel as StorefrontModel.CategoryMenuLink;
+            if (productLink != null)
+            {
+                shopifyModel.Type = "product";
+                if (productLink.Product != null)
+                {
+                    shopifyModel.Object = productLink.Product.ToShopifyModel(workContext);
+                }
+            }
+            if (categoryLink != null)
+            {
+                shopifyModel.Type = "collection";
+                if (categoryLink.Category != null)
+                {
+                    shopifyModel.Object = categoryLink.Category.ToShopifyModel(workContext);
+                }
+            }
             return shopifyModel;
         }
     }

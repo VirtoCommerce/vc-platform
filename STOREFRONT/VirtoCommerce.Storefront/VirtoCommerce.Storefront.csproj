@@ -359,6 +359,7 @@
     <Compile Include="Services\CartValidator.cs" />
     <Compile Include="Services\CustomerServiceImpl.cs" />
     <Compile Include="Services\LinkHelper.cs" />
+    <Compile Include="Services\LinkListServiceImpl.cs" />
     <Compile Include="Services\PricingServiceImpl.cs" />
     <Compile Include="Services\PromotionEvaluator.cs" />
     <Compile Include="Common\StorefrontConstants.cs" />

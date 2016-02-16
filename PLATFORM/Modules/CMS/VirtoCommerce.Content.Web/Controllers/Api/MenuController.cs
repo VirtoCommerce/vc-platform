@@ -95,7 +95,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		{
             base.CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Update, new ContentScopeObject { StoreId = list.StoreId });
 
-            _menuService.Update(list.ToCoreModel());
+            _menuService.AddOrUpdate(list.ToCoreModel());
             return StatusCode(HttpStatusCode.NoContent);
 		}
 

@@ -25,7 +25,7 @@
 					<div class="column">
 						<fieldset ng-if="blade.isNew">
 							<legend>{{ 'platform.blades.notifications-edit-template.labels.language' | translate }}</legend>
-                            <div class=" form-group" ng-if="blade.isNew" style="margin-top:0">
+                            <div class="form-group" ng-if="blade.isNew" style="margin-top:0">
                                 <div class="form-input">
                                     <ui-select ng-model="blade.currentEntity.language">
                                         <ui-select-match placeholder="{{ 'platform.blades.notifications-edit-template.placeholders.language' | translate }}"><span class="flag flag-{{blade.getFlag($select.selected)}}"></span> {{$select.selected}}</ui-select-match>

@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommercePlatformWebModelSecurityChangePasswordInfo : IEquatable<VirtoCommercePlatformWebModelSecurityChangePasswordInfo>
+    public partial class VirtoCommercePlatformWebModelSecurityChangePasswordInfo :  IEquatable<VirtoCommercePlatformWebModelSecurityChangePasswordInfo>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelSecurityChangePasswordInfo" /> class.
@@ -80,7 +81,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommercePlatformWebModelSecurityChangePasswordInfo instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommercePlatformWebModelSecurityChangePasswordInfo to be compared</param>
+        /// <param name="other">Instance of VirtoCommercePlatformWebModelSecurityChangePasswordInfo to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommercePlatformWebModelSecurityChangePasswordInfo other)
         {
@@ -114,10 +115,10 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.OldPassword != null)
-                    hash = hash * 57 + this.OldPassword.GetHashCode();
+                    hash = hash * 59 + this.OldPassword.GetHashCode();
                 
                 if (this.NewPassword != null)
-                    hash = hash * 57 + this.NewPassword.GetHashCode();
+                    hash = hash * 59 + this.NewPassword.GetHashCode();
                 
                 return hash;
             }

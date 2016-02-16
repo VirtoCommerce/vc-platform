@@ -1,6 +1,6 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.itemPropertyDetailController', ['$scope', 'virtoCommerce.catalogModule.categories', 'virtoCommerce.catalogModule.properties', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', function ($scope, categories, properties, bladeNavigationService, dialogService) {
-    var b = $scope.blade;
+.controller('virtoCommerce.catalogModule.itemPropertyDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', function ($scope, bladeNavigationService, dialogService) {
+    var blade = $scope.blade;
     $scope.currentChild = undefined;
 
     function initializeBlade(data) {
@@ -10,41 +10,41 @@
             });
         }
 
-        b.currentEntity = angular.copy(data);
-        //b.origEntity = data;
-        b.isLoading = false;
+        blade.currentEntity = angular.copy(data);
+        //blade.origEntity = data;
+        blade.isLoading = false;
     };
 
     $scope.openChild = function (childType) {
-        var newBlade = { id: "propertyChild", property: b.currentEntity };
-        
+        var newBlade = { id: "propertyChild", property: blade.currentEntity };
+
         switch (childType) {
             case 'valType':
                 newBlade.title = 'catalog.blades.property-valueType.title';
-                newBlade.titleValues = {name: b.origEntity.name ? b.origEntity.name : b.currentEntity.name};
+                newBlade.titleValues = { name: blade.origEntity.name ? blade.origEntity.name : blade.currentEntity.name };
                 newBlade.subtitle = 'catalog.blades.property-valueType.subtitle';
                 newBlade.controller = 'virtoCommerce.catalogModule.propertyValueTypeController';
                 newBlade.template = 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/property-valueType.tpl.html';
                 break;
         }
-        bladeNavigationService.showBlade(newBlade, b);
+        bladeNavigationService.showBlade(newBlade, blade);
         $scope.currentChild = childType;
     }
 
     function isDirty() {
-        return !angular.equals(b.currentEntity, b.origEntity);
+        return !angular.equals(blade.currentEntity, blade.origEntity);
     };
 
     $scope.cancelChanges = function () {
-        angular.copy(b.origEntity, b.currentEntity);
+        angular.copy(blade.origEntity, blade.currentEntity);
         $scope.bladeClose();
     };
 
     $scope.saveChanges = function () {
-        angular.copy(b.currentEntity, b.origEntity);
+        angular.copy(blade.currentEntity, blade.origEntity);
 
-        if (b.isNew) {
-            b.currentEntities.push(b.origEntity);
+        if (blade.isNew) {
+            blade.currentEntities.push(blade.origEntity);
         }
 
         $scope.bladeClose();
@@ -55,61 +55,38 @@
             id: "confirmDelete",
             title: "catalog.dialogs.property-delete.title",
             message: 'catalog.dialogs.property-delete.message',
-            messageValues: {name: prop.name},
+            messageValues: { name: prop.name },
             callback: function (remove) {
                 if (remove) {
-                    var idx = b.currentEntities.indexOf(b.origEntity);
-                    b.currentEntities.splice(idx, 1);
+                    var idx = blade.currentEntities.indexOf(blade.origEntity);
+                    blade.currentEntities.splice(idx, 1);
                     $scope.bladeClose();
                 }
             }
         }
         dialogService.showConfirmationDialog(dialog);
-            $scope.paragraph = paragraph;
     }
 
-    b.onClose = function (closeCallback) {
-        angular.forEach(b.childrenBlades.slice(), function (child) {
-            bladeNavigationService.closeBlade(child);
-        });
-
-        if (isDirty()) {
-            var dialog = {
-                id: "confirmItemChange",
-                title: "catalog.dialogs.property-save.title",
-                message: "catalog.dialogs.property-save.message",
-                callback: function (needSave) {
-                    if (needSave) {
-                        $scope.saveChanges();
-                    }
-                    closeCallback();
-                }
-            };
-            dialogService.showConfirmationDialog(dialog);
-        }
-        else {
-            closeCallback();
-        }
+    blade.onClose = function (closeCallback) {
+        bladeNavigationService.showConfirmationIfNeeded(isDirty(), $scope.formScope && $scope.formScope.$valid, blade, $scope.saveChanges, closeCallback, "catalog.dialogs.property-save.title", "catalog.dialogs.property-save.message");
     };
 
-    $scope.setForm = function (form) {
-        $scope.formScope = form;
-    }
+    $scope.setForm = function (form) { $scope.formScope = form; };
 
-    if (!b.isNew) {
-        b.headIcon = 'fa-gear';
-        b.toolbarCommands = [
+    if (!blade.isNew) {
+        blade.headIcon = 'fa-gear';
+        blade.toolbarCommands = [
             {
                 name: "platform.commands.reset", icon: 'fa fa-undo',
                 executeMethod: function () {
-                    angular.copy(b.origEntity, b.currentEntity);
+                    angular.copy(blade.origEntity, blade.currentEntity);
                 },
                 canExecuteMethod: isDirty
             },
             {
                 name: "platform.commands.delete", icon: 'fa fa-trash-o',
                 executeMethod: function () {
-                    removeProperty(b.origEntity);
+                    removeProperty(blade.origEntity);
                 },
                 canExecuteMethod: function () { return true; }
             }
@@ -117,9 +94,9 @@
     }
 
     $scope.$watch('blade.parentBlade.item.properties', function (data) {
-        b.currentEntities = data;
+        blade.currentEntities = data;
     });
 
     // actions on load    
-    initializeBlade(b.origEntity);
+    initializeBlade(blade.origEntity);
 }]);

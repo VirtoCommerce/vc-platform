@@ -45,7 +45,7 @@
                 <div class="columns clearfix">
                     <div class="column">
                         <div class="form-group">
-                            <label class="form-label">{{ 'stores.blades.store-detail.labels.default-language' | translate }} <a href="" ng-click="openLanguagesDictionarySettingManagement()" va-permission="platform:setting:update"><i class="form-ico fa fa-pencil"></i></a></label>
+                            <label class="form-label">{{ 'stores.blades.store-detail.labels.default-language' | translate }} <a href="" ng-click="openLanguagesDictionarySettingManagement()" class="form-edit" va-permission="platform:setting:update"><i class="form-ico fa fa-pencil"></i></a></label>
                             <div class="form-input">
                                 <ui-select ng-model="blade.currentEntity.defaultLanguage" required>
                                     <ui-select-match placeholder="{{ 'stores.blades.store-detail.placeholders.default-language' | translate }}">{{$select.selected}}</ui-select-match>
@@ -58,7 +58,7 @@
                     </div>
                     <div class="column">
                         <div class="form-group">
-                            <label class="form-label">{{ 'stores.blades.store-detail.labels.additional-languages' | translate }} <a href="" ng-click="openLanguagesDictionarySettingManagement()" va-permission="platform:setting:update"><i class="form-ico fa fa-pencil"></i></a></label>
+                            <label class="form-label">{{ 'stores.blades.store-detail.labels.additional-languages' | translate }} <a href="" ng-click="openLanguagesDictionarySettingManagement()" class="form-edit" va-permission="platform:setting:update"><i class="form-ico fa fa-pencil"></i></a></label>
                             <div class="form-input" data-role="input-control">
                                 <ui-select multiple ng-model="blade.currentEntity.additionalLanguages">
                                     <ui-select-match placeholder="{{ 'stores.blades.store-detail.placeholders.additional-languages' | translate }}">{{$item}}</ui-select-match>
@@ -73,7 +73,7 @@
                 <div class="columns clearfix">
                     <div class="column">
                         <div class="form-group">
-                            <label class="form-label">{{ 'stores.blades.store-detail.labels.default-currency' | translate }} <a href="" ng-click="currencyUtils.editCurrencies(blade)"><i class="form-ico fa fa-pencil"></i></a></label>
+                            <label class="form-label">{{ 'stores.blades.store-detail.labels.default-currency' | translate }} <a href="" ng-click="currencyUtils.editCurrencies(blade)" class="form-edit"><i class="form-ico fa fa-pencil"></i></a></label>
                             <div class="form-input" ng-init="currencies = currencyUtils.getCurrencies()">
                                 <ui-select ng-model="blade.currentEntity.defaultCurrency" required>
                                     <ui-select-match placeholder="{{ 'stores.blades.store-detail.placeholders.default-currency' | translate }}">{{$select.selected.code}}</ui-select-match>
@@ -86,7 +86,7 @@
                     </div>
                     <div class="column">
                         <div class="form-group">
-                            <label class="form-label">{{ 'stores.blades.store-detail.labels.additional-currencies' | translate }} <a href="" ng-click="currencyUtils.editCurrencies(blade)"><i class="form-ico fa fa-pencil"></i></a></label>
+                            <label class="form-label">{{ 'stores.blades.store-detail.labels.additional-currencies' | translate }} <a href="" ng-click="currencyUtils.editCurrencies(blade)" class="form-edit"><i class="form-ico fa fa-pencil"></i></a></label>
                             <div class="form-input" data-role="input-control">
                                 <ui-select multiple ng-model="blade.currentEntity.additionalCurrencies">
                                     <ui-select-match placeholder="{{ 'stores.blades.store-detail.placeholders.additional-currencies' | translate }}">{{$item.code}}</ui-select-match>

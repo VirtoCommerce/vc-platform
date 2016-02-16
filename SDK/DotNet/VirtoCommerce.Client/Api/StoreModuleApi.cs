@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using RestSharp;
 using VirtoCommerce.Client.Client;
@@ -386,15 +387,21 @@ namespace VirtoCommerce.Client.Api
             var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var formParams = new Dictionary<String, String>();
             var fileParams = new Dictionary<String, FileParameter>();
-            String postBody = null;
+            Object postBody = null;
+
+            // to determine the Content-Type header
+            String[] httpContentTypes = new String[] {
+                
+            };
+            String httpContentType = Configuration.ApiClient.SelectHeaderContentType(httpContentTypes);
 
             // to determine the Accept header
-            String[] http_header_accepts = new String[] {
+            String[] httpHeaderAccepts = new String[] {
                 "application/json", "text/json"
             };
-            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
-            if (http_header_accept != null)
-                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
+            String httpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(httpHeaderAccepts);
+            if (httpHeaderAccept != null)
+                headerParams.Add("Accept", httpHeaderAccept);
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
@@ -408,7 +415,9 @@ namespace VirtoCommerce.Client.Api
             
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, 
+                Method.GET, queryParams, postBody, headerParams, formParams, fileParams,
+                pathParams, httpContentType);
 
             int statusCode = (int) response.StatusCode;
     
@@ -446,18 +455,24 @@ namespace VirtoCommerce.Client.Api
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var formParams = new Dictionary<String, String>();
             var fileParams = new Dictionary<String, FileParameter>();
-            String postBody = null;
+            Object postBody = null;
+
+            // to determine the Content-Type header
+            String[] httpContentTypes = new String[] {
+                
+            };
+            String httpContentType = Configuration.ApiClient.SelectHeaderContentType(httpContentTypes);
 
             // to determine the Accept header
-            String[] http_header_accepts = new String[] {
+            String[] httpHeaderAccepts = new String[] {
                 "application/json", "text/json"
             };
-            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
-            if (http_header_accept != null)
-                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
+            String httpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(httpHeaderAccepts);
+            if (httpHeaderAccept != null)
+                headerParams.Add("Accept", httpHeaderAccept);
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
@@ -471,7 +486,9 @@ namespace VirtoCommerce.Client.Api
             
 
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, 
+                Method.GET, queryParams, postBody, headerParams, formParams, fileParams, 
+                pathParams, httpContentType);
 
             int statusCode = (int) response.StatusCode;
  
@@ -505,7 +522,8 @@ namespace VirtoCommerce.Client.Api
         {
             
             // verify the required parameter 'store' is set
-            if (store == null) throw new ApiException(400, "Missing required parameter 'store' when calling StoreModuleUpdate");
+            if (store == null)
+                throw new ApiException(400, "Missing required parameter 'store' when calling StoreModuleApi->StoreModuleUpdate");
             
     
             var path_ = "/api/stores";
@@ -515,15 +533,21 @@ namespace VirtoCommerce.Client.Api
             var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var formParams = new Dictionary<String, String>();
             var fileParams = new Dictionary<String, FileParameter>();
-            String postBody = null;
+            Object postBody = null;
+
+            // to determine the Content-Type header
+            String[] httpContentTypes = new String[] {
+                "application/json", "text/json", "application/x-www-form-urlencoded"
+            };
+            String httpContentType = Configuration.ApiClient.SelectHeaderContentType(httpContentTypes);
 
             // to determine the Accept header
-            String[] http_header_accepts = new String[] {
+            String[] httpHeaderAccepts = new String[] {
                 
             };
-            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
-            if (http_header_accept != null)
-                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
+            String httpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(httpHeaderAccepts);
+            if (httpHeaderAccept != null)
+                headerParams.Add("Accept", httpHeaderAccept);
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
@@ -532,13 +556,21 @@ namespace VirtoCommerce.Client.Api
             
             
             
-            postBody = Configuration.ApiClient.Serialize(store); // http body (model) parameter
-            
+            if (store.GetType() != typeof(byte[]))
+            {
+                postBody = Configuration.ApiClient.Serialize(store); // http body (model) parameter
+            }
+            else
+            {
+                postBody = store; // byte array
+            }
 
             
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, 
+                Method.PUT, queryParams, postBody, headerParams, formParams, fileParams,
+                pathParams, httpContentType);
 
             int statusCode = (int) response.StatusCode;
     
@@ -579,18 +611,24 @@ namespace VirtoCommerce.Client.Api
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var formParams = new Dictionary<String, String>();
             var fileParams = new Dictionary<String, FileParameter>();
-            String postBody = null;
+            Object postBody = null;
+
+            // to determine the Content-Type header
+            String[] httpContentTypes = new String[] {
+                "application/json", "text/json", "application/x-www-form-urlencoded"
+            };
+            String httpContentType = Configuration.ApiClient.SelectHeaderContentType(httpContentTypes);
 
             // to determine the Accept header
-            String[] http_header_accepts = new String[] {
+            String[] httpHeaderAccepts = new String[] {
                 
             };
-            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
-            if (http_header_accept != null)
-                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
+            String httpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(httpHeaderAccepts);
+            if (httpHeaderAccept != null)
+                headerParams.Add("Accept", httpHeaderAccept);
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
@@ -605,7 +643,9 @@ namespace VirtoCommerce.Client.Api
             
 
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, 
+                Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, 
+                pathParams, httpContentType);
 
             int statusCode = (int) response.StatusCode;
  
@@ -640,7 +680,8 @@ namespace VirtoCommerce.Client.Api
         {
             
             // verify the required parameter 'store' is set
-            if (store == null) throw new ApiException(400, "Missing required parameter 'store' when calling StoreModuleCreate");
+            if (store == null)
+                throw new ApiException(400, "Missing required parameter 'store' when calling StoreModuleApi->StoreModuleCreate");
             
     
             var path_ = "/api/stores";
@@ -650,15 +691,21 @@ namespace VirtoCommerce.Client.Api
             var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var formParams = new Dictionary<String, String>();
             var fileParams = new Dictionary<String, FileParameter>();
-            String postBody = null;
+            Object postBody = null;
+
+            // to determine the Content-Type header
+            String[] httpContentTypes = new String[] {
+                "application/json", "text/json", "application/x-www-form-urlencoded"
+            };
+            String httpContentType = Configuration.ApiClient.SelectHeaderContentType(httpContentTypes);
 
             // to determine the Accept header
-            String[] http_header_accepts = new String[] {
+            String[] httpHeaderAccepts = new String[] {
                 "application/json", "text/json"
             };
-            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
-            if (http_header_accept != null)
-                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
+            String httpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(httpHeaderAccepts);
+            if (httpHeaderAccept != null)
+                headerParams.Add("Accept", httpHeaderAccept);
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
@@ -667,13 +714,21 @@ namespace VirtoCommerce.Client.Api
             
             
             
-            postBody = Configuration.ApiClient.Serialize(store); // http body (model) parameter
-            
+            if (store.GetType() != typeof(byte[]))
+            {
+                postBody = Configuration.ApiClient.Serialize(store); // http body (model) parameter
+            }
+            else
+            {
+                postBody = store; // byte array
+            }
 
             
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, 
+                Method.POST, queryParams, postBody, headerParams, formParams, fileParams,
+                pathParams, httpContentType);
 
             int statusCode = (int) response.StatusCode;
     
@@ -715,18 +770,24 @@ namespace VirtoCommerce.Client.Api
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var formParams = new Dictionary<String, String>();
             var fileParams = new Dictionary<String, FileParameter>();
-            String postBody = null;
+            Object postBody = null;
+
+            // to determine the Content-Type header
+            String[] httpContentTypes = new String[] {
+                "application/json", "text/json", "application/x-www-form-urlencoded"
+            };
+            String httpContentType = Configuration.ApiClient.SelectHeaderContentType(httpContentTypes);
 
             // to determine the Accept header
-            String[] http_header_accepts = new String[] {
+            String[] httpHeaderAccepts = new String[] {
                 "application/json", "text/json"
             };
-            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
-            if (http_header_accept != null)
-                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
+            String httpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(httpHeaderAccepts);
+            if (httpHeaderAccept != null)
+                headerParams.Add("Accept", httpHeaderAccept);
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
@@ -741,7 +802,9 @@ namespace VirtoCommerce.Client.Api
             
 
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, 
+                Method.POST, queryParams, postBody, headerParams, formParams, fileParams, 
+                pathParams, httpContentType);
 
             int statusCode = (int) response.StatusCode;
  
@@ -775,7 +838,8 @@ namespace VirtoCommerce.Client.Api
         {
             
             // verify the required parameter 'ids' is set
-            if (ids == null) throw new ApiException(400, "Missing required parameter 'ids' when calling StoreModuleDelete");
+            if (ids == null)
+                throw new ApiException(400, "Missing required parameter 'ids' when calling StoreModuleApi->StoreModuleDelete");
             
     
             var path_ = "/api/stores";
@@ -785,15 +849,21 @@ namespace VirtoCommerce.Client.Api
             var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var formParams = new Dictionary<String, String>();
             var fileParams = new Dictionary<String, FileParameter>();
-            String postBody = null;
+            Object postBody = null;
 
-            // to determine the Accept header
-            String[] http_header_accepts = new String[] {
+            // to determine the Content-Type header
+            String[] httpContentTypes = new String[] {
                 
             };
-            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
-            if (http_header_accept != null)
-                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
+            String httpContentType = Configuration.ApiClient.SelectHeaderContentType(httpContentTypes);
+
+            // to determine the Accept header
+            String[] httpHeaderAccepts = new String[] {
+                
+            };
+            String httpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(httpHeaderAccepts);
+            if (httpHeaderAccept != null)
+                headerParams.Add("Accept", httpHeaderAccept);
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
@@ -808,7 +878,9 @@ namespace VirtoCommerce.Client.Api
             
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, 
+                Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams,
+                pathParams, httpContentType);
 
             int statusCode = (int) response.StatusCode;
     
@@ -849,18 +921,24 @@ namespace VirtoCommerce.Client.Api
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var formParams = new Dictionary<String, String>();
             var fileParams = new Dictionary<String, FileParameter>();
-            String postBody = null;
+            Object postBody = null;
 
-            // to determine the Accept header
-            String[] http_header_accepts = new String[] {
+            // to determine the Content-Type header
+            String[] httpContentTypes = new String[] {
                 
             };
-            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
-            if (http_header_accept != null)
-                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
+            String httpContentType = Configuration.ApiClient.SelectHeaderContentType(httpContentTypes);
+
+            // to determine the Accept header
+            String[] httpHeaderAccepts = new String[] {
+                
+            };
+            String httpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(httpHeaderAccepts);
+            if (httpHeaderAccept != null)
+                headerParams.Add("Accept", httpHeaderAccept);
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
@@ -875,7 +953,9 @@ namespace VirtoCommerce.Client.Api
             
 
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, 
+                Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, 
+                pathParams, httpContentType);
 
             int statusCode = (int) response.StatusCode;
  
@@ -910,7 +990,8 @@ namespace VirtoCommerce.Client.Api
         {
             
             // verify the required parameter 'criteria' is set
-            if (criteria == null) throw new ApiException(400, "Missing required parameter 'criteria' when calling StoreModuleSearchStores");
+            if (criteria == null)
+                throw new ApiException(400, "Missing required parameter 'criteria' when calling StoreModuleApi->StoreModuleSearchStores");
             
     
             var path_ = "/api/stores/search";
@@ -920,15 +1001,21 @@ namespace VirtoCommerce.Client.Api
             var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var formParams = new Dictionary<String, String>();
             var fileParams = new Dictionary<String, FileParameter>();
-            String postBody = null;
+            Object postBody = null;
+
+            // to determine the Content-Type header
+            String[] httpContentTypes = new String[] {
+                "application/json", "text/json", "application/x-www-form-urlencoded"
+            };
+            String httpContentType = Configuration.ApiClient.SelectHeaderContentType(httpContentTypes);
 
             // to determine the Accept header
-            String[] http_header_accepts = new String[] {
+            String[] httpHeaderAccepts = new String[] {
                 "application/json", "text/json"
             };
-            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
-            if (http_header_accept != null)
-                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
+            String httpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(httpHeaderAccepts);
+            if (httpHeaderAccept != null)
+                headerParams.Add("Accept", httpHeaderAccept);
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
@@ -937,13 +1024,21 @@ namespace VirtoCommerce.Client.Api
             
             
             
-            postBody = Configuration.ApiClient.Serialize(criteria); // http body (model) parameter
-            
+            if (criteria.GetType() != typeof(byte[]))
+            {
+                postBody = Configuration.ApiClient.Serialize(criteria); // http body (model) parameter
+            }
+            else
+            {
+                postBody = criteria; // byte array
+            }
 
             
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, 
+                Method.POST, queryParams, postBody, headerParams, formParams, fileParams,
+                pathParams, httpContentType);
 
             int statusCode = (int) response.StatusCode;
     
@@ -985,18 +1080,24 @@ namespace VirtoCommerce.Client.Api
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var formParams = new Dictionary<String, String>();
             var fileParams = new Dictionary<String, FileParameter>();
-            String postBody = null;
+            Object postBody = null;
+
+            // to determine the Content-Type header
+            String[] httpContentTypes = new String[] {
+                "application/json", "text/json", "application/x-www-form-urlencoded"
+            };
+            String httpContentType = Configuration.ApiClient.SelectHeaderContentType(httpContentTypes);
 
             // to determine the Accept header
-            String[] http_header_accepts = new String[] {
+            String[] httpHeaderAccepts = new String[] {
                 "application/json", "text/json"
             };
-            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
-            if (http_header_accept != null)
-                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
+            String httpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(httpHeaderAccepts);
+            if (httpHeaderAccept != null)
+                headerParams.Add("Accept", httpHeaderAccept);
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
@@ -1011,7 +1112,9 @@ namespace VirtoCommerce.Client.Api
             
 
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, 
+                Method.POST, queryParams, postBody, headerParams, formParams, fileParams, 
+                pathParams, httpContentType);
 
             int statusCode = (int) response.StatusCode;
  
@@ -1045,7 +1148,8 @@ namespace VirtoCommerce.Client.Api
         {
             
             // verify the required parameter 'request' is set
-            if (request == null) throw new ApiException(400, "Missing required parameter 'request' when calling StoreModuleSendDynamicNotificationAnStoreEmail");
+            if (request == null)
+                throw new ApiException(400, "Missing required parameter 'request' when calling StoreModuleApi->StoreModuleSendDynamicNotificationAnStoreEmail");
             
     
             var path_ = "/api/stores/send/dynamicnotification";
@@ -1055,15 +1159,21 @@ namespace VirtoCommerce.Client.Api
             var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var formParams = new Dictionary<String, String>();
             var fileParams = new Dictionary<String, FileParameter>();
-            String postBody = null;
+            Object postBody = null;
+
+            // to determine the Content-Type header
+            String[] httpContentTypes = new String[] {
+                "application/json", "text/json", "application/x-www-form-urlencoded"
+            };
+            String httpContentType = Configuration.ApiClient.SelectHeaderContentType(httpContentTypes);
 
             // to determine the Accept header
-            String[] http_header_accepts = new String[] {
+            String[] httpHeaderAccepts = new String[] {
                 
             };
-            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
-            if (http_header_accept != null)
-                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
+            String httpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(httpHeaderAccepts);
+            if (httpHeaderAccept != null)
+                headerParams.Add("Accept", httpHeaderAccept);
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
@@ -1072,13 +1182,21 @@ namespace VirtoCommerce.Client.Api
             
             
             
-            postBody = Configuration.ApiClient.Serialize(request); // http body (model) parameter
-            
+            if (request.GetType() != typeof(byte[]))
+            {
+                postBody = Configuration.ApiClient.Serialize(request); // http body (model) parameter
+            }
+            else
+            {
+                postBody = request; // byte array
+            }
 
             
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, 
+                Method.POST, queryParams, postBody, headerParams, formParams, fileParams,
+                pathParams, httpContentType);
 
             int statusCode = (int) response.StatusCode;
     
@@ -1119,18 +1237,24 @@ namespace VirtoCommerce.Client.Api
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var formParams = new Dictionary<String, String>();
             var fileParams = new Dictionary<String, FileParameter>();
-            String postBody = null;
+            Object postBody = null;
+
+            // to determine the Content-Type header
+            String[] httpContentTypes = new String[] {
+                "application/json", "text/json", "application/x-www-form-urlencoded"
+            };
+            String httpContentType = Configuration.ApiClient.SelectHeaderContentType(httpContentTypes);
 
             // to determine the Accept header
-            String[] http_header_accepts = new String[] {
+            String[] httpHeaderAccepts = new String[] {
                 
             };
-            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
-            if (http_header_accept != null)
-                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
+            String httpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(httpHeaderAccepts);
+            if (httpHeaderAccept != null)
+                headerParams.Add("Accept", httpHeaderAccept);
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
@@ -1145,7 +1269,9 @@ namespace VirtoCommerce.Client.Api
             
 
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, 
+                Method.POST, queryParams, postBody, headerParams, formParams, fileParams, 
+                pathParams, httpContentType);
 
             int statusCode = (int) response.StatusCode;
  
@@ -1180,7 +1306,8 @@ namespace VirtoCommerce.Client.Api
         {
             
             // verify the required parameter 'id' is set
-            if (id == null) throw new ApiException(400, "Missing required parameter 'id' when calling StoreModuleGetStoreById");
+            if (id == null)
+                throw new ApiException(400, "Missing required parameter 'id' when calling StoreModuleApi->StoreModuleGetStoreById");
             
     
             var path_ = "/api/stores/{id}";
@@ -1190,15 +1317,21 @@ namespace VirtoCommerce.Client.Api
             var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var formParams = new Dictionary<String, String>();
             var fileParams = new Dictionary<String, FileParameter>();
-            String postBody = null;
+            Object postBody = null;
+
+            // to determine the Content-Type header
+            String[] httpContentTypes = new String[] {
+                
+            };
+            String httpContentType = Configuration.ApiClient.SelectHeaderContentType(httpContentTypes);
 
             // to determine the Accept header
-            String[] http_header_accepts = new String[] {
+            String[] httpHeaderAccepts = new String[] {
                 "application/json", "text/json"
             };
-            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
-            if (http_header_accept != null)
-                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
+            String httpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(httpHeaderAccepts);
+            if (httpHeaderAccept != null)
+                headerParams.Add("Accept", httpHeaderAccept);
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
@@ -1213,7 +1346,9 @@ namespace VirtoCommerce.Client.Api
             
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, 
+                Method.GET, queryParams, postBody, headerParams, formParams, fileParams,
+                pathParams, httpContentType);
 
             int statusCode = (int) response.StatusCode;
     
@@ -1255,18 +1390,24 @@ namespace VirtoCommerce.Client.Api
     
             var pathParams = new Dictionary<String, String>();
             var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
             var formParams = new Dictionary<String, String>();
             var fileParams = new Dictionary<String, FileParameter>();
-            String postBody = null;
+            Object postBody = null;
+
+            // to determine the Content-Type header
+            String[] httpContentTypes = new String[] {
+                
+            };
+            String httpContentType = Configuration.ApiClient.SelectHeaderContentType(httpContentTypes);
 
             // to determine the Accept header
-            String[] http_header_accepts = new String[] {
+            String[] httpHeaderAccepts = new String[] {
                 "application/json", "text/json"
             };
-            String http_header_accept = Configuration.ApiClient.SelectHeaderAccept(http_header_accepts);
-            if (http_header_accept != null)
-                headerParams.Add("Accept", Configuration.ApiClient.SelectHeaderAccept(http_header_accepts));
+            String httpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(httpHeaderAccepts);
+            if (httpHeaderAccept != null)
+                headerParams.Add("Accept", httpHeaderAccept);
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
@@ -1281,7 +1422,9 @@ namespace VirtoCommerce.Client.Api
             
 
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, Method.GET, queryParams, postBody, headerParams, formParams, fileParams, pathParams);
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, 
+                Method.GET, queryParams, postBody, headerParams, formParams, fileParams, 
+                pathParams, httpContentType);
 
             int statusCode = (int) response.StatusCode;
  

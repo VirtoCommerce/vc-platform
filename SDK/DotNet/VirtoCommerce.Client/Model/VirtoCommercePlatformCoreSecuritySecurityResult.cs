@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommercePlatformCoreSecuritySecurityResult : IEquatable<VirtoCommercePlatformCoreSecuritySecurityResult>
+    public partial class VirtoCommercePlatformCoreSecuritySecurityResult :  IEquatable<VirtoCommercePlatformCoreSecuritySecurityResult>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreSecuritySecurityResult" /> class.
@@ -80,7 +81,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommercePlatformCoreSecuritySecurityResult instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommercePlatformCoreSecuritySecurityResult to be compared</param>
+        /// <param name="other">Instance of VirtoCommercePlatformCoreSecuritySecurityResult to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommercePlatformCoreSecuritySecurityResult other)
         {
@@ -114,10 +115,10 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.Succeeded != null)
-                    hash = hash * 57 + this.Succeeded.GetHashCode();
+                    hash = hash * 59 + this.Succeeded.GetHashCode();
                 
                 if (this.Errors != null)
-                    hash = hash * 57 + this.Errors.GetHashCode();
+                    hash = hash * 59 + this.Errors.GetHashCode();
                 
                 return hash;
             }

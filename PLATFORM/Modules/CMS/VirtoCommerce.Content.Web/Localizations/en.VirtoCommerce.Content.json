@@ -116,14 +116,22 @@
         "labels": {
           "name": "Name",
           "language": "Language",
+          "list-note": "Set the order how the links appear sorted in web store. Drag and drop to change the order.",
           "is-active": "IsActive",
           "link-title": "Link Title",
-          "links-to": "Links to..."
+          "link-url": "URL",
+          "links-to": "Links to",
+          "linked-object": "Linked object"
         },
         "placeholders": {
           "name": "Enter page name",
-          "language": "Select..."
+          "language": "Select...",
+          "associated-object-type": "Select type"
         }
+      },
+      "catalog-items-select": {
+        "title-product": "Pick Product for link",
+        "title-category": "Pick Category for link"
       },
       "edit-blog": {
         "title-new": "Add blog",

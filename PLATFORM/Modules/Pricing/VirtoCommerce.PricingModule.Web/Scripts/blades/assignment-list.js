@@ -1,14 +1,20 @@
 ﻿angular.module('virtoCommerce.pricingModule')
-.controller('virtoCommerce.pricingModule.assignmentListController', ['$scope', 'virtoCommerce.pricingModule.pricelistAssignments', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'uiGridConstants', 'platformWebApp.uiGridHelper',
-function ($scope, assignments, bladeNavigationService, dialogService, uiGridConstants, uiGridHelper) {
-    $scope.uiGridConstants = uiGridConstants;
+.controller('virtoCommerce.pricingModule.assignmentListController', ['$scope', 'virtoCommerce.pricingModule.pricelistAssignments', 'platformWebApp.dialogService', 'platformWebApp.uiGridHelper', 'platformWebApp.bladeUtils',
+function ($scope, assignments, dialogService, uiGridHelper, bladeUtils) {
+    $scope.uiGridConstants = uiGridHelper.uiGridConstants;
     var blade = $scope.blade;
+    var bladeNavigationService = bladeUtils.bladeNavigationService;
 
     blade.refresh = function () {
         blade.isLoading = true;
 
-        assignments.query({}, function (data) {
+        assignments.query({
+            sort: uiGridHelper.getSortExpression($scope),
+            skip: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
+            take: $scope.pageSettings.itemsPerPageCount
+        }, function (data) {
             blade.isLoading = false;
+            $scope.pageSettings.totalItems = data.length;
             blade.currentEntities = data;
         }, function (error) {
             bladeNavigationService.setError('Error ' + error.status, blade);
@@ -29,7 +35,7 @@ function ($scope, assignments, bladeNavigationService, dialogService, uiGridCons
 
         bladeNavigationService.showBlade(newBlade, blade);
     };
-    
+
     function isItemsChecked() {
         return $scope.gridApi && _.any($scope.gridApi.selection.getSelectedRows());
     }
@@ -62,7 +68,7 @@ function ($scope, assignments, bladeNavigationService, dialogService, uiGridCons
     }
 
     blade.headIcon = 'fa-anchor';
-    blade.subtitle = 'pricing.blades.pricelist-assignment-list.subtitle';    
+    blade.subtitle = 'pricing.blades.pricelist-assignment-list.subtitle';
 
     blade.toolbarCommands = [
         {
@@ -106,9 +112,13 @@ function ($scope, assignments, bladeNavigationService, dialogService, uiGridCons
 
     // ui-grid
     $scope.setGridOptions = function (gridOptions) {
-        uiGridHelper.initialize($scope, gridOptions);
+        uiGridHelper.initialize($scope, gridOptions, function (gridApi) {
+            uiGridHelper.bindRefreshOnSortChanged($scope);
+        });
+
+        bladeUtils.initializePagination($scope);
     };
 
     // actions on load
-    blade.refresh();
+    //blade.refresh();
 }]);

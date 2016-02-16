@@ -3,28 +3,28 @@
 
     <script type="text/ng-template" id="dShortText.html">
         <div class="form-input">
-            <input ng-required="currentEntity.property.isRequired"
+            <input ng-required="currentEntity.isRequired"
                    ng-model="context.currentPropValues[0].value"
                    placeholder="{{ 'platform.genericValueInput.placeholders.short-text' | translate}}">
         </div>
     </script>
     <script type="text/ng-template" id="dSecureString.html">
         <div class="form-input">
-            <input ng-required="currentEntity.property.isRequired"
+            <input ng-required="currentEntity.isRequired"
                    ng-model="context.currentPropValues[0].value"
                    type="password" placeholder="{{ 'platform.genericValueInput.placeholders.secure-string' | translate}}">
         </div>
     </script>
     <script type="text/ng-template" id="dLongText.html">
         <div class="form-input">
-            <textarea ng-required="currentEntity.property.isRequired"
+            <textarea ng-required="currentEntity.isRequired"
                       ng-model="context.currentPropValues[0].value"
                       placeholder="{{ 'platform.genericValueInput.placeholders.long-text' | translate}}"></textarea>
         </div>
     </script>
     <script type="text/ng-template" id="dHtml.html">
         <div class="form-input">
-            <ui-codemirror ng-required="currentEntity.property.isRequired"
+            <ui-codemirror ng-required="currentEntity.isRequired"
                            ng-model="context.currentPropValues[0].value"
                            ui-codemirror-opts="editorOptions"></ui-codemirror>
         </div>
@@ -33,7 +33,7 @@
     <script type="text/ng-template" id="dInteger.html">
         <div class="form-input __number">
             <input smart-float num-type="integer"
-                   ng-required="currentEntity.property.isRequired"
+                   ng-required="currentEntity.isRequired"
                    ng-model="context.currentPropValues[0].value"
                    placeholder="{{ 'platform.genericValueInput.placeholders.integer' | translate}}" />
         </div>
@@ -42,7 +42,7 @@
     <script type="text/ng-template" id="dDecimal.html">
         <div class="form-input __number">
             <input smart-float num-type="float"
-                   ng-required="currentEntity.property.isRequired"
+                   ng-required="currentEntity.isRequired"
                    ng-model="context.currentPropValues[0].value"
                    placeholder="{{ 'platform.genericValueInput.placeholders.number' | translate}}" />
         </div>
@@ -71,7 +71,7 @@
     <script type="text/ng-template" id="dShortText-multivalue.html">
         <tags-input ng-model="context.currentPropValues"
                     min-length="1"
-                    min-tags="{{currentEntity.property.isRequired ? 1 : undefined}}"
+                    min-tags="{{currentEntity.isRequired ? 1 : undefined}}"
                     add-on-blur="true"
                     display-property="value"
                     placeholder="{{ 'platform.genericValueInput.placeholders.short-text-multivalue' | translate}}">
@@ -79,7 +79,7 @@
     </script>
     <script type="text/ng-template" id="dInteger-multivalue.html">
         <tags-input ng-model="context.currentPropValues"
-                    min-tags="{{currentEntity.property.isRequired ? 1 : undefined}}"
+                    min-tags="{{currentEntity.isRequired ? 1 : undefined}}"
                     add-on-blur="true"
                     allowed-tags-pattern="^[-]?[0-9]*$"
                     min-length="1"
@@ -89,7 +89,7 @@
     </script>
     <script type="text/ng-template" id="dDecimal-multivalue.html">
         <tags-input ng-model="context.currentPropValues"
-                    min-tags="{{currentEntity.property.isRequired ? 1 : undefined}}"
+                    min-tags="{{currentEntity.isRequired ? 1 : undefined}}"
                     add-on-blur="true"
                     allowed-tags-pattern="^[-]?[0-9]+[\.]?[0-9]*$"
                     min-length="1"
@@ -125,7 +125,7 @@
         <div class="form-group" ng-repeat="propValue in context.currentPropValues">
             <div class="form-input __langs">
                 <span class="flag flag-{{propValue.locale.substr(3).toLowerCase()}}"></span>
-                <input ng-required="currentEntity.property.isRequired"
+                <input ng-required="currentEntity.isRequired"
                        ng-model="propValue.value"
                        placeholder="{{ 'platform.genericValueInput.placeholders.short-text-multilang' | translate}}">
             </div>
@@ -135,7 +135,7 @@
         <div class="form-group" ng-repeat="propValue in context.currentPropValues">
             <div class="form-input __langs">
                 <span class="flag flag-{{propValue.locale.substr(3).toLowerCase()}}"></span>
-                <textarea ng-required="currentEntity.property.isRequired"
+                <textarea ng-required="currentEntity.isRequired"
                           ng-model="propValue.value"
                           placeholder="{{ 'platform.genericValueInput.placeholders.long-text-multilang' | translate}}" />
             </div>
@@ -144,7 +144,7 @@
     <script type="text/ng-template" id="dHtml-multilang.html">
         <div ng-class="{'form-group': !$first}" ng-repeat="propValue in context.currentPropValues">
             <span class="flag flag-{{propValue.locale.substr(3).toLowerCase()}}"></span>
-            <div ng-required="currentEntity.property.isRequired"
+            <div ng-required="currentEntity.isRequired"
                  ng-model="propValue.value"
                  placeholder="{{ 'platform.genericValueInput.placeholders.html-multilang' | translate}}"
                  class="editable" text-angular text-angular-name="dHMmyEditor"></div>
@@ -157,7 +157,7 @@
             <div class="form-input __langs">
                 <span class="flag flag-{{propValue.locale.substr(3).toLowerCase()}}"></span>
                 <tags-input ng-model="propValue.values"
-                            min-tags="{{currentEntity.property.isRequired ? 1 : undefined}}"
+                            min-tags="{{currentEntity.isRequired ? 1 : undefined}}"
                             add-on-blur="true"
                             min-length="1"
                             display-property="value"

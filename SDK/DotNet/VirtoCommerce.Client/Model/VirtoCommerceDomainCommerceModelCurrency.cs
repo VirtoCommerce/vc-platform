@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommerceDomainCommerceModelCurrency : IEquatable<VirtoCommerceDomainCommerceModelCurrency>
+    public partial class VirtoCommerceDomainCommerceModelCurrency :  IEquatable<VirtoCommerceDomainCommerceModelCurrency>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceDomainCommerceModelCurrency" /> class.
@@ -112,7 +113,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommerceDomainCommerceModelCurrency instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommerceDomainCommerceModelCurrency to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceDomainCommerceModelCurrency to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommerceDomainCommerceModelCurrency other)
         {
@@ -166,22 +167,22 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.Code != null)
-                    hash = hash * 57 + this.Code.GetHashCode();
+                    hash = hash * 59 + this.Code.GetHashCode();
                 
                 if (this.Name != null)
-                    hash = hash * 57 + this.Name.GetHashCode();
+                    hash = hash * 59 + this.Name.GetHashCode();
                 
                 if (this.IsPrimary != null)
-                    hash = hash * 57 + this.IsPrimary.GetHashCode();
+                    hash = hash * 59 + this.IsPrimary.GetHashCode();
                 
                 if (this.ExchangeRate != null)
-                    hash = hash * 57 + this.ExchangeRate.GetHashCode();
+                    hash = hash * 59 + this.ExchangeRate.GetHashCode();
                 
                 if (this.Symbol != null)
-                    hash = hash * 57 + this.Symbol.GetHashCode();
+                    hash = hash * 59 + this.Symbol.GetHashCode();
                 
                 if (this.CustomFormatting != null)
-                    hash = hash * 57 + this.CustomFormatting.GetHashCode();
+                    hash = hash * 59 + this.CustomFormatting.GetHashCode();
                 
                 return hash;
             }

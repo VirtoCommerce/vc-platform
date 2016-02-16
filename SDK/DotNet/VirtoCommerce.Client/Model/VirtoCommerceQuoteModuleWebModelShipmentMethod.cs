@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommerceQuoteModuleWebModelShipmentMethod : IEquatable<VirtoCommerceQuoteModuleWebModelShipmentMethod>
+    public partial class VirtoCommerceQuoteModuleWebModelShipmentMethod :  IEquatable<VirtoCommerceQuoteModuleWebModelShipmentMethod>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceQuoteModuleWebModelShipmentMethod" /> class.
@@ -112,7 +113,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommerceQuoteModuleWebModelShipmentMethod instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommerceQuoteModuleWebModelShipmentMethod to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceQuoteModuleWebModelShipmentMethod to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommerceQuoteModuleWebModelShipmentMethod other)
         {
@@ -166,22 +167,22 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.ShipmentMethodCode != null)
-                    hash = hash * 57 + this.ShipmentMethodCode.GetHashCode();
+                    hash = hash * 59 + this.ShipmentMethodCode.GetHashCode();
                 
                 if (this.OptionName != null)
-                    hash = hash * 57 + this.OptionName.GetHashCode();
+                    hash = hash * 59 + this.OptionName.GetHashCode();
                 
                 if (this.Name != null)
-                    hash = hash * 57 + this.Name.GetHashCode();
+                    hash = hash * 59 + this.Name.GetHashCode();
                 
                 if (this.LogoUrl != null)
-                    hash = hash * 57 + this.LogoUrl.GetHashCode();
+                    hash = hash * 59 + this.LogoUrl.GetHashCode();
                 
                 if (this.Currency != null)
-                    hash = hash * 57 + this.Currency.GetHashCode();
+                    hash = hash * 59 + this.Currency.GetHashCode();
                 
                 if (this.Price != null)
-                    hash = hash * 57 + this.Price.GetHashCode();
+                    hash = hash * 59 + this.Price.GetHashCode();
                 
                 return hash;
             }

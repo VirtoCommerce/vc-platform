@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommerceCartModuleWebModelPaymentMethod : IEquatable<VirtoCommerceCartModuleWebModelPaymentMethod>
+    public partial class VirtoCommerceCartModuleWebModelPaymentMethod :  IEquatable<VirtoCommerceCartModuleWebModelPaymentMethod>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceCartModuleWebModelPaymentMethod" /> class.
@@ -144,7 +145,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommerceCartModuleWebModelPaymentMethod instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommerceCartModuleWebModelPaymentMethod to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceCartModuleWebModelPaymentMethod to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommerceCartModuleWebModelPaymentMethod other)
         {
@@ -213,31 +214,31 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.GatewayCode != null)
-                    hash = hash * 57 + this.GatewayCode.GetHashCode();
+                    hash = hash * 59 + this.GatewayCode.GetHashCode();
                 
                 if (this.Name != null)
-                    hash = hash * 57 + this.Name.GetHashCode();
+                    hash = hash * 59 + this.Name.GetHashCode();
                 
                 if (this.IconUrl != null)
-                    hash = hash * 57 + this.IconUrl.GetHashCode();
+                    hash = hash * 59 + this.IconUrl.GetHashCode();
                 
                 if (this.Description != null)
-                    hash = hash * 57 + this.Description.GetHashCode();
+                    hash = hash * 59 + this.Description.GetHashCode();
                 
                 if (this.Type != null)
-                    hash = hash * 57 + this.Type.GetHashCode();
+                    hash = hash * 59 + this.Type.GetHashCode();
                 
                 if (this.Group != null)
-                    hash = hash * 57 + this.Group.GetHashCode();
+                    hash = hash * 59 + this.Group.GetHashCode();
                 
                 if (this.Priority != null)
-                    hash = hash * 57 + this.Priority.GetHashCode();
+                    hash = hash * 59 + this.Priority.GetHashCode();
                 
                 if (this.IsAvailableForPartial != null)
-                    hash = hash * 57 + this.IsAvailableForPartial.GetHashCode();
+                    hash = hash * 59 + this.IsAvailableForPartial.GetHashCode();
                 
                 if (this.Settings != null)
-                    hash = hash * 57 + this.Settings.GetHashCode();
+                    hash = hash * 59 + this.Settings.GetHashCode();
                 
                 return hash;
             }

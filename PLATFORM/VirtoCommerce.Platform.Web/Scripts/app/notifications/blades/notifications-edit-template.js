@@ -119,7 +119,7 @@
 			    executeMethod: function () {
 			        blade.currentEntity = _.clone(blade.origEntity);
 			    },
-			    canExecuteMethod: canSave
+			    canExecuteMethod: isDirty
 			},
 			{
 			    name: "platform.commands.preview", icon: 'fa fa-eye',
@@ -185,32 +185,16 @@
         mode: "liquid-html"
     };
 
+    function isDirty() {
+        return (!angular.equals(blade.origEntity, blade.currentEntity) || blade.isNew) && blade.hasUpdatePermission();
+    }
+
     function canSave() {
-        var retVal = (!angular.equals(blade.origEntity, blade.currentEntity) || blade.isNew) && blade.hasUpdatePermission();
-        if (!angular.isUndefined($scope.formScope)) {
-            retVal = retVal && !$scope.formScope.$invalid;
-        }
-        return retVal;
+        return isDirty() && $scope.formScope && $scope.formScope.$valid;
     }
 
     blade.onClose = function (closeCallback) {
-        if (canSave()) {
-            var dialog = {
-                id: "confirmCurrentBladeClose",
-                title: "platform.dialogs.notification-template-save.title",
-                message: "platform.dialogs.notification-template-save.message",
-                callback: function (needSave) {
-                    if (needSave) {
-                        blade.updateTemplate();
-                    }
-                    closeCallback();
-                }
-            }
-            dialogService.showConfirmationDialog(dialog);
-        }
-        else {
-            closeCallback();
-        }
+        bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, blade.updateTemplate, closeCallback, "platform.dialogs.notification-template-save.title", "platform.dialogs.notification-template-save.message");
     };
 
     blade.getLanguages = function () {
@@ -220,9 +204,6 @@
 
     blade.getFlag = function (x) {
         switch (x) {
-            case 'ru-RU':
-                return 'ru';
-
             case 'en-US':
                 return 'us';
 

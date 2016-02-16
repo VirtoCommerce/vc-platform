@@ -39,6 +39,7 @@ using VirtoCommerce.Storefront.Model.Customer.Services;
 using VirtoCommerce.Storefront.Model.Common.Events;
 using VirtoCommerce.Storefront.Model.Order.Events;
 using NLog;
+using VirtoCommerce.Storefront.Model.LinkList.Services;
 
 [assembly: OwinStartup(typeof(Startup))]
 [assembly: PreApplicationStartMethod(typeof(Startup), "PreApplicationStart")]
@@ -121,6 +122,7 @@ namespace VirtoCommerce.Storefront
 
             var apiClient = new HmacApiClient(baseUrl, ConfigurationManager.AppSettings["vc-public-ApiAppId"], ConfigurationManager.AppSettings["vc-public-ApiSecretKey"]);
             container.RegisterInstance<ApiClient>(apiClient);
+            container.RegisterInstance(new VirtoCommerce.Client.Client.Configuration(apiClient));
 
             container.RegisterType<IStoreModuleApi, StoreModuleApi>();
             container.RegisterType<IVirtoCommercePlatformApi, VirtoCommercePlatformApi>();
@@ -141,6 +143,7 @@ namespace VirtoCommerce.Storefront
             container.RegisterType<ICartValidator, CartValidator>();
             container.RegisterType<IPricingService, PricingServiceImpl>();
             container.RegisterType<ICustomerService, CustomerServiceImpl>();
+            container.RegisterType<IMenuLinkListService, MenuLinkListServiceImpl>();
 
             container.RegisterType<ICartBuilder, CartBuilder>();
             container.RegisterType<IQuoteRequestBuilder, QuoteRequestBuilder>();

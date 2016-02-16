@@ -1,13 +1,15 @@
 ﻿angular.module('virtoCommerce.quoteModule')
-.controller('virtoCommerce.quoteModule.quotesListController', ['$scope', 'virtoCommerce.quoteModule.quotes', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'uiGridConstants', 'platformWebApp.uiGridHelper',
-    function ($scope, quotes, bladeNavigationService, dialogService, uiGridConstants, uiGridHelper) {
-        $scope.uiGridConstants = uiGridConstants;
+.controller('virtoCommerce.quoteModule.quotesListController', ['$scope', 'virtoCommerce.quoteModule.quotes', 'platformWebApp.dialogService', 'platformWebApp.uiGridHelper', 'platformWebApp.bladeUtils',
+    function ($scope, quotes, dialogService, uiGridHelper, bladeUtils) {
+        $scope.uiGridConstants = uiGridHelper.uiGridConstants;
         var blade = $scope.blade;
+        var bladeNavigationService = bladeUtils.bladeNavigationService;
 
         blade.refresh = function () {
             blade.isLoading = true;
             quotes.search({
                 keyword: filter.keyword,
+                sort: uiGridHelper.getSortExpression($scope),
                 start: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
                 count: $scope.pageSettings.itemsPerPageCount
             }, function (data) {
@@ -87,13 +89,6 @@
             }
         ];
 
-        //pagination settings
-        $scope.pageSettings = {};
-        $scope.pageSettings.totalItems = 0;
-        $scope.pageSettings.currentPage = 1;
-        $scope.pageSettings.numPages = 5;
-        $scope.pageSettings.itemsPerPageCount = 20;
-
         var filter = $scope.filter = {};
         filter.criteriaChanged = function () {
             if ($scope.pageSettings.currentPage > 1) {
@@ -105,10 +100,13 @@
 
         // ui-grid
         $scope.setGridOptions = function (gridOptions) {
-            uiGridHelper.initialize($scope, gridOptions);
+            uiGridHelper.initialize($scope, gridOptions, function (gridApi) {
+                uiGridHelper.bindRefreshOnSortChanged($scope);
+            });
+            bladeUtils.initializePagination($scope);
         };
 
-        $scope.$watch('pageSettings.currentPage', blade.refresh);
+
         //No need to call this because page 'pageSettings.currentPage' is watched!!! It would trigger subsequent duplicated req...
         //blade.refresh();
     }]);

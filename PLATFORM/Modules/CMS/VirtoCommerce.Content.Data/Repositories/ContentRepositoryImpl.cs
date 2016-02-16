@@ -67,47 +67,5 @@ namespace VirtoCommerce.Content.Data.Repositories
 		{
             return MenuLinkLists.Include(s => s.MenuLinks).FirstOrDefault(s => s.Id == listId);
 		}
-
-		public void UpdateList(Models.MenuLinkList list)
-		{
-			var existingList = GetListById(list.Id);
-			if (existingList != null)
-			{
-				existingList.Attach(list);
-			}
-			else
-			{
-				existingList = list;
-			}
-
-			AddOrUpdate(existingList);
-			UnitOfWork.Commit();
-
-			var ids = new List<string>();
-
-			foreach (var link in existingList.MenuLinks)
-			{
-				if (!list.MenuLinks.Any(l => l.Id == link.Id))
-				{
-					ids.Add(link.Id);
-				}
-			}
-
-			foreach (var id in ids)
-			{
-				var link = MenuLinks.First(m => m.Id == id);
-				Remove(link);
-			}
-
-			UnitOfWork.Commit();
-		}
-
-		public void DeleteList(string listId)
-		{
-			var existingList = GetListById(listId);
-
-			Remove(existingList);
-			UnitOfWork.Commit();
-		}
 	}
 }

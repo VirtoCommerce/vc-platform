@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommerceDomainCatalogModelPropertyDisplayName : IEquatable<VirtoCommerceDomainCatalogModelPropertyDisplayName>
+    public partial class VirtoCommerceDomainCatalogModelPropertyDisplayName :  IEquatable<VirtoCommerceDomainCatalogModelPropertyDisplayName>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceDomainCatalogModelPropertyDisplayName" /> class.
@@ -80,7 +81,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommerceDomainCatalogModelPropertyDisplayName instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommerceDomainCatalogModelPropertyDisplayName to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceDomainCatalogModelPropertyDisplayName to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommerceDomainCatalogModelPropertyDisplayName other)
         {
@@ -114,10 +115,10 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.Name != null)
-                    hash = hash * 57 + this.Name.GetHashCode();
+                    hash = hash * 59 + this.Name.GetHashCode();
                 
                 if (this.LanguageCode != null)
-                    hash = hash * 57 + this.LanguageCode.GetHashCode();
+                    hash = hash * 59 + this.LanguageCode.GetHashCode();
                 
                 return hash;
             }

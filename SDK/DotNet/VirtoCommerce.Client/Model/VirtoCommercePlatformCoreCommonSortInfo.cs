@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommercePlatformCoreCommonSortInfo : IEquatable<VirtoCommercePlatformCoreCommonSortInfo>
+    public partial class VirtoCommercePlatformCoreCommonSortInfo :  IEquatable<VirtoCommercePlatformCoreCommonSortInfo>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreCommonSortInfo" /> class.
@@ -80,7 +81,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommercePlatformCoreCommonSortInfo instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommercePlatformCoreCommonSortInfo to be compared</param>
+        /// <param name="other">Instance of VirtoCommercePlatformCoreCommonSortInfo to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommercePlatformCoreCommonSortInfo other)
         {
@@ -114,10 +115,10 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.SortColumn != null)
-                    hash = hash * 57 + this.SortColumn.GetHashCode();
+                    hash = hash * 59 + this.SortColumn.GetHashCode();
                 
                 if (this.SortDirection != null)
-                    hash = hash * 57 + this.SortDirection.GetHashCode();
+                    hash = hash * 59 + this.SortDirection.GetHashCode();
                 
                 return hash;
             }

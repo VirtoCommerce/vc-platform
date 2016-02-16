@@ -1,16 +1,16 @@
 ﻿angular.module('virtoCommerce.catalogModule')
 .controller('virtoCommerce.catalogModule.itemAssociationsWidgetController', ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
-    $scope.currentBlade = $scope.widget.blade;
+    var blade = $scope.blade;
 
     $scope.openBlade = function () {
-        if ($scope.currentBlade.item.associations) {
+        if (blade.item.associations) {
             var newBlade;
-            if (_.any($scope.currentBlade.item.associations)) {
+            if (_.any(blade.item.associations) || !blade.hasUpdatePermission()) {
                 newBlade = {
                     id: "associationsList",
-                    currentEntityId: $scope.currentBlade.currentEntityId,
-                    currentEntities: $scope.currentBlade.item.associations,
-                    title: $scope.currentBlade.title,
+                    currentEntityId: blade.currentEntityId,
+                    currentEntities: blade.item.associations,
+                    title: blade.title,
                     subtitle: 'catalog.widgets.itemAssociations.blade-subtitle',
                     controller: 'virtoCommerce.catalogModule.itemAssociationsListController',
                     template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/item-associations-list.tpl.html'
@@ -18,13 +18,13 @@
             } else {
                 var newBlade = {
                     id: "associationWizard",
-                    associations: $scope.currentBlade.item.associations,
+                    associations: blade.item.associations,
                     controller: 'virtoCommerce.catalogModule.associationWizardController',
                     template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/wizards/newAssociation/association-wizard.tpl.html'
                 };
             }
 
-            bladeNavigationService.showBlade(newBlade, $scope.currentBlade);
+            bladeNavigationService.showBlade(newBlade, blade);
         }
     };
 }]);

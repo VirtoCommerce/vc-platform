@@ -97,23 +97,7 @@
 //    ];
 
 //    blade.onClose = function (closeCallback) {
-//        if (isDirty()) {
-//            var dialog = {
-//                id: "confirmItemChange",
-//                title: "platform.dialogs.settings-save.title",
-//                message: "platform.dialogs.settings-save.message",
-//                callback: function (needSave) {
-//                    if (needSave) {
-//                        $scope.saveChanges();
-//                    }
-//                    closeCallback();
-//                }
-//            };
-//            dialogService.showConfirmationDialog(dialog);
-//        }
-//        else {
-//            closeCallback();
-//        }
+//        bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, $scope.saveChanges, closeCallback, "platform.dialogs.settings-save.title", "platform.dialogs.settings-save.message");
 //    };
 
 //    // actions on load

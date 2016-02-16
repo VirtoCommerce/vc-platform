@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommerceCatalogModuleWebExportImportCsvProductMappingConfiguration : IEquatable<VirtoCommerceCatalogModuleWebExportImportCsvProductMappingConfiguration>
+    public partial class VirtoCommerceCatalogModuleWebExportImportCsvProductMappingConfiguration :  IEquatable<VirtoCommerceCatalogModuleWebExportImportCsvProductMappingConfiguration>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebExportImportCsvProductMappingConfiguration" /> class.
@@ -104,7 +105,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommerceCatalogModuleWebExportImportCsvProductMappingConfiguration instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommerceCatalogModuleWebExportImportCsvProductMappingConfiguration to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceCatalogModuleWebExportImportCsvProductMappingConfiguration to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommerceCatalogModuleWebExportImportCsvProductMappingConfiguration other)
         {
@@ -153,19 +154,19 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.ETag != null)
-                    hash = hash * 57 + this.ETag.GetHashCode();
+                    hash = hash * 59 + this.ETag.GetHashCode();
                 
                 if (this.Delimiter != null)
-                    hash = hash * 57 + this.Delimiter.GetHashCode();
+                    hash = hash * 59 + this.Delimiter.GetHashCode();
                 
                 if (this.CsvColumns != null)
-                    hash = hash * 57 + this.CsvColumns.GetHashCode();
+                    hash = hash * 59 + this.CsvColumns.GetHashCode();
                 
                 if (this.PropertyMaps != null)
-                    hash = hash * 57 + this.PropertyMaps.GetHashCode();
+                    hash = hash * 59 + this.PropertyMaps.GetHashCode();
                 
                 if (this.PropertyCsvColumns != null)
-                    hash = hash * 57 + this.PropertyCsvColumns.GetHashCode();
+                    hash = hash * 59 + this.PropertyCsvColumns.GetHashCode();
                 
                 return hash;
             }

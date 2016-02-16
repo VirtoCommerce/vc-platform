@@ -1,16 +1,11 @@
 ﻿angular.module('virtoCommerce.customerModule')
-.controller('virtoCommerce.customerModule.memberListController', ['$scope', 'virtoCommerce.customerModule.members', 'virtoCommerce.customerModule.contacts', 'virtoCommerce.customerModule.organizations', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'uiGridConstants', 'platformWebApp.uiGridHelper',
-    function ($scope, members, contacts, organizations, bladeNavigationService, dialogService, uiGridConstants, uiGridHelper) {
-        $scope.uiGridConstants = uiGridConstants;
-        //pagination settings
-        $scope.pageSettings = {};
-        $scope.pageSettings.totalItems = 0;
-        $scope.pageSettings.currentPage = 1;
-        $scope.pageSettings.numPages = 5;
-        $scope.pageSettings.itemsPerPageCount = 20;
+.controller('virtoCommerce.customerModule.memberListController', ['$scope', 'virtoCommerce.customerModule.members', 'virtoCommerce.customerModule.contacts', 'virtoCommerce.customerModule.organizations', 'platformWebApp.dialogService', 'platformWebApp.bladeUtils', 'platformWebApp.uiGridHelper',
+    function ($scope, members, contacts, organizations, dialogService, bladeUtils, uiGridHelper) {
+        $scope.uiGridConstants = uiGridHelper.uiGridConstants;
 
         var blade = $scope.blade;
         blade.title = 'customer.blades.member-list.title';
+        var bladeNavigationService = bladeUtils.bladeNavigationService;
 
         blade.refresh = function () {
             blade.isLoading = true;
@@ -235,13 +230,10 @@
         // ui-grid
         $scope.setGridOptions = function (gridOptions) {
             uiGridHelper.initialize($scope, gridOptions, function (gridApi) {
-                gridApi.core.on.sortChanged($scope, function () {
-                    if (!blade.isLoading)
-                        blade.refresh();
-                });
+                uiGridHelper.bindRefreshOnSortChanged($scope);
             });
 
-            $scope.$watch('pageSettings.currentPage', blade.refresh);
+            bladeUtils.initializePagination($scope);
         };
 
 
