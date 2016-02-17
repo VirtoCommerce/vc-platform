@@ -83,6 +83,14 @@ namespace VirtoCommerce.Client.Model
   
         
         /// <summary>
+        /// Display name for associated object
+        /// </summary>
+        /// <value>Display name for associated object</value>
+        [DataMember(Name="associatedObjectName", EmitDefaultValue=false)]
+        public string AssociatedObjectName { get; set; }
+  
+        
+        /// <summary>
         /// Associated object type
         /// </summary>
         /// <value>Associated object type</value>
@@ -113,6 +121,7 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  IsActive: ").Append(IsActive).Append("\n");
             sb.Append("  MenuLinkListId: ").Append(MenuLinkListId).Append("\n");
             sb.Append("  AssociatedObjectId: ").Append(AssociatedObjectId).Append("\n");
+            sb.Append("  AssociatedObjectName: ").Append(AssociatedObjectName).Append("\n");
             sb.Append("  AssociatedObjectType: ").Append(AssociatedObjectType).Append("\n");
             sb.Append("  SecurityScopes: ").Append(SecurityScopes).Append("\n");
             
@@ -188,6 +197,11 @@ namespace VirtoCommerce.Client.Model
                     this.AssociatedObjectId.Equals(other.AssociatedObjectId)
                 ) && 
                 (
+                    this.AssociatedObjectName == other.AssociatedObjectName ||
+                    this.AssociatedObjectName != null &&
+                    this.AssociatedObjectName.Equals(other.AssociatedObjectName)
+                ) && 
+                (
                     this.AssociatedObjectType == other.AssociatedObjectType ||
                     this.AssociatedObjectType != null &&
                     this.AssociatedObjectType.Equals(other.AssociatedObjectType)
@@ -231,6 +245,9 @@ namespace VirtoCommerce.Client.Model
                 
                 if (this.AssociatedObjectId != null)
                     hash = hash * 59 + this.AssociatedObjectId.GetHashCode();
+                
+                if (this.AssociatedObjectName != null)
+                    hash = hash * 59 + this.AssociatedObjectName.GetHashCode();
                 
                 if (this.AssociatedObjectType != null)
                     hash = hash * 59 + this.AssociatedObjectType.GetHashCode();

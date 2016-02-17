@@ -345,6 +345,7 @@
     <Compile Include="Builders\CartBuilder.cs" />
     <Compile Include="Builders\QuoteRequestBuilder.cs" />
     <Compile Include="Common\HandleJsonErrorAttribute.cs" />
+    <Compile Include="Common\IdentityExtensions.cs" />
     <Compile Include="Controllers\MarketingController.cs" />
     <Compile Include="Controllers\PricingController.cs" />
     <Compile Include="Controllers\QuoteRequestController.cs" />
