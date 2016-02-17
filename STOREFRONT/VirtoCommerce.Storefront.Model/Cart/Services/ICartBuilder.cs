@@ -89,7 +89,7 @@ namespace VirtoCommerce.Storefront.Model.Cart.Services
         /// <param name="itemIds"></param>
         /// <param name="shippingMethodCode"></param>
         /// <returns></returns>
-        Task<ICartBuilder> AddOrUpdateShipmentAsync(string shipmentId, Address shippingAddress, ICollection<string> itemIds, string shippingMethodCode);
+        Task<ICartBuilder> AddOrUpdateShipmentAsync(Shipment shipment);
 
         /// <summary>
         /// Remove exist shipment from cart
@@ -106,7 +106,7 @@ namespace VirtoCommerce.Storefront.Model.Cart.Services
         /// <param name="paymentMethodCode"></param>
         /// <param name="outerId"></param>
         /// <returns></returns>
-        Task<ICartBuilder> AddOrUpdatePaymentAsync(string paymentId, Address billingAddress, string paymentMethodCode, string outerId);
+        Task<ICartBuilder> AddOrUpdatePaymentAsync(Payment payment);
 
         /// <summary>
         /// Merge other cart with captured

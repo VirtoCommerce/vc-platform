@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using VirtoCommerce.LiquidThemeEngine.Objects;
-using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Storefront.Model.Common;
 using StorefrontModel = VirtoCommerce.Storefront.Model;
+
 
 namespace VirtoCommerce.LiquidThemeEngine.Converters
 {

@@ -357,16 +357,6 @@ namespace VirtoCommerce.Storefront.Controllers
             }
         }
 
-        // GET: /account/json
-        [HttpGet]
-        [AllowAnonymous]
-        public ActionResult GetCurrentCustomer()
-        {
-            return Json(WorkContext.CurrentCustomer, JsonRequestBehavior.AllowGet);
-        }
-
-       
-
         private ClaimsIdentity CreateClaimsIdentity(string userName, string userId)
         {
             var claims = new List<Claim>();

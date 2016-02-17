@@ -16,6 +16,7 @@ using VirtoCommerce.Client.Model;
 using VirtoCommerce.Storefront.Model.Common.Events;
 using VirtoCommerce.Storefront.Model.Quote.Events;
 using VirtoCommerce.Storefront.Model.Common.Exceptions;
+using System.Collections.Generic;
 
 namespace VirtoCommerce.Storefront.Builders
 {
@@ -34,6 +35,19 @@ namespace VirtoCommerce.Storefront.Builders
             _quoteApi = quoteApi;
             _cacheManager = cacheManager;
             _quoteRequestUpdatedEventPublisher = quoteRequestUpdatedEventPublisher;
+        }
+        #region IQuoteRequestBuilder Members
+
+        public async Task<IQuoteRequestBuilder> LoadQuoteRequestAsync(string number, Language language, IEnumerable<Currency> availCurrencies)
+        {
+            var quoteRequest = await _quoteApi.QuoteModuleGetByIdAsync(number);
+            if (quoteRequest == null)
+            {
+                throw new StorefrontException("Quote request for number " + number + " not found");
+            }
+            _quoteRequest = quoteRequest.ToWebModel(availCurrencies, language);
+
+            return this;
         }
 
         public IQuoteRequestBuilder TakeQuoteRequest(QuoteRequest quoteRequest)
@@ -199,7 +213,7 @@ namespace VirtoCommerce.Storefront.Builders
             return this;
         }
 
-        public async Task<IQuoteRequestBuilder> MergeWithQuoteRequest(QuoteRequest quoteRequest)
+        public async Task<IQuoteRequestBuilder> MergeFromOtherAsync(QuoteRequest quoteRequest)
         {
             _quoteRequest.Comment = quoteRequest.Comment;
 
@@ -244,6 +258,14 @@ namespace VirtoCommerce.Storefront.Builders
             }
         }
 
+        public async Task<IQuoteRequestBuilder> CalculateTotalsAsync()
+        {
+            var result = await _quoteApi.QuoteModuleCalculateTotalsAsync(_quoteRequest.ToServiceModel());
+            _quoteRequest.Totals = result.Totals.ToWebModel(_quoteRequest.Currency);
+            return this;
+        }
+
+        #endregion
         #region IObserver<UserLoginEvent> Members
         /// <summary>
         /// Merge anonymous user quote to newly logined user quote by loging event
@@ -256,7 +278,7 @@ namespace VirtoCommerce.Storefront.Builders
                  && userLoginEvent.WorkContext.CurrentQuoteRequest != null && userLoginEvent.WorkContext.CurrentQuoteRequest.Items.Any())
             {
                 await GetOrCreateNewTransientQuoteRequestAsync(userLoginEvent.WorkContext.CurrentStore, userLoginEvent.NewUser, userLoginEvent.WorkContext.CurrentLanguage, userLoginEvent.WorkContext.CurrentCurrency);
-                await MergeWithQuoteRequest(userLoginEvent.WorkContext.CurrentQuoteRequest);
+                await MergeFromOtherAsync(userLoginEvent.WorkContext.CurrentQuoteRequest);
                 await SaveAsync();
             }
         }

@@ -82,6 +82,8 @@
     <Compile Include="Catalog\CatalogSearchCriteria.cs" />
     <Compile Include="Catalog\Term.cs" />
     <Compile Include="Catalog\TermExtensions.cs" />
+    <Compile Include="Common\AnonymousComparer.cs" />
+    <Compile Include="Common\EntryState.cs" />
     <Compile Include="LinkList\CategoryMenuLink.cs" />
     <Compile Include="Common\Events\EventPublisher.cs" />
     <Compile Include="Common\Events\IAsyncObserver.cs" />

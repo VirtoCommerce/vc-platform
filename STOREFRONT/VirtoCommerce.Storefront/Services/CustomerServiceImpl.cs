@@ -101,16 +101,29 @@ namespace VirtoCommerce.Storefront.Services
         #endregion
 
         #region IObserver<CreateOrderEvent> Members
-        public Task OnNextAsync(OrderPlacedEvent value)
+        public async Task OnNextAsync(OrderPlacedEvent eventArgs)
         {
-            if (value.Order != null)
+            if (eventArgs.Order != null)
             {
-                var cacheKey = GetCacheKey(value.Order.CustomerId);
+                //Invalidate cache
+                var cacheKey = GetCacheKey(eventArgs.Order.CustomerId);
                 _cacheManager.Remove(cacheKey, "ApiRegion");
+
+                var workContext = _workContextFactory();
+                //Add addresses to contact profile
+                if (workContext.CurrentCustomer.IsRegisteredUser)
+                {
+                    workContext.CurrentCustomer.Addresses.AddRange(eventArgs.Order.Addresses);
+                    workContext.CurrentCustomer.Addresses.AddRange(eventArgs.Order.Shipments.Select(x => x.DeliveryAddress));
+
+                    await UpdateCustomerAsync(workContext.CurrentCustomer);
+                }
+
             }
-            return Task.Factory.StartNew(() => { });
         }
         #endregion
+
+        #region IAsyncObserver<QuoteRequestUpdatedEvent> Members
 
         public Task OnNextAsync(QuoteRequestUpdatedEvent quoteRequestCreatedEvent)
         {
@@ -123,6 +136,7 @@ namespace VirtoCommerce.Storefront.Services
             return Task.Factory.StartNew(() => { });
         }
 
+        #endregion
         private string GetCacheKey(string customerId)
         {
             return "GetCustomerById-" + customerId;

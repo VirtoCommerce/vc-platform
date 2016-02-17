@@ -1,7 +1,6 @@
 ﻿using Omu.ValueInjecter;
 using System.Linq;
 using VirtoCommerce.LiquidThemeEngine.Objects;
-using VirtoCommerce.Platform.Core.Common;
 using StorefrontModel = VirtoCommerce.Storefront.Model;
 
 namespace VirtoCommerce.LiquidThemeEngine.Converters

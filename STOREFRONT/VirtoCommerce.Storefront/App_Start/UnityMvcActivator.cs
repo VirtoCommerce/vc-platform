@@ -22,9 +22,7 @@ namespace VirtoCommerce.Storefront.App_Start
             // Configures container for ASP.NET MVC
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
 
-            // Configures container for WebAPI
-            GlobalConfiguration.Configuration.DependencyResolver = new Unity.WebApi.UnityDependencyResolver(container);
-
+         
             // TODO: Uncomment if you want to use PerRequestLifetimeManager
             //Microsoft.Web.Infrastructure.DynamicModuleHelper.DynamicModuleUtility.RegisterModule(typeof(UnityPerRequestHttpModule));
         }

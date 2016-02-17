@@ -71,8 +71,12 @@ namespace VirtoCommerce.Storefront
             Settings = new JsonSerializerSettings
             {
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                NullValueHandling = NullValueHandling.Ignore
+                NullValueHandling = NullValueHandling.Ignore,
+                ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
+                
             };
+
+            JsonRequestBehavior = JsonRequestBehavior.AllowGet;
 
             Settings.Converters.Add(new StringEnumConverter
             {
