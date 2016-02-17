@@ -9,5 +9,6 @@
         <span ng-if="!storefrontNotification.detailsVisible">Show me a technical details</span>
         <span ng-if="storefrontNotification.detailsVisible">Hide a technical details</span>
     </a>
+    <p ng-if="storefrontNotification.detailsVisible" ng-bind="storefrontNotification.title"></p>
     <p ng-if="storefrontNotification.detailsVisible" ng-bind="storefrontNotification.message"></p>
 </div>
