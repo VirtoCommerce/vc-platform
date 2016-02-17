@@ -107,5 +107,12 @@ namespace VirtoCommerce.Storefront.Controllers
         {
             return View("NoStore");
         }
+
+        // GET: /maintenance
+        [HttpGet]
+        public ActionResult Maintenance()
+        {
+            return View("maintenance", "empty", WorkContext);
+        }
     }
 }

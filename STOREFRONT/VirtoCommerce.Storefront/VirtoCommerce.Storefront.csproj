@@ -424,6 +424,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\Themes\default\snippets\quote-modal.liquid" />
+    <Content Include="App_Data\Themes\default\templates\maintenance.liquid" />
+    <Content Include="App_Data\Themes\default\layout\empty.liquid" />
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
     </None>
