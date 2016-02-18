@@ -74,6 +74,7 @@ namespace VirtoCommerce.LiquidThemeEngine
             Template.RegisterTag<LayoutTag>("layout");
             Template.RegisterTag<FormTag>("form");
             Template.RegisterTag<PaginateTag>("paginate");
+            Template.RegisterTag<PoweredByTag>("poweredBy");
             //Observe themes file system changes to invalidate cache if changes occur
             _fileSystemWatcher = MonitorThemeFileSystemChanges();
         }
