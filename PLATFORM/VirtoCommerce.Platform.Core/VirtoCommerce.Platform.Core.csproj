@@ -236,6 +236,7 @@
     <Compile Include="Security\ApplicationUserExtended.cs" />
     <Compile Include="Security\AuthentificationOptions.cs" />
     <Compile Include="Security\CheckPermissionAttribute.cs" />
+    <Compile Include="Security\VirtoCommerceClaimTypes.cs" />
     <Compile Include="Security\IPermissionScopeService.cs" />
     <Compile Include="Security\IRoleManagementService.cs" />
     <Compile Include="Security\ISecurityOptions.cs" />
