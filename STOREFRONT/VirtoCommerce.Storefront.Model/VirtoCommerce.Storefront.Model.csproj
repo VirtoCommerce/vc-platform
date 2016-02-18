@@ -102,6 +102,7 @@
     <Compile Include="Quote\TierPriceFormModel.cs" />
     <Compile Include="StorefrontNotification.cs" />
     <Compile Include="StorefrontNotificationType.cs" />
+    <Compile Include="StoreStatus.cs" />
     <Compile Include="TierPrice.cs" />
     <Compile Include="Common\AsyncLock.cs" />
     <Compile Include="Common\CacheManagerExtension.cs" />
