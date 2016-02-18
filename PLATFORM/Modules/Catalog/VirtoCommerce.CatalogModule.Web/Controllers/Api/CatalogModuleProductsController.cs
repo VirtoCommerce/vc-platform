@@ -230,7 +230,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                 variation.SeoInfos.Clear();
             }
 
-            return Ok(product);
+            return Ok(product.ToWebModel(_blobUrlResolver));
         }
 
         /// <summary>
