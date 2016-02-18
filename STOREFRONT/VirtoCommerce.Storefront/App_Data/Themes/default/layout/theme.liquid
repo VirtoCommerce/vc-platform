@@ -110,10 +110,10 @@
                         {% endcomment %}
 
                         <span class="site-header--meta-links medium-down--hide">
-                            <span ng-if="customer && customer.IsRegisteredUser && customer.ManagerUserName" ng-cloak>
+                            <span ng-if="customer && customer.IsRegisteredUser && customer.OperatorUserName" ng-cloak>
                                 {{ 'layout.customer.logged_in_on_behalf_of_label' | t }} <a href="{{ 'account' | absolute_url }}" ng-bind="customer.FirstName"></a> &middot; {{ 'layout.customer.log_out' | t | customer_logout_link }}
                             </span>
-                            <span ng-if="customer && customer.IsRegisteredUser && !customer.ManagerUserName" ng-cloak>
+                            <span ng-if="customer && customer.IsRegisteredUser && !customer.OperatorUserName" ng-cloak>
                                 {{ 'layout.customer.logged_in_as_label' | t }} <a href="{{ 'account' | absolute_url }}" ng-bind="customer.FirstName"></a> &middot; {{ 'layout.customer.log_out' | t | customer_logout_link }}
                             </span>
                             <span ng-if="customer && !customer.IsRegisteredUser" ng-cloak>

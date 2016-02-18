@@ -198,8 +198,8 @@ namespace VirtoCommerce.Storefront.Owin
                     retVal.IsRegisteredUser = true;
                 }
 
-                retVal.ManagerUserId = principal.FindFirstValue(StorefrontConstants.ManagerUserIdClaimType);
-                retVal.ManagerUserName = principal.FindFirstValue(StorefrontConstants.ManagerUserNameClaimType);
+                retVal.OperatorUserId = principal.FindFirstValue(StorefrontConstants.OperatorUserIdClaimType);
+                retVal.OperatorUserName = principal.FindFirstValue(StorefrontConstants.OperatorUserNameClaimType);
             }
 
             if (!retVal.IsRegisteredUser)

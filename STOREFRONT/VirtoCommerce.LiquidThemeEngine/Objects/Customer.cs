@@ -124,7 +124,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
 
         public IStorefrontPagedList<QuoteRequest> QuoteRequests { get; set; }
 
-        public string ManagerUserId { get; set; }
-        public string ManagerUserName { get; set; }
+        public string OperatorUserId { get; set; }
+        public string OperatorUserName { get; set; }
     }
 }
