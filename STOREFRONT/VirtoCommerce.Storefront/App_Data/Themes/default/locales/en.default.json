@@ -389,6 +389,8 @@
             "view_account": "View Account",
             "logged_in_as_html": "Logged in as {{ first_name }}",
             "logged_in_as_label": "Logged in as",
+            "logged_in_on_behalf_of_html": "Logged in on behalf of {{ first_name }}",
+            "logged_in_on_behalf_of_label": "Logged in on behalf of",
             "log_out": "Log out",
             "sign_in": "Sign in",
             "create_account": "Create an Account",
