@@ -37,7 +37,7 @@ namespace VirtoCommerce.Storefront.Model
         /// <summary>
         /// State of store (open, closing, maintenance)
         /// </summary>
-        public string StoreState { get; set; }
+        public StoreStatus StoreState { get; set; }
 
         public string TimeZone { get; set; }
 
