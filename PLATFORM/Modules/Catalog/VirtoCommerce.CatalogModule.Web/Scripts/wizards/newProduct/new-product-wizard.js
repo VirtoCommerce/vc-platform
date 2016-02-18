@@ -103,7 +103,7 @@
 
     $scope.getUnfilledProperties = function () {
         return _.filter(blade.item.properties, function (p) {
-            return p != undefined && p.values.length > 0 && p.values[0].value.length > 0;
+            return p && _.any(p.values) && p.values[0].value;
         });
     }
 

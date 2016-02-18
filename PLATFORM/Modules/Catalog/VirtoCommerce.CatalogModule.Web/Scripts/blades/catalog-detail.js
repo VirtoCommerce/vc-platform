@@ -28,11 +28,11 @@
         blade.securityScopes = data.securityScopes;
     };
 
-    function x() {
+    function isDirty() {
         return !angular.equals(blade.currentEntity, blade.origEntity) && blade.hasUpdatePermission();
     }
 
-    function y() {
+    function canSave() {
         return isDirty() && formScope && formScope.$valid;
     }
 
