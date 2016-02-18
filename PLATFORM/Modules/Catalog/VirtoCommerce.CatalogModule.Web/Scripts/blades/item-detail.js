@@ -91,7 +91,7 @@
                 blade.isLoading = true;
                 items.cloneItem({ itemId: blade.itemId }, function (data) {
                     var newBlade = {
-                        id: 'listItemDetail',
+                        id: blade.id,
                         item: data,
                         title: "catalog.wizards.new-product.title",
                         subtitle: 'catalog.wizards.new-product.subtitle',

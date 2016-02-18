@@ -11,6 +11,7 @@
 
         blade.item.$update(null,
             function (dbItem) {
+                blade.parentBlade.setSelectedItem(dbItem)
                 blade.parentBlade.refresh(true);
 
                 var newBlade = {
@@ -24,7 +25,7 @@
                 bladeNavigationService.showBlade(newBlade, blade.parentBlade);
             },
             function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
-    }
+    };
 
     $scope.openBlade = function (type) {
         var newBlade = null;
