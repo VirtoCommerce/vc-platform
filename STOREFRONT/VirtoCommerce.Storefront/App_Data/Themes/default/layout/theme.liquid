@@ -110,13 +110,13 @@
                         {% endcomment %}
 
                         <span class="site-header--meta-links medium-down--hide">
-                            <span ng-if="customer && customer.UserName != 'Anonymous' && customer.ManagerUserName" ng-cloak>
+                            <span ng-if="customer && customer.IsRegisteredUser && customer.ManagerUserName" ng-cloak>
                                 {{ 'layout.customer.logged_in_on_behalf_of_label' | t }} <a href="{{ 'account' | absolute_url }}" ng-bind="customer.FirstName"></a> &middot; {{ 'layout.customer.log_out' | t | customer_logout_link }}
                             </span>
-                            <span ng-if="customer && customer.UserName != 'Anonymous' && !customer.ManagerUserName" ng-cloak>
+                            <span ng-if="customer && customer.IsRegisteredUser && !customer.ManagerUserName" ng-cloak>
                                 {{ 'layout.customer.logged_in_as_label' | t }} <a href="{{ 'account' | absolute_url }}" ng-bind="customer.FirstName"></a> &middot; {{ 'layout.customer.log_out' | t | customer_logout_link }}
                             </span>
-                            <span ng-if="customer && customer.UserName == 'Anonymous'" ng-cloak>
+                            <span ng-if="customer && !customer.IsRegisteredUser" ng-cloak>
                                 {{ 'layout.customer.sign_in' | t | customer_login_link }}
                                 <span class="site-header--spacer">{{ 'layout.customer.or' | t }}</span>
                                 {{ 'layout.customer.create_account' | t | customer_register_link }}
