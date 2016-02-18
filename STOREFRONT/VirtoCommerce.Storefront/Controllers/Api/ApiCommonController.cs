@@ -1,23 +1,13 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
+﻿using System;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Web.Hosting;
-using System.Web.Http;
 using VirtoCommerce.Storefront.Model;
-using VirtoCommerce.Storefront.Model.Catalog;
-using VirtoCommerce.Storefront.Model.Services;
 using VirtoCommerce.Storefront.Model.Common;
 using System.Web.Mvc;
 using VirtoCommerce.Storefront.Common;
 
 namespace VirtoCommerce.Storefront.Controllers.Api
 {
-    [HandleJsonErrorAttribute]
+    [HandleJsonError]
     public class ApiCommonController : StorefrontControllerBase
     {
         private readonly Country[] _countriesWithoutRegions;

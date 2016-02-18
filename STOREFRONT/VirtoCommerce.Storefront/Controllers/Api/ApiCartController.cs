@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Http;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Services;
@@ -19,8 +18,8 @@ using System;
 
 namespace VirtoCommerce.Storefront.Controllers.Api
 {
-   
-    [HandleJsonErrorAttribute]
+
+    [HandleJsonError]
     public class ApiCartController : StorefrontControllerBase
     {
         private readonly ICartBuilder _cartBuilder;

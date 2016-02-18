@@ -39,6 +39,10 @@ namespace VirtoCommerce.Storefront.Model.Common
 		private decimal _amount;
 
         #region Constructors
+        private Money()
+        {
+        }
+
         public Money(Currency currency)
             :this(0m, currency)
         {

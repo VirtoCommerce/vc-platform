@@ -19,7 +19,7 @@ storefrontApp.service('dialogService', ['$uibModal', function ($uibModal) {
 storefrontApp.service('customerService', ['$http', function ($http) {
     return {
         getCurrentCustomer: function () {
-            return $http.get('account/json?t=' + new Date().getTime());
+            return $http.get('storefrontapi/account?t=' + new Date().getTime());
         }
     }
 }]);
@@ -27,7 +27,7 @@ storefrontApp.service('customerService', ['$http', function ($http) {
 storefrontApp.service('marketingService', ['$http', function ($http) {
     return {
         getDynamicContent: function (placeName) {
-            return $http.get('marketing/dynamiccontent/' + placeName + '/json?t=' + new Date().getTime());
+            return $http.get('storefrontapi/marketing/dynamiccontent/' + placeName + '?t=' + new Date().getTime());
         },
     }
 }]);
@@ -35,15 +35,15 @@ storefrontApp.service('marketingService', ['$http', function ($http) {
 storefrontApp.service('pricingService', ['$http', function ($http) {
 	return {
 		getActualProductPrices: function (products) {
-			return $http.post('pricing/actualprices', { products: products });
+		    return $http.post('storefrontapi/pricing/actualprices', { products: products });
 		}
 	}
 }]);
 
 storefrontApp.service('catalogService', ['$http', function ($http) {
     return {
-        getProduct: function (productId) {
-            return $http.get('product/' + productId + '/json');
+        getProduct: function (productIds) {
+            return $http.get('storefrontapi/products?productIds=' + productIds + '&t=' + new Date().getTime());
         }
     }
 }]);
@@ -51,49 +51,49 @@ storefrontApp.service('catalogService', ['$http', function ($http) {
 storefrontApp.service('cartService', ['$http', function ($http) {
     return {
         getCart: function () {
-            return $http.get('cart/json?t=' + new Date().getTime());
+            return $http.get('storefrontapi/cart?t=' + new Date().getTime());
         },
         getCartItemsCount: function () {
-            return $http.get('cart/itemscount/json?t=' + new Date().getTime());
+            return $http.get('storefrontapi/cart/itemscount?t=' + new Date().getTime());
         },
         addLineItem: function (productId, quantity) {
-            return $http.post('cart/additem', { id: productId, quantity: quantity });
+            return $http.post('storefrontapi/cart/items', { id: productId, quantity: quantity });
         },
         changeLineItemQuantity: function (lineItemId, quantity) {
-            return $http.post('cart/changeitem', { lineItemId: lineItemId, quantity: quantity });
+            return $http.put('storefrontapi/cart/items', { lineItemId: lineItemId, quantity: quantity });
         },
         removeLineItem: function (lineItemId) {
-            return $http.post('cart/removeitem', { lineItemId: lineItemId });
+            return $http.delete('storefrontapi/cart/items?lineItemId=' + lineItemId);
         },
         clearCart: function () {
-            return $http.post('cart/clear');
+            return $http.post('storefrontapi/cart/clear');
         },
         getCountries: function () {
-            return $http.get('common/getcountries/json?t=' + new Date().getTime());
+            return $http.get('storefrontapi/countries?t=' + new Date().getTime());
         },
         getCountryRegions: function (countryCode) {
-            return $http.get('common/getregions/' + countryCode + '/json?t=' + new Date().getTime());
+            return $http.get('storefrontapi/' + countryCode + '/regions?t=' + new Date().getTime());
         },
         addCoupon: function (couponCode) {
-            return $http.post('cart/addcoupon/' + couponCode);
+            return $http.post('storefrontapi/cart/coupons/' + couponCode);
         },
         removeCoupon: function () {
-            return $http.post('cart/removecoupon');
+            return $http.delete('storefrontapi/cart/coupons');
         },
-        addOrUpdateShipment: function (shipmentId, shippingAddress, itemIds, shippingMethodCode) {
-            return $http.post('cart/addorupdateshipment', { shipmentId: shipmentId, shippingAddress: shippingAddress, itemIds: itemIds, shippingMethodCode: shippingMethodCode });
+        addOrUpdateShipment: function (shipment) {
+            return $http.post('storefrontapi/cart/shipments', { shipment: shipment });
         },
-        addOrUpdatePayment: function (paymentId, billingAddress, paymentMethodCode, outerId) {
-            return $http.post('cart/addorupdatepayment', { paymentId: paymentId, billingAddress: billingAddress, paymentMethodCode: paymentMethodCode, outerId: outerId });
+        addOrUpdatePayment: function (payment) {
+            return $http.post('storefrontapi/cart/payments', { payment: payment });
         },
-        getAvailableShippingMethods: function () {
-            return $http.get('cart/shippingmethods/json?t=' + new Date().getTime());
+        getAvailableShippingMethods: function (shipmentId) {
+            return $http.get('storefrontapi/cart/shipments/' + shipmentId + '/shippingmethods?t=' + new Date().getTime());
         },
         getAvailablePaymentMethods: function () {
-            return $http.get('cart/paymentmethods/json?t=' + new Date().getTime());
+            return $http.get('storefrontapi/cart/paymentmethods?t=' + new Date().getTime());
         },
         createOrder: function (bankCardInfo) {
-            return $http.post('cart/createorder', { bankCardInfo: bankCardInfo });
+            return $http.post('storefrontapi/cart/createorder', { bankCardInfo: bankCardInfo });
         }
     }
 }]);
@@ -101,31 +101,31 @@ storefrontApp.service('cartService', ['$http', function ($http) {
 storefrontApp.service('quoteRequestService', ['$http', function ($http) {
     return {
         getQuoteRequest: function (number) {
-            return $http.get('quoterequest/' + number + '/json?t=' + new Date().getTime());
+            return $http.get('storefrontapi/quoterequests/' + number + '/itemscount?t=' + new Date().getTime());
         },
         getActualQuoteRequest: function () {
             return $http.get('actualquoterequest/itemscount/json?t=' + new Date().getTime());
         },
-        addProductToQuoteRequest: function (productId, quantity) {
-            return $http.post('actualquoterequest/addproduct', { productId: productId, quantity: quantity });
+        addProductToQuoteRequest: function (quoteRequestNumber, productId, quantity) {
+            return $http.post('storefrontapi/quoterequests/' + quoteRequestNumber + '/items', { productId: productId, quantity: quantity });
         },
-        removeProductFromQuoteRequest: function (quoteItemId) {
-            return $http.post('actualquoterequest/removeproduct', { quoteItemId: quoteItemId });
+        removeProductFromQuoteRequest: function (quoteRequestNumber, quoteItemId) {
+            return $http.delete('storefrontapi/quoterequest/' + quoteRequestNumber + '/items/' + quoteItemId);
         },
-        submitQuoteRequest: function (quoteRequest) {
-            return $http.post('quoterequest/submit', { quoteRequest: quoteRequest });
+        submitQuoteRequest: function (quoteRequestNumber, quoteRequest) {
+            return $http.post('storefrontapi/quoterequest/' + quoteRequestNumber + '/submit', { quoteForm: quoteRequest });
         },
-        rejectQuoteRequest: function (number) {
-            return $http.post('quoterequest/reject', { number: number });
+        rejectQuoteRequest: function (quoteRequestNumber) {
+            return $http.post('storefrontapi/quoterequest/' + quoteRequestNumber + '/reject');
         },
-        updateQuoteRequest: function (quoteRequest) {
-            return $http.post('quoterequest/update', { quoteRequest: quoteRequest });
+        updateQuoteRequest: function (quoteRequestNumber, quoteRequest) {
+            return $http.put('storefrontapi/quoterequest/' + quoteRequestNumber + '/update', { quoteRequest: quoteRequest });
         },
-        getTotals: function (quoteRequest) {
-            return $http.post('quoterequest/totals', { quoteRequest: quoteRequest });
+        getTotals: function (quoteRequestNumber, quoteRequest) {
+            return $http.post('storefrontapi/quoterequests/' + quoteRequestNumber + '/totals', { quoteRequest: quoteRequest });
         },
-        confirmQuoteRequest: function (quoteRequest) {
-            return $http.post('quoterequest/confirm', { quoteRequest: quoteRequest });
+        confirmQuoteRequest: function (quoteRequestNumber, quoteRequest) {
+            return $http.post('storefrontapi/quoterequests/' + quoteRequestNumber + '/confirm', { quoteRequest: quoteRequest });
         }
     }
 }]);

@@ -93,9 +93,9 @@ storefrontApp.controller('checkoutController', ['$rootScope', '$scope', '$window
         }
     }
 
-    $scope.setShippingMethod = function (shipmentId, shippingMethodCode)
+    $scope.setShippingMethod = function ()
     {
-        setShippingMethod(shipmentId, shippingMethodCode);
+        setShippingMethod($scope.checkout.Shipment);
     }
 
     $scope.setBillingAddressEqualShipping = function () {
@@ -117,6 +117,7 @@ storefrontApp.controller('checkoutController', ['$rootScope', '$scope', '$window
         if (!expirationDate) {
             return;
         }
+
         var currentDate = new Date();
         var currentYear = currentDate.getYear() - 100;
         var currentMonth = currentDate.getMonth() + 1;
@@ -135,11 +136,8 @@ storefrontApp.controller('checkoutController', ['$rootScope', '$scope', '$window
         if ($scope.formShippingAddress.$invalid) {
             return;
         }
-        var shipmentId = $scope.checkout.Shipment.Id;
-        var shipmentAddress = $scope.checkout.Shipment.DeliveryAddress;
-        var itemIds = _.map($scope.checkout.Items, function (i) { return i.Id });
         $scope.checkout.ShippingAddressProcessing = true;
-        cartService.addOrUpdateShipment(shipmentId, shipmentAddress, itemIds, null).then(function (response) {
+        cartService.addOrUpdateShipment($scope.checkout.Shipment).then(function (response) {
             $scope.checkout.ShippingAddressProcessing = false;
             $scope.innerRedirect(shippingMethodStepInnerUrl);
             getCart();
@@ -259,6 +257,7 @@ storefrontApp.controller('checkoutController', ['$rootScope', '$scope', '$window
             }
             updateTotals(cart);
             var shipment = cart.Shipments.length ? cart.Shipments[0] : newShipment;
+            shipment.DeliveryAddress = shipment.DeliveryAddress || { Type: shippingAddressType };
             if (!shipment.DeliveryAddress.FirstName) {
                 shipment.DeliveryAddress.FirstName = $scope.customer.FirstName;
             }
@@ -266,6 +265,7 @@ storefrontApp.controller('checkoutController', ['$rootScope', '$scope', '$window
                 shipment.DeliveryAddress.LastName = $scope.customer.LastName;
             }
             var payment = cart.Payments.length ? cart.Payments[0] : newPayment;
+            payment.BillingAddress = payment.BillingAddress || { Type: billingAddresstype };
             if (!payment.BillingAddress.FirstName) {
                 payment.BillingAddress.FirstName = $scope.customer.FirstName;
             }
@@ -382,7 +382,7 @@ storefrontApp.controller('checkoutController', ['$rootScope', '$scope', '$window
             $scope.checkout.AvailableShippingMethods = availableShippingMethods;
             if ($scope.checkout.Shipment && !$scope.checkout.Shipment.ShipmentMethodCode &&
                 addressIsValid($scope.checkout.Shipment.DeliveryAddress) && availableShippingMethods.length == 1) {
-                setShippingMethod(shipmentId, availableShippingMethods[0].ShipmentMethodCode);
+                setShippingMethod($scope.checkout.Shipment);
             }
         });
     }
@@ -392,14 +392,15 @@ storefrontApp.controller('checkoutController', ['$rootScope', '$scope', '$window
             var availablePaymentMethods = response.data;
             $scope.checkout.AvailablePaymentMethods = availablePaymentMethods;
             if (availablePaymentMethods.length == 1) {
+                $scope.checkout.Payment = $scope.checkout.Payment || newPayment;
                 $scope.checkout.Payment.PaymentGatewayCode = availablePaymentMethods[0].GatewayCode;
             }
         });
     }
 
-    function setShippingMethod(shipmentId, shippingMethodCode) {
+    function setShippingMethod(shipment) {
         $scope.checkout.ShippingMethodProcessing = true;
-        cartService.addOrUpdateShipment(shipmentId, null, null, shippingMethodCode).then(function (response) {
+        cartService.addOrUpdateShipment(shipment).then(function (response) {
             $scope.checkout.ShippingMethodProcessing = false;
             getCart();
         }, function (response) {

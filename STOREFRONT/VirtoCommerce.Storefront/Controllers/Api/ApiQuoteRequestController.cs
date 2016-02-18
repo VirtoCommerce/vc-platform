@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.Storefront.Common;
-using VirtoCommerce.Storefront.Converters;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Cart.Services;
 using VirtoCommerce.Storefront.Model.Catalog;
@@ -19,7 +15,7 @@ using VirtoCommerce.Storefront.Model.Services;
 
 namespace VirtoCommerce.Storefront.Controllers.Api
 {
-    [HandleJsonErrorAttribute]
+    [HandleJsonError]
     public class ApiQuoteRequestController : StorefrontControllerBase
     {
         private readonly IQuoteModuleApi _quoteApi;
@@ -36,7 +32,6 @@ namespace VirtoCommerce.Storefront.Controllers.Api
             _cartBuilder = cartBuilder;
             _catalogSearchService = catalogSearchService;
         }
-
 
         // GET: storefrontapi/quoterequests/{number}/itemscount
         [HttpGet]

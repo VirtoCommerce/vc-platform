@@ -41,9 +41,9 @@ storefrontApp.controller('productController', ['$rootScope', '$scope', '$window'
     }
 
     function Initialize() {
-        var productId = $window.products[0].id;
-        catalogService.getProduct(productId).then(function (response) {
-            var product = response.data;
+        var productIds = _.map($window.products, function (product) { return product.id});
+        catalogService.getProduct(productIds).then(function (response) {
+            var product = response.data[0];
             //Current product its also variation (titular)
             allVarations = [ product ].concat(product.Variations);
             $scope.allVariationPropsMap = getFlatternDistinctPropertiesMap(allVarations);

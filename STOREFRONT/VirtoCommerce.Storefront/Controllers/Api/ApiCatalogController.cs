@@ -1,13 +1,4 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Web.Hosting;
-using System.Web.Http;
+﻿using System.Threading.Tasks;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Services;
@@ -17,7 +8,7 @@ using VirtoCommerce.Storefront.Common;
 
 namespace VirtoCommerce.Storefront.Controllers.Api
 {
-    [HandleJsonErrorAttribute]
+    [HandleJsonError]
     public class ApiCatalogController : StorefrontControllerBase
     {
         private readonly ICatalogSearchService _catalogSearchService;
