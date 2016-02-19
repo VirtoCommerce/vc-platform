@@ -188,7 +188,7 @@ namespace VirtoCommerce.Storefront.Controllers.Api
 
         // POST: storefrontapi/cart/shipments
         [HttpPost]
-        public async Task<ActionResult> AddOrUpdateCartShipment(Shipment shipment)
+        public async Task<ActionResult> AddOrUpdateCartShipment(ShipmentUpdateModel shipment)
         {
             EnsureThatCartExist();
 
@@ -204,7 +204,7 @@ namespace VirtoCommerce.Storefront.Controllers.Api
 
         // POST: storefrontapi/cart/payments
         [HttpPost]
-        public async Task<ActionResult> AddOrUpdateCartPayment(Payment payment)
+        public async Task<ActionResult> AddOrUpdateCartPayment(PaymentUpdateModel payment)
         {
             EnsureThatCartExist();
 

@@ -8,7 +8,7 @@ storefrontApp.controller('categoryController', ['$scope', '$window', 'pricingSer
         var prices = response.data;
         if (prices.length) {
             for (var i = 0; i < prices.length; i++) {
-                $scope.productPrices[prices[i].ProductId] = prices[i];
+                $scope.productPrices[prices[i].productId] = prices[i];
             }
         }
         var productPricesSize = $scope.getObjectSize($scope.productPrices);

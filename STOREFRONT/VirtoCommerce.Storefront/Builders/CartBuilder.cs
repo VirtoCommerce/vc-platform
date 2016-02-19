@@ -214,15 +214,27 @@ namespace VirtoCommerce.Storefront.Builders
             return this;
         }
 
-        public virtual async Task<ICartBuilder> AddOrUpdateShipmentAsync(Shipment changedShipment)
+        public virtual async Task<ICartBuilder> AddOrUpdateShipmentAsync(ShipmentUpdateModel updateModel)
         {
+            var changedShipment = updateModel.ToShipmentModel(_cart.Currency);
+            foreach (var updateItemModel in updateModel.Items)
+            {
+                var cartItem = _cart.Items.FirstOrDefault(i => i.Id == updateItemModel.LineItemId);
+                if (cartItem != null)
+                {
+                    var shipmentItem = cartItem.ToShipmentItem();
+                    shipmentItem.Quantity = updateItemModel.Quantity;
+                    changedShipment.Items.Add(shipmentItem);
+                }
+            }
+
             Shipment shipment = null;
-            if (!changedShipment.IsTransient())
+            if (!string.IsNullOrEmpty(changedShipment.Id))
             {
                 shipment = _cart.Shipments.FirstOrDefault(s => s.Id == changedShipment.Id);
                 if (shipment == null)
                 {
-                    throw new StorefrontException(String.Format("Shipment with {0} not found", changedShipment.Id));
+                    throw new StorefrontException(string.Format("Shipment with {0} not found", changedShipment.Id));
                 }
             }
             else
@@ -239,8 +251,6 @@ namespace VirtoCommerce.Storefront.Builders
             //Update shipment items
             if (changedShipment.Items != null)
             {
-                var shipmentItemComparer = AnonymousComparer.Create((CartShipmentItem x) => x.LineItem.Id);
-
                 Action<EntryState, CartShipmentItem, CartShipmentItem> pathAction = (changeState, sourceItem, targetItem) =>
                 {
                     if (changeState == EntryState.Added)
@@ -262,6 +272,8 @@ namespace VirtoCommerce.Storefront.Builders
                         shipment.Items.Remove(sourceItem);
                     }
                 };
+
+                var shipmentItemComparer = AnonymousComparer.Create((CartShipmentItem x) => x.LineItem.Id);
                 changedShipment.Items.CompareTo(shipment.Items, shipmentItemComparer, pathAction);
             }
 
@@ -297,15 +309,15 @@ namespace VirtoCommerce.Storefront.Builders
             return this;
         }
 
-        public virtual async Task<ICartBuilder> AddOrUpdatePaymentAsync(Payment changedPayment)
+        public virtual async Task<ICartBuilder> AddOrUpdatePaymentAsync(PaymentUpdateModel updateModel)
         {
             Payment payment = null;
-            if (!changedPayment.IsTransient())
+            if (!string.IsNullOrEmpty(updateModel.Id))
             {
-                payment = _cart.Payments.FirstOrDefault(s => s.Id == changedPayment.Id);
+                payment = _cart.Payments.FirstOrDefault(s => s.Id == updateModel.Id);
                 if (payment == null)
                 {
-                    throw new StorefrontException(String.Format("Payment with {0} not found", changedPayment.Id));
+                    throw new StorefrontException(String.Format("Payment with {0} not found", updateModel.Id));
                 }
             }
             else
@@ -314,22 +326,24 @@ namespace VirtoCommerce.Storefront.Builders
                 _cart.Payments.Add(payment);
             }
          
-            if (changedPayment.BillingAddress != null)
+            if (updateModel.BillingAddress != null)
             {
-                payment.BillingAddress = changedPayment.BillingAddress;
+                payment.BillingAddress = updateModel.BillingAddress;
             }
-            if (!string.IsNullOrEmpty(changedPayment.PaymentGatewayCode))
+
+            if (!string.IsNullOrEmpty(updateModel.PaymentGatewayCode))
             {
                 var availablePaymentMethods = await GetAvailablePaymentMethodsAsync();
-                var paymentMethod = availablePaymentMethods.FirstOrDefault(pm => string.Equals(pm.GatewayCode, changedPayment.PaymentGatewayCode, StringComparison.InvariantCultureIgnoreCase));
+                var paymentMethod = availablePaymentMethods.FirstOrDefault(pm => string.Equals(pm.GatewayCode, updateModel.PaymentGatewayCode, StringComparison.InvariantCultureIgnoreCase));
                 if (paymentMethod == null)
                 {
-                    throw new StorefrontException("Unknown payment method " + changedPayment.PaymentGatewayCode);
+                    throw new StorefrontException("Unknown payment method " + updateModel.PaymentGatewayCode);
                 }
                 payment.PaymentGatewayCode = paymentMethod.GatewayCode;
             }
   
-            payment.OuterId = changedPayment.OuterId;
+            payment.OuterId = updateModel.OuterId;
+            payment.Amount = _cart.Total;
 
             return this;
         }

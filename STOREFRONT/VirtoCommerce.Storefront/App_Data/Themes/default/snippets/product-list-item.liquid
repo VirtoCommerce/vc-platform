@@ -57,12 +57,12 @@
 
                 <div class="product-item--price text-center" ng-if="productPricesLoaded">
                     <p class="h1 medium-down--left">
-                        <span class="old" ng-if="productPrices['{{ product.id }}'].AbsoluteBenefit.Amount > 0">
-                            <small ng-bind="productPrices['{{ product.id }}'].ListPrice.FormatedAmount"></small>
+                        <span class="old" ng-if="productPrices['{{ product.id }}'].absoluteBenefit.amount > 0">
+                            <small ng-bind="productPrices['{{ product.id }}'].listPrice.formatedAmount"></small>
                         </span>
-                        <small ng-bind="productPrices['{{ product.id }}'].ActualPrice.FormatedAmount"></small>
+                        <small ng-bind="productPrices['{{ product.id }}'].actualPrice.formatedAmount"></small>
                     </p>
-                    <span class="sale-tag medium--right" ng-if="productPrices['{{ product.id }}'].AbsoluteBenefit.Amount > 0" ng-bind="'save ' + productPrices['{{ product.id }}'].AbsoluteBenefit.FormatedAmount"></span>
+                    <span class="sale-tag medium--right" ng-if="productPrices['{{ product.id }}'].absoluteBenefit.amount > 0" ng-bind="'save ' + productPrices['{{ product.id }}'].absoluteBenefit.formatedAmount"></span>
 
                     {% if settings.product_reviews_enable %}
                         <span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span>

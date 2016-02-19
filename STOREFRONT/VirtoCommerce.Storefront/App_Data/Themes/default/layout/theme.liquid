@@ -112,10 +112,10 @@
                     {% endcomment %}
 
                     <span class="site-header--meta-links medium-down--hide">
-                        <span ng-if="customer && customer.IsRegisteredUser" ng-cloak>
-                            {{ 'layout.customer.logged_in_as_label' | t }} <a href="{{ 'account' | absolute_url }}" ng-bind="customer.FirstName"></a> &middot; {{ 'layout.customer.log_out' | t | customer_logout_link }}
+                        <span ng-if="customer && customer.isRegisteredUser" ng-cloak>
+                            {{ 'layout.customer.logged_in_as_label' | t }} <a href="{{ 'account' | absolute_url }}" ng-bind="customer.firstName"></a> &middot; {{ 'layout.customer.log_out' | t | customer_logout_link }}
                         </span>
-                        <span ng-if="customer && !customer.IsRegisteredUser" ng-cloak>
+                        <span ng-if="customer && !customer.isRegisteredUser" ng-cloak>
                             {{ 'layout.customer.sign_in' | t | customer_login_link }}
                             <span class="site-header--spacer">{{ 'layout.customer.or' | t }}</span>
                             {{ 'layout.customer.create_account' | t | customer_register_link }}
@@ -127,9 +127,9 @@
                 {% endif %}
                 {% include 'search-bar' %}
                 {% if shop.quotes_enabled %}
-                    <a class="header-cart-btn cart-toggle" ng-controller="actualQuoteRequestBarController" ng-click="outerRedirect(baseUrl + 'quoterequest/#/' + actualQuoteRequest.Id)">
+                    <a class="header-cart-btn cart-toggle" ng-controller="actualQuoteRequestBarController" ng-click="outerRedirect(baseUrl + 'quoterequest/#/' + actualQuoteRequest.id)">
                         <span class="fa fa-calculator"></span>
-                        Quote <span id="quoteRequestCount" ng-class="{ 'visible-count': actualQuoteRequest.ItemsCount > 0 }" ng-bind="actualQuoteRequest.ItemsCount" ng-cloak></span>
+                        Quote <span id="quoteRequestCount" ng-class="{ 'visible-count': actualQuoteRequest.itemsCount > 0 }" ng-bind="actualQuoteRequest.itemsCount" ng-cloak></span>
                     </a>
                 {% endif %}
                 <a class="header-cart-btn cart-toggle" href="{{ 'cart' | absolute_url }}" ng-controller="cartBarController">
@@ -158,9 +158,9 @@
         </div>
         {% if shop.quotes_enabled %}
             <div class="display-table-cell">
-                <a class="cart-toggle mobileNavBar-link" ng-controller="actualQuoteRequestBarController" ng-click="outerRedirect(baseUrl + 'quoterequest/#/' + actualQuoteRequest.Id)">
+                <a class="cart-toggle mobileNavBar-link" ng-controller="actualQuoteRequestBarController" ng-click="outerRedirect(baseUrl + 'quoterequest/#/' + actualQuoteRequest.id)">
                     <span class="fa fa-calculator"></span>
-                    Quote <span class="cartCount" ng-class="{ 'visible-count': actualQuoteRequest.ItemsCount > 0 }" ng-bind="actualQuoteRequest.ItemsCount"></span>
+                    Quote <span class="cartCount" ng-class="{ 'visible-count': actualQuoteRequest.itemsCount > 0 }" ng-bind="actualQuoteRequest.itemsCount"></span>
                 </a>
             </div>
         {% endif %}

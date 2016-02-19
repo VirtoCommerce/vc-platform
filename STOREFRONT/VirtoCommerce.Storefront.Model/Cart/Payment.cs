@@ -4,15 +4,12 @@ namespace VirtoCommerce.Storefront.Model.Cart
 {
     public class Payment : Entity
     {
-        //Default ctor for JSON deserialization
-        private Payment()
-        {
-        }
         public Payment(Currency currency)
         {
             Amount = new Money(currency);
             Currency = currency;
         }
+
         /// <summary>
         /// Gets or sets the value of payment outer id
         /// </summary>

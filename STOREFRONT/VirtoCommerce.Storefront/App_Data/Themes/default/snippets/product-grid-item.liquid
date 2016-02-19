@@ -53,12 +53,12 @@
 
         <div class="product-item--price" ng-if="productPricesLoaded">
             <span class="h1 medium--left">
-                <span class="old" ng-if="productPrices['{{ product.id }}'].AbsoluteBenefit.Amount > 0">
-                    <small ng-bind="productPrices['{{ product.id }}'].ListPrice.FormatedAmount"></small>
+                <span class="old" ng-if="productPrices['{{ product.id }}'].absoluteBenefit.amount > 0">
+                    <small ng-bind="productPrices['{{ product.id }}'].listPrice.formatedAmount"></small>
                 </span>
-                <small ng-bind="productPrices['{{ product.id }}'].ActualPrice.FormatedAmount"></small>
+                <small ng-bind="productPrices['{{ product.id }}'].actualPrice.formatedAmount"></small>
             </span>
-            <span class="sale-tag medium--right" ng-if="productPrices['{{ product.id }}'].AbsoluteBenefit.Amount > 0" ng-bind="'{{ 'products.general.save_html' | t }}'  + productPrices['{{ product.id }}'].AbsoluteBenefit.FormatedAmount"></span>
+            <span class="sale-tag medium--right" ng-if="productPrices['{{ product.id }}'].absoluteBenefit.amount > 0" ng-bind="'{{ 'products.general.save_html' | t }}'  + productPrices['{{ product.id }}'].absoluteBenefit.formatedAmount"></span>
         </div>
 
         <div class="product-item--other">

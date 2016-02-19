@@ -61,9 +61,12 @@
     <Compile Include="Attachment.cs" />
     <Compile Include="BankCardInfo.cs" />
     <Compile Include="Cart\CartShipmentItem.cs" />
+    <Compile Include="Cart\PaymentUpdateModel.cs" />
     <Compile Include="Cart\Services\ICartBuilder.cs" />
     <Compile Include="Cart\Services\ICartValidator.cs" />
     <Compile Include="Cart\Services\IValidatable.cs" />
+    <Compile Include="Cart\ShipmentItemUpdateModel.cs" />
+    <Compile Include="Cart\ShipmentUpdateModel.cs" />
     <Compile Include="Cart\ValidationErrors\CartSubtotalError.cs" />
     <Compile Include="Cart\ValidationErrors\ProductPriceError.cs" />
     <Compile Include="Cart\ValidationErrors\ProductQuantityError.cs" />

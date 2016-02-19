@@ -37,7 +37,7 @@ namespace VirtoCommerce.Storefront
             routes.MapLocalizedStorefrontRoute("API.Cart.AddCartCoupon", "storefrontapi/cart/coupons/{couponCode}", defaults: new { controller = "ApiCart", action = "AddCartCoupon" });
             routes.MapLocalizedStorefrontRoute("API.Cart.RemoveCartCoupon", "storefrontapi/cart/coupons", defaults: new { controller = "ApiCart", action = "RemoveCartCoupon" });
             routes.MapLocalizedStorefrontRoute("API.Cart.AddOrUpdateCartShipment", "storefrontapi/cart/shipments", defaults: new { controller = "ApiCart", action = "AddOrUpdateCartShipment" });
-            routes.MapLocalizedStorefrontRoute("API.Cart.AddOrUpdateCartPayment", " storefrontapi/cart/payments", defaults: new { controller = "ApiCart", action = "AddOrUpdateCartPayment" });
+            routes.MapLocalizedStorefrontRoute("API.Cart.AddOrUpdateCartPayment", "storefrontapi/cart/payments", defaults: new { controller = "ApiCart", action = "AddOrUpdateCartPayment" });
             routes.MapLocalizedStorefrontRoute("API.Cart.CreateOrder", "storefrontapi/cart/createorder", defaults: new { controller = "ApiCart", action = "CreateOrder" });
 
             //Catalog API

@@ -13,39 +13,37 @@ storefrontApp.controller('productController', ['$rootScope', '$scope', '$window'
     $scope.productPriceLoaded = false;
 
     $scope.addProductToCart = function (product, quantity) {
-        var dialogData = {
-            ImageUrl: product.PrimaryImage.Url,
-            ListPrice: product.Price.ListPrice,
-            Name: product.Name,
-            PlacedPrice: product.Price.ActualPrice,
-            Quantity: quantity
-        };
+        var dialogData = toDialogDataModel(product, quantity);
         dialogService.showDialog(dialogData, 'recentlyAddedCartItemDialogController', 'storefront.recently-added-cart-item-dialog.tpl');
-        cartService.addLineItem(product.Id, quantity).then(function (response) {
+        cartService.addLineItem(product.id, quantity).then(function (response) {
             $rootScope.$broadcast('cartItemsChanged');
         });
     }
 
     $scope.addProductToActualQuoteRequest = function (product, quantity) {
-        var dialogData = {
-            ImageUrl: product.PrimaryImage.Url,
-            ListPrice: product.Price.ListPrice,
-            Name: product.Name,
-            PlacedPrice: product.Price.ActualPrice,
-            Quantity: quantity
-        };
+        var dialogData = toDialogDataModel(product, quantity);
         dialogService.showDialog(dialogData, 'recentlyAddedActualQuoteRequestItemDialogController', 'storefront.recently-added-actual-quote-request-item-dialog.tpl');
-        quoteRequestService.addProductToQuoteRequest(product.Id, quantity).then(function (response) {
+        quoteRequestService.addProductToQuoteRequest(product.id, quantity).then(function (response) {
             $rootScope.$broadcast('actualQuoteRequestItemsChanged');
         });
     }
 
-    function Initialize() {
+    function toDialogDataModel(product, quantity) {
+        return {
+            imageUrl: product.primaryImage.url,
+            listPrice: product.price.listPrice,
+            name: product.name,
+            placedPrice: product.price.actualPrice,
+            quantity: quantity
+        }
+    }
+
+    function initialize() {
         var productIds = _.map($window.products, function (product) { return product.id});
         catalogService.getProduct(productIds).then(function (response) {
             var product = response.data[0];
             //Current product its also variation (titular)
-            allVarations = [ product ].concat(product.Variations);
+            allVarations = [ product ].concat(product.variations);
             $scope.allVariationPropsMap = getFlatternDistinctPropertiesMap(allVarations);
 
             //Auto select initial product as default variation  (its possible because all our products is variations)
@@ -71,7 +69,7 @@ storefrontApp.controller('productController', ['$rootScope', '$scope', '$window'
     };
 
     function getVariationPropertyMap(variation) {
-        retVal = _.groupBy(variation.VariationProperties, function (x) { return x.DisplayName });
+        retVal = _.groupBy(variation.variationProperties, function (x) { return x.displayName });
         return retVal;
     };
 
@@ -109,7 +107,7 @@ storefrontApp.controller('productController', ['$rootScope', '$scope', '$window'
     //Method called from View when user click to one of properties value
     $scope.checkProperty = function (property) {
         //Select apropriate property and diselect previous selected
-        var prevSelected = _.each($scope.allVariationPropsMap[property.DisplayName], function (x) {
+        var prevSelected = _.each($scope.allVariationPropsMap[property.displayName], function (x) {
             x.selected = x != property ? false : !x.selected;
         });
 
@@ -118,5 +116,5 @@ storefrontApp.controller('productController', ['$rootScope', '$scope', '$window'
         $scope.selectedVariation = findVariationBySelectedProps(allVarations, selectedPropsMap);
     };
 
-    Initialize();
+    initialize();
 }]);

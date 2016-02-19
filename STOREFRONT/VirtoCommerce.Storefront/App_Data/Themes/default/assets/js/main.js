@@ -34,6 +34,18 @@ storefrontApp.controller('mainController', ['$scope', '$location', '$window', 'c
         $scope.currentPath = $location.$$path.replace('/', '');
     };
 
+    $scope.stringifyAddress = function (address) {
+        var stringifiedAddress = address.firstName + ' ' + address.lastName + ', ';
+        stringifiedAddress += address.organization ? address.organization + ', ' : '';
+        stringifiedAddress += address.countryName + ', ';
+        stringifiedAddress += address.regionName ? address.regionName + ', ' : '';
+        stringifiedAddress += address.city;
+        stringifiedAddress += address.line1 + ', '
+        stringifiedAddress += address.line2 ? address.line2 : '';
+        stringifiedAddress += address.postalCode;
+        return stringifiedAddress;
+    }
+
     $scope.getObjectSize = function (obj) {
         var size = 0, key;
         for (key in obj) {

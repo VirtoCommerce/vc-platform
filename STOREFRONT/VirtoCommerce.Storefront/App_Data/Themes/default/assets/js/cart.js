@@ -10,12 +10,12 @@ storefrontApp.controller('cartController', ['$rootScope', '$scope', '$timeout', 
     }
 
     $scope.changeLineItemQuantity = function (lineItemId, quantity) {
-        var lineItem = _.find($scope.cart.Items, function (i) { return i.Id == lineItemId });
+        var lineItem = _.find($scope.cart.items, function (i) { return i.id == lineItemId });
         if (!lineItem || quantity < 1 || $scope.cartIsUpdating || $scope.formCart.$invalid) {
             return;
         }
-        var initialQuantity = lineItem.Quantity;
-        lineItem.Quantity = quantity;
+        var initialQuantity = lineItem.quantity;
+        lineItem.quantity = quantity;
         $timeout.cancel(timer);
         timer = $timeout(function () {
             $scope.cartIsUpdating = true;
@@ -23,26 +23,26 @@ storefrontApp.controller('cartController', ['$rootScope', '$scope', '$timeout', 
                 getCart();
                 $rootScope.$broadcast('cartItemsChanged');
             }, function (response) {
-                lineItem.Quantity = initialQuantity;
+                lineItem.quantity = initialQuantity;
                 $scope.cartIsUpdating = false;
             });
         }, 300);
     }
 
     $scope.removeLineItem = function (lineItemId) {
-        var lineItem = _.find($scope.cart.Items, function (i) { return i.Id == lineItemId });
+        var lineItem = _.find($scope.cart.items, function (i) { return i.id == lineItemId });
         if (!lineItem || $scope.cartIsUpdating) {
             return;
         }
         $scope.cartIsUpdating = true;
-        var initialItems = angular.copy($scope.cart.Items);
+        var initialItems = angular.copy($scope.cart.items);
         $scope.recentCartItemModalVisible = false;
-        $scope.cart.Items = _.without($scope.cart.Items, lineItem);
+        $scope.cart.items = _.without($scope.cart.items, lineItem);
         cartService.removeLineItem(lineItemId).then(function (response) {
             getCart();
             $rootScope.$broadcast('cartItemsChanged');
         }, function (response) {
-            $scope.cart.Items = initialItems;
+            $scope.cart.items = initialItems;
             $scope.cartIsUpdating = false;
         });
     }
@@ -52,7 +52,7 @@ storefrontApp.controller('cartController', ['$rootScope', '$scope', '$timeout', 
         if ($scope.formCart.$invalid) {
             return;
         }
-        if ($scope.cart.HasPhysicalProducts) {
+        if ($scope.cart.hasPhysicalProducts) {
             $scope.outerRedirect($scope.baseUrl + 'cart/checkout/#/shipping-address');
         } else {
             $scope.outerRedirect($scope.baseUrl + 'cart/checkout/#/payment-method');

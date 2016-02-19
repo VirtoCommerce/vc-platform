@@ -9,11 +9,6 @@ namespace VirtoCommerce.Storefront.Model.Cart
 {
     public class Shipment : Entity, IDiscountable, IValidatable
     {
-        //For json deserialization
-        private Shipment()
-        {
-        }
-
         public Shipment(Currency currency)
         {
             Currency = currency;

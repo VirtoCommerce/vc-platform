@@ -5,6 +5,7 @@ using System.Web.Routing;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using VirtoCommerce.Storefront.Model;
+using Newtonsoft.Json.Serialization;
 
 namespace VirtoCommerce.Storefront
 {
@@ -73,7 +74,7 @@ namespace VirtoCommerce.Storefront
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
                 NullValueHandling = NullValueHandling.Ignore,
                 ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
-                
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
             };
 
             JsonRequestBehavior = JsonRequestBehavior.AllowGet;
@@ -81,7 +82,7 @@ namespace VirtoCommerce.Storefront
             Settings.Converters.Add(new StringEnumConverter
             {
                 AllowIntegerValues = false,
-                CamelCaseText = false
+                CamelCaseText = true
             });
         }
 

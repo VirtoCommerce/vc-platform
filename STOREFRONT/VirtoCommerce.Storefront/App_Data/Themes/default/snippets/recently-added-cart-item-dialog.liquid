@@ -9,22 +9,22 @@
                         <div class="grid">
                             <div class="grid-item one-third large--one-quarter">
                                 <span class="cart-image">
-                                    <img ng-src="{( dialogData.ImageUrl )}" />
+                                    <img ng-src="{( dialogData.imageUrl )}" />
                                 </span>
                             </div>
                             <div class="grid-item two-thirds large--three-quarters">
-                                <a ng-bind="dialogData.Name"></a>
+                                <a ng-bind="dialogData.name"></a>
                             </div>
                         </div>
                     </div>
                     <div class="grid-item large--five-twelfths medium--two-thirds push--medium--one-third">
                         <div class="grid">
                             <div class="grid-item one-half medium-down--one-third text-right">
-                                <div class="ajaxifyCart--qty" ng-bind="dialogData.Quantity"></div>
+                                <div class="ajaxifyCart--qty" ng-bind="dialogData.quantity"></div>
                             </div>
                             <div class="grid-item one-third medium-down--one-third medium-down--text-left text-right">
-                                <span class="h2" ng-bind="dialogData.PlacedPrice.FormatedAmount"></span>
-                                <span style="text-decoration: line-through;" ng-if="dialogData.ListPrice.Amount != dialogData.PlacedPrice.Amount" ng-bind="dialogData.ListPrice.FormatedAmount"></span>
+                                <span class="h2" ng-bind="dialogData.placedPrice.formatedAmount"></span>
+                                <span style="text-decoration: line-through;" ng-if="dialogData.listPrice.amount != dialogData.placedPrice.amount" ng-bind="dialogData.listPrice.formatedAmount"></span>
                             </div>
                         </div>
                     </div>
