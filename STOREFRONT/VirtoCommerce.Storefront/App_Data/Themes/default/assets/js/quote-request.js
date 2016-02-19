@@ -9,14 +9,14 @@ storefrontApp.controller('quoteRequestController', ['$rootScope', '$scope', '$lo
     }
 
     $scope.displayForStatuses = function (statuses) {
-        return _.contains(statuses, $scope.quoteRequest.Status);
+        return _.contains(statuses, $scope.quoteRequest.status);
     }
 
     $scope.addTierPrice = function (quoteItem) {
-        quoteItem.ProposalPrices.push({
-            Id: quoteItem.ProposalPrices.length + 1,
-            Price: quoteItem.SalePrice,
-            Quantity: 1
+        quoteItem.proposalPrices.push({
+            id: quoteItem.proposalPrices.length + 1,
+            price: quoteItem.salePrice,
+            quantity: 1
         });
     }
 
@@ -24,62 +24,62 @@ storefrontApp.controller('quoteRequestController', ['$rootScope', '$scope', '$lo
         if (quantity < 1 || quantity.isNaN) {
             return;
         }
-        tierPrice.Quantity = quantity;
+        tierPrice.quantity = quantity;
     }
 
     $scope.removeTierPrice = function (quoteItem, tierPrice) {
-        quoteItem.ProposalPrices = _.without(quoteItem.ProposalPrices, tierPrice);
+        quoteItem.proposalPrices = _.without(quoteItem.proposalPrices, tierPrice);
     }
 
     $scope.removeProductFromQuoteRequest = function (quoteItem) {
-        var initialQuoteItems = angular.copy($scope.quoteRequest.Items);
-        $scope.quoteRequest.Items = _.without($scope.quoteRequest.Items, quoteItem);
-        quoteRequestService.removeProductFromQuoteRequest(quoteItem.Id).then(function (response) {
-            getQuoteRequest($scope.quoteRequest.Id);
+        var initialQuoteItems = angular.copy($scope.quoteRequest.items);
+        $scope.quoteRequest.items = _.without($scope.quoteRequest.items, quoteItem);
+        quoteRequestService.removeProductFromQuoteRequest($scope.quoteRequest.id, quoteItem.id).then(function (response) {
+            getQuoteRequest($scope.quoteRequest.id);
             $rootScope.$broadcast('actualQuoteRequestItemsChanged');
         }, function (response) {
-            $scope.quoteRequest.Items = initialQuoteItems;
+            $scope.quoteRequest.items = initialQuoteItems;
         });
     }
 
     $scope.setCountry = function (addressType, countryName) {
-        var country = _.find($scope.countries, function (c) { return c.Name == countryName });
+        var country = _.find($scope.countries, function (c) { return c.name == countryName });
         if (!country) {
             return;
         }
         if (addressType == 'Billing') {
             $scope.billingCountry = country;
             $scope.billingCountryRegions = [];
-            $scope.quoteRequest.BillingAddress.CountryCode = country.Code3 || country.Code2;
-            $scope.quoteRequest.BillingAddress.RegionId = null;
-            $scope.quoteRequest.BillingAddress.RegionName = null;
+            $scope.quoteRequest.billingAddress.countryCode = country.code3 || country.code2;
+            $scope.quoteRequest.billingAddress.regionId = null;
+            $scope.quoteRequest.billingAddress.regionName = null;
         }
         if (addressType == 'Shipping') {
             $scope.shippingCountry = country;
             $scope.shippingCountryRegions = [];
-            $scope.quoteRequest.ShippingAddress.CountryCode = country.Code3 || country.Code2;
-            $scope.quoteRequest.ShippingAddress.RegionId = null;
-            $scope.quoteRequest.ShippingAddress.RegionName = null;
+            $scope.quoteRequest.shippingAddress.countryCode = country.code3 || country.code2;
+            $scope.quoteRequest.shippingAddress.regionId = null;
+            $scope.quoteRequest.shippingAddress.regionName = null;
         }
-        if (country.Code3) {
-            getCountryRegions(addressType, country.Code3);
+        if (country.code3) {
+            getCountryRegions(addressType, country.code3);
         }
     }
 
     $scope.setCountryRegion = function (addressType) {
         if (addressType == 'Billing') {
-            var countryRegion = _.find($scope.billingCountryRegions, function (r) { return r.Name == $scope.quoteRequest.BillingAddress.RegionName });
+            var countryRegion = _.find($scope.billingCountryRegions, function (r) { return r.name == $scope.quoteRequest.billingAddress.regionName });
             if (!countryRegion) {
                 return;
             }
-            $scope.quoteRequest.BillingAddress.RegionId = countryRegion.Code;
+            $scope.quoteRequest.billingAddress.regionId = countryRegion.code;
         }
         if (addressType == 'Shipping') {
-            var countryRegion = _.find($scope.shippingCountryRegions, function (r) { return r.Name == $scope.quoteRequest.ShippingAddress.RegionName });
+            var countryRegion = _.find($scope.shippingCountryRegions, function (r) { return r.name == $scope.quoteRequest.shippingAddress.regionName });
             if (!countryRegion) {
                 return;
             }
-            $scope.quoteRequest.ShippingAddress.RegionId = countryRegion.Code;
+            $scope.quoteRequest.shippingAddress.regionId = countryRegion.code;
         }
     }
 
@@ -87,14 +87,14 @@ storefrontApp.controller('quoteRequestController', ['$rootScope', '$scope', '$lo
         if (!address) {
             return;
         }
-        var stringifiedAddress = address.FirstName + ' ' + address.LastName + ', ';
-        stringifiedAddress += address.Organization ? address.Organization + ', ' : '';
-        stringifiedAddress += address.CountryName + ', ';
-        stringifiedAddress += address.RegionName ? address.RegionName + ', ' : '';
-        stringifiedAddress += address.City;
-        stringifiedAddress += address.Line1 + ', '
-        stringifiedAddress += address.Line2 ? address.Line2 : '';
-        stringifiedAddress += address.PostalCode;
+        var stringifiedAddress = address.firstName + ' ' + address.lastName + ', ';
+        stringifiedAddress += address.organization ? address.organization + ', ' : '';
+        stringifiedAddress += address.countryName + ', ';
+        stringifiedAddress += address.regionName ? address.regionName + ', ' : '';
+        stringifiedAddress += address.city;
+        stringifiedAddress += address.line1 + ', '
+        stringifiedAddress += address.line2 ? address.line2 : '';
+        stringifiedAddress += address.postalCode;
         return stringifiedAddress;
     }
 
@@ -103,17 +103,12 @@ storefrontApp.controller('quoteRequestController', ['$rootScope', '$scope', '$lo
         if ($scope.formQuoteRequest.$invalid) {
             return;
         }
-        _.each($scope.quoteRequest.Items, function (item) {
-            if (!$scope.tierPricesUnique(item)) {
-                return;
-            }
-        });
-        $scope.quoteRequest.BillingAddress.Email = $scope.quoteRequest.Email;
-        if ($scope.quoteRequest.ShippingAddress) {
-            $scope.quoteRequest.ShippingAddress.Email = $scope.quoteRequest.Email;
+        $scope.quoteRequest.billingAddress.email = $scope.quoteRequest.email;
+        if ($scope.quoteRequest.shippingAddress) {
+            $scope.quoteRequest.shippingAddress.email = $scope.quoteRequest.email;
         }
-        quoteRequestService.submitQuoteRequest(toFormModel($scope.quoteRequest)).then(function (response) {
-            if ($scope.customer.IsRegisteredUser) {
+        quoteRequestService.submitQuoteRequest($scope.quoteRequest.id, toFormModel($scope.quoteRequest)).then(function (response) {
+            if ($scope.customer.isRegisteredUser) {
                 $scope.outerRedirect($scope.baseUrl + 'account/quoterequests');
             } else {
                 $scope.outerRedirect($scope.baseUrl + 'account/login');
@@ -122,42 +117,42 @@ storefrontApp.controller('quoteRequestController', ['$rootScope', '$scope', '$lo
     }
 
     $scope.rejectQuoteRequest = function () {
-        quoteRequestService.rejectQuoteRequest($scope.quoteRequest.Id).then(function (response) {
-            $scope.outerRedirect($scope.baseUrl + 'quoterequest/#/' + $scope.quoteRequest.Id);
+        quoteRequestService.rejectQuoteRequest($scope.quoteRequest.id).then(function (response) {
+            quoteRequestService.getQuoteRequest($scope.quoteRequest.id);
         });
     }
 
     $scope.selectTierPrice = function () {
-        quoteRequestService.getTotals(toFormModel($scope.quoteRequest)).then(function (response) {
-            $scope.quoteRequest.Totals = response.data;
+        quoteRequestService.getTotals($scope.quoteRequest.id, toFormModel($scope.quoteRequest)).then(function (response) {
+            $scope.quoteRequest.totals = response.data;
         });
     }
 
     $scope.confirmQuoteRequest = function () {
-        quoteRequestService.confirmQuoteRequest(toFormModel($scope.quoteRequest)).then(function (response) {
+        quoteRequestService.confirmQuoteRequest($scope.quoteRequest.id, toFormModel($scope.quoteRequest)).then(function (response) {
             $scope.outerRedirect($scope.baseUrl + 'cart/checkout/#/shipping-address');
         });
     }
 
     $scope.setShippingAddressEqualsBilling = function () {
-        if ($scope.quoteRequest.ShippingAddressEqualsBilling) {
-            $scope.quoteRequest.ShippingAddress = angular.copy($scope.quoteRequest.BillingAddress);
-            $scope.quoteRequest.ShippingAddress.Type = 'Shipping';
-            if ($scope.quoteRequest.ShippingAddress.CountryCode) {
+        if ($scope.quoteRequest.shippingAddressEqualsBilling) {
+            $scope.quoteRequest.shippingAddress = angular.copy($scope.quoteRequest.billingAddress);
+            $scope.quoteRequest.shippingAddress.type = 'Shipping';
+            if ($scope.quoteRequest.shippingAddress.countryCode) {
                 $scope.shippingCountry = $scope.billingCountry;
-                getCountryRegions('Shipping', $scope.quoteRequest.ShippingAddress.CountryCode);
+                getCountryRegions('Shipping', $scope.quoteRequest.shippingAddress.countryCode);
             }
         }
     }
 
     $scope.tierPricesUnique = function (quoteItem) {
-        var quantities = _.map(quoteItem.ProposalPrices, function (p) { return p.Quantity });
-        return _.uniq(quantities).length == quoteItem.ProposalPrices.length;
+        var quantities = _.map(quoteItem.proposalPrices, function (p) { return p.quantity });
+        return _.uniq(quantities).length == quoteItem.proposalPrices.length;
     }
 
     function initialize() {
         var quoteRequestNumber = $location.url().replace('/', '');
-        $scope.quoteRequest = { ItemsCount: 0 };
+        $scope.quoteRequest = { itemsCount: 0 };
         $scope.billingCountry = null;
         $scope.shippingCountry = null;
         getCountries();
@@ -169,23 +164,23 @@ storefrontApp.controller('quoteRequestController', ['$rootScope', '$scope', '$lo
     function getQuoteRequest(number) {
         quoteRequestService.getQuoteRequest(number).then(function (response) {
             var quoteRequest = response.data;
-            if (!quoteRequest.BillingAddress) {
-                quoteRequest.BillingAddress = {
-                    FirstName: $scope.customer.FirstName,
-                    LastName: $scope.customer.LastName
+            if (!quoteRequest.billingAddress) {
+                quoteRequest.billingAddress = {
+                    firstName: $scope.customer.firstName,
+                    lastName: $scope.customer.lastName
                 };
             }
-            _.each(quoteRequest.Items, function (quoteItem) {
+            _.each(quoteRequest.items, function (quoteItem) {
                 var i = 1;
-                _.each(quoteItem.ProposalPrices, function (tierPrice) {
-                    tierPrice.Id = i;
-                    if (quoteItem.SelectedTierPrice.Quantity == tierPrice.Quantity) {
-                        quoteItem.SelectedTierPrice.Id = i;
+                _.each(quoteItem.proposalPrices, function (tierPrice) {
+                    tierPrice.id = i;
+                    if (quoteItem.selectedTierPrice.quantity == tierPrice.quantity) {
+                        quoteItem.selectedTierPrice.id = i;
                     }
                     i++;
                 });
             });
-            quoteRequest.RequestShippingQuote = true;
+            quoteRequest.requestShippingQuote = true;
             $scope.quoteRequest = quoteRequest;
         });
     }
@@ -210,31 +205,31 @@ storefrontApp.controller('quoteRequestController', ['$rootScope', '$scope', '$lo
 
     function toFormModel(quoteRequest) {
         var quoteRequestFormModel = {
-            Id: quoteRequest.Id,
-            Tag: quoteRequest.Tag,
-            Status: quoteRequest.Status,
-            Comment: quoteRequest.Comment,
-            BillingAddress: quoteRequest.BillingAddress,
-            ShippingAddress: quoteRequest.ShippingAddress,
-            Items: []
+            id: quoteRequest.id,
+            tag: quoteRequest.tag,
+            status: quoteRequest.status,
+            comment: quoteRequest.comment,
+            billingAddress: quoteRequest.billingAddress,
+            shippingAddress: quoteRequest.shippingAddress,
+            items: []
         };
-        _.each(quoteRequest.Items, function (quoteItem) {
+        _.each(quoteRequest.items, function (quoteItem) {
             var quoteItemFormModel = {
-                Id: quoteItem.Id,
-                Comment: quoteItem.Comment,
-                SelectedTierPrice: {
-                    Price: quoteItem.SelectedTierPrice.Price.Amount,
-                    Quantity: quoteItem.SelectedTierPrice.Quantity
+                id: quoteItem.id,
+                comment: quoteItem.comment,
+                selectedTierPrice: {
+                    price: quoteItem.selectedTierPrice.price.amount,
+                    quantity: quoteItem.selectedTierPrice.quantity
                 },
-                ProposalPrices: []
+                proposalPrices: []
             };
-            _.each(quoteItem.ProposalPrices, function (tierPrice) {
-                quoteItemFormModel.ProposalPrices.push({
-                    Price: tierPrice.Price.Amount,
-                    Quantity: tierPrice.Quantity
+            _.each(quoteItem.proposalPrices, function (tierPrice) {
+                quoteItemFormModel.proposalPrices.push({
+                    price: tierPrice.price.amount,
+                    quantity: tierPrice.quantity
                 });
             });
-            quoteRequestFormModel.Items.push(quoteItemFormModel);
+            quoteRequestFormModel.items.push(quoteItemFormModel);
         });
 
         return quoteRequestFormModel;
@@ -242,14 +237,14 @@ storefrontApp.controller('quoteRequestController', ['$rootScope', '$scope', '$lo
 }]);
 
 storefrontApp.controller('actualQuoteRequestBarController', ['$scope', 'quoteRequestService', function ($scope, quoteRequestService) {
-    getActualQuoteRequest();
+    getCurrentQuoteRequest();
 
     $scope.$on('actualQuoteRequestItemsChanged', function (event, data) {
-        getActualQuoteRequest();
+        getCurrentQuoteRequest();
     });
 
-    function getActualQuoteRequest() {
-        quoteRequestService.getActualQuoteRequest().then(function (response) {
+    function getCurrentQuoteRequest() {
+        quoteRequestService.getCurrentQuoteRequest().then(function (response) {
             $scope.actualQuoteRequest = response.data;
         });
     }

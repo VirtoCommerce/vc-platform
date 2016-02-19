@@ -59,11 +59,21 @@ namespace VirtoCommerce.Storefront.Controllers.Api
             return Json(quoteRequest);
         }
 
-        // POST: storefrontapi/quoterequests/{number}/items?productId=...&quantity=...
-        [HttpPost]
-        public async Task<ActionResult> AddItem(string number, string productId, int quantity)
+        // GET: storefrontapi/quoterequest/current
+        [HttpGet]
+        public ActionResult GetCurrent()
         {
-            await _quoteRequestBuilder.LoadQuoteRequestAsync(number, WorkContext.CurrentLanguage, WorkContext.AllCurrencies);
+            EnsureThatIsItCustomerQuoteRequest(WorkContext.CurrentQuoteRequest);
+
+            return Json(WorkContext.CurrentQuoteRequest);
+        }
+
+        // POST: storefrontapi/quoterequests/current/items?productId=...&quantity=...
+        [HttpPost]
+        public async Task<ActionResult> AddItem(string productId, int quantity)
+        {
+            EnsureThatIsItCustomerQuoteRequest(WorkContext.CurrentQuoteRequest);
+            _quoteRequestBuilder.TakeQuoteRequest(WorkContext.CurrentQuoteRequest);
 
             using (var lockObject = await AsyncLock.GetLockByKey(GetAsyncLockQuoteKey(_quoteRequestBuilder.QuoteRequest.Id)).LockAsync())
             {
@@ -182,7 +192,7 @@ namespace VirtoCommerce.Storefront.Controllers.Api
 
         private void EnsureThatIsItCustomerQuoteRequest(QuoteRequest quote)
         {
-            if (WorkContext.CurrentCustomer.Id == quote.CustomerId)
+            if (WorkContext.CurrentCustomer.Id != quote.CustomerId)
             {
                 throw new StorefrontException("Requested quote not belongs to user " + WorkContext.CurrentCustomer.UserName);
             }

@@ -116,6 +116,11 @@ namespace VirtoCommerce.Storefront.Services
                     workContext.CurrentCustomer.Addresses.AddRange(eventArgs.Order.Addresses);
                     workContext.CurrentCustomer.Addresses.AddRange(eventArgs.Order.Shipments.Select(x => x.DeliveryAddress));
 
+                    foreach (var address in workContext.CurrentCustomer.Addresses)
+                    {
+                        address.Name = string.Format("{0} {1}", address.FirstName, address.LastName);
+                    }
+
                     await UpdateCustomerAsync(workContext.CurrentCustomer);
                 }
 
