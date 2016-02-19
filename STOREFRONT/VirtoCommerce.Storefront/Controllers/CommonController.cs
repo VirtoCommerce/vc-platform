@@ -93,11 +93,25 @@ namespace VirtoCommerce.Storefront.Controllers
         [HttpGet]
         public ActionResult GetRegions(string countryCode)
         {
-            var country = WorkContext.AllCountries.FirstOrDefault(c => c.Code3.Equals(countryCode, StringComparison.OrdinalIgnoreCase));
+            Country country = null;
+
+            if (countryCode != null)
+            {
+                if (countryCode.Length == 3)
+                {
+                    country = WorkContext.AllCountries.FirstOrDefault(c => c.Code3.Equals(countryCode, StringComparison.OrdinalIgnoreCase));
+                }
+                else if (countryCode.Length == 2)
+                {
+                    country = WorkContext.AllCountries.FirstOrDefault(c => c.Code2.Equals(countryCode, StringComparison.OrdinalIgnoreCase));
+                }
+            }
+
             if (country != null)
             {
                 return Json(country.Regions, JsonRequestBehavior.AllowGet);
             }
+
             return HttpNotFound();
         }
 
@@ -106,6 +120,13 @@ namespace VirtoCommerce.Storefront.Controllers
         public ActionResult NoStore()
         {
             return View("NoStore");
+        }
+
+        // GET: /maintenance
+        [HttpGet]
+        public ActionResult Maintenance()
+        {
+            return View("maintenance", "empty", WorkContext);
         }
     }
 }

@@ -1,0 +1,58 @@
+﻿<style>
+    html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+    }
+
+    .container {
+        background-color: #00abec;
+        height: 100%;
+        overflow: hidden;
+        width: 100%;
+    }
+
+    #feature {
+        width: 960px;
+        margin: 95px auto 0 auto;
+        overflow: auto;
+    }
+
+    #content {
+        font-family: "Segoe UI";
+        font-weight: normal;
+        font-size: 26px;
+        color: #ffffff;
+        float: left;
+        width: 460px;
+        margin-top: 68px;
+        margin-left: 0px;
+        vertical-align: middle;
+    }
+    #content h1 {
+        font-family: "Segoe UI Light";
+        color: #ffffff;
+        font-weight: normal;
+        font-size: 70px;
+        line-height: 48pt;
+        width: 800px;
+        padding-bottom: 15px;
+    }
+
+    p a, p a:visited, p a:active, p a:hover {
+        color: #ffffff;
+    }
+</style>
+<div class="container">
+    <div id="feature">
+        <div id="content">
+            {% if shop.status == 'Closed' %}
+                <h1>Store is closed right now</h1>
+            {% endif %}
+            <p>
+                Please visit us a little bit later!
+            </p>
+        </div>
+    </div>
+</div>

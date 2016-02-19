@@ -63,7 +63,6 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                 foreach (var item in items)
                 {
                     var dbItem = item.ToDataModel(pkMap);
-                    repository.Add(dbItem);
                     if (item.Variations != null)
                     {
                         foreach (var variation in item.Variations)
@@ -71,9 +70,10 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                             variation.MainProductId = dbItem.Id;
                             variation.CatalogId = dbItem.CatalogId;
                             var dbVariation = variation.ToDataModel(pkMap);
-                            repository.Add(dbVariation);
+                            dbItem.Childrens.Add(dbVariation);
                         }
                     }
+                    repository.Add(dbItem);
                 }
                 CommitChanges(repository);
                 pkMap.ResolvePrimaryKeys();

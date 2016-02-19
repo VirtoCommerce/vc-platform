@@ -125,6 +125,7 @@
     <Compile Include="Model\VirtoCommerceCoreModuleWebModelSignInResult.cs" />
     <Compile Include="Model\VirtoCommerceCustomerModuleWebModelAddress.cs" />
     <Compile Include="Model\VirtoCommerceCustomerModuleWebModelContact.cs" />
+    <Compile Include="Model\VirtoCommerceCustomerModuleWebModelLoginOnBehalfInfo.cs" />
     <Compile Include="Model\VirtoCommerceCustomerModuleWebModelMember.cs" />
     <Compile Include="Model\VirtoCommerceCustomerModuleWebModelNote.cs" />
     <Compile Include="Model\VirtoCommerceCustomerModuleWebModelOrganization.cs" />

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Model
@@ -37,7 +36,7 @@ namespace VirtoCommerce.Storefront.Model
         /// <summary>
         /// State of store (open, closing, maintenance)
         /// </summary>
-        public string StoreState { get; set; }
+        public StoreStatus StoreState { get; set; }
 
         public string TimeZone { get; set; }
 
@@ -83,7 +82,7 @@ namespace VirtoCommerce.Storefront.Model
         /// Store theme name
         /// </summary>
         public string ThemeName { get; set; }
-  
+
         public ICollection<DynamicProperty> DynamicProperties { get; set; }
 
         /// <summary>
@@ -111,39 +110,39 @@ namespace VirtoCommerce.Storefront.Model
         }
 
         //Need sync store currencies with system avail currencies for specific language
-        public void SyncCurrencies(IEnumerable<Currency> availCurrencies, Language language)
+        public void SyncCurrencies(IEnumerable<Currency> availableCurrencies, Language language)
         {
-            var storeCurrencies = new List<Currency>();
-            foreach (var storeCurrency in Currencies)
-            {
-                var currency = availCurrencies.FirstOrDefault(x => x.Equals(storeCurrency));
-                if (currency == null)
-                {
-                    currency = new Currency(language, storeCurrency.Code);
-                }
-                storeCurrencies.Add(currency);
-            }
-            Currencies = storeCurrencies;
-            DefaultCurrency = Currencies.FirstOrDefault(x => x.Equals(DefaultCurrency)) ?? new Currency(language, DefaultCurrency.Code);
+            var allCurrencies = availableCurrencies.ToList();
+            var newCurrencies = Currencies
+                .Select(storeCurrency => allCurrencies.FirstOrDefault(c => c.Equals(storeCurrency)) ?? new Currency(language, storeCurrency.Code))
+                .ToList();
+
+            Currencies = newCurrencies;
+            DefaultCurrency = Currencies.FirstOrDefault(c => c.Equals(DefaultCurrency)) ?? new Currency(language, DefaultCurrency.Code);
         }
 
         /// <summary>
-        /// Check that specified request uri matched to this store
+        /// Checks if specified URL starts with store URL or store secure URL.
         /// </summary>
-        /// <param name="requestUri"></param>
+        /// <param name="url"></param>
         /// <returns></returns>
-        public bool IsStoreUri(Uri requestUri)
+        public bool IsStoreUrl(Uri url)
         {
-            var retVal = false;
-            if (requestUri.Scheme == Uri.UriSchemeHttps)
+            var result = false;
+
+            var requestAddress = url.ToString();
+
+            if (!string.IsNullOrEmpty(Url))
             {
-                retVal = !String.IsNullOrEmpty(SecureUrl) && requestUri.ToString().StartsWith(SecureUrl);
+                result = requestAddress.StartsWith(Url);
             }
-            else
+
+            if (!result && !string.IsNullOrEmpty(SecureUrl))
             {
-                retVal = !String.IsNullOrEmpty(Url) && requestUri.ToString().StartsWith(Url);
+                result = requestAddress.StartsWith(SecureUrl);
             }
-            return retVal;
+
+            return result;
         }
     }
 }

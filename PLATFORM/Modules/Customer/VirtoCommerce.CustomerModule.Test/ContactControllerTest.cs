@@ -68,22 +68,22 @@ namespace VirtoCommerce.CustomerModule.Test
                 BirthDate = DateTime.UtcNow,
                 Organizations = new[] { "org1" },
                 Addresses = new webModel.Address[]
-				{
-					new webModel.Address {	
-					Name = "some name",	 
-					AddressType = AddressType.Shipping, 
-					City = "london",
-					Phone = "+68787687",
-					PostalCode = "22222",
-					CountryCode = "ENG",
-					CountryName = "England",
-					Email = "user@mail.com",
-					FirstName = "first name",
-					LastName = "last name",
-					Line1 = "line 1",
-					Organization = "org1"
-					}
-				}.ToList(),
+                {
+                    new webModel.Address {
+                    Name = "some name",
+                    AddressType = AddressType.Shipping,
+                    City = "london",
+                    Phone = "+68787687",
+                    PostalCode = "22222",
+                    CountryCode = "ENG",
+                    CountryName = "England",
+                    Email = "user@mail.com",
+                    FirstName = "first name",
+                    LastName = "last name",
+                    Line1 = "line 1",
+                    Organization = "org1"
+                    }
+                }.ToList(),
                 Notes = new webModel.Note[] { new webModel.Note { Title = "1111", Body = "dfsdfs sdf sdf sdf sd" } },
                 Emails = new[] { "uuu@mail.ru", "ssss@mail.ru" },
                 Phones = new[] { "2322232", "32323232" },
@@ -149,7 +149,8 @@ namespace VirtoCommerce.CustomerModule.Test
             var contactService = new ContactServiceImpl(customerRepositoryFactory, dynamicPropertyService);
             var orgService = new OrganizationServiceImpl(customerRepositoryFactory, dynamicPropertyService);
             var searchService = new CustomerSearchServiceImpl(customerRepositoryFactory);
-            return new CustomerModuleController(contactService, orgService, searchService);
+
+            return new CustomerModuleController(contactService, orgService, searchService, null);
         }
     }
 }

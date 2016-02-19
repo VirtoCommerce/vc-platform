@@ -100,5 +100,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         public bool CustomerAccountsEnabled { get; set; }
 
         public bool CustomerAccountsOptional { get; set; }
+
+        public string Status { get; set; }
     }
 }
