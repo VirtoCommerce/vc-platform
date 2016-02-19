@@ -7,6 +7,20 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
 {
     public static class ShopifyContextConverter
     {
+        private static string[] _poweredLinks = {
+                                             "<a href=\"http://virtocommerce.com\" rel=\"nofollow\" target=\"_blank\">.NET ecommerce platform</a> by Virto",
+                                             "<a href=\"http://virtocommerce.com/shopping-cart\" rel=\"nofollow\" target=\"_blank\">Shopping Cart</a> by Virto",
+                                             "<a href=\"http://virtocommerce.com/shopping-cart\" rel=\"nofollow\" target=\"_blank\">.NET Shopping Cart</a> by Virto",
+                                             "<a href=\"http://virtocommerce.com/shopping-cart\" rel=\"nofollow\" target=\"_blank\">ASP.NET Shopping Cart</a> by Virto",
+                                             "<a href=\"http://virtocommerce.com\" rel=\"nofollow\" target=\"_blank\">.NET ecommerce</a> by Virto",
+                                             "<a href=\"http://virtocommerce.com\" rel=\"nofollow\" target=\"_blank\">.NET ecommerce framework</a> by Virto",
+                                             "<a href=\"http://virtocommerce.com\" rel=\"nofollow\" target=\"_blank\">ASP.NET ecommerce</a> by Virto Commerce",
+                                             "<a href=\"http://virtocommerce.com\" rel=\"nofollow\" target=\"_blank\">ASP.NET ecommerce platform</a> by Virto",
+                                             "<a href=\"http://virtocommerce.com\" rel=\"nofollow\" target=\"_blank\">ASP.NET ecommerce framework</a> by Virto",
+                                             "<a href=\"http://virtocommerce.com\" rel=\"nofollow\" target=\"_blank\">Enterprise ecommerce</a> by Virto",
+                                             "<a href=\"http://virtocommerce.com\" rel=\"nofollow\" target=\"_blank\">Enterprise ecommerce platform</a> by Virto",
+                                         };
+
         public static ShopifyThemeWorkContext ToShopifyModel(this storefrontModel.WorkContext workContext, IStorefrontUrlBuilder urlBuilder)
         {
             var result = new ShopifyThemeWorkContext();
@@ -94,6 +108,13 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                 result.Notification = workContext.StorefrontNotification.ToShopifyModel();
             }
 
+            //Powered by link
+            if (workContext.CurrentStore != null)
+            {
+                var storeName = workContext.CurrentStore.Name;
+                var hashCode = (uint)storeName.GetHashCode();
+                result.PoweredByLink = _poweredLinks[hashCode % _poweredLinks.Length];
+            }
             return result;
         }
     }

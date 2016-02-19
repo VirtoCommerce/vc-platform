@@ -76,6 +76,8 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
 
         public TagCollection CurrentTags { get; set; }
 
+        public string PoweredByLink { get; set; }
+
         #region Custom properties
         public Language CurrentLanguage { get; set; }
 
