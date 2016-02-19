@@ -75,7 +75,7 @@ namespace VirtoCommerce.Storefront.Model.Customer
             return string.Format(CultureInfo.InvariantCulture, "user#{0} {1} {2}", Id ?? "undef", UserName ?? "undef", IsRegisteredUser ? "registered" : "anonymous");
         }
 
-        public string ManagerUserId { get; set; }
-        public string ManagerUserName { get; set; }
+        public string OperatorUserId { get; set; }
+        public string OperatorUserName { get; set; }
     }
 }

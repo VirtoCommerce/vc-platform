@@ -13,7 +13,7 @@
 
         public const string AnonymousUsername = "Anonymous";
 
-        public const string ManagerUserNameClaimType = "http://schemas.virtocommerce.com/ws/2016/02/identity/claims/managername";
-        public const string ManagerUserIdClaimType = "http://schemas.virtocommerce.com/ws/2016/02/identity/claims/managernameidentifier";
+        public const string OperatorUserNameClaimType = "http://schemas.virtocommerce.com/ws/2016/02/identity/claims/operatorname";
+        public const string OperatorUserIdClaimType = "http://schemas.virtocommerce.com/ws/2016/02/identity/claims/operatornameidentifier";
     }
 }

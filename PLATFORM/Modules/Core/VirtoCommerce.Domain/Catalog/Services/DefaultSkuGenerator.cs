@@ -11,24 +11,29 @@ namespace VirtoCommerce.Domain.Catalog.Services
 	/// </summary>
 	public class DefaultSkuGenerator : ISkuGenerator
 	{
-		#region ISkuGenerator Members
+        private static readonly Random _random = new Random();
+        private static readonly object _lockObject = new object();
 
-		public string GenerateSku(Model.CatalogProduct product)
+        #region ISkuGenerator Members
+
+        public string GenerateSku(Model.CatalogProduct product)
 		{
 			const string leterPart = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 			const string digitPart = "1234567890";
 			StringBuilder res = new StringBuilder();
 
-			Random rnd = new Random();
-			for (int i = 0; i < 3; i++)
-			{
-				res.Append(leterPart[rnd.Next(leterPart.Length)]);
-			}
-			res.Append("-");
-			for (int i = 0; i < 8; i++)
-			{
-				res.Append(digitPart[rnd.Next(digitPart.Length)]);
-			}
+            lock (_lockObject)
+            { 
+                for (int i = 0; i < 3; i++)
+                {
+                    res.Append(leterPart[_random.Next(leterPart.Length)]);
+                }
+                res.Append("-");
+                for (int i = 0; i < 8; i++)
+                {
+                    res.Append(digitPart[_random.Next(digitPart.Length)]);
+                }
+            }
 			return res.ToString();
 		}
 

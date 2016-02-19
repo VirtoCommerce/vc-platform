@@ -27,8 +27,12 @@
         }
     };
 
-    $scope.selectVariation = function (listItem) {
+    blade.setSelectedItem = function (listItem) {
         $scope.selectedNodeId = listItem.id;
+    };
+
+    $scope.selectVariation = function (listItem) {
+        blade.setSelectedItem(listItem);
 
         var newBlade = {
             id: 'variationDetail',

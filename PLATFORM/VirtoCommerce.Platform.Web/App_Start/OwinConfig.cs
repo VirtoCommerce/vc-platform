@@ -91,6 +91,8 @@ namespace VirtoCommerce.Platform.Web
                 }
             }
 
+            app.Use<UserNameOwinMiddleware>();
+
             var securityService = container.Resolve<ISecurityService>();
             var moduleInitializerOptions = container.Resolve<IModuleInitializerOptions>();
             app.UseHangfire(config =>

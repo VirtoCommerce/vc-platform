@@ -47,9 +47,6 @@
 <div class="container">
     <div id="feature">
         <div id="content">
-            {% if shop.status == 'RestrictedAccess' %}
-                <h1>Store is under maintenance for now</h1>
-            {% endif %}
             {% if shop.status == 'Closed' %}
                 <h1>Store is closed right now</h1>
             {% endif %}

@@ -233,8 +233,8 @@ namespace VirtoCommerce.Storefront.Controllers
                         if (user2 != null && customer2 != null)
                         {
                             customer2.UserName = user2.UserName;
-                            customer2.ManagerUserId = user.Id;
-                            customer2.ManagerUserName = user.UserName;
+                            customer2.OperatorUserId = user.Id;
+                            customer2.OperatorUserName = user.UserName;
                             customer = customer2;
                         }
 
@@ -413,14 +413,14 @@ namespace VirtoCommerce.Storefront.Controllers
 
             var identity = new ClaimsIdentity(claims, Microsoft.AspNet.Identity.DefaultAuthenticationTypes.ApplicationCookie);
 
-            if (!string.IsNullOrEmpty(customer.ManagerUserName))
+            if (!string.IsNullOrEmpty(customer.OperatorUserName))
             {
-                identity.AddClaim(new Claim(StorefrontConstants.ManagerUserNameClaimType, customer.ManagerUserName));
+                identity.AddClaim(new Claim(StorefrontConstants.OperatorUserNameClaimType, customer.OperatorUserName));
             }
 
-            if (!string.IsNullOrEmpty(customer.ManagerUserId))
+            if (!string.IsNullOrEmpty(customer.OperatorUserId))
             {
-                identity.AddClaim(new Claim(StorefrontConstants.ManagerUserIdClaimType, customer.ManagerUserId));
+                identity.AddClaim(new Claim(StorefrontConstants.OperatorUserIdClaimType, customer.OperatorUserId));
             }
 
             return identity;
