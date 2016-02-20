@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
+using VirtoCommerce.Platform.Core.Security;
 
 namespace VirtoCommerce.CustomerModule.Web.Model
 {
@@ -21,7 +22,10 @@ namespace VirtoCommerce.CustomerModule.Web.Model
 		public ICollection<Address> Addresses { get; set; }
 		public ICollection<string> Phones { get; set; }
 		public ICollection<string> Emails { get; set; }
-
+        /// <summary>
+        /// All security accounts logins associated with this member (test@mail.com, test2@mail.com etc.)
+        /// </summary>
+        public ICollection<ApplicationUserExtended> SecurityAccounts { get; set; }
         /// <summary>
         /// Additional information about the member
         /// </summary>

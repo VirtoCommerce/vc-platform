@@ -19,7 +19,7 @@ namespace VirtoCommerce.CustomerModule.Data.Model
 			MemberRelations = new NullCollection<MemberRelation>();
 			Phones = new NullCollection<Phone>();
 			Emails = new NullCollection<Email>();
-		}
+        }
 
 		#region NavigationProperties
 
@@ -33,6 +33,6 @@ namespace VirtoCommerce.CustomerModule.Data.Model
 
 		public ObservableCollection<Email> Emails { get; set; }
 
-	    #endregion
-	}
+        #endregion
+    }
 }

@@ -48,7 +48,7 @@ namespace VirtoCommerce.Storefront.Controllers
         [HttpGet]
         public ActionResult GetAccount()
         {
-            //Customer should be already populated in WorkContext middleware
+            //Customer should be already populated in WorkContext middle-ware
             return View("customers/account", WorkContext);
         }
 
@@ -154,13 +154,16 @@ namespace VirtoCommerce.Storefront.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> Register(Register formModel)
         {
+            //add store id to user name to get resulting string as storeId/userName.
+            //Thats allow to use same user login in one security accounts storage  and also used for stores security accounts isolation or sharing
+            var storeFrontUserName = new StorefrontUserName(formModel.Email, WorkContext.CurrentStore.Id).ToString();
             var user = new VirtoCommercePlatformCoreSecurityApplicationUserExtended
             {
                 Email = formModel.Email,
                 Password = formModel.Password,
-                UserName = formModel.Email,
+                UserName = storeFrontUserName,
                 UserType = "Customer",
-                StoreId = WorkContext.CurrentStore.Id
+                StoreId = WorkContext.CurrentStore.Id,
             };
             //Register user in VC Platform (create security account)
             var result = await _commerceCoreApi.StorefrontSecurityCreateAsync(user);
@@ -168,17 +171,17 @@ namespace VirtoCommerce.Storefront.Controllers
             if (result.Succeeded == true)
             {
                 //Load newly created account from API
-                user = await _commerceCoreApi.StorefrontSecurityGetUserByNameAsync(user.UserName);
+                user = await _commerceCoreApi.StorefrontSecurityGetUserByNameAsync(storeFrontUserName);
 
                 //Next need create corresponding Customer contact in VC Customers (CRM) module
                 //Contacts and account has the same Id.
                 var customer = formModel.ToWebModel();
                 customer.Id = user.Id;
-                customer.UserName = user.UserName;
+                customer.UserName = storeFrontUserName;
                 customer.IsRegisteredUser = true;
                 await _customerService.CreateCustomerAsync(customer);
 
-                await _commerceCoreApi.StorefrontSecurityPasswordSignInAsync(formModel.Email, formModel.Password);
+                await _commerceCoreApi.StorefrontSecurityPasswordSignInAsync(storeFrontUserName, formModel.Password);
 
                 var identity = CreateClaimsIdentity(customer);
                 _authenticationManager.SignIn(identity);
@@ -215,12 +218,16 @@ namespace VirtoCommerce.Storefront.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> Login(Login formModel, string returnUrl)
         {
-            var loginResult = await _commerceCoreApi.StorefrontSecurityPasswordSignInAsync(formModel.Email, formModel.Password);
+            //add store id to user name to get resulting string as storeId/userName.
+            //Thats allow to use same user login in one security accounts storage  and also used for stores security accounts isolation or sharing
+            var storeFrontUserName = new StorefrontUserName(formModel.Email, WorkContext.CurrentStore.Id).ToString();
+
+            var loginResult = await _commerceCoreApi.StorefrontSecurityPasswordSignInAsync(storeFrontUserName, formModel.Password);
 
             switch (loginResult.Status)
             {
                 case "success":
-                    var user = await _platformApi.SecurityGetUserByNameAsync(formModel.Email);
+                    var user = await _commerceCoreApi.StorefrontSecurityGetUserByNameAsync(storeFrontUserName);
                     var customer = await _customerService.GetCustomerByIdAsync(user.Id);
                     customer.UserName = user.UserName;
 
@@ -228,7 +235,7 @@ namespace VirtoCommerce.Storefront.Controllers
                     var userId = GetUserIdForLoginOnBehalf(Request);
                     if (!string.IsNullOrEmpty(userId) && !string.Equals(userId, user.Id) && await _customerService.CanLoginOnBehalfAsync(user.Id))
                     {
-                        var user2 = await _platformApi.SecurityGetUserByIdAsync(userId);
+                        var user2 = await _commerceCoreApi.StorefrontSecurityGetUserByIdAsync(userId);
                         var customer2 = await _customerService.GetCustomerByIdAsync(userId);
 
                         if (user2 != null && customer2 != null)
@@ -272,7 +279,11 @@ namespace VirtoCommerce.Storefront.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> ForgotPassword(ForgotPassword formModel)
         {
-            var user = await _commerceCoreApi.StorefrontSecurityGetUserByNameAsync(formModel.Email);
+            //add store id to user name to get resulting string as storeId/userName.
+            //Thats allow to use same user login in one security accounts storage  and also used for stores security accounts isolation or sharing
+            var storeFrontUserName = new StorefrontUserName(formModel.Email, WorkContext.CurrentStore.Id).ToString();
+
+            var user = await _commerceCoreApi.StorefrontSecurityGetUserByNameAsync(storeFrontUserName);
 
             if (user != null)
             {

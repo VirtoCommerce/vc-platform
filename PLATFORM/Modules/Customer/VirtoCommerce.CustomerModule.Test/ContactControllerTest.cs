@@ -146,7 +146,7 @@ namespace VirtoCommerce.CustomerModule.Test
             Func<ICustomerRepository> customerRepositoryFactory = () => new CustomerRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor());
 
             var dynamicPropertyService = new DynamicPropertyService(platformRepositoryFactory);
-            var contactService = new ContactServiceImpl(customerRepositoryFactory, dynamicPropertyService);
+            var contactService = new ContactServiceImpl(customerRepositoryFactory, dynamicPropertyService, null);
             var orgService = new OrganizationServiceImpl(customerRepositoryFactory, dynamicPropertyService);
             var searchService = new CustomerSearchServiceImpl(customerRepositoryFactory);
 

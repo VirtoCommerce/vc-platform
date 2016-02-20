@@ -186,6 +186,7 @@
     <Compile Include="Cart\ShoppingCart.cs" />
     <Compile Include="Store.cs" />
     <Compile Include="TaxDetail.cs" />
+    <Compile Include="StorefrontUserName.cs" />
     <Compile Include="WorkContext.cs" />
   </ItemGroup>
   <ItemGroup>

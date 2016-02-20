@@ -103,6 +103,10 @@
     <Compile Include="Migrations\201510221207527_AddPartialFlagToPaymentMethod.Designer.cs">
       <DependentUpon>201510221207527_AddPartialFlagToPaymentMethod.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201602191328025_TrustedGroups.cs" />
+    <Compile Include="Migrations\201602191328025_TrustedGroups.Designer.cs">
+      <DependentUpon>201602191328025_TrustedGroups.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Store.cs" />
     <Compile Include="Model\StoreCurrency.cs" />
@@ -110,6 +114,7 @@
     <Compile Include="Model\StorePaymentMethod.cs" />
     <Compile Include="Model\StoreShippingMethod.cs" />
     <Compile Include="Model\StoreTaxProvider.cs" />
+    <Compile Include="Model\StoreTrustedGroup.cs" />
     <Compile Include="Notifications\StoreDynamicEmailNotification.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\StoreRepositoryImpl.cs" />
@@ -158,6 +163,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201510221207527_AddPartialFlagToPaymentMethod.resx">
       <DependentUpon>201510221207527_AddPartialFlagToPaymentMethod.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201602191328025_TrustedGroups.resx">
+      <DependentUpon>201602191328025_TrustedGroups.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

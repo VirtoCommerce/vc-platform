@@ -19,19 +19,28 @@ namespace VirtoCommerce.StoreModule.Web.Converters
             retVal.DefaultCurrency = store.DefaultCurrency;
             retVal.StoreState = store.StoreState;
             retVal.DynamicProperties = store.DynamicProperties;
+
             if (store.ShippingMethods != null)
                 retVal.ShippingMethods = store.ShippingMethods.Select(x => x.ToWebModel()).ToList();
+
             if (store.PaymentMethods != null)
                 retVal.PaymentMethods = store.PaymentMethods.Select(x => x.ToWebModel()).ToList();
+
             if (store.TaxProviders != null)
                 retVal.TaxProviders = store.TaxProviders.Select(x => x.ToWebModel()).ToList();
 
             if (store.Languages != null)
                 retVal.Languages = store.Languages;
+
             if (store.Currencies != null)
                 retVal.Currencies = store.Currencies;
+
+            if (store.TrustedGroups != null)
+                retVal.TrustedGroups = store.TrustedGroups;
+
             if (store.ReturnsFulfillmentCenter != null)
                 retVal.ReturnsFulfillmentCenter = store.ReturnsFulfillmentCenter.ToWebModel();
+
             if (store.FulfillmentCenter != null)
                 retVal.FulfillmentCenter = store.FulfillmentCenter.ToWebModel();
 
@@ -87,10 +96,16 @@ namespace VirtoCommerce.StoreModule.Web.Converters
 
             if (store.Languages != null)
                 retVal.Languages = store.Languages;
+
             if (store.Currencies != null)
                 retVal.Currencies = store.Currencies;
+
+            if (store.TrustedGroups != null)
+                retVal.TrustedGroups = store.TrustedGroups;
+
             if (store.ReturnsFulfillmentCenter != null)
                 retVal.ReturnsFulfillmentCenter = store.ReturnsFulfillmentCenter.ToCoreModel();
+
             if (store.FulfillmentCenter != null)
                 retVal.FulfillmentCenter = store.FulfillmentCenter.ToCoreModel();
 

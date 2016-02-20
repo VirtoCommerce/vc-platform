@@ -5,12 +5,14 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Hosting;
 using CacheManager.Core;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin;
+using Microsoft.Owin.Security;
 using Microsoft.Practices.Unity;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -103,6 +105,7 @@ namespace VirtoCommerce.Storefront.Owin
                     workContext.CurrentQuoteSearchCriteria = new Model.Quote.QuoteSearchCriteria(qs);
 
                     //Current customer
+                    ValidateUserStoreLogin(context, workContext.CurrentStore);
                     workContext.CurrentCustomer = await GetCustomerAsync(context);
                     MaintainAnonymousCustomerCookie(context, workContext);
 
@@ -168,6 +171,27 @@ namespace VirtoCommerce.Storefront.Owin
         private bool IsAssetRequest(Uri uri)
         {
             return uri.AbsolutePath.Contains("themes/assets") || !string.IsNullOrEmpty(Path.GetExtension(uri.ToString()));
+        }
+
+        private void ValidateUserStoreLogin(IOwinContext context, Store currentStore)
+        {
+            var principal = context.Authentication.User;
+            var identity = principal.Identity;
+
+            if (identity.IsAuthenticated)
+            {
+                //TODO: need check stores trusted relationships
+                var storeFrontUserName = StorefrontUserName.TryParse(identity.Name);
+                if(storeFrontUserName != null && storeFrontUserName.Domain != null)
+                {
+                    if (storeFrontUserName.Domain != currentStore.Id)
+                    {
+                        context.Authentication.SignOut();
+                        context.Authentication.User = new GenericPrincipal(new GenericIdentity(string.Empty), null);
+
+                    }
+                }
+            }
         }
 
         private async Task<CustomerInfo> GetCustomerAsync(IOwinContext context)

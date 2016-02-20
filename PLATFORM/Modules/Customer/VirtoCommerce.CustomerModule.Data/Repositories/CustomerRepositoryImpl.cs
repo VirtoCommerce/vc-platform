@@ -21,56 +21,83 @@ namespace VirtoCommerce.CustomerModule.Data.Repositories
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            InheritanceMapping(modelBuilder);
 
-            MapEntity<Address>(modelBuilder, toTable: "Address");
-            MapEntity<Email>(modelBuilder, toTable: "Email");
-            MapEntity<Note>(modelBuilder, toTable: "Note");
-            MapEntity<Phone>(modelBuilder, toTable: "Phone");
-            MapEntity<Organization>(modelBuilder, toTable: "Organization");
+            #region Member
+            modelBuilder.Entity<Member>().HasKey(x => x.Id)
+                .Property(x => x.Id);
+            modelBuilder.Entity<Member>().ToTable("Member");
 
+            #endregion
+
+
+            #region Contact
+            modelBuilder.Entity<Contact>().HasKey(x => x.Id)
+                .Property(x => x.Id);
+            modelBuilder.Entity<Contact>().ToTable("Contact");
+
+            #endregion
+
+            #region Organization
+            modelBuilder.Entity<Organization>().HasKey(x => x.Id)
+                .Property(x => x.Id);
+            modelBuilder.Entity<Organization>().ToTable("Organization");
+            #endregion
+
+            #region MemberRelation
+            modelBuilder.Entity<MemberRelation>().HasKey(x => x.Id)
+                .Property(x => x.Id);
+            modelBuilder.Entity<MemberRelation>().ToTable("MemberRelation");
+
+            modelBuilder.Entity<MemberRelation>().HasRequired(m => m.Descendant)
+                                                 .WithMany(m => m.MemberRelations).WillCascadeOnDelete(false);
+            #endregion
+
+            #region Address
+            modelBuilder.Entity<Address>().HasKey(x => x.Id)
+                .Property(x => x.Id);
+            modelBuilder.Entity<Address>().ToTable("Address");
+
+            modelBuilder.Entity<Address>().HasRequired(m => m.Member)
+                                          .WithMany(m => m.Addresses).HasForeignKey(m => m.MemberId)
+                                          .WillCascadeOnDelete(true);
+            #endregion
+
+            #region Email
+            modelBuilder.Entity<Email>().HasKey(x => x.Id)
+                .Property(x => x.Id);
+            modelBuilder.Entity<Email>().ToTable("Email");
+
+            modelBuilder.Entity<Email>().HasRequired(m => m.Member)
+                                          .WithMany(m => m.Emails).HasForeignKey(m => m.MemberId)
+                                          .WillCascadeOnDelete(true);
+            #endregion
+
+            #region Phone
+            modelBuilder.Entity<Phone>().HasKey(x => x.Id)
+                .Property(x => x.Id);
+            modelBuilder.Entity<Phone>().ToTable("Phone");
+
+            modelBuilder.Entity<Phone>().HasRequired(m => m.Member)
+                                          .WithMany(m => m.Phones).HasForeignKey(m => m.MemberId)
+                                          .WillCascadeOnDelete(true);
+            #endregion
+
+            #region Note
+            modelBuilder.Entity<Note>().HasKey(x => x.Id)
+                .Property(x => x.Id);
+            modelBuilder.Entity<Note>().ToTable("Note");
+
+            modelBuilder.Entity<Note>().HasOptional(m => m.Member)
+                                          .WithMany(m => m.Notes).HasForeignKey(m => m.MemberId)
+                                          .WillCascadeOnDelete(true);
+            #endregion
+
+     
 
             base.OnModelCreating(modelBuilder);
         }
 
-        private void InheritanceMapping(DbModelBuilder modelBuilder)
-        {
-
-            modelBuilder.Entity<Member>().Map(entity =>
-                {
-                    entity.ToTable("Member");
-                });
-            modelBuilder.Entity<Contact>().Map(entity =>
-                {
-                    entity.ToTable("Contact");
-                });
-
-            MapEntity<MemberRelation>(modelBuilder, toTable: "MemberRelation");
-
-            #region Contact mapping
-
-            modelBuilder.Entity<Member>()
-                .HasMany(c => c.Emails)
-                .WithRequired(e => e.Member);
-            modelBuilder.Entity<Member>()
-                .HasMany(c => c.Phones)
-                .WithRequired(p => p.Member);
-            modelBuilder.Entity<Member>()
-                .HasMany(c => c.Addresses)
-                .WithRequired(p => p.Member);
-            modelBuilder.Entity<Member>()
-                .HasMany(c => c.Notes)
-                .WithOptional(p => p.Member);
-
-
-            #endregion
-
-            modelBuilder.Entity<MemberRelation>()
-                .HasRequired(m => m.Descendant)
-                .WithMany(m => m.MemberRelations)
-                .WillCascadeOnDelete(false);
-        }
-
+    
         #region IFoundationCustomerRepository Members
 
 
@@ -108,7 +135,6 @@ namespace VirtoCommerce.CustomerModule.Data.Repositories
         {
             get { return GetAsQueryable<MemberRelation>(); }
         }
-
 
         public Contact GetContactById(string id)
         {

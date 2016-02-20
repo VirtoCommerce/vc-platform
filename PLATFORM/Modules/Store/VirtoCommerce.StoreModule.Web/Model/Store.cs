@@ -72,9 +72,20 @@ namespace VirtoCommerce.StoreModule.Web.Model
 
         public FulfillmentCenter ReturnsFulfillmentCenter { get; set; }
 
+        /// <summary>
+        /// All store supported languages
+        /// </summary>
         public ICollection<string> Languages { get; set; }
 
+        /// <summary>
+        /// All store supported currencies
+        /// </summary>
         public ICollection<string> Currencies { get; set; }
+
+        /// <summary>
+        /// All store trusted groups (group of stores that shared the user logins)
+        /// </summary>
+        public ICollection<string> TrustedGroups { get; set; }
 
         public string ObjectType { get; set; }
         public ICollection<DynamicObjectProperty> DynamicProperties { get; set; }

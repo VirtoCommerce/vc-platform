@@ -99,6 +99,11 @@ namespace VirtoCommerce.Platform.Data.Security
                 using (var repository = _platformRepository())
                 {
                     var dbAcount = user.ToDataModel();
+                    if(string.IsNullOrEmpty(user.MemberId))
+                    {
+                        //Use for memberId same account id if its not set (Our current case Contact member 1 - 1 Account workaround). But client may use memberId as for any outer id.
+                        dbAcount.MemberId = dbAcount.Id;
+                    }
                     dbAcount.AccountState = AccountState.Approved.ToString();
 
                     repository.Add(dbAcount);
@@ -268,6 +273,12 @@ namespace VirtoCommerce.Platform.Data.Security
                 if (request.Keyword != null)
                 {
                     query = query.Where(u => u.UserName.Contains(request.Keyword));
+                }
+
+                if(!string.IsNullOrEmpty(request.MemberId))
+                {
+                    //Find all accounts with specified memberId
+                    query = query.Where(u => u.MemberId == request.MemberId);
                 }
 
                 if (request.AccountTypes != null && request.AccountTypes.Any())
