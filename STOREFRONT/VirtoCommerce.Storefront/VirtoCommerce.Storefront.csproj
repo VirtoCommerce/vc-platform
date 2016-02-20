@@ -291,7 +291,7 @@
     <Content Include="App_Data\Themes\default\assets\modernizr.min.js" />
     <Content Include="App_Data\Themes\default\assets\navbuttons.gif" />
     <Content Include="App_Data\Themes\default\assets\navbuttons2.gif" />
-    <Content Include="App_Data\Themes\default\assets\no-image.gif" />
+    <Content Include="App_Data\Themes\default\assets\no-image.svg" />
     <Content Include="App_Data\Themes\default\assets\offsite-small.svg" />
     <Content Include="App_Data\Themes\default\assets\offsite.svg" />
     <Content Include="App_Data\Themes\default\assets\option_selection.js" />

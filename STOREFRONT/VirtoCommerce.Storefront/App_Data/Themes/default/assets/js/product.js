@@ -30,7 +30,7 @@ storefrontApp.controller('productController', ['$rootScope', '$scope', '$window'
 
     function toDialogDataModel(product, quantity) {
         return {
-            imageUrl: product.primaryImage.url,
+            imageUrl: product.primaryImage ? product.primaryImage.url : null,
             listPrice: product.price.listPrice,
             name: product.name,
             placedPrice: product.price.actualPrice,
