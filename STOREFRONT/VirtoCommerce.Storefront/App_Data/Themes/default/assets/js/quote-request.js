@@ -1,7 +1,7 @@
 ﻿var storefrontApp = angular.module('storefrontApp');
 
-storefrontApp.controller('quoteRequestController', ['$rootScope', '$scope', '$location', 'quoteRequestService', 'cartService',
-    function ($rootScope, $scope, $location, quoteRequestService, cartService) {
+storefrontApp.controller('quoteRequestController', ['$rootScope', '$scope', '$window', '$location', 'quoteRequestService', 'cartService',
+    function ($rootScope, $scope, $window, $location, quoteRequestService, cartService) {
     initialize();
 
     $scope.setQuoteRequestForm = function (form) {
@@ -118,7 +118,9 @@ storefrontApp.controller('quoteRequestController', ['$rootScope', '$scope', '$lo
 
     $scope.rejectQuoteRequest = function () {
         quoteRequestService.rejectQuoteRequest($scope.quoteRequest.id).then(function (response) {
-            quoteRequestService.getQuoteRequest($scope.quoteRequest.id);
+            quoteRequestService.getQuoteRequest($scope.quoteRequest.id).then(function (response) {
+                $scope.quoteRequest = response.data;
+            });
         });
     }
 
@@ -151,13 +153,14 @@ storefrontApp.controller('quoteRequestController', ['$rootScope', '$scope', '$lo
     }
 
     function initialize() {
-        var quoteRequestNumber = $location.url().replace('/', '');
-        $scope.quoteRequest = { itemsCount: 0 };
+        var quoteRequestNumber = $location.url().replace('/', '') || $window.currentQuoteRequestNumber;
         $scope.billingCountry = null;
         $scope.shippingCountry = null;
         getCountries();
         if (quoteRequestNumber) {
             getQuoteRequest(quoteRequestNumber);
+        } else {
+            $scope.quoteRequest = { itemsCount: 0 };
         }
     }
 

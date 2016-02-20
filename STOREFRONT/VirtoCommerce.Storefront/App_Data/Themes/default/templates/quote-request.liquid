@@ -1,4 +1,11 @@
-﻿<div ng-controller="quoteRequestController">
+﻿<script>
+    window.currentQuoteRequestNumber = '{{ quote_request.id }}';
+</script>
+
+<div ng-controller="quoteRequestController">
+    <div ng-if="!quoteRequest">
+        <h2>Loading quote request...</h2>
+    </div>
     <div ng-if="quoteRequest.itemsCount == 0">
         <h2>Quote request is currently empty.</h2>
     </div>
@@ -55,7 +62,7 @@
                         <td><strong>Billing address:</strong></td>
                         <td ng-bind="stringifyAddress(quoteRequest.billingAddress)"></td>
                     </tr>
-                    <tr ng-if="quoteRequest.ShippingAddress">
+                    <tr ng-if="quoteRequest.shippingAddress">
                         <td><strong>Shipping address:</strong></td>
                         <td ng-bind="stringifyAddress(quoteRequest.shippingAddress)"></td>
                     </tr>
