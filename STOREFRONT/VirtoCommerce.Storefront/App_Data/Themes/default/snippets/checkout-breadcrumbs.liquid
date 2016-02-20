@@ -2,18 +2,18 @@
     <li class="breadcrumb__item breadcrumb__item--completed">
         <a class="breadcrumb__link" href="" ng-click="outerRedirect(baseUrl + 'cart')">{{ 'checkout.cart' | t }}</a>
     </li>
-    <li class="breadcrumb__item" ng-repeat="checkoutStep in checkout.Steps" ng-class="{ 'breadcrumb__item--current': checkoutStep.Current, 'breadcrumb__item--completed': checkoutStep.Completed }">
-        <span ng-if="checkoutStep.Code == 'shippingAddress'">
-            <a class="breadcrumb__link" href="" ng-click="goToCheckoutStep(checkoutStep.InnerUrl)" ng-if="!checkoutStep.Current">Shipping address</a>
-            <span ng-class="{ 'current': checkoutStep.Current }" ng-if="checkoutStep.Current">Shipping address</span>
+    <li class="breadcrumb__item" ng-repeat="checkoutStep in checkout.steps" ng-class="{ 'breadcrumb__item--current': checkoutStep.current, 'breadcrumb__item--completed': checkoutStep.completed }">
+        <span ng-if="checkoutStep.code == 'shippingAddress'">
+            <a class="breadcrumb__link" href="" ng-click="goToCheckoutStep(checkoutStep.InnerUrl)" ng-if="!checkoutStep.current">Shipping address</a>
+            <span ng-class="{ 'current': checkoutStep.current }" ng-if="checkoutStep.current">Shipping address</span>
         </span>
-        <span ng-if="checkoutStep.Code == 'shippingMethod'">
-            <a class="breadcrumb__link" href="" ng-click="goToCheckoutStep(checkoutStep.InnerUrl)" ng-if="!checkoutStep.Current && checkoutStep.Enabled">Shipping method</a>
-            <span ng-class="{ 'current': checkoutStep.Current }" ng-if="checkoutStep.Current || !checkoutStep.Enabled">Shipping method</span>
+        <span ng-if="checkoutStep.code == 'shippingMethod'">
+            <a class="breadcrumb__link" href="" ng-click="goToCheckoutStep(checkoutStep.InnerUrl)" ng-if="!checkoutStep.current && checkoutStep.enabled">Shipping method</a>
+            <span ng-class="{ 'current': checkoutStep.current }" ng-if="checkoutStep.current || !checkoutStep.Enabled">Shipping method</span>
         </span>
-        <span ng-if="checkoutStep.Code == 'paymentMethod'">
-            <a class="breadcrumb__link" href="" ng-click="goToCheckoutStep(checkoutStep.InnerUrl)" ng-if="!checkoutStep.Current && checkoutStep.Enabled">Payment method</a>
-            <span ng-class="{ 'current': checkoutStep.Current }" ng-if="checkoutStep.Current || !checkoutStep.Enabled">Payment method</span>
+        <span ng-if="checkoutStep.code == 'paymentMethod'">
+            <a class="breadcrumb__link" href="" ng-click="goToCheckoutStep(checkoutStep.InnerUrl)" ng-if="!checkoutStep.current && checkoutStep.enabled">Payment method</a>
+            <span ng-class="{ 'current': checkoutStep.current }" ng-if="checkoutStep.current || !checkoutStep.enabled">Payment method</span>
         </span>
     </li>
 </ul>
