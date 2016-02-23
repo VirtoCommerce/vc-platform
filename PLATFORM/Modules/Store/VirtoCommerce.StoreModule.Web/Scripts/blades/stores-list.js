@@ -30,7 +30,6 @@
                 currentEntityId: data.id,
                 // currentEntity: data,
                 title: data.name,
-                subtitle: 'stores.blades.store-detail.subtitle',
                 controller: 'virtoCommerce.storeModule.storeDetailController',
                 template: 'Modules/$(VirtoCommerce.Store)/Scripts/blades/store-detail.tpl.html'
             };

@@ -42,6 +42,10 @@ angular.module(moduleName, [])
 
       //Register widgets in customer details
       widgetService.registerWidget({
+          controller: 'virtoCommerce.customerModule.memberAccountsWidgetController',
+          template: 'Modules/$(VirtoCommerce.Customer)/Scripts/widgets/memberAccountsWidget.tpl.html'
+      }, 'customerDetail1');
+      widgetService.registerWidget({
           controller: 'virtoCommerce.customerModule.memberAddressesWidgetController',
           template: 'Modules/$(VirtoCommerce.Customer)/Scripts/widgets/memberAddressesWidget.tpl.html'
       }, 'customerDetail1');
@@ -52,7 +56,7 @@ angular.module(moduleName, [])
       widgetService.registerWidget({
           controller: 'virtoCommerce.customerModule.memberPhonesWidgetController',
           template: 'Modules/$(VirtoCommerce.Customer)/Scripts/widgets/memberPhonesWidget.tpl.html'
-      }, 'customerDetail1');
+      }, 'customerDetail2');
       widgetService.registerWidget({
           controller: 'platformWebApp.dynamicPropertyWidgetController',
           template: '$(Platform)/Scripts/app/dynamicProperties/widgets/dynamicPropertyWidget.tpl.html'

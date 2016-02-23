@@ -1,8 +1,7 @@
 ﻿angular.module('virtoCommerce.customerModule')
-.controller('virtoCommerce.customerModule.memberDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.customerModule.contacts', 'virtoCommerce.customerModule.organizations', 'platformWebApp.accounts', 'platformWebApp.dynamicProperties.api', function ($scope, bladeNavigationService, contacts, organizations, accounts, dynamicPropertiesApi) {
+.controller('virtoCommerce.customerModule.memberDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.customerModule.contacts', 'virtoCommerce.customerModule.organizations', 'platformWebApp.dynamicProperties.api', function ($scope, bladeNavigationService, contacts, organizations, dynamicPropertiesApi) {
     var blade = $scope.blade;
     blade.currentResource = blade.isOrganization ? organizations : contacts;
-    var userStateCommand, customerAccount;
 
     blade.refresh = function (parentRefresh) {
         if (blade.currentEntityId) {
@@ -12,78 +11,6 @@
                 initializeBlade(data);
                 if (parentRefresh) {
                     blade.parentBlade.refresh();
-                }
-
-                if (!blade.isOrganization && data.emails.length > 0) {
-                    accounts.get({ id: data.emails[0] }, function (account) {
-                        if (account.userName) {
-                            var needToAddToolbarCommands = !customerAccount;
-                            customerAccount = account;
-                            data.userState = account.userState;
-                            initializeBlade(data);
-
-                            if (needToAddToolbarCommands) {
-                                blade.toolbarCommands.push(
-                                   {
-                                       name: "customer.commands.login-on-behalf",
-                                       icon: 'fa fa-key',
-                                       executeMethod: function () {
-                                           var newBlade = {
-                                               id: 'memberDetailChild',
-                                               currentEntityId: blade.currentEntityId,
-                                               title: 'customer.blades.loginOnBehalf-list.title',
-                                               titleValues: { name: blade.currentEntity.fullName },
-                                               controller: 'virtoCommerce.customerModule.loginOnBehalfListController',
-                                               template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/loginOnBehalf-list.tpl.html'
-                                           };
-                                           bladeNavigationService.showBlade(newBlade, blade);
-                                       },
-                                       canExecuteMethod: function () { return true; },
-                                       permission: 'customer:loginOnBehalf'
-                                   },
-                                   userStateCommand = {
-                                       updateName: function () {
-                                           return this.name = (blade.currentEntity && blade.currentEntity.userState === 'Approved') ? 'customer.commands.reject-user' : 'customer.commands.approve-user';
-                                       },
-                                       icon: 'fa fa-dot-circle-o',
-                                       executeMethod: function () {
-                                           if (blade.currentEntity.userState === 'Approved') {
-                                               blade.currentEntity.userState = 'Rejected';
-                                           } else {
-                                               blade.currentEntity.userState = 'Approved';
-                                           }
-                                           this.updateName();
-                                       },
-                                       canExecuteMethod: function () {
-                                           return true;
-                                       },
-                                       permission: 'platform:security:update'
-                                   },
-                                   {
-                                       name: "customer.commands.change-password",
-                                       icon: 'fa fa-refresh',
-                                       executeMethod: function () {
-                                           var newBlade = {
-                                               id: 'accountDetailChild',
-                                               currentEntityId: account.userName,
-                                               title: blade.title,
-                                               subtitle: "customer.blades.account-changePassword.subtitle",
-                                               controller: 'platformWebApp.accountChangePasswordController',
-                                               template: '$(Platform)/Scripts/app/security/blades/account-changePassword.tpl.html'
-                                           };
-                                           bladeNavigationService.showBlade(newBlade, blade);
-                                       },
-                                       canExecuteMethod: function () {
-                                           return true;
-                                       },
-                                       permission: 'platform:security:update'
-                                   });
-                            }
-
-                            userStateCommand.updateName();
-                        }
-                    },
-                    function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
                 }
             },
             function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
@@ -137,13 +64,6 @@
         blade.isLoading = true;
 
         if (blade.currentEntityId) {
-            if (customerAccount && customerAccount.userState !== blade.currentEntity.userState) {
-                customerAccount.userState = blade.currentEntity.userState;
-                customerAccount.$update(null, function () { }, function (error) {
-                    bladeNavigationService.setError('Error ' + error.status, $scope.blade);
-                });
-            }
-
             blade.currentResource.update({}, blade.currentEntity, function (data) {
                 blade.refresh(true);
             }, function (error) {
@@ -183,9 +103,6 @@
             icon: 'fa fa-undo',
             executeMethod: function () {
                 angular.copy(blade.origEntity, blade.currentEntity);
-                if (userStateCommand) {
-                    userStateCommand.updateName();
-                }
             },
             canExecuteMethod: isDirty,
             permission: 'customer:update'

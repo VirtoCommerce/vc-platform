@@ -49,8 +49,6 @@
       <permission id="customer:read" name="View customer data" description=""/>
       <permission id="customer:update" name="Update customer" description=""/>
       <permission id="customer:delete" name="Delete customer" description=""/>
-
-      <permission id="customer:loginOnBehalf" name="Login on behalf of a customer" description="Permission to login on behalf of a customer to Storefront."/>
     </group>
   </permissions>
 </module>

@@ -8,13 +8,15 @@
     }
 
     function initializeBlade(data) {
+        blade.data = data;
+
         // transform simple string to complex object. Simple string isn't editable.
         data = _.map(data, transformDataElement);
 
         blade.currentEntities = angular.copy(data);
         blade.origEntity = data;
         blade.isLoading = false;
-    };
+    }
 
     $scope.selectItem = function (listItem) {
         $scope.selectedItem = listItem;
@@ -82,11 +84,8 @@
         }
     ];
 
-    $scope.$watch('blade.parentBlade.currentEntity.emails', function (currentEntities) {
-        blade.data = currentEntities;
-        initializeBlade(blade.data);
-    });
+    $scope.$watch('blade.parentBlade.currentEntity.emails', initializeBlade);
 
-    // on load: 
+    // on load:
     // $scope.$watch('blade.parentBlade.currentEntity.emails' gets fired
 }]);

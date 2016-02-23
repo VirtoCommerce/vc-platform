@@ -98,6 +98,17 @@
                         </div>
                     </div>
                 </div>
+                <div class="form-group">
+                    <label class="form-label">{{ 'stores.blades.store-detail.labels.trusted-groups' | translate }} <a href="" ng-click="openTrustedGroupsDictionarySettingManagement()" class="form-edit" va-permission="platform:setting:update"><i class="form-ico fa fa-pencil"></i></a></label>
+                    <div class="form-input" data-role="input-control">
+                        <ui-select multiple ng-model="blade.currentEntity.trustedGroups">
+                            <ui-select-match placeholder="{{ 'stores.blades.store-detail.placeholders.trusted-groups' | translate }}">{{$item}}</ui-select-match>
+                            <ui-select-choices repeat="x in trustedGroups | filter: $select.search">
+                                <span ng-bind-html="x | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
             </form>
 
             <va-widget-container group="storeDetail" blade="blade" gridster-opts="{width: 526}"></va-widget-container>

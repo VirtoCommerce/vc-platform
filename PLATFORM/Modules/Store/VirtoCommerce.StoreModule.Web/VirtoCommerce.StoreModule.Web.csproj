@@ -136,6 +136,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Scripts\blades\loginOnBehalf\loginOnBehalf-list.js" />
+    <Content Include="Scripts\blades\loginOnBehalf\loginOnBehalf-list.tpl.html" />
     <Content Include="Scripts\blades\paymentMethod-detail.js" />
     <Content Include="Scripts\blades\seo-detail.js" />
     <Content Include="Scripts\blades\seo-detail.tpl.html" />

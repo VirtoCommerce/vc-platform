@@ -29,28 +29,11 @@
           "business-category": "Enter description"
         }
       },
-      "loginOnBehalf-list": {
-        "title": "Login on behalf of {{name}}",
-        "labels": {
-          "pick-store-to-login": "Pick a Store to login",
-          "no-stores": "No Stores yet"
-        },
-        "validations": {
-          "secure-url-missing": "Secure URL is missing. Click to open Store details.",
-          "default-language-missing": "Default language is missing. Click to open Store details."
-        }
-      },
-      "store-detail": {
-        "subtitle": "Store details"
-      },
       "new-organization": {
         "title": "New Organization"
       },
       "new-customer": {
         "title": "New Customer"
-      },
-      "account-changePassword": {
-        "subtitle": "Change user's password"
       },
       "member-add": {
         "title": "New member",
@@ -108,6 +91,10 @@
       "member-phones-list": {
         "title": "Phones",
         "blade-subtitle": "Manage customer phones"
+      },
+      "member-accounts-list": {
+        "title": "Accounts",
+        "blade-subtitle": "Manage customer accounts"
       }
     },
     "dialogs": {
@@ -135,12 +122,6 @@
         "title": "Save changes",
         "message": "The Phone number has been modified. Do you want to save changes?"
       }
-    },
-    "commands": {
-      "login-on-behalf": "Login on behalf",
-      "change-password": "Change password",
-      "reject-user": "Reject user",
-      "approve-user": "Approve user"
     }
   }
 }

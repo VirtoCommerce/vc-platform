@@ -7,10 +7,10 @@
                     <div class="form-group">
                         <label class="form-label">{{ 'platform.blades.setting-dictionary.labels.new-value' | translate }}</label>
                         <div class="form-input" ng-if="blade.currentEntity.valueType !== 'Number'">
-                            <input ng-class="{'error' : pdForm.dictValue.$invalid && !pdForm.dictValue.$pristine}" required ng-model="newValue.value" ui-validate=" 'dictValueValidator($value)' " name="dictValue" focus-on="" type="text" placeholder="{{ 'platform.blades.setting-dictionary.placeholders.new-value' | translate }}" />
+                            <input ng-class="{'error' : pdForm.dictValue.$invalid && !pdForm.dictValue.$pristine}" required ng-model="newValue.value" ui-validate=" 'dictValueValidator($value)' " name="dictValue" focus-on="" maxlength="512" placeholder="{{ 'platform.blades.setting-dictionary.placeholders.new-value' | translate }}" />
                         </div>
                         <div class="form-input" ng-if="blade.currentEntity.valueType === 'Number'">
-                            <input ng-class="{'error' : pdForm.dictValue.$invalid && !pdForm.dictValue.$pristine}" required ng-model="newValue.value" ui-validate=" 'dictValueValidator($value)' " name="dictValue" focus-on="" type="text" placeholder="{{ 'platform.blades.setting-dictionary.placeholders.new-value' | translate }}" />
+                            <input ng-class="{'error' : pdForm.dictValue.$invalid && !pdForm.dictValue.$pristine}" required ng-model="newValue.value" ui-validate=" 'dictValueValidator($value)' " name="dictValue" focus-on="" maxlength="36" placeholder="{{ 'platform.blades.setting-dictionary.placeholders.new-value' | translate }}" />
                         </div>
                         <div class="form-error" ng-if="pdForm.dictValue.$dirty && pdForm.dictValue.$invalid">
                             <span ng-if="pdForm.dictValue.$error.required">{{ 'platform.blades.setting-dictionary.validations.new-value-required' | translate }}</span>
@@ -48,10 +48,10 @@
                                     </td>
                                     <td class="table-col">
                                         <div class="form-input" ng-if="blade.currentEntity.valueType !== 'Number'">
-                                            <input required ng-model="data.value" type="text" />
+                                            <input required ng-model="data.value" maxlength="512" />
                                         </div>
                                         <div class="form-input __number" ng-if="blade.currentEntity.valueType === 'Number'">
-                                            <input smart-float required ng-model="data.value" type="text" num-type="float">
+                                            <input smart-float required ng-model="data.value" maxlength="36" num-type="float">
                                         </div>
                                         <ul role="menu" class="menu __context" id="pd_menu_{{$index}}">
                                             <li class="menu-item" ng-click='delete($index)'>

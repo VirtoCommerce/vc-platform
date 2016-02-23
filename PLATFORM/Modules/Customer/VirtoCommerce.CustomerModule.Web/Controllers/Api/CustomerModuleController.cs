@@ -196,24 +196,24 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
         /// </summary>
         /// <param name="id">Contact ID</param>
         /// <returns></returns>
-        [HttpGet]
-        [ResponseType(typeof(webModel.LoginOnBehalfInfo))]
-        [Route("contacts/{id}/loginonbehalf")]
-        public async Task<IHttpActionResult> GetLoginOnBehalfInfo(string id)
-        {
-            var result = new webModel.LoginOnBehalfInfo
-            {
-                UserName = id
-            };
+        //[HttpGet]
+        //[ResponseType(typeof(webModel.LoginOnBehalfInfo))]
+        //[Route("contacts/{id}/loginonbehalf")]
+        //public async Task<IHttpActionResult> GetLoginOnBehalfInfo(string id)
+        //{
+        //    var result = new webModel.LoginOnBehalfInfo
+        //    {
+        //        UserName = id
+        //    };
 
-            var user = await _securityService.FindByIdAsync(id, UserDetails.Reduced);
+        //    var user = await _securityService.FindByIdAsync(id, UserDetails.Reduced);
 
-            if (user != null)
-            {
-                result.CanLoginOnBehalf = _securityService.UserHasAnyPermission(user.UserName, null, CustomerPredefinedPermissions.LoginOnBehalf);
-            }
+        //    if (user != null)
+        //    {
+        //        result.CanLoginOnBehalf = _securityService.UserHasAnyPermission(user.UserName, null, CustomerPredefinedPermissions.LoginOnBehalf);
+        //    }
 
-            return Ok(result);
-        }
+        //    return Ok(result);
+        //}
     }
 }

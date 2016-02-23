@@ -88,6 +88,8 @@
 			<permission id="store:read" name="View store data"/>
 			<permission id="store:update" name="Update store"/>
 			<permission id="store:delete" name="Delete store"/>
+
+      <permission id="store:loginOnBehalf" name="Login on behalf of a customer" description="Permission to login on behalf of a customer to Storefront."/>
 		</group>
 	</permissions>
 </module>

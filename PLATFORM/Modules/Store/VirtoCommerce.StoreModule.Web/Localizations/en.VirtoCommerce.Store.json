@@ -114,7 +114,8 @@
           "default-language": "Default language",
           "additional-languages": "Additional languages",
           "default-currency": "Default currency",
-          "additional-currencies": "Additional currencies"
+          "additional-currencies": "Additional currencies",
+          "trusted-groups": "Shared account groups"
         },
         "placeholders": {
           "code": "Enter code",
@@ -124,7 +125,8 @@
           "default-language": "Select...",
           "additional-languages": "Select...",
           "default-currency": "Select...",
-          "additional-currencies": "Select..."
+          "additional-currencies": "Select...",
+          "trusted-groups": "This store doesn't share accounts"
         }
       },
       "new-store-wizard": {
@@ -148,6 +150,17 @@
         "labels": {
           "is-active": "Is active",
           "tax-provider": "Tax provider"
+        }
+      },
+      "loginOnBehalf-list": {
+        "title": "Login as {{name}}",
+        "labels": {
+          "pick-store-to-login": "Pick a Store to login",
+          "no-stores": "No Stores yet"
+        },
+        "validations": {
+          "secure-url-missing": "Secure URL is missing. Click to open Store details.",
+          "default-language-missing": "Default language is missing. Click to open Store details."
         }
       }
     },
@@ -199,6 +212,9 @@
         "title": "Save changes",
         "message": "The SEO information has been modified. Do you want to save changes?"
       }
+    },
+    "commands": {
+      "login-on-behalf": "Login on behalf"
     }
   }
 }
