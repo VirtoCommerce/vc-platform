@@ -1,6 +1,7 @@
 ﻿angular.module('virtoCommerce.catalogModule')
 .controller('virtoCommerce.catalogModule.editorialReviewDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'virtoCommerce.catalogModule.items', 'platformWebApp.settings', function ($scope, bladeNavigationService, dialogService, items, settings) {
     var blade = $scope.blade;
+    blade.updatePermission = 'catalog:update';
     var promise = settings.getValues({ id: 'Catalog.EditorialReviewTypes' }).$promise;
 
     function initializeBlade(data) {
@@ -18,7 +19,7 @@
     };
 
     function isDirty() {
-        return !angular.equals($scope.currentEntity, blade.origEntity);
+        return !angular.equals($scope.currentEntity, blade.origEntity) && blade.hasUpdatePermission();
     }
 
     function canSave() {
@@ -73,7 +74,7 @@
             name: "platform.commands.save", icon: 'fa fa-save',
             executeMethod: saveChanges,
             canExecuteMethod: canSave,
-            permission: 'catalog:update'
+            permission: blade.updatePermission
         },
         {
             name: "platform.commands.reset", icon: 'fa fa-undo',
@@ -81,7 +82,7 @@
                 angular.copy(blade.origEntity, $scope.currentEntity);
             },
             canExecuteMethod: isDirty,
-            permission: 'catalog:update'
+            permission: blade.updatePermission
         },
         {
             name: "platform.commands.delete", icon: 'fa fa-trash-o',
@@ -89,7 +90,7 @@
             canExecuteMethod: function () {
                 return blade.parentBlade.currentEntities.indexOf(blade.origEntity) >= 0 && !isDirty();
             },
-            permission: 'catalog:update'
+            permission: blade.updatePermission
         }
     ];
 

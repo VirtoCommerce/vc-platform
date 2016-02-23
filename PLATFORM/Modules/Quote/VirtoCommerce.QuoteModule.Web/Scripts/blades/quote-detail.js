@@ -2,6 +2,7 @@
 .controller('virtoCommerce.quoteModule.quoteDetailController', ['$scope', '$timeout', 'platformWebApp.bladeNavigationService', 'virtoCommerce.quoteModule.quotes', 'virtoCommerce.storeModule.stores', 'platformWebApp.settings', 'platformWebApp.dialogService', 'platformWebApp.accounts',
     function ($scope, $timeout, bladeNavigationService, quotes, stores, settings, dialogService, accounts) {
         var blade = $scope.blade;
+        blade.updatePermission = 'quote:update';
 
         var openItemsListOnce = _.once(function () {
             $timeout(function () {
@@ -31,7 +32,7 @@
         }
 
         function isDirty() {
-            return !angular.equals(blade.currentEntity, blade.origEntity) // && permission;
+            return !angular.equals(blade.currentEntity, blade.origEntity) && blade.hasUpdatePermission();
         }
 
         function canSave() {
@@ -133,7 +134,7 @@
             canExecuteMethod: function () {
                 return true;
             },
-            permission: 'quote:update'
+            permission: blade.updatePermission
         };
 
         blade.toolbarCommands = [
@@ -142,7 +143,7 @@
                 icon: 'fa fa-save',
                 executeMethod: saveChanges,
                 canExecuteMethod: canSave,
-                permission: 'quote:update'
+                permission: blade.updatePermission
             },
             {
                 name: "platform.commands.reset",
@@ -152,7 +153,7 @@
                     onHoldCommand.updateName();
                 },
                 canExecuteMethod: isDirty,
-                permission: 'quote:update'
+                permission: blade.updatePermission
             },
             {
                 name: "quotes.commands.submit-proposal", icon: 'fa fa-check-square-o',
@@ -173,7 +174,7 @@
                 canExecuteMethod: function () {
                     return blade.origEntity && blade.origEntity.status !== 'Proposal sent';
                 },
-                permission: 'quote:update'
+                permission: blade.updatePermission
             },
             onHoldCommand,
             {
@@ -195,7 +196,7 @@
                 canExecuteMethod: function () {
                     return blade.currentEntity && !blade.currentEntity.isCancelled;
                 },
-                permission: 'quote:update'
+                permission: blade.updatePermission
             },
             {
                 name: "platform.commands.delete", icon: 'fa fa-trash-o',

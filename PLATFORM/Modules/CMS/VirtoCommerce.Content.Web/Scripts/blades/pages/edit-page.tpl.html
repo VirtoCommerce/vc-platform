@@ -1,75 +1,75 @@
 ﻿<div class="blade-static __expanded">
-	<form class="form" name="pageForm">
-		<div class="columns clearfix">
-			<div class="column">
-				<div class="form-group" ng-init="setForm(pageForm)">
-					<label class="form-label">{{ 'content.blades.edit-page.labels.name' | translate }}</label>
-					<div class="form-input">
-						<input focus-on="" required class="form-control" ng-model="blade.currentEntity.pageName" placeholder="{{ 'content.blades.edit-page.placeholders.name' | translate }}" name="pageName" ui-validate=" 'validators.webSafeFileNameValidator($value)' " />
-					</div>
+    <form class="form" name="pageForm">
+        <div class="columns clearfix">
+            <div class="column">
+                <div class="form-group" ng-init="setForm(pageForm)">
+                    <label class="form-label">{{ 'content.blades.edit-page.labels.name' | translate }}</label>
+                    <div class="form-input">
+                        <input focus-on="" required class="form-control" ng-model="blade.currentEntity.pageName" placeholder="{{ 'content.blades.edit-page.placeholders.name' | translate }}" name="pageName" ui-validate=" 'validators.webSafeFileNameValidator($value)' " />
+                    </div>
                     <div class="form-error" ng-show="pageForm.pageName.$dirty">
                         <span ng-show="pageForm.pageName.$error.validator">{{ 'content.blades.edit-page.validations.pageName-invalid' | translate }}</span>
                     </div>
-				</div>
-			</div>
-			<div class="column" ng-if="!blade.isByteContent">
-				<div class="form-group">
-					<label class="form-label">{{ 'content.blades.edit-page.labels.language' | translate }}</label>
-					<div class="form-input">
-						<ui-select ng-model="blade.currentEntity.language">
-							<ui-select-match placeholder="{{ 'content.blades.edit-page.placeholders.language' | translate }}">{{$select.selected}}</ui-select-match>
-							<ui-select-choices repeat="x in blade.languages">
-								<span class="flag flag-{{blade.getFlag(x)}}"></span>
-								<span ng-bind-html="x"></span>
-							</ui-select-choices>
-						</ui-select>
-					</div>
-				</div>
-			</div>
-		</div>
-	</form>
+                </div>
+            </div>
+            <div class="column" ng-if="!blade.isByteContent">
+                <div class="form-group">
+                    <label class="form-label">{{ 'content.blades.edit-page.labels.language' | translate }}</label>
+                    <div class="form-input">
+                        <ui-select ng-model="blade.currentEntity.language">
+                            <ui-select-match placeholder="{{ 'content.blades.edit-page.placeholders.language' | translate }}">{{$select.selected}}</ui-select-match>
+                            <ui-select-choices repeat="x in blade.languages">
+                                <span class="flag flag-{{blade.getFlag(x)}}"></span>
+                                <span ng-bind-html="x"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
 </div>
 
 <div class="blade-content __large-wide" ng-if="blade.isByteContent">
-	<div class="blade-inner">
-		<div class="inner-block">
-			<div class="inner-block">
-				<form class="form">
-					<div ng-show="uploader.isHTML5">
-						<div over-class="bd-blue" nv-file-over="" nv-file-drop="" uploader="uploader" class="drag-area">
-							<div class="drag-content">
-								{{ 'content.blades.edit-page.labels.drag-note' | translate }}
-							</div>
-						</div>
-					</div>
+    <div class="blade-inner">
+        <div class="inner-block">
+            <div class="inner-block">
+                <form class="form" ng-if="blade.hasUpdatePermission()">
+                    <div ng-show="uploader.isHTML5">
+                        <div over-class="bd-blue" nv-file-over="" nv-file-drop="" uploader="uploader" class="drag-area">
+                            <div class="drag-content">
+                                {{ 'content.blades.edit-page.labels.drag-note' | translate }}
+                            </div>
+                        </div>
+                    </div>
 
-					<div class="form-input">
-						<input type="file" uploader="uploader" nv-file-select="" style="z-index: 0;" tabindex="-1">
-						<input type="text" style="z-index: 1; cursor: default;" readonly="">
-						<button class="btn __file" type="button" onclick="$('input[type=file]').trigger('click')">
-							<i class="btn-ico fa fa-image"></i>
-						</button>
-					</div>
-				</form>
+                    <div class="form-input">
+                        <input type="file" uploader="uploader" nv-file-select="" style="z-index: 0;" tabindex="-1">
+                        <input type="text" style="z-index: 1; cursor: default;" readonly="">
+                        <button class="btn __file" type="button" onclick="$('input[type=file]').trigger('click')">
+                            <i class="btn-ico fa fa-image"></i>
+                        </button>
+                    </div>
+                </form>
 
-				<div ng-show="uploader.isUploading">
-					<div class="sub-t">{{ 'content.blades.edit-page.labels.progress' | translate }}</div>
-					<div class="progress-bar __aqua" ng-style="{'width': uploader.progress + '%'}"></div>
-				</div>
+                <div ng-show="uploader.isUploading">
+                    <div class="sub-t">{{ 'content.blades.edit-page.labels.progress' | translate }}</div>
+                    <div class="progress-bar __aqua" ng-style="{'width': uploader.progress + '%'}"></div>
+                </div>
 
-				<div class="tile-group triple __images-list" ng-if="blade.isImage()">
-					<div class="tile double">
-						<img class="tile-img" ng-src="{{blade.image}}">
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+                <div class="tile-group triple __images-list" ng-if="blade.isImage()">
+                    <div class="tile double">
+                        <img class="tile-img" ng-src="{{blade.image}}">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="blade-content __xxlarge-wide" ng-if="!blade.isByteContent">
-	<div class="blade-inner">
-		<div class="inner-block">
+    <div class="blade-inner">
+        <div class="inner-block">
             <div class="tabs" va-tabs>
                 <div class="tabs-elements">
                     <div class="tab-item __selected">{{ 'content.blades.edit-page.labels.markdown' | translate }}</div>
@@ -90,6 +90,6 @@
                     </form>
                 </div>
             </div>
-		</div>
-	</div>
+        </div>
+    </div>
 </div>

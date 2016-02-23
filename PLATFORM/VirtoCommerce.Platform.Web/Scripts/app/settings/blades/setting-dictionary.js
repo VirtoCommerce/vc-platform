@@ -1,6 +1,7 @@
 ﻿angular.module('platformWebApp')
 .controller('platformWebApp.settingDictionaryController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings', function ($scope, dialogService, bladeNavigationService, settings) {
     var blade = $scope.blade;
+    blade.updatePermission = 'platform:setting:update';
     var currentEntities;
 
     blade.refresh = function (parentRefresh) {
@@ -74,7 +75,7 @@
         }
 
         function isDirty() {
-            return !angular.equals(currentEntities, blade.origEntity);
+            return !angular.equals(currentEntities, blade.origEntity) && blade.hasUpdatePermission();
         };
 
         function saveChanges() {

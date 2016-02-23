@@ -1,14 +1,13 @@
 ﻿angular.module('virtoCommerce.marketingModule')
 .controller('virtoCommerce.marketingModule.addPlaceholderController', ['$scope', 'virtoCommerce.marketingModule.dynamicContent.contentPlaces', 'platformWebApp.bladeNavigationService', 'FileUploader', 'platformWebApp.dialogService', function ($scope, marketing_dynamicContents_res_contentPlaces, bladeNavigationService, FileUploader, dialogService) {
-    $scope.setForm = function (form) {
-        $scope.formScope = form;
-    }
+    $scope.setForm = function (form) { $scope.formScope = form; }
 
     var blade = $scope.blade;
+    blade.updatePermission = 'marketing:update';
     blade.originalEntity = angular.copy(blade.entity);
 
     blade.initialize = function () {
-        if (!$scope.uploader) {
+        if (!$scope.uploader && blade.hasUpdatePermission()) {
             // create the uploader
             var uploader = $scope.uploader = new FileUploader({
                 scope: $scope,
@@ -51,7 +50,7 @@
 				    canExecuteMethod: function () {
 				        return !angular.equals(blade.originalEntity, blade.entity) && !$scope.formScope.$invalid;
 				    },
-				    permission: 'marketing:update'
+				    permission: blade.updatePermission
 				},
                 {
                     name: "platform.commands.reset", icon: 'fa fa-undo',
@@ -61,7 +60,7 @@
                     canExecuteMethod: function () {
                         return !angular.equals(blade.originalEntity, blade.entity);
                     },
-                    permission: 'marketing:update'
+                    permission: blade.updatePermission
                 },
 				{
 				    name: "platform.commands.delete", icon: 'fa fa-trash',
@@ -82,7 +81,7 @@
 				    canExecuteMethod: function () {
 				        return true;
 				    },
-				    permission: 'marketing:update'
+				    permission: blade.updatePermission
 				}
             ];
         }

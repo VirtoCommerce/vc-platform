@@ -85,7 +85,7 @@
                 canExecuteMethod: function () {
                     return $scope.gridApi && _.any($scope.gridApi.selection.getSelectedRows());
                 },
-                permission: 'quote:update'
+                permission: 'quote:delete'
             }
         ];
 

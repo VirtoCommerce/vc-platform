@@ -1,6 +1,7 @@
 ﻿angular.module('virtoCommerce.marketingModule')
 .controller('virtoCommerce.marketingModule.promotionDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.marketingModule.promotions', 'virtoCommerce.catalogModule.catalogs', 'virtoCommerce.storeModule.stores', 'platformWebApp.settings', 'virtoCommerce.coreModule.common.dynamicExpressionService', function ($scope, bladeNavigationService, marketing_res_promotions, catalogs, stores, settings, dynamicExpressionService) {
     var blade = $scope.blade;
+    blade.updatePermission = 'marketing:update';
 
     blade.refresh = function (parentRefresh) {
         if (blade.isNew) {
@@ -34,7 +35,7 @@
     }
 
     function isDirty() {
-        return !angular.equals(blade.currentEntity, blade.origEntity);
+        return !angular.equals(blade.currentEntity, blade.origEntity) && blade.hasUpdatePermission();
     }
 
     $scope.cancelChanges = function () {
@@ -95,7 +96,7 @@
                     icon: 'fa fa-save',
                     executeMethod: $scope.saveChanges,
                     canExecuteMethod: $scope.isValid,
-                    permission: 'marketing:update'
+                    permission: blade.updatePermission
                 },
                 {
                     name: "platform.commands.reset",
@@ -104,7 +105,7 @@
                         angular.copy(blade.origEntity, blade.currentEntity);
                     },
                     canExecuteMethod: isDirty,
-                    permission: 'marketing:update'
+                    permission: blade.updatePermission
                 }
             ];
         }

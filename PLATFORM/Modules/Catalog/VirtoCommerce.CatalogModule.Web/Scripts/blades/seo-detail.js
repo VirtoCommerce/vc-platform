@@ -1,7 +1,8 @@
 ﻿angular.module('virtoCommerce.catalogModule')
 .controller('virtoCommerce.catalogModule.seoDetailController', ['$scope', 'virtoCommerce.catalogModule.categories', 'virtoCommerce.catalogModule.items', 'platformWebApp.bladeNavigationService', function ($scope, categories, items, bladeNavigationService) {
     var blade = $scope.blade;
-    
+    blade.updatePermission = 'catalog:update';
+
     function initializeBlade(parentEntity) {
         if (parentEntity) {
             if (blade.isNew) {
@@ -65,7 +66,7 @@
     };
 
     function isDirty() {
-        return !angular.equals($scope.seoInfos, blade.origItem);
+        return !angular.equals($scope.seoInfos, blade.origItem) && blade.hasUpdatePermission();
     }
 
     function canSave() {
@@ -88,7 +89,7 @@
                 name: "platform.commands.save", icon: 'fa fa-save',
                 executeMethod: $scope.saveChanges,
                 canExecuteMethod: canSave,
-                permission: 'catalog:update'
+                permission: blade.updatePermission
             },
             {
                 name: "platform.commands.reset", icon: 'fa fa-undo',
@@ -96,7 +97,7 @@
                     angular.copy(blade.origItem, $scope.seoInfos);
                 },
                 canExecuteMethod: isDirty,
-                permission: 'catalog:update'
+                permission: blade.updatePermission
             }
         ];
     }

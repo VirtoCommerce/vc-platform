@@ -22,13 +22,13 @@
                     canExecuteMethod: function () {
                         return true;
                     },
-                    permission: 'content:update'
+                    permission: blade.updatePermission
                 },
 				{
 				    name: "content.commands.save-list", icon: 'fa fa-save',
 				    executeMethod: blade.saveChanges,
 				    canExecuteMethod: canSave,
-				    permission: 'content:update'
+				    permission: blade.updatePermission
 				}];
 
                 blade.isLoading = false;
@@ -49,13 +49,13 @@
                             blade.recalculatePriority();
                         },
                         canExecuteMethod: function () { return true; },
-                        permission: 'content:update'
+                        permission: blade.updatePermission
                     },
 					{
 					    name: "content.commands.save-list", icon: 'fa fa-save',
 					    executeMethod: blade.saveChanges,
 					    canExecuteMethod: canSave,
-					    permission: 'content:update'
+					    permission: blade.updatePermission
 					},
 					{
 					    name: "content.commands.reset-list", icon: 'fa fa-undo',
@@ -65,7 +65,7 @@
 					    canExecuteMethod: function () {
 					        return !angular.equals(blade.origEntity, blade.currentEntity) && blade.hasUpdatePermission();
 					    },
-					    permission: 'content:update'
+					    permission: blade.updatePermission
 					},
 					{
 					    name: "content.commands.delete-list", icon: 'fa fa-trash-o',

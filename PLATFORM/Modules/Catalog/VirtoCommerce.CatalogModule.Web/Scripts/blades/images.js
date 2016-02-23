@@ -1,10 +1,12 @@
 ﻿angular.module('virtoCommerce.catalogModule')
 .controller('virtoCommerce.catalogModule.imagesController', ['$scope', '$filter', '$translate', 'FileUploader', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'platformWebApp.authService', 'platformWebApp.assets.api', function ($scope, $filter, $translate, FileUploader, dialogService, bladeNavigationService, authService, assets) {
     var blade = $scope.blade;
+    blade.updatePermission = 'catalog:update';
 
     blade.refresh = function (parentRefresh) {
         blade.currentResource.get({ id: blade.currentEntityId }, function (data) {
-            $scope.uploader.url = 'api/platform/assets?folderUrl=catalog/' + data.code;
+            if ($scope.uploader)
+                $scope.uploader.url = 'api/platform/assets?folderUrl=catalog/' + data.code;
             $scope.origItem = data;
             blade.currentEntity = angular.copy(data);
             blade.isLoading = false;
@@ -16,9 +18,9 @@
     }
 
     function isDirty() {
-        return !angular.equals(blade.currentEntity, $scope.origItem) && authService.checkPermission(blade.permission);
+        return !angular.equals(blade.currentEntity, $scope.origItem) && blade.hasUpdatePermission();
     }
-    
+
     $scope.reset = function () {
         angular.copy($scope.origItem, blade.currentEntity);
     };
@@ -45,7 +47,7 @@
     };
 
     function initialize() {
-        if (!$scope.uploader && authService.checkPermission(blade.permission)) {
+        if (!$scope.uploader && blade.hasUpdatePermission()) {
             // create the uploader            
             var uploader = $scope.uploader = new FileUploader({
                 scope: $scope,
@@ -126,7 +128,7 @@
             name: 'platform.commands.save', icon: 'fa fa-save',
             executeMethod: $scope.saveChanges,
             canExecuteMethod: isDirty,
-            permission: blade.permission
+            permission: blade.updatePermission
         },
 		{
 		    name: 'platform.commands.remove', icon: 'fa fa-trash-o', executeMethod: function () { $scope.removeAction(); },
@@ -138,7 +140,7 @@
 		        }
 		        return retVal;
 		    },
-		    permission: blade.permission
+		    permission: blade.updatePermission
 		},
         {
             name: 'catalog.commands.gallery', icon: 'fa fa-image',
@@ -150,11 +152,7 @@
                 dialogService.showGalleryDialog(dialog);
             },
             canExecuteMethod: function () {
-                var canExecute = false;
-                if (blade.currentEntity && blade.currentEntity.images && blade.currentEntity.images.length > 0) {
-                    canExecute = true;
-                }
-                return canExecute;
+                return blade.currentEntity && _.any(blade.currentEntity.images);
             }
         }
     ];

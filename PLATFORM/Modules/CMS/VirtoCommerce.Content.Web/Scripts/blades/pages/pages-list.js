@@ -3,6 +3,7 @@
     $scope.selectedNodeId = null;
 
     var blade = $scope.blade;
+    blade.updatePermission = 'content:update';
 
     blade.isPages = function () {
         return blade.type === 'pages';
@@ -165,7 +166,7 @@
                 canExecuteMethod: function () {
                     return true;
                 },
-                permission: 'content:update'
+                permission: blade.updatePermission
             });
         }
     }
@@ -213,7 +214,7 @@
                 canExecuteMethod: function () {
                     return true;
                 },
-                permission: 'content:update'
+                permission: blade.updatePermission
             });
         }
     }

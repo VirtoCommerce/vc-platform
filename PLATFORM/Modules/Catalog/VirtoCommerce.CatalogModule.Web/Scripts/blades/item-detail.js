@@ -1,10 +1,10 @@
 ﻿angular.module('virtoCommerce.catalogModule')
 .controller('virtoCommerce.catalogModule.itemDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings', 'virtoCommerce.catalogModule.items', function ($scope, bladeNavigationService, settings, items) {
     var blade = $scope.blade;
+    blade.updatePermission = 'catalog:update';
     blade.origItem = {};
     blade.item = {};
     blade.currentEntityId = blade.itemId;
-    blade.updatePermission = 'catalog:update';
 
     blade.refresh = function (parentRefresh) {
         blade.isLoading = true;

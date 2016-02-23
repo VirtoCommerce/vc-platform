@@ -1,6 +1,7 @@
 ﻿angular.module('virtoCommerce.quoteModule')
 .controller('virtoCommerce.quoteModule.quoteItemsController', ['$scope', 'focus', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'virtoCommerce.quoteModule.quotes', 'virtoCommerce.catalogModule.items', 'virtoCommerce.pricingModule.prices', function ($scope, focus, bladeNavigationService, dialogService, quotes, items, prices) {
     var blade = $scope.blade;
+    blade.updatePermission = 'quote:update';
 
     // set initial values to totals 
     $scope.totals = {
@@ -110,7 +111,7 @@
             canExecuteMethod: function () {
                 return true;
             },
-            permission: 'quote:update'
+            permission: blade.updatePermission
         },
         {
             name: "platform.commands.remove", icon: 'fa fa-trash-o',
@@ -122,7 +123,7 @@
             canExecuteMethod: function () {
                 return _.any(blade.currentEntity.items, function (x) { return x.$selected; });;
             },
-            permission: 'quote:update'
+            permission: blade.updatePermission
         }
     ];
 
