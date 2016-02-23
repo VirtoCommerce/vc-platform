@@ -94,7 +94,7 @@
         };
 
         $scope.downloadUrl = function (data) {
-            window.open(data.url, '_blank', '');
+            window.open(data.url, '_blank');
         };
 
         //$scope.rename = function (listItem) {

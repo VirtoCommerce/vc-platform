@@ -105,6 +105,15 @@
                 permission: blade.updatePermission
             },
             {
+                name: "platform.commands.preview", icon: 'fa fa-external-link',
+                executeMethod: function () {
+                    window.open(blade.currentEntity.url, '_blank');
+                },
+                canExecuteMethod: function () {
+                    return blade.currentEntity && blade.currentEntity.url;
+                }
+            },
+            {
                 name: "platform.commands.delete", icon: 'fa fa-trash-o',
                 executeMethod: deleteEntry,
                 canExecuteMethod: function () { return true; },
