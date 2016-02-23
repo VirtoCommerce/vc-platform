@@ -96,7 +96,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                         //Then load all physical categories linked to catalog
                         var allCatalogLinkedCategories = repository.CategoryLinks.Where(x => criteria.CatalogIds.Contains(x.TargetCatalogId)).Select(x => x.SourceCategoryId).ToArray();
                         searchCategoryIds = searchCategoryIds.Concat(allCatalogLinkedCategories).Distinct().ToArray();
-                        //Then exapand all categories, get all childrens
+                        //Then expand all categories, get all children's
                         searchCategoryIds = searchCategoryIds.Concat(repository.GetAllChildrenCategoriesIds(searchCategoryIds)).ToArray();
                         if (!searchCategoryIds.IsNullOrEmpty())
                         {

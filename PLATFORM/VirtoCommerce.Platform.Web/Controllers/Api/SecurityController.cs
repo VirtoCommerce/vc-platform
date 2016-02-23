@@ -214,6 +214,20 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
+        /// Get user details by user ID
+        /// </summary>
+        /// <param name="id"></param>
+        [HttpGet]
+        [Route("users/id/{id}")]
+        [ResponseType(typeof(ApplicationUserExtended))]
+        [CheckPermission(Permission = PredefinedPermissions.SecurityQuery)]
+        public async Task<IHttpActionResult> GetUserById(string id)
+        {
+            var retVal = await _securityService.FindByIdAsync(id, UserDetails.Full);
+            return Ok(retVal);
+        }
+
+        /// <summary>
         /// Create new user
         /// </summary>
         /// <param name="user">User details.</param>
@@ -243,7 +257,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         {
             EnsureThatUsersEditable(userName);
 
-             var result = await _securityService.ChangePasswordAsync(userName, changePassword.OldPassword, changePassword.NewPassword);
+            var result = await _securityService.ChangePasswordAsync(userName, changePassword.OldPassword, changePassword.NewPassword);
 
             if (result == null)
                 return NotFound();
@@ -301,12 +315,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-      
+
         private void EnsureThatUsersEditable(params string[] userNames)
         {
             if (_securityOptions != null && _securityOptions.NonEditableUsers != null)
             {
-                if(userNames.Any(x => _securityOptions.NonEditableUsers.Contains(x)))
+                if (userNames.Any(x => _securityOptions.NonEditableUsers.Contains(x)))
                 {
                     throw new HttpException((int)HttpStatusCode.InternalServerError, "It is forbidden to edit this user.");
                 }

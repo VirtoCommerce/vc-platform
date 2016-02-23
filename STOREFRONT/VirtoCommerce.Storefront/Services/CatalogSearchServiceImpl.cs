@@ -35,11 +35,12 @@ namespace VirtoCommerce.Storefront.Services
             _promotionEvaluator = promotionEvaluator;
         }
 
+        #region ICatalogSearchService Members
         public async Task<Product[]> GetProductsAsync(string[] ids, ItemResponseGroup responseGroup = ItemResponseGroup.ItemInfo)
         {
             var workContext = _workContextFactory();
 
-            var retVal = (await _catalogModuleApi.CatalogModuleProductsGetProductByIdsAsync(ids.ToList())).Select(x => x.ToWebModel(workContext.CurrentLanguage, workContext.CurrentCurrency)).ToArray();
+            var retVal = (await _catalogModuleApi.CatalogModuleProductsGetProductByIdsAsync(ids.ToList(), ((int)responseGroup).ToString())).Select(x => x.ToWebModel(workContext.CurrentLanguage, workContext.CurrentCurrency)).ToArray();
 
             var allProducts = retVal.Concat(retVal.SelectMany(x => x.Variations)).ToArray();
 
@@ -47,7 +48,7 @@ namespace VirtoCommerce.Storefront.Services
             {
                 var taskList = new List<Task>();
 
-                if ((responseGroup | ItemResponseGroup.ItemWithInventories) == responseGroup)
+                if ((responseGroup | ItemResponseGroup.Inventory) == responseGroup)
                 {
                     taskList.Add(LoadProductsInventoriesAsync(allProducts));
                 }
@@ -64,6 +65,15 @@ namespace VirtoCommerce.Storefront.Services
                 await Task.WhenAll(taskList.ToArray());
             }
 
+            return retVal;
+        }
+
+        public async Task<Category[]> GetCategoriesAsync(string[] ids, CategoryResponseGroup responseGroup = CategoryResponseGroup.Info)
+        {
+            var workContext = _workContextFactory();
+
+            var retVal = (await _catalogModuleApi.CatalogModuleCategoriesGetCategoriesByIdsAsync(ids.ToList(), ((int)responseGroup).ToString())).Select(x => x.ToWebModel(workContext.CurrentLanguage)).ToArray();
+            
             return retVal;
         }
 
@@ -124,7 +134,9 @@ namespace VirtoCommerce.Storefront.Services
             }
 
             return retVal;
-        }
+        } 
+
+        #endregion
 
         private async Task LoadProductsDiscountsAsync(IEnumerable<Product> products)
         {

@@ -97,6 +97,12 @@ namespace VirtoCommerce.Storefront.Services
             await _customerApi.CustomerModuleUpdateContactAsync(contact);
             _cacheManager.Remove(GetCacheKey(customer.Id), "ApiRegion");
         }
+
+        public async Task<bool> CanLoginOnBehalfAsync(string customerId)
+        {
+            var info = await _customerApi.CustomerModuleGetLoginOnBehalfInfoAsync(customerId);
+            return info.CanLoginOnBehalf == true;
+        }
         #endregion
 
         #region IObserver<CreateOrderEvent> Members
@@ -111,11 +117,9 @@ namespace VirtoCommerce.Storefront.Services
         }
         #endregion
 
-        private string GetCacheKey(string customerId)
+        private static string GetCacheKey(string customerId)
         {
             return "GetCustomerById-" + customerId;
         }
-
-
     }
 }

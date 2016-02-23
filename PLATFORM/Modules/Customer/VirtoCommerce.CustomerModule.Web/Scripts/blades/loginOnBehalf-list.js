@@ -24,8 +24,8 @@
             };
             bladeNavigationService.showBlade(newBlade, $scope.blade);
         } else {
-            // https://{store_secure_url}/{locale}/{store_code}/account/login?uid={customer_id}
-            var url = store.secureUrl + '/' + store.defaultLanguage + '/' + store.id + '/account/login?uid=' + $scope.blade.currentEntityId;
+            // {store_secure_url}/account/login?UserId={customer_id}
+            var url = store.secureUrl + '/account/login?UserId=' + $scope.blade.currentEntityId;
             $window.open(url, '_blank');
         }
     }

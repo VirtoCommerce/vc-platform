@@ -16,7 +16,7 @@ namespace VirtoCommerce.Storefront.Converters
             {
                 retVal.SeoInfos = storeDto.SeoInfos.Select(x => x.ToWebModel()).ToList();
             }
-            retVal.DefaultLanguage = storeDto.DefaultLanguage != null ? new Language(storeDto.DefaultLanguage) : new Language("en-US");
+            retVal.DefaultLanguage = storeDto.DefaultLanguage != null ? new Language(storeDto.DefaultLanguage) : Language.InvariantLanguage;
             if(storeDto.Languages != null)
             {
                 retVal.Languages = storeDto.Languages.Select(x => new Language(x)).ToList();
@@ -33,6 +33,8 @@ namespace VirtoCommerce.Storefront.Converters
                 retVal.DynamicProperties = storeDto.DynamicProperties.Select(x => x.ToWebModel()).ToList();
                 retVal.ThemeName = retVal.DynamicProperties.GetDynamicPropertyValue("DefaultThemeName");
             }
+
+            retVal.StoreState = EnumUtility.SafeParse(storeDto.StoreState, StoreStatus.Open);
 
             return retVal;
         }

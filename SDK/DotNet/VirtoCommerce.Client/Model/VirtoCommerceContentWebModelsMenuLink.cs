@@ -75,6 +75,30 @@ namespace VirtoCommerce.Client.Model
   
         
         /// <summary>
+        /// Each link element can have an associated object like Product, Category, Promotion, etc.\r\n            Is a primary key of associated object
+        /// </summary>
+        /// <value>Each link element can have an associated object like Product, Category, Promotion, etc.\r\n            Is a primary key of associated object</value>
+        [DataMember(Name="associatedObjectId", EmitDefaultValue=false)]
+        public string AssociatedObjectId { get; set; }
+  
+        
+        /// <summary>
+        /// Display name for associated object
+        /// </summary>
+        /// <value>Display name for associated object</value>
+        [DataMember(Name="associatedObjectName", EmitDefaultValue=false)]
+        public string AssociatedObjectName { get; set; }
+  
+        
+        /// <summary>
+        /// Associated object type
+        /// </summary>
+        /// <value>Associated object type</value>
+        [DataMember(Name="associatedObjectType", EmitDefaultValue=false)]
+        public string AssociatedObjectType { get; set; }
+  
+        
+        /// <summary>
         /// Gets or Sets SecurityScopes
         /// </summary>
         [DataMember(Name="securityScopes", EmitDefaultValue=false)]
@@ -96,6 +120,9 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Priority: ").Append(Priority).Append("\n");
             sb.Append("  IsActive: ").Append(IsActive).Append("\n");
             sb.Append("  MenuLinkListId: ").Append(MenuLinkListId).Append("\n");
+            sb.Append("  AssociatedObjectId: ").Append(AssociatedObjectId).Append("\n");
+            sb.Append("  AssociatedObjectName: ").Append(AssociatedObjectName).Append("\n");
+            sb.Append("  AssociatedObjectType: ").Append(AssociatedObjectType).Append("\n");
             sb.Append("  SecurityScopes: ").Append(SecurityScopes).Append("\n");
             
             sb.Append("}\n");
@@ -165,6 +192,21 @@ namespace VirtoCommerce.Client.Model
                     this.MenuLinkListId.Equals(other.MenuLinkListId)
                 ) && 
                 (
+                    this.AssociatedObjectId == other.AssociatedObjectId ||
+                    this.AssociatedObjectId != null &&
+                    this.AssociatedObjectId.Equals(other.AssociatedObjectId)
+                ) && 
+                (
+                    this.AssociatedObjectName == other.AssociatedObjectName ||
+                    this.AssociatedObjectName != null &&
+                    this.AssociatedObjectName.Equals(other.AssociatedObjectName)
+                ) && 
+                (
+                    this.AssociatedObjectType == other.AssociatedObjectType ||
+                    this.AssociatedObjectType != null &&
+                    this.AssociatedObjectType.Equals(other.AssociatedObjectType)
+                ) && 
+                (
                     this.SecurityScopes == other.SecurityScopes ||
                     this.SecurityScopes != null &&
                     this.SecurityScopes.SequenceEqual(other.SecurityScopes)
@@ -200,6 +242,15 @@ namespace VirtoCommerce.Client.Model
                 
                 if (this.MenuLinkListId != null)
                     hash = hash * 59 + this.MenuLinkListId.GetHashCode();
+                
+                if (this.AssociatedObjectId != null)
+                    hash = hash * 59 + this.AssociatedObjectId.GetHashCode();
+                
+                if (this.AssociatedObjectName != null)
+                    hash = hash * 59 + this.AssociatedObjectName.GetHashCode();
+                
+                if (this.AssociatedObjectType != null)
+                    hash = hash * 59 + this.AssociatedObjectType.GetHashCode();
                 
                 if (this.SecurityScopes != null)
                     hash = hash * 59 + this.SecurityScopes.GetHashCode();

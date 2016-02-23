@@ -113,6 +113,8 @@ namespace VirtoCommerce.OrderModule.Data.Converters
             //Save only disctinct addresses for order
             retVal.Addresses = retVal.Addresses.Distinct().ToList();
 			retVal.TaxDetails = cart.TaxDetails;
+            retVal.Tax = cart.TaxTotal;
+            retVal.TaxIncluded = cart.TaxIncluded ?? false;
 			return retVal;
 		}
 

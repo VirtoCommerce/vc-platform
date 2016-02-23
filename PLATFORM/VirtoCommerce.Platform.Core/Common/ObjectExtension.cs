@@ -93,19 +93,21 @@ namespace VirtoCommerce.Platform.Core.Common
 
         public static Nullable<T> ToNullable<T>(this object obj) where T : struct
         {
-            Nullable<T> result = new Nullable<T>();
-            if(obj != null)
+            if (obj == null)
             {
-                if (obj is string)
-                {
-                    result = ((string)obj).ToNullable<T>();
-                }
-                else
-                {
-                    result = (Nullable<T>)obj;
-                }
+                return default(T);
             }
-            return result;
+            var objString = obj as string;
+            if (objString != null)
+            {
+                return objString.ToNullable<T>();
+            }
+            var objType = typeof(T);
+            if (objType.IsGenericType && objType.GetGenericTypeDefinition() == typeof(Nullable<>))
+            {
+                objType = Nullable.GetUnderlyingType(objType);
+            }
+            return (T)Convert.ChangeType(obj, objType);
         }
     }
 }

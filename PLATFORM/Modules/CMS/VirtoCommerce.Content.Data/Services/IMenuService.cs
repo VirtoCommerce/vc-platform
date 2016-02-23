@@ -12,7 +12,7 @@ namespace VirtoCommerce.Content.Data.Services
         IEnumerable<MenuLinkList> GetAllLinkLists();
         IEnumerable<MenuLinkList> GetListsByStoreId(string storeId);
 		MenuLinkList GetListById(string listId);
-		void Update(MenuLinkList list);
+		void AddOrUpdate(MenuLinkList list);
 		void DeleteList(string listId);
 		bool CheckList(string storeId, string name, string language, string id);
 	}

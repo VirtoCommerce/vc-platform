@@ -34,6 +34,7 @@ namespace VirtoCommerce.Storefront.Services
         private readonly ICacheManager<object> _cacheManager;
         private readonly Func<WorkContext> _workContextFactory;
         private readonly Func<IStorefrontUrlBuilder> _urlBuilderFactory;
+        private readonly LinkHelper _linkHelper;
 
         [CLSCompliant(false)]
         public StaticContentServiceImpl(string baseLocalPath, Markdown markdownRender, ILiquidThemeEngine liquidEngine,
@@ -47,6 +48,7 @@ namespace VirtoCommerce.Storefront.Services
             _cacheManager = cacheManager;
             _workContextFactory = workContextFactory;
             _urlBuilderFactory = urlBuilderFactory;
+            _linkHelper = new LinkHelper();
         }
 
         #region IStaticContentService Members
@@ -98,13 +100,19 @@ namespace VirtoCommerce.Storefront.Services
                 totalCount = localizedFiles.Count();
                 foreach (var localizedFile in localizedFiles.OrderBy(x => x.Name).Skip((pageIndex - 1) * pageSize).Take(pageSize))
                 {
+                    var relativePath = localizedFile.LocalPath.Replace(baseStorePath, string.Empty);
                     var contentItem = contentItemFactory();
                     contentItem.Name = localizedFile.Name;
                     contentItem.Language = language;
-                    contentItem.Url = GetUrlFromPath(localizedFile.LocalPath.Replace(baseStorePath, string.Empty));
+                    contentItem.RelativePath = relativePath;
+                    contentItem.FileName = Path.GetFileName(relativePath);
                     contentItem.LocalPath = localizedFile.LocalPath;
 
                     LoadAndRenderContentItem(contentItem, renderContent);
+
+                    contentItem.Url = _linkHelper.EvaluatePermalink("none", contentItem); // TODO: replace with setting "permalink"
+
+
                     retVal.Add(contentItem);
                 }
             }
@@ -143,12 +151,6 @@ namespace VirtoCommerce.Storefront.Services
             }
 
             contentItem.LoadContent(content, metaHeaders);
-        }
-
-        private static string GetUrlFromPath(string path)
-        {
-            var retVal = Path.GetDirectoryName(path) + "/" + Path.GetFileName(path).Split('.').First();
-            return Uri.EscapeUriString(retVal.TrimStart('/'));
         }
 
         private static string RemoveYamlHeader(string text)
@@ -263,13 +265,6 @@ namespace VirtoCommerce.Storefront.Services
             public string Name { get; private set; }
             public string Language { get; private set; }
             public string LocalPath { get; private set; }
-
-            
-
         }
-
-
     }
-
-
 }

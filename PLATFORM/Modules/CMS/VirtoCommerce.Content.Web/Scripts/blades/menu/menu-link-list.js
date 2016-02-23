@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.contentModule')
-.controller('virtoCommerce.contentModule.menuLinkListController', ['$scope', 'virtoCommerce.contentModule.menus', 'virtoCommerce.contentModule.stores', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', function ($scope, menus, menusStores, bladeNavigationService, dialogService) {
+.controller('virtoCommerce.contentModule.menuLinkListController', ['$scope', 'virtoCommerce.contentModule.menus', 'virtoCommerce.contentModule.stores', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'virtoCommerce.contentModule.menuLinkList-associationTypesService', function ($scope, menus, menusStores, bladeNavigationService, dialogService, associationTypesService) {
     var blade = $scope.blade;
     blade.updatePermission = 'content:update';
     blade.selectedItemIds = [];
@@ -36,6 +36,11 @@
             else {
                 blade.isLoading = true;
                 menus.getList({ storeId: blade.choosenStoreId, listId: blade.choosenListId }, function (data) {
+                    _.each(data.menuLinks, function (x) {
+                        if (x.associatedObjectType) {
+                            x.associatedObject = _.findWhere($scope.associatedObjectTypes, { id: x.associatedObjectType });
+                        }
+                    });
                     data.menuLinks = _.sortBy(data.menuLinks, 'priority').reverse();
                     blade.origEntity = data;
                     blade.currentEntity = angular.copy(data);
@@ -96,9 +101,7 @@
 
     $scope.selected = function (id) {
         return _.contains(blade.selectedItemIds, id);
-    }
-
-    blade.initialize();
+    };
 
     blade.saveChanges = function () {
         //checkForNull();
@@ -135,13 +138,10 @@
 
     function canSave() {
         var listNameIsRight = !((angular.isUndefined(blade.currentEntity.name)) || (blade.currentEntity.name === null));
-        var linksIsRight = blade.currentEntity.menuLinks.length == _.reject(
-				blade.currentEntity.menuLinks,
-				function (link) {
-				    return !(!(angular.isUndefined(link.title) || link.title === null) &&
-						!(angular.isUndefined(link.url) || link.url === null));
-				}).length;
-        return isDirty() && listNameIsRight && linksIsRight && blade.currentEntity.menuLinks.length > 0;
+        var linksAreRight = _.all(blade.currentEntity.menuLinks, function (x) {
+            return x.title && x.url && (!x.associatedObjectType || x.associatedObjectId);
+        });
+        return isDirty() && listNameIsRight && linksAreRight && _.any(blade.currentEntity.menuLinks);
     }
 
     blade.deleteList = function () {
@@ -240,14 +240,13 @@
 
     $scope.blade.headIcon = 'fa-archive';
 
-
-
     $scope.sortableOptions = {
-        update: function (e, ui) {
-
-        },
         stop: function (e, ui) {
             blade.recalculatePriority();
-        }
+        },
+        axis: 'y'
     };
+
+    $scope.associatedObjectTypes = associationTypesService.objects;
+    blade.initialize();
 }]);

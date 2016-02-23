@@ -200,7 +200,39 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             return Ok(newVariation);
         }
 
-        
+
+        [HttpGet]
+        [ResponseType(typeof(webModel.Product))]
+        [Route("{productId}/clone")]
+        public IHttpActionResult CloneProduct(string productId)
+        {
+
+            var product = _itemsService.GetById(productId, coreModel.ItemResponseGroup.ItemLarge);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            //Need reset all Id instead properties because its gets by inheritance
+            var allEntities = product.GetFlatObjectsListWithInterface<IEntity>();
+            foreach(var entity in allEntities)
+            {
+                var property = entity as coreModel.Property;
+                if (property == null)
+                {
+                    entity.Id = null;
+                }
+            }
+            product.Code = _skuGenerator.GenerateSku(product);
+            product.SeoInfos.Clear();
+            foreach(var variation in product.Variations)
+            {
+                variation.Code = _skuGenerator.GenerateSku(variation);
+                variation.SeoInfos.Clear();
+            }
+
+            return Ok(product.ToWebModel(_blobUrlResolver));
+        }
+
         /// <summary>
         /// Updates the specified product.
         /// </summary>
