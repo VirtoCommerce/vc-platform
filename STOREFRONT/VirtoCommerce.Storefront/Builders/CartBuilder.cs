@@ -399,45 +399,48 @@ namespace VirtoCommerce.Storefront.Builders
                 }
             }
 
-            _cart.Shipments.Clear();
-            var shipment = new Shipment(_cart.Currency);
-
-            foreach (var item in _cart.Items)
+            if (quoteRequest.RequestShippingQuote)
             {
-                shipment.Items.Add(item.ToShipmentItem());
-            }
+                _cart.Shipments.Clear();
+                var shipment = new Shipment(_cart.Currency);
 
-            if (quoteRequest.ShipmentMethod != null)
-            {
-                var availableShippingMethods = await GetAvailableShippingMethodsAsync();
-                if (availableShippingMethods != null)
+                foreach (var item in _cart.Items)
                 {
-                    var availableShippingMethod = availableShippingMethods.FirstOrDefault(sm => sm.ShipmentMethodCode == quoteRequest.ShipmentMethod.ShipmentMethodCode);
-                    if (availableShippingMethod != null)
+                    shipment.Items.Add(item.ToShipmentItem());
+                }
+
+                if (quoteRequest.ShippingAddress != null)
+                {
+                    shipment.DeliveryAddress = quoteRequest.ShippingAddress;
+                }
+
+                if (quoteRequest.ShipmentMethod != null)
+                {
+                    var availableShippingMethods = await GetAvailableShippingMethodsAsync();
+                    if (availableShippingMethods != null)
                     {
-                        shipment = quoteRequest.ShipmentMethod.ToShipmentModel(_cart.Currency);
-                        _cart.Shipments.Add(shipment);
+                        var availableShippingMethod = availableShippingMethods.FirstOrDefault(sm => sm.ShipmentMethodCode == quoteRequest.ShipmentMethod.ShipmentMethodCode);
+                        if (availableShippingMethod != null)
+                        {
+                            shipment = quoteRequest.ShipmentMethod.ToShipmentModel(_cart.Currency);
+                        }
                     }
                 }
+
+                _cart.Shipments.Add(shipment);
             }
 
             _cart.Payments.Clear();
             var payment = new Payment(_cart.Currency);
 
-            if (quoteRequest.Addresses != null)
+            if (quoteRequest.BillingAddress != null)
             {
-                var shippingAddress = quoteRequest.Addresses.FirstOrDefault(a => a.Type == AddressType.Shipping);
-                if (shippingAddress != null)
-                {
-                    shipment.DeliveryAddress = shippingAddress;
-                }
-                var billingAddress = quoteRequest.Addresses.FirstOrDefault(a => a.Type == AddressType.Billing);
-                if (billingAddress != null)
-                {
-                    payment.BillingAddress = billingAddress;
-                    _cart.Payments.Add(payment);
-                }
+                payment.BillingAddress = quoteRequest.BillingAddress;
             }
+
+            payment.Amount = quoteRequest.Totals.GrandTotalInclTax;
+
+            _cart.Payments.Add(payment);
 
             return this;
         }
