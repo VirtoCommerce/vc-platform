@@ -249,6 +249,9 @@ namespace VirtoCommerce.Platform.Web
 
         private static void InitializePlatform(IAppBuilder app, IUnityContainer container, string connectionStringName)
         {
+            container.RegisterType<IOwinRequest>(new PerRequestLifetimeManager(), new InjectionFactory(c => HttpContext.Current.GetOwinContext().Request));
+            container.RegisterType<IUserNameResolver, UserNameResolver>();
+
             #region Setup database
 
             using (var db = new SecurityDbContext(connectionStringName))
@@ -460,7 +463,7 @@ namespace VirtoCommerce.Platform.Web
             container.RegisterInstance<IPackageService>(packageService);
 
             var uploadsPath = HostingEnvironment.MapPath(VirtualRoot + "/App_Data/Uploads");
-            container.RegisterType<ModulesController>(new InjectionConstructor(packageService, uploadsPath, notifier));
+            container.RegisterType<ModulesController>(new InjectionConstructor(packageService, uploadsPath, notifier, container.Resolve<IUserNameResolver>()));
 
             #endregion
 
@@ -486,9 +489,6 @@ namespace VirtoCommerce.Platform.Web
             container.RegisterType<IAuthenticationManager>(new InjectionFactory(c => HttpContext.Current.GetOwinContext().Authentication));
             container.RegisterType<ApplicationUserManager>();
             container.RegisterType<ApplicationSignInManager>();
-
-            container.RegisterType<IOwinRequest>(new PerRequestLifetimeManager(), new InjectionFactory(c => HttpContext.Current.GetOwinContext().Request));
-            container.RegisterType<IUserNameResolver, UserNameResolver>(new PerRequestLifetimeManager());
 
             var nonEditableUsers = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:NonEditableUsers", string.Empty);
             container.RegisterInstance<ISecurityOptions>(new SecurityOptions(nonEditableUsers));
