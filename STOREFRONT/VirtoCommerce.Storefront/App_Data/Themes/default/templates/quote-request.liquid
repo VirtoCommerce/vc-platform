@@ -39,7 +39,7 @@
                 </div>
             </div>
         </div>
-        <div class="grid" ng-if="displayForStatuses(['Processing', 'Proposal sent', 'Ordered', 'Rejected'])">
+        <div class="grid" ng-if="displayForStatuses(['Processing', 'Proposal sent', 'Ordered', 'Rejected', 'Canceled'])">
             <div class="grid-item medium-down--one-whole">
                 <table>
                     <tr>
@@ -84,7 +84,7 @@
                         <div class="grid-item one-third" ng-bind="quoteItem.name"></div>
                         <div class="grid-item one-third">
                             <textarea class="quote_item_comment" id="{( 'Item_' + quoteItem.id + '_Comment' )}" name="{( 'Item_' + quoteItem.id + '_Comment' )}" ng-if="displayForStatuses(['New'])" ng-model="quoteItem.comment"></textarea>
-                            <span ng-bind="quoteItem.comment" ng-if="displayForStatuses(['Processing', 'Proposal sent', 'Ordered', 'Rejected'])"></span>
+                            <span ng-bind="quoteItem.comment" ng-if="displayForStatuses(['Processing', 'Proposal sent', 'Ordered', 'Rejected', 'Canceled'])"></span>
                         </div>
                     </div>
                 </div>
@@ -107,13 +107,13 @@
                                 <a class="add-tier" style="cursor: pointer;" ng-click="addTierPrice(quoteItem)">Add tier</a>
                             </div>
                         </div>
-                        <div class="grid-item one-half medium-down--one-third text-right" ng-if="displayForStatuses(['Processing', 'Proposal sent', 'Ordered', 'Rejected'])">
+                        <div class="grid-item one-half medium-down--one-third text-right" ng-if="displayForStatuses(['Processing', 'Proposal sent', 'Ordered', 'Rejected', 'Canceled'])">
                             <div class="js-qty" ng-repeat="tierPrice in quoteItem.proposalPrices">
                                 <div class="js-qty--inner" ng-bind="tierPrice.quantity"></div>
                             </div>
                         </div>
                         <div class="grid-item one-third medium-down--one-third medium-down--text-left text-right proposal-prices">
-                            <span class="h2 tier-price" ng-repeat="tierPrice in quoteItem.proposalPrices" ng-if="displayForStatuses(['New', 'Processing', 'Ordered', 'Rejected'])">
+                            <span class="h2 tier-price" ng-repeat="tierPrice in quoteItem.proposalPrices" ng-if="displayForStatuses(['New', 'Processing', 'Ordered', 'Rejected', 'Canceled'])">
                                 <small ng-bind="tierPrice.price.formatedAmount"></small>
                             </span>
                             <span class="h2 tier-price" ng-repeat="tierPrice in quoteItem.proposalPrices" ng-if="displayForStatuses(['Proposal sent'])">
