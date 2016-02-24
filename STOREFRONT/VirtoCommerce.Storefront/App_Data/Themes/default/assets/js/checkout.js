@@ -1,6 +1,7 @@
 ﻿var storefrontApp = angular.module('storefrontApp');
 
-storefrontApp.controller('checkoutController', ['$rootScope', '$scope', '$window', 'customerService', 'cartService', function ($rootScope, $scope, $window, customerService, cartService) {
+storefrontApp.controller('checkoutController', ['$rootScope', '$scope', '$window', 'cartService',
+    function ($rootScope, $scope, $window, cartService) {
     const shippingAddressStepInnerUrl = 'shipping-address';
     const shippingMethodStepInnerUrl = 'shipping-method';
     const paymentMethodStepInnerUrl = 'payment-method';
@@ -183,6 +184,7 @@ storefrontApp.controller('checkoutController', ['$rootScope', '$scope', '$window
             shippingMethodProcessing: false,
             orderProcessing: false,
             billingAddressEqualsShipping: true,
+            customerAddresses: [],
             bankCardInfo: {
                 type: 'Unknown',
                 cardNumberPattern: /^\d{12,19}$/,
@@ -194,33 +196,8 @@ storefrontApp.controller('checkoutController', ['$rootScope', '$scope', '$window
         getAvailablePaymentMethods();
     }
 
-    function getCurrentCustomer() {
-        customerService.getCurrentCustomer().then(function (response) {
-            var customer = response.data;
-            $scope.customer = customer;
-            getCustomerAddresses();
-        });
-    }
-
-    function getCustomerAddresses() {
-        if (!$scope.customer.addresses) {
-            return;
-        }
-        for (var i = 0; i < $scope.customer.addresses.length; i++) {
-            $scope.customer.addresses[i].id = i + 1;
-            $scope.customer.addresses[i].stringifiedAddress = stringifyAddress($scope.customer.addresses[i]);
-        }
-
-        if ((!$scope.checkout.shipment || !$scope.checkout.shipment.deliveryAddress) && $scope.currentPath == shippingAddressStepInnerUrl) {
-            selectAddress(shippingAddressType);
-        }
-        if ((!$scope.checkout.payment || !$scope.checkout.shipment.billingAddress) && $scope.currentPath == paymentMethodStepInnerUrl) {
-            selectAddress(billingAddressType);
-        }
-    }
-
     function selectAddress(addressType) {
-        var address = _.find($scope.customer.addresses, function (a) { return a.id == $scope.checkout.selectedCustomerAddressId });
+        var address = _.find($scope.checkout.customerAddresses, function (a) { return a.id == $scope.checkout.selectedCustomerAddressId });
         if (!address) {
             return;
         }
@@ -256,26 +233,15 @@ storefrontApp.controller('checkoutController', ['$rootScope', '$scope', '$window
             }
             updateTotals(cart);
             var shipment = cart.shipments.length ? cart.shipments[0] : newShipment;
-            shipment.deliveryAddress = shipment.deliveryAddress || { type: shippingAddressType };
-            if (!shipment.deliveryAddress.firstName) {
-                shipment.deliveryAddress.firstName = $scope.customer.firstName;
-            }
-            if (!shipment.deliveryAddress.lastName) {
-                shipment.deliveryAddress.lastName = $scope.customer.lastName;
-            }
+            shipment.deliveryAddress = addressIsValid(shipment.deliveryAddress) ? shipment.deliveryAddress : cart.defaultShippingAddress;
             var payment = cart.payments.length ? cart.payments[0] : newPayment;
-            payment.billingAddress = payment.billingAddress || { type: billingAddresstype };
-            if (!payment.billingAddress.firstName) {
-                payment.billingAddress.firstName = $scope.customer.firstName;
-            }
-            if (!payment.billingAddress.lastName) {
-                payment.billingAddress.lastName = $scope.customer.lastName;
-            }
-            $scope.checkout.email = shipment.deliveryAddress.email || $scope.customer.email;
+            payment.billingAddress = addressIsValid(payment.billingAddress) ? payment.billingAddress : cart.defaultBillingAddress;
+            $scope.checkout.email = cart.email;
             $scope.checkout.items = cart.items;
             $scope.checkout.hasPhysicalProducts = cart.hasPhysicalProducts;
             $scope.checkout.shipment = shipment;
             $scope.checkout.payment = payment;
+            getCustomerAddresses(cart);
             if (shipment.deliveryAddress.countryCode) {
                 getCountryRegions(shipment.deliveryAddress.countryCode);
             }
@@ -291,10 +257,21 @@ storefrontApp.controller('checkoutController', ['$rootScope', '$scope', '$window
                 $scope.checkout.shippingAddressIsFilled = addressIsValid($scope.checkout.shipment.deliveryAddress);
                 $scope.checkout.shippingMethodIsFilled = !_.isEmpty($scope.checkout.shipment.shipmentMethodCode);
             }
-            getCheckoutSteps(cart);
-            handleCheckoutRedirects(cart);
-            getCurrentCustomer();
+            //getCheckoutSteps(cart);
+            //handleCheckoutRedirects(cart);
         });
+    }
+
+    function getCustomerAddresses(cart) {
+        var addressId = 1;
+        if (cart.customer) {
+            _.each(cart.customer.addresses, function (address) {
+                address.id = addressId;
+                address.stringifiedAddress = stringifyAddress(address);
+                addressId++;
+            });
+            $scope.checkout.customerAddresses = cart.customer.addresses;
+        }
     }
 
     function getCheckoutSteps(cart) {

@@ -41,7 +41,7 @@
                                 <div class="field__input-wrapper field__input-wrapper--select">
                                     <label class="field__label" for="Addresses">Customer addresses</label>
                                     <select class="field__input field__input--select text-truncate" id="Addresses" name="Addresses" size="1" ng-model="checkout.selectedCustomerAddressId" ng-change="selectAddress('Shipping')" ng-disabled="checkout.shippingAddressProcessing">
-                                        <option ng-repeat="address in customer.addresses" ng-value="address.id" ng-selected="checkout.selectedCustomerAddressId == address.id" ng-bind="address.stringifiedAddress"></option>
+                                        <option ng-repeat="address in checkout.customerAddresses" ng-value="address.id" ng-selected="checkout.selectedCustomerAddressId == address.id" ng-bind="address.stringifiedAddress"></option>
                                     </select>
                                 </div>
                             </div>

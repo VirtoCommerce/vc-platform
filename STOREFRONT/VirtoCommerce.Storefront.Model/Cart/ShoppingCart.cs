@@ -220,6 +220,11 @@ namespace VirtoCommerce.Storefront.Model.Cart
                         shippingAddress = shipment.DeliveryAddress;
                     }
 
+                    if (shippingAddress == null && Customer != null)
+                    {
+                        shippingAddress = Customer.Addresses.FirstOrDefault();
+                    }
+
                     if (shippingAddress == null)
                     {
                         shippingAddress = new Address
@@ -230,6 +235,8 @@ namespace VirtoCommerce.Storefront.Model.Cart
                             LastName = Customer.LastName
                         };
                     }
+
+                    shippingAddress.Type = AddressType.Shipping;
                 }
 
                 return shippingAddress;
@@ -251,6 +258,11 @@ namespace VirtoCommerce.Storefront.Model.Cart
                     billingAddress = payment.BillingAddress;
                 }
 
+                if (billingAddress == null && Customer != null)
+                {
+                    billingAddress = Customer.Addresses.FirstOrDefault();
+                }
+
                 if (billingAddress == null)
                 {
                     billingAddress = new Address
@@ -261,6 +273,8 @@ namespace VirtoCommerce.Storefront.Model.Cart
                         LastName = Customer.LastName
                     };
                 }
+
+                billingAddress.Type = AddressType.Billing;
 
                 return billingAddress;
             }
