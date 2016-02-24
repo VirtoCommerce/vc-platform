@@ -1,9 +1,11 @@
 ﻿angular.module('platformWebApp')
 .controller('platformWebApp.accountApiListController', ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
+    var blade = $scope.blade;
+    blade.updatePermission = 'platform:security:update';
 
     function initializeBlade(data) {
-        $scope.blade.currentEntities = data;
-        $scope.blade.isLoading = false;
+        blade.currentEntities = data;
+        blade.isLoading = false;
     };
 
     $scope.selectNode = function (node) {
@@ -11,9 +13,9 @@
             subtitle: 'platform.blades.account-api.title',
             origEntity: node,
             deleteFn: function (entry) {
-                var idx = $scope.blade.currentEntities.indexOf(entry);
+                var idx = blade.currentEntities.indexOf(entry);
                 if (idx >= 0) {
-                    $scope.blade.currentEntities.splice(idx, 1);
+                    blade.currentEntities.splice(idx, 1);
                 }
             }
         };
@@ -23,27 +25,27 @@
     function openDetailsBlade(node) {
         var newBlade = {
             id: "accountApiDetail",
-            title: $scope.blade.title,
+            title: blade.title,
             controller: 'platformWebApp.accountApiController',
             template: '$(Platform)/Scripts/app/security/blades/account-api.tpl.html'
         };
         angular.extend(newBlade, node);
 
-        bladeNavigationService.showBlade(newBlade, $scope.blade);
+        bladeNavigationService.showBlade(newBlade, blade);
     }
 
-    $scope.blade.headIcon = 'fa-key';
+    blade.headIcon = 'fa-key';
 
-    $scope.blade.toolbarCommands = [
+    blade.toolbarCommands = [
        {
            name: "platform.commands.add", icon: 'fa fa-plus',
            executeMethod: function () {
-               $scope.blade.selectedData = undefined;
+               blade.selectedData = undefined;
                var newBlade = {
                    subtitle: 'platform.blades.account-api.title-new',
                    isNew: true,
                    confirmChangesFn: function (entry) {
-                       $scope.blade.currentEntities.push(entry);
+                       blade.currentEntities.push(entry);
                    },
                };
                openDetailsBlade(newBlade);
@@ -51,7 +53,7 @@
            canExecuteMethod: function () {
                return true;
            },
-           permission: 'platform:security:update'
+           permission: blade.updatePermission
        }
     ];
 

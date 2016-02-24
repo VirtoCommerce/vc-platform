@@ -14,14 +14,17 @@ namespace VirtoCommerce.Storefront.Controllers
     [OutputCache(CacheProfile = "CommonCachingProfile")]
     public class CommonController : StorefrontControllerBase
     {
-  
+        private readonly Country[] _countriesWithoutRegions;
         private readonly IStoreModuleApi _storeModuleApi;
 
         public CommonController(WorkContext workContext, IStorefrontUrlBuilder urlBuilder, IStoreModuleApi storeModuleApi)
             : base(workContext, urlBuilder)
         {
             _storeModuleApi = storeModuleApi;
-         
+            _countriesWithoutRegions = workContext.AllCountries
+                .Select(c => new Country { Name = c.Name, Code2 = c.Code2, Code3 = c.Code3, RegionType = c.RegionType })
+                .ToArray();
+
         }
 
         /// <summary>
@@ -80,14 +83,51 @@ namespace VirtoCommerce.Storefront.Controllers
             return StoreFrontRedirect(returnUrl);
         }
 
-     
+        // GET: common/getcountries/json
+        [HttpGet]
+        public ActionResult GetCountries()
+        {
+            return Json(_countriesWithoutRegions, JsonRequestBehavior.AllowGet);
+        }
 
+        // GET: common/getregions/{countryCode}/json
+        [HttpGet]
+        public ActionResult GetRegions(string countryCode)
+        {
+            Country country = null;
+
+            if (countryCode != null)
+            {
+                if (countryCode.Length == 3)
+                {
+                    country = WorkContext.AllCountries.FirstOrDefault(c => c.Code3.Equals(countryCode, StringComparison.OrdinalIgnoreCase));
+                }
+                else if (countryCode.Length == 2)
+                {
+                    country = WorkContext.AllCountries.FirstOrDefault(c => c.Code2.Equals(countryCode, StringComparison.OrdinalIgnoreCase));
+                }
+            }
+
+            if (country != null)
+            {
+                return Json(country.Regions, JsonRequestBehavior.AllowGet);
+            }
+
+            return HttpNotFound();
+        }
 
         // GET: common/nostore
         [HttpGet]
         public ActionResult NoStore()
         {
             return View("NoStore");
+        }
+
+        // GET: /maintenance
+        [HttpGet]
+        public ActionResult Maintenance()
+        {
+            return View("maintenance", "empty", WorkContext);
         }
     }
 }

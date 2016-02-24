@@ -1010,6 +1010,11 @@ h3
             box-shadow: none;
 }
 
+input::-ms-clear
+{
+    display: none;
+}
+
 .error,
 .__error
 {

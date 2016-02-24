@@ -37,6 +37,19 @@ namespace VirtoCommerce.Storefront
                 {
                     filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Common", action = "NoStore" }));
                 }
+
+                if (workContext.CurrentStore != null)
+                {
+                    if (filterContext.ActionDescriptor.ActionName != "Maintenance" && workContext.CurrentStore.StoreState == StoreStatus.Closed)
+                    {
+                        filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Common", action = "Maintenance" }));
+                    }
+                    if (workContext.CurrentCustomer != null && !workContext.CurrentCustomer.IsRegisteredUser &&
+                        workContext.CurrentStore.StoreState == StoreStatus.RestrictedAccess && filterContext.ActionDescriptor.ActionName != "Login")
+                    {
+                        filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Account", action = "Login" }));
+                    }
+                }
             }
 
             base.OnActionExecuting(filterContext);

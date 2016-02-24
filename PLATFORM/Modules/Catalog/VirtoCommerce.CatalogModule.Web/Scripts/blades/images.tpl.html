@@ -5,8 +5,8 @@
 <div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
-            <div class="sub-t">{{ 'catalog.blades.images.labels.select-images' | translate }}</div>
-            <form class="form">
+            <div class="sub-t" va-permission="{{blade.updatePermission}}">{{ 'catalog.blades.images.labels.select-images' | translate }}</div>
+            <form class="form" ng-if="blade.hasUpdatePermission()">
                 <div ng-show="uploader.isHTML5">
                     <!-- 3. ng-file-over | ng-file-over="className" -->
                     <div over-class="bd-blue" nv-file-over nv-file-drop uploader="uploader" class="drag-area">
@@ -36,7 +36,7 @@
                 <div class="progress-bar __aqua" ng-style="{'width': uploader.progress + '%'}"></div>
             </div>
 
-            <p class="note">{{ 'catalog.blades.images.labels.make-default-image' | translate }}</p>
+            <p class="note" va-permission="{{blade.updatePermission}}">{{ 'catalog.blades.images.labels.make-default-image' | translate }}</p>
             <div class="tile-group triple __images-list" ui-sortable="sortableOptions" ng-model="blade.currentEntity.images">
                 <div class="tile" ng-click="toggleImageSelect($event, image)" ng-class="{'double': $first, '__selected': image.$selected}" ng-repeat="image in blade.currentEntity.images" ng-include="'imageTemplate.html'"></div>
             </div>

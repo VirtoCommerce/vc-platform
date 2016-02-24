@@ -23,6 +23,7 @@ namespace VirtoCommerce.QuoteModule.Web
 {
     public class Module : ModuleBase, ISupportExportImportModule
     {
+        private const string _connectionStringName = "VirtoCommerce";
         private readonly IUnityContainer _container;
 
         public Module(IUnityContainer container)
@@ -34,7 +35,7 @@ namespace VirtoCommerce.QuoteModule.Web
 
         public override void SetupDatabase()
         {
-            using (var context = new QuoteRepositoryImpl("VirtoCommerce"))
+            using (var context = new QuoteRepositoryImpl(_connectionStringName, _container.Resolve<AuditableInterceptor>()))
             {
                 var initializer = new SetupDatabaseInitializer<QuoteRepositoryImpl, Data.Migrations.Configuration>();
                 initializer.InitializeDatabase(context);
@@ -48,7 +49,7 @@ namespace VirtoCommerce.QuoteModule.Web
 
             _container.RegisterType<IQuoteTotalsCalculator, DefaultQuoteTotalsCalculator>();
 
-            _container.RegisterType<IQuoteRepository>(new InjectionFactory(c => new QuoteRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor())));
+            _container.RegisterType<IQuoteRepository>(new InjectionFactory(c => new QuoteRepositoryImpl(_connectionStringName, new EntityPrimaryKeyGeneratorInterceptor(), _container.Resolve<AuditableInterceptor>())));
             _container.RegisterType<IQuoteRequestService, QuoteRequestServiceImpl>();
 
             _container.RegisterType<IEventPublisher<QuoteRequestChangeEvent>, EventPublisher<QuoteRequestChangeEvent>>();

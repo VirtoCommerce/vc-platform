@@ -1,9 +1,12 @@
 ﻿angular.module('virtoCommerce.orderModule')
 .controller('virtoCommerce.orderModule.customerOrderItemsController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'virtoCommerce.orderModule.calculateTotalsService', 'virtoCommerce.catalogModule.items', 'virtoCommerce.pricingModule.prices', function ($scope, bladeNavigationService, dialogService, calculateTotalsService, items, prices) {
+    var blade = $scope.blade;
+    blade.updatePermission = 'order:update';
+
     //pagination settings
     $scope.pageSettings = {};
     $scope.totals = {};
-    $scope.pageSettings.totalItems = $scope.blade.currentEntity.items.length;
+    $scope.pageSettings.totalItems = blade.currentEntity.items.length;
     $scope.pageSettings.currentPage = 1;
     $scope.pageSettings.numPages = 5;
     $scope.pageSettings.itemsPerPageCount = 4;
@@ -15,16 +18,16 @@
         calculateTotalsService.recalculateTotals(operation);
     }, true);
 
-    $scope.blade.refresh = function () {
-        $scope.blade.isLoading = false;
-        $scope.blade.selectedAll = false;
+    blade.refresh = function () {
+        blade.isLoading = false;
+        blade.selectedAll = false;
     };
     
     function addProductsToOrder(products) {
         angular.forEach(products, function (product) {
             items.get({ id: product.id }, function (data) {
                 prices.getProductPrices({ id: product.id }, function (prices) {
-                    var price = _.find(prices, function (x) { return x.currency == $scope.blade.currentEntity.currency });
+                    var price = _.find(prices, function (x) { return x.currency == blade.currentEntity.currency });
 
                     var newLineItem =
 					{
@@ -38,10 +41,10 @@
 					    price: price ? (price.sale ? price.sale : price.list) : 0,
 					    tax: 0,
 					    discountAmount: 0,
-					    currency: $scope.blade.currentEntity.currency
+					    currency: blade.currentEntity.currency
 					};
-                    $scope.blade.currentEntity.items.push(newLineItem);
-                    $scope.pageSettings.totalItems = $scope.blade.currentEntity.items.length;
+                    blade.currentEntity.items.push(newLineItem);
+                    $scope.pageSettings.totalItems = blade.currentEntity.items.length;
                 },
                 function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
             },
@@ -85,7 +88,7 @@
         };
         var newBlade = {
             id: "CatalogItemsSelect",
-            currentEntities: $scope.blade.currentEntity,
+            currentEntities: blade.currentEntity,
             title: "orders.blades.catalog-items-select.title",
             controller: 'virtoCommerce.catalogModule.catalogItemSelectController',
             template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/common/catalog-items-select.tpl.html',
@@ -108,35 +111,35 @@
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     }
 
-    $scope.blade.headIcon = 'fa-file-text';
+    blade.headIcon = 'fa-file-text';
 
-    $scope.blade.toolbarCommands = [
+    blade.toolbarCommands = [
         {
             name: "orders.commands.add-item", icon: 'fa fa-plus',
             executeMethod: function () {
                 openAddEntityWizard();
             },
             canExecuteMethod: function () {
-                return $scope.blade.currentEntity.operationType.toLowerCase() == 'customerorder';
+                return blade.currentEntity.operationType.toLowerCase() == 'customerorder';
             },
-            permission: 'order:update'
+            permission: blade.updatePermission
         },
         {
             name: "platform.commands.remove", icon: 'fa fa-trash-o',
             executeMethod: function () {
-                var lineItems = $scope.blade.currentEntity.items;
-                $scope.blade.currentEntity.items = _.difference(lineItems, _.filter(lineItems, function (x) { return x.selected }));
-                $scope.pageSettings.totalItems = $scope.blade.currentEntity.items.length;
+                var lineItems = blade.currentEntity.items;
+                blade.currentEntity.items = _.difference(lineItems, _.filter(lineItems, function (x) { return x.selected }));
+                $scope.pageSettings.totalItems = blade.currentEntity.items.length;
             },
             canExecuteMethod: function () {
-                return _.any($scope.blade.currentEntity.items, function (x) { return x.selected; });;
+                return _.any(blade.currentEntity.items, function (x) { return x.selected; });;
             },
-            permission: 'order:update'
+            permission: blade.updatePermission
         }
     ];
 
     //$scope.$watch('pageSettings.currentPage', function (newPage) {
-    //    $scope.blade.refresh();
+    //    blade.refresh();
     //});
 
     $scope.selectItem = function (node) {
@@ -145,10 +148,10 @@
     };
 
     $scope.checkAll = function (selected) {
-        angular.forEach($scope.blade.currentEntity.items, function (item) {
+        angular.forEach(blade.currentEntity.items, function (item) {
             item.selected = selected;
         });
     };
 
-    $scope.blade.refresh();
+    blade.refresh();
 }]);

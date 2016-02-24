@@ -33,6 +33,8 @@ namespace VirtoCommerce.Storefront.Converters
                 retVal.ThemeName = retVal.DynamicProperties.GetDynamicPropertyValue("DefaultThemeName");
             }
 
+            retVal.StoreState = EnumUtility.SafeParse(storeDto.StoreState, StoreStatus.Open);
+
             return retVal;
         }
     }

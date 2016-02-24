@@ -1,10 +1,10 @@
 ﻿angular.module('virtoCommerce.catalogModule')
 .controller('virtoCommerce.catalogModule.itemDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings', 'virtoCommerce.catalogModule.items', function ($scope, bladeNavigationService, settings, items) {
     var blade = $scope.blade;
+    blade.updatePermission = 'catalog:update';
     blade.origItem = {};
     blade.item = {};
     blade.currentEntityId = blade.itemId;
-    blade.updatePermission = 'catalog:update';
 
     blade.refresh = function (parentRefresh) {
         blade.isLoading = true;
@@ -84,6 +84,27 @@
             },
             canExecuteMethod: isDirty,
             permission: blade.updatePermission
+        },
+        {
+            name: "Clone", icon: 'fa fa-files-o',
+            executeMethod: function () {
+                blade.isLoading = true;
+                items.cloneItem({ itemId: blade.itemId }, function (data) {
+                    var newBlade = {
+                        id: blade.id,
+                        item: data,
+                        title: "catalog.wizards.new-product.title",
+                        subtitle: 'catalog.wizards.new-product.subtitle',
+                        controller: 'virtoCommerce.catalogModule.newProductWizardController',
+                        template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/wizards/newProduct/new-product-wizard.tpl.html'
+                    };
+                    bladeNavigationService.showBlade(newBlade, blade.parentBlade);
+                },
+                function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
+
+            },
+            canExecuteMethod: function () { return !isDirty(); },
+            permission: 'catalog:create'
         }
     ];
 

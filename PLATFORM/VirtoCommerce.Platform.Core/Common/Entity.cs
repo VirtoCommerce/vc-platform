@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace VirtoCommerce.Platform.Core.Common
 {
-    public abstract class Entity
+    public abstract class Entity : IEntity
     {
         private int? _requestedHashCode;
 

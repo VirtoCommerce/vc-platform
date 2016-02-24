@@ -336,6 +336,7 @@
     <Compile Include="Security\SecurityOptions.cs" />
     <Compile Include="Security\PermissionScopeService.cs" />
     <Compile Include="Security\SecurityService.cs" />
+    <Compile Include="Security\UserNameResolver.cs" />
     <Compile Include="Settings\Converters\ModuleConverter.cs" />
     <Compile Include="Settings\Converters\SettingConverter.cs" />
     <Compile Include="Settings\Converters\SettingValueConverter.cs" />

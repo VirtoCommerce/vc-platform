@@ -1,5 +1,5 @@
 ﻿<td class="table-col __product-img">
-    <i class="table-ico fa fa-download"></i>
+    <i class="table-ico fa" ng-class="notification.notifyType === 'PlatformExportPushNotification' ? 'fa-upload' : 'fa-download'"></i>
 </td>
 <td class="table-col">
     <span class="table-t" ng-bind="notification.title"></span>

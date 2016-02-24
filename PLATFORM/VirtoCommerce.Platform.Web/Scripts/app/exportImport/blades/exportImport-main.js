@@ -1,6 +1,6 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.exportImport.mainController', ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
-   
+.controller('platformWebApp.exportImport.mainController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.authService', function ($scope, bladeNavigationService, authService) {
+
     $scope.export = function () {
         $scope.selectedNodeId = 'export';
 
@@ -12,13 +12,15 @@
     };
 
     $scope.import = function () {
-        $scope.selectedNodeId = 'import';
+        if (authService.checkPermission('platform:exportImport:import')) {
+            $scope.selectedNodeId = 'import';
 
-        var newBlade = {
-            controller: 'platformWebApp.exportImport.importMainController',
-            template: '$(Platform)/Scripts/app/exportImport/blades/import-main.tpl.html'
-        };
-        bladeNavigationService.showBlade(newBlade, $scope.blade);
+            var newBlade = {
+                controller: 'platformWebApp.exportImport.importMainController',
+                template: '$(Platform)/Scripts/app/exportImport/blades/import-main.tpl.html'
+            };
+            bladeNavigationService.showBlade(newBlade, $scope.blade);
+        }
     };
 
     $scope.blade.headIcon = 'fa-database';

@@ -1,9 +1,9 @@
 ﻿angular.module('virtoCommerce.searchModule')
 .controller('virtoCommerce.searchModule.storePropertiesController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'virtoCommerce.searchModule.search', function ($scope, dialogService, bladeNavigationService, searchAPI) {
     var blade = $scope.blade;
+    blade.updatePermission = 'store:update';
 
     function initializeBlade() {
-        // var results = [{ name: 'adsas', isSelected: true }, { name: 'adsas dsdc' }];
         searchAPI.queryFilterProperties({ id: blade.storeId }, function (results) {
             blade.currentEntities = angular.copy(results);
             blade.origEntity = results;
@@ -28,7 +28,7 @@
     };
 
     function isDirty() {
-        return !angular.equals(blade.selectedEntities, blade.origSelected);
+        return !angular.equals(blade.selectedEntities, blade.origSelected) && blade.hasUpdatePermission();
     }
     
     blade.onClose = function (closeCallback) {

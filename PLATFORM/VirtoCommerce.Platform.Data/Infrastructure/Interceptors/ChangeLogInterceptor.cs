@@ -2,6 +2,7 @@
 using System.Data.Entity;
 using System.Linq;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Model;
 using VirtoCommerce.Platform.Data.Repositories;
 
@@ -10,14 +11,16 @@ namespace VirtoCommerce.Platform.Data.Infrastructure.Interceptors
     public class ChangeLogInterceptor : IInterceptor
     {
         private readonly Func<IPlatformRepository> _repositoryFactory;
-        private readonly string[] _entityTypes;
         private readonly ChangeLogPolicy _policy;
+        private readonly string[] _entityTypes;
+        private readonly Func<IUserNameResolver> _userNameResolverFactory;
 
-        public ChangeLogInterceptor(Func<IPlatformRepository> repositoryFactory, ChangeLogPolicy policy, string[] entityTypes)
+        public ChangeLogInterceptor(Func<IPlatformRepository> repositoryFactory, ChangeLogPolicy policy, string[] entityTypes, Func<IUserNameResolver> userNameResolverFactory)
         {
             _repositoryFactory = repositoryFactory;
-            _entityTypes = entityTypes;
             _policy = policy;
+            _entityTypes = entityTypes;
+            _userNameResolverFactory = userNameResolverFactory;
         }
 
         /// <summary>
@@ -98,7 +101,7 @@ namespace VirtoCommerce.Platform.Data.Infrastructure.Interceptors
                 CreatedDate = createdDate,
                 ObjectId = objectId,
                 ObjectType = objectType,
-                CreatedBy = CurrentPrincipal.GetCurrentUserName(),
+                CreatedBy = GetCurrentUserName(),
                 OperationType = state.ToString()
             };
 
@@ -122,6 +125,13 @@ namespace VirtoCommerce.Platform.Data.Infrastructure.Interceptors
             }
 
             return retVal;
+        }
+
+        private string GetCurrentUserName()
+        {
+            var resolver = _userNameResolverFactory != null ? _userNameResolverFactory() : null;
+            var result = resolver != null ? resolver.GetCurrentUserName() : "unknown";
+            return result;
         }
     }
 }

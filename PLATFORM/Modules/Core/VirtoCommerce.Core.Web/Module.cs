@@ -19,7 +19,7 @@ using VirtoCommerce.Domain.Commerce.Model;
 
 namespace VirtoCommerce.CoreModule.Web
 {
-	public class Module : ModuleBase, ISupportExportImportModule
+    public class Module : ModuleBase, ISupportExportImportModule
     {
         private const string _connectionStringName = "VirtoCommerce";
         private readonly IUnityContainer _container;
@@ -33,11 +33,11 @@ namespace VirtoCommerce.CoreModule.Web
 
         public override void SetupDatabase()
         {
-			using (var db = new CommerceRepositoryImpl("VirtoCommerce"))
-			{
-				var initializer = new SetupDatabaseInitializer<CommerceRepositoryImpl, VirtoCommerce.CoreModule.Data.Migrations.Configuration>();
-				initializer.InitializeDatabase(db);
-			}
+            using (var db = new CommerceRepositoryImpl(_connectionStringName, _container.Resolve<AuditableInterceptor>()))
+            {
+                var initializer = new SetupDatabaseInitializer<CommerceRepositoryImpl, VirtoCommerce.CoreModule.Data.Migrations.Configuration>();
+                initializer.InitializeDatabase(db);
+            }
         }
 
         public override void Initialize()
@@ -50,7 +50,7 @@ namespace VirtoCommerce.CoreModule.Web
 
             #region Fulfillment
 
-            _container.RegisterType<IСommerceRepository>(new InjectionFactory(c => new CommerceRepositoryImpl(_connectionStringName, new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor())));
+            _container.RegisterType<IСommerceRepository>(new InjectionFactory(c => new CommerceRepositoryImpl(_connectionStringName, new EntityPrimaryKeyGeneratorInterceptor(), _container.Resolve<AuditableInterceptor>())));
             _container.RegisterType<ICommerceService, CommerceServiceImpl>();
 
             #endregion
@@ -76,7 +76,7 @@ namespace VirtoCommerce.CoreModule.Web
             var commerceService = _container.Resolve<ICommerceService>();
             var shippingService = _container.Resolve<IShippingMethodsService>();
             var taxService = _container.Resolve<ITaxService>();
-			var paymentService = _container.Resolve<IPaymentMethodsService>();
+            var paymentService = _container.Resolve<IPaymentMethodsService>();
             var moduleSettings = settingManager.GetModuleSettings("VirtoCommerce.Core");
             taxService.RegisterTaxProvider(() => new FixedTaxRateProvider(moduleSettings.First(x => x.Name == "VirtoCommerce.Core.FixedTaxRateProvider.Rate"))
             {
@@ -85,11 +85,11 @@ namespace VirtoCommerce.CoreModule.Web
                 LogoUrl = "http://virtocommerce.com/Content/images/logo.jpg"
             });
 
-            shippingService.RegisterShippingMethod(() => new FixedRateShippingMethod(moduleSettings.First(x=>x.Name == "VirtoCommerce.Core.FixedRateShippingMethod.Rate"))
-                {
-                    Name = "fixed rate",
-                    Description = "Fixed rate shipping method",
-                    LogoUrl = "http://virtocommerce.com/Content/images/logo.jpg"
+            shippingService.RegisterShippingMethod(() => new FixedRateShippingMethod(moduleSettings.First(x => x.Name == "VirtoCommerce.Core.FixedRateShippingMethod.Rate"))
+            {
+                Name = "fixed rate",
+                Description = "Fixed rate shipping method",
+                LogoUrl = "http://virtocommerce.com/Content/images/logo.jpg"
 
             });
 
@@ -102,7 +102,7 @@ namespace VirtoCommerce.CoreModule.Web
             });
 
             var currencies = commerceService.GetAllCurrencies();
-            if(!currencies.Any())
+            if (!currencies.Any())
             {
                 var defaultCurrency = new Currency
                 {
@@ -122,25 +122,25 @@ namespace VirtoCommerce.CoreModule.Web
 
         public void DoExport(System.IO.Stream outStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
         {
-			var job = _container.Resolve<CoreExportImport>();
+            var job = _container.Resolve<CoreExportImport>();
             job.DoExport(outStream, progressCallback);
         }
 
-		public void DoImport(System.IO.Stream inputStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
+        public void DoImport(System.IO.Stream inputStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
         {
-			var job = _container.Resolve<CoreExportImport>();
+            var job = _container.Resolve<CoreExportImport>();
             job.DoImport(inputStream, progressCallback);
         }
 
-		public string ExportDescription
-		{
-			get
-			{
-				var settingManager = _container.Resolve<ISettingsManager>();
-				return settingManager.GetValue("VirtoCommerce.Core.ExportImport.Description", String.Empty);
-			}
-		}
+        public string ExportDescription
+        {
+            get
+            {
+                var settingManager = _container.Resolve<ISettingsManager>();
+                return settingManager.GetValue("VirtoCommerce.Core.ExportImport.Description", String.Empty);
+            }
+        }
 
-		#endregion
-	}
+        #endregion
+    }
 }

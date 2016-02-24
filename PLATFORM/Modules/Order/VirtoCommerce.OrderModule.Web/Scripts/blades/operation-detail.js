@@ -1,7 +1,8 @@
 ﻿angular.module('virtoCommerce.orderModule')
-.controller('virtoCommerce.orderModule.operationDetailController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'virtoCommerce.orderModule.order_res_customerOrders', 'virtoCommerce.orderModule.order_res_fulfilmentCenters', 'virtoCommerce.orderModule.order_res_stores', 'platformWebApp.objCompareService', 'platformWebApp.settings', 'platformWebApp.authService',
-    function ($scope, dialogService, bladeNavigationService, order_res_customerOrders, order_res_fulfilmentCenters, order_res_stores, objCompareService, settings, authService) {
+.controller('virtoCommerce.orderModule.operationDetailController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'virtoCommerce.orderModule.order_res_customerOrders', 'virtoCommerce.orderModule.order_res_fulfilmentCenters', 'virtoCommerce.orderModule.order_res_stores', 'platformWebApp.objCompareService', 'platformWebApp.settings',
+    function ($scope, dialogService, bladeNavigationService, order_res_customerOrders, order_res_fulfilmentCenters, order_res_stores, objCompareService, settings) {
         var blade = $scope.blade;
+        blade.updatePermission = 'order:update';
 
         blade.refresh = function (noRefresh) {
             blade.isLoading = true;
@@ -54,14 +55,7 @@
         }
 
         function isDirty() {
-            var retVal = false;
-            if (blade.origEntity) {
-                retVal = !objCompareService.equal(blade.origEntity, blade.currentEntity) || blade.isNew;
-            }
-            if (retVal) {
-                retVal = authService.checkPermission('order:update', blade.securityScopes);
-            }
-            return retVal;
+            return blade.origEntity && (!objCompareService.equal(blade.origEntity, blade.currentEntity) || blade.isNew) && blade.hasUpdatePermission();
         }
 
         function canSave() {
@@ -125,13 +119,13 @@
                 canExecuteMethod: function () {
                     return blade.currentEntity && blade.currentEntity.operationType.toLowerCase() === 'customerorder';
                 },
-                permission: 'order:update'
+                permission: blade.updatePermission
             },
             {
                 name: "platform.commands.save", icon: 'fa fa-save',
                 executeMethod: saveChanges,
                 canExecuteMethod: canSave,
-                permission: 'order:update'
+                permission: blade.updatePermission
             },
             {
                 name: "platform.commands.reset", icon: 'fa fa-undo',
@@ -139,7 +133,7 @@
                     angular.copy(blade.origEntity, blade.currentEntity);
                 },
                 canExecuteMethod: isDirty,
-                permission: 'order:update'
+                permission: blade.updatePermission
             },
             {
                 name: "platform.commands.delete", icon: 'fa fa-trash-o',
@@ -196,7 +190,7 @@
                 canExecuteMethod: function () {
                     return blade.currentEntity && !blade.currentEntity.isCancelled;
                 },
-                permission: 'order:update'
+                permission: blade.updatePermission
             }
         ];
 

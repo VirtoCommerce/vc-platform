@@ -4,7 +4,6 @@ using System.Web.Http.Results;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VirtoCommerce.CoreModule.Data.Repositories;
 using VirtoCommerce.Domain.Commerce.Services;
-using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Data.DynamicProperties;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Platform.Data.Repositories;
@@ -53,7 +52,7 @@ namespace VirtoCommerce.StoreModule.Test
                 },
                 //PaymentGateways = new string[] { "PayPal", "Clarna" },
                 StoreState = Domain.Store.Model.StoreState.Open,
-             
+
 
             };
             var result = controller.Create(store) as OkNegotiatedContentResult<Store>;
@@ -71,7 +70,7 @@ namespace VirtoCommerce.StoreModule.Test
             store.DefaultCurrency = "UYU";
             store.Currencies.Add("UYU");
             store.Languages.Remove(store.Languages.FirstOrDefault());
-           
+
             store.FulfillmentCenter.CountryCode = "SSS";
             store.ReturnsFulfillmentCenter = store.FulfillmentCenter;
 
@@ -95,13 +94,13 @@ namespace VirtoCommerce.StoreModule.Test
 
         private ICommerceService GetCommerceService()
         {
-            return new CommerceServiceImpl(() => new CommerceRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor()));
+            return new CommerceServiceImpl(() => new CommerceRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor(null)));
         }
 
         private StoreModuleController GetStoreController()
         {
-            Func<IPlatformRepository> platformRepositoryFactory = () => new PlatformRepository("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor());
-            Func<IStoreRepository> repositoryFactory = () => new StoreRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor());
+            Func<IPlatformRepository> platformRepositoryFactory = () => new PlatformRepository("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor(null));
+            Func<IStoreRepository> repositoryFactory = () => new StoreRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor(null));
 
             var dynamicPropertyService = new DynamicPropertyService(platformRepositoryFactory);
             var storeService = new StoreServiceImpl(repositoryFactory, GetCommerceService(), null, dynamicPropertyService, null, null, null, null);

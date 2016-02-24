@@ -1,6 +1,7 @@
 ﻿angular.module('virtoCommerce.catalogModule')
 .controller('virtoCommerce.catalogModule.itemPropertyListController', ['$scope', 'virtoCommerce.catalogModule.items', 'virtoCommerce.catalogModule.properties', 'platformWebApp.bladeNavigationService', function ($scope, items, properties, bladeNavigationService) {
     var blade = $scope.blade;
+    blade.updatePermission = 'catalog:update';
 
     blade.refresh = function (parentRefresh) {
         items.get({ id: blade.itemId }, function (data) {
@@ -29,7 +30,7 @@
     }
 
     function isDirty() {
-        return !angular.equals(blade.item, blade.origItem);
+        return !angular.equals(blade.item, blade.origItem) && blade.hasUpdatePermission();
     }
 
     function canSave() {
@@ -100,7 +101,7 @@
 		        saveChanges();
 		    },
 		    canExecuteMethod: canSave,
-		    permission: 'catalog:update'
+		    permission: blade.updatePermission
 		},
         {
             name: "platform.commands.reset", icon: 'fa fa-undo',
@@ -108,7 +109,7 @@
                 angular.copy(blade.origItem, blade.item);
             },
             canExecuteMethod: isDirty,
-            permission: 'catalog:update'
+            permission: blade.updatePermission
         },
 		{
 		    name: "catalog.commands.add-property", icon: 'fa fa-plus',
@@ -119,12 +120,12 @@
 		            origEntity: {
 		                type: "Product",
 		                valueType: "ShortText",
-                        values:[]
+		                values: []
 		            }
 		        });
 		    },
 		    canExecuteMethod: function () { return true; },
-		    permission: 'catalog:update'
+		    permission: blade.updatePermission
 		}
     ];
 

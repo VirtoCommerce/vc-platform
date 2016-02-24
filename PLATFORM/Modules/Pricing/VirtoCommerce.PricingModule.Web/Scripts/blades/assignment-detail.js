@@ -1,6 +1,7 @@
 ﻿angular.module('virtoCommerce.pricingModule')
 .controller('virtoCommerce.pricingModule.assignmentDetailController', ['$scope', 'virtoCommerce.catalogModule.catalogs', 'virtoCommerce.pricingModule.pricelists', 'virtoCommerce.pricingModule.pricelistAssignments', 'platformWebApp.bladeNavigationService', 'virtoCommerce.coreModule.common.dynamicExpressionService', function ($scope, catalogs, pricelists, assignments, bladeNavigationService, dynamicExpressionService) {
     var blade = $scope.blade;
+    blade.updatePermission = 'pricing:update';
 
     blade.refresh = function (parentRefresh) {
         if (blade.isNew) {
@@ -28,7 +29,7 @@
                     icon: 'fa fa-save',
                     executeMethod: $scope.saveChanges,
                     canExecuteMethod: canSave,
-                    permission: 'pricing:update'
+                    permission: blade.updatePermission
                 },
                 {
                     name: "platform.commands.reset",
@@ -37,14 +38,14 @@
                         angular.copy(blade.origEntity, blade.currentEntity);
                     },
                     canExecuteMethod: isDirty,
-                    permission: 'pricing:update'
+                    permission: blade.updatePermission
                 }
             ];
         }
     }
 
     function isDirty() {
-        return !angular.equals(blade.currentEntity, blade.origEntity);
+        return !angular.equals(blade.currentEntity, blade.origEntity) && blade.hasUpdatePermission();
     }
 
     function canSave() {

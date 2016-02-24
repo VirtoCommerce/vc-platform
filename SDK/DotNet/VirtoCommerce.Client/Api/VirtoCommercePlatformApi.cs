@@ -1938,6 +1938,46 @@ namespace VirtoCommerce.Client.Api
         System.Threading.Tasks.Task<ApiResponse<VirtoCommercePlatformCoreSecuritySecurityResult>> SecurityCreateAsyncAsyncWithHttpInfo (VirtoCommercePlatformCoreSecurityApplicationUserExtended user);
         
         /// <summary>
+        /// Get user details by user ID
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="id"></param>
+        /// <returns>VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>
+        VirtoCommercePlatformCoreSecurityApplicationUserExtended SecurityGetUserById (string id);
+  
+        /// <summary>
+        /// Get user details by user ID
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="id"></param>
+        /// <returns>ApiResponse of VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>
+        ApiResponse<VirtoCommercePlatformCoreSecurityApplicationUserExtended> SecurityGetUserByIdWithHttpInfo (string id);
+
+        /// <summary>
+        /// Get user details by user ID
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="id"></param>
+        /// <returns>Task of VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>
+        System.Threading.Tasks.Task<VirtoCommercePlatformCoreSecurityApplicationUserExtended> SecurityGetUserByIdAsync (string id);
+
+        /// <summary>
+        /// Get user details by user ID
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="id"></param>
+        /// <returns>Task of ApiResponse (VirtoCommercePlatformCoreSecurityApplicationUserExtended)</returns>
+        System.Threading.Tasks.Task<ApiResponse<VirtoCommercePlatformCoreSecurityApplicationUserExtended>> SecurityGetUserByIdAsyncWithHttpInfo (string id);
+        
+        /// <summary>
         /// Get user details by user name
         /// </summary>
         /// <remarks>
@@ -9644,6 +9684,159 @@ namespace VirtoCommerce.Client.Api
             return new ApiResponse<VirtoCommercePlatformCoreSecuritySecurityResult>(statusCode,
                 response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 (VirtoCommercePlatformCoreSecuritySecurityResult) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommercePlatformCoreSecuritySecurityResult)));
+            
+        }
+        
+        /// <summary>
+        /// Get user details by user ID 
+        /// </summary>
+        /// <param name="id"></param> 
+        /// <returns>VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>
+        public VirtoCommercePlatformCoreSecurityApplicationUserExtended SecurityGetUserById (string id)
+        {
+             ApiResponse<VirtoCommercePlatformCoreSecurityApplicationUserExtended> response = SecurityGetUserByIdWithHttpInfo(id);
+             return response.Data;
+        }
+
+        /// <summary>
+        /// Get user details by user ID 
+        /// </summary>
+        /// <param name="id"></param> 
+        /// <returns>ApiResponse of VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>
+        public ApiResponse< VirtoCommercePlatformCoreSecurityApplicationUserExtended > SecurityGetUserByIdWithHttpInfo (string id)
+        {
+            
+            // verify the required parameter 'id' is set
+            if (id == null)
+                throw new ApiException(400, "Missing required parameter 'id' when calling VirtoCommercePlatformApi->SecurityGetUserById");
+            
+    
+            var path_ = "/api/platform/security/users/id/{id}";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            Object postBody = null;
+
+            // to determine the Content-Type header
+            String[] httpContentTypes = new String[] {
+                
+            };
+            String httpContentType = Configuration.ApiClient.SelectHeaderContentType(httpContentTypes);
+
+            // to determine the Accept header
+            String[] httpHeaderAccepts = new String[] {
+                "application/json", "text/json"
+            };
+            String httpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(httpHeaderAccepts);
+            if (httpHeaderAccept != null)
+                headerParams.Add("Accept", httpHeaderAccept);
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            if (id != null) pathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
+            
+            
+            
+            
+            
+
+            
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, 
+                Method.GET, queryParams, postBody, headerParams, formParams, fileParams,
+                pathParams, httpContentType);
+
+            int statusCode = (int) response.StatusCode;
+    
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling SecurityGetUserById: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling SecurityGetUserById: " + response.ErrorMessage, response.ErrorMessage);
+    
+            return new ApiResponse<VirtoCommercePlatformCoreSecurityApplicationUserExtended>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (VirtoCommercePlatformCoreSecurityApplicationUserExtended) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommercePlatformCoreSecurityApplicationUserExtended)));
+            
+        }
+    
+        /// <summary>
+        /// Get user details by user ID 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>Task of VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>
+        public async System.Threading.Tasks.Task<VirtoCommercePlatformCoreSecurityApplicationUserExtended> SecurityGetUserByIdAsync (string id)
+        {
+             ApiResponse<VirtoCommercePlatformCoreSecurityApplicationUserExtended> response = await SecurityGetUserByIdAsyncWithHttpInfo(id);
+             return response.Data;
+
+        }
+
+        /// <summary>
+        /// Get user details by user ID 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>Task of ApiResponse (VirtoCommercePlatformCoreSecurityApplicationUserExtended)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommercePlatformCoreSecurityApplicationUserExtended>> SecurityGetUserByIdAsyncWithHttpInfo (string id)
+        {
+            // verify the required parameter 'id' is set
+            if (id == null) throw new ApiException(400, "Missing required parameter 'id' when calling SecurityGetUserById");
+            
+    
+            var path_ = "/api/platform/security/users/id/{id}";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            Object postBody = null;
+
+            // to determine the Content-Type header
+            String[] httpContentTypes = new String[] {
+                
+            };
+            String httpContentType = Configuration.ApiClient.SelectHeaderContentType(httpContentTypes);
+
+            // to determine the Accept header
+            String[] httpHeaderAccepts = new String[] {
+                "application/json", "text/json"
+            };
+            String httpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(httpHeaderAccepts);
+            if (httpHeaderAccept != null)
+                headerParams.Add("Accept", httpHeaderAccept);
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            if (id != null) pathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
+            
+            
+            
+            
+            
+
+            
+
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, 
+                Method.GET, queryParams, postBody, headerParams, formParams, fileParams, 
+                pathParams, httpContentType);
+
+            int statusCode = (int) response.StatusCode;
+ 
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling SecurityGetUserById: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling SecurityGetUserById: " + response.ErrorMessage, response.ErrorMessage);
+
+            return new ApiResponse<VirtoCommercePlatformCoreSecurityApplicationUserExtended>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (VirtoCommercePlatformCoreSecurityApplicationUserExtended) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommercePlatformCoreSecurityApplicationUserExtended)));
             
         }
         

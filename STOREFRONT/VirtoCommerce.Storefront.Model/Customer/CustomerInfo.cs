@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Runtime.Serialization;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Order;
@@ -48,7 +49,7 @@ namespace VirtoCommerce.Storefront.Model.Customer
         /// </summary>
         public bool AcceptsMarketing { get; set; }
 
-     
+
         /// <summary>
         /// Returns the default customer_address.
         /// </summary>
@@ -71,7 +72,10 @@ namespace VirtoCommerce.Storefront.Model.Customer
 
         public override string ToString()
         {
-            return string.Format("user#{0} {1} {2}", Id ?? "undef", UserName ?? "undef", IsRegisteredUser ? "registered" : "anonymous");
+            return string.Format(CultureInfo.InvariantCulture, "user#{0} {1} {2}", Id ?? "undef", UserName ?? "undef", IsRegisteredUser ? "registered" : "anonymous");
         }
+
+        public string OperatorUserId { get; set; }
+        public string OperatorUserName { get; set; }
     }
 }

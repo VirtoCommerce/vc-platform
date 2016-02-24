@@ -54,7 +54,7 @@
     };
 
     function isDirty() {
-        return blade.hasUpdatePermission() && !angular.equals($scope.seoInfos, blade.origItem);
+        return !angular.equals($scope.seoInfos, blade.origItem) && blade.hasUpdatePermission();
     }
 
     function canSave() {

@@ -11,86 +11,82 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.PricingModule.Data.Repositories
 {
-	public class PricingRepositoryImpl : EFRepositoryBase, IPricingRepository
-	{
-		public PricingRepositoryImpl()
-		{
-		}
+    public class PricingRepositoryImpl : EFRepositoryBase, IPricingRepository
+    {
+        public PricingRepositoryImpl()
+        {
+        }
 
-		public PricingRepositoryImpl(string nameOrConnectionString)
-			: this(nameOrConnectionString, null)
-		{
-		}
-		public PricingRepositoryImpl(string nameOrConnectionString, params IInterceptor[] interceptors)
-			: base(nameOrConnectionString, null, interceptors)
-		{
-			Configuration.LazyLoadingEnabled = false;
-		}
+        public PricingRepositoryImpl(string nameOrConnectionString, params IInterceptor[] interceptors)
+            : base(nameOrConnectionString, null, interceptors)
+        {
+            Configuration.LazyLoadingEnabled = false;
+        }
 
-		protected override void OnModelCreating(DbModelBuilder modelBuilder)
-		{
-			//MapEntity<Price>(modelBuilder, toTable: "Price");
-			//MapEntity<Pricelist>(modelBuilder, toTable: "Pricelist");
-			//MapEntity<PricelistAssignment>(modelBuilder, toTable: "PricelistAssignment");
-			modelBuilder.Entity<Price>().HasKey(x => x.Id).Property(x => x.Id);
-			modelBuilder.Entity<Price>().HasRequired(x => x.Pricelist).WithMany(x => x.Prices).HasForeignKey(x => x.PricelistId);
-			modelBuilder.Entity<Price>().ToTable("Price");
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            //MapEntity<Price>(modelBuilder, toTable: "Price");
+            //MapEntity<Pricelist>(modelBuilder, toTable: "Pricelist");
+            //MapEntity<PricelistAssignment>(modelBuilder, toTable: "PricelistAssignment");
+            modelBuilder.Entity<Price>().HasKey(x => x.Id).Property(x => x.Id);
+            modelBuilder.Entity<Price>().HasRequired(x => x.Pricelist).WithMany(x => x.Prices).HasForeignKey(x => x.PricelistId);
+            modelBuilder.Entity<Price>().ToTable("Price");
 
-			modelBuilder.Entity<Pricelist>().HasKey(x => x.Id).Property(x => x.Id);
-			modelBuilder.Entity<Pricelist>().ToTable("Pricelist");
+            modelBuilder.Entity<Pricelist>().HasKey(x => x.Id).Property(x => x.Id);
+            modelBuilder.Entity<Pricelist>().ToTable("Pricelist");
 
-			modelBuilder.Entity<PricelistAssignment>().HasKey(x => x.Id).Property(x => x.Id);
-			modelBuilder.Entity<PricelistAssignment>().HasRequired(x => x.Pricelist).WithMany(x=>x.Assignments).HasForeignKey(x => x.PricelistId);
-			modelBuilder.Entity<PricelistAssignment>().ToTable("PricelistAssignment");
+            modelBuilder.Entity<PricelistAssignment>().HasKey(x => x.Id).Property(x => x.Id);
+            modelBuilder.Entity<PricelistAssignment>().HasRequired(x => x.Pricelist).WithMany(x => x.Assignments).HasForeignKey(x => x.PricelistId);
+            modelBuilder.Entity<PricelistAssignment>().ToTable("PricelistAssignment");
 
-			base.OnModelCreating(modelBuilder);
-		}
+            base.OnModelCreating(modelBuilder);
+        }
 
-		#region IPricingRepository Members
+        #region IPricingRepository Members
 
-		public IQueryable<Pricelist> Pricelists
-		{
-			get { return GetAsQueryable<Pricelist>(); }
-		}
+        public IQueryable<Pricelist> Pricelists
+        {
+            get { return GetAsQueryable<Pricelist>(); }
+        }
 
-		public IQueryable<Price> Prices
-		{
-			get { return GetAsQueryable<Price>(); }
-		}
+        public IQueryable<Price> Prices
+        {
+            get { return GetAsQueryable<Price>(); }
+        }
 
-		public IQueryable<PricelistAssignment> PricelistAssignments
-		{
-			get { return GetAsQueryable<PricelistAssignment>(); }
-		}
+        public IQueryable<PricelistAssignment> PricelistAssignments
+        {
+            get { return GetAsQueryable<PricelistAssignment>(); }
+        }
 
-		public Price GetPriceById(string priceId)
-		{
-			var retVal = Prices.Include(x => x.Pricelist).FirstOrDefault(x => x.Id == priceId);
-			return retVal;
-		}
+        public Price GetPriceById(string priceId)
+        {
+            var retVal = Prices.Include(x => x.Pricelist).FirstOrDefault(x => x.Id == priceId);
+            return retVal;
+        }
 
-		public Pricelist GetPricelistById(string priceListId)
-		{
-			var retVal = Pricelists.Include(x => x.Prices)
-								   .Include(x=>x.Assignments)
-								   .FirstOrDefault(x => x.Id == priceListId);
-			return retVal;
-		}
+        public Pricelist GetPricelistById(string priceListId)
+        {
+            var retVal = Pricelists.Include(x => x.Prices)
+                                   .Include(x => x.Assignments)
+                                   .FirstOrDefault(x => x.Id == priceListId);
+            return retVal;
+        }
 
-		public PricelistAssignment GetPricelistAssignmentById(string assignmentId)
-		{
-			var retVal = PricelistAssignments.FirstOrDefault(x => x.Id == assignmentId);
-			return retVal;
-		}
+        public PricelistAssignment GetPricelistAssignmentById(string assignmentId)
+        {
+            var retVal = PricelistAssignments.FirstOrDefault(x => x.Id == assignmentId);
+            return retVal;
+        }
 
-	
-		public PricelistAssignment[] GetAllPricelistAssignments(string pricelistId)
-		{
-			var retVal = PricelistAssignments.Where(x => x.PricelistId == pricelistId);
-			return retVal.ToArray();
-		}
 
-		#endregion
-	}
+        public PricelistAssignment[] GetAllPricelistAssignments(string pricelistId)
+        {
+            var retVal = PricelistAssignments.Where(x => x.PricelistId == pricelistId);
+            return retVal.ToArray();
+        }
+
+        #endregion
+    }
 
 }

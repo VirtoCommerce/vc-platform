@@ -1,28 +1,30 @@
 ﻿angular.module('virtoCommerce.catalogModule')
 .controller('virtoCommerce.catalogModule.editorialReviewsListController', ['$timeout', '$scope', 'platformWebApp.bladeNavigationService', function ($timeout, $scope, bladeNavigationService) {
+    var blade = $scope.blade;
+    blade.updatePermission = 'catalog:update';
 
-    $scope.blade.refresh = function (parentRefresh) {
+    blade.refresh = function (parentRefresh) {
         if (parentRefresh) {
-            $scope.blade.isLoading = true;
-            $scope.blade.parentBlade.refresh().$promise.then(function (data) {
+            blade.isLoading = true;
+            blade.parentBlade.refresh().$promise.then(function (data) {
                 initializeBlade(data.reviews);
             });
         } else {
-            initializeBlade($scope.blade.currentEntities);
+            initializeBlade(blade.currentEntities);
         }
     }
 
     function initializeBlade(data) {
-        $scope.blade.currentEntities = angular.copy(data);
-        $scope.blade.origItem = data;
-        $scope.blade.isLoading = false;
+        blade.currentEntities = angular.copy(data);
+        blade.origItem = data;
+        blade.isLoading = false;
     };
 
     $scope.openBlade = function (data) {
         var newBlade = {
             id: 'editorialReview',
             currentEntity: data,
-            languages: $scope.blade.parentBlade.item.catalog.languages,
+            languages: blade.parentBlade.item.catalog.languages,
             title: 'catalog.blades.editorialReview-detail.title',
             subtitle: 'catalog.blades.editorialReview-detail.subtitle',
             controller: 'virtoCommerce.catalogModule.editorialReviewDetailController',
@@ -34,14 +36,14 @@
     function openAddEntityBlade() {
         var data = {
             isNew: true,
-            languageCode: $scope.blade.parentBlade.item.catalog.defaultLanguage.languageCode
+            languageCode: blade.parentBlade.item.catalog.defaultLanguage.languageCode
         };
         $scope.openBlade(data);
     }
 
-    $scope.blade.headIcon = 'fa-comments';
+    blade.headIcon = 'fa-comments';
 
-    $scope.blade.toolbarCommands = [
+    blade.toolbarCommands = [
         {
             name: "platform.commands.add", icon: 'fa fa-plus',
             executeMethod: function () {
@@ -50,14 +52,14 @@
             canExecuteMethod: function () {
                 return true;
             },
-            permission: 'catalog:update'
+            permission: blade.updatePermission
         }
     ];
 
-    $scope.blade.refresh(false);
+    blade.refresh(false);
 
     // open blade for new review 
-    if (!_.some($scope.blade.currentEntities)) {
+    if (!_.some(blade.currentEntities)) {
         $timeout(openAddEntityBlade, 60, false);
     }
 }]);

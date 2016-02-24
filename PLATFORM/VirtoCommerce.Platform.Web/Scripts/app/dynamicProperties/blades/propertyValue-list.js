@@ -1,6 +1,7 @@
 ﻿angular.module('platformWebApp')
 .controller('platformWebApp.propertyValueListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.settings', 'platformWebApp.dynamicProperties.dictionaryItemsApi', function ($scope, bladeNavigationService, dialogService, settings, dictionaryItemsApi) {
     var blade = $scope.blade;
+    blade.updatePermission = 'platform:dynamic_properties:update';
     blade.headIcon = 'fa-plus-square-o';
     blade.title = "platform.blades.propertyValue-list.title";
     blade.subtitle = "platform.blades.propertyValue-list.subtitle";
@@ -26,7 +27,7 @@
     };
 
     function isDirty() {
-        return !angular.equals(blade.currentEntities, blade.origEntity);
+        return !angular.equals(blade.currentEntities, blade.origEntity) && blade.hasUpdatePermission();
     }
 
     function canSave() {

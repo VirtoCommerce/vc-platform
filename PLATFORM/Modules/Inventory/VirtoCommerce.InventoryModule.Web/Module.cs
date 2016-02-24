@@ -14,6 +14,7 @@ namespace VirtoCommerce.InventoryModule.Web
 {
     public class Module : ModuleBase, ISupportExportImportModule
     {
+        private const string _connectionStringName = "VirtoCommerce";
         private readonly IUnityContainer _container;
 
         public Module(IUnityContainer container)
@@ -25,7 +26,7 @@ namespace VirtoCommerce.InventoryModule.Web
 
         public override void SetupDatabase()
         {
-            using (var context = new InventoryRepositoryImpl())
+            using (var context = new InventoryRepositoryImpl(_connectionStringName, _container.Resolve<AuditableInterceptor>()))
             {
                 var initializer = new SetupDatabaseInitializer<InventoryRepositoryImpl, VirtoCommerce.InventoryModule.Data.Migrations.Configuration>();
                 initializer.InitializeDatabase(context);
@@ -34,35 +35,35 @@ namespace VirtoCommerce.InventoryModule.Web
 
         public override void Initialize()
         {
-            _container.RegisterType<IInventoryRepository>(new InjectionFactory(c => new InventoryRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor())));
+            _container.RegisterType<IInventoryRepository>(new InjectionFactory(c => new InventoryRepositoryImpl(_connectionStringName, new EntityPrimaryKeyGeneratorInterceptor(), _container.Resolve<AuditableInterceptor>())));
 
             _container.RegisterType<IInventoryService, InventoryServiceImpl>();
         }
 
         #endregion
 
-		#region ISupportExportImportModule Members
+        #region ISupportExportImportModule Members
 
-		public void DoExport(System.IO.Stream outStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
+        public void DoExport(System.IO.Stream outStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
         {
             var job = _container.Resolve<InventoryExportImport>();
             job.DoExport(outStream, progressCallback);
         }
 
-		public void DoImport(System.IO.Stream inputStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
+        public void DoImport(System.IO.Stream inputStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
         {
             var job = _container.Resolve<InventoryExportImport>();
             job.DoImport(inputStream, progressCallback);
         }
 
-		public string ExportDescription
-		{
-			get
-			{
-				var settingManager = _container.Resolve<ISettingsManager>();
-				return settingManager.GetValue("Inventory.ExportImport.Description", String.Empty);
-			}
-		}
+        public string ExportDescription
+        {
+            get
+            {
+                var settingManager = _container.Resolve<ISettingsManager>();
+                return settingManager.GetValue("Inventory.ExportImport.Description", String.Empty);
+            }
+        }
         #endregion
 
 

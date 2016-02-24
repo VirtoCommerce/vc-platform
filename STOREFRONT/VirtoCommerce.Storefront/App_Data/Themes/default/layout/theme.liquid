@@ -61,106 +61,109 @@
     {% include 'notification' %}
     {% include 'recently-added-cart-item-dialog' %}
     {% include 'recently-added-actual-quote-request-item-dialog' %}
-    {% if settings.store_selector_enable %}
-    {% include 'top-header-selector' %}
-    {% endif %}
-    <header class="site-header" role="banner">
-        <div class="wrapper">
-            <div class="grid--full">
-                <div class="grid-item large--one-third">
-                    {% if template == 'index' %}
-                    <h1 class="header-logo" itemscope itemtype="http://schema.org/Organization">
-                        {% else %}
-                        <div class="h1 header-logo" itemscope itemtype="http://schema.org/Organization">
-                            {% endif %}
-                            {% if settings.logo_use_image %}
-                            <a href="{{ '/' | absolute_url }}" itemprop="url">
-                                <img alt="{{ shop.name }}" src="{{ 'logo.png' | asset_url }}" itemprop="logo" />
-                            </a>
+        {% if settings.store_selector_enable %}
+        {% include 'top-header-selector' %}
+        {% endif %}
+        <header class="site-header" role="banner">
+            <div class="wrapper">
+                <div class="grid--full">
+                    <div class="grid-item large--one-third">
+                        {% if template == 'index' %}
+                        <h1 class="header-logo" itemscope itemtype="http://schema.org/Organization">
                             {% else %}
-                            <a href="{{ '/' | absolute_url }}" itemprop="url">{{ shop.name }}</a>
-                            {% endif %}
-                            {% if template == 'index' %}
-                    </h1>
-                    {% else %}
-                </div>
-                {% endif %}
-            </div>
-            <div class="grid-item large--two-third text-center large--text-right">
-                {% if settings.header_message != blank or shop.customer_accounts_enabled %}
-                <div class="site-header--text-links{% if settings.header_message == blank %} medium-down--hide{% endif %}">
-                    {% if settings.header_message != blank %}
-                    {{ settings.header_message }}
-                    {% endif %}
-                    {% comment %}
-                    {% if shop.customer_accounts_enabled %}
-                    <span class="site-header--meta-links medium-down--hide">
-                        {% if customer %}
-                        {% capture first_name %}
-                        <a href="{{ '/account' | absolute_url }}">{{ customer.first_name }}</a>
-                        {% endcapture %}
-                        {{ 'layout.customer.logged_in_as_html' | t: first_name: first_name }} &middot; {{ 'layout.customer.log_out' | t | customer_logout_link }}
+                            <div class="h1 header-logo" itemscope itemtype="http://schema.org/Organization">
+                                {% endif %}
+                                {% if settings.logo_use_image %}
+                                <a href="{{ '/' | absolute_url }}" itemprop="url">
+                                    <img alt="{{ shop.name }}" src="{{ 'logo.png' | asset_url }}" itemprop="logo" />
+                                </a>
+                                {% else %}
+                                <a href="{{ '/' | absolute_url }}" itemprop="url">{{ shop.name }}</a>
+                                {% endif %}
+                                {% if template == 'index' %}
+                        </h1>
                         {% else %}
-                        {{ 'layout.customer.sign_in' | t | customer_login_link }}
-                        {% if shop.customer_accounts_optional %}
-                        <span class="site-header--spacer">{{ 'layout.customer.or' | t }}</span>
-                        {{ 'layout.customer.create_account' | t | customer_register_link }}
-                        {% endif %}
-                        {% endif %}
-                    </span>
+                    </div>
                     {% endif %}
-                    {% endcomment %}
-
-                    <span class="site-header--meta-links medium-down--hide">
-                        <span ng-if="customer && customer.isRegisteredUser" ng-cloak>
-                            {{ 'layout.customer.logged_in_as_label' | t }} <a href="{{ 'account' | absolute_url }}" ng-bind="customer.firstName"></a> &middot; {{ 'layout.customer.log_out' | t | customer_logout_link }}
-                        </span>
-                        <span ng-if="customer && !customer.isRegisteredUser" ng-cloak>
+                </div>
+                <div class="grid-item large--two-third text-center large--text-right">
+                    {% if settings.header_message != blank or shop.customer_accounts_enabled %}
+                    <div class="site-header--text-links{% if settings.header_message == blank %} medium-down--hide{% endif %}">
+                        {% if settings.header_message != blank %}
+                        {{ settings.header_message }}
+                        {% endif %}
+                        {% comment %}
+                        {% if shop.customer_accounts_enabled %}
+                        <span class="site-header--meta-links medium-down--hide">
+                            {% if customer %}
+                            {% capture first_name %}
+                            <a href="{{ '/account' | absolute_url }}">{{ customer.first_name }}</a>
+                            {% endcapture %}
+                            {{ 'layout.customer.logged_in_as_html' | t: first_name: first_name }} &middot; {{ 'layout.customer.log_out' | t | customer_logout_link }}
+                            {% else %}
                             {{ 'layout.customer.sign_in' | t | customer_login_link }}
+                            {% if shop.customer_accounts_optional %}
                             <span class="site-header--spacer">{{ 'layout.customer.or' | t }}</span>
                             {{ 'layout.customer.create_account' | t | customer_register_link }}
+                            {% endif %}
+                            {% endif %}
                         </span>
-                    </span>
+                        {% endif %}
+                        {% endcomment %}
 
-                </div>
-                <br class="medium-down--hide" />
-                {% endif %}
-                {% include 'search-bar' %}
-                {% if shop.quotes_enabled %}
+                        <span class="site-header--meta-links medium-down--hide">
+                            <span ng-if="customer && customer.isRegisteredUser && customer.operatorUserName" ng-cloak>
+                                {{ 'layout.customer.logged_in_on_behalf_of_label' | t }} <a href="{{ 'account' | absolute_url }}" ng-bind="customer.firstName"></a> &middot; {{ 'layout.customer.log_out' | t | customer_logout_link }}
+                            </span>
+                            <span ng-if="customer && customer.isRegisteredUser && !customer.operatorUserName" ng-cloak>
+                                {{ 'layout.customer.logged_in_as_label' | t }} <a href="{{ 'account' | absolute_url }}" ng-bind="customer.firstName"></a> &middot; {{ 'layout.customer.log_out' | t | customer_logout_link }}
+                            </span>
+                            <span ng-if="customer && !customer.isRegisteredUser" ng-cloak>
+                                {{ 'layout.customer.sign_in' | t | customer_login_link }}
+                                <span class="site-header--spacer">{{ 'layout.customer.or' | t }}</span>
+                                {{ 'layout.customer.create_account' | t | customer_register_link }}
+                            </span>
+                        </span>
+
+                    </div>
+                    <br class="medium-down--hide" />
+                    {% endif %}
+                    {% include 'search-bar' %}
+                    {% if shop.quotes_enabled %}
                     <a class="header-cart-btn cart-toggle" ng-controller="actualQuoteRequestBarController" ng-click="outerRedirect(baseUrl + 'quoterequest/#/' + actualQuoteRequest.id)">
                         <span class="fa fa-calculator"></span>
                         Quote <span id="quoteRequestCount" ng-class="{ 'visible-count': actualQuoteRequest.itemsCount > 0 }" ng-bind="actualQuoteRequest.itemsCount" ng-cloak></span>
                     </a>
-                {% endif %}
+                    {% endif %}
                 <a class="header-cart-btn cart-toggle" href="{{ 'cart' | absolute_url }}" ng-controller="cartBarController">
-                    <span class="icon icon-cart"></span>
+                        <span class="icon icon-cart"></span>
                     {{ 'layout.cart.cart' | t }} <span id="cartCount" ng-class="{ 'visible-count': cartItemsCount > 0 }" ng-bind="cartItemsCount" ng-cloak></span>
+                    </a>
+                </div>
+            </div>
+            </div>
+        </header>
+        <nav class="nav-bar" role="navigation">
+            <div class="wrapper">
+                {% include 'search-bar' %}
+                {% include 'site-nav' %}
+            </div>
+        </nav>
+        <div id="mobileNavBar">
+            <div class="display-table-cell">
+                <a class="menu-toggle mobileNavBar-link">{{ 'layout.navigation.mobile_menu' | t }}</a>
+            </div>
+            <div class="display-table-cell">
+            <a class="cart-toggle mobileNavBar-link" href="{{ 'cart' | absolute_url }}" ng-click="toggleCartModal(isCartModalVisible)">
+                    <span class="icon icon-cart"></span>
+                    {{ 'layout.cart.cart' | t }} <span class="cartCount" ng-bind="cart.ItemsCount" ng-if="cart.ItemsCount > 0"></span>
                 </a>
             </div>
         </div>
-        </div>
-    </header>
-    <nav class="nav-bar" role="navigation">
-        <div class="wrapper">
-            {% include 'search-bar' %}
-            {% include 'site-nav' %}
-        </div>
-    </nav>
-    <div id="mobileNavBar">
-        <div class="display-table-cell">
-            <a class="menu-toggle mobileNavBar-link">{{ 'layout.navigation.mobile_menu' | t }}</a>
-        </div>
-        <div class="display-table-cell">
-            <a class="cart-toggle mobileNavBar-link" href="{{ 'cart' | absolute_url }}" ng-click="toggleCartModal(isCartModalVisible)">
-                <span class="icon icon-cart"></span>
-                {{ 'layout.cart.cart' | t }} <span class="cartCount" ng-bind="cart.ItemsCount" ng-if="cart.ItemsCount > 0"></span>
-            </a>
-        </div>
-    </div>
-    <main class="wrapper main-content" role="main">
-        {{ content_for_layout }}
-    </main>
-    {% include 'footer' %}
+        <main class="wrapper main-content" role="main">
+            {{ content_for_layout }}
+        </main>
+        {% include 'footer' %}
     <script>
         window.quotesEnabled = {{ shop.quotes_enabled }};
     </script>

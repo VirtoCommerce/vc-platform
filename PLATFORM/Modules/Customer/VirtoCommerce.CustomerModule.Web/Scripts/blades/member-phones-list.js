@@ -1,6 +1,7 @@
 ﻿angular.module('virtoCommerce.customerModule')
 .controller('virtoCommerce.customerModule.memberPhonesListController', ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
     var blade = $scope.blade;
+    blade.updatePermission = 'customer:update';
     $scope.selectedItem = null;
 
     function transformDataElement(data) {
@@ -25,7 +26,7 @@
     };
 
     function isDirty() {
-        return !angular.equals(blade.currentEntities, blade.origEntity);
+        return !angular.equals(blade.currentEntities, blade.origEntity) && blade.hasUpdatePermission();
     }
 
     function canSave() {
@@ -57,7 +58,7 @@
             canExecuteMethod: function () {
                 return true;
             },
-            permission: 'customer:update'
+            permission: blade.updatePermission
         },
         {
             name: "platform.commands.reset", icon: 'fa fa-undo',
@@ -65,7 +66,7 @@
                 angular.copy(blade.origEntity, blade.currentEntities);
             },
             canExecuteMethod: isDirty,
-            permission: 'customer:update'
+            permission: blade.updatePermission
         },
         {
             name: "platform.commands.delete", icon: 'fa fa-trash-o',
@@ -78,7 +79,7 @@
             canExecuteMethod: function () {
                 return $scope.selectedItem;
             },
-            permission: 'customer:update'
+            permission: blade.updatePermission
         }
     ];
 

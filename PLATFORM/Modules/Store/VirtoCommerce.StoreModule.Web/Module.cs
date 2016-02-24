@@ -18,6 +18,7 @@ namespace VirtoCommerce.StoreModule.Web
 {
     public class Module : ModuleBase, ISupportExportImportModule
     {
+        private const string _connectionStringName = "VirtoCommerce";
         private readonly IUnityContainer _container;
 
         public Module(IUnityContainer container)
@@ -29,7 +30,7 @@ namespace VirtoCommerce.StoreModule.Web
 
         public override void SetupDatabase()
         {
-            using (var db = new StoreRepositoryImpl())
+            using (var db = new StoreRepositoryImpl(_connectionStringName, _container.Resolve<AuditableInterceptor>()))
             {
                 var initializer = new SetupDatabaseInitializer<StoreRepositoryImpl, Data.Migrations.Configuration>();
 
@@ -39,7 +40,7 @@ namespace VirtoCommerce.StoreModule.Web
 
         public override void Initialize()
         {
-            _container.RegisterType<IStoreRepository>(new InjectionFactory(c => new StoreRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor())));
+            _container.RegisterType<IStoreRepository>(new InjectionFactory(c => new StoreRepositoryImpl(_connectionStringName, new EntityPrimaryKeyGeneratorInterceptor(), _container.Resolve<AuditableInterceptor>())));
             _container.RegisterType<IStoreService, StoreServiceImpl>();
         }
 

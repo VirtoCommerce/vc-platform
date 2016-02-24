@@ -3,16 +3,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Packaging;
 using System.Linq;
+using System.Threading.Tasks;
+using CacheManager.Core;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Packaging;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
-using VirtoCommerce.Platform.Data.Security.Identity;
 using VirtoCommerce.Platform.Data.Common;
-using System.Threading.Tasks;
-using CacheManager.Core;
 
 namespace VirtoCommerce.Platform.Data.ExportImport
 {
@@ -50,7 +49,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
         private readonly IRoleManagementService _roleManagementService;
         private readonly ISettingsManager _settingsManager;
         private readonly IDynamicPropertyService _dynamicPropertyService;
-		private readonly ICacheManager<object> _cacheManager;
+        private readonly ICacheManager<object> _cacheManager;
         [CLSCompliant(false)]
         public PlatformExportImportManager(ISecurityService securityService, IRoleManagementService roleManagementService, ISettingsManager settingsManager, IDynamicPropertyService dynamicPropertyService, IPackageService packageService, ICacheManager<object> cacheManager)
         {
@@ -59,18 +58,18 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             _roleManagementService = roleManagementService;
             _settingsManager = settingsManager;
             _packageService = packageService;
-			_cacheManager = cacheManager;
+            _cacheManager = cacheManager;
             _manifestPartUri = PackUriHelper.CreatePartUri(new Uri("Manifest.json", UriKind.Relative));
             _platformEntriesPartUri = PackUriHelper.CreatePartUri(new Uri("PlatformEntries.json", UriKind.Relative));
         }
 
         #region IPlatformExportImportManager Members
 
-        public PlatformExportManifest GetNewExportManifest()
+        public PlatformExportManifest GetNewExportManifest(string author)
         {
             var retVal = new PlatformExportManifest
             {
-                Author = CurrentPrincipal.GetCurrentUserName(),
+                Author = author,
                 PlatformVersion = PlatformVersion.CurrentVersion.ToString(),
                 Modules = InnerGetModulesWithInterface(typeof(ISupportExportImportModule)).Select(x => new ExportModuleInfo
                 {
@@ -141,8 +140,8 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                 ImportPlatformEntriesInternal(package, manifest, progressCallback);
                 //Import selected modules
                 ImportModulesInternal(package, manifest, progressCallback);
-				//Reset cache
-				_cacheManager.Clear();
+                //Reset cache
+                _cacheManager.Clear();
 
             }
         }
@@ -215,7 +214,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                 //Roles
                 platformExportObj.Roles = _roleManagementService.SearchRoles(new RoleSearchRequest { SkipCount = 0, TakeCount = int.MaxValue }).Roles;
                 //users 
-                var usersResult = Task.Run(()=> _securityService.SearchUsersAsync(new UserSearchRequest { TakeCount = int.MaxValue })).Result;
+                var usersResult = Task.Run(() => _securityService.SearchUsersAsync(new UserSearchRequest { TakeCount = int.MaxValue })).Result;
                 progressInfo.Description = String.Format("Security: {0} users exporting...", usersResult.Users.Count());
                 progressCallback(progressInfo);
 
@@ -277,7 +276,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                         }
                         catch (Exception ex)
                         {
-							progressInfo.Errors.Add(String.Format("{0}: {1}", moduleInfo.Id, ex.ExpandExceptionMessage()));
+                            progressInfo.Errors.Add(String.Format("{0}: {1}", moduleInfo.Id, ex.ExpandExceptionMessage()));
                             progressCallback(progressInfo);
                         }
                     }
@@ -313,7 +312,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                     }
                     catch (Exception ex)
                     {
-						progressInfo.Errors.Add(String.Format("{0}: {1}", module.Id, ex.ExpandExceptionMessage()));
+                        progressInfo.Errors.Add(String.Format("{0}: {1}", module.Id, ex.ExpandExceptionMessage()));
                         progressCallback(progressInfo);
                     }
 

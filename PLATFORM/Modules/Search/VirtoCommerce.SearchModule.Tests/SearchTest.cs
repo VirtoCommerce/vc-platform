@@ -1,5 +1,4 @@
-﻿using System;
-using VirtoCommerce.CatalogModule.Data.Repositories;
+﻿using VirtoCommerce.CatalogModule.Data.Repositories;
 using VirtoCommerce.CatalogModule.Data.Services;
 using VirtoCommerce.CoreModule.Data.Repositories;
 using VirtoCommerce.Domain.Catalog.Services;
@@ -7,16 +6,11 @@ using VirtoCommerce.Domain.Commerce.Services;
 using VirtoCommerce.Domain.Pricing.Services;
 using VirtoCommerce.Domain.Search.Model;
 using VirtoCommerce.Platform.Core.ChangeLog;
-using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.ChangeLog;
-using VirtoCommerce.Platform.Data.Common;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Platform.Data.Repositories;
-using VirtoCommerce.Platform.Data.Settings;
 using VirtoCommerce.PricingModule.Data.Repositories;
 using VirtoCommerce.PricingModule.Data.Services;
-using VirtoCommerce.SearchModule.Data.Model;
-using VirtoCommerce.SearchModule.Data.Providers.Lucene;
 using VirtoCommerce.SearchModule.Data.Services;
 using Xunit;
 
@@ -24,7 +18,7 @@ namespace VirtoCommerce.SearchModule.Tests
 {
     public class SearchTest
     {
-   
+
 
         [Fact]
         public void SearchCatalogBuilderTest()
@@ -36,8 +30,8 @@ namespace VirtoCommerce.SearchModule.Tests
 
         private SearchIndexController GetSearchIndexController()
         {
- 
-        
+
+
             return null;
         }
 
@@ -85,25 +79,25 @@ namespace VirtoCommerce.SearchModule.Tests
 
         private IPlatformRepository GetPlatformRepository()
         {
-            var result = new PlatformRepository("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor());
+            var result = new PlatformRepository("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor(null));
             return result;
         }
 
         private IPricingRepository GetPricingRepository()
         {
-            var result = new PricingRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor());
+            var result = new PricingRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor(null));
             return result;
         }
 
         private ICatalogRepository GetCatalogRepository()
         {
-            var result = new CatalogRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor());
+            var result = new CatalogRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor(null));
             return result;
         }
 
         private static IСommerceRepository GetCommerceRepository()
         {
-            var result = new CommerceRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor());
+            var result = new CommerceRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor(null));
             return result;
         }
     }

@@ -13,13 +13,11 @@ using VirtoCommerce.Storefront.Common;
 using VirtoCommerce.Storefront.Converters;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Common;
-using shopifyModel = VirtoCommerce.LiquidThemeEngine.Objects;
-using VirtoCommerce.Storefront.Model.Cart.Services;
-using CacheManager.Core;
-using VirtoCommerce.Storefront.Model.Customer.Services;
-using VirtoCommerce.Storefront.Model.Customer;
 using VirtoCommerce.Storefront.Model.Common.Events;
+using VirtoCommerce.Storefront.Model.Customer;
+using VirtoCommerce.Storefront.Model.Customer.Services;
 using VirtoCommerce.Storefront.Model.Order.Events;
+using shopifyModel = VirtoCommerce.LiquidThemeEngine.Objects;
 
 namespace VirtoCommerce.Storefront.Controllers
 {
@@ -29,24 +27,19 @@ namespace VirtoCommerce.Storefront.Controllers
         private readonly ICommerceCoreModuleApi _commerceCoreApi;
         private readonly IAuthenticationManager _authenticationManager;
         private readonly IVirtoCommercePlatformApi _platformApi;
-        private readonly ICartBuilder _cartBuilder;
-        private readonly ICacheManager<object> _cacheManager;
         private readonly ICustomerService _customerService;
         private readonly IOrderModuleApi _orderApi;
         private readonly IEventPublisher<UserLoginEvent> _userLoginEventPublisher;
 
         public AccountController(WorkContext workContext, IStorefrontUrlBuilder urlBuilder, ICommerceCoreModuleApi commerceCoreApi,
             IAuthenticationManager authenticationManager, IVirtoCommercePlatformApi platformApi,
-            ICartBuilder cartBuilder, ICustomerService customerService, IOrderModuleApi orderApi, IEventPublisher<UserLoginEvent> userLoginEventPublisher,
-            ICacheManager<object> cacheManager)
+            ICustomerService customerService, IOrderModuleApi orderApi, IEventPublisher<UserLoginEvent> userLoginEventPublisher)
             : base(workContext, urlBuilder)
         {
             _commerceCoreApi = commerceCoreApi;
             _customerService = customerService;
             _authenticationManager = authenticationManager;
             _platformApi = platformApi;
-            _cartBuilder = cartBuilder;
-            _cacheManager = cacheManager;
             _orderApi = orderApi;
             _userLoginEventPublisher = userLoginEventPublisher;
          }
@@ -177,19 +170,20 @@ namespace VirtoCommerce.Storefront.Controllers
                 user = await _commerceCoreApi.StorefrontSecurityGetUserByNameAsync(user.UserName);
 
                 //Next need create corresponding Customer contact in VC Customers (CRM) module
-                //Contacts and account has a same Id.
-                var contact = formModel.ToWebModel();
-                contact.Id = user.Id;
-                contact.IsRegisteredUser = true;
-                await _customerService.CreateCustomerAsync(contact);
+                //Contacts and account has the same Id.
+                var customer = formModel.ToWebModel();
+                customer.Id = user.Id;
+                customer.UserName = user.UserName;
+                customer.IsRegisteredUser = true;
+                await _customerService.CreateCustomerAsync(customer);
 
                 await _commerceCoreApi.StorefrontSecurityPasswordSignInAsync(formModel.Email, formModel.Password);
 
-                var identity = CreateClaimsIdentity(formModel.Email, user.Id);
+                var identity = CreateClaimsIdentity(customer);
                 _authenticationManager.SignIn(identity);
 
                 //Publish user login event 
-                await _userLoginEventPublisher.PublishAsync(new UserLoginEvent(base.WorkContext, base.WorkContext.CurrentCustomer, contact));
+                await _userLoginEventPublisher.PublishAsync(new UserLoginEvent(WorkContext, WorkContext.CurrentCustomer, customer));
 
                 return StoreFrontRedirect("~/account");
             }
@@ -203,7 +197,7 @@ namespace VirtoCommerce.Storefront.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public ActionResult Login()
+        public ActionResult Login(string userId)
         {
             if (User.Identity.IsAuthenticated)
             {
@@ -211,6 +205,7 @@ namespace VirtoCommerce.Storefront.Controllers
             }
 
             WorkContext.Login = new Login();
+            SetUserIdForLoginOnBehalf(Response, userId);
 
             return View("customers/login", WorkContext);
         }
@@ -219,8 +214,6 @@ namespace VirtoCommerce.Storefront.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> Login(Login formModel, string returnUrl)
         {
-            var anonymousQuoteRequest = WorkContext.CurrentQuoteRequest;
-
             var loginResult = await _commerceCoreApi.StorefrontSecurityPasswordSignInAsync(formModel.Email, formModel.Password);
 
             switch (loginResult.Status)
@@ -228,10 +221,33 @@ namespace VirtoCommerce.Storefront.Controllers
                 case "success":
                     var user = await _platformApi.SecurityGetUserByNameAsync(formModel.Email);
                     var customer = await _customerService.GetCustomerByIdAsync(user.Id);
-                    var identity = CreateClaimsIdentity(formModel.Email, user.Id);
+                    customer.UserName = user.UserName;
+
+                    // Login on behalf of a user with the specified ID
+                    var userId = GetUserIdForLoginOnBehalf(Request);
+                    if (!string.IsNullOrEmpty(userId) && !string.Equals(userId, user.Id) && await _customerService.CanLoginOnBehalfAsync(user.Id))
+                    {
+                        var user2 = await _platformApi.SecurityGetUserByIdAsync(userId);
+                        var customer2 = await _customerService.GetCustomerByIdAsync(userId);
+
+                        if (user2 != null && customer2 != null)
+                        {
+                            customer2.UserName = user2.UserName;
+                            customer2.OperatorUserId = user.Id;
+                            customer2.OperatorUserName = user.UserName;
+                            customer = customer2;
+                        }
+
+                        SetUserIdForLoginOnBehalf(Response, null);
+
+                        // TODO: Configure the reduced login expiration
+                    }
+
+                    var identity = CreateClaimsIdentity(customer);
                     _authenticationManager.SignIn(identity);
+
                     //Publish user login event 
-                    await _userLoginEventPublisher.PublishAsync(new UserLoginEvent(base.WorkContext, base.WorkContext.CurrentCustomer, customer));
+                    await _userLoginEventPublisher.PublishAsync(new UserLoginEvent(WorkContext, WorkContext.CurrentCustomer, customer));
                     return StoreFrontRedirect(returnUrl);
                 case "lockedOut":
                     return View("lockedout", WorkContext);
@@ -290,13 +306,8 @@ namespace VirtoCommerce.Storefront.Controllers
                 return View("error", WorkContext);
             }
 
-            var tokenCookie = new HttpCookie(StorefrontConstants.PasswordResetTokenCookie, code);
-            tokenCookie.Expires = DateTime.UtcNow.AddDays(1);
-            HttpContext.Response.Cookies.Add(tokenCookie);
-
-            var customerIdCookie = new HttpCookie(StorefrontConstants.CustomerIdCookie, userId);
-            customerIdCookie.Expires = DateTime.UtcNow.AddDays(1);
-            HttpContext.Response.Cookies.Add(customerIdCookie);
+            SetCookieValue(Response, StorefrontConstants.PasswordResetTokenCookie, code, new TimeSpan(1, 0, 0, 0));
+            SetCookieValue(Response, StorefrontConstants.CustomerIdCookie, userId, new TimeSpan(1, 0, 0, 0));
 
             return View("customers/reset_password", WorkContext);
         }
@@ -305,11 +316,8 @@ namespace VirtoCommerce.Storefront.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> ResetPassword(ResetPassword formModel)
         {
-            var customerIdCookie = HttpContext.Request.Cookies[StorefrontConstants.CustomerIdCookie];
-            string userId = customerIdCookie != null ? customerIdCookie.Value : null;
-
-            var tokenCookie = HttpContext.Request.Cookies[StorefrontConstants.PasswordResetTokenCookie];
-            string token = tokenCookie != null ? tokenCookie.Value : null;
+            var userId = GetCookieValue(Request, StorefrontConstants.CustomerIdCookie);
+            var token = GetCookieValue(Request, StorefrontConstants.PasswordResetTokenCookie);
 
             if (userId == null && token == null)
             {
@@ -321,8 +329,9 @@ namespace VirtoCommerce.Storefront.Controllers
 
             if (result.Succeeded == true)
             {
-                HttpContext.Response.Cookies.Add(new HttpCookie(StorefrontConstants.CustomerIdCookie) { Expires = DateTime.UtcNow.AddDays(-1) });
-                HttpContext.Response.Cookies.Add(new HttpCookie(StorefrontConstants.PasswordResetTokenCookie) { Expires = DateTime.UtcNow.AddDays(-1) });
+                // Remove cookies
+                SetCookieValue(Response, StorefrontConstants.CustomerIdCookie);
+                SetCookieValue(Response, StorefrontConstants.PasswordResetTokenCookie);
 
                 return View("customers/reset_password_confirmation", WorkContext);
             }
@@ -357,13 +366,62 @@ namespace VirtoCommerce.Storefront.Controllers
             }
         }
 
-        private ClaimsIdentity CreateClaimsIdentity(string userName, string userId)
+        // GET: /account/json
+        [HttpGet]
+        [AllowAnonymous]
+        public ActionResult GetCurrentCustomer()
         {
-            var claims = new List<Claim>();
-            claims.Add(new Claim(ClaimTypes.Name, userName));
-            claims.Add(new Claim(ClaimTypes.Sid, userId));
+            return Json(WorkContext.CurrentCustomer, JsonRequestBehavior.AllowGet);
+        }
+
+
+        private static string GetUserIdForLoginOnBehalf(HttpRequestBase request)
+        {
+            return GetCookieValue(request, StorefrontConstants.LoginOnBehalfUserIdCookie);
+        }
+
+        private static void SetUserIdForLoginOnBehalf(HttpResponseBase response, string userId)
+        {
+            SetCookieValue(response, StorefrontConstants.LoginOnBehalfUserIdCookie, userId, new TimeSpan(0, 10, 0));
+        }
+
+        private static string GetCookieValue(HttpRequestBase request, string name)
+        {
+            var cookie = request.Cookies[name];
+            var result = cookie != null ? cookie.Value : null;
+            return result;
+        }
+
+        private static void SetCookieValue(HttpResponseBase response, string name, string value = null, TimeSpan? expiresAfter = null)
+        {
+            // Remove cookie if value is empty
+            var expires = !string.IsNullOrEmpty(value) && expiresAfter != null
+                ? DateTime.UtcNow.Add(expiresAfter.Value)
+                : DateTime.UtcNow.AddDays(-1);
+
+            var cookie = new HttpCookie(name, value) { Expires = expires };
+            response.Cookies.Add(cookie);
+        }
+
+        private static ClaimsIdentity CreateClaimsIdentity(CustomerInfo customer)
+        {
+            var claims = new List<Claim>
+        {
+                new Claim(ClaimTypes.Name, customer.UserName),
+                new Claim(ClaimTypes.NameIdentifier, customer.Id)
+            };
 
             var identity = new ClaimsIdentity(claims, Microsoft.AspNet.Identity.DefaultAuthenticationTypes.ApplicationCookie);
+
+            if (!string.IsNullOrEmpty(customer.OperatorUserName))
+            {
+                identity.AddClaim(new Claim(StorefrontConstants.OperatorUserNameClaimType, customer.OperatorUserName));
+            }
+
+            if (!string.IsNullOrEmpty(customer.OperatorUserId))
+            {
+                identity.AddClaim(new Claim(StorefrontConstants.OperatorUserIdClaimType, customer.OperatorUserId));
+            }
 
             return identity;
         }

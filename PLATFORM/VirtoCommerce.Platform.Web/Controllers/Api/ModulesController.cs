@@ -26,12 +26,14 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly IPackageService _packageService;
         private readonly string _uploadsPath;
         private readonly IPushNotificationManager _pushNotifier;
+        private readonly IUserNameResolver _userNameResolver;
 
-        public ModulesController(IPackageService packageService, string uploadsPath, IPushNotificationManager pushNotifier)
+        public ModulesController(IPackageService packageService, string uploadsPath, IPushNotificationManager pushNotifier, IUserNameResolver userNameResolver)
         {
             _packageService = packageService;
             _uploadsPath = uploadsPath;
             _pushNotifier = pushNotifier;
+            _userNameResolver = userNameResolver;
         }
 
         /// <summary>
@@ -184,7 +186,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-		[ApiExplorerSettings(IgnoreApi=true)]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public void ModuleBackgroundJob(webModel.ModuleBackgroundJobOptions options, webModel.ModulePushNotification notification)
         {
             try
@@ -228,7 +230,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         private webModel.ModulePushNotification ScheduleJob(webModel.ModuleBackgroundJobOptions options)
         {
-            var notification = new webModel.ModulePushNotification(CurrentPrincipal.GetCurrentUserName());
+            var notification = new webModel.ModulePushNotification(_userNameResolver.GetCurrentUserName());
 
             switch (options.Action)
             {

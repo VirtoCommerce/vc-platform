@@ -10,24 +10,20 @@ using VirtoCommerce.CoreModule.Data.Model;
 
 namespace VirtoCommerce.CoreModule.Data.Repositories
 {
-	public class CommerceRepositoryImpl : EFRepositoryBase, IСommerceRepository
-	{
-		public CommerceRepositoryImpl()
-		{
-		}
+    public class CommerceRepositoryImpl : EFRepositoryBase, IСommerceRepository
+    {
+        public CommerceRepositoryImpl()
+        {
+        }
 
-		public CommerceRepositoryImpl(string nameOrConnectionString)
-			: this(nameOrConnectionString, null)
-		{
-		}
-		public CommerceRepositoryImpl(string nameOrConnectionString, params IInterceptor[] interceptors)
-			: base(nameOrConnectionString, null, interceptors)
-		{
-			Configuration.LazyLoadingEnabled = false;
-		}
+        public CommerceRepositoryImpl(string nameOrConnectionString, params IInterceptor[] interceptors)
+            : base(nameOrConnectionString, null, interceptors)
+        {
+            Configuration.LazyLoadingEnabled = false;
+        }
 
-		protected override void OnModelCreating(DbModelBuilder modelBuilder)
-		{
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
 
             modelBuilder.Entity<FulfillmentCenter>().HasKey(x => x.Id).Property(x => x.Id);
             modelBuilder.Entity<FulfillmentCenter>().ToTable("FulfillmentCenter");
@@ -44,18 +40,18 @@ namespace VirtoCommerce.CoreModule.Data.Repositories
 
 
             base.OnModelCreating(modelBuilder);
-		}
+        }
 
-		#region IСommerceRepository Members
+        #region IСommerceRepository Members
 
-		public IQueryable<FulfillmentCenter> FulfillmentCenters
-		{
-			get { return GetAsQueryable<FulfillmentCenter>(); }
-		}
-		public IQueryable<SeoUrlKeyword> SeoUrlKeywords
-		{
-			get { return GetAsQueryable<SeoUrlKeyword>(); }
-		}
+        public IQueryable<FulfillmentCenter> FulfillmentCenters
+        {
+            get { return GetAsQueryable<FulfillmentCenter>(); }
+        }
+        public IQueryable<SeoUrlKeyword> SeoUrlKeywords
+        {
+            get { return GetAsQueryable<SeoUrlKeyword>(); }
+        }
         public IQueryable<Sequence> Sequences
         {
             get { return GetAsQueryable<Sequence>(); }
