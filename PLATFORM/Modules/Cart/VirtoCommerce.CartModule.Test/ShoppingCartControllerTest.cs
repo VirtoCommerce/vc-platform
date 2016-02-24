@@ -1,33 +1,32 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http.Results;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using VirtoCommerce.CartModule.Data.Repositories;
 using VirtoCommerce.CartModule.Data.Services;
-using dataModel = VirtoCommerce.CartModule.Data.Model;
-using webModel = VirtoCommerce.CartModule.Web.Model;
-using VirtoCommerce.Domain.Commerce.Model;
 using VirtoCommerce.CartModule.Web.Controllers.Api;
-using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
-using Moq;
-using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Domain.Cart.Events;
 using VirtoCommerce.Domain.Catalog.Services;
-using VirtoCommerce.Platform.Core.DynamicProperties;
+using VirtoCommerce.Domain.Commerce.Model;
 using VirtoCommerce.Domain.Store.Services;
-using System.Collections.Generic;
+using VirtoCommerce.Platform.Core.DynamicProperties;
+using VirtoCommerce.Platform.Core.Events;
+using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
+using webModel = VirtoCommerce.CartModule.Web.Model;
 
 namespace VirtoCommerce.CartModule.Test
 {
 
     [TestClass]
-	public class ShoppingCartControllerTest
-	{
+    public class ShoppingCartControllerTest
+    {
         [TestMethod]
         public void CreateMultishipmentCart()
         {
             var controller = GetCartController();
-       
+
             var cart = new webModel.ShoppingCart
             {
                 Currency = "USD",
@@ -63,7 +62,7 @@ namespace VirtoCommerce.CartModule.Test
                 LastName = "last name",
                 Organization = "org1",
                 Line1 = "sss"
-            }; 
+            };
             //Select appropriate shipment method
             var shipment = new webModel.Shipment
             {
@@ -114,153 +113,152 @@ namespace VirtoCommerce.CartModule.Test
         }
 
         [TestMethod]
-		public void GetCurrentCartTest()
-		{
-			var controller = GetCartController();
-			var result = controller.GetCurrentCart("testSite", null) as OkNegotiatedContentResult<webModel.ShoppingCart>;
-			Assert.IsNotNull(result.Content);
-		}
+        public void GetCurrentCartTest()
+        {
+            var controller = GetCartController();
+            var result = controller.GetCurrentCart("testSite", null) as OkNegotiatedContentResult<webModel.ShoppingCart>;
+            Assert.IsNotNull(result.Content);
+        }
 
-		[TestMethod]
-		public void AddItemToShoppingCart()
-		{
-			var controller = GetCartController();
-			var result = controller.GetCurrentCart("testSite", null) as OkNegotiatedContentResult<webModel.ShoppingCart>;
-			var cart = result.Content;
+        [TestMethod]
+        public void AddItemToShoppingCart()
+        {
+            var controller = GetCartController();
+            var result = controller.GetCurrentCart("testSite", null) as OkNegotiatedContentResult<webModel.ShoppingCart>;
+            var cart = result.Content;
 
-			var item = new webModel.LineItem
-			{
-				CatalogId = "Samsung",
-				CategoryId = "100df6d5-8210-4b72-b00a-5003f9dcb79d",
-				ProductId = "v-b000bkzs9w",
-				ListPrice = 10.44m,
-				PlacedPrice = 20.33m,
-				Quantity = 1,
-				Name = "Samsung YP-T7JX 512 MB Digital Audio Player with FM Tuner & Recorder",
-				Currency = cart.Currency
-			};
-			cart.Items.Add(item);
+            var item = new webModel.LineItem
+            {
+                CatalogId = "Samsung",
+                CategoryId = "100df6d5-8210-4b72-b00a-5003f9dcb79d",
+                ProductId = "v-b000bkzs9w",
+                ListPrice = 10.44m,
+                PlacedPrice = 20.33m,
+                Quantity = 1,
+                Name = "Samsung YP-T7JX 512 MB Digital Audio Player with FM Tuner & Recorder",
+                Currency = cart.Currency
+            };
+            cart.Items.Add(item);
 
-			controller.Update(cart);
+            controller.Update(cart);
 
-			result = controller.GetCartById(cart.Id) as OkNegotiatedContentResult<webModel.ShoppingCart>;
-			cart = result.Content;
-		}
+            result = controller.GetCartById(cart.Id) as OkNegotiatedContentResult<webModel.ShoppingCart>;
+            cart = result.Content;
+        }
 
-		[TestMethod]
-		public void TestCheckout()
-		{
-			var controller = GetCartController();
-			var result = controller.GetCurrentCart("testSite", null) as OkNegotiatedContentResult<webModel.ShoppingCart>;
-			var cart = result.Content;
+        [TestMethod]
+        public void TestCheckout()
+        {
+            var controller = GetCartController();
+            var result = controller.GetCurrentCart("testSite", null) as OkNegotiatedContentResult<webModel.ShoppingCart>;
+            var cart = result.Content;
 
-			var deliveryAddress = cart.Addresses.FirstOrDefault(x=>x.Type == AddressType.Shipping);
-			if(deliveryAddress == null)
-			{
-				//Enter delivery address
-				deliveryAddress = new webModel.Address
-				{
-					Type = AddressType.Shipping,
-					City = "london",
-					Phone = "+68787687",
-					PostalCode = "2222",
-					CountryCode = "ENG",
-					CountryName = "England",
-					Email = "user@mail.com",
-					FirstName = "first name",
-					LastName = "last name",
-					Organization = "org1"
-				};
-				//cart.Addresses.Add(deliveryAddress);
+            var deliveryAddress = cart.Addresses.FirstOrDefault(x => x.Type == AddressType.Shipping);
+            if (deliveryAddress == null)
+            {
+                //Enter delivery address
+                deliveryAddress = new webModel.Address
+                {
+                    Type = AddressType.Shipping,
+                    City = "london",
+                    Phone = "+68787687",
+                    PostalCode = "2222",
+                    CountryCode = "ENG",
+                    CountryName = "England",
+                    Email = "user@mail.com",
+                    FirstName = "first name",
+                    LastName = "last name",
+                    Organization = "org1"
+                };
+                //cart.Addresses.Add(deliveryAddress);
 
-			}
-			deliveryAddress.Line1 = "Wishing Zephyr Limits, Coffee Creek";
-		
-			//Save changes
-			controller.Update(cart);
+            }
+            deliveryAddress.Line1 = "Wishing Zephyr Limits, Coffee Creek";
 
-			result = controller.GetCurrentCart("testSite", null) as OkNegotiatedContentResult<webModel.ShoppingCart>;
-			cart = result.Content;
+            //Save changes
+            controller.Update(cart);
 
-			//Select appropriate shipment method
-			var shipmentMethodResult = controller.GetShipmentMethods(cart.Id) as OkNegotiatedContentResult<webModel.ShippingMethod[]>;
-			var shipmentMethod = shipmentMethodResult.Content.FirstOrDefault();
-			var shipment = new webModel.Shipment
-			{
-				DeliveryAddress = deliveryAddress,
-				Currency = shipmentMethod.Currency,
-				ShipmentMethodCode = shipmentMethod.ShipmentMethodCode,
-				ShippingPrice = shipmentMethod.Price
-			};
-			cart.Shipments.Add(shipment);
+            result = controller.GetCurrentCart("testSite", null) as OkNegotiatedContentResult<webModel.ShoppingCart>;
+            cart = result.Content;
 
-			//Save changes
-			controller.Update(cart);
-			result = controller.GetCurrentCart("testSite", null) as OkNegotiatedContentResult<webModel.ShoppingCart>;
-			cart = result.Content;
+            //Select appropriate shipment method
+            var shipmentMethodResult = controller.GetShipmentMethods(cart.Id) as OkNegotiatedContentResult<webModel.ShippingMethod[]>;
+            var shipmentMethod = shipmentMethodResult.Content.FirstOrDefault();
+            var shipment = new webModel.Shipment
+            {
+                DeliveryAddress = deliveryAddress,
+                Currency = shipmentMethod.Currency,
+                ShipmentMethodCode = shipmentMethod.ShipmentMethodCode,
+                ShippingPrice = shipmentMethod.Price
+            };
+            cart.Shipments.Add(shipment);
 
-			//Select payment method
+            //Save changes
+            controller.Update(cart);
+            result = controller.GetCurrentCart("testSite", null) as OkNegotiatedContentResult<webModel.ShoppingCart>;
+            cart = result.Content;
 
-			var paymentMethodResults = controller.GetPaymentMethods(cart.Id) as OkNegotiatedContentResult<webModel.PaymentMethod[]>;
-			var paymentMethod = paymentMethodResults.Content.FirstOrDefault();
+            //Select payment method
 
-			//Enter billing address
-			var billingAddress = new webModel.Address
-			{
-				Type = AddressType.Billing,
-				City = "london",
-				Phone = "+68787687",
-				PostalCode = "2222",
-				CountryCode = "ENG",
-				CountryName = "England",
-				Email = "user@mail.com",
-				FirstName = "first name",
-				LastName = "last name",
-				Line1 = "line 1",
-				Organization = "org1"
-			};
-		
-			var payment = new webModel.Payment
-			{
-				PaymentGatewayCode = paymentMethod.GatewayCode,
-				BillingAddress = billingAddress,
-				Currency = cart.Currency,
-				Amount = cart.Total
-			};
-			cart.Payments.Add(payment);
-			//Save changes
-			controller.Update(cart);
-			result = controller.GetCurrentCart("testSite", null) as OkNegotiatedContentResult<webModel.ShoppingCart>;
-			cart = result.Content;
+            var paymentMethodResults = controller.GetPaymentMethods(cart.Id) as OkNegotiatedContentResult<webModel.PaymentMethod[]>;
+            var paymentMethod = paymentMethodResults.Content.FirstOrDefault();
 
-			//Next it call customer order method create order form cart
-		}
+            //Enter billing address
+            var billingAddress = new webModel.Address
+            {
+                Type = AddressType.Billing,
+                City = "london",
+                Phone = "+68787687",
+                PostalCode = "2222",
+                CountryCode = "ENG",
+                CountryName = "England",
+                Email = "user@mail.com",
+                FirstName = "first name",
+                LastName = "last name",
+                Line1 = "line 1",
+                Organization = "org1"
+            };
 
-		//[TestMethod]
-		//public void SearchCarts()
-		//{
-		//	var controller = GetCartController();
-		//	var result = controller.SearchCarts(new webModel.SearchCriteria { SiteId = "test" }) as OkNegotiatedContentResult<webModel.SearchResult>;
-		//	Assert.IsNotNull(result.Content);
-		//}
+            var payment = new webModel.Payment
+            {
+                PaymentGatewayCode = paymentMethod.GatewayCode,
+                BillingAddress = billingAddress,
+                Currency = cart.Currency,
+                Amount = cart.Total
+            };
+            cart.Payments.Add(payment);
+            //Save changes
+            controller.Update(cart);
+            result = controller.GetCurrentCart("testSite", null) as OkNegotiatedContentResult<webModel.ShoppingCart>;
+            cart = result.Content;
 
-		private static CartModuleController GetCartController()
-		{
-			Func<ICartRepository> repositoryFactory = () =>
-			{
-				return new CartRepositoryImpl("VirtoCommerce", new AuditableInterceptor(),
-															   new EntityPrimaryKeyGeneratorInterceptor());
-			};
-			//Business logic for core model
-		
+            //Next it call customer order method create order form cart
+        }
 
-			var cartService = new ShoppingCartServiceImpl(repositoryFactory, new Mock<IEventPublisher<CartChangeEvent>>().Object, new Mock<IItemService>().Object, new Mock<IDynamicPropertyService>().Object);
-			var searchService = new ShoppingCartSearchServiceImpl(repositoryFactory);
-			//var memoryPaymentGatewayManager = new InMemoryPaymentGatewayManagerImpl();
+        //[TestMethod]
+        //public void SearchCarts()
+        //{
+        //	var controller = GetCartController();
+        //	var result = controller.SearchCarts(new webModel.SearchCriteria { SiteId = "test" }) as OkNegotiatedContentResult<webModel.SearchResult>;
+        //	Assert.IsNotNull(result.Content);
+        //}
+
+        private static CartModuleController GetCartController()
+        {
+            Func<ICartRepository> repositoryFactory = () =>
+            {
+                return new CartRepositoryImpl("VirtoCommerce", new AuditableInterceptor(null), new EntityPrimaryKeyGeneratorInterceptor());
+            };
+            //Business logic for core model
 
 
-			var controller = new CartModuleController(cartService, searchService, new Mock<IStoreService>().Object);
-			return controller;
-		}
-	}
+            var cartService = new ShoppingCartServiceImpl(repositoryFactory, new Mock<IEventPublisher<CartChangeEvent>>().Object, new Mock<IItemService>().Object, new Mock<IDynamicPropertyService>().Object);
+            var searchService = new ShoppingCartSearchServiceImpl(repositoryFactory);
+            //var memoryPaymentGatewayManager = new InMemoryPaymentGatewayManagerImpl();
+
+
+            var controller = new CartModuleController(cartService, searchService, new Mock<IStoreService>().Object);
+            return controller;
+        }
+    }
 }

@@ -16,10 +16,6 @@ namespace VirtoCommerce.StoreModule.Data.Repositories
 		{
 		}
 
-		public StoreRepositoryImpl(string nameOrConnectionString)
-			: this(nameOrConnectionString, null)
-		{
-		}
 		public StoreRepositoryImpl(string nameOrConnectionString, params IInterceptor[] interceptors)
 			: base(nameOrConnectionString, null, interceptors)
 		{
@@ -61,7 +57,7 @@ namespace VirtoCommerce.StoreModule.Data.Repositories
 
             modelBuilder.Entity<StoreTrustedGroup>().HasRequired(x => x.Store)
                                    .WithMany(x => x.TrustedGroups)
-                                   .HasForeignKey(x => x.StoreId).WillCascadeOnDelete(true);
+								   .HasForeignKey(x => x.StoreId).WillCascadeOnDelete(true);
             #endregion
 
             #region StorePaymentMethod
@@ -69,9 +65,9 @@ namespace VirtoCommerce.StoreModule.Data.Repositories
                 .Property(x => x.Id);
             modelBuilder.Entity<StorePaymentMethod>().ToTable("StorePaymentMethod");
 
-            modelBuilder.Entity<StorePaymentMethod>().HasRequired(x => x.Store)
-                                   .WithMany(x => x.PaymentMethods)
-                                   .HasForeignKey(x => x.StoreId).WillCascadeOnDelete(true);
+			modelBuilder.Entity<StorePaymentMethod>().HasRequired(x => x.Store)
+							   .WithMany(x => x.PaymentMethods)
+							   .HasForeignKey(x => x.StoreId).WillCascadeOnDelete(true);
             #endregion
 
             #region StoreShippingMethod
@@ -90,10 +86,10 @@ namespace VirtoCommerce.StoreModule.Data.Repositories
             modelBuilder.Entity<StoreTaxProvider>().ToTable("StoreTaxProvider");
 
             modelBuilder.Entity<StoreTaxProvider>().HasRequired(x => x.Store)
-                                   .WithMany(x => x.TaxProviders)
-                                   .HasForeignKey(x => x.StoreId).WillCascadeOnDelete(true);
+                                 .WithMany(x => x.TaxProviders)
+                                 .HasForeignKey(x => x.StoreId).WillCascadeOnDelete(true);
             #endregion
-           
+
 
             base.OnModelCreating(modelBuilder);
 		}

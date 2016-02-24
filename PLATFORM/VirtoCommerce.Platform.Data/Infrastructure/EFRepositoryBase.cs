@@ -20,7 +20,7 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
     {
         protected const string DiscriminatorFieldName = "Discriminator";
         private IUnitOfWork _unitOfWork;
-        private IInterceptor[] _interceptors;
+        private readonly IInterceptor[] _interceptors;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EFRepositoryBase"/> class.
@@ -42,7 +42,7 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
             _unitOfWork = unitOfWork;
             _interceptors = interceptors;
 
-			Configuration.LazyLoadingEnabled = false;
+            Configuration.LazyLoadingEnabled = false;
 
         }
 
@@ -58,7 +58,7 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
             _unitOfWork = unitOfWork;
             _interceptors = interceptors;
 
-			Configuration.LazyLoadingEnabled = false;
+            Configuration.LazyLoadingEnabled = false;
         }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
 
-			modelBuilder.Properties().Where(x => x.Name == "ModifiedBy" || x.Name == "CreatedBy").Configure(x => x.HasMaxLength(64));
+            modelBuilder.Properties().Where(x => x.Name == "ModifiedBy" || x.Name == "CreatedBy").Configure(x => x.HasMaxLength(64));
             base.OnModelCreating(modelBuilder);
         }
 
@@ -150,11 +150,6 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
             {
                 if (_unitOfWork == null)
                 {
-                    if (_interceptors == null || _interceptors.Length == 0)
-                    {
-                        _interceptors = new IInterceptor[] { new AuditableInterceptor() };
-                    }
-
                     _unitOfWork = new BasicUnitOfWork(this, _interceptors);
                 }
 

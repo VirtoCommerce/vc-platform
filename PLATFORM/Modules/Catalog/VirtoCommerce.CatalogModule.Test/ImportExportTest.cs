@@ -1,25 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
-using CsvHelper;
 using System.Linq;
-using CsvHelper.Configuration;
+using CsvHelper;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using coreModel = VirtoCommerce.Domain.Catalog.Model;
-using webModel = VirtoCommerce.CatalogModule.Web.Model;
-using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.CatalogModule.Data.Repositories;
+using VirtoCommerce.CatalogModule.Data.Services;
+using VirtoCommerce.CatalogModule.Web.ExportImport;
+using VirtoCommerce.CoreModule.Data.Repositories;
 using VirtoCommerce.Domain.Catalog.Model;
 using VirtoCommerce.Domain.Catalog.Services;
-using VirtoCommerce.CatalogModule.Data.Services;
-using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
-using VirtoCommerce.CatalogModule.Data.Repositories;
 using VirtoCommerce.Domain.Commerce.Services;
-using Omu.ValueInjecter;
-using VirtoCommerce.CoreModule.Data.Repositories;
-using System.Dynamic;
-using VirtoCommerce.CatalogModule.Web.ExportImport;
-using VirtoCommerce.CatalogModule.Web.Model;
+using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
+using coreModel = VirtoCommerce.Domain.Catalog.Model;
 namespace VirtoCommerce.CatalogModule.Test
 {
     [TestClass]
@@ -115,11 +107,11 @@ namespace VirtoCommerce.CatalogModule.Test
 
         private ICommerceService GetCommerceService()
         {
-            return new CommerceServiceImpl(() => new CommerceRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor()));
+            return new CommerceServiceImpl(() => new CommerceRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor(null)));
         }
         private ICatalogRepository GetRepository()
         {
-            var retVal = new CatalogRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor());
+            var retVal = new CatalogRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor(null));
             return retVal;
         }
     }

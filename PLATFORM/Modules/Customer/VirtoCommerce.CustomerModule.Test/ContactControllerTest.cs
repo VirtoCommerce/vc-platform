@@ -6,12 +6,12 @@ using VirtoCommerce.CustomerModule.Data.Repositories;
 using VirtoCommerce.CustomerModule.Data.Services;
 using VirtoCommerce.CustomerModule.Web.Controllers.Api;
 using VirtoCommerce.CustomerModule.Web.Model;
+using VirtoCommerce.Domain.Commerce.Model;
 using VirtoCommerce.Platform.Data.DynamicProperties;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Platform.Data.Repositories;
-using webModel = VirtoCommerce.CustomerModule.Web.Model;
 using coreModel = VirtoCommerce.Domain.Customer.Model;
-using VirtoCommerce.Domain.Commerce.Model;
+using webModel = VirtoCommerce.CustomerModule.Web.Model;
 
 namespace VirtoCommerce.CustomerModule.Test
 {
@@ -142,8 +142,8 @@ namespace VirtoCommerce.CustomerModule.Test
 
         private static CustomerModuleController GetContactController()
         {
-            Func<IPlatformRepository> platformRepositoryFactory = () => new PlatformRepository("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor());
-            Func<ICustomerRepository> customerRepositoryFactory = () => new CustomerRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor());
+            Func<IPlatformRepository> platformRepositoryFactory = () => new PlatformRepository("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor(null));
+            Func<ICustomerRepository> customerRepositoryFactory = () => new CustomerRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor(null));
 
             var dynamicPropertyService = new DynamicPropertyService(platformRepositoryFactory);
             var contactService = new ContactServiceImpl(customerRepositoryFactory, dynamicPropertyService, null);
