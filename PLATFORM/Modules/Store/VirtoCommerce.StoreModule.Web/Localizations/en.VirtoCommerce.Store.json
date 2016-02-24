@@ -115,7 +115,7 @@
           "additional-languages": "Additional languages",
           "default-currency": "Default currency",
           "additional-currencies": "Additional currencies",
-          "trusted-groups": "Shared account groups"
+          "linked-stores": "Linked stores. (Customers can use theirs credentials here.)"
         },
         "placeholders": {
           "code": "Enter code",
@@ -126,7 +126,7 @@
           "additional-languages": "Select...",
           "default-currency": "Select...",
           "additional-currencies": "Select...",
-          "trusted-groups": "This store doesn't share accounts"
+          "linked-stores": "This store has no linked stores"
         }
       },
       "new-store-wizard": {
