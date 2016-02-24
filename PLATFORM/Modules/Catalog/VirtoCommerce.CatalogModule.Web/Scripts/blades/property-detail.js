@@ -1,6 +1,7 @@
 ﻿angular.module('virtoCommerce.catalogModule')
 .controller('virtoCommerce.catalogModule.propertyDetailController', ['$scope', 'virtoCommerce.catalogModule.properties', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', function ($scope, properties, bladeNavigationService, dialogService) {
     var blade = $scope.blade;
+    blade.updatePermission = 'catalog:update';
     blade.origEntity = {};
 
     $scope.currentChild = undefined;
@@ -80,7 +81,7 @@
     };
 
     function isDirty() {
-        return !angular.equals(blade.currentEntity, blade.origEntity);
+        return !angular.equals(blade.currentEntity, blade.origEntity) && blade.hasUpdatePermission();
     }
 
     function canSave() {

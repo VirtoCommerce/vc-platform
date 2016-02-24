@@ -40,7 +40,7 @@
         }
 
         function isDirty() {
-            return blade.hasUpdatePermission() && !angular.equals(blade.currentEntity, blade.origEntity);
+            return !angular.equals(blade.currentEntity, blade.origEntity) && blade.hasUpdatePermission();
         }
 
         function canSave() {
@@ -94,7 +94,7 @@
                 icon: 'fa fa-save',
                 executeMethod: $scope.saveChanges,
                 canExecuteMethod: canSave,
-                permission: 'store:update'
+                permission: blade.updatePermission
             },
             {
                 name: "platform.commands.reset",
@@ -103,7 +103,16 @@
                     angular.copy(blade.origEntity, blade.currentEntity);
                 },
                 canExecuteMethod: isDirty,
-                permission: 'store:update'
+                permission: blade.updatePermission
+            },
+            {
+                name: "platform.commands.preview", icon: 'fa fa-external-link',
+                executeMethod: function () {
+                    window.open(blade.currentEntity.url, '_blank');
+                },
+                canExecuteMethod: function () {
+                    return blade.currentEntity && blade.currentEntity.url;
+                }
             },
             {
                 name: "platform.commands.delete", icon: 'fa fa-trash-o',

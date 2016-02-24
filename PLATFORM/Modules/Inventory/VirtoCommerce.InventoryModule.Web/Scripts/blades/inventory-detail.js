@@ -1,6 +1,7 @@
 ﻿angular.module('virtoCommerce.inventoryModule')
 .controller('virtoCommerce.inventoryModule.inventoryDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.inventoryModule.inventories', function ($scope, bladeNavigationService, inventories) {
     var blade = $scope.blade;
+    blade.updatePermission = 'inventory:update';
 
     blade.refresh = function () {
         blade.isLoading = true;
@@ -26,7 +27,7 @@
     }
 
     function isDirty() {
-        return !angular.equals(blade.currentEntity, blade.origEntity);
+        return !angular.equals(blade.currentEntity, blade.origEntity) && blade.hasUpdatePermission();
     }
 
     function canSave() {
@@ -53,7 +54,7 @@
             name: "platform.commands.save", icon: 'fa fa-save',
             executeMethod: $scope.saveChanges,
             canExecuteMethod: canSave,
-            permission: 'customer:update'
+            permission: blade.updatePermission
         },
         {
             name: "platform.commands.reset", icon: 'fa fa-undo',
@@ -61,7 +62,7 @@
                 angular.copy(blade.origEntity, blade.currentEntity);
             },
             canExecuteMethod: isDirty,
-            permission: 'customer:update'
+            permission: blade.updatePermission
         }
     ];
     // datepicker

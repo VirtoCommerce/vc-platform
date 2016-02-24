@@ -1,23 +1,26 @@
 ﻿angular.module('platformWebApp')
 .controller('platformWebApp.accountApiController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.accounts', function ($scope, bladeNavigationService, dialogService, accounts) {
+    var blade = $scope.blade;
+    blade.updatePermission = 'platform:security:update';
+    
     $scope.apiAccountTypes = ['Hmac', 'Simple'];
 
     function refresh() {
-        if ($scope.blade.isNew) {
+        if (blade.isNew) {
             generateNewApiAccount(true);
         } else {
-            initializeBlade($scope.blade.origEntity);
+            initializeBlade(blade.origEntity);
         }
     }
 
     function initializeBlade(data) {
-        $scope.blade.currentEntity = angular.copy(data);
-        // $scope.blade.origEntity = data;
-        $scope.blade.isLoading = false;
+        blade.currentEntity = angular.copy(data);
+        // blade.origEntity = data;
+        blade.isLoading = false;
     };
 
     function isDirty() {
-        return !angular.equals($scope.blade.currentEntity, $scope.blade.origEntity);
+        return !angular.equals(blade.currentEntity, blade.origEntity) && blade.hasUpdatePermission();
     };
 
     $scope.cancelChanges = function () {
@@ -25,11 +28,11 @@
     }
 
     $scope.saveChanges = function () {
-        if ($scope.blade.confirmChangesFn) {
-            $scope.blade.confirmChangesFn($scope.blade.currentEntity);
+        if (blade.confirmChangesFn) {
+            blade.confirmChangesFn(blade.currentEntity);
         }
 
-        angular.copy($scope.blade.currentEntity, $scope.blade.origEntity);
+        angular.copy(blade.currentEntity, blade.origEntity);
         $scope.bladeClose();
     };
 
@@ -40,8 +43,8 @@
             message: "platform.dialogs.api-key-delete.message",
             callback: function (remove) {
                 if (remove) {
-                    if ($scope.blade.deleteFn) {
-                        $scope.blade.deleteFn($scope.blade.origEntity);
+                    if (blade.deleteFn) {
+                        blade.deleteFn(blade.origEntity);
                     }
                     $scope.bladeClose();
                 }
@@ -50,9 +53,9 @@
         dialogService.showConfirmationDialog(dialog);
     }
 
-    $scope.blade.headIcon = 'fa-key';
+    blade.headIcon = 'fa-key';
 
-    $scope.blade.toolbarCommands = [
+    blade.toolbarCommands = [
         {
             name: "platform.commands.generate", icon: 'fa fa-refresh',
             executeMethod: function () {
@@ -61,24 +64,24 @@
             canExecuteMethod: function () {
                 return true;
             },
-            permission: 'platform:security:update'
+            permission: blade.updatePermission
         },
         {
             name: "platform.commands.reset",
             icon: 'fa fa-undo',
             executeMethod: function () {
-                angular.copy($scope.blade.origEntity, $scope.blade.currentEntity);
+                angular.copy(blade.origEntity, blade.currentEntity);
             },
             canExecuteMethod: isDirty,
-            permission: 'platform:security:update'
+            permission: blade.updatePermission
         },
         {
             name: "platform.commands.delete", icon: 'fa fa-trash-o',
             executeMethod: deleteEntry,
             canExecuteMethod: function () {
-                return !$scope.blade.isNew;
+                return !blade.isNew;
             },
-            permission: 'platform:security:update'
+            permission: blade.updatePermission
         }
     ];
 
@@ -87,19 +90,19 @@
         if (isInitialRequest) {
             parameters = { "type": $scope.apiAccountTypes[0] };
         } else {
-            $scope.blade.isLoading = true;
-            parameters = { "type": $scope.blade.currentEntity.apiAccountType };
+            blade.isLoading = true;
+            parameters = { "type": blade.currentEntity.apiAccountType };
         }
 
         accounts.generateNewApiAccount(parameters, function (apiAccount) {
             if (isInitialRequest) {
                 apiAccount.isActive = true;
-                $scope.blade.origEntity = apiAccount;
-                initializeBlade($scope.blade.origEntity);
+                blade.origEntity = apiAccount;
+                initializeBlade(blade.origEntity);
             } else {
-                $scope.blade.currentEntity.secretKey = undefined;
-                angular.extend($scope.blade.currentEntity, apiAccount);
-                $scope.blade.isLoading = false;
+                blade.currentEntity.secretKey = undefined;
+                angular.extend(blade.currentEntity, apiAccount);
+                blade.isLoading = false;
             }
         }, function (error) {
             bladeNavigationService.setError('Error ' + error.status, $scope.blade);

@@ -1,6 +1,7 @@
 ﻿angular.module('virtoCommerce.customerModule')
 .controller('virtoCommerce.customerModule.memberDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.customerModule.contacts', 'virtoCommerce.customerModule.organizations', 'platformWebApp.dynamicProperties.api', function ($scope, bladeNavigationService, contacts, organizations, dynamicPropertiesApi) {
     var blade = $scope.blade;
+    blade.updatePermission = 'customer:update';
     blade.currentResource = blade.isOrganization ? organizations : contacts;
 
     blade.refresh = function (parentRefresh) {
@@ -53,7 +54,7 @@
     }
 
     function isDirty() {
-        return !angular.equals(blade.currentEntity, blade.origEntity);
+        return !angular.equals(blade.currentEntity, blade.origEntity) && blade.hasUpdatePermission();
     }
 
     function canSave() {
@@ -96,7 +97,7 @@
             icon: 'fa fa-save',
             executeMethod: $scope.saveChanges,
             canExecuteMethod: canSave,
-            permission: 'customer:update'
+            permission: blade.updatePermission
         },
         {
             name: "platform.commands.reset",
@@ -105,7 +106,7 @@
                 angular.copy(blade.origEntity, blade.currentEntity);
             },
             canExecuteMethod: isDirty,
-            permission: 'customer:update'
+            permission: blade.updatePermission
         }
     ];
 

@@ -5,6 +5,7 @@
     }
 
     var blade = $scope.blade;
+    blade.updatePermission = 'marketing:update';
     blade.originalEntity = angular.copy(blade.entity);
 
     blade.initialize = function () {
@@ -18,7 +19,7 @@
 				    canExecuteMethod: function () {
 				        return !angular.equals(blade.originalEntity, blade.entity) && !$scope.formScope.$invalid;
 				    },
-				    permission: 'marketing:update'
+				    permission: blade.updatePermission
 				},
 				{
 				    name: "platform.commands.reset", icon: 'fa fa-undo',
@@ -28,7 +29,7 @@
 				    canExecuteMethod: function () {
 				        return !angular.equals(blade.originalEntity, blade.entity);
 				    },
-				    permission: 'marketing:update'
+				    permission: blade.updatePermission
 				},
                 {
                     name: "platform.commands.delete", icon: 'fa fa-trash',
@@ -50,7 +51,7 @@
                     canExecuteMethod: function () {
                         return true;
                     },
-                    permission: 'marketing:update'
+                    permission: blade.updatePermission
                 }
             ];
         }

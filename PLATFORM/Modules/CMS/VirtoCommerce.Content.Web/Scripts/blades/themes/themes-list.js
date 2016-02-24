@@ -1,6 +1,7 @@
 ﻿angular.module('virtoCommerce.contentModule')
 .controller('virtoCommerce.contentModule.themesListController', ['$scope', 'virtoCommerce.contentModule.themes', 'virtoCommerce.contentModule.stores', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', function ($scope, themes, themesStores, bladeNavigationService, dialogService) {
     var blade = $scope.blade;
+    blade.updatePermission = 'content:update';
     blade.defaultThemeName = undefined;
 
     blade.initialize = function () {
@@ -48,7 +49,7 @@
 		    canExecuteMethod: function () {
 		        return !angular.isUndefined(blade.choosenTheme) && !blade.isThemeDefault(blade.choosenTheme);
 		    },
-		    permission: 'content:update'
+		    permission: blade.updatePermission
 		},
 		{
 		    name: "content.commands.delete-theme", icon: 'fa fa-trash-o',
@@ -77,7 +78,7 @@
 		    canExecuteMethod: function () {
 		        return !angular.isUndefined(blade.choosenTheme);
 		    },
-		    permission: 'content:update'
+		    permission: blade.updatePermission
 		}
     ];
 

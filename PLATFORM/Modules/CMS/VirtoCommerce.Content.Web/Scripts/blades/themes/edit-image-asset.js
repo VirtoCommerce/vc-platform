@@ -143,7 +143,7 @@
         }
     }
 
-    if (!$scope.uploader) {
+    if (!$scope.uploader && blade.hasUpdatePermission()) {
         // create the uploader
         var uploader = $scope.uploader = new FileUploader({
             scope: $scope,
@@ -176,4 +176,3 @@
     blade.initializeBlade();
 
 }]);
-

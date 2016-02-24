@@ -5,12 +5,13 @@
     }
 
     var blade = $scope.blade;
+    blade.updatePermission = 'marketing:update';
 
     blade.initialize = function () {
-        $scope.blade.toolbarCommands = [];
+        blade.toolbarCommands = [];
 
         if (!blade.isNew) {
-            $scope.blade.toolbarCommands = [
+            blade.toolbarCommands = [
 				{
 				    name: "platform.commands.save", icon: 'fa fa-save',
 				    executeMethod: function () {
@@ -19,7 +20,7 @@
 				    canExecuteMethod: function () {
 				        return !angular.equals(blade.originalEntity, blade.entity) && !$scope.formScope.$invalid;
 				    },
-				    permission: 'marketing:update'
+				    permission: blade.updatePermission
 				},
                 {
                     name: "platform.commands.reset", icon: 'fa fa-undo',
@@ -29,7 +30,7 @@
                     canExecuteMethod: function () {
                         return !angular.equals(blade.originalEntity, blade.entity);
                     },
-                    permission: 'marketing:update'
+                    permission: blade.updatePermission
                 },
 				{
 				    name: "platform.commands.delete", icon: 'fa fa-trash',
@@ -50,12 +51,12 @@
 				    canExecuteMethod: function () {
 				        return true;
 				    },
-				    permission: 'marketing:update'
+				    permission: blade.updatePermission
 				}
             ];
         }
 
-        $scope.blade.toolbarCommands.push(
+        blade.toolbarCommands.push(
             {
                 name: "marketing.commands.manage-type-properties", icon: 'fa fa-edit',
                 executeMethod: function () {
@@ -124,7 +125,7 @@
         dictionaryItemsApi.query({ id: property.objectType, propertyId: property.id }, callback);
     }
 
-    $scope.blade.headIcon = 'fa-inbox';
+    blade.headIcon = 'fa-inbox';
 
     blade.initialize();
 }]);

@@ -1,5 +1,5 @@
 ﻿<a class="list-link info" href="">
-    <i class="list-ico fa fa-download"></i>
+    <i class="list-ico fa" ng-class="menuItem.notify.notifyType === 'PlatformExportPushNotification' ? 'fa-upload' : 'fa-download'"></i>
     <span class="list-t" ng-bind="menuItem.notify.title"></span>
     <span class="list-descr" ng-bind="menuItem.notify.description"></span>
     <span class="list-date" am-time-ago="menuItem.notify.created"></span>

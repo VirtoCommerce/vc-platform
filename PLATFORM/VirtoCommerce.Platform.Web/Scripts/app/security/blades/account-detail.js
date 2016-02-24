@@ -24,7 +24,7 @@
     };
 
     function isDirty() {
-        return !angular.equals(blade.currentEntity, blade.origEntity) && blade.hasUpdatePermission();;
+        return !angular.equals(blade.currentEntity, blade.origEntity) && blade.hasUpdatePermission();
     };
 
     $scope.openAccountTypeSettingManagement = function () {

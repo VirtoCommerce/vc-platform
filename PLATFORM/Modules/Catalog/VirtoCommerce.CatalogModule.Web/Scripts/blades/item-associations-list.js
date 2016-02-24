@@ -2,6 +2,7 @@
 .controller('virtoCommerce.catalogModule.itemAssociationsListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'virtoCommerce.catalogModule.items', 'filterFilter', 'uiGridConstants', 'platformWebApp.uiGridHelper', function ($scope, bladeNavigationService, dialogService, items, filterFilter, uiGridConstants, uiGridHelper) {
     $scope.uiGridConstants = uiGridConstants;
     var blade = $scope.blade;
+    blade.updatePermission = 'catalog:update';
 
     blade.refresh = function () {
         blade.isLoading = true;
@@ -76,7 +77,7 @@
             canExecuteMethod: function () {
                 return true;
             },
-            permission: 'catalog:update'
+            permission: blade.updatePermission
         },
         {
             name: "platform.commands.delete", icon: 'fa fa-trash-o',
@@ -86,7 +87,7 @@
             canExecuteMethod: function () {
                 return $scope.gridApi && _.any($scope.gridApi.selection.getSelectedRows());
             },
-            permission: 'catalog:update'
+            permission: blade.updatePermission
         }
     ];
 

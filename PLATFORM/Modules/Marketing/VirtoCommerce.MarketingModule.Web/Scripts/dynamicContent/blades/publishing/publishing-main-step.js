@@ -5,6 +5,7 @@
     }
 
     var blade = $scope.blade;
+    blade.updatePermission = 'marketing:update';
 
     blade.initializeBlade = function () {
         if (!blade.isNew) {
@@ -20,7 +21,7 @@
 				        canExecuteMethod: function () {
 				            return blade.checkDifferense();
 				        },
-				        permission: 'marketing:update'
+				        permission: blade.updatePermission
 				    },
 				    {
 				        name: "platform.commands.reset", icon: 'fa fa-undo',
@@ -30,7 +31,7 @@
 				        canExecuteMethod: function () {
 				            return blade.checkDifferense();
 				        },
-				        permission: 'marketing:update'
+				        permission: blade.updatePermission
 				    },
 				    {
 				        name: "platform.commands.delete", icon: 'fa fa-trash',
@@ -52,7 +53,7 @@
 				        canExecuteMethod: function () {
 				            return true;
 				        },
-				        permission: 'marketing:update'
+				        permission: blade.updatePermission
 				    }
                 ];
             },
