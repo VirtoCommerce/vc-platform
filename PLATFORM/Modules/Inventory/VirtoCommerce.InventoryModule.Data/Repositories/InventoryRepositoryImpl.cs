@@ -10,44 +10,40 @@ using VirtoCommerce.InventoryModule.Data.Model;
 
 namespace VirtoCommerce.InventoryModule.Data.Repositories
 {
-	public class InventoryRepositoryImpl : EFRepositoryBase, IInventoryRepository
-	{
-		public InventoryRepositoryImpl()
-		{
-		}
+    public class InventoryRepositoryImpl : EFRepositoryBase, IInventoryRepository
+    {
+        public InventoryRepositoryImpl()
+        {
+        }
 
-		public InventoryRepositoryImpl(string nameOrConnectionString)
-			: this(nameOrConnectionString, null)
-		{
-		}
-		public InventoryRepositoryImpl(string nameOrConnectionString, params IInterceptor[] interceptors)
-			: base(nameOrConnectionString, null, interceptors)
-		{
-			Configuration.LazyLoadingEnabled = false;
-		}
+        public InventoryRepositoryImpl(string nameOrConnectionString, params IInterceptor[] interceptors)
+            : base(nameOrConnectionString, null, interceptors)
+        {
+            Configuration.LazyLoadingEnabled = false;
+        }
 
 
-		protected override void OnModelCreating(DbModelBuilder modelBuilder)
-		{
-			MapEntity<Inventory>(modelBuilder, toTable: "Inventory");
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            MapEntity<Inventory>(modelBuilder, toTable: "Inventory");
 
-			base.OnModelCreating(modelBuilder);
-		}
+            base.OnModelCreating(modelBuilder);
+        }
 
 
-		#region IFoundationInventoryRepository Members
+        #region IFoundationInventoryRepository Members
 
-		public IQueryable<Inventory> Inventories
-		{
-			get { return GetAsQueryable<Inventory>(); }
-		}
+        public IQueryable<Inventory> Inventories
+        {
+            get { return GetAsQueryable<Inventory>(); }
+        }
 
-		public IEnumerable<Inventory> GetProductsInventories(string[] productIds)
-		{
-			return Inventories.Where(x => productIds.Contains(x.Sku)).ToArray();
-		}
+        public IEnumerable<Inventory> GetProductsInventories(string[] productIds)
+        {
+            return Inventories.Where(x => productIds.Contains(x.Sku)).ToArray();
+        }
 
-		#endregion
-	}
+        #endregion
+    }
 
 }

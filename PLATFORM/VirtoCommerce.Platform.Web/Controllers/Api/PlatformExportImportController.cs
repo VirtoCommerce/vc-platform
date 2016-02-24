@@ -33,15 +33,17 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly IBlobStorageProvider _blobStorageProvider;
         private readonly IBlobUrlResolver _blobUrlResolver;
         private readonly ISettingsManager _settingsManager;
+        private readonly IUserNameResolver _userNameResolver;
         private static readonly object _lockObject = new object();
 
-        public PlatformExportImportController(IPlatformExportImportManager platformExportManager, IPushNotificationManager pushNotifier, IBlobStorageProvider blobStorageProvider, IBlobUrlResolver blobUrlResolver, ISettingsManager settingManager)
+        public PlatformExportImportController(IPlatformExportImportManager platformExportManager, IPushNotificationManager pushNotifier, IBlobStorageProvider blobStorageProvider, IBlobUrlResolver blobUrlResolver, ISettingsManager settingManager, IUserNameResolver userNameResolver)
         {
             _platformExportManager = platformExportManager;
             _pushNotifier = pushNotifier;
             _blobStorageProvider = blobStorageProvider;
             _blobUrlResolver = blobUrlResolver;
             _settingsManager = settingManager;
+            _userNameResolver = userNameResolver;
         }
 
         [HttpGet]
@@ -136,7 +138,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [ResponseType(typeof(PlatformExportManifest))]
         public IHttpActionResult GetNewExportManifest()
         {
-            return Ok(_platformExportManager.GetNewExportManifest());
+            return Ok(_platformExportManager.GetNewExportManifest(_userNameResolver.GetCurrentUserName()));
         }
 
         [HttpGet]
@@ -158,7 +160,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [CheckPermission(Permission = PredefinedPermissions.PlatformExport)]
         public IHttpActionResult ProcessExport(PlatformImportExportRequest exportRequest)
         {
-            var notification = new PlatformExportPushNotification(CurrentPrincipal.GetCurrentUserName())
+            var notification = new PlatformExportPushNotification(_userNameResolver.GetCurrentUserName())
             {
                 Title = "Platform export task",
                 Description = "starting export...."
@@ -176,7 +178,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [CheckPermission(Permission = PredefinedPermissions.PlatformImport)]
         public IHttpActionResult ProcessImport(PlatformImportExportRequest importRequest)
         {
-            var notification = new PlatformImportPushNotification(CurrentPrincipal.GetCurrentUserName())
+            var notification = new PlatformImportPushNotification(_userNameResolver.GetCurrentUserName())
             {
                 Title = "Platform import task",
                 Description = "starting import...."

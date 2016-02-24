@@ -19,10 +19,6 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
         {
         }
 
-        public CatalogRepositoryImpl(string nameOrConnectionString)
-            : this(nameOrConnectionString, null)
-        {
-        }
         public CatalogRepositoryImpl(string nameOrConnectionString, params IInterceptor[] interceptors)
             : base(nameOrConnectionString, null, interceptors)
         {
