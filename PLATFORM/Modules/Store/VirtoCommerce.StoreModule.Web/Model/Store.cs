@@ -83,7 +83,7 @@ namespace VirtoCommerce.StoreModule.Web.Model
         public ICollection<string> Currencies { get; set; }
 
         /// <summary>
-        /// All store trusted groups (group of stores that shared the user logins)
+        /// All linked stores (their accounts can be reused here)
         /// </summary>
         public ICollection<string> TrustedGroups { get; set; }
 

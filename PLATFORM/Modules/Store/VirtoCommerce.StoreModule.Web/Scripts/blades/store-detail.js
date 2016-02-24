@@ -124,23 +124,11 @@
             };
             bladeNavigationService.showBlade(newBlade, blade);
         };
-
-        $scope.openTrustedGroupsDictionarySettingManagement = function () {
-            var newBlade = {
-                id: 'settingDetailChild',
-                isApiSave: true,
-                currentEntityId: 'Stores.TrustedGroups',
-                parentRefresh: function (data) { $scope.trustedGroups = data; },
-                controller: 'platformWebApp.settingDictionaryController',
-                template: '$(Platform)/Scripts/app/settings/blades/setting-dictionary.tpl.html'
-            };
-            bladeNavigationService.showBlade(newBlade, blade);
-        };
-
+        
         blade.refresh(false);
         $scope.catalogs = catalogs.getCatalogs();
         $scope.storeStates = settings.getValues({ id: 'Stores.States' });
         $scope.languages = settings.getValues({ id: 'VirtoCommerce.Core.General.Languages' });
-        $scope.trustedGroups = settings.getValues({ id: 'Stores.TrustedGroups' });
+        $scope.allStores = stores.query();
         $scope.currencyUtils = currencyUtils;
     }]);
