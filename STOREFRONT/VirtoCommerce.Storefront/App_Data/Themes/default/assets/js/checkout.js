@@ -257,8 +257,6 @@ storefrontApp.controller('checkoutController', ['$rootScope', '$scope', '$window
                 $scope.checkout.shippingAddressIsFilled = addressIsValid($scope.checkout.shipment.deliveryAddress);
                 $scope.checkout.shippingMethodIsFilled = !_.isEmpty($scope.checkout.shipment.shipmentMethodCode);
             }
-            //getCheckoutSteps(cart);
-            //handleCheckoutRedirects(cart);
         });
     }
 
@@ -272,37 +270,6 @@ storefrontApp.controller('checkoutController', ['$rootScope', '$scope', '$window
             });
             $scope.checkout.customerAddresses = cart.customer.addresses;
         }
-    }
-
-    function getCheckoutSteps(cart) {
-        var steps = [];
-        if (cart.hasPhysicalProducts) {
-            steps.push({
-                code: 'shippingAddress',
-                weight: 1,
-                innerUrl: shippingAddressStepInnerUrl,
-                current: $scope.currentPath == shippingAddressStepInnerUrl,
-                enabled: true,
-                completed: $scope.checkout.shippingAddressIsFilled
-            });
-            steps.push({
-                code: 'shippingMethod',
-                weight: 2,
-                innerUrl: shippingMethodStepInnerUrl,
-                current: $scope.currentPath == shippingMethodStepInnerUrl,
-                enabled: $scope.checkout.shippingAddressIsFilled,
-                completed: $scope.checkout.shippingAddressIsFilled && $scope.checkout.shippingMethodIsFilled
-            });
-        }
-        steps.push({
-            code: 'paymentMethod',
-            weight: 3,
-            innerUrl: paymentMethodStepInnerUrl,
-            current: $scope.currentPath == paymentMethodStepInnerUrl,
-            enabled: !cart.hasPhysicalProducts || $scope.checkout.shippingAddressIsFilled && $scope.checkout.shippingMethodIsFilled,
-            completed: false
-        });
-        $scope.checkout.steps = _.sortBy(steps, 'Weight');
     }
 
     function handleCheckoutRedirects(cart) {

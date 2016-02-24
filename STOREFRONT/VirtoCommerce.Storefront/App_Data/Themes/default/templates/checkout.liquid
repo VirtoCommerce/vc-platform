@@ -203,7 +203,7 @@
                     <span class="btn__content">Continue to payment method</span>
                     <i class="btn__spinner icon icon--button-spinner"></i>
                 </button>
-                <a class="step__footer__previous-link" href="" ng-click="goToCheckoutStep('shipping-address')">
+                <a class="step__footer__previous-link" href="" ng-click="innerRedirect('shipping-address')">
                     <svg class="previous-link__icon icon--chevron icon" height="11.3" width="6.7" viewBox="0 0 6.7 11.3" xmlns="http://www.w3.org/2000/svg">
                         <path d="M 6.7 1.1 l -1 -1.1 l -4.6 4.6 l -1.1 1.1 l 1.1 1 l 4.6 4.6 l 1 -1 l -4.6 -4.6 Z"></path>
                     </svg>
@@ -458,7 +458,7 @@
                     <span class="btn__content">Create order</span>
                     <i class="btn__spinner icon icon--button-spinner"></i>
                 </button>
-                <a class="step__footer__previous-link" href="" ng-click="goToCheckoutStep('shipping-method')" ng-if="checkout.hasPhysicalProducts">
+                <a class="step__footer__previous-link" href="" ng-click="innerRedirect('shipping-method')" ng-if="checkout.hasPhysicalProducts">
                     <svg class="previous-link__icon icon--chevron icon" height="11.3" width="6.7" viewBox="0 0 6.7 11.3" xmlns="http://www.w3.org/2000/svg">
                         <path d="M 6.7 1.1 l -1 -1.1 l -4.6 4.6 l -1.1 1.1 l 1.1 1 l 4.6 4.6 l 1 -1 l -4.6 -4.6 Z"></path>
                     </svg>

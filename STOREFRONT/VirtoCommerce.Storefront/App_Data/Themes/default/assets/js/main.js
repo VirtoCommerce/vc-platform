@@ -8,7 +8,9 @@ storefrontApp.controller('mainController', ['$scope', '$location', '$window', 'c
     //Base store url populated in layout and can be used for construction url inside controller
     $scope.baseUrl = {};
 
-    $scope.currentPath = $location.$$path.replace('/', '');
+    $scope.$watch(function () {
+        $scope.currentPath = $location.$$path.replace('/', '');
+    });
 
     $scope.$on('storefrontError', function (event, data) {
         $scope.storefrontNotification = data;
