@@ -11,6 +11,7 @@ using Microsoft.Practices.Unity;
 using Owin;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Platform.Data;
 using VirtoCommerce.Platform.Data.Security;
 using VirtoCommerce.Platform.Data.Security.Authentication.ApiKeys;
 using VirtoCommerce.Platform.Data.Security.Authentication.Hmac;
@@ -90,6 +91,8 @@ namespace VirtoCommerce.Platform.Web
                     });
                 }
             }
+
+            app.Use<CurrentUserOwinMiddleware>(container.Resolve<Func<ICurrentUser>>());
 
             var securityService = container.Resolve<ISecurityService>();
             var moduleInitializerOptions = container.Resolve<IModuleInitializerOptions>();

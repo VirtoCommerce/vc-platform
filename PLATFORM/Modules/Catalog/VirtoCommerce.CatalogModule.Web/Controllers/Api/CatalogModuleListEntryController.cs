@@ -54,6 +54,9 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                 searchCriteria.SearchInChildren = true;
                 searchCriteria.SearchInVariations = true;
             }
+            //TODO: Paging cannot work correctly because we simulate paging in two different collections categories and products.
+            //request for pages with high number may not return products because total count is sum of total count products and categories
+
             var serviceResult = _searchService.Search(searchCriteria);
 
             var retVal = new webModel.ListEntrySearchResult();
@@ -68,7 +71,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             retVal.TotalCount = categories.Count() + serviceResult.ProductsTotalCount;
             retVal.ListEntries.AddRange(categories.Skip(start).Take(count));
 
-            count -= categories.Count();
+            count -= retVal.ListEntries.Count();
 
             retVal.ListEntries.AddRange(products.Take(count));
 

@@ -1,30 +1,21 @@
-﻿using Microsoft.Owin;
+﻿using System;
 using VirtoCommerce.Platform.Core.Security;
 
 namespace VirtoCommerce.Platform.Data.Security
 {
     public class UserNameResolver : IUserNameResolver
     {
-        private readonly IOwinRequest _owinRequest;
+        private readonly Func<ICurrentUser> _currentUserFactory;
 
-        public UserNameResolver(IOwinRequest owinRequest)
+        public UserNameResolver(Func<ICurrentUser> currentUserFactory)
         {
-            _owinRequest = owinRequest;
+            _currentUserFactory = currentUserFactory;
         }
 
         public string GetCurrentUserName()
         {
-            string userName = null;
-
-            var identity = _owinRequest.User.Identity;
-            if (identity != null && identity.IsAuthenticated)
-            {
-                userName = _owinRequest.Headers.Get("VirtoCommerce-User-Name");
-                if (string.IsNullOrEmpty(userName))
-                {
-                    userName = identity.Name;
-                }
-            }
+            var currentUser = _currentUserFactory != null ? _currentUserFactory() : null;
+            var userName = currentUser != null ? currentUser.UserName : null;
 
             if (string.IsNullOrEmpty(userName))
             {
