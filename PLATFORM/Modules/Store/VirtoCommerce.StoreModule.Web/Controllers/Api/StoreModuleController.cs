@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using VirtoCommerce.Domain.Payment.Services;
@@ -183,6 +184,32 @@ namespace VirtoCommerce.StoreModule.Web.Controllers.Api
             _notificationManager.ScheduleSendNotification(notification);
 
             return StatusCode(System.Net.HttpStatusCode.NoContent);
+        }
+
+        /// <summary>
+        /// Check if given contact has login on behalf permission
+        /// </summary>
+        /// <param name="id">Contact ID</param>
+        /// <returns></returns>
+        [HttpGet]
+        [ResponseType(typeof(webModel.LoginOnBehalfInfo))]
+        [Route("{storeId}/accounts/{id}/loginonbehalf")]
+        public async Task<IHttpActionResult> GetLoginOnBehalfInfo(string storeId, string id)
+        {
+             var result = new webModel.LoginOnBehalfInfo
+            {
+                UserName = id
+            };
+
+            var user = await _securityService.FindByIdAsync(id, UserDetails.Reduced);
+
+            if (user != null)
+            {  
+                //TODO: Check what requested user has permission to login on behalf in concrete store
+                result.CanLoginOnBehalf = _securityService.UserHasAnyPermission(user.UserName, null, StorePredefinedPermissions.LoginOnBehalf);
+            }
+
+            return Ok(result);
         }
 
         protected void CheckCurrentUserHasPermissionForObjects(string permission, params coreModel.Store[] objects)

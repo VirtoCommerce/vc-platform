@@ -151,7 +151,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\Api\CustomerModuleController.cs" />
-    <Compile Include="Model\LoginOnBehalfInfo.cs" />
     <Compile Include="Security\CustomerPredefinedPermissions.cs" />
     <Compile Include="Converters\AddressConverter.cs" />
     <Compile Include="Converters\ContactConverter.cs" />

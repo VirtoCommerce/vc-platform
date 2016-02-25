@@ -192,6 +192,7 @@
     <Compile Include="Converters\SettingConverter.cs" />
     <Compile Include="ExportImport\StoreExportImport.cs" />
     <Compile Include="Model\FulfillmentCenter.cs" />
+    <Compile Include="Model\LoginOnBehalfInfo.cs" />
     <Compile Include="Model\PaymentMethod.cs" />
     <Compile Include="Model\SearchResult.cs" />
     <Compile Include="Model\SendDynamicNotificationRequest.cs" />
