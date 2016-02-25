@@ -206,12 +206,79 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// <summary>
         /// Gets or sets the default shipping address
         /// </summary>
-        public Address DefaultShippingAddress { get; set; }
+        public Address DefaultShippingAddress
+        {
+            get
+            {
+                Address shippingAddress = null;
+
+                if (HasPhysicalProducts)
+                {
+                    var shipment = Shipments.FirstOrDefault();
+                    if (shipment != null)
+                    {
+                        shippingAddress = shipment.DeliveryAddress;
+                    }
+
+                    if (shippingAddress == null && Customer != null)
+                    {
+                        shippingAddress = Customer.Addresses.FirstOrDefault();
+                    }
+
+                    if (shippingAddress == null)
+                    {
+                        shippingAddress = new Address
+                        {
+                            Type = AddressType.Shipping,
+                            Email = Customer.Email,
+                            FirstName = Customer.FirstName,
+                            LastName = Customer.LastName
+                        };
+                    }
+
+                    shippingAddress.Type = AddressType.Shipping;
+                }
+
+                return shippingAddress;
+            }
+        }
 
         /// <summary>
         /// Gets default the default billing address
         /// </summary>
-        public Address DefaultBillingAddress { get; set; }
+        public Address DefaultBillingAddress
+        {
+            get
+            {
+                Address billingAddress = null;
+
+                var payment = Payments.FirstOrDefault();
+                if (payment != null)
+                {
+                    billingAddress = payment.BillingAddress;
+                }
+
+                if (billingAddress == null && Customer != null)
+                {
+                    billingAddress = Customer.Addresses.FirstOrDefault();
+                }
+
+                if (billingAddress == null)
+                {
+                    billingAddress = new Address
+                    {
+                        Type = AddressType.Billing,
+                        Email = Customer.Email,
+                        FirstName = Customer.FirstName,
+                        LastName = Customer.LastName
+                    };
+                }
+
+                billingAddress.Type = AddressType.Billing;
+
+                return billingAddress;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the value of shopping cart line items
@@ -283,6 +350,36 @@ namespace VirtoCommerce.Storefront.Model.Cart
             get
             {
                 return Items.OrderByDescending(i => i.CreatedDate).FirstOrDefault();
+            }
+        }
+
+        public string Email
+        {
+            get
+            {
+                string email = null;
+
+                var shipment = Shipments.FirstOrDefault();
+                if (shipment != null && shipment.DeliveryAddress != null)
+                {
+                    email = shipment.DeliveryAddress.Email;
+                }
+
+                if (string.IsNullOrEmpty(email))
+                {
+                    var payment = Payments.FirstOrDefault();
+                    if (payment != null && payment.BillingAddress != null)
+                    {
+                        email = payment.BillingAddress.Email;
+                    }
+                }
+
+                if (string.IsNullOrEmpty(email))
+                {
+                    email = Customer.Email;
+                }
+
+                return email;
             }
         }
 

@@ -1,6 +1,7 @@
 ﻿var storefrontApp = angular.module('storefrontApp');
 
-storefrontApp.controller('productController', ['$scope', '$window', 'catalogService', function ($scope, $window, catalogService) {
+storefrontApp.controller('productController', ['$rootScope', '$scope', '$window', 'dialogService', 'catalogService', 'cartService', 'quoteRequestService',
+    function ($rootScope, $scope, $window, dialogService, catalogService, cartService, quoteRequestService) {
     //TODO: prevent add to cart not selected variation
     // display validator please select property
     // display price range
@@ -11,12 +12,38 @@ storefrontApp.controller('productController', ['$scope', '$window', 'catalogServ
     $scope.productPrice = null;
     $scope.productPriceLoaded = false;
 
-    function Initialize() {
-        var productId = $window.products[0].id;
-        catalogService.getProduct(productId).then(function (response) {
-            var product = response.data;
+    $scope.addProductToCart = function (product, quantity) {
+        var dialogData = toDialogDataModel(product, quantity);
+        dialogService.showDialog(dialogData, 'recentlyAddedCartItemDialogController', 'storefront.recently-added-cart-item-dialog.tpl');
+        cartService.addLineItem(product.id, quantity).then(function (response) {
+            $rootScope.$broadcast('cartItemsChanged');
+        });
+    }
+
+    $scope.addProductToActualQuoteRequest = function (product, quantity) {
+        var dialogData = toDialogDataModel(product, quantity);
+        dialogService.showDialog(dialogData, 'recentlyAddedActualQuoteRequestItemDialogController', 'storefront.recently-added-actual-quote-request-item-dialog.tpl');
+        quoteRequestService.addProductToQuoteRequest(product.id, quantity).then(function (response) {
+            $rootScope.$broadcast('actualQuoteRequestItemsChanged');
+        });
+    }
+
+    function toDialogDataModel(product, quantity) {
+        return {
+            imageUrl: product.primaryImage ? product.primaryImage.url : null,
+            listPrice: product.price.listPrice,
+            name: product.name,
+            placedPrice: product.price.actualPrice,
+            quantity: quantity
+        }
+    }
+
+    function initialize() {
+        var productIds = _.map($window.products, function (product) { return product.id});
+        catalogService.getProduct(productIds).then(function (response) {
+            var product = response.data[0];
             //Current product its also variation (titular)
-            allVarations = [ product ].concat(product.Variations);
+            allVarations = [ product ].concat(product.variations);
             $scope.allVariationPropsMap = getFlatternDistinctPropertiesMap(allVarations);
 
             //Auto select initial product as default variation  (its possible because all our products is variations)
@@ -42,7 +69,7 @@ storefrontApp.controller('productController', ['$scope', '$window', 'catalogServ
     };
 
     function getVariationPropertyMap(variation) {
-        retVal = _.groupBy(variation.VariationProperties, function (x) { return x.DisplayName });
+        retVal = _.groupBy(variation.variationProperties, function (x) { return x.displayName });
         return retVal;
     };
 
@@ -80,7 +107,7 @@ storefrontApp.controller('productController', ['$scope', '$window', 'catalogServ
     //Method called from View when user click to one of properties value
     $scope.checkProperty = function (property) {
         //Select apropriate property and diselect previous selected
-        var prevSelected = _.each($scope.allVariationPropsMap[property.DisplayName], function (x) {
+        var prevSelected = _.each($scope.allVariationPropsMap[property.displayName], function (x) {
             x.selected = x != property ? false : !x.selected;
         });
 
@@ -89,5 +116,5 @@ storefrontApp.controller('productController', ['$scope', '$window', 'catalogServ
         $scope.selectedVariation = findVariationBySelectedProps(allVarations, selectedPropsMap);
     };
 
-    Initialize();
+    initialize();
 }]);

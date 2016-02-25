@@ -6,6 +6,7 @@ using VirtoCommerce.Client.Api;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Services;
 using VirtoCommerce.Storefront.Routing;
+using VirtoCommerce.Storefront.Controllers.Api;
 
 namespace VirtoCommerce.Storefront
 {
@@ -21,6 +22,54 @@ namespace VirtoCommerce.Storefront
             //this leads to different kinds of collisions and we deside to use only Convention routing 
 
             //routes.MapMvcAttributeRoutes();
+
+            #region Storefront API routes
+
+            //API cart
+            routes.MapLocalizedStorefrontRoute("API.GetCart", "storefrontapi/cart", defaults: new { controller = "ApiCart", action = "GetCart" });
+            routes.MapLocalizedStorefrontRoute("API.Cart.GetCartItemsCount", "storefrontapi/cart/itemscount", defaults: new { controller = "ApiCart", action = "GetCartItemsCount" });
+            routes.MapLocalizedStorefrontRoute("API.Cart.AddItemToCart", "storefrontapi/cart/items", defaults: new { controller = "ApiCart", action = "AddItemToCart" }, constraints: new { httpMethod = new HttpMethodConstraint(new string[] { "POST" }) });
+            routes.MapLocalizedStorefrontRoute("API.Cart.ChangeCartItem", "storefrontapi/cart/items", defaults: new { controller = "ApiCart", action = "ChangeCartItem" }, constraints: new { httpMethod = new HttpMethodConstraint(new string[] { "PUT" }) });
+            routes.MapLocalizedStorefrontRoute("API.Cart.RemoveCartItem", "storefrontapi/cart/items", defaults: new { controller = "ApiCart", action = "RemoveCartItem" }, constraints: new { httpMethod = new HttpMethodConstraint(new string[] { "DELETE" }) });
+            routes.MapLocalizedStorefrontRoute("API.Cart.ClearCart", "storefrontapi/cart/clear", defaults: new { controller = "ApiCart", action = "ClearCart" });
+            routes.MapLocalizedStorefrontRoute("API.Cart.GetCartShipmentAvailShippingMethods", "storefrontapi/cart/shipments/{shipmentId}/shippingmethods", defaults: new { controller = "ApiCart", action = "GetCartShipmentAvailShippingMethods" });
+            routes.MapLocalizedStorefrontRoute("API.Cart.GetCartAvailPaymentMethods", "storefrontapi/cart/paymentmethods", defaults: new { controller = "ApiCart", action = "GetCartAvailPaymentMethods" });
+            routes.MapLocalizedStorefrontRoute("API.Cart.AddCartCoupon", "storefrontapi/cart/coupons/{couponCode}", defaults: new { controller = "ApiCart", action = "AddCartCoupon" });
+            routes.MapLocalizedStorefrontRoute("API.Cart.RemoveCartCoupon", "storefrontapi/cart/coupons", defaults: new { controller = "ApiCart", action = "RemoveCartCoupon" });
+            routes.MapLocalizedStorefrontRoute("API.Cart.AddOrUpdateCartShipment", "storefrontapi/cart/shipments", defaults: new { controller = "ApiCart", action = "AddOrUpdateCartShipment" });
+            routes.MapLocalizedStorefrontRoute("API.Cart.AddOrUpdateCartPayment", "storefrontapi/cart/payments", defaults: new { controller = "ApiCart", action = "AddOrUpdateCartPayment" });
+            routes.MapLocalizedStorefrontRoute("API.Cart.CreateOrder", "storefrontapi/cart/createorder", defaults: new { controller = "ApiCart", action = "CreateOrder" });
+
+            //Catalog API
+            routes.MapLocalizedStorefrontRoute("API.Catalog.SearchProducts", "storefrontapi/catalog/search", defaults: new { controller = "ApiCatalog", action = "SearchProducts" }, constraints: new { httpMethod = new HttpMethodConstraint(new string[] { "POST" }) });
+            routes.MapLocalizedStorefrontRoute("API.Catalog.GetProductsByIds", "storefrontapi/products", defaults: new { controller = "ApiCatalog", action = "GetProductsByIds" });
+            routes.MapLocalizedStorefrontRoute("API.Catalog.GetCategoriesByIds", "storefrontapi/categories", defaults: new { controller = "ApiCatalog", action = "GetCategoriesByIds" });
+
+            //Common storefront API
+            routes.MapLocalizedStorefrontRoute("API.Common.GetCountries", "storefrontapi/countries", defaults: new { controller = "ApiCommon", action = "GetCountries" });
+            routes.MapLocalizedStorefrontRoute("API.Common.GetRegions", "storefrontapi/{countryCode}/regions", defaults: new { controller = "ApiCommon", action = "GetRegions" });
+
+            //Pricing API
+            routes.MapLocalizedStorefrontRoute("API.Pricing.GetActualProductPrices", "storefrontapi/pricing/actualprices", defaults: new { controller = "ApiPricing", action = "GetActualProductPrices" }, constraints: new { httpMethod = new HttpMethodConstraint(new string[] { "POST" }) });
+            //Marketing API
+            routes.MapLocalizedStorefrontRoute("API.Marketing.GetDynamicContent", "storefrontapi/marketing/dynamiccontent/{placeName}", defaults: new { controller = "ApiMarketing", action = "GetDynamicContent" });
+            //Account API
+            routes.MapLocalizedStorefrontRoute("API.Account.GetCurrentCustomer", "storefrontapi/account", defaults: new { controller = "ApiAccount", action = "GetCurrentCustomer" });
+           
+            //Quote requests API
+            routes.MapLocalizedStorefrontRoute("API.QuoteRequest.GetItemsCount", "storefrontapi/quoterequests/{number}/itemscount", defaults: new { controller = "ApiQuoteRequest", action = "GetItemsCount" });
+            routes.MapLocalizedStorefrontRoute("API.QuoteRequest.Get", "storefrontapi/quoterequests/{number}", defaults: new { controller = "ApiQuoteRequest", action = "Get" });
+            routes.MapLocalizedStorefrontRoute("API.QuoteRequest.GetCurrent", "storefrontapi/quoterequest/current", defaults: new { controller = "ApiQuoteRequest", action = "GetCurrent" });
+            routes.MapLocalizedStorefrontRoute("API.QuoteRequest.AddItem", "storefrontapi/quoterequests/current/items", defaults: new { controller = "ApiQuoteRequest", action = "AddItem" }, constraints: new { httpMethod = new HttpMethodConstraint(new string[] { "POST" }) });
+            routes.MapLocalizedStorefrontRoute("API.QuoteRequest.RemoveItem", "storefrontapi/quoterequests/{number}/items/{itemId}", defaults: new { controller = "ApiQuoteRequest", action = "RemoveItem" }, constraints: new { httpMethod = new HttpMethodConstraint(new string[] { "DELETE" }) });
+            routes.MapLocalizedStorefrontRoute("API.QuoteRequest.Update", "storefrontapi/quoterequests/{number}", defaults: new { controller = "ApiQuoteRequest", action = "Update" }, constraints: new { httpMethod = new HttpMethodConstraint(new string[] { "PUT" }) });
+            routes.MapLocalizedStorefrontRoute("API.QuoteRequest.Submit", "storefrontapi/quoterequests/{number}/submit", defaults: new { controller = "ApiQuoteRequest", action = "Submit" }, constraints: new { httpMethod = new HttpMethodConstraint(new string[] { "POST" }) });
+            routes.MapLocalizedStorefrontRoute("API.QuoteRequest.Reject", "storefrontapi/quoterequests/{number}/reject", defaults: new { controller = "ApiQuoteRequest", action = "Reject" }, constraints: new { httpMethod = new HttpMethodConstraint(new string[] { "POST" }) });
+            routes.MapLocalizedStorefrontRoute("API.QuoteRequest.CalculateTotals", "storefrontapi/quoterequests/{number}/totals", defaults: new { controller = "ApiQuoteRequest", action = "CalculateTotals" }, constraints: new { httpMethod = new HttpMethodConstraint(new string[] { "POST" }) });
+            routes.MapLocalizedStorefrontRoute("API.QuoteRequest.Confirm", "storefrontapi/quoterequests/{number}/confirm", defaults: new { controller = "ApiQuoteRequest", action = "Confirm" }, constraints: new { httpMethod = new HttpMethodConstraint(new string[] { "POST" }) });
+
+            #endregion
+
             //Account
             routes.MapLocalizedStorefrontRoute("Account", "account", defaults: new { controller = "Account", action = "GetAccount" }, constraints: new { httpMethod = new HttpMethodConstraint(new string[] { "GET" }) });
             routes.MapLocalizedStorefrontRoute("Account.UpdateAccount", "account", defaults: new { controller = "Account", action = "UpdateAccount" }, constraints: new { httpMethod = new HttpMethodConstraint(new string[] { "POST" }) });
@@ -33,24 +82,11 @@ namespace VirtoCommerce.Storefront
             routes.MapLocalizedStorefrontRoute("Account.ForgotPassword", "account/forgotpassword", defaults: new { controller = "Account", action = "ForgotPassword" });
             routes.MapLocalizedStorefrontRoute("Account.ResetPassword", "account/resetpassword", defaults: new { controller = "Account", action = "ResetPassword" });
             routes.MapLocalizedStorefrontRoute("Account.ChangePassword", "account/password", defaults: new { controller = "Account", action = "ChangePassword" });
-            routes.MapLocalizedStorefrontRoute("Account.Json", "account/json", defaults: new { controller = "Account", action = "GetCurrentCustomer" });
-          
+        
 
             //Cart
             routes.MapLocalizedStorefrontRoute("Cart.Index", "cart", defaults: new { controller = "Cart", action = "Index" }, constraints: new { httpMethod = new HttpMethodConstraint(new string[] { "GET" }) });
-            routes.MapLocalizedStorefrontRoute("Cart.Json", "cart/json", defaults: new { controller = "Cart", action = "CartJson" });
-            routes.MapLocalizedStorefrontRoute("Cart.AddItem", "cart/additem", defaults: new { controller = "Cart", action = "AddItemJson" });
-            routes.MapLocalizedStorefrontRoute("Cart.ChangeItem", "cart/changeitem", defaults: new { controller = "Cart", action = "ChangeItemJson" });
-            routes.MapLocalizedStorefrontRoute("Cart.RemoveItem", "cart/removeitem", defaults: new { controller = "Cart", action = "RemoveItemJson" });
-            routes.MapLocalizedStorefrontRoute("Cart.ClearJson", "cart/clear", defaults: new { controller = "Cart", action = "ClearJson" }, constraints: new { httpMethod = new HttpMethodConstraint(new string[] { "POST" }) });
             routes.MapLocalizedStorefrontRoute("Cart.Checkout", "cart/checkout", defaults: new { controller = "Cart", action = "Checkout" });
-            routes.MapLocalizedStorefrontRoute("Cart.ShippingMethods", "cart/shippingmethods/json", defaults: new { controller = "Cart", action = "CartShippingMethodsJson" });
-            routes.MapLocalizedStorefrontRoute("Cart.PaymentMethods", "cart/paymentmethods/json", defaults: new { controller = "Cart", action = "CartPaymentMethodsJson" });
-            routes.MapLocalizedStorefrontRoute("Cart.AddCoupon", "cart/addcoupon/{couponCode}", defaults: new { controller = "Cart", action = "AddCouponJson" });
-            routes.MapLocalizedStorefrontRoute("Cart.RemoveCoupon", "cart/removecoupon", defaults: new { controller = "Cart", action = "RemoveCouponJson" });
-            routes.MapLocalizedStorefrontRoute("Cart.AddOrUpdateShipment", "cart/addorupdateshipment", defaults: new { controller = "Cart", action = "AddOrUpdateShipmentJson" });
-            routes.MapLocalizedStorefrontRoute("Cart.AddOrUpdatePayment", "cart/addorupdatepayment", defaults: new { controller = "Cart", action = "AddOrUpdatePaymentJson" });
-            routes.MapLocalizedStorefrontRoute("Cart.CreateOrder", "cart/createorder", defaults: new { controller = "Cart", action = "CreateOrderJson" });
             routes.MapLocalizedStorefrontRoute("Cart.ExternalPaymentCallback", "cart/externalpaymentcallback", defaults: new { controller = "Cart", action = "ExternalPaymentCallback" });
             routes.MapLocalizedStorefrontRoute("Cart.Thanks", "cart/thanks/{orderNumber}", defaults: new { controller = "Cart", action = "Thanks" });
             routes.MapLocalizedStorefrontRoute("Cart.PaymentForm", "cart/checkout/paymentform", defaults: new { controller = "Cart", action = "PaymentForm" });
@@ -66,36 +102,22 @@ namespace VirtoCommerce.Storefront
             routes.MapLocalizedStorefrontRoute("ShopifyCart.UpdateJs", "cart/update.js", defaults: new { controller = "ShopifyCompatibility", action = "UpdateJs" });
 
             // QuoteRequest
-            routes.MapLocalizedStorefrontRoute("QuoteRequest.QuoteRequest", "quoterequest", defaults: new { controller = "QuoteRequest", action = "GetCustomerCurrentQuoteRequest" });
-            routes.MapLocalizedStorefrontRoute("QuoteRequest.QuoteRequests", "account/quoterequests", defaults: new { controller = "QuoteRequest", action = "GetCustomerQuoteRequests" });
-            routes.MapLocalizedStorefrontRoute("QuoteRequest.QuoteRequestByNumber", "quoterequest/{number}", defaults: new { controller = "QuoteRequest", action = "QuoteRequestByNumber" });
-            routes.MapLocalizedStorefrontRoute("QuoteRequest.CurrentQuoteRequest", "currentquoterequest/json", defaults: new { controller = "QuoteRequest", action = "CurrentQuoteRequestJson" });
-            routes.MapLocalizedStorefrontRoute("QuoteRequest.CustomerQuoteRequest", "customerquoterequest/{number}/json", defaults: new { controller = "QuoteRequest", action = "CustomerQuoteRequestJson" });
-            routes.MapLocalizedStorefrontRoute("QuoteRequest.AddItem", "quoterequest/additem/json", defaults: new { controller = "QuoteRequest", action = "AddItemJson" });
-            routes.MapLocalizedStorefrontRoute("QuoteRequest.RemoveItem", "quoterequest/removeitem/json", defaults: new { controller = "QuoteRequest", action = "RemoveItemJson" });
-            routes.MapLocalizedStorefrontRoute("QuoteRequest.Update", "quoterequest/update/json", defaults: new { controller = "QuoteRequest", action = "UpdateJson" });
-            routes.MapLocalizedStorefrontRoute("QuoteRequest.GetTotals", "quoterequest/totals", defaults: new { controller = "QuoteRequest", action = "GetTotalsJson" });
-            routes.MapLocalizedStorefrontRoute("QuoteRequest.ConfirmQuoteRequest", "quoterequest/quote-request/{number}/confirm", defaults: new { controller = "QuoteRequest", action = "ConfirmQuoteRequest" });
-
           
+            routes.MapLocalizedStorefrontRoute("QuoteRequest.CurrentQuoteRequest", "quoterequest", defaults: new { controller = "QuoteRequest", action = "CurrentQuoteRequest" });
+            routes.MapLocalizedStorefrontRoute("Account.QuoteRequests", "account/quoterequests", defaults: new { controller = "QuoteRequest", action = "QuoteRequests" });
+            routes.MapLocalizedStorefrontRoute("Account.QuoteRequestByNumber", "quoterequest/{number}", defaults: new { controller = "QuoteRequest", action = "QuoteRequestByNumber" });
+
             //CatalogSearch
             routes.MapLocalizedStorefrontRoute("CatalogSearch.CategoryBrowsing", "search/{categoryId}", defaults: new { controller = "CatalogSearch", action = "CategoryBrowsing" });
             routes.MapLocalizedStorefrontRoute("CatalogSearch.SearchProducts", "search", defaults: new { controller = "CatalogSearch", action = "SearchProducts" });
             //Common
             routes.MapLocalizedStorefrontRoute("Common.SetCurrency", "common/setcurrency/{currency}", defaults: new { controller = "Common", action = "SetCurrency" });
-            routes.MapLocalizedStorefrontRoute("Common.Getcountries", "common/getcountries/json", defaults: new { controller = "Common", action = "GetCountries" });
-            routes.MapLocalizedStorefrontRoute("Common.Getregions", "common/getregions/{countryCode}/json", defaults: new { controller = "Common", action = "GetRegions" });
             routes.MapLocalizedStorefrontRoute("Common.ContactUsPost", "contact/{viewName}", defaults: new { controller = "Common", action = "СontactUs", viewName = UrlParameter.Optional }, constraints: new { httpMethod = new HttpMethodConstraint(new string[] { "POST" }) });
             routes.MapLocalizedStorefrontRoute("Common.ContactUs", "contact/{viewName}", defaults: new { controller = "Common", action = "СontactUs", viewName = UrlParameter.Optional }, constraints: new { httpMethod = new HttpMethodConstraint(new string[] { "GET" }) });
             routes.MapLocalizedStorefrontRoute("Common.NoStore", "common/nostore", defaults: new { controller = "Common", action = "NoStore" });
             routes.MapLocalizedStorefrontRoute("Common.Maintenance", "maintenance", defaults: new { controller = "Common", action = "Maintenance" });
 
-            //Marketing 
-            routes.MapLocalizedStorefrontRoute("Marketing.DynamicContent", "marketing/dynamiccontent/{placeName}/json", defaults: new { controller = "Marketing", action = "GetDynamicContentJson" });
-
-            //Pricing 
-            routes.MapLocalizedStorefrontRoute("Pricing.ActualPrices", "pricing/actualprices", defaults: new { controller = "Pricing", action = "GetActualProductPricesJson" });
-
+         
             //Product routes
             routes.MapLocalizedStorefrontRoute("Product.GetProduct", "product/{productId}", defaults: new { controller = "Product", action = "ProductDetails" });
             routes.MapLocalizedStorefrontRoute("Product.GetProductJson", "product/{productId}/json", defaults: new { controller = "Product", action = "ProductDetailsJson" });

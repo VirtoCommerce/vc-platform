@@ -42,7 +42,7 @@ namespace VirtoCommerce.Storefront.Controllers
             _platformApi = platformApi;
             _orderApi = orderApi;
             _userLoginEventPublisher = userLoginEventPublisher;
-        }
+         }
 
         //GET: /account
         [HttpGet]
@@ -52,7 +52,7 @@ namespace VirtoCommerce.Storefront.Controllers
             return View("customers/account", WorkContext);
         }
 
-
+      
         //POST: /account
         [HttpPost]
         public async Task<ActionResult> UpdateAccount(CustomerInfo customer)
@@ -418,7 +418,7 @@ namespace VirtoCommerce.Storefront.Controllers
         private static ClaimsIdentity CreateClaimsIdentity(CustomerInfo customer)
         {
             var claims = new List<Claim>
-            {
+        {
                 new Claim(ClaimTypes.Name, customer.UserName),
                 new Claim(ClaimTypes.NameIdentifier, customer.Id)
             };

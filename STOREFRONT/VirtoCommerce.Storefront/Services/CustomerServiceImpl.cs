@@ -14,10 +14,11 @@ using VirtoCommerce.Storefront.Model.Customer.Services;
 using VirtoCommerce.Storefront.Model.Order;
 using VirtoCommerce.Storefront.Model.Order.Events;
 using VirtoCommerce.Storefront.Model.Quote;
+using VirtoCommerce.Storefront.Model.Quote.Events;
 
 namespace VirtoCommerce.Storefront.Services
 {
-    public class CustomerServiceImpl : ICustomerService, IAsyncObserver<OrderPlacedEvent>
+    public class CustomerServiceImpl : ICustomerService, IAsyncObserver<OrderPlacedEvent>, IAsyncObserver<QuoteRequestUpdatedEvent>
     {
         private readonly ICustomerManagementModuleApi _customerApi;
         private readonly IOrderModuleApi _orderApi;
@@ -106,15 +107,46 @@ namespace VirtoCommerce.Storefront.Services
         #endregion
 
         #region IObserver<CreateOrderEvent> Members
-        public Task OnNextAsync(OrderPlacedEvent value)
+        public async Task OnNextAsync(OrderPlacedEvent eventArgs)
         {
-            if (value.Order != null)
+            if (eventArgs.Order != null)
             {
-                var cacheKey = GetCacheKey(value.Order.CustomerId);
+                //Invalidate cache
+                var cacheKey = GetCacheKey(eventArgs.Order.CustomerId);
+                _cacheManager.Remove(cacheKey, "ApiRegion");
+
+                var workContext = _workContextFactory();
+                //Add addresses to contact profile
+                if (workContext.CurrentCustomer.IsRegisteredUser)
+                {
+                    workContext.CurrentCustomer.Addresses.AddRange(eventArgs.Order.Addresses);
+                    workContext.CurrentCustomer.Addresses.AddRange(eventArgs.Order.Shipments.Select(x => x.DeliveryAddress));
+
+                    foreach (var address in workContext.CurrentCustomer.Addresses)
+                    {
+                        address.Name = string.Format("{0} {1}", address.FirstName, address.LastName);
+                    }
+
+                    await UpdateCustomerAsync(workContext.CurrentCustomer);
+                }
+
+            }
+        }
+        #endregion
+
+        #region IAsyncObserver<QuoteRequestUpdatedEvent> Members
+
+        public Task OnNextAsync(QuoteRequestUpdatedEvent quoteRequestCreatedEvent)
+        {
+            if (quoteRequestCreatedEvent.QuoteRequest != null)
+            {
+                var cacheKey = GetCacheKey(quoteRequestCreatedEvent.QuoteRequest.CustomerId);
                 _cacheManager.Remove(cacheKey, "ApiRegion");
             }
+
             return Task.Factory.StartNew(() => { });
         }
+
         #endregion
 
         private static string GetCacheKey(string customerId)

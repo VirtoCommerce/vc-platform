@@ -18,7 +18,7 @@
                     {% for quote_request in customer.quote_requests %}
                         <tr>
                             <td>
-                                {% assign quote_request_url = '/quoterequest/' | append: quote_request.id %}
+                                {% assign quote_request_url = '/quoterequest/#/' | append: quote_request.id %}
                                 <a href="{{ quote_request_url | absolute_url }}">{{ quote_request.number }}</a>
                             </td>
                             <td>{{ quote_request.created_date | date: format: 'month_day_year' }}</td>

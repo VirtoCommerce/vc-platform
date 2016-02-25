@@ -1,13 +1,14 @@
-﻿<div class="toast-top-full-width" id="toast-container" ng-cloak ng-if="storefrontNotification">
-    <div class="toast toast-error" ng-if="storefrontNotification.type == 'error'">
-        <button class="toast-close-button" type="button" ng-click="closeNotification()">×</button>
-        <div class="toast-title">{{ 'notification.error_title' | t }}</div>
-        <div class="toast-message">{{ 'notification.error_message' | t }}</div>
+﻿<div class="alert fixed" role="alert" ng-class="{ 'alert-danger': storefrontNotification.type == 'error' }" ng-if="storefrontNotification" ng-cloak>
+    <button aria-label="Close" class="close" type="button" ng-click="closeNotification()">
+        <span aria-hidden="true">×</span>
+    </button>
+    <strong>Oops! An error was occured!</strong>
+    Please send a technical details to us.<br /><br />
+    <a style="color: #a94442; cursor: pointer; font-weight: 700;" ng-click="toggleNotificationDetails()">
         <i class="fa" ng-class="{ 'fa-angle-down': !storefrontNotification.detailsVisible, 'fa-angle-up': storefrontNotification.detailsVisible }"></i>
-        <a href="" style="color: #ffffff; text-decoration: underline;" ng-click="toggleNotificationDetails()">
-            <span ng-if="!storefrontNotification.detailsVisible">{{ 'notification.show_error_details_link_text' | t }}</span>
-            <span ng-if="storefrontNotification.detailsVisible">{{ 'notification.hide_error_details_link_text' | t }}</span>
-        </a>
-        <div class="toast-message" style="margin-top: 20px;" ng-bind="storefrontNotification.message" ng-if="storefrontNotification.detailsVisible"></div>
-    </div>
+        <span ng-if="!storefrontNotification.detailsVisible">Show me a technical details</span>
+        <span ng-if="storefrontNotification.detailsVisible">Hide a technical details</span>
+    </a>
+    <p ng-if="storefrontNotification.detailsVisible" ng-bind="storefrontNotification.title"></p>
+    <p ng-if="storefrontNotification.detailsVisible" ng-bind="storefrontNotification.message"></p>
 </div>

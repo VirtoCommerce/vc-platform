@@ -8,7 +8,9 @@ storefrontApp.controller('mainController', ['$scope', '$location', '$window', 'c
     //Base store url populated in layout and can be used for construction url inside controller
     $scope.baseUrl = {};
 
-    $scope.currentPath = $location.$$path.replace('/', '');
+    $scope.$watch(function () {
+        $scope.currentPath = $location.$$path.replace('/', '');
+    });
 
     $scope.$on('storefrontError', function (event, data) {
         $scope.storefrontNotification = data;
@@ -33,6 +35,18 @@ storefrontApp.controller('mainController', ['$scope', '$location', '$window', 'c
         $location.path(path);
         $scope.currentPath = $location.$$path.replace('/', '');
     };
+
+    $scope.stringifyAddress = function (address) {
+        var stringifiedAddress = address.firstName + ' ' + address.lastName + ', ';
+        stringifiedAddress += address.organization ? address.organization + ', ' : '';
+        stringifiedAddress += address.countryName + ', ';
+        stringifiedAddress += address.regionName ? address.regionName + ', ' : '';
+        stringifiedAddress += address.city;
+        stringifiedAddress += address.line1 + ', '
+        stringifiedAddress += address.line2 ? address.line2 : '';
+        stringifiedAddress += address.postalCode;
+        return stringifiedAddress;
+    }
 
     $scope.getObjectSize = function (obj) {
         var size = 0, key;

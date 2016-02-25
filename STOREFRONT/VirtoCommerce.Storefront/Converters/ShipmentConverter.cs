@@ -128,5 +128,14 @@ namespace VirtoCommerce.Storefront.Converters
 
             return webModel;
         }
+
+        public static Shipment ToShipmentModel(this ShipmentUpdateModel updateModel, Currency currency)
+        {
+            var shipmentModel = new Shipment(currency);
+
+            shipmentModel.InjectFrom<NullableAndEnumValueInjecter>(updateModel);
+
+            return shipmentModel;
+        }
     }
 }

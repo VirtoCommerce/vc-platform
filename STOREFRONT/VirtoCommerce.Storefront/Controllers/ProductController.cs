@@ -39,20 +39,5 @@ namespace VirtoCommerce.Storefront.Controllers
 
             return View("product", WorkContext);
         }
-
-        /// <summary>
-        /// GET: /product/{productId}/json
-        /// This action used by js 
-        /// </summary>
-        /// <param name="productId"></param>
-        /// <returns></returns>
-        [HttpGet]
-        [OutputCache(NoStore = true, Duration = 0, VaryByParam = "None")]
-        [HandleJsonErrorAttribute]
-        public async Task<ActionResult> ProductDetailsJson(string productId)
-        {
-            base.WorkContext.CurrentProduct = (await _catalogSearchService.GetProductsAsync(new [] { productId }, Model.Catalog.ItemResponseGroup.ItemLarge)).FirstOrDefault();
-            return Json(base.WorkContext.CurrentProduct, JsonRequestBehavior.AllowGet);
-        }
     }
 }

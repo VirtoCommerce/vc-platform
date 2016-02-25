@@ -9,20 +9,18 @@
 
     {{ '//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css' | stylesheet_tag }}
     {{ 'checkout.css' | global_asset_url | stylesheet_tag }}
-    <!--need for client notifications-->
-    {{ 'toastr.css' | asset_url | stylesheet_tag }}
 
     <base href="{{ '/' | absolute_url }}" />
 
     {{ '//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js' | script_tag }}
     {{ '//ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular.min.js' | script_tag }}
     {{ '//ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular-route.min.js' | script_tag }}
-    {{ '//ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular-sanitize.min.js' | script_tag }}
-    {{ 'storefrontApp.js' | global_asset_url | script_tag }}
-    {{ 'storefrontServices.js' | global_asset_url | script_tag }}
-    {{ 'storefrontDirectives.js' | global_asset_url | script_tag }}
-    {{ 'storefrontMainController.js' | global_asset_url | script_tag }}
-    {{ 'storefrontCheckoutController.js' | global_asset_url | script_tag }}
+    {{ '//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/1.1.2/ui-bootstrap-tpls.min.js' | script_tag }}
+    {{ 'app.js' | global_asset_url | script_tag }}
+    {{ 'services.js' | global_asset_url | script_tag }}
+    {{ 'directives.js' | global_asset_url | script_tag }}
+    {{ 'main.js' | asset_url | script_tag }}
+    {{ 'checkout.js' | asset_url | script_tag }}
 
     {{ content_for_header }}
 </head>
@@ -34,7 +32,7 @@
             </a>
         </div>
     </div>
-    <button class="order-summary-toggle" ng-class="{ 'order-summary-toggle--show': !checkout.OrderSummaryVisible, 'order-summary-toggle--hide': checkout.OrderSummaryVisible }" ng-click="toggleOrderSummary(checkout.OrderSummaryVisible)">
+    <button class="order-summary-toggle" ng-class="{ 'order-summary-toggle--show': !checkout.orderSummaryVisible, 'order-summary-toggle--hide': checkout.orderSummaryVisible }" ng-click="toggleOrderSummary()">
         <div class="wrap">
             <div class="order-summary-toggle__inner">
                 <div class="order-summary-toggle__icon-wrapper">

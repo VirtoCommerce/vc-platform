@@ -1,4 +1,4 @@
-﻿var storefrontApp = angular.module('storefrontApp', ['ngRoute']);
+﻿var storefrontApp = angular.module('storefrontApp', ['ngRoute', 'ui.bootstrap']);
 
 storefrontApp.factory('httpErrorInterceptor', ['$q', '$rootScope', function ($q, $rootScope) {
     var httpErrorInterceptor = {};
@@ -6,16 +6,16 @@ storefrontApp.factory('httpErrorInterceptor', ['$q', '$rootScope', function ($q,
     httpErrorInterceptor.responseError = function (rejection) {
         $rootScope.$broadcast('storefrontError', {
             type: 'error',
-            title: rejection.data.message,
-            message: rejection.data.stackTrace
+            title: [rejection.config.method, rejection.config.url, rejection.status, rejection.statusText, rejection.data.message].join(' '),
+            message: rejection.data.stackTrace,
         });
         return $q.reject(rejection);
     };
     httpErrorInterceptor.requestError = function (rejection) {
         $rootScope.$broadcast('storefrontError', {
             type: 'error',
-            title: rejection.data.message,
-            message: rejection.data.stackTrace
+            title: [rejection.config.method, rejection.config.url, rejection.status, rejection.statusText, rejection.data.message].join(' '),
+            message: rejection.data.stackTrace,
         });
         return $q.reject(rejection);
     };
@@ -24,7 +24,6 @@ storefrontApp.factory('httpErrorInterceptor', ['$q', '$rootScope', function ($q,
 }])
 
 storefrontApp.config(['$interpolateProvider', '$routeProvider', '$httpProvider', function ($interpolateProvider, $routeProvider, $httpProvider) {
-    //Add interceptor
     $httpProvider.interceptors.push('httpErrorInterceptor');
 
     $routeProvider

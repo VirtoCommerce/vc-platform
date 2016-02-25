@@ -10,6 +10,10 @@ namespace VirtoCommerce.Storefront.Model.Common
     /// </summary>
     public class Currency
     {
+        protected Currency()
+        {
+        }
+
         public Currency(Language language, string code, string name, string symbol, decimal exchangeRate)
             : this(language, code)
         {

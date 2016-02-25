@@ -43,7 +43,6 @@ namespace VirtoCommerce.Storefront.Converters
                 {
                     billingAddress = new Address { Type = AddressType.Billing };
                 }
-                webModel.DefaultBillingAddress = billingAddress;
 
                 if (webModel.HasPhysicalProducts)
                 {
@@ -52,7 +51,6 @@ namespace VirtoCommerce.Storefront.Converters
                     {
                         shippingAddress = new Address { Type = AddressType.Shipping };
                     }
-                    webModel.DefaultShippingAddress = shippingAddress;
                 }
             }
 

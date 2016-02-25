@@ -75,7 +75,7 @@ namespace VirtoCommerce.Storefront.Converters
             quoteItem.InjectFrom<NullableAndEnumValueInjecter>(product);
 
             quoteItem.Id = null;
-            quoteItem.ImageUrl = product.PrimaryImage.Url;
+            quoteItem.ImageUrl = product.PrimaryImage != null ? product.PrimaryImage.Url : null;
             quoteItem.ListPrice = product.Price.ListPrice;
             quoteItem.ProductId = product.Id;
             quoteItem.SalePrice = product.Price.SalePrice;

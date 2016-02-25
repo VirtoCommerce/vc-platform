@@ -214,56 +214,81 @@ namespace VirtoCommerce.Storefront.Builders
             return this;
         }
 
-        public virtual async Task<ICartBuilder> AddOrUpdateShipmentAsync(string shipmentId, Address shippingAddress, ICollection<string> itemIds, string shippingMethodCode)
+        public virtual async Task<ICartBuilder> AddOrUpdateShipmentAsync(ShipmentUpdateModel updateModel)
         {
-            var shipment = _cart.Shipments.FirstOrDefault(s => s.Id == shipmentId);
-            if (shipment == null)
+            var changedShipment = updateModel.ToShipmentModel(_cart.Currency);
+            foreach (var updateItemModel in updateModel.Items)
+            {
+                var cartItem = _cart.Items.FirstOrDefault(i => i.Id == updateItemModel.LineItemId);
+                if (cartItem != null)
+                {
+                    var shipmentItem = cartItem.ToShipmentItem();
+                    shipmentItem.Quantity = updateItemModel.Quantity;
+                    changedShipment.Items.Add(shipmentItem);
+                }
+            }
+
+            Shipment shipment = null;
+            if (!string.IsNullOrEmpty(changedShipment.Id))
+            {
+                shipment = _cart.Shipments.FirstOrDefault(s => s.Id == changedShipment.Id);
+                if (shipment == null)
+                {
+                    throw new StorefrontException(string.Format("Shipment with {0} not found", changedShipment.Id));
+                }
+            }
+            else
             {
                 shipment = new Shipment(_cart.Currency);
+                _cart.Shipments.Add(shipment);
             }
 
-            if (shippingAddress != null)
+            if (changedShipment.DeliveryAddress != null)
             {
-                shipment.DeliveryAddress = shippingAddress;
+                shipment.DeliveryAddress = changedShipment.DeliveryAddress;
             }
 
-            if (itemIds != null)
+            //Update shipment items
+            if (changedShipment.Items != null)
             {
-                foreach (var itemId in itemIds)
+                Action<EntryState, CartShipmentItem, CartShipmentItem> pathAction = (changeState, sourceItem, targetItem) =>
                 {
-                    var cartItem = _cart.Items.FirstOrDefault(i => i.Id == itemId);
-                    if (cartItem != null)
+                    if (changeState == EntryState.Added)
                     {
-                        var newShipmentItem = cartItem.ToShipmentItem();
-                        var shipmentItem = shipment.Items.FirstOrDefault(i => i.LineItem != null && i.LineItem.Id == itemId);
-                        if (shipmentItem != null)
+                        var cartLineItem = _cart.Items.FirstOrDefault(i => i.Id == sourceItem.LineItem.Id);
+                        if (cartLineItem != null)
                         {
-                            shipmentItem = newShipmentItem;
-                        }
-                        else
-                        {
+                            var newShipmentItem = cartLineItem.ToShipmentItem();
+                            newShipmentItem.Quantity = sourceItem.Quantity;
                             shipment.Items.Add(newShipmentItem);
                         }
                     }
-                }
+                    else if (changeState == EntryState.Modified)
+                    {
+                        targetItem.Quantity = sourceItem.Quantity;
+                    }
+                    else if (changeState == EntryState.Deleted)
+                    {
+                        shipment.Items.Remove(sourceItem);
+                    }
+                };
+
+                var shipmentItemComparer = AnonymousComparer.Create((CartShipmentItem x) => x.LineItem.Id);
+                changedShipment.Items.CompareTo(shipment.Items, shipmentItemComparer, pathAction);
             }
 
-            if (!string.IsNullOrEmpty(shippingMethodCode))
+            if (!string.IsNullOrEmpty(changedShipment.ShipmentMethodCode))
             {
                 var availableShippingMethods = await GetAvailableShippingMethodsAsync();
-                var shippingMethod = availableShippingMethods.FirstOrDefault(sm => sm.ShipmentMethodCode == shippingMethodCode);
-                if (shippingMethod != null)
+                var shippingMethod = availableShippingMethods.FirstOrDefault(sm => sm.ShipmentMethodCode == changedShipment.ShipmentMethodCode);
+                if (shippingMethod == null)
                 {
-                    shipment.ShipmentMethodCode = shippingMethod.ShipmentMethodCode;
-                    shipment.ShippingPrice = shippingMethod.Price;
-                    shipment.TaxType = shippingMethod.TaxType;
+                    throw new StorefrontException("Unknown shipment method " + changedShipment.ShipmentMethodCode);
                 }
-            }
 
-            if (shipment.IsTransient())
-            {
-
-                _cart.Shipments.Add(shipment);
+                shipment.ShipmentMethodCode = shippingMethod.ShipmentMethodCode;
+                shipment.ShippingPrice = shippingMethod.Price;
+                shipment.TaxType = shippingMethod.TaxType;
             }
 
             await EvaluatePromotionsAsync();
@@ -284,32 +309,41 @@ namespace VirtoCommerce.Storefront.Builders
             return this;
         }
 
-        public virtual async Task<ICartBuilder> AddOrUpdatePaymentAsync(string paymentId, Address billingAddress, string paymentMethodCode, string outerId)
+        public virtual async Task<ICartBuilder> AddOrUpdatePaymentAsync(PaymentUpdateModel updateModel)
         {
-            var payment = _cart.Payments.FirstOrDefault(p => p.Id == paymentId);
-            if (payment == null)
+            Payment payment = null;
+            if (!string.IsNullOrEmpty(updateModel.Id))
+            {
+                payment = _cart.Payments.FirstOrDefault(s => s.Id == updateModel.Id);
+                if (payment == null)
+                {
+                    throw new StorefrontException(String.Format("Payment with {0} not found", updateModel.Id));
+                }
+            }
+            else
             {
                 payment = new Payment(_cart.Currency);
-            }
-
-            if (billingAddress != null)
-            {
-                payment.BillingAddress = billingAddress;
-            }
-
-            var availablePaymentMethods = await GetAvailablePaymentMethodsAsync();
-            var paymentMethod = availablePaymentMethods.FirstOrDefault(pm => pm.GatewayCode == paymentMethodCode);
-            if (paymentMethod != null)
-            {
-                payment.PaymentGatewayCode = paymentMethodCode;
-            }
-
-            payment.OuterId = outerId;
-
-            if (payment.IsTransient())
-            {
                 _cart.Payments.Add(payment);
             }
+         
+            if (updateModel.BillingAddress != null)
+            {
+                payment.BillingAddress = updateModel.BillingAddress;
+            }
+
+            if (!string.IsNullOrEmpty(updateModel.PaymentGatewayCode))
+            {
+                var availablePaymentMethods = await GetAvailablePaymentMethodsAsync();
+                var paymentMethod = availablePaymentMethods.FirstOrDefault(pm => string.Equals(pm.GatewayCode, updateModel.PaymentGatewayCode, StringComparison.InvariantCultureIgnoreCase));
+                if (paymentMethod == null)
+                {
+                    throw new StorefrontException("Unknown payment method " + updateModel.PaymentGatewayCode);
+                }
+                payment.PaymentGatewayCode = paymentMethod.GatewayCode;
+            }
+  
+            payment.OuterId = updateModel.OuterId;
+            payment.Amount = _cart.Total;
 
             return this;
         }
@@ -365,45 +399,48 @@ namespace VirtoCommerce.Storefront.Builders
                 }
             }
 
-            _cart.Shipments.Clear();
-            var shipment = new Shipment(_cart.Currency);
-
-            foreach (var item in _cart.Items)
+            if (quoteRequest.RequestShippingQuote)
             {
-                shipment.Items.Add(item.ToShipmentItem());
-            }
+                _cart.Shipments.Clear();
+                var shipment = new Shipment(_cart.Currency);
 
-            if (quoteRequest.ShipmentMethod != null)
-            {
-                var availableShippingMethods = await GetAvailableShippingMethodsAsync();
-                if (availableShippingMethods != null)
+                foreach (var item in _cart.Items)
                 {
-                    var availableShippingMethod = availableShippingMethods.FirstOrDefault(sm => sm.ShipmentMethodCode == quoteRequest.ShipmentMethod.ShipmentMethodCode);
-                    if (availableShippingMethod != null)
+                    shipment.Items.Add(item.ToShipmentItem());
+                }
+
+                if (quoteRequest.ShippingAddress != null)
+                {
+                    shipment.DeliveryAddress = quoteRequest.ShippingAddress;
+                }
+
+                if (quoteRequest.ShipmentMethod != null)
+                {
+                    var availableShippingMethods = await GetAvailableShippingMethodsAsync();
+                    if (availableShippingMethods != null)
                     {
-                        shipment = quoteRequest.ShipmentMethod.ToShipmentModel(_cart.Currency);
-                        _cart.Shipments.Add(shipment);
+                        var availableShippingMethod = availableShippingMethods.FirstOrDefault(sm => sm.ShipmentMethodCode == quoteRequest.ShipmentMethod.ShipmentMethodCode);
+                        if (availableShippingMethod != null)
+                        {
+                            shipment = quoteRequest.ShipmentMethod.ToShipmentModel(_cart.Currency);
+                        }
                     }
                 }
+
+                _cart.Shipments.Add(shipment);
             }
 
             _cart.Payments.Clear();
             var payment = new Payment(_cart.Currency);
 
-            if (quoteRequest.Addresses != null)
+            if (quoteRequest.BillingAddress != null)
             {
-                var shippingAddress = quoteRequest.Addresses.FirstOrDefault(a => a.Type == AddressType.Shipping);
-                if (shippingAddress != null)
-                {
-                    shipment.DeliveryAddress = shippingAddress;
-                }
-                var billingAddress = quoteRequest.Addresses.FirstOrDefault(a => a.Type == AddressType.Billing);
-                if (billingAddress != null)
-                {
-                    payment.BillingAddress = billingAddress;
-                    _cart.Payments.Add(payment);
-                }
+                payment.BillingAddress = quoteRequest.BillingAddress;
             }
+
+            payment.Amount = quoteRequest.Totals.GrandTotalInclTax;
+
+            _cart.Payments.Add(payment);
 
             return this;
         }

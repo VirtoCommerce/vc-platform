@@ -1,0 +1,47 @@
+﻿<script id="storefront.recently-added-actual-quote-request-item-dialog.tpl" type="text/ng-template">
+    <div class="ajaxify-modal is-visible" id="ajaxifyModal" style="opacity: 1;">
+        <button class="ajaxifyCart--close" title="{{ 'cart.general.close_cart' | t }}" ng-click="close()">{{ 'cart.general.close_cart' | t }}</button>
+        <div class="ajaxifyCart--content" id="ajaxifyCart">
+            <h1 class="h2">Product is added to quote request</h1>
+            <div class="cart-row">
+                <div class="grid">
+                    <div class="grid-item large--seven-twelfths">
+                        <div class="grid">
+                            <div class="grid-item one-third large--one-quarter">
+                                <span class="cart-image">
+                                    <img ng-src="{( dialogData.imageUrl )}" ng-if="dialogData.imageUrl" />
+                                    <div class="no-product-image" ng-if="!dialogData.imageUrl">
+                                        <img src="{{ 'no-image.svg' | asset_url }}" />
+                                    </div>
+                                </span>
+                            </div>
+                            <div class="grid-item two-thirds large--three-quarters">
+                                <a ng-bind="dialogData.name"></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid-item large--five-twelfths medium--two-thirds push--medium--one-third">
+                        <div class="grid">
+                            <div class="grid-item one-half medium-down--one-third text-right">
+                                <div class="ajaxifyCart--qty" ng-bind="dialogData.quantity"></div>
+                            </div>
+                            <div class="grid-item one-third medium-down--one-third medium-down--text-left text-right">
+                                <span class="h2" ng-bind="dialogData.placedPrice.formatedAmount"></span>
+                                <span style="text-decoration: line-through;" ng-if="dialogData.listPrice.amount != dialogData.placedPrice.amount" ng-bind="dialogData.listPrice.formatedAmount"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cart-row">
+                <div class="grid">
+                    <div class="grid-item text-right">
+                        <button class="btn" ng-click="redirect('{{ 'quoterequest' | absolute_url }}')">Go to quote request</button>
+                        <button class="btn" ng-click="close()">Continue shopping</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="ajaxifyCart-overlay"></div>
+</script>

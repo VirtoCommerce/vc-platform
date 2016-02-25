@@ -1,244 +1,285 @@
-﻿<div ng-if="!quoteRequest || !quoteRequest.Items.length" ng-cloak>
-    <h2>Quote request is currently empty.</h2>
-</div>
+﻿<script>
+    window.currentQuoteRequestNumber = '{{ quote_request.id }}';
+</script>
 
-<form name="formQuoteRequest" novalidate="novalidate" ng-if="quoteRequest && quoteRequest.Items.length" ng-cloak>
-    <span ng-init="setQuoteRequestForm(formQuoteRequest)"></span>
-    <div class="ajax-informer" ng-class="{ 'fade': quoteRequestIsUpdating }" style="position: fixed; z-index: 999999;">
-        <div class="loader"></div>
-        <span>Updating quote request...</span>
+<div ng-controller="quoteRequestController">
+    <div ng-if="!quoteRequest">
+        <h2>Loading quote request...</h2>
     </div>
-    <h1 class="h2">Quote request <span ng-if="quoteRequest.Status != 'New'" ng-bind="'#' + quoteRequest.Number"></span></h1>
-    <div ng-if="quoteRequest.Status == 'New'">
-        <div class="grid">
+    <div ng-if="quoteRequest.itemsCount == 0">
+        <h2>Quote request is currently empty.</h2>
+    </div>
+    <form name="formQuoteRequest" novalidate="novalidate" ng-if="quoteRequest.itemsCount > 0">
+        <span ng-init="setQuoteRequestForm(formQuoteRequest)"></span>
+        <div class="ajax-informer" style="position: fixed; z-index: 999999;">
+            <div class="loader"></div>
+            <span>Updating quote request...</span>
+        </div>
+        <h1 class="h2" ng-bind="'Quote request #' + quoteRequest.number"></h1>
+        <div class="grid" ng-if="displayForStatuses(['New'])">
             <div class="grid-item">
                 <div class="ublock">
                     <h4>
                         E-mail address <span style="color: #ff0000;">*</span>
                     </h4>
-                    <input id="Email" name="Email" type="email" required="required" ng-model="quoteRequest.Email" />
-                    <div class="alert alert-error" ng-if="(formQuoteRequest.Email.$dirty || formQuoteRequest.$submitted) && formQuoteRequest.Email.$error.required">Please enter your E-mail address</div>
-                    <div class="alert alert-error" ng-if="(formQuoteRequest.Email.$dirty || formQuoteRequest.$submitted) && formQuoteRequest.Email.$error.email">Please enter valid E-mail address</div>
+                    <input id="Email" name="Email" type="email" required="required" ng-class="{ 'error': (formQuoteRequest.$submitted || formQuoteRequest.Email.$dirty) && formQuoteRequest.Email.$invalid }" ng-model="quoteRequest.email" />
+                    <div class="alert alert-error" ng-if="(formQuoteRequest.$submitted || formQuoteRequest.Email.$dirty) && formQuoteRequest.Email.$error.required">Please enter your E-mail address</div>
+                    <div class="alert alert-error" ng-if="(formQuoteRequest.$submitted || formQuoteRequest.Email.$dirty) && formQuoteRequest.Email.$error.email">Please enter valid E-mail address</div>
                 </div>
             </div>
         </div>
-        <div class="grid">
+        <div class="grid" ng-if="displayForStatuses(['New'])">
             <div class="grid-item">
                 <div class="ublock">
                     <h4>Remarks</h4>
                     <p>Do you have a general remark with this Quote Request?</p>
-                    <textarea id="Comment" name="Comment" ng-model="quoteRequest.Comment"></textarea>
-                    <input id="RequestShippingQuote" name="RequestShippingQuote" style="display: inline-block;" type="checkbox" ng-model="quoteRequest.RequestShippingQuote" ng-change="setRequestShippingQuote(!quoteRequest.RequestShippingQuote)" />
+                    <textarea id="Comment" name="Comment" ng-model="quoteRequest.comment"></textarea>
+                    <input id="RequestShippingQuote" name="RequestShippingQuote" style="display: inline-block;" type="checkbox" ng-model="quoteRequest.requestShippingQuote" />
                     <label for="RequestShippingQuote" style="display: inline-block;">Request a shipping quote</label>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="grid" ng-if="quoteRequest.Status != 'New'">
-        <div class="grid-item medium-down--one-whole">
-            <dl class="dl-horizontal">
-                <dt>E-mail:</dt>
-                <dd ng-bind="quoteRequest.Email"></dd>
-                <dt ng-if="quoteRequest.Comment">Comment:</dt>
-                <dd ng-if="quoteRequest.Comment" ng-bind="quoteRequest.Comment"></dd>
-                <dt>Created date:</dt>
-                <dd nd-bind="quoteRequest.CreatedDate"></dd>
-                <dt>Status:</dt>
-                <dd nd-bind="quoteRequest.Status"></dd>
-                <dt>Billing address:</dt>
-                <dd ng-bind="stringifyAddress(quoteRequest.BillingAddress)"></dd>
-                <dt ng-if="quoteRequest.ShippingAddress">Shipping address:</dt>
-                <dd ng-if="quoteRequest.Shipping address" ng-bind="stringifyAddress(quoteRequest.ShippingAddress)"></dd>
-            </dl>
-        </div>
-    </div>
-    <h4>Quote items</h4>
-    <div class="cart-row quote" ng-repeat="quoteItem in quoteRequest.Items">
-        <input id="{( 'QuoteItem_' + quoteItem.Id )}" name="{( 'QuoteItem_' + quoteItem.Id )}" type="hidden" ng-model="quoteItem.Id" />
-        <div class="grid">
-            <div class="grid-item large--seven-twelfths">
-                <div class="grid">
-                    <div class="grid-item one-third large--one-quarter">
-                        <span class="cart-image">
-                            <img alt="quoteItem.Name" ng-src="{( quoteItem.ImageUrl )}" title="quoteItem.Name" />
-                        </span>
-                    </div>
-                    <div class="grid-item one-third" ng-bind="quoteItem.Name"></div>
-                    <div class="grid-item one-third">
-                        <textarea class="quote_item_comment" id="{( 'Comment_' + quoteItem.Id )}" name="{( 'Comment_' + quoteItem.Id )}" ng-model="quoteItem.Comment" ng-if="quoteRequest.Status == 'New'"></textarea>
-                        <span ng-if="quoteRequest.Status != 'New'" ng-bind="quoteItem.Comment"></span>
-                    </div>
-                </div>
+        <div class="grid" ng-if="displayForStatuses(['Processing', 'Proposal sent', 'Ordered', 'Rejected', 'Canceled'])">
+            <div class="grid-item medium-down--one-whole">
+                <table>
+                    <tr>
+                        <td><strong>Email:</strong></td>
+                        <td ng-bind="quoteRequest.email"></td>
+                    </tr>
+                    <tr ng-if="quoteRequest.comment">
+                        <td><strong>Comment:</strong></td>
+                        <td ng-bind="quoteRequest.comment"></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Created:</strong></td>
+                        <td ng-bind="quoteRequest.createdDate | date: 'medium'"></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Status:</strong></td>
+                        <td ng-bind="quoteRequest.status"></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Billing address:</strong></td>
+                        <td ng-bind="stringifyAddress(quoteRequest.billingAddress)"></td>
+                    </tr>
+                    <tr ng-if="quoteRequest.shippingAddress">
+                        <td><strong>Shipping address:</strong></td>
+                        <td ng-bind="stringifyAddress(quoteRequest.shippingAddress)"></td>
+                    </tr>
+                </table>
             </div>
-            <div class="grid-item large--five-twelfths medium--two-thirds push--medium--one-third">
-                <div class="grid" ng-if="quoteRequest.Status == 'New'">
-                    <div class="grid-item one-half medium-down--one-third text-right">
-                        <div class="js-qty" ng-repeat="proposalPrice in quoteItem.ProposalPrices">
-                            <div class="js-qty--inner">
-                                <input class="js--num" id="{( 'Quantity_' + quoteItem.Id + '' )}" min="1" name="{( 'Quantity_' + quoteItem.Id + '_' + proposalPrice.Id )}" required="required" type="number" ng-model="proposalPrice.Quantity" ng-blur="updateProposalPrice(quoteItem.Id, proposalPrice.Id, proposalPrice.Quantity)" />
-                                <span class="js--qty-adjuster js--add" ng-click="updateProposalPrice(quoteItem.Id, proposalPrice.Id, proposalPrice.Quantity + 1)">+</span>
-                                <span class="js--qty-adjuster js--minus" ng-click="updateProposalPrice(quoteItem.Id, proposalPrice.Id, proposalPrice.Quantity - 1)">-</span>
-                            </div>
-                            <div class="alert alert-error" style="margin-top: 5px;" ng-if="(formQuoteRequest['Quantity_' + quoteItem.Id + '_' + proposalPrice.Id].$dirty || formQuoteRequest.$submitted) && formQuoteRequest['Quantity_' + quoteItem.Id + '_' + proposalPrice.Id].$error.required">Please enter a quantity</div>
-                            <div class="alert alert-error" style="margin-top: 5px;" ng-if="(formQuoteRequest['Quantity_' + quoteItem.Id + '_' + proposalPrice.Id].$dirty || formQuoteRequest.$submitted) && formQuoteRequest['Quantity_' + quoteItem.Id + '_' + proposalPrice.Id].$error.number">Please enter a number</div>
-                            <div class="alert alert-error" style="margin-top: 5px;" ng-if="(formQuoteRequest['Quantity_' + quoteItem.Id + '_' + proposalPrice.Id].$dirty || formQuoteRequest.$submitted) && formQuoteRequest['Quantity_' + quoteItem.Id + '_' + proposalPrice.Id].$error.min">Quantity should be greater than 0</div>
-                            <div class="alert alert-error" style="margin-top: 5px;" ng-if="formQuoteRequest.$submitted && !quoteItem.TierPricesAreUnique">Quantites should be unique</div>
-                            <a class="link-action" ng-click="removeTierPrice(quoteItem.Id, proposalPrice.Id)" ng-if="quoteItem.ProposalPrices.length > 1">Remove</a>
-                        </div>
-                        <div class="js-qty">
-                            <a class="add-tier" style="cursor: pointer;" ng-click="addTierPrice(quoteItem.Id)">Add tier</a>
-                        </div>
-                    </div>
-                    <div class="grid-item one-third medium-down--one-third medium-down--text-left text-right proposal-prices">
-                        <span class="h2 tier-price" ng-repeat="proposalPrice in quoteItem.ProposalPrices">
-                            <small ng-bind="quoteItem.SalePrice.FormatedAmount"></small>
-                        </span>
-                    </div>
-                    <div class="grid-item one-sixth medium-down--one-third text-right">
-                        <a class="icon-fallback-text btn-secondary remove" href="" ng-click="removeItemFromQuoteRequest(quoteItem.Id)">
-                            <span aria-hidden="true" class="icon icon-x"></span>
-                            <span class="fallback-text">Remove</span>
-                        </a>
-                    </div>
-                </div>
-                <div class="grid" ng-if="quoteRequest.Status != 'New'">
-                    <div class="grid-item large--five-twelfths medium--two-thirds push--medium--one-third">
-                        <div class="grid">
-                            <div class="grid-item one-third medium-down--one-third text-right">
-                                <div class="js-qty" ng-bind="quoteItem.SalePrice.FormatedAmount"></div>
-                            </div>
-                            <div class="grid-item one-third medium-down--one-third text-right">
-                                <div class="js-qty" ng-repeat="tierPrice in quoteItem.ProposalPrices" ng-bind="tierPrice.Quantity"></div>
-                            </div>
-                            <div class="grid-item one-third medium-down--one-third text-right">
-                                <div class="js-qty" ng-repeat="tierPrice in quoteItem.ProposalPrices">
-                                    <input class="proposal-price-radio" id="{( 'QuoteItem_' + quoteItem.Id + '_' + tierPrice.Id )}" name="{( 'QuoteItem_' + quoteItem.Id + '_TierPrice' )}" style="display: inline-block;" type="radio" ng-model="quoteItem.SelectedTierPrice" ng-checked="tierPrice.Quantity == quoteItem.SelectedTierPrice.Quantity" ng-change="getQuoteRequestTotals(quoteItem.Id, proposalPrice)" ng-disabled="customerQuoteRequest.Status != 'ProposalSent'" />
-                                    <label for="{( 'QuoteItem_' + quoteItem.Id + '_' + tierPrice.Id )}" style="display: inline-block;" ng-bind="tierPrice.Price.FormatedAmount"></label>
+        </div>
+        <div class="cart-row quote" ng-repeat="quoteItem in quoteRequest.items">
+            <div class="grid">
+                <div class="grid-item large--seven-twelfths">
+                    <div class="grid">
+                        <div class="grid-item one-third large--one-quarter">
+                            <span class="cart-image">
+                                <img alt="quoteItem.name" ng-src="{( quoteItem.imageUrl )}" title="quoteItem.name" ng-if="quoteItem.imageUrl" />
+                                <div class="no-product-image" ng-if="!quoteItem.imageUrl">
+                                    <img src="{{ 'no-image.svg' | asset_url }}" />
                                 </div>
+                            </span>
+                        </div>
+                        <div class="grid-item one-third" ng-bind="quoteItem.name"></div>
+                        <div class="grid-item one-third">
+                            <textarea class="quote_item_comment" id="{( 'Item_' + quoteItem.id + '_Comment' )}" name="{( 'Item_' + quoteItem.id + '_Comment' )}" ng-if="displayForStatuses(['New'])" ng-model="quoteItem.comment"></textarea>
+                            <span ng-bind="quoteItem.comment" ng-if="displayForStatuses(['Processing', 'Proposal sent', 'Ordered', 'Rejected', 'Canceled'])"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid-item large--five-twelfths medium--two-thirds push--medium--one-third">
+                    <div class="grid">
+                        <div class="grid-item one-half medium-down--one-third text-right" ng-if="displayForStatuses(['New'])">
+                            <div class="js-qty" ng-repeat="tierPrice in quoteItem.proposalPrices">
+                                <div class="js-qty--inner">
+                                    <input class="js--num" id="{( 'QuoteItem_' + quoteItemId + '_' + tierPrice.id )}" min="1" name="{( 'QuoteItem_' + quoteItemId + '_' + tierPrice.id )}" required="required" type="number" ng-class="{ 'error': (formQuoteRequest.$submitted || formQuoteRequest['QuoteItem_' + quoteItemId + '_' + tierPrice.id].$dirty) && formQuoteRequest['QuoteItem_' + quoteItemId + '_' + tierPrice.id].$invalid }" ng-model="tierPrice.quantity" />
+                                    <span class="js--qty-adjuster js--add" ng-click="changeTierPriceQuantity(tierPrice, tierPrice.quantity + 1)">+</span>
+                                    <span class="js--qty-adjuster js--minus" ng-click="changeTierPriceQuantity(tierPrice, tierPrice.quantity - 1)">-</span>
+                                </div>
+                                <a class="link-action" ng-click="removeTierPrice(quoteItem, tierPrice)">Remove</a>
+                                <div class="alert alert-error tier-price" ng-if="(formQuoteRequest.$submitted || formQuoteRequest['QuoteItem_' + quoteItemId + '_' + tierPrice.id].$dirty) && formQuoteRequest['QuoteItem_' + quoteItemId + '_' + tierPrice.id].$error.required">Please enter quantity</div>
+                                <div class="alert alert-error tier-price" ng-if="(formQuoteRequest.$submitted || formQuoteRequest['QuoteItem_' + quoteItemId + '_' + tierPrice.id].$dirty) && formQuoteRequest['QuoteItem_' + quoteItemId + '_' + tierPrice.id].$error.number">Please enter a number</div>
+                                <div class="alert alert-error tier-price" ng-if="(formQuoteRequest.$submitted || formQuoteRequest['QuoteItem_' + quoteItemId + '_' + tierPrice.id].$dirty) && formQuoteRequest['QuoteItem_' + quoteItemId + '_' + tierPrice.id].$error.min">Please enter a positive value</div>
                             </div>
+                            <div class="js-qty">
+                                <div class="alert alert-error tier-price" ng-if="formQuoteRequest.$submitted && !tierPricesUnique(quoteItem)">Please enter an unique quantities</div>
+                                <a class="add-tier" style="cursor: pointer;" ng-click="addTierPrice(quoteItem)">Add tier</a>
+                            </div>
+                        </div>
+                        <div class="grid-item one-half medium-down--one-third text-right" ng-if="displayForStatuses(['Processing', 'Proposal sent', 'Ordered', 'Rejected', 'Canceled'])">
+                            <div class="js-qty" ng-repeat="tierPrice in quoteItem.proposalPrices">
+                                <div class="js-qty--inner" ng-bind="tierPrice.quantity"></div>
+                            </div>
+                        </div>
+                        <div class="grid-item one-third medium-down--one-third medium-down--text-left text-right proposal-prices">
+                            <span class="h2 tier-price" ng-repeat="tierPrice in quoteItem.proposalPrices" ng-if="displayForStatuses(['New', 'Processing', 'Ordered', 'Rejected', 'Canceled'])">
+                                <small ng-bind="tierPrice.price.formatedAmount"></small>
+                            </span>
+                            <span class="h2 tier-price" ng-repeat="tierPrice in quoteItem.proposalPrices" ng-if="displayForStatuses(['Proposal sent'])">
+                                <input id="{('QuoteItem_' + quoteItem.id + '_' + tierPrice.id )}" name="{('QuoteItem_' + quoteItem.id + '_SelectedTierPrice' )}" style="display: inline-block;" type="radio" ng-model="quoteItem.selectedTierPrice" ng-value="tierPrice" ng-change="selectTierPrice()" />
+                                <label for="{('QuoteItem_' + quoteItem.id + '_' + tierPrice.id )}" style="display: inline-block;" ng-bind="tierPrice.price.formatedAmount"></label>
+                            </span>
+                        </div>
+                        <div class="grid-item one-sixth medium-down--one-third text-right" ng-if="displayForStatuses(['New'])">
+                            <a class="icon-fallback-text btn-secondary remove" href="" ng-click="removeProductFromQuoteRequest(quoteItem)">
+                                <span aria-hidden="true" class="icon icon-x"></span>
+                                <span class="fallback-text">Remove</span>
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="grid" ng-if="quoteRequest.Status == 'New'">
-        <div class="grid-item">
-            <div class="ublock" id="billing-address-block">
-                <div class="h3">Billing address</div>
-                <input id="BillingAddressType" name="BillingAddressType" type="hidden" ng-model="quoteRequest.BillingAddress.Type" />
-                <div class="grid">
-                    <div class="grid-item large--one-half">
-                        <label for="BillingAddressFirstName" style="float: left;">First name</label>
-                        <span style="color: #ff0000; float: left; margin-left: 5px;">*</span>
-                        <input id="BillingAddressFirstName" name="BillingAddressFirstName" required="required" type="text" ng-model="quoteRequest.BillingAddress.FirstName" />
-                        <div class="alert alert-error" ng-if="(formQuoteRequest.$submitted || formQuoteRequest.BillingAddressFirstName.$dirty) && formQuoteRequest.BillingAddressFirstName.$error.required">Please enter your first name</div>
-                        <label for="BillingAddressLastName" style="float: left;">Last name</label>
-                        <span style="color: #ff0000; float: left; margin-left: 5px;">*</span>
-                        <input id="BillingAddressLastName" name="BillingAddressLastName" required="required" type="text" ng-model="quoteRequest.BillingAddress.LastName" />
-                        <div class="alert alert-error" ng-if="(formQuoteRequest.$submitted || formQuoteRequest.BillingAddressLastName.$dirty) && formQuoteRequest.BillingAddressLastName.$error.required">Please enter your last name</div>
-                        <label for="BillingAddressCountryName" style="float: left;">Country</label>
-                        <span style="color: #ff0000; float: left; margin-left: 5px;">*</span>
-                        <select id="BillingAddressCountryName" name="BillingAddressCountryName" required="required" style="background-color: #ffffff;" ng-model="quoteRequest.BillingAddress.CountryName" ng-change="setCountry('Billing', quoteRequest.BillingAddress.CountryName)">
-                            <option disabled="disabled" value="" ng-bind="'Select country'"></option>
-                            <option ng-repeat="country in quoteRequest.Countries" ng-value="country.Name" ng-bind="country.Name" ng-selected="country.Name == quoteRequest.BillingAddress.CountryName"></option>
-                        </select>
-                        <input id="BillingAddressCountryCode" name="BillingAddressCountryCode" type="hidden" ng-model="quoteRequest.BillingAddress.CountryCode" />
-                        <div class="alert alert-error" ng-if="(formQuoteRequest.$submitted || formQuoteRequest.BillingAddressCountryName.$dirty) && formQuoteRequest.BillingAddressCountryName.$error.required">Please select your country</div>
-                        <label for="BillingAddressRegionName" style="float: left;" ng-bind="quoteRequest.SelectedBillingCountry.RegionType || 'Region'" ng-if="quoteRequest.BillingCountryRegions.length"></label>
-                        <span style="color: #ff0000; float: left; margin-left: 5px;" ng-if="quoteRequest.BillingCountryRegions.length">*</span>
-                        <select id="BillingAddressRegionName" name="BillingAddressRegionName" required="required" style="background-color: #ffffff;" ng-model="quoteRequest.BillingAddress.RegionName" ng-if="quoteRequest.BillingCountryRegions.length" ng-change="setCountryRegion('Billing', quoteRequest.BillingAddress.RegionName)">
-                            <option disabled="disabled" value="" ng-bind="'Select ' + quoteRequest.SelectedBillingCountry.RegionType"></option>
-                            <option ng-repeat="countryRegion in quoteRequest.BillingCountryRegions" ng-value="countryRegion.Name" ng-bind="countryRegion.Name" ng-selected="countryRegion.Name == quoteRequest.BillingAddress.RegionName"></option>
-                        </select>
-                        <input id="BillingAddressRegionId" name="BillingAddressregionId" type="hidden" ng-model="quoteRequest.BillingAddress.RegionId" ng-if="quoteRequest.BillingCountryRegions.length" />
-                        <div class="alert alert-error" ng-if="(formQuoteRequest.$submitted || formQuoteRequest.BillingAddressRegionName.$dirty) && formQuoteRequest.BillingAddressRegionName.$error.required">Please select your {( quoteRequest.SelectedBillingCountry.RegionType )}</div>
-                        <label for="BillingAddressCity" style="float: left;">City</label>
-                        <span style="color: #ff0000; float: left; margin-left: 5px;">*</span>
-                        <input id="BillingAddressCity" name="BillingAddressCity" required="required" type="text" ng-model="quoteRequest.BillingAddress.City" />
-                        <div class="alert alert-error" ng-if="(formQuoteRequest.$submitted || formQuoteRequest.BillingAddressCity.$dirty) && formQuoteRequest.BillingAddressCity.$error.required">Please enter your city</div>
+        <div class="cart-row" id="quote-totals" ng-if="displayForStatuses(['Proposal sent'])">
+            <div class="grid">
+                <div class="grid-item text-right">
+                    <div class="cart-total">
+                        Subtotal
+                        <span class="h1 cart-subtotal--price">
+                            <small id="quote-subtotal" ng-bind="quoteRequest.totals.subTotalExlTax.formatedAmount"></small>
+                        </span>
                     </div>
-                    <div class="grid-item large--one-half">
-                        <label for="BillingAddressOrganization">Company</label>
-                        <input id="BillingAddressOrganization" name="BillingAddressOrganization" type="text" ng-model="quoteRequest.BillingAddress.Organization" />
-                        <label for="BillingAddressLine1" style="float: left;">Address line 1</label>
-                        <span style="color: #ff0000; float: left; margin-left: 5px;">*</span>
-                        <input id="BillingAddressLine1" name="BillingAddressLine1" type="text" required="required" ng-model="quoteRequest.BillingAddress.Line1" />
-                        <div class="alert alert-error" ng-if="(formQuoteRequest.$submitted || formQuoteRequest.BillingAddressLine1.$dirty) && formQuoteRequest.BillingAddressLine1.$error.required">Please enter your address line 1</div>
-                        <label for="BillingAddressLine2">Address line 2</label>
-                        <input id="BillingAddressLine2" name="BillingAddressLine2" type="text" ng-model="quoteRequest.BillingAddress.Line2" />
-                        <label for="BillingAddressPostalCode" style="float: left;">Zip/Postal code</label>
-                        <span style="color: #ff0000; float: left; margin-left: 5px;">*</span>
-                        <input id="BillingAddressPostalCode" name="BillingAddressPostalCode" required="required" type="text" ng-model="quoteRequest.BillingAddress.PostalCode" />
-                        <div class="alert alert-error" ng-if="(formQuoteRequest.$submitted || formQuoteRequest.BillingAddressPostalCode.$dirty) && formQuoteRequest.BillingAddressPostalCode.$error.required">Please enter your postal code</div>
-                        <label for="BillingAddressPhone">Phone</label>
-                        <input id="BillingAddressPhone" name="BillingAddressPhone" type="text" ng-model="quoteRequest.BillingAddress.Phone" />
+                    <div class="cart-total" ng-if="quoteRequest.totals.discountTotal.amount > 0">
+                        Discount
+                        <span class="h1 cart-subtotal--price">
+                            <small id="quote-subtotal" ng-bind="quoteRequest.totals.discountTotal.formatedAmount"></small>
+                        </span>
                     </div>
-                </div>
-            </div>
-            <div class="ublock" id="shipping-address-block" ng-if="quoteRequest.RequestShippingQuote">
-                <div class="h3">Shipping address</div>
-                <input id="ShippingAddressEqualsBilling" name="ShippingAddressEqualsBilling" type="checkbox" style="display: inline-block;" ng-model="quoteRequest.ShippingAddressEqualsBilling" ng-change="setShippingAddressEqualsBilling()" />
-                <label for="ShippingAddressEqualsBilling" style="display: inline-block;">Billing Address is same as Shipping Address</label>
-                <input id="ShippingAddressType" name="ShippingAddressType" type="hidden" ng-model="quoteRequest.ShippingAddress.Type" />
-                <div class="grid">
-                    <div class="grid-item large--one-half">
-                        <label for="ShippingAddressFirstName" style="float: left;">First name</label>
-                        <span style="color: #ff0000; float: left; margin-left: 5px;">*</span>
-                        <input id="ShippingAddressFirstName" name="ShippingAddressFirstName" required="required" type="text" ng-model="quoteRequest.ShippingAddress.FirstName" />
-                        <div class="alert alert-error" ng-if="(formQuoteRequest.$submitted || formQuoteRequest.ShippingAddressFirstName.$dirty) && formQuoteRequest.ShippingAddressFirstName.$error.required">Please enter your first name</div>
-                        <label for="ShippingAddressLastName" style="float: left;">Last name</label>
-                        <span style="color: #ff0000; float: left; margin-left: 5px;">*</span>
-                        <input id="ShippingAddressLastName" name="ShippingAddressLastName" required="required" type="text" ng-model="quoteRequest.ShippingAddress.LastName" />
-                        <div class="alert alert-error" ng-if="(formQuoteRequest.$submitted || formQuoteRequest.ShippingAddressLastName.$dirty) && formQuoteRequest.ShippingAddressLastName.$error.required">Please enter your last name</div>
-                        <label for="ShippingAddressCountryName" style="float: left;">Country</label>
-                        <span style="color: #ff0000; float: left; margin-left: 5px;">*</span>
-                        <select id="ShippingAddressCountryName" name="ShippingAddressCountryName" required="required" style="background-color: #ffffff;" ng-model="quoteRequest.ShippingAddress.CountryName" ng-change="setCountry('Shipping', quoteRequest.ShippingAddress.CountryName)">
-                            <option disabled="disabled" value="" ng-bind="'Select country'"></option>
-                            <option ng-repeat="country in quoteRequest.Countries" ng-value="country.Name" ng-bind="country.Name" ng-selected="country.Name == quoteRequest.ShippingAddress.CountryName"></option>
-                        </select>
-                        <input id="ShippingAddressCountryCode" name="ShippingAddressCountryCode" type="hidden" ng-model="quoteRequest.ShippingAddress.CountryCode" />
-                        <div class="alert alert-error" ng-if="(formQuoteRequest.$submitted || formQuoteRequest.ShippingAddressCountryName.$dirty) && formQuoteRequest.ShippingAddressCountryName.$error.required">Please select your country</div>
-                        <label for="ShippingAddressRegionName" style="float: left;" ng-bind="quoteRequest.SelectedShippingCountry.RegionType || 'Region'" ng-if="quoteRequest.ShippingCountryRegions.length"></label>
-                        <span style="color: #ff0000; float: left; margin-left: 5px;" ng-if="quoteRequest.ShippingCountryRegions.length">*</span>
-                        <select id="ShippingAddressRegionName" name="ShippingAddressRegionName" required="required" style="background-color: #ffffff;" ng-model="quoteRequest.ShippingAddress.RegionName" ng-if="quoteRequest.ShippingCountryRegions.length" ng-change="setcountryRegion('Shipping', quoteRequest.ShippingAddress.RegionName)">
-                            <option disabled="disabled" value="" ng-bind="'Select ' + quoteRequest.SelectedCountry.RegionType"></option>
-                            <option ng-repeat="countryRegion in quoteRequest.ShippingCountryRegions" ng-value="countryRegion.Name" ng-bind="countryRegion.Name" ng-selected="countryRegion.Name == quoteRequest.ShippingAddress.RegionName"></option>
-                        </select>
-                        <input id="ShippingAddressRegionId" name="ShippingAddressregionId" type="hidden" ng-model="quoteRequest.ShippingAddress.RegionId" />
-                        <div class="alert alert-error" ng-if="(formQuoteRequest.$submitted || formQuoteRequest.ShippingAddressRegionName.$dirty) && formQuoteRequest.ShippingAddressRegionName.$error.required">Please select your {( quoteRequest.SelectedShippingCountry.RegionType )}</div>
-                        <label for="ShippingAddressCity" style="float: left;">City</label>
-                        <span style="color: #ff0000; float: left; margin-left: 5px;">*</span>
-                        <input id="ShippingAddressCity" name="ShippingAddressCity" required="required" type="text" ng-model="quoteRequest.ShippingAddress.City" />
-                        <div class="alert alert-error" ng-if="(formQuoteRequest.$submitted || formQuoteRequest.ShippingAddressCity.$dirty) && formQuoteRequest.ShippingAddressCity.$error.required">Please enter your city</div>
+                    <div class="cart-total">
+                        Tax
+                        <span class="h1 cart-subtotal--price">
+                            <small id="quote-tax-total" ng-bind="quoteRequest.totals.taxTotal.formatedAmount"></small>
+                        </span>
                     </div>
-                    <div class="grid-item large--one-half">
-                        <label for="ShippingAddressOrganization">Company</label>
-                        <input id="ShippingAddressOrganization" name="ShippingAddressOrganization" type="text" ng-model="quoteRequest.ShippingAddress.Organization" />
-                        <label for="ShippingAddressLine1" style="float: left;">Address line 1</label>
-                        <span style="color: #ff0000; float: left; margin-left: 5px;">*</span>
-                        <input id="ShippingAddressLine1" name="ShippingAddressLine1" required="required" type="text" ng-model="quoteRequest.ShippingAddress.Line1" />
-                        <div class="alert alert-error" ng-if="(formQuoteRequest.$submitted || formQuoteRequest.ShippingAddressLine1.$dirty) && formQuoteRequest.ShippingAddressLine1.$error.required">Please enter your address line 1</div>
-                        <label for="ShippingAddressLine2">Address line 2</label>
-                        <input id="ShippingAddressLine2" name="ShippingAddressLine2" type="text" ng-model="quoteRequest.ShippingAddress.Line2" />
-                        <label for="ShippingAddressPostalCode" style="float: left;">Zip/Postal code</label>
-                        <span style="color: #ff0000; float: left; margin-left: 5px;">*</span>
-                        <input id="ShippingAddressPostalCode" name="ShippingAddressPostalCode" required="required" type="text" ng-model="quoteRequest.ShippingAddress.PostalCode" />
-                        <div class="alert alert-error" ng-if="(formQuoteRequest.$submitted || formQuoteRequest.ShippingAddressPostalCode.$dirty) && formQuoteRequest.ShippingAddressPostalCode.$error.required">Please enter your postal code</div>
-                        <label for="ShippingAddressPhone">Phone</label>
-                        <input id="ShippingAddressPhone" name="ShippingAddressPhone" type="text" ng-model="quoteRequest.ShippingAddress.Phone" />
+                    <div class="cart-total">
+                        Grand total
+                        <span class="h1 cart-subtotal--price">
+                            <small id="quote-grand-total" ng-bind="quoteRequest.totals.grandTotalInclTax.formatedAmount"></small>
+                        </span>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="ublock text-right">
-        <button class="btn" id="btn-submit-quote-request" type="button" ng-click="submitQuoteRequest()" ng-if="quoteRequest.Status == 'New'">Submit quote request</button>
-        <button class="btn btn-secondary" id="btn-submit-quote-request" style="margin: 0;" type="button" ng-click="rejectQuoteRequest()" ng-if="quoteRequest.Status == 'Processing' || quoteRequest.Status == 'ProposalSent'">Reject quote request</button>
-        <button class="btn" id="btn-submit-quote-request" type="button" ng-click="rejectQuoteRequest()" ng-if="quoteRequest.Status == 'ProposalSent'">Confirm and checkout</button>
-    </div>
-</form>
 
-<script>
-    window.quoteRequestNumber = '{{ quote_request.id }}';
-</script>
+        <div class="grid" ng-if="displayForStatuses(['New'])">
+            <div class="grid-item">
+                <div class="ublock">
+                    <div class="h3">Billing address</div>
+                    <input id="BillingAddressType" name="BillingAddressType" type="hidden" value="Billing" ng-model="quoteRequest.billingAddress.type" ng-init="quoteRequest.billingAddress.type = 'Billing'" />
+                    <div class="grid">
+                        <div class="grid-item large--one-half">
+                            <label for="BillingAddressFirstName" style="float: left;">First name</label>
+                            <span style="color: #ff0000; float: left; margin-left: 5px;">*</span>
+                            <input id="BillingAddressFirstName" name="BillingAddressFirstName" required="required" type="text" ng-class="{ 'error': (formQuoteRequest.$submitted || formQuoteRequest.BillingAddressFirstName.$dirty) && formQuoteRequest.BillingAddressFirstName.$invalid }" ng-model="quoteRequest.billingAddress.firstName" />
+                            <div class="alert alert-error" ng-if="(formQuoteRequest.$submitted || formQuoteRequest.BillingAddressFirstName.$dirty) && formQuoteRequest.BillingAddressFirstName.$error.required">Please enter your first name</div>
+                            <label for="BillingAddressLastName" style="float: left;">Last name</label>
+                            <span style="color: #ff0000; float: left; margin-left: 5px;">*</span>
+                            <input id="BillingAddressLastName" name="BillingAddressLastName" required="required" type="text" ng-class="{ 'error': (formQuoteRequest.$submitted || formQuoteRequest.BillingAddressLastName.$dirty) && formQuoteRequest.BillingAddressLastName.$invalid }" ng-model="quoteRequest.billingAddress.lastName" />
+                            <div class="alert alert-error" ng-if="(formQuoteRequest.$submitted || formQuoteRequest.BillingAddressLastName.$dirty) && formQuoteRequest.BillingAddressLastName.$error.required">Please enter your last name</div>
+                            <label for="BillingAddressCountry" style="float: left;">Country</label>
+                            <span style="color: #ff0000; float: left; margin-left: 5px;">*</span>
+                            <select id="BillingAddressCountryName" name="BillingAddressCountryName" required="required" ng-class="{ 'error': (formQuoteRequest.$submitted || formQuoteRequest.BillingAddressCountryName.$dirty) && formQuoteRequest.BillingAddressCountryName.$invalid }" ng-model="quoteRequest.billingAddress.countryName" ng-change="setCountry('Billing', quoteRequest.billingAddress.countryName)">
+                                <option disabled="disabled" value="">Select country</option>
+                                <option ng-repeat="country in countries" ng-value="country.name" ng-selected="country.name == quoteRequest.billingAddress.countryName" ng-bind="country.name"></option>
+                            </select>
+                            <input id="BillingAddressCountryCode" name="BillingAddressCountryCode" type="hidden" ng-model="quoteRequest.billingAddress.countryCode" />
+                            <div class="alert alert-error" ng-if="(formQuoteRequest.$submitted || formQuoteRequest.BillingAddressCountryName.$dirty) && formQuoteRequest.BillingAddressCountryName.$error.required">Please select your country</div>
+                            <div ng-if="billingCountryRegions.length">
+                                <label for="BillingAddressRegionName" style="float: left;" ng-bind="billingCountry.regionType"></label>
+                                <span style="color: #ff0000; float: left; margin-left: 5px;">*</span>
+                                <select id="BillingAddressRegionName" name="BillingAddressRegionName" required="required" ng-class="{ 'error': (formQuoteRequest.$submitted || formQuoteRequest.BillingAddressRegionName.$dirty) && formQuoteRequest.BillingAddressRegionName.$invalid }" ng-model="quoteRequest.billingAddress.regionName" ng-change="setCountryRegion('Billing')">
+                                    <option disabled="disabled" value="" ng-bind="'Select ' + billingCountry.regionType"></option>
+                                    <option ng-repeat="countryRegion in billingCountryRegions" ng-value="countryRegion.name" ng-selected="countryRegion.name == quoteRequest.billingAddress.regionName" ng-bind="countryRegion.name"></option>
+                                </select>
+                                <input id="BillingAddressRegionId" name="BillingAddressRegionId" type="hidden" ng-model="quoteRequest.billingAddress.regionId" />
+                                <div class="alert alert-error" ng-if="(formQuoteRequest.$submitted || formQuoteRequest.BillingAddressRegionName.$dirty) && formQuoteRequest.BillingAddressRegionName.$errro.required" ng-bind="'Please select your ' + billingCountry.regionType"></div>
+                            </div>
+                            <label for="BillingAddressCity" style="float: left;">City</label>
+                            <span style="color: #ff0000; float: left; margin-left: 5px;">*</span>
+                            <input id="BillingAddressCity" name="BillingAddressCity" required="required" type="text" ng-class="{ 'error': (formQuoteRequest.$submitted || formQuoteRequest.BillingAddressCity.$dirty) && formQuoteRequest.BillingAddressCity.$invalid }" ng-model="quoteRequest.billingAddress.city" />
+                            <div class="alert alert-error" ng-if="(formQuoteRequest.$submitted || formQuoteRequest.BillingAddressCity.$dirty) && formQuoteRequest.BillingAddressCity.$error.required">Please enter your city</div>
+                        </div>
+                        <div class="grid-item large--one-half">
+                            <label for="BillingAddressOrganization">Company</label>
+                            <input id="BillingAddressOrganization" name="BillingAddressOrganization" type="text" ng-model="quoteRequest.billingAddress.organization" />
+                            <label for="BillingAddressLine1" style="float: left;">Address line 1</label>
+                            <span style="color: #ff0000; float: left; margin-left: 5px;">*</span>
+                            <input id="BillingAddressLine1" name="BillingAddressLine1" type="text" required="required" ng-class="{ 'error': (formQuoteRequest.$submitted || formQuoteRequest.BillingAddressLine1.$dirty) && formQuoteRequest.BillingAddressLine1.$invalid }" ng-model="quoteRequest.billingAddress.line1" />
+                            <div class="alert alert-error" ng-if="(formQuoteRequest.$submitted || formQuoteRequest.BillingAddressLine1.$dirty) && formQuoteRequest.BillingAddressLine1.$error.required">Please enter your address line 1</div>
+                            <label for="BillingAddressLine2">Address line 2</label>
+                            <input id="BillingAddressLine2" name="BillingAddressLine2" type="text" ng-model="quoteRequest.billingAddress.line2" />
+                            <label for="BillingAddressPostalCode" style="float: left;">Zip/Postal code</label>
+                            <span style="color: #ff0000; float: left; margin-left: 5px;">*</span>
+                            <input id="BillingAddressPostalCode" name="BillingAddressPostalCode" required="required" type="text" ng-class="{ 'error': (formQuoteRequest.$submitted || formQuoteRequest.BillingAddressPostalCode.$dirty) && formQuoteRequest.BillingAddressPostalCode.$invalid }" ng-model="quoteRequest.billingAddress.postalCode" />
+                            <div class="alert alert-error" ng-if="(formQuoteRequest.$submitted || formQuoteRequest.BillingAddressPostalCode.$dirty) && formQuoteRequest.BillingAddressPostalCode.$invalid">Please enter your postal code</div>
+                            <label for="BillingAddressPhone">Phone</label>
+                            <input id="BillingAddressPhone" name="BillingAddressPhone" type="text" ng-model="quoteRequest.billingAddress.phone" />
+                        </div>
+                    </div>
+                </div>
+                <div class="ublock" ng-if="quoteRequest.requestShippingQuote">
+                    <div class="h3">Shipping address</div>
+                    <input id="ShippingAddressEqualsBilling" name="ShippingAddressEqualsBilling" type="checkbox" style="display: inline-block;" ng-model="quoteRequest.shippingAddressEqualsBilling" ng-change="setShippingAddressEqualsBilling()" />
+                    <label for="ShippingAddressEqualsBilling" style="display: inline-block;">Billing Address is same as Shipping Address</label>
+                    <input id="ShippingAddressType" name="ShippingAddressType" type="hidden" value="Shipping" ng-model="quoteRequest.shippingAddress.type" ng-init="quoteRequest.shippingAddress.type = 'Shipping'" />
+                    <div class="grid">
+                        <div class="grid-item large--one-half">
+                            <label for="ShippingAddressFirstName" style="float: left;">First name</label>
+                            <span style="color: #ff0000; float: left; margin-left: 5px;">*</span>
+                            <input id="ShippingAddressFirstName" name="ShippingAddressFirstName" required="required" type="text" ng-class="{ 'error': (formQuoteRequest.$submitted || formQuoteRequest.ShippingAddressFirstName.$dirty) && formQuoteRequest.ShippingAddressFirstName.$invalid }" ng-model="quoteRequest.shippingAddress.firstName" />
+                            <div class="alert alert-error" ng-if="(formQuoteRequest.$submitted || formQuoteRequest.ShippingAddressFirstName.$dirty) && formQuoteRequest.ShippingAddressFirstName.$error.required">Please enter your first name</div>
+                            <label for="ShippingAddressLastName" style="float: left;">Last name</label>
+                            <span style="color: #ff0000; float: left; margin-left: 5px;">*</span>
+                            <input id="ShippingAddressLastName" name="ShippingAddressLastName" required="required" type="text" ng-class="{ 'error': (formQuoteRequest.$submitted || formQuoteRequest.ShippingAddressLastName.$dirty) && formQuoteRequest.ShippingAddressLastName.$invalid }" ng-model="quoteRequest.shippingAddress.lastName" />
+                            <div class="alert alert-error" ng-if="(formQuoteRequest.$submitted || formQuoteRequest.ShippingAddressLastName.$dirty) && formQuoteRequest.ShippingAddressLastName.$error.required">Please enter your last name</div>
+                            <label for="ShippingAddressCountry" style="float: left;">Country</label>
+                            <span style="color: #ff0000; float: left; margin-left: 5px;">*</span>
+                            <select id="ShippingAddressCountryName" name="ShippingAddressCountryName" required="required" ng-class="{ 'error': (formQuoteRequest.$submitted || formQuoteRequest.ShippingAddressCountryName.$dirty) && formQuoteRequest.ShippingAddressCountryName.$invalid }" ng-model="quoteRequest.shippingAddress.countryName" ng-change="setCountry('Shipping', quoteRequest.shippingAddress.countryName)">
+                                <option disabled="disabled" value="">Select country</option>
+                                <option ng-repeat="country in countries" ng-value="country.name" ng-selected="country.name == quoteRequest.shippingAddress.countryName" ng-bind="country.name"></option>
+                            </select>
+                            <input id="ShippingAddressCountryCode" name="ShippingAddressCountryCode" type="hidden" ng-model="quoteRequest.shippingAddress.countryCode" />
+                            <div class="alert alert-error" ng-if="(formQuoteRequest.$submitted || formQuoteRequest.ShippingAddressCountryName.$dirty) && formQuoteRequest.ShippingAddressCountryName.$error.required">Please select your country</div>
+                            <div ng-if="shippingCountryRegions.length">
+                                <label for="ShippingAddressRegionName" style="float: left;" ng-bind="shippingCountry.RegionType"></label>
+                                <span style="color: #ff0000; float: left; margin-left: 5px;">*</span>
+                                <select id="ShippingAddressRegionName" name="ShippingAddressRegionName" required="required" ng-class="{ 'error': (formQuoteRequest.$submitted || formQuoteRequest.ShippingAddressRegionName.$dirty) && formQuoteRequest.ShippingAddressRegionName.$invalid }" ng-model="quoteRequest.shippingAddress.regionName" ng-change="setCountryRegion('Shipping')">
+                                    <option disabled="disabled" value="" ng-bind="'Select ' + shippingCountry.regionType"></option>
+                                    <option ng-repeat="countryRegion in shippingCountryRegions" ng-value="countryRegion.name" ng-selected="countryRegion.name == quoteRequest.shippingAddress.regionName" ng-bind="countryRegion.name"></option>
+                                </select>
+                                <input id="ShippingAddressRegionId" name="ShippingAddressRegionId" type="hidden" ng-model="quoteRequest.shippingAddress.regionId" />
+                                <div class="alert alert-error" ng-if="(formQuoteRequest.$submitted || formQuoteRequest.ShippingAddressRegionName.$dirty) && formQuoteRequest.ShippingAddressRegionName.$error.required" ng-bind="'Please select your ' + shippingCountry.regionType"></div>
+                            </div>
+                            <label for="ShippingAddressCity" style="float: left;">City</label>
+                            <span style="color: #ff0000; float: left; margin-left: 5px;">*</span>
+                            <input id="ShippingAddressCity" name="ShippingAddressCity" required="required" type="text" ng-class="{ 'error': (formQuoteRequest.$submitted || formQuoteRequest.ShippingAddressCity.$dirty) && formQuoteRequest.ShippingAddressCity.$invalid }" ng-model="quoteRequest.shippingAddress.city" />
+                            <div class="alert alert-error" ng-if="(formQuoteRequest.$submitted || formQuoteRequest.ShippingAddressCity.$dirty) && formQuoteRequest.ShippingAddressCity.$error.required">Please enter your city</div>
+                        </div>
+                        <div class="grid-item large--one-half">
+                            <label for="ShippingAddressOrganization">Company</label>
+                            <input id="ShippingAddressOrganization" name="ShippingAddressOrganization" type="text" ng-model="quoteRequest.shippingAddress.organization" />
+                            <label for="ShippingAddressLine1" style="float: left;">Address line 1</label>
+                            <span style="color: #ff0000; float: left; margin-left: 5px;">*</span>
+                            <input id="ShippingAddressLine1" name="ShippingAddressLine1" type="text" required="required" ng-class="{ 'error': (formQuoteRequest.$submitted || formQuoteRequest.ShippingAddressLine1.$dirty) && formQuoteRequest.ShippingAddressLine1.$invalid }" ng-model="quoteRequest.shippingAddress.line1" />
+                            <div class="alert alert-error" ng-if="(formQuoteRequest.$submitted || formQuoteRequest.ShippingAddressLine1.$dirty) && formQuoteRequest.ShippingAddressLine1.$error.required">Please enter your address line 1</div>
+                            <label for="ShippingAddressLine2">Address line 2</label>
+                            <input id="ShippingAddressLine2" name="ShippingAddressLine2" type="text" ng-model="quoteRequest.shippingAddress.line2" />
+                            <label for="ShippingAddressPostalCode" style="float: left;">Zip/Postal code</label>
+                            <span style="color: #ff0000; float: left; margin-left: 5px;">*</span>
+                            <input id="ShippingAddressPostalCode" name="ShippingAddressPostalCode" required="required" type="text" ng-class="{ 'error': (formQuoteRequest.$submitted || formQuoteRequest.ShippingAddressPostalCode.$dirty) && formQuoteRequest.ShippingAddressPostalCode.$invalid }" ng-model="quoteRequest.shippingAddress.postalCode" />
+                            <div class="alert alert-error" ng-if="(formQuoteRequest.$submitted || formQuoteRequest.ShippingAddressPostalCode.$dirty) && formQuoteRequest.ShippingAddressPostalCode.$error.required">Please enter your postal code</div>
+                            <label for="ShippingAddressPhone">Phone</label>
+                            <input id="ShippingAddressPhone" name="ShippingAddressPhone" type="text" ng-model="quoteRequest.shippingAddress.phone" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ublock text-right" ng-if="displayForStatuses(['New', 'Processing', 'Proposal sent'])">
+            <button class="btn" id="btn-submit-quote-request" type="button" ng-click="submitQuoteRequest()" ng-if="displayForStatuses(['New'])">Submit quote request</button>
+            <button class="btn btn-secondary" id="btn-submit-quote-request" style="margin: 0;" type="button" ng-click="rejectQuoteRequest()" ng-if="displayForStatuses(['Processing', 'Proposal sent'])">Reject quote request</button>
+            <button class="btn" id="btn-submit-quote-request" type="button" ng-click="confirmQuoteRequest()" ng-if="displayForStatuses(['Proposal sent'])">Confirm and checkout</button>
+        </div>
+    </form>
+</div>

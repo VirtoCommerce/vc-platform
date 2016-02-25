@@ -2,7 +2,6 @@
 using VirtoCommerce.Storefront.Model;
 using System.Linq;
 using VirtoCommerce.Storefront.Model.Common;
-using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Storefront.Converters
 {

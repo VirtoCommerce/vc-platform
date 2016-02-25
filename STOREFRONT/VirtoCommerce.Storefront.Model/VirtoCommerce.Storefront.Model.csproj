@@ -61,9 +61,12 @@
     <Compile Include="Attachment.cs" />
     <Compile Include="BankCardInfo.cs" />
     <Compile Include="Cart\CartShipmentItem.cs" />
+    <Compile Include="Cart\PaymentUpdateModel.cs" />
     <Compile Include="Cart\Services\ICartBuilder.cs" />
     <Compile Include="Cart\Services\ICartValidator.cs" />
     <Compile Include="Cart\Services\IValidatable.cs" />
+    <Compile Include="Cart\ShipmentItemUpdateModel.cs" />
+    <Compile Include="Cart\ShipmentUpdateModel.cs" />
     <Compile Include="Cart\ValidationErrors\CartSubtotalError.cs" />
     <Compile Include="Cart\ValidationErrors\ProductPriceError.cs" />
     <Compile Include="Cart\ValidationErrors\ProductQuantityError.cs" />
@@ -82,6 +85,8 @@
     <Compile Include="Catalog\CatalogSearchCriteria.cs" />
     <Compile Include="Catalog\Term.cs" />
     <Compile Include="Catalog\TermExtensions.cs" />
+    <Compile Include="Common\AnonymousComparer.cs" />
+    <Compile Include="Common\EntryState.cs" />
     <Compile Include="LinkList\CategoryMenuLink.cs" />
     <Compile Include="Common\Events\EventPublisher.cs" />
     <Compile Include="Common\Events\IAsyncObserver.cs" />
@@ -93,6 +98,7 @@
     <Compile Include="LinkList\Services\ILinkListService.cs" />
     <Compile Include="Order\Events\OrderPlacedEvent.cs" />
     <Compile Include="Order\OrderSearchCriteria.cs" />
+    <Compile Include="Quote\Events\QuoteRequestUpdatedEvent.cs" />
     <Compile Include="LinkList\ProductMenuLink.cs" />
     <Compile Include="Quote\QuoteItemFormModel.cs" />
     <Compile Include="Quote\QuoteRequestFormModel.cs" />
