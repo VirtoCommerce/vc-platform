@@ -62,7 +62,7 @@ storefrontApp.controller('productController', ['$rootScope', '$scope', '$window'
             var propertyMap = getVariationPropertyMap(variation);
             //merge
             _.each(_.keys(propertyMap), function (x) {
-                retVal[x] = _.uniq(_.union(retVal[x], propertyMap[x]), "Value");
+                retVal[x] = _.uniq(_.union(retVal[x], propertyMap[x]), "value");
             });
         });
         return retVal;
@@ -90,7 +90,7 @@ storefrontApp.controller('productController', ['$rootScope', '$scope', '$window'
         return _.every(_.keys(propMap1), function (x) {
             var retVal = propMap2.hasOwnProperty(x);
             if (retVal) {
-                retVal = propMap1[x][0].Value == propMap2[x][0].Value;
+                retVal = propMap1[x][0].value == propMap2[x][0].value;
             }
             return retVal;
         });

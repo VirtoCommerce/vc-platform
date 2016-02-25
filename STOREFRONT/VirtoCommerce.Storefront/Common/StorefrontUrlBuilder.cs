@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Text;
 using System.Web;
 using System.Web.Hosting;
@@ -8,7 +9,7 @@ using VirtoCommerce.Storefront.Model.Common;
 namespace VirtoCommerce.Storefront.Common
 {
     /// <summary>
-    /// Create storefront url with all localization and store information
+    /// Create storefront url contains language and store information
     /// </summary>
     public class StorefrontUrlBuilder : IStorefrontUrlBuilder
     {
@@ -49,12 +50,12 @@ namespace VirtoCommerce.Storefront.Common
                 {
                     var requestAddress = _workContext.RequestUrl.ToString();
 
-                    if (!string.IsNullOrEmpty(store.Url) && requestAddress.StartsWith(store.Url))
+                    if (!string.IsNullOrEmpty(store.Url) && requestAddress.StartsWith(store.Url, StringComparison.InvariantCultureIgnoreCase))
                     {
                         result.Clear();
                         result.Append(store.Url.TrimEnd('/'));
                     }
-                    else if (!string.IsNullOrEmpty(store.SecureUrl) && requestAddress.StartsWith(store.SecureUrl))
+                    else if (!string.IsNullOrEmpty(store.SecureUrl) && requestAddress.StartsWith(store.SecureUrl, StringComparison.InvariantCultureIgnoreCase))
                     {
                         result.Clear();
                         result.Append(store.SecureUrl.TrimEnd('/'));

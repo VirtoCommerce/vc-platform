@@ -244,7 +244,7 @@ namespace VirtoCommerce.Storefront.Controllers
                         var customer2 = await _customerService.GetCustomerByIdAsync(userId);
                         if(customer2 == null)
                         {
-                            customer2 = customer;
+                            customer2 = new CustomerInfo(); 
                         }
 
                         if (user2 != null)

@@ -132,12 +132,12 @@ namespace VirtoCommerce.Storefront.Model
 
             if (!string.IsNullOrEmpty(Url))
             {
-                result = requestAddress.StartsWith(Url);
+                result = requestAddress.StartsWith(Url, StringComparison.InvariantCultureIgnoreCase);
             }
 
             if (!result && !string.IsNullOrEmpty(SecureUrl))
             {
-                result = requestAddress.StartsWith(SecureUrl);
+                result = requestAddress.StartsWith(SecureUrl, StringComparison.InvariantCultureIgnoreCase);
             }
 
             return result;
