@@ -49,15 +49,15 @@ namespace VirtoCommerce.Storefront.Model
 
         public override string ToString()
         {
-            string retVal = null;
-            if(!string.IsNullOrEmpty(Domain))
-            {
-                retVal = Domain + _delimiter;
-            }
-            if (!string.IsNullOrEmpty(UserName))
-            {
-                retVal += UserName;
-            }
+            string retVal = UserName;
+            //if(!string.IsNullOrEmpty(Domain))
+            //{
+            //    retVal = Domain + _delimiter;
+            //}
+            //if (!string.IsNullOrEmpty(UserName))
+            //{
+            //    retVal += UserName;
+            //}
             return retVal;
         }
     }

@@ -105,7 +105,7 @@ namespace VirtoCommerce.Storefront.Owin
                     workContext.CurrentQuoteSearchCriteria = new Model.Quote.QuoteSearchCriteria(qs);
 
                     //Current customer
-                    ValidateUserStoreLogin(context, workContext.CurrentStore);
+                    //ValidateUserStoreLogin(context, workContext.CurrentStore);
                     workContext.CurrentCustomer = await GetCustomerAsync(context);
                     MaintainAnonymousCustomerCookie(context, workContext);
 
@@ -173,26 +173,26 @@ namespace VirtoCommerce.Storefront.Owin
             return uri.AbsolutePath.Contains("themes/assets") || !string.IsNullOrEmpty(Path.GetExtension(uri.ToString()));
         }
 
-        private void ValidateUserStoreLogin(IOwinContext context, Store currentStore)
-        {
-            var principal = context.Authentication.User;
-            var identity = principal.Identity;
+        //private void ValidateUserStoreLogin(IOwinContext context, Store currentStore)
+        //{
+        //    var principal = context.Authentication.User;
+        //    var identity = principal.Identity;
 
-            if (identity.IsAuthenticated)
-            {
-                //TODO: need check stores trusted relationships
-                var storeFrontUserName = StorefrontUserName.TryParse(identity.Name);
-                if(storeFrontUserName != null && storeFrontUserName.Domain != null)
-                {
-                    if (storeFrontUserName.Domain != currentStore.Id)
-                    {
-                        context.Authentication.SignOut();
-                        context.Authentication.User = new GenericPrincipal(new GenericIdentity(string.Empty), null);
+        //    if (identity.IsAuthenticated)
+        //    {
+        //        //TODO: need check stores trusted relationships
+        //        var storeFrontUserName = StorefrontUserName.TryParse(identity.Name);
+        //        if(storeFrontUserName != null && storeFrontUserName.Domain != null)
+        //        {
+        //            if (storeFrontUserName.Domain != currentStore.Id)
+        //            {
+        //                context.Authentication.SignOut();
+        //                context.Authentication.User = new GenericPrincipal(new GenericIdentity(string.Empty), null);
 
-                    }
-                }
-            }
-        }
+        //            }
+        //        }
+        //    }
+        //}
 
         private async Task<CustomerInfo> GetCustomerAsync(IOwinContext context)
         {
