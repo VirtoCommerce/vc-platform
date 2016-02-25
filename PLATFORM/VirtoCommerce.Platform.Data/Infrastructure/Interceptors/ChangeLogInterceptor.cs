@@ -13,14 +13,14 @@ namespace VirtoCommerce.Platform.Data.Infrastructure.Interceptors
         private readonly Func<IPlatformRepository> _repositoryFactory;
         private readonly ChangeLogPolicy _policy;
         private readonly string[] _entityTypes;
-        private readonly Func<IUserNameResolver> _userNameResolverFactory;
+        private readonly IUserNameResolver _userNameResolver;
 
-        public ChangeLogInterceptor(Func<IPlatformRepository> repositoryFactory, ChangeLogPolicy policy, string[] entityTypes, Func<IUserNameResolver> userNameResolverFactory)
+        public ChangeLogInterceptor(Func<IPlatformRepository> repositoryFactory, ChangeLogPolicy policy, string[] entityTypes, IUserNameResolver userNameResolver)
         {
             _repositoryFactory = repositoryFactory;
             _policy = policy;
             _entityTypes = entityTypes;
-            _userNameResolverFactory = userNameResolverFactory;
+            _userNameResolver = userNameResolver;
         }
 
         /// <summary>
@@ -129,8 +129,7 @@ namespace VirtoCommerce.Platform.Data.Infrastructure.Interceptors
 
         private string GetCurrentUserName()
         {
-            var resolver = _userNameResolverFactory != null ? _userNameResolverFactory() : null;
-            var result = resolver != null ? resolver.GetCurrentUserName() : "unknown";
+            var result = _userNameResolver != null ? _userNameResolver.GetCurrentUserName() : "unknown";
             return result;
         }
     }

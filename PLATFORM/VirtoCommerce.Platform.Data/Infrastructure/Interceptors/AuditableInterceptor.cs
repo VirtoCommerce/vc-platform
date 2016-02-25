@@ -7,11 +7,11 @@ namespace VirtoCommerce.Platform.Data.Infrastructure.Interceptors
 {
     public class AuditableInterceptor : ChangeInterceptor<IAuditable>
     {
-        private readonly Func<IUserNameResolver> _userNameResolverFactory;
+        private readonly IUserNameResolver _userNameResolver;
 
-        public AuditableInterceptor(Func<IUserNameResolver> userNameResolverFactory)
+        public AuditableInterceptor(IUserNameResolver userNameResolver)
         {
-            _userNameResolverFactory = userNameResolverFactory;
+            _userNameResolver = userNameResolver;
         }
 
         public override void OnBeforeInsert(DbEntityEntry entry, IAuditable item)
@@ -36,8 +36,7 @@ namespace VirtoCommerce.Platform.Data.Infrastructure.Interceptors
 
         private string GetCurrentUserName()
         {
-            var resolver = _userNameResolverFactory != null ? _userNameResolverFactory() : null;
-            var result = resolver != null ? resolver.GetCurrentUserName() : "unknown";
+            var result = _userNameResolver != null ? _userNameResolver.GetCurrentUserName() : "unknown";
             return result;
         }
     }
