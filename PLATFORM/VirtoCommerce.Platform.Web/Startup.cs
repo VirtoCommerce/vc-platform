@@ -249,7 +249,7 @@ namespace VirtoCommerce.Platform.Web
 
         private static void InitializePlatform(IAppBuilder app, IUnityContainer container, string connectionStringName)
         {
-            container.RegisterType<IOwinRequest>(new PerRequestLifetimeManager(), new InjectionFactory(c => HttpContext.Current.GetOwinContext().Request));
+            container.RegisterType<ICurrentUser, CurrentUser>(new HttpContextLifetimeManager());
             container.RegisterType<IUserNameResolver, UserNameResolver>();
 
             #region Setup database
