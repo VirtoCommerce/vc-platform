@@ -65,6 +65,14 @@ namespace VirtoCommerce.Client.Model
   
         
         /// <summary>
+        /// All security accounts logins associated with this member (test@mail.com, test2@mail.com etc.)
+        /// </summary>
+        /// <value>All security accounts logins associated with this member (test@mail.com, test2@mail.com etc.)</value>
+        [DataMember(Name="securityAccounts", EmitDefaultValue=false)]
+        public List<VirtoCommercePlatformCoreSecurityApplicationUserExtended> SecurityAccounts { get; set; }
+  
+        
+        /// <summary>
         /// Additional information about the member
         /// </summary>
         /// <value>Additional information about the member</value>
@@ -137,6 +145,7 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Addresses: ").Append(Addresses).Append("\n");
             sb.Append("  Phones: ").Append(Phones).Append("\n");
             sb.Append("  Emails: ").Append(Emails).Append("\n");
+            sb.Append("  SecurityAccounts: ").Append(SecurityAccounts).Append("\n");
             sb.Append("  Notes: ").Append(Notes).Append("\n");
             sb.Append("  ObjectType: ").Append(ObjectType).Append("\n");
             sb.Append("  DynamicProperties: ").Append(DynamicProperties).Append("\n");
@@ -208,6 +217,11 @@ namespace VirtoCommerce.Client.Model
                     this.Emails.SequenceEqual(other.Emails)
                 ) && 
                 (
+                    this.SecurityAccounts == other.SecurityAccounts ||
+                    this.SecurityAccounts != null &&
+                    this.SecurityAccounts.SequenceEqual(other.SecurityAccounts)
+                ) && 
+                (
                     this.Notes == other.Notes ||
                     this.Notes != null &&
                     this.Notes.SequenceEqual(other.Notes)
@@ -275,6 +289,9 @@ namespace VirtoCommerce.Client.Model
                 
                 if (this.Emails != null)
                     hash = hash * 59 + this.Emails.GetHashCode();
+                
+                if (this.SecurityAccounts != null)
+                    hash = hash * 59 + this.SecurityAccounts.GetHashCode();
                 
                 if (this.Notes != null)
                     hash = hash * 59 + this.Notes.GetHashCode();

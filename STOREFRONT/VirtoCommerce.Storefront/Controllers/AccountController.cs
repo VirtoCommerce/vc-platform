@@ -42,7 +42,7 @@ namespace VirtoCommerce.Storefront.Controllers
             _platformApi = platformApi;
             _orderApi = orderApi;
             _userLoginEventPublisher = userLoginEventPublisher;
-         }
+        }
 
         //GET: /account
         [HttpGet]
@@ -52,7 +52,7 @@ namespace VirtoCommerce.Storefront.Controllers
             return View("customers/account", WorkContext);
         }
 
-      
+
         //POST: /account
         [HttpPost]
         public async Task<ActionResult> UpdateAccount(CustomerInfo customer)
@@ -233,7 +233,7 @@ namespace VirtoCommerce.Storefront.Controllers
 
                     // Login on behalf of a user with the specified ID
                     var userId = GetUserIdForLoginOnBehalf(Request);
-                    if (!string.IsNullOrEmpty(userId) && !string.Equals(userId, user.Id) && await _customerService.CanLoginOnBehalfAsync(user.Id))
+                    if (!string.IsNullOrEmpty(userId) && !string.Equals(userId, user.Id) && await _customerService.CanLoginOnBehalfAsync(WorkContext.CurrentStore.Id, user.Id))
                     {
                         var user2 = await _commerceCoreApi.StorefrontSecurityGetUserByIdAsync(userId);
                         var customer2 = await _customerService.GetCustomerByIdAsync(userId);

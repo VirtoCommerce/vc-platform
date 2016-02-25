@@ -125,7 +125,6 @@
     <Compile Include="Model\VirtoCommerceCoreModuleWebModelSignInResult.cs" />
     <Compile Include="Model\VirtoCommerceCustomerModuleWebModelAddress.cs" />
     <Compile Include="Model\VirtoCommerceCustomerModuleWebModelContact.cs" />
-    <Compile Include="Model\VirtoCommerceCustomerModuleWebModelLoginOnBehalfInfo.cs" />
     <Compile Include="Model\VirtoCommerceCustomerModuleWebModelMember.cs" />
     <Compile Include="Model\VirtoCommerceCustomerModuleWebModelNote.cs" />
     <Compile Include="Model\VirtoCommerceCustomerModuleWebModelOrganization.cs" />
@@ -254,6 +253,7 @@
     <Compile Include="Model\VirtoCommerceQuoteModuleWebModelTierPrice.cs" />
     <Compile Include="Model\VirtoCommerceSearchModuleWebModelFilterProperty.cs" />
     <Compile Include="Model\VirtoCommerceStoreModuleWebModelFulfillmentCenter.cs" />
+    <Compile Include="Model\VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo.cs" />
     <Compile Include="Model\VirtoCommerceStoreModuleWebModelPaymentMethod.cs" />
     <Compile Include="Model\VirtoCommerceStoreModuleWebModelSearchResult.cs" />
     <Compile Include="Model\VirtoCommerceStoreModuleWebModelSendDynamicNotificationRequest.cs" />

@@ -157,17 +157,27 @@ namespace VirtoCommerce.Client.Model
   
         
         /// <summary>
-        /// Gets or Sets Languages
+        /// All store supported languages
         /// </summary>
+        /// <value>All store supported languages</value>
         [DataMember(Name="languages", EmitDefaultValue=false)]
         public List<string> Languages { get; set; }
   
         
         /// <summary>
-        /// Gets or Sets Currencies
+        /// All store supported currencies
         /// </summary>
+        /// <value>All store supported currencies</value>
         [DataMember(Name="currencies", EmitDefaultValue=false)]
         public List<string> Currencies { get; set; }
+  
+        
+        /// <summary>
+        /// All linked stores (their accounts can be reused here)
+        /// </summary>
+        /// <value>All linked stores (their accounts can be reused here)</value>
+        [DataMember(Name="trustedGroups", EmitDefaultValue=false)]
+        public List<string> TrustedGroups { get; set; }
   
         
         /// <summary>
@@ -282,6 +292,7 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  ReturnsFulfillmentCenter: ").Append(ReturnsFulfillmentCenter).Append("\n");
             sb.Append("  Languages: ").Append(Languages).Append("\n");
             sb.Append("  Currencies: ").Append(Currencies).Append("\n");
+            sb.Append("  TrustedGroups: ").Append(TrustedGroups).Append("\n");
             sb.Append("  ObjectType: ").Append(ObjectType).Append("\n");
             sb.Append("  DynamicProperties: ").Append(DynamicProperties).Append("\n");
             sb.Append("  PaymentMethods: ").Append(PaymentMethods).Append("\n");
@@ -427,6 +438,11 @@ namespace VirtoCommerce.Client.Model
                     this.Currencies.SequenceEqual(other.Currencies)
                 ) && 
                 (
+                    this.TrustedGroups == other.TrustedGroups ||
+                    this.TrustedGroups != null &&
+                    this.TrustedGroups.SequenceEqual(other.TrustedGroups)
+                ) && 
+                (
                     this.ObjectType == other.ObjectType ||
                     this.ObjectType != null &&
                     this.ObjectType.Equals(other.ObjectType)
@@ -556,6 +572,9 @@ namespace VirtoCommerce.Client.Model
                 
                 if (this.Currencies != null)
                     hash = hash * 59 + this.Currencies.GetHashCode();
+                
+                if (this.TrustedGroups != null)
+                    hash = hash * 59 + this.TrustedGroups.GetHashCode();
                 
                 if (this.ObjectType != null)
                     hash = hash * 59 + this.ObjectType.GetHashCode();

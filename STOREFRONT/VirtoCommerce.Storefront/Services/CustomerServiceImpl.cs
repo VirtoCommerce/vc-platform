@@ -24,15 +24,17 @@ namespace VirtoCommerce.Storefront.Services
         private readonly IOrderModuleApi _orderApi;
         private readonly Func<WorkContext> _workContextFactory;
         private readonly IQuoteModuleApi _quoteApi;
+        private readonly IStoreModuleApi _storeApi;
         private readonly ICacheManager<object> _cacheManager;
 
         public CustomerServiceImpl(Func<WorkContext> workContextFactory, ICustomerManagementModuleApi customerApi, IOrderModuleApi orderApi,
-                                   IQuoteModuleApi quoteApi, ICacheManager<object> cacheManager)
+                                   IQuoteModuleApi quoteApi, IStoreModuleApi storeApi, ICacheManager<object> cacheManager)
         {
             _workContextFactory = workContextFactory;
             _customerApi = customerApi;
             _orderApi = orderApi;
             _quoteApi = quoteApi;
+            _storeApi = storeApi;
             _cacheManager = cacheManager;
         }
 
@@ -99,9 +101,9 @@ namespace VirtoCommerce.Storefront.Services
             _cacheManager.Remove(GetCacheKey(customer.Id), "ApiRegion");
         }
 
-        public async Task<bool> CanLoginOnBehalfAsync(string customerId)
+        public async Task<bool> CanLoginOnBehalfAsync(string storeId, string customerId)
         {
-            var info = await _customerApi.CustomerModuleGetLoginOnBehalfInfoAsync(customerId);
+            var info = await _storeApi.StoreModuleGetLoginOnBehalfInfoAsync(storeId, customerId);
             return info.CanLoginOnBehalf == true;
         }
         #endregion

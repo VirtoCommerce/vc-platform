@@ -43,6 +43,13 @@ namespace VirtoCommerce.Client.Model
   
         
         /// <summary>
+        /// Gets or Sets MemberId
+        /// </summary>
+        [DataMember(Name="memberId", EmitDefaultValue=false)]
+        public string MemberId { get; set; }
+  
+        
+        /// <summary>
         /// Gets or Sets SkipCount
         /// </summary>
         [DataMember(Name="skipCount", EmitDefaultValue=false)]
@@ -67,6 +74,7 @@ namespace VirtoCommerce.Client.Model
             sb.Append("class VirtoCommercePlatformCoreSecurityUserSearchRequest {\n");
             sb.Append("  AccountTypes: ").Append(AccountTypes).Append("\n");
             sb.Append("  Keyword: ").Append(Keyword).Append("\n");
+            sb.Append("  MemberId: ").Append(MemberId).Append("\n");
             sb.Append("  SkipCount: ").Append(SkipCount).Append("\n");
             sb.Append("  TakeCount: ").Append(TakeCount).Append("\n");
             
@@ -117,6 +125,11 @@ namespace VirtoCommerce.Client.Model
                     this.Keyword.Equals(other.Keyword)
                 ) && 
                 (
+                    this.MemberId == other.MemberId ||
+                    this.MemberId != null &&
+                    this.MemberId.Equals(other.MemberId)
+                ) && 
+                (
                     this.SkipCount == other.SkipCount ||
                     this.SkipCount != null &&
                     this.SkipCount.Equals(other.SkipCount)
@@ -145,6 +158,9 @@ namespace VirtoCommerce.Client.Model
                 
                 if (this.Keyword != null)
                     hash = hash * 59 + this.Keyword.GetHashCode();
+                
+                if (this.MemberId != null)
+                    hash = hash * 59 + this.MemberId.GetHashCode();
                 
                 if (this.SkipCount != null)
                     hash = hash * 59 + this.SkipCount.GetHashCode();

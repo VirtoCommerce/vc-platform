@@ -14,15 +14,15 @@ namespace VirtoCommerce.Client.Model
 {
 
     /// <summary>
-    /// 
+    /// Represent result for checking of possibility login on behalf request
     /// </summary>
     [DataContract]
-    public partial class VirtoCommerceCustomerModuleWebModelLoginOnBehalfInfo :  IEquatable<VirtoCommerceCustomerModuleWebModelLoginOnBehalfInfo>
+    public partial class VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo :  IEquatable<VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceCustomerModuleWebModelLoginOnBehalfInfo" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo" /> class.
         /// </summary>
-        public VirtoCommerceCustomerModuleWebModelLoginOnBehalfInfo()
+        public VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo()
         {
             
         }
@@ -50,7 +50,7 @@ namespace VirtoCommerce.Client.Model
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class VirtoCommerceCustomerModuleWebModelLoginOnBehalfInfo {\n");
+            sb.Append("class VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo {\n");
             sb.Append("  UserName: ").Append(UserName).Append("\n");
             sb.Append("  CanLoginOnBehalf: ").Append(CanLoginOnBehalf).Append("\n");
             
@@ -75,15 +75,15 @@ namespace VirtoCommerce.Client.Model
         public override bool Equals(object obj)
         {
             // credit: http://stackoverflow.com/a/10454552/677735
-            return this.Equals(obj as VirtoCommerceCustomerModuleWebModelLoginOnBehalfInfo);
+            return this.Equals(obj as VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo);
         }
 
         /// <summary>
-        /// Returns true if VirtoCommerceCustomerModuleWebModelLoginOnBehalfInfo instances are equal
+        /// Returns true if VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo instances are equal
         /// </summary>
-        /// <param name="other">Instance of VirtoCommerceCustomerModuleWebModelLoginOnBehalfInfo to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(VirtoCommerceCustomerModuleWebModelLoginOnBehalfInfo other)
+        public bool Equals(VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo other)
         {
             // credit: http://stackoverflow.com/a/10454552/677735
             if (other == null)
