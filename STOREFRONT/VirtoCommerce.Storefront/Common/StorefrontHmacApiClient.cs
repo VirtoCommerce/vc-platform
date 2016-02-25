@@ -15,6 +15,7 @@ namespace VirtoCommerce.Storefront.Common
             _workContextFactory = workContextFactory;
         }
 
+        
         protected override RestRequest PrepareRequest(string path, Method method, Dictionary<string, string> queryParams, object postBody, Dictionary<string, string> headerParams,
             Dictionary<string, string> formParams, Dictionary<string, FileParameter> fileParams, Dictionary<string, string> pathParams, string contentType)
         {
@@ -23,6 +24,7 @@ namespace VirtoCommerce.Storefront.Common
             var workContext = _workContextFactory();
             var currentUser = workContext.CurrentCustomer;
 
+            //Add special header with user name to each API request for future audit and logging
             if (currentUser != null && currentUser.IsRegisteredUser)
             {
                 var userName = currentUser.OperatorUserName;

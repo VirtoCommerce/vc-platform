@@ -228,7 +228,12 @@ namespace VirtoCommerce.Storefront.Controllers
             {
                 case "success":
                     var user = await _commerceCoreApi.StorefrontSecurityGetUserByNameAsync(storeFrontUserName);
+                    //User may not have contact record
                     var customer = await _customerService.GetCustomerByIdAsync(user.Id);
+                    if(customer == null)
+                    {
+                        customer = new CustomerInfo();
+                    }
                     customer.UserName = user.UserName;
 
                     // Login on behalf of a user with the specified ID
@@ -237,15 +242,19 @@ namespace VirtoCommerce.Storefront.Controllers
                     {
                         var user2 = await _commerceCoreApi.StorefrontSecurityGetUserByIdAsync(userId);
                         var customer2 = await _customerService.GetCustomerByIdAsync(userId);
+                        if(customer2 == null)
+                        {
+                            customer2 = customer;
+                        }
 
-                        if (user2 != null && customer2 != null)
+                        if (user2 != null)
                         {
                             customer2.UserName = user2.UserName;
                             customer2.OperatorUserId = user.Id;
                             customer2.OperatorUserName = user.UserName;
                             customer = customer2;
                         }
-
+                        //Clear LoginOnBehalf cookies
                         SetUserIdForLoginOnBehalf(Response, null);
 
                         // TODO: Configure the reduced login expiration
