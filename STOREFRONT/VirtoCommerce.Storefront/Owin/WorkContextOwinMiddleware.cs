@@ -105,7 +105,7 @@ namespace VirtoCommerce.Storefront.Owin
 
                     //Current customer
                     //ValidateUserStoreLogin(context, workContext.CurrentStore);
-                    workContext.CurrentCustomer = await GetCustomerAsync(context);
+                    await GetCustomerAsync(context, workContext);
                     MaintainAnonymousCustomerCookie(context, workContext);
 
                     //Do not load shopping cart and other for resource requests
@@ -193,7 +193,7 @@ namespace VirtoCommerce.Storefront.Owin
         //    }
         //}
 
-        private async Task<CustomerInfo> GetCustomerAsync(IOwinContext context)
+        private async Task GetCustomerAsync(IOwinContext context, WorkContext workContext)
         {
             var retVal = new CustomerInfo();
 
@@ -222,8 +222,8 @@ namespace VirtoCommerce.Storefront.Owin
                     retVal.IsRegisteredUser = true;
                 }
 
-                retVal.OperatorUserId = principal.FindFirstValue(StorefrontConstants.OperatorUserIdClaimType);
-                retVal.OperatorUserName = principal.FindFirstValue(StorefrontConstants.OperatorUserNameClaimType);
+                workContext.OperatorUserId = principal.FindFirstValue(StorefrontConstants.OperatorUserIdClaimType);
+                workContext.OperatorUserName = principal.FindFirstValue(StorefrontConstants.OperatorUserNameClaimType);
             }
 
             if (!retVal.IsRegisteredUser)
@@ -233,7 +233,7 @@ namespace VirtoCommerce.Storefront.Owin
                 retVal.FullName = StorefrontConstants.AnonymousUsername;
             }
 
-            return retVal;
+            workContext.CurrentCustomer = retVal;
         }
 
         private void MaintainAnonymousCustomerCookie(IOwinContext context, WorkContext workContext)

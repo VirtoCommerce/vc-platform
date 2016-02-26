@@ -63,6 +63,15 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         /// </summary>
         public Customer Customer { get; set; }
 
+        /// <summary>
+        /// The user ID of an operator who has loggen in on behalf of a customer
+        /// </summary>
+        public string OperatorUserId { get; set; }
+        /// <summary>
+        /// The user name of an operator who has loggen in on behalf of a customer
+        /// </summary>
+        public string OperatorUserName { get; set; }
+
         public string CountryOptionTags { get; set; }
 
         /// <summary>
