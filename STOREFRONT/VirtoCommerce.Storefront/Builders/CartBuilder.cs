@@ -71,8 +71,8 @@ namespace VirtoCommerce.Storefront.Builders
             {
                 ShoppingCart retVal;
 
-                var cartSearchResult = await _cartApi.CartModuleGetCurrentCartAsync(store.Id, customer.Id);
-                if (cartSearchResult == null)
+                var cart = await _cartApi.CartModuleGetCurrentCartAsync(store.Id, customer.Id);
+                if (cart == null)
                 {
                     retVal = new ShoppingCart(currency, language);
 
@@ -92,8 +92,7 @@ namespace VirtoCommerce.Storefront.Builders
                 }
                 else
                 {
-                    var detalizedCart = await _cartApi.CartModuleGetCartByIdAsync(cartSearchResult.Id);
-                    retVal = detalizedCart.ToWebModel(currency, language);
+                    retVal = cart.ToWebModel(currency, language);
                 }
                 retVal.Customer = customer;
 

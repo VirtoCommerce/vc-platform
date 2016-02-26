@@ -62,8 +62,8 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
             {
                 return Ok();
             }
-
-            return Ok(retVal.ToWebModel());
+            //need load whole cart
+            return GetCartById(retVal.Id);
         }
 
         /// <summary>
