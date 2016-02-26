@@ -24,6 +24,7 @@ namespace VirtoCommerce.Storefront.Builders
 {
     public class CartBuilder : ICartBuilder, IAsyncObserver<UserLoginEvent>
     {
+        private readonly ICommerceCoreModuleApi _commerceApi;
         private readonly IShoppingCartModuleApi _cartApi;
         private readonly IPromotionEvaluator _promotionEvaluator;
         private readonly ICatalogSearchService _catalogSearchService;
@@ -33,12 +34,13 @@ namespace VirtoCommerce.Storefront.Builders
         private const string _cartCacheRegion = "CartRegion";
 
         [CLSCompliant(false)]
-        public CartBuilder(IShoppingCartModuleApi cartApi, IPromotionEvaluator promotionEvaluator, ICatalogSearchService catalogSearchService, ICacheManager<object> cacheManager)
+        public CartBuilder(IShoppingCartModuleApi cartApi, IPromotionEvaluator promotionEvaluator, ICatalogSearchService catalogSearchService, ICommerceCoreModuleApi commerceApi, ICacheManager<object> cacheManager)
         {
             _cartApi = cartApi;
             _promotionEvaluator = promotionEvaluator;
             _catalogSearchService = catalogSearchService;
             _cacheManager = cacheManager;
+            _commerceApi = commerceApi;
         }
 
         public string CartCaheKey
@@ -107,7 +109,7 @@ namespace VirtoCommerce.Storefront.Builders
             AddLineItem(product.ToLineItem(_cart.Language, quantity));
 
 
-            await EvaluatePromotionsAsync();
+            await EvaluatePromotionsAndTaxes();
 
             return this;
         }
@@ -127,7 +129,7 @@ namespace VirtoCommerce.Storefront.Builders
                     _cart.Items.Remove(lineItem);
                 }
 
-                await EvaluatePromotionsAsync();
+                await EvaluatePromotionsAndTaxes();
             }
 
             return this;
@@ -148,7 +150,7 @@ namespace VirtoCommerce.Storefront.Builders
                 }
             }
 
-            await EvaluatePromotionsAsync();
+            await EvaluatePromotionsAndTaxes();
 
             return this;
         }
@@ -164,7 +166,7 @@ namespace VirtoCommerce.Storefront.Builders
                 }
             }
 
-            await EvaluatePromotionsAsync();
+            await EvaluatePromotionsAndTaxes();
 
             return this;
         }
@@ -177,7 +179,7 @@ namespace VirtoCommerce.Storefront.Builders
 
                 _cart.Items.Remove(lineItem);
 
-                await EvaluatePromotionsAsync();
+                await EvaluatePromotionsAndTaxes();
             }
 
             return this;
@@ -187,7 +189,7 @@ namespace VirtoCommerce.Storefront.Builders
         {
             _cart.Items.Clear();
 
-            await EvaluatePromotionsAsync();
+            await EvaluatePromotionsAndTaxes();
 
             return this;
         }
@@ -200,7 +202,7 @@ namespace VirtoCommerce.Storefront.Builders
                 Code = couponCode
             };
 
-            await EvaluatePromotionsAsync();
+            await EvaluatePromotionsAndTaxes();
 
             return this;
         }
@@ -209,7 +211,7 @@ namespace VirtoCommerce.Storefront.Builders
         {
             _cart.Coupon = null;
 
-            await EvaluatePromotionsAsync();
+            await EvaluatePromotionsAndTaxes();
 
             return this;
         }
@@ -291,7 +293,7 @@ namespace VirtoCommerce.Storefront.Builders
                 shipment.TaxType = shippingMethod.TaxType;
             }
 
-            await EvaluatePromotionsAsync();
+            await EvaluatePromotionsAndTaxes();
 
             return this;
         }
@@ -304,7 +306,7 @@ namespace VirtoCommerce.Storefront.Builders
                 _cart.Shipments.Remove(shipment);
             }
 
-            await EvaluatePromotionsAsync();
+            await EvaluatePromotionsAndTaxes();
 
             return this;
         }
@@ -364,7 +366,7 @@ namespace VirtoCommerce.Storefront.Builders
             _cart.Payments.Clear();
             _cart.Payments = cart.Payments;
 
-            await EvaluatePromotionsAsync();
+            await EvaluatePromotionsAndTaxes();
 
             await _cartApi.CartModuleDeleteCartsAsync(new List<string> { cart.Id });
              _cacheManager.Remove(CartCaheKey, _cartCacheRegion);
@@ -492,6 +494,20 @@ namespace VirtoCommerce.Storefront.Builders
             return this;
         }
 
+        /// <summary>
+        /// Evaluate taxes  for captured cart
+        /// </summary>
+        /// <returns></returns>
+        public async Task<ICartBuilder> EvaluateTaxAsync()
+        {
+            var taxResult = await _commerceApi.CommerceEvaluateTaxesAsync(_cart.StoreId, _cart.ToTaxEvalContext());
+            if(taxResult != null)
+            {
+                _cart.ApplyTaxRates(taxResult.Select(x => x.ToWebModel(_cart.Currency)));
+            }
+            return this;
+        }
+
         public virtual async Task SaveAsync()
         {
             var cart = _cart.ToServiceModel();
@@ -560,6 +576,11 @@ namespace VirtoCommerce.Storefront.Builders
             }
         }
        
+        private async Task EvaluatePromotionsAndTaxes()
+        {
+            await EvaluatePromotionsAsync();
+            await EvaluateTaxAsync();
+        }
 
         private string GetCartCacheKey(string storeId, string customerId)
         {

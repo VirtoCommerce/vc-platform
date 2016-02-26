@@ -132,9 +132,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\ICartRepository.cs" />
     <Compile Include="Repositories\CartRepositoryImpl.cs" />
+    <Compile Include="Services\DefaultCartTotalsCalculator.cs" />
     <Compile Include="Services\ShoppingCartSearchServiceImpl.cs" />
     <Compile Include="Services\ShoppingCartServiceImpl.cs" />
-    <Compile Include="Observers\CalculateCartTotalsObserver.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -58,7 +58,7 @@ namespace VirtoCommerce.Storefront.Converters
 
             if (serviceModel.TaxDetails != null)
             {
-                webModel.TaxDetails = serviceModel.TaxDetails.Select(td => td.ToWebModel()).ToList();
+                webModel.TaxDetails = serviceModel.TaxDetails.Select(td => td.ToWebModel(currency)).ToList();
             }
 
             if (serviceModel.Totals != null)

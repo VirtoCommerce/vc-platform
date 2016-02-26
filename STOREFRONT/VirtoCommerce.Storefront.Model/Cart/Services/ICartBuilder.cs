@@ -146,6 +146,12 @@ namespace VirtoCommerce.Storefront.Model.Cart.Services
         /// <returns></returns>
         Task<ICartBuilder> EvaluatePromotionsAsync();
 
+        /// <summary>
+        /// Evaluate taxes  for captured cart
+        /// </summary>
+        /// <returns></returns>
+        Task<ICartBuilder> EvaluateTaxAsync();
+
         //Save cart changes
         Task SaveAsync();
 

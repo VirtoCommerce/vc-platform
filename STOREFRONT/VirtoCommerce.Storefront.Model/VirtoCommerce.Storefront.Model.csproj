@@ -87,6 +87,7 @@
     <Compile Include="Catalog\TermExtensions.cs" />
     <Compile Include="Common\AnonymousComparer.cs" />
     <Compile Include="Common\EntryState.cs" />
+    <Compile Include="Tax\ITaxable.cs" />
     <Compile Include="LinkList\CategoryMenuLink.cs" />
     <Compile Include="Common\Events\EventPublisher.cs" />
     <Compile Include="Common\Events\IAsyncObserver.cs" />
@@ -109,6 +110,8 @@
     <Compile Include="StorefrontNotification.cs" />
     <Compile Include="StorefrontNotificationType.cs" />
     <Compile Include="StoreStatus.cs" />
+    <Compile Include="Tax\TaxLine.cs" />
+    <Compile Include="Tax\TaxRate.cs" />
     <Compile Include="TierPrice.cs" />
     <Compile Include="Common\AsyncLock.cs" />
     <Compile Include="Common\CacheManagerExtension.cs" />
@@ -191,7 +194,7 @@
     <Compile Include="Cart\Shipment.cs" />
     <Compile Include="Cart\ShoppingCart.cs" />
     <Compile Include="Store.cs" />
-    <Compile Include="TaxDetail.cs" />
+    <Compile Include="Tax\TaxDetail.cs" />
     <Compile Include="StorefrontUserName.cs" />
     <Compile Include="WorkContext.cs" />
   </ItemGroup>

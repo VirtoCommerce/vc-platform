@@ -9,7 +9,6 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             var shopifyModel = new TaxLine();
 
             shopifyModel.Price = storefrontModel.Amount.Amount * 100;
-            shopifyModel.Rate = storefrontModel.Rate;
             shopifyModel.Title = storefrontModel.Name;
 
             return shopifyModel;
