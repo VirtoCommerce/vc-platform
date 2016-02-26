@@ -81,8 +81,8 @@ namespace VirtoCommerce.StoreModule.Web.Controllers.Api
         {
             var criteria = new coreModel.SearchCriteria
             {
-                 Skip = 0,
-                 Take = int.MaxValue
+                Skip = 0,
+                Take = int.MaxValue
             };
             var retVal = SearchStores(criteria);
             return Ok(retVal.Stores);
@@ -189,6 +189,7 @@ namespace VirtoCommerce.StoreModule.Web.Controllers.Api
         /// <summary>
         /// Check if given contact has login on behalf permission
         /// </summary>
+        /// <param name="storeId">Store ID</param>
         /// <param name="id">Contact ID</param>
         /// <returns></returns>
         [HttpGet]
@@ -196,7 +197,7 @@ namespace VirtoCommerce.StoreModule.Web.Controllers.Api
         [Route("{storeId}/accounts/{id}/loginonbehalf")]
         public async Task<IHttpActionResult> GetLoginOnBehalfInfo(string storeId, string id)
         {
-             var result = new webModel.LoginOnBehalfInfo
+            var result = new webModel.LoginOnBehalfInfo
             {
                 UserName = id
             };
@@ -204,7 +205,7 @@ namespace VirtoCommerce.StoreModule.Web.Controllers.Api
             var user = await _securityService.FindByIdAsync(id, UserDetails.Reduced);
 
             if (user != null)
-            {  
+            {
                 //TODO: Check what requested user has permission to login on behalf in concrete store
                 result.CanLoginOnBehalf = _securityService.UserHasAnyPermission(user.UserName, null, StorePredefinedPermissions.LoginOnBehalf);
             }
@@ -222,6 +223,6 @@ namespace VirtoCommerce.StoreModule.Web.Controllers.Api
             }
         }
 
-     
+
     }
 }
