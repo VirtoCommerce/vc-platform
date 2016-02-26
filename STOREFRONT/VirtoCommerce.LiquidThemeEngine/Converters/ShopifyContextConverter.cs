@@ -33,8 +33,6 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             result.Cart = workContext.CurrentCart != null ? workContext.CurrentCart.ToShopifyModel(workContext) : null;
             result.Product = workContext.CurrentProduct != null ? workContext.CurrentProduct.ToShopifyModel(workContext) : null;
             result.Customer = workContext.CurrentCustomer != null && workContext.CurrentCustomer.IsRegisteredUser ? workContext.CurrentCustomer.ToShopifyModel(workContext, urlBuilder) : null;
-            result.OperatorUserName = workContext.OperatorUserName;
-            result.OperatorUserId = workContext.OperatorUserId;
             result.AllStores = workContext.AllStores.Select(x => x.ToShopifyModel(workContext)).ToArray();
 
             result.CurrentCurrency = workContext.CurrentCurrency != null ? workContext.CurrentCurrency.ToShopifyModel() : null;

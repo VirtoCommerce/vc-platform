@@ -105,7 +105,7 @@ namespace VirtoCommerce.Storefront.Owin
 
                     //Current customer
                     //ValidateUserStoreLogin(context, workContext.CurrentStore);
-                    await GetCustomerAsync(context, workContext);
+                    workContext.CurrentCustomer = await GetCustomerAsync(context);
                     MaintainAnonymousCustomerCookie(context, workContext);
 
                     //Do not load shopping cart and other for resource requests
@@ -193,7 +193,7 @@ namespace VirtoCommerce.Storefront.Owin
         //    }
         //}
 
-        private async Task GetCustomerAsync(IOwinContext context, WorkContext workContext)
+        private async Task<CustomerInfo> GetCustomerAsync(IOwinContext context)
         {
             var retVal = new CustomerInfo();
 
@@ -216,14 +216,15 @@ namespace VirtoCommerce.Storefront.Owin
                 if (userId != null)
                 {
                     var customerService = _container.Resolve<ICustomerService>();
-                    retVal = await customerService.GetCustomerByIdAsync(userId) ?? retVal;
+                    var customer = await customerService.GetCustomerByIdAsync(userId);
+                    retVal = customer != null ? customer.JsonClone() : retVal;
                     retVal.Id = userId;
                     retVal.UserName = identity.Name;
                     retVal.IsRegisteredUser = true;
                 }
 
-                workContext.OperatorUserId = principal.FindFirstValue(StorefrontConstants.OperatorUserIdClaimType);
-                workContext.OperatorUserName = principal.FindFirstValue(StorefrontConstants.OperatorUserNameClaimType);
+                retVal.OperatorUserId = principal.FindFirstValue(StorefrontConstants.OperatorUserIdClaimType);
+                retVal.OperatorUserName = principal.FindFirstValue(StorefrontConstants.OperatorUserNameClaimType);
             }
 
             if (!retVal.IsRegisteredUser)
@@ -233,7 +234,7 @@ namespace VirtoCommerce.Storefront.Owin
                 retVal.FullName = StorefrontConstants.AnonymousUsername;
             }
 
-            workContext.CurrentCustomer = retVal;
+            return retVal;
         }
 
         private void MaintainAnonymousCustomerCookie(IOwinContext context, WorkContext workContext)

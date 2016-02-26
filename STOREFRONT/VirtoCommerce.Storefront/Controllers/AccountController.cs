@@ -398,14 +398,6 @@ namespace VirtoCommerce.Storefront.Controllers
             }
         }
 
-        // GET: /account/json
-        [HttpGet]
-        [AllowAnonymous]
-        public ActionResult GetCurrentCustomer()
-        {
-            return Json(WorkContext.CurrentCustomer, JsonRequestBehavior.AllowGet);
-        }
-
 
         private static string GetUserIdForLoginOnBehalf(HttpRequestBase request)
         {

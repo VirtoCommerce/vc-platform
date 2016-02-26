@@ -27,7 +27,7 @@ namespace VirtoCommerce.Storefront.Common
             //Add special header with user name to each API request for future audit and logging
             if (currentUser != null && currentUser.IsRegisteredUser)
             {
-                var userName = workContext.OperatorUserName;
+                var userName = currentUser.OperatorUserName;
 
                 if (string.IsNullOrEmpty(userName))
                 {
