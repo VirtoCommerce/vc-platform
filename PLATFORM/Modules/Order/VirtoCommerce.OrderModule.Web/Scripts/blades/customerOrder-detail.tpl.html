@@ -1,11 +1,11 @@
 ﻿<div class="blade-content __medium-wide">
     <div class="blade-inner">
         <div class="inner-block">
+            <div class="order-status canceled" ng-if="blade.currentEntity.status">
+                <div class="status" ng-bind="blade.currentEntity.status"></div>
+                <div class="reason" ng-bind="blade.currentEntity.cancelReason" ng-if="blade.currentEntity.isCancelled"></div>
+            </div>
             <form class="form" name="formScope">
-                <div class="order-status canceled" ng-if="blade.currentEntity.status">
-                    <div class="status" ng-bind="blade.currentEntity.status"></div>
-                    <div class="reason" ng-bind="blade.currentEntity.cancelReason" ng-if="blade.currentEntity.isCancelled"></div>
-                </div>
                 <div class="form-group" ng-init="setForm(formScope)">
                     <label class="form-label">{{ 'orders.blades.customerOrder-detail.labels.approved' | translate }}</label>
                     <div class="form-input">
