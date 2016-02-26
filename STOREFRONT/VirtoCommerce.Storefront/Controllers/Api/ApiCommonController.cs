@@ -4,6 +4,7 @@ using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Common;
 using System.Web.Mvc;
 using VirtoCommerce.Storefront.Common;
+using System.Net;
 
 namespace VirtoCommerce.Storefront.Controllers.Api
 {
@@ -28,16 +29,16 @@ namespace VirtoCommerce.Storefront.Controllers.Api
         }
 
 
-        // GET: storefrontapi/{countryCode}/regions
+        // GET: storefrontapi/countries/{countryCode}/regions
         [HttpGet]
-        public ActionResult GetRegions(string countryCode)
+        public ActionResult GetCountryRegions(string countryCode)
         {
-            var country = WorkContext.AllCountries.FirstOrDefault(c => c.Code3.Equals(countryCode, StringComparison.OrdinalIgnoreCase));
+            var country = WorkContext.AllCountries.FirstOrDefault(c => c.Code2.Equals(countryCode, StringComparison.InvariantCultureIgnoreCase) || c.Code3.Equals(countryCode, StringComparison.InvariantCultureIgnoreCase));
             if (country != null)
             {
                 return Json(country.Regions, JsonRequestBehavior.AllowGet);
             }
-            return HttpNotFound();
+            return new HttpStatusCodeResult(HttpStatusCode.OK);
         }
     }
 }

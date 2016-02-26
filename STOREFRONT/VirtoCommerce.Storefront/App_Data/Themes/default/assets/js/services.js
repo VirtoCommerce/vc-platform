@@ -72,7 +72,7 @@ storefrontApp.service('cartService', ['$http', function ($http) {
             return $http.get('storefrontapi/countries?t=' + new Date().getTime());
         },
         getCountryRegions: function (countryCode) {
-            return $http.get('storefrontapi/' + countryCode + '/regions?t=' + new Date().getTime());
+        	return $http.get('storefrontapi/countries/' + countryCode + '/regions?t=' + new Date().getTime());
         },
         addCoupon: function (couponCode) {
             return $http.post('storefrontapi/cart/coupons/' + couponCode);

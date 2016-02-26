@@ -7,6 +7,11 @@ using VirtoCommerce.Domain.Store.Services;
 
 namespace AvaTax.TaxModule.Web.Observers
 {
+    /// <summary>
+    /// TODO: deprecated because tax calculation occur by implicit request
+    /// Need remove this in future
+    /// </summary>
+    [Obsolete]
     public class CalculateOrderTaxesObserver : IObserver<OrderChangeEvent>
 	{
         private readonly IStoreService _storeService;
@@ -36,27 +41,27 @@ namespace AvaTax.TaxModule.Web.Observers
 		#endregion
 		private void CalculateCustomerOrderTaxes(OrderChangeEvent context)
 		{
-            if (context.ModifiedOrder.IsCancelled)
-            {
-                return;
-            }
+            //if (context.ModifiedOrder.IsCancelled)
+            //{
+            //    return;
+            //}
 
-            var order = context.ModifiedOrder;
-            var originalOrder = context.OrigOrder;
+            //var order = context.ModifiedOrder;
+            //var originalOrder = context.OrigOrder;
 
-            //do nothing if order Items quantities did not changed
-            if (
-                originalOrder.Items.Any(
-                    li => !order.Items.Any(oli => oli.Id.Equals(li.Id)) ||
-                        order.Items.Single(oli => li.Id.Equals(oli.Id)).Quantity < li.Quantity))
-                return;
+            ////do nothing if order Items quantities did not changed
+            //if (
+            //    originalOrder.Items.Any(
+            //        li => !order.Items.Any(oli => oli.Id.Equals(li.Id)) ||
+            //            order.Items.Single(oli => li.Id.Equals(oli.Id)).Quantity < li.Quantity))
+            //    return;
 
-            var store = _storeService.GetById(order.StoreId);
-            var taxProvider = store.TaxProviders.FirstOrDefault(x => x.Code == typeof(AvaTaxRateProvider).Name);
-            if (taxProvider != null && taxProvider.IsActive)
-            {                
-                (taxProvider as AvaTaxRateProvider).CalculateOrderTax(order);
-            }
+            //var store = _storeService.GetById(order.StoreId);
+            //var taxProvider = store.TaxProviders.FirstOrDefault(x => x.Code == typeof(AvaTaxRateProvider).Name);
+            //if (taxProvider != null && taxProvider.IsActive)
+            //{                
+            //    (taxProvider as AvaTaxRateProvider).CalculateOrderTax(order);
+            //}
 		}
 	}
 }

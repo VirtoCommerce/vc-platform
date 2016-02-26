@@ -22,8 +22,8 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
         private readonly IStoreService _storeService;
         public CartModuleController(IShoppingCartService cartService, IShoppingCartSearchService searchService, IStoreService storeService)
         {
-            this._shoppingCartService = cartService;
-            this._searchService = searchService;
+            _shoppingCartService = cartService;
+            _searchService = searchService;
             _storeService = storeService;
         }
 
@@ -62,8 +62,8 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
             {
                 return Ok();
             }
-
-            return Ok(retVal.ToWebModel());
+            //need load whole cart
+            return GetCartById(retVal.Id);
         }
 
         /// <summary>
@@ -199,5 +199,7 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
             _shoppingCartService.Delete(ids);
             return StatusCode(HttpStatusCode.NoContent);
         }
+
+    
     }
 }

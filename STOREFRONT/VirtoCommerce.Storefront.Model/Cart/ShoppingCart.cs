@@ -190,10 +190,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
             }
         }
 
-        /// <summary>
-        /// Gets or sets the value of total tax cost
-        /// </summary>
-        public Money TaxTotal { get; set; }
+     
 
         /// <summary>
         /// Gets or sets the collection of shopping cart addresses
@@ -314,13 +311,6 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// </value>
         public ICollection<Shipment> Shipments { get; set; }
 
-        /// <summary>
-        /// Gets or sets the collection of line item tax detalization lines
-        /// </summary>
-        /// <value>
-        /// Collection of TaxDetail objects
-        /// </value>
-        public ICollection<TaxDetail> TaxDetails { get; set; }
 
         /// <summary>
         /// Used for dynamic properties management, contains object type string
@@ -436,6 +426,44 @@ namespace VirtoCommerce.Storefront.Model.Cart
                         Coupon.Description = reward.Promotion.Description;
                     }
                 }
+            }
+        }
+        #endregion
+
+
+        #region ITaxable Members
+        /// <summary>
+        /// Gets or sets the value of total shipping tax amount
+        /// </summary>
+        public Money TaxTotal { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of shipping tax type
+        /// </summary>
+        public string TaxType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the collection of line item tax details lines
+        /// </summary>
+        /// <value>
+        /// Collection of TaxDetail objects
+        /// </value>
+        public ICollection<TaxDetail> TaxDetails { get; set; }
+
+        public void ApplyTaxRates(IEnumerable<TaxRate> taxRates)
+        {
+            TaxTotal = new Money(TaxTotal.Currency);
+            foreach (var taxRate in taxRates)
+            {
+                TaxTotal += taxRate.Rate;
+            }
+            foreach(var lineItem in Items)
+            {
+                lineItem.ApplyTaxRates(taxRates);
+            }
+            foreach(var shipment in Shipments)
+            {
+                shipment.ApplyTaxRates(taxRates);
             }
         }
         #endregion

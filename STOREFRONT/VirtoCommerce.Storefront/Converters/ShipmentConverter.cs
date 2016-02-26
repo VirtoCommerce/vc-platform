@@ -31,7 +31,7 @@ namespace VirtoCommerce.Storefront.Converters
 
             if (shipment.TaxDetails != null)
             {
-                webModel.TaxDetails = shipment.TaxDetails.Select(td => td.ToWebModel()).ToList();
+                webModel.TaxDetails = shipment.TaxDetails.Select(td => td.ToWebModel(cart.Currency)).ToList();
             }
 
             return webModel;
@@ -123,7 +123,7 @@ namespace VirtoCommerce.Storefront.Converters
 
             if (shipment.TaxDetails != null)
             {
-                webModel.TaxDetails = shipment.TaxDetails.Select(td => td.ToWebModel()).ToList();
+                webModel.TaxDetails = shipment.TaxDetails.Select(td => td.ToWebModel(currency)).ToList();
             }
 
             return webModel;

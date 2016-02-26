@@ -6,6 +6,11 @@ using VirtoCommerce.Domain.Store.Services;
 
 namespace AvaTax.TaxModule.Web.Observers
 {
+    /// <summary>
+    /// TODO: deprecated because tax calculation occur by implicit request
+    /// Need remove this in future
+    /// </summary>
+    [Obsolete]
     public class CalculateTaxAdjustmentObserver : IObserver<OrderChangeEvent>
     {
         private readonly IStoreService _storeService;
@@ -39,14 +44,14 @@ namespace AvaTax.TaxModule.Web.Observers
             {
                 return;
             }
-            
+
             var originalOrder = context.OrigOrder;
             var modifiedOrder = context.ModifiedOrder;
 
             //do nothing if order Items quantities did not changed
             if (
                 originalOrder.Items.All(
-                    li => modifiedOrder.Items.Any(oli => oli.Id.Equals(li.Id)) && 
+                    li => modifiedOrder.Items.Any(oli => oli.Id.Equals(li.Id)) &&
                         modifiedOrder.Items.Single(oli => li.Id.Equals(oli.Id)).Quantity.Equals(li.Quantity)))
                 return;
 
