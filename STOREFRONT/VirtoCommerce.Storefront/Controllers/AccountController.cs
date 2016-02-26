@@ -183,7 +183,7 @@ namespace VirtoCommerce.Storefront.Controllers
 
                 await _commerceCoreApi.StorefrontSecurityPasswordSignInAsync(storeFrontUserName, formModel.Password);
 
-                var identity = CreateClaimsIdentity(customer);
+                var identity = CreateClaimsIdentity(customer, null, null);
                 _authenticationManager.SignIn(identity);
 
                 //Publish user login event 
@@ -230,28 +230,39 @@ namespace VirtoCommerce.Storefront.Controllers
                     var user = await _commerceCoreApi.StorefrontSecurityGetUserByNameAsync(storeFrontUserName);
                     //User may not have contact record
                     var customer = await _customerService.GetCustomerByIdAsync(user.Id);
-                    if(customer == null)
+                    if (customer == null)
                     {
-                        customer = new CustomerInfo();
+                        customer = new CustomerInfo
+                        {
+                            Id = user.Id,
+                            IsRegisteredUser = true,
+                        };
                     }
                     customer.UserName = user.UserName;
 
                     // Login on behalf of a user with the specified ID
+                    string operatorUserName = null;
+                    string operatorUserId = null;
                     var userId = GetUserIdForLoginOnBehalf(Request);
+
                     if (!string.IsNullOrEmpty(userId) && !string.Equals(userId, user.Id) && await _customerService.CanLoginOnBehalfAsync(WorkContext.CurrentStore.Id, user.Id))
                     {
                         var user2 = await _commerceCoreApi.StorefrontSecurityGetUserByIdAsync(userId);
                         var customer2 = await _customerService.GetCustomerByIdAsync(userId);
-                        if(customer2 == null)
+                        if (customer2 == null)
                         {
-                            customer2 = new CustomerInfo(); 
+                            customer2 = new CustomerInfo
+                            {
+                                Id = user2.Id,
+                                IsRegisteredUser = true,
+                            };
                         }
 
                         if (user2 != null)
                         {
                             customer2.UserName = user2.UserName;
-                            customer2.OperatorUserId = user.Id;
-                            customer2.OperatorUserName = user.UserName;
+                            operatorUserId = user.Id;
+                            operatorUserName = user.UserName;
                             customer = customer2;
                         }
                         //Clear LoginOnBehalf cookies
@@ -260,7 +271,7 @@ namespace VirtoCommerce.Storefront.Controllers
                         // TODO: Configure the reduced login expiration
                     }
 
-                    var identity = CreateClaimsIdentity(customer);
+                    var identity = CreateClaimsIdentity(customer, operatorUserName, operatorUserId);
                     _authenticationManager.SignIn(identity);
 
                     //Publish user login event 
@@ -424,7 +435,7 @@ namespace VirtoCommerce.Storefront.Controllers
             response.Cookies.Add(cookie);
         }
 
-        private static ClaimsIdentity CreateClaimsIdentity(CustomerInfo customer)
+        private static ClaimsIdentity CreateClaimsIdentity(CustomerInfo customer, string operatorUserName, string operatorUserId)
         {
             var claims = new List<Claim>
         {
@@ -434,14 +445,14 @@ namespace VirtoCommerce.Storefront.Controllers
 
             var identity = new ClaimsIdentity(claims, Microsoft.AspNet.Identity.DefaultAuthenticationTypes.ApplicationCookie);
 
-            if (!string.IsNullOrEmpty(customer.OperatorUserName))
+            if (!string.IsNullOrEmpty(operatorUserName))
             {
-                identity.AddClaim(new Claim(StorefrontConstants.OperatorUserNameClaimType, customer.OperatorUserName));
+                identity.AddClaim(new Claim(StorefrontConstants.OperatorUserNameClaimType, operatorUserName));
             }
 
-            if (!string.IsNullOrEmpty(customer.OperatorUserId))
+            if (!string.IsNullOrEmpty(operatorUserId))
             {
-                identity.AddClaim(new Claim(StorefrontConstants.OperatorUserIdClaimType, customer.OperatorUserId));
+                identity.AddClaim(new Claim(StorefrontConstants.OperatorUserIdClaimType, operatorUserId));
             }
 
             return identity;

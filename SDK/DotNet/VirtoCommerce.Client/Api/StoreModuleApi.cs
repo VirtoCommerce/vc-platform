@@ -299,7 +299,7 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// 
         /// </remarks>
-        /// <param name="storeId"></param>
+        /// <param name="storeId">Store ID</param>
         /// <param name="id">Contact ID</param>
         /// <returns>VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo</returns>
         VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo StoreModuleGetLoginOnBehalfInfo (string storeId, string id);
@@ -310,7 +310,7 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// 
         /// </remarks>
-        /// <param name="storeId"></param>
+        /// <param name="storeId">Store ID</param>
         /// <param name="id">Contact ID</param>
         /// <returns>ApiResponse of VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo</returns>
         ApiResponse<VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo> StoreModuleGetLoginOnBehalfInfoWithHttpInfo (string storeId, string id);
@@ -321,7 +321,7 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// 
         /// </remarks>
-        /// <param name="storeId"></param>
+        /// <param name="storeId">Store ID</param>
         /// <param name="id">Contact ID</param>
         /// <returns>Task of VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo</returns>
         System.Threading.Tasks.Task<VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo> StoreModuleGetLoginOnBehalfInfoAsync (string storeId, string id);
@@ -332,7 +332,7 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// 
         /// </remarks>
-        /// <param name="storeId"></param>
+        /// <param name="storeId">Store ID</param>
         /// <param name="id">Contact ID</param>
         /// <returns>Task of ApiResponse (VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo)</returns>
         System.Threading.Tasks.Task<ApiResponse<VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo>> StoreModuleGetLoginOnBehalfInfoAsyncWithHttpInfo (string storeId, string id);
@@ -1486,7 +1486,7 @@ namespace VirtoCommerce.Client.Api
         /// <summary>
         /// Check if given contact has login on behalf permission 
         /// </summary>
-        /// <param name="storeId"></param> 
+        /// <param name="storeId">Store ID</param> 
         /// <param name="id">Contact ID</param> 
         /// <returns>VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo</returns>
         public VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo StoreModuleGetLoginOnBehalfInfo (string storeId, string id)
@@ -1498,7 +1498,7 @@ namespace VirtoCommerce.Client.Api
         /// <summary>
         /// Check if given contact has login on behalf permission 
         /// </summary>
-        /// <param name="storeId"></param> 
+        /// <param name="storeId">Store ID</param> 
         /// <param name="id">Contact ID</param> 
         /// <returns>ApiResponse of VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo</returns>
         public ApiResponse< VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo > StoreModuleGetLoginOnBehalfInfoWithHttpInfo (string storeId, string id)
@@ -1570,7 +1570,7 @@ namespace VirtoCommerce.Client.Api
         /// <summary>
         /// Check if given contact has login on behalf permission 
         /// </summary>
-        /// <param name="storeId"></param>
+        /// <param name="storeId">Store ID</param>
         /// <param name="id">Contact ID</param>
         /// <returns>Task of VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo</returns>
         public async System.Threading.Tasks.Task<VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo> StoreModuleGetLoginOnBehalfInfoAsync (string storeId, string id)
@@ -1583,7 +1583,7 @@ namespace VirtoCommerce.Client.Api
         /// <summary>
         /// Check if given contact has login on behalf permission 
         /// </summary>
-        /// <param name="storeId"></param>
+        /// <param name="storeId">Store ID</param>
         /// <param name="id">Contact ID</param>
         /// <returns>Task of ApiResponse (VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo)</returns>
         public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo>> StoreModuleGetLoginOnBehalfInfoAsyncWithHttpInfo (string storeId, string id)
