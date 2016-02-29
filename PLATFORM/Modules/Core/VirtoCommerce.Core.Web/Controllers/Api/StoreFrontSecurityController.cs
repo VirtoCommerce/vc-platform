@@ -53,7 +53,7 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
             if (user != null)
             {
                 var result = user.ToWebModel();
-                result.AllowedStores = _storeService.GetUserAllowedStores(result);
+                result.AllowedStores = _storeService.GetUserAllowedStoreIds(result);
                 return Ok(result);
             }
             return NotFound();
@@ -78,7 +78,7 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
             if (user != null)
             {
                 var result = user.ToWebModel();
-                result.AllowedStores = _storeService.GetUserAllowedStores(result);
+                result.AllowedStores = _storeService.GetUserAllowedStoreIds(result);
                 return Ok(result);
             }
 
@@ -105,7 +105,7 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
             if (user != null)
             {
                 var result = user.ToWebModel();
-                result.AllowedStores = _storeService.GetUserAllowedStores(result);
+                result.AllowedStores = _storeService.GetUserAllowedStoreIds(result);
                 return Ok(result);
             }
 

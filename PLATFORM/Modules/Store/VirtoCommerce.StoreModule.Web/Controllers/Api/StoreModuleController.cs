@@ -9,6 +9,7 @@ using VirtoCommerce.Domain.Payment.Services;
 using VirtoCommerce.Domain.Shipping.Services;
 using VirtoCommerce.Domain.Store.Services;
 using VirtoCommerce.Domain.Tax.Services;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Notifications;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.StoreModule.Data.Notifications;
@@ -228,7 +229,8 @@ namespace VirtoCommerce.StoreModule.Web.Controllers.Api
             var user = await _securityService.FindByIdAsync(userId, UserDetails.Reduced);
             if(user != null)
             {
-                retVal.AddRange(_storeService.GetUserAllowedStores(user).Select(x=>x.ToWebModel()));
+                var storeIds = _storeService.GetUserAllowedStoreIds(user);
+                retVal.AddRange(_storeService.GetByIds(storeIds.ToArray()).Select(x=>x.ToWebModel()));
             }
             return Ok(retVal.ToArray());
         }

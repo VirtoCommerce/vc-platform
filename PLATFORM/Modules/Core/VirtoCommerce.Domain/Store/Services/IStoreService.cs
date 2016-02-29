@@ -17,6 +17,6 @@ namespace VirtoCommerce.Domain.Store.Services
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        IEnumerable<coreModel.Store> GetUserAllowedStores(ApplicationUserExtended user);
+        IEnumerable<string> GetUserAllowedStoreIds(ApplicationUserExtended user);
     }
 }
