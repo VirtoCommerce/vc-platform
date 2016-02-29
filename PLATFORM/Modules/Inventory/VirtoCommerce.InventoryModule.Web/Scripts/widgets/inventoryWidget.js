@@ -7,6 +7,8 @@
         return inventories.query({ id: blade.itemId }, function (results) {
             if (_.any(results)) {
                 $scope.currentInventory = _.reduce(results, function (memo, x) { return memo + x.inStockQuantity; }, 0);
+                var reservedQuantity = _.reduce(results, function (memo, x) { return memo + x.reservedQuantity; }, 0);
+                $scope.availableInventory = $scope.currentInventory - reservedQuantity;
             } else {
                 $scope.currentInventory = 'N/A';
             }
