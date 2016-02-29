@@ -123,5 +123,14 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         public int OrdersCount { get; set; }
 
         public IStorefrontPagedList<QuoteRequest> QuoteRequests { get; set; }
+
+        /// <summary>
+        /// The user ID of an operator who has loggen in on behalf of a customer
+        /// </summary>
+        public string OperatorUserId { get; set; }
+        /// <summary>
+        /// The user name of an operator who has loggen in on behalf of a customer
+        /// </summary>
+        public string OperatorUserName { get; set; }
     }
 }

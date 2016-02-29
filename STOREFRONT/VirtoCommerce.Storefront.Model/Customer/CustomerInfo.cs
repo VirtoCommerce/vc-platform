@@ -70,6 +70,16 @@ namespace VirtoCommerce.Storefront.Model.Customer
         [IgnoreDataMember]
         public IStorefrontPagedList<QuoteRequest> QuoteRequests { get; set; }
 
+        /// <summary>
+        /// The user ID of an operator who has loggen in on behalf of a customer
+        /// </summary>
+        public string OperatorUserId { get; set; }
+        /// <summary>
+        /// The user name of an operator who has loggen in on behalf of a customer
+        /// </summary>
+        public string OperatorUserName { get; set; }
+
+
         public override string ToString()
         {
             return string.Format(CultureInfo.InvariantCulture, "user#{0} {1} {2}", Id ?? "undef", UserName ?? "undef", IsRegisteredUser ? "registered" : "anonymous");

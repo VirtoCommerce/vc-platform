@@ -34,15 +34,6 @@ namespace VirtoCommerce.Storefront.Model
         public CustomerInfo CurrentCustomer { get; set; }
 
         /// <summary>
-        /// The user ID of an operator who has loggen in on behalf of a customer
-        /// </summary>
-        public string OperatorUserId { get; set; }
-        /// <summary>
-        /// The user name of an operator who has loggen in on behalf of a customer
-        /// </summary>
-        public string OperatorUserName { get; set; }
-
-        /// <summary>
         /// Current language and culture
         /// </summary>
         public Language CurrentLanguage { get; set; }

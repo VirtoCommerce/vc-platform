@@ -41,7 +41,7 @@
                                     <div class="image" style="background-image: url({{data.imageUrl}})" ng-if="data.imageUrl" ng-click="openItemDetail(data)"></div>
                                     <i class="table-ico fa fa-image" ng-if="!data.imageUrl" />
                                 </div>
-                              
+
                             </td>
                             <td class="table-col">
                                 <div class="form-input __mini __number">
@@ -56,7 +56,7 @@
                             </td>
                             <td class="table-col">
                                 <div class="form-input __mini">
-                                    <input name="price" money  required ng-model="data.price" type="text">
+                                    <input name="price" money required ng-model="data.price" type="text">
                                 </div>
                             </td>
                             <td class="table-col">
@@ -97,13 +97,10 @@
                         <td class="table-col __price">{{blade.currentEntity._taxTotal | number:2}}&nbsp;{{blade.currentEntity.currency}}</td>
                     </tr>
                     <tr class="table-item __total">
-                        <td class="table-col">{{ 'orders.blades.customerOrder-items.labels.total' | translate }}:</td>
+                        <td class="table-col">{{ 'orders.blades.customerOrder-items.labels.total' | translate }}</td>
                         <td class="table-col __price">{{blade.currentEntity._total | number:2}}&nbsp;{{blade.currentEntity.currency}}</td>
                     </tr>
                 </table>
-            </div>
-            <div class="form-group __order-currency">
-             
             </div>
         </div>
     </div>

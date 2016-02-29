@@ -320,7 +320,7 @@ storefrontApp.controller('checkoutController', ['$rootScope', '$scope', '$window
     }
 
     function getAvailableShippingMethods(shipmentId) {
-        cartService.getAvailableShippingMethods().then(function (response) {
+        cartService.getAvailableShippingMethods(shipmentId).then(function (response) {
             var availableShippingMethods = response.data;
             $scope.checkout.availableShippingMethods = availableShippingMethods;
             if ($scope.checkout.shipment && !$scope.checkout.shipment.shipmentMethodCode &&
