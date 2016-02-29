@@ -94,6 +94,11 @@ namespace VirtoCommerce.Storefront.Model
         /// </summary>
         public ICollection<SeoInfo> SeoInfos { get; set; }
 
+        /// <summary>
+        /// All linked stores (their accounts can be reused here)
+        /// </summary>
+        public ICollection<string> TrustedGroups { get; set; }
+
         public bool QuotesEnabled
         {
             get

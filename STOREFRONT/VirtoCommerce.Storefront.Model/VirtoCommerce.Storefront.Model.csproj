@@ -87,6 +87,7 @@
     <Compile Include="Catalog\TermExtensions.cs" />
     <Compile Include="Common\AnonymousComparer.cs" />
     <Compile Include="Common\EntryState.cs" />
+    <Compile Include="Common\EnumerableExtension.cs" />
     <Compile Include="Tax\ITaxable.cs" />
     <Compile Include="LinkList\CategoryMenuLink.cs" />
     <Compile Include="Common\Events\EventPublisher.cs" />
@@ -109,7 +110,7 @@
     <Compile Include="Quote\TierPriceFormModel.cs" />
     <Compile Include="StorefrontNotification.cs" />
     <Compile Include="StorefrontNotificationType.cs" />
-    <Compile Include="StoreStatus.cs" />
+    <Compile Include="Store\StoreStatus.cs" />
     <Compile Include="Tax\TaxLine.cs" />
     <Compile Include="Tax\TaxRate.cs" />
     <Compile Include="TierPrice.cs" />
@@ -127,7 +128,7 @@
     <Compile Include="ContactForm.cs" />
     <Compile Include="Country.cs" />
     <Compile Include="CountryRegion.cs" />
-    <Compile Include="DynamicContentItem.cs" />
+    <Compile Include="Marketing\DynamicContentItem.cs" />
     <Compile Include="Marketing\Coupon.cs" />
     <Compile Include="LinkList\MenuLink.cs" />
     <Compile Include="LinkList\MenuLinkList.cs" />
@@ -155,11 +156,11 @@
     <Compile Include="Customer\CustomerInfo.cs" />
     <Compile Include="DynamicProperty.cs" />
     <Compile Include="DynamicPropertyDictionaryItem.cs" />
-    <Compile Include="ForgotPassword.cs" />
+    <Compile Include="Security\ForgotPassword.cs" />
     <Compile Include="Language.cs" />
     <Compile Include="Catalog\Product.cs" />
     <Compile Include="LocalizedString.cs" />
-    <Compile Include="Login.cs" />
+    <Compile Include="Security\Login.cs" />
     <Compile Include="Order\CustomerOrder.cs" />
     <Compile Include="Order\LineItem.cs" />
     <Compile Include="Order\Operation.cs" />
@@ -173,9 +174,9 @@
     <Compile Include="Quote\QuoteItem.cs" />
     <Compile Include="Quote\QuoteRequest.cs" />
     <Compile Include="Quote\QuoteRequestTotals.cs" />
-    <Compile Include="Register.cs" />
+    <Compile Include="Security\Register.cs" />
     <Compile Include="ChangePassword.cs" />
-    <Compile Include="ResetPassword.cs" />
+    <Compile Include="Security\ResetPassword.cs" />
     <Compile Include="Catalog\ProductProperty.cs" />
     <Compile Include="SeoInfo.cs" />
     <Compile Include="Catalog\Services\ICatalogSearchService.cs" />
@@ -193,9 +194,8 @@
     <Compile Include="Cart\Payment.cs" />
     <Compile Include="Cart\Shipment.cs" />
     <Compile Include="Cart\ShoppingCart.cs" />
-    <Compile Include="Store.cs" />
+    <Compile Include="Store\Store.cs" />
     <Compile Include="Tax\TaxDetail.cs" />
-    <Compile Include="StorefrontUserName.cs" />
     <Compile Include="WorkContext.cs" />
   </ItemGroup>
   <ItemGroup>

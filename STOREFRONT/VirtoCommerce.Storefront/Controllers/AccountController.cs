@@ -154,14 +154,11 @@ namespace VirtoCommerce.Storefront.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> Register(Register formModel)
         {
-            //add store id to user name to get resulting string as storeId/userName.
-            //Thats allow to use same user login in one security accounts storage  and also used for stores security accounts isolation or sharing
-            var storeFrontUserName = new StorefrontUserName(formModel.Email, WorkContext.CurrentStore.Id).ToString();
             var user = new VirtoCommercePlatformCoreSecurityApplicationUserExtended
             {
                 Email = formModel.Email,
                 Password = formModel.Password,
-                UserName = storeFrontUserName,
+                UserName = formModel.Email,
                 UserType = "Customer",
                 StoreId = WorkContext.CurrentStore.Id,
             };
@@ -171,17 +168,17 @@ namespace VirtoCommerce.Storefront.Controllers
             if (result.Succeeded == true)
             {
                 //Load newly created account from API
-                user = await _commerceCoreApi.StorefrontSecurityGetUserByNameAsync(storeFrontUserName);
+                user = await _commerceCoreApi.StorefrontSecurityGetUserByNameAsync(user.UserName);
 
                 //Next need create corresponding Customer contact in VC Customers (CRM) module
                 //Contacts and account has the same Id.
                 var customer = formModel.ToWebModel();
                 customer.Id = user.Id;
-                customer.UserName = storeFrontUserName;
+                customer.UserName = user.UserName;
                 customer.IsRegisteredUser = true;
                 await _customerService.CreateCustomerAsync(customer);
 
-                await _commerceCoreApi.StorefrontSecurityPasswordSignInAsync(storeFrontUserName, formModel.Password);
+                await _commerceCoreApi.StorefrontSecurityPasswordSignInAsync(user.UserName, formModel.Password);
 
                 var identity = CreateClaimsIdentity(customer, null, null);
                 _authenticationManager.SignIn(identity);
@@ -218,16 +215,13 @@ namespace VirtoCommerce.Storefront.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> Login(Login formModel, string returnUrl)
         {
-            //add store id to user name to get resulting string as storeId/userName.
-            //Thats allow to use same user login in one security accounts storage  and also used for stores security accounts isolation or sharing
-            var storeFrontUserName = new StorefrontUserName(formModel.Email, WorkContext.CurrentStore.Id).ToString();
-
-            var loginResult = await _commerceCoreApi.StorefrontSecurityPasswordSignInAsync(storeFrontUserName, formModel.Password);
+         
+            var loginResult = await _commerceCoreApi.StorefrontSecurityPasswordSignInAsync(formModel.Email, formModel.Password);
 
             switch (loginResult.Status)
             {
                 case "success":
-                    var user = await _commerceCoreApi.StorefrontSecurityGetUserByNameAsync(storeFrontUserName);
+                    var user = await _commerceCoreApi.StorefrontSecurityGetUserByNameAsync(formModel.Email);
                     //User may not have contact record
                     var customer = await _customerService.GetCustomerByIdAsync(user.Id);
                     if (customer == null)
@@ -299,11 +293,8 @@ namespace VirtoCommerce.Storefront.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> ForgotPassword(ForgotPassword formModel)
         {
-            //add store id to user name to get resulting string as storeId/userName.
-            //Thats allow to use same user login in one security accounts storage  and also used for stores security accounts isolation or sharing
-            var storeFrontUserName = new StorefrontUserName(formModel.Email, WorkContext.CurrentStore.Id).ToString();
-
-            var user = await _commerceCoreApi.StorefrontSecurityGetUserByNameAsync(storeFrontUserName);
+          
+            var user = await _commerceCoreApi.StorefrontSecurityGetUserByNameAsync(formModel.Email);
 
             if (user != null)
             {

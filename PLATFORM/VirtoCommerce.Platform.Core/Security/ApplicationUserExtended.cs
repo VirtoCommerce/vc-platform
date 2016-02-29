@@ -10,6 +10,9 @@ namespace VirtoCommerce.Platform.Core.Security
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
 
+        /// <summary>
+        /// Tenant id
+        /// </summary>
         public string StoreId { get; set; }
         public string MemberId { get; set; }
         public string Icon { get; set; }

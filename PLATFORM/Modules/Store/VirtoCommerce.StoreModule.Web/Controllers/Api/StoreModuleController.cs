@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -211,6 +212,25 @@ namespace VirtoCommerce.StoreModule.Web.Controllers.Api
             }
 
             return Ok(result);
+        }
+
+        /// <summary>
+        /// Returns list of stores which user can sign in
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [ResponseType(typeof(string[]))]
+        [Route("allowed/{userId}")]
+        public async Task<IHttpActionResult> GetUserAllowedStores(string userId)
+        {
+            var retVal = new List<string>();
+            var user = await _securityService.FindByIdAsync(userId, UserDetails.Reduced);
+            if(user != null)
+            {
+                retVal = _storeService.GetUserAllowedStores(user).ToList();
+            }
+            return Ok(retVal.ToArray());
         }
 
         protected void CheckCurrentUserHasPermissionForObjects(string permission, params coreModel.Store[] objects)

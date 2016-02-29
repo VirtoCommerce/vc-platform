@@ -154,8 +154,10 @@
   <ItemGroup>
     <Compile Include="Controllers\Api\CommerceController.cs" />
     <Compile Include="Controllers\Api\StorefrontSecurityController.cs" />
+    <Compile Include="Converters\StorefrontUserConverter.cs" />
     <Compile Include="Model\KeyValuePair.cs" />
     <Compile Include="Model\PaymentCallbackParameters.cs" />
+    <Compile Include="Model\StorefrontUser.cs" />
     <Compile Include="Model\SignInResult.cs" />
     <Compile Include="Security\CommercePredefinedPermissions.cs" />
     <Compile Include="Converters\FulfillmentCenterConverter.cs" />

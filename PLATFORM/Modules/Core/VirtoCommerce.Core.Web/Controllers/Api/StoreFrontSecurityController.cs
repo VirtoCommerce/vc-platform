@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
+using VirtoCommerce.CoreModule.Web.Converters;
 using VirtoCommerce.CoreModule.Web.Model;
 using VirtoCommerce.Domain.Customer.Services;
 using VirtoCommerce.Domain.Store.Services;
@@ -49,7 +50,7 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
         /// <returns></returns>
         [HttpGet]
         [Route("user/id/{userId}")]
-        [ResponseType(typeof(ApplicationUserExtended))]
+        [ResponseType(typeof(StorefrontUser))]
         public async Task<IHttpActionResult> GetUserById(string userId)
         {
             if (string.IsNullOrEmpty(userId))
@@ -57,9 +58,15 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
                 return BadRequest();
             }
 
+            StorefrontUser retVal = null; 
             var user = await _securityService.FindByIdAsync(userId, UserDetails.Reduced);
-
-            return Ok(user);
+            if(user != null)
+            {
+                retVal = user.ToWebModel();
+                retVal.AlowedStores = _storeService.GetUserAllowedStores(retVal);
+                return Ok(retVal);
+            }
+            return NotFound();
         }
 
         /// <summary>
@@ -69,7 +76,7 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
         /// <returns></returns>
         [HttpGet]
         [Route("user/name/{userName}")]
-        [ResponseType(typeof(ApplicationUserExtended))]
+        [ResponseType(typeof(StorefrontUser))]
         public async Task<IHttpActionResult> GetUserByName(string userName)
         {
             if (string.IsNullOrEmpty(userName))
@@ -77,9 +84,16 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
                 return BadRequest();
             }
 
+            StorefrontUser retVal = null;
             var user = await _securityService.FindByNameAsync(userName, UserDetails.Reduced);
+            if (user != null)
+            {
+                retVal = user.ToWebModel();
+                retVal.AlowedStores = _storeService.GetUserAllowedStores(retVal);
+                return Ok(retVal);
+            }
 
-            return Ok(user);
+            return NotFound();
         }
 
         /// <summary>
@@ -90,7 +104,7 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
         /// <returns></returns>
         [HttpGet]
         [Route("user/external")]
-        [ResponseType(typeof(ApplicationUserExtended))]
+        [ResponseType(typeof(StorefrontUser))]
         public async Task<IHttpActionResult> GetUserByLogin(string loginProvider, string providerKey)
         {
             if (string.IsNullOrEmpty(loginProvider) || string.IsNullOrEmpty(providerKey))
@@ -98,9 +112,16 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
                 return BadRequest();
             }
 
+            StorefrontUser retVal = null;
             var user = await _securityService.FindByLoginAsync(loginProvider, providerKey, UserDetails.Reduced);
+            if (user != null)
+            {
+                retVal = user.ToWebModel();
+                retVal.AlowedStores = _storeService.GetUserAllowedStores(retVal);
+                return Ok(retVal);
+            }
 
-            return Ok(user);
+            return NotFound();
         }
 
         /// <summary>
@@ -121,11 +142,11 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 
             var status = await SignInManager.PasswordSignInAsync(userName, password, false, shouldLockout: true);
             var result = new SignInResult { Status = status };
-            if(result.Status == Microsoft.AspNet.Identity.Owin.SignInStatus.Success)
+            if (result.Status == Microsoft.AspNet.Identity.Owin.SignInStatus.Success)
             {
                 var user = await _securityService.FindByNameAsync(userName, UserDetails.Full);
                 //Do not allow login rejected users
-                if(user != null && user.UserState == AccountState.Rejected)
+                if (user != null && user.UserState == AccountState.Rejected)
                 {
                     result.Status = Microsoft.AspNet.Identity.Owin.SignInStatus.LockedOut;
                 }
@@ -229,5 +250,7 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 
             return Ok(result);
         }
+
+      
     }
 }
