@@ -37,12 +37,14 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                 }
                 //TODO: make customer.Addresses as IPagedList
                 result.Addresses = new StorefrontModel.Common.StorefrontPagedList<Address>(addresses, 1, 10, addresses.Count, page => workContext.RequestUrl.SetQueryParameter("page", page.ToString()).ToString());
+                result.AddressesCount = addresses.Count;
             }
 
             if (customer.Orders != null)
             {
                 var orders = customer.Orders.Select(o => o.ToShopifyModel(urlBuilder)).ToList();
                 result.Orders = new StorefrontModel.Common.StorefrontPagedList<Order>(orders, customer.Orders, customer.Orders.GetPageUrl);
+                result.OrdersCount = orders.Count;
             }
 
             if (customer.QuoteRequests != null)
