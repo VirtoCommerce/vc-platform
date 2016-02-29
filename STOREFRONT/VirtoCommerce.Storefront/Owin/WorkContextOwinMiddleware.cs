@@ -110,7 +110,7 @@ namespace VirtoCommerce.Storefront.Owin
                     MaintainAnonymousCustomerCookie(context, workContext);
 
                     //Do not load shopping cart and other for resource requests
-                    if (!IsAssetRequest(context.Request.Uri))
+                    if (!IsAssetRequest(context.Request))
                     {
                         //Shopping cart
                         await cartBuilder.GetOrCreateNewTransientCartAsync(workContext.CurrentStore, workContext.CurrentCustomer, workContext.CurrentLanguage, workContext.CurrentCurrency);
@@ -168,9 +168,14 @@ namespace VirtoCommerce.Storefront.Owin
         }
 
 
-        private bool IsAssetRequest(Uri uri)
+        private bool IsAssetRequest(IOwinRequest request)
         {
-            return uri.AbsolutePath.Contains("themes/assets") || !string.IsNullOrEmpty(Path.GetExtension(uri.ToString()));
+            var retVal = string.Equals(request.Method, "GET", StringComparison.OrdinalIgnoreCase); 
+            if(retVal)
+            {
+                retVal = request.Uri.AbsolutePath.Contains("themes/assets") || !string.IsNullOrEmpty(Path.GetExtension(request.Uri.ToString()));
+            }
+            return retVal;
         }
 
         private void ValidateUserStoreLogin(IOwinContext context, CustomerInfo customer, Store currentStore)

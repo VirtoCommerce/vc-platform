@@ -35,10 +35,6 @@ namespace VirtoCommerce.OrderModule.Data.Observers
 			foreach (var item in order.Items)
 			{
 				order.Sum += item.Price * item.Quantity;
-				if(item.Discount != null)
-				{
-					order.Sum -= item.Discount.DiscountAmount;
-				}
 			}
 
 			foreach (var shipment in order.Shipments)
