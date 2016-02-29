@@ -5,6 +5,7 @@ using CacheManager.Core;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.Client.Model;
 using VirtoCommerce.LiquidThemeEngine.Extensions;
+using VirtoCommerce.Storefront.Common;
 using VirtoCommerce.Storefront.Converters;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Common;
@@ -85,7 +86,8 @@ namespace VirtoCommerce.Storefront.Services
 
                 return result;
             });
-            return retVal;
+
+            return retVal != null ? retVal.JsonClone() : null;
         }
 
         public async Task CreateCustomerAsync(CustomerInfo customer)
