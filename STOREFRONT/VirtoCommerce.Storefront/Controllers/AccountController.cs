@@ -168,18 +168,18 @@ namespace VirtoCommerce.Storefront.Controllers
             if (result.Succeeded == true)
             {
                 //Load newly created account from API
-                user = await _commerceCoreApi.StorefrontSecurityGetUserByNameAsync(user.UserName);
+                var storefrontUser = await _commerceCoreApi.StorefrontSecurityGetUserByNameAsync(user.UserName);
 
                 //Next need create corresponding Customer contact in VC Customers (CRM) module
                 //Contacts and account has the same Id.
                 var customer = formModel.ToWebModel();
-                customer.Id = user.Id;
-                customer.UserName = user.UserName;
+                customer.Id = storefrontUser.Id;
+                customer.UserName = storefrontUser.UserName;
                 customer.IsRegisteredUser = true;
-                customer.AllowedStores = user.AllowedStores;
+                customer.AllowedStores = storefrontUser.AllowedStores;
                 await _customerService.CreateCustomerAsync(customer);
 
-                await _commerceCoreApi.StorefrontSecurityPasswordSignInAsync(user.UserName, formModel.Password);
+                await _commerceCoreApi.StorefrontSecurityPasswordSignInAsync(storefrontUser.UserName, formModel.Password);
 
                 var identity = CreateClaimsIdentity(customer, null, null);
                 _authenticationManager.SignIn(identity);
@@ -216,7 +216,7 @@ namespace VirtoCommerce.Storefront.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> Login(Login formModel, string returnUrl)
         {
-         
+
             var loginResult = await _commerceCoreApi.StorefrontSecurityPasswordSignInAsync(formModel.Email, formModel.Password);
 
             switch (loginResult.Status)
@@ -295,7 +295,7 @@ namespace VirtoCommerce.Storefront.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> ForgotPassword(ForgotPassword formModel)
         {
-          
+
             var user = await _commerceCoreApi.StorefrontSecurityGetUserByNameAsync(formModel.Email);
 
             if (user != null)

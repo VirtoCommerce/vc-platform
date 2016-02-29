@@ -17,16 +17,24 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public partial class VirtoCommercePlatformCoreSecurityApplicationUserExtended :  IEquatable<VirtoCommercePlatformCoreSecurityApplicationUserExtended>
+    public partial class VirtoCommerceCoreModuleWebModelStorefrontUser :  IEquatable<VirtoCommerceCoreModuleWebModelStorefrontUser>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreSecurityApplicationUserExtended" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceCoreModuleWebModelStorefrontUser" /> class.
         /// </summary>
-        public VirtoCommercePlatformCoreSecurityApplicationUserExtended()
+        public VirtoCommerceCoreModuleWebModelStorefrontUser()
         {
             
         }
 
+        
+        /// <summary>
+        /// List of stores which  user can sing in
+        /// </summary>
+        /// <value>List of stores which  user can sing in</value>
+        [DataMember(Name="allowedStores", EmitDefaultValue=false)]
+        public List<string> AllowedStores { get; set; }
+  
         
         /// <summary>
         /// Gets or Sets Id
@@ -155,7 +163,8 @@ namespace VirtoCommerce.Client.Model
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class VirtoCommercePlatformCoreSecurityApplicationUserExtended {\n");
+            sb.Append("class VirtoCommerceCoreModuleWebModelStorefrontUser {\n");
+            sb.Append("  AllowedStores: ").Append(AllowedStores).Append("\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
             sb.Append("  UserName: ").Append(UserName).Append("\n");
             sb.Append("  Email: ").Append(Email).Append("\n");
@@ -195,21 +204,26 @@ namespace VirtoCommerce.Client.Model
         public override bool Equals(object obj)
         {
             // credit: http://stackoverflow.com/a/10454552/677735
-            return this.Equals(obj as VirtoCommercePlatformCoreSecurityApplicationUserExtended);
+            return this.Equals(obj as VirtoCommerceCoreModuleWebModelStorefrontUser);
         }
 
         /// <summary>
-        /// Returns true if VirtoCommercePlatformCoreSecurityApplicationUserExtended instances are equal
+        /// Returns true if VirtoCommerceCoreModuleWebModelStorefrontUser instances are equal
         /// </summary>
-        /// <param name="other">Instance of VirtoCommercePlatformCoreSecurityApplicationUserExtended to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceCoreModuleWebModelStorefrontUser to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(VirtoCommercePlatformCoreSecurityApplicationUserExtended other)
+        public bool Equals(VirtoCommerceCoreModuleWebModelStorefrontUser other)
         {
             // credit: http://stackoverflow.com/a/10454552/677735
             if (other == null)
                 return false;
 
             return 
+                (
+                    this.AllowedStores == other.AllowedStores ||
+                    this.AllowedStores != null &&
+                    this.AllowedStores.SequenceEqual(other.AllowedStores)
+                ) && 
                 (
                     this.Id == other.Id ||
                     this.Id != null &&
@@ -308,6 +322,9 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
+                
+                if (this.AllowedStores != null)
+                    hash = hash * 59 + this.AllowedStores.GetHashCode();
                 
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();

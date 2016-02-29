@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 using VirtoCommerce.Platform.Core.Security;
 
 namespace VirtoCommerce.CoreModule.Web.Model
@@ -11,6 +8,6 @@ namespace VirtoCommerce.CoreModule.Web.Model
         /// <summary>
         /// List of stores which  user can sing in
         /// </summary>
-        public IEnumerable<string> AlowedStores { get; set; }
+        public IEnumerable<string> AllowedStores { get; set; }
     }
 }

@@ -34,15 +34,6 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
             _contactService = contactService;
         }
 
-        private ApplicationSignInManager _signInManager;
-        private ApplicationSignInManager SignInManager
-        {
-            get
-            {
-                return _signInManager ?? (_signInManager = _signInManagerFactory());
-            }
-        }
-
         /// <summary>
         /// Get user details by user ID
         /// </summary>
@@ -58,13 +49,12 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
                 return BadRequest();
             }
 
-            StorefrontUser retVal = null; 
             var user = await _securityService.FindByIdAsync(userId, UserDetails.Reduced);
-            if(user != null)
+            if (user != null)
             {
-                retVal = user.ToWebModel();
-                retVal.AlowedStores = _storeService.GetUserAllowedStores(retVal);
-                return Ok(retVal);
+                var result = user.ToWebModel();
+                result.AllowedStores = _storeService.GetUserAllowedStores(result);
+                return Ok(result);
             }
             return NotFound();
         }
@@ -84,13 +74,12 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
                 return BadRequest();
             }
 
-            StorefrontUser retVal = null;
             var user = await _securityService.FindByNameAsync(userName, UserDetails.Reduced);
             if (user != null)
             {
-                retVal = user.ToWebModel();
-                retVal.AlowedStores = _storeService.GetUserAllowedStores(retVal);
-                return Ok(retVal);
+                var result = user.ToWebModel();
+                result.AllowedStores = _storeService.GetUserAllowedStores(result);
+                return Ok(result);
             }
 
             return NotFound();
@@ -112,13 +101,12 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
                 return BadRequest();
             }
 
-            StorefrontUser retVal = null;
             var user = await _securityService.FindByLoginAsync(loginProvider, providerKey, UserDetails.Reduced);
             if (user != null)
             {
-                retVal = user.ToWebModel();
-                retVal.AlowedStores = _storeService.GetUserAllowedStores(retVal);
-                return Ok(retVal);
+                var result = user.ToWebModel();
+                result.AllowedStores = _storeService.GetUserAllowedStores(result);
+                return Ok(result);
             }
 
             return NotFound();
@@ -140,19 +128,25 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
                 return BadRequest();
             }
 
-            var status = await SignInManager.PasswordSignInAsync(userName, password, false, shouldLockout: true);
-            var result = new SignInResult { Status = status };
-            if (result.Status == Microsoft.AspNet.Identity.Owin.SignInStatus.Success)
+            using (var signInManager = _signInManagerFactory())
             {
-                var user = await _securityService.FindByNameAsync(userName, UserDetails.Full);
-                //Do not allow login rejected users
-                if (user != null && user.UserState == AccountState.Rejected)
+                var status = await signInManager.PasswordSignInAsync(userName, password, false, shouldLockout: true);
+                var result = new SignInResult { Status = status };
+
+                if (result.Status == Microsoft.AspNet.Identity.Owin.SignInStatus.Success)
                 {
-                    result.Status = Microsoft.AspNet.Identity.Owin.SignInStatus.LockedOut;
+                    var user = await _securityService.FindByNameAsync(userName, UserDetails.Full);
+
+                    //Do not allow to login rejected users
+                    if (user != null && user.UserState == AccountState.Rejected)
+                    {
+                        result.Status = Microsoft.AspNet.Identity.Owin.SignInStatus.LockedOut;
+                    }
+
                 }
 
+                return Ok(result);
             }
-            return Ok(result);
         }
 
         /// <summary>
@@ -251,6 +245,6 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
             return Ok(result);
         }
 
-      
+
     }
 }

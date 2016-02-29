@@ -123,6 +123,7 @@
     <Compile Include="Model\VirtoCommerceCoreModuleWebModelKeyValuePair.cs" />
     <Compile Include="Model\VirtoCommerceCoreModuleWebModelPaymentCallbackParameters.cs" />
     <Compile Include="Model\VirtoCommerceCoreModuleWebModelSignInResult.cs" />
+    <Compile Include="Model\VirtoCommerceCoreModuleWebModelStorefrontUser.cs" />
     <Compile Include="Model\VirtoCommerceCustomerModuleWebModelAddress.cs" />
     <Compile Include="Model\VirtoCommerceCustomerModuleWebModelContact.cs" />
     <Compile Include="Model\VirtoCommerceCustomerModuleWebModelMember.cs" />
