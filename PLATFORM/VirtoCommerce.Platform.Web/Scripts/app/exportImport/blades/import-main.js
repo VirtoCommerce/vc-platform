@@ -5,7 +5,6 @@
     blade.headIcon = 'fa-download';
     blade.title = 'platform.blades.import-main.title';
     blade.isLoading = false;
-
     $scope.importRequest = {};
 
     $scope.$on("new-notification-event", function (event, notification) {
@@ -42,7 +41,7 @@
         var uploader = $scope.uploader = new FileUploader({
             scope: $scope,
             headers: { Accept: 'application/json' },
-            url: 'api/platform/assets?folderUrl=tmp',
+            url: 'api/platform/assets/localstorage',
             method: 'POST',
             autoUpload: true,
             removeAfterUpload: true
@@ -67,7 +66,8 @@
         };
 
         uploader.onSuccessItem = function (fileItem, asset, status, headers) {
-            $scope.importRequest.fileUrl = asset[0].relativeUrl;
+        	$scope.importRequest.fileUrl = asset[0].url;
+        	$scope.importRequest.fileName = asset[0].name;
 
             exportImportResourse.loadExportManifest({ fileUrl: $scope.importRequest.fileUrl }, function (data) {
                 // select all available data for import

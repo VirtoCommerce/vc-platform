@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -20,12 +21,53 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     {
         private readonly IBlobStorageProvider _blobProvider;
         private readonly IBlobUrlResolver _urlResolver;
+        private readonly string _tmpUrl = "/App_Data/Uploads/";
         public AssetsController(IBlobStorageProvider blobProvider, IBlobUrlResolver urlResolver)
         {
             _blobProvider = blobProvider;
             _urlResolver = urlResolver;
         }
 
+        /// <summary>
+        /// This method used to upload files on local disk storage in special uploads folder
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("localstorage")]
+        [ResponseType(typeof(webModel.BlobInfo[]))]
+        [CheckPermission(Permission = PredefinedPermissions.AssetCreate)]
+        public async Task<IHttpActionResult> UploadAssetToLocalFileSystem()
+        {
+            var retVal = new List<webModel.BlobInfo>();
+
+            if (!Request.Content.IsMimeMultipartContent())
+            {
+                throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.NotAcceptable, "This request is not properly formatted"));
+            }
+            var baseUrl = Startup.VirtualRoot + _tmpUrl;
+            var path = HostingEnvironment.MapPath(baseUrl);
+            var streamProvider = new CustomMultipartFormDataStreamProvider(path);
+            await Request.Content.ReadAsMultipartAsync(streamProvider).ContinueWith(t =>
+            {
+                if (t.IsFaulted || t.IsCanceled)
+                    throw new HttpResponseException(HttpStatusCode.InternalServerError);
+            });
+
+            foreach (var fileData in streamProvider.FileData)
+            {
+                var fileName = fileData.Headers.ContentDisposition.FileName.Replace("\"", string.Empty);
+        
+                var blobInfo = new webModel.BlobInfo
+                {
+                    Name = fileName,
+                    Url = VirtualPathUtility.ToAbsolute(baseUrl + "/" + fileName),
+                    MimeType = MimeTypeResolver.ResolveContentType(fileName)
+                };
+                retVal.Add(blobInfo);
+            }
+
+            return Ok(retVal.ToArray());
+        }
 
         /// <summary>
         /// Upload assets to the folder

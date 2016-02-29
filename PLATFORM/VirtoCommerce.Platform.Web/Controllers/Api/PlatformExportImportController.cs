@@ -146,8 +146,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [ResponseType(typeof(PlatformExportManifest))]
         public IHttpActionResult LoadExportManifest([FromUri]string fileUrl)
         {
+            if(string.IsNullOrEmpty(fileUrl))
+            {
+                throw new ArgumentNullException("fileUrl");
+            }
+            var localPath = HostingEnvironment.MapPath(fileUrl);
             PlatformExportManifest retVal;
-            using (var stream = _blobStorageProvider.OpenRead(fileUrl))
+            using (var stream = File.Open(localPath, FileMode.Open))
             {
                 retVal = _platformExportManager.ReadExportManifest(stream);
             }
@@ -251,7 +256,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var now = DateTime.UtcNow;
             try
             {
-                using (var stream = _blobStorageProvider.OpenRead(importRequest.FileUrl))
+                var localPath = HostingEnvironment.MapPath(importRequest.FileUrl);
+
+                //Load source data only from local file system 
+                using (var stream = File.Open(localPath, FileMode.Open))
                 {
                     var manifest = importRequest.ToManifest();
                     manifest.Created = now;

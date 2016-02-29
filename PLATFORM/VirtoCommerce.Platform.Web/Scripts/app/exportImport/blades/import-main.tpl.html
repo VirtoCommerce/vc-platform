@@ -12,7 +12,7 @@
                         <label class="form-label">{{ 'platform.blades.import-main.labels.select-file' | translate }}</label>
                         <div class="form-input">
                             <input type="file" uploader="uploader" nv-file-select style="z-index: 0;" tabindex="-1">
-                            <input type="text" readonly="" ng-model="importRequest.fileUrl">
+                            <input type="text" placeholder="upload import zip package" readonly="" ng-model="importRequest.fileName">
                             <button class="btn __file" type="button" onclick="$('input[type=file]').trigger('click')">
                                 <i class="btn-ico fa fa-image"></i>
                             </button>
