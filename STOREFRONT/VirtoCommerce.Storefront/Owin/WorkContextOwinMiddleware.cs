@@ -106,6 +106,7 @@ namespace VirtoCommerce.Storefront.Owin
                     //Current customer
                     //ValidateUserStoreLogin(context, workContext.CurrentStore);
                     workContext.CurrentCustomer = await GetCustomerAsync(context);
+                    ValidateUserStoreLogin(context, workContext.CurrentCustomer, workContext.CurrentStore);
                     MaintainAnonymousCustomerCookie(context, workContext);
 
                     //Do not load shopping cart and other for resource requests
@@ -172,26 +173,16 @@ namespace VirtoCommerce.Storefront.Owin
             return uri.AbsolutePath.Contains("themes/assets") || !string.IsNullOrEmpty(Path.GetExtension(uri.ToString()));
         }
 
-        //private void ValidateUserStoreLogin(IOwinContext context, Store currentStore)
-        //{
-        //    var principal = context.Authentication.User;
-        //    var identity = principal.Identity;
+        private void ValidateUserStoreLogin(IOwinContext context, CustomerInfo customer, Store currentStore)
+        {
 
-        //    if (identity.IsAuthenticated)
-        //    {
-        //        //TODO: need check stores trusted relationships
-        //        var storeFrontUserName = StorefrontUserName.TryParse(identity.Name);
-        //        if(storeFrontUserName != null && storeFrontUserName.Domain != null)
-        //        {
-        //            if (storeFrontUserName.Domain != currentStore.Id)
-        //            {
-        //                context.Authentication.SignOut();
-        //                context.Authentication.User = new GenericPrincipal(new GenericIdentity(string.Empty), null);
-
-        //            }
-        //        }
-        //    }
-        //}
+            if (customer.IsRegisteredUser && !customer.AllowedStores.IsNullOrEmpty()
+                && !customer.AllowedStores.Any(x => string.Equals(x, currentStore.Id, StringComparison.InvariantCultureIgnoreCase)))
+            {
+                context.Authentication.SignOut();
+                context.Authentication.User = new GenericPrincipal(new GenericIdentity(string.Empty), null);
+            }
+        }
 
         private async Task<CustomerInfo> GetCustomerAsync(IOwinContext context)
         {
@@ -206,7 +197,7 @@ namespace VirtoCommerce.Storefront.Owin
                 if (userId == null)
                 {
                     //If somehow claim not found in user cookies need load user by name from API
-                    var user = await _platformApi.SecurityGetUserByNameAsync(identity.Name);
+                    var user = await _commerceApi.StorefrontSecurityGetUserByNameAsync(identity.Name);
                     if (user != null)
                     {
                         userId = user.Id;
@@ -225,6 +216,11 @@ namespace VirtoCommerce.Storefront.Owin
 
                 retVal.OperatorUserId = principal.FindFirstValue(StorefrontConstants.OperatorUserIdClaimType);
                 retVal.OperatorUserName = principal.FindFirstValue(StorefrontConstants.OperatorUserNameClaimType);
+                var allowedStores = principal.FindFirstValue(StorefrontConstants.AllowedStoresClaimType);
+                if(!string.IsNullOrEmpty(allowedStores))
+                {
+                    retVal.AllowedStores = allowedStores.Split(',');
+                }
             }
 
             if (!retVal.IsRegisteredUser)

@@ -79,6 +79,10 @@ namespace VirtoCommerce.Storefront.Model.Customer
         /// </summary>
         public string OperatorUserName { get; set; }
 
+        /// <summary>
+        /// List of stores which user can sign in
+        /// </summary>
+        public IEnumerable<string> AllowedStores { get; set; }
 
         public override string ToString()
         {

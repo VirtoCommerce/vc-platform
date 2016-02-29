@@ -176,6 +176,7 @@ namespace VirtoCommerce.Storefront.Controllers
                 customer.Id = user.Id;
                 customer.UserName = user.UserName;
                 customer.IsRegisteredUser = true;
+                customer.AllowedStores = user.AllowedStores;
                 await _customerService.CreateCustomerAsync(customer);
 
                 await _commerceCoreApi.StorefrontSecurityPasswordSignInAsync(user.UserName, formModel.Password);
@@ -232,6 +233,7 @@ namespace VirtoCommerce.Storefront.Controllers
                             IsRegisteredUser = true,
                         };
                     }
+                    customer.AllowedStores = user.AllowedStores;
                     customer.UserName = user.UserName;
 
                     // Login on behalf of a user with the specified ID
@@ -251,7 +253,7 @@ namespace VirtoCommerce.Storefront.Controllers
                                 IsRegisteredUser = true,
                             };
                         }
-
+                        customer2.AllowedStores = user2.AllowedStores;
                         if (user2 != null)
                         {
                             customer2.UserName = user2.UserName;
@@ -427,6 +429,11 @@ namespace VirtoCommerce.Storefront.Controllers
             };
 
             var identity = new ClaimsIdentity(claims, Microsoft.AspNet.Identity.DefaultAuthenticationTypes.ApplicationCookie);
+
+            if (!customer.AllowedStores.IsNullOrEmpty())
+            {
+                identity.AddClaim(new Claim(StorefrontConstants.AllowedStoresClaimType, string.Join(",", customer.AllowedStores)));
+            }
 
             if (!string.IsNullOrEmpty(operatorUserName))
             {

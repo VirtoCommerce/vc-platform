@@ -145,9 +145,10 @@ namespace VirtoCommerce.Client.Model
         /// </summary>
         [DataMember(Name="apiAccounts", EmitDefaultValue=false)]
         public List<VirtoCommercePlatformCoreSecurityApiAccount> ApiAccounts { get; set; }
-  
-        
-  
+
+        [DataMember(Name = "allowedStores", EmitDefaultValue = false)]
+        public List<string> AllowedStores { get; set; }
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
