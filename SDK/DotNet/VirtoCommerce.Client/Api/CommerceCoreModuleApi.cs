@@ -417,8 +417,8 @@ namespace VirtoCommerce.Client.Api
         /// </remarks>
         /// <param name="loginProvider"></param>
         /// <param name="providerKey"></param>
-        /// <returns>VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>
-        VirtoCommercePlatformCoreSecurityApplicationUserExtended StorefrontSecurityGetUserByLogin (string loginProvider, string providerKey);
+        /// <returns>VirtoCommerceCoreModuleWebModelStorefrontUser</returns>
+        VirtoCommerceCoreModuleWebModelStorefrontUser StorefrontSecurityGetUserByLogin (string loginProvider, string providerKey);
   
         /// <summary>
         /// Get user details by external login provider
@@ -428,8 +428,8 @@ namespace VirtoCommerce.Client.Api
         /// </remarks>
         /// <param name="loginProvider"></param>
         /// <param name="providerKey"></param>
-        /// <returns>ApiResponse of VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>
-        ApiResponse<VirtoCommercePlatformCoreSecurityApplicationUserExtended> StorefrontSecurityGetUserByLoginWithHttpInfo (string loginProvider, string providerKey);
+        /// <returns>ApiResponse of VirtoCommerceCoreModuleWebModelStorefrontUser</returns>
+        ApiResponse<VirtoCommerceCoreModuleWebModelStorefrontUser> StorefrontSecurityGetUserByLoginWithHttpInfo (string loginProvider, string providerKey);
 
         /// <summary>
         /// Get user details by external login provider
@@ -439,8 +439,8 @@ namespace VirtoCommerce.Client.Api
         /// </remarks>
         /// <param name="loginProvider"></param>
         /// <param name="providerKey"></param>
-        /// <returns>Task of VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>
-        System.Threading.Tasks.Task<VirtoCommercePlatformCoreSecurityApplicationUserExtended> StorefrontSecurityGetUserByLoginAsync (string loginProvider, string providerKey);
+        /// <returns>Task of VirtoCommerceCoreModuleWebModelStorefrontUser</returns>
+        System.Threading.Tasks.Task<VirtoCommerceCoreModuleWebModelStorefrontUser> StorefrontSecurityGetUserByLoginAsync (string loginProvider, string providerKey);
 
         /// <summary>
         /// Get user details by external login provider
@@ -450,8 +450,8 @@ namespace VirtoCommerce.Client.Api
         /// </remarks>
         /// <param name="loginProvider"></param>
         /// <param name="providerKey"></param>
-        /// <returns>Task of ApiResponse (VirtoCommercePlatformCoreSecurityApplicationUserExtended)</returns>
-        System.Threading.Tasks.Task<ApiResponse<VirtoCommercePlatformCoreSecurityApplicationUserExtended>> StorefrontSecurityGetUserByLoginAsyncWithHttpInfo (string loginProvider, string providerKey);
+        /// <returns>Task of ApiResponse (VirtoCommerceCoreModuleWebModelStorefrontUser)</returns>
+        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceCoreModuleWebModelStorefrontUser>> StorefrontSecurityGetUserByLoginAsyncWithHttpInfo (string loginProvider, string providerKey);
         
         /// <summary>
         /// Get user details by user ID
@@ -460,8 +460,8 @@ namespace VirtoCommerce.Client.Api
         /// 
         /// </remarks>
         /// <param name="userId"></param>
-        /// <returns>VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>
-        VirtoCommercePlatformCoreSecurityApplicationUserExtended StorefrontSecurityGetUserById (string userId);
+        /// <returns>VirtoCommerceCoreModuleWebModelStorefrontUser</returns>
+        VirtoCommerceCoreModuleWebModelStorefrontUser StorefrontSecurityGetUserById (string userId);
   
         /// <summary>
         /// Get user details by user ID
@@ -470,8 +470,8 @@ namespace VirtoCommerce.Client.Api
         /// 
         /// </remarks>
         /// <param name="userId"></param>
-        /// <returns>ApiResponse of VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>
-        ApiResponse<VirtoCommercePlatformCoreSecurityApplicationUserExtended> StorefrontSecurityGetUserByIdWithHttpInfo (string userId);
+        /// <returns>ApiResponse of VirtoCommerceCoreModuleWebModelStorefrontUser</returns>
+        ApiResponse<VirtoCommerceCoreModuleWebModelStorefrontUser> StorefrontSecurityGetUserByIdWithHttpInfo (string userId);
 
         /// <summary>
         /// Get user details by user ID
@@ -480,8 +480,8 @@ namespace VirtoCommerce.Client.Api
         /// 
         /// </remarks>
         /// <param name="userId"></param>
-        /// <returns>Task of VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>
-        System.Threading.Tasks.Task<VirtoCommercePlatformCoreSecurityApplicationUserExtended> StorefrontSecurityGetUserByIdAsync (string userId);
+        /// <returns>Task of VirtoCommerceCoreModuleWebModelStorefrontUser</returns>
+        System.Threading.Tasks.Task<VirtoCommerceCoreModuleWebModelStorefrontUser> StorefrontSecurityGetUserByIdAsync (string userId);
 
         /// <summary>
         /// Get user details by user ID
@@ -490,8 +490,8 @@ namespace VirtoCommerce.Client.Api
         /// 
         /// </remarks>
         /// <param name="userId"></param>
-        /// <returns>Task of ApiResponse (VirtoCommercePlatformCoreSecurityApplicationUserExtended)</returns>
-        System.Threading.Tasks.Task<ApiResponse<VirtoCommercePlatformCoreSecurityApplicationUserExtended>> StorefrontSecurityGetUserByIdAsyncWithHttpInfo (string userId);
+        /// <returns>Task of ApiResponse (VirtoCommerceCoreModuleWebModelStorefrontUser)</returns>
+        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceCoreModuleWebModelStorefrontUser>> StorefrontSecurityGetUserByIdAsyncWithHttpInfo (string userId);
         
         /// <summary>
         /// Get user details by user name
@@ -500,8 +500,8 @@ namespace VirtoCommerce.Client.Api
         /// 
         /// </remarks>
         /// <param name="userName"></param>
-        /// <returns>VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>
-        VirtoCommercePlatformCoreSecurityApplicationUserExtended StorefrontSecurityGetUserByName (string userName);
+        /// <returns>VirtoCommerceCoreModuleWebModelStorefrontUser</returns>
+        VirtoCommerceCoreModuleWebModelStorefrontUser StorefrontSecurityGetUserByName (string userName);
   
         /// <summary>
         /// Get user details by user name
@@ -510,8 +510,8 @@ namespace VirtoCommerce.Client.Api
         /// 
         /// </remarks>
         /// <param name="userName"></param>
-        /// <returns>ApiResponse of VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>
-        ApiResponse<VirtoCommercePlatformCoreSecurityApplicationUserExtended> StorefrontSecurityGetUserByNameWithHttpInfo (string userName);
+        /// <returns>ApiResponse of VirtoCommerceCoreModuleWebModelStorefrontUser</returns>
+        ApiResponse<VirtoCommerceCoreModuleWebModelStorefrontUser> StorefrontSecurityGetUserByNameWithHttpInfo (string userName);
 
         /// <summary>
         /// Get user details by user name
@@ -520,8 +520,8 @@ namespace VirtoCommerce.Client.Api
         /// 
         /// </remarks>
         /// <param name="userName"></param>
-        /// <returns>Task of VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>
-        System.Threading.Tasks.Task<VirtoCommercePlatformCoreSecurityApplicationUserExtended> StorefrontSecurityGetUserByNameAsync (string userName);
+        /// <returns>Task of VirtoCommerceCoreModuleWebModelStorefrontUser</returns>
+        System.Threading.Tasks.Task<VirtoCommerceCoreModuleWebModelStorefrontUser> StorefrontSecurityGetUserByNameAsync (string userName);
 
         /// <summary>
         /// Get user details by user name
@@ -530,8 +530,8 @@ namespace VirtoCommerce.Client.Api
         /// 
         /// </remarks>
         /// <param name="userName"></param>
-        /// <returns>Task of ApiResponse (VirtoCommercePlatformCoreSecurityApplicationUserExtended)</returns>
-        System.Threading.Tasks.Task<ApiResponse<VirtoCommercePlatformCoreSecurityApplicationUserExtended>> StorefrontSecurityGetUserByNameAsyncWithHttpInfo (string userName);
+        /// <returns>Task of ApiResponse (VirtoCommerceCoreModuleWebModelStorefrontUser)</returns>
+        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceCoreModuleWebModelStorefrontUser>> StorefrontSecurityGetUserByNameAsyncWithHttpInfo (string userName);
         
         /// <summary>
         /// Reset a password for the user
@@ -2325,10 +2325,10 @@ namespace VirtoCommerce.Client.Api
         /// </summary>
         /// <param name="loginProvider"></param> 
         /// <param name="providerKey"></param> 
-        /// <returns>VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>
-        public VirtoCommercePlatformCoreSecurityApplicationUserExtended StorefrontSecurityGetUserByLogin (string loginProvider, string providerKey)
+        /// <returns>VirtoCommerceCoreModuleWebModelStorefrontUser</returns>
+        public VirtoCommerceCoreModuleWebModelStorefrontUser StorefrontSecurityGetUserByLogin (string loginProvider, string providerKey)
         {
-             ApiResponse<VirtoCommercePlatformCoreSecurityApplicationUserExtended> response = StorefrontSecurityGetUserByLoginWithHttpInfo(loginProvider, providerKey);
+             ApiResponse<VirtoCommerceCoreModuleWebModelStorefrontUser> response = StorefrontSecurityGetUserByLoginWithHttpInfo(loginProvider, providerKey);
              return response.Data;
         }
 
@@ -2337,8 +2337,8 @@ namespace VirtoCommerce.Client.Api
         /// </summary>
         /// <param name="loginProvider"></param> 
         /// <param name="providerKey"></param> 
-        /// <returns>ApiResponse of VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>
-        public ApiResponse< VirtoCommercePlatformCoreSecurityApplicationUserExtended > StorefrontSecurityGetUserByLoginWithHttpInfo (string loginProvider, string providerKey)
+        /// <returns>ApiResponse of VirtoCommerceCoreModuleWebModelStorefrontUser</returns>
+        public ApiResponse< VirtoCommerceCoreModuleWebModelStorefrontUser > StorefrontSecurityGetUserByLoginWithHttpInfo (string loginProvider, string providerKey)
         {
             
             // verify the required parameter 'loginProvider' is set
@@ -2398,9 +2398,9 @@ namespace VirtoCommerce.Client.Api
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling StorefrontSecurityGetUserByLogin: " + response.ErrorMessage, response.ErrorMessage);
     
-            return new ApiResponse<VirtoCommercePlatformCoreSecurityApplicationUserExtended>(statusCode,
+            return new ApiResponse<VirtoCommerceCoreModuleWebModelStorefrontUser>(statusCode,
                 response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommercePlatformCoreSecurityApplicationUserExtended) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommercePlatformCoreSecurityApplicationUserExtended)));
+                (VirtoCommerceCoreModuleWebModelStorefrontUser) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceCoreModuleWebModelStorefrontUser)));
             
         }
     
@@ -2409,10 +2409,10 @@ namespace VirtoCommerce.Client.Api
         /// </summary>
         /// <param name="loginProvider"></param>
         /// <param name="providerKey"></param>
-        /// <returns>Task of VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>
-        public async System.Threading.Tasks.Task<VirtoCommercePlatformCoreSecurityApplicationUserExtended> StorefrontSecurityGetUserByLoginAsync (string loginProvider, string providerKey)
+        /// <returns>Task of VirtoCommerceCoreModuleWebModelStorefrontUser</returns>
+        public async System.Threading.Tasks.Task<VirtoCommerceCoreModuleWebModelStorefrontUser> StorefrontSecurityGetUserByLoginAsync (string loginProvider, string providerKey)
         {
-             ApiResponse<VirtoCommercePlatformCoreSecurityApplicationUserExtended> response = await StorefrontSecurityGetUserByLoginAsyncWithHttpInfo(loginProvider, providerKey);
+             ApiResponse<VirtoCommerceCoreModuleWebModelStorefrontUser> response = await StorefrontSecurityGetUserByLoginAsyncWithHttpInfo(loginProvider, providerKey);
              return response.Data;
 
         }
@@ -2422,8 +2422,8 @@ namespace VirtoCommerce.Client.Api
         /// </summary>
         /// <param name="loginProvider"></param>
         /// <param name="providerKey"></param>
-        /// <returns>Task of ApiResponse (VirtoCommercePlatformCoreSecurityApplicationUserExtended)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommercePlatformCoreSecurityApplicationUserExtended>> StorefrontSecurityGetUserByLoginAsyncWithHttpInfo (string loginProvider, string providerKey)
+        /// <returns>Task of ApiResponse (VirtoCommerceCoreModuleWebModelStorefrontUser)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceCoreModuleWebModelStorefrontUser>> StorefrontSecurityGetUserByLoginAsyncWithHttpInfo (string loginProvider, string providerKey)
         {
             // verify the required parameter 'loginProvider' is set
             if (loginProvider == null) throw new ApiException(400, "Missing required parameter 'loginProvider' when calling StorefrontSecurityGetUserByLogin");
@@ -2479,9 +2479,9 @@ namespace VirtoCommerce.Client.Api
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling StorefrontSecurityGetUserByLogin: " + response.ErrorMessage, response.ErrorMessage);
 
-            return new ApiResponse<VirtoCommercePlatformCoreSecurityApplicationUserExtended>(statusCode,
+            return new ApiResponse<VirtoCommerceCoreModuleWebModelStorefrontUser>(statusCode,
                 response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommercePlatformCoreSecurityApplicationUserExtended) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommercePlatformCoreSecurityApplicationUserExtended)));
+                (VirtoCommerceCoreModuleWebModelStorefrontUser) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceCoreModuleWebModelStorefrontUser)));
             
         }
         
@@ -2489,10 +2489,10 @@ namespace VirtoCommerce.Client.Api
         /// Get user details by user ID 
         /// </summary>
         /// <param name="userId"></param> 
-        /// <returns>VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>
-        public VirtoCommercePlatformCoreSecurityApplicationUserExtended StorefrontSecurityGetUserById (string userId)
+        /// <returns>VirtoCommerceCoreModuleWebModelStorefrontUser</returns>
+        public VirtoCommerceCoreModuleWebModelStorefrontUser StorefrontSecurityGetUserById (string userId)
         {
-             ApiResponse<VirtoCommercePlatformCoreSecurityApplicationUserExtended> response = StorefrontSecurityGetUserByIdWithHttpInfo(userId);
+             ApiResponse<VirtoCommerceCoreModuleWebModelStorefrontUser> response = StorefrontSecurityGetUserByIdWithHttpInfo(userId);
              return response.Data;
         }
 
@@ -2500,8 +2500,8 @@ namespace VirtoCommerce.Client.Api
         /// Get user details by user ID 
         /// </summary>
         /// <param name="userId"></param> 
-        /// <returns>ApiResponse of VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>
-        public ApiResponse< VirtoCommercePlatformCoreSecurityApplicationUserExtended > StorefrontSecurityGetUserByIdWithHttpInfo (string userId)
+        /// <returns>ApiResponse of VirtoCommerceCoreModuleWebModelStorefrontUser</returns>
+        public ApiResponse< VirtoCommerceCoreModuleWebModelStorefrontUser > StorefrontSecurityGetUserByIdWithHttpInfo (string userId)
         {
             
             // verify the required parameter 'userId' is set
@@ -2556,9 +2556,9 @@ namespace VirtoCommerce.Client.Api
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling StorefrontSecurityGetUserById: " + response.ErrorMessage, response.ErrorMessage);
     
-            return new ApiResponse<VirtoCommercePlatformCoreSecurityApplicationUserExtended>(statusCode,
+            return new ApiResponse<VirtoCommerceCoreModuleWebModelStorefrontUser>(statusCode,
                 response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommercePlatformCoreSecurityApplicationUserExtended) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommercePlatformCoreSecurityApplicationUserExtended)));
+                (VirtoCommerceCoreModuleWebModelStorefrontUser) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceCoreModuleWebModelStorefrontUser)));
             
         }
     
@@ -2566,10 +2566,10 @@ namespace VirtoCommerce.Client.Api
         /// Get user details by user ID 
         /// </summary>
         /// <param name="userId"></param>
-        /// <returns>Task of VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>
-        public async System.Threading.Tasks.Task<VirtoCommercePlatformCoreSecurityApplicationUserExtended> StorefrontSecurityGetUserByIdAsync (string userId)
+        /// <returns>Task of VirtoCommerceCoreModuleWebModelStorefrontUser</returns>
+        public async System.Threading.Tasks.Task<VirtoCommerceCoreModuleWebModelStorefrontUser> StorefrontSecurityGetUserByIdAsync (string userId)
         {
-             ApiResponse<VirtoCommercePlatformCoreSecurityApplicationUserExtended> response = await StorefrontSecurityGetUserByIdAsyncWithHttpInfo(userId);
+             ApiResponse<VirtoCommerceCoreModuleWebModelStorefrontUser> response = await StorefrontSecurityGetUserByIdAsyncWithHttpInfo(userId);
              return response.Data;
 
         }
@@ -2578,8 +2578,8 @@ namespace VirtoCommerce.Client.Api
         /// Get user details by user ID 
         /// </summary>
         /// <param name="userId"></param>
-        /// <returns>Task of ApiResponse (VirtoCommercePlatformCoreSecurityApplicationUserExtended)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommercePlatformCoreSecurityApplicationUserExtended>> StorefrontSecurityGetUserByIdAsyncWithHttpInfo (string userId)
+        /// <returns>Task of ApiResponse (VirtoCommerceCoreModuleWebModelStorefrontUser)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceCoreModuleWebModelStorefrontUser>> StorefrontSecurityGetUserByIdAsyncWithHttpInfo (string userId)
         {
             // verify the required parameter 'userId' is set
             if (userId == null) throw new ApiException(400, "Missing required parameter 'userId' when calling StorefrontSecurityGetUserById");
@@ -2632,9 +2632,9 @@ namespace VirtoCommerce.Client.Api
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling StorefrontSecurityGetUserById: " + response.ErrorMessage, response.ErrorMessage);
 
-            return new ApiResponse<VirtoCommercePlatformCoreSecurityApplicationUserExtended>(statusCode,
+            return new ApiResponse<VirtoCommerceCoreModuleWebModelStorefrontUser>(statusCode,
                 response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommercePlatformCoreSecurityApplicationUserExtended) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommercePlatformCoreSecurityApplicationUserExtended)));
+                (VirtoCommerceCoreModuleWebModelStorefrontUser) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceCoreModuleWebModelStorefrontUser)));
             
         }
         
@@ -2642,10 +2642,10 @@ namespace VirtoCommerce.Client.Api
         /// Get user details by user name 
         /// </summary>
         /// <param name="userName"></param> 
-        /// <returns>VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>
-        public VirtoCommercePlatformCoreSecurityApplicationUserExtended StorefrontSecurityGetUserByName (string userName)
+        /// <returns>VirtoCommerceCoreModuleWebModelStorefrontUser</returns>
+        public VirtoCommerceCoreModuleWebModelStorefrontUser StorefrontSecurityGetUserByName (string userName)
         {
-             ApiResponse<VirtoCommercePlatformCoreSecurityApplicationUserExtended> response = StorefrontSecurityGetUserByNameWithHttpInfo(userName);
+             ApiResponse<VirtoCommerceCoreModuleWebModelStorefrontUser> response = StorefrontSecurityGetUserByNameWithHttpInfo(userName);
              return response.Data;
         }
 
@@ -2653,8 +2653,8 @@ namespace VirtoCommerce.Client.Api
         /// Get user details by user name 
         /// </summary>
         /// <param name="userName"></param> 
-        /// <returns>ApiResponse of VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>
-        public ApiResponse< VirtoCommercePlatformCoreSecurityApplicationUserExtended > StorefrontSecurityGetUserByNameWithHttpInfo (string userName)
+        /// <returns>ApiResponse of VirtoCommerceCoreModuleWebModelStorefrontUser</returns>
+        public ApiResponse< VirtoCommerceCoreModuleWebModelStorefrontUser > StorefrontSecurityGetUserByNameWithHttpInfo (string userName)
         {
             
             // verify the required parameter 'userName' is set
@@ -2709,9 +2709,9 @@ namespace VirtoCommerce.Client.Api
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling StorefrontSecurityGetUserByName: " + response.ErrorMessage, response.ErrorMessage);
     
-            return new ApiResponse<VirtoCommercePlatformCoreSecurityApplicationUserExtended>(statusCode,
+            return new ApiResponse<VirtoCommerceCoreModuleWebModelStorefrontUser>(statusCode,
                 response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommercePlatformCoreSecurityApplicationUserExtended) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommercePlatformCoreSecurityApplicationUserExtended)));
+                (VirtoCommerceCoreModuleWebModelStorefrontUser) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceCoreModuleWebModelStorefrontUser)));
             
         }
     
@@ -2719,10 +2719,10 @@ namespace VirtoCommerce.Client.Api
         /// Get user details by user name 
         /// </summary>
         /// <param name="userName"></param>
-        /// <returns>Task of VirtoCommercePlatformCoreSecurityApplicationUserExtended</returns>
-        public async System.Threading.Tasks.Task<VirtoCommercePlatformCoreSecurityApplicationUserExtended> StorefrontSecurityGetUserByNameAsync (string userName)
+        /// <returns>Task of VirtoCommerceCoreModuleWebModelStorefrontUser</returns>
+        public async System.Threading.Tasks.Task<VirtoCommerceCoreModuleWebModelStorefrontUser> StorefrontSecurityGetUserByNameAsync (string userName)
         {
-             ApiResponse<VirtoCommercePlatformCoreSecurityApplicationUserExtended> response = await StorefrontSecurityGetUserByNameAsyncWithHttpInfo(userName);
+             ApiResponse<VirtoCommerceCoreModuleWebModelStorefrontUser> response = await StorefrontSecurityGetUserByNameAsyncWithHttpInfo(userName);
              return response.Data;
 
         }
@@ -2731,8 +2731,8 @@ namespace VirtoCommerce.Client.Api
         /// Get user details by user name 
         /// </summary>
         /// <param name="userName"></param>
-        /// <returns>Task of ApiResponse (VirtoCommercePlatformCoreSecurityApplicationUserExtended)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommercePlatformCoreSecurityApplicationUserExtended>> StorefrontSecurityGetUserByNameAsyncWithHttpInfo (string userName)
+        /// <returns>Task of ApiResponse (VirtoCommerceCoreModuleWebModelStorefrontUser)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceCoreModuleWebModelStorefrontUser>> StorefrontSecurityGetUserByNameAsyncWithHttpInfo (string userName)
         {
             // verify the required parameter 'userName' is set
             if (userName == null) throw new ApiException(400, "Missing required parameter 'userName' when calling StorefrontSecurityGetUserByName");
@@ -2785,9 +2785,9 @@ namespace VirtoCommerce.Client.Api
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling StorefrontSecurityGetUserByName: " + response.ErrorMessage, response.ErrorMessage);
 
-            return new ApiResponse<VirtoCommercePlatformCoreSecurityApplicationUserExtended>(statusCode,
+            return new ApiResponse<VirtoCommerceCoreModuleWebModelStorefrontUser>(statusCode,
                 response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommercePlatformCoreSecurityApplicationUserExtended) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommercePlatformCoreSecurityApplicationUserExtended)));
+                (VirtoCommerceCoreModuleWebModelStorefrontUser) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceCoreModuleWebModelStorefrontUser)));
             
         }
         

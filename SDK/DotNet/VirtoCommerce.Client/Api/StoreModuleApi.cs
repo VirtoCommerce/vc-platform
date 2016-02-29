@@ -174,6 +174,46 @@ namespace VirtoCommerce.Client.Api
         System.Threading.Tasks.Task<ApiResponse<Object>> StoreModuleDeleteAsyncWithHttpInfo (List<string> ids);
         
         /// <summary>
+        /// Returns list of stores which user can sign in
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="userId"></param>
+        /// <returns>List&lt;string&gt;</returns>
+        List<string> StoreModuleGetUserAllowedStores (string userId);
+  
+        /// <summary>
+        /// Returns list of stores which user can sign in
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="userId"></param>
+        /// <returns>ApiResponse of List&lt;string&gt;</returns>
+        ApiResponse<List<string>> StoreModuleGetUserAllowedStoresWithHttpInfo (string userId);
+
+        /// <summary>
+        /// Returns list of stores which user can sign in
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="userId"></param>
+        /// <returns>Task of List&lt;string&gt;</returns>
+        System.Threading.Tasks.Task<List<string>> StoreModuleGetUserAllowedStoresAsync (string userId);
+
+        /// <summary>
+        /// Returns list of stores which user can sign in
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="userId"></param>
+        /// <returns>Task of ApiResponse (List&lt;string&gt;)</returns>
+        System.Threading.Tasks.Task<ApiResponse<List<string>>> StoreModuleGetUserAllowedStoresAsyncWithHttpInfo (string userId);
+        
+        /// <summary>
         /// Search stores
         /// </summary>
         /// <remarks>
@@ -1012,6 +1052,159 @@ namespace VirtoCommerce.Client.Api
             return new ApiResponse<Object>(statusCode,
                 response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 null);
+        }
+        
+        /// <summary>
+        /// Returns list of stores which user can sign in 
+        /// </summary>
+        /// <param name="userId"></param> 
+        /// <returns>List&lt;string&gt;</returns>
+        public List<string> StoreModuleGetUserAllowedStores (string userId)
+        {
+             ApiResponse<List<string>> response = StoreModuleGetUserAllowedStoresWithHttpInfo(userId);
+             return response.Data;
+        }
+
+        /// <summary>
+        /// Returns list of stores which user can sign in 
+        /// </summary>
+        /// <param name="userId"></param> 
+        /// <returns>ApiResponse of List&lt;string&gt;</returns>
+        public ApiResponse< List<string> > StoreModuleGetUserAllowedStoresWithHttpInfo (string userId)
+        {
+            
+            // verify the required parameter 'userId' is set
+            if (userId == null)
+                throw new ApiException(400, "Missing required parameter 'userId' when calling StoreModuleApi->StoreModuleGetUserAllowedStores");
+            
+    
+            var path_ = "/api/stores/allowed/{userId}";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            Object postBody = null;
+
+            // to determine the Content-Type header
+            String[] httpContentTypes = new String[] {
+                
+            };
+            String httpContentType = Configuration.ApiClient.SelectHeaderContentType(httpContentTypes);
+
+            // to determine the Accept header
+            String[] httpHeaderAccepts = new String[] {
+                "application/json", "text/json"
+            };
+            String httpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(httpHeaderAccepts);
+            if (httpHeaderAccept != null)
+                headerParams.Add("Accept", httpHeaderAccept);
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            if (userId != null) pathParams.Add("userId", Configuration.ApiClient.ParameterToString(userId)); // path parameter
+            
+            
+            
+            
+            
+
+            
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, 
+                Method.GET, queryParams, postBody, headerParams, formParams, fileParams,
+                pathParams, httpContentType);
+
+            int statusCode = (int) response.StatusCode;
+    
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling StoreModuleGetUserAllowedStores: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling StoreModuleGetUserAllowedStores: " + response.ErrorMessage, response.ErrorMessage);
+    
+            return new ApiResponse<List<string>>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (List<string>) Configuration.ApiClient.Deserialize(response, typeof(List<string>)));
+            
+        }
+    
+        /// <summary>
+        /// Returns list of stores which user can sign in 
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns>Task of List&lt;string&gt;</returns>
+        public async System.Threading.Tasks.Task<List<string>> StoreModuleGetUserAllowedStoresAsync (string userId)
+        {
+             ApiResponse<List<string>> response = await StoreModuleGetUserAllowedStoresAsyncWithHttpInfo(userId);
+             return response.Data;
+
+        }
+
+        /// <summary>
+        /// Returns list of stores which user can sign in 
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns>Task of ApiResponse (List&lt;string&gt;)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<List<string>>> StoreModuleGetUserAllowedStoresAsyncWithHttpInfo (string userId)
+        {
+            // verify the required parameter 'userId' is set
+            if (userId == null) throw new ApiException(400, "Missing required parameter 'userId' when calling StoreModuleGetUserAllowedStores");
+            
+    
+            var path_ = "/api/stores/allowed/{userId}";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            Object postBody = null;
+
+            // to determine the Content-Type header
+            String[] httpContentTypes = new String[] {
+                
+            };
+            String httpContentType = Configuration.ApiClient.SelectHeaderContentType(httpContentTypes);
+
+            // to determine the Accept header
+            String[] httpHeaderAccepts = new String[] {
+                "application/json", "text/json"
+            };
+            String httpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(httpHeaderAccepts);
+            if (httpHeaderAccept != null)
+                headerParams.Add("Accept", httpHeaderAccept);
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            if (userId != null) pathParams.Add("userId", Configuration.ApiClient.ParameterToString(userId)); // path parameter
+            
+            
+            
+            
+            
+
+            
+
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, 
+                Method.GET, queryParams, postBody, headerParams, formParams, fileParams, 
+                pathParams, httpContentType);
+
+            int statusCode = (int) response.StatusCode;
+ 
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling StoreModuleGetUserAllowedStores: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling StoreModuleGetUserAllowedStores: " + response.ErrorMessage, response.ErrorMessage);
+
+            return new ApiResponse<List<string>>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (List<string>) Configuration.ApiClient.Deserialize(response, typeof(List<string>)));
+            
         }
         
         /// <summary>
