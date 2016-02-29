@@ -7,6 +7,9 @@ using VirtoCommerce.Storefront.Model.Quote;
 
 namespace VirtoCommerce.Storefront.Model.Customer
 {
+    /// <summary>
+    /// Represent customer information structure 
+    /// </summary>
     public class CustomerInfo : Entity
     {
         public CustomerInfo()
@@ -14,7 +17,13 @@ namespace VirtoCommerce.Storefront.Model.Customer
             Addresses = new List<Address>();
             DynamicProperties = new List<DynamicProperty>();
         }
-
+        /// <summary>
+        /// Security account Id
+        /// </summary>
+        public string UserId { get; set; }
+        /// <summary>
+        /// Security account user name
+        /// </summary>
         public string UserName { get; set; }
         /// <summary>
         /// Returns the email address of the customer.

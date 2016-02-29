@@ -103,9 +103,9 @@ namespace VirtoCommerce.Storefront.Owin
                     workContext.CurrentOrderSearchCriteria = new Model.Order.OrderSearchCriteria(qs);
                     workContext.CurrentQuoteSearchCriteria = new Model.Quote.QuoteSearchCriteria(qs);
 
-                    //Current customer
-                    //ValidateUserStoreLogin(context, workContext.CurrentStore);
+                    //Get current customer
                     workContext.CurrentCustomer = await GetCustomerAsync(context);
+                    //Validate that current customer has to store access
                     ValidateUserStoreLogin(context, workContext.CurrentCustomer, workContext.CurrentStore);
                     MaintainAnonymousCustomerCookie(context, workContext);
 

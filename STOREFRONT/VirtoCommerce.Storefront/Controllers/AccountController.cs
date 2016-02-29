@@ -174,6 +174,7 @@ namespace VirtoCommerce.Storefront.Controllers
                 //Contacts and account has the same Id.
                 var customer = formModel.ToWebModel();
                 customer.Id = storefrontUser.Id;
+                customer.UserId = storefrontUser.Id;
                 customer.UserName = storefrontUser.UserName;
                 customer.IsRegisteredUser = true;
                 customer.AllowedStores = storefrontUser.AllowedStores;
@@ -181,7 +182,7 @@ namespace VirtoCommerce.Storefront.Controllers
 
                 await _commerceCoreApi.StorefrontSecurityPasswordSignInAsync(storefrontUser.UserName, formModel.Password);
 
-                var identity = CreateClaimsIdentity(customer, null, null);
+                var identity = CreateClaimsIdentity(customer);
                 _authenticationManager.SignIn(identity);
 
                 //Publish user login event 
@@ -216,72 +217,63 @@ namespace VirtoCommerce.Storefront.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> Login(Login formModel, string returnUrl)
         {
-
             var loginResult = await _commerceCoreApi.StorefrontSecurityPasswordSignInAsync(formModel.Email, formModel.Password);
 
-            switch (loginResult.Status)
+            if (string.Equals(loginResult.Status, "success", StringComparison.InvariantCultureIgnoreCase))
             {
-                case "success":
-                    var user = await _commerceCoreApi.StorefrontSecurityGetUserByNameAsync(formModel.Email);
-                    //User may not have contact record
-                    var customer = await _customerService.GetCustomerByIdAsync(user.Id);
-                    if (customer == null)
-                    {
-                        customer = new CustomerInfo
-                        {
-                            Id = user.Id,
-                            IsRegisteredUser = true,
-                        };
-                    }
-                    customer.AllowedStores = user.AllowedStores;
-                    customer.UserName = user.UserName;
+                var user = await _commerceCoreApi.StorefrontSecurityGetUserByNameAsync(formModel.Email);
+                var customer = await GetStorefrontCustomerByUserAsync(user);
 
-                    // Login on behalf of a user with the specified ID
-                    string operatorUserName = null;
-                    string operatorUserId = null;
-                    var userId = GetUserIdForLoginOnBehalf(Request);
-
-                    if (!string.IsNullOrEmpty(userId) && !string.Equals(userId, user.Id) && await _customerService.CanLoginOnBehalfAsync(WorkContext.CurrentStore.Id, user.Id))
+                //Check that it's login on behalf request           
+                var onBehalfUserId = GetUserIdForLoginOnBehalf(Request);
+                if (!string.IsNullOrEmpty(onBehalfUserId) && !string.Equals(onBehalfUserId, customer.UserId) && await _customerService.CanLoginOnBehalfAsync(WorkContext.CurrentStore.Id, customer.UserId))
+                {
+                    var userOnBehalf = await _commerceCoreApi.StorefrontSecurityGetUserByIdAsync(onBehalfUserId);
+                    if (userOnBehalf != null)
                     {
-                        var user2 = await _commerceCoreApi.StorefrontSecurityGetUserByIdAsync(userId);
-                        var customer2 = await _customerService.GetCustomerByIdAsync(userId);
-                        if (customer2 == null)
-                        {
-                            customer2 = new CustomerInfo
-                            {
-                                Id = user2.Id,
-                                IsRegisteredUser = true,
-                            };
-                        }
-                        customer2.AllowedStores = user2.AllowedStores;
-                        if (user2 != null)
-                        {
-                            customer2.UserName = user2.UserName;
-                            operatorUserId = user.Id;
-                            operatorUserName = user.UserName;
-                            customer = customer2;
-                        }
+                        var customerOnBehalf = await GetStorefrontCustomerByUserAsync(userOnBehalf);
+
+                        customerOnBehalf.OperatorUserId = customer.UserId;
+                        customerOnBehalf.OperatorUserName = customer.UserName;
+                        //change the operator login on the customer login
+                        customer = customerOnBehalf;
                         //Clear LoginOnBehalf cookies
                         SetUserIdForLoginOnBehalf(Response, null);
-
-                        // TODO: Configure the reduced login expiration
                     }
+                    // TODO: Configure the reduced login expiration
+                }
 
-                    var identity = CreateClaimsIdentity(customer, operatorUserName, operatorUserId);
+                //Check that current user can sing in to current store
+                if (customer.AllowedStores.IsNullOrEmpty() || customer.AllowedStores.Any(x => string.Equals(x, WorkContext.CurrentStore.Id, StringComparison.InvariantCultureIgnoreCase)))
+                {
+                    var identity = CreateClaimsIdentity(customer);
                     _authenticationManager.SignIn(identity);
+
 
                     //Publish user login event 
                     await _userLoginEventPublisher.PublishAsync(new UserLoginEvent(WorkContext, WorkContext.CurrentCustomer, customer));
                     return StoreFrontRedirect(returnUrl);
-                case "lockedOut":
-                    return View("lockedout", WorkContext);
-                case "requiresVerification":
-                    return StoreFrontRedirect("~/account/sendcode");
-                case "failure":
-                default:
-                    ModelState.AddModelError("form", "Login attempt failed.");
-                    return View("customers/login", WorkContext);
+                }
+                else
+                {
+                    ModelState.AddModelError("form", "User cannot login to current store.");
+                }
+              
             }
+
+            if (string.Equals(loginResult.Status, "lockedOut", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return View("lockedout", WorkContext);
+            }
+
+            if (string.Equals(loginResult.Status, "requiresVerification", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return StoreFrontRedirect("~/account/sendcode");
+            }
+
+            ModelState.AddModelError("form", "Login attempt failed.");
+            return View("customers/login", WorkContext);
+
         }
 
         [HttpGet]
@@ -391,6 +383,29 @@ namespace VirtoCommerce.Storefront.Controllers
             }
         }
 
+        private async Task<CustomerInfo> GetStorefrontCustomerByUserAsync(VirtoCommerceCoreModuleWebModelStorefrontUser user)
+        {
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+
+            //User may not have contact record
+            var result = await _customerService.GetCustomerByIdAsync(user.Id);
+            if (result == null)
+            {
+                result = new CustomerInfo
+                {
+                    Id = user.Id,
+                    IsRegisteredUser = true,
+                };
+            }
+            result.UserId = user.Id;
+            result.UserName = user.UserName;
+            result.AllowedStores = user.AllowedStores;
+
+            return result;
+        }
 
         private static string GetUserIdForLoginOnBehalf(HttpRequestBase request)
         {
@@ -420,10 +435,10 @@ namespace VirtoCommerce.Storefront.Controllers
             response.Cookies.Add(cookie);
         }
 
-        private static ClaimsIdentity CreateClaimsIdentity(CustomerInfo customer, string operatorUserName, string operatorUserId)
+        private static ClaimsIdentity CreateClaimsIdentity(CustomerInfo customer)
         {
             var claims = new List<Claim>
-        {
+            {
                 new Claim(ClaimTypes.Name, customer.UserName),
                 new Claim(ClaimTypes.NameIdentifier, customer.Id)
             };
@@ -435,14 +450,14 @@ namespace VirtoCommerce.Storefront.Controllers
                 identity.AddClaim(new Claim(StorefrontConstants.AllowedStoresClaimType, string.Join(",", customer.AllowedStores)));
             }
 
-            if (!string.IsNullOrEmpty(operatorUserName))
+            if (!string.IsNullOrEmpty(customer.OperatorUserName))
             {
-                identity.AddClaim(new Claim(StorefrontConstants.OperatorUserNameClaimType, operatorUserName));
+                identity.AddClaim(new Claim(StorefrontConstants.OperatorUserNameClaimType, customer.OperatorUserName));
             }
 
-            if (!string.IsNullOrEmpty(operatorUserId))
+            if (!string.IsNullOrEmpty(customer.OperatorUserId))
             {
-                identity.AddClaim(new Claim(StorefrontConstants.OperatorUserIdClaimType, operatorUserId));
+                identity.AddClaim(new Claim(StorefrontConstants.OperatorUserIdClaimType, customer.OperatorUserId));
             }
 
             return identity;
