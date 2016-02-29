@@ -258,7 +258,7 @@ namespace VirtoCommerce.Storefront.Controllers
                 {
                     ModelState.AddModelError("form", "User cannot login to current store.");
                 }
-              
+
             }
 
             if (string.Equals(loginResult.Status, "lockedOut", StringComparison.InvariantCultureIgnoreCase))
@@ -287,7 +287,6 @@ namespace VirtoCommerce.Storefront.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> ForgotPassword(ForgotPassword formModel)
         {
-
             var user = await _commerceCoreApi.StorefrontSecurityGetUserByNameAsync(formModel.Email);
 
             if (user != null)
@@ -390,8 +389,9 @@ namespace VirtoCommerce.Storefront.Controllers
                 throw new ArgumentNullException("user");
             }
 
-            //User may not have contact record
             var result = await _customerService.GetCustomerByIdAsync(user.Id);
+
+            // User may not have contact record
             if (result == null)
             {
                 result = new CustomerInfo
@@ -400,6 +400,7 @@ namespace VirtoCommerce.Storefront.Controllers
                     IsRegisteredUser = true,
                 };
             }
+
             result.UserId = user.Id;
             result.UserName = user.UserName;
             result.AllowedStores = user.AllowedStores;

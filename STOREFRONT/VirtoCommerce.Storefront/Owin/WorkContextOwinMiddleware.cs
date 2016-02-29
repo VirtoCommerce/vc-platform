@@ -208,7 +208,7 @@ namespace VirtoCommerce.Storefront.Owin
                 {
                     var customerService = _container.Resolve<ICustomerService>();
                     var customer = await customerService.GetCustomerByIdAsync(userId);
-                    retVal = customer != null ? customer.JsonClone() : retVal;
+                    retVal = customer ?? retVal;
                     retVal.Id = userId;
                     retVal.UserName = identity.Name;
                     retVal.IsRegisteredUser = true;
@@ -216,8 +216,9 @@ namespace VirtoCommerce.Storefront.Owin
 
                 retVal.OperatorUserId = principal.FindFirstValue(StorefrontConstants.OperatorUserIdClaimType);
                 retVal.OperatorUserName = principal.FindFirstValue(StorefrontConstants.OperatorUserNameClaimType);
+
                 var allowedStores = principal.FindFirstValue(StorefrontConstants.AllowedStoresClaimType);
-                if(!string.IsNullOrEmpty(allowedStores))
+                if (!string.IsNullOrEmpty(allowedStores))
                 {
                     retVal.AllowedStores = allowedStores.Split(',');
                 }
