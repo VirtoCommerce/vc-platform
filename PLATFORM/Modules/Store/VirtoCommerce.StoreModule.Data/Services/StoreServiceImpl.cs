@@ -202,22 +202,26 @@ namespace VirtoCommerce.StoreModule.Data.Services
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public IEnumerable<string> GetUserAllowedStores(ApplicationUserExtended user)
+        public IEnumerable<coreModel.Store> GetUserAllowedStores(ApplicationUserExtended user)
         {
             if(user == null)
             {
                 throw new ArgumentNullException("user");
             }
 
-            var retVal = new List<string>();
+            var retVal = new List<coreModel.Store>();
 
             if(user.StoreId != null)
             {
                 var store = GetById(user.StoreId);
                 if(store != null)
                 {
-                    retVal.Add(user.StoreId);
-                    retVal.AddRange(store.TrustedGroups);
+                    retVal.Add(store);
+                    if(!store.TrustedGroups.IsNullOrEmpty())
+                    {
+                        var trustedStores = SearchStores(new Domain.Store.Model.SearchCriteria { StoreIds = store.TrustedGroups.ToArray(), Take = int.MaxValue });
+                        retVal.AddRange(trustedStores.Stores);
+                    }
                 }
             }
             return retVal;

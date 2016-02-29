@@ -220,15 +220,15 @@ namespace VirtoCommerce.StoreModule.Web.Controllers.Api
         /// <param name="userId"></param>
         /// <returns></returns>
         [HttpGet]
-        [ResponseType(typeof(string[]))]
+        [ResponseType(typeof(webModel.Store[]))]
         [Route("allowed/{userId}")]
         public async Task<IHttpActionResult> GetUserAllowedStores(string userId)
         {
-            var retVal = new List<string>();
+            var retVal = new List<webModel.Store>();
             var user = await _securityService.FindByIdAsync(userId, UserDetails.Reduced);
             if(user != null)
             {
-                retVal = _storeService.GetUserAllowedStores(user).ToList();
+                retVal.AddRange(_storeService.GetUserAllowedStores(user).Select(x=>x.ToWebModel()));
             }
             return Ok(retVal.ToArray());
         }
