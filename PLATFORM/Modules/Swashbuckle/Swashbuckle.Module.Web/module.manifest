@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <module>
 	<id>VirtoCommerce.Swashbuckle</id>
-	<version>2.7.0</version>
-	<platformVersion>2.7.0</platformVersion>
+	<version>2.8.0</version>
+	<platformVersion>2.8.0</platformVersion>
 	<dependencies>
 	</dependencies>
 
