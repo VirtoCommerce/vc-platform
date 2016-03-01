@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <module>
   <id>VirtoCommerce.Core</id>
-  <version>2.7.0</version>
-  <platformVersion>2.7.0</platformVersion>
+  <version>2.8.0</version>
+  <platformVersion>2.8.0</platformVersion>
   <title>Commerce core module</title>
   <description>Common e-commerce domain functionality</description>
   <authors>

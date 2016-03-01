@@ -106,7 +106,7 @@
                 permission: blade.updatePermission
             },
             {
-                name: "platform.commands.preview", icon: 'fa fa-external-link',
+                name: "platform.commands.open-browser", icon: 'fa fa-external-link',
                 executeMethod: function () {
                     window.open(blade.currentEntity.url, '_blank');
                 },

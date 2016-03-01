@@ -4,7 +4,7 @@
     $scope.selectedNodeId = null;
 
     blade.refresh = function () {
-        stores.query({}, function (data) {
+        stores.queryLoginOnBehalfStores({ userId: blade.currentEntityId }, function (data) {
             blade.isLoading = false;
             blade.currentEntities = data;
         },

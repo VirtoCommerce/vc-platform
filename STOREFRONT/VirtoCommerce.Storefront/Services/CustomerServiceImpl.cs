@@ -87,7 +87,15 @@ namespace VirtoCommerce.Storefront.Services
                 return result;
             });
 
-            return retVal != null ? retVal.JsonClone() : null;
+            if (retVal != null)
+            {
+                var clone = retVal.JsonClone();
+                clone.Orders = retVal.Orders;
+                clone.QuoteRequests = retVal.QuoteRequests;
+                retVal = clone;
+            }
+
+            return retVal;
         }
 
         public async Task CreateCustomerAsync(CustomerInfo customer)
