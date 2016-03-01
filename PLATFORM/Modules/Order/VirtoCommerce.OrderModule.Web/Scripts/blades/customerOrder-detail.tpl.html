@@ -5,7 +5,7 @@
                 <div class="status" ng-bind="blade.currentEntity.status"></div>
                 <div class="reason" ng-bind="blade.currentEntity.cancelReason" ng-if="blade.currentEntity.isCancelled"></div>
             </div>
-            <form class="form" name="formScope">
+            <form name="formScope">
                 <div class="form-group" ng-init="setForm(formScope)">
                     <label class="form-label">{{ 'orders.blades.customerOrder-detail.labels.approved' | translate }}</label>
                     <div class="form-input">
@@ -70,9 +70,9 @@
                         </div>
                     </div>
                 </div>
-
-                <va-widget-container group="customerOrderDetailWidgets" blade="blade" gridster-opts="{width: 526}"></va-widget-container>
             </form>
+
+            <va-widget-container group="customerOrderDetailWidgets" blade="blade" gridster-opts="{width: 526}"></va-widget-container>
         </div>
     </div>
 </div>
