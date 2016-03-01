@@ -90,13 +90,13 @@ namespace VirtoCommerce.Storefront.Model.Cart
         public Money ShippingPrice { get; set; }
 
         /// <summary>
-        /// Gets the value of total shipping price
+        /// Gets the value of total shipping price without taxes
         /// </summary>
         public Money Total
         {
             get
             {
-                return ShippingPrice + TaxTotal - DiscountTotal;
+                return ShippingPrice - DiscountTotal;
             }
         }
 

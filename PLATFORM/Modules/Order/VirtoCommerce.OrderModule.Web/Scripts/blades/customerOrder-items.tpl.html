@@ -90,15 +90,15 @@
                     </tr>
                     <tr class="table-item">
                         <td class="table-col">{{ 'orders.blades.customerOrder-items.labels.discount-total' | translate }}</td>
-                        <td class="table-col __price">{{blade.currentEntity._discountTotal | number:2}}&nbsp;{{blade.currentEntity.currency}}</td>
+                        <td class="table-col __price">{{blade.currentEntity._itemsDiscountTotal | number:2}}&nbsp;{{blade.currentEntity.currency}}</td>
                     </tr>
                     <tr class="table-item">
                         <td class="table-col">{{ 'orders.blades.customerOrder-items.labels.tax-total' | translate }}</td>
-                        <td class="table-col __price">{{blade.currentEntity._taxTotal | number:2}}&nbsp;{{blade.currentEntity.currency}}</td>
+                        <td class="table-col __price">{{blade.currentEntity._itemsTaxTotal | number:2}}&nbsp;{{blade.currentEntity.currency}}</td>
                     </tr>
                     <tr class="table-item __total">
                         <td class="table-col">{{ 'orders.blades.customerOrder-items.labels.total' | translate }}</td>
-                        <td class="table-col __price">{{blade.currentEntity._total | number:2}}&nbsp;{{blade.currentEntity.currency}}</td>
+                        <td class="table-col __price">{{blade.currentEntity._itemsTotal | number:2}}&nbsp;{{blade.currentEntity.currency}}</td>
                     </tr>
                 </table>
             </div>

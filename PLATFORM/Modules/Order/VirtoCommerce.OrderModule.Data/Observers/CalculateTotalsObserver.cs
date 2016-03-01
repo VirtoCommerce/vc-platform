@@ -39,14 +39,11 @@ namespace VirtoCommerce.OrderModule.Data.Observers
 
 			foreach (var shipment in order.Shipments)
 			{
-				order.Sum += shipment.Sum - shipment.DiscountAmount + shipment.Tax;
+				order.Sum += shipment.Sum;
 			}
 	
-			if (order.TaxIncluded)
-			{
-				order.Sum += order.Tax;
-			}
-			order.Sum -= order.DiscountAmount;
+		    order.Sum += order.Tax;
+
 		}
 
 		
