@@ -3,10 +3,10 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "siteName": {
-      "value": ""
+      "value": "virtocommerce-test"
     },
     "hostingPlanName": {
-      "value": "virto-test"
+      "value": "virtocommerce-hosting"
     },
     "siteLocation": {
       "value": "West US"
@@ -21,13 +21,13 @@
       "value": 1
     },
     "sqlServerName": {
-      "value": ""
+      "value": "virtocommercetestsqlserver"
     },
     "sqlAdministratorLogin": {
-      "value": ""
+      "value": "virtocommercetestsqllogin"
     },
     "sqlAdministratorPassword": {
-      "value": ""
+      "value": "P@ssword1243!"
     }
   }
 }

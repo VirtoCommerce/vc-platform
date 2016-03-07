@@ -10,9 +10,9 @@ param(
   [string] $StorageContainerName = $ResourceGroupName.ToLowerInvariant() + '-stageartifacts',
   [string] $TemplateFile = 'Templates\dev.json',
   [string] $TemplateParametersFile = 'Templates\dev.params.json',
-  [string] $ArtifactStagingDirectory = 'staging',
+  [string] $ArtifactStagingDirectory = '..\..\artifacts\staging',
   [string] $AzCopyPath = 'Tools\AzCopy.exe',
-  [string] $DSCSourceFolder = '..\DSC'
+  [string] $DSCSourceFolder = '..\..\artifacts\wwwroot\'
 )
 
 . "$PSScriptRoot\Modules.ps1"
@@ -61,6 +61,10 @@ if ($UploadArtifacts) {
     $ArtifactStagingDirectory = [System.IO.Path]::Combine($PSScriptRoot, $ArtifactStagingDirectory)
     $DSCSourceFolder = [System.IO.Path]::Combine($PSScriptRoot, $DSCSourceFolder)
 
+    if (!(Test-Path $ArtifactStagingDirectory)) {
+        New-Item -ItemType Directory -Force -Path $ArtifactStagingDirectory
+    }
+
     Set-Variable ArtifactsLocationName '_artifactsLocation' -Option ReadOnly
     Set-Variable ArtifactsLocationSasTokenName '_artifactsLocationSasToken' -Option ReadOnly
 
@@ -93,7 +97,7 @@ if ($UploadArtifacts) {
     # Create DSC configuration archive
     if (Test-Path $DSCSourceFolder) {
     Add-Type -Assembly System.IO.Compression.FileSystem
-        $ArchiveFile = Join-Path $ArtifactStagingDirectory "dsc.zip"
+        $ArchiveFile = Join-Path $ArtifactStagingDirectory "package.zip"
         Remove-Item -Path $ArchiveFile -ErrorAction SilentlyContinue
         [System.IO.Compression.ZipFile]::CreateFromDirectory($DSCSourceFolder, $ArchiveFile)
     }
@@ -106,7 +110,7 @@ if ($UploadArtifacts) {
     }
 
     # Use AzCopy to copy files from the local storage drop path to the storage account container   
-    & $AzCopyPath """$ArtifactStagingDirectory""", $ArtifactsLocation, "/DestKey:$StorageAccountKey", "/S", "/Y", "/Z:$env:LocalAppData\Microsoft\Azure\AzCopy\$ResourceGroupName"
+    & $AzCopyPath """$ArtifactStagingDirectory""", $ArtifactsLocation, "/DestKey:$StorageAccountKey", "/S", "/Y", "/V", "/Z:$env:LocalAppData\Microsoft\Azure\AzCopy\$ResourceGroupName"
     if ($LASTEXITCODE -ne 0) { return }
 
     # Generate the value for artifacts location SAS token if it is not provided in the parameter file
