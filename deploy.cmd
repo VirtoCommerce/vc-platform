@@ -27,7 +27,7 @@ IF %ERRORLEVEL% NEQ 0 (
 
 setlocal enabledelayedexpansion
 
-SET ARTIFACTS=%~dp0%artifacts
+SET "ARTIFACTS=%~dp0%artifacts"
 
 IF NOT DEFINED DEPLOYMENT_SOURCE (
 	SET "DEPLOYMENT_SOURCE=%~dp0%."
@@ -52,10 +52,10 @@ IF NOT DEFINED KUDU_SYNC_CMD (
 	IF !ERRORLEVEL! NEQ 0 goto error
 
 	:: Locally just running "kuduSync" would also work
-	SET KUDU_SYNC_CMD=%appdata%\npm\kuduSync.cmd
+	SET "KUDU_SYNC_CMD=%appdata%\npm\kuduSync.cmd"
 )
 IF NOT DEFINED DEPLOYMENT_TEMP (
-	SET DEPLOYMENT_TEMP=%temp%\___deployTemp%random%
+	SET "DEPLOYMENT_TEMP=%temp%\___deployTemp%random%"
 	SET CLEAN_LOCAL_DEPLOYMENT_TEMP=true
 )
 

@@ -50,7 +50,10 @@ New-AzureRMResourceGroup -Name $ResourceGroupName -Location $ResourceGroupLocati
 
 if ($UploadArtifacts) {
     # Create storage account if one doesn't exist
-    if (!(Test-AzureName -Storage $StorageAccountName))
+
+    $artifactStorageAccountExists = Find-AzureRmResource -ResourceType Microsoft.Storage/storageAccounts -ResourceGroupNameContains $ResourceGroupName | where {$_.ResourceName -eq $StorageAccountName}
+
+    if ($artifactStorageAccountExists -eq $null)
     {
        # create the storage account.
        New-AzureRmStorageAccount -ResourceGroupName $ResourceGroupName -AccountName $StorageAccountName -Location $ResourceGroupLocation -Type "Standard_GRS"
