@@ -4,7 +4,7 @@ function ($scope, order_res_customerOrders, bladeUtils, dialogService, authServi
     var blade = $scope.blade;
     var bladeNavigationService = bladeUtils.bladeNavigationService;
     $scope.uiGridConstants = uiGridConstants;
-    
+
     blade.refresh = function () {
         blade.isLoading = true;
 
@@ -17,14 +17,14 @@ function ($scope, order_res_customerOrders, bladeUtils, dialogService, authServi
         order_res_customerOrders.search(criteria, function (data) {
             blade.isLoading = false;
 
-            $scope.pageSettings.totalItems = angular.isDefined(data.totalCount) ? data.totalCount : 0;
+            $scope.pageSettings.totalItems = data.totalCount;
             $scope.objects = data.customerOrders;
         },
 	   function (error) {
 	       bladeNavigationService.setError('Error ' + error.status, blade);
 	   });
     };
-    
+
     $scope.selectNode = function (node) {
         $scope.selectedNodeId = node.id;
         var newBlade = {
@@ -89,7 +89,7 @@ function ($scope, order_res_customerOrders, bladeUtils, dialogService, authServi
                       permission: 'order:delete'
                   }
     ];
-    
+
     var filter = $scope.filter = {};
     filter.criteriaChanged = function () {
         if ($scope.pageSettings.currentPage > 1) {
