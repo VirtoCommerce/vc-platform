@@ -180,7 +180,7 @@
             ],
             "virtualApplications": [
               {
-                "virtualPath": "/",
+                "virtualPath": "/store",
                 "physicalPath": "[concat('site\\wwwroot\\', variables(parameters('deployApplications')).rootDir)]",
                 "virtualDirectories": [
                   {
