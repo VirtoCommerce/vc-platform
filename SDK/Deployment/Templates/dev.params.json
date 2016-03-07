@@ -1,0 +1,33 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "siteName": {
+      "value": ""
+    },
+    "hostingPlanName": {
+      "value": "virto-test"
+    },
+    "siteLocation": {
+      "value": "West US"
+    },
+    "sku": {
+      "value": "Basic"
+    },
+    "workerSize": {
+      "value": "0"
+    },
+    "instancesCount": {
+      "value": 1
+    },
+    "sqlServerName": {
+      "value": ""
+    },
+    "sqlAdministratorLogin": {
+      "value": ""
+    },
+    "sqlAdministratorPassword": {
+      "value": ""
+    }
+  }
+}
