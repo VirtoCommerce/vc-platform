@@ -6,11 +6,11 @@
 
     blade.initialize = function () {
         blade.isLoading = true;
-        blade.choosenTheme = undefined;
+        blade.chosenTheme = undefined;
         themes.get({ storeId: blade.storeId, cacheKill: new Date().getTime() }, function (data) {
             blade.currentEntities = data;
             if (data.length > 0) {
-                blade.choosenTheme = blade.currentEntities[0];
+                blade.chosenTheme = blade.currentEntities[0];
             }
             themesStores.get({ id: blade.storeId }, function (data) {
                 blade.store = data;
@@ -47,7 +47,7 @@
 		        blade.setThemeAsActive();
 		    },
 		    canExecuteMethod: function () {
-		        return !angular.isUndefined(blade.choosenTheme) && !blade.isThemeDefault(blade.choosenTheme);
+		        return !angular.isUndefined(blade.chosenTheme) && !blade.isThemeDefault(blade.chosenTheme);
 		    },
 		    permission: blade.updatePermission
 		},
@@ -57,7 +57,7 @@
 		        blade.deleteTheme();
 		    },
 		    canExecuteMethod: function () {
-		        return !angular.isUndefined(blade.choosenTheme);
+		        return !angular.isUndefined(blade.chosenTheme);
 		    },
 		    permission: 'content:delete'
 		},
@@ -67,7 +67,7 @@
 		        blade.previewTheme();
 		    },
 		    canExecuteMethod: function () {
-		        return !angular.isUndefined(blade.choosenTheme);
+		        return !angular.isUndefined(blade.chosenTheme);
 		    }
 		},
 		{
@@ -76,7 +76,7 @@
 		        blade.editTheme();
 		    },
 		    canExecuteMethod: function () {
-		        return !angular.isUndefined(blade.choosenTheme);
+		        return !angular.isUndefined(blade.chosenTheme);
 		    },
 		    permission: blade.updatePermission
 		}
@@ -90,7 +90,7 @@
             callback: function (remove) {
                 if (remove) {
                     blade.isLoading = true;
-                    themes.deleteTheme({ storeId: blade.storeId, themeId: blade.choosenTheme.name }, function (data) {
+                    themes.deleteTheme({ storeId: blade.storeId, themeId: blade.chosenTheme.name }, function (data) {
                         bladeNavigationService.closeChildrenBlades(blade);
                         blade.initialize();
                         blade.parentBlade.refresh(blade.storeId, 'defaultTheme');
@@ -106,7 +106,7 @@
         else {
             dialog.message = "content.dialogs.theme-delete.message-last-one";
         }
-        dialog.messageValues = { name: blade.choosenTheme.name };
+        dialog.messageValues = { name: blade.chosenTheme.name };
         dialogService.showConfirmationDialog(dialog);
     }
 
@@ -115,7 +115,7 @@
         if (_.where(blade.store.dynamicProperties, { name: "DefaultThemeName" }).length > 0) {
             angular.forEach(blade.store.dynamicProperties, function (value, key) {
                 if (value.name === "DefaultThemeName") {
-                    value.values[0] = { value: blade.choosenTheme.name };
+                    value.values[0] = { value: blade.chosenTheme.name };
                 }
             });
         }
@@ -130,7 +130,7 @@
 
     blade.previewTheme = function () {
         if (blade.store.url !== undefined) {
-            window.open(blade.store.url + '?previewtheme=' + blade.choosenTheme.name, '_blank');
+            window.open(blade.store.url + '?previewtheme=' + blade.chosenTheme.name, '_blank');
         }
         else {
             var dialog = {
@@ -146,18 +146,18 @@
     }
 
     blade.checkTheme = function (data) {
-        blade.choosenTheme = data;
+        blade.chosenTheme = data;
     }
 
     blade.editTheme = function () {
 
         var newBlade = {
             id: 'themeAssetListBlade',
-            choosenThemeId: blade.choosenTheme.name,
-            choosenStoreId: blade.storeId,
-            choosenTheme: blade.choosenTheme,
+            chosenThemeId: blade.chosenTheme.name,
+            chosenStoreId: blade.storeId,
+            chosenTheme: blade.chosenTheme,
             title: 'content.blades.theme-asset-list.title',
-            titleValues: { name: blade.choosenTheme.path },
+            titleValues: { name: blade.chosenTheme.path },
             subtitle: 'content.blades.theme-asset-list.subtitle',
             controller: 'virtoCommerce.contentModule.themeAssetListController',
             template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/theme-asset-list.tpl.html',
@@ -190,8 +190,8 @@
     }
 
     blade.isThemeSelected = function (data) {
-        if (blade.choosenTheme !== undefined) {
-            if (blade.choosenTheme.name === data.name) {
+        if (blade.chosenTheme !== undefined) {
+            if (blade.chosenTheme.name === data.name) {
                 return true;
             }
         }
@@ -208,7 +208,7 @@
     blade.openBladeNew = function () {
         var newBlade = {
             id: 'addTheme',
-            choosenStoreId: blade.storeId,
+            chosenStoreId: blade.storeId,
             currentEntity: {},
             title: 'content.blades.add-theme.title',
             subtitle: 'content.blades.add-theme.subtitle',

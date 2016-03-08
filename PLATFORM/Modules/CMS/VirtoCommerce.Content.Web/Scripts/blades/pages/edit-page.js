@@ -10,13 +10,13 @@
     blade.editAsHtml = false;
 
     blade.initialize = function () {
-        pagesStores.get({ id: blade.choosenStoreId }, function (data) {
+        pagesStores.get({ id: blade.chosenStoreId }, function (data) {
             blade.languages = data.languages;
             blade.defaultStoreLanguage = data.defaultLanguage;
             blade.parentBlade.initialize();
 
             if (!blade.newPage) {
-                pages.getPage({ storeId: blade.choosenStoreId, language: blade.choosenPageLanguage ? blade.choosenPageLanguage : "undef", pageName: blade.choosenPageName }, function (data) {
+                pages.getPage({ storeId: blade.chosenStoreId, language: blade.chosenPageLanguage ? blade.chosenPageLanguage : "undef", pageName: blade.chosenPageName }, function (data) {
                     blade.isLoading = false;
                     blade.currentEntity = data;
 
@@ -72,7 +72,7 @@
                 var uploader = $scope.uploader = new FileUploader({
                     scope: $scope,
                     headers: { Accept: 'application/json' },
-                    url: 'api/platform/assets?folderUrl=pages',
+                    url: 'api/platform/assets?folderUrl=stores/' + blade.chosenStoreId + '/pages',
                     autoUpload: true,
                     removeAfterUpload: true
                 });
@@ -221,11 +221,11 @@
                 blade.currentEntity.language = "files";
             }
 
-            pages.checkName({ storeId: blade.choosenStoreId, pageName: blade.currentEntity.name, language: blade.currentEntity.language }, function (data) {
+            pages.checkName({ storeId: blade.chosenStoreId, pageName: blade.currentEntity.name, language: blade.currentEntity.language }, function (data) {
                 if (Boolean(data.result)) {
                     blade.setNewName();
 
-                    pages.update({ storeId: blade.choosenStoreId }, blade.currentEntity, function () {
+                    pages.update({ storeId: blade.chosenStoreId }, blade.currentEntity, function () {
                         blade.origEntity = angular.copy(blade.currentEntity);
                         blade.newPage = false;
                         blade.parentBlade.initialize();
@@ -250,13 +250,13 @@
         }
         else {
             if (blade.origEntity.pageName !== blade.currentEntity.pageName) {
-                pages.delete({ storeId: blade.choosenStoreId, pageNamesAndLanguges: blade.choosenPageLanguage + '^' + blade.choosenPageName }, function () {
-                    blade.setNewName(blade.choosenPageName);
+                pages.delete({ storeId: blade.chosenStoreId, pageNamesAndLanguges: blade.chosenPageLanguage + '^' + blade.chosenPageName }, function () {
+                    blade.setNewName(blade.chosenPageName);
                     blade.update();
                 }, function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
             }
             else if (blade.origEntity.language !== blade.currentEntity.language) {
-                pages.delete({ storeId: blade.choosenStoreId, pageNamesAndLanguges: blade.choosenPageLanguage + '^' + blade.choosenPageName }, function () {
+                pages.delete({ storeId: blade.chosenStoreId, pageNamesAndLanguges: blade.chosenPageLanguage + '^' + blade.chosenPageName }, function () {
                     blade.update();
                 }, function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
             }
@@ -275,7 +275,7 @@
                 if (remove) {
                     blade.isLoading = true;
 
-                    pages.delete({ storeId: blade.choosenStoreId, pageNamesAndLanguges: blade.choosenPageLanguage + '^' + blade.choosenPageName }, function () {
+                    pages.delete({ storeId: blade.chosenStoreId, pageNamesAndLanguges: blade.chosenPageLanguage + '^' + blade.chosenPageName }, function () {
                         $scope.bladeClose();
                         blade.parentBlade.initialize();
                     },
@@ -319,9 +319,9 @@
     };
 
     blade.update = function () {
-        pages.update({ storeId: blade.choosenStoreId }, blade.currentEntity, function () {
-            blade.choosenPageName = blade.currentEntity.name;
-            blade.choosenPageLanguage = blade.currentEntity.language;
+        pages.update({ storeId: blade.chosenStoreId }, blade.currentEntity, function () {
+            blade.chosenPageName = blade.currentEntity.name;
+            blade.chosenPageLanguage = blade.currentEntity.language;
             blade.title = blade.currentEntity.name;
             blade.subtitle = 'Edit page';
             blade.newPage = false;
