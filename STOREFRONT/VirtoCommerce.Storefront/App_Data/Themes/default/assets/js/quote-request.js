@@ -289,6 +289,11 @@ storefrontApp.controller('actualQuoteRequestBarController', ['$scope', 'quoteReq
 
 storefrontApp.controller('recentlyAddedActualQuoteRequestItemDialogController', ['$scope', '$window', '$uibModalInstance', 'dialogData',
     function ($scope, $window, $uibModalInstance, dialogData) {
+
+    $scope.$on('actualQuoteRequestItemsChanged', function (event, data) {
+        dialogData.updated = true;
+    });
+
     $scope.dialogData = dialogData;
 
     $scope.close = function () {
