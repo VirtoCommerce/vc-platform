@@ -186,6 +186,42 @@ namespace VirtoCommerce.Client.Api
         System.Threading.Tasks.Task<ApiResponse<Object>> AssetsCreateBlobFolderAsyncWithHttpInfo (VirtoCommercePlatformCoreAssetBlobFolder folder);
         
         /// <summary>
+        /// This method used to upload files on local disk storage in special uploads folder
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <returns>List&lt;VirtoCommercePlatformWebModelAssetBlobInfo&gt;</returns>
+        List<VirtoCommercePlatformWebModelAssetBlobInfo> AssetsUploadAssetToLocalFileSystem ();
+  
+        /// <summary>
+        /// This method used to upload files on local disk storage in special uploads folder
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <returns>ApiResponse of List&lt;VirtoCommercePlatformWebModelAssetBlobInfo&gt;</returns>
+        ApiResponse<List<VirtoCommercePlatformWebModelAssetBlobInfo>> AssetsUploadAssetToLocalFileSystemWithHttpInfo ();
+
+        /// <summary>
+        /// This method used to upload files on local disk storage in special uploads folder
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <returns>Task of List&lt;VirtoCommercePlatformWebModelAssetBlobInfo&gt;</returns>
+        System.Threading.Tasks.Task<List<VirtoCommercePlatformWebModelAssetBlobInfo>> AssetsUploadAssetToLocalFileSystemAsync ();
+
+        /// <summary>
+        /// This method used to upload files on local disk storage in special uploads folder
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <returns>Task of ApiResponse (List&lt;VirtoCommercePlatformWebModelAssetBlobInfo&gt;)</returns>
+        System.Threading.Tasks.Task<ApiResponse<List<VirtoCommercePlatformWebModelAssetBlobInfo>>> AssetsUploadAssetToLocalFileSystemAsyncWithHttpInfo ();
+        
+        /// <summary>
         /// Get object types which support dynamic properties
         /// </summary>
         /// <remarks>
@@ -2948,6 +2984,147 @@ namespace VirtoCommerce.Client.Api
             return new ApiResponse<Object>(statusCode,
                 response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 null);
+        }
+        
+        /// <summary>
+        /// This method used to upload files on local disk storage in special uploads folder 
+        /// </summary>
+        /// <returns>List&lt;VirtoCommercePlatformWebModelAssetBlobInfo&gt;</returns>
+        public List<VirtoCommercePlatformWebModelAssetBlobInfo> AssetsUploadAssetToLocalFileSystem ()
+        {
+             ApiResponse<List<VirtoCommercePlatformWebModelAssetBlobInfo>> response = AssetsUploadAssetToLocalFileSystemWithHttpInfo();
+             return response.Data;
+        }
+
+        /// <summary>
+        /// This method used to upload files on local disk storage in special uploads folder 
+        /// </summary>
+        /// <returns>ApiResponse of List&lt;VirtoCommercePlatformWebModelAssetBlobInfo&gt;</returns>
+        public ApiResponse< List<VirtoCommercePlatformWebModelAssetBlobInfo> > AssetsUploadAssetToLocalFileSystemWithHttpInfo ()
+        {
+            
+    
+            var path_ = "/api/platform/assets/localstorage";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            Object postBody = null;
+
+            // to determine the Content-Type header
+            String[] httpContentTypes = new String[] {
+                
+            };
+            String httpContentType = Configuration.ApiClient.SelectHeaderContentType(httpContentTypes);
+
+            // to determine the Accept header
+            String[] httpHeaderAccepts = new String[] {
+                "application/json", "text/json"
+            };
+            String httpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(httpHeaderAccepts);
+            if (httpHeaderAccept != null)
+                headerParams.Add("Accept", httpHeaderAccept);
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            
+            
+            
+            
+
+            
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, 
+                Method.POST, queryParams, postBody, headerParams, formParams, fileParams,
+                pathParams, httpContentType);
+
+            int statusCode = (int) response.StatusCode;
+    
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling AssetsUploadAssetToLocalFileSystem: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling AssetsUploadAssetToLocalFileSystem: " + response.ErrorMessage, response.ErrorMessage);
+    
+            return new ApiResponse<List<VirtoCommercePlatformWebModelAssetBlobInfo>>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (List<VirtoCommercePlatformWebModelAssetBlobInfo>) Configuration.ApiClient.Deserialize(response, typeof(List<VirtoCommercePlatformWebModelAssetBlobInfo>)));
+            
+        }
+    
+        /// <summary>
+        /// This method used to upload files on local disk storage in special uploads folder 
+        /// </summary>
+        /// <returns>Task of List&lt;VirtoCommercePlatformWebModelAssetBlobInfo&gt;</returns>
+        public async System.Threading.Tasks.Task<List<VirtoCommercePlatformWebModelAssetBlobInfo>> AssetsUploadAssetToLocalFileSystemAsync ()
+        {
+             ApiResponse<List<VirtoCommercePlatformWebModelAssetBlobInfo>> response = await AssetsUploadAssetToLocalFileSystemAsyncWithHttpInfo();
+             return response.Data;
+
+        }
+
+        /// <summary>
+        /// This method used to upload files on local disk storage in special uploads folder 
+        /// </summary>
+        /// <returns>Task of ApiResponse (List&lt;VirtoCommercePlatformWebModelAssetBlobInfo&gt;)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<List<VirtoCommercePlatformWebModelAssetBlobInfo>>> AssetsUploadAssetToLocalFileSystemAsyncWithHttpInfo ()
+        {
+            
+    
+            var path_ = "/api/platform/assets/localstorage";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            Object postBody = null;
+
+            // to determine the Content-Type header
+            String[] httpContentTypes = new String[] {
+                
+            };
+            String httpContentType = Configuration.ApiClient.SelectHeaderContentType(httpContentTypes);
+
+            // to determine the Accept header
+            String[] httpHeaderAccepts = new String[] {
+                "application/json", "text/json"
+            };
+            String httpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(httpHeaderAccepts);
+            if (httpHeaderAccept != null)
+                headerParams.Add("Accept", httpHeaderAccept);
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            
+            
+            
+            
+            
+
+            
+
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, 
+                Method.POST, queryParams, postBody, headerParams, formParams, fileParams, 
+                pathParams, httpContentType);
+
+            int statusCode = (int) response.StatusCode;
+ 
+            if (statusCode >= 400)
+                throw new ApiException (statusCode, "Error calling AssetsUploadAssetToLocalFileSystem: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling AssetsUploadAssetToLocalFileSystem: " + response.ErrorMessage, response.ErrorMessage);
+
+            return new ApiResponse<List<VirtoCommercePlatformWebModelAssetBlobInfo>>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (List<VirtoCommercePlatformWebModelAssetBlobInfo>) Configuration.ApiClient.Deserialize(response, typeof(List<VirtoCommercePlatformWebModelAssetBlobInfo>)));
+            
         }
         
         /// <summary>
