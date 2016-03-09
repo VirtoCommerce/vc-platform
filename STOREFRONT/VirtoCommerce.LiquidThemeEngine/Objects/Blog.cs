@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DotLiquid;
+using PagedList;
 using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.LiquidThemeEngine.Objects
@@ -31,7 +32,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         /// <summary>
         /// Returns an array of all articles in a blog. See this page for a list of all available attributes for article.
         /// </summary>
-        public IStorefrontPagedList<Article> Articles { get; set; }
+        public IMutablePagedList<Article> Articles { get; set; }
 
         /// <summary>
         /// Returns the total number of articles in a blog. This total does not include hidden articles.

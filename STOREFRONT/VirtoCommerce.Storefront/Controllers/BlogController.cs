@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using PagedList;
 using VirtoCommerce.LiquidThemeEngine.Extensions;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Common;
@@ -26,15 +27,16 @@ namespace VirtoCommerce.Storefront.Controllers
         public ActionResult GetBlog(string blog)
         {
             var context = base.WorkContext;
-            var pageNumber = context.CurrentBlogSearchCritera.PageNumber;
-            var pageSize = context.CurrentBlogSearchCritera.PageSize;
-
             var contentBlog = LoadBlog(blog);
 
-            //Then need load all blog articles and exclude blog file from result
-            var blogArticles = _contentService.LoadContentItemsByUrl("/blogs/" + blog, context.CurrentStore, context.CurrentLanguage, () => new BlogArticle(), new[] { "default" }, pageNumber, pageSize);
-                                              
-            contentBlog.Articles = new StorefrontPagedList<BlogArticle>(blogArticles.OfType<BlogArticle>(), blogArticles, page => context.RequestUrl.SetQueryParameter("page", page.ToString()).ToString());
+            Func<int, int, IPagedList<BlogArticle>> articlesPagedListGetter = (pageNumber, pageSize) =>
+            {
+                //Then need load  blog articles and exclude blog file from result
+                var blogArticles = _contentService.LoadContentItemsByUrl("/blogs/" + blog, context.CurrentStore, context.CurrentLanguage, () => new BlogArticle(), new[] { "default" }, pageNumber, pageSize);
+                return new StaticPagedList<BlogArticle>(blogArticles.OfType<BlogArticle>(), blogArticles);
+
+            };
+            contentBlog.Articles = new MutablePagedList<BlogArticle>(articlesPagedListGetter, context.CurrentBlogSearchCritera.PageNumber, context.CurrentBlogSearchCritera.PageSize);
             context.CurrentBlog = contentBlog;
             return View("blog", base.WorkContext);
         }
@@ -51,13 +53,18 @@ namespace VirtoCommerce.Storefront.Controllers
           
             if (blogArticle != null)
             {
-                var recentArticles = _contentService.LoadContentItemsByUrl("/blogs/" + blog, context.CurrentStore, context.CurrentLanguage, () => new BlogArticle(), new[] { blogArticle.Name, "default" }, 1, 10);
-                contentBlog.Articles =  new StorefrontPagedList<BlogArticle>(recentArticles.OfType<BlogArticle>(), recentArticles, page => context.RequestUrl.SetQueryParameter("page", page.ToString()).ToString());
+                Func<int, int, IPagedList<BlogArticle>> recentArticlesPagedListGetter = (pageNumber, pageSize) =>
+                {
+                    //Then need load  blog articles and exclude blog file from result
+                    var blogArticles = _contentService.LoadContentItemsByUrl("/blogs/" + blog, context.CurrentStore, context.CurrentLanguage, () => new BlogArticle(), new[] { "default" }, pageNumber, pageSize);
+                    return new StaticPagedList<BlogArticle>(blogArticles.OfType<BlogArticle>(), blogArticles);
+                };
+
+                contentBlog.Articles = new MutablePagedList<BlogArticle>(recentArticlesPagedListGetter);
                 base.WorkContext.CurrentBlog = contentBlog;
                 base.WorkContext.CurrentBlogArticle = blogArticle as BlogArticle;
                 
                 return View("article", base.WorkContext);
-
             }
             throw new HttpException(404, articleUrl);
         }

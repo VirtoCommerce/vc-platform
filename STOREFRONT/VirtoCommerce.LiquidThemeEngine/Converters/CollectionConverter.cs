@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using PagedList;
 using VirtoCommerce.LiquidThemeEngine.Objects;
 using VirtoCommerce.Storefront.Model.Common;
 using storefrontModel = VirtoCommerce.Storefront.Model;
@@ -19,7 +20,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
 
             if (searchResult.Products != null)
             {
-                result.Products = new StorefrontPagedList<Product>(searchResult.Products.Select(x => x.ToShopifyModel(workContext)), searchResult.Products, searchResult.Products.GetPageUrl);
+                result.Products = new StaticPagedList<Product>(searchResult.Products.Select(x => x.ToShopifyModel(workContext)), searchResult.Products);
                 result.ProductsCount = searchResult.Products.TotalItemCount;
                 result.AllProductsCount = searchResult.Products.TotalItemCount;
             }
