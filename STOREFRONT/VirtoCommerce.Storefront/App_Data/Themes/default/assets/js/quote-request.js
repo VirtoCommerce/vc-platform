@@ -136,6 +136,12 @@ storefrontApp.controller('quoteRequestController', ['$rootScope', '$scope', '$wi
         });
     }
 
+    $scope.setRequestShippingQuote = function () {
+        if (!$scope.quoteRequest.requestShippingQuote) {
+            $scope.quoteRequest.shippingAddress = null;
+        }
+    }
+
     $scope.setShippingAddressEqualsBilling = function () {
         if ($scope.quoteRequest.shippingAddressEqualsBilling) {
             $scope.quoteRequest.shippingAddress = angular.copy($scope.quoteRequest.billingAddress);

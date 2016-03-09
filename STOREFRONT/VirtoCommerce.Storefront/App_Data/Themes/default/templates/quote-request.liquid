@@ -34,7 +34,7 @@
                     <h4>Remarks</h4>
                     <p>Do you have a general remark with this Quote Request?</p>
                     <textarea id="Comment" name="Comment" ng-model="quoteRequest.comment"></textarea>
-                    <input id="RequestShippingQuote" name="RequestShippingQuote" style="display: inline-block;" type="checkbox" ng-model="quoteRequest.requestShippingQuote" />
+                    <input id="RequestShippingQuote" name="RequestShippingQuote" style="display: inline-block;" type="checkbox" ng-model="quoteRequest.requestShippingQuote" ng-change="setRequestShippingQuote()" />
                     <label for="RequestShippingQuote" style="display: inline-block;">Request a shipping quote</label>
                 </div>
             </div>
