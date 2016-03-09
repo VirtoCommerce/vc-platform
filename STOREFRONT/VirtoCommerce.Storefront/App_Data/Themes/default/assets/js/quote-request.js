@@ -184,7 +184,7 @@ storefrontApp.controller('quoteRequestController', ['$rootScope', '$scope', '$wi
                 _.each(quoteItem.proposalPrices, function (tierPrice) {
                     tierPrice.id = i;
                     if (quoteItem.selectedTierPrice.quantity == tierPrice.quantity) {
-                        quoteItem.selectedTierPrice.id = i;
+                        quoteItem.selectedTierPrice = tierPrice;
                     }
                     i++;
                 });
