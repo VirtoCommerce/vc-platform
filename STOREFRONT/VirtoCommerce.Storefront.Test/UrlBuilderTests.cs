@@ -17,7 +17,6 @@ namespace VirtoCommerce.Storefront.Test
         {
             _workContext = new WorkContext
             {
-                RequestUrl = new Uri("http://localhost/path"),
                 AllStores = new[]
                 {
                     new Store
@@ -89,7 +88,6 @@ namespace VirtoCommerce.Storefront.Test
         {
             _workContext = new WorkContext
             {
-                RequestUrl = new Uri("http://localhost/path"),
                 AllStores = new[]
                 {
                     new Store
@@ -163,7 +161,6 @@ namespace VirtoCommerce.Storefront.Test
         {
             _workContext = new WorkContext
             {
-                RequestUrl = new Uri("http://localhost/path"),
                 AllStores = new[]
                 {
                     new Store
@@ -259,23 +256,23 @@ namespace VirtoCommerce.Storefront.Test
         }
     }
 
-    public class UrlBuilderPublicStoreUrl
+    public class UrlBuilderStoreWithUrlsInsecureRequest
     {
         private readonly WorkContext _workContext;
         private readonly IStorefrontUrlBuilder _builder;
 
-        public UrlBuilderPublicStoreUrl()
+        public UrlBuilderStoreWithUrlsInsecureRequest()
         {
             _workContext = new WorkContext
             {
-                RequestUrl = new Uri("http://localhost/public/path"),
+                RequestUrl = new Uri("http://localhost/insecure1/path"),
                 AllStores = new[]
                 {
                     new Store
                     {
                         Id = "Store1",
-                        Url = "http://localhost/public",
-                        SecureUrl = "https://localhost/secure",
+                        Url = "http://localhost/insecure1",
+                        SecureUrl = "https://localhost/secure1",
                         DefaultLanguage = new Language("ru-RU"),
                         Languages = new List<Language>(new[]
                         {
@@ -322,7 +319,7 @@ namespace VirtoCommerce.Storefront.Test
         public void When_CurrentStoreAndCurrentLanguage_Expect_PublicUrlAndCurrentLanguage()
         {
             var result = _builder.ToAppRelative("/");
-            Assert.Equal("http://localhost/public/en-US/", result);
+            Assert.Equal("http://localhost/insecure1/en-US/", result);
         }
 
         [Fact]
@@ -332,7 +329,7 @@ namespace VirtoCommerce.Storefront.Test
             var language = new Language("ja-JP");
 
             var result = _builder.ToAppRelative("/", store, language);
-            Assert.Equal("http://localhost/public/ru-RU/", result);
+            Assert.Equal("http://localhost/insecure1/ru-RU/", result);
         }
 
         [Fact]
@@ -342,7 +339,7 @@ namespace VirtoCommerce.Storefront.Test
             var language = store.Languages.Last();
 
             var result = _builder.ToAppRelative("/", store, language);
-            Assert.Equal("http://localhost/public/lt-LT/", result);
+            Assert.Equal("http://localhost/insecure1/lt-LT/", result);
         }
 
         [Fact]
@@ -366,23 +363,23 @@ namespace VirtoCommerce.Storefront.Test
         }
     }
 
-    public class UrlBuilderSecureStoreUrl
+    public class UrlBuilderStoreWithUrlsSecureRequest
     {
         private readonly WorkContext _workContext;
         private readonly IStorefrontUrlBuilder _builder;
 
-        public UrlBuilderSecureStoreUrl()
+        public UrlBuilderStoreWithUrlsSecureRequest()
         {
             _workContext = new WorkContext
             {
-                RequestUrl = new Uri("https://localhost/secure/path"),
+                RequestUrl = new Uri("https://localhost/secure1/path"),
                 AllStores = new[]
                 {
                     new Store
                     {
                         Id = "Store1",
-                        Url = "http://localhost/public",
-                        SecureUrl = "https://localhost/secure",
+                        Url = "http://localhost/insecure1",
+                        SecureUrl = "https://localhost/secure1",
                         DefaultLanguage = new Language("ru-RU"),
                         Languages = new List<Language>(new[]
                         {
@@ -429,7 +426,7 @@ namespace VirtoCommerce.Storefront.Test
         public void When_CurrentStoreAndCurrentLanguage_Expect_SecureUrlAndCurrentLanguage()
         {
             var result = _builder.ToAppRelative("/");
-            Assert.Equal("https://localhost/secure/en-US/", result);
+            Assert.Equal("https://localhost/secure1/en-US/", result);
         }
 
         [Fact]
@@ -439,7 +436,7 @@ namespace VirtoCommerce.Storefront.Test
             var language = new Language("ja-JP");
 
             var result = _builder.ToAppRelative("/", store, language);
-            Assert.Equal("https://localhost/secure/ru-RU/", result);
+            Assert.Equal("https://localhost/secure1/ru-RU/", result);
         }
 
         [Fact]
@@ -449,7 +446,7 @@ namespace VirtoCommerce.Storefront.Test
             var language = store.Languages.Last();
 
             var result = _builder.ToAppRelative("/", store, language);
-            Assert.Equal("https://localhost/secure/lt-LT/", result);
+            Assert.Equal("https://localhost/secure1/lt-LT/", result);
         }
 
         [Fact]
@@ -470,6 +467,129 @@ namespace VirtoCommerce.Storefront.Test
 
             var result = _builder.ToAppRelative("/", store, language);
             Assert.Equal("~/Store2/fr-FR/", result);
+        }
+    }
+
+    public class UrlBuilderStoreWithUrlsRequestFromDifferentStore
+    {
+        private readonly WorkContext _workContext;
+        private readonly IStorefrontUrlBuilder _builder;
+
+        public UrlBuilderStoreWithUrlsRequestFromDifferentStore()
+        {
+            _workContext = new WorkContext
+            {
+                RequestUrl = new Uri("https://localhost/secure2/path"),
+                AllStores = new[]
+                {
+                    new Store
+                    {
+                        Id = "Store1",
+                        Url = "http://localhost/insecure1",
+                        SecureUrl = "https://localhost/secure1",
+                        DefaultLanguage = new Language("ru-RU"),
+                        Languages = new List<Language>(new[]
+                        {
+                            new Language("en-US"),
+                            new Language("ru-RU"),
+                            new Language("lt-LT"),
+                        }),
+                    },
+                }
+            };
+
+            _workContext.CurrentStore = _workContext.AllStores.First();
+            _workContext.CurrentLanguage = _workContext.CurrentStore.Languages.First();
+
+            _builder = new StorefrontUrlBuilder(_workContext);
+        }
+
+        [Fact]
+        public void When_CurrentStoreAndCurrentLanguage_Expect_SecureUrlAndCurrentLanguage()
+        {
+            var result = _builder.ToAppRelative("/");
+            Assert.Equal("http://localhost/insecure1/en-US/", result);
+        }
+
+        [Fact]
+        public void When_CurrentStoreAndUnknownLanguage_Expect_SecureUrlAndDefaultLanguage()
+        {
+            var store = _workContext.CurrentStore;
+            var language = new Language("ja-JP");
+
+            var result = _builder.ToAppRelative("/", store, language);
+            Assert.Equal("http://localhost/insecure1/ru-RU/", result);
+        }
+
+        [Fact]
+        public void When_CurrentStoreAndSelectedLanguage_Expect_SecureUrlAndSelectedLanguage()
+        {
+            var store = _workContext.CurrentStore;
+            var language = store.Languages.Last();
+
+            var result = _builder.ToAppRelative("/", store, language);
+            Assert.Equal("http://localhost/insecure1/lt-LT/", result);
+        }
+    }
+
+    public class UrlBuilderStoreWithUrlsNoRequest
+    {
+        private readonly WorkContext _workContext;
+        private readonly IStorefrontUrlBuilder _builder;
+
+        public UrlBuilderStoreWithUrlsNoRequest()
+        {
+            _workContext = new WorkContext
+            {
+                AllStores = new[]
+                {
+                    new Store
+                    {
+                        Id = "Store1",
+                        Url = "http://localhost/insecure1",
+                        SecureUrl = "https://localhost/secure1",
+                        DefaultLanguage = new Language("ru-RU"),
+                        Languages = new List<Language>(new[]
+                        {
+                            new Language("en-US"),
+                            new Language("ru-RU"),
+                            new Language("lt-LT"),
+                        }),
+                    },
+                }
+            };
+
+            _workContext.CurrentStore = _workContext.AllStores.First();
+            _workContext.CurrentLanguage = _workContext.CurrentStore.Languages.First();
+
+            _builder = new StorefrontUrlBuilder(_workContext);
+        }
+
+        [Fact]
+        public void When_CurrentStoreAndCurrentLanguage_Expect_SecureUrlAndCurrentLanguage()
+        {
+            var result = _builder.ToAppRelative("/");
+            Assert.Equal("http://localhost/insecure1/en-US/", result);
+        }
+
+        [Fact]
+        public void When_CurrentStoreAndUnknownLanguage_Expect_SecureUrlAndDefaultLanguage()
+        {
+            var store = _workContext.CurrentStore;
+            var language = new Language("ja-JP");
+
+            var result = _builder.ToAppRelative("/", store, language);
+            Assert.Equal("http://localhost/insecure1/ru-RU/", result);
+        }
+
+        [Fact]
+        public void When_CurrentStoreAndSelectedLanguage_Expect_SecureUrlAndSelectedLanguage()
+        {
+            var store = _workContext.CurrentStore;
+            var language = store.Languages.Last();
+
+            var result = _builder.ToAppRelative("/", store, language);
+            Assert.Equal("http://localhost/insecure1/lt-LT/", result);
         }
     }
 }
