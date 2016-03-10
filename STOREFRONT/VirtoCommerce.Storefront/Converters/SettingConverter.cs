@@ -11,7 +11,7 @@ namespace VirtoCommerce.Storefront.Converters
 {
     public static class SettingConverter
     {
-        public static SettingEntry ToWebModel(this VirtoCommercePlatformCoreSettingsSettingEntry dto)
+        public static SettingEntry ToWebModel(this VirtoCommerceStoreModuleWebModelSetting dto)
         {
             var retVal = new SettingEntry();
             retVal.InjectFrom<NullableAndEnumValueInjecter>(dto);

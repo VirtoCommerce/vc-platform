@@ -9,7 +9,7 @@ using coreModel = VirtoCommerce.Domain.Store.Model;
 
 namespace VirtoCommerce.StoreModule.Web.Model
 {
-	public class Store : AuditableEntity, IHasDynamicProperties, IHaveSettings, ISeoSupport
+	public class Store : AuditableEntity, IHasDynamicProperties, ISeoSupport
     {
         public string Name { get; set; }
 
@@ -105,9 +105,8 @@ namespace VirtoCommerce.StoreModule.Web.Model
         public ICollection<DynamicObjectProperty> DynamicProperties { get; set; }
         #endregion
 
-        #region IHaveSettings Members
-        public ICollection<SettingEntry> Settings { get; set; }
-        #endregion
+        public ICollection<Setting> Settings { get; set; }
+
 
     }
 }
