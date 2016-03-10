@@ -181,20 +181,6 @@ namespace VirtoCommerce.Client.Model
   
         
         /// <summary>
-        /// Gets or Sets ObjectType
-        /// </summary>
-        [DataMember(Name="objectType", EmitDefaultValue=false)]
-        public string ObjectType { get; set; }
-  
-        
-        /// <summary>
-        /// Gets or Sets DynamicProperties
-        /// </summary>
-        [DataMember(Name="dynamicProperties", EmitDefaultValue=false)]
-        public List<VirtoCommercePlatformCoreDynamicPropertiesDynamicObjectProperty> DynamicProperties { get; set; }
-  
-        
-        /// <summary>
         /// Gets or Sets PaymentMethods
         /// </summary>
         [DataMember(Name="paymentMethods", EmitDefaultValue=false)]
@@ -216,6 +202,13 @@ namespace VirtoCommerce.Client.Model
   
         
         /// <summary>
+        /// Gets or Sets SecurityScopes
+        /// </summary>
+        [DataMember(Name="securityScopes", EmitDefaultValue=false)]
+        public List<string> SecurityScopes { get; set; }
+  
+        
+        /// <summary>
         /// Gets or Sets SeoInfos
         /// </summary>
         [DataMember(Name="seoInfos", EmitDefaultValue=false)]
@@ -223,10 +216,24 @@ namespace VirtoCommerce.Client.Model
   
         
         /// <summary>
-        /// Gets or Sets SecurityScopes
+        /// Gets or Sets ObjectType
         /// </summary>
-        [DataMember(Name="securityScopes", EmitDefaultValue=false)]
-        public List<string> SecurityScopes { get; set; }
+        [DataMember(Name="objectType", EmitDefaultValue=false)]
+        public string ObjectType { get; set; }
+  
+        
+        /// <summary>
+        /// Gets or Sets DynamicProperties
+        /// </summary>
+        [DataMember(Name="dynamicProperties", EmitDefaultValue=false)]
+        public List<VirtoCommercePlatformCoreDynamicPropertiesDynamicObjectProperty> DynamicProperties { get; set; }
+  
+        
+        /// <summary>
+        /// Gets or Sets Settings
+        /// </summary>
+        [DataMember(Name="settings", EmitDefaultValue=false)]
+        public List<VirtoCommercePlatformCoreSettingsSettingEntry> Settings { get; set; }
   
         
         /// <summary>
@@ -293,13 +300,14 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Languages: ").Append(Languages).Append("\n");
             sb.Append("  Currencies: ").Append(Currencies).Append("\n");
             sb.Append("  TrustedGroups: ").Append(TrustedGroups).Append("\n");
-            sb.Append("  ObjectType: ").Append(ObjectType).Append("\n");
-            sb.Append("  DynamicProperties: ").Append(DynamicProperties).Append("\n");
             sb.Append("  PaymentMethods: ").Append(PaymentMethods).Append("\n");
             sb.Append("  ShippingMethods: ").Append(ShippingMethods).Append("\n");
             sb.Append("  TaxProviders: ").Append(TaxProviders).Append("\n");
-            sb.Append("  SeoInfos: ").Append(SeoInfos).Append("\n");
             sb.Append("  SecurityScopes: ").Append(SecurityScopes).Append("\n");
+            sb.Append("  SeoInfos: ").Append(SeoInfos).Append("\n");
+            sb.Append("  ObjectType: ").Append(ObjectType).Append("\n");
+            sb.Append("  DynamicProperties: ").Append(DynamicProperties).Append("\n");
+            sb.Append("  Settings: ").Append(Settings).Append("\n");
             sb.Append("  CreatedDate: ").Append(CreatedDate).Append("\n");
             sb.Append("  ModifiedDate: ").Append(ModifiedDate).Append("\n");
             sb.Append("  CreatedBy: ").Append(CreatedBy).Append("\n");
@@ -443,16 +451,6 @@ namespace VirtoCommerce.Client.Model
                     this.TrustedGroups.SequenceEqual(other.TrustedGroups)
                 ) && 
                 (
-                    this.ObjectType == other.ObjectType ||
-                    this.ObjectType != null &&
-                    this.ObjectType.Equals(other.ObjectType)
-                ) && 
-                (
-                    this.DynamicProperties == other.DynamicProperties ||
-                    this.DynamicProperties != null &&
-                    this.DynamicProperties.SequenceEqual(other.DynamicProperties)
-                ) && 
-                (
                     this.PaymentMethods == other.PaymentMethods ||
                     this.PaymentMethods != null &&
                     this.PaymentMethods.SequenceEqual(other.PaymentMethods)
@@ -468,14 +466,29 @@ namespace VirtoCommerce.Client.Model
                     this.TaxProviders.SequenceEqual(other.TaxProviders)
                 ) && 
                 (
+                    this.SecurityScopes == other.SecurityScopes ||
+                    this.SecurityScopes != null &&
+                    this.SecurityScopes.SequenceEqual(other.SecurityScopes)
+                ) && 
+                (
                     this.SeoInfos == other.SeoInfos ||
                     this.SeoInfos != null &&
                     this.SeoInfos.SequenceEqual(other.SeoInfos)
                 ) && 
                 (
-                    this.SecurityScopes == other.SecurityScopes ||
-                    this.SecurityScopes != null &&
-                    this.SecurityScopes.SequenceEqual(other.SecurityScopes)
+                    this.ObjectType == other.ObjectType ||
+                    this.ObjectType != null &&
+                    this.ObjectType.Equals(other.ObjectType)
+                ) && 
+                (
+                    this.DynamicProperties == other.DynamicProperties ||
+                    this.DynamicProperties != null &&
+                    this.DynamicProperties.SequenceEqual(other.DynamicProperties)
+                ) && 
+                (
+                    this.Settings == other.Settings ||
+                    this.Settings != null &&
+                    this.Settings.SequenceEqual(other.Settings)
                 ) && 
                 (
                     this.CreatedDate == other.CreatedDate ||
@@ -576,12 +589,6 @@ namespace VirtoCommerce.Client.Model
                 if (this.TrustedGroups != null)
                     hash = hash * 59 + this.TrustedGroups.GetHashCode();
                 
-                if (this.ObjectType != null)
-                    hash = hash * 59 + this.ObjectType.GetHashCode();
-                
-                if (this.DynamicProperties != null)
-                    hash = hash * 59 + this.DynamicProperties.GetHashCode();
-                
                 if (this.PaymentMethods != null)
                     hash = hash * 59 + this.PaymentMethods.GetHashCode();
                 
@@ -591,11 +598,20 @@ namespace VirtoCommerce.Client.Model
                 if (this.TaxProviders != null)
                     hash = hash * 59 + this.TaxProviders.GetHashCode();
                 
+                if (this.SecurityScopes != null)
+                    hash = hash * 59 + this.SecurityScopes.GetHashCode();
+                
                 if (this.SeoInfos != null)
                     hash = hash * 59 + this.SeoInfos.GetHashCode();
                 
-                if (this.SecurityScopes != null)
-                    hash = hash * 59 + this.SecurityScopes.GetHashCode();
+                if (this.ObjectType != null)
+                    hash = hash * 59 + this.ObjectType.GetHashCode();
+                
+                if (this.DynamicProperties != null)
+                    hash = hash * 59 + this.DynamicProperties.GetHashCode();
+                
+                if (this.Settings != null)
+                    hash = hash * 59 + this.Settings.GetHashCode();
                 
                 if (this.CreatedDate != null)
                     hash = hash * 59 + this.CreatedDate.GetHashCode();
