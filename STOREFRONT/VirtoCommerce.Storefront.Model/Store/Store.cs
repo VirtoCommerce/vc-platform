@@ -113,7 +113,7 @@ namespace VirtoCommerce.Storefront.Model
         }
 
         #region IhasSettings Member
-        public ICollection<SettingEntry> Settings { get; private set; }
+        public ICollection<SettingEntry> Settings { get; set; }
         
         #endregion
 

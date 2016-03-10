@@ -364,6 +364,7 @@
     <Compile Include="Controllers\Api\ApiMarketingController.cs" />
     <Compile Include="Controllers\QuoteRequestController.cs" />
     <Compile Include="Converters\AttachmentConverter.cs" />
+    <Compile Include="Converters\SettingConverter.cs" />
     <Compile Include="Converters\TaxRateConverter.cs" />
     <Compile Include="Converters\CurrencyConverter.cs" />
     <Compile Include="Converters\PricelistConverter.cs" />
