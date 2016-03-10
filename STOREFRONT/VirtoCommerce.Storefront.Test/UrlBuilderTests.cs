@@ -8,6 +8,7 @@ using Xunit;
 
 namespace VirtoCommerce.Storefront.Test
 {
+    [Trait("Category", "CI")]
     public class UrlBuilderSingleStoreSingleLanguage
     {
         private readonly WorkContext _workContext;
@@ -79,6 +80,7 @@ namespace VirtoCommerce.Storefront.Test
         }
     }
 
+    [Trait("Category", "CI")]
     public class UrlBuilderSingleStoreMultipleLanguages
     {
         private readonly WorkContext _workContext;
@@ -152,6 +154,7 @@ namespace VirtoCommerce.Storefront.Test
         }
     }
 
+    [Trait("Category", "CI")]
     public class UrlBuilderMultipleStoresMultipleLanguages
     {
         private readonly WorkContext _workContext;
@@ -256,6 +259,7 @@ namespace VirtoCommerce.Storefront.Test
         }
     }
 
+    [Trait("Category", "CI")]
     public class UrlBuilderStoreWithUrlsInsecureRequest
     {
         private readonly WorkContext _workContext;
@@ -363,6 +367,7 @@ namespace VirtoCommerce.Storefront.Test
         }
     }
 
+    [Trait("Category", "CI")]
     public class UrlBuilderStoreWithUrlsSecureRequest
     {
         private readonly WorkContext _workContext;
@@ -470,6 +475,7 @@ namespace VirtoCommerce.Storefront.Test
         }
     }
 
+    [Trait("Category", "CI")]
     public class UrlBuilderStoreWithUrlsRequestFromDifferentStore
     {
         private readonly WorkContext _workContext;
@@ -532,6 +538,7 @@ namespace VirtoCommerce.Storefront.Test
         }
     }
 
+    [Trait("Category", "CI")]
     public class UrlBuilderStoreWithUrlsNoRequest
     {
         private readonly WorkContext _workContext;
