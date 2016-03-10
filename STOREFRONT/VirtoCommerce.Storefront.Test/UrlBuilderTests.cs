@@ -320,14 +320,14 @@ namespace VirtoCommerce.Storefront.Test
         }
 
         [Fact]
-        public void When_CurrentStoreAndCurrentLanguage_Expect_PublicUrlAndCurrentLanguage()
+        public void When_CurrentStoreAndCurrentLanguage_Expect_InsecureUrlAndCurrentLanguage()
         {
             var result = _builder.ToAppRelative("/");
             Assert.Equal("http://localhost/insecure1/en-US/", result);
         }
 
         [Fact]
-        public void When_CurrentStoreAndUnknownLanguage_Expect_PublicUrlAndDefaultLanguage()
+        public void When_CurrentStoreAndUnknownLanguage_Expect_InsecureUrlAndDefaultLanguage()
         {
             var store = _workContext.CurrentStore;
             var language = new Language("ja-JP");
@@ -337,7 +337,7 @@ namespace VirtoCommerce.Storefront.Test
         }
 
         [Fact]
-        public void When_CurrentStoreAndSelectedLanguage_Expect_PublicUrlAndSelectedLanguage()
+        public void When_CurrentStoreAndSelectedLanguage_Expect_InsecureUrlAndSelectedLanguage()
         {
             var store = _workContext.CurrentStore;
             var language = store.Languages.Last();
@@ -511,14 +511,14 @@ namespace VirtoCommerce.Storefront.Test
         }
 
         [Fact]
-        public void When_CurrentStoreAndCurrentLanguage_Expect_SecureUrlAndCurrentLanguage()
+        public void When_CurrentStoreAndCurrentLanguage_Expect_InsecureUrlAndCurrentLanguage()
         {
             var result = _builder.ToAppRelative("/");
             Assert.Equal("http://localhost/insecure1/en-US/", result);
         }
 
         [Fact]
-        public void When_CurrentStoreAndUnknownLanguage_Expect_SecureUrlAndDefaultLanguage()
+        public void When_CurrentStoreAndUnknownLanguage_Expect_InsecureUrlAndDefaultLanguage()
         {
             var store = _workContext.CurrentStore;
             var language = new Language("ja-JP");
@@ -528,7 +528,7 @@ namespace VirtoCommerce.Storefront.Test
         }
 
         [Fact]
-        public void When_CurrentStoreAndSelectedLanguage_Expect_SecureUrlAndSelectedLanguage()
+        public void When_CurrentStoreAndSelectedLanguage_Expect_InsecureUrlAndSelectedLanguage()
         {
             var store = _workContext.CurrentStore;
             var language = store.Languages.Last();
@@ -573,14 +573,14 @@ namespace VirtoCommerce.Storefront.Test
         }
 
         [Fact]
-        public void When_CurrentStoreAndCurrentLanguage_Expect_SecureUrlAndCurrentLanguage()
+        public void When_CurrentStoreAndCurrentLanguage_Expect_InsecureUrlAndCurrentLanguage()
         {
             var result = _builder.ToAppRelative("/");
             Assert.Equal("http://localhost/insecure1/en-US/", result);
         }
 
         [Fact]
-        public void When_CurrentStoreAndUnknownLanguage_Expect_SecureUrlAndDefaultLanguage()
+        public void When_CurrentStoreAndUnknownLanguage_Expect_InsecureUrlAndDefaultLanguage()
         {
             var store = _workContext.CurrentStore;
             var language = new Language("ja-JP");
@@ -590,7 +590,7 @@ namespace VirtoCommerce.Storefront.Test
         }
 
         [Fact]
-        public void When_CurrentStoreAndSelectedLanguage_Expect_SecureUrlAndSelectedLanguage()
+        public void When_CurrentStoreAndSelectedLanguage_Expect_InsecureUrlAndSelectedLanguage()
         {
             var store = _workContext.CurrentStore;
             var language = store.Languages.Last();
