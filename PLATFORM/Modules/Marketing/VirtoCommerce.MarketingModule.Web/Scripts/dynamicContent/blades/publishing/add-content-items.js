@@ -1,11 +1,11 @@
 ﻿angular.module('virtoCommerce.marketingModule')
 .controller('virtoCommerce.marketingModule.addPublishingContentItemsStepController', ['$scope', 'virtoCommerce.marketingModule.dynamicContent.search', 'virtoCommerce.marketingModule.dynamicContent.contentItems', 'platformWebApp.bladeNavigationService', function ($scope, marketing_dynamicContents_res_search, marketing_dynamicContents_res_contentItems, bladeNavigationService) {
     var blade = $scope.blade;
-    blade.choosenFolder = 'ContentItem';
+    blade.chosenFolder = 'ContentItem';
     blade.currentEntity = {};
 
     function refresh() {
-        marketing_dynamicContents_res_search.search({ folderId: blade.choosenFolder, responseGroup: '18' }, function (data) {
+        marketing_dynamicContents_res_search.search({ folderId: blade.chosenFolder, responseGroup: '18' }, function (data) {
             blade.currentEntity.childrenFolders = data.contentFolders;
             blade.currentEntity.items = data.contentItems;
             setBreadcrumbs();
@@ -51,9 +51,9 @@
     }
 
     blade.folderClick = function (contentItem) {
-        if (angular.isUndefined(blade.choosenFolder) || !angular.equals(blade.choosenFolder, contentItem.id)) {
+        if (angular.isUndefined(blade.chosenFolder) || !angular.equals(blade.chosenFolder, contentItem.id)) {
             blade.isLoading = true;
-            blade.choosenFolder = contentItem.id;
+            blade.chosenFolder = contentItem.id;
             blade.currentEntity = contentItem;
             refresh();
         }
@@ -64,7 +64,7 @@
     function setBreadcrumbs() {
         if (blade.breadcrumbs) {
             var breadcrumbs;
-            var index = _.findLastIndex(blade.breadcrumbs, { id: blade.choosenFolder });
+            var index = _.findLastIndex(blade.breadcrumbs, { id: blade.chosenFolder });
             if (index > -1) {
                 //Clone array (angular.copy leaves the same reference)
                 breadcrumbs = blade.breadcrumbs.slice(0, index + 1);

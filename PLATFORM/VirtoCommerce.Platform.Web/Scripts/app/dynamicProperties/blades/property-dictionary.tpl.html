@@ -21,7 +21,7 @@
                 <fieldset ng-if="blade.currentEntity.isMultilingual">
                     <label>{{ 'platform.blades.property-dictionary.labels.localized-values' | translate }}</label>
                     <div class="form-group">
-                        <div class="form-input __langs" ng-repeat="data in newValue.displayNames">
+                        <div class="form-input __langs" ng-repeat="data in newValue.displayNames | orderBy: 'locale'">
                             <ng-form name="valuesForm">
                                 <span class="flag flag-{{data.locale.substr(3).toLowerCase()}}"></span>
                                 <input ng-model="data.name" class="form-control" ui-validate=" 'dictValueValidator($value, data)' " name="mValue" placeholder="{{ 'platform.blades.property-dictionary.placeholders.localized-values' | translate }}" />
@@ -76,7 +76,7 @@
                                         </ul>
                                     </td>
                                     <td class="table-col" ng-if="blade.currentEntity.isMultilingual">
-                                        <div ng-repeat="data in data.displayNames | orderBy:'locale'" style="margin:5px 0;">
+                                        <div ng-repeat="data in data.displayNames | orderBy: 'locale'" style="margin:5px 0;">
                                             <span class="flag flag-{{data.locale.substr(3, 2).toLowerCase()}}"></span>
                                             {{data.name}}
                                         </div>

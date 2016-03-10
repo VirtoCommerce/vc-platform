@@ -49,7 +49,7 @@
                 }
                 blade.breadcrumbs = breadcrumbs;
             } else {
-                blade.breadcrumbs = [generateBreadcrumb(null, 'all')];
+                blade.breadcrumbs = [generateBreadcrumb(blade.currentEntity.url, 'all')];
             }
         }
 
@@ -61,7 +61,7 @@
                 navigate: function (breadcrumb) {
                     breadcrumb.blade.searchKeyword = null;
                     breadcrumb.blade.disableOpenAnimation = true;
-                    bladeNavigationService.showBlade(breadcrumb.blade);
+                    bladeNavigationService.showBlade(breadcrumb.blade, breadcrumb.blade.parentBlade);
                     // breadcrumb.blade.refresh();
                 }
             }
@@ -152,7 +152,7 @@
                         disableOpenAnimation: true,
                         controller: blade.controller,
                         template: blade.template,
-                        isClosingDisabled: true
+                        isClosingDisabled: blade.isClosingDisabled
                     };
 
                     bladeNavigationService.showBlade(newBlade, blade.parentBlade);

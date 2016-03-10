@@ -4,7 +4,7 @@
     blade.currentEntity = {};
 
     function refresh() {
-        marketing_dynamicContents_res_search.search({ folderId: blade.choosenFolder, responseGroup: '18' }, function (data) {
+        marketing_dynamicContents_res_search.search({ folderId: blade.chosenFolder, responseGroup: '18' }, function (data) {
             blade.currentEntity.childrenFolders = data.contentFolders;
             blade.currentEntity.items = data.contentItems;
             setBreadcrumbs();
@@ -14,8 +14,8 @@
     }
 
     blade.initializeBlade = function () {
-        if (blade.choosenFolder === undefined) {
-            blade.choosenFolder = 'ContentItem';
+        if (blade.chosenFolder === undefined) {
+            blade.chosenFolder = 'ContentItem';
         }
         refresh();
     };
@@ -27,7 +27,7 @@
             id: 'listItemChild',
             title: 'marketing.blades.items.add.title',
             subtitle: 'marketing.blades.items.add.subtitle',
-            choosenFolder: blade.choosenFolder,
+            chosenFolder: blade.chosenFolder,
             controller: 'virtoCommerce.marketingModule.addContentItemsElementController',
             template: 'Modules/$(VirtoCommerce.Marketing)/Scripts/dynamicContent/blades/items/add.tpl.html'
         };
@@ -104,8 +104,8 @@
         blade.isLoading = true;
         blade.closeChildrenBlades();
 
-        if (angular.isUndefined(blade.choosenFolder) || !angular.equals(blade.choosenFolder, contentItemFolder.id)) {
-            blade.choosenFolder = contentItemFolder.id;
+        if (angular.isUndefined(blade.chosenFolder) || !angular.equals(blade.chosenFolder, contentItemFolder.id)) {
+            blade.chosenFolder = contentItemFolder.id;
             blade.currentEntity = contentItemFolder;
             refresh();
         }
@@ -114,7 +114,7 @@
     function setBreadcrumbs() {
         if (blade.breadcrumbs) {
             var breadcrumbs;
-            var index = _.findLastIndex(blade.breadcrumbs, { id: blade.choosenFolder });
+            var index = _.findLastIndex(blade.breadcrumbs, { id: blade.chosenFolder });
             if (index > -1) {
                 //Clone array (angular.copy leaves the same reference)
                 breadcrumbs = blade.breadcrumbs.slice(0, index + 1);
@@ -149,7 +149,7 @@
                     marketing_dynamicContents_res_folders.delete({ ids: [data.id] }, function () {
                         var pathSteps = data.outline.split(';');
                         var id = pathSteps[pathSteps.length - 2];
-                        blade.choosenFolder = id;
+                        blade.chosenFolder = id;
                         blade.initializeBlade();
                     },
 					function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });

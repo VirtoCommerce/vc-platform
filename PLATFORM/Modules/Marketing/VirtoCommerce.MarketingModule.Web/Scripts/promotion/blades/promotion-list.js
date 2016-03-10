@@ -16,7 +16,7 @@
             }, function (data) {
                 blade.isLoading = false;
 
-                $scope.pageSettings.totalItems = angular.isDefined(data.totalCount) ? data.totalCount : 0;
+                $scope.pageSettings.totalItems = data.totalCount;
                 blade.currentEntities = data.promotions;
             }, function (error) {
                 bladeNavigationService.setError('Error ' + error.status, blade);
@@ -124,7 +124,7 @@
 
             bladeUtils.initializePagination($scope);
         };
-        
+
         // actions on load
         //No need to call this because page 'pageSettings.currentPage' is watched!!! It would trigger subsequent duplicated req...
         //blade.refresh();

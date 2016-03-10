@@ -36,7 +36,10 @@
             <div class="cart-row">
                 <div class="grid">
                     <div class="grid-item text-right">
-                        <button class="btn" ng-click="redirect('{{ 'cart' | absolute_url }}')">Go to cart</button>
+                        <button class="btn" ng-class="{ 'btn-secondary': !dialogData.updated }" ng-disabled="!dialogData.updated" ng-click="redirect('{{ 'cart' | absolute_url }}')">
+                            <span ng-if="dialogData.updated">Go to cart</span>
+                            <span ng-if="!dialogData.updated">Updating cart...</span>
+                        </button>
                         <button class="btn" ng-click="close()">Continue shopping</button>
                     </div>
                 </div>

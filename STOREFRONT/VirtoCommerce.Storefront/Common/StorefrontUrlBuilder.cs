@@ -45,21 +45,26 @@ namespace VirtoCommerce.Storefront.Common
 
             if (store != null)
             {
-                // If store has specific URL use it
-                if (store.IsStoreUrl(_workContext.RequestUrl))
+                // If store has public or secure URL, use them
+                if (!string.IsNullOrEmpty(store.Url) || !string.IsNullOrEmpty(store.SecureUrl))
                 {
-                    var requestAddress = _workContext.RequestUrl.ToString();
+                    string baseAddress = null;
 
-                    if (!string.IsNullOrEmpty(store.Url) && requestAddress.StartsWith(store.Url, StringComparison.InvariantCultureIgnoreCase))
+                    // If current request is secure, use secure URL
+                    if (_workContext.RequestUrl != null && !string.IsNullOrEmpty(store.SecureUrl) &&
+                        _workContext.RequestUrl.ToString()
+                            .StartsWith(store.SecureUrl, StringComparison.InvariantCultureIgnoreCase))
                     {
-                        result.Clear();
-                        result.Append(store.Url.TrimEnd('/'));
+                        baseAddress = store.SecureUrl;
                     }
-                    else if (!string.IsNullOrEmpty(store.SecureUrl) && requestAddress.StartsWith(store.SecureUrl, StringComparison.InvariantCultureIgnoreCase))
+
+                    if (baseAddress == null)
                     {
-                        result.Clear();
-                        result.Append(store.SecureUrl.TrimEnd('/'));
+                        baseAddress = !string.IsNullOrEmpty(store.Url) ? store.Url : store.SecureUrl;
                     }
+
+                    result.Clear();
+                    result.Append(baseAddress.TrimEnd('/'));
                 }
                 else
                 {
