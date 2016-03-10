@@ -5,7 +5,6 @@
     blade.headIcon = 'fa-plus-square-o';
     blade.title = "platform.blades.propertyValue-list.title";
     blade.subtitle = "platform.blades.propertyValue-list.subtitle";
-    $scope.languages = [];
 
     blade.refresh = function () {
         settings.getValues({ id: 'VirtoCommerce.Core.General.Languages' }, function (data) {

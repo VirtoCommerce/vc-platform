@@ -157,7 +157,9 @@
     <Content Include="Scripts\blades\store-advanced.js" />
     <Content Include="Scripts\blades\store-detail.js" />
     <Content Include="Scripts\blades\store-advanced.tpl.html" />
+    <Content Include="Scripts\widgets\assetsWidget.js" />
     <Content Include="Scripts\widgets\seoWidget.js" />
+    <Content Include="Scripts\widgets\assetsWidget.tpl.html" />
     <Content Include="Scripts\widgets\seoWidget.tpl.html" />
     <Content Include="Scripts\widgets\storeNotificationsLogWidget.js" />
     <Content Include="Scripts\widgets\storeNotificationsLogWidget.tpl.html" />

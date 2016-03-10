@@ -61,7 +61,8 @@ namespace VirtoCommerce.StoreModule.Data.Services
 
                     store.ReturnsFulfillmentCenter = fulfillmentCenters.FirstOrDefault(x => x.Id == dbStore.ReturnsFulfillmentCenterId);
                     store.FulfillmentCenter = fulfillmentCenters.FirstOrDefault(x => x.Id == dbStore.FulfillmentCenterId);
-                   
+                    //Set default settings for store it can be override by store instance setting in LoadEntitySettingsValues
+                    store.Settings = _settingManager.GetModuleSettings("VirtoCommerce.Store");
                     _settingManager.LoadEntitySettingsValues(store);
                     _dynamicPropertyService.LoadDynamicPropertyValues(store);
                     retVal.Add(store);
