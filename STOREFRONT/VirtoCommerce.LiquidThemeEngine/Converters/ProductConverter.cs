@@ -59,7 +59,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             }
             if(product.VariationProperties != null)
             {
-                result.Options = product.VariationProperties.Select(x => x.Name).ToArray();
+                result.Options = product.VariationProperties.Where(x => !string.IsNullOrEmpty(x.Value)).Select(x => x.Name).ToArray();
             }
             if(product.Properties != null)
             {
@@ -96,7 +96,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             result.Id = product.Id;
             result.InventoryPolicy = "continue";
             result.InventoryQuantity = product.Inventory != null ? product.Inventory.InStockQuantity ?? 0 : 0;
-            result.Options = product.VariationProperties.Select(p => p.Value).ToArray();
+            result.Options = product.VariationProperties.Where(p => !string.IsNullOrEmpty(p.Value)).Select(p => p.Value).ToArray();
             result.CompareAtPrice = product.Price.ListPrice.Amount * 100;
             result.Price = product.Price.SalePrice.Amount * 100;
             if (product.Price.ActiveDiscount != null)
