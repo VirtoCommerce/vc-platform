@@ -15,7 +15,7 @@ namespace VirtoCommerce.Storefront.Test
         public void PagedAccessToCollection_CollectionChunkedToPages()
         {
             int totalCount;
-            var superset = GetTestData(1, int.MaxValue, out totalCount);
+            var superset = GetTestData(0, int.MaxValue, out totalCount);
             var mutablePagedList = new MutablePagedList<int>(superset, 1, 5);
 
             Assert.True(mutablePagedList.TotalItemCount == 0);
@@ -28,8 +28,8 @@ namespace VirtoCommerce.Storefront.Test
             Assert.True(mutablePagedList.PageSize == 5);
             Assert.True(mutablePagedList.PageCount == 2);
 
-            Assert.True(mutablePagedList.First() == 1);
-            Assert.True(mutablePagedList.Last() == 5);
+            Assert.True(mutablePagedList.First() == 0);
+            Assert.True(mutablePagedList.Last() == 4);
 
             //Change mutable list pageNumber to 2 
             mutablePagedList.Resize(2, 5);
@@ -39,8 +39,8 @@ namespace VirtoCommerce.Storefront.Test
             Assert.True(mutablePagedList.PageSize == 5);
             Assert.True(mutablePagedList.PageCount == 2);
 
-            Assert.True(mutablePagedList.First() == 6);
-            Assert.True(mutablePagedList.Last() == 10);
+            Assert.True(mutablePagedList.First() == 5);
+            Assert.True(mutablePagedList.Last() == 9);
         }
 
         [Fact]
@@ -63,26 +63,26 @@ namespace VirtoCommerce.Storefront.Test
             Assert.True(mutablePagedList.PageSize == 5);
             Assert.True(mutablePagedList.PageCount == 2);
 
-            Assert.True(mutablePagedList.First() == 1);
-            Assert.True(mutablePagedList.Last() == 5);
+            Assert.True(mutablePagedList.First() == 0);
+            Assert.True(mutablePagedList.Last() == 4);
 
             //Change mutable list pageNumber to 2 (should load new data set)
             mutablePagedList.Resize(2, 5);
-
+            //Load data by 2 times request
             Assert.True(requestCount == 2);
             Assert.True(mutablePagedList.TotalItemCount == 10);
             Assert.True(mutablePagedList.PageNumber == 2);
             Assert.True(mutablePagedList.PageSize == 5);
             Assert.True(mutablePagedList.PageCount == 2);
 
-            Assert.True(mutablePagedList.First() == 6);
-            Assert.True(mutablePagedList.Last() == 10);
+            Assert.True(mutablePagedList.First() == 5);
+            Assert.True(mutablePagedList.Last() == 9);
         }
 
         private int[] GetTestData(int skip, int take, out int totalCount)
         {
             totalCount = 10;
-            var retVal = Enumerable.Range(1, totalCount).Skip(skip).Take(take);
+            var retVal = Enumerable.Range(0, totalCount + 1).Skip(skip).Take(take);
             return retVal.ToArray();
         }
     }
