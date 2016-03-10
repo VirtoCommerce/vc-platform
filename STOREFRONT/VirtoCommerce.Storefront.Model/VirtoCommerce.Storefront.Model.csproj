@@ -88,6 +88,8 @@
     <Compile Include="Common\AnonymousComparer.cs" />
     <Compile Include="Common\EntryState.cs" />
     <Compile Include="Common\EnumerableExtension.cs" />
+    <Compile Include="IHasSettings.cs" />
+    <Compile Include="SettingEntry.cs" />
     <Compile Include="Tax\ITaxable.cs" />
     <Compile Include="LinkList\CategoryMenuLink.cs" />
     <Compile Include="Common\Events\EventPublisher.cs" />
