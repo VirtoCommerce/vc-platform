@@ -18,9 +18,11 @@
         function initializeBlade(data) {
             data.additionalLanguages = _.without(data.languages, data.defaultLanguage);
             data.additionalCurrencies = _.without(data.currencies, data.defaultCurrency);
-
+            
             blade.currentEntityId = data.id;
             blade.title = data.name;
+
+            settingsHelper.fixValues(data.settings);
 
             data.shippingMethods.sort(function (a, b) { return a.priority - b.priority; });
             data.paymentMethods.sort(function (a, b) { return a.priority - b.priority; });
@@ -28,7 +30,7 @@
             _.each(data.shippingMethods, function (x) { settingsHelper.fixValues(x.settings); })
             _.each(data.paymentMethods, function (x) { settingsHelper.fixValues(x.settings); })
             _.each(data.taxProviders, function (x) { settingsHelper.fixValues(x.settings); })
-
+            
             blade.currentEntity = angular.copy(data);
             blade.origEntity = data;
             blade.isLoading = false;
