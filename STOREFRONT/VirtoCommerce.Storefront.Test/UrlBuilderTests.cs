@@ -8,6 +8,7 @@ using Xunit;
 
 namespace VirtoCommerce.Storefront.Test
 {
+    [Trait("Category", "CI")]
     public class UrlBuilderSingleStoreSingleLanguage
     {
         private readonly WorkContext _workContext;
@@ -79,6 +80,7 @@ namespace VirtoCommerce.Storefront.Test
         }
     }
 
+    [Trait("Category", "CI")]
     public class UrlBuilderSingleStoreMultipleLanguages
     {
         private readonly WorkContext _workContext;
@@ -152,6 +154,98 @@ namespace VirtoCommerce.Storefront.Test
         }
     }
 
+    [Trait("Category", "CI")]
+    public class UrlBuilderMultipleStoresSingleLanguage
+    {
+        private readonly WorkContext _workContext;
+        private readonly IStorefrontUrlBuilder _builder;
+
+        public UrlBuilderMultipleStoresSingleLanguage()
+        {
+            _workContext = new WorkContext
+            {
+                AllStores = new[]
+                {
+                    new Store
+                    {
+                        Id = "Store1",
+                        DefaultLanguage = new Language("en-US"),
+                        Languages = new List<Language>(new[]
+                        {
+                            new Language("en-US"),
+                        }),
+                    },
+                    new Store
+                    {
+                        Id = "Store2",
+                        DefaultLanguage = new Language("de-DE"),
+                        Languages = new List<Language>(new[]
+                        {
+                            new Language("de-DE"),
+                        }),
+                    }
+                }
+            };
+
+            _workContext.CurrentStore = _workContext.AllStores.First();
+            _workContext.CurrentLanguage = _workContext.CurrentStore.Languages.First();
+
+            _builder = new StorefrontUrlBuilder(_workContext);
+        }
+
+        [Fact]
+        public void When_StoreIsNullAndLanguageIsNull_Expect_VirtualRoot()
+        {
+            var result = _builder.ToAppRelative("/", null, null);
+            Assert.Equal("~/", result);
+        }
+
+        [Fact]
+        public void When_StoreIsNullAndLanguageIsAny_Expect_VirtualRoot()
+        {
+            var result = _builder.ToAppRelative("/", null, new Language("en-US"));
+            Assert.Equal("~/", result);
+        }
+
+        [Fact]
+        public void When_CurrentStoreAndCurrentLanguage_Expect_CurrentStoreAndNoLanguage()
+        {
+            var result = _builder.ToAppRelative("/");
+            Assert.Equal("~/Store1/", result);
+        }
+
+        [Fact]
+        public void When_CurrentStoreAndUnknownLanguage_Expect_CurrentStoreAndNoLanguage()
+        {
+            var store = _workContext.CurrentStore;
+            var language = new Language("ja-JP");
+
+            var result = _builder.ToAppRelative("/", store, language);
+            Assert.Equal("~/Store1/", result);
+        }
+
+        [Fact]
+        public void When_SelectedStoreAndUnknownLanguage_Expect_SelectedStoreAndNotLanguage()
+        {
+            var store = _workContext.AllStores.Last();
+            var language = new Language("ja-JP");
+
+            var result = _builder.ToAppRelative("/", store, language);
+            Assert.Equal("~/Store2/", result);
+        }
+
+        [Fact]
+        public void When_SelectedStoreAndSelectedLanguage_Expect_SelectedStoreAndNoLanguage()
+        {
+            var store = _workContext.AllStores.Last();
+            var language = store.Languages.Last();
+
+            var result = _builder.ToAppRelative("/", store, language);
+            Assert.Equal("~/Store2/", result);
+        }
+    }
+
+    [Trait("Category", "CI")]
     public class UrlBuilderMultipleStoresMultipleLanguages
     {
         private readonly WorkContext _workContext;
@@ -256,6 +350,7 @@ namespace VirtoCommerce.Storefront.Test
         }
     }
 
+    [Trait("Category", "CI")]
     public class UrlBuilderStoreWithUrlsInsecureRequest
     {
         private readonly WorkContext _workContext;
@@ -316,14 +411,14 @@ namespace VirtoCommerce.Storefront.Test
         }
 
         [Fact]
-        public void When_CurrentStoreAndCurrentLanguage_Expect_PublicUrlAndCurrentLanguage()
+        public void When_CurrentStoreAndCurrentLanguage_Expect_InsecureUrlAndCurrentLanguage()
         {
             var result = _builder.ToAppRelative("/");
             Assert.Equal("http://localhost/insecure1/en-US/", result);
         }
 
         [Fact]
-        public void When_CurrentStoreAndUnknownLanguage_Expect_PublicUrlAndDefaultLanguage()
+        public void When_CurrentStoreAndUnknownLanguage_Expect_InsecureUrlAndDefaultLanguage()
         {
             var store = _workContext.CurrentStore;
             var language = new Language("ja-JP");
@@ -333,7 +428,7 @@ namespace VirtoCommerce.Storefront.Test
         }
 
         [Fact]
-        public void When_CurrentStoreAndSelectedLanguage_Expect_PublicUrlAndSelectedLanguage()
+        public void When_CurrentStoreAndSelectedLanguage_Expect_InsecureUrlAndSelectedLanguage()
         {
             var store = _workContext.CurrentStore;
             var language = store.Languages.Last();
@@ -363,6 +458,7 @@ namespace VirtoCommerce.Storefront.Test
         }
     }
 
+    [Trait("Category", "CI")]
     public class UrlBuilderStoreWithUrlsSecureRequest
     {
         private readonly WorkContext _workContext;
@@ -470,6 +566,7 @@ namespace VirtoCommerce.Storefront.Test
         }
     }
 
+    [Trait("Category", "CI")]
     public class UrlBuilderStoreWithUrlsRequestFromDifferentStore
     {
         private readonly WorkContext _workContext;
@@ -505,14 +602,14 @@ namespace VirtoCommerce.Storefront.Test
         }
 
         [Fact]
-        public void When_CurrentStoreAndCurrentLanguage_Expect_SecureUrlAndCurrentLanguage()
+        public void When_CurrentStoreAndCurrentLanguage_Expect_InsecureUrlAndCurrentLanguage()
         {
             var result = _builder.ToAppRelative("/");
             Assert.Equal("http://localhost/insecure1/en-US/", result);
         }
 
         [Fact]
-        public void When_CurrentStoreAndUnknownLanguage_Expect_SecureUrlAndDefaultLanguage()
+        public void When_CurrentStoreAndUnknownLanguage_Expect_InsecureUrlAndDefaultLanguage()
         {
             var store = _workContext.CurrentStore;
             var language = new Language("ja-JP");
@@ -522,7 +619,7 @@ namespace VirtoCommerce.Storefront.Test
         }
 
         [Fact]
-        public void When_CurrentStoreAndSelectedLanguage_Expect_SecureUrlAndSelectedLanguage()
+        public void When_CurrentStoreAndSelectedLanguage_Expect_InsecureUrlAndSelectedLanguage()
         {
             var store = _workContext.CurrentStore;
             var language = store.Languages.Last();
@@ -532,6 +629,7 @@ namespace VirtoCommerce.Storefront.Test
         }
     }
 
+    [Trait("Category", "CI")]
     public class UrlBuilderStoreWithUrlsNoRequest
     {
         private readonly WorkContext _workContext;
@@ -566,14 +664,14 @@ namespace VirtoCommerce.Storefront.Test
         }
 
         [Fact]
-        public void When_CurrentStoreAndCurrentLanguage_Expect_SecureUrlAndCurrentLanguage()
+        public void When_CurrentStoreAndCurrentLanguage_Expect_InsecureUrlAndCurrentLanguage()
         {
             var result = _builder.ToAppRelative("/");
             Assert.Equal("http://localhost/insecure1/en-US/", result);
         }
 
         [Fact]
-        public void When_CurrentStoreAndUnknownLanguage_Expect_SecureUrlAndDefaultLanguage()
+        public void When_CurrentStoreAndUnknownLanguage_Expect_InsecureUrlAndDefaultLanguage()
         {
             var store = _workContext.CurrentStore;
             var language = new Language("ja-JP");
@@ -583,7 +681,7 @@ namespace VirtoCommerce.Storefront.Test
         }
 
         [Fact]
-        public void When_CurrentStoreAndSelectedLanguage_Expect_SecureUrlAndSelectedLanguage()
+        public void When_CurrentStoreAndSelectedLanguage_Expect_InsecureUrlAndSelectedLanguage()
         {
             var store = _workContext.CurrentStore;
             var language = store.Languages.Last();
