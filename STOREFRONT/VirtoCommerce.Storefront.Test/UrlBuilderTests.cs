@@ -225,7 +225,7 @@ namespace VirtoCommerce.Storefront.Test
         }
 
         [Fact]
-        public void When_SelectedStoreAndUnknownLanguage_Expect_SelectedStoreAndNotLanguage()
+        public void When_SelectedStoreAndUnknownLanguage_Expect_SelectedStoreAndNoLanguage()
         {
             var store = _workContext.AllStores.Last();
             var language = new Language("ja-JP");
