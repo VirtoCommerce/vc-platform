@@ -45,7 +45,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             {
                 result.Orders = new MutablePagedList<Order>((pageNumber, pageSize) =>
                 {
-                    customer.Orders.Resize(pageNumber, pageSize);
+                    customer.Orders.Slice(pageNumber, pageSize);
                     return new StaticPagedList<Order>(customer.Orders.Select(x => x.ToShopifyModel(urlBuilder)), customer.Orders);
                 }, customer.Orders.PageNumber, customer.Orders.PageSize);
             }
@@ -54,7 +54,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             {
                 result.QuoteRequests = new MutablePagedList<QuoteRequest>((pageNumber, pageSize) =>
                 {
-                    customer.QuoteRequests.Resize(pageNumber, pageSize);
+                    customer.QuoteRequests.Slice(pageNumber, pageSize);
                     return new StaticPagedList<QuoteRequest>(customer.QuoteRequests.Select(x => x.ToShopifyModel()), customer.QuoteRequests);
                 }, customer.QuoteRequests.PageNumber, customer.QuoteRequests.PageSize);
             }

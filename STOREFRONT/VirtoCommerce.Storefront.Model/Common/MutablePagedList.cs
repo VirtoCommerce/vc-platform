@@ -33,7 +33,7 @@ namespace VirtoCommerce.Storefront.Model.Common
         /// </summary>
         /// <param name="pageNumber"></param>
         /// <param name="pageSize"></param>
-        public void Resize(int pageNumber, int pageSize)
+        public void Slice(int pageNumber, int pageSize)
         {
             if (pageNumber < 1)
                 throw new ArgumentOutOfRangeException("pageNumber", pageNumber, "PageNumber cannot be below 1.");

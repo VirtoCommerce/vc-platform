@@ -23,7 +23,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             {
                 retVal.Articles = new MutablePagedList<Article>((pageNumber, pageSize) =>
                 {
-                    blog.Articles.Resize(pageNumber, pageSize);
+                    blog.Articles.Slice(pageNumber, pageSize);
                     return new StaticPagedList<Article>(blog.Articles.Select(x => x.ToShopifyModel()), blog.Articles);
                 }, blog.Articles.PageNumber, blog.Articles.PageSize);
             }

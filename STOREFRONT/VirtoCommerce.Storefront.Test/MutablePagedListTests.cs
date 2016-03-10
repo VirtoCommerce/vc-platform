@@ -32,7 +32,7 @@ namespace VirtoCommerce.Storefront.Test
             Assert.True(mutablePagedList.Last() == 4);
 
             //Change mutable list pageNumber to 2 
-            mutablePagedList.Resize(2, 5);
+            mutablePagedList.Slice(2, 5);
 
             Assert.True(mutablePagedList.TotalItemCount == 10);
             Assert.True(mutablePagedList.PageNumber == 2);
@@ -67,7 +67,7 @@ namespace VirtoCommerce.Storefront.Test
             Assert.True(mutablePagedList.Last() == 4);
 
             //Change mutable list pageNumber to 2 (should load new data set)
-            mutablePagedList.Resize(2, 5);
+            mutablePagedList.Slice(2, 5);
             //Load data by 2 times request
             Assert.True(requestCount == 2);
             Assert.True(mutablePagedList.TotalItemCount == 10);

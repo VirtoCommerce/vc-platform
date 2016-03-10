@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Web;
 using VirtoCommerce.LiquidThemeEngine.Objects;
 using VirtoCommerce.Storefront.Model.Common;
 using storefrontModel = VirtoCommerce.Storefront.Model;
@@ -114,6 +116,15 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                 var storeName = workContext.CurrentStore.Name;
                 var hashCode = (uint)storeName.GetHashCode();
                 result.PoweredByLink = _poweredLinks[hashCode % _poweredLinks.Length];
+            }
+
+            result.CurrentPage = 1;
+            if (workContext.RequestUrl != null)
+            {
+                result.RequestUrl = workContext.RequestUrl.ToString();
+                //Populate current page number
+                var qs = HttpUtility.ParseQueryString(workContext.RequestUrl.Query);
+                result.CurrentPage = Convert.ToInt32(qs.Get("page") ?? 1.ToString());
             }
             return result;
         }

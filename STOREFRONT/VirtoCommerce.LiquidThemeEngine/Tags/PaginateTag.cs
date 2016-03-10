@@ -54,15 +54,13 @@ namespace VirtoCommerce.LiquidThemeEngine.Tags
             var mutablePagedList = context[_collectionName] as IMutablePagedList;
             var collection = context[_collectionName] as ICollection;
             var pagedList = context[_collectionName] as IPagedList;
-
-            var themeEngine = (ShopifyLiquidThemeEngine)Template.FileSystem;
-            var workContext = themeEngine.WorkContext;
-            var qs = HttpUtility.ParseQueryString(workContext.RequestUrl.Query);
-            var pageNumber = Convert.ToInt32(qs.Get("page") ?? 1.ToString());
-
-            if(mutablePagedList != null)
+            Uri requestUrl;
+            Uri.TryCreate(context["request_url"] as string, UriKind.RelativeOrAbsolute, out requestUrl);
+            var pageNumber = (int)context["current_page"];
+ 
+            if (mutablePagedList != null)
             {
-                mutablePagedList.Resize(pageNumber, _pageSize);
+                mutablePagedList.Slice(pageNumber, _pageSize);
                 pagedList = mutablePagedList;
             }
             else if (collection != null)
@@ -71,7 +69,6 @@ namespace VirtoCommerce.LiquidThemeEngine.Tags
                 //TODO: Need find way to replace ICollection instance in liquid context to paged instance
                 //var hash = context.Environments.FirstOrDefault(s => s.ContainsKey(_collectionName));
                 //hash[_collectionName] = pagedList;
-
             }
 
             if (pagedList != null)
@@ -81,7 +78,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Tags
 
                 for (int i = 1; i <= pagedList.PageCount; i++)
                 {
-                    paginate.Parts.Add(new Part { IsLink = i != pagedList.PageNumber, Title = i.ToString(), Url = workContext.RequestUrl.SetQueryParameter("page", i.ToString()).ToString() });
+                    paginate.Parts.Add(new Part { IsLink = i != pagedList.PageNumber, Title = i.ToString(), Url = requestUrl != null ? requestUrl.SetQueryParameter("page", i.ToString()).ToString() : i.ToString() });
                 }
                 RenderAll(NodeList, context, result);
             }

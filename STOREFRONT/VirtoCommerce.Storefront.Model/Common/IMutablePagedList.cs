@@ -12,7 +12,7 @@ namespace VirtoCommerce.Storefront.Model.Common
     /// </summary>
     public interface IMutablePagedList : IPagedList 
     {
-        void Resize(int pageNumber, int pageSize);
+        void Slice(int pageNumber, int pageSize);
     }
 
     public interface IMutablePagedList<T> : IMutablePagedList, IPagedList<T>
