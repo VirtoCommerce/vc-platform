@@ -82,7 +82,7 @@ namespace VirtoCommerce.Storefront.Test
         private int[] GetTestData(int skip, int take, out int totalCount)
         {
             totalCount = 10;
-            var retVal = Enumerable.Range(0, totalCount + 1).Skip(skip).Take(take);
+            var retVal = Enumerable.Range(0, totalCount).Skip(skip).Take(take);
             return retVal.ToArray();
         }
     }
