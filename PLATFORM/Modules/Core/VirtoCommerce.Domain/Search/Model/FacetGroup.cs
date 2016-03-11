@@ -13,107 +13,109 @@ namespace VirtoCommerce.Domain.Search.Model
         public const string Category = "category";
     }
 
-	public class FacetGroup : INotifyPropertyChanged
-	{
-		/// <summary>
-		/// Gets the name of the field.
-		/// </summary>
-		/// <value>The name of the field.</value>
-		public string FieldName
-		{
-			get;
-			private set;
-		}
+    public class FacetGroup : INotifyPropertyChanged
+    {
+        /// <summary>
+        /// Gets the name of the field.
+        /// </summary>
+        /// <value>The name of the field.</value>
+        public string FieldName { get; private set; }
 
-		/// <summary>
-		/// Specifies facet type.
-		/// </summary>
-		/// <value>The name.</value>
-		public string FacetType
-		{
-			get;
-			set;
-		}
+        /// <summary>
+        /// Gets the field display name
+        /// </summary>
+        public string FieldDisplayName { get; private set; }
 
-		FacetCollection<Facet> _Facets = null;
-		/// <summary>
-		/// Gets the facets.
-		/// </summary>
-		/// <value>The facets.</value>
-		public FacetCollection<Facet> Facets
-		{
-			get
-			{
-				if (_Facets == null)
-					_Facets = new FacetCollection<Facet>(this);
+        /// <summary>
+        /// Specifies facet type.
+        /// </summary>
+        /// <value>The name.</value>
+        public string FacetType
+        {
+            get;
+            set;
+        }
 
-				return _Facets;
-			}
-		}
+        FacetCollection<Facet> _Facets = null;
+        /// <summary>
+        /// Gets the facets.
+        /// </summary>
+        /// <value>The facets.</value>
+        public FacetCollection<Facet> Facets
+        {
+            get
+            {
+                if (_Facets == null)
+                    _Facets = new FacetCollection<Facet>(this);
 
-		public FacetGroup()
-		{
-		}
+                return _Facets;
+            }
+        }
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="FacetGroup"/> class.
-		/// </summary>
-		/// <param name="fieldName">Name of the field.</param>
-		public FacetGroup(string fieldName/*, string name*/)
-		{
-			this.FieldName = fieldName;
-			//this.Name = name;
-		}
+        public FacetGroup()
+        {
+        }
 
-		protected virtual void OnPropertyChanged(string propertyName)
-		{
-			var tmp = PropertyChanged;
-			if (tmp != null)
-			{
-				tmp(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FacetGroup"/> class.
+        /// </summary>
+        /// <param name="fieldName">Name of the field.</param>
+        /// <param name="fieldDisplayName">Display name of the field.</param>
+        public FacetGroup(string fieldName, string fieldDisplayName)
+        {
+            FieldName = fieldName;
+            FieldDisplayName = fieldDisplayName;
+        }
 
-		public event PropertyChangedEventHandler PropertyChanged;
-	}
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            var tmp = PropertyChanged;
+            if (tmp != null)
+            {
+                tmp(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
 
-	public class FacetCollection<T> : ObservableCollection<T> where T : Facet
-	{
-		protected string ParentKeyProperty { get; set; }
-		protected string LocalParentKeyProperty { get; set; }
+        public event PropertyChangedEventHandler PropertyChanged;
+    }
 
-		public FacetGroup Parent { get; set; }
+    public class FacetCollection<T> : ObservableCollection<T> where T : Facet
+    {
+        protected string ParentKeyProperty { get; set; }
+        protected string LocalParentKeyProperty { get; set; }
 
-
-		public FacetCollection()
-		{
-		}
+        public FacetGroup Parent { get; set; }
 
 
-		public FacetCollection(FacetGroup parent)
-		{
-			Parent = parent;
-			if (parent != null)
-			{
-				((INotifyPropertyChanged)parent).PropertyChanged += this.StorageEntityCollection_PropertyChanged;
-			}
-		}
+        public FacetCollection()
+        {
+        }
 
 
-		protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
-		{
-			if (e.Action == NotifyCollectionChangedAction.Add)
-			{
-				var newItems = e.NewItems.Cast<T>();
-				foreach (var item in newItems)
-				{
-					item.Group = Parent;
-				}
-			}
-		}
+        public FacetCollection(FacetGroup parent)
+        {
+            Parent = parent;
+            if (parent != null)
+            {
+                ((INotifyPropertyChanged)parent).PropertyChanged += StorageEntityCollection_PropertyChanged;
+            }
+        }
 
-		private void StorageEntityCollection_PropertyChanged(object sender, PropertyChangedEventArgs e)
-		{
-		}
-	}
+
+        protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                var newItems = e.NewItems.Cast<T>();
+                foreach (var item in newItems)
+                {
+                    item.Group = Parent;
+                }
+            }
+        }
+
+        private void StorageEntityCollection_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+        }
+    }
 }

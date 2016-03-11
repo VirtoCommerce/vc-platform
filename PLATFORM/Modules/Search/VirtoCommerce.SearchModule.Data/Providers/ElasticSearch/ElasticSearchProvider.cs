@@ -11,6 +11,7 @@ using PlainElastic.Net.Serialization;
 using VirtoCommerce.Domain.Search.Filters;
 using VirtoCommerce.Domain.Search.Model;
 using VirtoCommerce.Domain.Search.Services;
+using VirtoCommerce.SearchModule.Data.Services;
 
 namespace VirtoCommerce.SearchModule.Data.Providers.ElasticSearch
 {
@@ -190,11 +191,21 @@ namespace VirtoCommerce.SearchModule.Data.Providers.ElasticSearch
 
             if (resultDocs.facets != null)
             {
+                var locale = criteria.Locale;
+                string localeShort = null;
+                try
+                {
+                    localeShort = new CultureInfo(locale).TwoLetterISOLanguageName;
+                }
+                catch
+                {
+                }
+
                 foreach (var filter in criteria.Filters)
                 {
                     var groupCount = 0;
 
-                    var group = new FacetGroup(filter.Key);
+                    var group = new FacetGroup(filter.Key, filter.GetDisplayName(locale, localeShort));
 
                     if (filter is AttributeFilter)
                     {

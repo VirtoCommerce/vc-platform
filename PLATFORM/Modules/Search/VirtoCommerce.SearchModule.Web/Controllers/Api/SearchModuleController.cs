@@ -27,6 +27,7 @@ using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Common;
+using VirtoCommerce.SearchModule.Data.Services;
 using VirtoCommerce.SearchModule.Web.BackgroundJobs;
 using VirtoCommerce.SearchModule.Web.Security;
 using VirtoCommerce.SearchModule.Web.Services;
@@ -168,14 +169,20 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
                 .ToArray();
 
             // Keep the selected properties order
-            var selectedDictionaryProperties = selectedPropertyNames
+            var selectedProperties = selectedPropertyNames
                 .SelectMany(n => allProperties.Where(p => string.Equals(p.Name, n, StringComparison.OrdinalIgnoreCase)))
                 .ToArray();
 
-            var attributes = selectedDictionaryProperties
+            var attributes = selectedProperties
                 .Select(ConvertToAttributeFilter)
                 .GroupBy(a => a.Key)
-                .Select(g => new AttributeFilter { Key = g.Key, Values = GetDistinctValues(g.SelectMany(p => p.Values)) })
+                .Select(g => new AttributeFilter
+                {
+                    Key = g.Key,
+                    Values = GetDistinctValues(g.SelectMany(a => a.Values)),
+                    IsLocalized = g.Any(a => a.IsLocalized),
+                    DisplayNames = GetDistinctNames(g.SelectMany(a => a.DisplayNames)),
+                })
                 .ToArray();
 
             SetFilteredBrowsingAttributes(store, attributes);
@@ -335,7 +342,7 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
             #endregion
 
             //criteria.ClassTypes.Add("Product");
-            serviceCriteria.RecordsToRetrieve = criteria.Take <= 0 ? 10 : criteria.Take;
+            serviceCriteria.RecordsToRetrieve = criteria.Take < 0 ? 10 : criteria.Take;
             serviceCriteria.StartingRecord = criteria.Skip;
             serviceCriteria.Pricelists = criteria.PricelistIds;
             serviceCriteria.Currency = criteria.Currency;
@@ -358,7 +365,7 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
                             sortObject = new SearchSort(
                                 serviceCriteria.Pricelists.Select(
                                     priceList =>
-                                        new SearchSortField(String.Format("price_{0}_{1}", serviceCriteria.Currency.ToLower(), priceList.ToLower()))
+                                        new SearchSortField(string.Format("price_{0}_{1}", serviceCriteria.Currency.ToLower(), priceList.ToLower()))
                                         {
                                             IgnoredUnmapped = true,
                                             IsDescending = isDescending,
@@ -496,13 +503,30 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
             return result;
         }
 
+        private static FilterDisplayName[] GetDistinctNames(IEnumerable<FilterDisplayName> names)
+        {
+            return names
+                .Where(n => !string.IsNullOrEmpty(n.Language) && !string.IsNullOrEmpty(n.Name))
+                .GroupBy(n => n.Language, StringComparer.OrdinalIgnoreCase)
+                .Select(g => g.FirstOrDefault())
+                .OrderBy(n => n.Language)
+                .ThenBy(n => n.Name)
+                .ToArray();
+        }
+
         private static AttributeFilterValue[] GetDistinctValues(IEnumerable<AttributeFilterValue> values)
         {
             return values
                 .Where(v => !string.IsNullOrEmpty(v.Id) && !string.IsNullOrEmpty(v.Value))
                 .GroupBy(v => v.Id, StringComparer.OrdinalIgnoreCase)
-                .Select(g => g.FirstOrDefault())
-                .OrderBy(v => v.Value)
+                .SelectMany(g => g
+                    .GroupBy(g2 => g2.Language, StringComparer.OrdinalIgnoreCase)
+                    .SelectMany(g2 => g2
+                        .GroupBy(g3 => g3.Value, StringComparer.OrdinalIgnoreCase)
+                        .Select(g3 => g3.FirstOrDefault())))
+                .OrderBy(v => v.Id)
+                .ThenBy(v => v.Language)
+                .ThenBy(v => v.Value)
                 .ToArray();
         }
 
@@ -559,6 +583,19 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
             {
                 Key = property.Name,
                 Values = values.Select(ConvertToAttributeFilterValue).ToArray(),
+                IsLocalized = property.Multilanguage,
+                DisplayNames = property.DisplayNames.Select(ConvertToFilterDisplayName).ToArray(),
+            };
+
+            return result;
+        }
+
+        private static FilterDisplayName ConvertToFilterDisplayName(PropertyDisplayName displayName)
+        {
+            var result = new FilterDisplayName
+            {
+                Language = displayName.LanguageCode,
+                Name = displayName.Name,
             };
 
             return result;
@@ -570,6 +607,7 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
             {
                 Id = dictionaryValue.Alias,
                 Value = dictionaryValue.Value,
+                Language = dictionaryValue.LanguageCode,
             };
 
             return result;

@@ -8,6 +8,7 @@ using Lucene.Net.Util;
 using SpellChecker.Net.Search.Spell;
 using VirtoCommerce.Domain.Search.Filters;
 using VirtoCommerce.Domain.Search.Model;
+using VirtoCommerce.SearchModule.Data.Services;
 
 namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
 {
@@ -45,54 +46,6 @@ namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
         #region Methods
 
         /// <summary>
-        ///     Gets the description.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="locale">The locale.</param>
-        /// <returns></returns>
-        private string GetDescription(ISearchFilterValue value, string locale)
-        {
-            if (value is AttributeFilterValue)
-            {
-                var v = value as AttributeFilterValue;
-                return v.Value;
-            }
-            if (value is RangeFilterValue)
-            {
-                var v = value as RangeFilterValue;
-                if (v.Displays != null)
-                {
-                    var returnVal = from d in v.Displays
-                                    where d.Language.Equals(locale, StringComparison.OrdinalIgnoreCase)
-                                    select d.Value;
-
-                    if (!returnVal.Any())
-                    {
-                        try
-                        {
-                            var localeShort = new CultureInfo(locale).TwoLetterISOLanguageName;
-                            returnVal = v.Displays.Where(d => d.Language.Equals(localeShort, StringComparison.OrdinalIgnoreCase)).Select(d => d.Value);
-                        }
-                        catch
-                        {
-                        }
-                    }
-
-                    if (returnVal.Any())
-                        return returnVal.SingleOrDefault();
-                }
-                return v.Id;
-            }
-            if (value is CategoryFilterValue)
-            {
-                var v = value as CategoryFilterValue;
-                return v.Name;
-            }
-
-            return string.Empty;
-        }
-
-        /// <summary>
         ///     Calculates number of facets found in the filter doc set.
         /// </summary>
         /// <param name="baseBitSet">The base bit set.</param>
@@ -107,63 +60,94 @@ namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
             return total;
         }
 
-        /// <summary>
-        /// Calculates the result count.
-        /// </summary>
-        /// <param name="reader">The reader.</param>
-        /// <param name="baseDocIdSet">The base doc id set.</param>
-        /// <param name="facetGroup">The facet group.</param>
-        /// <param name="filter">The filter.</param>
-        /// <param name="criteria">The criteria.</param>
-        /// <returns></returns>
-        private int CalculateResultCount(IndexReader reader, DocIdSet baseDocIdSet, FacetGroup facetGroup, ISearchFilter filter, ISearchCriteria criteria)
+        private FacetGroup CalculateResultCount(IndexReader reader, DocIdSet baseDocIdSet, ISearchFilter filter, ISearchCriteria criteria)
         {
-            var count = 0;
+            FacetGroup result = null;
 
-            var values = LuceneQueryHelper.GetFilterValues(filter);
-
-            if (values == null)
+            var values = filter.GetValues();
+            if (values != null)
             {
-                return 0;
-            }
+                var count = 0;
 
-            BooleanFilter ffilter = null;
-            foreach (var f in criteria.CurrentFilters)
-            {
-                if (!f.Key.Equals(facetGroup.FieldName))
+                BooleanFilter ffilter = null;
+                foreach (var f in criteria.CurrentFilters)
                 {
-                    if (ffilter == null)
-                        ffilter = new BooleanFilter();
+                    if (!f.Key.Equals(filter.Key))
+                    {
+                        if (ffilter == null)
+                            ffilter = new BooleanFilter();
 
-                    var q = LuceneQueryHelper.CreateQuery(criteria, f, Occur.SHOULD);
-                    ffilter.Add(new FilterClause(q, Occur.MUST));
+                        var q = LuceneQueryHelper.CreateQuery(criteria, f, Occur.SHOULD);
+                        ffilter.Add(new FilterClause(q, Occur.MUST));
+                    }
+                }
+
+                var locale = Results.SearchCriteria.Locale;
+                string localeShort = null;
+                try
+                {
+                    localeShort = new CultureInfo(locale).TwoLetterISOLanguageName;
+                }
+                catch
+                {
+                }
+
+                var facetGroup = new FacetGroup(filter.Key, filter.GetDisplayName(locale, localeShort));
+
+                foreach (var group in values.GroupBy(v => v.Id))
+                {
+                    var value = GetLocalizedValue(group.ToList(), locale, localeShort);
+                    var valueFilter = LuceneQueryHelper.CreateQueryForValue(Results.SearchCriteria, filter, value);
+
+                    if (valueFilter == null)
+                        continue;
+
+                    var queryFilter = new BooleanFilter();
+                    queryFilter.Add(new FilterClause(valueFilter, Occur.MUST));
+                    if (ffilter != null)
+                        queryFilter.Add(new FilterClause(ffilter, Occur.MUST));
+
+                    var filterArray = queryFilter.GetDocIdSet(reader);
+                    var newCount = (int)CalculateFacetCount(baseDocIdSet, filterArray);
+                    if (newCount == 0)
+                        continue;
+
+                    var displayValue = value.GetDisplayValue(locale, localeShort);
+                    var newFacet = new Facet(facetGroup, value.Id, displayValue, newCount);
+                    facetGroup.Facets.Add(newFacet);
+                    count += newCount;
+                }
+
+                if (count > 0)
+                {
+                    result = facetGroup;
                 }
             }
 
-            foreach (var value in values)
+            return result;
+        }
+
+        private static ISearchFilterValue GetLocalizedValue(List<ISearchFilterValue> values, string locale, string localeShort)
+        {
+            ISearchFilterValue result = values.FirstOrDefault();
+
+            var attributeFilterValues = values.OfType<AttributeFilterValue>().ToList();
+            if (attributeFilterValues.Any())
             {
-                var queryFilter = new BooleanFilter();
+                result = GetLocalizedValue(attributeFilterValues, locale);
 
-                var valueFilter = LuceneQueryHelper.CreateQueryForValue(Results.SearchCriteria, filter, value);
-
-                if (valueFilter == null)
-                    continue;
-
-                queryFilter.Add(new FilterClause(valueFilter, Occur.MUST));
-                if (ffilter != null)
-                    queryFilter.Add(new FilterClause(ffilter, Occur.MUST));
-
-                var filterArray = queryFilter.GetDocIdSet(reader);
-                var newCount = (int)CalculateFacetCount(baseDocIdSet, filterArray);
-                if (newCount == 0)
-                    continue;
-
-                var newFacet = new Facet(facetGroup, value.Id, GetDescription(value, Results.SearchCriteria.Locale), newCount);
-                facetGroup.Facets.Add(newFacet);
-                count += newCount;
+                if (result == null)
+                {
+                    result = GetLocalizedValue(attributeFilterValues, localeShort);
+                }
             }
 
-            return count;
+            return result;
+        }
+
+        private static ISearchFilterValue GetLocalizedValue(List<AttributeFilterValue> values, string locale)
+        {
+            return values.FirstOrDefault(v => v.Language.Equals(locale, StringComparison.OrdinalIgnoreCase));
         }
 
         /// <summary>
@@ -290,8 +274,6 @@ namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
             {
                 foreach (var filter in Results.SearchCriteria.Filters)
                 {
-                    var group = new FacetGroup(filter.Key);
-                    var groupCount = 0;
 
                     if (!string.IsNullOrEmpty(Results.SearchCriteria.Currency) && filter is PriceRangeFilter)
                     {
@@ -302,10 +284,8 @@ namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
                         }
                     }
 
-                    groupCount += CalculateResultCount(reader, baseDocIdSet, group, filter, Results.SearchCriteria);
-
-                    // Add only if items exist under
-                    if (groupCount > 0)
+                    var group = CalculateResultCount(reader, baseDocIdSet, filter, Results.SearchCriteria);
+                    if (group != null)
                     {
                         groups.Add(group);
                     }

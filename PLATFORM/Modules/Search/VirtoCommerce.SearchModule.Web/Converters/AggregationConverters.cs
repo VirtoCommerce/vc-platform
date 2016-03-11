@@ -13,6 +13,7 @@ namespace VirtoCommerce.SearchModule.Web.Converters
             {
                 AggregationType = facetGroup.FacetType,
                 Field = facetGroup.FieldName,
+                Label = facetGroup.FieldDisplayName,
                 Items = facetGroup.Facets.Select(f => f.ToModuleModel(appliedFilters)).ToArray()
             };
             return result;

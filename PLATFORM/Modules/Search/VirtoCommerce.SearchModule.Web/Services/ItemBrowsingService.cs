@@ -6,8 +6,8 @@ using VirtoCommerce.Domain.Search.Model;
 using VirtoCommerce.Domain.Search.Services;
 using VirtoCommerce.Platform.Core.Asset;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.SearchModule.Data.Services;
 using VirtoCommerce.SearchModule.Web.Converters;
-using VirtoCommerce.SearchModule.Web.Model;
 using moduleModel = VirtoCommerce.Domain.Catalog.Model;
 
 namespace VirtoCommerce.SearchModule.Web.Services

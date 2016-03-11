@@ -234,6 +234,7 @@
     <Compile Include="Quote\Services\IQuoteRequestService.cs" />
     <Compile Include="Quote\Services\IQuoteTotalsCalculator.cs" />
     <Compile Include="Search\Filters\AttributeFilter.cs" />
+    <Compile Include="Search\Filters\FilterDisplayName.cs" />
     <Compile Include="Search\Filters\Filters.cs">
       <DependentUpon>Filters.xsd</DependentUpon>
     </Compile>
