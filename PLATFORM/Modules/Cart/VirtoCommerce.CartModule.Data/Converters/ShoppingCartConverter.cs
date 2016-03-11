@@ -45,7 +45,7 @@ namespace VirtoCommerce.CartModule.Data.Converters
 
             retVal.InjectFrom(cart);
 
-			retVal.Currency = cart.Currency.ToString();
+			retVal.Currency = cart.Currency;
 
 			if (cart.Addresses != null)
 			{
