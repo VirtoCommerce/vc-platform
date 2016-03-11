@@ -18,10 +18,12 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             retVal.Results = new MutablePagedList<Drop>((pageNumber, pageSize) =>
             {
                products.Slice(pageNumber, pageSize);
+               retVal.ResultsCount = products.TotalItemCount;
                return new StaticPagedList<Drop>(products.Select(x=>x.ToShopifyModel()).OfType<Drop>(), products);
             });
             retVal.ResultsCount = products.TotalItemCount;
             retVal.Terms = terms;
+            retVal.Performed = true;
             return retVal;
         }
     }

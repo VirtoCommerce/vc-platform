@@ -14,6 +14,10 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
     public class Search : Drop
     {
         /// <summary>
+        /// Returns  true  if an HTML form with the attribute  action="/search"  was submitted successfully. This allows you to show content based on whether a search was performed or not.
+        /// </summary>
+        public bool Performed { get; set; }
+        /// <summary>
         /// Returns an array of matching search result items. The items in the array can be a(n): product, article, page
         /// </summary>
         public IMutablePagedList<Drop> Results { get; set; }

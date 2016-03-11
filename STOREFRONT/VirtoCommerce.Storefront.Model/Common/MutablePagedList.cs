@@ -40,22 +40,18 @@ namespace VirtoCommerce.Storefront.Model.Common
             if (pageSize < 1)
                 throw new ArgumentOutOfRangeException("pageSize", pageSize, "PageSize cannot be less than 1.");
 
-            var needReload = false;
             if (pageNumber != PageNumber)
             {
                 PageNumber = pageNumber;
-                needReload = true;
+                _pagedList = null;
             }
             if (pageSize != PageSize)
             {
                 PageSize = pageSize;
-                needReload = true;
-            }
-            if (needReload)
-            {
                 _pagedList = null;
-                TryReloadPagedData();
             }
+          
+            TryReloadPagedData();
         }
         #endregion
         #region IPagedList<T> Members

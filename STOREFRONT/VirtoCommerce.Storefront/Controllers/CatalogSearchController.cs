@@ -32,7 +32,7 @@ namespace VirtoCommerce.Storefront.Controllers
         {
             //All resulting categories, products and aggregations will be lazy evaluated when view will be rendered. (workContext.Products, workContext.Categories etc) 
             //All data will loaded using by current search criteria taken from query string
-           return View("collection", WorkContext);
+           return View("search", WorkContext);
         }
 
         /// <summary>
