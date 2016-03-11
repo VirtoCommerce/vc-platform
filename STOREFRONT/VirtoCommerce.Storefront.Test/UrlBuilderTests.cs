@@ -60,6 +60,13 @@ namespace VirtoCommerce.Storefront.Test
         }
 
         [Fact]
+        public void When_AbsoluteUrl_Expect_AbsoluteUrl()
+        {
+            var result = _builder.ToAppRelative("http://domain/path");
+            Assert.Equal("http://domain/path", result);
+        }
+
+        [Fact]
         public void When_CurrentStoreAndUnknownLanguage_Expect_VirtualRoot()
         {
             var store = _workContext.CurrentStore;
@@ -131,6 +138,13 @@ namespace VirtoCommerce.Storefront.Test
         {
             var result = _builder.ToAppRelative("/");
             Assert.Equal("~/en-US/", result);
+        }
+
+        [Fact]
+        public void When_AbsoluteUrl_Expect_AbsoluteUrl()
+        {
+            var result = _builder.ToAppRelative("http://domain/path");
+            Assert.Equal("http://domain/path", result);
         }
 
         [Fact]
@@ -212,6 +226,13 @@ namespace VirtoCommerce.Storefront.Test
         {
             var result = _builder.ToAppRelative("/");
             Assert.Equal("~/Store1/", result);
+        }
+
+        [Fact]
+        public void When_AbsoluteUrl_Expect_AbsoluteUrl()
+        {
+            var result = _builder.ToAppRelative("http://domain/path");
+            Assert.Equal("http://domain/path", result);
         }
 
         [Fact]
@@ -307,6 +328,13 @@ namespace VirtoCommerce.Storefront.Test
         {
             var result = _builder.ToAppRelative("/");
             Assert.Equal("~/Store1/en-US/", result);
+        }
+
+        [Fact]
+        public void When_AbsoluteUrl_Expect_AbsoluteUrl()
+        {
+            var result = _builder.ToAppRelative("http://domain/path");
+            Assert.Equal("http://domain/path", result);
         }
 
         [Fact]
@@ -418,6 +446,13 @@ namespace VirtoCommerce.Storefront.Test
         }
 
         [Fact]
+        public void When_AbsoluteUrl_Expect_AbsoluteUrl()
+        {
+            var result = _builder.ToAppRelative("http://domain/path");
+            Assert.Equal("http://domain/path", result);
+        }
+
+        [Fact]
         public void When_CurrentStoreAndUnknownLanguage_Expect_InsecureUrlAndDefaultLanguage()
         {
             var store = _workContext.CurrentStore;
@@ -526,6 +561,13 @@ namespace VirtoCommerce.Storefront.Test
         }
 
         [Fact]
+        public void When_AbsoluteUrl_Expect_AbsoluteUrl()
+        {
+            var result = _builder.ToAppRelative("http://domain/path");
+            Assert.Equal("http://domain/path", result);
+        }
+
+        [Fact]
         public void When_CurrentStoreAndUnknownLanguage_Expect_SecureUrlAndDefaultLanguage()
         {
             var store = _workContext.CurrentStore;
@@ -609,6 +651,13 @@ namespace VirtoCommerce.Storefront.Test
         }
 
         [Fact]
+        public void When_AbsoluteUrl_Expect_AbsoluteUrl()
+        {
+            var result = _builder.ToAppRelative("http://domain/path");
+            Assert.Equal("http://domain/path", result);
+        }
+
+        [Fact]
         public void When_CurrentStoreAndUnknownLanguage_Expect_InsecureUrlAndDefaultLanguage()
         {
             var store = _workContext.CurrentStore;
@@ -668,6 +717,13 @@ namespace VirtoCommerce.Storefront.Test
         {
             var result = _builder.ToAppRelative("/");
             Assert.Equal("http://localhost/insecure1/en-US/", result);
+        }
+
+        [Fact]
+        public void When_AbsoluteUrl_Expect_AbsoluteUrl()
+        {
+            var result = _builder.ToAppRelative("http://domain/path");
+            Assert.Equal("http://domain/path", result);
         }
 
         [Fact]
