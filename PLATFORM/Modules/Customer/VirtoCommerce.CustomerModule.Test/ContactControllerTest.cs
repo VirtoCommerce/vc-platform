@@ -6,12 +6,12 @@ using VirtoCommerce.CustomerModule.Data.Repositories;
 using VirtoCommerce.CustomerModule.Data.Services;
 using VirtoCommerce.CustomerModule.Web.Controllers.Api;
 using VirtoCommerce.CustomerModule.Web.Model;
+using VirtoCommerce.Domain.Commerce.Model;
 using VirtoCommerce.Platform.Data.DynamicProperties;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Platform.Data.Repositories;
-using webModel = VirtoCommerce.CustomerModule.Web.Model;
 using coreModel = VirtoCommerce.Domain.Customer.Model;
-using VirtoCommerce.Domain.Commerce.Model;
+using webModel = VirtoCommerce.CustomerModule.Web.Model;
 
 namespace VirtoCommerce.CustomerModule.Test
 {
@@ -68,22 +68,22 @@ namespace VirtoCommerce.CustomerModule.Test
                 BirthDate = DateTime.UtcNow,
                 Organizations = new[] { "org1" },
                 Addresses = new webModel.Address[]
-				{
-					new webModel.Address {	
-					Name = "some name",	 
-					AddressType = AddressType.Shipping, 
-					City = "london",
-					Phone = "+68787687",
-					PostalCode = "22222",
-					CountryCode = "ENG",
-					CountryName = "England",
-					Email = "user@mail.com",
-					FirstName = "first name",
-					LastName = "last name",
-					Line1 = "line 1",
-					Organization = "org1"
-					}
-				}.ToList(),
+                {
+                    new webModel.Address {
+                    Name = "some name",
+                    AddressType = AddressType.Shipping,
+                    City = "london",
+                    Phone = "+68787687",
+                    PostalCode = "22222",
+                    CountryCode = "ENG",
+                    CountryName = "England",
+                    Email = "user@mail.com",
+                    FirstName = "first name",
+                    LastName = "last name",
+                    Line1 = "line 1",
+                    Organization = "org1"
+                    }
+                }.ToList(),
                 Notes = new webModel.Note[] { new webModel.Note { Title = "1111", Body = "dfsdfs sdf sdf sdf sd" } },
                 Emails = new[] { "uuu@mail.ru", "ssss@mail.ru" },
                 Phones = new[] { "2322232", "32323232" },
@@ -142,14 +142,15 @@ namespace VirtoCommerce.CustomerModule.Test
 
         private static CustomerModuleController GetContactController()
         {
-            Func<IPlatformRepository> platformRepositoryFactory = () => new PlatformRepository("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor());
-            Func<ICustomerRepository> customerRepositoryFactory = () => new CustomerRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor());
+            Func<IPlatformRepository> platformRepositoryFactory = () => new PlatformRepository("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor(null));
+            Func<ICustomerRepository> customerRepositoryFactory = () => new CustomerRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor(null));
 
             var dynamicPropertyService = new DynamicPropertyService(platformRepositoryFactory);
-            var contactService = new ContactServiceImpl(customerRepositoryFactory, dynamicPropertyService);
+            var contactService = new ContactServiceImpl(customerRepositoryFactory, dynamicPropertyService, null);
             var orgService = new OrganizationServiceImpl(customerRepositoryFactory, dynamicPropertyService);
             var searchService = new CustomerSearchServiceImpl(customerRepositoryFactory);
-            return new CustomerModuleController(contactService, orgService, searchService);
+
+            return new CustomerModuleController(contactService, orgService, searchService, null);
         }
     }
 }

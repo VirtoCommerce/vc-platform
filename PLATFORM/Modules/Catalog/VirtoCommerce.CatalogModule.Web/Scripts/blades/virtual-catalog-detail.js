@@ -1,6 +1,7 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.virtualCatalogDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.catalogModule.catalogs', 'platformWebApp.dialogService', function ($scope, bladeNavigationService, catalogs, dialogService) {
+.controller('virtoCommerce.catalogModule.virtualCatalogDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.catalogModule.catalogs', function ($scope, bladeNavigationService, catalogs) {
     var blade = $scope.blade;
+    blade.updatePermission = 'catalog:update';
 
     blade.refresh = function (parentRefresh) {
         if (blade.isNew) {
@@ -28,8 +29,15 @@
     };
 
     function isDirty() {
-        return !angular.equals(blade.currentEntity, blade.origEntity);
-    };
+        return !angular.equals(blade.currentEntity, blade.origEntity) && blade.hasUpdatePermission();
+    }
+
+    function canSave() {
+        return isDirty() && formScope && formScope.$valid;
+    }
+
+    var formScope;
+    $scope.setForm = function (form) { formScope = form; }
 
     $scope.cancelChanges = function () {
         angular.copy(blade.origEntity, blade.currentEntity);
@@ -59,32 +67,9 @@
     };
 
     blade.onClose = function (closeCallback) {
-        closeChildrenBlades();
-        if (isDirty()) {
-            var dialog = {
-                id: "confirmCurrentBladeClose",
-                title: "catalog.dialogs.virtual-catalog-save.title",
-                message: "catalog.dialogs.virtual-catalog-save.message"
-            };
-            dialog.callback = function (needSave) {
-                if (needSave) {
-                    $scope.saveChanges();
-                }
-                closeCallback();
-            };
-            dialogService.showConfirmationDialog(dialog);
-        }
-        else {
-            closeCallback();
-        }
+        bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, $scope.saveChanges, closeCallback, "catalog.dialogs.virtual-catalog-save.title", "catalog.dialogs.virtual-catalog-save.message");
     };
-
-    function closeChildrenBlades() {
-        angular.forEach(blade.childrenBlades.slice(), function (child) {
-            bladeNavigationService.closeBlade(child);
-        });
-    }
-
+    
     function initializeToolbar() {
         if (!blade.isNew) {
             blade.toolbarCommands = [
@@ -93,10 +78,8 @@
                     executeMethod: function () {
                         $scope.saveChanges();
                     },
-                    canExecuteMethod: function () {
-                        return isDirty();
-                    },
-                    permission: 'catalog:update'
+                    canExecuteMethod: canSave,
+                    permission: blade.updatePermission
                 },
                 {
                     name: "platform.commands.reset", icon: 'fa fa-undo',
@@ -104,7 +87,7 @@
                         angular.copy(blade.origEntity, blade.currentEntity);
                     },
                     canExecuteMethod: isDirty,
-                    permission: 'catalog:update'
+                    permission: blade.updatePermission
                 }
             ];
         }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Web.Hosting;
@@ -12,7 +13,6 @@ using Lucene.Net.Store;
 using VirtoCommerce.Domain.Search.Model;
 using VirtoCommerce.Domain.Search.Services;
 using u = Lucene.Net.Util;
-using Lucene.Net.Analysis;
 
 namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
 {
@@ -26,11 +26,8 @@ namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
 
         private readonly ISearchConnection _connection;
         private readonly Dictionary<string, List<Document>> _pendingDocuments = new Dictionary<string, List<Document>>();
-        private bool _autoCommit = true;
-        private int _autoCommitCount = 100;
         private bool _isInitialized;
-        private string _location = String.Empty;
-        private ISearchQueryBuilder _queryBuilder;
+        private string _location = string.Empty;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="LuceneSearchProvider" /> class.
@@ -39,7 +36,10 @@ namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
         /// <param name="connection">The connection.</param>
         public LuceneSearchProvider(ISearchQueryBuilder queryBuilder, ISearchConnection connection)
         {
-            _queryBuilder = queryBuilder;
+            AutoCommit = true;
+            AutoCommitCount = 100;
+
+            QueryBuilder = queryBuilder;
             _connection = connection;
             Init();
         }
@@ -50,33 +50,13 @@ namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
         /// <value>
         ///     <c>true</c> if [auto commit]; otherwise, <c>false</c>.
         /// </value>
-        public bool AutoCommit
-        {
-            get
-            {
-                return _autoCommit;
-            }
-            set
-            {
-                _autoCommit = value;
-            }
-        }
+        public bool AutoCommit { get; set; }
 
         /// <summary>
         ///     Gets or sets the auto commit count.
         /// </summary>
         /// <value>The auto commit count.</value>
-        public int AutoCommitCount
-        {
-            get
-            {
-                return _autoCommitCount;
-            }
-            set
-            {
-                _autoCommitCount = value;
-            }
-        }
+        public int AutoCommitCount { get; set; }
 
         /// <summary>
         ///     Gets or sets the query builder.
@@ -84,17 +64,7 @@ namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
         /// <value>
         ///     The query builder.
         /// </value>
-        public ISearchQueryBuilder QueryBuilder
-        {
-            get
-            {
-                return _queryBuilder;
-            }
-            set
-            {
-                _queryBuilder = value;
-            }
-        }
+        public ISearchQueryBuilder QueryBuilder { get; set; }
 
         /// <summary>
         ///     Closes the specified provider.
@@ -257,17 +227,18 @@ namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
                 {
                     var numDocs = criteria.StartingRecord + criteria.RecordsToRetrieve;
 
+                    // numDocs must be > 0
+                    if (numDocs < 1)
+                    {
+                        numDocs = 1;
+                    }
+
                     if (criteria.Sort != null)
                     {
                         var fields = criteria.Sort.GetSort();
 
-                        docs = searcher.Search(
-                            q.Query,
-                            filter,
-                            numDocs,
-                            new Sort(
-                                fields.Select(field => new SortField(field.FieldName, field.DataType, field.IsDescending))
-                                    .ToArray()));
+                        docs = searcher.Search(q.Query, filter, numDocs,
+                            new Sort(fields.Select(field => new SortField(field.FieldName, field.DataType, field.IsDescending)).ToArray()));
                     }
                     else
                     {
@@ -341,7 +312,7 @@ namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
         /// <returns></returns>
         private string GetFolderName(string scope, string documentType)
         {
-            return String.Format("{0}-{1}", scope, documentType);
+            return string.Format(CultureInfo.InvariantCulture, "{0}-{1}", scope, documentType);
         }
 
         /// <summary>

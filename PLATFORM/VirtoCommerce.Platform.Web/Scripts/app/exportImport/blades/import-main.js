@@ -1,24 +1,23 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.exportImport.importMainController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.exportImport.resource', 'FileUploader', 'platformWebApp.authService', function ($scope, bladeNavigationService, exportImportResourse, FileUploader, authService) {
+.controller('platformWebApp.exportImport.importMainController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.exportImport.resource', 'FileUploader', function ($scope, bladeNavigationService, exportImportResourse, FileUploader) {
     var blade = $scope.blade;
+    blade.updatePermission = 'platform:exportImport:import';
     blade.headIcon = 'fa-download';
     blade.title = 'platform.blades.import-main.title';
     blade.isLoading = false;
-
     $scope.importRequest = {};
 
     $scope.$on("new-notification-event", function (event, notification) {
         if (blade.notification && notification.id == blade.notification.id) {
-        	angular.copy(notification, blade.notification);
-        	if(notification.errorCount > 0)
-        	{
-        		bladeNavigationService.setError('Import error', blade);
-        	}
+            angular.copy(notification, blade.notification);
+            if (notification.errorCount > 0) {
+                bladeNavigationService.setError('Import error', blade);
+            }
         }
     });
 
     $scope.canStartProcess = function () {
-    	return authService.checkPermission('platform:exportImport:import') && (($scope.importRequest.modules && $scope.importRequest.modules.length > 0) || $scope.importRequest.handleSecurity || $scope.importRequest.handleSettings || $scope.importRequest.handleBinaryData);
+        return blade.hasUpdatePermission() && (_.any($scope.importRequest.modules) || $scope.importRequest.handleSecurity || $scope.importRequest.handleSettings || $scope.importRequest.handleBinaryData);
     }
 
     $scope.startProcess = function () {
@@ -29,8 +28,8 @@
     }
 
     $scope.updateModuleSelection = function () {
-    	var selection = _.where($scope.importRequest.exportManifest.modules, { isChecked: true });
-    	$scope.importRequest.modules = _.pluck(selection, 'id');
+        var selection = _.where($scope.importRequest.exportManifest.modules, { isChecked: true });
+        $scope.importRequest.modules = _.pluck(selection, 'id');
     };
 
     if (!$scope.uploader) {
@@ -42,12 +41,12 @@
         var uploader = $scope.uploader = new FileUploader({
             scope: $scope,
             headers: { Accept: 'application/json' },
-            url: 'api/platform/assets?folderUrl=tmp',
+            url: 'api/platform/assets/localstorage',
             method: 'POST',
             autoUpload: true,
             removeAfterUpload: true
         });
-        
+
         // ADDING FILTERS
         // zip only
         uploader.filters.push({
@@ -67,21 +66,22 @@
         };
 
         uploader.onSuccessItem = function (fileItem, asset, status, headers) {
-        	$scope.importRequest.fileUrl = asset[0].relativeUrl;
+        	$scope.importRequest.fileUrl = asset[0].url;
+        	$scope.importRequest.fileName = asset[0].name;
 
-        	exportImportResourse.loadExportManifest({ fileUrl: $scope.importRequest.fileUrl }, function (data) {
+            exportImportResourse.loadExportManifest({ fileUrl: $scope.importRequest.fileUrl }, function (data) {
                 // select all available data for import
-        	    $scope.importRequest.handleSecurity = data.handleSecurity;
-        	    $scope.importRequest.handleSettings = data.handleSettings;
-        	    $scope.importRequest.handleBinaryData = data.handleBinaryData;
+                $scope.importRequest.handleSecurity = data.handleSecurity;
+                $scope.importRequest.handleSettings = data.handleSettings;
+                $scope.importRequest.handleBinaryData = data.handleBinaryData;
 
-        	    _.each(data.modules, function (x) {
-        	        x.isChecked = true;
-        	    });
-        		
-        	    $scope.importRequest.exportManifest = data;
-        	    $scope.updateModuleSelection();
-          	    blade.isLoading = false;
+                _.each(data.modules, function (x) {
+                    x.isChecked = true;
+                });
+
+                $scope.importRequest.exportManifest = data;
+                $scope.updateModuleSelection();
+                blade.isLoading = false;
             }, function (error) {
                 bladeNavigationService.setError('Error ' + error.status, blade);
             });

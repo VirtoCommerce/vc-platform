@@ -1,17 +1,11 @@
 ﻿angular.module('virtoCommerce.catalogModule')
     .controller('virtoCommerce.catalogModule.categoriesItemsListController', [
-        '$sessionStorage', '$localStorage', '$timeout', '$scope', 'virtoCommerce.catalogModule.categories', 'virtoCommerce.catalogModule.items', 'virtoCommerce.catalogModule.listEntries', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.authService', 'uiGridConstants', 'platformWebApp.uiGridHelper',
-        function ($sessionStorage, $localStorage, $timeout, $scope, categories, items, listEntries, bladeNavigationService, dialogService, authService, uiGridConstants, uiGridHelper) {
-            $scope.uiGridConstants = uiGridConstants;
-
-            //pagination settings
-            $scope.pageSettings = {};
-            $scope.pageSettings.totalItems = 0;
-            $scope.pageSettings.currentPage = 1;
-            $scope.pageSettings.numPages = 5;
-            $scope.pageSettings.itemsPerPageCount = 20;
+        '$sessionStorage', '$localStorage', '$timeout', '$scope', 'virtoCommerce.catalogModule.categories', 'virtoCommerce.catalogModule.items', 'virtoCommerce.catalogModule.listEntries', 'platformWebApp.bladeUtils', 'platformWebApp.dialogService', 'platformWebApp.authService', 'platformWebApp.uiGridHelper',
+        function ($sessionStorage, $localStorage, $timeout, $scope, categories, items, listEntries, bladeUtils, dialogService, authService, uiGridHelper) {
+            $scope.uiGridConstants = uiGridHelper.uiGridConstants;
 
             var blade = $scope.blade;
+            var bladeNavigationService = bladeUtils.bladeNavigationService;
 
             blade.refresh = function () {
                 blade.isLoading = true;
@@ -34,7 +28,7 @@
                         transformByFilters(data.listEntries);
 
                         blade.isLoading = false;
-                        $scope.pageSettings.totalItems = angular.isDefined(data.totalCount) ? data.totalCount : 0;
+                        $scope.pageSettings.totalItems = data.totalCount;
                         $scope.items = data.listEntries;
 
                         //Set navigation breadcrumbs
@@ -79,8 +73,6 @@
             }
 
             $scope.edit = function (listItem) {
-                closeChildrenBlades();
-
                 if (listItem.type === 'category') {
                     blade.setSelectedItem(listItem);
                     blade.showCategoryBlade(listItem);
@@ -155,7 +147,7 @@
                     listItemLinkCount: listEntryLinks.length - listCategoryLinkCount,
                     callback: function (remove) {
                         if (remove) {
-                            closeChildrenBlades();
+                            bladeNavigationService.closeChildrenBlades(blade);
                             blade.isLoading = true;
                             if (listEntryLinks.length > 0) {
                                 listEntries.deletelinks(listEntryLinks, function (data, headers) {
@@ -187,7 +179,7 @@
             }
 
             function mapChecked() {
-                closeChildrenBlades();
+                bladeNavigationService.closeChildrenBlades(blade);
 
                 var selection = $scope.gridApi.selection.getSelectedRows();
                 var listEntryLinks = [];
@@ -322,17 +314,6 @@
                 return blade.catalog.virtual && listEntry.links && (listEntry.type === 'category' ? listEntry.links.length > 0 : listEntry.links.length > 1);
             }
 
-            blade.onClose = function (closeCallback) {
-                closeChildrenBlades();
-                closeCallback();
-            };
-
-            function closeChildrenBlades() {
-                angular.forEach(blade.childrenBlades.slice(), function (child) {
-                    bladeNavigationService.closeBlade(child);
-                });
-            }
-
             blade.toolbarCommands = [
                 {
                     name: "platform.commands.refresh",
@@ -456,8 +437,6 @@
                     name: "platform.commands.add",
                     icon: 'fa fa-plus',
                     executeMethod: function () {
-                        closeChildrenBlades();
-
                         var newBlade = {
                             id: 'listItemChild',
                             title: 'catalog.blades.categories-items-add.title',
@@ -574,14 +553,10 @@
                     }
 
                     $timeout(function () {
-                        gridApi.core.on.sortChanged($scope, function () {
-                            if (!blade.isLoading)
-                                blade.refresh();
-                        });
+                        uiGridHelper.bindRefreshOnSortChanged($scope);
                     }, 200);
                 });
-
-                $scope.$watch('pageSettings.currentPage', blade.refresh);
+                bladeUtils.initializePagination($scope);
             };
 
             $scope.getGroupInfo = function (groupEntity) {

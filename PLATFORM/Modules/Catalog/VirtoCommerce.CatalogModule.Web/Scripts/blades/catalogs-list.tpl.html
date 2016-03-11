@@ -1,27 +1,59 @@
-﻿<div class="blade-content">
+﻿<div class="blade-static" ng-if="blade.currentEntities.length">
+    <div class="form-group">
+        <div class="form-input __search">
+            <input placeholder="{{'platform.placeholders.search-keyword' | translate }}" ng-model="blade.searchText" ng-keyup="gridApi.grid.queueGridRefresh()">
+            <button class="btn __other" style="position: relative;right: 45px;">
+                <i class="btn-ico fa fa-remove" title="Clear" ng-click="blade.searchText='';gridApi.grid.queueGridRefresh()"></i>
+            </button>
+        </div>
+        <p class="form-count">{{ 'platform.list.count' | translate }}: <span class="count">{{filteredEntitiesCount}}</span></p>
+    </div>
+</div>
+<div class="blade-content __medium-wide">
     <div class="blade-inner">
-        <div class="inner-block clearfix">
-            <ul class="list __items" ng-init="blade.hoverNodeid=null">
-                <li class="list-item" ng-repeat="data in objects track by data.id" ng-class="{'__hovered': data.id === blade.hoverNodeid, '__selected': data.id === selectedNodeId}" ng-click='selectNode(data)' context-menu='blade.hoverNodeid = data.id' data-target="cl_menu{{$index}}">
-                    <div class="list-action" left-click-menu='blade.hoverNodeid = data.id' data-target="cl_menu{{$index}}">
-                        <i class="list-ico fa fa-ellipsis-v"></i>
-                    </div>
-                    <i class="list-ico fa" ng-class="data.virtual ? 'fa-cloud' : 'fa-folder'"></i>
-                    <span class="list-name" ng-show="data.virtual">{{ 'catalog.blades.catalogs-list.labels.virtual' | translate:{ name: data.name } }}</span>
-                    <span class="list-name" ng-hide="data.virtual">{{data.name}}</span>
-                    <ul class="menu __context" role="menu" id="cl_menu{{$index}}">
-                        <li class="menu-item" ng-click='editCatalog(data)' va-permission="catalog:read" security-scopes="data.securityScopes">
-                            <i class="menu-ico fa fa-edit"></i> {{'platform.commands.manage' | translate}}
-                        </li>
-                        <li class="menu-item" ng-click='deleteCatalog(data)' va-permission="catalog:delete">
-                            <i class="menu-ico fa fa-trash-o"></i> {{'platform.commands.delete' | translate}}
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-            <div class="note" ng-if="objects.length == 0">
-                {{'platform.list.no-data' | translate}}
+        <div class="inner-block" ng-init="setGridOptions({
+                    useExternalSorting: true,
+                    rowTemplate: 'list.row.html',
+                    virtualizationThreshold: 1000,
+                    rowHeight: 60,
+                    columnDefs: [
+                                { name: 'actions', displayName: '', enableColumnResizing: false, enableSorting: false, width: 30, cellTemplate: 'list-actions.cell.html', pinnedLeft:true },
+                                {
+                                    displayName: 'catalog.blades.catalogs-list.labels.name', name: 'name',
+                                    sort: { direction: uiGridConstants.ASC }, cellTemplate: 'list-name.cell.html'
+                                }
+                    ]})">
+            <div class="table-wrapper" ng-if="blade.currentEntities.length">
+                <div ui-grid="gridOptions" ui-grid-auto-resize ui-grid-save-state ui-grid-resize-columns ui-grid-move-columns ui-grid-pinning ui-grid-height></div>
+                <ul class="menu __context" role="menu" id="cl_menu">
+                    <li class="menu-item" ng-click='editCatalog(contextMenuEntity)' va-permission="catalog:read" security-scopes="contextMenuEntity.securityScopes">
+                        <i class="menu-ico fa fa-edit"></i> {{'platform.commands.manage' | translate}}
+                    </li>
+                    <li class="menu-item" ng-click='deleteCatalog(contextMenuEntity)' va-permission="catalog:delete">
+                        <i class="menu-ico fa fa-trash-o"></i> {{'platform.commands.delete' | translate}}
+                    </li>
+                </ul>
             </div>
+            <div class="note" ng-if="!blade.currentEntities.length">{{ 'platform.list.no-data' | translate }}</div>
         </div>
     </div>
 </div>
+
+<script type="text/ng-template" id="list.row.html">
+    <div ng-click='grid.appScope.selectNode(row.entity)' ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + '-' + col.uid + '-cell'" class="ui-grid-cell" ng-class="{'ui-grid-row-header-cell': col.isRowHeader, '__hovered': grid.appScope.contextMenuEntity === row.entity, '__selected': row.entity.id===grid.appScope.selectedNodeId }" role="{{col.isRowHeader ? 'rowheader' : 'gridcell' }}" ui-grid-cell context-menu="grid.appScope.contextMenuEntity = row.entity" data-target="cl_menu"></div>
+</script>
+
+<script type="text/ng-template" id="list-actions.cell.html">
+    <div class="ui-grid-actions" left-click-menu="grid.appScope.contextMenuEntity = row.entity" data-target="cl_menu">
+        <i class="fa fa-ellipsis-v"></i>
+    </div>
+</script>
+<script type="text/ng-template" id="list-name.cell.html">
+    <div class="ui-grid-cell-contents">
+        <div class="inner-contents">
+            <i class="table-ico fa" ng-class="row.entity.virtual ? 'fa-cloud' : 'fa-folder'"></i>
+            <span class="table-t" ng-show="row.entity.virtual">{{ 'catalog.blades.catalogs-list.labels.virtual' | translate: { name: COL_FIELD } }}</span>
+            <span class="table-t" ng-hide="row.entity.virtual">{{COL_FIELD}}</span>
+        </div>
+    </div>
+</script>

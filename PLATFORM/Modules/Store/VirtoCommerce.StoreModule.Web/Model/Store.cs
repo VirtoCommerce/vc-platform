@@ -4,11 +4,12 @@ using Newtonsoft.Json.Converters;
 using VirtoCommerce.Domain.Commerce.Model;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
+using VirtoCommerce.Platform.Core.Settings;
 using coreModel = VirtoCommerce.Domain.Store.Model;
 
 namespace VirtoCommerce.StoreModule.Web.Model
 {
-	public class Store : AuditableEntity
+	public class Store : AuditableEntity, IHasDynamicProperties, ISeoSupport
     {
         public string Name { get; set; }
 
@@ -72,12 +73,20 @@ namespace VirtoCommerce.StoreModule.Web.Model
 
         public FulfillmentCenter ReturnsFulfillmentCenter { get; set; }
 
+        /// <summary>
+        /// All store supported languages
+        /// </summary>
         public ICollection<string> Languages { get; set; }
 
+        /// <summary>
+        /// All store supported currencies
+        /// </summary>
         public ICollection<string> Currencies { get; set; }
 
-        public string ObjectType { get; set; }
-        public ICollection<DynamicObjectProperty> DynamicProperties { get; set; }
+        /// <summary>
+        /// All linked stores (their accounts can be reused here)
+        /// </summary>
+        public ICollection<string> TrustedGroups { get; set; }
 
         public ICollection<PaymentMethod> PaymentMethods { get; set; }
 
@@ -85,9 +94,19 @@ namespace VirtoCommerce.StoreModule.Web.Model
 
         public ICollection<TaxProvider> TaxProviders { get; set; }
 
-        public ICollection<SeoInfo> SeoInfos { get; set; }
-
         public string[] SecurityScopes { get; set; }
+
+        #region ISeoSupport Members
+        public ICollection<SeoInfo> SeoInfos { get; set; }
+        #endregion
+
+        #region IHasDynamicProperties Members
+        public string ObjectType { get; set; }
+        public ICollection<DynamicObjectProperty> DynamicProperties { get; set; }
+        #endregion
+
+        public ICollection<Setting> Settings { get; set; }
+
 
     }
 }

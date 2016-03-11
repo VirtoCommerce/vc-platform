@@ -87,45 +87,51 @@ namespace VirtoCommerce.Platform.Core.Common
 			return retVal;
 		}
 
-		public static T[] GetFlatObjectsListWithInterface<T>(this object obj)
-		{
-			var retVal = new List<T>();
+        public static T[] GetFlatObjectsListWithInterface<T>(this object obj, List<T> resultList = null)
+        {
+            var retVal = new List<T>();
 
-			var objectType = obj.GetType();
+            if (resultList == null)
+            {
+                resultList = new List<T>();
+            }
+            //Ignore cycling references
+            if (!resultList.Any(x => Object.ReferenceEquals(x, obj)))
+            {
+                var objectType = obj.GetType();
 
-			if(objectType.GetInterface(typeof(T).Name) != null)
-			{
-				retVal.Add((T)obj);
-			}
+                if (objectType.GetInterface(typeof(T).Name) != null)
+                {
+                    retVal.Add((T)obj);
+                    resultList.Add((T)obj);
+                }
 
-			var properties = objectType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+                var properties = objectType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
-			var objects = properties.Where(x => x.PropertyType.GetInterface(typeof(T).Name) != null)
-									.Select(x =>(T)x.GetValue(obj)).ToList();
+                var objects = properties.Where(x => x.PropertyType.GetInterface(typeof(T).Name) != null)
+                                        .Select(x => (T)x.GetValue(obj)).ToList();
 
-            //Recursive call for single properties
-			retVal.AddRange(objects.Where(x=> x != null).SelectMany(x => x.GetFlatObjectsListWithInterface<T>()));
+                //Recursive call for single properties
+                retVal.AddRange(objects.Where(x => x != null).SelectMany(x => x.GetFlatObjectsListWithInterface<T>(resultList)));
 
-            //Handle collection and arrays
-			var collections = properties.Select(x =>  x.GetValue(obj, null))
-										.Where(x => x is IEnumerable && !(x is String))
-										.Cast<IEnumerable>();
+                //Handle collection and arrays
+                var collections = properties.Select(x => x.GetValue(obj, null))
+                                            .Where(x => x is IEnumerable && !(x is String))
+                                            .Cast<IEnumerable>();
 
-			foreach(var collection in collections)
-			{
-				foreach(var collectionObject in collection)
-				{
-					if (collectionObject is T)
-					{
-						retVal.AddRange(collectionObject.GetFlatObjectsListWithInterface<T>());
-					}
-				}
-			}
+                foreach (var collection in collections)
+                {
+                    foreach (var collectionObject in collection)
+                    {
+                        if (collectionObject is T)
+                        {
+                            retVal.AddRange(collectionObject.GetFlatObjectsListWithInterface<T>(resultList));
+                        }
+                    }
+                }
+            }
+            return retVal.ToArray();
+        }
 
-			return retVal.ToArray();
-		
-			
-		}
-
-	}
+    }
 }

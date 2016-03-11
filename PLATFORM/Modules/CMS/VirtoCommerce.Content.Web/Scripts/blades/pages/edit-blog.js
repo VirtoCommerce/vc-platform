@@ -5,6 +5,7 @@
     $scope.setForm = function (form) { $scope.formScope = formScope = form; }
     
     var blade = $scope.blade;
+    blade.updatePermission = 'content:update';
     blade.originalEntity = angular.copy(blade.entity);
 
     blade.initialize = function () {
@@ -18,7 +19,7 @@
 				    canExecuteMethod: function () {
 				        return !angular.equals(blade.originalEntity, blade.entity) && formScope.$valid;
 				    },
-				    permission: 'marketing:update'
+				    permission: blade.updatePermission
 				},
 				{
 				    name: "platform.commands.reset", icon: 'fa fa-undo',
@@ -28,7 +29,7 @@
 				    canExecuteMethod: function () {
 				        return blade.entity.name !== blade.originalEntity.name;
 				    },
-				    permission: 'marketing:update'
+				    permission: blade.updatePermission
 				},
                 {
                     name: "platform.commands.delete", icon: 'fa fa-trash',
@@ -50,7 +51,7 @@
                     canExecuteMethod: function () {
                         return true;
                     },
-                    permission: 'marketing:update'
+                    permission: blade.updatePermission
                 }
             ];
         }
@@ -62,7 +63,7 @@
         blade.isLoading = true;
 
         if (blade.isNew) {
-            pages.createBlog({ storeId: blade.choosenStoreId, blogName: blade.entity.name }, {}, function (data) {
+            pages.createBlog({ storeId: blade.chosenStoreId, blogName: blade.entity.name }, {}, function (data) {
                 blade.parentBlade.isLoading = true;
                 blade.parentBlade.initialize();
                 bladeNavigationService.closeBlade(blade);
@@ -71,7 +72,7 @@
             function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); blade.isLoading = false; });
         }
         else {
-            pages.updateBlog({ storeId: blade.choosenStoreId, blogName: blade.entity.name, oldBlogName: blade.originalEntity.name }, {}, function (data) {
+            pages.updateBlog({ storeId: blade.chosenStoreId, blogName: blade.entity.name, oldBlogName: blade.originalEntity.name }, {}, function (data) {
                 blade.parentBlade.initialize();
                 blade.parentBlade.checkPreviousStep();
                 blade.originalEntity = angular.copy(blade.entity);
@@ -82,7 +83,7 @@
     }
 
     blade.deleteBlog = function (data) {
-        pages.deleteBlog({ storeId: blade.choosenStoreId, blogName: blade.entity.name }, function () {
+        pages.deleteBlog({ storeId: blade.chosenStoreId, blogName: blade.entity.name }, function () {
             blade.parentBlade.isLoading = true;
             blade.parentBlade.initialize();
             blade.parentBlade.checkPreviousStep();

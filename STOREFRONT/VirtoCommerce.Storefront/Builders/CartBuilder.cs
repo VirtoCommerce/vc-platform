@@ -24,6 +24,7 @@ namespace VirtoCommerce.Storefront.Builders
 {
     public class CartBuilder : ICartBuilder, IAsyncObserver<UserLoginEvent>
     {
+        private readonly ICommerceCoreModuleApi _commerceApi;
         private readonly IShoppingCartModuleApi _cartApi;
         private readonly IPromotionEvaluator _promotionEvaluator;
         private readonly ICatalogSearchService _catalogSearchService;
@@ -33,12 +34,13 @@ namespace VirtoCommerce.Storefront.Builders
         private const string _cartCacheRegion = "CartRegion";
 
         [CLSCompliant(false)]
-        public CartBuilder(IShoppingCartModuleApi cartApi, IPromotionEvaluator promotionEvaluator, ICatalogSearchService catalogSearchService, ICacheManager<object> cacheManager)
+        public CartBuilder(IShoppingCartModuleApi cartApi, IPromotionEvaluator promotionEvaluator, ICatalogSearchService catalogSearchService, ICommerceCoreModuleApi commerceApi, ICacheManager<object> cacheManager)
         {
             _cartApi = cartApi;
             _promotionEvaluator = promotionEvaluator;
             _catalogSearchService = catalogSearchService;
             _cacheManager = cacheManager;
+            _commerceApi = commerceApi;
         }
 
         public string CartCaheKey
@@ -69,8 +71,8 @@ namespace VirtoCommerce.Storefront.Builders
             {
                 ShoppingCart retVal;
 
-                var cartSearchResult = await _cartApi.CartModuleGetCurrentCartAsync(store.Id, customer.Id);
-                if (cartSearchResult == null)
+                var cart = await _cartApi.CartModuleGetCurrentCartAsync(store.Id, customer.Id);
+                if (cart == null)
                 {
                     retVal = new ShoppingCart(currency, language);
 
@@ -90,8 +92,7 @@ namespace VirtoCommerce.Storefront.Builders
                 }
                 else
                 {
-                    var detalizedCart = await _cartApi.CartModuleGetCartByIdAsync(cartSearchResult.Id);
-                    retVal = detalizedCart.ToWebModel(currency, language);
+                    retVal = cart.ToWebModel(currency, language);
                 }
                 retVal.Customer = customer;
 
@@ -107,7 +108,7 @@ namespace VirtoCommerce.Storefront.Builders
             AddLineItem(product.ToLineItem(_cart.Language, quantity));
 
 
-            await EvaluatePromotionsAsync();
+            await EvaluatePromotionsAndTaxes();
 
             return this;
         }
@@ -127,7 +128,7 @@ namespace VirtoCommerce.Storefront.Builders
                     _cart.Items.Remove(lineItem);
                 }
 
-                await EvaluatePromotionsAsync();
+                await EvaluatePromotionsAndTaxes();
             }
 
             return this;
@@ -148,7 +149,7 @@ namespace VirtoCommerce.Storefront.Builders
                 }
             }
 
-            await EvaluatePromotionsAsync();
+            await EvaluatePromotionsAndTaxes();
 
             return this;
         }
@@ -164,7 +165,7 @@ namespace VirtoCommerce.Storefront.Builders
                 }
             }
 
-            await EvaluatePromotionsAsync();
+            await EvaluatePromotionsAndTaxes();
 
             return this;
         }
@@ -177,7 +178,7 @@ namespace VirtoCommerce.Storefront.Builders
 
                 _cart.Items.Remove(lineItem);
 
-                await EvaluatePromotionsAsync();
+                await EvaluatePromotionsAndTaxes();
             }
 
             return this;
@@ -187,7 +188,7 @@ namespace VirtoCommerce.Storefront.Builders
         {
             _cart.Items.Clear();
 
-            await EvaluatePromotionsAsync();
+            await EvaluatePromotionsAndTaxes();
 
             return this;
         }
@@ -200,7 +201,7 @@ namespace VirtoCommerce.Storefront.Builders
                 Code = couponCode
             };
 
-            await EvaluatePromotionsAsync();
+            await EvaluatePromotionsAndTaxes();
 
             return this;
         }
@@ -209,64 +210,89 @@ namespace VirtoCommerce.Storefront.Builders
         {
             _cart.Coupon = null;
 
-            await EvaluatePromotionsAsync();
+            await EvaluatePromotionsAndTaxes();
 
             return this;
         }
 
-        public virtual async Task<ICartBuilder> AddOrUpdateShipmentAsync(string shipmentId, Address shippingAddress, ICollection<string> itemIds, string shippingMethodCode)
+        public virtual async Task<ICartBuilder> AddOrUpdateShipmentAsync(ShipmentUpdateModel updateModel)
         {
-            var shipment = _cart.Shipments.FirstOrDefault(s => s.Id == shipmentId);
-            if (shipment == null)
+            var changedShipment = updateModel.ToShipmentModel(_cart.Currency);
+            foreach (var updateItemModel in updateModel.Items)
+            {
+                var cartItem = _cart.Items.FirstOrDefault(i => i.Id == updateItemModel.LineItemId);
+                if (cartItem != null)
+                {
+                    var shipmentItem = cartItem.ToShipmentItem();
+                    shipmentItem.Quantity = updateItemModel.Quantity;
+                    changedShipment.Items.Add(shipmentItem);
+                }
+            }
+
+            Shipment shipment = null;
+            if (!string.IsNullOrEmpty(changedShipment.Id))
+            {
+                shipment = _cart.Shipments.FirstOrDefault(s => s.Id == changedShipment.Id);
+                if (shipment == null)
+                {
+                    throw new StorefrontException(string.Format("Shipment with {0} not found", changedShipment.Id));
+                }
+            }
+            else
             {
                 shipment = new Shipment(_cart.Currency);
-            }
-
-            if (shippingAddress != null)
-            {
-                shipment.DeliveryAddress = shippingAddress;
-            }
-
-            if (itemIds != null)
-            {
-                foreach (var itemId in itemIds)
-                {
-                    var cartItem = _cart.Items.FirstOrDefault(i => i.Id == itemId);
-                    if (cartItem != null)
-                    {
-                        var newShipmentItem = cartItem.ToShipmentItem();
-                        var shipmentItem = shipment.Items.FirstOrDefault(i => i.LineItem != null && i.LineItem.Id == itemId);
-                        if (shipmentItem != null)
-                        {
-                            shipmentItem = newShipmentItem;
-                        }
-                        else
-                        {
-                            shipment.Items.Add(newShipmentItem);
-                        }
-                    }
-                }
-            }
-
-            if (!string.IsNullOrEmpty(shippingMethodCode))
-            {
-                var availableShippingMethods = await GetAvailableShippingMethodsAsync();
-                var shippingMethod = availableShippingMethods.FirstOrDefault(sm => sm.ShipmentMethodCode == shippingMethodCode);
-                if (shippingMethod != null)
-                {
-                    shipment.ShipmentMethodCode = shippingMethod.ShipmentMethodCode;
-                    shipment.ShippingPrice = shippingMethod.Price;
-                    shipment.TaxType = shippingMethod.TaxType;
-                }
-            }
-
-            if (shipment.IsTransient())
-            {
-
                 _cart.Shipments.Add(shipment);
             }
 
-            await EvaluatePromotionsAsync();
+            if (changedShipment.DeliveryAddress != null)
+            {
+                shipment.DeliveryAddress = changedShipment.DeliveryAddress;
+            }
+
+            //Update shipment items
+            if (changedShipment.Items != null)
+            {
+                Action<EntryState, CartShipmentItem, CartShipmentItem> pathAction = (changeState, sourceItem, targetItem) =>
+                {
+                    if (changeState == EntryState.Added)
+                    {
+                        var cartLineItem = _cart.Items.FirstOrDefault(i => i.Id == sourceItem.LineItem.Id);
+                        if (cartLineItem != null)
+                        {
+                            var newShipmentItem = cartLineItem.ToShipmentItem();
+                            newShipmentItem.Quantity = sourceItem.Quantity;
+                            shipment.Items.Add(newShipmentItem);
+                        }
+                    }
+                    else if (changeState == EntryState.Modified)
+                    {
+                        targetItem.Quantity = sourceItem.Quantity;
+                    }
+                    else if (changeState == EntryState.Deleted)
+                    {
+                        shipment.Items.Remove(sourceItem);
+                    }
+                };
+
+                var shipmentItemComparer = AnonymousComparer.Create((CartShipmentItem x) => x.LineItem.Id);
+                changedShipment.Items.CompareTo(shipment.Items, shipmentItemComparer, pathAction);
+            }
+
+            if (!string.IsNullOrEmpty(changedShipment.ShipmentMethodCode))
+            {
+                var availableShippingMethods = await GetAvailableShippingMethodsAsync();
+                var shippingMethod = availableShippingMethods.FirstOrDefault(sm => sm.ShipmentMethodCode == changedShipment.ShipmentMethodCode);
+                if (shippingMethod == null)
+                {
+                    throw new StorefrontException("Unknown shipment method " + changedShipment.ShipmentMethodCode);
+                }
+
+                shipment.ShipmentMethodCode = shippingMethod.ShipmentMethodCode;
+                shipment.ShippingPrice = shippingMethod.Price;
+                shipment.TaxType = shippingMethod.TaxType;
+            }
+
+            await EvaluatePromotionsAndTaxes();
 
             return this;
         }
@@ -279,37 +305,46 @@ namespace VirtoCommerce.Storefront.Builders
                 _cart.Shipments.Remove(shipment);
             }
 
-            await EvaluatePromotionsAsync();
+            await EvaluatePromotionsAndTaxes();
 
             return this;
         }
 
-        public virtual async Task<ICartBuilder> AddOrUpdatePaymentAsync(string paymentId, Address billingAddress, string paymentMethodCode, string outerId)
+        public virtual async Task<ICartBuilder> AddOrUpdatePaymentAsync(PaymentUpdateModel updateModel)
         {
-            var payment = _cart.Payments.FirstOrDefault(p => p.Id == paymentId);
-            if (payment == null)
+            Payment payment = null;
+            if (!string.IsNullOrEmpty(updateModel.Id))
+            {
+                payment = _cart.Payments.FirstOrDefault(s => s.Id == updateModel.Id);
+                if (payment == null)
+                {
+                    throw new StorefrontException(String.Format("Payment with {0} not found", updateModel.Id));
+                }
+            }
+            else
             {
                 payment = new Payment(_cart.Currency);
-            }
-
-            if (billingAddress != null)
-            {
-                payment.BillingAddress = billingAddress;
-            }
-
-            var availablePaymentMethods = await GetAvailablePaymentMethodsAsync();
-            var paymentMethod = availablePaymentMethods.FirstOrDefault(pm => pm.GatewayCode == paymentMethodCode);
-            if (paymentMethod != null)
-            {
-                payment.PaymentGatewayCode = paymentMethodCode;
-            }
-
-            payment.OuterId = outerId;
-
-            if (payment.IsTransient())
-            {
                 _cart.Payments.Add(payment);
             }
+         
+            if (updateModel.BillingAddress != null)
+            {
+                payment.BillingAddress = updateModel.BillingAddress;
+            }
+
+            if (!string.IsNullOrEmpty(updateModel.PaymentGatewayCode))
+            {
+                var availablePaymentMethods = await GetAvailablePaymentMethodsAsync();
+                var paymentMethod = availablePaymentMethods.FirstOrDefault(pm => string.Equals(pm.GatewayCode, updateModel.PaymentGatewayCode, StringComparison.InvariantCultureIgnoreCase));
+                if (paymentMethod == null)
+                {
+                    throw new StorefrontException("Unknown payment method " + updateModel.PaymentGatewayCode);
+                }
+                payment.PaymentGatewayCode = paymentMethod.GatewayCode;
+            }
+  
+            payment.OuterId = updateModel.OuterId;
+            payment.Amount = _cart.Total;
 
             return this;
         }
@@ -330,7 +365,7 @@ namespace VirtoCommerce.Storefront.Builders
             _cart.Payments.Clear();
             _cart.Payments = cart.Payments;
 
-            await EvaluatePromotionsAsync();
+            await EvaluatePromotionsAndTaxes();
 
             await _cartApi.CartModuleDeleteCartsAsync(new List<string> { cart.Id });
              _cacheManager.Remove(CartCaheKey, _cartCacheRegion);
@@ -365,45 +400,48 @@ namespace VirtoCommerce.Storefront.Builders
                 }
             }
 
-            _cart.Shipments.Clear();
-            var shipment = new Shipment(_cart.Currency);
-
-            foreach (var item in _cart.Items)
+            if (quoteRequest.RequestShippingQuote)
             {
-                shipment.Items.Add(item.ToShipmentItem());
-            }
+                _cart.Shipments.Clear();
+                var shipment = new Shipment(_cart.Currency);
 
-            if (quoteRequest.ShipmentMethod != null)
-            {
-                var availableShippingMethods = await GetAvailableShippingMethodsAsync();
-                if (availableShippingMethods != null)
+                foreach (var item in _cart.Items)
                 {
-                    var availableShippingMethod = availableShippingMethods.FirstOrDefault(sm => sm.ShipmentMethodCode == quoteRequest.ShipmentMethod.ShipmentMethodCode);
-                    if (availableShippingMethod != null)
+                    shipment.Items.Add(item.ToShipmentItem());
+                }
+
+                if (quoteRequest.ShippingAddress != null)
+                {
+                    shipment.DeliveryAddress = quoteRequest.ShippingAddress;
+                }
+
+                if (quoteRequest.ShipmentMethod != null)
+                {
+                    var availableShippingMethods = await GetAvailableShippingMethodsAsync();
+                    if (availableShippingMethods != null)
                     {
-                        shipment = quoteRequest.ShipmentMethod.ToShipmentModel(_cart.Currency);
-                        _cart.Shipments.Add(shipment);
+                        var availableShippingMethod = availableShippingMethods.FirstOrDefault(sm => sm.ShipmentMethodCode == quoteRequest.ShipmentMethod.ShipmentMethodCode);
+                        if (availableShippingMethod != null)
+                        {
+                            shipment = quoteRequest.ShipmentMethod.ToShipmentModel(_cart.Currency);
+                        }
                     }
                 }
+
+                _cart.Shipments.Add(shipment);
             }
 
             _cart.Payments.Clear();
             var payment = new Payment(_cart.Currency);
 
-            if (quoteRequest.Addresses != null)
+            if (quoteRequest.BillingAddress != null)
             {
-                var shippingAddress = quoteRequest.Addresses.FirstOrDefault(a => a.Type == AddressType.Shipping);
-                if (shippingAddress != null)
-                {
-                    shipment.DeliveryAddress = shippingAddress;
-                }
-                var billingAddress = quoteRequest.Addresses.FirstOrDefault(a => a.Type == AddressType.Billing);
-                if (billingAddress != null)
-                {
-                    payment.BillingAddress = billingAddress;
-                    _cart.Payments.Add(payment);
-                }
+                payment.BillingAddress = quoteRequest.BillingAddress;
             }
+
+            payment.Amount = quoteRequest.Totals.GrandTotalInclTax;
+
+            _cart.Payments.Add(payment);
 
             return this;
         }
@@ -452,6 +490,20 @@ namespace VirtoCommerce.Storefront.Builders
 
             await _promotionEvaluator.EvaluateDiscountsAsync(promotionContext, new IDiscountable[] { _cart });
 
+            return this;
+        }
+
+        /// <summary>
+        /// Evaluate taxes  for captured cart
+        /// </summary>
+        /// <returns></returns>
+        public async Task<ICartBuilder> EvaluateTaxAsync()
+        {
+            var taxResult = await _commerceApi.CommerceEvaluateTaxesAsync(_cart.StoreId, _cart.ToTaxEvalContext());
+            if(taxResult != null)
+            {
+                _cart.ApplyTaxRates(taxResult.Select(x => x.ToWebModel(_cart.Currency)));
+            }
             return this;
         }
 
@@ -523,6 +575,11 @@ namespace VirtoCommerce.Storefront.Builders
             }
         }
        
+        private async Task EvaluatePromotionsAndTaxes()
+        {
+            await EvaluatePromotionsAsync();
+            await EvaluateTaxAsync();
+        }
 
         private string GetCartCacheKey(string storeId, string customerId)
         {

@@ -24,6 +24,7 @@ namespace VirtoCommerce.Storefront.Controllers
             _countriesWithoutRegions = workContext.AllCountries
                 .Select(c => new Country { Name = c.Name, Code2 = c.Code2, Code3 = c.Code3, RegionType = c.RegionType })
                 .ToArray();
+
         }
 
         /// <summary>
@@ -33,9 +34,9 @@ namespace VirtoCommerce.Storefront.Controllers
         /// <returns></returns>
         [HttpGet]
         [AllowAnonymous]
-        public ActionResult СontactUs()
+        public ActionResult СontactUs(string viewName = "page.contact")
         {
-            return View("page.contact", base.WorkContext);
+            return View(viewName, base.WorkContext);
         }
 
         /// <summary>
@@ -46,11 +47,11 @@ namespace VirtoCommerce.Storefront.Controllers
         [HttpPost]
         [AllowAnonymous]
         [OutputCache(NoStore = true, Duration = 0, VaryByParam = "None")]
-        public async Task<ActionResult> СontactUs(ContactUsForm model)
+        public async Task<ActionResult> СontactUs(ContactUsForm model, string viewName = "page.contact")
         {
             await _storeModuleApi.StoreModuleSendDynamicNotificationAnStoreEmailAsync(model.ToServiceModel(base.WorkContext));
             WorkContext.ContactUsForm = model;
-            return View("page.contact", base.WorkContext);
+            return View(viewName, base.WorkContext);
         }
 
         /// <summary>
@@ -93,11 +94,25 @@ namespace VirtoCommerce.Storefront.Controllers
         [HttpGet]
         public ActionResult GetRegions(string countryCode)
         {
-            var country = WorkContext.AllCountries.FirstOrDefault(c => c.Code3.Equals(countryCode, StringComparison.OrdinalIgnoreCase));
+            Country country = null;
+
+            if (countryCode != null)
+            {
+                if (countryCode.Length == 3)
+                {
+                    country = WorkContext.AllCountries.FirstOrDefault(c => c.Code3.Equals(countryCode, StringComparison.OrdinalIgnoreCase));
+                }
+                else if (countryCode.Length == 2)
+                {
+                    country = WorkContext.AllCountries.FirstOrDefault(c => c.Code2.Equals(countryCode, StringComparison.OrdinalIgnoreCase));
+                }
+            }
+
             if (country != null)
             {
                 return Json(country.Regions, JsonRequestBehavior.AllowGet);
             }
+
             return HttpNotFound();
         }
 
@@ -106,6 +121,13 @@ namespace VirtoCommerce.Storefront.Controllers
         public ActionResult NoStore()
         {
             return View("NoStore");
+        }
+
+        // GET: /maintenance
+        [HttpGet]
+        public ActionResult Maintenance()
+        {
+            return View("maintenance", "empty", WorkContext);
         }
     }
 }

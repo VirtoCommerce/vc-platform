@@ -1,16 +1,10 @@
 ﻿angular.module('virtoCommerce.storeModule')
-.controller('virtoCommerce.storeModule.storesListController', ['$scope', 'virtoCommerce.storeModule.stores', 'platformWebApp.bladeNavigationService', 'platformWebApp.authService', 'uiGridConstants', 'platformWebApp.uiGridHelper',
-    function ($scope, stores, bladeNavigationService, authService, uiGridConstants, uiGridHelper) {
+.controller('virtoCommerce.storeModule.storesListController', ['$scope', 'virtoCommerce.storeModule.stores', 'platformWebApp.bladeUtils', 'platformWebApp.authService', 'uiGridConstants', 'platformWebApp.uiGridHelper',
+    function ($scope, stores, bladeUtils, authService, uiGridConstants, uiGridHelper) {
         $scope.uiGridConstants = uiGridConstants;
 
-        //pagination settings
-        $scope.pageSettings = {};
-        $scope.pageSettings.totalItems = 0;
-        $scope.pageSettings.currentPage = 1;
-        $scope.pageSettings.numPages = 5;
-        $scope.pageSettings.itemsPerPageCount = 20;
-
         var blade = $scope.blade;
+        var bladeNavigationService = bladeUtils.bladeNavigationService;
 
         blade.refresh = function () {
             blade.isLoading = true;
@@ -36,7 +30,6 @@
                 currentEntityId: data.id,
                 // currentEntity: data,
                 title: data.name,
-                subtitle: 'stores.blades.store-detail.subtitle',
                 controller: 'virtoCommerce.storeModule.storeDetailController',
                 template: 'Modules/$(VirtoCommerce.Store)/Scripts/blades/store-detail.tpl.html'
             };
@@ -91,13 +84,9 @@
         // ui-grid
         $scope.setGridOptions = function (gridOptions) {
             uiGridHelper.initialize($scope, gridOptions, function (gridApi) {
-                gridApi.core.on.sortChanged($scope, function () {
-                    if (!blade.isLoading)
-                        blade.refresh();
-                });
+                uiGridHelper.bindRefreshOnSortChanged($scope);
             });
-
-            $scope.$watch('pageSettings.currentPage', blade.refresh);
+            bladeUtils.initializePagination($scope);
         };
 
     }]);

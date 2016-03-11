@@ -123,6 +123,7 @@
     <Compile Include="Model\VirtoCommerceCoreModuleWebModelKeyValuePair.cs" />
     <Compile Include="Model\VirtoCommerceCoreModuleWebModelPaymentCallbackParameters.cs" />
     <Compile Include="Model\VirtoCommerceCoreModuleWebModelSignInResult.cs" />
+    <Compile Include="Model\VirtoCommerceCoreModuleWebModelStorefrontUser.cs" />
     <Compile Include="Model\VirtoCommerceCustomerModuleWebModelAddress.cs" />
     <Compile Include="Model\VirtoCommerceCustomerModuleWebModelContact.cs" />
     <Compile Include="Model\VirtoCommerceCustomerModuleWebModelMember.cs" />
@@ -253,6 +254,7 @@
     <Compile Include="Model\VirtoCommerceQuoteModuleWebModelTierPrice.cs" />
     <Compile Include="Model\VirtoCommerceSearchModuleWebModelFilterProperty.cs" />
     <Compile Include="Model\VirtoCommerceStoreModuleWebModelFulfillmentCenter.cs" />
+    <Compile Include="Model\VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo.cs" />
     <Compile Include="Model\VirtoCommerceStoreModuleWebModelPaymentMethod.cs" />
     <Compile Include="Model\VirtoCommerceStoreModuleWebModelSearchResult.cs" />
     <Compile Include="Model\VirtoCommerceStoreModuleWebModelSendDynamicNotificationRequest.cs" />
@@ -261,6 +263,7 @@
     <Compile Include="Model\VirtoCommerceStoreModuleWebModelStore.cs" />
     <Compile Include="Model\VirtoCommerceStoreModuleWebModelTaxProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SimpleKeyApiClient.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="codegen-config.json" />

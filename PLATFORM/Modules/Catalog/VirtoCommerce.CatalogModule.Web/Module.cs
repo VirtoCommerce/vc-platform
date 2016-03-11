@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data.Entity;
 using System.IO;
 using Microsoft.Practices.Unity;
 using VirtoCommerce.CatalogModule.Data.Model;
@@ -18,7 +17,7 @@ using VirtoCommerce.Platform.Data.Repositories;
 
 namespace VirtoCommerce.CatalogModule.Web
 {
-	public class Module : ModuleBase, ISupportExportImportModule
+    public class Module : ModuleBase, ISupportExportImportModule
     {
         private const string _connectionStringName = "VirtoCommerce";
         private readonly IUnityContainer _container;
@@ -34,12 +33,12 @@ namespace VirtoCommerce.CatalogModule.Web
         {
             base.SetupDatabase();
 
-			using (var db = new CatalogRepositoryImpl(_connectionStringName))
-			{
-				var initializer = new SetupDatabaseInitializer<CatalogRepositoryImpl, Data.Migrations.Configuration>();
+            using (var db = new CatalogRepositoryImpl(_connectionStringName, _container.Resolve<AuditableInterceptor>()))
+            {
+                var initializer = new SetupDatabaseInitializer<CatalogRepositoryImpl, Data.Migrations.Configuration>();
 
-				initializer.InitializeDatabase(db);
-			}
+                initializer.InitializeDatabase(db);
+            }
         }
 
         public override void Initialize()
@@ -49,8 +48,8 @@ namespace VirtoCommerce.CatalogModule.Web
             #region Catalog dependencies
 
             Func<ICatalogRepository> catalogRepFactory = () =>
-                new CatalogRepositoryImpl(_connectionStringName, new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor(),
-                    new ChangeLogInterceptor(_container.Resolve<Func<IPlatformRepository>>(), ChangeLogPolicy.Cumulative, new[] { typeof(Item).Name }));
+                new CatalogRepositoryImpl(_connectionStringName, new EntityPrimaryKeyGeneratorInterceptor(), _container.Resolve<AuditableInterceptor>(),
+                    new ChangeLogInterceptor(_container.Resolve<Func<IPlatformRepository>>(), ChangeLogPolicy.Cumulative, new[] { typeof(Item).Name }, _container.Resolve<IUserNameResolver>()));
 
             _container.RegisterInstance(catalogRepFactory);
 
@@ -59,7 +58,7 @@ namespace VirtoCommerce.CatalogModule.Web
             _container.RegisterType<ICatalogService, CatalogServiceImpl>();
             _container.RegisterType<IPropertyService, PropertyServiceImpl>();
             _container.RegisterType<ICatalogSearchService, CatalogSearchServiceImpl>();
-			_container.RegisterType<ISkuGenerator, DefaultSkuGenerator>();
+            _container.RegisterType<ISkuGenerator, DefaultSkuGenerator>();
 
             #endregion
         }
@@ -72,29 +71,29 @@ namespace VirtoCommerce.CatalogModule.Web
         }
         #endregion
 
-            #region ISupportExportImportModule Members
+        #region ISupportExportImportModule Members
 
         public void DoExport(Stream outStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
-		{
+        {
             var exportJob = _container.Resolve<CatalogExportImport>();
-			exportJob.DoExport(outStream, manifest, progressCallback);
+            exportJob.DoExport(outStream, manifest, progressCallback);
         }
 
-		public void DoImport(Stream inputStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
-		{
+        public void DoImport(Stream inputStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
+        {
             var exportJob = _container.Resolve<CatalogExportImport>();
             exportJob.DoImport(inputStream, manifest, progressCallback);
         }
 
 
-		public string ExportDescription
-		{
-			get
-			{
-				var settingManager = _container.Resolve<ISettingsManager>();
-				return settingManager.GetValue("Catalog.ExportImport.Description", String.Empty);
-			}
-		}
-		#endregion
-	}
+        public string ExportDescription
+        {
+            get
+            {
+                var settingManager = _container.Resolve<ISettingsManager>();
+                return settingManager.GetValue("Catalog.ExportImport.Description", String.Empty);
+            }
+        }
+        #endregion
+    }
 }

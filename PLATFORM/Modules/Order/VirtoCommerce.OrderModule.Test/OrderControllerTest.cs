@@ -8,22 +8,20 @@ using VirtoCommerce.CartModule.Data.Repositories;
 using VirtoCommerce.CartModule.Data.Services;
 using VirtoCommerce.CoreModule.Data.Services;
 using VirtoCommerce.Domain.Cart.Events;
-using VirtoCommerce.Platform.Core.Events;
+using VirtoCommerce.Domain.Commerce.Model;
 using VirtoCommerce.Domain.Order.Events;
 using VirtoCommerce.Domain.Payment.Model;
 using VirtoCommerce.Domain.Payment.Services;
 using VirtoCommerce.OrderModule.Data.Repositories;
 using VirtoCommerce.OrderModule.Data.Services;
-using VirtoCommerce.OrderModule.Web.BackgroundJobs;
 using VirtoCommerce.OrderModule.Web.Controllers.Api;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Data.DynamicProperties;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Platform.Data.Repositories;
 using coreModel = VirtoCommerce.Domain.Order.Model;
 using webModel = VirtoCommerce.OrderModule.Web.Model;
-using VirtoCommerce.Domain.Commerce.Model;
-using VirtoCommerce.Platform.Data.Settings;
 
 namespace VirtoCommerce.OrderModule.Test
 {
@@ -45,7 +43,7 @@ namespace VirtoCommerce.OrderModule.Test
             var orderService = GetCustomerOrderService();
             var order = orderService.GetById("863f4bdf-7c0b-4e4c-a2e7-a0984b1a4b94", coreModel.CustomerOrderResponseGroup.Full);
         }
-        
+
 
         [TestMethod]
         public void CreateNewOrderByShoppingCart()
@@ -346,7 +344,7 @@ namespace VirtoCommerce.OrderModule.Test
             Func<IOrderRepository> orderRepositoryFactory = () =>
             {
                 return new OrderRepositoryImpl("VirtoCommerce",
-                    new AuditableInterceptor(),
+                    new AuditableInterceptor(null),
                     new EntityPrimaryKeyGeneratorInterceptor());
             };
             return orderRepositoryFactory;
@@ -354,14 +352,14 @@ namespace VirtoCommerce.OrderModule.Test
 
         private static CustomerOrderServiceImpl GetCustomerOrderService()
         {
-            Func<IPlatformRepository> platformRepositoryFactory = () => new PlatformRepository("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor());
-            Func<ICartRepository> repositoryFactory = () => new CartRepositoryImpl("VirtoCommerce", new AuditableInterceptor());
+            Func<IPlatformRepository> platformRepositoryFactory = () => new PlatformRepository("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor(null));
+            Func<ICartRepository> repositoryFactory = () => new CartRepositoryImpl("VirtoCommerce", new AuditableInterceptor(null));
 
             var dynamicPropertyService = new DynamicPropertyService(platformRepositoryFactory);
             var orderEventPublisher = new EventPublisher<OrderChangeEvent>(Enumerable.Empty<IObserver<OrderChangeEvent>>().ToArray());
             var cartEventPublisher = new EventPublisher<CartChangeEvent>(Enumerable.Empty<IObserver<CartChangeEvent>>().ToArray());
             var cartService = new ShoppingCartServiceImpl(repositoryFactory, cartEventPublisher, null, dynamicPropertyService);
-         
+
 
             var orderService = new CustomerOrderServiceImpl(GetOrderRepositoryFactory(), new TimeBasedNumberGeneratorImpl(), orderEventPublisher, cartService, null, dynamicPropertyService, null, null, null);
 
@@ -371,7 +369,7 @@ namespace VirtoCommerce.OrderModule.Test
         private static OrderModuleController GetCustomerOrderController()
         {
             var orderService = GetCustomerOrderService();
-            
+
             return null;
         }
     }

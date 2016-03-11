@@ -1,7 +1,8 @@
 ﻿angular.module('virtoCommerce.pricingModule')
-    .controller('virtoCommerce.pricingModule.pricelistDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.pricingModule.pricelists', 'platformWebApp.settings', 'platformWebApp.dialogService', 'virtoCommerce.coreModule.currency.currencyUtils',
-        function ($scope, bladeNavigationService, pricelists, settings, dialogService, currencyUtils) {
+    .controller('virtoCommerce.pricingModule.pricelistDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.pricingModule.pricelists', 'platformWebApp.settings', 'virtoCommerce.coreModule.currency.currencyUtils',
+        function ($scope, bladeNavigationService, pricelists, settings, currencyUtils) {
             var blade = $scope.blade;
+            blade.updatePermission = 'pricing:update';
 
             blade.refresh = function (parentRefresh) {
                 if (blade.isNew) {
@@ -25,11 +26,15 @@
                 blade.currentEntity = angular.copy(data);
                 blade.origEntity = data;
                 blade.isLoading = false;
-            };
+            }
 
             function isDirty() {
-                return !angular.equals(blade.currentEntity, blade.origEntity);
-            };
+                return !angular.equals(blade.currentEntity, blade.origEntity) && blade.hasUpdatePermission();
+            }
+
+            function canSave() {
+                return isDirty() && $scope.formScope && $scope.formScope.$valid;
+            }
 
             $scope.cancelChanges = function () {
                 angular.copy(blade.origEntity, blade.currentEntity);
@@ -57,35 +62,11 @@
                 }
             };
 
-            $scope.setForm = function (form) {
-                $scope.formScope = form;
-            };
+            $scope.setForm = function (form) { $scope.formScope = form; };
 
             blade.onClose = function (closeCallback) {
-                closeChildrenBlades();
-                if (isDirty()) {
-                    var dialog = {
-                        id: "confirmCurrentBladeClose",
-                        title: "pricing.dialogs.pricelist-save.title",
-                        message: "pricing.dialogs.pricelist-save.message"
-                    };
-                    dialog.callback = function (needSave) {
-                        if (needSave) {
-                            $scope.saveChanges();
-                        }
-                        closeCallback();
-                    };
-                    dialogService.showConfirmationDialog(dialog);
-                } else {
-                    closeCallback();
-                }
+                bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, $scope.saveChanges, closeCallback, "pricing.dialogs.pricelist-save.title", "pricing.dialogs.pricelist-save.message");
             };
-
-            function closeChildrenBlades() {
-                angular.forEach(blade.childrenBlades.slice(), function (child) {
-                    bladeNavigationService.closeBlade(child);
-                });
-            }
 
             blade.headIcon = blade.parentBlade.headIcon;
 
@@ -95,13 +76,9 @@
                         {
                             name: "platform.commands.save",
                             icon: 'fa fa-save',
-                            executeMethod: function () {
-                                $scope.saveChanges();
-                            },
-                            canExecuteMethod: function () {
-                                return isDirty() && $scope.formScope && $scope.formScope.$valid;
-                            },
-                            permission: 'pricing:update'
+                            executeMethod: $scope.saveChanges,
+                            canExecuteMethod: canSave,
+                            permission: blade.updatePermission
                         },
                         {
                             name: "platform.commands.reset",
@@ -110,7 +87,7 @@
                                 angular.copy(blade.origEntity, blade.currentEntity);
                             },
                             canExecuteMethod: isDirty,
-                            permission: 'pricing:update'
+                            permission: blade.updatePermission
                         }
                     ];
                 }

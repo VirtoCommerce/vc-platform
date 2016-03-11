@@ -97,6 +97,7 @@
     <Compile Include="Common\EnumerableExtensions.cs" />
     <Compile Include="Common\AsyncLock.cs" />
     <Compile Include="Common\ConfigManagerExtensions.cs" />
+    <Compile Include="Common\IEntity.cs" />
     <Compile Include="Common\ObservableChangeTracker.cs" />
     <Compile Include="Common\PlatformVersion.cs" />
     <Compile Include="Common\PrimaryKeyResolvingMap.cs" />
@@ -128,7 +129,6 @@
     <Compile Include="Common\AttributeExtensions.cs" />
     <Compile Include="Common\AuditableEntity.cs" />
     <Compile Include="Common\ClientCacheAttribute.cs" />
-    <Compile Include="Common\CurrentPrincipal.cs" />
     <Compile Include="Common\DateTimeExtensions.cs" />
     <Compile Include="Common\DictionaryExtensions.cs" />
     <Compile Include="Common\Entity.cs" />
@@ -235,6 +235,9 @@
     <Compile Include="Security\ApplicationUserExtended.cs" />
     <Compile Include="Security\AuthentificationOptions.cs" />
     <Compile Include="Security\CheckPermissionAttribute.cs" />
+    <Compile Include="Security\ICurrentUser.cs" />
+    <Compile Include="Security\IUserNameResolver.cs" />
+    <Compile Include="Security\VirtoCommerceClaimTypes.cs" />
     <Compile Include="Security\IPermissionScopeService.cs" />
     <Compile Include="Security\IRoleManagementService.cs" />
     <Compile Include="Security\ISecurityOptions.cs" />

@@ -235,7 +235,7 @@ namespace VirtoCommerce.Platform.Data.Repositories
 
         public DynamicPropertyEntity[] GetObjectDynamicProperties(string objectType, string objectId)
         {
-            var retVal = DynamicProperties.Include(x=>x.DisplayNames)
+            var retVal = DynamicProperties.Include(x => x.DisplayNames)
                                           .Where(x => x.ObjectType == objectType)
                                           .OrderBy(x => x.Name)
                                           .ToArray();

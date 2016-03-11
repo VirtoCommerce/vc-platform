@@ -27,6 +27,26 @@ namespace VirtoCommerce.Storefront.Model.Common
                 }).Where(x=> x != null).ToArray();
         }
 
+        /// <summary>
+        /// Return all localized strings for specified language also always returns strings with invariant language
+        /// </summary>
+        /// <param name="localizedStrings"></param>
+        /// <param name="language"></param>
+        /// <returns></returns>
+        public static IEnumerable<LocalizedString> GetLocalizedStringsForLanguage(this IEnumerable<LocalizedString> localizedStrings, Language language)
+        {
+            if(localizedStrings == null)
+            {
+                throw new ArgumentNullException("localizedStrings");
+            }
+            if(language == null)
+            {
+                throw new ArgumentNullException("language");
+            }
+            var retVal = localizedStrings.Where(x => x.Language == language || x.Language.IsInvariant).ToArray();
+            return retVal;
+        }
+
         public static string GetCurrencySymbol(this string ISOCurrencySymbol)
         {
             var symbol = _cachedRegionInfos.Where(x => x != null && String.Equals(x.ISOCurrencySymbol, ISOCurrencySymbol, StringComparison.InvariantCultureIgnoreCase))

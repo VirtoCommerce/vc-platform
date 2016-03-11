@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Threading.Tasks;
+using System.Linq;
 using VirtoCommerce.CustomerModule.Data.Converters;
 using VirtoCommerce.CustomerModule.Data.Repositories;
 using VirtoCommerce.Domain.Customer.Services;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
+using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using coreModel = VirtoCommerce.Domain.Customer.Model;
 
@@ -13,11 +16,13 @@ namespace VirtoCommerce.CustomerModule.Data.Services
     {
         private readonly Func<ICustomerRepository> _repositoryFactory;
         private readonly IDynamicPropertyService _dynamicPropertyService;
+        private readonly ISecurityService _securityService;
 
-        public ContactServiceImpl(Func<ICustomerRepository> repositoryFactory, IDynamicPropertyService dynamicPropertyService)
+        public ContactServiceImpl(Func<ICustomerRepository> repositoryFactory, IDynamicPropertyService dynamicPropertyService, ISecurityService securityService)
         {
             _repositoryFactory = repositoryFactory;
             _dynamicPropertyService = dynamicPropertyService;
+            _securityService = securityService;
         }
 
         #region IContactService Members
@@ -36,7 +41,14 @@ namespace VirtoCommerce.CustomerModule.Data.Services
             }
 
             if (retVal != null)
+            {
+                //Load dynamic properties for contact
                 _dynamicPropertyService.LoadDynamicPropertyValues(retVal);
+
+                //Load all security accounts associated with this contact
+                var result = Task.Run(() => _securityService.SearchUsersAsync(new UserSearchRequest { MemberId = retVal.Id, TakeCount = int.MaxValue })).Result;
+                retVal.SecurityAccounts = result.Users.ToList();
+            }
 
             return retVal;
         }

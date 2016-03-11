@@ -51,8 +51,6 @@ namespace VirtoCommerce.CustomerModule.Data.Model
  		[StringLength(128, ErrorMessage = "Only 128 characters allowed.")]
 		public string DescendantId { get; set; }
 
-        [ForeignKey("DescendantId")]
-        [Parent]
         public virtual Member Descendant { get; set; }
         #endregion
     }

@@ -1,12 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using VirtoCommerce.Domain.Payment.Services;
 using VirtoCommerce.Domain.Shipping.Services;
 using VirtoCommerce.Domain.Store.Services;
 using VirtoCommerce.Domain.Tax.Services;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Notifications;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.StoreModule.Data.Notifications;
@@ -80,8 +83,8 @@ namespace VirtoCommerce.StoreModule.Web.Controllers.Api
         {
             var criteria = new coreModel.SearchCriteria
             {
-                 Skip = 0,
-                 Take = int.MaxValue
+                Skip = 0,
+                Take = int.MaxValue
             };
             var retVal = SearchStores(criteria);
             return Ok(retVal.Stores);
@@ -185,6 +188,53 @@ namespace VirtoCommerce.StoreModule.Web.Controllers.Api
             return StatusCode(System.Net.HttpStatusCode.NoContent);
         }
 
+        /// <summary>
+        /// Check if given contact has login on behalf permission
+        /// </summary>
+        /// <param name="storeId">Store ID</param>
+        /// <param name="id">Contact ID</param>
+        /// <returns></returns>
+        [HttpGet]
+        [ResponseType(typeof(webModel.LoginOnBehalfInfo))]
+        [Route("{storeId}/accounts/{id}/loginonbehalf")]
+        public async Task<IHttpActionResult> GetLoginOnBehalfInfo(string storeId, string id)
+        {
+            var result = new webModel.LoginOnBehalfInfo
+            {
+                UserName = id
+            };
+
+            var user = await _securityService.FindByIdAsync(id, UserDetails.Reduced);
+
+            if (user != null)
+            {
+                //TODO: Check what requested user has permission to login on behalf in concrete store
+                result.CanLoginOnBehalf = _securityService.UserHasAnyPermission(user.UserName, null, StorePredefinedPermissions.LoginOnBehalf);
+            }
+
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Returns list of stores which user can sign in
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [ResponseType(typeof(webModel.Store[]))]
+        [Route("allowed/{userId}")]
+        public async Task<IHttpActionResult> GetUserAllowedStores(string userId)
+        {
+            var retVal = new List<webModel.Store>();
+            var user = await _securityService.FindByIdAsync(userId, UserDetails.Reduced);
+            if(user != null)
+            {
+                var storeIds = _storeService.GetUserAllowedStoreIds(user);
+                retVal.AddRange(_storeService.GetByIds(storeIds.ToArray()).Select(x=>x.ToWebModel()));
+            }
+            return Ok(retVal.ToArray());
+        }
+
         protected void CheckCurrentUserHasPermissionForObjects(string permission, params coreModel.Store[] objects)
         {
             //Scope bound security check
@@ -195,6 +245,6 @@ namespace VirtoCommerce.StoreModule.Web.Controllers.Api
             }
         }
 
-     
+
     }
 }

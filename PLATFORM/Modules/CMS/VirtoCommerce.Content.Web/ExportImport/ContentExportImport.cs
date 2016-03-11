@@ -81,7 +81,7 @@ namespace VirtoCommerce.Content.Web.ExportImport
         {
             foreach (var item in linkLIsts.Select(x => x.ToCoreModel()))
             {
-                _menuService.Update(item);
+                _menuService.AddOrUpdate(item);
             }
         }
 

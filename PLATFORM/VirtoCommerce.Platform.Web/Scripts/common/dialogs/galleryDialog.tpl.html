@@ -8,12 +8,12 @@
         <a class="control ctrl-r" ng-click="nextImage(images.indexOf(currentImage) + 1)"><i class="fa fa-chevron-right"></i></a>
         <ul class="list __slides">
             <li class="list-item">
-                <img alt="{{currentImage.name}}" class="list-img" src="{{currentImage.url}}" />
+                <img alt="{{currentImage.name}}" class="list-img" ng-src="{{currentImage.url}}" />
             </li>
         </ul>
         <ul class="list __navs">
             <li class="list-item" ng-class="{'__selected': currentImage.id == image.id}" ng-click="openImage(image)" ng-repeat="image in images">
-                <img alt="{{image.name}}" class="list-img" src="{{image.url}}" />
+                <img alt="{{image.name}}" class="list-img" ng-src="{{image.url}}" />
             </li>
         </ul>
     </div>

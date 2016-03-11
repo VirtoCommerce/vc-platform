@@ -1,6 +1,7 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.categoryDetailController', ['$rootScope', '$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings', 'virtoCommerce.catalogModule.categories', 'platformWebApp.dialogService', function ($rootScope, $scope, bladeNavigationService, settings, categories, dialogService) {
+.controller('virtoCommerce.catalogModule.categoryDetailController', ['$rootScope', '$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings', 'virtoCommerce.catalogModule.categories', function ($rootScope, $scope, bladeNavigationService, settings, categories) {
     var blade = $scope.blade;
+    blade.updatePermission = 'catalog:update';
 
     blade.refresh = function (parentRefresh) {
         return categories.get({ id: blade.currentEntityId }, function (data) {
@@ -13,11 +14,11 @@
     };
 
     function initializeBlade(data) {
-        $scope.blade.currentEntity = angular.copy(data);
-        $scope.blade.origEntity = data;
-        $scope.blade.title = data.name;
-        $scope.blade.isLoading = false;
-        $scope.blade.securityScopes = data.securityScopes;
+        blade.currentEntity = angular.copy(data);
+        blade.origEntity = data;
+        blade.title = data.name;
+        blade.isLoading = false;
+        blade.securityScopes = data.securityScopes;
     };
 
     $scope.codeValidator = function (value) {
@@ -26,8 +27,12 @@
     };
 
     function isDirty() {
-        return !angular.equals(blade.currentEntity, blade.origEntity);
+        return !angular.equals(blade.currentEntity, blade.origEntity) && blade.hasUpdatePermission();
     };
+
+    function canSave() {
+        return isDirty() && formScope && formScope.$valid;
+    }
 
     function saveChanges() {
         blade.isLoading = true;
@@ -38,58 +43,26 @@
     };
 
     blade.onClose = function (closeCallback) {
-        closeChildrenBlades();
-
-        if (isDirty()) {
-            var dialog = {
-                id: "confirmItemChange",
-                title: "catalog.dialogs.category-save.title",
-                message: "catalog.dialogs.category-save.message",
-                callback: function (needSave) {
-                    if (needSave) {
-                        saveChanges();
-                    }
-                    closeCallback();
-                }
-            };
-            dialogService.showConfirmationDialog(dialog);
-        }
-        else {
-            closeCallback();
-        }
+        bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, saveChanges, closeCallback, "catalog.dialogs.category-save.title", "catalog.dialogs.category-save.message");
     };
 
-    function closeChildrenBlades() {
-        angular.forEach(blade.childrenBlades.slice(), function (child) {
-            bladeNavigationService.closeBlade(child);
-        });
-    }
-
     var formScope;
-    $scope.setForm = function (form) {
-        formScope = form;
-    }
-    
+    $scope.setForm = function (form) { formScope = form; }
+
     blade.toolbarCommands = [
 		{
 		    name: "platform.commands.save", icon: 'fa fa-save',
-		    executeMethod: function () {
-		        saveChanges();
-		    },
-		    canExecuteMethod: function () {
-		        return isDirty() && formScope && formScope.$valid;
-		    },
-		    permission: 'catalog:update'
+		    executeMethod: saveChanges,
+		    canExecuteMethod: canSave,
+		    permission: blade.updatePermission
 		},
         {
             name: "platform.commands.reset", icon: 'fa fa-undo',
             executeMethod: function () {
                 angular.copy(blade.origEntity, blade.currentEntity);
             },
-            canExecuteMethod: function () {
-                return isDirty();
-            },
-            permission: 'catalog:update'
+            canExecuteMethod: isDirty,
+            permission: blade.updatePermission
         }
     ];
 

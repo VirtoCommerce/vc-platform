@@ -152,23 +152,15 @@ namespace VirtoCommerce.CoreModule.Data.Repositories
             }
         }
 
-
-
         public IEnumerable<coreModel.SeoInfo> GetSeoByKeyword(string keyword)
         {
             var retVal = new List<coreModel.SeoInfo>();
             using (var repository = _repositoryFactory())
             {
-                //find seo entries for specified keyword
-                retVal = repository.SeoUrlKeywords.Where(x => x.Keyword == keyword).ToArray()
-                                  .Select(x => x.ToCoreModel()).ToList();
-                //find other seo entries related to finding object
-                if (retVal.Any())
-                {
-                    var objectIds = retVal.Select(x => x.ObjectId).Distinct().ToArray();
-                    var objectsSeo = repository.SeoUrlKeywords.Where(x => objectIds.Contains(x.Id)).ToArray().Select(x => x.ToCoreModel());
-                    retVal.AddRange(objectsSeo);
-                }
+                //find seo entries for specified keyword also need find other seo entries related to finding object
+                var query = repository.SeoUrlKeywords.Where(x => x.Keyword == keyword).Join(repository.SeoUrlKeywords, x => x.ObjectId, y => y.ObjectId, (x, y) => y)
+                                    .ToArray();
+                retVal.AddRange(query.Select(x => x.ToCoreModel()));
             }
             return retVal;
         }

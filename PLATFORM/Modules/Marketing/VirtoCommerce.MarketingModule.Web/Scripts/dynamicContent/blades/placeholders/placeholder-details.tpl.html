@@ -26,7 +26,7 @@
 
 				<div class="sub-t">{{ 'marketing.blades.placeholders.placeholder-details.labels.placeholder-image-description' | translate }}</div>
 
-				<div ng-show="uploader.isHTML5">
+				<div ng-show="uploader.isHTML5" ng-if="blade.hasUpdatePermission()">
 					<div over-class="bd-blue" nv-file-over="" nv-file-drop="" uploader="uploader" class="drag-area">
 						<div class="drag-content">
 							{{ 'marketing.blades.placeholders.placeholder-details.labels.image-note' | translate }}
@@ -34,7 +34,7 @@
 					</div>
 				</div>
 
-				<div class="form-input">
+				<div class="form-input" ng-if="blade.hasUpdatePermission()">
 					<input type="file" uploader="uploader" nv-file-select="" style="z-index: 0;" tabindex="-1">
 					<input type="text" style="z-index: 1; cursor: default;" readonly="">
 					<button class="btn __file" type="button" onclick="$('input[type=file]').trigger('click')">

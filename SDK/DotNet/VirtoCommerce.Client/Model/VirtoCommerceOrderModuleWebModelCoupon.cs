@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// Represent coupon entered by customer on checkout
     /// </summary>
     [DataContract]
-    public class VirtoCommerceOrderModuleWebModelCoupon : IEquatable<VirtoCommerceOrderModuleWebModelCoupon>
+    public partial class VirtoCommerceOrderModuleWebModelCoupon :  IEquatable<VirtoCommerceOrderModuleWebModelCoupon>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceOrderModuleWebModelCoupon" /> class.
@@ -80,7 +81,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommerceOrderModuleWebModelCoupon instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommerceOrderModuleWebModelCoupon to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceOrderModuleWebModelCoupon to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommerceOrderModuleWebModelCoupon other)
         {
@@ -114,10 +115,10 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.Code != null)
-                    hash = hash * 57 + this.Code.GetHashCode();
+                    hash = hash * 59 + this.Code.GetHashCode();
                 
                 if (this.InvalidDescription != null)
-                    hash = hash * 57 + this.InvalidDescription.GetHashCode();
+                    hash = hash * 59 + this.InvalidDescription.GetHashCode();
                 
                 return hash;
             }

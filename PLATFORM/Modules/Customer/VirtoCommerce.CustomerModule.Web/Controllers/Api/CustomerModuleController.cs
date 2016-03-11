@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using VirtoCommerce.CustomerModule.Web.Converters;
@@ -18,9 +19,12 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
         private readonly IContactService _contactService;
         private readonly IOrganizationService _organizationService;
         private readonly ICustomerSearchService _contactSearchService;
-        public CustomerModuleController(IContactService contactService, IOrganizationService organizationService, ICustomerSearchService contactSearchService)
+        private readonly ISecurityService _securityService;
+
+        public CustomerModuleController(IContactService contactService, IOrganizationService organizationService, ICustomerSearchService contactSearchService, ISecurityService securityService)
         {
             _contactSearchService = contactSearchService;
+            _securityService = securityService;
             _organizationService = organizationService;
             _contactService = contactService;
         }
@@ -59,11 +63,11 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
             var organizations = result.Organizations.Select(x => x.ToWebModel());
             var contacts = result.Contacts.Select(x => x.ToWebModel());
 
-            retVal.TotalCount = organizations.Count() + result.TotalCount;
+            var organizationsCount = organizations.Count();
+            retVal.TotalCount = organizationsCount + result.TotalCount;
             retVal.Members.AddRange(organizations.Skip(start).Take(count));
 
-            count -= organizations.Count();
-
+            count -= organizationsCount;
             retVal.Members.AddRange(contacts.Take(count));
 
             return Ok(retVal);
@@ -73,7 +77,7 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
         /// <summary>
         /// Get contact
         /// </summary>
-        /// <param name="id">Contact id</param>
+        /// <param name="id">Contact ID</param>
         [HttpGet]
         [ResponseType(typeof(webModel.Contact))]
         [Route("contacts/{id}")]
@@ -107,7 +111,7 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
         [CheckPermission(Permission = CustomerPredefinedPermissions.Update)]
         public IHttpActionResult UpdateContact(webModel.Contact contact)
         {
-            _contactService.Update(new coreModel.Contact[] { contact.ToCoreModel() });
+            _contactService.Update(new[] { contact.ToCoreModel() });
             return StatusCode(HttpStatusCode.NoContent);
         }
 
@@ -167,7 +171,7 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
         [CheckPermission(Permission = CustomerPredefinedPermissions.Update)]
         public IHttpActionResult UpdateOrganization(webModel.Organization organization)
         {
-            _organizationService.Update(new coreModel.Organization[] { organization.ToCoreModel() });
+            _organizationService.Update(new[] { organization.ToCoreModel() });
             return StatusCode(HttpStatusCode.NoContent);
         }
 
@@ -186,5 +190,7 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
             _organizationService.Delete(ids);
             return StatusCode(HttpStatusCode.NoContent);
         }
+
+     
     }
 }

@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommercePlatformWebModelPackagingModuleDescriptor : IEquatable<VirtoCommercePlatformWebModelPackagingModuleDescriptor>
+    public partial class VirtoCommercePlatformWebModelPackagingModuleDescriptor :  IEquatable<VirtoCommercePlatformWebModelPackagingModuleDescriptor>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelPackagingModuleDescriptor" /> class.
@@ -209,7 +210,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommercePlatformWebModelPackagingModuleDescriptor instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommercePlatformWebModelPackagingModuleDescriptor to be compared</param>
+        /// <param name="other">Instance of VirtoCommercePlatformWebModelPackagingModuleDescriptor to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommercePlatformWebModelPackagingModuleDescriptor other)
         {
@@ -323,58 +324,58 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.Id != null)
-                    hash = hash * 57 + this.Id.GetHashCode();
+                    hash = hash * 59 + this.Id.GetHashCode();
                 
                 if (this.Version != null)
-                    hash = hash * 57 + this.Version.GetHashCode();
+                    hash = hash * 59 + this.Version.GetHashCode();
                 
                 if (this.PlatformVersion != null)
-                    hash = hash * 57 + this.PlatformVersion.GetHashCode();
+                    hash = hash * 59 + this.PlatformVersion.GetHashCode();
                 
                 if (this.Title != null)
-                    hash = hash * 57 + this.Title.GetHashCode();
+                    hash = hash * 59 + this.Title.GetHashCode();
                 
                 if (this.Description != null)
-                    hash = hash * 57 + this.Description.GetHashCode();
+                    hash = hash * 59 + this.Description.GetHashCode();
                 
                 if (this.Authors != null)
-                    hash = hash * 57 + this.Authors.GetHashCode();
+                    hash = hash * 59 + this.Authors.GetHashCode();
                 
                 if (this.Owners != null)
-                    hash = hash * 57 + this.Owners.GetHashCode();
+                    hash = hash * 59 + this.Owners.GetHashCode();
                 
                 if (this.LicenseUrl != null)
-                    hash = hash * 57 + this.LicenseUrl.GetHashCode();
+                    hash = hash * 59 + this.LicenseUrl.GetHashCode();
                 
                 if (this.ProjectUrl != null)
-                    hash = hash * 57 + this.ProjectUrl.GetHashCode();
+                    hash = hash * 59 + this.ProjectUrl.GetHashCode();
                 
                 if (this.IconUrl != null)
-                    hash = hash * 57 + this.IconUrl.GetHashCode();
+                    hash = hash * 59 + this.IconUrl.GetHashCode();
                 
                 if (this.RequireLicenseAcceptance != null)
-                    hash = hash * 57 + this.RequireLicenseAcceptance.GetHashCode();
+                    hash = hash * 59 + this.RequireLicenseAcceptance.GetHashCode();
                 
                 if (this.ReleaseNotes != null)
-                    hash = hash * 57 + this.ReleaseNotes.GetHashCode();
+                    hash = hash * 59 + this.ReleaseNotes.GetHashCode();
                 
                 if (this.Copyright != null)
-                    hash = hash * 57 + this.Copyright.GetHashCode();
+                    hash = hash * 59 + this.Copyright.GetHashCode();
                 
                 if (this.Tags != null)
-                    hash = hash * 57 + this.Tags.GetHashCode();
+                    hash = hash * 59 + this.Tags.GetHashCode();
                 
                 if (this.Dependencies != null)
-                    hash = hash * 57 + this.Dependencies.GetHashCode();
+                    hash = hash * 59 + this.Dependencies.GetHashCode();
                 
                 if (this.ValidationErrors != null)
-                    hash = hash * 57 + this.ValidationErrors.GetHashCode();
+                    hash = hash * 59 + this.ValidationErrors.GetHashCode();
                 
                 if (this.IsRemovable != null)
-                    hash = hash * 57 + this.IsRemovable.GetHashCode();
+                    hash = hash * 59 + this.IsRemovable.GetHashCode();
                 
                 if (this.FileName != null)
-                    hash = hash * 57 + this.FileName.GetHashCode();
+                    hash = hash * 59 + this.FileName.GetHashCode();
                 
                 return hash;
             }

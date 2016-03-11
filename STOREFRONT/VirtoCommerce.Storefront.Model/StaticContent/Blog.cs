@@ -9,6 +9,6 @@ namespace VirtoCommerce.Storefront.Model.StaticContent
 {
     public class Blog : ContentItem
     {
-        public IStorefrontPagedList<BlogArticle> Articles { get; set; }
+        public IMutablePagedList<BlogArticle> Articles { get; set; }
     }
 }

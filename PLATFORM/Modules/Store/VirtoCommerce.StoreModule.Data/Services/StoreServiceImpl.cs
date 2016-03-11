@@ -11,6 +11,7 @@ using VirtoCommerce.Domain.Store.Services;
 using VirtoCommerce.Domain.Tax.Services;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
+using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.StoreModule.Data.Converters;
@@ -60,7 +61,8 @@ namespace VirtoCommerce.StoreModule.Data.Services
 
                     store.ReturnsFulfillmentCenter = fulfillmentCenters.FirstOrDefault(x => x.Id == dbStore.ReturnsFulfillmentCenterId);
                     store.FulfillmentCenter = fulfillmentCenters.FirstOrDefault(x => x.Id == dbStore.FulfillmentCenterId);
-                   
+                    //Set default settings for store it can be override by store instance setting in LoadEntitySettingsValues
+                    store.Settings = _settingManager.GetModuleSettings("VirtoCommerce.Store");
                     _settingManager.LoadEntitySettingsValues(store);
                     _dynamicPropertyService.LoadDynamicPropertyValues(store);
                     retVal.Add(store);
@@ -191,6 +193,36 @@ namespace VirtoCommerce.StoreModule.Data.Services
                                  .ToArray();
 
                 retVal.Stores = GetByIds(storeIds).AsQueryable().OrderBySortInfos(sortInfos).ToList(); 
+            }
+            return retVal;
+        }
+
+
+        /// <summary>
+        /// Returns list of stores ids which passed user can signIn
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public IEnumerable<string> GetUserAllowedStoreIds(ApplicationUserExtended user)
+        {
+            if(user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+
+            var retVal = new List<string>();
+
+            if(user.StoreId != null)
+            {
+                var store = GetById(user.StoreId);
+                if(store != null)
+                {
+                    retVal.Add(store.Id);
+                    if(!store.TrustedGroups.IsNullOrEmpty())
+                    {
+                        retVal.AddRange(store.TrustedGroups);
+                    }
+                }
             }
             return retVal;
         }

@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.coreModule.common')
-.controller('virtoCommerce.coreModule.common.coreAddressDetailController', ['$scope', 'virtoCommerce.coreModule.common.countries', 'platformWebApp.dialogService', function ($scope, countries, dialogService) {
+.controller('virtoCommerce.coreModule.common.coreAddressDetailController', ['$scope', 'virtoCommerce.coreModule.common.countries', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', function ($scope, countries, dialogService, bladeNavigationService) {
     var blade = $scope.blade;
 
     $scope.addressTypes = ['Billing', 'Shipping', 'BillingAndShipping'];
@@ -9,12 +9,17 @@
             blade.currentEntity.addressType = $scope.addressTypes[1];
         }
 
-        blade.origEntity = angular.copy(blade.currentEntity);
+        blade.origEntity = blade.currentEntity;
+        blade.currentEntity = angular.copy(blade.origEntity);
         blade.isLoading = false;
     }
 
     function isDirty() {
         return !angular.equals(blade.currentEntity, blade.origEntity);
+    }
+
+    function canSave() {
+        return isDirty() && $scope.isValid();
     }
 
     $scope.setForm = function (form) { $scope.formScope = form; };
@@ -36,23 +41,8 @@
     };
 
     blade.onClose = function (closeCallback) {
-        if (isDirty() && $scope.isValid()) {
-            var dialog = {
-                id: "confirmCurrentBladeClose",
-                title: "core.dialogs.address-save.title",
-                message: "core.dialogs.address-save.message",
-                callback: function (needSave) {
-                    if (needSave) {
-                        $scope.saveChanges();
-                    }
-                    closeCallback();
-                }
-            }
-            dialogService.showConfirmationDialog(dialog);
-        }
-        else {
-            closeCallback();
-        }
+        bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, $scope.saveChanges, closeCallback, "core.dialogs.address-save.title", "core.dialogs.address-save.message");
+        
     };
 
     function deleteEntry() {

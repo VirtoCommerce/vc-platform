@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using VirtoCommerce.Domain.Commerce.Model;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
+using VirtoCommerce.Platform.Core.Security;
 
 namespace VirtoCommerce.Domain.Customer.Model
 {
@@ -24,6 +25,10 @@ namespace VirtoCommerce.Domain.Customer.Model
         public ICollection<Address> Addresses { get; set; }
         public ICollection<string> Phones { get; set; }
         public ICollection<string> Emails { get; set; }
+        /// <summary>
+        /// All security accounts associated with this contact
+        /// </summary>
+        public ICollection<ApplicationUserExtended> SecurityAccounts { get; set; }
         public ICollection<Note> Notes { get; set; }
 
         #region IHasDynamicProperties Members

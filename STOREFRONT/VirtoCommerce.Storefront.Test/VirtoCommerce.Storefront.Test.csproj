@@ -86,11 +86,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConcurrentAsyncLockTests.cs" />
+    <Compile Include="MutablePagedListTests.cs" />
+    <Compile Include="QuoteRequestTests.cs" />
     <Compile Include="LinkHelperTests.cs" />
     <Compile Include="ShoppingCartTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StaticContentScenarios.cs" />
     <Compile Include="StorefrontTestBase.cs" />
+    <Compile Include="UrlBuilderTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

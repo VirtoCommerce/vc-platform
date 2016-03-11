@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommerceOrderModuleWebModelDashboardStatisticsResult : IEquatable<VirtoCommerceOrderModuleWebModelDashboardStatisticsResult>
+    public partial class VirtoCommerceOrderModuleWebModelDashboardStatisticsResult :  IEquatable<VirtoCommerceOrderModuleWebModelDashboardStatisticsResult>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceOrderModuleWebModelDashboardStatisticsResult" /> class.
@@ -152,7 +153,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommerceOrderModuleWebModelDashboardStatisticsResult instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommerceOrderModuleWebModelDashboardStatisticsResult to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceOrderModuleWebModelDashboardStatisticsResult to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommerceOrderModuleWebModelDashboardStatisticsResult other)
         {
@@ -231,37 +232,37 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.StartDate != null)
-                    hash = hash * 57 + this.StartDate.GetHashCode();
+                    hash = hash * 59 + this.StartDate.GetHashCode();
                 
                 if (this.EndDate != null)
-                    hash = hash * 57 + this.EndDate.GetHashCode();
+                    hash = hash * 59 + this.EndDate.GetHashCode();
                 
                 if (this.Revenue != null)
-                    hash = hash * 57 + this.Revenue.GetHashCode();
+                    hash = hash * 59 + this.Revenue.GetHashCode();
                 
                 if (this.RevenuePeriodDetails != null)
-                    hash = hash * 57 + this.RevenuePeriodDetails.GetHashCode();
+                    hash = hash * 59 + this.RevenuePeriodDetails.GetHashCode();
                 
                 if (this.OrderCount != null)
-                    hash = hash * 57 + this.OrderCount.GetHashCode();
+                    hash = hash * 59 + this.OrderCount.GetHashCode();
                 
                 if (this.CustomersCount != null)
-                    hash = hash * 57 + this.CustomersCount.GetHashCode();
+                    hash = hash * 59 + this.CustomersCount.GetHashCode();
                 
                 if (this.RevenuePerCustomer != null)
-                    hash = hash * 57 + this.RevenuePerCustomer.GetHashCode();
+                    hash = hash * 59 + this.RevenuePerCustomer.GetHashCode();
                 
                 if (this.AvgOrderValue != null)
-                    hash = hash * 57 + this.AvgOrderValue.GetHashCode();
+                    hash = hash * 59 + this.AvgOrderValue.GetHashCode();
                 
                 if (this.AvgOrderValuePeriodDetails != null)
-                    hash = hash * 57 + this.AvgOrderValuePeriodDetails.GetHashCode();
+                    hash = hash * 59 + this.AvgOrderValuePeriodDetails.GetHashCode();
                 
                 if (this.ItemsPurchased != null)
-                    hash = hash * 57 + this.ItemsPurchased.GetHashCode();
+                    hash = hash * 59 + this.ItemsPurchased.GetHashCode();
                 
                 if (this.LineitemsPerOrder != null)
-                    hash = hash * 57 + this.LineitemsPerOrder.GetHashCode();
+                    hash = hash * 59 + this.LineitemsPerOrder.GetHashCode();
                 
                 return hash;
             }

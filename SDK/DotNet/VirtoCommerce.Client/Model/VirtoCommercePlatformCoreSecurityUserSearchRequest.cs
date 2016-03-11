@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommercePlatformCoreSecurityUserSearchRequest : IEquatable<VirtoCommercePlatformCoreSecurityUserSearchRequest>
+    public partial class VirtoCommercePlatformCoreSecurityUserSearchRequest :  IEquatable<VirtoCommercePlatformCoreSecurityUserSearchRequest>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreSecurityUserSearchRequest" /> class.
@@ -39,6 +40,13 @@ namespace VirtoCommerce.Client.Model
         /// </summary>
         [DataMember(Name="keyword", EmitDefaultValue=false)]
         public string Keyword { get; set; }
+  
+        
+        /// <summary>
+        /// Gets or Sets MemberId
+        /// </summary>
+        [DataMember(Name="memberId", EmitDefaultValue=false)]
+        public string MemberId { get; set; }
   
         
         /// <summary>
@@ -66,6 +74,7 @@ namespace VirtoCommerce.Client.Model
             sb.Append("class VirtoCommercePlatformCoreSecurityUserSearchRequest {\n");
             sb.Append("  AccountTypes: ").Append(AccountTypes).Append("\n");
             sb.Append("  Keyword: ").Append(Keyword).Append("\n");
+            sb.Append("  MemberId: ").Append(MemberId).Append("\n");
             sb.Append("  SkipCount: ").Append(SkipCount).Append("\n");
             sb.Append("  TakeCount: ").Append(TakeCount).Append("\n");
             
@@ -96,7 +105,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommercePlatformCoreSecurityUserSearchRequest instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommercePlatformCoreSecurityUserSearchRequest to be compared</param>
+        /// <param name="other">Instance of VirtoCommercePlatformCoreSecurityUserSearchRequest to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommercePlatformCoreSecurityUserSearchRequest other)
         {
@@ -114,6 +123,11 @@ namespace VirtoCommerce.Client.Model
                     this.Keyword == other.Keyword ||
                     this.Keyword != null &&
                     this.Keyword.Equals(other.Keyword)
+                ) && 
+                (
+                    this.MemberId == other.MemberId ||
+                    this.MemberId != null &&
+                    this.MemberId.Equals(other.MemberId)
                 ) && 
                 (
                     this.SkipCount == other.SkipCount ||
@@ -140,16 +154,19 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.AccountTypes != null)
-                    hash = hash * 57 + this.AccountTypes.GetHashCode();
+                    hash = hash * 59 + this.AccountTypes.GetHashCode();
                 
                 if (this.Keyword != null)
-                    hash = hash * 57 + this.Keyword.GetHashCode();
+                    hash = hash * 59 + this.Keyword.GetHashCode();
+                
+                if (this.MemberId != null)
+                    hash = hash * 59 + this.MemberId.GetHashCode();
                 
                 if (this.SkipCount != null)
-                    hash = hash * 57 + this.SkipCount.GetHashCode();
+                    hash = hash * 59 + this.SkipCount.GetHashCode();
                 
                 if (this.TakeCount != null)
-                    hash = hash * 57 + this.TakeCount.GetHashCode();
+                    hash = hash * 59 + this.TakeCount.GetHashCode();
                 
                 return hash;
             }

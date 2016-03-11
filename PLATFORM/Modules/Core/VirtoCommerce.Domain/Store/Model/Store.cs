@@ -10,11 +10,14 @@ using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.Domain.Store.Model
 {
-    public class Store : AuditableEntity, IHasDynamicProperties, ISeoSupport
+    public class Store : AuditableEntity, IHasDynamicProperties, IHaveSettings, ISeoSupport
     {
         public string Name { get; set; }
         public string Description { get; set; }
-        public string Url { get; set; }
+    
+        /// <summary>
+        /// Store current state (Open, Closed, RestrictedAccess)
+        /// </summary>
         public StoreState StoreState { get; set; }
 
         public string TimeZone { get; set; }
@@ -23,17 +26,40 @@ namespace VirtoCommerce.Domain.Store.Model
         public string DefaultLanguage { get; set; }
 
         public string DefaultCurrency { get; set; }
+        /// <summary>
+        /// Catalog id used as primary store catalog
+        /// </summary>
         public string Catalog { get; set; }
         public bool CreditCardSavePolicy { get; set; }
+        /// <summary>
+        /// Store storefront url
+        /// </summary>
+        public string Url { get; set; }
+        /// <summary>
+        /// Store storefront https url
+        /// </summary>
         public string SecureUrl { get; set; }
+        /// <summary>
+        /// Primary store contact email can be used for store event notifications and for feed back
+        /// </summary>
         public string Email { get; set; }
         public string AdminEmail { get; set; }
         public bool DisplayOutOfStock { get; set; }
 
         public FulfillmentCenter FulfillmentCenter { get; set; }
         public FulfillmentCenter ReturnsFulfillmentCenter { get; set; }
+        /// <summary>
+        /// All store supported languages
+        /// </summary>
         public ICollection<string> Languages { get; set; }
+        /// <summary>
+        /// All store supported currencies
+        /// </summary>
         public ICollection<string> Currencies { get; set; }
+        /// <summary>
+        /// All store trusted groups (group of stores that shared the user logins)
+        /// </summary>
+        public ICollection<string> TrustedGroups { get; set; }
 
         public ICollection<TaxProvider> TaxProviders { get; set; }
         public ICollection<PaymentMethod> PaymentMethods { get; set; }
@@ -46,6 +72,10 @@ namespace VirtoCommerce.Domain.Store.Model
         #region IHasDynamicProperties Members
         public string ObjectType { get; set; }
         public ICollection<DynamicObjectProperty> DynamicProperties { get; set; }
+        #endregion
+
+        #region IHaveSettings Members
+        public ICollection<SettingEntry> Settings { get; set; }
         #endregion
     }
 }

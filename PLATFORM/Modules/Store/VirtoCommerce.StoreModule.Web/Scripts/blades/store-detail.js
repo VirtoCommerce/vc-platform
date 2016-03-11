@@ -1,7 +1,9 @@
 ﻿angular.module('virtoCommerce.storeModule')
-.controller('virtoCommerce.storeModule.storeDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.storeModule.stores', 'virtoCommerce.catalogModule.catalogs', 'platformWebApp.settings', 'platformWebApp.settings.helper', 'platformWebApp.dialogService', 'platformWebApp.authService', 'virtoCommerce.coreModule.currency.currencyUtils',
-    function ($scope, bladeNavigationService, stores, catalogs, settings, settingsHelper, dialogService, authService, currencyUtils) {
+.controller('virtoCommerce.storeModule.storeDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.storeModule.stores', 'virtoCommerce.catalogModule.catalogs', 'platformWebApp.settings', 'platformWebApp.settings.helper', 'platformWebApp.dialogService', 'virtoCommerce.coreModule.currency.currencyUtils',
+    function ($scope, bladeNavigationService, stores, catalogs, settings, settingsHelper, dialogService, currencyUtils) {
         var blade = $scope.blade;
+        blade.updatePermission = 'store:update';
+        blade.subtitle = 'stores.blades.store-detail.subtitle';
 
         blade.refresh = function (parentRefresh) {
             stores.get({ id: blade.currentEntityId }, function (data) {
@@ -16,9 +18,11 @@
         function initializeBlade(data) {
             data.additionalLanguages = _.without(data.languages, data.defaultLanguage);
             data.additionalCurrencies = _.without(data.currencies, data.defaultCurrency);
-
+            
             blade.currentEntityId = data.id;
             blade.title = data.name;
+
+            settingsHelper.fixValues(data.settings);
 
             data.shippingMethods.sort(function (a, b) { return a.priority - b.priority; });
             data.paymentMethods.sort(function (a, b) { return a.priority - b.priority; });
@@ -26,20 +30,24 @@
             _.each(data.shippingMethods, function (x) { settingsHelper.fixValues(x.settings); })
             _.each(data.paymentMethods, function (x) { settingsHelper.fixValues(x.settings); })
             _.each(data.taxProviders, function (x) { settingsHelper.fixValues(x.settings); })
-
+            
             blade.currentEntity = angular.copy(data);
             blade.origEntity = data;
             blade.isLoading = false;
 
             //sets security scopes for scope bounded ACL
-            if (blade.currentEntity && blade.currentEntity.securityScopes && angular.isArray(blade.currentEntity.securityScopes)) {
+            if (blade.currentEntity.securityScopes && angular.isArray(blade.currentEntity.securityScopes)) {
                 blade.securityScopes = blade.currentEntity.securityScopes;
             }
-        };
+        }
 
         function isDirty() {
-            return authService.checkPermission('store:update', blade.securityScopes) && !angular.equals(blade.currentEntity, blade.origEntity);
-        };
+            return !angular.equals(blade.currentEntity, blade.origEntity) && blade.hasUpdatePermission();
+        }
+
+        function canSave() {
+            return isDirty() && $scope.formScope && $scope.formScope.$valid;
+        }
 
         $scope.saveChanges = function () {
             blade.isLoading = true;
@@ -75,50 +83,20 @@
             dialogService.showConfirmationDialog(dialog);
         }
 
-        $scope.setForm = function (form) {
-            $scope.formScope = form;
-        }
+        $scope.setForm = function (form) { $scope.formScope = form; };
 
         blade.onClose = function (closeCallback) {
-            closeChildrenBlades();
-            if (isDirty()) {
-                var dialog = {
-                    id: "confirmCurrentBladeClose",
-                    title: "stores.dialogs.store-save.title",
-                    message: "stores.dialogs.store-save.message"
-                };
-                dialog.callback = function (needSave) {
-                    if (needSave) {
-                        $scope.saveChanges();
-                    }
-                    closeCallback();
-                };
-                dialogService.showConfirmationDialog(dialog);
-            }
-            else {
-                closeCallback();
-            }
+            bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, $scope.saveChanges, closeCallback, "stores.dialogs.store-save.title", "stores.dialogs.store-save.message");
         };
 
-        function closeChildrenBlades() {
-            angular.forEach(blade.childrenBlades.slice(), function (child) {
-                bladeNavigationService.closeBlade(child);
-            });
-        }
-
         blade.headIcon = 'fa-archive';
-
         blade.toolbarCommands = [
             {
                 name: "platform.commands.save",
                 icon: 'fa fa-save',
-                executeMethod: function () {
-                    $scope.saveChanges();
-                },
-                canExecuteMethod: function () {
-                    return isDirty() && $scope.formScope && $scope.formScope.$valid;
-                },
-                permission: 'store:update'
+                executeMethod: $scope.saveChanges,
+                canExecuteMethod: canSave,
+                permission: blade.updatePermission
             },
             {
                 name: "platform.commands.reset",
@@ -126,19 +104,22 @@
                 executeMethod: function () {
                     angular.copy(blade.origEntity, blade.currentEntity);
                 },
-                canExecuteMethod: function () {
-                    return isDirty();
+                canExecuteMethod: isDirty,
+                permission: blade.updatePermission
+            },
+            {
+                name: "platform.commands.open-browser", icon: 'fa fa-external-link',
+                executeMethod: function () {
+                    window.open(blade.currentEntity.url, '_blank');
                 },
-                permission: 'store:update'
+                canExecuteMethod: function () {
+                    return blade.currentEntity && blade.currentEntity.url;
+                }
             },
             {
                 name: "platform.commands.delete", icon: 'fa fa-trash-o',
-                executeMethod: function () {
-                    deleteEntry();
-                },
-                canExecuteMethod: function () {
-                    return !isDirty();
-                },
+                executeMethod: deleteEntry,
+                canExecuteMethod: function () { return true; },
                 permission: 'store:delete'
             }
         ];
@@ -154,10 +135,11 @@
             };
             bladeNavigationService.showBlade(newBlade, blade);
         };
-
+        
         blade.refresh(false);
         $scope.catalogs = catalogs.getCatalogs();
         $scope.storeStates = settings.getValues({ id: 'Stores.States' });
         $scope.languages = settings.getValues({ id: 'VirtoCommerce.Core.General.Languages' });
+        $scope.allStores = stores.query();
         $scope.currencyUtils = currencyUtils;
     }]);

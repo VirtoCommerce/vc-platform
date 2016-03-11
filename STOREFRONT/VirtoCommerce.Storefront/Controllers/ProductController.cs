@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using VirtoCommerce.Storefront.Common;
 using VirtoCommerce.Storefront.Model;
+using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Services;
 
@@ -31,28 +32,28 @@ namespace VirtoCommerce.Storefront.Controllers
         [HttpGet]
         public async Task<ActionResult> ProductDetails(string productId)
         {
-            var product = (await _catalogSearchService.GetProductsAsync(new[] { productId }, Model.Catalog.ItemResponseGroup.ItemInfo | Model.Catalog.ItemResponseGroup.ItemWithPrices)).FirstOrDefault();
+            var product = (await _catalogSearchService.GetProductsAsync(new[] { productId },
+                Model.Catalog.ItemResponseGroup.Variations |
+                Model.Catalog.ItemResponseGroup.ItemProperties |
+                Model.Catalog.ItemResponseGroup.ItemSmall |
+                Model.Catalog.ItemResponseGroup.ItemWithPrices)).FirstOrDefault();
             WorkContext.CurrentProduct = product;
+            if(product.CategoryId != null)
+            {
+                var category = (await _catalogSearchService.GetCategoriesAsync(new[] { product.CategoryId }, Model.Catalog.CategoryResponseGroup.Full)).FirstOrDefault();
+                WorkContext.CurrentCategory = category;
+                category.Products = new MutablePagedList<Product>((pageNumber, pageSize) =>
+                {
+                    var criteria = WorkContext.CurrentCatalogSearchCriteria.Clone();                    
+                    criteria.CategoryId = product.CategoryId;
+                    criteria.PageNumber = pageNumber;
+                    criteria.PageSize = pageSize;
+                    return _catalogSearchService.SearchProducts(criteria);
+                });
 
-            WorkContext.CurrentCatalogSearchCriteria.CategoryId = product.CategoryId;
-            WorkContext.CurrentCatalogSearchResult = await _catalogSearchService.SearchAsync(WorkContext.CurrentCatalogSearchCriteria);
-
+            }
+     
             return View("product", WorkContext);
-        }
-
-        /// <summary>
-        /// GET: /product/{productId}/json
-        /// This action used by js 
-        /// </summary>
-        /// <param name="productId"></param>
-        /// <returns></returns>
-        [HttpGet]
-        [OutputCache(NoStore = true, Duration = 0, VaryByParam = "None")]
-        [HandleJsonErrorAttribute]
-        public async Task<ActionResult> ProductDetailsJson(string productId)
-        {
-            base.WorkContext.CurrentProduct = (await _catalogSearchService.GetProductsAsync(new [] { productId }, Model.Catalog.ItemResponseGroup.ItemLarge)).FirstOrDefault();
-            return Json(base.WorkContext.CurrentProduct, JsonRequestBehavior.AllowGet);
         }
     }
 }

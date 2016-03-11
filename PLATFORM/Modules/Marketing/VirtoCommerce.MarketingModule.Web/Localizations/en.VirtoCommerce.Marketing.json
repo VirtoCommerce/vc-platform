@@ -6,7 +6,7 @@
         "title": "Marketing"
       },
       "promotion-detail": {
-        "title-new": "New Promotion list",
+        "title-new": "New Promotion",
         "labels": {
           "is-active": "Is active",
           "promotion-name": "Promotion name",
@@ -269,8 +269,7 @@
     },
     "commands": {
       "manage-type-properties": "Manage type properties",
-      "edit-folder": "Edit folder",
-      "pick-selected": "Pick selected"
+      "edit-folder": "Edit folder"
     }
   }
 }

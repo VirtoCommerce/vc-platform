@@ -1,6 +1,7 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.catalogLanguagesController', ['$scope', 'platformWebApp.settings', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', function ($scope, settings, dialogService, bladeNavigationService) {
+.controller('virtoCommerce.catalogModule.catalogLanguagesController', ['$scope', 'platformWebApp.settings', 'platformWebApp.bladeNavigationService', function ($scope, settings, bladeNavigationService) {
     var blade = $scope.blade;
+    blade.updatePermission = 'catalog:update';
     var promise = settings.getValues({ id: 'VirtoCommerce.Core.General.Languages' }).$promise;
     $scope.languages = [];
 
@@ -25,27 +26,11 @@
     }
 
     blade.onClose = function (closeCallback) {
-        if (isDirty()) {
-            var dialog = {
-                id: "confirmItemChange",
-                title: "catalogs.dialogs.language-save.title",
-                message: "catalogs.dialogs.language-save.message"
-            };
-            dialog.callback = function (needSave) {
-                if (needSave) {
-                    $scope.saveChanges();
-                }
-                closeCallback();
-            };
-            dialogService.showConfirmationDialog(dialog);
-        }
-        else {
-            closeCallback();
-        }
+        bladeNavigationService.showConfirmationIfNeeded(isDirty(), true, blade, $scope.saveChanges, closeCallback, "catalog.dialogs.language-save.title", "catalog.dialogs.language-save.message");
     };
 
     function isDirty() {
-        return !angular.equals(blade.currentEntity, blade.origEntity);
+        return !angular.equals(blade.currentEntity, blade.origEntity) && blade.hasUpdatePermission();
     };
 
     $scope.cancelChanges = function () {
@@ -54,6 +39,8 @@
     }
 
     $scope.saveChanges = function () {
+        if (!blade.hasUpdatePermission()) return;
+
         var selectedValues = blade.data.virtual ? [] : _.map(blade.currentEntity.selectedValues, function (x) { return { languageCode: x }; });
         var defaultValue = _.find(selectedValues, function (x) { return x.languageCode.toLowerCase() === blade.currentEntity.defaultValue.toLowerCase(); });
         if (defaultValue) {

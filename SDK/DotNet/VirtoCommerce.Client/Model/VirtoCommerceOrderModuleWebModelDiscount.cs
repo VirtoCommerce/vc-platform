@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommerceOrderModuleWebModelDiscount : IEquatable<VirtoCommerceOrderModuleWebModelDiscount>
+    public partial class VirtoCommerceOrderModuleWebModelDiscount :  IEquatable<VirtoCommerceOrderModuleWebModelDiscount>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceOrderModuleWebModelDiscount" /> class.
@@ -104,7 +105,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommerceOrderModuleWebModelDiscount instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommerceOrderModuleWebModelDiscount to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceOrderModuleWebModelDiscount to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommerceOrderModuleWebModelDiscount other)
         {
@@ -153,19 +154,19 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.PromotionId != null)
-                    hash = hash * 57 + this.PromotionId.GetHashCode();
+                    hash = hash * 59 + this.PromotionId.GetHashCode();
                 
                 if (this.Currency != null)
-                    hash = hash * 57 + this.Currency.GetHashCode();
+                    hash = hash * 59 + this.Currency.GetHashCode();
                 
                 if (this.DiscountAmount != null)
-                    hash = hash * 57 + this.DiscountAmount.GetHashCode();
+                    hash = hash * 59 + this.DiscountAmount.GetHashCode();
                 
                 if (this.Coupon != null)
-                    hash = hash * 57 + this.Coupon.GetHashCode();
+                    hash = hash * 59 + this.Coupon.GetHashCode();
                 
                 if (this.Description != null)
-                    hash = hash * 57 + this.Description.GetHashCode();
+                    hash = hash * 59 + this.Description.GetHashCode();
                 
                 return hash;
             }

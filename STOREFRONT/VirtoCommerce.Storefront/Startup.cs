@@ -6,15 +6,19 @@ using System.Reflection;
 using System.Web;
 using System.Web.Compilation;
 using System.Web.Hosting;
+using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Routing;
+using CacheManager.Core;
+using CacheManager.Web;
+using MarkdownDeep;
 using Microsoft.Owin;
 using Microsoft.Owin.Extensions;
 using Microsoft.Owin.Security;
 using Microsoft.Practices.Unity;
 using Microsoft.Practices.Unity.Mvc;
+using NLog;
 using Owin;
-using VirtoCommerce.Client;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.Client.Client;
 using VirtoCommerce.LiquidThemeEngine;
@@ -22,29 +26,27 @@ using VirtoCommerce.LiquidThemeEngine.Binders;
 using VirtoCommerce.Storefront;
 using VirtoCommerce.Storefront.App_Start;
 using VirtoCommerce.Storefront.Builders;
-using VirtoCommerce.Storefront.Model;
-using VirtoCommerce.Storefront.Model.Common;
-using VirtoCommerce.Storefront.Owin;
-using VirtoCommerce.Storefront.Model.Services;
-using VirtoCommerce.Storefront.Services;
 using VirtoCommerce.Storefront.Common;
-using CacheManager.Core;
-using CacheManager.Web;
-using MarkdownDeep;
-using VirtoCommerce.Storefront.Model.Marketing.Services;
+using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Cart.Services;
+using VirtoCommerce.Storefront.Model.Common;
+using VirtoCommerce.Storefront.Model.Common.Events;
+using VirtoCommerce.Storefront.Model.Customer.Services;
+using VirtoCommerce.Storefront.Model.LinkList.Services;
+using VirtoCommerce.Storefront.Model.Marketing.Services;
+using VirtoCommerce.Storefront.Model.Order.Events;
 using VirtoCommerce.Storefront.Model.Pricing.Services;
 using VirtoCommerce.Storefront.Model.Quote.Services;
-using VirtoCommerce.Storefront.Model.Customer.Services;
-using VirtoCommerce.Storefront.Model.Common.Events;
-using VirtoCommerce.Storefront.Model.Order.Events;
-using NLog;
+using VirtoCommerce.Storefront.Model.Services;
+using VirtoCommerce.Storefront.Owin;
+using VirtoCommerce.Storefront.Services;
+using VirtoCommerce.Storefront.Model.Quote.Events;
 
 [assembly: OwinStartup(typeof(Startup))]
 [assembly: PreApplicationStartMethod(typeof(Startup), "PreApplicationStart")]
 namespace VirtoCommerce.Storefront
 {
-    public partial class Startup
+    public class Startup
     {
         private static readonly List<string> _directories = new List<string>(new[] { Path.Combine(HostingEnvironment.MapPath("~/App_Data"), Environment.Is64BitProcess ? "x64" : "x86") });
         private static Assembly _managerAssembly;
@@ -79,7 +81,7 @@ namespace VirtoCommerce.Storefront
 
             //Caching configuration (system runtime memory handle)
             var cacheManager = CacheFactory.FromConfiguration<object>("storefrontCache");
-            container.RegisterInstance<ICacheManager<object>>(cacheManager);
+            container.RegisterInstance(cacheManager);
             //Because CacheManagerOutputCacheProvider used diff cache manager instance need translate clear region by this way
             //https://github.com/MichaCo/CacheManager/issues/32
             cacheManager.OnClearRegion += (sender, region) =>
@@ -108,6 +110,11 @@ namespace VirtoCommerce.Storefront
             var logger = LogManager.GetLogger("default");
             container.RegisterInstance<ILogger>(logger);
 
+            // Create new work context for each request
+            container.RegisterType<WorkContext, WorkContext>(new PerRequestLifetimeManager());
+            Func<WorkContext> workContextFactory = () => container.Resolve<WorkContext>();
+            container.RegisterInstance(workContextFactory);
+
             // Workaround for old storefront base URL: remove /api/ suffix since it is already included in every resource address in VirtoCommerce.Client library.
             var baseUrl = ConfigurationManager.ConnectionStrings["VirtoCommerceBaseUrl"].ConnectionString;
             if (baseUrl != null && baseUrl.EndsWith("/api/", StringComparison.OrdinalIgnoreCase))
@@ -119,8 +126,11 @@ namespace VirtoCommerce.Storefront
                 }
             }
 
-            var apiClient = new HmacApiClient(baseUrl, ConfigurationManager.AppSettings["vc-public-ApiAppId"], ConfigurationManager.AppSettings["vc-public-ApiSecretKey"]);
+            var apiAppId = ConfigurationManager.AppSettings["vc-public-ApiAppId"];
+            var apiSecretKey = ConfigurationManager.AppSettings["vc-public-ApiSecretKey"];
+            var apiClient = new StorefrontHmacApiClient(baseUrl, apiAppId, apiSecretKey, workContextFactory);
             container.RegisterInstance<ApiClient>(apiClient);
+            container.RegisterInstance(new VirtoCommerce.Client.Client.Configuration(apiClient));
 
             container.RegisterType<IStoreModuleApi, StoreModuleApi>();
             container.RegisterType<IVirtoCommercePlatformApi, VirtoCommercePlatformApi>();
@@ -141,11 +151,12 @@ namespace VirtoCommerce.Storefront
             container.RegisterType<ICartValidator, CartValidator>();
             container.RegisterType<IPricingService, PricingServiceImpl>();
             container.RegisterType<ICustomerService, CustomerServiceImpl>();
+            container.RegisterType<IMenuLinkListService, MenuLinkListServiceImpl>();
 
             container.RegisterType<ICartBuilder, CartBuilder>();
             container.RegisterType<IQuoteRequestBuilder, QuoteRequestBuilder>();
             container.RegisterType<ICatalogSearchService, CatalogSearchServiceImpl>();
-            container.RegisterType<IAuthenticationManager>(new InjectionFactory((context) => HttpContext.Current.GetOwinContext().Authentication));
+            container.RegisterType<IAuthenticationManager>(new InjectionFactory(context => HttpContext.Current.GetOwinContext().Authentication));
 
 
             container.RegisterType<IStorefrontUrlBuilder, StorefrontUrlBuilder>(new PerRequestLifetimeManager());
@@ -153,15 +164,12 @@ namespace VirtoCommerce.Storefront
             //Register domain events
             container.RegisterType<IEventPublisher<OrderPlacedEvent>, EventPublisher<OrderPlacedEvent>>();
             container.RegisterType<IEventPublisher<UserLoginEvent>, EventPublisher<UserLoginEvent>>();
+            container.RegisterType<IEventPublisher<QuoteRequestUpdatedEvent>, EventPublisher<QuoteRequestUpdatedEvent>>();
             //Register event handlers (observers)
             container.RegisterType<IAsyncObserver<OrderPlacedEvent>, CustomerServiceImpl>("Invalidate customer cache when user placed new order");
+            container.RegisterType<IAsyncObserver<QuoteRequestUpdatedEvent>, CustomerServiceImpl>("Invalidate customer cache when quote request was updated");
             container.RegisterType<IAsyncObserver<UserLoginEvent>, CartBuilder>("Merge anonymous cart with loggined user cart");
             container.RegisterType<IAsyncObserver<UserLoginEvent>, QuoteRequestBuilder>("Merge anonymous quote request with loggined user quote");
-
-            // Create new work context for each request
-            container.RegisterType<WorkContext, WorkContext>(new PerRequestLifetimeManager());
-            Func<WorkContext> workContextFactory = () => container.Resolve<WorkContext>();
-            container.RegisterInstance(workContextFactory);
 
             var themesPath = ConfigurationManager.AppSettings["vc-public-themes"] ?? "~/App_data/Themes";
             var shopifyLiquidEngine = new ShopifyLiquidThemeEngine(cacheManager, workContextFactory, () => container.Resolve<IStorefrontUrlBuilder>(), ResolveLocalPath(themesPath), "~/themes/assets", "~/themes/global/assets");
@@ -177,8 +185,8 @@ namespace VirtoCommerce.Storefront
             var staticContentService = new StaticContentServiceImpl(ResolveLocalPath(staticContentPath), new Markdown(), shopifyLiquidEngine, cacheManager, workContextFactory, () => container.Resolve<IStorefrontUrlBuilder>());
             container.RegisterInstance<IStaticContentService>(staticContentService);
 
-            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters, () => container.Resolve<WorkContext>());
-            RouteConfig.RegisterRoutes(RouteTable.Routes, () => container.Resolve<WorkContext>(), container.Resolve<ICommerceCoreModuleApi>(), container.Resolve<IStaticContentService>(), cacheManager);
+            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters, workContextFactory);
+            RouteConfig.RegisterRoutes(RouteTable.Routes, workContextFactory, container.Resolve<ICommerceCoreModuleApi>(), container.Resolve<IStaticContentService>(), cacheManager);
             AuthConfig.ConfigureAuth(app, () => container.Resolve<IStorefrontUrlBuilder>());
 
             app.Use<WorkContextOwinMiddleware>(container);

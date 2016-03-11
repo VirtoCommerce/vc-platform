@@ -160,6 +160,7 @@
     <Compile Include="Common\ConventionInjections\IgnorePropertiesInjection.cs" />
     <Compile Include="Common\ConventionInjections\PatchInjection.cs" />
     <Compile Include="Common\ExceptionExtensions.cs" />
+    <Compile Include="CurrentUserOwinMiddleware.cs" />
     <Compile Include="DynamicProperties\Converters\DynamicPropertyConverter.cs" />
     <Compile Include="DynamicProperties\Converters\DynamicPropertyDictionaryItemConverter.cs" />
     <Compile Include="DynamicProperties\Converters\DynamicPropertyDictionaryItemNameConverter.cs" />
@@ -318,6 +319,7 @@
     <Compile Include="Security\Converters\RoleAssignmentConverter.cs" />
     <Compile Include="Security\Converters\RoleConverter.cs" />
     <Compile Include="Security\Converters\RolePermissionConverter.cs" />
+    <Compile Include="Security\CurrentUser.cs" />
     <Compile Include="Security\Identity\ApplicationClaimsIdentityProvider.cs" />
     <Compile Include="Security\Identity\ApplicationSignInManager.cs" />
     <Compile Include="Security\Identity\ApplicationUser.cs" />
@@ -336,6 +338,7 @@
     <Compile Include="Security\SecurityOptions.cs" />
     <Compile Include="Security\PermissionScopeService.cs" />
     <Compile Include="Security\SecurityService.cs" />
+    <Compile Include="Security\UserNameResolver.cs" />
     <Compile Include="Settings\Converters\ModuleConverter.cs" />
     <Compile Include="Settings\Converters\SettingConverter.cs" />
     <Compile Include="Settings\Converters\SettingValueConverter.cs" />

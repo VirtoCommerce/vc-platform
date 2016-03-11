@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommerceDomainCustomerModelSearchCriteria : IEquatable<VirtoCommerceDomainCustomerModelSearchCriteria>
+    public partial class VirtoCommerceDomainCustomerModelSearchCriteria :  IEquatable<VirtoCommerceDomainCustomerModelSearchCriteria>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceDomainCustomerModelSearchCriteria" /> class.
@@ -112,7 +113,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommerceDomainCustomerModelSearchCriteria instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommerceDomainCustomerModelSearchCriteria to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceDomainCustomerModelSearchCriteria to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommerceDomainCustomerModelSearchCriteria other)
         {
@@ -166,22 +167,22 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.Keyword != null)
-                    hash = hash * 57 + this.Keyword.GetHashCode();
+                    hash = hash * 59 + this.Keyword.GetHashCode();
                 
                 if (this.OrganizationId != null)
-                    hash = hash * 57 + this.OrganizationId.GetHashCode();
+                    hash = hash * 59 + this.OrganizationId.GetHashCode();
                 
                 if (this.Sort != null)
-                    hash = hash * 57 + this.Sort.GetHashCode();
+                    hash = hash * 59 + this.Sort.GetHashCode();
                 
                 if (this.SortInfos != null)
-                    hash = hash * 57 + this.SortInfos.GetHashCode();
+                    hash = hash * 59 + this.SortInfos.GetHashCode();
                 
                 if (this.Skip != null)
-                    hash = hash * 57 + this.Skip.GetHashCode();
+                    hash = hash * 59 + this.Skip.GetHashCode();
                 
                 if (this.Take != null)
-                    hash = hash * 57 + this.Take.GetHashCode();
+                    hash = hash * 59 + this.Take.GetHashCode();
                 
                 return hash;
             }

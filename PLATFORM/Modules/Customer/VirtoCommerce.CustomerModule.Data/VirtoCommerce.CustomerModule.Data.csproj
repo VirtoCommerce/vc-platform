@@ -76,6 +76,10 @@
     <Compile Include="Migrations\201601261223264_NewContactFields.Designer.cs">
       <DependentUpon>201601261223264_NewContactFields.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201602191500249_Refactoring.cs" />
+    <Compile Include="Migrations\201602191500249_Refactoring.Designer.cs">
+      <DependentUpon>201602191500249_Refactoring.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Address.cs" />
     <Compile Include="Model\Contact.cs" />
@@ -119,6 +123,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201601261223264_NewContactFields.resx">
       <DependentUpon>201601261223264_NewContactFields.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201602191500249_Refactoring.resx">
+      <DependentUpon>201602191500249_Refactoring.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

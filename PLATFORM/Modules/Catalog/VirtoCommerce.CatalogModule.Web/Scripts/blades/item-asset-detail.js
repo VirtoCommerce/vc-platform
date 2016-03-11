@@ -1,12 +1,14 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.itemAssetController', ['$rootScope', '$scope', '$translate', 'virtoCommerce.catalogModule.items', 'platformWebApp.bladeNavigationService', '$filter', 'FileUploader', 'platformWebApp.dialogService', '$injector', function ($rootScope, $scope, $translate, items, bladeNavigationService, $filter, FileUploader, dialogService, $injector) {
+.controller('virtoCommerce.catalogModule.itemAssetController', ['$scope', '$translate', 'virtoCommerce.catalogModule.items', 'platformWebApp.bladeNavigationService', '$filter', 'FileUploader', function ($scope, $translate, items, bladeNavigationService, $filter, FileUploader) {
     var blade = $scope.blade;
+    blade.updatePermission = 'catalog:update';
     $scope.item = {};
     $scope.origItem = {};
 
     blade.refresh = function (parentRefresh) {
         items.get({ id: blade.itemId }, function (data) {
-            $scope.uploader.url = 'api/platform/assets?folderUrl=catalog/' + data.code;
+            if ($scope.uploader)
+                $scope.uploader.url = 'api/platform/assets?folderUrl=catalog/' + data.code;
             $scope.origItem = data;
             $scope.item = angular.copy(data);
             blade.isLoading = false;
@@ -18,7 +20,7 @@
     }
 
     $scope.isDirty = function () {
-        return !angular.equals($scope.item, $scope.origItem);
+        return !angular.equals($scope.item, $scope.origItem) && blade.hasUpdatePermission();
     };
 
     $scope.reset = function () {
@@ -26,25 +28,8 @@
     };
 
     blade.onClose = function (closeCallback) {
-        if ($scope.isDirty()) {
-            var dialog = {
-                id: "confirmItemChange",
-                title: "catalog.dialogs.asset-save.title",
-                message: "catalog.dialogs.asset-save.message"
-            };
-            dialog.callback = function (needSave) {
-                if (needSave) {
-                    $scope.saveChanges();
-                }
-                closeCallback();
-            };
-            dialogService.showConfirmationDialog(dialog);
-        }
-        else {
-            closeCallback();
-        }
+        bladeNavigationService.showConfirmationIfNeeded($scope.isDirty(), true, blade, $scope.saveChanges, closeCallback, "catalog.dialogs.asset-save.title", "catalog.dialogs.asset-save.message");
     };
-
 
     $scope.saveChanges = function () {
         blade.isLoading = true;
@@ -55,7 +40,7 @@
     };
 
     function initialize() {
-        if (!$scope.uploader) {
+        if (!$scope.uploader && blade.hasUpdatePermission()) {
             // create the uploader
             var uploader = $scope.uploader = new FileUploader({
                 scope: $scope,
@@ -119,7 +104,7 @@
             canExecuteMethod: function () {
                 return $scope.isDirty();
             },
-            permission: 'catalog:update'
+            permission: blade.updatePermission
         }
     ];
 

@@ -48,9 +48,9 @@
 	blade.save = function () {
 		blade.isLoading = true;
 		if (!$scope.formScope.$invalid) {
-			themes.createTheme({ storeId: blade.choosenStoreId, themeName: blade.name, themeFileUrl: blade.themeFileUrl }, function (data) {
+			themes.createTheme({ storeId: blade.chosenStoreId, themeName: blade.name, themeFileUrl: blade.themeFileUrl }, function (data) {
 				blade.parentBlade.initialize();
-				blade.parentBlade.parentBlade.refresh(blade.choosenStoreId, 'themes');
+				blade.parentBlade.parentBlade.refresh(blade.chosenStoreId, 'themes');
 				blade.isLoading = false;
 				bladeNavigationService.closeBlade(blade);
 			},

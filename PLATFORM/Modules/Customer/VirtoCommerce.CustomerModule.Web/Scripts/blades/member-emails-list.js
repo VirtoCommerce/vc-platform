@@ -1,5 +1,7 @@
 ﻿angular.module('virtoCommerce.customerModule')
-.controller('virtoCommerce.customerModule.memberEmailsListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', function ($scope, bladeNavigationService, dialogService) {
+.controller('virtoCommerce.customerModule.memberEmailsListController', ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
+    var blade = $scope.blade;
+    blade.updatePermission = 'customer:update';
     $scope.selectedItem = null;
 
     function transformDataElement(data) {
@@ -7,94 +9,84 @@
     }
 
     function initializeBlade(data) {
+        blade.data = data;
+
         // transform simple string to complex object. Simple string isn't editable.
         data = _.map(data, transformDataElement);
 
-        $scope.blade.currentEntities = angular.copy(data);
-        $scope.blade.origEntity = data;
-        $scope.blade.isLoading = false;
-    };
+        blade.currentEntities = angular.copy(data);
+        blade.origEntity = data;
+        blade.isLoading = false;
+    }
 
     $scope.selectItem = function (listItem) {
         $scope.selectedItem = listItem;
     };
 
-    $scope.blade.onClose = function (closeCallback) {
-        if (isDirty()) {
-            var dialog = {
-                id: "confirmItemChange",
-                title: "customer.dialogs.email-save.title",
-                message: "customer.dialogs.email-save.message"
-            };
-            dialog.callback = function (needSave) {
-                if (needSave) {
-                    $scope.saveChanges();
-                }
-                closeCallback();
-            };
-            dialogService.showConfirmationDialog(dialog);
-        }
-        else {
-            closeCallback();
-        }
+    blade.onClose = function (closeCallback) {
+        bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, $scope.saveChanges, closeCallback, "customer.dialogs.email-save.title", "customer.dialogs.email-save.message");
     };
 
     function isDirty() {
-        return !angular.equals($scope.blade.currentEntities, $scope.blade.origEntity);
-    };
+        return !angular.equals(blade.currentEntities, blade.origEntity) && blade.hasUpdatePermission();
+    }
+
+    function canSave() {
+        return isDirty() && formScope && formScope.$valid;
+    }
+
+    var formScope;
+    $scope.setForm = function (form) { formScope = form; }
 
     $scope.cancelChanges = function () {
         $scope.bladeClose();
     }
 
     $scope.saveChanges = function () {
-        var values = _.pluck($scope.blade.currentEntities, 'value');
-        angular.copy(values, $scope.blade.data);
-        angular.copy($scope.blade.currentEntities, $scope.blade.origEntity);
+        var values = _.pluck(blade.currentEntities, 'value');
+        angular.copy(values, blade.data);
+        angular.copy(blade.currentEntities, blade.origEntity);
         $scope.bladeClose();
     };
 
-    $scope.blade.headIcon = 'fa-user';
+    blade.headIcon = 'fa-user';
 
-    $scope.blade.toolbarCommands = [
+    blade.toolbarCommands = [
         {
             name: "platform.commands.add", icon: 'fa fa-plus',
             executeMethod: function () {
-                $scope.blade.currentEntities.push(transformDataElement(''));
+                blade.currentEntities.push(transformDataElement(''));
             },
             canExecuteMethod: function () {
                 return true;
             },
-            permission: 'customer:update'
+            permission: blade.updatePermission
         },
         {
             name: "platform.commands.reset", icon: 'fa fa-undo',
             executeMethod: function () {
-                angular.copy($scope.blade.origEntity, $scope.blade.currentEntities);
+                angular.copy(blade.origEntity, blade.currentEntities);
             },
             canExecuteMethod: isDirty,
-            permission: 'customer:update'
+            permission: blade.updatePermission
         },
         {
             name: "platform.commands.delete", icon: 'fa fa-trash-o',
             executeMethod: function () {
-                var idx = $scope.blade.currentEntities.indexOf($scope.selectedItem);
+                var idx = blade.currentEntities.indexOf($scope.selectedItem);
                 if (idx >= 0) {
-                    $scope.blade.currentEntities.splice(idx, 1);
+                    blade.currentEntities.splice(idx, 1);
                 }
             },
             canExecuteMethod: function () {
                 return $scope.selectedItem;
             },
-            permission: 'customer:update'
+            permission: blade.updatePermission
         }
     ];
 
-    $scope.$watch('blade.parentBlade.currentEntity.emails', function (currentEntities) {
-        $scope.blade.data = currentEntities;
-        initializeBlade($scope.blade.data);
-    });
+    $scope.$watch('blade.parentBlade.currentEntity.emails', initializeBlade);
 
-    // on load: 
+    // on load:
     // $scope.$watch('blade.parentBlade.currentEntity.emails' gets fired
 }]);

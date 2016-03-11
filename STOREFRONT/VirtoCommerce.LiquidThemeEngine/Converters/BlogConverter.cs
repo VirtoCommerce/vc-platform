@@ -7,6 +7,7 @@ using StorefrontModel = VirtoCommerce.Storefront.Model.StaticContent;
 using VirtoCommerce.LiquidThemeEngine.Objects;
 using Omu.ValueInjecter;
 using VirtoCommerce.Storefront.Model.Common;
+using PagedList;
 
 namespace VirtoCommerce.LiquidThemeEngine.Converters
 {
@@ -20,7 +21,11 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
 
             if(blog.Articles != null)
             {
-                retVal.Articles = new StorefrontPagedList<Article>(blog.Articles.Select(x => x.ToShopifyModel()), blog.Articles, blog.Articles.GetPageUrl);
+                retVal.Articles = new MutablePagedList<Article>((pageNumber, pageSize) =>
+                {
+                    blog.Articles.Slice(pageNumber, pageSize);
+                    return new StaticPagedList<Article>(blog.Articles.Select(x => x.ToShopifyModel()), blog.Articles);
+                }, blog.Articles.PageNumber, blog.Articles.PageSize);
             }
             return retVal;
         }

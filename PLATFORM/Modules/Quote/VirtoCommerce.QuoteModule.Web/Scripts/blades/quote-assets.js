@@ -1,10 +1,11 @@
 ﻿angular.module('virtoCommerce.quoteModule')
 .controller('virtoCommerce.quoteModule.quoteAssetController', ['$scope', 'virtoCommerce.catalogModule.items', 'platformWebApp.bladeNavigationService', '$filter', 'FileUploader', 'platformWebApp.dialogService', '$injector', function ($scope, items, bladeNavigationService, $filter, FileUploader, dialogService, $injector) {
     var blade = $scope.blade;
+    blade.updatePermission = 'quote:update';
     $scope.currentEntities = blade.currentEntities = blade.currentEntity.attachments;
 
     function initialize() {
-        if (!$scope.uploader) {
+        if (!$scope.uploader && blade.hasUpdatePermission()) {
             // create the uploader
             var uploader = $scope.uploader = new FileUploader({
                 scope: $scope,

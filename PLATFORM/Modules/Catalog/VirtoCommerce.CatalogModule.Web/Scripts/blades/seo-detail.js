@@ -1,7 +1,8 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.seoDetailController', ['$scope', 'virtoCommerce.catalogModule.categories', 'virtoCommerce.catalogModule.items', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', function ($scope, categories, items, dialogService, bladeNavigationService) {
+.controller('virtoCommerce.catalogModule.seoDetailController', ['$scope', 'virtoCommerce.catalogModule.categories', 'virtoCommerce.catalogModule.items', 'platformWebApp.bladeNavigationService', function ($scope, categories, items, bladeNavigationService) {
     var blade = $scope.blade;
-    
+    blade.updatePermission = 'catalog:update';
+
     function initializeBlade(parentEntity) {
         if (parentEntity) {
             if (blade.isNew) {
@@ -62,30 +63,18 @@
         //var pattern = /^([a-zA-Z0-9\(\)_\-]+)*$/;
         var pattern = /[$+;=%{}[\]|\\\/@ ~#!^*&?:'<>,]/;
         return !pattern.test(value);
-    }
-
-    function isDirty() {
-        return !angular.equals($scope.seoInfos, blade.origItem);
     };
 
+    function isDirty() {
+        return !angular.equals($scope.seoInfos, blade.origItem) && blade.hasUpdatePermission();
+    }
+
+    function canSave() {
+        return isDirty() && _.every(_.filter($scope.seoInfos, function (data) { return !data.isNew; }), isValid) && _.some($scope.seoInfos, isValid); // isValid formScope && formScope.$valid;
+    }
+
     blade.onClose = function (closeCallback) {
-        if (isDirty()) {
-            var dialog = {
-                id: "confirmItemChange",
-                title: "catalog.dialogs.seo-save.title",
-                message: "catalog.dialogs.seo-save.message"
-            };
-            dialog.callback = function (needSave) {
-                if (needSave) {
-                    $scope.saveChanges();
-                }
-                closeCallback();
-            };
-            dialogService.showConfirmationDialog(dialog);
-        }
-        else {
-            closeCallback();
-        }
+        bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, $scope.saveChanges, closeCallback, "catalog.dialogs.seo-save.title", "catalog.dialogs.seo-save.message");
     };
 
     var formScope;
@@ -98,13 +87,9 @@
         blade.toolbarCommands = [
             {
                 name: "platform.commands.save", icon: 'fa fa-save',
-                executeMethod: function () {
-                    $scope.saveChanges();
-                },
-                canExecuteMethod: function () {
-                    return isDirty() && _.every(_.filter($scope.seoInfos, function (data) { return !data.isNew; }), isValid) && _.some($scope.seoInfos, isValid); // isValid formScope && formScope.$valid;
-                },
-                permission: 'catalog:update'
+                executeMethod: $scope.saveChanges,
+                canExecuteMethod: canSave,
+                permission: blade.updatePermission
             },
             {
                 name: "platform.commands.reset", icon: 'fa fa-undo',
@@ -112,7 +97,7 @@
                     angular.copy(blade.origItem, $scope.seoInfos);
                 },
                 canExecuteMethod: isDirty,
-                permission: 'catalog:update'
+                permission: blade.updatePermission
             }
         ];
     }

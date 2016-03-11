@@ -123,7 +123,7 @@ namespace VirtoCommerce.PricingModule.Data.Services
                                              .Where(x => evalContext.ProductIds.Contains(x.ProductId))
                                              .Where(x => evalContext.Quantity >= x.MinQuantity || evalContext.Quantity == 0);
 
-                if (evalContext.PricelistIds == null)
+                if (evalContext.PricelistIds.IsNullOrEmpty())
                 {
                     evalContext.PricelistIds = EvaluatePriceLists(evalContext).Select(x => x.Id).ToArray();
                 }
@@ -141,7 +141,7 @@ namespace VirtoCommerce.PricingModule.Data.Services
                         groupPrices = groupPrices.OrderBy(x => Array.IndexOf(evalContext.PricelistIds, x.PricelistId));
                     }
                     //Order by  price value
-                    var orderedPrices = groupPrices.OrderBy(x => Math.Min(x.Sale.HasValue ? x.Sale.Value : x.List, x.List));
+                    var orderedPrices = groupPrices.ThenBy(x => Math.Min(x.Sale.HasValue ? x.Sale.Value : x.List, x.List));
                     retVal.AddRange(orderedPrices);
                 }
 

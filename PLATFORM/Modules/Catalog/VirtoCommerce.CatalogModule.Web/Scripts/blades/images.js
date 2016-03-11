@@ -1,10 +1,12 @@
 ﻿angular.module('virtoCommerce.catalogModule')
 .controller('virtoCommerce.catalogModule.imagesController', ['$scope', '$filter', '$translate', 'FileUploader', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'platformWebApp.authService', 'platformWebApp.assets.api', function ($scope, $filter, $translate, FileUploader, dialogService, bladeNavigationService, authService, assets) {
     var blade = $scope.blade;
+    blade.updatePermission = 'catalog:update';
 
     blade.refresh = function (parentRefresh) {
         blade.currentResource.get({ id: blade.currentEntityId }, function (data) {
-            $scope.uploader.url = 'api/platform/assets?folderUrl=catalog/' + data.code;
+            if ($scope.uploader)
+                $scope.uploader.url = 'api/platform/assets?folderUrl=catalog/' + data.code;
             $scope.origItem = data;
             blade.currentEntity = angular.copy(data);
             blade.isLoading = false;
@@ -15,9 +17,9 @@
         function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
     }
 
-    $scope.isDirty = function () {
-        return !angular.equals(blade.currentEntity, $scope.origItem);
-    };
+    function isDirty() {
+        return !angular.equals(blade.currentEntity, $scope.origItem) && blade.hasUpdatePermission();
+    }
 
     $scope.reset = function () {
         angular.copy($scope.origItem, blade.currentEntity);
@@ -33,25 +35,8 @@
     };
 
     blade.onClose = function (closeCallback) {
-        if ($scope.isDirty() && authService.checkPermission(blade.permission)) {
-            var dialog = {
-                id: "confirmItemChange",
-                title: "catalog.dialogs.image-save.title",
-                message: "catalog.dialogs.image-save.message"
-            };
-            dialog.callback = function (needSave) {
-                if (needSave) {
-                    $scope.saveChanges();
-                }
-                closeCallback();
-            };
-            dialogService.showConfirmationDialog(dialog);
-        }
-        else {
-            closeCallback();
-        }
+        bladeNavigationService.showConfirmationIfNeeded(isDirty(), true, blade, $scope.saveChanges, closeCallback, "catalog.dialogs.image-save.title", "catalog.dialogs.image-save.message");
     };
-
 
     $scope.saveChanges = function () {
         blade.isLoading = true;
@@ -62,7 +47,7 @@
     };
 
     function initialize() {
-        if (!$scope.uploader && authService.checkPermission(blade.permission)) {
+        if (!$scope.uploader && blade.hasUpdatePermission()) {
             // create the uploader            
             var uploader = $scope.uploader = new FileUploader({
                 scope: $scope,
@@ -80,7 +65,7 @@
                     return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
                 }
             });
-            
+
             uploader.onSuccessItem = function (fileItem, images, status, headers) {
                 angular.forEach(images, function (image) {
                     //ADD uploaded image
@@ -142,8 +127,8 @@
         {
             name: 'platform.commands.save', icon: 'fa fa-save',
             executeMethod: $scope.saveChanges,
-            canExecuteMethod: $scope.isDirty,
-            permission: blade.permission
+            canExecuteMethod: isDirty,
+            permission: blade.updatePermission
         },
 		{
 		    name: 'platform.commands.remove', icon: 'fa fa-trash-o', executeMethod: function () { $scope.removeAction(); },
@@ -155,7 +140,7 @@
 		        }
 		        return retVal;
 		    },
-		    permission: blade.permission
+		    permission: blade.updatePermission
 		},
         {
             name: 'catalog.commands.gallery', icon: 'fa fa-image',
@@ -167,11 +152,7 @@
                 dialogService.showGalleryDialog(dialog);
             },
             canExecuteMethod: function () {
-                var canExecute = false;
-                if (blade.currentEntity && blade.currentEntity.images && blade.currentEntity.images.length > 0) {
-                    canExecute = true;
-                }
-                return canExecute;
+                return blade.currentEntity && _.any(blade.currentEntity.images);
             }
         }
     ];

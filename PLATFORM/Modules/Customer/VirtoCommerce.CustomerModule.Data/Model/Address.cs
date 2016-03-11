@@ -78,11 +78,8 @@ namespace VirtoCommerce.CustomerModule.Data.Model
 		
 		#region Navigation Properties
 
-		[StringLength(128, ErrorMessage = "Only 128 characters allowed.")]
 		public string MemberId { get; set; }
 
-        [Parent]
-        [ForeignKey("MemberId")]
 		public virtual Member Member { get; set; }
 
 

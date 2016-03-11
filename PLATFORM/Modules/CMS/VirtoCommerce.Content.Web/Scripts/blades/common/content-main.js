@@ -99,7 +99,9 @@
 
 	            case 'blogs':
 	                pages.getFolders({ storeId: storeId }, function (data) {
-	                    entity.blogsCount = _.find(data.folders, function (folder) { return folder.folderName === "blogs" }).folders.length;
+	                    var blogsFolder = _.find(data.folders, function (folder) { return folder.folderName === "blogs" });
+	                    if (blogsFolder)
+	                        entity.blogsCount = blogsFolder.folders.length;
 	                }, function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
 	                break;
 
@@ -198,7 +200,7 @@
 	    blade.addNewTheme = function (data) {
 	        var newBlade = {
 	            id: 'addTheme',
-	            choosenStoreId: data.store.id,
+	            chosenStoreId: data.store.id,
 	            currentEntity: {},
 	            title: 'content.blades.add-theme.title',
 	            subtitle: 'content.blades.add-theme.subtitle',
@@ -211,7 +213,7 @@
 	    blade.addNewPage = function (data) {
 	        var newBlade = {
 	            id: 'addPageBlade',
-	            choosenStoreId: data.store.id,
+	            chosenStoreId: data.store.id,
 	            currentEntity: { name: null, content: null },
 	            newPage: true,
 	            title: 'content.blades.edit-page.title-new',
@@ -225,7 +227,7 @@
 	    blade.addNewLinkList = function (data) {
 	        var newBlade = {
 	            id: 'addMenuLinkListBlade',
-	            choosenStoreId: data.store.id,
+	            chosenStoreId: data.store.id,
 	            newList: true,
 	            title: 'content.blades.menu-link-list.title-new',
 	            subtitle: 'content.blades.menu-link-list.subtitle-new',
@@ -238,7 +240,7 @@
 	    blade.addBlog = function (data) {
 	        var newBlade = {
 	            id: 'openBlogNew',
-	            choosenStoreId: data.store.id,
+	            chosenStoreId: data.store.id,
 	            isNew: true,
 	            entity: { name: undefined },
 	            title: 'content.blades.edit-blog.title-new',
@@ -252,9 +254,9 @@
 	    blade.openTheme = function (data) {
 	        var newBlade = {
 	            id: 'themeAssetListBlade',
-	            choosenThemeId: data.defaultTheme.name,
-	            choosenStoreId: data.store.id,
-	            choosenTheme: data.defaultTheme,
+	            chosenThemeId: data.defaultTheme.name,
+	            chosenStoreId: data.store.id,
+	            chosenTheme: data.defaultTheme,
 	            title: 'content.blades.theme-asset-list.subtitle',
 	            titleValues: { path: data.defaultTheme.path },
 	            subtitle: 'content.blades.theme-asset-list.subtitle',

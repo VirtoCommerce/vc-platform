@@ -27,10 +27,7 @@ namespace VirtoCommerce.CustomerModule.Data.Model
 		public bool IsSticky { get; set; }
 
 		#region Navigation Properties
-		[StringLength(128)]
 		public string MemberId { get; set; }
-
-        [ForeignKey("MemberId")]
         public virtual Member Member { get; set; }
 
 		#endregion

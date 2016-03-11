@@ -148,6 +148,14 @@
       <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestSharp.105.2.3\lib\net451\RestSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Net.Http.WebRequest" />
     <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Web.DynamicData" />
@@ -269,6 +277,8 @@
     <Content Include="App_Data\Themes\default\assets\informer-loader.gif" />
     <Content Include="App_Data\Themes\default\assets\jcb.svg" />
     <Content Include="App_Data\Themes\default\assets\jquery.zoom.min.js" />
+    <Content Include="App_Data\Themes\default\assets\js\cart.js" />
+    <Content Include="App_Data\Themes\default\assets\js\quote-request.js" />
     <Content Include="App_Data\Themes\default\assets\klarna-big.png" />
     <Content Include="App_Data\Themes\default\assets\laser.svg" />
     <Content Include="App_Data\Themes\default\assets\litecoin.svg" />
@@ -281,6 +291,7 @@
     <Content Include="App_Data\Themes\default\assets\modernizr.min.js" />
     <Content Include="App_Data\Themes\default\assets\navbuttons.gif" />
     <Content Include="App_Data\Themes\default\assets\navbuttons2.gif" />
+    <Content Include="App_Data\Themes\default\assets\no-image.svg" />
     <Content Include="App_Data\Themes\default\assets\offsite-small.svg" />
     <Content Include="App_Data\Themes\default\assets\offsite.svg" />
     <Content Include="App_Data\Themes\default\assets\option_selection.js" />
@@ -303,28 +314,26 @@
     <Content Include="App_Data\Themes\default\assets\shopify_common.js" />
     <Content Include="App_Data\Themes\default\assets\storefront.css" />
     <Content Include="App_Data\Themes\default\snippets\checkout-footer.liquid" />
-    <Content Include="App_Data\Themes\default\assets\storefrontApp.js" />
-    <Content Include="App_Data\Themes\default\assets\storefrontCartController.js" />
-    <Content Include="App_Data\Themes\default\assets\storefrontCategoryController.js" />
-    <Content Include="App_Data\Themes\default\assets\storefrontCheckoutController.js" />
-    <Content Include="App_Data\Themes\default\assets\storefrontDirectives.js" />
-    <Content Include="App_Data\Themes\default\assets\storefrontMainController.js" />
-    <Content Include="App_Data\Themes\default\assets\storefrontProductController.js" />
-    <Content Include="App_Data\Themes\default\assets\storefrontQuoteRequestController.js" />
-    <Content Include="App_Data\Themes\default\assets\storefrontServices.js" />
+    <Content Include="App_Data\Themes\default\assets\js\app.js" />
+    <Content Include="App_Data\Themes\default\assets\js\category.js" />
+    <Content Include="App_Data\Themes\default\assets\js\checkout.js" />
+    <Content Include="App_Data\Themes\default\assets\js\directives.js" />
+    <Content Include="App_Data\Themes\default\assets\js\main.js" />
+    <Content Include="App_Data\Themes\default\assets\js\product.js" />
+    <Content Include="App_Data\Themes\default\assets\js\services.js" />
     <Content Include="App_Data\Themes\default\assets\thumbs-bar.gif" />
-    <Content Include="App_Data\Themes\default\assets\toastr.css" />
     <Content Include="App_Data\Themes\default\assets\unionpay.svg" />
     <Content Include="App_Data\Themes\default\assets\vc-big.png" />
     <Content Include="App_Data\Themes\default\assets\visa.svg" />
     <Content Include="App_Data\Themes\default\assets\warning.svg" />
     <Content Include="App_Data\Themes\default\assets\slide_1.jpg" />
     <Content Include="App_Data\Themes\default\assets\slide_2.jpg" />
-    <Content Include="App_Data\Themes\default\snippets\cart-modal.liquid" />
     <Content Include="App_Data\Themes\default\social\shopify-social.svg" />
     <Content Include="App_Data\Themes\default\social\social-icons.css" />
     <Content Include="App_Data\Themes\default\snippets\notification.liquid" />
-    <Content Include="App_Data\Themes\default\templates\quote-request.liquid" />
+    <Content Include="App_Data\Themes\default\templates\quote-request.liquid">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="App_Data\x64\LibSass.x64.dll" />
     <Content Include="App_Data\x64\libsassnet.dll" />
     <Content Include="App_Data\x86\LibSass.x86.dll" />
@@ -345,10 +354,21 @@
     <Compile Include="Builders\CartBuilder.cs" />
     <Compile Include="Builders\QuoteRequestBuilder.cs" />
     <Compile Include="Common\HandleJsonErrorAttribute.cs" />
-    <Compile Include="Controllers\MarketingController.cs" />
-    <Compile Include="Controllers\PricingController.cs" />
+    <Compile Include="Common\IdentityExtensions.cs" />
+    <Compile Include="Common\ObjectExtensions.cs" />
+    <Compile Include="Common\StorefrontHmacApiClient.cs" />
+    <Compile Include="Controllers\Api\ApiQuoteRequestController.cs" />
+    <Compile Include="Controllers\Api\ApiCommonController.cs" />
+    <Compile Include="Controllers\Api\ApiAccountController.cs" />
+    <Compile Include="Controllers\Api\ApiPricingController.cs" />
+    <Compile Include="Controllers\Api\ApiMarketingController.cs" />
     <Compile Include="Controllers\QuoteRequestController.cs" />
     <Compile Include="Converters\AttachmentConverter.cs" />
+    <Compile Include="Converters\SettingConverter.cs" />
+    <Compile Include="Converters\CatalogPropertyConverter.cs" />
+    <Compile Include="Converters\CatalogSearchCriteriaConverter.cs" />
+    <Compile Include="Converters\PriceEvaluationContextConverter.cs" />
+    <Compile Include="Converters\TaxRateConverter.cs" />
     <Compile Include="Converters\CurrencyConverter.cs" />
     <Compile Include="Converters\PricelistConverter.cs" />
     <Compile Include="Converters\QuoteItemConverter.cs" />
@@ -359,7 +379,10 @@
     <Compile Include="Services\CartValidator.cs" />
     <Compile Include="Services\CustomerServiceImpl.cs" />
     <Compile Include="Services\LinkHelper.cs" />
+    <Compile Include="Services\LinkListServiceImpl.cs" />
     <Compile Include="Services\PricingServiceImpl.cs" />
+    <Compile Include="Controllers\Api\ApiCartController.cs" />
+    <Compile Include="Controllers\Api\ApiCatalogController.cs" />
     <Compile Include="Services\PromotionEvaluator.cs" />
     <Compile Include="Common\StorefrontConstants.cs" />
     <Compile Include="Common\StorefrontUrlBuilder.cs" />
@@ -402,7 +425,6 @@
     <Compile Include="Converters\PromotionEvaluationContextConverter.cs" />
     <Compile Include="Converters\PromotionProductEntryConverter.cs" />
     <Compile Include="Converters\PromotionRewardConverter.cs" />
-    <Compile Include="Converters\PropertyConverter.cs" />
     <Compile Include="Converters\SeoInfoConverter.cs" />
     <Compile Include="Converters\ShipmentConverter.cs" />
     <Compile Include="Converters\ShipmentItemConverter.cs" />
@@ -422,7 +444,12 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\Themes\default\snippets\quote-modal.liquid" />
+    <Content Include="App_Data\Themes\default\snippets\recently-added-cart-item-dialog.liquid" />
+    <Content Include="App_Data\Themes\default\snippets\recently-added-actual-quote-request-item-dialog.liquid">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_Data\Themes\default\templates\maintenance.liquid" />
+    <Content Include="App_Data\Themes\default\layout\empty.liquid" />
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -475,7 +502,6 @@
     <Content Include="App_Data\Themes\default\snippets\price.liquid" />
     <Content Include="App_Data\Themes\default\snippets\product-grid-item.liquid" />
     <Content Include="App_Data\Themes\default\snippets\product-list-item.liquid" />
-    <Content Include="App_Data\Themes\default\snippets\quote-informer.liquid" />
     <Content Include="App_Data\Themes\default\snippets\quote-totals.liquid" />
     <Content Include="App_Data\Themes\default\snippets\related-products.liquid" />
     <Content Include="App_Data\Themes\default\snippets\respond.liquid" />
@@ -514,7 +540,6 @@
     <Content Include="App_Data\Themes\default\templates\customers\addresses.liquid" />
     <Content Include="App_Data\Themes\default\templates\customers\login.liquid" />
     <Content Include="App_Data\Themes\default\templates\customers\order.liquid" />
-    <Content Include="App_Data\Themes\default\templates\customers\quote-request.liquid" />
     <Content Include="App_Data\Themes\default\templates\customers\quote-requests.liquid" />
     <Content Include="App_Data\Themes\default\templates\customers\register.liquid" />
     <Content Include="App_Data\Themes\default\templates\customers\reset_password.liquid" />

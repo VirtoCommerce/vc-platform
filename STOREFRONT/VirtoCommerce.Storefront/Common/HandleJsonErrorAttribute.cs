@@ -40,7 +40,7 @@ namespace VirtoCommerce.Storefront.Common
             var errorData = new
             {
                 message = filterContext.Exception.Message,
-                stackTrace = filterContext.Exception.StackTrace
+                stackTrace = filterContext.Exception.ToString()
             };
 
             filterContext.Result = new JsonResult()

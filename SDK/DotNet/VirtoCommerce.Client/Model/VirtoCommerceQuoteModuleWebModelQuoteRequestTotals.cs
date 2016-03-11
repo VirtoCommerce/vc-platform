@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommerceQuoteModuleWebModelQuoteRequestTotals : IEquatable<VirtoCommerceQuoteModuleWebModelQuoteRequestTotals>
+    public partial class VirtoCommerceQuoteModuleWebModelQuoteRequestTotals :  IEquatable<VirtoCommerceQuoteModuleWebModelQuoteRequestTotals>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceQuoteModuleWebModelQuoteRequestTotals" /> class.
@@ -133,7 +134,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommerceQuoteModuleWebModelQuoteRequestTotals instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommerceQuoteModuleWebModelQuoteRequestTotals to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceQuoteModuleWebModelQuoteRequestTotals to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommerceQuoteModuleWebModelQuoteRequestTotals other)
         {
@@ -197,28 +198,28 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.OriginalSubTotalExlTax != null)
-                    hash = hash * 57 + this.OriginalSubTotalExlTax.GetHashCode();
+                    hash = hash * 59 + this.OriginalSubTotalExlTax.GetHashCode();
                 
                 if (this.SubTotalExlTax != null)
-                    hash = hash * 57 + this.SubTotalExlTax.GetHashCode();
+                    hash = hash * 59 + this.SubTotalExlTax.GetHashCode();
                 
                 if (this.ShippingTotal != null)
-                    hash = hash * 57 + this.ShippingTotal.GetHashCode();
+                    hash = hash * 59 + this.ShippingTotal.GetHashCode();
                 
                 if (this.DiscountTotal != null)
-                    hash = hash * 57 + this.DiscountTotal.GetHashCode();
+                    hash = hash * 59 + this.DiscountTotal.GetHashCode();
                 
                 if (this.TaxTotal != null)
-                    hash = hash * 57 + this.TaxTotal.GetHashCode();
+                    hash = hash * 59 + this.TaxTotal.GetHashCode();
                 
                 if (this.AdjustmentQuoteExlTax != null)
-                    hash = hash * 57 + this.AdjustmentQuoteExlTax.GetHashCode();
+                    hash = hash * 59 + this.AdjustmentQuoteExlTax.GetHashCode();
                 
                 if (this.GrandTotalExlTax != null)
-                    hash = hash * 57 + this.GrandTotalExlTax.GetHashCode();
+                    hash = hash * 59 + this.GrandTotalExlTax.GetHashCode();
                 
                 if (this.GrandTotalInclTax != null)
-                    hash = hash * 57 + this.GrandTotalInclTax.GetHashCode();
+                    hash = hash * 59 + this.GrandTotalInclTax.GetHashCode();
                 
                 return hash;
             }

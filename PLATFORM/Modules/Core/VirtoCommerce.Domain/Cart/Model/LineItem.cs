@@ -55,9 +55,21 @@ namespace VirtoCommerce.Domain.Cart.Model
         public string PriceId { get; set; }
         public Price Price { get; set; }
 
+        /// <summary>
+        /// old price
+        /// </summary>
         public decimal ListPrice { get; set; }
+        /// <summary>
+        /// new price
+        /// </summary>
 		public decimal SalePrice { get; set; }
+        /// <summary>
+        /// Resulting price with discount 
+        /// </summary>
 		public decimal PlacedPrice { get; set; }
+        /// <summary>
+        /// PlacedPrice * Quantity
+        /// </summary>
 		public decimal ExtendedPrice { get; set; }
 
 		public decimal DiscountTotal { get; set; }

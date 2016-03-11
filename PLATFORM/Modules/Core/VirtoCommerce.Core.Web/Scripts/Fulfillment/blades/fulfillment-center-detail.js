@@ -1,89 +1,90 @@
 ﻿angular.module('virtoCommerce.coreModule.fulfillment')
 .controller('virtoCommerce.coreModule.fulfillment.fulfillmentCenterDetailController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'virtoCommerce.coreModule.fulfillment.fulfillments', function ($scope, dialogService, bladeNavigationService, fulfillments) {
+    var blade = $scope.blade;
+    blade.updatePermission = 'core:fulfillment:update';
 
-    $scope.blade.refresh = function (parentRefresh) {
-        if ($scope.blade.currentEntityId) {
-            $scope.blade.isLoading = true;
+    blade.refresh = function (parentRefresh) {
+        if (blade.currentEntityId) {
+            blade.isLoading = true;
 
-            fulfillments.get({ _id: $scope.blade.currentEntityId }, function (data) {
+            fulfillments.get({ _id: blade.currentEntityId }, function (data) {
                 initializeBlade(data);
                 if (parentRefresh) {
-                    $scope.blade.parentBlade.refresh();
+                    blade.parentBlade.refresh();
                 }
             },
-            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+            function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
         } else {
-            initializeBlade($scope.blade.currentEntity);
+            initializeBlade(blade.currentEntity);
         }
     }
 
     function initializeBlade(data) {
-        $scope.blade.currentEntity = angular.copy(data);
-        $scope.blade.origEntity = data;
-        $scope.blade.isLoading = false;
+        blade.currentEntity = angular.copy(data);
+        blade.origEntity = data;
+        blade.isLoading = false;
     };
 
     var formScope;
-    $scope.setForm = function (form) {
-        formScope = form;
-    }
+    $scope.setForm = function (form) { formScope = form; };
 
     function isDirty() {
-        return !angular.equals($scope.blade.currentEntity, $scope.blade.origEntity);
-    };
+        return !angular.equals(blade.currentEntity, blade.origEntity) && blade.hasUpdatePermission();
+    }
+
+    function canSave() {
+        return isDirty() && formScope && formScope.$valid &&
+                blade.currentEntity.daytimePhoneNumber &&
+                blade.currentEntity.line1 &&
+                blade.currentEntity.city &&
+                blade.currentEntity.stateProvince &&
+                blade.currentEntity.countryCode &&
+                blade.currentEntity.countryName &&
+                blade.currentEntity.postalCode;;
+    }
 
     function saveChanges() {
-        $scope.blade.isLoading = true;
+        blade.isLoading = true;
 
-        if ($scope.blade.currentEntityId) {
-            fulfillments.update($scope.blade.currentEntity, function () {
-                $scope.blade.refresh(true);
+        if (blade.currentEntityId) {
+            fulfillments.update(blade.currentEntity, function () {
+                blade.refresh(true);
             }, function (error) {
-                bladeNavigationService.setError('Error: ' + error.status, $scope.blade);
+                bladeNavigationService.setError('Error: ' + error.status, blade);
             });
         } else {
-            fulfillments.update($scope.blade.currentEntity, function (data) {
-                $scope.blade.title = data.displayName;
-                $scope.blade.currentEntityId = data.id;
+            fulfillments.update(blade.currentEntity, function (data) {
+                blade.title = data.displayName;
+                blade.currentEntityId = data.id;
                 initializeBlade(data);
-                $scope.blade.parentBlade.refresh();
+                blade.parentBlade.refresh();
             }, function (error) {
-                bladeNavigationService.setError('Error: ' + error.status, $scope.blade);
+                bladeNavigationService.setError('Error: ' + error.status, blade);
             });
         }
     };
 
-    $scope.blade.headIcon = 'fa-wrench';
+    blade.headIcon = 'fa-wrench';
 
-    $scope.blade.toolbarCommands = [
+    blade.toolbarCommands = [
         {
             name: "platform.commands.save", icon: 'fa fa-save',
-            executeMethod: function () {
-                saveChanges();
-            },
-            canExecuteMethod: function () {
-                return isDirty() && isValid();
-            },
-            permission: 'core:fulfillment:update'
+            executeMethod: saveChanges,
+            canExecuteMethod: canSave,
+            permission: blade.updatePermission
         },
         {
             name: "platform.commands.reset", icon: 'fa fa-undo',
             executeMethod: function () {
-                angular.copy($scope.blade.origEntity, $scope.blade.currentEntity);
+                angular.copy(blade.origEntity, blade.currentEntity);
             },
-            canExecuteMethod: function () {
-                return isDirty();
-            },
-            permission: 'core:fulfillment:update'
+            canExecuteMethod: isDirty,
+            permission: blade.updatePermission
         },
         {
             name: "platform.commands.delete", icon: 'fa fa-trash-o',
-            executeMethod: function () {
-                deleteEntry();
-            },
-            canExecuteMethod: function () {
-                return !isDirty();
-            },
+            executeMethod: deleteEntry,
+            canExecuteMethod: function () { return true; },
             permission: 'core:fulfillment:delete'
         }
     ];
@@ -95,13 +96,13 @@
             message: "core.dialogs.fulfillment-delete.message",
             callback: function (remove) {
                 if (remove) {
-                    $scope.blade.isLoading = true;
+                    blade.isLoading = true;
 
-                    fulfillments.remove({ ids: $scope.blade.currentEntityId }, function () {
+                    fulfillments.remove({ ids: blade.currentEntityId }, function () {
                         $scope.bladeClose();
-                        $scope.blade.parentBlade.refresh();
+                        blade.parentBlade.refresh();
                     }, function (error) {
-                        bladeNavigationService.setError('Error ' + error.status, $scope.blade);
+                        bladeNavigationService.setError('Error ' + error.status, blade);
                     });
                 }
             }
@@ -109,37 +110,10 @@
         dialogService.showConfirmationDialog(dialog);
     }
 
-    $scope.blade.onClose = function (closeCallback) {
-        if (isDirty()) {
-            var dialog = {
-                id: "confirmItemChange",
-                title: "core.dialogs.fulfillments-save.title",
-                message: "core.dialogs.fulfillments-save.message",
-                callback: function (needSave) {
-                    if (needSave) {
-                        saveChanges();
-                    }
-                    closeCallback();
-                }
-            };
-            dialogService.showConfirmationDialog(dialog);
-        }
-        else {
-            closeCallback();
-        }
-    };
-
-    function isValid() {
-        return formScope && formScope.$valid &&
-                $scope.blade.currentEntity.daytimePhoneNumber &&
-                $scope.blade.currentEntity.line1 &&
-                $scope.blade.currentEntity.city &&
-                $scope.blade.currentEntity.stateProvince &&
-                $scope.blade.currentEntity.countryCode &&
-                $scope.blade.currentEntity.countryName &&
-                $scope.blade.currentEntity.postalCode;
+    blade.onClose = function (closeCallback) {
+        bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, saveChanges, closeCallback, "core.dialogs.fulfillments-save.title", "core.dialogs.fulfillments-save.message");
     };
 
     // actions on load
-    $scope.blade.refresh();
+    blade.refresh();
 }]);

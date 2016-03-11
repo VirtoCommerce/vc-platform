@@ -9,7 +9,7 @@ using VirtoCommerce.Storefront.Model.Marketing;
 
 namespace VirtoCommerce.Storefront.Model.Cart
 {
-    public class LineItem : Entity, IDiscountable, IValidatable
+    public class LineItem : Entity, IDiscountable, IValidatable, ITaxable
     {
         public LineItem(Currency currency, Language language)
         {
@@ -204,23 +204,6 @@ namespace VirtoCommerce.Storefront.Model.Cart
             }
         }
 
-        /// <summary>
-        /// Gets or sets the value of line item total tax amount
-        /// </summary>
-        public Money TaxTotal { get; set; }
-
-        /// <summary>
-        /// Gets or sets the value of line item tax type
-        /// </summary>
-        public string TaxType { get; set; }
-
-        /// <summary>
-        /// Gets or sets the collection of line item tax detalization lines
-        /// </summary>
-        /// <value>
-        /// Collection of TaxDetail objects
-        /// </value>
-        public ICollection<TaxDetail> TaxDetails { get; set; }
 
         /// <summary>
         /// Used for dynamic properties management, contains object type string
@@ -237,6 +220,37 @@ namespace VirtoCommerce.Storefront.Model.Cart
         public ICollection<ValidationError> ValidationErrors { get; set; }
 
         public ICollection<ValidationError> ValidationWarnings { get; set; }
+
+        #region ITaxable Members
+        /// <summary>
+        /// Gets or sets the value of total shipping tax amount
+        /// </summary>
+        public Money TaxTotal { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of shipping tax type
+        /// </summary>
+        public string TaxType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the collection of line item tax details lines
+        /// </summary>
+        /// <value>
+        /// Collection of TaxDetail objects
+        /// </value>
+        public ICollection<TaxDetail> TaxDetails { get; set; }
+
+        public void ApplyTaxRates(IEnumerable<TaxRate> taxRates)
+        {
+            var lineItemTaxRates = taxRates.Where(x => x.Line.Id == Id);
+            TaxTotal = new Money(TaxTotal.Currency);
+            foreach (var lineItemTaxRate in lineItemTaxRates)
+            {
+                TaxTotal += lineItemTaxRate.Rate;
+            }
+        }
+        #endregion
+
 
         #region IDiscountable  Members
         public Currency Currency { get; private set; }

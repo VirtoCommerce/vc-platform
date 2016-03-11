@@ -35,6 +35,8 @@ namespace VirtoCommerce.LiquidThemeEngine
     /// </summary>
     public class ShopifyLiquidThemeEngine : IFileSystem, ILiquidThemeEngine
     {
+        private const string _angularInterpolateTagStart = "{(";
+        private const string _angularInterpolateTagStop = ")}";
         private const string _globalThemeName = "default";
         private const string _defaultMasterView = "theme";
         private const string _liquidTemplateFormat = "{0}.liquid";
@@ -294,6 +296,13 @@ namespace VirtoCommerce.LiquidThemeEngine
                 {
                     parameters[registerPair.Key] = registerPair.Value;
                 }
+            }
+            //Replace escaped angular interpolated tag symbols to standard
+            if(retVal != null)
+            {
+                //TODO: Need make it in more by liquid processor compatible way (may be using exist tokenizer or something like that)
+                retVal = retVal.Replace(_angularInterpolateTagStart, "{{");
+                retVal = retVal.Replace(_angularInterpolateTagStop, "}}");
             }
             return retVal;
         }

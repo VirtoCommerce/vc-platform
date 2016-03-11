@@ -12,9 +12,7 @@
                     <div class="form-group" ng-repeat="prop in properties = (blade.item.properties | filter: {type:propGroup.type})">
                         <label class="form-label">
                             {{prop.name}}
-                            <a href="" ng-click="editProperty(prop)">
-                                <i class="form-ico fa fa-pencil"></i>
-                            </a>
+                            <a href="" ng-click="editProperty(prop)" class="form-edit"><i class="form-ico fa fa-pencil"></i></a>
                         </label>
                         <va-property2 ng-model="prop" get-prop-values="getPropValues" />
                     </div>

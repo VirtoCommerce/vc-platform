@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommerceStoreModuleWebModelStore : IEquatable<VirtoCommerceStoreModuleWebModelStore>
+    public partial class VirtoCommerceStoreModuleWebModelStore :  IEquatable<VirtoCommerceStoreModuleWebModelStore>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceStoreModuleWebModelStore" /> class.
@@ -156,31 +157,27 @@ namespace VirtoCommerce.Client.Model
   
         
         /// <summary>
-        /// Gets or Sets Languages
+        /// All store supported languages
         /// </summary>
+        /// <value>All store supported languages</value>
         [DataMember(Name="languages", EmitDefaultValue=false)]
         public List<string> Languages { get; set; }
   
         
         /// <summary>
-        /// Gets or Sets Currencies
+        /// All store supported currencies
         /// </summary>
+        /// <value>All store supported currencies</value>
         [DataMember(Name="currencies", EmitDefaultValue=false)]
         public List<string> Currencies { get; set; }
   
         
         /// <summary>
-        /// Gets or Sets ObjectType
+        /// All linked stores (their accounts can be reused here)
         /// </summary>
-        [DataMember(Name="objectType", EmitDefaultValue=false)]
-        public string ObjectType { get; set; }
-  
-        
-        /// <summary>
-        /// Gets or Sets DynamicProperties
-        /// </summary>
-        [DataMember(Name="dynamicProperties", EmitDefaultValue=false)]
-        public List<VirtoCommercePlatformCoreDynamicPropertiesDynamicObjectProperty> DynamicProperties { get; set; }
+        /// <value>All linked stores (their accounts can be reused here)</value>
+        [DataMember(Name="trustedGroups", EmitDefaultValue=false)]
+        public List<string> TrustedGroups { get; set; }
   
         
         /// <summary>
@@ -205,6 +202,13 @@ namespace VirtoCommerce.Client.Model
   
         
         /// <summary>
+        /// Gets or Sets SecurityScopes
+        /// </summary>
+        [DataMember(Name="securityScopes", EmitDefaultValue=false)]
+        public List<string> SecurityScopes { get; set; }
+  
+        
+        /// <summary>
         /// Gets or Sets SeoInfos
         /// </summary>
         [DataMember(Name="seoInfos", EmitDefaultValue=false)]
@@ -212,12 +216,25 @@ namespace VirtoCommerce.Client.Model
   
         
         /// <summary>
-        /// Gets or Sets SecurityScopes
+        /// Gets or Sets ObjectType
         /// </summary>
-        [DataMember(Name="securityScopes", EmitDefaultValue=false)]
-        public List<string> SecurityScopes { get; set; }
+        [DataMember(Name="objectType", EmitDefaultValue=false)]
+        public string ObjectType { get; set; }
   
         
+        /// <summary>
+        /// Gets or Sets DynamicProperties
+        /// </summary>
+        [DataMember(Name="dynamicProperties", EmitDefaultValue=false)]
+        public List<VirtoCommercePlatformCoreDynamicPropertiesDynamicObjectProperty> DynamicProperties { get; set; }
+
+
+        /// <summary>
+        /// Gets or Sets Settings
+        /// </summary>
+        [DataMember(Name = "settings", EmitDefaultValue = false)]
+        public List<VirtoCommerceStoreModuleWebModelSetting> Settings { get; set; }
+
         /// <summary>
         /// Gets or Sets CreatedDate
         /// </summary>
@@ -281,13 +298,15 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  ReturnsFulfillmentCenter: ").Append(ReturnsFulfillmentCenter).Append("\n");
             sb.Append("  Languages: ").Append(Languages).Append("\n");
             sb.Append("  Currencies: ").Append(Currencies).Append("\n");
-            sb.Append("  ObjectType: ").Append(ObjectType).Append("\n");
-            sb.Append("  DynamicProperties: ").Append(DynamicProperties).Append("\n");
+            sb.Append("  TrustedGroups: ").Append(TrustedGroups).Append("\n");
             sb.Append("  PaymentMethods: ").Append(PaymentMethods).Append("\n");
             sb.Append("  ShippingMethods: ").Append(ShippingMethods).Append("\n");
             sb.Append("  TaxProviders: ").Append(TaxProviders).Append("\n");
-            sb.Append("  SeoInfos: ").Append(SeoInfos).Append("\n");
             sb.Append("  SecurityScopes: ").Append(SecurityScopes).Append("\n");
+            sb.Append("  SeoInfos: ").Append(SeoInfos).Append("\n");
+            sb.Append("  ObjectType: ").Append(ObjectType).Append("\n");
+            sb.Append("  DynamicProperties: ").Append(DynamicProperties).Append("\n");
+            sb.Append("  Settings: ").Append(Settings).Append("\n");
             sb.Append("  CreatedDate: ").Append(CreatedDate).Append("\n");
             sb.Append("  ModifiedDate: ").Append(ModifiedDate).Append("\n");
             sb.Append("  CreatedBy: ").Append(CreatedBy).Append("\n");
@@ -321,7 +340,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommerceStoreModuleWebModelStore instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommerceStoreModuleWebModelStore to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceStoreModuleWebModelStore to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommerceStoreModuleWebModelStore other)
         {
@@ -426,14 +445,9 @@ namespace VirtoCommerce.Client.Model
                     this.Currencies.SequenceEqual(other.Currencies)
                 ) && 
                 (
-                    this.ObjectType == other.ObjectType ||
-                    this.ObjectType != null &&
-                    this.ObjectType.Equals(other.ObjectType)
-                ) && 
-                (
-                    this.DynamicProperties == other.DynamicProperties ||
-                    this.DynamicProperties != null &&
-                    this.DynamicProperties.SequenceEqual(other.DynamicProperties)
+                    this.TrustedGroups == other.TrustedGroups ||
+                    this.TrustedGroups != null &&
+                    this.TrustedGroups.SequenceEqual(other.TrustedGroups)
                 ) && 
                 (
                     this.PaymentMethods == other.PaymentMethods ||
@@ -451,14 +465,29 @@ namespace VirtoCommerce.Client.Model
                     this.TaxProviders.SequenceEqual(other.TaxProviders)
                 ) && 
                 (
+                    this.SecurityScopes == other.SecurityScopes ||
+                    this.SecurityScopes != null &&
+                    this.SecurityScopes.SequenceEqual(other.SecurityScopes)
+                ) && 
+                (
                     this.SeoInfos == other.SeoInfos ||
                     this.SeoInfos != null &&
                     this.SeoInfos.SequenceEqual(other.SeoInfos)
                 ) && 
                 (
-                    this.SecurityScopes == other.SecurityScopes ||
-                    this.SecurityScopes != null &&
-                    this.SecurityScopes.SequenceEqual(other.SecurityScopes)
+                    this.ObjectType == other.ObjectType ||
+                    this.ObjectType != null &&
+                    this.ObjectType.Equals(other.ObjectType)
+                ) && 
+                (
+                    this.DynamicProperties == other.DynamicProperties ||
+                    this.DynamicProperties != null &&
+                    this.DynamicProperties.SequenceEqual(other.DynamicProperties)
+                ) && 
+                (
+                    this.Settings == other.Settings ||
+                    this.Settings != null &&
+                    this.Settings.SequenceEqual(other.Settings)
                 ) && 
                 (
                     this.CreatedDate == other.CreatedDate ||
@@ -500,97 +529,103 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.Name != null)
-                    hash = hash * 57 + this.Name.GetHashCode();
+                    hash = hash * 59 + this.Name.GetHashCode();
                 
                 if (this.Description != null)
-                    hash = hash * 57 + this.Description.GetHashCode();
+                    hash = hash * 59 + this.Description.GetHashCode();
                 
                 if (this.Url != null)
-                    hash = hash * 57 + this.Url.GetHashCode();
+                    hash = hash * 59 + this.Url.GetHashCode();
                 
                 if (this.StoreState != null)
-                    hash = hash * 57 + this.StoreState.GetHashCode();
+                    hash = hash * 59 + this.StoreState.GetHashCode();
                 
                 if (this.TimeZone != null)
-                    hash = hash * 57 + this.TimeZone.GetHashCode();
+                    hash = hash * 59 + this.TimeZone.GetHashCode();
                 
                 if (this.Country != null)
-                    hash = hash * 57 + this.Country.GetHashCode();
+                    hash = hash * 59 + this.Country.GetHashCode();
                 
                 if (this.Region != null)
-                    hash = hash * 57 + this.Region.GetHashCode();
+                    hash = hash * 59 + this.Region.GetHashCode();
                 
                 if (this.DefaultLanguage != null)
-                    hash = hash * 57 + this.DefaultLanguage.GetHashCode();
+                    hash = hash * 59 + this.DefaultLanguage.GetHashCode();
                 
                 if (this.DefaultCurrency != null)
-                    hash = hash * 57 + this.DefaultCurrency.GetHashCode();
+                    hash = hash * 59 + this.DefaultCurrency.GetHashCode();
                 
                 if (this.Catalog != null)
-                    hash = hash * 57 + this.Catalog.GetHashCode();
+                    hash = hash * 59 + this.Catalog.GetHashCode();
                 
                 if (this.CreditCardSavePolicy != null)
-                    hash = hash * 57 + this.CreditCardSavePolicy.GetHashCode();
+                    hash = hash * 59 + this.CreditCardSavePolicy.GetHashCode();
                 
                 if (this.SecureUrl != null)
-                    hash = hash * 57 + this.SecureUrl.GetHashCode();
+                    hash = hash * 59 + this.SecureUrl.GetHashCode();
                 
                 if (this.Email != null)
-                    hash = hash * 57 + this.Email.GetHashCode();
+                    hash = hash * 59 + this.Email.GetHashCode();
                 
                 if (this.AdminEmail != null)
-                    hash = hash * 57 + this.AdminEmail.GetHashCode();
+                    hash = hash * 59 + this.AdminEmail.GetHashCode();
                 
                 if (this.DisplayOutOfStock != null)
-                    hash = hash * 57 + this.DisplayOutOfStock.GetHashCode();
+                    hash = hash * 59 + this.DisplayOutOfStock.GetHashCode();
                 
                 if (this.FulfillmentCenter != null)
-                    hash = hash * 57 + this.FulfillmentCenter.GetHashCode();
+                    hash = hash * 59 + this.FulfillmentCenter.GetHashCode();
                 
                 if (this.ReturnsFulfillmentCenter != null)
-                    hash = hash * 57 + this.ReturnsFulfillmentCenter.GetHashCode();
+                    hash = hash * 59 + this.ReturnsFulfillmentCenter.GetHashCode();
                 
                 if (this.Languages != null)
-                    hash = hash * 57 + this.Languages.GetHashCode();
+                    hash = hash * 59 + this.Languages.GetHashCode();
                 
                 if (this.Currencies != null)
-                    hash = hash * 57 + this.Currencies.GetHashCode();
+                    hash = hash * 59 + this.Currencies.GetHashCode();
                 
-                if (this.ObjectType != null)
-                    hash = hash * 57 + this.ObjectType.GetHashCode();
-                
-                if (this.DynamicProperties != null)
-                    hash = hash * 57 + this.DynamicProperties.GetHashCode();
+                if (this.TrustedGroups != null)
+                    hash = hash * 59 + this.TrustedGroups.GetHashCode();
                 
                 if (this.PaymentMethods != null)
-                    hash = hash * 57 + this.PaymentMethods.GetHashCode();
+                    hash = hash * 59 + this.PaymentMethods.GetHashCode();
                 
                 if (this.ShippingMethods != null)
-                    hash = hash * 57 + this.ShippingMethods.GetHashCode();
+                    hash = hash * 59 + this.ShippingMethods.GetHashCode();
                 
                 if (this.TaxProviders != null)
-                    hash = hash * 57 + this.TaxProviders.GetHashCode();
-                
-                if (this.SeoInfos != null)
-                    hash = hash * 57 + this.SeoInfos.GetHashCode();
+                    hash = hash * 59 + this.TaxProviders.GetHashCode();
                 
                 if (this.SecurityScopes != null)
-                    hash = hash * 57 + this.SecurityScopes.GetHashCode();
+                    hash = hash * 59 + this.SecurityScopes.GetHashCode();
+                
+                if (this.SeoInfos != null)
+                    hash = hash * 59 + this.SeoInfos.GetHashCode();
+                
+                if (this.ObjectType != null)
+                    hash = hash * 59 + this.ObjectType.GetHashCode();
+                
+                if (this.DynamicProperties != null)
+                    hash = hash * 59 + this.DynamicProperties.GetHashCode();
+                
+                if (this.Settings != null)
+                    hash = hash * 59 + this.Settings.GetHashCode();
                 
                 if (this.CreatedDate != null)
-                    hash = hash * 57 + this.CreatedDate.GetHashCode();
+                    hash = hash * 59 + this.CreatedDate.GetHashCode();
                 
                 if (this.ModifiedDate != null)
-                    hash = hash * 57 + this.ModifiedDate.GetHashCode();
+                    hash = hash * 59 + this.ModifiedDate.GetHashCode();
                 
                 if (this.CreatedBy != null)
-                    hash = hash * 57 + this.CreatedBy.GetHashCode();
+                    hash = hash * 59 + this.CreatedBy.GetHashCode();
                 
                 if (this.ModifiedBy != null)
-                    hash = hash * 57 + this.ModifiedBy.GetHashCode();
+                    hash = hash * 59 + this.ModifiedBy.GetHashCode();
                 
                 if (this.Id != null)
-                    hash = hash * 57 + this.Id.GetHashCode();
+                    hash = hash * 59 + this.Id.GetHashCode();
                 
                 return hash;
             }

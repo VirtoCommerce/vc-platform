@@ -54,23 +54,44 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                 searchCriteria.SearchInChildren = true;
                 searchCriteria.SearchInVariations = true;
             }
-            var serviceResult = _searchService.Search(searchCriteria);
 
             var retVal = new webModel.ListEntrySearchResult();
+           
+            int categorySkip = 0;
+            int categoryTake = 0;
+            //Because products and categories represent in search result as two separated collections for handle paging request 
+            //we should join two resulting collection artificially
+            //search categories
+            if (searchCriteria.ResponseGroup.HasFlag(coreModel.SearchResponseGroup.WithCategories))
+            {
+                searchCriteria.ResponseGroup = searchCriteria.ResponseGroup & ~coreModel.SearchResponseGroup.WithProducts;
+                var categoriesSearchResult = _searchService.Search(searchCriteria);
+                var categoriesTotalCount = categoriesSearchResult.Categories.Count();
 
-            var start = searchCriteria.Skip;
-            var count = searchCriteria.Take;
+                categorySkip = Math.Min(categoriesTotalCount, searchCriteria.Skip);
+                categoryTake = Math.Min(searchCriteria.Take, Math.Max(0, categoriesTotalCount - searchCriteria.Skip));
+                var categories = categoriesSearchResult.Categories.Skip(categorySkip).Take(categoryTake).Select(x => new webModel.ListEntryCategory(x.ToWebModel(_blobUrlResolver))).ToList();
 
-            // all categories
-            var categories = serviceResult.Categories.Select(x => new webModel.ListEntryCategory(x.ToWebModel(_blobUrlResolver))).ToList();
-            var products = serviceResult.Products.Select(x => new webModel.ListEntryProduct(x.ToWebModel(_blobUrlResolver)));
+                retVal.TotalCount = categoriesTotalCount;
+                retVal.ListEntries.AddRange(categories);
 
-            retVal.TotalCount = categories.Count() + serviceResult.ProductsTotalCount;
-            retVal.ListEntries.AddRange(categories.Skip(start).Take(count));
+                searchCriteria.ResponseGroup = searchCriteria.ResponseGroup | coreModel.SearchResponseGroup.WithProducts;
+            }
 
-            count -= categories.Count();
+            //search products
+            if (searchCriteria.ResponseGroup.HasFlag(coreModel.SearchResponseGroup.WithProducts))
+            {
+                searchCriteria.ResponseGroup = searchCriteria.ResponseGroup & ~coreModel.SearchResponseGroup.WithCategories;
+                searchCriteria.Skip = searchCriteria.Skip - categorySkip;
+                searchCriteria.Take = searchCriteria.Take - categoryTake;
+                var productsSearchResult = _searchService.Search(searchCriteria);
+      
+                var products = productsSearchResult.Products.Select(x => new webModel.ListEntryProduct(x.ToWebModel(_blobUrlResolver)));
 
-            retVal.ListEntries.AddRange(products.Take(count));
+                retVal.TotalCount += productsSearchResult.ProductsTotalCount;
+                retVal.ListEntries.AddRange(products);
+            }
+
 
             return Ok(retVal);
         }

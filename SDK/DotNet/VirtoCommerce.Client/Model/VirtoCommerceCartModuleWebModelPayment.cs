@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommerceCartModuleWebModelPayment : IEquatable<VirtoCommerceCartModuleWebModelPayment>
+    public partial class VirtoCommerceCartModuleWebModelPayment :  IEquatable<VirtoCommerceCartModuleWebModelPayment>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceCartModuleWebModelPayment" /> class.
@@ -117,7 +118,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommerceCartModuleWebModelPayment instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommerceCartModuleWebModelPayment to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceCartModuleWebModelPayment to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommerceCartModuleWebModelPayment other)
         {
@@ -171,22 +172,22 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.OuterId != null)
-                    hash = hash * 57 + this.OuterId.GetHashCode();
+                    hash = hash * 59 + this.OuterId.GetHashCode();
                 
                 if (this.PaymentGatewayCode != null)
-                    hash = hash * 57 + this.PaymentGatewayCode.GetHashCode();
+                    hash = hash * 59 + this.PaymentGatewayCode.GetHashCode();
                 
                 if (this.Currency != null)
-                    hash = hash * 57 + this.Currency.GetHashCode();
+                    hash = hash * 59 + this.Currency.GetHashCode();
                 
                 if (this.Amount != null)
-                    hash = hash * 57 + this.Amount.GetHashCode();
+                    hash = hash * 59 + this.Amount.GetHashCode();
                 
                 if (this.BillingAddress != null)
-                    hash = hash * 57 + this.BillingAddress.GetHashCode();
+                    hash = hash * 59 + this.BillingAddress.GetHashCode();
                 
                 if (this.Id != null)
-                    hash = hash * 57 + this.Id.GetHashCode();
+                    hash = hash * 59 + this.Id.GetHashCode();
                 
                 return hash;
             }

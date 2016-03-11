@@ -19,13 +19,13 @@ namespace VirtoCommerce.Storefront.Converters
 
             var currency = product.Price.Currency;
 
-            lineItemWebModel.ImageUrl = product.PrimaryImage.Url;
+            lineItemWebModel.ImageUrl = product.PrimaryImage != null ? product.PrimaryImage.Url : null;
             lineItemWebModel.ListPrice = product.Price.ListPrice;
             lineItemWebModel.SalePrice = product.Price.SalePrice;
             lineItemWebModel.ProductId = product.Id;
             lineItemWebModel.Quantity = quantity;
 
-            lineItemWebModel.ThumbnailImageUrl = product.PrimaryImage.Url;
+            lineItemWebModel.ThumbnailImageUrl = product.PrimaryImage != null ? product.PrimaryImage.Url : null;
 
             return lineItemWebModel;
         }
@@ -38,7 +38,7 @@ namespace VirtoCommerce.Storefront.Converters
 
             if (serviceModel.TaxDetails != null)
             {
-                webModel.TaxDetails = serviceModel.TaxDetails.Select(td => td.ToWebModel()).ToList();
+                webModel.TaxDetails = serviceModel.TaxDetails.Select(td => td.ToWebModel(currency)).ToList();
             }
 
             if (serviceModel.DynamicProperties != null)

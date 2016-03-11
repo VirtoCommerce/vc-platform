@@ -1,29 +1,29 @@
 ﻿angular.module('virtoCommerce.orderModule')
-.controller('virtoCommerce.orderModule.customerOrderListController', ['$scope', 'virtoCommerce.orderModule.order_res_customerOrders', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.authService', 'uiGridConstants', 'platformWebApp.uiGridHelper', 'dateFilter',
-function ($scope, order_res_customerOrders, bladeNavigationService, dialogService, authService, uiGridConstants, uiGridHelper, dateFilter) {
+.controller('virtoCommerce.orderModule.customerOrderListController', ['$scope', 'virtoCommerce.orderModule.order_res_customerOrders', 'platformWebApp.bladeUtils', 'platformWebApp.dialogService', 'platformWebApp.authService', 'uiGridConstants', 'platformWebApp.uiGridHelper', 'dateFilter',
+function ($scope, order_res_customerOrders, bladeUtils, dialogService, authService, uiGridConstants, uiGridHelper, dateFilter) {
     var blade = $scope.blade;
+    var bladeNavigationService = bladeUtils.bladeNavigationService;
     $scope.uiGridConstants = uiGridConstants;
-    
+
     blade.refresh = function () {
         blade.isLoading = true;
 
         var criteria = {
             keyword: filter.keyword,
+            sort: uiGridHelper.getSortExpression($scope),
             start: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
             count: $scope.pageSettings.itemsPerPageCount
         };
         order_res_customerOrders.search(criteria, function (data) {
             blade.isLoading = false;
 
-            $scope.pageSettings.totalItems = angular.isDefined(data.totalCount) ? data.totalCount : 0;
+            $scope.pageSettings.totalItems = data.totalCount;
             $scope.objects = data.customerOrders;
         },
 	   function (error) {
 	       bladeNavigationService.setError('Error ' + error.status, blade);
 	   });
     };
-
-    $scope.$watch('pageSettings.currentPage', blade.refresh);
 
     $scope.selectNode = function (node) {
         $scope.selectedNodeId = node.id;
@@ -90,13 +90,6 @@ function ($scope, order_res_customerOrders, bladeNavigationService, dialogServic
                   }
     ];
 
-    //pagination settings
-    $scope.pageSettings = {};
-    $scope.pageSettings.totalItems = 0;
-    $scope.pageSettings.currentPage = 1;
-    $scope.pageSettings.numPages = 5;
-    $scope.pageSettings.itemsPerPageCount = 20;
-
     var filter = $scope.filter = {};
     filter.criteriaChanged = function () {
         if ($scope.pageSettings.currentPage > 1) {
@@ -112,7 +105,11 @@ function ($scope, order_res_customerOrders, bladeNavigationService, dialogServic
         if (createdDateColumn) { // custom tooltip
             createdDateColumn.cellTooltip = function (row, col) { return dateFilter(row.entity.createdDate, 'medium'); }
         }
-        uiGridHelper.initialize($scope, gridOptions);
+        uiGridHelper.initialize($scope, gridOptions, function (gridApi) {
+            uiGridHelper.bindRefreshOnSortChanged($scope);
+        });
+
+        bladeUtils.initializePagination($scope);
     };
 
 

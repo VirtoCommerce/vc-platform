@@ -43,7 +43,6 @@ namespace VirtoCommerce.Storefront.Converters
                 {
                     billingAddress = new Address { Type = AddressType.Billing };
                 }
-                webModel.DefaultBillingAddress = billingAddress;
 
                 if (webModel.HasPhysicalProducts)
                 {
@@ -52,7 +51,6 @@ namespace VirtoCommerce.Storefront.Converters
                     {
                         shippingAddress = new Address { Type = AddressType.Shipping };
                     }
-                    webModel.DefaultShippingAddress = shippingAddress;
                 }
             }
 
@@ -73,7 +71,7 @@ namespace VirtoCommerce.Storefront.Converters
 
             if (serviceModel.TaxDetails != null)
             {
-                webModel.TaxDetails = serviceModel.TaxDetails.Select(td => td.ToWebModel()).ToList();
+                webModel.TaxDetails = serviceModel.TaxDetails.Select(td => td.ToWebModel(currency)).ToList();
             }
 
           
@@ -91,6 +89,41 @@ namespace VirtoCommerce.Storefront.Converters
             webModel.Width = (decimal)(serviceModel.Width ?? 0);
 
             return webModel;
+        }
+
+        public static VirtoCommerceDomainTaxModelTaxEvaluationContext ToTaxEvalContext(this ShoppingCart cart)
+        {
+            var retVal = new VirtoCommerceDomainTaxModelTaxEvaluationContext();
+            retVal.Id = cart.Id;
+            retVal.Code = cart.Name;
+            retVal.Currency = cart.Currency.Code;
+            retVal.Type = "Cart";
+            retVal.Lines = new System.Collections.Generic.List<VirtoCommerceDomainTaxModelTaxLine>();
+            foreach (var lineItem in cart.Items)
+            {
+                var line = new VirtoCommerceDomainTaxModelTaxLine
+                {
+                    Id = lineItem.Id,
+                    Code = lineItem.Sku,
+                    Name = lineItem.Name,
+                    TaxType = lineItem.TaxType,
+                    Amount = (double)lineItem.ExtendedPrice.Amount
+                };
+                retVal.Lines.Add(line);
+            }
+            foreach (var shipment in cart.Shipments)
+            {
+                var line = new VirtoCommerceDomainTaxModelTaxLine
+                {
+                    Id = shipment.Id,
+                    Code = shipment.ShipmentMethodCode,
+                    Name = shipment.ShipmentMethodCode,
+                    TaxType = shipment.TaxType,
+                    Amount = (double)shipment.ShippingPrice.Amount
+                };
+                retVal.Lines.Add(line);
+            }
+            return retVal;
         }
 
         public static VirtoCommerceCartModuleWebModelShoppingCart ToServiceModel(this ShoppingCart webModel)

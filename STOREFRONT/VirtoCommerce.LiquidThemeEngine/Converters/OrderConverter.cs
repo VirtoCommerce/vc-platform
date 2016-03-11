@@ -63,7 +63,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                 discounts.Add(order.Discount.ToShopifyModel());
             }
 
-            var taxLines = new List<TaxLine>();
+            var taxLines = new List<Objects.TaxLine>();
 
             if (order.InPayments != null)
             {
@@ -86,7 +86,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
 
                     if (inPayment.TaxIncluded == true)
                     {
-                        taxLines.Add(new TaxLine { Title = "Payments tax", Price = inPayment.Tax.Amount * 100 });
+                        taxLines.Add(new Objects.TaxLine { Title = "Payments tax", Price = inPayment.Tax.Amount * 100 });
                     }
                 }
             }
@@ -113,7 +113,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
 
                     if (orderShipment.TaxIncluded == true)
                     {
-                        taxLines.Add(new TaxLine { Title = "Shipping tax", Price = orderShipment.Tax.Amount * 100 });
+                        taxLines.Add(new Objects.TaxLine { Title = "Shipping tax", Price = orderShipment.Tax.Amount * 100 });
                     }
                 }
 
@@ -123,11 +123,10 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
 
                 if (shipmentsWithTax.Count > 0)
                 {
-                    taxLines.Add(new TaxLine
+                    taxLines.Add(new Objects.TaxLine
                     {
                         Title = "Shipping",
-                        Price = shipmentsWithTax.Sum(s => s.Tax.Amount),
-                        Rate = shipmentsWithTax.Where(s => s.TaxDetails != null).Sum(i => i.TaxDetails.Sum(td => td.Rate)),
+                        Price = shipmentsWithTax.Sum(s => s.Tax.Amount)
                     });
                 }
 
@@ -161,12 +160,11 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
 
                 if (itemsWithTax.Any())
                 {
-                    taxLines.Add(new TaxLine
+                    taxLines.Add(new Objects.TaxLine
                     {
                         Title = "Line items",
-                        Price = itemsWithTax.Sum(i => i.Tax.Amount * 100),
-                        Rate = itemsWithTax.Where(i => i.TaxDetails != null).Sum(i => i.TaxDetails.Sum(td => td.Rate)),
-                    });
+                        Price = itemsWithTax.Sum(i => i.Tax.Amount * 100)
+                     });
                 }
 
                 var itemsWithDiscount = order.Items

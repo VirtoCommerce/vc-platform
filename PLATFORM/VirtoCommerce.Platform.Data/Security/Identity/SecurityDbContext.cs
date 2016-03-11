@@ -6,7 +6,7 @@ namespace VirtoCommerce.Platform.Data.Security.Identity
     public class SecurityDbContext : IdentityDbContext<ApplicationUser>
     {
         public SecurityDbContext()
-            : this("VirtoCommerce")
+       : this("VirtoCommerce")
         {
         }
 
@@ -14,11 +14,6 @@ namespace VirtoCommerce.Platform.Data.Security.Identity
             : base(nameOrConnectionString, false)
         {
             Database.SetInitializer<SecurityDbContext>(null);
-        }
-
-        public static SecurityDbContext Create()
-        {
-            return new SecurityDbContext();
         }
     }
 }

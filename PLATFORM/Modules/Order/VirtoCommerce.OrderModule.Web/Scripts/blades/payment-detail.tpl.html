@@ -46,10 +46,7 @@
                         <div class="form-group">
                             <label class="form-label">
                                 {{ 'orders.blades.payment-detail.labels.status' | translate }}
-                                <a href="" ng-click="openStatusSettingManagement()">
-                                    <i class="form-ico fa fa-pencil"></i>
-                                </a>
-
+                                <a href="" ng-click="openStatusSettingManagement()" class="form-edit"><i class="form-ico fa fa-pencil"></i></a>
                             </label>
                             <div class="form-input">
                                 <ui-select ng-model="blade.currentEntity.status">

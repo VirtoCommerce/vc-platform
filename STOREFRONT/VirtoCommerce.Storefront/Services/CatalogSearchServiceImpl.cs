@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using PagedList;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.Client.Model;
 using VirtoCommerce.LiquidThemeEngine.Extensions;
@@ -35,19 +37,20 @@ namespace VirtoCommerce.Storefront.Services
             _promotionEvaluator = promotionEvaluator;
         }
 
+        #region ICatalogSearchService Members
         public async Task<Product[]> GetProductsAsync(string[] ids, ItemResponseGroup responseGroup = ItemResponseGroup.ItemInfo)
         {
             var workContext = _workContextFactory();
 
-            var retVal = (await _catalogModuleApi.CatalogModuleProductsGetProductByIdsAsync(ids.ToList())).Select(x => x.ToWebModel(workContext.CurrentLanguage, workContext.CurrentCurrency)).ToArray();
+            var retVal = (await _catalogModuleApi.CatalogModuleProductsGetProductByIdsAsync(ids.ToList(), ((int)responseGroup).ToString())).Select(x => x.ToWebModel(workContext.CurrentLanguage, workContext.CurrentCurrency)).ToArray();
 
             var allProducts = retVal.Concat(retVal.SelectMany(x => x.Variations)).ToArray();
 
-            if (allProducts != null && allProducts.Any())
+            if (!allProducts.IsNullOrEmpty())
             {
                 var taskList = new List<Task>();
 
-                if ((responseGroup | ItemResponseGroup.ItemWithInventories) == responseGroup)
+                if ((responseGroup | ItemResponseGroup.Inventory) == responseGroup)
                 {
                     taskList.Add(LoadProductsInventoriesAsync(allProducts));
                 }
@@ -67,69 +70,143 @@ namespace VirtoCommerce.Storefront.Services
             return retVal;
         }
 
-        public async Task<CatalogSearchResult> SearchAsync(CatalogSearchCriteria criteria)
+        public async Task<Category[]> GetCategoriesAsync(string[] ids, CategoryResponseGroup responseGroup = CategoryResponseGroup.Info)
         {
-            var retVal = new CatalogSearchResult();
-
             var workContext = _workContextFactory();
 
-            var searchCriteria = new VirtoCommerceDomainCatalogModelSearchCriteria
-            {
-                StoreId = workContext.CurrentStore.Id,
-                Keyword = criteria.Keyword,
-                ResponseGroup = criteria.ResponseGroup.ToString(),
-                SearchInChildren = criteria.SearchInChildren,
-                CategoryId = criteria.CategoryId,
-                CatalogId = criteria.CatalogId,
-                Currency = workContext.CurrentCurrency.Code,
-                HideDirectLinkedCategories = true,
-                Terms = criteria.Terms.ToStrings(),
-                PricelistIds = workContext.CurrentPricelists.Where(p => p.Currency == workContext.CurrentCurrency.Code).Select(p => p.Id).ToList(),
-                Skip = criteria.Start,
-                Take = criteria.PageSize,
-                Sort = criteria.SortBy
-            };
-
-            var searchTask = _searchApi.SearchModuleSearchAsync(searchCriteria);
-            if (criteria.CategoryId != null)
-            {
-                var category = await _catalogModuleApi.CatalogModuleCategoriesGetAsync(criteria.CategoryId);
-                if (category != null)
-                {
-                    retVal.Category = category.ToWebModel(workContext.CurrentLanguage);
-                }
-            }
-            var result = await searchTask;
-
-
-            if (result != null)
-            {
-                if (result.Products != null && result.Products.Any())
-                {
-                    var products = result.Products.Select(x => x.ToWebModel(workContext.CurrentLanguage, workContext.CurrentCurrency)).ToArray();
-                    retVal.Products = new StorefrontPagedList<Product>(products, criteria.PageNumber, criteria.PageSize, result.ProductsTotalCount.Value, page => workContext.RequestUrl.SetQueryParameter("page", page.ToString()).ToString());
-
-                    await Task.WhenAll(_pricingService.EvaluateProductPricesAsync(retVal.Products), LoadProductsInventoriesAsync(retVal.Products));
-                }
-
-                if (result.Categories != null && result.Categories.Any())
-                {
-                    retVal.Categories = result.Categories.Select(x => x.ToWebModel(workContext.CurrentLanguage));
-                }
-
-                if (result.Aggregations != null)
-                {
-                    retVal.Aggregations = result.Aggregations.Select(x => x.ToWebModel()).ToArray();
-                }
-            }
-
+            var retVal = (await _catalogModuleApi.CatalogModuleCategoriesGetCategoriesByIdsAsync(ids.ToList(), ((int)responseGroup).ToString())).Select(x => x.ToWebModel(workContext.CurrentLanguage)).ToArray();
+            
             return retVal;
+        }
+
+        /// <summary>
+        /// Async search categories by given criteria 
+        /// </summary>
+        /// <param name="criteria"></param>
+        /// <returns></returns>
+        public async Task<IPagedList<Category>> SearchCategoriesAsync(CatalogSearchCriteria criteria)
+        {
+            var workContext = _workContextFactory();
+            criteria = criteria.Clone();
+            //exclude products
+            criteria.ResponseGroup = criteria.ResponseGroup & (~CatalogSearchResponseGroup.WithProducts);
+            //include categories
+            criteria.ResponseGroup = criteria.ResponseGroup | CatalogSearchResponseGroup.WithCategories;
+
+            var searchCriteria = criteria.ToServiceModel(workContext);
+            searchCriteria.SearchInChildren = true;
+
+            var result = await _searchApi.SearchModuleSearchAsync(searchCriteria);
+
+            //API temporary does not support paginating request to categories (that's uses PagedList with superset instead StaticPagedList)
+            return new PagedList<Category>(result.Categories.Select(x => x.ToWebModel(workContext.CurrentLanguage)), criteria.PageNumber, criteria.PageSize);
+        }
+
+        /// <summary>
+        /// search categories by given criteria 
+        /// </summary>
+        /// <param name="criteria"></param>
+        /// <returns></returns>
+        public IPagedList<Category> SearchCategories(CatalogSearchCriteria criteria)
+        {
+            var workContext = _workContextFactory();
+            criteria = criteria.Clone();
+            //exclude products
+            criteria.ResponseGroup = criteria.ResponseGroup & (~CatalogSearchResponseGroup.WithProducts);
+            //include categories
+            criteria.ResponseGroup = criteria.ResponseGroup | CatalogSearchResponseGroup.WithCategories;
+            var searchCriteria = criteria.ToServiceModel(workContext);
+            var categories = _searchApi.SearchModuleSearch(searchCriteria).Categories.Select(x => x.ToWebModel(workContext.CurrentLanguage)).ToList();
+           
+            //API temporary does not support paginating request to categories (that's uses PagedList with superset)
+            return new PagedList<Category>(categories, criteria.PageNumber, criteria.PageSize);
+        }
+
+        /// <summary>
+        /// Async search products by given criteria 
+        /// </summary>
+        /// <param name="criteria"></param>
+        /// <returns></returns>
+        public async Task<IPagedList<Product>> SearchProductsAsync(CatalogSearchCriteria criteria)
+        {
+            criteria = criteria.Clone();
+            //exclude categories
+            criteria.ResponseGroup = criteria.ResponseGroup & (~CatalogSearchResponseGroup.WithCategories);
+            //include products
+            criteria.ResponseGroup = criteria.ResponseGroup | CatalogSearchResponseGroup.WithProducts;
+
+            var workContext = _workContextFactory();
+            var searchCriteria = criteria.ToServiceModel(workContext);
+            var result = await _searchApi.SearchModuleSearchAsync(searchCriteria);
+            var products = result.Products.Select(x => x.ToWebModel(workContext.CurrentLanguage, workContext.CurrentCurrency)).ToList();
+
+            if (!products.IsNullOrEmpty())
+            {
+                var taskList = new List<Task>();
+                taskList.Add(LoadProductsInventoriesAsync(products));
+                taskList.Add(_pricingService.EvaluateProductPricesAsync(products));
+                await Task.WhenAll(taskList.ToArray());
+            }
+
+            return new StaticPagedList<Product>(products, criteria.PageNumber, criteria.PageSize, result.ProductsTotalCount.Value);
+        }
+
+
+        /// <summary>
+        /// Search products by given criteria 
+        /// </summary>
+        /// <param name="criteria"></param>
+        /// <returns></returns>
+        public IPagedList<Product> SearchProducts(CatalogSearchCriteria criteria)
+        {
+            var workContext = _workContextFactory();
+            criteria = criteria.Clone();
+            //exclude categories
+            criteria.ResponseGroup = criteria.ResponseGroup & (~CatalogSearchResponseGroup.WithCategories);
+            //include products
+            criteria.ResponseGroup = criteria.ResponseGroup | CatalogSearchResponseGroup.WithProducts;
+
+            var searchCriteria = criteria.ToServiceModel(workContext);
+        
+            var result = _searchApi.SearchModuleSearch(searchCriteria);
+            var products = result.Products.Select(x => x.ToWebModel(workContext.CurrentLanguage, workContext.CurrentCurrency)).ToList();
+
+            //Unable to make parallel call because its synchronous method (in future this information pricing and inventory will be getting from search index) and this lines can be removed
+            _pricingService.EvaluateProductPrices(products);
+            LoadProductsInventories(products);
+
+            return new StaticPagedList<Product>(products, criteria.PageNumber, criteria.PageSize, result.ProductsTotalCount.Value);
+        }
+
+        public IPagedList<Aggregation> GetAggregations(CatalogSearchCriteria criteria)
+        {
+            var workContext = _workContextFactory();
+            var searchCriteria = criteria.ToServiceModel(workContext);
+            //Aggregations not support pagination
+            searchCriteria.Skip = 0;
+            searchCriteria.Take = 10;
+            searchCriteria.ResponseGroup = CatalogSearchResponseGroup.WithProducts.ToString();
+
+            var result = _searchApi.SearchModuleSearch(searchCriteria);
+            var aggregations = result.Aggregations.Select(x => x.ToWebModel()).ToList();
+
+            return new StaticPagedList<Aggregation>(aggregations, criteria.PageNumber, criteria.PageSize, aggregations.Count());
+        }
+
+        #endregion
+
+        private void LoadProductsDiscounts(IEnumerable<Product> products)
+        {
+            var workContext = _workContextFactory();
+            var promotionContext = workContext.ToPromotionEvaluationContext(products);
+            promotionContext.PromoEntries = products.Select(x => x.ToPromotionItem()).ToList();
+            _promotionEvaluator.EvaluateDiscounts(promotionContext, products);
         }
 
         private async Task LoadProductsDiscountsAsync(IEnumerable<Product> products)
         {
             var workContext = _workContextFactory();
-            var promotionContext = workContext.ToPromotionEvaluationContext();
+            var promotionContext = workContext.ToPromotionEvaluationContext(products);
             promotionContext.PromoEntries = products.Select(x => x.ToPromotionItem()).ToList();
             await _promotionEvaluator.EvaluateDiscountsAsync(promotionContext, products);
         }
@@ -143,6 +220,16 @@ namespace VirtoCommerce.Storefront.Services
                 item.Inventory = inventories.Where(x => x.ProductId == item.Id).Select(x => x.ToWebModel()).FirstOrDefault();
             }
         }
+
+        private void LoadProductsInventories(IEnumerable<Product> products)
+        {
+            var inventories = _inventoryModuleApi.InventoryModuleGetProductsInventories(products.Select(x => x.Id).ToList());
+            foreach (var item in products)
+            {
+                item.Inventory = inventories.Where(x => x.ProductId == item.Id).Select(x => x.ToWebModel()).FirstOrDefault();
+            }
+        }
+
 
     }
 }

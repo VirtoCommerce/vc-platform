@@ -9,6 +9,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
             Amount = new Money(currency);
             Currency = currency;
         }
+
         /// <summary>
         /// Gets or sets the value of payment outer id
         /// </summary>

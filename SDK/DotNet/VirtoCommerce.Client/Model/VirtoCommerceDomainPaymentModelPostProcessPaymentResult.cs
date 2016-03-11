@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public class VirtoCommerceDomainPaymentModelPostProcessPaymentResult : IEquatable<VirtoCommerceDomainPaymentModelPostProcessPaymentResult>
+    public partial class VirtoCommerceDomainPaymentModelPostProcessPaymentResult :  IEquatable<VirtoCommerceDomainPaymentModelPostProcessPaymentResult>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceDomainPaymentModelPostProcessPaymentResult" /> class.
@@ -112,7 +113,7 @@ namespace VirtoCommerce.Client.Model
         /// <summary>
         /// Returns true if VirtoCommerceDomainPaymentModelPostProcessPaymentResult instances are equal
         /// </summary>
-        /// <param name="obj">Instance of VirtoCommerceDomainPaymentModelPostProcessPaymentResult to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceDomainPaymentModelPostProcessPaymentResult to be compared</param>
         /// <returns>Boolean</returns>
         public bool Equals(VirtoCommerceDomainPaymentModelPostProcessPaymentResult other)
         {
@@ -166,22 +167,22 @@ namespace VirtoCommerce.Client.Model
                 // Suitable nullity checks etc, of course :)
                 
                 if (this.NewPaymentStatus != null)
-                    hash = hash * 57 + this.NewPaymentStatus.GetHashCode();
+                    hash = hash * 59 + this.NewPaymentStatus.GetHashCode();
                 
                 if (this.IsSuccess != null)
-                    hash = hash * 57 + this.IsSuccess.GetHashCode();
+                    hash = hash * 59 + this.IsSuccess.GetHashCode();
                 
                 if (this.ErrorMessage != null)
-                    hash = hash * 57 + this.ErrorMessage.GetHashCode();
+                    hash = hash * 59 + this.ErrorMessage.GetHashCode();
                 
                 if (this.ReturnUrl != null)
-                    hash = hash * 57 + this.ReturnUrl.GetHashCode();
+                    hash = hash * 59 + this.ReturnUrl.GetHashCode();
                 
                 if (this.OrderId != null)
-                    hash = hash * 57 + this.OrderId.GetHashCode();
+                    hash = hash * 59 + this.OrderId.GetHashCode();
                 
                 if (this.OuterId != null)
-                    hash = hash * 57 + this.OuterId.GetHashCode();
+                    hash = hash * 59 + this.OuterId.GetHashCode();
                 
                 return hash;
             }

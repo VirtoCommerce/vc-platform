@@ -10,12 +10,12 @@ using VirtoCommerce.CatalogModule.Data.Services;
 using VirtoCommerce.CoreModule.Data.Services;
 using VirtoCommerce.Domain.Cart.Events;
 using VirtoCommerce.Domain.Catalog.Services;
-using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Domain.Order.Events;
 using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.Domain.Payment.Model;
 using VirtoCommerce.OrderModule.Data.Repositories;
 using VirtoCommerce.OrderModule.Data.Services;
+using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.DynamicProperties;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
@@ -85,15 +85,15 @@ namespace PaymentMethods.Tests
 
         private CustomerOrderServiceImpl GetCustomerOrderService()
         {
-            Func<IPlatformRepository> platformRepositoryFactory = () => new PlatformRepository("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor());
+            Func<IPlatformRepository> platformRepositoryFactory = () => new PlatformRepository("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor(null));
             Func<IOrderRepository> orderRepositoryFactory = () =>
             {
-                return new OrderRepositoryImpl("VirtoCommerce", new AuditableInterceptor(), new EntityPrimaryKeyGeneratorInterceptor());
+                return new OrderRepositoryImpl("VirtoCommerce", new AuditableInterceptor(null), new EntityPrimaryKeyGeneratorInterceptor());
             };
 
             Func<ICartRepository> repositoryFactory = () =>
             {
-                return new CartRepositoryImpl("VirtoCommerce", new AuditableInterceptor());
+                return new CartRepositoryImpl("VirtoCommerce", new AuditableInterceptor(null));
             };
 
             var dynamicPropertyService = new DynamicPropertyService(platformRepositoryFactory);
@@ -160,7 +160,7 @@ namespace PaymentMethods.Tests
 
         private ICatalogRepository GetRepository()
         {
-            var retVal = new CatalogRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor());
+            var retVal = new CatalogRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor(null));
             return retVal;
         }
     }

@@ -1,10 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Omu.ValueInjecter;
+﻿using System.Linq;
 using VirtoCommerce.Client.Model;
 using VirtoCommerce.Storefront.Model;
-using VirtoCommerce.Storefront.Model.Catalog;
-using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Converters
 {
@@ -16,7 +12,7 @@ namespace VirtoCommerce.Storefront.Converters
             retVal.Language = workContext.CurrentLanguage.CultureName;
             retVal.StoreId = workContext.CurrentStore.Id;
             retVal.Type = contactUsForm.FormType;
-            retVal.Fields = contactUsForm.Contact.ToDictionary(x => x.Key, x => (object)((string[])x.Value).FirstOrDefault());
+            retVal.Fields = contactUsForm.Contact.ToDictionary(x => x.Key, x => x.Value != null ? x.Value.ToString() : string.Empty);
             return retVal;
         }
     }

@@ -24,14 +24,10 @@ namespace VirtoCommerce.Storefront.Converters
 
             retVal.Sku = product.Code;
 
-            if(product.Category != null)
-            {
-                retVal.Category = product.Category.ToWebModel(currentLanguage);
-            }
-
+          
             if (product.Properties != null)
             {
-                retVal.Properties = product.Properties.Where(x => !String.Equals(x.Type, "Variation", StringComparison.InvariantCultureIgnoreCase))
+                retVal.Properties = product.Properties.Where(x => String.Equals(x.Type, "Product", StringComparison.InvariantCultureIgnoreCase))
                                                       .Select(p => p.ToWebModel(currentLanguage))
                                                       .ToList();
                 retVal.VariationProperties = product.Properties.Where(x => String.Equals(x.Type, "Variation", StringComparison.InvariantCultureIgnoreCase))
@@ -75,7 +71,7 @@ namespace VirtoCommerce.Storefront.Converters
             quoteItem.InjectFrom<NullableAndEnumValueInjecter>(product);
 
             quoteItem.Id = null;
-            quoteItem.ImageUrl = product.PrimaryImage.Url;
+            quoteItem.ImageUrl = product.PrimaryImage != null ? product.PrimaryImage.Url : null;
             quoteItem.ListPrice = product.Price.ListPrice;
             quoteItem.ProductId = product.Id;
             quoteItem.SalePrice = product.Price.SalePrice;

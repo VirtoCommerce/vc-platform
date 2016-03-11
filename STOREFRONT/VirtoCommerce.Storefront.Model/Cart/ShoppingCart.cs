@@ -190,10 +190,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
             }
         }
 
-        /// <summary>
-        /// Gets or sets the value of total tax cost
-        /// </summary>
-        public Money TaxTotal { get; set; }
+     
 
         /// <summary>
         /// Gets or sets the collection of shopping cart addresses
@@ -206,12 +203,79 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// <summary>
         /// Gets or sets the default shipping address
         /// </summary>
-        public Address DefaultShippingAddress { get; set; }
+        public Address DefaultShippingAddress
+        {
+            get
+            {
+                Address shippingAddress = null;
+
+                if (HasPhysicalProducts)
+                {
+                    var shipment = Shipments.FirstOrDefault();
+                    if (shipment != null)
+                    {
+                        shippingAddress = shipment.DeliveryAddress;
+                    }
+
+                    if (shippingAddress == null && Customer != null)
+                    {
+                        shippingAddress = Customer.Addresses.FirstOrDefault();
+                    }
+
+                    if (shippingAddress == null)
+                    {
+                        shippingAddress = new Address
+                        {
+                            Type = AddressType.Shipping,
+                            Email = Customer.Email,
+                            FirstName = Customer.FirstName,
+                            LastName = Customer.LastName
+                        };
+                    }
+
+                    shippingAddress.Type = AddressType.Shipping;
+                }
+
+                return shippingAddress;
+            }
+        }
 
         /// <summary>
         /// Gets default the default billing address
         /// </summary>
-        public Address DefaultBillingAddress { get; set; }
+        public Address DefaultBillingAddress
+        {
+            get
+            {
+                Address billingAddress = null;
+
+                var payment = Payments.FirstOrDefault();
+                if (payment != null)
+                {
+                    billingAddress = payment.BillingAddress;
+                }
+
+                if (billingAddress == null && Customer != null)
+                {
+                    billingAddress = Customer.Addresses.FirstOrDefault();
+                }
+
+                if (billingAddress == null)
+                {
+                    billingAddress = new Address
+                    {
+                        Type = AddressType.Billing,
+                        Email = Customer.Email,
+                        FirstName = Customer.FirstName,
+                        LastName = Customer.LastName
+                    };
+                }
+
+                billingAddress.Type = AddressType.Billing;
+
+                return billingAddress;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the value of shopping cart line items
@@ -247,13 +311,6 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// </value>
         public ICollection<Shipment> Shipments { get; set; }
 
-        /// <summary>
-        /// Gets or sets the collection of line item tax detalization lines
-        /// </summary>
-        /// <value>
-        /// Collection of TaxDetail objects
-        /// </value>
-        public ICollection<TaxDetail> TaxDetails { get; set; }
 
         /// <summary>
         /// Used for dynamic properties management, contains object type string
@@ -283,6 +340,36 @@ namespace VirtoCommerce.Storefront.Model.Cart
             get
             {
                 return Items.OrderByDescending(i => i.CreatedDate).FirstOrDefault();
+            }
+        }
+
+        public string Email
+        {
+            get
+            {
+                string email = null;
+
+                var shipment = Shipments.FirstOrDefault();
+                if (shipment != null && shipment.DeliveryAddress != null)
+                {
+                    email = shipment.DeliveryAddress.Email;
+                }
+
+                if (string.IsNullOrEmpty(email))
+                {
+                    var payment = Payments.FirstOrDefault();
+                    if (payment != null && payment.BillingAddress != null)
+                    {
+                        email = payment.BillingAddress.Email;
+                    }
+                }
+
+                if (string.IsNullOrEmpty(email))
+                {
+                    email = Customer.Email;
+                }
+
+                return email;
             }
         }
 
@@ -339,6 +426,44 @@ namespace VirtoCommerce.Storefront.Model.Cart
                         Coupon.Description = reward.Promotion.Description;
                     }
                 }
+            }
+        }
+        #endregion
+
+
+        #region ITaxable Members
+        /// <summary>
+        /// Gets or sets the value of total shipping tax amount
+        /// </summary>
+        public Money TaxTotal { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of shipping tax type
+        /// </summary>
+        public string TaxType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the collection of line item tax details lines
+        /// </summary>
+        /// <value>
+        /// Collection of TaxDetail objects
+        /// </value>
+        public ICollection<TaxDetail> TaxDetails { get; set; }
+
+        public void ApplyTaxRates(IEnumerable<TaxRate> taxRates)
+        {
+            TaxTotal = new Money(TaxTotal.Currency);
+            foreach (var taxRate in taxRates)
+            {
+                TaxTotal += taxRate.Rate;
+            }
+            foreach(var lineItem in Items)
+            {
+                lineItem.ApplyTaxRates(taxRates);
+            }
+            foreach(var shipment in Shipments)
+            {
+                shipment.ApplyTaxRates(taxRates);
             }
         }
         #endregion

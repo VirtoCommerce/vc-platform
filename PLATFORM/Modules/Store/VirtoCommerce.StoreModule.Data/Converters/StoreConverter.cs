@@ -36,6 +36,7 @@ namespace VirtoCommerce.StoreModule.Data.Converters
 			
 			retVal.Languages = dbStore.Languages.Select(x => x.LanguageCode).ToList();
             retVal.Currencies = dbStore.Currencies.Select(x => x.CurrencyCode).ToList();
+            retVal.TrustedGroups = dbStore.TrustedGroups.Select(x => x.GroupName).ToList();
 
             //Payment methods need return only contains in registered
             retVal.PaymentMethods = paymentMethods;
@@ -113,8 +114,17 @@ namespace VirtoCommerce.StoreModule.Data.Converters
 					StoreId = retVal.Id
 				}));
 			}
-			
-			if (store.ShippingMethods != null)
+
+            if (store.TrustedGroups != null)
+            {
+                retVal.TrustedGroups = new ObservableCollection<dataModel.StoreTrustedGroup>(store.TrustedGroups.Select(x => new dataModel.StoreTrustedGroup
+                {
+                    GroupName = x,
+                    StoreId = retVal.Id
+                }));
+            }
+
+            if (store.ShippingMethods != null)
 			{
 				retVal.ShippingMethods = new ObservableCollection<dataModel.StoreShippingMethod>(store.ShippingMethods.Select(x => x.ToDataModel()));
 			}
@@ -160,7 +170,13 @@ namespace VirtoCommerce.StoreModule.Data.Converters
 				source.Currencies.Patch(target.Currencies, currencyComparer,
 									  (sourceCurrency, targetCurrency) => targetCurrency.CurrencyCode = sourceCurrency.CurrencyCode);
 			}
-			if (!source.PaymentMethods.IsNullCollection())
+            if (!source.TrustedGroups.IsNullCollection())
+            {
+                var trustedGroupComparer = AnonymousComparer.Create((dataModel.StoreTrustedGroup x) => x.GroupName);
+                source.TrustedGroups.Patch(target.TrustedGroups, trustedGroupComparer,
+                                      (sourceGroup, targetGroup) => sourceGroup.GroupName = targetGroup.GroupName);
+            }
+            if (!source.PaymentMethods.IsNullCollection())
 			{
 				var paymentComparer = AnonymousComparer.Create((dataModel.StorePaymentMethod x) => x.Code);
 				source.PaymentMethods.Patch(target.PaymentMethods, paymentComparer,

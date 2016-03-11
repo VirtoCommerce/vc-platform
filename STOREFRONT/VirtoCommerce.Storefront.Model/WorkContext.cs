@@ -114,15 +114,27 @@ namespace VirtoCommerce.Storefront.Model
         /// Represent current product
         /// </summary>
         public Product CurrentProduct { get; set; }
-
+        /// <summary>
+        /// Represent current category
+        /// </summary>
         public Category CurrentCategory { get; set; }
+        /// <summary>
+        /// Represent all store catalog categories filtered by current search criteria CurrentCatalogSearchCriteria (loaded on first access by lazy loading)
+        /// </summary>
+        public IMutablePagedList<Category> Categories { get; set; }
+        /// <summary>
+        /// Represent products filtered by current search criteria CurrentCatalogSearchCriteria (loaded on first access by lazy loading)
+        /// </summary>
+        public IMutablePagedList<Product> Products { get; set; }
+        /// <summary>
+        /// Represent bucket, aggregated data based on a search query resulted by current search criteria CurrentCatalogSearchCriteria (example  color 33, gr
+        /// </summary>
+        public IMutablePagedList<Aggregation> Aggregations { get; set; }
 
         /// <summary>
         /// Current search catalog criterias
         /// </summary>
         public CatalogSearchCriteria CurrentCatalogSearchCriteria { get; set; }
-
-        public CatalogSearchResult CurrentCatalogSearchResult { get; set; }
 
         #endregion
 

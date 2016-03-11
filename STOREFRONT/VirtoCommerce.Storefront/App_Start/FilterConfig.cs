@@ -5,6 +5,7 @@ using System.Web.Routing;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using VirtoCommerce.Storefront.Model;
+using Newtonsoft.Json.Serialization;
 
 namespace VirtoCommerce.Storefront
 {
@@ -35,6 +36,19 @@ namespace VirtoCommerce.Storefront
                     && filterContext.ActionDescriptor.ActionName != "NoStore")
                 {
                     filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Common", action = "NoStore" }));
+                }
+
+                if (workContext.CurrentStore != null)
+                {
+                    if (filterContext.ActionDescriptor.ActionName != "Maintenance" && workContext.CurrentStore.StoreState == StoreStatus.Closed)
+                    {
+                        filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Common", action = "Maintenance" }));
+                    }
+                    if (workContext.CurrentCustomer != null && !workContext.CurrentCustomer.IsRegisteredUser &&
+                        workContext.CurrentStore.StoreState == StoreStatus.RestrictedAccess && filterContext.ActionDescriptor.ActionName != "Login")
+                    {
+                        filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Account", action = "Login" }));
+                    }
                 }
             }
 
@@ -71,13 +85,17 @@ namespace VirtoCommerce.Storefront
             Settings = new JsonSerializerSettings
             {
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                NullValueHandling = NullValueHandling.Ignore
+                NullValueHandling = NullValueHandling.Ignore,
+                ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
             };
+
+            JsonRequestBehavior = JsonRequestBehavior.AllowGet;
 
             Settings.Converters.Add(new StringEnumConverter
             {
                 AllowIntegerValues = false,
-                CamelCaseText = false
+                CamelCaseText = true
             });
         }
 

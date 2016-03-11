@@ -19,10 +19,6 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
         {
         }
 
-        public CatalogRepositoryImpl(string nameOrConnectionString)
-            : this(nameOrConnectionString, null)
-        {
-        }
         public CatalogRepositoryImpl(string nameOrConnectionString, params IInterceptor[] interceptors)
             : base(nameOrConnectionString, null, interceptors)
         {
@@ -285,10 +281,11 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
                 }
             }
 
+            //Load category property values by separate query
+            var propertyValues = PropertyValues.Where(x => categoriesIds.Contains(x.CategoryId)).ToArray();
+            //Load all properties meta information and information for inheritance
             if ((respGroup & coreModel.CategoryResponseGroup.WithProperties) == coreModel.CategoryResponseGroup.WithProperties)
             {
-                //Load property values by separate query
-                var propertyValues = PropertyValues.Where(x => categoriesIds.Contains(x.CategoryId)).ToArray();
                 //Need load inherited from parents categories and catalogs
                 var allParents = result.SelectMany(x => x.AllParents).ToArray();
                 var allCategoriesTreeIds = allParents.Select(x => x.Id).Concat(categoriesIds).Distinct().ToArray();
@@ -318,6 +315,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
             }
             //Used breaking query EF performance concept https://msdn.microsoft.com/en-us/data/hh949853.aspx#8
             var retVal = Items.Include(x => x.Images).Where(x => itemIds.Contains(x.Id)).ToArray();
+            var propertyValues = PropertyValues.Where(x => itemIds.Contains(x.ItemId)).ToArray();
 
             //Load product catalogs separately
             var catalogIds = retVal.Select(x => x.CatalogId).Distinct().ToArray();
@@ -331,9 +329,9 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
             {
                 var relations = CategoryItemRelations.Where(x => itemIds.Contains(x.ItemId)).ToArray();
             }
+            //Load all properties meta information and data for inheritance from parent categories and catalog
             if ((respGroup & coreModel.ItemResponseGroup.ItemProperties) == coreModel.ItemResponseGroup.ItemProperties)
             {
-                var propertyValues = PropertyValues.Where(x => itemIds.Contains(x.ItemId)).ToArray();
                 //Load categories with all properties for property inheritance
                 categories = GetCategoriesByIds(categoryIds, coreModel.CategoryResponseGroup.WithProperties);
                 //load catalogs with properties for products not belongs to any category (EF auto populated all Catalog nav properties for all objects)

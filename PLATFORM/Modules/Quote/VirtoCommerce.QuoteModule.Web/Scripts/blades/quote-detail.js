@@ -2,6 +2,7 @@
 .controller('virtoCommerce.quoteModule.quoteDetailController', ['$scope', '$timeout', 'platformWebApp.bladeNavigationService', 'virtoCommerce.quoteModule.quotes', 'virtoCommerce.storeModule.stores', 'platformWebApp.settings', 'platformWebApp.dialogService', 'platformWebApp.accounts',
     function ($scope, $timeout, bladeNavigationService, quotes, stores, settings, dialogService, accounts) {
         var blade = $scope.blade;
+        blade.updatePermission = 'quote:update';
 
         var openItemsListOnce = _.once(function () {
             $timeout(function () {
@@ -31,7 +32,11 @@
         }
 
         function isDirty() {
-            return !angular.equals(blade.currentEntity, blade.origEntity);
+            return !angular.equals(blade.currentEntity, blade.origEntity) && blade.hasUpdatePermission();
+        }
+
+        function canSave() {
+            return isDirty() && $scope.formScope && $scope.formScope.$valid && !blade.isLocked();
         }
 
         function saveChanges() {
@@ -97,25 +102,7 @@
         }
 
         blade.onClose = function (closeCallback) {
-            bladeNavigationService.closeChildrenBlades(blade, function () {
-                if (isDirty() && !blade.isLocked()) {
-                    var dialog = {
-                        id: "confirmCurrentBladeClose",
-                        title: "quotes.dialogs.quote-save.title",
-                        message: "quotes.dialogs.quote-save.message",
-                    };
-                    dialog.callback = function (needSave) {
-                        if (needSave) {
-                            saveChanges();
-                        }
-                        closeCallback();
-                    };
-                    dialogService.showConfirmationDialog(dialog);
-                }
-                else {
-                    closeCallback();
-                }
-            });
+            bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, saveChanges, closeCallback, "quotes.dialogs.quote-save.title", "quotes.dialogs.quote-save.message");
         };
 
         blade.isLocked = function () {
@@ -147,20 +134,16 @@
             canExecuteMethod: function () {
                 return true;
             },
-            permission: 'quote:update'
+            permission: blade.updatePermission
         };
 
         blade.toolbarCommands = [
             {
                 name: "platform.commands.save",
                 icon: 'fa fa-save',
-                executeMethod: function () {
-                    saveChanges();
-                },
-                canExecuteMethod: function () {
-                    return isDirty() && $scope.formScope && $scope.formScope.$valid && !blade.isLocked();
-                },
-                permission: 'quote:update'
+                executeMethod: saveChanges,
+                canExecuteMethod: canSave,
+                permission: blade.updatePermission
             },
             {
                 name: "platform.commands.reset",
@@ -170,7 +153,7 @@
                     onHoldCommand.updateName();
                 },
                 canExecuteMethod: isDirty,
-                permission: 'quote:update'
+                permission: blade.updatePermission
             },
             {
                 name: "quotes.commands.submit-proposal", icon: 'fa fa-check-square-o',
@@ -191,7 +174,7 @@
                 canExecuteMethod: function () {
                     return blade.origEntity && blade.origEntity.status !== 'Proposal sent';
                 },
-                permission: 'quote:update'
+                permission: blade.updatePermission
             },
             onHoldCommand,
             {
@@ -213,7 +196,7 @@
                 canExecuteMethod: function () {
                     return blade.currentEntity && !blade.currentEntity.isCancelled;
                 },
-                permission: 'quote:update'
+                permission: blade.updatePermission
             },
             {
                 name: "platform.commands.delete", icon: 'fa fa-trash-o',
