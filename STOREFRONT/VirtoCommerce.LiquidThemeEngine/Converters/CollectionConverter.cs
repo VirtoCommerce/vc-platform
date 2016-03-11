@@ -63,7 +63,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
 
             if(!category.Properties.IsNullOrEmpty())
             {
-                //result.Metafields = new MetaFieldNamespacesCollection(new[] { new MetafieldsCollection("properties", category.Properties.Select(x=>x.ToShopifyModel())) });
+                result.Metafields = new MetaFieldNamespacesCollection(new[] { new MetafieldsCollection("properties", category.Properties) });
             }
             return result;
         }

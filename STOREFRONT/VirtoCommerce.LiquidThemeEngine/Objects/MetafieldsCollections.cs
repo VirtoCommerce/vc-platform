@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.Storefront.Model;
+using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.LiquidThemeEngine.Objects
@@ -55,6 +56,19 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
                     {
                         this.Add(dynamicProperty.Name, dynamicProperty.Values.GetLocalizedStringsForLanguage(language).Select(x => x.Value).FirstOrDefault());
                     }
+                }
+            }
+        }
+
+        public MetafieldsCollection(string scope, ICollection<CatalogProperty> catalogProperties)
+        {
+            this.Namespace = scope;
+            if (catalogProperties != null)
+            {
+                foreach (var property in catalogProperties)
+                {
+                    //TODO: Add support multi-values
+                    this.Add(property.DisplayName, property.Value);
                 }
             }
         }
