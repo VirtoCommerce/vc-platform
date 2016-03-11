@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using VirtoCommerce.Client.Api;
@@ -27,11 +28,11 @@ namespace VirtoCommerce.Storefront.Controllers
         /// This method used for search products by given criteria 
         /// </summary>
         /// <returns></returns>
-        public async Task<ActionResult> SearchProducts()
+        public ActionResult SearchProducts()
         {
-            WorkContext.CurrentCatalogSearchResult = await _searchService.SearchAsync(WorkContext.CurrentCatalogSearchCriteria);
-
-            return View("collection", WorkContext);
+            //All resulting categories, products and aggregations will be lazy evaluated when view will be rendered. (workContext.Products, workContext.Categories etc) 
+            //All data will loaded using by current search criteria taken from query string
+           return View("collection", WorkContext);
         }
 
         /// <summary>
@@ -48,8 +49,14 @@ namespace VirtoCommerce.Storefront.Controllers
             }
 
             WorkContext.CurrentCatalogSearchCriteria.CategoryId = categoryId;
-
-            WorkContext.CurrentCatalogSearchResult = await _searchService.SearchAsync(WorkContext.CurrentCatalogSearchCriteria);
+            WorkContext.CurrentCategory = (await _searchService.GetCategoriesAsync(new[] { categoryId }, CategoryResponseGroup.Full)).FirstOrDefault();
+            WorkContext.CurrentCategory.Products = new MutablePagedList<Product>((pageNumber, pageSize) =>
+            {
+                var criteria = WorkContext.CurrentCatalogSearchCriteria.Clone();
+                criteria.PageNumber = pageNumber;
+                criteria.PageSize = pageSize;
+                return _searchService.SearchProducts(criteria);
+            });
 
             if (view.Equals("list", StringComparison.OrdinalIgnoreCase))
             {

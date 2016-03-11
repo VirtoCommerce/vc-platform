@@ -10,16 +10,15 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
 {
     public static class ProductConverter
     {
-        public static Product ToShopifyModel(this StorefrontModel.Catalog.Product product, StorefrontModel.WorkContext workContext)
+        public static Product ToShopifyModel(this StorefrontModel.Catalog.Product product)
         {
             var result = new Product();
             result.InjectFrom<StorefrontModel.Common.NullableAndEnumValueInjecter>(product);
-            result.Variants.Add(product.ToVariant(workContext));
+            result.Variants.Add(product.ToVariant());
 
             if (product.Variations != null)
             {
-                result.Variants.AddRange(product.Variations.Select(x => x.ToVariant(workContext)));
-                
+                result.Variants.AddRange(product.Variations.Select(x => x.ToVariant()));                
             }
 
             result.Available = true;// product.IsActive && product.IsBuyable;
@@ -77,7 +76,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             return result;
         }
 
-        public static Variant ToVariant(this StorefrontModel.Catalog.Product product, StorefrontModel.WorkContext workContext)
+        public static Variant ToVariant(this StorefrontModel.Catalog.Product product)
         {
             var result = new Variant();
             result.Available = true; //product.IsActive && product.IsBuyable;

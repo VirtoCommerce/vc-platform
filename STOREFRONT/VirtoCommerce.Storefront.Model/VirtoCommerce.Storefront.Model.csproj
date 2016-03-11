@@ -77,9 +77,11 @@
     <Compile Include="Catalog\Aggregation.cs" />
     <Compile Include="Catalog\AggregationItem.cs" />
     <Compile Include="Catalog\Asset.cs" />
+    <Compile Include="Catalog\CatalogProperty.cs" />
     <Compile Include="Catalog\CatalogSearchResponseGroup.cs" />
     <Compile Include="Catalog\CatalogSearchResult.cs" />
     <Compile Include="Catalog\CategoryResponseGroup.cs" />
+    <Compile Include="Catalog\IHasProperties.cs" />
     <Compile Include="Catalog\InventoryStatus.cs" />
     <Compile Include="Catalog\ItemResponseGroup.cs" />
     <Compile Include="Catalog\CatalogSearchCriteria.cs" />
@@ -177,7 +179,6 @@
     <Compile Include="Security\Register.cs" />
     <Compile Include="ChangePassword.cs" />
     <Compile Include="Security\ResetPassword.cs" />
-    <Compile Include="Catalog\ProductProperty.cs" />
     <Compile Include="SeoInfo.cs" />
     <Compile Include="Catalog\Services\ICatalogSearchService.cs" />
     <Compile Include="Marketing\Services\IMarketingService.cs" />

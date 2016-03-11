@@ -364,7 +364,9 @@
     <Compile Include="Controllers\Api\ApiMarketingController.cs" />
     <Compile Include="Controllers\QuoteRequestController.cs" />
     <Compile Include="Converters\AttachmentConverter.cs" />
+    <Compile Include="Converters\CatalogPropertyConverter.cs" />
     <Compile Include="Converters\CatalogSearchCriteriaConverter.cs" />
+    <Compile Include="Converters\PriceEvaluationContextConverter.cs" />
     <Compile Include="Converters\TaxRateConverter.cs" />
     <Compile Include="Converters\CurrencyConverter.cs" />
     <Compile Include="Converters\PricelistConverter.cs" />
@@ -422,7 +424,6 @@
     <Compile Include="Converters\PromotionEvaluationContextConverter.cs" />
     <Compile Include="Converters\PromotionProductEntryConverter.cs" />
     <Compile Include="Converters\PromotionRewardConverter.cs" />
-    <Compile Include="Converters\PropertyConverter.cs" />
     <Compile Include="Converters\SeoInfoConverter.cs" />
     <Compile Include="Converters\ShipmentConverter.cs" />
     <Compile Include="Converters\ShipmentItemConverter.cs" />

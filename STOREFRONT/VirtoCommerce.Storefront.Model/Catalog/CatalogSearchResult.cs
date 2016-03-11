@@ -6,10 +6,9 @@ namespace VirtoCommerce.Storefront.Model.Catalog
 {
     public class CatalogSearchResult
     {
-        public IPagedList<Product> Products { get; set; }
-        public int TotalItemCount { get; set; }
+        public IMutablePagedList<Product> Products { get; set; }
         public Category Category { get; set; }
-        public IEnumerable<Category> Categories { get; set; }
-        public Aggregation[] Aggregations { get; set; }
+        public IMutablePagedList<Category> Categories { get; set; }
+        public IMutablePagedList<Aggregation> Aggregations { get; set; }
     }
 }

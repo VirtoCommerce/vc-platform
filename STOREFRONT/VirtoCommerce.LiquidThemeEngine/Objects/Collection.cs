@@ -106,7 +106,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         /// <summary>
         /// Returns paged collection of products
         /// </summary>
-        public IPagedList<Product> Products { get; set; }
+        public IMutablePagedList<Product> Products { get; set; }
 
         /// <summary>
         /// Returns collection total products count
@@ -137,5 +137,10 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         /// </summary>
         [DataMember]
         public string Url { get; set; }
+
+        /// <summary>
+        /// Shop metafields
+        /// </summary>
+        public MetaFieldNamespacesCollection Metafields { get; set; }
     }
 }

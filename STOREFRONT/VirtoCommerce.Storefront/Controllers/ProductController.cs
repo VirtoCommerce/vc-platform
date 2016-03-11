@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using VirtoCommerce.Storefront.Common;
 using VirtoCommerce.Storefront.Model;
+using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Services;
 
@@ -33,10 +34,21 @@ namespace VirtoCommerce.Storefront.Controllers
         {
             var product = (await _catalogSearchService.GetProductsAsync(new[] { productId }, Model.Catalog.ItemResponseGroup.ItemSmall | Model.Catalog.ItemResponseGroup.ItemWithPrices)).FirstOrDefault();
             WorkContext.CurrentProduct = product;
+            if(product.CategoryId != null)
+            {
+                var category = (await _catalogSearchService.GetCategoriesAsync(new[] { product.CategoryId }, Model.Catalog.CategoryResponseGroup.Full)).FirstOrDefault();
+                WorkContext.CurrentCategory = category;
+                category.Products = new MutablePagedList<Product>((pageNumber, pageSize) =>
+                {
+                    var criteria = WorkContext.CurrentCatalogSearchCriteria.Clone();
+                    criteria.CategoryId = product.CategoryId;
+                    criteria.PageNumber = pageNumber;
+                    criteria.PageSize = pageSize;
+                    return _catalogSearchService.SearchProducts(criteria);
+                });
 
-            WorkContext.CurrentCatalogSearchCriteria.CategoryId = product.CategoryId;
-            WorkContext.CurrentCatalogSearchResult = await _catalogSearchService.SearchAsync(WorkContext.CurrentCatalogSearchCriteria);
-
+            }
+     
             return View("product", WorkContext);
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using PagedList;
 using VirtoCommerce.LiquidThemeEngine.Objects;
@@ -9,42 +10,8 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
 {
     public static class CollectionConverter
     {
-        public static Collection ToShopifyModel(this storefrontModel.Catalog.CatalogSearchResult searchResult, storefrontModel.WorkContext workContext)
-        {
-            var result = new Collection();
-
-            if (searchResult.Category != null)
-            {
-                result = searchResult.Category.ToShopifyModel(workContext);
-            }
-
-            if (searchResult.Products != null)
-            {
-                result.Products = new StaticPagedList<Product>(searchResult.Products.Select(x => x.ToShopifyModel(workContext)), searchResult.Products);
-                result.ProductsCount = searchResult.Products.TotalItemCount;
-                result.AllProductsCount = searchResult.Products.TotalItemCount;
-            }
-
-            if (searchResult.Aggregations != null)
-            {
-                var tags = searchResult.Aggregations
-                    .Where(a => a.Items != null)
-                    .SelectMany(a => a.Items.Select(item => item.ToShopifyModel(a.Field, a.Label)))
-                    .ToList();
-
-                result.Tags = new TagCollection(tags);
-            }
-
-            result.DefaultSortBy = "manual";
-            if (workContext.CurrentCatalogSearchCriteria != null)
-            {
-                result.SortBy = workContext.CurrentCatalogSearchCriteria.SortBy;
-            }
-
-            return result;
-        }
-
-        public static Collection ToShopifyModel(this storefrontModel.Catalog.Category category, storefrontModel.WorkContext workContext)
+    
+        public static Collection ToShopifyModel(this storefrontModel.Catalog.Category category, IMutablePagedList<storefrontModel.Catalog.Aggregation> aggregations = null, string sortBy = null)
         {
             var result = new Collection
             {
@@ -64,6 +31,40 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                 result.Url = "~/" + category.SeoInfo.Slug;
             }
 
+            if (category.Products != null)
+            {
+                result.Products = new MutablePagedList<Product>((pageNumber, pageSize) =>
+                {
+                    category.Products.Slice(pageNumber, pageSize);
+                    return new StaticPagedList<Product>(category.Products.Select(x => x.ToShopifyModel()), category.Products);
+                }, category.Products.PageNumber, category.Products.PageSize);
+
+                 result.ProductsCount = category.Products.TotalItemCount;
+                 result.AllProductsCount = category.Products.TotalItemCount;
+            }
+
+            if (aggregations != null)
+            {
+                result.Tags = new TagCollection(new MutablePagedList<Tag>((pageNumber, pageSize) =>
+                {
+                    aggregations.Slice(pageNumber, pageSize);
+                    var tags = aggregations.Where(a => a.Items != null)
+                                           .SelectMany(a => a.Items.Select(item => item.ToShopifyModel(a.Field, a.Label)));
+                    return new StaticPagedList<Tag>(tags, aggregations);
+
+                }, aggregations.PageNumber, aggregations.PageSize));
+            }
+
+            result.DefaultSortBy = "manual";
+            if (sortBy != null)
+            {
+                result.SortBy = sortBy;
+            }
+
+            if(!category.Properties.IsNullOrEmpty())
+            {
+                //result.Metafields = new MetaFieldNamespacesCollection(new[] { new MetafieldsCollection("properties", category.Properties.Select(x=>x.ToShopifyModel())) });
+            }
             return result;
         }
     }

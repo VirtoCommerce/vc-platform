@@ -25,7 +25,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Tags
         private static readonly Regex _syntax = R.B(R.Q(@"({0})\s*by\s*({0}+)?"), DotLiquid.Liquid.QuotedFragment);
 
         private string _collectionName;
-        private int _pageSize = 20;
+        private int _pageSize;
         #region Public Methods and Operators
 
         public override void Initialize(string tagName, string markup, List<string> tokens)
@@ -38,13 +38,15 @@ namespace VirtoCommerce.LiquidThemeEngine.Tags
                 var pageSize =  match.Groups[2].Value;
                 if(!string.IsNullOrEmpty(pageSize))
                 {
-                    _pageSize = Convert.ToInt32(pageSize);
+                    int.TryParse(pageSize, out _pageSize);
                 }
             }
             else
             {
                 throw new SyntaxException("PaginateSyntaxException");
             }
+
+            _pageSize = _pageSize > 0 ? _pageSize : 20;
 
             base.Initialize(tagName, markup, tokens);
         }
@@ -60,7 +62,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Tags
  
             if (mutablePagedList != null)
             {
-                mutablePagedList.Slice(pageNumber, _pageSize);
+                mutablePagedList.Slice(pageNumber, _pageSize > 0 ? _pageSize : 20);
                 pagedList = mutablePagedList;
             }
             else if (collection != null)

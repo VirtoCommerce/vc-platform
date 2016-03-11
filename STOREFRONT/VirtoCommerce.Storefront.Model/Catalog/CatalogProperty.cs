@@ -7,9 +7,9 @@ using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Model.Catalog
 {
-    public class ProductProperty : Entity
+    public class CatalogProperty : Entity
     {
-        public ProductProperty()
+        public CatalogProperty()
         {
             LocalizedValues = new List<LocalizedString>();
             DisplayNames = new List<LocalizedString>();

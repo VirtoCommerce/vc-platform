@@ -26,22 +26,28 @@ namespace VirtoCommerce.Storefront.Services
         public async Task EvaluateProductPricesAsync(IEnumerable<Product> products)
         {
             var workContext = _workContextFactory();
-
             //Evaluate products prices
-            var evalContext = new VirtoCommerceDomainPricingModelPriceEvaluationContext
-            {
-                ProductIds = products.Select(p => p.Id).ToList(),
-                PricelistIds = workContext.CurrentPricelists.Select(p => p.Id).ToList(),
-                CatalogId = workContext.CurrentStore.Catalog,
-                CustomerId = workContext.CurrentCustomer.Id,
-                Language = workContext.CurrentLanguage.CultureName,
-                CertainDate = workContext.StorefrontUtcNow,
-                StoreId = workContext.CurrentStore.Id
-            };
+            var evalContext = products.ToServiceModel(workContext);
 
             var pricesResponse = await _pricingApi.PricingModuleEvaluatePricesAsync(evalContext);
+            ApplyProductPricesInternal(products, pricesResponse);
+        }
 
-            var alreadyDefinedProductsPriceGroups = pricesResponse.Select(x => x.ToWebModel(workContext.AllCurrencies, workContext.CurrentLanguage)).GroupBy(x => x.ProductId);
+        public void EvaluateProductPrices(IEnumerable<Product> products)
+        {
+            var workContext = _workContextFactory();
+            //Evaluate products prices
+            var evalContext = products.ToServiceModel(workContext);
+
+            var pricesResponse = _pricingApi.PricingModuleEvaluatePrices(evalContext);
+            ApplyProductPricesInternal(products, pricesResponse);
+        }
+
+        #endregion
+        private void ApplyProductPricesInternal(IEnumerable<Product> products, IEnumerable<VirtoCommercePricingModuleWebModelPrice> prices)
+        {
+            var workContext = _workContextFactory();
+            var alreadyDefinedProductsPriceGroups = prices.Select(x => x.ToWebModel(workContext.AllCurrencies, workContext.CurrentLanguage)).GroupBy(x => x.ProductId);
             foreach (var product in products)
             {
                 var productPricesGroup = alreadyDefinedProductsPriceGroups.FirstOrDefault(x => x.Key == product.Id);
@@ -69,7 +75,5 @@ namespace VirtoCommerce.Storefront.Services
             }
 
         }
-
-        #endregion
     }
 }

@@ -10,7 +10,7 @@ namespace VirtoCommerce.Storefront.Converters
 {
     public static class CatalogSearchCriteriaConverter
     {
-        public static VirtoCommerceDomainCatalogModelSearchCriteria ToWebModel(this CatalogSearchCriteria criteria, WorkContext workContext)
+        public static VirtoCommerceDomainCatalogModelSearchCriteria ToServiceModel(this CatalogSearchCriteria criteria, WorkContext workContext)
         {
             var result = new VirtoCommerceDomainCatalogModelSearchCriteria
             {

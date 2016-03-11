@@ -16,6 +16,7 @@ using Microsoft.Owin.Security;
 using Microsoft.Practices.Unity;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using PagedList;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.Client.Model;
 using VirtoCommerce.Storefront.Common;
@@ -28,6 +29,7 @@ using VirtoCommerce.Storefront.Model.Customer;
 using VirtoCommerce.Storefront.Model.Customer.Services;
 using VirtoCommerce.Storefront.Model.LinkList.Services;
 using VirtoCommerce.Storefront.Model.Quote.Services;
+using VirtoCommerce.Storefront.Model.Services;
 
 namespace VirtoCommerce.Storefront.Owin
 {
@@ -45,6 +47,8 @@ namespace VirtoCommerce.Storefront.Owin
         private readonly IQuoteRequestBuilder _quoteRequestBuilder;
         private readonly ICMSContentModuleApi _cmsApi;
         private readonly ICacheManager<object> _cacheManager;
+        private readonly ICatalogModuleApi _catalogModuleApi;
+        private readonly ISearchModuleApi _searchApi;
 
         private readonly UnityContainer _container;
 
@@ -60,6 +64,8 @@ namespace VirtoCommerce.Storefront.Owin
             _pricingModuleApi = container.Resolve<IPricingModuleApi>();
             _commerceApi = container.Resolve<ICommerceCoreModuleApi>();
             _cacheManager = container.Resolve<ICacheManager<object>>();
+            _catalogModuleApi = container.Resolve<ICatalogModuleApi>();
+            _searchApi = container.Resolve<ISearchModuleApi>();
             _container = container;
         }
 
@@ -72,6 +78,7 @@ namespace VirtoCommerce.Storefront.Owin
 
                 var linkListService = _container.Resolve<IMenuLinkListService>();
                 var cartBuilder = _container.Resolve<ICartBuilder>();
+                var catalogSearchService = _container.Resolve<ICatalogSearchService>();
 
                 // Initialize common properties
                 workContext.RequestUrl = context.Request.Uri;
@@ -95,10 +102,43 @@ namespace VirtoCommerce.Storefront.Owin
 
                     var qs = HttpUtility.ParseQueryString(workContext.RequestUrl.Query);
                     //Initialize catalog search criteria
-                    workContext.CurrentCatalogSearchCriteria = new CatalogSearchCriteria(qs);
+                    workContext.CurrentCatalogSearchCriteria = new CatalogSearchCriteria(workContext.CurrentLanguage, workContext.CurrentCurrency, qs);
                     workContext.CurrentCatalogSearchCriteria.CatalogId = workContext.CurrentStore.Catalog;
-                    workContext.CurrentCatalogSearchCriteria.Currency = workContext.CurrentCurrency;
-                    workContext.CurrentCatalogSearchCriteria.Language = workContext.CurrentLanguage;
+
+                    workContext.Categories = new MutablePagedList<Category>((pageNumber, pageSize) =>
+                    {
+                        var criteria = workContext.CurrentCatalogSearchCriteria.Clone();
+                        criteria.PageNumber = pageNumber;
+                        criteria.PageSize = pageSize;
+                        var result = catalogSearchService.SearchCategories(criteria);
+                        foreach(var category in result)
+                        {
+                            category.Products = new MutablePagedList<Product>((pageNumber2, pageSize2) =>
+                            {
+                                var criteria2 = criteria.Clone();
+                                criteria.PageNumber = pageNumber2;
+                                criteria.PageSize = pageSize2;
+                                return catalogSearchService.SearchProducts(criteria);
+                            });
+                        }
+                        return result;
+                    });
+
+                    workContext.Products = new MutablePagedList<Product>((pageNumber, pageSize) =>
+                    {
+                        var criteria = workContext.CurrentCatalogSearchCriteria.Clone();
+                        criteria.PageNumber = pageNumber;
+                        criteria.PageSize = pageSize;
+                        return catalogSearchService.SearchProducts(criteria);
+                    });
+
+                    workContext.Aggregations = new MutablePagedList<Aggregation>((pageNumber, pageSize) =>
+                    {
+                        var criteria = workContext.CurrentCatalogSearchCriteria.Clone();
+                        criteria.PageNumber = pageNumber;
+                        criteria.PageSize = pageSize;
+                        return catalogSearchService.GetAggregations(criteria);
+                    });
 
                     workContext.CurrentOrderSearchCriteria = new Model.Order.OrderSearchCriteria(qs);
                     workContext.CurrentQuoteSearchCriteria = new Model.Quote.QuoteSearchCriteria(qs);
@@ -416,5 +456,8 @@ namespace VirtoCommerce.Storefront.Owin
 
             return country;
         }
+
+
+       
     }
 }

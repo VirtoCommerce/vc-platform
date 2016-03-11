@@ -9,11 +9,11 @@ using VirtoCommerce.Storefront.Model.Catalog;
 
 namespace VirtoCommerce.Storefront.Converters
 {
-    public static class PropertyConverter
+    public static class CatalogPropertyConverter
     {
-        public static ProductProperty ToWebModel(this VirtoCommerceCatalogModuleWebModelProperty property, Language currentLanguage)
+        public static CatalogProperty ToWebModel(this VirtoCommerceCatalogModuleWebModelProperty property, Language currentLanguage)
         {
-            var retVal = new ProductProperty();
+            var retVal = new CatalogProperty();
             retVal.InjectFrom(property);
             //Set display names and set current display name for requested language
             if (property.DisplayNames != null)
