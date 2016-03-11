@@ -105,6 +105,7 @@ namespace VirtoCommerce.Storefront.Owin
                     workContext.CurrentCatalogSearchCriteria = new CatalogSearchCriteria(workContext.CurrentLanguage, workContext.CurrentCurrency, qs);
                     workContext.CurrentCatalogSearchCriteria.CatalogId = workContext.CurrentStore.Catalog;
 
+                    //This line make delay categories loading initialization (categories can be evaluated on view rendering time)
                     workContext.Categories = new MutablePagedList<Category>((pageNumber, pageSize) =>
                     {
                         var criteria = workContext.CurrentCatalogSearchCriteria.Clone();
@@ -124,7 +125,7 @@ namespace VirtoCommerce.Storefront.Owin
                         }
                         return result;
                     });
-
+                    //This line make delay products loading initialization (products can be evaluated on view rendering time)
                     workContext.Products = new MutablePagedList<Product>((pageNumber, pageSize) =>
                     {
                         var criteria = workContext.CurrentCatalogSearchCriteria.Clone();
@@ -132,7 +133,8 @@ namespace VirtoCommerce.Storefront.Owin
                         criteria.PageSize = pageSize;
                         return catalogSearchService.SearchProducts(criteria);
                     });
-
+                    //TODO: Get rid redundant call to API because current API can return aggregations with product per one request
+                    //This line make delay aggregation loading initialization (aggregation can be evaluated on view rendering time)
                     workContext.Aggregations = new MutablePagedList<Aggregation>((pageNumber, pageSize) =>
                     {
                         var criteria = workContext.CurrentCatalogSearchCriteria.Clone();
