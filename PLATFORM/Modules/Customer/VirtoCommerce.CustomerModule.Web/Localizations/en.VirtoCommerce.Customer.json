@@ -7,7 +7,6 @@
         "labels": {
           "full-name": "Full name",
           "birthday": "Birthday",
-          "account-state": "Account state",
           "organizations": "Organization(s)"
         },
         "placeholders": {

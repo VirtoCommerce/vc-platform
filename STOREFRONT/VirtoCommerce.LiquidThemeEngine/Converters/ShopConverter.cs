@@ -25,7 +25,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             result.Languages = store.Languages.Select(x => x.ToShopifyModel()).ToArray();
             result.Catalog = store.Catalog;
             result.Status = store.StoreState.ToString();
-            //result.Metafields = new MetaFieldNamespacesCollection(new[] { new MetafieldsCollection("global", store.DynamicProperties) });
+            result.Metafields = new MetaFieldNamespacesCollection(new[] { new MetafieldsCollection("dynamic_properties", workContext.CurrentLanguage, store.DynamicProperties), new MetafieldsCollection("settings", store.Settings) });
 
             return result;
         }

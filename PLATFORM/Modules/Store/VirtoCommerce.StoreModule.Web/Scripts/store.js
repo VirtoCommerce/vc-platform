@@ -59,8 +59,13 @@ angular.module(moduleName, [
 	    }, 'storeDetail');
 	    widgetService.registerWidget({
 	        controller: 'platformWebApp.dynamicPropertyWidgetController',
-	        title: 'Settings',
 	        template: '$(Platform)/Scripts/app/dynamicProperties/widgets/dynamicPropertyWidget.tpl.html'
+	    }, 'storeDetail');
+        widgetService.registerWidget({
+            //controller: 'virtoCommerce.storeModule.storeSettingsWidgetController',
+	        //template: 'Modules/$(VirtoCommerce.Store)/Scripts/widgets/storeSettingsWidget.tpl.html'
+            controller: 'platformWebApp.entitySettingsWidgetController',
+            template: '$(Platform)/Scripts/app/settings/widgets/entitySettingsWidget.tpl.html'
 	    }, 'storeDetail');
 	    widgetService.registerWidget({
 	        controller: 'virtoCommerce.storeModule.storePaymentsWidgetController',

@@ -364,6 +364,7 @@
     <Compile Include="Controllers\Api\ApiMarketingController.cs" />
     <Compile Include="Controllers\QuoteRequestController.cs" />
     <Compile Include="Converters\AttachmentConverter.cs" />
+    <Compile Include="Converters\SettingConverter.cs" />
     <Compile Include="Converters\CatalogPropertyConverter.cs" />
     <Compile Include="Converters\CatalogSearchCriteriaConverter.cs" />
     <Compile Include="Converters\PriceEvaluationContextConverter.cs" />

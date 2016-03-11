@@ -405,6 +405,8 @@
     <Content Include="Scripts\app\security\blades\permission-scopes.js" />
     <Content Include="Scripts\app\security\blades\permission-scopes.tpl.html" />
     <Content Include="Scripts\app\security\services\permissionScopeResolver.js" />
+    <Content Include="Scripts\app\settings\widgets\entitySettingsWidget.js" />
+    <Content Include="Scripts\app\settings\widgets\entitySettingsWidget.tpl.html" />
     <Content Include="Scripts\app\userProfile\blades\userProfile.js" />
     <Content Include="Scripts\app\userProfile\blades\userProfile.tpl.html" />
     <Content Include="Scripts\app\userProfile\resources\userProfileApi.js" />

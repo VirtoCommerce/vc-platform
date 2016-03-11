@@ -1,86 +1,85 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <module>
-  <id>VirtoCommerce.Store</id>
-  <version>2.8.0</version>
-  <platformVersion>2.8.0</platformVersion>
-  <dependencies>
-    <dependency id="VirtoCommerce.Core" version="2.8.0" />
-    <!--using catalog api, seo UI? -->
-    <dependency id="VirtoCommerce.Catalog" version="2.8.0" />
-  </dependencies>
+	<id>VirtoCommerce.Store</id>
+	<version>2.8.0</version>
+	<platformVersion>2.8.0</platformVersion>
+	<dependencies>
+		<dependency id="VirtoCommerce.Core" version="2.8.0" />
+		<!--using catalog api, seo UI? -->
+		<dependency id="VirtoCommerce.Catalog" version="2.8.0" />
+	</dependencies>
 
-  <title>Store module</title>
-  <description>Multi store management with individual store settings</description>
-  <authors>
-    <author>Virto Commerce</author>
-  </authors>
-  <owners>
-    <owner>Virto Commerce</owner>
-  </owners>
-  <projectUrl>http://virtocommerce.com/</projectUrl>
-  <iconUrl>Modules/$(VirtoCommerce.Store)/Content/logo.png</iconUrl>
-  <releaseNotes>First version.</releaseNotes>
-  <copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
-  <tags>stores</tags>
+	<title>Store module</title>
+	<description>Multi store management with individual store settings</description>
+	<authors>
+		<author>Virto Commerce</author>
+	</authors>
+	<owners>
+		<owner>Virto Commerce</owner>
+	</owners>
+	<projectUrl>http://virtocommerce.com/</projectUrl>
+	<iconUrl>Modules/$(VirtoCommerce.Store)/Content/logo.png</iconUrl>
+	<releaseNotes>First version.</releaseNotes>
+	<copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
+	<tags>stores</tags>
 
-  <assemblyFile>VirtoCommerce.StoreModule.Web.dll</assemblyFile>
-  <moduleType>VirtoCommerce.StoreModule.Web.Module, VirtoCommerce.StoreModule.Web</moduleType>
-  <!--<styles>
+	<assemblyFile>VirtoCommerce.StoreModule.Web.dll</assemblyFile>
+	<moduleType>VirtoCommerce.StoreModule.Web.Module, VirtoCommerce.StoreModule.Web</moduleType>
+	<!--<styles>
     <directory virtualPath="$/Content/css" searchPattern="*.css" searchSubdirectories="true" />
   </styles>-->
-  <scripts>
-    <directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
-  </scripts>
+	<scripts>
+		<directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
+	</scripts>
 
-  <settings>
-    <group name="Store|General">
-      <setting>
-        <name>Stores.States</name>
-        <valueType>string</valueType>
-        <defaultValue>Open</defaultValue>
-        <title>States</title>
-        <description>States that a store can be in</description>
-        <isArray>true</isArray>
-        <arrayValues>
-          <value>Open</value>
-          <value>Closed</value>
-          <value>RestrictedAccess</value>
-        </arrayValues>
-      </setting>
-      <setting>
-        <name>Stores.ExportImport.Description</name>
-        <valueType>string</valueType>
-        <defaultValue>Export/Import stores with all related informations</defaultValue>
-        <title>Export/Import description</title>
-        <description>Module description in platform export/import wizard</description>
-      </setting>
-    </group>
-    <group name="Store|Caching">
-      <setting>
-        <name>Stores.Caching.Enabled</name>
-        <valueType>boolean</valueType>
-        <defaultValue>true</defaultValue>
-        <title>Caching Enabled</title>
-        <description>Specified if caching is enabled for Stores</description>
-      </setting>
-      <setting>
-        <name>Stores.Caching.StoreTimeout</name>
-        <valueType>integer</valueType>
-        <defaultValue>30</defaultValue>
-        <title>Store Timeout (in seconds)</title>
-        <description>Specify caching timeout in seconds for store entity</description>
-      </setting>
-    </group>
-  </settings>
-  <permissions>
-    <group name="Store">
-      <permission id="store:access" name="Open stores menu"/>
-      <permission id="store:create" name="Create a store"/>
-      <permission id="store:read" name="View store data"/>
-      <permission id="store:update" name="Update store"/>
-      <permission id="store:delete" name="Delete store"/>
+	<settings>
+		<group name="Store|General">
+			<setting>
+				<name>Stores.States</name>
+				<valueType>string</valueType>
+				<defaultValue>Open</defaultValue>
+				<title>States</title>
+				<description>States that a store can be in</description>
+				<allowedValues>
+					<value>Open</value>
+					<value>Closed</value>
+					<value>RestrictedAccess</value>
+				</allowedValues>
+			</setting>
+			<setting>
+				<name>Stores.ExportImport.Description</name>
+				<valueType>string</valueType>
+				<defaultValue>Export/Import stores with all related informations</defaultValue>
+				<title>Export/Import description</title>
+				<description>Module description in platform export/import wizard</description>
+			</setting>
+		</group>
+		<group name="Store|Caching">
+			<setting>
+				<name>Stores.Caching.Enabled</name>
+				<valueType>boolean</valueType>
+				<defaultValue>true</defaultValue>
+				<title>Caching Enabled</title>
+				<description>Specified if caching is enabled for Stores</description>
+			</setting>
+			<setting>
+				<name>Stores.Caching.StoreTimeout</name>
+				<valueType>integer</valueType>
+				<defaultValue>30</defaultValue>
+				<title>Store Timeout (in seconds)</title>
+				<description>Specify caching timeout in seconds for store entity</description>
+			</setting>
+		</group>
+	</settings>
+	<permissions>
+		<group name="Store">
+			<permission id="store:access" name="Open stores menu"/>
+			<permission id="store:create" name="Create a store"/>
+			<permission id="store:read" name="View store data"/>
+			<permission id="store:update" name="Update store"/>
+			<permission id="store:delete" name="Delete store"/>
 
-      <permission id="store:loginOnBehalf" name="Login on behalf of a customer" description="Permission to login on behalf of a customer to Storefront."/>
-    </group>
-  </permissions>
+			<permission id="store:loginOnBehalf" name="Login on behalf of a customer" description="Permission to login on behalf of a customer to Storefront."/>
+		</group>
+	</permissions>
 </module>

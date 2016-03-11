@@ -1,105 +1,111 @@
-﻿//angular.module('platformWebApp')
-//.controller('platformWebApp.entitySettingListController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', function ($scope, dialogService, bladeNavigationService) {
-//    var blade = $scope.blade;
-//    blade.updatePermission = 'platform:setting:update';
-//    blade.title = 'Settings';
+﻿angular.module('platformWebApp')
+.controller('platformWebApp.entitySettingListController', ['$scope', 'platformWebApp.settings.helper', 'platformWebApp.bladeNavigationService', function ($scope, settingsHelper, bladeNavigationService) {
+    var blade = $scope.blade;
+    // blade.updatePermission = // Use predefined (parent) permission
+    blade.title = 'platform.blades.entitySetting-list.title';
 
-//    function initializeBlade(results) {
-//        blade.data = results;
+    function initializeBlade(results) {
+        blade.data = results;
+        results = angular.copy(results);
 
-//        // parse values as they all are strings
-//        var selectedSettings = _.where(results, { valueType: 'Integer' });
-//        _.forEach(selectedSettings, function (setting) {
-//            setting.value = parseInt(setting.value, 10);
-//            if (setting.allowedValues) {
-//                setting.allowedValues = _.map(setting.allowedValues, function (value) { return parseInt(value, 10); });
-//            }
-//        });
+        // settingsHelper.fixValues(results);
+        
+        _.each(results, function (setting) {
+            // set group names to show.
+            if (setting.groupName) {
+                var paths = setting.groupName.split('|');
+                setting.groupName = paths.pop();
+            }
 
-//        selectedSettings = _.where(results, { valueType: 'Decimal' });
-//        _.forEach(selectedSettings, function (setting) {
-//            setting.value = parseFloat(setting.value);
-//            if (setting.allowedValues) {
-//                setting.allowedValues = _.map(setting.allowedValues, function (value) { return parseFloat(value); });
-//            }
-//        });
+            // transform to va-generic-value-input suitable structure
+            setting.isDictionary = _.any(setting.allowedValues);
+            setting.values = setting.isDictionary ? [{ value: { id: setting.value, name: setting.value } }] : [{ id: setting.value, value: setting.value }];
+            if (setting.allowedValues) {
+                setting.allowedValues = _.map(setting.allowedValues, function (x) {
+                    return { id: x, name: x };
+                });
+            }
+        });
 
-//        selectedSettings = _.where(results, { valueType: 'Boolean' });
-//        _.forEach(selectedSettings, function (setting) {
-//            setting.value = setting.value.toLowerCase() === 'true';
-//            if (setting.allowedValues) {
-//                setting.allowedValues = _.map(setting.allowedValues, function (value) { return value.toLowerCase() === 'true'; });
-//            }
-//        });
 
-//        selectedSettings = _.where(results, { isArray: true });
-//        _.forEach(selectedSettings, function (setting) {
-//            if (setting.arrayValues) {
-//                setting.arrayValues = _.map(setting.arrayValues, function (value) { return { value: value }; });
-//            }
-//        });
+        results = _.groupBy(results, 'groupName');
+        blade.groupNames = _.keys(results);
+        blade.currentEntities = angular.copy(results);
+        blade.origEntity = results;
+        blade.isLoading = false;
+    }
 
-//        results = _.groupBy(results, 'groupName');
-//        blade.groupNames = _.keys(results);
-//        blade.currentEntities = angular.copy(results);
-//        blade.origEntity = results;
-//        blade.isLoading = false;
-//    };
+    $scope.editArray = function (node) {
+        var newBlade = {
+            id: "settingDetailChild",
+            currentEntityId: node.name,
+            controller: 'platformWebApp.settingDictionaryController',
+            template: '$(Platform)/Scripts/app/settings/blades/setting-dictionary.tpl.html'
+        };
+        bladeNavigationService.showBlade(newBlade, blade);
+    }
 
-//    $scope.editArray = function (node) {
-//        var newBlade = {
-//            id: "settingDetailChild",
-//            currentEntityId: node.name,
-//            controller: 'platformWebApp.settingDictionaryController',
-//            template: '$(Platform)/Scripts/app/settings/blades/setting-dictionary.tpl.html'
-//        };
-//        bladeNavigationService.showBlade(newBlade, blade);
-//    }
+    function isDirty() {
+        return !angular.equals(blade.currentEntities, blade.origEntity) && blade.hasUpdatePermission();
+    }
 
-//    function isDirty() {
-//        return !angular.equals(blade.currentEntities, blade.origEntity) && blade.hasUpdatePermission();
-//    };
+    function canSave() {
+        return isDirty() && formScope && formScope.$valid;
+    }
 
-//    $scope.cancelChanges = function () {
-//        angular.copy(blade.origEntity, blade.currentEntities);
-//        $scope.bladeClose();
-//    }
+    var formScope;
+    $scope.setForm = function (form) { formScope = form; }
 
-//    $scope.saveChanges = function () {
-//        if (!blade.hasUpdatePermission()) return;
+    $scope.cancelChanges = function () {
+        angular.copy(blade.origEntity, blade.currentEntities);
+        $scope.bladeClose();
+    }
 
-//        blade.isLoading = true;
-//        var objects = _.flatten(_.map(blade.currentEntities, _.values));
+    $scope.saveChanges = function () {
+        if (!blade.hasUpdatePermission()) return;
 
-//        var selectedSettings = _.where(objects, { isArray: true });
-//        _.forEach(selectedSettings, function (setting) {
-//            if (setting.arrayValues) {
-//                setting.arrayValues = _.pluck(setting.arrayValues, 'value');
-//            }
-//        });
+        blade.isLoading = true;
+        var objects = _.flatten(_.map(blade.currentEntities, _.values));
+        objects = _.map(objects, function (x) {
+            x.value = x.isDictionary ? x.values[0].value.id : x.values[0].value;
+            x.values = undefined;
+            x.allowedValues = _.pluck(x.allowedValues, 'id');
+            return x;
+        });
 
-//        //console.log('saveChanges3: ' + angular.toJson(objects, true));
-//        angular.copy(objects, blade.data);
-//        angular.copy(blade.currentEntities, blade.origEntity);
-//        $scope.bladeClose();
-//    };
+        var selectedSettings = _.where(objects, { isArray: true });
+        _.forEach(selectedSettings, function (setting) {
+            if (setting.arrayValues) {
+                setting.arrayValues = _.pluck(setting.arrayValues, 'value');
+            }
+        });
 
-//    $scope.blade.headIcon = 'fa-wrench';
-//    $scope.blade.toolbarCommands = [
-//        {
-//            name: "platform.commands.reset", icon: 'fa fa-undo',
-//            executeMethod: function () {
-//                blade.currentEntities = angular.copy(blade.origEntity);
-//            },
-//            canExecuteMethod: isDirty,
-//            permission: blade.updatePermission
-//        }
-//    ];
+        //console.log('saveChanges3: ' + angular.toJson(objects, true));
+        angular.copy(objects, blade.data);
+        angular.copy(blade.currentEntities, blade.origEntity);
+        $scope.bladeClose();
+    };
 
-//    blade.onClose = function (closeCallback) {
-//        bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, $scope.saveChanges, closeCallback, "platform.dialogs.settings-save.title", "platform.dialogs.settings-save.message");
-//    };
+    $scope.blade.headIcon = 'fa-wrench';
+    $scope.blade.toolbarCommands = [
+        {
+            name: "platform.commands.reset", icon: 'fa fa-undo',
+            executeMethod: function () {
+                blade.currentEntities = angular.copy(blade.origEntity);
+            },
+            canExecuteMethod: isDirty,
+            permission: blade.updatePermission
+        }
+    ];
 
-//    // actions on load
-//    $scope.$watch('blade.parentBlade.currentEntity.settings', initializeBlade);
-//}]);
+    blade.onClose = function (closeCallback) {
+        bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, $scope.saveChanges, closeCallback, "platform.dialogs.settings-save.title", "platform.dialogs.settings-save.message");
+    };
+
+    $scope.getDictionaryValues = function (setting, callback) {
+        callback(setting.allowedValues);
+    };
+
+    // actions on load
+    $scope.$watch('blade.parentBlade.currentEntity.settings', initializeBlade);
+}]);

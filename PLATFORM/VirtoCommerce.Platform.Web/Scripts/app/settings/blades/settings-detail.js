@@ -117,7 +117,7 @@
 
     $scope.getDictionaryValues = function (setting, callback) {
         callback(setting.allowedValues);
-    }
+    };
 
     // actions on load
     blade.refresh();

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.Storefront.Model;
+using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.LiquidThemeEngine.Objects
 {
@@ -20,20 +21,39 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
             this.Namespace = scope;
         }
 
-        public MetafieldsCollection(string scope, ICollection<DynamicProperty> dynamicProperties)
+        public MetafieldsCollection(string scope, ICollection<SettingEntry> settings)
         {
             this.Namespace = scope;
-            if(dynamicProperties != null)
+            if (settings != null)
             {
-                foreach(var dynamicProperty in dynamicProperties)
+                foreach (var setting in settings)
                 {
-                    if (dynamicProperty.IsDictionary || dynamicProperty.IsArray)
+                    if (setting.IsArray)
                     {
-                        this.Add(dynamicProperty.Name, dynamicProperty.Values);
+                        this.Add(setting.Name, setting.ArrayValues);
                     }
                     else
                     {
-                        this.Add(dynamicProperty.Name, dynamicProperty.Values.FirstOrDefault());
+                        this.Add(setting.Name, setting.Value);
+                    }
+                }
+            }
+        }
+
+        public MetafieldsCollection(string scope, Storefront.Model.Language language, ICollection<DynamicProperty> dynamicProperties)
+        {
+            this.Namespace = scope;
+            if (dynamicProperties != null)
+            {
+                foreach (var dynamicProperty in dynamicProperties)
+                {
+                    if (dynamicProperty.IsDictionary || dynamicProperty.IsArray)
+                    {
+                        this.Add(dynamicProperty.Name, dynamicProperty.Values.GetLocalizedStringsForLanguage(language).Select(x => x.Value));
+                    }
+                    else
+                    {
+                        this.Add(dynamicProperty.Name, dynamicProperty.Values.GetLocalizedStringsForLanguage(language).Select(x => x.Value).FirstOrDefault());
                     }
                 }
             }
