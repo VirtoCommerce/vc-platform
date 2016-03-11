@@ -44,7 +44,7 @@ namespace VirtoCommerce.Storefront.Controllers
                 WorkContext.CurrentCategory = category;
                 category.Products = new MutablePagedList<Product>((pageNumber, pageSize) =>
                 {
-                    var criteria = WorkContext.CurrentCatalogSearchCriteria.Clone();
+                    var criteria = WorkContext.CurrentCatalogSearchCriteria.Clone();                    
                     criteria.CategoryId = product.CategoryId;
                     criteria.PageNumber = pageNumber;
                     criteria.PageSize = pageSize;

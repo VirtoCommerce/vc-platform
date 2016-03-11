@@ -47,7 +47,6 @@ namespace VirtoCommerce.Storefront.Controllers
             {
                 view = "grid";
             }
-
             WorkContext.CurrentCatalogSearchCriteria.CategoryId = categoryId;
             WorkContext.CurrentCategory = (await _searchService.GetCategoriesAsync(new[] { categoryId }, CategoryResponseGroup.Full)).FirstOrDefault();
             WorkContext.CurrentCategory.Products = new MutablePagedList<Product>((pageNumber, pageSize) =>

@@ -116,6 +116,7 @@ namespace VirtoCommerce.Storefront.Owin
                             category.Products = new MutablePagedList<Product>((pageNumber2, pageSize2) =>
                             {
                                 var criteria2 = criteria.Clone();
+                                criteria.CategoryId = category.Id;
                                 criteria.PageNumber = pageNumber2;
                                 criteria.PageSize = pageSize2;
                                 return catalogSearchService.SearchProducts(criteria);

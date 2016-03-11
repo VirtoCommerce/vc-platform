@@ -17,7 +17,7 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         {
             Language = language;
             Currency = currency;
-            ResponseGroup = CatalogSearchResponseGroup.WithProducts;
+            ResponseGroup = CatalogSearchResponseGroup.WithProducts | CatalogSearchResponseGroup.WithCategories | CatalogSearchResponseGroup.WithProperties;
             SearchInChildren = true;
 
             Parse(queryString);
