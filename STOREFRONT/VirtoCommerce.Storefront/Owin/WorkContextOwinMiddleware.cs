@@ -69,7 +69,6 @@ namespace VirtoCommerce.Storefront.Owin
             _cacheManager = container.Resolve<ICacheManager<object>>();
             _catalogModuleApi = container.Resolve<ICatalogModuleApi>();
             _searchApi = container.Resolve<ISearchModuleApi>();
-            _customerService = container.Resolve<ICustomerService>();
             _staticContentService = container.Resolve<IStaticContentService>();
             _container = container;
         }
@@ -183,7 +182,7 @@ namespace VirtoCommerce.Storefront.Owin
                                    {
                                        Name = x.Key,
                                        Title = x.Key,
-                                       Articles = new StorefrontPagedList<BlogArticle>(x, 1, 1000, x.Count(), page => workContext.RequestUrl.SetQueryParameter("page", page.ToString()).ToString())
+                                       Articles = new MutablePagedList<BlogArticle>(x)
                                    }).ToArray();
 
                             return new { Pages = pages, Blogs = blogs };

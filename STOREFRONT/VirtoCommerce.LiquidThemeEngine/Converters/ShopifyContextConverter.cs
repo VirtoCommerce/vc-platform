@@ -1,7 +1,7 @@
 ﻿using PagedList;
+using System;
 using System.Linq;
 using System.Web;
-using PagedList;
 using VirtoCommerce.LiquidThemeEngine.Objects;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.StaticContent;
@@ -82,7 +82,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                         {
                             Name = x.Key,
                             Title = x.Key,
-                            Articles = new StorefrontPagedList<BlogArticle>(x, 1, 1000, x.Count(), null)
+                            Articles = new MutablePagedList<BlogArticle>(x)
                         });
 
                 result.Blogs = new Blogs(blogs.Select(x=>x.ToShopifyModel()));

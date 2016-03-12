@@ -1,69 +1,35 @@
-﻿using DotLiquid;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
-using VirtoCommerce.Storefront.Model.Catalog;
+using DotLiquid;
+using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.LiquidThemeEngine.Objects
 {
+    /// <summary>
+    /// https://docs.shopify.com/themes/liquid/objects/search
+    /// </summary>
     public class Search : Drop
     {
-        CatalogSearchResult _proxyResults = null;
-        //private bool _productsLoaded = false;
-        #region Constructors and Destructors
-        public Search(CatalogSearchResult results)
-        {
-            _proxyResults = results;
-            this.Performed = true;
-        }
-        #endregion
-
-        #region Public Properties
+        /// <summary>
+        /// Returns  true  if an HTML form with the attribute  action="/search"  was submitted successfully. This allows you to show content based on whether a search was performed or not.
+        /// </summary>
         public bool Performed { get; set; }
+        /// <summary>
+        /// Returns an array of matching search result items. The items in the array can be a(n): product, article, page
+        /// </summary>
+        public IMutablePagedList<Drop> Results { get; set; }
 
-        private ItemCollection<object> _Results = null;
+        /// <summary>
+        /// Returns the number of results found.
+        /// </summary>
+        public int ResultsCount { get; set; }
 
-        public ItemCollection<object> Results
-        {
-            get { this.LoadSearchResults(); return _Results; }
-            set { _Results = value; }
-        }
-
-        public int ResultsCount
-        {
-            get
-            {
-                var response = Results;
-                if (response != null)
-                {
-                    return response.Count;
-                }
-
-                return 0;
-            }
-        }
-
+        /// <summary>
+        /// Returns the string that was entered in the search input box. Use the highlight filter to apply a different 
+        /// </summary>
         public string Terms { get; set; }
-        #endregion
-
-        #region Methods
-        private void LoadSearchResults()
-        {
-            if (!this.Performed)
-            {
-                return;
-            }
-
-            var response = Task.Run(() => _proxyResults.Products).Result;
-            //var products = _proxyResults.Products;
-            //var pageSize = this.Context == null ? 20 : this.Context["paginate.page_size"].ToInt(20);
-            //var skip = this.Context == null ? 0 : this.Context["paginate.current_offset"].ToInt();
-            //var terms = this.Terms; //this.Context["current_query"] as string;
-            //var type = this.Context == null ? "product" : this.Context["current_type"] as string;
-
-            //var response = Task.Run(() => service.SearchAsync<object>(siteContext, searchQuery)).Result;
-            //this.Results = response;
-
-            this.Performed = false;
-        }
-        #endregion
     }
 }

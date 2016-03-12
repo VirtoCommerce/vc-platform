@@ -15,6 +15,7 @@ using Moq;
 
 namespace VirtoCommerce.Storefront.Test
 {
+    [Trait("Category", "CI")]
     public class StaticContentScenarios
     {
         [Fact]
