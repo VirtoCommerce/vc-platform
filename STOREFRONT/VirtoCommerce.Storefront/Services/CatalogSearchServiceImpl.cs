@@ -26,7 +26,6 @@ namespace VirtoCommerce.Storefront.Services
         private readonly IPromotionEvaluator _promotionEvaluator;
         private readonly Func<WorkContext> _workContextFactory;
 
-
         public CatalogSearchServiceImpl(Func<WorkContext> workContextFactory, ICatalogModuleApi catalogModuleApi, IPricingService pricingService, IInventoryModuleApi inventoryModuleApi, ISearchModuleApi searchApi, IPromotionEvaluator promotionEvaluator)
         {
             _workContextFactory = workContextFactory;

@@ -1,9 +1,10 @@
-﻿using System;
+﻿using PagedList;
+using System;
 using System.Linq;
 using System.Web;
-using PagedList;
 using VirtoCommerce.LiquidThemeEngine.Objects;
 using VirtoCommerce.Storefront.Model.Common;
+using VirtoCommerce.Storefront.Model.StaticContent;
 using storefrontModel = VirtoCommerce.Storefront.Model;
 
 namespace VirtoCommerce.LiquidThemeEngine.Converters
@@ -60,7 +61,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                     workContext.Categories.Slice(pageNumber, pageSize);
                     return new StaticPagedList<Collection>(workContext.Categories.Select(x => x.ToShopifyModel(workContext.Aggregations, workContext.CurrentCatalogSearchCriteria.SortBy)), workContext.Categories);
                 }));
-            }
+                }
 
             if(!string.IsNullOrEmpty(workContext.CurrentCatalogSearchCriteria.Keyword) && workContext.Products != null)
             {
@@ -70,6 +71,12 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             if (workContext.CurrentLinkLists != null)
             {
                 result.Linklists = new Linklists(workContext.CurrentLinkLists.Select(x => x.ToShopifyModel(workContext)));
+            }
+
+            if (workContext.Pages != null)
+            {
+                result.Pages = new Pages(workContext.Pages.OfType<ContentPage>().Select(x => x.ToShopifyModel()));
+                result.Blogs = new Blogs(workContext.Blogs.Select(x => x.ToShopifyModel(workContext.CurrentLanguage)));
             }
 
             if (workContext.CurrentOrder != null)
@@ -92,7 +99,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
 
             if (workContext.CurrentBlog != null)
             {
-                result.Blog = workContext.CurrentBlog.ToShopifyModel();
+                result.Blog = workContext.CurrentBlog.ToShopifyModel(workContext.CurrentLanguage);
             }
 
             if (workContext.CurrentBlogArticle != null)
