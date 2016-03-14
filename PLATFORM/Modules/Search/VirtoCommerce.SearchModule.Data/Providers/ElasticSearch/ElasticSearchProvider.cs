@@ -458,6 +458,27 @@ namespace VirtoCommerce.SearchModule.Data.Providers.ElasticSearch
                     var facetGroup = new FacetGroup(filter.Key, groupLabels);
 
                     var values = filter.GetValues();
+
+                    // Return all facet terms for attribute filter if values are not defined
+                    if (values == null && filter is AttributeFilter)
+                    {
+                        facetGroup.FacetType = FacetTypes.Attribute;
+
+                        var key = filter.Key.ToLower();
+                        if (facets.ContainsKey(key))
+                        {
+                            var facet = facets[key] as TermsFacetResult;
+                            if (facet != null)
+                            {
+                                foreach (var term in facet.terms)
+                                {
+                                    var newFacet = new Facet(facetGroup, term.term, term.count, null);
+                                    facetGroup.Facets.Add(newFacet);
+                                }
+                            }
+                        }
+                    }
+
                     if (values != null)
                     {
                         foreach (var group in values.GroupBy(v => v.Id))
@@ -534,12 +555,12 @@ namespace VirtoCommerce.SearchModule.Data.Providers.ElasticSearch
                                 }
                             }
                         }
+                    }
 
-                        // Add facet group only if has items
-                        if (facetGroup.Facets.Any())
-                        {
-                            result.Add(facetGroup);
-                        }
+                    // Add facet group only if has items
+                    if (facetGroup.Facets.Any())
+                    {
+                        result.Add(facetGroup);
                     }
                 }
             }
