@@ -13,11 +13,11 @@ namespace VirtoCommerce.Storefront.Model.StaticContent
 {
     public abstract class ContentItem
     {
-        protected static readonly Regex _timestampAndTitleFromPathRegex = new Regex(string.Format(@"{0}(?:(?<timestamp>\d+-\d+-\d+)-)?(?<title>[^{0}]*)\.[^\.]+$", Regex.Escape(Path.DirectorySeparatorChar.ToString())), RegexOptions.Compiled);
-        protected static readonly Regex _timestampAndTitleAndLanguageFromPathRegex = new Regex(string.Format(@"{0}(?:(?<timestamp>\d+-\d+-\d+)-)?(?<title>[^{0}]*)\.(?<language>[A-z]{{2}}-[A-z]{{2}})\.[^\.]+$", Regex.Escape(Path.DirectorySeparatorChar.ToString())), RegexOptions.Compiled);
-        protected static readonly Regex _categoryRegex = new Regex(@":category(\d*)", RegexOptions.Compiled);
-        protected static readonly Regex _slashesRegex = new Regex(@"/{1,}", RegexOptions.Compiled);
-        protected static readonly string[] _htmlExtensions = new[] { ".markdown", ".mdown", ".mkdn", ".mkd", ".md", ".textile", ".cshtml" };
+        private static readonly Regex _timestampAndTitleFromPathRegex = new Regex(string.Format(@"{0}(?:(?<timestamp>\d+-\d+-\d+)-)?(?<title>[^{0}]*)\.[^\.]+$", Regex.Escape(Path.DirectorySeparatorChar.ToString())), RegexOptions.Compiled);
+        private static readonly Regex _timestampAndTitleAndLanguageFromPathRegex = new Regex(string.Format(@"{0}(?:(?<timestamp>\d+-\d+-\d+)-)?(?<title>[^{0}]*)\.(?<language>[A-z]{{2}}-[A-z]{{2}})\.[^\.]+$", Regex.Escape(Path.DirectorySeparatorChar.ToString())), RegexOptions.Compiled);
+        private static readonly Regex _categoryRegex = new Regex(@":category(\d*)", RegexOptions.Compiled);
+        private static readonly Regex _slashesRegex = new Regex(@"/{1,}", RegexOptions.Compiled);
+        private static readonly string[] _htmlExtensions = new[] { ".markdown", ".mdown", ".mkdn", ".mkd", ".md", ".textile", ".cshtml" };
 
         private static readonly Dictionary<string, string> _builtInPermalinks = new Dictionary<string, string>
         {
@@ -42,12 +42,12 @@ namespace VirtoCommerce.Storefront.Model.StaticContent
         public DateTime? PublishedDate { get; set; }
 
         public string Title { get; set; }
-        
+
         /// <summary>
         /// Relative content url
         /// </summary>
         public string Url { get; set; }
-      
+
         public string Permalink { get; set; }
 
         public List<string> Tags { get; set; }
@@ -59,7 +59,7 @@ namespace VirtoCommerce.Storefront.Model.StaticContent
         public ContentPublicationStatus PublicationStatus { get; set; }
 
         public Language Language { get; set; }
-        
+
         /// <summary>
         /// Content file name without extension
         /// </summary>
@@ -127,18 +127,18 @@ namespace VirtoCommerce.Storefront.Model.StaticContent
             }
 
             //Try to get permalink template from theme settings
-            if(string.IsNullOrEmpty(Permalink) && themeSettings != null && themeSettings.Contains("permalink"))
+            if (string.IsNullOrEmpty(Permalink) && themeSettings != null && themeSettings.Contains("permalink"))
             {
                 Permalink = themeSettings["permalink"] as string;
             }
 
-            if(string.IsNullOrEmpty(Permalink))
+            if (string.IsNullOrEmpty(Permalink))
             {
                 Permalink = "none";
             }
 
             Url = EvaluateUrlFromPermalink(Permalink);
- 
+
             Content = content;
             if (Title == null)
             {
