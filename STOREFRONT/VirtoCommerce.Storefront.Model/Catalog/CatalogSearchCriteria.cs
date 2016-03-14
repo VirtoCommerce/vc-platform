@@ -8,6 +8,12 @@ namespace VirtoCommerce.Storefront.Model.Catalog
 {
     public class CatalogSearchCriteria : PagedSearchCriteria
     {
+        //For JSON deserialization 
+        public CatalogSearchCriteria()
+            : base(new NameValueCollection())
+        {
+        }
+
         public CatalogSearchCriteria(Language language, Currency currency)
             : this(language, currency, new NameValueCollection())
         {
