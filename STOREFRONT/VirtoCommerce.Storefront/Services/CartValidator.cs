@@ -57,7 +57,8 @@ namespace VirtoCommerce.Storefront.Services
                 }
                 else if (product != null)
                 {
-                    if (product.TrackInventory && product.Inventory != null)
+                    if (product.TrackInventory && product.Inventory != null &&
+                        (lineItem.ValidationType == ValidationType.PriceAndQuantity || lineItem.ValidationType == ValidationType.Quantity))
                     {
                         var availableQuantity = product.Inventory.InStockQuantity;
                         if (product.Inventory.ReservedQuantity.HasValue)
@@ -70,7 +71,8 @@ namespace VirtoCommerce.Storefront.Services
                         }
                     }
 
-                    if (lineItem.PlacedPrice != product.Price.ActualPrice)
+                    if (lineItem.PlacedPrice != product.Price.ActualPrice &&
+                        (lineItem.ValidationType == ValidationType.PriceAndQuantity || lineItem.ValidationType == ValidationType.Price))
                     {
                         var newLineItem = product.ToLineItem(workContext.CurrentLanguage, lineItem.Quantity);
                         newLineItem.ValidationWarnings.Add(new ProductPriceError(lineItem.PlacedPrice));
@@ -105,7 +107,8 @@ namespace VirtoCommerce.Storefront.Services
                     if (existingShippingMethod != null)
                     {
                         var shippingMethod = existingShippingMethod.ToWebModel(workContext.AllCurrencies, workContext.CurrentLanguage);
-                        if (shippingMethod.Price != shipment.ShippingPrice)
+                        if (shippingMethod.Price != shipment.ShippingPrice &&
+                            (cart.ValidationType == ValidationType.PriceAndQuantity || cart.ValidationType == ValidationType.Price))
                         {
                             shipment.ValidationWarnings.Add(new ShippingPriceError(shipment.ShippingPrice));
 
