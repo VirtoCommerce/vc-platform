@@ -29,6 +29,13 @@ namespace VirtoCommerce.Client.Model
 
         
         /// <summary>
+        /// Gets or Sets Number
+        /// </summary>
+        [DataMember(Name="number", EmitDefaultValue=false)]
+        public string Number { get; set; }
+  
+        
+        /// <summary>
         /// Gets or Sets Keyword
         /// </summary>
         [DataMember(Name="keyword", EmitDefaultValue=false)]
@@ -100,6 +107,7 @@ namespace VirtoCommerce.Client.Model
         {
             var sb = new StringBuilder();
             sb.Append("class VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria {\n");
+            sb.Append("  Number: ").Append(Number).Append("\n");
             sb.Append("  Keyword: ").Append(Keyword).Append("\n");
             sb.Append("  CustomerId: ").Append(CustomerId).Append("\n");
             sb.Append("  StoreId: ").Append(StoreId).Append("\n");
@@ -146,6 +154,11 @@ namespace VirtoCommerce.Client.Model
                 return false;
 
             return 
+                (
+                    this.Number == other.Number ||
+                    this.Number != null &&
+                    this.Number.Equals(other.Number)
+                ) && 
                 (
                     this.Keyword == other.Keyword ||
                     this.Keyword != null &&
@@ -204,6 +217,9 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
+                
+                if (this.Number != null)
+                    hash = hash * 59 + this.Number.GetHashCode();
                 
                 if (this.Keyword != null)
                     hash = hash * 59 + this.Keyword.GetHashCode();

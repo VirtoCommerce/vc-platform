@@ -227,14 +227,15 @@ namespace VirtoCommerce.Client.Model
         /// </summary>
         [DataMember(Name="dynamicProperties", EmitDefaultValue=false)]
         public List<VirtoCommercePlatformCoreDynamicPropertiesDynamicObjectProperty> DynamicProperties { get; set; }
-
-
+  
+        
         /// <summary>
         /// Gets or Sets Settings
         /// </summary>
-        [DataMember(Name = "settings", EmitDefaultValue = false)]
+        [DataMember(Name="settings", EmitDefaultValue=false)]
         public List<VirtoCommerceStoreModuleWebModelSetting> Settings { get; set; }
-
+  
+        
         /// <summary>
         /// Gets or Sets CreatedDate
         /// </summary>
