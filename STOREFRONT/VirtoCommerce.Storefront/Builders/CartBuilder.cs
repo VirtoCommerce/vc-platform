@@ -395,6 +395,7 @@ namespace VirtoCommerce.Storefront.Builders
                     var lineItem = product.ToLineItem(_cart.Language, (int)quoteItem.SelectedTierPrice.Quantity);
                     lineItem.ListPrice = quoteItem.SelectedTierPrice.Price;
                     lineItem.SalePrice = quoteItem.SelectedTierPrice.Price;
+                    lineItem.ValidationType = ValidationType.None;
 
                     AddLineItem(lineItem);
                 }

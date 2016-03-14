@@ -200,6 +200,9 @@ storefrontApp.controller('quoteRequestController', ['$rootScope', '$scope', '$wi
                 if ($scope.customer.addresses.length) {
                     quoteRequest.billingAddress = angular.copy($scope.customer.addresses[0]);
                     quoteRequest.billingAddress.type = 'Billing';
+                    if (quoteRequest.billingAddress.countryCode) {
+                        getCountryRegions('Billing', quoteRequest.billingAddress.countryCode);
+                    }
                 } else {
                     quoteRequest.billingAddress = {
                         firstName: $scope.customer.firstName,

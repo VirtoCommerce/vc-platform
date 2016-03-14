@@ -140,6 +140,11 @@ namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
                 {
                     result = GetLocalizedValue(attributeFilterValues, localeShort);
                 }
+
+                if (result == null)
+                {
+                    result = GetLocalizedValue(attributeFilterValues, null);
+                }
             }
 
             return result;
@@ -147,7 +152,7 @@ namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
 
         private static ISearchFilterValue GetLocalizedValue(List<AttributeFilterValue> values, string locale)
         {
-            return values.FirstOrDefault(v => v.Language.Equals(locale, StringComparison.OrdinalIgnoreCase));
+            return values.FirstOrDefault(v => string.Equals(v.Language, locale, StringComparison.OrdinalIgnoreCase));
         }
 
         /// <summary>
