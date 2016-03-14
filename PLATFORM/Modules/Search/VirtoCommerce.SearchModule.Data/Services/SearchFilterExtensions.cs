@@ -55,8 +55,9 @@ namespace VirtoCommerce.SearchModule.Data.Services
 
         public static FacetLabel[] GetValueLabels(this IEnumerable<ISearchFilterValue> values)
         {
-            return values
+            var result = values
                 .SelectMany(GetValueLabels)
+                .Where(l => !string.IsNullOrEmpty(l.Language) && !string.IsNullOrEmpty(l.Label))
                 .GroupBy(v => v.Language, StringComparer.OrdinalIgnoreCase)
                 .SelectMany(g => g
                     .GroupBy(g2 => g2.Label, StringComparer.OrdinalIgnoreCase)
@@ -64,6 +65,8 @@ namespace VirtoCommerce.SearchModule.Data.Services
             .OrderBy(v => v.Language)
             .ThenBy(v => v.Label)
             .ToArray();
+
+            return result.Any() ? result : null;
         }
 
 
