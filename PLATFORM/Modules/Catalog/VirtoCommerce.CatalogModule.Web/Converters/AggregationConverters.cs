@@ -17,6 +17,11 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
                 result.Items = aggregation.Items.Select(i => i.ToWebModel()).ToArray();
             }
 
+            if (aggregation.Labels != null)
+            {
+                result.Labels = aggregation.Labels.Select(ToWebModel).ToArray();
+            }
+
             return result;
         }
 
@@ -24,7 +29,22 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
         {
             var result = new webModel.AggregationItem();
             result.InjectFrom(item);
+
+            if (item.Labels != null)
+            {
+                result.Labels = item.Labels.Select(ToWebModel).ToArray();
+            }
+
             return result;
+        }
+
+        public static webModel.AggregationLabel ToWebModel(this coreModel.AggregationLabel label)
+        {
+            return new webModel.AggregationLabel
+            {
+                Language = label.Language,
+                Label = label.Label,
+            };
         }
     }
 }

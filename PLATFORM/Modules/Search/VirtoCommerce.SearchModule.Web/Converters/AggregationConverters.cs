@@ -13,9 +13,14 @@ namespace VirtoCommerce.SearchModule.Web.Converters
             {
                 AggregationType = facetGroup.FacetType,
                 Field = facetGroup.FieldName,
-                Label = facetGroup.FieldDisplayName,
                 Items = facetGroup.Facets.Select(f => f.ToModuleModel(appliedFilters)).ToArray()
             };
+
+            if (facetGroup.Labels != null)
+            {
+                result.Labels = facetGroup.Labels.Select(ToModuleModel).ToArray();
+            }
+
             return result;
         }
 
@@ -23,12 +28,26 @@ namespace VirtoCommerce.SearchModule.Web.Converters
         {
             var result = new coreModel.AggregationItem
             {
-                Label = facet.Name,
                 Value = facet.Key,
                 Count = facet.Count,
                 IsApplied = appliedFilters.Any(x => x.Equals(facet.Key, StringComparison.OrdinalIgnoreCase))
             };
+
+            if (facet.Labels != null)
+            {
+                result.Labels = facet.Labels.Select(ToModuleModel).ToArray();
+            }
+
             return result;
+        }
+
+        public static coreModel.AggregationLabel ToModuleModel(this searchModel.FacetLabel label)
+        {
+            return new coreModel.AggregationLabel
+            {
+                Language = label.Language,
+                Label = label.Label,
+            };
         }
     }
 }
