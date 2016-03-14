@@ -168,6 +168,8 @@
     <Compile Include="Objects\LineItem.cs" />
     <Compile Include="Objects\Link.cs" />
     <Compile Include="Objects\Linklist.cs" />
+    <Compile Include="Objects\Blogs.cs" />
+    <Compile Include="Objects\Pages.cs" />
     <Compile Include="Objects\Linklists.cs" />
     <Compile Include="Objects\MetafieldsCollections.cs" />
     <Compile Include="Objects\Notification.cs" />

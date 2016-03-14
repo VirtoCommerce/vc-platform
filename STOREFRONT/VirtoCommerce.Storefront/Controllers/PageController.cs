@@ -22,23 +22,18 @@ namespace VirtoCommerce.Storefront.Controllers
         }
 
         //Called from SEO route by page permalink
-        public ActionResult GetContentPage(ContentPage page)
+        public ActionResult GetContentPage(ContentItem page)
         {
-            base.WorkContext.CurrentPage = page;
-            return View("page", page.Layout, base.WorkContext);
-        }
-
-        // GET: /pages/{page}
-        public ActionResult GetContentPageByName(string page)
-        {
-            var contentPage = _contentService.LoadContentItemsByUrl(page, base.WorkContext.CurrentStore, base.WorkContext.CurrentLanguage, () => new ContentPage()).FirstOrDefault();
-            if (contentPage != null)
+            if (page is BlogArticle)
             {
-                base.WorkContext.CurrentPage = contentPage as ContentPage;
-
-                return View("page", contentPage.Layout, base.WorkContext);
+                base.WorkContext.CurrentBlogArticle = page as BlogArticle;
+                return View("article", page.Layout, base.WorkContext);
             }
-            throw new HttpException(404, "Page with " + page + " not found.");
+            else
+            {
+                base.WorkContext.CurrentPage = page as ContentPage;
+                return View("page", page.Layout, base.WorkContext);
+            }
         }
     }
 }

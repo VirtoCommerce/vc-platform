@@ -14,7 +14,7 @@ namespace VirtoCommerce.Storefront.Model.Services
     /// </summary>
     public interface IStaticContentService
     {
-        IPagedList<ContentItem> LoadContentItemsByUrl(string url, Store store, Language language, Func<ContentItem> contentItemFactory, string[] excludingNames = null, int pageIndex = 1, int pageSize = 10, bool renderContent = true);
+        IEnumerable<ContentItem> LoadStoreStaticContent(Store store);
 
     }
 }
