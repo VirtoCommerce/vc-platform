@@ -17,7 +17,7 @@
               Loop through collection tags
             {% endcomment %}
             {% for custom_tag in collection.all_tags %}
-              {% if custom_tag.group_name == cat_item %}
+              {% if custom_tag.group_label == cat_item %}
                 {% comment %}
                   Strip out tag category prefix and add/remove link for tag filtering
                 {% endcomment %}
