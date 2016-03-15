@@ -35,5 +35,25 @@ namespace VirtoCommerce.Storefront.Controllers
                 return View("page", page.Layout, base.WorkContext);
             }
         }
+
+        // GET: /pages/{page}
+        public ActionResult GetContentPageByName(string page)
+        {
+
+            var contentPages = base.WorkContext.Pages.Where(x => string.Equals(x.Url, page, StringComparison.OrdinalIgnoreCase));
+            var contentPage = contentPages.FirstOrDefault(x => x.Language == base.WorkContext.CurrentLanguage);
+            if(contentPage == null)
+            {
+                contentPage = contentPages.FirstOrDefault(x => x.Language.IsInvariant);
+            }
+
+            if (contentPage != null)
+            {
+                base.WorkContext.CurrentPage = contentPage as ContentPage;
+
+                return View("page", base.WorkContext);
+            }
+            throw new HttpException(404, "Page with " + page + " not found.");
+        }
     }
 }
