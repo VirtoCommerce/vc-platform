@@ -91,10 +91,7 @@ namespace VirtoCommerce.Storefront.Services
             criteria.ResponseGroup = criteria.ResponseGroup & (~CatalogSearchResponseGroup.WithProducts);
             //include categories
             criteria.ResponseGroup = criteria.ResponseGroup | CatalogSearchResponseGroup.WithCategories;
-
             var searchCriteria = criteria.ToServiceModel(workContext);
-            searchCriteria.SearchInChildren = true;
-
             var result = await _searchApi.SearchModuleSearchAsync(searchCriteria);
 
             //API temporary does not support paginating request to categories (that's uses PagedList with superset instead StaticPagedList)
