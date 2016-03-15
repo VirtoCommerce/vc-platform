@@ -144,6 +144,14 @@ namespace VirtoCommerce.Storefront.Owin
                             var pricingResult = await _pricingModuleApi.PricingModuleEvaluatePriceListsAsync(evalContext);
                             return pricingResult.Select(p => p.ToWebModel()).ToList();
                         });
+
+                        var externalAuthTypes = context.Authentication.GetExternalAuthenticationTypes();
+                        workContext.ExternalLoginProviders = externalAuthTypes.Select(at => new LoginProvider
+                        {
+                            AuthenticationType = at.AuthenticationType,
+                            Caption = at.Caption,
+                            Properties = at.Properties
+                        }).ToList();
                     }
                 }
             }

@@ -41,6 +41,8 @@ using VirtoCommerce.Storefront.Model.Services;
 using VirtoCommerce.Storefront.Owin;
 using VirtoCommerce.Storefront.Services;
 using VirtoCommerce.Storefront.Model.Quote.Events;
+using Microsoft.Owin.Security.Google;
+using Microsoft.Owin.Security.Facebook;
 
 [assembly: OwinStartup(typeof(Startup))]
 [assembly: PreApplicationStartMethod(typeof(Startup), "PreApplicationStart")]
@@ -188,6 +190,20 @@ namespace VirtoCommerce.Storefront
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters, workContextFactory);
             RouteConfig.RegisterRoutes(RouteTable.Routes, workContextFactory, container.Resolve<ICommerceCoreModuleApi>(), container.Resolve<IStaticContentService>(), cacheManager);
             AuthConfig.ConfigureAuth(app, () => container.Resolve<IStorefrontUrlBuilder>());
+
+            // Adds Google external login provider
+            app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions
+            {
+                ClientId = ConfigurationManager.AppSettings["OAuth2.Google.ClientId"],
+                ClientSecret = ConfigurationManager.AppSettings["OAuth2.Google.Secret"]
+            });
+
+            // Adds Facebook external login provider
+            app.UseFacebookAuthentication(new FacebookAuthenticationOptions
+            {
+                AppId = ConfigurationManager.AppSettings["OAuth2.Facebook.AppId"],
+                AppSecret = ConfigurationManager.AppSettings["OAuth2.Facebook.Secret"]
+            });
 
             app.Use<WorkContextOwinMiddleware>(container);
             app.UseStageMarker(PipelineStage.ResolveCache);
