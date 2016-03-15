@@ -351,21 +351,6 @@
           "group": "Group"
         }
       },
-      "seo-detail": {
-        "subtitle": "Seo details",
-        "labels": {
-          "url-keyword": "URL keyword",
-          "page-title": "Page title",
-          "meta-description": "Meta description",
-          "alternative-text": "Image alternative text"
-        },
-        "placeholders": {
-          "url-keyword": "Enter keyword",
-          "page-title": "Enter title",
-          "meta-description": "Enter description",
-          "alternative-text": "Enter text"
-        }
-      },
       "advanced-search-results": {
         "title": "Search results"
       },
@@ -441,9 +426,6 @@
       "itemVariation": {
         "blade-subtitle": "Item variations",
         "title": "Variations"
-      },
-      "seo": {
-        "title": "SEO"
       }
     },
     "dialogs": {
@@ -522,12 +504,7 @@
       "language-save": {
         "title": "Save changes",
         "message": "The Languages has been modified. Do you want to save changes?"
-      },
-      "seo-save": {
-        "title": "Save changes",
-        "message": "The SEO information has been modified. Do you want to save changes?"
       }
-
     },
     "wizards": {
       "category": {
