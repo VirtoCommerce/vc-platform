@@ -16,9 +16,9 @@
         public string Field { get; set; }
 
         /// <summary>
-        /// Gets or sets the value of the aggregation label
+        /// Gets or sets the collection of aggregation labels
         /// </summary>
-        public string Label { get; set; }
+        public AggregationLabel[] Labels { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of the aggregation items

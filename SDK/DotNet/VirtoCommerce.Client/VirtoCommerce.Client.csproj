@@ -90,6 +90,7 @@
     <Compile Include="Model\VirtoCommerceCatalogModuleWebExportImportCsvProductPropertyMap.cs" />
     <Compile Include="Model\VirtoCommerceCatalogModuleWebModelAggregation.cs" />
     <Compile Include="Model\VirtoCommerceCatalogModuleWebModelAggregationItem.cs" />
+    <Compile Include="Model\VirtoCommerceCatalogModuleWebModelAggregationLabel.cs" />
     <Compile Include="Model\VirtoCommerceCatalogModuleWebModelAsset.cs" />
     <Compile Include="Model\VirtoCommerceCatalogModuleWebModelCatalog.cs" />
     <Compile Include="Model\VirtoCommerceCatalogModuleWebModelCatalogLanguage.cs" />
