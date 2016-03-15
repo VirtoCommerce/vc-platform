@@ -26,12 +26,8 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
                 throw new ArgumentNullException("dbEntity");
 
             var retVal = new coreModel.Organization();
-            retVal.InjectFrom(dbEntity);
+            dbEntity.ToCoreModel(retVal);
 
-            retVal.Addresses = dbEntity.Addresses.Select(x => x.ToCoreModel()).ToList();
-            retVal.Emails = dbEntity.Emails.Select(x => x.Address).ToList();
-            retVal.Notes = dbEntity.Notes.Select(x => x.ToCoreModel()).ToList();
-            retVal.Phones = dbEntity.Phones.Select(x => x.Number).ToList();
             if (dbEntity.MemberRelations.Any())
             {
                 retVal.ParentId = dbEntity.MemberRelations.FirstOrDefault().AncestorId;
@@ -48,46 +44,12 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
                 throw new ArgumentNullException("organization");
 
             var retVal = new dataModel.Organization();
+
+            organization.ToDataModel(retVal);
+
             pkMap.AddPair(organization, retVal);
 
-            retVal.InjectFrom(organization);
-
-            if (organization.Phones != null)
-            {
-                retVal.Phones = new ObservableCollection<dataModel.Phone>(organization.Phones.Select(x => new dataModel.Phone
-                {
-                    Number = x,
-                    MemberId = organization.Id
-                }));
-            }
-
-            if (organization.Emails != null)
-            {
-                retVal.Emails = new ObservableCollection<dataModel.Email>(organization.Emails.Select(x => new dataModel.Email
-                {
-                    Address = x,
-                    MemberId = organization.Id
-                }));
-            }
-
-            if (organization.Addresses != null)
-            {
-                retVal.Addresses = new ObservableCollection<dataModel.Address>(organization.Addresses.Select(x => x.ToDataModel()));
-                foreach (var address in retVal.Addresses)
-                {
-                    address.MemberId = organization.Id;
-                }
-            }
-
-            if (organization.Notes != null)
-            {
-                retVal.Notes = new ObservableCollection<dataModel.Note>(organization.Notes.Select(x => x.ToDataModel()));
-                foreach (var note in retVal.Notes)
-                {
-                    note.MemberId = organization.Id;
-                }
-            }
-
+         
             if (organization.ParentId != null)
             {
                 retVal.MemberRelations = new ObservableCollection<dataModel.MemberRelation>();
@@ -116,26 +78,8 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
                                                                            x => x.OwnerId, x => x.OrgType,
                                                                            x => x.BusinessCategory);
             target.InjectFrom(patchInjection, source);
-
-            if (!source.Phones.IsNullCollection())
-            {
-                var phoneComparer = AnonymousComparer.Create((dataModel.Phone x) => x.Number);
-                source.Phones.Patch(target.Phones, phoneComparer, (sourcePhone, targetPhone) => targetPhone.Number = sourcePhone.Number);
-            }
-            if (!source.Emails.IsNullCollection())
-            {
-                var addressComparer = AnonymousComparer.Create((dataModel.Email x) => x.Address);
-                source.Emails.Patch(target.Emails, addressComparer, (sourceEmail, targetEmail) => targetEmail.Address = sourceEmail.Address);
-            }
-            if (!source.Addresses.IsNullCollection())
-            {
-                source.Addresses.Patch(target.Addresses, new AddressComparer(), (sourceAddress, targetAddress) => sourceAddress.Patch(targetAddress));
-            }
-            if (!source.Notes.IsNullCollection())
-            {
-                var noteComparer = AnonymousComparer.Create((dataModel.Note x) => x.Id);
-                source.Notes.Patch(target.Notes, noteComparer, (sourceNote, targetNote) => sourceNote.Patch(targetNote));
-            }
+            //Path base type properties
+            ((dataModel.Member)source).Patch(target);
         }
 
 

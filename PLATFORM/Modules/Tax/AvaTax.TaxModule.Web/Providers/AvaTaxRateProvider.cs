@@ -32,19 +32,19 @@ namespace AvaTax.TaxModule.Web
         #endregion
 
         private readonly AvalaraLogger _logger;
-        private readonly IContactService _customerSearchService;
+        private readonly IMemberService _memberService;
 
         public AvaTaxRateProvider()
             : base("AvaTaxRateProvider")
         {
         }
 
-        public AvaTaxRateProvider(IContactService customerService, ILog log, params SettingEntry[] settings)
+        public AvaTaxRateProvider(IMemberService memberService, ILog log, params SettingEntry[] settings)
             : this()
         {
             Settings = settings;
             _logger = new AvalaraLogger(log);
-            _customerSearchService = customerService;
+            _memberService = memberService;
         }
 
         private string AccountNumber
@@ -115,11 +115,11 @@ namespace AvaTax.TaxModule.Web
                     && !string.IsNullOrEmpty(ServiceUrl)
                     && !string.IsNullOrEmpty(CompanyCode))
                 {
-                    Contact contact = null;
+                    Member member = null;
                     if (cart.CustomerId != null)
-                        contact = _customerSearchService.GetById(cart.CustomerId);
+                        member = _memberService.GetByIds(new[] { cart.CustomerId }).FirstOrDefault();
 
-                    var request = cart.ToAvaTaxRequest(CompanyCode, contact);
+                    var request = cart.ToAvaTaxRequest(CompanyCode, member);
                     if (request != null)
                     {
                         log.docCode = request.DocCode;
@@ -167,11 +167,11 @@ namespace AvaTax.TaxModule.Web
                     var isCommit = order.InPayments != null && order.InPayments.Any()
                         && order.InPayments.All(pi => pi.IsApproved);
 
-                    Contact contact = null;
+                    Member member = null;
                     if (order.CustomerId != null)
-                        contact = _customerSearchService.GetById(order.CustomerId);
+                        member = _memberService.GetByIds(new[] { order.CustomerId }).FirstOrDefault();
 
-                    var request = order.ToAvaTaxRequest(CompanyCode, contact, isCommit);
+                    var request = order.ToAvaTaxRequest(CompanyCode, member, isCommit);
                     if (request != null)
                     {
                         log.docCode = request.DocCode;
@@ -221,11 +221,11 @@ namespace AvaTax.TaxModule.Web
                     var isCommit = modifiedOrder.InPayments != null && modifiedOrder.InPayments.Any()
                         && modifiedOrder.InPayments.All(pi => pi.IsApproved);
 
-                    Contact contact = null;
+                    Member member = null;
                     if (modifiedOrder.CustomerId != null)
-                        contact = _customerSearchService.GetById(modifiedOrder.CustomerId);
+                        member = _memberService.GetByIds(new[] { modifiedOrder.CustomerId }).FirstOrDefault();
 
-                    var request = modifiedOrder.ToAvaTaxAdjustmentRequest(CompanyCode, contact, originalOrder, isCommit);
+                    var request = modifiedOrder.ToAvaTaxAdjustmentRequest(CompanyCode, member, originalOrder, isCommit);
                     if (request != null)
                     {
                         log.docCode = request.ReferenceCode;

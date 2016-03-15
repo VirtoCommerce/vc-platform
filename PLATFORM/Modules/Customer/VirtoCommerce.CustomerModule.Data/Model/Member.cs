@@ -21,6 +21,9 @@ namespace VirtoCommerce.CustomerModule.Data.Model
 			Emails = new NullCollection<Email>();
         }
 
+        [StringLength(64)]
+        public string MemberType { get; set; }
+
 		#region NavigationProperties
 
 		public ObservableCollection<Note> Notes { get; set; }

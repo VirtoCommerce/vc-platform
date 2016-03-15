@@ -152,17 +152,7 @@
   <ItemGroup>
     <Compile Include="Controllers\Api\CustomerModuleController.cs" />
     <Compile Include="Security\CustomerPredefinedPermissions.cs" />
-    <Compile Include="Converters\AddressConverter.cs" />
-    <Compile Include="Converters\ContactConverter.cs" />
-    <Compile Include="Converters\NoteConverter.cs" />
-    <Compile Include="Converters\OrganizationConverter.cs" />
     <Compile Include="ExportImport\CustomerExportImport.cs" />
-    <Compile Include="Model\Address.cs" />
-    <Compile Include="Model\Contact.cs" />
-    <Compile Include="Model\Member.cs" />
-    <Compile Include="Model\Note.cs" />
-    <Compile Include="Model\Organization.cs" />
-    <Compile Include="Model\SearchResult.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

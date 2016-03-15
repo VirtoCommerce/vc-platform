@@ -27,6 +27,7 @@ namespace VirtoCommerce.Platform.Core.Common
 			return ApplyOrder<T>(source, property, "ThenByDescending");
 		}
 
+      
         public static IOrderedQueryable<T> OrderBySortInfos<T>(this IQueryable<T> source, SortInfo[] sortInfos)
         {
             if(sortInfos.IsNullOrEmpty())
@@ -43,22 +44,31 @@ namespace VirtoCommerce.Platform.Core.Common
             {
                 retVal = source.OrderBy(firstSortInfo.SortColumn);
             }
+            return retVal.ThenBySortInfos(sortInfos.Skip(1).ToArray());
+        }
 
-            foreach (var nextSortInfo in sortInfos.Skip(1))
+        public static IOrderedQueryable<T> ThenBySortInfos<T>(this IOrderedQueryable<T> source, SortInfo[] sortInfos)
+        {
+            if (sortInfos.IsNullOrEmpty())
             {
-                if (firstSortInfo.SortDirection == SortDirection.Descending)
+                throw new ArgumentNullException("sortInfos");
+            }
+            var retVal = source;
+            foreach (var sortInfo in sortInfos)
+            {
+                if (sortInfo.SortDirection == SortDirection.Descending)
                 {
-                    retVal = retVal.ThenByDescending(firstSortInfo.SortColumn);
+                    retVal = retVal.ThenByDescending(sortInfo.SortColumn);
                 }
                 else
                 {
-                    retVal = retVal.ThenBy(firstSortInfo.SortColumn);
+                    retVal = retVal.ThenBy(sortInfo.SortColumn);
                 }
             }
             return retVal;
         }
 
-		public static IOrderedQueryable<T> ApplyOrder<T>(IQueryable<T> source, string property, string methodName)
+        public static IOrderedQueryable<T> ApplyOrder<T>(IQueryable<T> source, string property, string methodName)
 		{
 			if (property == null)
 				throw new ArgumentNullException("property");

@@ -13,6 +13,7 @@ namespace VirtoCommerce.Domain.Customer.Model
 		{
             Take = 20;
 		}
+        public string MemberType { get; set; }
         /// <summary>
         /// Word, part of word or phrase to search
         /// </summary>

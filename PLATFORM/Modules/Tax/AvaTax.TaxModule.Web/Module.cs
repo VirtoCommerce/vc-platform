@@ -61,7 +61,7 @@ namespace AvaTax.TaxModule.Web
             var settingManager = _container.Resolve<ISettingsManager>();
             var taxService = _container.Resolve<ITaxService>();
             var moduleSettings = settingManager.GetModuleSettings("Avalara.Tax");
-            taxService.RegisterTaxProvider(() => new AvaTaxRateProvider(_container.Resolve<IContactService>(), _container.Resolve<ILog>(), moduleSettings)
+            taxService.RegisterTaxProvider(() => new AvaTaxRateProvider(_container.Resolve<IMemberService>(), _container.Resolve<ILog>(), moduleSettings)
             {
                 Name = "Avalara taxes",
                 Description = "Avalara service integration",

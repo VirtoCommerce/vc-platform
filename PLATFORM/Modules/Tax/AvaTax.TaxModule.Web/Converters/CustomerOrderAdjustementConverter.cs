@@ -12,7 +12,7 @@ namespace AvaTax.TaxModule.Web.Converters
 {
     public static class CustomerOrderAdjustmentConverter
     {
-        public static GetTaxRequest ToAvaTaxAdjustmentRequest(this VirtoCommerce.Domain.Order.Model.CustomerOrder modifiedOrder, string companyCode, Contact contact, VirtoCommerce.Domain.Order.Model.CustomerOrder originalOrder, bool commit = false)
+        public static GetTaxRequest ToAvaTaxAdjustmentRequest(this VirtoCommerce.Domain.Order.Model.CustomerOrder modifiedOrder, string companyCode, Member member, VirtoCommerce.Domain.Order.Model.CustomerOrder originalOrder, bool commit = false)
         {
             if (modifiedOrder.Addresses != null && modifiedOrder.Addresses.Any() && originalOrder.Items != null && originalOrder.Items.Any())
             {
@@ -54,7 +54,7 @@ namespace AvaTax.TaxModule.Web.Converters
                 getTaxRequest.CurrencyCode = modifiedOrder.Currency.ToString();
 
                 //add customer tax exemption code to cart if exists
-                getTaxRequest.ExemptionNo = contact.GetDynamicPropertyValue("Tax exempt", string.Empty);
+                getTaxRequest.ExemptionNo = member.GetDynamicPropertyValue("Tax exempt", string.Empty);
 
                 string destinationAddressIndex = "0";
 
