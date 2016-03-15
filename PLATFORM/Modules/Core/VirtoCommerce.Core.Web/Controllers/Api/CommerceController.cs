@@ -160,7 +160,24 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
         }
 
         /// <summary>
-        /// Find all SEO records for object by slug
+        /// Find all SEO records for object by slug in specified store
+        /// </summary>
+        /// <param name="slug">slug</param>
+        /// <param name="storeId">storeId</param>
+        [HttpGet]
+        [ResponseType(typeof(coreModel.SeoInfo[]))]
+        [Route("stores/{storeId}/seoinfos/{slug}")]
+        [CheckPermission(Permission = CommercePredefinedPermissions.Read)]
+        public IHttpActionResult GetSeoInfoBySlugInStore(string slug, string storeId)
+        {
+            var retVal = _commerceService.GetSeoByKeyword(slug, storeId).ToArray();
+
+            return Ok(retVal);
+        }
+
+
+        /// <summary>
+        /// Find all SEO records for object by slug 
         /// </summary>
         /// <param name="slug">slug</param>
         [HttpGet]

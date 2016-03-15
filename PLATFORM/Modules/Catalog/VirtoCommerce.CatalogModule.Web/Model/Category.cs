@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Specialized;
 using VirtoCommerce.Domain.Commerce.Model;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.CatalogModule.Web.Model
 {
     /// <summary>
     /// Merchandising Category
     /// </summary>
-    public class Category
+    public class Category : AuditableEntity, ISeoSupport
     {
         /// <summary>
         /// Gets or sets the parent category id.
@@ -16,8 +17,6 @@ namespace VirtoCommerce.CatalogModule.Web.Model
         /// The parent identifier.
         /// </value>
         public string ParentId { get; set; }
-
-        public string Id { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="Category"/> is virtual or common.
@@ -94,13 +93,7 @@ namespace VirtoCommerce.CatalogModule.Web.Model
         /// The links.
         /// </value>
 		public ICollection<CategoryLink> Links { get; set; }
-        /// <summary>
-        /// Gets or sets the list of SEO information records.
-        /// </summary>
-        /// <value>
-        /// The seo infos.
-        /// </value>
-		public ICollection<SeoInfo> SeoInfos { get; set; }
+      
         /// <summary>
         /// Gets or sets the images.
         /// </summary>
@@ -110,5 +103,15 @@ namespace VirtoCommerce.CatalogModule.Web.Model
 		public ICollection<Image> Images { get; set; }
 
         public string[] SecurityScopes { get; set; }
+
+        #region ISeoSupport Members 
+        /// <summary>
+        /// Gets or sets the list of SEO information records.
+        /// </summary>
+        /// <value>
+        /// The seo infos.
+        /// </value>
+        public ICollection<SeoInfo> SeoInfos { get; set; }
+        #endregion
     }
 }

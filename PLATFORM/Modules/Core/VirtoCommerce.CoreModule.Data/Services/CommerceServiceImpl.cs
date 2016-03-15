@@ -152,14 +152,15 @@ namespace VirtoCommerce.CoreModule.Data.Repositories
             }
         }
 
-        public IEnumerable<coreModel.SeoInfo> GetSeoByKeyword(string keyword)
+        public IEnumerable<coreModel.SeoInfo> GetSeoByKeyword(string keyword, string storeId = null)
         {
             var retVal = new List<coreModel.SeoInfo>();
             using (var repository = _repositoryFactory())
             {
                 //find seo entries for specified keyword also need find other seo entries related to finding object
-                var query = repository.SeoUrlKeywords.Where(x => x.Keyword == keyword).Join(repository.SeoUrlKeywords, x => x.ObjectId, y => y.ObjectId, (x, y) => y)
-                                    .ToArray();
+                var query = repository.SeoUrlKeywords.Where(x => x.StoreId == storeId && x.Keyword == keyword)
+                                                     .Join(repository.SeoUrlKeywords, x => x.ObjectId, y => y.ObjectId, (x, y) => y)
+                                                     .ToArray();
                 retVal.AddRange(query.Select(x => x.ToCoreModel()));
             }
             return retVal;
