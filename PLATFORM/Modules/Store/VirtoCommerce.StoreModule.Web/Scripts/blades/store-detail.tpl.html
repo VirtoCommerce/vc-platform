@@ -30,7 +30,7 @@
                     </div>
                     <div class="column">
                         <div class="form-group">
-                            <label class="form-label">{{ 'stores.blades.store-detail.labels.state' | translate }}</label>
+                            <label class="form-label">{{ 'stores.blades.store-detail.labels.state' | translate }} <a href="" ng-click="openStatesDictionarySettingManagement()" class="form-edit" va-permission="platform:setting:update"><i class="form-ico fa fa-pencil"></i></a></label>
                             <div class="form-input">
                                 <ui-select ng-model="blade.currentEntity.storeState" required>
                                     <ui-select-match placeholder="{{ 'stores.blades.store-detail.placeholders.state' | translate }}">{{$select.selected}}</ui-select-match>
