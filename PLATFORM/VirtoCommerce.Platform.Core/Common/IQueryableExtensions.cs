@@ -49,20 +49,19 @@ namespace VirtoCommerce.Platform.Core.Common
 
         public static IOrderedQueryable<T> ThenBySortInfos<T>(this IOrderedQueryable<T> source, SortInfo[] sortInfos)
         {
+            var retVal = source;
             if (sortInfos.IsNullOrEmpty())
             {
-                throw new ArgumentNullException("sortInfos");
-            }
-            var retVal = source;
-            foreach (var sortInfo in sortInfos)
-            {
-                if (sortInfo.SortDirection == SortDirection.Descending)
+                foreach (var sortInfo in sortInfos)
                 {
-                    retVal = retVal.ThenByDescending(sortInfo.SortColumn);
-                }
-                else
-                {
-                    retVal = retVal.ThenBy(sortInfo.SortColumn);
+                    if (sortInfo.SortDirection == SortDirection.Descending)
+                    {
+                        retVal = retVal.ThenByDescending(sortInfo.SortColumn);
+                    }
+                    else
+                    {
+                        retVal = retVal.ThenBy(sortInfo.SortColumn);
+                    }
                 }
             }
             return retVal;
