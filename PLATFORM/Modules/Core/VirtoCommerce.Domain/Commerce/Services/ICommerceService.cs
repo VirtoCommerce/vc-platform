@@ -17,7 +17,7 @@ namespace VirtoCommerce.Domain.Commerce.Services
         void UpsertCurrencies(Currency[] currencies);
         void DeleteCurrencies(string[] codes);
 
-        IEnumerable<SeoInfo> GetSeoByKeyword(string keyword, string storeId = null);
+        IEnumerable<SeoInfo> GetSeoByKeyword(string keyword);
         void LoadSeoForObjects(ISeoSupport[] seoSupportObjects);
         void UpsertSeoForObjects(ISeoSupport[] seoSupportObjects);
         void DeleteSeoForObject(ISeoSupport seoSupportObject);

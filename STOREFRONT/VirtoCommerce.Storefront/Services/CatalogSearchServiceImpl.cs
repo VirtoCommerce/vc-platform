@@ -41,7 +41,7 @@ namespace VirtoCommerce.Storefront.Services
         {
             var workContext = _workContextFactory();
 
-            var retVal = (await _catalogModuleApi.CatalogModuleProductsGetProductByIdsAsync(ids.ToList(), ((int)responseGroup).ToString())).Select(x => x.ToWebModel(workContext.CurrentLanguage, workContext.CurrentCurrency)).ToArray();
+            var retVal = (await _catalogModuleApi.CatalogModuleProductsGetProductByIdsAsync(ids.ToList(), ((int)responseGroup).ToString())).Select(x => x.ToWebModel(workContext.CurrentLanguage, workContext.CurrentCurrency, workContext.CurrentStore)).ToArray();
 
             var allProducts = retVal.Concat(retVal.SelectMany(x => x.Variations)).ToArray();
 
@@ -73,7 +73,7 @@ namespace VirtoCommerce.Storefront.Services
         {
             var workContext = _workContextFactory();
 
-            var retVal = (await _catalogModuleApi.CatalogModuleCategoriesGetCategoriesByIdsAsync(ids.ToList(), ((int)responseGroup).ToString())).Select(x => x.ToWebModel(workContext.CurrentLanguage)).ToArray();
+            var retVal = (await _catalogModuleApi.CatalogModuleCategoriesGetCategoriesByIdsAsync(ids.ToList(), ((int)responseGroup).ToString())).Select(x => x.ToWebModel(workContext.CurrentLanguage, workContext.CurrentStore)).ToArray();
 
             return retVal;
         }
@@ -95,7 +95,7 @@ namespace VirtoCommerce.Storefront.Services
             var result = await _catalogModuleApi.CatalogModuleSearchSearchAsync(searchCriteria);
 
             //API temporary does not support paginating request to categories (that's uses PagedList with superset instead StaticPagedList)
-            return new PagedList<Category>(result.Categories.Select(x => x.ToWebModel(workContext.CurrentLanguage)), criteria.PageNumber, criteria.PageSize);
+            return new PagedList<Category>(result.Categories.Select(x => x.ToWebModel(workContext.CurrentLanguage, workContext.CurrentStore)), criteria.PageNumber, criteria.PageSize);
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace VirtoCommerce.Storefront.Services
             //include categories
             criteria.ResponseGroup = criteria.ResponseGroup | CatalogSearchResponseGroup.WithCategories;
             var searchCriteria = criteria.ToServiceModel(workContext);
-            var categories = _catalogModuleApi.CatalogModuleSearchSearch(searchCriteria).Categories.Select(x => x.ToWebModel(workContext.CurrentLanguage)).ToList();
+            var categories = _catalogModuleApi.CatalogModuleSearchSearch(searchCriteria).Categories.Select(x => x.ToWebModel(workContext.CurrentLanguage, workContext.CurrentStore)).ToList();
 
             //API temporary does not support paginating request to categories (that's uses PagedList with superset)
             return new PagedList<Category>(categories, criteria.PageNumber, criteria.PageSize);
@@ -134,7 +134,7 @@ namespace VirtoCommerce.Storefront.Services
             var workContext = _workContextFactory();
             var searchCriteria = criteria.ToServiceModel(workContext);
             var result = await _searchApi.SearchModuleSearchAsync(searchCriteria);
-            var products = result.Products.Select(x => x.ToWebModel(workContext.CurrentLanguage, workContext.CurrentCurrency)).ToList();
+            var products = result.Products.Select(x => x.ToWebModel(workContext.CurrentLanguage, workContext.CurrentCurrency, workContext.CurrentStore)).ToList();
 
             if (!products.IsNullOrEmpty())
             {
@@ -165,7 +165,7 @@ namespace VirtoCommerce.Storefront.Services
             var searchCriteria = criteria.ToServiceModel(workContext);
 
             var result = _searchApi.SearchModuleSearch(searchCriteria);
-            var products = result.Products.Select(x => x.ToWebModel(workContext.CurrentLanguage, workContext.CurrentCurrency)).ToList();
+            var products = result.Products.Select(x => x.ToWebModel(workContext.CurrentLanguage, workContext.CurrentCurrency, workContext.CurrentStore)).ToList();
 
             //Unable to make parallel call because its synchronous method (in future this information pricing and inventory will be getting from search index) and this lines can be removed
             _pricingService.EvaluateProductPrices(products);
