@@ -6,41 +6,24 @@
         /// Gets the group.
         /// </summary>
         /// <value>The group.</value>
-        public FacetGroup Group
-        {
-            get;
-            set;
-        }
+        public FacetGroup Group { get; set; }
 
         /// <summary>
-        /// Gets the name.
+        /// Gets the facet labels.
         /// </summary>
-        /// <value>The name.</value>
-        public string Name
-        {
-            get;
-            private set;
-        }
+        public FacetLabel[] Labels { get; private set; }
 
         /// <summary>
         /// Gets the count.
         /// </summary>
         /// <value>The count.</value>
-        public int Count
-        {
-            get;
-            private set;
-        }
+        public int Count { get; private set; }
 
         /// <summary>
         /// Gets or sets the Key.
         /// </summary>
         /// <value>The URL.</value>
-        public string Key
-        {
-            get;
-            private set;
-        }
+        public string Key { get; private set; }
 
         public Facet()
         {
@@ -51,15 +34,14 @@
         /// </summary>
         /// <param name="group">The group.</param>
         /// <param name="key">The key.</param>
-        /// <param name="name">The name.</param>
         /// <param name="count">The count.</param>
-        public Facet(FacetGroup group, string key, string name, int count)
+        /// <param name="labels">The labels.</param>
+        public Facet(FacetGroup group, string key, int count, FacetLabel[] labels)
         {
-            this.Group = group;
-            this.Key = key;
-            this.Name = name;
-            this.Count = count;
+            Group = group;
+            Key = key;
+            Labels = labels;
+            Count = count;
         }
-
     }
 }

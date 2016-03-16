@@ -199,6 +199,7 @@
     <Compile Include="Cart\ShoppingCart.cs" />
     <Compile Include="Store\Store.cs" />
     <Compile Include="Tax\TaxDetail.cs" />
+    <Compile Include="ValidationType.cs" />
     <Compile Include="WorkContext.cs" />
   </ItemGroup>
   <ItemGroup>

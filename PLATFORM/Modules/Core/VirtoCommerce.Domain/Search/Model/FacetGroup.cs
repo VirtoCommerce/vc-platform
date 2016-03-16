@@ -22,21 +22,17 @@ namespace VirtoCommerce.Domain.Search.Model
         public string FieldName { get; private set; }
 
         /// <summary>
-        /// Gets the field display name
+        /// Gets the facet group labels.
         /// </summary>
-        public string FieldDisplayName { get; private set; }
+        public FacetLabel[] Labels { get; private set; }
 
         /// <summary>
         /// Specifies facet type.
         /// </summary>
         /// <value>The name.</value>
-        public string FacetType
-        {
-            get;
-            set;
-        }
+        public string FacetType { get; set; }
 
-        FacetCollection<Facet> _Facets = null;
+        FacetCollection<Facet> _facets;
         /// <summary>
         /// Gets the facets.
         /// </summary>
@@ -45,10 +41,10 @@ namespace VirtoCommerce.Domain.Search.Model
         {
             get
             {
-                if (_Facets == null)
-                    _Facets = new FacetCollection<Facet>(this);
+                if (_facets == null)
+                    _facets = new FacetCollection<Facet>(this);
 
-                return _Facets;
+                return _facets;
             }
         }
 
@@ -60,11 +56,11 @@ namespace VirtoCommerce.Domain.Search.Model
         /// Initializes a new instance of the <see cref="FacetGroup"/> class.
         /// </summary>
         /// <param name="fieldName">Name of the field.</param>
-        /// <param name="fieldDisplayName">Display name of the field.</param>
-        public FacetGroup(string fieldName, string fieldDisplayName)
+        /// <param name="labels">Display names of the field.</param>
+        public FacetGroup(string fieldName, FacetLabel[] labels)
         {
             FieldName = fieldName;
-            FieldDisplayName = fieldDisplayName;
+            Labels = labels;
         }
 
         protected virtual void OnPropertyChanged(string propertyName)

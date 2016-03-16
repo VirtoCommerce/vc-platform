@@ -9,6 +9,7 @@ using Xunit;
 
 namespace VirtoCommerce.Storefront.Test
 {
+    [Trait("Category", "CI")]
     public class MutablePagedListTests
     {
         [Fact]

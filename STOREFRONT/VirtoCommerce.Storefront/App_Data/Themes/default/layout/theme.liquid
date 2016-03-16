@@ -130,7 +130,7 @@
                     {% endif %}
                     {% include 'search-bar' %}
                     {% if shop.quotes_enabled %}
-                    <a class="header-cart-btn cart-toggle" ng-controller="actualQuoteRequestBarController" ng-click="outerRedirect(baseUrl + 'quoterequest/#/' + actualQuoteRequest.id)">
+                    <a class="header-cart-btn cart-toggle" ng-controller="actualQuoteRequestBarController" ng-click="outerRedirect(baseUrl + 'quoterequest/#/' + actualQuoteRequest.number)">
                         <span class="fa fa-calculator"></span>
                         Quote <span id="quoteRequestCount" ng-class="{ 'visible-count': actualQuoteRequest.itemsCount > 0 }" ng-bind="actualQuoteRequest.itemsCount" ng-cloak></span>
                     </a>
