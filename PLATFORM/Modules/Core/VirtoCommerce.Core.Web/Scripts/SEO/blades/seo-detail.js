@@ -43,8 +43,8 @@
         angular.copy(blade.currentEntities, blade.origEntity);
         $scope.bladeClose();
 
-        if (blade.parentBlade.updateData)
-            blade.parentBlade.updateData();
+        if (blade.parentRefresh)
+            blade.parentRefresh();
     }
 
     function isValid(data) {

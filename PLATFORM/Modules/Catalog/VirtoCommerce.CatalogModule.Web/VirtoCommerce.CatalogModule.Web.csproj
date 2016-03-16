@@ -319,7 +319,6 @@
     <Content Include="Scripts\wizards\newProduct\new-product-wizard.js" />
     <Content Include="Scripts\wizards\newProduct\new-product-wizard.tpl.html" />
     <Content Include="Scripts\wizards\newProduct\new-variation-wizard.tpl.html" />
-    <Content Include="Scripts\wizards\newProduct\new-product-wizard-seo-detail-step.js" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">

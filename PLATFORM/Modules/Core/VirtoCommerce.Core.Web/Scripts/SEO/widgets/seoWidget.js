@@ -17,7 +17,6 @@
         } else {
             var newBlade = {
                 id: "seoStoreList",
-                isNew: blade.isNew,
                 title: blade.title,
                 seoLanguages: $scope.widget.getLanguages(blade),
                 updatePermission: blade.updatePermission,

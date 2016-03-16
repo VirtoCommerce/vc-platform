@@ -1,7 +1,7 @@
 ﻿angular.module('virtoCommerce.coreModule.seo')
 .controller('virtoCommerce.coreModule.seo.storeListController', ['$scope', 'platformWebApp.uiGridHelper', 'virtoCommerce.storeModule.stores', 'platformWebApp.bladeNavigationService', function ($scope, uiGridHelper, stores, bladeNavigationService) {
     var blade = $scope.blade;
-    $scope.selectedNodeId = null;
+    $scope.selectedNodeId = null; // need to initialize to null
     var promise = stores.query().$promise;
 
     function startBladeInitialization(parentEntity) {
@@ -9,14 +9,14 @@
             // set currentEntity to reference it from child blade.
             blade.currentEntity = parentEntity;
 
-            blade.updateData();
+            blade.refresh();
         }
     }
 
-    blade.updateData = function () {
+    blade.refresh = function () {
         promise.then(function (promiseData) {
             var sortedStores = _.sortBy(promiseData, 'name');
-            sortedStores.splice(0, 0, { name: 'default' });
+            sortedStores.splice(0, 0, { name: 'default SEO (not a store)' });
             _.each(sortedStores, function (x) {
                 x.seoInfo = _.find(blade.currentEntity.seoInfos, function (info) { return info.storeId === x.id; });
             });
@@ -39,6 +39,7 @@
         var newBlade = {
             id: 'seoDetails',
             store: node,
+            parentRefresh: blade.refresh,
             updatePermission: blade.updatePermission,
             controller: 'virtoCommerce.coreModule.seo.seoDetailController',
             template: 'Modules/$(VirtoCommerce.Core)/Scripts/SEO/blades/seo-detail.tpl.html'
