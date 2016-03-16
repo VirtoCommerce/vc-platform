@@ -5,13 +5,12 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VirtoCommerce.CustomerModule.Data.Repositories;
 using VirtoCommerce.CustomerModule.Data.Services;
 using VirtoCommerce.CustomerModule.Web.Controllers.Api;
-using VirtoCommerce.CustomerModule.Web.Model;
 using VirtoCommerce.Domain.Commerce.Model;
+using VirtoCommerce.Domain.Customer.Model;
 using VirtoCommerce.Platform.Data.DynamicProperties;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Platform.Data.Repositories;
-using coreModel = VirtoCommerce.Domain.Customer.Model;
-using webModel = VirtoCommerce.CustomerModule.Web.Model;
+
 
 namespace VirtoCommerce.CustomerModule.Test
 {
@@ -22,7 +21,7 @@ namespace VirtoCommerce.CustomerModule.Test
         public void SearchContactsTest()
         {
             var controller = GetContactController();
-            var result = controller.Search(new coreModel.SearchCriteria()) as OkNegotiatedContentResult<SearchResult>;
+            var result = controller.Search(new SearchCriteria()) as OkNegotiatedContentResult<SearchResult>;
             Assert.IsNotNull(result.Content);
         }
 
@@ -30,7 +29,7 @@ namespace VirtoCommerce.CustomerModule.Test
         public void CreateNewOrganization()
         {
             var controller = GetContactController();
-            var org = new webModel.Organization
+            var org = new Organization
             {
                 Id = "org2",
                 BusinessCategory = "cat2",
@@ -39,7 +38,7 @@ namespace VirtoCommerce.CustomerModule.Test
 
 
             };
-            var result = controller.CreateOrganization(org) as OkNegotiatedContentResult<webModel.Organization>;
+            var result = controller.CreateOrganization(org) as OkNegotiatedContentResult<Organization>;
             Assert.IsNotNull(result.Content);
         }
 
@@ -47,29 +46,29 @@ namespace VirtoCommerce.CustomerModule.Test
         public void SearchTest()
         {
             var controller = GetContactController();
-            var result = controller.Search(new coreModel.SearchCriteria { OrganizationId = "org1" }) as OkNegotiatedContentResult<webModel.SearchResult>;
+            var result = controller.Search(new SearchCriteria { MemberId = "org1" }) as OkNegotiatedContentResult<SearchResult>;
         }
 
         [TestMethod]
         public void GetContact()
         {
             var controller = GetContactController();
-            var result = controller.GetContactById("testContact1") as OkNegotiatedContentResult<webModel.Contact>;
+            var result = controller.GetContactById("testContact1") as OkNegotiatedContentResult<Contact>;
         }
 
         [TestMethod]
         public void CreateNewContact()
         {
             var controller = GetContactController();
-            var contact = new webModel.Contact
+            var contact = new Contact
             {
                 Id = "testContact1",
                 FullName = "Vasa2",
                 BirthDate = DateTime.UtcNow,
                 Organizations = new[] { "org1" },
-                Addresses = new webModel.Address[]
+                Addresses = new Address[]
                 {
-                    new webModel.Address {
+                    new Address {
                     Name = "some name",
                     AddressType = AddressType.Shipping,
                     City = "london",
@@ -84,13 +83,13 @@ namespace VirtoCommerce.CustomerModule.Test
                     Organization = "org1"
                     }
                 }.ToList(),
-                Notes = new webModel.Note[] { new webModel.Note { Title = "1111", Body = "dfsdfs sdf sdf sdf sd" } },
+                Notes = new Note[] { new Note { Title = "1111", Body = "dfsdfs sdf sdf sdf sd" } },
                 Emails = new[] { "uuu@mail.ru", "ssss@mail.ru" },
                 Phones = new[] { "2322232", "32323232" },
                 //DynamicPropertyValues = new[] { new DynamicPropertyObjectValue { Property = new DynamicProperty { Name = "testProp", ValueType = DynamicPropertyValueType.ShortText }, Values = new object[] { "sss" } } }.ToList(),
                 DefaultLanguage = "ru"
             };
-            var result = controller.CreateContact(contact) as OkNegotiatedContentResult<webModel.Contact>;
+            var result = controller.CreateContact(contact) as OkNegotiatedContentResult<Contact>;
             Assert.IsNotNull(result.Content);
         }
 
@@ -98,7 +97,7 @@ namespace VirtoCommerce.CustomerModule.Test
         public void UpdateContact()
         {
             var controller = GetContactController();
-            var result = controller.GetContactById("testContact") as OkNegotiatedContentResult<webModel.Contact>;
+            var result = controller.GetContactById("testContact") as OkNegotiatedContentResult<Contact>;
             var contact = result.Content;
 
             contact.FullName = "diff name";
@@ -107,7 +106,7 @@ namespace VirtoCommerce.CustomerModule.Test
 
             controller.UpdateContact(contact);
 
-            result = controller.GetContactById("testContact") as OkNegotiatedContentResult<webModel.Contact>;
+            result = controller.GetContactById("testContact") as OkNegotiatedContentResult<Contact>;
 
             contact = result.Content;
         }
@@ -116,7 +115,7 @@ namespace VirtoCommerce.CustomerModule.Test
         public void PartialUpdateContact()
         {
             var controller = GetContactController();
-            var contact = new webModel.Contact
+            var contact = new Contact
             {
                 Id = "testContact",
                 FullName = "ET"
@@ -124,7 +123,7 @@ namespace VirtoCommerce.CustomerModule.Test
 
             controller.UpdateContact(contact);
 
-            var result = controller.GetContactById("testContact") as OkNegotiatedContentResult<webModel.Contact>;
+            var result = controller.GetContactById("testContact") as OkNegotiatedContentResult<Contact>;
 
             contact = result.Content;
         }
@@ -134,7 +133,7 @@ namespace VirtoCommerce.CustomerModule.Test
         {
             var controller = GetContactController();
             controller.DeleteContacts(new[] { "testContact" });
-            var result = controller.GetContactById("testStore") as OkNegotiatedContentResult<webModel.Contact>;
+            var result = controller.GetContactById("testStore") as OkNegotiatedContentResult<Contact>;
 
             Assert.IsNull(result);
         }
@@ -146,11 +145,9 @@ namespace VirtoCommerce.CustomerModule.Test
             Func<ICustomerRepository> customerRepositoryFactory = () => new CustomerRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor(null));
 
             var dynamicPropertyService = new DynamicPropertyService(platformRepositoryFactory);
-            var contactService = new ContactServiceImpl(customerRepositoryFactory, dynamicPropertyService, null);
-            var orgService = new OrganizationServiceImpl(customerRepositoryFactory, dynamicPropertyService);
-            var searchService = new CustomerSearchServiceImpl(customerRepositoryFactory);
-
-            return new CustomerModuleController(contactService, orgService, searchService, null);
+            var memberService = new MemberServiceImpl(customerRepositoryFactory, dynamicPropertyService, null);
+      
+            return new CustomerModuleController(memberService, null);
         }
     }
 }

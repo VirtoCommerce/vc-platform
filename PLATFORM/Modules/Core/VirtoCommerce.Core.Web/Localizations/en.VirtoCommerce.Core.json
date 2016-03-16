@@ -92,6 +92,37 @@
       "fulfillment-center-list": {
         "title": "Fulfillment centers",
         "subtitle": "Manage Fulfillment centers"
+      },
+      "store-list": {
+        "subtitle": "Manage SEO in stores",
+        "labels": {
+          "new-store": "Add SEO for other store",
+          "name": "Store name",
+          "no-store": "No SEO defined"
+        },
+        "placeholders": {
+          "store": "Pick store"
+        }
+      },
+      "seo-detail": {
+        "title": "SEO for {{store}}",
+        "subtitle": "Seo details",
+        "labels": {
+          "url-keyword": "URL keyword",
+          "page-title": "Page title",
+          "meta-description": "Meta description",
+          "alternative-text": "Image alternative text"
+        },
+        "placeholders": {
+          "url-keyword": "Enter keyword",
+          "page-title": "Enter title",
+          "meta-description": "Enter description",
+          "alternative-text": "Enter text"
+        },
+        "validations": {
+          "url-keyword-required": "Required",
+          "url-keyword-invalid": "Invalid characters in URL found"
+        }
       }
     },
     "dialogs": {
@@ -118,6 +149,10 @@
       "fulfillments-save": {
         "title": "Save changes",
         "message": "The fulfillments has been modified. Do you want to save changes?"
+      },
+      "seo-save": {
+        "title": "Save changes",
+        "message": "The SEO information has been modified. Do you want to save changes?"
       }
     },
     "widgets": {
@@ -130,6 +165,9 @@
       },
       "fulfillment": {
         "title": "Fulfillment centers"
+      },
+      "seo": {
+        "title": "SEO"
       }
     }
   }

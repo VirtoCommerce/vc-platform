@@ -23,15 +23,15 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
         private readonly Func<ApplicationSignInManager> _signInManagerFactory;
         private readonly INotificationManager _notificationManager;
         private readonly IStoreService _storeService;
-        private readonly IContactService _contactService;
+        private readonly IMemberService _memberService;
 
-        public StorefrontSecurityController(ISecurityService securityService, Func<ApplicationSignInManager> signInManagerFactory, INotificationManager notificationManager, IStoreService storeService, IContactService contactService)
+        public StorefrontSecurityController(ISecurityService securityService, Func<ApplicationSignInManager> signInManagerFactory, INotificationManager notificationManager, IStoreService storeService, IMemberService memberService)
         {
             _securityService = securityService;
             _signInManagerFactory = signInManagerFactory;
             _notificationManager = notificationManager;
             _storeService = storeService;
-            _contactService = contactService;
+            _memberService = memberService;
         }
 
         /// <summary>
@@ -208,10 +208,10 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
             notification.Sender = store.Email;
             notification.IsActive = true;
 
-            var contact = _contactService.GetById(userId);
-            if (contact != null)
+            var member = _memberService.GetByIds(new [] { userId }).FirstOrDefault();
+            if (member != null)
             {
-                var email = contact.Emails.FirstOrDefault();
+                var email = member.Emails.FirstOrDefault();
                 if (!string.IsNullOrEmpty(email))
                 {
                     notification.Recipient = email;

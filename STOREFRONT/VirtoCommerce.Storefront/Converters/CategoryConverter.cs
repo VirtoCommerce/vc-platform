@@ -10,13 +10,19 @@ namespace VirtoCommerce.Storefront.Converters
 {
     public static class CategoryConverter
     {
-        public static Category ToWebModel(this VirtoCommerceCatalogModuleWebModelCategory category, Language currentLanguage, VirtoCommerceCatalogModuleWebModelProduct[] products = null)
+        public static Category ToWebModel(this VirtoCommerceCatalogModuleWebModelCategory category, Language currentLanguage, Store store, VirtoCommerceCatalogModuleWebModelProduct[] products = null)
         {
             var retVal = new Category();
             retVal.InjectFrom<NullableAndEnumValueInjecter>(category);
 
             if (category.SeoInfos != null)
-                retVal.SeoInfo = category.SeoInfos.Select(s => s.ToWebModel()).FirstOrDefault(x => x.Language == currentLanguage);
+            {
+                //Select best matched SEO by StoreId and Language
+                retVal.SeoInfo = category.SeoInfos.Where(x => store.Id.Equals(x.StoreId, StringComparison.OrdinalIgnoreCase) || x.StoreId == null)
+                                                  .OrderByDescending(x => x.StoreId)
+                                                  .Select(s => s.ToWebModel())
+                                                  .FirstOrDefault(x => x.Language == currentLanguage);
+            }
 
             if (category.Images != null)
             {

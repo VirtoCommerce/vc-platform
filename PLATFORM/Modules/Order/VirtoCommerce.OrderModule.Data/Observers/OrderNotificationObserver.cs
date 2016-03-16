@@ -17,13 +17,13 @@ namespace VirtoCommerce.OrderModule.Data.Observers
     {
         private readonly INotificationManager _notificationManager;
         private readonly IStoreService _storeService;
-        private readonly IContactService _contactService;
+        private readonly IMemberService _memberService;
 
-        public OrderNotificationObserver(INotificationManager notificationManager, IStoreService storeService, IContactService contactService)
+        public OrderNotificationObserver(INotificationManager notificationManager, IStoreService storeService, IMemberService memberService)
         {
             _notificationManager = notificationManager;
             _storeService = storeService;
-            _contactService = contactService;
+            _memberService = memberService;
         }
 
         public void OnCompleted()
@@ -183,10 +183,10 @@ namespace VirtoCommerce.OrderModule.Data.Observers
             notification.Sender = store.Email;
             notification.IsActive = true;
 
-            var contact = _contactService.GetById(value.ModifiedOrder.CustomerId);
-            if (contact != null)
+            var member = _memberService.GetByIds(new[] { value.ModifiedOrder.CustomerId }).FirstOrDefault();
+            if (member != null)
             {
-                var email = contact.Emails.FirstOrDefault();
+                var email = member.Emails.FirstOrDefault();
                 if (!string.IsNullOrEmpty(email))
                 {
                     notification.Recipient = email;

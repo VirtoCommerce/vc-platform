@@ -125,12 +125,6 @@
     <Compile Include="Model\VirtoCommerceCoreModuleWebModelPaymentCallbackParameters.cs" />
     <Compile Include="Model\VirtoCommerceCoreModuleWebModelSignInResult.cs" />
     <Compile Include="Model\VirtoCommerceCoreModuleWebModelStorefrontUser.cs" />
-    <Compile Include="Model\VirtoCommerceCustomerModuleWebModelAddress.cs" />
-    <Compile Include="Model\VirtoCommerceCustomerModuleWebModelContact.cs" />
-    <Compile Include="Model\VirtoCommerceCustomerModuleWebModelMember.cs" />
-    <Compile Include="Model\VirtoCommerceCustomerModuleWebModelNote.cs" />
-    <Compile Include="Model\VirtoCommerceCustomerModuleWebModelOrganization.cs" />
-    <Compile Include="Model\VirtoCommerceCustomerModuleWebModelSearchResult.cs" />
     <Compile Include="Model\VirtoCommerceDomainCatalogModelAsset.cs" />
     <Compile Include="Model\VirtoCommerceDomainCatalogModelCatalog.cs" />
     <Compile Include="Model\VirtoCommerceDomainCatalogModelCatalogLanguage.cs" />
@@ -153,9 +147,11 @@
     <Compile Include="Model\VirtoCommerceDomainCommonConditionExpressionTree.cs" />
     <Compile Include="Model\VirtoCommerceDomainCommonDynamicExpression.cs" />
     <Compile Include="Model\VirtoCommerceDomainCustomerModelContact.cs" />
+    <Compile Include="Model\VirtoCommerceDomainCustomerModelMember.cs" />
     <Compile Include="Model\VirtoCommerceDomainCustomerModelNote.cs" />
     <Compile Include="Model\VirtoCommerceDomainCustomerModelOrganization.cs" />
     <Compile Include="Model\VirtoCommerceDomainCustomerModelSearchCriteria.cs" />
+    <Compile Include="Model\VirtoCommerceDomainCustomerModelSearchResult.cs" />
     <Compile Include="Model\VirtoCommerceDomainInventoryModelInventoryInfo.cs" />
     <Compile Include="Model\VirtoCommerceDomainMarketingModelDynamicContentDynamicContentEvaluationContext.cs" />
     <Compile Include="Model\VirtoCommerceDomainMarketingModelMarketingSearchCriteria.cs" />

@@ -1,14 +1,13 @@
-﻿using System.Linq;
+﻿using System;
+using System.ComponentModel;
+using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
-using VirtoCommerce.CustomerModule.Web.Converters;
 using VirtoCommerce.CustomerModule.Web.Security;
 using VirtoCommerce.Domain.Customer.Services;
 using VirtoCommerce.Platform.Core.Security;
 using coreModel = VirtoCommerce.Domain.Customer.Model;
-using webModel = VirtoCommerce.CustomerModule.Web.Model;
 
 namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
 {
@@ -16,17 +15,13 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
     [CheckPermission(Permission = CustomerPredefinedPermissions.Read)]
     public class CustomerModuleController : ApiController
     {
-        private readonly IContactService _contactService;
-        private readonly IOrganizationService _organizationService;
-        private readonly ICustomerSearchService _contactSearchService;
+        private readonly IMemberService _memberService;
         private readonly ISecurityService _securityService;
 
-        public CustomerModuleController(IContactService contactService, IOrganizationService organizationService, ICustomerSearchService contactSearchService, ISecurityService securityService)
+        public CustomerModuleController(IMemberService memberService, ISecurityService securityService)
         {
-            _contactSearchService = contactSearchService;
+            _memberService = memberService;
             _securityService = securityService;
-            _organizationService = organizationService;
-            _contactService = contactService;
         }
 
         /// <summary>
@@ -34,12 +29,18 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
         /// </summary>
         /// <remarks>Get array of all organizations.</remarks>
         [HttpGet]
-        [ResponseType(typeof(webModel.Organization[]))]
+        [ResponseType(typeof(coreModel.Organization[]))]
         [Route("organizations")]
         public IHttpActionResult ListOrganizations()
         {
-            var retVal = _organizationService.List().ToArray();
-            return Ok(retVal);
+            var searchCriteria = new coreModel.SearchCriteria
+            {
+                MemberType = typeof(coreModel.Organization).Name,
+                Take = int.MaxValue
+            };
+            var result = _memberService.SearchMembers(searchCriteria);
+
+            return Ok(result.Members);
         }
 
         /// <summary>
@@ -48,57 +49,89 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
         /// <remarks>Get array of members satisfied search criteria.</remarks>
         /// <param name="criteria">Search criteria</param>
         [HttpPost]
-        [ResponseType(typeof(webModel.SearchResult))]
-        [Route("members")]
+        [ResponseType(typeof(coreModel.SearchResult))]
+        [Route("members/search")]
         public IHttpActionResult Search(coreModel.SearchCriteria criteria)
         {
-            var result = _contactSearchService.Search(criteria);
+            var result = _memberService.SearchMembers(criteria);
 
-            var retVal = new webModel.SearchResult();
+            return Ok(result);
+        }
 
-            var start = criteria.Skip;
-            var count = criteria.Take;
-
-            // all organizations
-            var organizations = result.Organizations.Select(x => x.ToWebModel());
-            var contacts = result.Contacts.Select(x => x.ToWebModel());
-
-            var organizationsCount = organizations.Count();
-            retVal.TotalCount = organizationsCount + result.TotalCount;
-            retVal.Members.AddRange(organizations.Skip(start).Take(count));
-
-            count -= organizationsCount;
-            retVal.Members.AddRange(contacts.Take(count));
-
-            return Ok(retVal);
+        /// <summary>
+        /// Get member
+        /// </summary>
+        /// <param name="id">member id</param>
+        [HttpGet]
+        [ResponseType(typeof(coreModel.Member))]
+        [Route("members/{id}")]
+        public IHttpActionResult GetMemberById(string id)
+        {
+            var retVal = _memberService.GetByIds(new[] { id }).FirstOrDefault();
+            if (retVal != null)
+            {
+                return Ok(retVal);
+            }
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
 
         /// <summary>
-        /// Get contact
+        /// Create member
         /// </summary>
-        /// <param name="id">Contact ID</param>
-        [HttpGet]
-        [ResponseType(typeof(webModel.Contact))]
-        [Route("contacts/{id}")]
-        public IHttpActionResult GetContactById(string id)
+        [HttpPost]
+        [ResponseType(typeof(coreModel.Member))]
+        [Route("members")]
+        [CheckPermission(Permission = CustomerPredefinedPermissions.Create)]
+        public IHttpActionResult CreateMember(coreModel.Member member)
         {
-            var retVal = _contactService.GetById(id);
-            return retVal != null ? Ok(retVal.ToWebModel()) : (IHttpActionResult)Ok();
+            var retVal = _memberService.Create(member);
+            return Ok(retVal);
         }
+
+        /// <summary>
+        /// Update member
+        /// </summary>
+        /// <response code="204">Operation completed.</response>
+        [HttpPut]
+        [ResponseType(typeof(void))]
+        [Route("members")]
+        [CheckPermission(Permission = CustomerPredefinedPermissions.Update)]
+        public IHttpActionResult UpdateMember(coreModel.Member member)
+        {
+            _memberService.Update(new[] { member });
+            return StatusCode(HttpStatusCode.NoContent);
+        }
+
+        /// <summary>
+        /// Delete members
+        /// </summary>
+        /// <remarks>Delete members by given array of ids.</remarks>
+        /// <param name="ids">An array of members ids</param>
+        /// <response code="204">Operation completed.</response>
+        [HttpDelete]
+        [ResponseType(typeof(void))]
+        [Route("members")]
+        [CheckPermission(Permission = CustomerPredefinedPermissions.Delete)]
+       
+        public IHttpActionResult DeleteMembers([FromUri] string[] ids)
+        {
+            _memberService.Delete(ids);
+            return StatusCode(HttpStatusCode.NoContent);
+        }
+
 
 
         /// <summary>
         /// Create contact
         /// </summary>
         [HttpPost]
-        [ResponseType(typeof(webModel.Contact))]
+        [ResponseType(typeof(coreModel.Contact))]
         [Route("contacts")]
         [CheckPermission(Permission = CustomerPredefinedPermissions.Create)]
-        public IHttpActionResult CreateContact(webModel.Contact contact)
+        public IHttpActionResult CreateContact(coreModel.Contact contact)
         {
-            var retVal = _contactService.Create(contact.ToCoreModel());
-            return Ok(retVal.ToWebModel());
+            return CreateMember(contact);
         }
 
         /// <summary>
@@ -109,56 +142,23 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
         [ResponseType(typeof(void))]
         [Route("contacts")]
         [CheckPermission(Permission = CustomerPredefinedPermissions.Update)]
-        public IHttpActionResult UpdateContact(webModel.Contact contact)
+        public IHttpActionResult UpdateContact(coreModel.Contact contact)
         {
-            _contactService.Update(new[] { contact.ToCoreModel() });
-            return StatusCode(HttpStatusCode.NoContent);
+            return UpdateMember(contact);
         }
 
-        /// <summary>
-        /// Delete contacts
-        /// </summary>
-        /// <remarks>Delete contacts by given array of ids.</remarks>
-        /// <param name="ids">An array of contacts ids</param>
-        /// <response code="204">Operation completed.</response>
-        [HttpDelete]
-        [ResponseType(typeof(void))]
-        [Route("contacts")]
-        [CheckPermission(Permission = CustomerPredefinedPermissions.Delete)]
-        public IHttpActionResult DeleteContacts([FromUri] string[] ids)
-        {
-            _contactService.Delete(ids);
-            return StatusCode(HttpStatusCode.NoContent);
-        }
-
-
-        /// <summary>
-        /// Get organization
-        /// </summary>
-        /// <param name="id">Organization id</param>
-        /// <response code="200"></response>
-        /// <response code="404">Organization not found.</response>
-        [HttpGet]
-        [ResponseType(typeof(webModel.Organization))]
-        [Route("organizations/{id}")]
-        public IHttpActionResult GetOrganizationById(string id)
-        {
-            var retVal = _organizationService.GetById(id);
-            return retVal != null ? Ok(retVal.ToWebModel()) : (IHttpActionResult)NotFound();
-        }
-
+    
 
         /// <summary>
         /// Create organization
         /// </summary>
         [HttpPost]
-        [ResponseType(typeof(webModel.Organization))]
+        [ResponseType(typeof(coreModel.Organization))]
         [Route("organizations")]
         [CheckPermission(Permission = CustomerPredefinedPermissions.Create)]
-        public IHttpActionResult CreateOrganization(webModel.Organization organization)
+        public IHttpActionResult CreateOrganization(coreModel.Organization organization)
         {
-            var retVal = _organizationService.Create(organization.ToCoreModel());
-            return Ok(retVal.ToWebModel());
+            return CreateMember(organization);
         }
 
         /// <summary>
@@ -169,11 +169,14 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
         [ResponseType(typeof(void))]
         [Route("organizations")]
         [CheckPermission(Permission = CustomerPredefinedPermissions.Update)]
-        public IHttpActionResult UpdateOrganization(webModel.Organization organization)
+        public IHttpActionResult UpdateOrganization(coreModel.Organization organization)
         {
-            _organizationService.Update(new[] { organization.ToCoreModel() });
-            return StatusCode(HttpStatusCode.NoContent);
+            return UpdateMember(organization);
         }
+
+
+
+        #region Obsolete members
 
         /// <summary>
         /// Delete organizations
@@ -181,16 +184,64 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
         /// <remarks>Delete organizations by given array of ids.</remarks>
         /// <param name="ids">An array of organizations ids</param>
         /// <response code="204">Operation completed.</response>
+        [Obsolete("Use DeleteMembers instead")]
         [HttpDelete]
         [ResponseType(typeof(void))]
         [Route("organizations")]
         [CheckPermission(Permission = CustomerPredefinedPermissions.Delete)]
         public IHttpActionResult DeleteOrganizations([FromUri] string[] ids)
         {
-            _organizationService.Delete(ids);
-            return StatusCode(HttpStatusCode.NoContent);
+            return DeleteMembers(ids);
         }
 
-     
+        /// <summary>
+        /// Delete contacts
+        /// </summary>
+        /// <remarks>Delete contacts by given array of ids.</remarks>
+        /// <param name="ids">An array of contacts ids</param>
+        /// <response code="204">Operation completed.</response>
+        [Obsolete("Use DeleteMembers instead")]
+        [HttpDelete]
+        [ResponseType(typeof(void))]
+        [Route("contacts")]
+        [CheckPermission(Permission = CustomerPredefinedPermissions.Delete)]
+        public IHttpActionResult DeleteContacts([FromUri] string[] ids)
+        {
+            return DeleteMembers(ids);
+        }
+
+
+
+        /// <summary>
+        /// Get organization
+        /// </summary>
+        /// <param name="id">Organization id</param>
+        /// <response code="200"></response>
+        /// <response code="404">Organization not found.</response>
+        [Obsolete("Use GetMemberById  instead")]
+        [HttpGet]
+        [ResponseType(typeof(coreModel.Organization))]
+        [Route("organizations/{id}")]
+        public IHttpActionResult GetOrganizationById(string id)
+        {
+            return GetMemberById(id);
+        }
+
+        /// <summary>
+        /// Get contact
+        /// </summary>
+        /// <param name="id">Contact ID</param>
+        [Obsolete("Use GetMemberById instead")]
+        [HttpGet]
+        [ResponseType(typeof(coreModel.Contact))]
+        [Route("contacts/{id}")]
+        public IHttpActionResult GetContactById(string id)
+        {
+            return GetMemberById(id);
+        }
+
+
+
+        #endregion
     }
 }

@@ -122,14 +122,13 @@
     <Compile Include="Common\Expressions\IDynamicExpression.cs" />
     <Compile Include="Common\IEvaluationContext.cs" />
     <Compile Include="Customer\Model\Contact.cs" />
+    <Compile Include="Customer\Model\Member.cs" />
     <Compile Include="Customer\Model\Note.cs" />
     <Compile Include="Customer\Model\Organization.cs" />
     <Compile Include="Customer\Model\PropertyValueType.cs" />
     <Compile Include="Customer\Model\Search\SearchCriteria.cs" />
     <Compile Include="Customer\Model\Search\SearchResult.cs" />
-    <Compile Include="Customer\Services\ICustomerSearchService.cs" />
-    <Compile Include="Customer\Services\IContactService.cs" />
-    <Compile Include="Customer\Services\IOrganizationService.cs" />
+    <Compile Include="Customer\Services\IMemberService.cs" />
     <Compile Include="Commerce\Model\FulfillmentCenter.cs" />
     <Compile Include="Commerce\Services\ICommerceService.cs" />
     <Compile Include="Inventory\Model\InventoryInfo.cs" />

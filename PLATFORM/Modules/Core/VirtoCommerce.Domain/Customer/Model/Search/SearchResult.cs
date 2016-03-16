@@ -8,15 +8,11 @@ namespace VirtoCommerce.Domain.Customer.Model
 {
 	public class SearchResult
 	{
-		public SearchResult()
-		{
-			Contacts = new List<Contact>();
-			Organizations = new List<Organization>();
-		}
+        public SearchResult()
+        {
+            Members = new List<Member>();
+        }
 		public int TotalCount { get; set; }
-
-		public List<Contact> Contacts { get; set; }
-		public List<Organization> Organizations { get; set; }
-
+		public List<Member> Members { get; set; }
 	}
 }

@@ -11,21 +11,16 @@ namespace VirtoCommerce.CustomerModule.Web.ExportImport
 {
     public sealed class BackupObject
     {
-        public Contact[] Contacts { get; set; }
-        public Organization[] Organizations { get; set; }
+        public Member[] Members { get; set; }
     }
 
     public sealed class CustomerExportImport
     {
-        private readonly IContactService _contactService;
-        private readonly ICustomerSearchService _customerSearchService;
-        private readonly IOrganizationService _organizationService;
-
-        public CustomerExportImport(IContactService contactService, IOrganizationService organizationService, ICustomerSearchService customerSearchService)
+        private readonly IMemberService _memberService;
+     
+        public CustomerExportImport(IMemberService memberService)
         {
-            _contactService = contactService;
-            _organizationService = organizationService;
-            _customerSearchService = customerSearchService;
+            _memberService = memberService;
         }
 
         public void DoExport(Stream backupStream, Action<ExportImportProgressInfo> progressCallback)
@@ -40,52 +35,34 @@ namespace VirtoCommerce.CustomerModule.Web.ExportImport
 			var originalObject = GetBackupObject(progressCallback);
 
 			var progressInfo = new ExportImportProgressInfo();
-			progressInfo.Description = String.Format("{0} organizations importing...", backupObject.Organizations.Count());
-			progressCallback(progressInfo);
-            UpdateOrganizations(originalObject.Organizations, backupObject.Organizations);
+			progressInfo.Description = String.Format("{0} members importing...", backupObject.Members.Count());
+            progressCallback(progressInfo);
+            UpdateMembers(originalObject.Members, backupObject.Members.OrderByDescending(x => x.MemberType).ToList());
 
-			progressInfo.Description = String.Format("{0} contacts importing...", backupObject.Contacts.Count());
-			progressCallback(progressInfo);
-            UpdateContacts(originalObject.Contacts, backupObject.Contacts);
+
         }
 
         #region Import updates
         
-        private void UpdateOrganizations(ICollection<Organization> original, ICollection<Organization> backup)
+        private void UpdateMembers(ICollection<Member> original, ICollection<Member> backup)
         {
-            var organizationsToUpdate = new List<Organization>();
-            backup.CompareTo(original, EqualityComparer<Organization>.Default, (state, x, y) =>
+            var membersToUpdate = new List<Member>();
+            backup.CompareTo(original, EqualityComparer<Member>.Default, (state, x, y) =>
             {
                 switch (state)
                 {
                     case EntryState.Modified:
-                        organizationsToUpdate.Add(x);
+                        membersToUpdate.Add(x);
                         break;
                     case EntryState.Added:
-                        _organizationService.Create(x);
+                        _memberService.Create(x);
                         break;
                 }
             });
-            _organizationService.Update(organizationsToUpdate.ToArray());
+            _memberService.Update(membersToUpdate.ToArray());
         }
 
-        private void UpdateContacts(ICollection<Contact> original, ICollection<Contact> backup)
-        {
-            var contactsToUpdate = new List<Contact>();
-            backup.CompareTo(original, EqualityComparer<Contact>.Default, (state, x, y) =>
-            {
-                switch (state)
-                {
-                    case EntryState.Modified:
-                        contactsToUpdate.Add(x);
-                        break;
-                    case EntryState.Added:
-                        _contactService.Create(x);
-                        break;
-                }
-            });
-            _contactService.Update(contactsToUpdate.ToArray());
-        }
+     
 
         #endregion
 
@@ -94,32 +71,15 @@ namespace VirtoCommerce.CustomerModule.Web.ExportImport
 		public BackupObject GetBackupObject(Action<ExportImportProgressInfo> progressCallback)
         {
 			var progressInfo = new ExportImportProgressInfo();
-			progressInfo.Description = "loading organizations and contacts...";
+			progressInfo.Description = "loading members...";
 			progressCallback(progressInfo);
 
-            var rootOrganization = GetOrganizations(null);
-            var organizations = rootOrganization != null ? rootOrganization.Traverse(ChildrenForOrganization).ToArray() : null;
+            var members = _memberService.SearchMembers(new SearchCriteria { DeepSearch = true, Take = int.MaxValue }).Members;
 
             var result = new BackupObject();
-            if (organizations != null)
-            {
-                result.Contacts = organizations.SelectMany(x => x.Contacts).Select(x => _contactService.GetById(x.Id)).ToArray();
-                result.Organizations = organizations.SelectMany(x => x.Organizations).Select(x=> _organizationService.GetById(x.Id)).ToArray();
-            }
+            result.Members = _memberService.GetByIds(members.Select(x => x.Id).ToArray()).OrderByDescending(x=> x.MemberType).ToArray();
 
             return result;
-        }
-
-        private IEnumerable<SearchResult> ChildrenForOrganization(SearchResult result)
-        {
-            return result != null && result.Organizations != null
-                ? result.Organizations.Select(x => GetOrganizations(x.Id))
-                : null;
-        }
-
-        private SearchResult GetOrganizations(string organizationId)
-        {
-            return _customerSearchService.Search(new SearchCriteria { Take = int.MaxValue, OrganizationId = organizationId });
         }
 
         #endregion

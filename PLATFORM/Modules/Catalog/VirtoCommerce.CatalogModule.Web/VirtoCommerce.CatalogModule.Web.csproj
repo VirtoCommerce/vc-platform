@@ -245,8 +245,6 @@
     <Content Include="Scripts\blades\category-detail.tpl.html" />
     <Content Include="Scripts\blades\editorialReview-detail.js" />
     <Content Include="Scripts\blades\editorialReview-detail.tpl.html" />
-    <Content Include="Scripts\blades\seo-detail.js" />
-    <Content Include="Scripts\blades\seo-detail.tpl.html" />
     <Content Include="Scripts\blades\property-attributes.js" />
     <Content Include="Scripts\blades\property-dictionary.js" />
     <Content Include="Scripts\blades\property-attributes.tpl.html" />
@@ -298,9 +296,7 @@
     <Content Include="Scripts\widgets\editorialReviewWidget.tpl.html" />
     <Content Include="Scripts\widgets\itemAssociationsWidget.js" />
     <Content Include="Scripts\widgets\dashboard.js" />
-    <Content Include="Scripts\widgets\seoWidget.js" />
     <Content Include="Scripts\widgets\itemAssociationsWidget.tpl.html" />
-    <Content Include="Scripts\widgets\seoWidget.tpl.html" />
     <Content Include="Scripts\widgets\itemAssetWidget.js" />
     <Content Include="Scripts\widgets\itemImageWidget.js" />
     <Content Include="Scripts\widgets\itemAssetWidget.tpl.html" />
@@ -324,7 +320,6 @@
     <Content Include="Scripts\wizards\newProduct\new-product-wizard.js" />
     <Content Include="Scripts\wizards\newProduct\new-product-wizard.tpl.html" />
     <Content Include="Scripts\wizards\newProduct\new-variation-wizard.tpl.html" />
-    <Content Include="Scripts\wizards\newProduct\new-product-wizard-seo-detail-step.js" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">

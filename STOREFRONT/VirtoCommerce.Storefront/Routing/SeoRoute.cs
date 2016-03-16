@@ -49,7 +49,13 @@ namespace VirtoCommerce.Storefront.Routing
                 }
                
                 var seoRecords = GetSeoRecords(path);
-                var seoRecord = seoRecords.FirstOrDefault();
+                //Try first find SEO record for current store
+                var seoRecord = seoRecords.FirstOrDefault(x=> workContext.CurrentStore.Id.Equals(x.StoreId, StringComparison.OrdinalIgnoreCase));
+                if(seoRecord == null)
+                {
+                    //Then get first SEO without store
+                    seoRecord = seoRecords.FirstOrDefault(x => x.StoreId == null);
+                }
              
                 if(seoRecord != null)
                 {
@@ -151,7 +157,7 @@ namespace VirtoCommerce.Storefront.Routing
                 var slug = tokens.LastOrDefault();
                 if (!String.IsNullOrEmpty(slug))
                 {
-                    seoRecords = _cacheManager.Get("CommerceGetSeoInfoBySlug-" + slug, "ApiRegion", () => { return _commerceCoreApi.CommerceGetSeoInfoBySlug(slug); });
+                    seoRecords = _cacheManager.Get(string.Join(":", "CommerceGetSeoInfoBySlug", slug), "ApiRegion", () => { return _commerceCoreApi.CommerceGetSeoInfoBySlug(slug); });
                 }
             }
 

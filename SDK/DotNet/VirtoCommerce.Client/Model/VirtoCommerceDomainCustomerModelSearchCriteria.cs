@@ -29,6 +29,13 @@ namespace VirtoCommerce.Client.Model
 
         
         /// <summary>
+        /// Gets or Sets MemberType
+        /// </summary>
+        [DataMember(Name="memberType", EmitDefaultValue=false)]
+        public string MemberType { get; set; }
+  
+        
+        /// <summary>
         /// Gets or Sets Keyword
         /// </summary>
         [DataMember(Name="keyword", EmitDefaultValue=false)]
@@ -36,10 +43,17 @@ namespace VirtoCommerce.Client.Model
   
         
         /// <summary>
-        /// Gets or Sets OrganizationId
+        /// Gets or Sets MemberId
         /// </summary>
-        [DataMember(Name="organizationId", EmitDefaultValue=false)]
-        public string OrganizationId { get; set; }
+        [DataMember(Name="memberId", EmitDefaultValue=false)]
+        public string MemberId { get; set; }
+  
+        
+        /// <summary>
+        /// Gets or Sets DeepSearch
+        /// </summary>
+        [DataMember(Name="deepSearch", EmitDefaultValue=false)]
+        public bool? DeepSearch { get; set; }
   
         
         /// <summary>
@@ -79,8 +93,10 @@ namespace VirtoCommerce.Client.Model
         {
             var sb = new StringBuilder();
             sb.Append("class VirtoCommerceDomainCustomerModelSearchCriteria {\n");
+            sb.Append("  MemberType: ").Append(MemberType).Append("\n");
             sb.Append("  Keyword: ").Append(Keyword).Append("\n");
-            sb.Append("  OrganizationId: ").Append(OrganizationId).Append("\n");
+            sb.Append("  MemberId: ").Append(MemberId).Append("\n");
+            sb.Append("  DeepSearch: ").Append(DeepSearch).Append("\n");
             sb.Append("  Sort: ").Append(Sort).Append("\n");
             sb.Append("  SortInfos: ").Append(SortInfos).Append("\n");
             sb.Append("  Skip: ").Append(Skip).Append("\n");
@@ -123,14 +139,24 @@ namespace VirtoCommerce.Client.Model
 
             return 
                 (
+                    this.MemberType == other.MemberType ||
+                    this.MemberType != null &&
+                    this.MemberType.Equals(other.MemberType)
+                ) && 
+                (
                     this.Keyword == other.Keyword ||
                     this.Keyword != null &&
                     this.Keyword.Equals(other.Keyword)
                 ) && 
                 (
-                    this.OrganizationId == other.OrganizationId ||
-                    this.OrganizationId != null &&
-                    this.OrganizationId.Equals(other.OrganizationId)
+                    this.MemberId == other.MemberId ||
+                    this.MemberId != null &&
+                    this.MemberId.Equals(other.MemberId)
+                ) && 
+                (
+                    this.DeepSearch == other.DeepSearch ||
+                    this.DeepSearch != null &&
+                    this.DeepSearch.Equals(other.DeepSearch)
                 ) && 
                 (
                     this.Sort == other.Sort ||
@@ -166,11 +192,17 @@ namespace VirtoCommerce.Client.Model
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
                 
+                if (this.MemberType != null)
+                    hash = hash * 59 + this.MemberType.GetHashCode();
+                
                 if (this.Keyword != null)
                     hash = hash * 59 + this.Keyword.GetHashCode();
                 
-                if (this.OrganizationId != null)
-                    hash = hash * 59 + this.OrganizationId.GetHashCode();
+                if (this.MemberId != null)
+                    hash = hash * 59 + this.MemberId.GetHashCode();
+                
+                if (this.DeepSearch != null)
+                    hash = hash * 59 + this.DeepSearch.GetHashCode();
                 
                 if (this.Sort != null)
                     hash = hash * 59 + this.Sort.GetHashCode();

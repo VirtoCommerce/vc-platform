@@ -17,31 +17,29 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public partial class VirtoCommerceCustomerModuleWebModelSearchResult :  IEquatable<VirtoCommerceCustomerModuleWebModelSearchResult>
+    public partial class VirtoCommerceDomainCustomerModelSearchResult :  IEquatable<VirtoCommerceDomainCustomerModelSearchResult>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceCustomerModuleWebModelSearchResult" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCustomerModelSearchResult" /> class.
         /// </summary>
-        public VirtoCommerceCustomerModuleWebModelSearchResult()
+        public VirtoCommerceDomainCustomerModelSearchResult()
         {
             
         }
 
         
         /// <summary>
-        /// Total count of objects satisfied Search Criteria
+        /// Gets or Sets TotalCount
         /// </summary>
-        /// <value>Total count of objects satisfied Search Criteria</value>
         [DataMember(Name="totalCount", EmitDefaultValue=false)]
         public int? TotalCount { get; set; }
   
         
         /// <summary>
-        /// Part of objects satisfied Search Criteria. See Skip and Count parameters of Search Criteria
+        /// Gets or Sets Members
         /// </summary>
-        /// <value>Part of objects satisfied Search Criteria. See Skip and Count parameters of Search Criteria</value>
         [DataMember(Name="members", EmitDefaultValue=false)]
-        public List<VirtoCommerceCustomerModuleWebModelMember> Members { get; set; }
+        public List<VirtoCommerceDomainCustomerModelMember> Members { get; set; }
   
         
   
@@ -52,7 +50,7 @@ namespace VirtoCommerce.Client.Model
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class VirtoCommerceCustomerModuleWebModelSearchResult {\n");
+            sb.Append("class VirtoCommerceDomainCustomerModelSearchResult {\n");
             sb.Append("  TotalCount: ").Append(TotalCount).Append("\n");
             sb.Append("  Members: ").Append(Members).Append("\n");
             
@@ -77,15 +75,15 @@ namespace VirtoCommerce.Client.Model
         public override bool Equals(object obj)
         {
             // credit: http://stackoverflow.com/a/10454552/677735
-            return this.Equals(obj as VirtoCommerceCustomerModuleWebModelSearchResult);
+            return this.Equals(obj as VirtoCommerceDomainCustomerModelSearchResult);
         }
 
         /// <summary>
-        /// Returns true if VirtoCommerceCustomerModuleWebModelSearchResult instances are equal
+        /// Returns true if VirtoCommerceDomainCustomerModelSearchResult instances are equal
         /// </summary>
-        /// <param name="other">Instance of VirtoCommerceCustomerModuleWebModelSearchResult to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceDomainCustomerModelSearchResult to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(VirtoCommerceCustomerModuleWebModelSearchResult other)
+        public bool Equals(VirtoCommerceDomainCustomerModelSearchResult other)
         {
             // credit: http://stackoverflow.com/a/10454552/677735
             if (other == null)

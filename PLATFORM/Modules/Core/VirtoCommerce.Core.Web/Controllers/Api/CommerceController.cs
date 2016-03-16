@@ -158,9 +158,9 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
             }
             return Ok(new PostProcessPaymentResult { ErrorMessage = "cancel payment" });
         }
-
+       
         /// <summary>
-        /// Find all SEO records for object by slug
+        /// Find all SEO records for object by slug 
         /// </summary>
         /// <param name="slug">slug</param>
         [HttpGet]

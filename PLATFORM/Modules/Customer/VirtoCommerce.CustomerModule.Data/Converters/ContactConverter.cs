@@ -22,17 +22,10 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
                 throw new ArgumentNullException("dbEntity");
 
             var retVal = new coreModel.Contact();
-            retVal.InjectFrom(dbEntity);
-
-            retVal.Addresses = dbEntity.Addresses.OrderBy(x=>x.Id).Select(x => x.ToCoreModel()).ToList();
-            retVal.Emails = dbEntity.Emails.OrderBy(x => x.Id).Select(x => x.Address).ToList();
-            retVal.Notes = dbEntity.Notes.OrderBy(x => x.Id).Select(x => x.ToCoreModel()).ToList();
-            retVal.Phones = dbEntity.Phones.OrderBy(x => x.Id).Select(x => x.Number).ToList();
+            dbEntity.ToCoreModel(retVal);
             retVal.Organizations = dbEntity.MemberRelations.Select(x => x.Ancestor).OfType<dataModel.Organization>().Select(x => x.Id).ToList();
             return retVal;
-
         }
-
 
         public static dataModel.Contact ToDataModel(this coreModel.Contact contact, PrimaryKeyResolvingMap pkMap)
         {
@@ -40,46 +33,15 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
                 throw new ArgumentNullException("contact");
 
             var retVal = new dataModel.Contact();
+           
+            contact.ToDataModel(retVal);
+
+            if (retVal.Name == null)
+            {
+                retVal.Name = retVal.FullName;
+            }
 
             pkMap.AddPair(contact, retVal);
-
-            retVal.InjectFrom(contact);
-
-            if (contact.Phones != null)
-            {
-                retVal.Phones = new ObservableCollection<dataModel.Phone>(contact.Phones.Select(x => new dataModel.Phone
-                {
-                    Number = x,
-                    MemberId = contact.Id
-                }));
-            }
-
-            if (contact.Emails != null)
-            {
-                retVal.Emails = new ObservableCollection<dataModel.Email>(contact.Emails.Select(x => new dataModel.Email
-                {
-                    Address = x,
-                    MemberId = contact.Id
-                }));
-            }
-
-            if (contact.Addresses != null)
-            {
-                retVal.Addresses = new ObservableCollection<dataModel.Address>(contact.Addresses.Select(x => x.ToDataModel()));
-                foreach (var address in retVal.Addresses)
-                {
-                    address.MemberId = contact.Id;
-                }
-            }
-
-            if (contact.Notes != null)
-            {
-                retVal.Notes = new ObservableCollection<dataModel.Note>(contact.Notes.Select(x => x.ToDataModel()));
-                foreach (var note in retVal.Notes)
-                {
-                    note.MemberId = contact.Id;
-                }
-            }
 
             if (contact.Organizations != null)
             {
@@ -90,12 +52,12 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
                     {
                         AncestorId = organization,
                         AncestorSequence = 1,
-                        DescendantId = retVal.Id
+                        DescendantId = retVal.Id,
                     };
                     retVal.MemberRelations.Add(memberRelation);
                 }
             }
-            return retVal;
+            return (dataModel.Contact)retVal;
         }
 
         /// <summary>
@@ -112,35 +74,8 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
                                                                            x => x.FullName, x => x.Salutation,
                                                                            x => x.TimeZone);
             target.InjectFrom(patchInjection, source);
-
-            if (!source.Phones.IsNullCollection())
-            {
-                var phoneComparer = AnonymousComparer.Create((dataModel.Phone x) => x.Number);
-                source.Phones.Patch(target.Phones, phoneComparer, (sourcePhone, targetPhone) => targetPhone.Number = sourcePhone.Number);
-            }
-
-            if (!source.Emails.IsNullCollection())
-            {
-                var addressComparer = AnonymousComparer.Create((dataModel.Email x) => x.Address);
-                source.Emails.Patch(target.Emails, addressComparer, (sourceEmail, targetEmail) => targetEmail.Address = sourceEmail.Address);
-            }
-
-            if (!source.Addresses.IsNullCollection())
-            {
-                source.Addresses.Patch(target.Addresses, new AddressComparer(), (sourceAddress, targetAddress) => sourceAddress.Patch(targetAddress));
-            }
-
-            if (!source.Notes.IsNullCollection())
-            {
-                var noteComparer = AnonymousComparer.Create((dataModel.Note x) => x.Id ?? x.Body);
-                source.Notes.Patch(target.Notes, noteComparer, (sourceNote, targetNote) => sourceNote.Patch(targetNote));
-            }
-
-            if (!source.MemberRelations.IsNullCollection())
-            {
-                var relationComparer = AnonymousComparer.Create((dataModel.MemberRelation x) => x.AncestorId);
-                source.MemberRelations.Patch(target.MemberRelations, relationComparer, (sourceRel, targetRel) => { /*Nothing todo*/ });
-            }
+            //Path base type properties
+            ((dataModel.Member)source).Patch(target);
         }
     }
 }

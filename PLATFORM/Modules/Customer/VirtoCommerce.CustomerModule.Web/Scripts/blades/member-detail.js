@@ -72,7 +72,7 @@
             });
         } else {
             blade.currentResource.save({}, blade.currentEntity, function (data) {
-                blade.title = data.displayName;
+                blade.title = data.name;
                 blade.currentEntityId = data.id;
                 initializeBlade(data);
                 blade.parentBlade.refresh();

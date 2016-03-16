@@ -12,7 +12,7 @@ namespace VirtoCommerce.Storefront.Converters
     {
         private static readonly char[] _nameSeparator = { ' ' };
 
-   
+
         public static CustomerInfo ToWebModel(this Register formModel)
         {
             var result = new CustomerInfo
@@ -30,7 +30,7 @@ namespace VirtoCommerce.Storefront.Converters
             return result;
         }
 
-        public static CustomerInfo ToWebModel(this VirtoCommerceCustomerModuleWebModelContact contact)
+        public static CustomerInfo ToWebModel(this VirtoCommerceDomainCustomerModelContact contact)
         {
             var retVal = new CustomerInfo();
             retVal.InjectFrom(contact);
@@ -68,9 +68,9 @@ namespace VirtoCommerce.Storefront.Converters
             return retVal;
         }
 
-        public static VirtoCommerceCustomerModuleWebModelContact ToServiceModel(this CustomerInfo customer)
+        public static VirtoCommerceDomainCustomerModelContact ToServiceModel(this CustomerInfo customer)
         {
-            var retVal = new VirtoCommerceCustomerModuleWebModelContact();
+            var retVal = new VirtoCommerceDomainCustomerModelContact();
             retVal.InjectFrom<NullableAndEnumValueInjecter>(customer);
             if (customer.Addresses != null)
             {
@@ -81,7 +81,7 @@ namespace VirtoCommerce.Storefront.Converters
                 retVal.Emails = new[] { customer.Email }.ToList();
             }
             retVal.FullName = customer.FullName;
-       
+
             return retVal;
         }
     }
