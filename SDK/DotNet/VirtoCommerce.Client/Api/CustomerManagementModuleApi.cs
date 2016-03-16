@@ -553,7 +553,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
     
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CustomerModuleUpdateContact: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CustomerModuleUpdateContact: " + response.ErrorMessage, response.ErrorMessage);
@@ -628,7 +628,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
  
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CustomerModuleUpdateContact: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CustomerModuleUpdateContact: " + response.ErrorMessage, response.ErrorMessage);
@@ -711,7 +711,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
     
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CustomerModuleCreateContact: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CustomerModuleCreateContact: " + response.ErrorMessage, response.ErrorMessage);
@@ -787,7 +787,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
  
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CustomerModuleCreateContact: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CustomerModuleCreateContact: " + response.ErrorMessage, response.ErrorMessage);
@@ -863,7 +863,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
     
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CustomerModuleDeleteContacts: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CustomerModuleDeleteContacts: " + response.ErrorMessage, response.ErrorMessage);
@@ -938,7 +938,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
  
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CustomerModuleDeleteContacts: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CustomerModuleDeleteContacts: " + response.ErrorMessage, response.ErrorMessage);
@@ -1015,7 +1015,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
     
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CustomerModuleGetContactById: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CustomerModuleGetContactById: " + response.ErrorMessage, response.ErrorMessage);
@@ -1091,7 +1091,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
  
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CustomerModuleGetContactById: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CustomerModuleGetContactById: " + response.ErrorMessage, response.ErrorMessage);
@@ -1174,7 +1174,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
     
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CustomerModuleSearch: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CustomerModuleSearch: " + response.ErrorMessage, response.ErrorMessage);
@@ -1250,7 +1250,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
  
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CustomerModuleSearch: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CustomerModuleSearch: " + response.ErrorMessage, response.ErrorMessage);
@@ -1320,7 +1320,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
     
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CustomerModuleListOrganizations: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CustomerModuleListOrganizations: " + response.ErrorMessage, response.ErrorMessage);
@@ -1391,7 +1391,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
  
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CustomerModuleListOrganizations: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CustomerModuleListOrganizations: " + response.ErrorMessage, response.ErrorMessage);
@@ -1473,7 +1473,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
     
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CustomerModuleUpdateOrganization: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CustomerModuleUpdateOrganization: " + response.ErrorMessage, response.ErrorMessage);
@@ -1548,7 +1548,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
  
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CustomerModuleUpdateOrganization: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CustomerModuleUpdateOrganization: " + response.ErrorMessage, response.ErrorMessage);
@@ -1631,7 +1631,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
     
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CustomerModuleCreateOrganization: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CustomerModuleCreateOrganization: " + response.ErrorMessage, response.ErrorMessage);
@@ -1707,7 +1707,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
  
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CustomerModuleCreateOrganization: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CustomerModuleCreateOrganization: " + response.ErrorMessage, response.ErrorMessage);
@@ -1783,7 +1783,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
     
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CustomerModuleDeleteOrganizations: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CustomerModuleDeleteOrganizations: " + response.ErrorMessage, response.ErrorMessage);
@@ -1858,7 +1858,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
  
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CustomerModuleDeleteOrganizations: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CustomerModuleDeleteOrganizations: " + response.ErrorMessage, response.ErrorMessage);
@@ -1935,7 +1935,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
     
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CustomerModuleGetOrganizationById: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CustomerModuleGetOrganizationById: " + response.ErrorMessage, response.ErrorMessage);
@@ -2011,7 +2011,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
  
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CustomerModuleGetOrganizationById: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CustomerModuleGetOrganizationById: " + response.ErrorMessage, response.ErrorMessage);
