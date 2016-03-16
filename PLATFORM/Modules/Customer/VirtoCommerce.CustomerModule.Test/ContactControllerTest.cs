@@ -46,7 +46,7 @@ namespace VirtoCommerce.CustomerModule.Test
         public void SearchTest()
         {
             var controller = GetContactController();
-            var result = controller.Search(new SearchCriteria { OrganizationId = "org1" }) as OkNegotiatedContentResult<SearchResult>;
+            var result = controller.Search(new SearchCriteria { MemberId = "org1" }) as OkNegotiatedContentResult<SearchResult>;
         }
 
         [TestMethod]

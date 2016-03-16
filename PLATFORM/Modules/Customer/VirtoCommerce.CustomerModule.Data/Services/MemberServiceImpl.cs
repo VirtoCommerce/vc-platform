@@ -21,17 +21,11 @@ namespace VirtoCommerce.CustomerModule.Data.Services
         private readonly IDynamicPropertyService _dynamicPropertyService;
         private readonly ISecurityService _securityService;
 
-        private Dictionary<string, string> _contactSortingAliases = new Dictionary<string, string>();
-        private Dictionary<string, string> _organizationSortingAliases = new Dictionary<string, string>();
-
         public MemberServiceImpl(Func<ICustomerRepository> repositoryFactory, IDynamicPropertyService dynamicPropertyService, ISecurityService securityService)
         {
             _repositoryFactory = repositoryFactory;
             _dynamicPropertyService = dynamicPropertyService;
             _securityService = securityService;
-
-            _contactSortingAliases["name"] = ReflectionUtility.GetPropertyName<Contact>(x => x.FullName);
-            _organizationSortingAliases["name"] = ReflectionUtility.GetPropertyName<Organization>(x => x.Name);
         }
 
         #region IMemberService Members
@@ -87,6 +81,10 @@ namespace VirtoCommerce.CustomerModule.Data.Services
                     var dbMembers = repository.GetMembersByIds(ids);
                     foreach (var dbMember in dbMembers)
                     {
+                        foreach (var relation in dbMember.MemberRelations.ToArray())
+                        {
+                            repository.Remove(relation);
+                        }
                         repository.Remove(dbMember);
                     }
                 }
@@ -141,9 +139,9 @@ namespace VirtoCommerce.CustomerModule.Data.Services
                 {
                     query = query.Where(x => x.MemberType == criteria.MemberType || x.MemberType == null);
                 }
-                if (criteria.OrganizationId != null)
+                if (criteria.MemberId != null)
                 {
-                    query = query.Where(x => x.MemberRelations.Any(y => y.AncestorId == criteria.OrganizationId));
+                    query = query.Where(x => x.MemberRelations.Any(y => y.AncestorId == criteria.MemberId));
                 }
                 else
                 {
@@ -154,8 +152,8 @@ namespace VirtoCommerce.CustomerModule.Data.Services
                 {
                     var contactQuery = query.OfType<dataModel.Contact>().Where(x => x.FullName.Contains(criteria.Keyword) || x.Emails.Any(y => y.Address.Contains(criteria.Keyword))).Select(x => x.Id).ToArray();
                     var orgQuery = query.OfType<dataModel.Organization>().Where(x => x.Name.Contains(criteria.Keyword)).Select(x => x.Id).ToArray();
-                    var memberIds = contactQuery.Concat(orgQuery).ToArray();
-                    query = query.Where(x => memberIds.Contains(x.Id));
+                    var ids = contactQuery.Concat(orgQuery).ToArray();
+                    query = query.Where(x => ids.Contains(x.Id));
                 }
 
                 retVal.TotalCount = query.Count();
@@ -163,24 +161,23 @@ namespace VirtoCommerce.CustomerModule.Data.Services
                 var sortInfos = criteria.SortInfos;
                 if (sortInfos.IsNullOrEmpty())
                 {
-                    sortInfos = new[] { new SortInfo { SortColumn = "FullName" } };
+                    sortInfos = new[] { new SortInfo { SortColumn = "Name" } };
                 }
-
-                //Try to replace sorting columns names
-                TryTransformSortingInfoColumnNames(_contactSortingAliases, sortInfos);
+                //Workaround - need display organization first (OrderByDescending(x => x.MemberType))
                 query = query.OrderByDescending(x => x.MemberType).ThenBySortInfos(sortInfos);
 
                 retVal.Members = query.Skip(criteria.Skip)
-                                   .Take(criteria.Take)
-                                   .ToArray()
-                                   .Select(x => ConvertToMember(x))
-                                   .ToList();
+                                      .Take(criteria.Take)
+                                      .ToArray()
+                                      .Select(x => ConvertToMember(x))
+                                      .ToList();            
                 return retVal;
             }
         }
         #endregion
+
         /// <summary>
-        /// Data type factory methods
+        /// Data type factory methods. This methods can be override to extend exist member type to new
         /// </summary>
         /// <param name="member"></param>
         /// <returns></returns>
@@ -222,19 +219,6 @@ namespace VirtoCommerce.CustomerModule.Data.Services
             }
             
             return retVal;
-        }
-
-        private static void TryTransformSortingInfoColumnNames(IDictionary<string, string> transformationMap, SortInfo[] sortingInfos)
-        {
-            //Try to replace sorting columns names
-            foreach (var sortInfo in sortingInfos)
-            {
-                string newColumnName;
-                if (transformationMap.TryGetValue(sortInfo.SortColumn.ToLowerInvariant(), out newColumnName))
-                {
-                    sortInfo.SortColumn = newColumnName;
-                }
-            }
         }
     }
 }

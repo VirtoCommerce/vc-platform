@@ -85,6 +85,14 @@
     <Compile Include="Migrations\201603151150335_AddMemberTypeToMember.Designer.cs">
       <DependentUpon>201603151150335_AddMemberTypeToMember.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201603160823229_AddRelationType.cs" />
+    <Compile Include="Migrations\201603160823229_AddRelationType.Designer.cs">
+      <DependentUpon>201603160823229_AddRelationType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201603160938316_AddNameToMember.cs" />
+    <Compile Include="Migrations\201603160938316_AddNameToMember.Designer.cs">
+      <DependentUpon>201603160938316_AddNameToMember.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Address.cs" />
     <Compile Include="Model\Contact.cs" />
@@ -132,6 +140,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201603151150335_AddMemberTypeToMember.resx">
       <DependentUpon>201603151150335_AddMemberTypeToMember.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603160823229_AddRelationType.resx">
+      <DependentUpon>201603160823229_AddRelationType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603160938316_AddNameToMember.resx">
+      <DependentUpon>201603160938316_AddNameToMember.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

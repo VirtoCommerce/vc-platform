@@ -13,6 +13,9 @@ namespace VirtoCommerce.Domain.Customer.Model
 		{
             Take = 20;
 		}
+        /// <summary>
+        /// Search member type (Contact, Organization etc)
+        /// </summary>
         public string MemberType { get; set; }
         /// <summary>
         /// Word, part of word or phrase to search
@@ -20,9 +23,9 @@ namespace VirtoCommerce.Domain.Customer.Model
         public string Keyword { get; set; }
 
         /// <summary>
-        /// It used to limit search within an organization
+        /// It used to limit search within an member (organization for example)
         /// </summary>
-        public string OrganizationId { get; set; }
+        public string MemberId { get; set; }
 
 
         /// <summary>

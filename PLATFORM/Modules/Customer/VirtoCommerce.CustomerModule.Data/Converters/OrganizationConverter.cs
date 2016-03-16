@@ -32,9 +32,7 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
             {
                 retVal.ParentId = dbEntity.MemberRelations.FirstOrDefault().AncestorId;
             }
-
             return retVal;
-
         }
 
 
@@ -48,7 +46,6 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
             organization.ToDataModel(retVal);
 
             pkMap.AddPair(organization, retVal);
-
          
             if (organization.ParentId != null)
             {
@@ -58,7 +55,6 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
                     AncestorId = organization.ParentId,
                     DescendantId = organization.Id,
                     AncestorSequence = 1
-
                 };
                 retVal.MemberRelations.Add(memberRelation);
             }

@@ -87,7 +87,9 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
             if (target == null)
                 throw new ArgumentNullException("target");
 
-       
+            var patchInjection = new PatchInjection<dataModel.Member>(x => x.Name);
+            target.InjectFrom(patchInjection, source);
+
             if (!source.Phones.IsNullCollection())
             {
                 var phoneComparer = AnonymousComparer.Create((dataModel.Phone x) => x.Number);

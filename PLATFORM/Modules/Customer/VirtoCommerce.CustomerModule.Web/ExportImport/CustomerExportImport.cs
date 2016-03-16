@@ -75,10 +75,10 @@ namespace VirtoCommerce.CustomerModule.Web.ExportImport
 			progressCallback(progressInfo);
 
             var members = _memberService.SearchMembers(new SearchCriteria { Take = int.MaxValue }).Members;
-          
+
             var result = new BackupObject();
-            result.Members = _memberService.SearchMembers(new SearchCriteria { Take = int.MaxValue }).Members.ToArray();
-         
+            result.Members = _memberService.GetByIds(members.Select(x => x.Id).ToArray());
+
             return result;
         }
 

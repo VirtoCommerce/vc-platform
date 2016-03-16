@@ -11,7 +11,7 @@
             blade.isLoading = true;
             members.search(
             {
-                organizationId: blade.currentEntity.id,
+                memberId: blade.currentEntity.id,
                 keyword: filter.keyword ? filter.keyword : undefined,
                 sort: uiGridHelper.getSortExpression($scope),
                 skip: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,

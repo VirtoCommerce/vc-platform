@@ -23,13 +23,9 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 
             var retVal = new coreModel.Contact();
             dbEntity.ToCoreModel(retVal);
-
-            retVal.Name = dbEntity.FullName;
             retVal.Organizations = dbEntity.MemberRelations.Select(x => x.Ancestor).OfType<dataModel.Organization>().Select(x => x.Id).ToList();
             return retVal;
-
         }
-
 
         public static dataModel.Contact ToDataModel(this coreModel.Contact contact, PrimaryKeyResolvingMap pkMap)
         {
@@ -37,7 +33,13 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
                 throw new ArgumentNullException("contact");
 
             var retVal = new dataModel.Contact();
+           
             contact.ToDataModel(retVal);
+
+            if (retVal.Name == null)
+            {
+                retVal.Name = retVal.FullName;
+            }
 
             pkMap.AddPair(contact, retVal);
 
@@ -50,7 +52,7 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
                     {
                         AncestorId = organization,
                         AncestorSequence = 1,
-                        DescendantId = retVal.Id
+                        DescendantId = retVal.Id,
                     };
                     retVal.MemberRelations.Add(memberRelation);
                 }
