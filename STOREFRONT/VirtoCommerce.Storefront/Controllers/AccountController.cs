@@ -301,33 +301,42 @@ namespace VirtoCommerce.Storefront.Controllers
             var user = await _commerceCoreApi.StorefrontSecurityGetUserByLoginAsync(loginInfo.Login.LoginProvider, loginInfo.Login.ProviderKey);
             if (user == null)
             {
-                var confirmLoginUrl = "~/account/confirm-external-login?loginProvider=" + loginInfo.Login.LoginProvider;
-                if (!string.IsNullOrEmpty(returnUrl))
+                var newUser = new VirtoCommercePlatformCoreSecurityApplicationUserExtended
                 {
-                    confirmLoginUrl += "&returnUrl=" + returnUrl;
+                    Email = loginInfo.Email,
+                    UserName = string.Format("{0}|{1}", loginInfo.Login.LoginProvider, loginInfo.Email),
+                    UserType = "Customer",
+                    StoreId = WorkContext.CurrentStore.Id,
+                    Logins =
+                    {
+                        new VirtoCommercePlatformCoreSecurityApplicationUserLogin
+                        {
+                            LoginProvider = loginInfo.Login.LoginProvider,
+                            ProviderKey = loginInfo.Login.ProviderKey
+                        }
+                    }
+                };
+                var result = await _commerceCoreApi.StorefrontSecurityCreateAsync(newUser);
+
+                if (result.Succeeded == true)
+                {
+                    var storefrontUser = await _commerceCoreApi.StorefrontSecurityGetUserByNameAsync(user.UserName);
+                    await _customerService.CreateCustomerAsync(new CustomerInfo
+                    {
+                        Id = storefrontUser.Id,
+                        UserId = storefrontUser.Id,
+                        UserName = storefrontUser.UserName,
+                        IsRegisteredUser = true,
+                        AllowedStores = storefrontUser.AllowedStores
+                    });
                 }
-                return StoreFrontRedirect(confirmLoginUrl);
-            }
-            else
-            {
-                var customer = await GetStorefrontCustomerByUserAsync(user);
-                var identity = CreateClaimsIdentity(customer);
-                _authenticationManager.SignIn();
-
-                return StoreFrontRedirect(returnUrl);
-            }
-        }
-
-        [HttpGet]
-        [AllowAnonymous]
-        public ActionResult ConfirmExternalLogin(string loginProvider, string returnUrl)
-        {
-            if (string.IsNullOrEmpty(loginProvider))
-            {
-                return new HttpStatusCodeResult(System.Net.HttpStatusCode.BadRequest);
             }
 
-            return View("confirm-external-login");
+            var customer = await GetStorefrontCustomerByUserAsync(user);
+            var identity = CreateClaimsIdentity(customer);
+            _authenticationManager.SignIn();
+
+            return StoreFrontRedirect(returnUrl);
         }
 
         [HttpGet]
