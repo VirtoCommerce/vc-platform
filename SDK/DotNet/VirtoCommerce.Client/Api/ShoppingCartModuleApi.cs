@@ -522,7 +522,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
     
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CartModuleUpdate: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CartModuleUpdate: " + response.ErrorMessage, response.ErrorMessage);
@@ -598,7 +598,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
  
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CartModuleUpdate: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CartModuleUpdate: " + response.ErrorMessage, response.ErrorMessage);
@@ -681,7 +681,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
     
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CartModuleCreate: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CartModuleCreate: " + response.ErrorMessage, response.ErrorMessage);
@@ -757,7 +757,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
  
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CartModuleCreate: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CartModuleCreate: " + response.ErrorMessage, response.ErrorMessage);
@@ -833,7 +833,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
     
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CartModuleDeleteCarts: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CartModuleDeleteCarts: " + response.ErrorMessage, response.ErrorMessage);
@@ -908,7 +908,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
  
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CartModuleDeleteCarts: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CartModuleDeleteCarts: " + response.ErrorMessage, response.ErrorMessage);
@@ -985,7 +985,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
     
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CartModuleGetPaymentMethods: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CartModuleGetPaymentMethods: " + response.ErrorMessage, response.ErrorMessage);
@@ -1061,7 +1061,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
  
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CartModuleGetPaymentMethods: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CartModuleGetPaymentMethods: " + response.ErrorMessage, response.ErrorMessage);
@@ -1138,7 +1138,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
     
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CartModuleGetShipmentMethods: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CartModuleGetShipmentMethods: " + response.ErrorMessage, response.ErrorMessage);
@@ -1214,7 +1214,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
  
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CartModuleGetShipmentMethods: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CartModuleGetShipmentMethods: " + response.ErrorMessage, response.ErrorMessage);
@@ -1291,7 +1291,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
     
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CartModuleGetCartById: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CartModuleGetCartById: " + response.ErrorMessage, response.ErrorMessage);
@@ -1367,7 +1367,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
  
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CartModuleGetCartById: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CartModuleGetCartById: " + response.ErrorMessage, response.ErrorMessage);
@@ -1450,7 +1450,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
     
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CartModuleSearch: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CartModuleSearch: " + response.ErrorMessage, response.ErrorMessage);
@@ -1526,7 +1526,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
  
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CartModuleSearch: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CartModuleSearch: " + response.ErrorMessage, response.ErrorMessage);
@@ -1603,7 +1603,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
     
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CartModuleGetPaymentMethodsForStore: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CartModuleGetPaymentMethodsForStore: " + response.ErrorMessage, response.ErrorMessage);
@@ -1679,7 +1679,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
  
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CartModuleGetPaymentMethodsForStore: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CartModuleGetPaymentMethodsForStore: " + response.ErrorMessage, response.ErrorMessage);
@@ -1763,7 +1763,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
     
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CartModuleGetCurrentCart: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CartModuleGetCurrentCart: " + response.ErrorMessage, response.ErrorMessage);
@@ -1844,7 +1844,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
  
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CartModuleGetCurrentCart: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CartModuleGetCurrentCart: " + response.ErrorMessage, response.ErrorMessage);
