@@ -17,28 +17,27 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public partial class VirtoCommerceCustomerModuleWebModelMember :  IEquatable<VirtoCommerceCustomerModuleWebModelMember>
+    public partial class VirtoCommerceDomainCustomerModelMember :  IEquatable<VirtoCommerceDomainCustomerModelMember>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceCustomerModuleWebModelMember" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCustomerModelMember" /> class.
         /// </summary>
-        public VirtoCommerceCustomerModuleWebModelMember()
+        public VirtoCommerceDomainCustomerModelMember()
         {
             
         }
 
         
         /// <summary>
-        /// Gets or Sets DisplayName
+        /// Gets or Sets Name
         /// </summary>
-        [DataMember(Name="displayName", EmitDefaultValue=false)]
-        public string DisplayName { get; set; }
+        [DataMember(Name="name", EmitDefaultValue=false)]
+        public string Name { get; set; }
   
         
         /// <summary>
-        /// String representation of member type (Organization or Contact). Used as Discriminator
+        /// Gets or Sets MemberType
         /// </summary>
-        /// <value>String representation of member type (Organization or Contact). Used as Discriminator</value>
         [DataMember(Name="memberType", EmitDefaultValue=false)]
         public string MemberType { get; set; }
   
@@ -47,7 +46,7 @@ namespace VirtoCommerce.Client.Model
         /// Gets or Sets Addresses
         /// </summary>
         [DataMember(Name="addresses", EmitDefaultValue=false)]
-        public List<VirtoCommerceCustomerModuleWebModelAddress> Addresses { get; set; }
+        public List<VirtoCommerceDomainCommerceModelAddress> Addresses { get; set; }
   
         
         /// <summary>
@@ -65,33 +64,22 @@ namespace VirtoCommerce.Client.Model
   
         
         /// <summary>
-        /// All security accounts logins associated with this member (test@mail.com, test2@mail.com etc.)
+        /// Gets or Sets Notes
         /// </summary>
-        /// <value>All security accounts logins associated with this member (test@mail.com, test2@mail.com etc.)</value>
-        [DataMember(Name="securityAccounts", EmitDefaultValue=false)]
-        public List<VirtoCommercePlatformCoreSecurityApplicationUserExtended> SecurityAccounts { get; set; }
-  
-        
-        /// <summary>
-        /// Additional information about the member
-        /// </summary>
-        /// <value>Additional information about the member</value>
         [DataMember(Name="notes", EmitDefaultValue=false)]
-        public List<VirtoCommerceCustomerModuleWebModelNote> Notes { get; set; }
+        public List<VirtoCommerceDomainCustomerModelNote> Notes { get; set; }
   
         
         /// <summary>
-        /// Not documented
+        /// Gets or Sets ObjectType
         /// </summary>
-        /// <value>Not documented</value>
         [DataMember(Name="objectType", EmitDefaultValue=false)]
         public string ObjectType { get; set; }
   
         
         /// <summary>
-        /// Some additional properties
+        /// Gets or Sets DynamicProperties
         /// </summary>
-        /// <value>Some additional properties</value>
         [DataMember(Name="dynamicProperties", EmitDefaultValue=false)]
         public List<VirtoCommercePlatformCoreDynamicPropertiesDynamicObjectProperty> DynamicProperties { get; set; }
   
@@ -139,13 +127,12 @@ namespace VirtoCommerce.Client.Model
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class VirtoCommerceCustomerModuleWebModelMember {\n");
-            sb.Append("  DisplayName: ").Append(DisplayName).Append("\n");
+            sb.Append("class VirtoCommerceDomainCustomerModelMember {\n");
+            sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  MemberType: ").Append(MemberType).Append("\n");
             sb.Append("  Addresses: ").Append(Addresses).Append("\n");
             sb.Append("  Phones: ").Append(Phones).Append("\n");
             sb.Append("  Emails: ").Append(Emails).Append("\n");
-            sb.Append("  SecurityAccounts: ").Append(SecurityAccounts).Append("\n");
             sb.Append("  Notes: ").Append(Notes).Append("\n");
             sb.Append("  ObjectType: ").Append(ObjectType).Append("\n");
             sb.Append("  DynamicProperties: ").Append(DynamicProperties).Append("\n");
@@ -176,15 +163,15 @@ namespace VirtoCommerce.Client.Model
         public override bool Equals(object obj)
         {
             // credit: http://stackoverflow.com/a/10454552/677735
-            return this.Equals(obj as VirtoCommerceCustomerModuleWebModelMember);
+            return this.Equals(obj as VirtoCommerceDomainCustomerModelMember);
         }
 
         /// <summary>
-        /// Returns true if VirtoCommerceCustomerModuleWebModelMember instances are equal
+        /// Returns true if VirtoCommerceDomainCustomerModelMember instances are equal
         /// </summary>
-        /// <param name="other">Instance of VirtoCommerceCustomerModuleWebModelMember to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceDomainCustomerModelMember to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(VirtoCommerceCustomerModuleWebModelMember other)
+        public bool Equals(VirtoCommerceDomainCustomerModelMember other)
         {
             // credit: http://stackoverflow.com/a/10454552/677735
             if (other == null)
@@ -192,9 +179,9 @@ namespace VirtoCommerce.Client.Model
 
             return 
                 (
-                    this.DisplayName == other.DisplayName ||
-                    this.DisplayName != null &&
-                    this.DisplayName.Equals(other.DisplayName)
+                    this.Name == other.Name ||
+                    this.Name != null &&
+                    this.Name.Equals(other.Name)
                 ) && 
                 (
                     this.MemberType == other.MemberType ||
@@ -215,11 +202,6 @@ namespace VirtoCommerce.Client.Model
                     this.Emails == other.Emails ||
                     this.Emails != null &&
                     this.Emails.SequenceEqual(other.Emails)
-                ) && 
-                (
-                    this.SecurityAccounts == other.SecurityAccounts ||
-                    this.SecurityAccounts != null &&
-                    this.SecurityAccounts.SequenceEqual(other.SecurityAccounts)
                 ) && 
                 (
                     this.Notes == other.Notes ||
@@ -275,8 +257,8 @@ namespace VirtoCommerce.Client.Model
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
                 
-                if (this.DisplayName != null)
-                    hash = hash * 59 + this.DisplayName.GetHashCode();
+                if (this.Name != null)
+                    hash = hash * 59 + this.Name.GetHashCode();
                 
                 if (this.MemberType != null)
                     hash = hash * 59 + this.MemberType.GetHashCode();
@@ -289,9 +271,6 @@ namespace VirtoCommerce.Client.Model
                 
                 if (this.Emails != null)
                     hash = hash * 59 + this.Emails.GetHashCode();
-                
-                if (this.SecurityAccounts != null)
-                    hash = hash * 59 + this.SecurityAccounts.GetHashCode();
                 
                 if (this.Notes != null)
                     hash = hash * 59 + this.Notes.GetHashCode();

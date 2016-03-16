@@ -29,13 +29,6 @@ namespace VirtoCommerce.Client.Model
 
         
         /// <summary>
-        /// Gets or Sets Name
-        /// </summary>
-        [DataMember(Name="name", EmitDefaultValue=false)]
-        public string Name { get; set; }
-  
-        
-        /// <summary>
         /// Gets or Sets Description
         /// </summary>
         [DataMember(Name="description", EmitDefaultValue=false)]
@@ -61,6 +54,20 @@ namespace VirtoCommerce.Client.Model
         /// </summary>
         [DataMember(Name="parentId", EmitDefaultValue=false)]
         public string ParentId { get; set; }
+  
+        
+        /// <summary>
+        /// Gets or Sets Name
+        /// </summary>
+        [DataMember(Name="name", EmitDefaultValue=false)]
+        public string Name { get; set; }
+  
+        
+        /// <summary>
+        /// Gets or Sets MemberType
+        /// </summary>
+        [DataMember(Name="memberType", EmitDefaultValue=false)]
+        public string MemberType { get; set; }
   
         
         /// <summary>
@@ -149,11 +156,12 @@ namespace VirtoCommerce.Client.Model
         {
             var sb = new StringBuilder();
             sb.Append("class VirtoCommerceDomainCustomerModelOrganization {\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  Description: ").Append(Description).Append("\n");
             sb.Append("  BusinessCategory: ").Append(BusinessCategory).Append("\n");
             sb.Append("  OwnerId: ").Append(OwnerId).Append("\n");
             sb.Append("  ParentId: ").Append(ParentId).Append("\n");
+            sb.Append("  Name: ").Append(Name).Append("\n");
+            sb.Append("  MemberType: ").Append(MemberType).Append("\n");
             sb.Append("  Addresses: ").Append(Addresses).Append("\n");
             sb.Append("  Phones: ").Append(Phones).Append("\n");
             sb.Append("  Emails: ").Append(Emails).Append("\n");
@@ -203,11 +211,6 @@ namespace VirtoCommerce.Client.Model
 
             return 
                 (
-                    this.Name == other.Name ||
-                    this.Name != null &&
-                    this.Name.Equals(other.Name)
-                ) && 
-                (
                     this.Description == other.Description ||
                     this.Description != null &&
                     this.Description.Equals(other.Description)
@@ -226,6 +229,16 @@ namespace VirtoCommerce.Client.Model
                     this.ParentId == other.ParentId ||
                     this.ParentId != null &&
                     this.ParentId.Equals(other.ParentId)
+                ) && 
+                (
+                    this.Name == other.Name ||
+                    this.Name != null &&
+                    this.Name.Equals(other.Name)
+                ) && 
+                (
+                    this.MemberType == other.MemberType ||
+                    this.MemberType != null &&
+                    this.MemberType.Equals(other.MemberType)
                 ) && 
                 (
                     this.Addresses == other.Addresses ||
@@ -296,9 +309,6 @@ namespace VirtoCommerce.Client.Model
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
                 
-                if (this.Name != null)
-                    hash = hash * 59 + this.Name.GetHashCode();
-                
                 if (this.Description != null)
                     hash = hash * 59 + this.Description.GetHashCode();
                 
@@ -310,6 +320,12 @@ namespace VirtoCommerce.Client.Model
                 
                 if (this.ParentId != null)
                     hash = hash * 59 + this.ParentId.GetHashCode();
+                
+                if (this.Name != null)
+                    hash = hash * 59 + this.Name.GetHashCode();
+                
+                if (this.MemberType != null)
+                    hash = hash * 59 + this.MemberType.GetHashCode();
                 
                 if (this.Addresses != null)
                     hash = hash * 59 + this.Addresses.GetHashCode();

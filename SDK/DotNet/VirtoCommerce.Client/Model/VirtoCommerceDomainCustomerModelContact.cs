@@ -113,6 +113,27 @@ namespace VirtoCommerce.Client.Model
   
         
         /// <summary>
+        /// Gets or Sets SecurityAccounts
+        /// </summary>
+        [DataMember(Name="securityAccounts", EmitDefaultValue=false)]
+        public List<VirtoCommercePlatformCoreSecurityApplicationUserExtended> SecurityAccounts { get; set; }
+  
+        
+        /// <summary>
+        /// Gets or Sets Name
+        /// </summary>
+        [DataMember(Name="name", EmitDefaultValue=false)]
+        public string Name { get; set; }
+  
+        
+        /// <summary>
+        /// Gets or Sets MemberType
+        /// </summary>
+        [DataMember(Name="memberType", EmitDefaultValue=false)]
+        public string MemberType { get; set; }
+  
+        
+        /// <summary>
         /// Gets or Sets Addresses
         /// </summary>
         [DataMember(Name="addresses", EmitDefaultValue=false)]
@@ -131,13 +152,6 @@ namespace VirtoCommerce.Client.Model
         /// </summary>
         [DataMember(Name="emails", EmitDefaultValue=false)]
         public List<string> Emails { get; set; }
-  
-        
-        /// <summary>
-        /// Gets or Sets SecurityAccounts
-        /// </summary>
-        [DataMember(Name="securityAccounts", EmitDefaultValue=false)]
-        public List<VirtoCommercePlatformCoreSecurityApplicationUserExtended> SecurityAccounts { get; set; }
   
         
         /// <summary>
@@ -217,10 +231,12 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  PreferredCommunication: ").Append(PreferredCommunication).Append("\n");
             sb.Append("  Salutation: ").Append(Salutation).Append("\n");
             sb.Append("  Organizations: ").Append(Organizations).Append("\n");
+            sb.Append("  SecurityAccounts: ").Append(SecurityAccounts).Append("\n");
+            sb.Append("  Name: ").Append(Name).Append("\n");
+            sb.Append("  MemberType: ").Append(MemberType).Append("\n");
             sb.Append("  Addresses: ").Append(Addresses).Append("\n");
             sb.Append("  Phones: ").Append(Phones).Append("\n");
             sb.Append("  Emails: ").Append(Emails).Append("\n");
-            sb.Append("  SecurityAccounts: ").Append(SecurityAccounts).Append("\n");
             sb.Append("  Notes: ").Append(Notes).Append("\n");
             sb.Append("  ObjectType: ").Append(ObjectType).Append("\n");
             sb.Append("  DynamicProperties: ").Append(DynamicProperties).Append("\n");
@@ -327,6 +343,21 @@ namespace VirtoCommerce.Client.Model
                     this.Organizations.SequenceEqual(other.Organizations)
                 ) && 
                 (
+                    this.SecurityAccounts == other.SecurityAccounts ||
+                    this.SecurityAccounts != null &&
+                    this.SecurityAccounts.SequenceEqual(other.SecurityAccounts)
+                ) && 
+                (
+                    this.Name == other.Name ||
+                    this.Name != null &&
+                    this.Name.Equals(other.Name)
+                ) && 
+                (
+                    this.MemberType == other.MemberType ||
+                    this.MemberType != null &&
+                    this.MemberType.Equals(other.MemberType)
+                ) && 
+                (
                     this.Addresses == other.Addresses ||
                     this.Addresses != null &&
                     this.Addresses.SequenceEqual(other.Addresses)
@@ -340,11 +371,6 @@ namespace VirtoCommerce.Client.Model
                     this.Emails == other.Emails ||
                     this.Emails != null &&
                     this.Emails.SequenceEqual(other.Emails)
-                ) && 
-                (
-                    this.SecurityAccounts == other.SecurityAccounts ||
-                    this.SecurityAccounts != null &&
-                    this.SecurityAccounts.SequenceEqual(other.SecurityAccounts)
                 ) && 
                 (
                     this.Notes == other.Notes ||
@@ -436,6 +462,15 @@ namespace VirtoCommerce.Client.Model
                 if (this.Organizations != null)
                     hash = hash * 59 + this.Organizations.GetHashCode();
                 
+                if (this.SecurityAccounts != null)
+                    hash = hash * 59 + this.SecurityAccounts.GetHashCode();
+                
+                if (this.Name != null)
+                    hash = hash * 59 + this.Name.GetHashCode();
+                
+                if (this.MemberType != null)
+                    hash = hash * 59 + this.MemberType.GetHashCode();
+                
                 if (this.Addresses != null)
                     hash = hash * 59 + this.Addresses.GetHashCode();
                 
@@ -444,9 +479,6 @@ namespace VirtoCommerce.Client.Model
                 
                 if (this.Emails != null)
                     hash = hash * 59 + this.Emails.GetHashCode();
-                
-                if (this.SecurityAccounts != null)
-                    hash = hash * 59 + this.SecurityAccounts.GetHashCode();
                 
                 if (this.Notes != null)
                     hash = hash * 59 + this.Notes.GetHashCode();

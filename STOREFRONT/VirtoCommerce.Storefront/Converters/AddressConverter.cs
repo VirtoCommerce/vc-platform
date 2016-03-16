@@ -10,15 +10,6 @@ namespace VirtoCommerce.Storefront.Converters
 {
     public static class AddressConverter
     {
-        public static Address ToWebModel(this VirtoCommerceCustomerModuleWebModelAddress address)
-        {
-            var customerAddress = new Address();
-
-            customerAddress.InjectFrom<NullableAndEnumValueInjecter>(address);
-
-            return customerAddress;
-        }
-
         public static Address ToWebModel(this ShopifyModel.Address address, Country[] countries)
         {
             var result = new Address();
@@ -26,9 +17,9 @@ namespace VirtoCommerce.Storefront.Converters
             return result;
         }
 
-        public static VirtoCommerceCustomerModuleWebModelAddress ToServiceModel(this Address address)
+        public static VirtoCommerceDomainCommerceModelAddress ToServiceModel(this Address address)
         {
-            var retVal = new VirtoCommerceCustomerModuleWebModelAddress();
+            var retVal = new VirtoCommerceDomainCommerceModelAddress();
 
             retVal.InjectFrom<NullableAndEnumValueInjecter>(address);
             retVal.AddressType = address.Type.ToString();
@@ -36,10 +27,9 @@ namespace VirtoCommerce.Storefront.Converters
             return retVal;
         }
 
-
-        public static VirtoCommerceCustomerModuleWebModelAddress ToCustomerModel(this VirtoCommerceOrderModuleWebModelAddress orderAddress)
+        public static VirtoCommerceDomainCommerceModelAddress ToCustomerModel(this VirtoCommerceOrderModuleWebModelAddress orderAddress)
         {
-            var customerAddress = new VirtoCommerceCustomerModuleWebModelAddress();
+            var customerAddress = new VirtoCommerceDomainCommerceModelAddress();
 
             customerAddress.InjectFrom<NullableAndEnumValueInjecter>(orderAddress);
             customerAddress.AddressType = orderAddress.AddressType;
@@ -116,7 +106,7 @@ namespace VirtoCommerce.Storefront.Converters
 
             webModel.InjectFrom<NullableAndEnumValueInjecter>(serviceModel);
 
-            webModel.Type = EnumUtility.SafeParse(serviceModel.AddressType, AddressType.BillingAndShipping );
+            webModel.Type = EnumUtility.SafeParse(serviceModel.AddressType, AddressType.BillingAndShipping);
 
             return webModel;
         }
