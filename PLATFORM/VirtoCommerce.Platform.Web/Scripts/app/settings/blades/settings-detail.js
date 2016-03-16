@@ -75,12 +75,7 @@
             return x;
         });
 
-        var selectedSettings = _.where(objects, { isArray: true });
-        _.forEach(selectedSettings, function (setting) {
-            if (setting.arrayValues) {
-                setting.arrayValues = _.pluck(setting.arrayValues, 'value');
-            }
-        });
+        settingsHelper.toApiFormat(objects);
 
         //console.log('saveChanges3: ' + angular.toJson(objects, true));
         settings.update({}, objects, function (data, headers) {
