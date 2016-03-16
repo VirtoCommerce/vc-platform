@@ -171,6 +171,7 @@
     <Compile Include="Objects\Blogs.cs" />
     <Compile Include="Objects\Pages.cs" />
     <Compile Include="Objects\Linklists.cs" />
+    <Compile Include="Objects\LoginProvider.cs" />
     <Compile Include="Objects\MetafieldsCollections.cs" />
     <Compile Include="Objects\Notification.cs" />
     <Compile Include="Objects\Order.cs" />

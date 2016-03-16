@@ -65,7 +65,6 @@ namespace VirtoCommerce.Storefront
             app.UseGoogleAuthentication(googleOptions);
         }
 
-
         private static void ApplyRedirect(CookieApplyRedirectContext context, Func<IStorefrontUrlBuilder> urlBuilderFactory)
         {
             Uri absoluteUri;

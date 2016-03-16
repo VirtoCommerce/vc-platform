@@ -277,6 +277,79 @@ namespace VirtoCommerce.Storefront.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
+        public ActionResult ExternalLogin(string authType, string returnUrl)
+        {
+            if (string.IsNullOrEmpty(authType))
+            {
+                return new HttpStatusCodeResult(System.Net.HttpStatusCode.BadRequest);
+            }
+
+            return new ChallengeResult(authType, Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl }));
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<ActionResult> ExternalLoginCallback(string returnUrl)
+        {
+            var loginInfo = await _authenticationManager.GetExternalLoginInfoAsync();
+            if (loginInfo == null)
+            {
+                return new HttpStatusCodeResult(System.Net.HttpStatusCode.BadRequest);
+            }
+
+            CustomerInfo customer = null;
+
+            var user = await _commerceCoreApi.StorefrontSecurityGetUserByLoginAsync(loginInfo.Login.LoginProvider, loginInfo.Login.ProviderKey);
+            if (user == null)
+            {
+                var newUser = new VirtoCommercePlatformCoreSecurityApplicationUserExtended
+                {
+                    Email = loginInfo.Email,
+                    UserName = string.Format("{0}--{1}", loginInfo.Login.LoginProvider, loginInfo.Email),
+                    UserType = "Customer",
+                    StoreId = WorkContext.CurrentStore.Id
+                };
+                newUser.Logins = new List<VirtoCommercePlatformCoreSecurityApplicationUserLogin>
+                {
+                    new VirtoCommercePlatformCoreSecurityApplicationUserLogin
+                    {
+                        LoginProvider = loginInfo.Login.LoginProvider,
+                        ProviderKey = loginInfo.Login.ProviderKey
+                    }
+                };
+                var result = await _commerceCoreApi.StorefrontSecurityCreateAsync(newUser);
+
+                if (result.Succeeded == true)
+                {
+                    var storefrontUser = await _commerceCoreApi.StorefrontSecurityGetUserByNameAsync(newUser.UserName);
+                    await _customerService.CreateCustomerAsync(new CustomerInfo
+                    {
+                        Id = storefrontUser.Id,
+                        UserId = storefrontUser.Id,
+                        UserName = storefrontUser.UserName,
+                        FullName = loginInfo.ExternalIdentity.Name,
+                        IsRegisteredUser = true,
+                        AllowedStores = storefrontUser.AllowedStores
+                    });
+
+                    customer = await GetStorefrontCustomerByUserAsync(storefrontUser);
+                }
+            }
+            else
+            {
+                customer = await GetStorefrontCustomerByUserAsync(user);
+            }
+
+            var identity = CreateClaimsIdentity(customer);
+            _authenticationManager.SignIn(identity);
+
+            await _userLoginEventPublisher.PublishAsync(new UserLoginEvent(WorkContext, WorkContext.CurrentCustomer, customer));
+
+            return StoreFrontRedirect(returnUrl);
+        }
+
+        [HttpGet]
         public ActionResult Logout()
         {
             _authenticationManager.SignOut();
@@ -379,6 +452,39 @@ namespace VirtoCommerce.Storefront.Controllers
             {
                 ModelState.AddModelError("form", result.Errors.First());
                 return View("customers/account", WorkContext);
+            }
+        }
+
+        internal class ChallengeResult : HttpUnauthorizedResult
+        {
+            public string LoginProvider { get; set; }
+
+            public string RedirectUri { get; set; }
+
+            public string UserId { get; set; }
+
+            public ChallengeResult(string loginProvider, string redirectUri)
+                : this(loginProvider, redirectUri, null)
+            {
+            }
+
+            public ChallengeResult(string loginProvider, string redirectUri, string userId)
+            {
+                LoginProvider = loginProvider;
+                RedirectUri = redirectUri;
+                UserId = userId;
+            }
+
+            public override void ExecuteResult(ControllerContext context)
+            {
+                var properties = new AuthenticationProperties { RedirectUri = RedirectUri };
+
+                if (!string.IsNullOrEmpty(UserId))
+                {
+                    properties.Dictionary["XsrfId"] = UserId;
+                }
+
+                context.HttpContext.GetOwinContext().Authentication.Challenge(properties, LoginProvider);
             }
         }
 

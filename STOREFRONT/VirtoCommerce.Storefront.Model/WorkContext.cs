@@ -22,6 +22,7 @@ namespace VirtoCommerce.Storefront.Model
         {
             CurrentPricelists = new List<Pricelist>();
             CurrentLinkLists = new List<MenuLinkList>();
+            ExternalLoginProviders = new List<LoginProvider>();
         }
         /// <summary>
         /// Current request url example: http:/host/app/store/en-us/search?page=2
@@ -182,6 +183,11 @@ namespace VirtoCommerce.Storefront.Model
         ///  All blogs with articles for current store and theme
         /// </summary>
         public IMutablePagedList<Blog> Blogs { get; set; }
+
+        /// <summary>
+        /// Gets or sets the collection of external login providers
+        /// </summary>
+        public ICollection<LoginProvider> ExternalLoginProviders { get; set; }
 
         #region IDisposable Implementation
 

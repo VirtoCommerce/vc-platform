@@ -41,6 +41,8 @@ using VirtoCommerce.Storefront.Model.Services;
 using VirtoCommerce.Storefront.Owin;
 using VirtoCommerce.Storefront.Services;
 using VirtoCommerce.Storefront.Model.Quote.Events;
+using Microsoft.Owin.Security.Google;
+using Microsoft.Owin.Security.Facebook;
 
 [assembly: OwinStartup(typeof(Startup))]
 [assembly: PreApplicationStartMethod(typeof(Startup), "PreApplicationStart")]
