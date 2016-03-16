@@ -3,7 +3,7 @@
         '$sessionStorage', '$localStorage', '$timeout', '$scope', 'virtoCommerce.catalogModule.categories', 'virtoCommerce.catalogModule.items', 'virtoCommerce.catalogModule.listEntries', 'platformWebApp.bladeUtils', 'platformWebApp.dialogService', 'platformWebApp.authService', 'platformWebApp.uiGridHelper',
         function ($sessionStorage, $localStorage, $timeout, $scope, categories, items, listEntries, bladeUtils, dialogService, authService, uiGridHelper) {
             $scope.uiGridConstants = uiGridHelper.uiGridConstants;
-            
+
             var blade = $scope.blade;
             var bladeNavigationService = bladeUtils.bladeNavigationService;
 
@@ -28,7 +28,7 @@
                         transformByFilters(data.listEntries);
 
                         blade.isLoading = false;
-                        $scope.pageSettings.totalItems = angular.isDefined(data.totalCount) ? data.totalCount : 0;
+                        $scope.pageSettings.totalItems = data.totalCount;
                         $scope.items = data.listEntries;
 
                         //Set navigation breadcrumbs
@@ -313,7 +313,7 @@
             $scope.hasLinks = function (listEntry) {
                 return blade.catalog.virtual && listEntry.links && (listEntry.type === 'category' ? listEntry.links.length > 0 : listEntry.links.length > 1);
             }
-            
+
             blade.toolbarCommands = [
                 {
                     name: "platform.commands.refresh",

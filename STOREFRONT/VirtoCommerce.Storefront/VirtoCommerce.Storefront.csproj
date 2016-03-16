@@ -365,6 +365,10 @@
     <Compile Include="Controllers\Api\ApiMarketingController.cs" />
     <Compile Include="Controllers\QuoteRequestController.cs" />
     <Compile Include="Converters\AttachmentConverter.cs" />
+    <Compile Include="Converters\SettingConverter.cs" />
+    <Compile Include="Converters\CatalogPropertyConverter.cs" />
+    <Compile Include="Converters\CatalogSearchCriteriaConverter.cs" />
+    <Compile Include="Converters\PriceEvaluationContextConverter.cs" />
     <Compile Include="Converters\TaxRateConverter.cs" />
     <Compile Include="Converters\CurrencyConverter.cs" />
     <Compile Include="Converters\PricelistConverter.cs" />
@@ -375,7 +379,6 @@
     <Compile Include="Converters\TierPriceConverter.cs" />
     <Compile Include="Services\CartValidator.cs" />
     <Compile Include="Services\CustomerServiceImpl.cs" />
-    <Compile Include="Services\LinkHelper.cs" />
     <Compile Include="Services\LinkListServiceImpl.cs" />
     <Compile Include="Services\PricingServiceImpl.cs" />
     <Compile Include="Controllers\Api\ApiCartController.cs" />
@@ -422,7 +425,6 @@
     <Compile Include="Converters\PromotionEvaluationContextConverter.cs" />
     <Compile Include="Converters\PromotionProductEntryConverter.cs" />
     <Compile Include="Converters\PromotionRewardConverter.cs" />
-    <Compile Include="Converters\PropertyConverter.cs" />
     <Compile Include="Converters\SeoInfoConverter.cs" />
     <Compile Include="Converters\ShipmentConverter.cs" />
     <Compile Include="Converters\ShipmentItemConverter.cs" />
@@ -438,6 +440,7 @@
     <Compile Include="Routing\SeoRouteExtensions.cs" />
     <Compile Include="Services\CatalogSearchServiceImpl.cs" />
     <Compile Include="Services\MarketingServiceImpl.cs" />
+    <Compile Include="Services\StaticContentItemFactory.cs" />
     <Compile Include="Services\StaticContentServiceImpl.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>

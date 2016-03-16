@@ -24,14 +24,10 @@ namespace VirtoCommerce.Storefront.Converters
 
             retVal.Sku = product.Code;
 
-            if(product.Category != null)
-            {
-                retVal.Category = product.Category.ToWebModel(currentLanguage);
-            }
-
+          
             if (product.Properties != null)
             {
-                retVal.Properties = product.Properties.Where(x => !String.Equals(x.Type, "Variation", StringComparison.InvariantCultureIgnoreCase))
+                retVal.Properties = product.Properties.Where(x => String.Equals(x.Type, "Product", StringComparison.InvariantCultureIgnoreCase))
                                                       .Select(p => p.ToWebModel(currentLanguage))
                                                       .ToList();
                 retVal.VariationProperties = product.Properties.Where(x => String.Equals(x.Type, "Variation", StringComparison.InvariantCultureIgnoreCase))
@@ -81,7 +77,7 @@ namespace VirtoCommerce.Storefront.Converters
             quoteItem.SalePrice = product.Price.SalePrice;
             quoteItem.ProposalPrices.Add(new TierPrice
             {
-                Price = product.Price.ActualPrice,
+                Price = product.Price.SalePrice,
                 Quantity = quantity
             });
             quoteItem.SelectedTierPrice = quoteItem.ProposalPrices.First();

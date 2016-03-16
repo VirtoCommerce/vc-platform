@@ -36,7 +36,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                 shopifyModel.Type = "product";
                 if (productLink.Product != null)
                 {
-                    shopifyModel.Object = productLink.Product.ToShopifyModel(workContext);
+                    shopifyModel.Object = productLink.Product.ToShopifyModel();
                 }
             }
             if (categoryLink != null)
@@ -44,7 +44,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                 shopifyModel.Type = "collection";
                 if (categoryLink.Category != null)
                 {
-                    shopifyModel.Object = categoryLink.Category.ToShopifyModel(workContext);
+                    shopifyModel.Object = categoryLink.Category.ToShopifyModel();
                 }
             }
             return shopifyModel;

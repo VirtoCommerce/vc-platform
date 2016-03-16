@@ -120,6 +120,10 @@
     <Compile Include="Migrations\201512301349498_AddPriceId.Designer.cs">
       <DependentUpon>201512301349498_AddPriceId.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201603140730182_ValidationType.cs" />
+    <Compile Include="Migrations\201603140730182_ValidationType.Designer.cs">
+      <DependentUpon>201603140730182_ValidationType.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\AddressEntity.cs" />
     <Compile Include="Model\DiscountEntity.cs" />
@@ -187,6 +191,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201512301349498_AddPriceId.resx">
       <DependentUpon>201512301349498_AddPriceId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603140730182_ValidationType.resx">
+      <DependentUpon>201603140730182_ValidationType.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

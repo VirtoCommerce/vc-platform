@@ -83,6 +83,7 @@
     <Compile Include="Catalog\Model\Search\Aggregation.cs" />
     <Compile Include="Catalog\Model\Search\AggregationItem.cs" />
     <Compile Include="Catalog\Model\PropertyDisplayName.cs" />
+    <Compile Include="Catalog\Model\Search\AggregationLabel.cs" />
     <Compile Include="Commerce\Model\Address.cs" />
     <Compile Include="Commerce\Model\AddressType.cs" />
     <Compile Include="Commerce\Model\Currency.cs" />
@@ -234,6 +235,7 @@
     <Compile Include="Quote\Services\IQuoteRequestService.cs" />
     <Compile Include="Quote\Services\IQuoteTotalsCalculator.cs" />
     <Compile Include="Search\Filters\AttributeFilter.cs" />
+    <Compile Include="Search\Filters\FilterDisplayName.cs" />
     <Compile Include="Search\Filters\Filters.cs">
       <DependentUpon>Filters.xsd</DependentUpon>
     </Compile>
@@ -247,6 +249,7 @@
     <Compile Include="Search\Model\DocumentField.cs" />
     <Compile Include="Search\Model\Facet.cs" />
     <Compile Include="Search\Model\FacetGroup.cs" />
+    <Compile Include="Search\Model\FacetLabel.cs" />
     <Compile Include="Search\Model\IDocument.cs" />
     <Compile Include="Search\Model\IDocumentField.cs" />
     <Compile Include="Search\Model\IDocuments.cs" />

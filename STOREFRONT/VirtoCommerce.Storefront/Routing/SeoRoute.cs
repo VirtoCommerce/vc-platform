@@ -109,7 +109,7 @@ namespace VirtoCommerce.Storefront.Routing
                 }
                 else if(!String.IsNullOrEmpty(path))
                 {
-                    var contentPage = TryToFindContentPageWithUrl(path, workContext.CurrentStore, workContext.CurrentLanguage);
+                    var contentPage = TryToFindContentPageWithUrl(workContext, path);
                     if(contentPage != null)
                     {
                         data.Values["controller"] = "Page";
@@ -127,17 +127,17 @@ namespace VirtoCommerce.Storefront.Routing
             return data;
         }
 
-        private ContentPage TryToFindContentPageWithUrl(string url, Store store, Language language)
+        private ContentItem TryToFindContentPageWithUrl(WorkContext workContext, string url)
         {
-            if (store == null)
-                return null;
-            var cacheKey = String.Join(":", "AllStaticContentForLanguage", store.Id, language.CultureName);
-            var retVal = _cacheManager.Get(cacheKey, "ContentRegion", () =>
-            {
-                return _contentService.LoadContentItemsByUrl("/", store, language, () => new ContentPage(), null,  1, int.MaxValue, renderContent: false).OfType<ContentPage>().ToArray();
-            });
             url = url.TrimStart('/');
-            return retVal.FirstOrDefault(x => string.Equals(x.Permalink, url, StringComparison.CurrentCultureIgnoreCase) || string.Equals(x.Url, url, StringComparison.InvariantCultureIgnoreCase));
+            var pages = workContext.Pages.Where(x => string.Equals(x.Permalink, url, StringComparison.CurrentCultureIgnoreCase) || string.Equals(x.Url, url, StringComparison.InvariantCultureIgnoreCase));
+            //Need return page with current  or  invariant language 
+            var retVal = pages.FirstOrDefault(x => x.Language == workContext.CurrentLanguage);
+            if(retVal == null)
+            {
+                retVal = pages.FirstOrDefault(x => x.Language.IsInvariant);
+            }
+            return retVal;
         }
 
         private List<VirtoCommerceDomainCommerceModelSeoInfo> GetSeoRecords(string path)

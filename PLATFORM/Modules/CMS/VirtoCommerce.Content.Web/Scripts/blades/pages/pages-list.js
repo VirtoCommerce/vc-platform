@@ -54,9 +54,9 @@
 
                 var newBlade = {
                     id: 'editPageBlade',
-                    choosenStoreId: blade.storeId,
-                    choosenPageName: data.id,
-                    choosenPageLanguage: data.language,
+                    chosenStoreId: blade.storeId,
+                    chosenPageName: data.id,
+                    chosenPageLanguage: data.language,
                     newPage: false,
                     body: body,
                     metadata: metadata,
@@ -72,9 +72,9 @@
             else {
                 var newBlade = {
                     id: 'editPageBlade',
-                    choosenStoreId: blade.storeId,
-                    choosenPageName: data.id,
-                    choosenPageLanguage: data.language,
+                    chosenStoreId: blade.storeId,
+                    chosenPageName: data.id,
+                    chosenPageLanguage: data.language,
                     newPage: false,
                     title: 'content.blades.edit-page.title',
                     titleValues: { name: data.name },
@@ -106,7 +106,7 @@
         if (!isBytes) {
             var newBlade = {
                 id: 'addPageBlade',
-                choosenStoreId: blade.storeId,
+                chosenStoreId: blade.storeId,
                 currentEntity: { name: path + 'new_page.md', pageName: 'new_page', content: null, contentType: 'text/html', language: null, storeId: blade.storeId },
                 newPage: true,
                 body: '',
@@ -121,7 +121,7 @@
         else {
             var newBlade = {
                 id: 'addPageBlade',
-                choosenStoreId: blade.storeId,
+                chosenStoreId: blade.storeId,
                 path: path,
                 currentEntity: { name: path + 'new_file', pageName: 'new_file', content: null, contentType: null, language: null, storeId: blade.storeId },
                 newPage: true,
@@ -260,7 +260,7 @@
 
         var newBlade = {
             id: 'openBlogNew',
-            choosenStoreId: blade.storeId,
+            chosenStoreId: blade.storeId,
             isNew: isNew,
             entity: data,
             title: title,

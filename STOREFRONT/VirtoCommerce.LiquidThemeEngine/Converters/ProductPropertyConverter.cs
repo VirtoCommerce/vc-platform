@@ -7,7 +7,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
 {
     public static class ProductPropertyConverter
     {
-        public static ProductProperty ToShopifyModel(this StorefrontModel.Catalog.ProductProperty property)
+        public static ProductProperty ToShopifyModel(this StorefrontModel.Catalog.CatalogProperty property)
         {
             var result = new ProductProperty();
 

@@ -41,6 +41,11 @@ namespace VirtoCommerce.LiquidThemeEngine
 
         public ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName, bool useCache)
         {
+            if (String.IsNullOrEmpty(masterName))
+            {
+                masterName = _themeEngine.MasterViewName;
+            }
+
             if (_themeEngine.ResolveTemplatePath(viewName) != null)
             {
                 return new ViewEngineResult(new DotLiquidThemedView(_themeEngine, viewName, masterName), this);

@@ -19,7 +19,7 @@
             },
                 function (data) {
                     blade.isLoading = false;
-                    $scope.pageSettings.totalItems = angular.isDefined(data.totalCount) ? data.totalCount : 0;
+                    $scope.pageSettings.totalItems = data.totalCount;
                     $scope.listEntries = data.members;
 
                     //Set navigation breadcrumbs

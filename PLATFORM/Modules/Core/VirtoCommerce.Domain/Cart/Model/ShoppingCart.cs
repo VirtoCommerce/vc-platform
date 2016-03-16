@@ -28,7 +28,13 @@ namespace VirtoCommerce.Domain.Cart.Model
 		public string WeightUnit { get; set; }
 		public decimal? Weight { get; set; }
 
-		public decimal? VolumetricWeight { get; set; }
+        /// <summary>
+        /// Represent any line item validation type (noPriceValidate, noQuantityValidate etc) this value can be used in storefront 
+        /// to select appropriate validation strategy
+        /// </summary>
+        public string ValidationType { get; set; }
+
+        public decimal? VolumetricWeight { get; set; }
 
 		public decimal Total { get; set; }
 		public decimal SubTotal { get; set; }

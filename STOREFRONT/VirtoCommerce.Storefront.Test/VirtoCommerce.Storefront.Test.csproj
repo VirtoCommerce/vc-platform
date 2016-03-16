@@ -46,6 +46,14 @@
       <HintPath>..\packages\MarkdownDeep.NET.1.5\lib\.NetFramework 3.5\MarkdownDeep.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\EnterpriseLibrary.TransientFaultHandling.6.0.1304.0\lib\portable-net45+win+wp8\Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.Data, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\EnterpriseLibrary.TransientFaultHandling.Data.6.0.1304.1\lib\NET45\Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.Data.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Moq, Version=4.2.1510.2205, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <HintPath>..\packages\Moq.4.2.1510.2205\lib\net40\Moq.dll</HintPath>
       <Private>True</Private>
@@ -86,15 +94,22 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConcurrentAsyncLockTests.cs" />
+    <Compile Include="MutablePagedListTests.cs" />
+    <None Include="Pages\TestStore\blogs\news\default.md" />
     <Compile Include="QuoteRequestTests.cs" />
+    <Compile Include="PermalinkUrlTests.cs" />
     <Compile Include="ShoppingCartTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StaticContentTests.cs" />
+    <Compile Include="StaticContentScenarios.cs" />
     <Compile Include="StorefrontTestBase.cs" />
+    <Compile Include="UrlBuilderTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+    <None Include="Pages\TestStore\about_us_permalink.md" />
+    <None Include="Pages\TestStore\blogs\news\2015-11-11-post1.md" />
+    <None Include="Pages\TestStore\blogs\news\2016-01-01-post2.md" />
     <None Include="Pages\TestStore\folder1\about_us.en-US.md" />
     <None Include="Pages\TestStore\about_us.de-DE.md" />
     <None Include="Pages\TestStore\about_us.md" />

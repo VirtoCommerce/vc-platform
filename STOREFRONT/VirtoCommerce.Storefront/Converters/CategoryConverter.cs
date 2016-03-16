@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Omu.ValueInjecter;
 using VirtoCommerce.Client.Model;
 using VirtoCommerce.Storefront.Model;
@@ -23,7 +24,12 @@ namespace VirtoCommerce.Storefront.Converters
                 retVal.PrimaryImage = retVal.Images.FirstOrDefault();
             }
 
-
+            if (category.Properties != null)
+            {
+                retVal.Properties = category.Properties.Where(x => string.Equals(x.Type, "Category", StringComparison.InvariantCultureIgnoreCase))
+                                                      .Select(p => p.ToWebModel(currentLanguage))
+                                                      .ToList();
+            }
             return retVal;
         }
     }

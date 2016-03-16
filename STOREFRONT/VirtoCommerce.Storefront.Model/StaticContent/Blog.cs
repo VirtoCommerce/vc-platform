@@ -9,6 +9,10 @@ namespace VirtoCommerce.Storefront.Model.StaticContent
 {
     public class Blog : ContentItem
     {
-        public IStorefrontPagedList<BlogArticle> Articles { get; set; }
+        public Blog()
+        {
+            Permalink = ":folder";
+        }
+        public IMutablePagedList<BlogArticle> Articles { get; set; }
     }
 }

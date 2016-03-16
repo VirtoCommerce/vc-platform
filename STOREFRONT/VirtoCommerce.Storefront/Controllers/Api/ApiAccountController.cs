@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Web.Mvc;
 using VirtoCommerce.Storefront.Common;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Common;
@@ -18,6 +19,11 @@ namespace VirtoCommerce.Storefront.Controllers.Api
         [AllowAnonymous]
         public ActionResult GetCurrentCustomer()
         {
+            foreach (var address in WorkContext.CurrentCustomer.Addresses)
+            {
+                address.Id = Guid.NewGuid().ToString();
+            }
+
             return Json(WorkContext.CurrentCustomer);
         }
     }

@@ -1,6 +1,7 @@
 ﻿using DotLiquid;
 using System.Runtime.Serialization;
 using VirtoCommerce.Storefront.Model.Common;
+using PagedList;
 
 namespace VirtoCommerce.LiquidThemeEngine.Objects
 {
@@ -105,7 +106,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         /// <summary>
         /// Returns paged collection of products
         /// </summary>
-        public IStorefrontPagedList<Product> Products { get; set; }
+        public IMutablePagedList<Product> Products { get; set; }
 
         /// <summary>
         /// Returns collection total products count
@@ -136,5 +137,10 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         /// </summary>
         [DataMember]
         public string Url { get; set; }
+
+        /// <summary>
+        /// Shop metafields
+        /// </summary>
+        public MetaFieldNamespacesCollection Metafields { get; set; }
     }
 }

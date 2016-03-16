@@ -1,11 +1,11 @@
-﻿using System;
+﻿using System.Globalization;
 using System.Linq;
 using Lucene.Net.Index;
 using Lucene.Net.Search;
 using Lucene.Net.Util;
-using VirtoCommerce.Domain.Search;
 using VirtoCommerce.Domain.Search.Filters;
 using VirtoCommerce.Domain.Search.Model;
+using VirtoCommerce.SearchModule.Data.Services;
 
 namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
 {
@@ -19,9 +19,9 @@ namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
         /// <returns></returns>
         public static string ConvertToSearchable(object value, bool tryConvertToNumber = true)
         {
-            if (value == null || String.IsNullOrEmpty(value.ToString()))
+            if (value == null || string.IsNullOrEmpty(value.ToString()))
             {
-                return String.Empty;
+                return string.Empty;
             }
 
             if (tryConvertToNumber)
@@ -30,11 +30,11 @@ namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
                 int intVal;
 
                 // Try converting to a known type
-                if (Decimal.TryParse(value.ToString(), out decimalVal))
+                if (decimal.TryParse(value.ToString(), out decimalVal))
                 {
                     value = decimalVal;
                 }
-                else if (Int32.TryParse(value.ToString(), out intVal))
+                else if (int.TryParse(value.ToString(), out intVal))
                 {
                     value = intVal;
                 }
@@ -60,7 +60,7 @@ namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
 
         public static Filter CreateQuery(ISearchCriteria criteria, ISearchFilter filter, Occur clause)
         {
-            var values = GetFilterValues(filter);
+            var values = filter.GetValues();
             if (values == null)
                 return null;
 
@@ -76,45 +76,24 @@ namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
 
         public static Filter CreateQueryForValue(ISearchCriteria criteria, ISearchFilter filter, ISearchFilterValue value)
         {
-            Filter q = null;
+            Filter q;
             var priceQuery = filter is PriceRangeFilter;
-            if (value is RangeFilterValue && priceQuery)
+
+            var rangeFilterValue = value as RangeFilterValue;
+            if (rangeFilterValue != null && priceQuery)
             {
-                q = LuceneQueryHelper.CreateQuery(
-                    criteria, filter.Key, value as RangeFilterValue);
+                q = CreateQuery(criteria, filter.Key, rangeFilterValue);
             }
             else if (value is CategoryFilterValue)
             {
-                q = CreateQuery(filter.Key, value as CategoryFilterValue);
+                q = CreateQuery(filter.Key, (CategoryFilterValue)value);
             }
             else
             {
                 q = CreateQuery(filter.Key, value);
             }
+
             return q;
-        }
-
-        public static ISearchFilterValue[] GetFilterValues(ISearchFilter filter)
-        {
-            ISearchFilterValue[] values = null;
-            if (filter is AttributeFilter)
-            {
-                values = ((AttributeFilter)filter).Values;
-            }
-            else if (filter is RangeFilter)
-            {
-                values = ((RangeFilter)filter).Values;
-            }
-            else if (filter is PriceRangeFilter)
-            {
-                values = ((PriceRangeFilter)filter).Values;
-            }
-            else if (filter is CategoryFilter)
-            {
-                values = ((CategoryFilter)filter).Values;
-            }
-
-            return values;
         }
 
         /// <summary>
@@ -127,13 +106,16 @@ namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
         {
             field = field.ToLower();
 
-            if (value.GetType() == typeof(AttributeFilterValue))
+            var attributeFilterValue = value as AttributeFilterValue;
+            if (attributeFilterValue != null)
             {
-                return CreateQuery(field, value as AttributeFilterValue);
+                return CreateTermsFilter(field, attributeFilterValue);
             }
-            if (value.GetType() == typeof(RangeFilterValue))
+
+            var rangeFilterValue = value as RangeFilterValue;
+            if (rangeFilterValue != null)
             {
-                return CreateQuery(field, value as RangeFilterValue);
+                return CreateTermRangeFilter(field, rangeFilterValue);
             }
 
             return null;
@@ -145,13 +127,26 @@ namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
         /// <param name="field">The field.</param>
         /// <param name="value">The value.</param>
         /// <returns></returns>
-        public static Filter CreateQuery(string field, RangeFilterValue value)
+        public static Filter CreateTermsFilter(string field, AttributeFilterValue value)
+        {
+            object val = value.Id;
+            var query = new TermsFilter();
+            query.AddTerm(new Term(field, ConvertToSearchable(val, false)));
+            return query;
+        }
+
+        /// <summary>
+        ///     Creates the query.
+        /// </summary>
+        /// <param name="field">The field.</param>
+        /// <param name="value">The value.</param>
+        /// <returns></returns>
+        public static Filter CreateTermRangeFilter(string field, RangeFilterValue value)
         {
             object lowerbound = value.Lower;
             object upperbound = value.Upper;
 
-            var query = new TermRangeFilter(
-                field, ConvertToSearchable(lowerbound), ConvertToSearchable(upperbound), true, false);
+            var query = new TermRangeFilter(field, ConvertToSearchable(lowerbound), ConvertToSearchable(upperbound), true, false);
             return query;
         }
 
@@ -164,7 +159,7 @@ namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
         public static Filter CreateQuery(string field, CategoryFilterValue value)
         {
             var query = new BooleanFilter();
-            if (!String.IsNullOrEmpty(value.Outline))
+            if (!string.IsNullOrEmpty(value.Outline))
             {
                 // workaround since there is no wildcard filter in current lucene version
                 var outline = value.Outline.TrimEnd('*');
@@ -177,6 +172,7 @@ namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
         /// <summary>
         ///     Creates the query.
         /// </summary>
+        /// <param name="criteria">The search criteria.</param>
         /// <param name="field">The field.</param>
         /// <param name="value">The value.</param>
         /// <returns></returns>
@@ -202,8 +198,6 @@ namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
                 pls = searchCriteria.Pricelists;
             }
 
-            var parentPriceList = String.Empty;
-
             // Create  filter of type 
             // price_USD_pricelist1:[100 TO 200} (-price_USD_pricelist1:[* TO *} +(price_USD_pricelist2:[100 TO 200} (-price_USD_pricelist2:[* TO *} (+price_USD_pricelist3[100 TO 200}))))
 
@@ -215,7 +209,7 @@ namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
             var priceListId = pls[0].ToLower();
 
             var filter = new TermRangeFilter(
-                String.Format("{0}_{1}_{2}", field, currency, priceListId),
+                string.Format(CultureInfo.InvariantCulture, "{0}_{1}_{2}", field, currency, priceListId),
                 ConvertToSearchable(lowerbound),
                 upper,
                 lowerboundincluded,
@@ -223,7 +217,7 @@ namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
 
             query.Add(new FilterClause(filter, Occur.SHOULD));
 
-            if (pls.Count() > 1)
+            if (pls.Length > 1)
             {
                 var q = CreatePriceRangeQuery(
                     pls,
@@ -239,22 +233,6 @@ namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
 
             return query;
         }
-
-        /// <summary>
-        ///     Creates the query.
-        /// </summary>
-        /// <param name="field">The field.</param>
-        /// <param name="value">The value.</param>
-        /// <returns></returns>
-        public static Filter CreateQuery(string field, AttributeFilterValue value)
-        {
-            object val = value.Value;
-            var query = new TermsFilter();
-            query.AddTerm(new Term(field, ConvertToSearchable(val, false)));
-            return query;
-        }
-
-
 
 
         /// <summary>
@@ -288,7 +266,7 @@ namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
             // create left part
             var filter =
                 new TermRangeFilter(
-                    String.Format("{0}_{1}_{2}", field, currency, priceLists[index - 1].ToLower()),
+                    string.Format(CultureInfo.InvariantCulture, "{0}_{1}_{2}", field, currency, priceLists[index - 1].ToLower()),
                     "*",
                     "*",
                     true,
@@ -297,12 +275,12 @@ namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
             query.Add(leftClause);
 
             // create right part
-            if (index == priceLists.Count()) // last element
+            if (index == priceLists.Length) // last element
             {
                 //var rangefilter = NumericRangeFilter.;
                 var filter2 =
                     new TermRangeFilter(
-                        String.Format("{0}_{1}_{2}", field, currency, priceLists[index - 1].ToLower()),
+                        string.Format(CultureInfo.InvariantCulture, "{0}_{1}_{2}", field, currency, priceLists[index - 1].ToLower()),
                         lowerbound,
                         upperbound,
                         lowerboundincluded,

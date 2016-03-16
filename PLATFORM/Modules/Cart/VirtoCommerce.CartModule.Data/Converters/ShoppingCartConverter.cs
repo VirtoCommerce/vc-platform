@@ -87,7 +87,7 @@ namespace VirtoCommerce.CartModule.Data.Converters
 			if (target == null)
 				throw new ArgumentNullException("target");
 
-			var patchInjectionPolicy = new PatchInjection<ShoppingCartEntity>(x => x.Currency, x => x.Name,
+			var patchInjectionPolicy = new PatchInjection<ShoppingCartEntity>(x => x.Currency, x => x.Name, x=> x.ValidationType,
 																						  x => x.CustomerId, x => x.CustomerName,
 																						  x => x.IsAnonymous, x => x.IsRecuring, x => x.LanguageCode, x => x.Comment,
 																						  x => x.OrganizationId, x => x.Total, x => x.SubTotal, x => x.ShippingTotal,

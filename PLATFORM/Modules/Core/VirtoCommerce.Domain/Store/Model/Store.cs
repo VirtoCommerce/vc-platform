@@ -10,7 +10,7 @@ using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.Domain.Store.Model
 {
-    public class Store : AuditableEntity, IHasDynamicProperties, ISeoSupport
+    public class Store : AuditableEntity, IHasDynamicProperties, IHaveSettings, ISeoSupport
     {
         public string Name { get; set; }
         public string Description { get; set; }
@@ -72,6 +72,10 @@ namespace VirtoCommerce.Domain.Store.Model
         #region IHasDynamicProperties Members
         public string ObjectType { get; set; }
         public ICollection<DynamicObjectProperty> DynamicProperties { get; set; }
+        #endregion
+
+        #region IHaveSettings Members
+        public ICollection<SettingEntry> Settings { get; set; }
         #endregion
     }
 }

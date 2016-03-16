@@ -22,21 +22,36 @@ namespace VirtoCommerce.Storefront.Controllers
         }
 
         //Called from SEO route by page permalink
-        public ActionResult GetContentPage(ContentPage page)
+        public ActionResult GetContentPage(ContentItem page)
         {
-            base.WorkContext.CurrentPage = page;
-            return View("page", page.Layout, base.WorkContext);
+            if (page is BlogArticle)
+            {
+                base.WorkContext.CurrentBlogArticle = page as BlogArticle;
+                return View("article", page.Layout, base.WorkContext);
+            }
+            else
+            {
+                base.WorkContext.CurrentPage = page as ContentPage;
+                return View("page", page.Layout, base.WorkContext);
+            }
         }
 
         // GET: /pages/{page}
         public ActionResult GetContentPageByName(string page)
         {
-            var contentPage = _contentService.LoadContentItemsByUrl(page, base.WorkContext.CurrentStore, base.WorkContext.CurrentLanguage, () => new ContentPage()).FirstOrDefault();
+
+            var contentPages = base.WorkContext.Pages.Where(x => string.Equals(x.Url, page, StringComparison.OrdinalIgnoreCase));
+            var contentPage = contentPages.FirstOrDefault(x => x.Language == base.WorkContext.CurrentLanguage);
+            if(contentPage == null)
+            {
+                contentPage = contentPages.FirstOrDefault(x => x.Language.IsInvariant);
+            }
+
             if (contentPage != null)
             {
                 base.WorkContext.CurrentPage = contentPage as ContentPage;
 
-                return View("page", contentPage.Layout, base.WorkContext);
+                return View("page", base.WorkContext);
             }
             throw new HttpException(404, "Page with " + page + " not found.");
         }

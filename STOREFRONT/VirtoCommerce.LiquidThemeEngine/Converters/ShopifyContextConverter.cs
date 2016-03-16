@@ -1,6 +1,10 @@
-﻿using System.Linq;
+﻿using PagedList;
+using System;
+using System.Linq;
+using System.Web;
 using VirtoCommerce.LiquidThemeEngine.Objects;
 using VirtoCommerce.Storefront.Model.Common;
+using VirtoCommerce.Storefront.Model.StaticContent;
 using storefrontModel = VirtoCommerce.Storefront.Model;
 
 namespace VirtoCommerce.LiquidThemeEngine.Converters
@@ -31,17 +35,12 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             result.PageTitle = workContext.CurrentPageSeo != null ? workContext.CurrentPageSeo.Title : string.Empty;
             result.Shop = workContext.CurrentStore != null ? workContext.CurrentStore.ToShopifyModel(workContext) : null;
             result.Cart = workContext.CurrentCart != null ? workContext.CurrentCart.ToShopifyModel(workContext) : null;
-            result.Product = workContext.CurrentProduct != null ? workContext.CurrentProduct.ToShopifyModel(workContext) : null;
+            result.Product = workContext.CurrentProduct != null ? workContext.CurrentProduct.ToShopifyModel() : null;
             result.Customer = workContext.CurrentCustomer != null && workContext.CurrentCustomer.IsRegisteredUser ? workContext.CurrentCustomer.ToShopifyModel(workContext, urlBuilder) : null;
             result.AllStores = workContext.AllStores.Select(x => x.ToShopifyModel(workContext)).ToArray();
 
             result.CurrentCurrency = workContext.CurrentCurrency != null ? workContext.CurrentCurrency.ToShopifyModel() : null;
             result.CurrentLanguage = workContext.CurrentLanguage != null ? workContext.CurrentLanguage.ToShopifyModel() : null;
-
-            if (workContext.CurrentProduct != null && workContext.CurrentProduct.Category != null)
-            {
-                result.Collection = workContext.CurrentProduct.Category.ToShopifyModel(workContext);
-            }
 
             if (workContext.CurrentCatalogSearchCriteria != null && workContext.CurrentCatalogSearchCriteria.Terms.Any())
             {
@@ -50,20 +49,34 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                         workContext.CurrentCatalogSearchCriteria.Terms.Select(t => t.ToShopifyModel()).ToList());
             }
 
-            var searchResult = workContext.CurrentCatalogSearchResult;
-            if (searchResult != null)
+            if(workContext.CurrentCategory != null)
             {
-                result.Collection = searchResult.ToShopifyModel(workContext);
+                result.Collection = workContext.CurrentCategory.ToShopifyModel(workContext.Aggregations, workContext.CurrentCatalogSearchCriteria.SortBy);
+            }
 
-                if (searchResult.Categories != null)
+            if (workContext.Categories != null)
+            {
+                result.Collections = new Collections(new MutablePagedList<Collection>((pageNumber, pageSize) =>
                 {
-                    result.Collections = new Collections(searchResult.Categories.Select(x => x.ToShopifyModel(workContext)));
+                    workContext.Categories.Slice(pageNumber, pageSize);
+                    return new StaticPagedList<Collection>(workContext.Categories.Select(x => x.ToShopifyModel(workContext.Aggregations, workContext.CurrentCatalogSearchCriteria.SortBy)), workContext.Categories);
+                }));
                 }
+
+            if(!string.IsNullOrEmpty(workContext.CurrentCatalogSearchCriteria.Keyword) && workContext.Products != null)
+            {
+                result.Search = workContext.Products.ToShopifyModel(workContext.CurrentCatalogSearchCriteria.Keyword);
             }
 
             if (workContext.CurrentLinkLists != null)
             {
                 result.Linklists = new Linklists(workContext.CurrentLinkLists.Select(x => x.ToShopifyModel(workContext)));
+            }
+
+            if (workContext.Pages != null)
+            {
+                result.Pages = new Pages(workContext.Pages.OfType<ContentPage>().Select(x => x.ToShopifyModel()));
+                result.Blogs = new Blogs(workContext.Blogs.Select(x => x.ToShopifyModel(workContext.CurrentLanguage)));
             }
 
             if (workContext.CurrentOrder != null)
@@ -76,6 +89,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                 result.QuoteRequest = workContext.CurrentQuoteRequest.ToShopifyModel();
             }
 
+            
             result.PaymentFormHtml = workContext.PaymentFormHtml;
 
             if (workContext.CurrentPage != null)
@@ -85,7 +99,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
 
             if (workContext.CurrentBlog != null)
             {
-                result.Blog = workContext.CurrentBlog.ToShopifyModel();
+                result.Blog = workContext.CurrentBlog.ToShopifyModel(workContext.CurrentLanguage);
             }
 
             if (workContext.CurrentBlogArticle != null)
@@ -121,6 +135,15 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                 var storeName = workContext.CurrentStore.Name;
                 var hashCode = (uint)storeName.GetHashCode();
                 result.PoweredByLink = _poweredLinks[hashCode % _poweredLinks.Length];
+            }
+
+            result.CurrentPage = 1;
+            if (workContext.RequestUrl != null)
+            {
+                result.RequestUrl = workContext.RequestUrl.ToString();
+                //Populate current page number
+                var qs = HttpUtility.ParseQueryString(workContext.RequestUrl.Query);
+                result.CurrentPage = Convert.ToInt32(qs.Get("page") ?? 1.ToString());
             }
             return result;
         }

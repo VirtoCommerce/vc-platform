@@ -25,7 +25,7 @@ namespace VirtoCommerce.LiquidThemeEngine
 
             _themeAdaptor = themeAdaptor;
             _viewName = viewName;
-            _masterViewName = String.IsNullOrEmpty(masterViewName) ? _themeAdaptor.MasterViewName : masterViewName;
+            _masterViewName = masterViewName;
         }
 
         #region IView members
@@ -67,19 +67,28 @@ namespace VirtoCommerce.LiquidThemeEngine
             }
 
             var viewTemplate = _themeAdaptor.RenderTemplateByName(_viewName, parameters);
-            var masterViewName = _masterViewName;
-            object layoutFromTemplate;
-            if (parameters.TryGetValue("layout", out layoutFromTemplate))
+
+            // don't use layouts for partial views when masterViewName is not specified
+            if (_masterViewName != null)
             {
-                masterViewName = layoutFromTemplate.ToString();
+                var masterViewName = _masterViewName;
+                object layoutFromTemplate;
+                if (parameters.TryGetValue("layout", out layoutFromTemplate))
+                {
+                    masterViewName = layoutFromTemplate.ToString();
+                }
+                //if layout specified need render with master page
+                if (!String.IsNullOrEmpty(masterViewName))
+                {
+                    var headerTemplate = _themeAdaptor.RenderTemplateByName("content_header", parameters);
+
+                    //add special placeholder 'content_for_layout' to content it will be replaced in master page by main content
+                    parameters.Add("content_for_layout", viewTemplate);
+                    parameters.Add("content_for_header", headerTemplate);
+                    viewTemplate = _themeAdaptor.RenderTemplateByName(masterViewName, parameters);
+                }
             }
-            //if layout specified need render with master page
-            if (!String.IsNullOrEmpty(masterViewName))
-            {
-                //add special placeholder 'content_for_layout' to content it will be replaced in master page by main content
-                parameters.Add("content_for_layout", viewTemplate);
-                viewTemplate = _themeAdaptor.RenderTemplateByName(masterViewName, parameters);
-            }
+
             writer.Write(viewTemplate);
 
         }

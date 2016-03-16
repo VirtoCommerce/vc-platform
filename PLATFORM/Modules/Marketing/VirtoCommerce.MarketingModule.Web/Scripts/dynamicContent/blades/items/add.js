@@ -3,7 +3,7 @@
 	var blade = $scope.blade;
 
 	blade.addFolder = function () {
-		var data = { name: '', description: '', parentFolderId: blade.choosenFolder, items: [], childrenFolders: [] };
+		var data = { name: '', description: '', parentFolderId: blade.chosenFolder, items: [], childrenFolders: [] };
 		blade.parentBlade.addNewFolder(data);
 	};
 
@@ -13,7 +13,7 @@
 	        	item.values = [];
 	        	item.displayNames = [];
 	        });
-	        var contentItem = { name: '', description: '', folderId: blade.choosenFolder, dynamicProperties: data };
+	        var contentItem = { name: '', description: '', folderId: blade.chosenFolder, dynamicProperties: data };
 	        blade.parentBlade.addNewContentItem(contentItem);
 	    });
 	};

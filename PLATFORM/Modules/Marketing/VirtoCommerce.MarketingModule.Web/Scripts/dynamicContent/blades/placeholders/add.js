@@ -3,12 +3,12 @@
 	var blade = $scope.blade;
 
 	blade.addFolder = function () {
-		var data = { outline: '', name: '', description: '', parentFolderId: blade.choosenFolder};
+		var data = { outline: '', name: '', description: '', parentFolderId: blade.chosenFolder};
 		blade.parentBlade.addNewFolder(data);
 	};
 
 	blade.addPlaceholder = function () {
-	    var data = { name: '', description: '', imageUrl: 'Modules/$(VirtoCommerce.Marketing)/Content/images/noimage.png', folderId: blade.choosenFolder };
+	    var data = { name: '', description: '', imageUrl: 'Modules/$(VirtoCommerce.Marketing)/Content/images/noimage.png', folderId: blade.chosenFolder };
 		blade.parentBlade.addNewPlaceholder(data);
 	};
 

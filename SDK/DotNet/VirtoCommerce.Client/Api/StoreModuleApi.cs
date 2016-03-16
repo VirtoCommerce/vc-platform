@@ -180,8 +180,8 @@ namespace VirtoCommerce.Client.Api
         /// 
         /// </remarks>
         /// <param name="userId"></param>
-        /// <returns>List&lt;string&gt;</returns>
-        List<string> StoreModuleGetUserAllowedStores (string userId);
+        /// <returns>List&lt;VirtoCommerceStoreModuleWebModelStore&gt;</returns>
+        List<VirtoCommerceStoreModuleWebModelStore> StoreModuleGetUserAllowedStores (string userId);
   
         /// <summary>
         /// Returns list of stores which user can sign in
@@ -190,8 +190,8 @@ namespace VirtoCommerce.Client.Api
         /// 
         /// </remarks>
         /// <param name="userId"></param>
-        /// <returns>ApiResponse of List&lt;string&gt;</returns>
-        ApiResponse<List<string>> StoreModuleGetUserAllowedStoresWithHttpInfo (string userId);
+        /// <returns>ApiResponse of List&lt;VirtoCommerceStoreModuleWebModelStore&gt;</returns>
+        ApiResponse<List<VirtoCommerceStoreModuleWebModelStore>> StoreModuleGetUserAllowedStoresWithHttpInfo (string userId);
 
         /// <summary>
         /// Returns list of stores which user can sign in
@@ -200,8 +200,8 @@ namespace VirtoCommerce.Client.Api
         /// 
         /// </remarks>
         /// <param name="userId"></param>
-        /// <returns>Task of List&lt;string&gt;</returns>
-        System.Threading.Tasks.Task<List<string>> StoreModuleGetUserAllowedStoresAsync (string userId);
+        /// <returns>Task of List&lt;VirtoCommerceStoreModuleWebModelStore&gt;</returns>
+        System.Threading.Tasks.Task<List<VirtoCommerceStoreModuleWebModelStore>> StoreModuleGetUserAllowedStoresAsync (string userId);
 
         /// <summary>
         /// Returns list of stores which user can sign in
@@ -210,8 +210,8 @@ namespace VirtoCommerce.Client.Api
         /// 
         /// </remarks>
         /// <param name="userId"></param>
-        /// <returns>Task of ApiResponse (List&lt;string&gt;)</returns>
-        System.Threading.Tasks.Task<ApiResponse<List<string>>> StoreModuleGetUserAllowedStoresAsyncWithHttpInfo (string userId);
+        /// <returns>Task of ApiResponse (List&lt;VirtoCommerceStoreModuleWebModelStore&gt;)</returns>
+        System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceStoreModuleWebModelStore>>> StoreModuleGetUserAllowedStoresAsyncWithHttpInfo (string userId);
         
         /// <summary>
         /// Search stores
@@ -1058,10 +1058,10 @@ namespace VirtoCommerce.Client.Api
         /// Returns list of stores which user can sign in 
         /// </summary>
         /// <param name="userId"></param> 
-        /// <returns>List&lt;string&gt;</returns>
-        public List<string> StoreModuleGetUserAllowedStores (string userId)
+        /// <returns>List&lt;VirtoCommerceStoreModuleWebModelStore&gt;</returns>
+        public List<VirtoCommerceStoreModuleWebModelStore> StoreModuleGetUserAllowedStores (string userId)
         {
-             ApiResponse<List<string>> response = StoreModuleGetUserAllowedStoresWithHttpInfo(userId);
+             ApiResponse<List<VirtoCommerceStoreModuleWebModelStore>> response = StoreModuleGetUserAllowedStoresWithHttpInfo(userId);
              return response.Data;
         }
 
@@ -1069,8 +1069,8 @@ namespace VirtoCommerce.Client.Api
         /// Returns list of stores which user can sign in 
         /// </summary>
         /// <param name="userId"></param> 
-        /// <returns>ApiResponse of List&lt;string&gt;</returns>
-        public ApiResponse< List<string> > StoreModuleGetUserAllowedStoresWithHttpInfo (string userId)
+        /// <returns>ApiResponse of List&lt;VirtoCommerceStoreModuleWebModelStore&gt;</returns>
+        public ApiResponse< List<VirtoCommerceStoreModuleWebModelStore> > StoreModuleGetUserAllowedStoresWithHttpInfo (string userId)
         {
             
             // verify the required parameter 'userId' is set
@@ -1125,9 +1125,9 @@ namespace VirtoCommerce.Client.Api
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling StoreModuleGetUserAllowedStores: " + response.ErrorMessage, response.ErrorMessage);
     
-            return new ApiResponse<List<string>>(statusCode,
+            return new ApiResponse<List<VirtoCommerceStoreModuleWebModelStore>>(statusCode,
                 response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (List<string>) Configuration.ApiClient.Deserialize(response, typeof(List<string>)));
+                (List<VirtoCommerceStoreModuleWebModelStore>) Configuration.ApiClient.Deserialize(response, typeof(List<VirtoCommerceStoreModuleWebModelStore>)));
             
         }
     
@@ -1135,10 +1135,10 @@ namespace VirtoCommerce.Client.Api
         /// Returns list of stores which user can sign in 
         /// </summary>
         /// <param name="userId"></param>
-        /// <returns>Task of List&lt;string&gt;</returns>
-        public async System.Threading.Tasks.Task<List<string>> StoreModuleGetUserAllowedStoresAsync (string userId)
+        /// <returns>Task of List&lt;VirtoCommerceStoreModuleWebModelStore&gt;</returns>
+        public async System.Threading.Tasks.Task<List<VirtoCommerceStoreModuleWebModelStore>> StoreModuleGetUserAllowedStoresAsync (string userId)
         {
-             ApiResponse<List<string>> response = await StoreModuleGetUserAllowedStoresAsyncWithHttpInfo(userId);
+             ApiResponse<List<VirtoCommerceStoreModuleWebModelStore>> response = await StoreModuleGetUserAllowedStoresAsyncWithHttpInfo(userId);
              return response.Data;
 
         }
@@ -1147,8 +1147,8 @@ namespace VirtoCommerce.Client.Api
         /// Returns list of stores which user can sign in 
         /// </summary>
         /// <param name="userId"></param>
-        /// <returns>Task of ApiResponse (List&lt;string&gt;)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<List<string>>> StoreModuleGetUserAllowedStoresAsyncWithHttpInfo (string userId)
+        /// <returns>Task of ApiResponse (List&lt;VirtoCommerceStoreModuleWebModelStore&gt;)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceStoreModuleWebModelStore>>> StoreModuleGetUserAllowedStoresAsyncWithHttpInfo (string userId)
         {
             // verify the required parameter 'userId' is set
             if (userId == null) throw new ApiException(400, "Missing required parameter 'userId' when calling StoreModuleGetUserAllowedStores");
@@ -1201,9 +1201,9 @@ namespace VirtoCommerce.Client.Api
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling StoreModuleGetUserAllowedStores: " + response.ErrorMessage, response.ErrorMessage);
 
-            return new ApiResponse<List<string>>(statusCode,
+            return new ApiResponse<List<VirtoCommerceStoreModuleWebModelStore>>(statusCode,
                 response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (List<string>) Configuration.ApiClient.Deserialize(response, typeof(List<string>)));
+                (List<VirtoCommerceStoreModuleWebModelStore>) Configuration.ApiClient.Deserialize(response, typeof(List<VirtoCommerceStoreModuleWebModelStore>)));
             
         }
         

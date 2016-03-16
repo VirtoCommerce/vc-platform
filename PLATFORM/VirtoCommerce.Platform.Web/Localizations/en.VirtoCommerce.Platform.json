@@ -518,9 +518,7 @@
         "subtitle": "User management"
       },
       "entitySetting-list": {
-        "placeholders": {
-          "entity": "Select ..."
-        }
+        "title": "Settings"
       },
       "setting-dictionary": {
         "subtitle": "Manage dictionary values",
@@ -575,6 +573,9 @@
       },
       "dynamicProperty": {
         "title": "Dynamic properties"
+      },
+      "entitySettings": {
+        "title": "Settings"
       },
       "accountApi": {
         "title": "API Keys",

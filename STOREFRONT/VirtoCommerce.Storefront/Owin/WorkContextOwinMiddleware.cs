@@ -16,6 +16,7 @@ using Microsoft.Owin.Security;
 using Microsoft.Practices.Unity;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using PagedList;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.Client.Model;
 using VirtoCommerce.Storefront.Common;
@@ -28,6 +29,9 @@ using VirtoCommerce.Storefront.Model.Customer;
 using VirtoCommerce.Storefront.Model.Customer.Services;
 using VirtoCommerce.Storefront.Model.LinkList.Services;
 using VirtoCommerce.Storefront.Model.Quote.Services;
+using VirtoCommerce.Storefront.Model.Services;
+using VirtoCommerce.Storefront.Model.StaticContent;
+using VirtoCommerce.LiquidThemeEngine.Extensions;
 
 namespace VirtoCommerce.Storefront.Owin
 {
@@ -45,6 +49,9 @@ namespace VirtoCommerce.Storefront.Owin
         private readonly IQuoteRequestBuilder _quoteRequestBuilder;
         private readonly ICMSContentModuleApi _cmsApi;
         private readonly ICacheManager<object> _cacheManager;
+        private readonly ICatalogModuleApi _catalogModuleApi;
+        private readonly ISearchModuleApi _searchApi;
+        private readonly IStaticContentService _staticContentService;
 
         private readonly UnityContainer _container;
 
@@ -60,6 +67,9 @@ namespace VirtoCommerce.Storefront.Owin
             _pricingModuleApi = container.Resolve<IPricingModuleApi>();
             _commerceApi = container.Resolve<ICommerceCoreModuleApi>();
             _cacheManager = container.Resolve<ICacheManager<object>>();
+            _catalogModuleApi = container.Resolve<ICatalogModuleApi>();
+            _searchApi = container.Resolve<ISearchModuleApi>();
+            _staticContentService = container.Resolve<IStaticContentService>();
             _container = container;
         }
 
@@ -72,6 +82,7 @@ namespace VirtoCommerce.Storefront.Owin
 
                 var linkListService = _container.Resolve<IMenuLinkListService>();
                 var cartBuilder = _container.Resolve<ICartBuilder>();
+                var catalogSearchService = _container.Resolve<ICatalogSearchService>();
 
                 // Initialize common properties
                 workContext.RequestUrl = context.Request.Uri;
@@ -97,10 +108,46 @@ namespace VirtoCommerce.Storefront.Owin
 
                     var qs = HttpUtility.ParseQueryString(workContext.RequestUrl.Query);
                     //Initialize catalog search criteria
-                    workContext.CurrentCatalogSearchCriteria = new CatalogSearchCriteria(qs);
+                    workContext.CurrentCatalogSearchCriteria = new CatalogSearchCriteria(workContext.CurrentLanguage, workContext.CurrentCurrency, qs);
                     workContext.CurrentCatalogSearchCriteria.CatalogId = workContext.CurrentStore.Catalog;
-                    workContext.CurrentCatalogSearchCriteria.Currency = workContext.CurrentCurrency;
-                    workContext.CurrentCatalogSearchCriteria.Language = workContext.CurrentLanguage;
+
+                    //This line make delay categories loading initialization (categories can be evaluated on view rendering time)
+                    workContext.Categories = new MutablePagedList<Category>((pageNumber, pageSize) =>
+                    {
+                        var criteria = workContext.CurrentCatalogSearchCriteria.Clone();
+                        criteria.PageNumber = pageNumber;
+                        criteria.PageSize = pageSize;
+                        var result = catalogSearchService.SearchCategories(criteria);
+                        foreach(var category in result)
+                        {
+                            category.Products = new MutablePagedList<Product>((pageNumber2, pageSize2) =>
+                            {
+                                var criteria2 = criteria.Clone();
+                                criteria.CategoryId = category.Id;
+                                criteria.PageNumber = pageNumber2;
+                                criteria.PageSize = pageSize2;
+                                return catalogSearchService.SearchProducts(criteria);
+                            });
+                        }
+                        return result;
+                    });
+                    //This line make delay products loading initialization (products can be evaluated on view rendering time)
+                    workContext.Products = new MutablePagedList<Product>((pageNumber, pageSize) =>
+                    {
+                        var criteria = workContext.CurrentCatalogSearchCriteria.Clone();
+                        criteria.PageNumber = pageNumber;
+                        criteria.PageSize = pageSize;
+                        return catalogSearchService.SearchProducts(criteria);
+                    });
+                    //TODO: Get rid redundant call to API because current API can return aggregations with product per one request
+                    //This line make delay aggregation loading initialization (aggregation can be evaluated on view rendering time)
+                    workContext.Aggregations = new MutablePagedList<Aggregation>((pageNumber, pageSize) =>
+                    {
+                        var criteria = workContext.CurrentCatalogSearchCriteria.Clone();
+                        criteria.PageNumber = pageNumber;
+                        criteria.PageSize = pageSize;
+                        return catalogSearchService.GetAggregations(criteria);
+                    });
 
                     workContext.CurrentOrderSearchCriteria = new Model.Order.OrderSearchCriteria(qs);
                     workContext.CurrentQuoteSearchCriteria = new Model.Quote.QuoteSearchCriteria(qs);
@@ -134,7 +181,24 @@ namespace VirtoCommerce.Storefront.Owin
 
                         var linkLists = await _cacheManager.GetAsync("GetAllStoreLinkLists-" + workContext.CurrentStore.Id, "ApiRegion", async () => await linkListService.LoadAllStoreLinkListsAsync(workContext.CurrentStore.Id));
                         workContext.CurrentLinkLists = linkLists.Where(x => x.Language == workContext.CurrentLanguage).ToList();
-
+                        // load all static content
+                        var staticContents = _cacheManager.Get(string.Join(":", "AllStoreStaticContent", workContext.CurrentStore.Id), "ContentRegion", () =>
+                        {
+                            var allContentItems = _staticContentService.LoadStoreStaticContent(workContext.CurrentStore);
+                            var blogs = allContentItems.OfType<Blog>().ToArray();
+                            var blogArticlesGroup = allContentItems.OfType<BlogArticle>().GroupBy(x => x.BlogName, x => x);
+                            foreach(var blog in blogs)
+                            {
+                                var blogArticles = blogArticlesGroup.FirstOrDefault(x => string.Equals(x.Key, blog.Name, StringComparison.OrdinalIgnoreCase));
+                                if(blogArticles != null)
+                                {
+                                    blog.Articles = new MutablePagedList<BlogArticle>(blogArticles);
+                                }
+                            }
+                            return new { Pages = allContentItems, Blogs = blogs };
+                        });
+                        workContext.Pages = new MutablePagedList<ContentItem>(staticContents.Pages);
+                        workContext.Blogs = new MutablePagedList<Blog>(staticContents.Blogs);
 
                         //Initialize blogs search criteria 
                         //TODO: read from query string
@@ -190,10 +254,10 @@ namespace VirtoCommerce.Storefront.Owin
 
         private void ValidateUserStoreLogin(IOwinContext context, CustomerInfo customer, Store currentStore)
         {
-
+     
             if (customer.IsRegisteredUser && !customer.AllowedStores.IsNullOrEmpty()
                 && !customer.AllowedStores.Any(x => string.Equals(x, currentStore.Id, StringComparison.InvariantCultureIgnoreCase)))
-            {
+        {
                 context.Authentication.SignOut();
                 context.Authentication.User = new GenericPrincipal(new GenericIdentity(string.Empty), null);
             }
@@ -426,5 +490,8 @@ namespace VirtoCommerce.Storefront.Owin
 
             return country;
         }
+
+
+       
     }
 }

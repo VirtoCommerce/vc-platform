@@ -46,6 +46,10 @@ angular.module(moduleName, [
 
 	    //Register widgets in store details
 	    widgetService.registerWidget({
+	        controller: 'virtoCommerce.storeModule.assetsWidgetController',
+	        template: 'Modules/$(VirtoCommerce.Store)/Scripts/widgets/assetsWidget.tpl.html'
+	    }, 'storeDetail');
+	    widgetService.registerWidget({
 	        controller: 'virtoCommerce.storeModule.seoWidgetController',
 	        template: 'Modules/$(VirtoCommerce.Store)/Scripts/widgets/seoWidget.tpl.html'
 	    }, 'storeDetail');
@@ -55,8 +59,13 @@ angular.module(moduleName, [
 	    }, 'storeDetail');
 	    widgetService.registerWidget({
 	        controller: 'platformWebApp.dynamicPropertyWidgetController',
-	        title: 'Settings',
 	        template: '$(Platform)/Scripts/app/dynamicProperties/widgets/dynamicPropertyWidget.tpl.html'
+	    }, 'storeDetail');
+        widgetService.registerWidget({
+            //controller: 'virtoCommerce.storeModule.storeSettingsWidgetController',
+	        //template: 'Modules/$(VirtoCommerce.Store)/Scripts/widgets/storeSettingsWidget.tpl.html'
+            controller: 'platformWebApp.entitySettingsWidgetController',
+            template: '$(Platform)/Scripts/app/settings/widgets/entitySettingsWidget.tpl.html'
 	    }, 'storeDetail');
 	    widgetService.registerWidget({
 	        controller: 'virtoCommerce.storeModule.storePaymentsWidgetController',

@@ -16,7 +16,7 @@ function ($scope, bladeNavigationService, eventTemplateResolver, notifications) 
 		{ title: "platform.blades.history.labels.created", orderBy: "Created", checked: true, reverse: true }
 
     ];
-	
+
     blade.refresh = function () {
         blade.isLoading = true;
         var start = $scope.pageSettings.currentPage * $scope.pageSettings.itemsPerPageCount - $scope.pageSettings.itemsPerPageCount;
@@ -27,7 +27,7 @@ function ($scope, bladeNavigationService, eventTemplateResolver, notifications) 
                 x.action = notificationTemplate.action;
             });
             $scope.notifications = data.notifyEvents;
-            $scope.pageSettings.totalItems = angular.isDefined(data.totalCount) ? data.totalCount : 0;
+            $scope.pageSettings.totalItems = data.totalCount;
             blade.isLoading = false;
         }, function (error) {
             bladeNavigationService.setError('Error ' + error.status, blade);
@@ -35,36 +35,35 @@ function ($scope, bladeNavigationService, eventTemplateResolver, notifications) 
     };
 
     function getOrderByExpression() {
-    	var retVal = '';
-    	var column = _.find($scope.columns, function (x) { return x.checked; });
-    	if(angular.isDefined(column))
-    	{
-    		retVal = column.orderBy;
-    		if (column.reverse) {
-    			retVal += ":desc";
-    		}
-    	}
-    	return retVal;
+        var retVal = '';
+        var column = _.find($scope.columns, function (x) { return x.checked; });
+        if (angular.isDefined(column)) {
+            retVal = column.orderBy;
+            if (column.reverse) {
+                retVal += ":desc";
+            }
+        }
+        return retVal;
     };
 
     $scope.setOrder = function (column) {
-    	//reset prev selection may be commented if need support multiple order clauses
-    	_.each($scope.columns, function (x) { x.checked = false });
-    	column.checked = true;
-    	column.reverse = !column.reverse;
-    	$scope.pageSettings.currentPage = 1;
+        //reset prev selection may be commented if need support multiple order clauses
+        _.each($scope.columns, function (x) { x.checked = false });
+        column.checked = true;
+        column.reverse = !column.reverse;
+        $scope.pageSettings.currentPage = 1;
 
-    	blade.refresh();
+        blade.refresh();
     }
-    
+
     blade.toolbarCommands = [
 			{
-				name: "platform.commands.refresh",
-				icon: 'fa fa-refresh',
-				executeMethod: blade.refresh,
-				canExecuteMethod: function () {
-					return true;
-				}
+			    name: "platform.commands.refresh",
+			    icon: 'fa fa-refresh',
+			    executeMethod: blade.refresh,
+			    canExecuteMethod: function () {
+			        return true;
+			    }
 			}];
 
     $scope.$watch('pageSettings.currentPage', blade.refresh);

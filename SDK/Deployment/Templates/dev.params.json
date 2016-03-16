@@ -1,0 +1,33 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "siteName": {
+      "value": "virtocommerce-test"
+    },
+    "hostingPlanName": {
+      "value": "virtocommerce-hosting"
+    },
+    "siteLocation": {
+      "value": "West US"
+    },
+    "sku": {
+      "value": "Basic"
+    },
+    "workerSize": {
+      "value": "0"
+    },
+    "instancesCount": {
+      "value": 1
+    },
+    "sqlServerName": {
+      "value": "virtocommercetestsqlserver"
+    },
+    "sqlAdministratorLogin": {
+      "value": "virtocommercetestsqllogin"
+    },
+    "sqlAdministratorPassword": {
+      "value": "P@ssword1243!"
+    }
+  }
+}

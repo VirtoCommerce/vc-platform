@@ -3,6 +3,11 @@
     public class AggregationItem
     {
         /// <summary>
+        /// Gets or sets the aggregation item value
+        /// </summary>
+        public object Value { get; set; }
+
+        /// <summary>
         /// Gets or sets the aggregation item count
         /// </summary>
         public int Count { get; set; }
@@ -13,13 +18,8 @@
         public bool IsApplied { get; set; }
 
         /// <summary>
-        /// Gets or sets the aggregation item label
+        /// Gets or sets the collection of the aggregation item labels
         /// </summary>
-        public string Label { get; set; }
-
-        /// <summary>
-        /// Gets or sets the aggregation item value
-        /// </summary>
-        public object Value { get; set; }
+        public AggregationLabel[] Labels { get; set; }
     }
 }

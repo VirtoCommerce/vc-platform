@@ -15,7 +15,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         {
             get
             {
-                var retVal = this.GroupBy(t => t.GroupName).Select(g => g.Key);
+                var retVal = this.GroupBy(t => t.GroupLabel).Select(g => g.Key);
                 return retVal;
             }
         }
@@ -25,14 +25,17 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
             var tag = value as Tag;
             var str = value as string;
             var retVal = false;
-            if(tag != null)
+
+            if (tag != null)
             {
                 retVal = this.Any(x => x.Equals(tag));
             }
-            if(str != null)
+
+            if (str != null)
             {
-                retVal = this.Any(x =>String.Equals(x.Value, str, StringComparison.InvariantCultureIgnoreCase));
+                retVal = this.Any(x => string.Equals(x.Value, str, StringComparison.OrdinalIgnoreCase));
             }
+
             return retVal;
         }
     }
