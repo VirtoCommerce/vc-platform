@@ -29,6 +29,14 @@ namespace VirtoCommerce.Client.Model
 
         
         /// <summary>
+        /// Gets or sets the aggregation item value
+        /// </summary>
+        /// <value>Gets or sets the aggregation item value</value>
+        [DataMember(Name="value", EmitDefaultValue=false)]
+        public Object Value { get; set; }
+  
+        
+        /// <summary>
         /// Gets or sets the aggregation item count
         /// </summary>
         /// <value>Gets or sets the aggregation item count</value>
@@ -45,19 +53,11 @@ namespace VirtoCommerce.Client.Model
   
         
         /// <summary>
-        /// Gets or sets the aggregation item label
+        /// Gets or sets the collection of aggregation item labels
         /// </summary>
-        /// <value>Gets or sets the aggregation item label</value>
-        [DataMember(Name="label", EmitDefaultValue=false)]
-        public string Label { get; set; }
-  
-        
-        /// <summary>
-        /// Gets or sets the aggregation item value
-        /// </summary>
-        /// <value>Gets or sets the aggregation item value</value>
-        [DataMember(Name="value", EmitDefaultValue=false)]
-        public Object Value { get; set; }
+        /// <value>Gets or sets the collection of aggregation item labels</value>
+        [DataMember(Name="labels", EmitDefaultValue=false)]
+        public List<VirtoCommerceCatalogModuleWebModelAggregationLabel> Labels { get; set; }
   
         
   
@@ -69,10 +69,10 @@ namespace VirtoCommerce.Client.Model
         {
             var sb = new StringBuilder();
             sb.Append("class VirtoCommerceCatalogModuleWebModelAggregationItem {\n");
+            sb.Append("  Value: ").Append(Value).Append("\n");
             sb.Append("  Count: ").Append(Count).Append("\n");
             sb.Append("  IsApplied: ").Append(IsApplied).Append("\n");
-            sb.Append("  Label: ").Append(Label).Append("\n");
-            sb.Append("  Value: ").Append(Value).Append("\n");
+            sb.Append("  Labels: ").Append(Labels).Append("\n");
             
             sb.Append("}\n");
             return sb.ToString();
@@ -111,6 +111,11 @@ namespace VirtoCommerce.Client.Model
 
             return 
                 (
+                    this.Value == other.Value ||
+                    this.Value != null &&
+                    this.Value.Equals(other.Value)
+                ) && 
+                (
                     this.Count == other.Count ||
                     this.Count != null &&
                     this.Count.Equals(other.Count)
@@ -121,14 +126,9 @@ namespace VirtoCommerce.Client.Model
                     this.IsApplied.Equals(other.IsApplied)
                 ) && 
                 (
-                    this.Label == other.Label ||
-                    this.Label != null &&
-                    this.Label.Equals(other.Label)
-                ) && 
-                (
-                    this.Value == other.Value ||
-                    this.Value != null &&
-                    this.Value.Equals(other.Value)
+                    this.Labels == other.Labels ||
+                    this.Labels != null &&
+                    this.Labels.SequenceEqual(other.Labels)
                 );
         }
 
@@ -144,17 +144,17 @@ namespace VirtoCommerce.Client.Model
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
                 
+                if (this.Value != null)
+                    hash = hash * 59 + this.Value.GetHashCode();
+                
                 if (this.Count != null)
                     hash = hash * 59 + this.Count.GetHashCode();
                 
                 if (this.IsApplied != null)
                     hash = hash * 59 + this.IsApplied.GetHashCode();
                 
-                if (this.Label != null)
-                    hash = hash * 59 + this.Label.GetHashCode();
-                
-                if (this.Value != null)
-                    hash = hash * 59 + this.Value.GetHashCode();
+                if (this.Labels != null)
+                    hash = hash * 59 + this.Labels.GetHashCode();
                 
                 return hash;
             }

@@ -17,8 +17,11 @@ namespace VirtoCommerce.Storefront.Model.Common
         {
             if (c.TargetProp.Type.IsEnum)
             {
-                var value = Enum.Parse(c.TargetProp.Type, c.SourceProp.Value.ToString(), true);
-                c.TargetProp.Value = value;
+                if (c.SourceProp.Value != null)
+                {
+                    var value = Enum.Parse(c.TargetProp.Type, c.SourceProp.Value.ToString(), true);
+                    c.TargetProp.Value = value;
+                }
             }
 
             if (c.TargetProp.Type == typeof(string) && c.SourceProp.Type.IsEnum)

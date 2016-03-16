@@ -325,6 +325,11 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// <value>Dynamic properties collections</value>
         public ICollection<DynamicProperty> DynamicProperties { get; set; }
 
+        /// <summary>
+        /// Gets or sets the cart validation type
+        /// </summary>
+        public ValidationType ValidationType { get; set; }
+
         public bool HasValidationErrors
         {
             get

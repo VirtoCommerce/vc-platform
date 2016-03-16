@@ -58,6 +58,7 @@ namespace VirtoCommerce.Storefront.Converters
             webModel.TaxTotal = new Money(serviceModel.TaxTotal ?? 0, currency);
             webModel.Weight = (decimal)(serviceModel.Weight ?? 0);
             webModel.Width = (decimal)(serviceModel.Width ?? 0);
+            webModel.ValidationType = EnumUtility.SafeParse(serviceModel.ValidationType, ValidationType.PriceAndQuantity);
 
             return webModel;
         }
@@ -83,6 +84,7 @@ namespace VirtoCommerce.Storefront.Converters
             serviceModel.VolumetricWeight = (double)(webModel.VolumetricWeight ?? 0);
             serviceModel.Weight = (double)webModel.Weight;
             serviceModel.Width = (double)webModel.Width;
+            serviceModel.ValidationType = webModel.ValidationType.ToString();
 
             return serviceModel;
         }

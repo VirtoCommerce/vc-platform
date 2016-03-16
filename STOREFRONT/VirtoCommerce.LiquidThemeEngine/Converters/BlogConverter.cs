@@ -13,18 +13,18 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
 {
     public static class BlogConverter
     {
-        public static Blog ToShopifyModel(this StorefrontModel.Blog blog)
+        public static Blog ToShopifyModel(this StorefrontModel.Blog blog, Storefront.Model.Language language)
         {
             var retVal = new Blog();
 
             retVal.InjectFrom<NullableAndEnumValueInjecter>(blog);
 
-            if(blog.Articles != null)
+            if (blog.Articles != null)
             {
                 retVal.Articles = new MutablePagedList<Article>((pageNumber, pageSize) =>
                 {
-                    blog.Articles.Slice(pageNumber, pageSize);
-                    return new StaticPagedList<Article>(blog.Articles.Select(x => x.ToShopifyModel()), blog.Articles);
+                    var articlesForLanguage = blog.Articles.Where(x => x.Language == language || x.Language.IsInvariant).GroupBy(x => x.Name).Select(x => x.OrderByDescending(y => y.Language).FirstOrDefault());
+                    return new PagedList<Article>(articlesForLanguage.Select(x => x.ToShopifyModel()), pageNumber, pageSize);
                 }, blog.Articles.PageNumber, blog.Articles.PageSize);
             }
             return retVal;

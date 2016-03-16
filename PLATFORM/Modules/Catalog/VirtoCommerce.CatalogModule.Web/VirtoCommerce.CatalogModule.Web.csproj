@@ -135,6 +135,7 @@
     <Compile Include="Converters\AggregationConverters.cs" />
     <Compile Include="Model\Aggregation.cs" />
     <Compile Include="Model\AggregationItem.cs" />
+    <Compile Include="Model\AggregationLabel.cs" />
     <Compile Include="Model\CatalogSearchResult.cs" />
     <Compile Include="Security\CatalogPredefinedPermissions.cs" />
     <Compile Include="Converters\AssetConverter.cs" />

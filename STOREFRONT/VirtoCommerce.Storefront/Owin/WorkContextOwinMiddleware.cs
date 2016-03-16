@@ -30,6 +30,8 @@ using VirtoCommerce.Storefront.Model.Customer.Services;
 using VirtoCommerce.Storefront.Model.LinkList.Services;
 using VirtoCommerce.Storefront.Model.Quote.Services;
 using VirtoCommerce.Storefront.Model.Services;
+using VirtoCommerce.Storefront.Model.StaticContent;
+using VirtoCommerce.LiquidThemeEngine.Extensions;
 
 namespace VirtoCommerce.Storefront.Owin
 {
@@ -49,6 +51,7 @@ namespace VirtoCommerce.Storefront.Owin
         private readonly ICacheManager<object> _cacheManager;
         private readonly ICatalogModuleApi _catalogModuleApi;
         private readonly ISearchModuleApi _searchApi;
+        private readonly IStaticContentService _staticContentService;
 
         private readonly UnityContainer _container;
 
@@ -66,6 +69,7 @@ namespace VirtoCommerce.Storefront.Owin
             _cacheManager = container.Resolve<ICacheManager<object>>();
             _catalogModuleApi = container.Resolve<ICatalogModuleApi>();
             _searchApi = container.Resolve<ISearchModuleApi>();
+            _staticContentService = container.Resolve<IStaticContentService>();
             _container = container;
         }
 
@@ -167,7 +171,24 @@ namespace VirtoCommerce.Storefront.Owin
 
                         var linkLists = await _cacheManager.GetAsync("GetAllStoreLinkLists-" + workContext.CurrentStore.Id, "ApiRegion", async () => await linkListService.LoadAllStoreLinkListsAsync(workContext.CurrentStore.Id));
                         workContext.CurrentLinkLists = linkLists.Where(x => x.Language == workContext.CurrentLanguage).ToList();
-
+                        // load all static content
+                        var staticContents = _cacheManager.Get(string.Join(":", "AllStoreStaticContent", workContext.CurrentStore.Id), "ContentRegion", () =>
+                        {
+                            var allContentItems = _staticContentService.LoadStoreStaticContent(workContext.CurrentStore);
+                            var blogs = allContentItems.OfType<Blog>().ToArray();
+                            var blogArticlesGroup = allContentItems.OfType<BlogArticle>().GroupBy(x => x.BlogName, x => x);
+                            foreach(var blog in blogs)
+                            {
+                                var blogArticles = blogArticlesGroup.FirstOrDefault(x => string.Equals(x.Key, blog.Name, StringComparison.OrdinalIgnoreCase));
+                                if(blogArticles != null)
+                                {
+                                    blog.Articles = new MutablePagedList<BlogArticle>(blogArticles);
+                                }
+                            }
+                            return new { Pages = allContentItems, Blogs = blogs };
+                        });
+                        workContext.Pages = new MutablePagedList<ContentItem>(staticContents.Pages);
+                        workContext.Blogs = new MutablePagedList<Blog>(staticContents.Blogs);
 
                         //Initialize blogs search criteria 
                         //TODO: read from query string
@@ -223,10 +244,10 @@ namespace VirtoCommerce.Storefront.Owin
 
         private void ValidateUserStoreLogin(IOwinContext context, CustomerInfo customer, Store currentStore)
         {
-
+     
             if (customer.IsRegisteredUser && !customer.AllowedStores.IsNullOrEmpty()
                 && !customer.AllowedStores.Any(x => string.Equals(x, currentStore.Id, StringComparison.InvariantCultureIgnoreCase)))
-            {
+        {
                 context.Authentication.SignOut();
                 context.Authentication.User = new GenericPrincipal(new GenericIdentity(string.Empty), null);
             }

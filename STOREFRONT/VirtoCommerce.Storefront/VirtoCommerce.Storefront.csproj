@@ -378,7 +378,6 @@
     <Compile Include="Converters\TierPriceConverter.cs" />
     <Compile Include="Services\CartValidator.cs" />
     <Compile Include="Services\CustomerServiceImpl.cs" />
-    <Compile Include="Services\LinkHelper.cs" />
     <Compile Include="Services\LinkListServiceImpl.cs" />
     <Compile Include="Services\PricingServiceImpl.cs" />
     <Compile Include="Controllers\Api\ApiCartController.cs" />
@@ -440,6 +439,7 @@
     <Compile Include="Routing\SeoRouteExtensions.cs" />
     <Compile Include="Services\CatalogSearchServiceImpl.cs" />
     <Compile Include="Services\MarketingServiceImpl.cs" />
+    <Compile Include="Services\StaticContentItemFactory.cs" />
     <Compile Include="Services\StaticContentServiceImpl.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>

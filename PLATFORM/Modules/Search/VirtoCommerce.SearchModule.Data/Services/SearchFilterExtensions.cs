@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using VirtoCommerce.Domain.Search.Filters;
 using VirtoCommerce.Domain.Search.Model;
@@ -7,42 +8,17 @@ namespace VirtoCommerce.SearchModule.Data.Services
 {
     public static class SearchFilterExtensions
     {
-        public static string GetDisplayName(this ISearchFilter filter, string locale, string localeShort)
+        public static FacetLabel[] GetLabels(this ISearchFilter filter)
         {
-            var result = filter.Key;
+            FacetLabel[] result = null;
 
             var attributeFilter = filter as AttributeFilter;
             if (attributeFilter != null)
             {
                 if (attributeFilter.DisplayNames != null)
                 {
-                    var displayName = attributeFilter.GetDisplayName(locale);
-
-                    if (string.IsNullOrEmpty(displayName) && localeShort != null)
-                    {
-                        displayName = attributeFilter.GetDisplayName(localeShort);
-                    }
-
-                    if (!string.IsNullOrEmpty(displayName))
-                    {
-                        result = displayName;
-                    }
+                    result = attributeFilter.DisplayNames.Select(d => new FacetLabel { Language = d.Language, Label = d.Name }).ToArray();
                 }
-            }
-
-            return result;
-        }
-
-        public static string GetDisplayName(this AttributeFilter attributeFilter, string locale)
-        {
-            string result = null;
-
-            if (attributeFilter.DisplayNames != null)
-            {
-                result = attributeFilter.DisplayNames
-                    .Where(d => d.Language.Equals(locale, StringComparison.OrdinalIgnoreCase))
-                    .Select(d => d.Name)
-                    .FirstOrDefault();
             }
 
             return result;
@@ -59,30 +35,49 @@ namespace VirtoCommerce.SearchModule.Data.Services
             var rangeFilter = filter as RangeFilter;
             if (rangeFilter != null)
             {
-                return rangeFilter.Values.OfType<ISearchFilterValue>().ToArray();
+                return rangeFilter.Values != null ? rangeFilter.Values.OfType<ISearchFilterValue>().ToArray() : null;
             }
 
             var priceRangeFilter = filter as PriceRangeFilter;
             if (priceRangeFilter != null)
             {
-                return priceRangeFilter.Values.OfType<ISearchFilterValue>().ToArray();
+                return priceRangeFilter.Values != null ? priceRangeFilter.Values.OfType<ISearchFilterValue>().ToArray() : null;
             }
 
             var categoryFilter = filter as CategoryFilter;
             if (categoryFilter != null)
             {
-                return categoryFilter.Values.OfType<ISearchFilterValue>().ToArray();
+                return categoryFilter.Values != null ? categoryFilter.Values.OfType<ISearchFilterValue>().ToArray() : null;
             }
 
             return null;
         }
 
-        public static string GetDisplayValue(this ISearchFilterValue value, string locale, string localeShort)
+        public static FacetLabel[] GetValueLabels(this IEnumerable<ISearchFilterValue> values)
         {
+            var result = values
+                .SelectMany(GetValueLabels)
+                .Where(l => !string.IsNullOrEmpty(l.Language) && !string.IsNullOrEmpty(l.Label))
+                .GroupBy(v => v.Language, StringComparer.OrdinalIgnoreCase)
+                .SelectMany(g => g
+                    .GroupBy(g2 => g2.Label, StringComparer.OrdinalIgnoreCase)
+                    .Select(g2 => g2.FirstOrDefault()))
+            .OrderBy(v => v.Language)
+            .ThenBy(v => v.Label)
+            .ToArray();
+
+            return result.Any() ? result : null;
+        }
+
+
+        private static List<FacetLabel> GetValueLabels(this ISearchFilterValue value)
+        {
+            var result = new List<FacetLabel>();
+
             var attributeFilterValue = value as AttributeFilterValue;
             if (attributeFilterValue != null)
             {
-                return attributeFilterValue.Value;
+                result.Add(new FacetLabel { Language = attributeFilterValue.Language, Label = attributeFilterValue.Value });
             }
 
             var rangeFilterValue = value as RangeFilterValue;
@@ -90,41 +85,11 @@ namespace VirtoCommerce.SearchModule.Data.Services
             {
                 if (rangeFilterValue.Displays != null)
                 {
-                    var displayValue = rangeFilterValue.GetDisplayValue(locale);
-
-                    if (string.IsNullOrEmpty(displayValue) && localeShort != null)
-                    {
-                        displayValue = rangeFilterValue.GetDisplayValue(localeShort);
-                    }
-
-                    if (!string.IsNullOrEmpty(displayValue))
-                    {
-                        return displayValue;
-                    }
+                    var labels = rangeFilterValue.Displays
+                        .Select(d => new FacetLabel { Language = d.Language, Label = d.Value })
+                        .ToArray();
+                    result.AddRange(labels);
                 }
-
-                return rangeFilterValue.Id;
-            }
-
-            var categoryFilterValue = value as CategoryFilterValue;
-            if (categoryFilterValue != null)
-            {
-                return categoryFilterValue.Name;
-            }
-
-            return string.Empty;
-        }
-
-        public static string GetDisplayValue(this RangeFilterValue rangeFilterValue, string locale)
-        {
-            string result = null;
-
-            if (rangeFilterValue.Displays != null)
-            {
-                result = rangeFilterValue.Displays
-                    .Where(d => d.Language.Equals(locale, StringComparison.OrdinalIgnoreCase))
-                    .Select(d => d.Value)
-                    .FirstOrDefault();
             }
 
             return result;
