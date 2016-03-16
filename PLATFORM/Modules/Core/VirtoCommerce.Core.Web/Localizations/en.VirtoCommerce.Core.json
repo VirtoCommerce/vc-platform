@@ -105,7 +105,7 @@
         }
       },
       "seo-detail": {
-        "title": "SEO in {{store}}",
+        "title": "SEO for {{store}}",
         "subtitle": "Seo details",
         "labels": {
           "url-keyword": "URL keyword",

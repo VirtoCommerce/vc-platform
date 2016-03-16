@@ -54,13 +54,15 @@
                 break;
             case 'seo':
                 initializeSEO(blade.item, function () {
+                    blade.currentEntity = blade.item; // reference for child blade
+                    blade.seoLanguages = _.pluck(getCatalog().languages, 'languageCode');
+
                     newBlade = {
-                        id: "seoStoreList",
-                        title: blade.item.name,
-                        seoLanguages: _.pluck(getCatalog().languages, 'languageCode'),
+                        id: 'seoDetails',
+                        store: { name: 'default store' },
                         updatePermission: 'catalog:create',
-                        controller: 'virtoCommerce.coreModule.seo.storeListController',
-                        template: 'Modules/$(VirtoCommerce.Core)/Scripts/SEO/blades/store-list.tpl.html'
+                        controller: 'virtoCommerce.coreModule.seo.seoDetailController',
+                        template: 'Modules/$(VirtoCommerce.Core)/Scripts/SEO/blades/seo-detail.tpl.html'
                     };
                     bladeNavigationService.showBlade(newBlade, blade);
                 });
