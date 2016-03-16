@@ -298,43 +298,51 @@ namespace VirtoCommerce.Storefront.Controllers
                 return new HttpStatusCodeResult(System.Net.HttpStatusCode.BadRequest);
             }
 
+            CustomerInfo customer = null;
+
             var user = await _commerceCoreApi.StorefrontSecurityGetUserByLoginAsync(loginInfo.Login.LoginProvider, loginInfo.Login.ProviderKey);
             if (user == null)
             {
                 var newUser = new VirtoCommercePlatformCoreSecurityApplicationUserExtended
                 {
                     Email = loginInfo.Email,
-                    UserName = string.Format("{0}|{1}", loginInfo.Login.LoginProvider, loginInfo.Email),
+                    UserName = string.Format("{0}--{1}", loginInfo.Login.LoginProvider, loginInfo.Email),
                     UserType = "Customer",
-                    StoreId = WorkContext.CurrentStore.Id,
-                    Logins =
+                    StoreId = WorkContext.CurrentStore.Id
+                };
+                newUser.Logins = new List<VirtoCommercePlatformCoreSecurityApplicationUserLogin>
+                {
+                    new VirtoCommercePlatformCoreSecurityApplicationUserLogin
                     {
-                        new VirtoCommercePlatformCoreSecurityApplicationUserLogin
-                        {
-                            LoginProvider = loginInfo.Login.LoginProvider,
-                            ProviderKey = loginInfo.Login.ProviderKey
-                        }
+                        LoginProvider = loginInfo.Login.LoginProvider,
+                        ProviderKey = loginInfo.Login.ProviderKey
                     }
                 };
                 var result = await _commerceCoreApi.StorefrontSecurityCreateAsync(newUser);
 
                 if (result.Succeeded == true)
                 {
-                    var storefrontUser = await _commerceCoreApi.StorefrontSecurityGetUserByNameAsync(user.UserName);
+                    var storefrontUser = await _commerceCoreApi.StorefrontSecurityGetUserByNameAsync(newUser.UserName);
                     await _customerService.CreateCustomerAsync(new CustomerInfo
                     {
                         Id = storefrontUser.Id,
                         UserId = storefrontUser.Id,
                         UserName = storefrontUser.UserName,
+                        FullName = loginInfo.ExternalIdentity.Name,
                         IsRegisteredUser = true,
                         AllowedStores = storefrontUser.AllowedStores
                     });
+
+                    customer = await GetStorefrontCustomerByUserAsync(storefrontUser);
                 }
             }
+            else
+            {
+                customer = await GetStorefrontCustomerByUserAsync(user);
+            }
 
-            var customer = await GetStorefrontCustomerByUserAsync(user);
             var identity = CreateClaimsIdentity(customer);
-            _authenticationManager.SignIn();
+            _authenticationManager.SignIn(identity);
 
             return StoreFrontRedirect(returnUrl);
         }
