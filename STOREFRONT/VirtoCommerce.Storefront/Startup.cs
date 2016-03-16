@@ -191,20 +191,6 @@ namespace VirtoCommerce.Storefront
             RouteConfig.RegisterRoutes(RouteTable.Routes, workContextFactory, container.Resolve<ICommerceCoreModuleApi>(), container.Resolve<IStaticContentService>(), cacheManager);
             AuthConfig.ConfigureAuth(app, () => container.Resolve<IStorefrontUrlBuilder>());
 
-            // Adds Google external login provider
-            app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions
-            {
-                ClientId = ConfigurationManager.AppSettings["OAuth2.Google.ClientId"],
-                ClientSecret = ConfigurationManager.AppSettings["OAuth2.Google.Secret"]
-            });
-
-            // Adds Facebook external login provider
-            app.UseFacebookAuthentication(new FacebookAuthenticationOptions
-            {
-                AppId = ConfigurationManager.AppSettings["OAuth2.Facebook.AppId"],
-                AppSecret = ConfigurationManager.AppSettings["OAuth2.Facebook.Secret"]
-            });
-
             app.Use<WorkContextOwinMiddleware>(container);
             app.UseStageMarker(PipelineStage.ResolveCache);
         }

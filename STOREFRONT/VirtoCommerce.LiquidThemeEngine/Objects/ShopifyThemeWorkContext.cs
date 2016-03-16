@@ -95,6 +95,8 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         public Order Order { get; set; }
 
         public QuoteRequest QuoteRequest { get; set; }
+
+        public ICollection<LoginProvider> ExternalLoginProviders { get; set; }
         #endregion
 
         #region ILiquidizable members

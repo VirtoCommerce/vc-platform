@@ -542,7 +542,7 @@
     <Content Include="App_Data\Themes\default\templates\customers\reset_password.liquid" />
     <Content Include="App_Data\Themes\default\templates\error.liquid" />
     <Content Include="App_Data\Themes\default\templates\error_index.liquid" />
-    <Content Include="App_Data\Themes\default\templates\external_login_confirmation.liquid" />
+    <Content Include="App_Data\Themes\default\templates\confirm-external-login.liquid" />
     <Content Include="App_Data\Themes\default\templates\gift_card.liquid" />
     <Content Include="App_Data\Themes\default\templates\index.liquid" />
     <Content Include="App_Data\Themes\default\templates\list-collections.liquid" />

@@ -79,6 +79,8 @@ namespace VirtoCommerce.Storefront.Owin
                 workContext.AllStores = await _cacheManager.GetAsync("GetAllStores", "ApiRegion", async () => { return await GetAllStoresAsync(); });
                 if (workContext.AllStores != null && workContext.AllStores.Any())
                 {
+                    var externalAuthTypes = context.Authentication.GetExternalAuthenticationTypes();
+
                     // Initialize request specific properties
                     workContext.CurrentStore = GetStore(context, workContext.AllStores);
                     workContext.CurrentLanguage = GetLanguage(context, workContext.AllStores, workContext.CurrentStore);
@@ -108,6 +110,14 @@ namespace VirtoCommerce.Storefront.Owin
                     //Validate that current customer has to store access
                     ValidateUserStoreLogin(context, workContext.CurrentCustomer, workContext.CurrentStore);
                     MaintainAnonymousCustomerCookie(context, workContext);
+
+                    // Gets the collection of external login providers
+                    workContext.ExternalLoginProviders = externalAuthTypes.Select(at => new LoginProvider
+                    {
+                        AuthenticationType = at.AuthenticationType,
+                        Caption = at.Caption,
+                        Properties = at.Properties
+                    }).ToList();
 
                     //Do not load shopping cart and other for resource requests
                     if (!IsAssetRequest(context.Request))
@@ -144,14 +154,6 @@ namespace VirtoCommerce.Storefront.Owin
                             var pricingResult = await _pricingModuleApi.PricingModuleEvaluatePriceListsAsync(evalContext);
                             return pricingResult.Select(p => p.ToWebModel()).ToList();
                         });
-
-                        var externalAuthTypes = context.Authentication.GetExternalAuthenticationTypes();
-                        workContext.ExternalLoginProviders = externalAuthTypes.Select(at => new LoginProvider
-                        {
-                            AuthenticationType = at.AuthenticationType,
-                            Caption = at.Caption,
-                            Properties = at.Properties
-                        }).ToList();
                     }
                 }
             }

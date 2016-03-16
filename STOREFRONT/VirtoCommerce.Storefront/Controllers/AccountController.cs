@@ -277,6 +277,60 @@ namespace VirtoCommerce.Storefront.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
+        public ActionResult ExternalLogin(string authType, string returnUrl)
+        {
+            if (string.IsNullOrEmpty(authType))
+            {
+                return new HttpStatusCodeResult(System.Net.HttpStatusCode.BadRequest);
+            }
+
+            return new ChallengeResult(authType, Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl }));
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<ActionResult> ExternalLoginCallback(string returnUrl)
+        {
+            var loginInfo = await _authenticationManager.GetExternalLoginInfoAsync();
+            if (loginInfo == null)
+            {
+                return new HttpStatusCodeResult(System.Net.HttpStatusCode.BadRequest);
+            }
+
+            var user = await _commerceCoreApi.StorefrontSecurityGetUserByLoginAsync(loginInfo.Login.LoginProvider, loginInfo.Login.ProviderKey);
+            if (user == null)
+            {
+                var confirmLoginUrl = "~/account/confirm-external-login?loginProvider=" + loginInfo.Login.LoginProvider;
+                if (!string.IsNullOrEmpty(returnUrl))
+                {
+                    confirmLoginUrl += "&returnUrl=" + returnUrl;
+                }
+                return StoreFrontRedirect(confirmLoginUrl);
+            }
+            else
+            {
+                var customer = await GetStorefrontCustomerByUserAsync(user);
+                var identity = CreateClaimsIdentity(customer);
+                _authenticationManager.SignIn();
+
+                return StoreFrontRedirect(returnUrl);
+            }
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public ActionResult ConfirmExternalLogin(string loginProvider, string returnUrl)
+        {
+            if (string.IsNullOrEmpty(loginProvider))
+            {
+                return new HttpStatusCodeResult(System.Net.HttpStatusCode.BadRequest);
+            }
+
+            return View("confirm-external-login");
+        }
+
+        [HttpGet]
         public ActionResult Logout()
         {
             _authenticationManager.SignOut();
@@ -379,6 +433,39 @@ namespace VirtoCommerce.Storefront.Controllers
             {
                 ModelState.AddModelError("form", result.Errors.First());
                 return View("customers/account", WorkContext);
+            }
+        }
+
+        internal class ChallengeResult : HttpUnauthorizedResult
+        {
+            public string LoginProvider { get; set; }
+
+            public string RedirectUri { get; set; }
+
+            public string UserId { get; set; }
+
+            public ChallengeResult(string loginProvider, string redirectUri)
+                : this(loginProvider, redirectUri, null)
+            {
+            }
+
+            public ChallengeResult(string loginProvider, string redirectUri, string userId)
+            {
+                LoginProvider = loginProvider;
+                RedirectUri = redirectUri;
+                UserId = userId;
+            }
+
+            public override void ExecuteResult(ControllerContext context)
+            {
+                var properties = new AuthenticationProperties { RedirectUri = RedirectUri };
+
+                if (!string.IsNullOrEmpty(UserId))
+                {
+                    properties.Dictionary["XsrfId"] = UserId;
+                }
+
+                context.HttpContext.GetOwinContext().Authentication.Challenge(properties, LoginProvider);
             }
         }
 
