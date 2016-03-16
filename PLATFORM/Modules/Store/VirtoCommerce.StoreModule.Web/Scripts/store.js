@@ -50,8 +50,10 @@ angular.module(moduleName, [
 	        template: 'Modules/$(VirtoCommerce.Store)/Scripts/widgets/assetsWidget.tpl.html'
 	    }, 'storeDetail');
 	    widgetService.registerWidget({
-	        controller: 'virtoCommerce.storeModule.seoWidgetController',
-	        template: 'Modules/$(VirtoCommerce.Store)/Scripts/widgets/seoWidget.tpl.html'
+	        skipStoreList: true,
+	        controller: 'virtoCommerce.coreModule.seo.seoWidgetController',
+	        template: 'Modules/$(VirtoCommerce.Core)/Scripts/SEO/widgets/seoWidget.tpl.html',
+	        getLanguages: function (blade) { return blade.currentEntity.languages; }
 	    }, 'storeDetail');
 	    widgetService.registerWidget({
 	        controller: 'virtoCommerce.storeModule.storeAdvancedWidgetController',
@@ -61,11 +63,11 @@ angular.module(moduleName, [
 	        controller: 'platformWebApp.dynamicPropertyWidgetController',
 	        template: '$(Platform)/Scripts/app/dynamicProperties/widgets/dynamicPropertyWidget.tpl.html'
 	    }, 'storeDetail');
-        widgetService.registerWidget({
-            //controller: 'virtoCommerce.storeModule.storeSettingsWidgetController',
+	    widgetService.registerWidget({
+	        //controller: 'virtoCommerce.storeModule.storeSettingsWidgetController',
 	        //template: 'Modules/$(VirtoCommerce.Store)/Scripts/widgets/storeSettingsWidget.tpl.html'
-            controller: 'platformWebApp.entitySettingsWidgetController',
-            template: '$(Platform)/Scripts/app/settings/widgets/entitySettingsWidget.tpl.html'
+	        controller: 'platformWebApp.entitySettingsWidgetController',
+	        template: '$(Platform)/Scripts/app/settings/widgets/entitySettingsWidget.tpl.html'
 	    }, 'storeDetail');
 	    widgetService.registerWidget({
 	        controller: 'virtoCommerce.storeModule.storePaymentsWidgetController',

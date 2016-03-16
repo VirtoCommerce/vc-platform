@@ -34,13 +34,9 @@
                     break;
                 case 'seo':
                     newBlade = {
-                        id: "seoDetail",
-                        seoUrlKeywordType: 0,
-                        parentEntity: blade.currentEntity,
-                        title: blade.title,
-                        controller: 'virtoCommerce.catalogModule.seoDetailController',
-                        //seoInfos: blade.item.seoInfos,
-                        template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/seo-detail.tpl.html'
+                        id: "seo",
+                        controller: 'virtoCommerce.coreModule.seo.storeListController',
+                        template: 'Modules/$(VirtoCommerce.Core)/Scripts/SEO/blades/seo-detail.tpl.html'
                     };
                     break;
             }
