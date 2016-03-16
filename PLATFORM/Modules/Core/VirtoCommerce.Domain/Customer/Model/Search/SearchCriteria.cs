@@ -27,6 +27,10 @@ namespace VirtoCommerce.Domain.Customer.Model
         /// </summary>
         public string MemberId { get; set; }
 
+        /// <summary>
+        /// Deep search in  specified memberId  children members or in all if not memberId empty
+        /// </summary>
+        public bool DeepSearch { get; set; }
 
         /// <summary>
         /// Sorting expression property1:asc;property2:desc

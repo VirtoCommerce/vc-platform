@@ -36,8 +36,8 @@ namespace VirtoCommerce.CustomerModule.Web.ExportImport
 
 			var progressInfo = new ExportImportProgressInfo();
 			progressInfo.Description = String.Format("{0} members importing...", backupObject.Members.Count());
-			progressCallback(progressInfo);
-            UpdateMembers(originalObject.Members, backupObject.Members);
+            progressCallback(progressInfo);
+            UpdateMembers(originalObject.Members, backupObject.Members.OrderByDescending(x => x.MemberType).ToList());
 
 
         }
@@ -74,10 +74,10 @@ namespace VirtoCommerce.CustomerModule.Web.ExportImport
 			progressInfo.Description = "loading members...";
 			progressCallback(progressInfo);
 
-            var members = _memberService.SearchMembers(new SearchCriteria { Take = int.MaxValue }).Members;
+            var members = _memberService.SearchMembers(new SearchCriteria { DeepSearch = true, Take = int.MaxValue }).Members;
 
             var result = new BackupObject();
-            result.Members = _memberService.GetByIds(members.Select(x => x.Id).ToArray());
+            result.Members = _memberService.GetByIds(members.Select(x => x.Id).ToArray()).OrderByDescending(x=> x.MemberType).ToArray();
 
             return result;
         }

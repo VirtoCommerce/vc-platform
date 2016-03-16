@@ -139,13 +139,18 @@ namespace VirtoCommerce.CustomerModule.Data.Services
                 {
                     query = query.Where(x => x.MemberType == criteria.MemberType || x.MemberType == null);
                 }
+
                 if (criteria.MemberId != null)
                 {
+                    //TODO: DeepSearch in specified member
                     query = query.Where(x => x.MemberRelations.Any(y => y.AncestorId == criteria.MemberId));
                 }
                 else
                 {
-                    query = query.Where(x => !x.MemberRelations.Any());
+                    if (!criteria.DeepSearch)
+                    {
+                        query = query.Where(x => !x.MemberRelations.Any());
+                    }
                 }
 
                 if (!String.IsNullOrEmpty(criteria.Keyword))
