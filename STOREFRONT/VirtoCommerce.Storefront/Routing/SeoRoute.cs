@@ -44,28 +44,26 @@ namespace VirtoCommerce.Storefront.Routing
                 //Special workaround for case when url contains only slug without store (one store case)
                 if(string.IsNullOrEmpty(path) && !string.IsNullOrEmpty(store) && workContext.AllStores != null)
                 {
-                        //use {store} as {path} if not exist any store with name {store} 
-                        path = workContext.AllStores.Any(x => string.Equals(store, x.Id, StringComparison.InvariantCultureIgnoreCase)) ? null : store;
+                   //use {store} as {path} if not exist any store with name {store} 
+                   path = workContext.AllStores.Any(x => string.Equals(store, x.Id, StringComparison.InvariantCultureIgnoreCase)) ? null : store;
                 }
-               
+                //Get all seo records for requested slug and also all other seo records with different slug and languages but related to same object
+                // GetSeoRecords('A') returns 
+                // { objectType: 'Product', objectId: '1',  SemanticUrl: 'A', Language: 'en-us', active : false }
+                // { objectType: 'Product', objectId: '1',  SemanticUrl: 'AA', Language: 'en-us', active : true }
                 var seoRecords = GetSeoRecords(path);
-                //Try first find SEO record for current store
-                var seoRecord = seoRecords.FirstOrDefault(x=> workContext.CurrentStore.Id.Equals(x.StoreId, StringComparison.OrdinalIgnoreCase));
-                if(seoRecord == null)
-                {
-                    //Then get first SEO without store
-                    seoRecord = seoRecords.FirstOrDefault(x => x.StoreId == null);
-                }
-             
-                if(seoRecord != null)
+                var seoRecord = FindBestSeoMatch(seoRecords.Where(x => path.Equals(x.SemanticUrl, StringComparison.OrdinalIgnoreCase)), workContext.CurrentLanguage, workContext.CurrentStore.Id);
+
+                if (seoRecord != null)
                 {
                     // Ensure the slug is active
                     if (seoRecord.IsActive == null || !seoRecord.IsActive.Value)
                     {
                         // Slug is not active. Try to find the active one for the same entity and language.
-                        var activeSlug = FindActiveSlug(seoRecords, seoRecord.ObjectType, seoRecord.ObjectId, seoRecord.LanguageCode);
-
-                        if (string.IsNullOrWhiteSpace(activeSlug))
+                        seoRecord = FindBestSeoMatch(seoRecords.Where(x=>x.ObjectType == seoRecord.ObjectType && x.ObjectId == seoRecord.ObjectId && x.IsActive != null && x.IsActive.Value),
+                                                     workContext.CurrentLanguage, workContext.CurrentStore.Id);
+                        
+                        if (seoRecord == null)
                         {
                             // No active slug found
                             data.Values["controller"] = "Error";
@@ -76,7 +74,7 @@ namespace VirtoCommerce.Storefront.Routing
                             // The active slug is found
                             var response = httpContext.Response;
                             response.Status = "301 Moved Permanently";
-                            response.RedirectLocation = string.Format("{0}{1}", workContext.CurrentStore.Url, activeSlug);
+                            response.RedirectLocation = string.Format("{0}{1}", workContext.CurrentStore.Url, seoRecord.SemanticUrl);
                             response.End();
                             data = null;
                         }
@@ -84,13 +82,14 @@ namespace VirtoCommerce.Storefront.Routing
                     else
                     {
                         // Redirect to the slug for the current language if it differs from the requested slug
-                        var slugForCurrentLanguage = GetSlug(seoRecords, workContext, seoRecord.ObjectType, seoRecord.ObjectId, workContext.CurrentLanguage.CultureName);
-
-                        if (!string.IsNullOrEmpty(slugForCurrentLanguage) && !slugForCurrentLanguage.Equals(seoRecord.SemanticUrl, StringComparison.OrdinalIgnoreCase))
+                        var actualActiveSeoRecord = FindBestSeoMatch(seoRecords.Where(x => x.ObjectType == seoRecord.ObjectType && x.ObjectId == seoRecord.ObjectId && x.IsActive != null && x.IsActive.Value),
+                                                                     workContext.CurrentLanguage, workContext.CurrentStore.Id);
+                        //If actual seo different that requested need redirect 302
+                        if (!string.Equals(actualActiveSeoRecord.SemanticUrl, seoRecord.SemanticUrl, StringComparison.OrdinalIgnoreCase))
                         {
                             var response = httpContext.Response;
                             response.Status = "302 Moved Temporarily";
-                            response.RedirectLocation = string.Format("{0}{1}", workContext.CurrentStore.Url, slugForCurrentLanguage);
+                            response.RedirectLocation = string.Format("{0}{1}", workContext.CurrentStore.Url, actualActiveSeoRecord.SemanticUrl);
                             response.End();
                             data = null;
                         }
@@ -164,31 +163,17 @@ namespace VirtoCommerce.Storefront.Routing
             return seoRecords;
         }
 
-        private string GetSlug(List<VirtoCommerceDomainCommerceModelSeoInfo> seoRecords, WorkContext workContext, string entityType, string entityId, string language)
+        private VirtoCommerceDomainCommerceModelSeoInfo FindBestSeoMatch(IEnumerable<VirtoCommerceDomainCommerceModelSeoInfo> seoRecords, Language language, string storeId)
         {
-            var result = string.Empty;
-
-            // Get slug for requested language
-            if (!string.IsNullOrEmpty(language) && workContext.CurrentStore.Languages.Count >= 2)
+            var retVal = seoRecords.Select(x =>
             {
-                result = FindActiveSlug(seoRecords, entityType, entityId, language);
-            }
-
-            // Get slug for default language
-            if (string.IsNullOrEmpty(result))
-            {
-                result = FindActiveSlug(seoRecords, entityType, entityId, null);
-            }
-
-            return result;
+                var score = 0;
+                score += language.Equals(x.LanguageCode) ? 1 : 0;
+                score += storeId.Equals(x.StoreId, StringComparison.OrdinalIgnoreCase) ? 2 : 0;
+                return new { SeoRecord = x, Score = score };
+            }).OrderByDescending(x => x.Score).Select(x => x.SeoRecord).FirstOrDefault();
+            return retVal;
         }
 
-        private string FindActiveSlug(List<VirtoCommerceDomainCommerceModelSeoInfo> seoRecords, string entityType, string entityId, string language)
-        {
-            return seoRecords
-                .Where(r => r.ObjectType == entityType && r.ObjectId == entityId && string.Equals(r.LanguageCode, language, StringComparison.OrdinalIgnoreCase) && r.IsActive != null && r.IsActive.Value)
-                .Select(r => r.SemanticUrl)
-                .FirstOrDefault();
-        }
     }
 }
