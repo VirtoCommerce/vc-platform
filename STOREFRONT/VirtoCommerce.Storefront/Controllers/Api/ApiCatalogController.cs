@@ -23,7 +23,11 @@ namespace VirtoCommerce.Storefront.Controllers.Api
         public async Task<ActionResult> SearchProducts(CatalogSearchCriteria searchCriteria)
         {
             var retVal = await _catalogSearchService.SearchProductsAsync(searchCriteria);
-            return Json(retVal);
+            return Json(new
+            {
+                 Products = retVal,
+                 MetaData = retVal.GetMetaData()
+            });
         }
 
         // storefrontapi/products?productIds=...&respGroup=...
@@ -39,7 +43,11 @@ namespace VirtoCommerce.Storefront.Controllers.Api
         public async Task<ActionResult> SearchCategories(CatalogSearchCriteria searchCriteria)
         {
             var retVal = await _catalogSearchService.SearchCategoriesAsync(searchCriteria);
-            return Json(retVal);
+            return Json(new
+            {
+                Categories = retVal,
+                MetaData = retVal.GetMetaData()
+            });
         }
 
         // GET: storefrontapi/categories

@@ -92,7 +92,7 @@ namespace VirtoCommerce.Storefront.Services
             //include categories
             criteria.ResponseGroup = criteria.ResponseGroup | CatalogSearchResponseGroup.WithCategories;
             var searchCriteria = criteria.ToServiceModel(workContext);
-            var result = await _searchApi.SearchModuleSearchAsync(searchCriteria);
+            var result = await _catalogModuleApi.CatalogModuleSearchSearchAsync(searchCriteria);
 
             //API temporary does not support paginating request to categories (that's uses PagedList with superset instead StaticPagedList)
             return new PagedList<Category>(result.Categories.Select(x => x.ToWebModel(workContext.CurrentLanguage)), criteria.PageNumber, criteria.PageSize);
@@ -112,7 +112,7 @@ namespace VirtoCommerce.Storefront.Services
             //include categories
             criteria.ResponseGroup = criteria.ResponseGroup | CatalogSearchResponseGroup.WithCategories;
             var searchCriteria = criteria.ToServiceModel(workContext);
-            var categories = _searchApi.SearchModuleSearch(searchCriteria).Categories.Select(x => x.ToWebModel(workContext.CurrentLanguage)).ToList();
+            var categories = _catalogModuleApi.CatalogModuleSearchSearch(searchCriteria).Categories.Select(x => x.ToWebModel(workContext.CurrentLanguage)).ToList();
 
             //API temporary does not support paginating request to categories (that's uses PagedList with superset)
             return new PagedList<Category>(categories, criteria.PageNumber, criteria.PageSize);
