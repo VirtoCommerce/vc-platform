@@ -18,7 +18,7 @@
         function initializeBlade(data) {
             data.additionalLanguages = _.without(data.languages, data.defaultLanguage);
             data.additionalCurrencies = _.without(data.currencies, data.defaultCurrency);
-            
+
             blade.currentEntityId = data.id;
             blade.title = data.name;
 
@@ -27,10 +27,10 @@
             data.shippingMethods.sort(function (a, b) { return a.priority - b.priority; });
             data.paymentMethods.sort(function (a, b) { return a.priority - b.priority; });
 
-            _.each(data.shippingMethods, function (x) { settingsHelper.fixValues(x.settings); })
-            _.each(data.paymentMethods, function (x) { settingsHelper.fixValues(x.settings); })
-            _.each(data.taxProviders, function (x) { settingsHelper.fixValues(x.settings); })
-            
+            _.each(data.shippingMethods, function (x) { settingsHelper.fixValues(x.settings); });
+            _.each(data.paymentMethods, function (x) { settingsHelper.fixValues(x.settings); });
+            _.each(data.taxProviders, function (x) { settingsHelper.fixValues(x.settings); });
+
             blade.currentEntity = angular.copy(data);
             blade.origEntity = data;
             blade.isLoading = false;
@@ -52,14 +52,18 @@
         $scope.saveChanges = function () {
             blade.isLoading = true;
 
-            blade.currentEntity.languages = _.union([blade.currentEntity.defaultLanguage], blade.currentEntity.additionalLanguages);
-            blade.currentEntity.currencies = _.union([blade.currentEntity.defaultCurrency], blade.currentEntity.additionalCurrencies);
+            var entityToSave = angular.copy(blade.currentEntity);
+            entityToSave.languages = _.union([entityToSave.defaultLanguage], entityToSave.additionalLanguages);
+            entityToSave.currencies = _.union([entityToSave.defaultCurrency], entityToSave.additionalCurrencies);
 
-            stores.update({}, blade.currentEntity, function (data) {
+            settingsHelper.toApiFormat(entityToSave.settings);
+            _.each(entityToSave.shippingMethods, function (x) { settingsHelper.toApiFormat(x.settings); });
+            _.each(entityToSave.paymentMethods, function (x) { settingsHelper.toApiFormat(x.settings); });
+            _.each(entityToSave.taxProviders, function (x) { settingsHelper.toApiFormat(x.settings); });
+
+            stores.update({}, entityToSave, function (data) {
                 blade.refresh(true);
-            }, function (error) {
-                bladeNavigationService.setError('Error ' + error.status, blade);
-            });
+            }, function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
         };
 
         function deleteEntry() {
@@ -135,7 +139,19 @@
             };
             bladeNavigationService.showBlade(newBlade, blade);
         };
-        
+
+        $scope.openStatesDictionarySettingManagement = function () {
+            var newBlade = {
+                id: 'settingDetailChild',
+                isApiSave: true,
+                currentEntityId: 'Stores.States',
+                parentRefresh: function (data) { $scope.storeStates = data; },
+                controller: 'platformWebApp.settingDictionaryController',
+                template: '$(Platform)/Scripts/app/settings/blades/setting-dictionary.tpl.html'
+            };
+            bladeNavigationService.showBlade(newBlade, blade);
+        };
+
         blade.refresh(false);
         $scope.catalogs = catalogs.getCatalogs();
         $scope.storeStates = settings.getValues({ id: 'Stores.States' });

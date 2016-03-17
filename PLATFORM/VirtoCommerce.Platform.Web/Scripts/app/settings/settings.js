@@ -70,5 +70,14 @@
         });
     };
 
+    retVal.toApiFormat = function (settings) {
+        var selectedSettings = _.where(settings, { isArray: true });
+        _.forEach(selectedSettings, function (setting) {
+            if (setting.arrayValues) {
+                setting.arrayValues = _.pluck(setting.arrayValues, 'value');
+            }
+        });
+    };
+
     return retVal;
 }]);
