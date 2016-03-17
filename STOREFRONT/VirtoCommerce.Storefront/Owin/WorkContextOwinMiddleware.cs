@@ -90,8 +90,6 @@ namespace VirtoCommerce.Storefront.Owin
                 workContext.AllStores = await _cacheManager.GetAsync("GetAllStores", "ApiRegion", async () => { return await GetAllStoresAsync(); });
                 if (workContext.AllStores != null && workContext.AllStores.Any())
                 {
-                    var externalAuthTypes = context.Authentication.GetExternalAuthenticationTypes();
-
                     // Initialize request specific properties
                     workContext.CurrentStore = GetStore(context, workContext.AllStores);
                     workContext.CurrentLanguage = GetLanguage(context, workContext.AllStores, workContext.CurrentStore);
@@ -118,7 +116,7 @@ namespace VirtoCommerce.Storefront.Owin
                         criteria.PageNumber = pageNumber;
                         criteria.PageSize = pageSize;
                         var result = catalogSearchService.SearchCategories(criteria);
-                        foreach(var category in result)
+                        foreach (var category in result)
                         {
                             category.Products = new MutablePagedList<Product>((pageNumber2, pageSize2) =>
                             {
@@ -159,6 +157,8 @@ namespace VirtoCommerce.Storefront.Owin
                     MaintainAnonymousCustomerCookie(context, workContext);
 
                     // Gets the collection of external login providers
+                    var externalAuthTypes = context.Authentication.GetExternalAuthenticationTypes();
+
                     workContext.ExternalLoginProviders = externalAuthTypes.Select(at => new LoginProvider
                     {
                         AuthenticationType = at.AuthenticationType,
@@ -187,10 +187,10 @@ namespace VirtoCommerce.Storefront.Owin
                             var allContentItems = _staticContentService.LoadStoreStaticContent(workContext.CurrentStore);
                             var blogs = allContentItems.OfType<Blog>().ToArray();
                             var blogArticlesGroup = allContentItems.OfType<BlogArticle>().GroupBy(x => x.BlogName, x => x);
-                            foreach(var blog in blogs)
+                            foreach (var blog in blogs)
                             {
                                 var blogArticles = blogArticlesGroup.FirstOrDefault(x => string.Equals(x.Key, blog.Name, StringComparison.OrdinalIgnoreCase));
-                                if(blogArticles != null)
+                                if (blogArticles != null)
                                 {
                                     blog.Articles = new MutablePagedList<BlogArticle>(blogArticles);
                                 }
@@ -244,8 +244,8 @@ namespace VirtoCommerce.Storefront.Owin
 
         private bool IsAssetRequest(IOwinRequest request)
         {
-            var retVal = string.Equals(request.Method, "GET", StringComparison.OrdinalIgnoreCase); 
-            if(retVal)
+            var retVal = string.Equals(request.Method, "GET", StringComparison.OrdinalIgnoreCase);
+            if (retVal)
             {
                 retVal = request.Uri.AbsolutePath.Contains("themes/assets") || !string.IsNullOrEmpty(Path.GetExtension(request.Uri.ToString()));
             }
@@ -254,10 +254,10 @@ namespace VirtoCommerce.Storefront.Owin
 
         private void ValidateUserStoreLogin(IOwinContext context, CustomerInfo customer, Store currentStore)
         {
-     
+
             if (customer.IsRegisteredUser && !customer.AllowedStores.IsNullOrEmpty()
                 && !customer.AllowedStores.Any(x => string.Equals(x, currentStore.Id, StringComparison.InvariantCultureIgnoreCase)))
-        {
+            {
                 context.Authentication.SignOut();
                 context.Authentication.User = new GenericPrincipal(new GenericIdentity(string.Empty), null);
             }
@@ -492,6 +492,6 @@ namespace VirtoCommerce.Storefront.Owin
         }
 
 
-       
+
     }
 }

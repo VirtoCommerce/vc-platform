@@ -356,6 +356,7 @@
     <Compile Include="Builders\QuoteRequestBuilder.cs" />
     <Compile Include="Common\HandleJsonErrorAttribute.cs" />
     <Compile Include="Common\IdentityExtensions.cs" />
+    <Compile Include="Common\NameValueCollectionExtensions.cs" />
     <Compile Include="Common\ObjectExtensions.cs" />
     <Compile Include="Common\StorefrontHmacApiClient.cs" />
     <Compile Include="Controllers\Api\ApiQuoteRequestController.cs" />
