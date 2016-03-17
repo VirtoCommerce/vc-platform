@@ -318,6 +318,7 @@ namespace VirtoCommerce.Platform.Data.Settings
             using (var repository = _repositoryFactory())
             {
                 return repository.Settings
+                    .Where(x => x.ObjectType == null && x.ObjectId == null)
                     .Include(s => s.SettingValues)
                     .ToList();
             }
