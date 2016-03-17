@@ -53,7 +53,7 @@ namespace VirtoCommerce.CustomerModule.Test
         public void GetContact()
         {
             var controller = GetContactController();
-            var result = controller.GetContactById("testContact1") as OkNegotiatedContentResult<Contact>;
+            var result = controller.GetMemberById("testContact1") as OkNegotiatedContentResult<Contact>;
         }
 
         [TestMethod]
@@ -97,7 +97,7 @@ namespace VirtoCommerce.CustomerModule.Test
         public void UpdateContact()
         {
             var controller = GetContactController();
-            var result = controller.GetContactById("testContact") as OkNegotiatedContentResult<Contact>;
+            var result = controller.GetMemberById("testContact") as OkNegotiatedContentResult<Contact>;
             var contact = result.Content;
 
             contact.FullName = "diff name";
@@ -106,7 +106,7 @@ namespace VirtoCommerce.CustomerModule.Test
 
             controller.UpdateContact(contact);
 
-            result = controller.GetContactById("testContact") as OkNegotiatedContentResult<Contact>;
+            result = controller.GetMemberById("testContact") as OkNegotiatedContentResult<Contact>;
 
             contact = result.Content;
         }
@@ -123,7 +123,7 @@ namespace VirtoCommerce.CustomerModule.Test
 
             controller.UpdateContact(contact);
 
-            var result = controller.GetContactById("testContact") as OkNegotiatedContentResult<Contact>;
+            var result = controller.GetMemberById("testContact") as OkNegotiatedContentResult<Contact>;
 
             contact = result.Content;
         }
@@ -132,8 +132,8 @@ namespace VirtoCommerce.CustomerModule.Test
         public void DeleteContact()
         {
             var controller = GetContactController();
-            controller.DeleteContacts(new[] { "testContact" });
-            var result = controller.GetContactById("testStore") as OkNegotiatedContentResult<Contact>;
+            controller.DeleteMembers(new[] { "testContact" });
+            var result = controller.GetMemberById("testStore") as OkNegotiatedContentResult<Contact>;
 
             Assert.IsNull(result);
         }
