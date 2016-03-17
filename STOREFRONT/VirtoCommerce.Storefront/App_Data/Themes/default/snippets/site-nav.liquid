@@ -8,7 +8,7 @@
         {% assign child_list_handle = link.title | handleize %}
         {% if linklists[child_list_handle].links != blank %}
             <li class="site-nav--has-dropdown{% if link.active %} site-nav--active{% endif %}" aria-haspopup="true">
-                <a href="{{ link.url | absolute_url }}">
+                <a href="{{ link.url }}">
                     {{ link.title }}
                     <span class="icon-fallback-text">
                         <span class="icon icon-arrow-down" aria-hidden="true"></span>

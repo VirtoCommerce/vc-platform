@@ -70,7 +70,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
 
             if (workContext.CurrentLinkLists != null)
             {
-                result.Linklists = new Linklists(workContext.CurrentLinkLists.Select(x => x.ToShopifyModel(workContext)));
+                result.Linklists = new Linklists(workContext.CurrentLinkLists.Select(x => x.ToShopifyModel(urlBuilder)));
             }
 
             if (workContext.Pages != null)

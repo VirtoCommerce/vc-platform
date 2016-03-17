@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using VirtoCommerce.LiquidThemeEngine.Objects;
+using VirtoCommerce.Storefront.Model.Common;
 using StorefrontModel = VirtoCommerce.Storefront.Model;
 
 
@@ -7,19 +8,19 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
 {
     public static class LinkListConverter
     {
-        public static Linklist ToShopifyModel(this StorefrontModel.MenuLinkList storefrontModel, StorefrontModel.WorkContext workContext)
+        public static Linklist ToShopifyModel(this StorefrontModel.MenuLinkList storefrontModel, IStorefrontUrlBuilder urlBuilder)
         {
             var shopifyModel = new Linklist();
 
             shopifyModel.Handle = storefrontModel.Name;
             shopifyModel.Id = storefrontModel.Id;
-            shopifyModel.Links = storefrontModel.MenuLinks.Select(ml => ml.ToShopfiyModel(workContext)).ToList();
+            shopifyModel.Links = storefrontModel.MenuLinks.Select(ml => ml.ToShopfiyModel(urlBuilder)).ToList();
             shopifyModel.Title = storefrontModel.Name;
 
             return shopifyModel;
         }
 
-        public static Link ToShopfiyModel(this StorefrontModel.MenuLink storefrontModel, StorefrontModel.WorkContext workContext)
+        public static Link ToShopfiyModel(this StorefrontModel.MenuLink storefrontModel, IStorefrontUrlBuilder urlBuilder)
         {
             var shopifyModel = new Link();
 
@@ -27,7 +28,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             shopifyModel.Object = "";
             shopifyModel.Title = storefrontModel.Title;
             shopifyModel.Type = "";
-            shopifyModel.Url = storefrontModel.Url;
+            shopifyModel.Url = urlBuilder.ToAppAbsolute(storefrontModel.Url);
 
             var productLink = storefrontModel as StorefrontModel.ProductMenuLink;
             var categoryLink = storefrontModel as StorefrontModel.CategoryMenuLink;
