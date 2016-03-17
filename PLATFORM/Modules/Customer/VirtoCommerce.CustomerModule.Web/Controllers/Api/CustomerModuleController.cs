@@ -87,7 +87,7 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
         public IHttpActionResult CreateMember(coreModel.Member member)
         {
             _memberService.CreateOrUpdate(new [] { member });
-            var retVal = _memberService.GetByIds(new[] { member.Id });
+            var retVal = _memberService.GetByIds(new[] { member.Id }).FirstOrDefault();
             return Ok(retVal);
         }
 
