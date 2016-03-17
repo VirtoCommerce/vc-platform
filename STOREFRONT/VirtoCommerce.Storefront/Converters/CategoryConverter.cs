@@ -2,6 +2,7 @@
 using System.Linq;
 using Omu.ValueInjecter;
 using VirtoCommerce.Client.Model;
+using VirtoCommerce.Storefront.Common;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
@@ -18,10 +19,11 @@ namespace VirtoCommerce.Storefront.Converters
             if (category.SeoInfos != null)
             {
                 //Select best matched SEO by StoreId and Language
-                retVal.SeoInfo = category.SeoInfos.Where(x => store.Id.Equals(x.StoreId, StringComparison.OrdinalIgnoreCase) || x.StoreId == null)
-                                                  .OrderByDescending(x => x.StoreId)
-                                                  .Select(s => s.ToWebModel())
-                                                  .FirstOrDefault(x => x.Language == currentLanguage);
+                var bestMatchSeo = category.SeoInfos.FindBestSeoMatch(currentLanguage, store);
+                if(bestMatchSeo != null)
+                {
+                    retVal.SeoInfo = bestMatchSeo.ToWebModel();
+                }
             }
 
             if (category.Images != null)
