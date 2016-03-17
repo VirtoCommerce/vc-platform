@@ -82,7 +82,7 @@ namespace VirtoCommerce.Storefront.Controllers
         {
             var order = await _orderApi.OrderModuleGetByNumberAsync(number);
 
-            if (order == null || order != null && order.CustomerId != WorkContext.CurrentCustomer.Id)
+            if (order == null || order.CustomerId != WorkContext.CurrentCustomer.Id)
             {
                 return HttpNotFound();
             }
@@ -298,24 +298,28 @@ namespace VirtoCommerce.Storefront.Controllers
                 return new HttpStatusCodeResult(System.Net.HttpStatusCode.BadRequest);
             }
 
-            CustomerInfo customer = null;
+            CustomerInfo customer;
 
             var user = await _commerceCoreApi.StorefrontSecurityGetUserByLoginAsync(loginInfo.Login.LoginProvider, loginInfo.Login.ProviderKey);
-            if (user == null)
+            if (user != null)
+            {
+                customer = await GetStorefrontCustomerByUserAsync(user);
+            }
+            else
             {
                 var newUser = new VirtoCommercePlatformCoreSecurityApplicationUserExtended
                 {
                     Email = loginInfo.Email,
-                    UserName = string.Format("{0}--{1}", loginInfo.Login.LoginProvider, loginInfo.Email),
+                    UserName = string.Join("--", loginInfo.Login.LoginProvider, loginInfo.Login.ProviderKey),
                     UserType = "Customer",
-                    StoreId = WorkContext.CurrentStore.Id
-                };
-                newUser.Logins = new List<VirtoCommercePlatformCoreSecurityApplicationUserLogin>
-                {
-                    new VirtoCommercePlatformCoreSecurityApplicationUserLogin
+                    StoreId = WorkContext.CurrentStore.Id,
+                    Logins = new List<VirtoCommercePlatformCoreSecurityApplicationUserLogin>
                     {
-                        LoginProvider = loginInfo.Login.LoginProvider,
-                        ProviderKey = loginInfo.Login.ProviderKey
+                        new VirtoCommercePlatformCoreSecurityApplicationUserLogin
+                        {
+                            LoginProvider = loginInfo.Login.LoginProvider,
+                            ProviderKey = loginInfo.Login.ProviderKey
+                        }
                     }
                 };
                 var result = await _commerceCoreApi.StorefrontSecurityCreateAsync(newUser);
@@ -335,10 +339,10 @@ namespace VirtoCommerce.Storefront.Controllers
 
                     customer = await GetStorefrontCustomerByUserAsync(storefrontUser);
                 }
-            }
-            else
-            {
-                customer = await GetStorefrontCustomerByUserAsync(user);
+                else
+                {
+                    return new HttpStatusCodeResult(System.Net.HttpStatusCode.InternalServerError);
+                }
             }
 
             var identity = CreateClaimsIdentity(customer);
