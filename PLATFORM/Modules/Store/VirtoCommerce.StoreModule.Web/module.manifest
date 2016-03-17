@@ -50,7 +50,7 @@
       <setting>
         <name>Stores.ExportImport.Description</name>
         <valueType>string</valueType>
-        <defaultValue>Export/Import stores with all related informations</defaultValue>
+        <defaultValue>Export/Import stores with all related information</defaultValue>
         <title>Export/Import description</title>
         <description>Module description in platform export/import wizard</description>
       </setting>
@@ -61,7 +61,7 @@
         <valueType>boolean</valueType>
         <defaultValue>true</defaultValue>
         <title>Caching Enabled</title>
-        <description>Specified if caching is enabled for Stores</description>
+        <description>Specify if caching is enabled for store entity</description>
       </setting>
       <setting>
         <name>Stores.Caching.StoreTimeout</name>
