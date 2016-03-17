@@ -48,22 +48,43 @@ namespace VirtoCommerce.CustomerModule.Data.Services
             return retVal.ToArray();
         }
 
-        public Member Create(Member member)
+        public void CreateOrUpdate(Member[] members)
         {
             var pkMap = new PrimaryKeyResolvingMap();
-
-            var dbMember = ConvertToDataMember(member, pkMap);
             using (var repository = _repositoryFactory())
+            using (var changeTracker = GetChangeTracker(repository))
             {
-                repository.Add(dbMember);
+                var dbExistsMembers = repository.GetMembersByIds(members.Where(x => !x.IsTransient()).Select(x => x.Id).ToArray());
+                foreach (var member in members)
+                {
+                    var dbChangedMember = ConvertToDataMember(member, pkMap);
+                    var dbExistMember = dbExistsMembers.FirstOrDefault(x => x.Id == member.Id);
+                    if (dbExistMember != null)
+                    {
+                        changeTracker.Attach(dbExistMember);
+                        if (dbChangedMember is dataModel.Contact)
+                        {
+                            ((dataModel.Contact)dbChangedMember).Patch((dataModel.Contact)dbExistMember);
+                        }
+                        if (dbChangedMember is dataModel.Organization)
+                        {
+                            ((dataModel.Organization)dbChangedMember).Patch((dataModel.Organization)dbExistMember);
+                        }
+                    }
+                    else
+                    {
+                        repository.Add(dbChangedMember);
+                    }
+                }
                 CommitChanges(repository);
                 pkMap.ResolvePrimaryKeys();
+
+                foreach (var member in members)
+                {
+                    _dynamicPropertyService.SaveDynamicPropertyValues(member);
+                }
             }
 
-            _dynamicPropertyService.SaveDynamicPropertyValues(member);
-
-            var retVal = GetByIds(dbMember.Id).FirstOrDefault();
-            return retVal;
         }
 
         public void Delete(string[] ids)
@@ -92,42 +113,7 @@ namespace VirtoCommerce.CustomerModule.Data.Services
             }
         }
 
-        public void Update(Member[] members)
-        {
-            var pkMap = new PrimaryKeyResolvingMap();
-            using (var repository = _repositoryFactory())
-            using (var changeTracker = GetChangeTracker(repository))
-            {
-                var dbTargetMembers = repository.GetMembersByIds(members.Select(x => x.Id).Where(x => x != null).ToArray());
-
-                foreach (var member in members)
-                {
-                    var dbTargetMember = dbTargetMembers.FirstOrDefault(x => x.Id == member.Id);
-                    if (dbTargetMember != null)
-                    {
-                        changeTracker.Attach(dbTargetMember);
-                        var dbSourceMember = ConvertToDataMember(member, pkMap);
-                        if(dbSourceMember is dataModel.Contact)
-                        {
-                            ((dataModel.Contact)dbSourceMember).Patch((dataModel.Contact)dbTargetMember);
-                        }
-                        if(dbSourceMember is dataModel.Organization)
-                        {
-                            ((dataModel.Organization)dbSourceMember).Patch((dataModel.Organization)dbTargetMember);
-                        }
-                    }
-                }
-
-                CommitChanges(repository);
-                pkMap.ResolvePrimaryKeys();
-            }
-
-            foreach (var member in members)
-            {
-                _dynamicPropertyService.SaveDynamicPropertyValues(member);
-            }
-        }
-
+ 
         public SearchResult SearchMembers(SearchCriteria criteria)
         {
             var retVal = new SearchResult();

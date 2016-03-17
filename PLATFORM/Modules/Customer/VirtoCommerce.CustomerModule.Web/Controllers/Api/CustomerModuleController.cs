@@ -36,6 +36,7 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
             var searchCriteria = new coreModel.SearchCriteria
             {
                 MemberType = typeof(coreModel.Organization).Name,
+                DeepSearch = true,
                 Take = int.MaxValue
             };
             var result = _memberService.SearchMembers(searchCriteria);
@@ -85,7 +86,8 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
         [CheckPermission(Permission = CustomerPredefinedPermissions.Create)]
         public IHttpActionResult CreateMember(coreModel.Member member)
         {
-            var retVal = _memberService.Create(member);
+            _memberService.CreateOrUpdate(new [] { member });
+            var retVal = _memberService.GetByIds(new[] { member.Id });
             return Ok(retVal);
         }
 
@@ -99,7 +101,7 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
         [CheckPermission(Permission = CustomerPredefinedPermissions.Update)]
         public IHttpActionResult UpdateMember(coreModel.Member member)
         {
-            _memberService.Update(new[] { member });
+            _memberService.CreateOrUpdate(new[] { member });
             return StatusCode(HttpStatusCode.NoContent);
         }
 

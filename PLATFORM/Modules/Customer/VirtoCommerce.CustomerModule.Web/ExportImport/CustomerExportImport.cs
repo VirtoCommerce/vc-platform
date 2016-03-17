@@ -37,36 +37,11 @@ namespace VirtoCommerce.CustomerModule.Web.ExportImport
 			var progressInfo = new ExportImportProgressInfo();
 			progressInfo.Description = String.Format("{0} members importing...", backupObject.Members.Count());
             progressCallback(progressInfo);
-            UpdateMembers(originalObject.Members, backupObject.Members.OrderByDescending(x => x.MemberType).ToList());
-
+            _memberService.CreateOrUpdate(backupObject.Members.OrderByDescending(x => x.MemberType).ToArray());
 
         }
 
-        #region Import updates
-        
-        private void UpdateMembers(ICollection<Member> original, ICollection<Member> backup)
-        {
-            var membersToUpdate = new List<Member>();
-            backup.CompareTo(original, EqualityComparer<Member>.Default, (state, x, y) =>
-            {
-                switch (state)
-                {
-                    case EntryState.Modified:
-                        membersToUpdate.Add(x);
-                        break;
-                    case EntryState.Added:
-                        _memberService.Create(x);
-                        break;
-                }
-            });
-            _memberService.Update(membersToUpdate.ToArray());
-        }
-
-     
-
-        #endregion
-
-        #region BackupObject
+            #region BackupObject
 
 		public BackupObject GetBackupObject(Action<ExportImportProgressInfo> progressCallback)
         {

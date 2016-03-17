@@ -11,7 +11,7 @@
           <h3>{{ 'layout.footer.quick_links' | t }}</h3>
           <ul>
             {% for link in linklists[settings.footer_quicklinks_linklist].links %}
-              <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+              <li><a href="{{ link.url | absolute_url }}">{{ link.title }}</a></li>
             {% else %}
               {% capture theme_settings_footer_linklist_path %}<strong>Footer</strong> > <strong>Quick links link list</strong>{% endcapture %}
               {{ 'layout.footer.instructions_for_linklist_html' | t: theme_settings_link: theme_settings_link, theme_settings_footer_linklist_path: theme_settings_footer_linklist_path }}

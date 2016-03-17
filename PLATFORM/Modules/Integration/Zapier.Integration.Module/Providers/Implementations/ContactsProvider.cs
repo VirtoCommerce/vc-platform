@@ -30,7 +30,8 @@ namespace Zapier.IntegrationModule.Web.Providers.Implementations
 
         public Contact NewContact(Contact newContact)
         {
-            return _memberService.Create(newContact) as Contact;
+            _memberService.CreateOrUpdate(new[] { newContact });
+            return _memberService.GetByIds(new[] { newContact.Id }).OfType<Contact>().FirstOrDefault();
         }
     }
 }
