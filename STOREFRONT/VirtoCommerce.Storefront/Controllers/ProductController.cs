@@ -48,7 +48,7 @@ namespace VirtoCommerce.Storefront.Controllers
                     criteria.CategoryId = product.CategoryId;
                     criteria.PageNumber = pageNumber;
                     criteria.PageSize = pageSize;
-                    return _catalogSearchService.SearchProducts(criteria);
+                    return _catalogSearchService.SearchProducts(criteria).Products;
                 });
 
             }

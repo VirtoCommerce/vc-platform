@@ -25,8 +25,9 @@ namespace VirtoCommerce.Storefront.Controllers.Api
             var retVal = await _catalogSearchService.SearchProductsAsync(searchCriteria);
             return Json(new
             {
-                 Products = retVal,
-                 MetaData = retVal.GetMetaData()
+                 Products = retVal.Products,
+                 Aggregations = retVal.Aggregations,
+                 MetaData = retVal.Products.GetMetaData()
             });
         }
 

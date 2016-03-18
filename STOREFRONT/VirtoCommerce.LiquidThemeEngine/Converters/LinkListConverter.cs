@@ -8,19 +8,19 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
 {
     public static class LinkListConverter
     {
-        public static Linklist ToShopifyModel(this StorefrontModel.MenuLinkList storefrontModel, IStorefrontUrlBuilder urlBuilder)
+        public static Linklist ToShopifyModel(this StorefrontModel.MenuLinkList storefrontModel, Storefront.Model.WorkContext workContext,  IStorefrontUrlBuilder urlBuilder)
         {
             var shopifyModel = new Linklist();
 
             shopifyModel.Handle = storefrontModel.Name;
             shopifyModel.Id = storefrontModel.Id;
-            shopifyModel.Links = storefrontModel.MenuLinks.Select(ml => ml.ToShopfiyModel(urlBuilder)).ToList();
+            shopifyModel.Links = storefrontModel.MenuLinks.Select(ml => ml.ToShopfiyModel(workContext, urlBuilder)).ToList();
             shopifyModel.Title = storefrontModel.Name;
 
             return shopifyModel;
         }
 
-        public static Link ToShopfiyModel(this StorefrontModel.MenuLink storefrontModel, IStorefrontUrlBuilder urlBuilder)
+        public static Link ToShopfiyModel(this StorefrontModel.MenuLink storefrontModel, Storefront.Model.WorkContext workContext, IStorefrontUrlBuilder urlBuilder)
         {
             var shopifyModel = new Link();
 
@@ -45,7 +45,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                 shopifyModel.Type = "collection";
                 if (categoryLink.Category != null)
                 {
-                    shopifyModel.Object = categoryLink.Category.ToShopifyModel();
+                    shopifyModel.Object = categoryLink.Category.ToShopifyModel(workContext);
                 }
             }
             return shopifyModel;

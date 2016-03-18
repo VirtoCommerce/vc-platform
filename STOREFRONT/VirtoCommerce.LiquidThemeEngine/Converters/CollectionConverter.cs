@@ -11,7 +11,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
     public static class CollectionConverter
     {
     
-        public static Collection ToShopifyModel(this storefrontModel.Catalog.Category category, IMutablePagedList<storefrontModel.Catalog.Aggregation> aggregations = null, string sortBy = null)
+        public static Collection ToShopifyModel(this storefrontModel.Catalog.Category category, storefrontModel.WorkContext workContext)
         {
             var result = new Collection
             {
@@ -45,22 +45,22 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                  result.AllProductsCount = category.Products.TotalItemCount;
             }
 
-            if (aggregations != null)
+            if (workContext.Aggregations != null)
             {
                 result.Tags = new TagCollection(new MutablePagedList<Tag>((pageNumber, pageSize) =>
                 {
-                    aggregations.Slice(pageNumber, pageSize);
-                    var tags = aggregations.Where(a => a.Items != null)
+                    workContext.Aggregations.Slice(pageNumber, pageSize);
+                    var tags = workContext.Aggregations.Where(a => a.Items != null)
                                            .SelectMany(a => a.Items.Select(item => item.ToShopifyModel(a.Field, a.Label)));
-                    return new StaticPagedList<Tag>(tags, aggregations);
+                    return new StaticPagedList<Tag>(tags, workContext.Aggregations);
 
-                }, aggregations.PageNumber, aggregations.PageSize));
+                }, workContext.Aggregations.PageNumber, workContext.Aggregations.PageSize));
             }
 
             result.DefaultSortBy = "manual";
-            if (sortBy != null)
+            if (workContext.CurrentCatalogSearchCriteria.SortBy != null)
             {
-                result.SortBy = sortBy;
+                result.SortBy = workContext.CurrentCatalogSearchCriteria.SortBy;
             }
 
             if(!category.Properties.IsNullOrEmpty())

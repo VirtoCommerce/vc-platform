@@ -49,13 +49,7 @@ namespace VirtoCommerce.Storefront.Controllers
             }
             WorkContext.CurrentCatalogSearchCriteria.CategoryId = categoryId;
             WorkContext.CurrentCategory = (await _searchService.GetCategoriesAsync(new[] { categoryId }, CategoryResponseGroup.Full)).FirstOrDefault();
-            WorkContext.CurrentCategory.Products = new MutablePagedList<Product>((pageNumber, pageSize) =>
-            {
-                var criteria = WorkContext.CurrentCatalogSearchCriteria.Clone();
-                criteria.PageNumber = pageNumber;
-                criteria.PageSize = pageSize;
-                return _searchService.SearchProducts(criteria);
-            });
+            WorkContext.CurrentCategory.Products = WorkContext.Products;
 
             if (view.Equals("list", StringComparison.OrdinalIgnoreCase))
             {

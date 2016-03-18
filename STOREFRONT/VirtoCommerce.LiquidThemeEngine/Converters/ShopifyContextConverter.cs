@@ -51,7 +51,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
 
             if(workContext.CurrentCategory != null)
             {
-                result.Collection = workContext.CurrentCategory.ToShopifyModel(workContext.Aggregations, workContext.CurrentCatalogSearchCriteria.SortBy);
+                result.Collection = workContext.CurrentCategory.ToShopifyModel(workContext);
             }
 
             if (workContext.Categories != null)
@@ -59,7 +59,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                 result.Collections = new Collections(new MutablePagedList<Collection>((pageNumber, pageSize) =>
                 {
                     workContext.Categories.Slice(pageNumber, pageSize);
-                    return new StaticPagedList<Collection>(workContext.Categories.Select(x => x.ToShopifyModel(workContext.Aggregations, workContext.CurrentCatalogSearchCriteria.SortBy)), workContext.Categories);
+                    return new StaticPagedList<Collection>(workContext.Categories.Select(x => x.ToShopifyModel(workContext)), workContext.Categories);
                 }));
                 }
 
@@ -70,7 +70,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
 
             if (workContext.CurrentLinkLists != null)
             {
-                result.Linklists = new Linklists(workContext.CurrentLinkLists.Select(x => x.ToShopifyModel(urlBuilder)));
+                result.Linklists = new Linklists(workContext.CurrentLinkLists.Select(x => x.ToShopifyModel(workContext, urlBuilder)));
             }
 
             if (workContext.Pages != null)

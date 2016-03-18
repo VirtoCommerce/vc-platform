@@ -123,7 +123,7 @@ namespace VirtoCommerce.Storefront.Services
         /// </summary>
         /// <param name="criteria"></param>
         /// <returns></returns>
-        public async Task<IPagedList<Product>> SearchProductsAsync(CatalogSearchCriteria criteria)
+        public async Task<CatalogSearchResult> SearchProductsAsync(CatalogSearchCriteria criteria)
         {
             criteria = criteria.Clone();
             //exclude categories
@@ -144,7 +144,11 @@ namespace VirtoCommerce.Storefront.Services
                 await Task.WhenAll(taskList.ToArray());
             }
 
-            return new StaticPagedList<Product>(products, criteria.PageNumber, criteria.PageSize, result.ProductsTotalCount.Value);
+            return new CatalogSearchResult
+            {
+                Products = new StaticPagedList<Product>(products, criteria.PageNumber, criteria.PageSize, result.ProductsTotalCount.Value),
+                Aggregations = !result.Aggregations.IsNullOrEmpty() ? result.Aggregations.Select(x => x.ToWebModel(workContext.CurrentLanguage.CultureName)).ToArray() : new Aggregation[] { }
+            };
         }
 
 
@@ -153,7 +157,7 @@ namespace VirtoCommerce.Storefront.Services
         /// </summary>
         /// <param name="criteria"></param>
         /// <returns></returns>
-        public IPagedList<Product> SearchProducts(CatalogSearchCriteria criteria)
+        public CatalogSearchResult SearchProducts(CatalogSearchCriteria criteria)
         {
             var workContext = _workContextFactory();
             criteria = criteria.Clone();
@@ -171,24 +175,11 @@ namespace VirtoCommerce.Storefront.Services
             _pricingService.EvaluateProductPrices(products);
             LoadProductsInventories(products);
 
-            return new StaticPagedList<Product>(products, criteria.PageNumber, criteria.PageSize, result.ProductsTotalCount.Value);
-        }
-
-        public IPagedList<Aggregation> GetAggregations(CatalogSearchCriteria criteria)
-        {
-            var workContext = _workContextFactory();
-            var searchCriteria = criteria.ToServiceModel(workContext);
-            //Aggregations not support pagination
-            searchCriteria.Skip = 0;
-            searchCriteria.Take = 10;
-            searchCriteria.ResponseGroup = CatalogSearchResponseGroup.WithProducts.ToString();
-
-            var result = _searchApi.SearchModuleSearch(searchCriteria);
-            var aggregations = result.Aggregations
-                .Select(x => x.ToWebModel(workContext.CurrentLanguage.CultureName))
-                .ToList();
-
-            return new StaticPagedList<Aggregation>(aggregations, criteria.PageNumber, criteria.PageSize, aggregations.Count);
+            return new CatalogSearchResult
+            {
+                Products = new StaticPagedList<Product>(products, criteria.PageNumber, criteria.PageSize, result.ProductsTotalCount.Value),
+                Aggregations = !result.Aggregations.IsNullOrEmpty() ? result.Aggregations.Select(x => x.ToWebModel(workContext.CurrentLanguage.CultureName)).ToArray() : new Aggregation[] { }
+            };
         }
 
         #endregion

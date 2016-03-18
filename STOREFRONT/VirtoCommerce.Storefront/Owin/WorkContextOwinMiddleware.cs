@@ -120,11 +120,14 @@ namespace VirtoCommerce.Storefront.Owin
                         {
                             category.Products = new MutablePagedList<Product>((pageNumber2, pageSize2) =>
                             {
-                                var criteria2 = criteria.Clone();
                                 criteria.CategoryId = category.Id;
                                 criteria.PageNumber = pageNumber2;
                                 criteria.PageSize = pageSize2;
-                                return catalogSearchService.SearchProducts(criteria);
+                                var searchResult = catalogSearchService.SearchProducts(criteria);
+                                //Because catalog search products returns also aggregations we can use it to populate workContext using C# closure
+                                //now workContext.Aggregation will be contains preloaded aggregations for current category
+                                workContext.Aggregations = new MutablePagedList<Aggregation>(searchResult.Aggregations, 1, int.MaxValue);
+                                return searchResult.Products;
                             });
                         }
                         return result;
@@ -135,16 +138,23 @@ namespace VirtoCommerce.Storefront.Owin
                         var criteria = workContext.CurrentCatalogSearchCriteria.Clone();
                         criteria.PageNumber = pageNumber;
                         criteria.PageSize = pageSize;
-                        return catalogSearchService.SearchProducts(criteria);
+
+                        var result = catalogSearchService.SearchProducts(criteria);
+                        //Prevent double api request for get aggregations
+                        //Because catalog search products returns also aggregations we can use it to populate workContext using C# closure
+                        //now workContext.Aggregation will be contains preloaded aggregations for current search criteria
+                        workContext.Aggregations = new MutablePagedList<Aggregation>(result.Aggregations, 1, int.MaxValue);
+                        return result.Products;
                     });
-                    //TODO: Get rid redundant call to API because current API can return aggregations with product per one request
                     //This line make delay aggregation loading initialization (aggregation can be evaluated on view rendering time)
                     workContext.Aggregations = new MutablePagedList<Aggregation>((pageNumber, pageSize) =>
                     {
                         var criteria = workContext.CurrentCatalogSearchCriteria.Clone();
                         criteria.PageNumber = pageNumber;
                         criteria.PageSize = pageSize;
-                        return catalogSearchService.GetAggregations(criteria);
+                        //Force to load products and its also populate workContext.Aggregations by preloaded values
+                        workContext.Products.Slice(pageNumber, pageSize);
+                        return workContext.Aggregations;
                     });
 
                     workContext.CurrentOrderSearchCriteria = new Model.Order.OrderSearchCriteria(qs);
