@@ -39,6 +39,18 @@
             bladeNavigationService.showBlade(newBlade, blade);
         };
 
+        $scope.openStatesDictionarySettingManagement = function () {
+            var newBlade = {
+                id: 'settingDetailChild',
+                isApiSave: true,
+                currentEntityId: 'Stores.States',
+                parentRefresh: function (data) { $scope.storeStates = data; },
+                controller: 'platformWebApp.settingDictionaryController',
+                template: '$(Platform)/Scripts/app/settings/blades/setting-dictionary.tpl.html'
+            };
+            bladeNavigationService.showBlade(newBlade, blade);
+        };
+
         $scope.catalogs = catalogs.getCatalogs();
         $scope.languages = settings.getValues({ id: 'VirtoCommerce.Core.General.Languages' });
         $scope.currencyUtils = currencyUtils;

@@ -84,7 +84,7 @@
     	marketing_dynamicContents_res_folders.delete({ ids: [data.id] }, function () {
     		var pathSteps = data.outline.split(';');
     		var id = pathSteps[pathSteps.length - 2];
-    		blade.parentBlade.choosenFolder = id;
+    		blade.parentBlade.chosenFolder = id;
     		blade.parentBlade.initializeBlade();
     	},
         function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); blade.isLoading = false; });

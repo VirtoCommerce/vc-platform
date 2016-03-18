@@ -41,57 +41,70 @@ namespace VirtoCommerce.Storefront.Common
 
         public string ToAppRelative(string virtualPath, Store store, Language language)
         {
-            var result = new StringBuilder("~");
+            var result = virtualPath;
 
-            if (store != null)
+            // Don't process absolute URL
+            Uri absoluteUri;
+            if (!Uri.TryCreate(virtualPath, UriKind.Absolute, out absoluteUri))
             {
-                // If store has specific URL use it
-                if (store.IsStoreUrl(_workContext.RequestUrl))
-                {
-                    var requestAddress = _workContext.RequestUrl.ToString();
+                var builder = new StringBuilder("~");
 
-                    if (!string.IsNullOrEmpty(store.Url) && requestAddress.StartsWith(store.Url, StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        result.Clear();
-                        result.Append(store.Url.TrimEnd('/'));
-                    }
-                    else if (!string.IsNullOrEmpty(store.SecureUrl) && requestAddress.StartsWith(store.SecureUrl, StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        result.Clear();
-                        result.Append(store.SecureUrl.TrimEnd('/'));
-                    }
-                }
-                else
+                if (store != null)
                 {
-                    // Do not add storeId to URL if there is only one store
-                    if (_workContext.AllStores.Length > 1)
+                    // If store has public or secure URL, use them
+                    if (!string.IsNullOrEmpty(store.Url) || !string.IsNullOrEmpty(store.SecureUrl))
                     {
-                        // If specified store does not exist, use current store
-                        store = _workContext.AllStores.Contains(store) ? store : _workContext.CurrentStore;
-                        if (!virtualPath.Contains("/" + store.Id + "/"))
+                        string baseAddress = null;
+
+                        // If current request is secure, use secure URL
+                        if (_workContext.RequestUrl != null && !string.IsNullOrEmpty(store.SecureUrl) &&
+                            _workContext.RequestUrl.ToString()
+                                .StartsWith(store.SecureUrl, StringComparison.InvariantCultureIgnoreCase))
                         {
-                            result.Append("/");
-                            result.Append(store.Id);
+                            baseAddress = store.SecureUrl;
+                        }
+
+                        if (baseAddress == null)
+                        {
+                            baseAddress = !string.IsNullOrEmpty(store.Url) ? store.Url : store.SecureUrl;
+                        }
+
+                        builder.Clear();
+                        builder.Append(baseAddress.TrimEnd('/'));
+                    }
+                    else
+                    {
+                        // Do not add storeId to URL if there is only one store
+                        if (_workContext.AllStores.Length > 1)
+                        {
+                            // If specified store does not exist, use current store
+                            store = _workContext.AllStores.Contains(store) ? store : _workContext.CurrentStore;
+                            if (!virtualPath.Contains("/" + store.Id + "/"))
+                            {
+                                builder.Append("/");
+                                builder.Append(store.Id);
+                            }
+                        }
+                    }
+
+                    // Do not add language to URL if store has only one language
+                    if (language != null && store.Languages.Count > 1)
+                    {
+                        language = store.Languages.Contains(language) ? language : store.DefaultLanguage;
+                        if (!virtualPath.Contains("/" + language.CultureName + "/"))
+                        {
+                            builder.Append("/");
+                            builder.Append(language.CultureName);
                         }
                     }
                 }
 
-                // Do not add language to URL if store has only one language
-                if (language != null && store.Languages.Count > 1)
-                {
-                    language = store.Languages.Contains(language) ? language : store.DefaultLanguage;
-                    if (!virtualPath.Contains("/" + language.CultureName + "/"))
-                    {
-                        result.Append("/");
-                        result.Append(language.CultureName);
-                    }
-                }
+                builder.Append("/");
+                builder.Append(virtualPath.TrimStart('~', '/'));
+                result = builder.ToString();
             }
 
-            result.Append("/");
-            result.Append(virtualPath.TrimStart('~', '/'));
-
-            return result.ToString();
+            return result;
         }
 
         public string ToLocalPath(string virtualPath)

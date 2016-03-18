@@ -10,16 +10,15 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
 {
     public static class ProductConverter
     {
-        public static Product ToShopifyModel(this StorefrontModel.Catalog.Product product, StorefrontModel.WorkContext workContext)
+        public static Product ToShopifyModel(this StorefrontModel.Catalog.Product product)
         {
             var result = new Product();
             result.InjectFrom<StorefrontModel.Common.NullableAndEnumValueInjecter>(product);
-            result.Variants.Add(product.ToVariant(workContext));
+            result.Variants.Add(product.ToVariant());
 
             if (product.Variations != null)
             {
-                result.Variants.AddRange(product.Variations.Select(x => x.ToVariant(workContext)));
-                
+                result.Variants.AddRange(product.Variations.Select(x => x.ToVariant()));                
             }
 
             result.Available = true;// product.IsActive && product.IsBuyable;
@@ -59,7 +58,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             }
             if(product.VariationProperties != null)
             {
-                result.Options = product.VariationProperties.Select(x => x.Name).ToArray();
+                result.Options = product.VariationProperties.Where(x => !string.IsNullOrEmpty(x.Value)).Select(x => x.Name).ToArray();
             }
             if(product.Properties != null)
             {
@@ -77,7 +76,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             return result;
         }
 
-        public static Variant ToVariant(this StorefrontModel.Catalog.Product product, StorefrontModel.WorkContext workContext)
+        public static Variant ToVariant(this StorefrontModel.Catalog.Product product)
         {
             var result = new Variant();
             result.Available = true; //product.IsActive && product.IsBuyable;
@@ -96,7 +95,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             result.Id = product.Id;
             result.InventoryPolicy = "continue";
             result.InventoryQuantity = product.Inventory != null ? product.Inventory.InStockQuantity ?? 0 : 0;
-            result.Options = product.VariationProperties.Select(p => p.Value).ToArray();
+            result.Options = product.VariationProperties.Where(p => !string.IsNullOrEmpty(p.Value)).Select(p => p.Value).ToArray();
             result.CompareAtPrice = product.Price.ListPrice.Amount * 100;
             result.Price = product.Price.SalePrice.Amount * 100;
             if (product.Price.ActiveDiscount != null)

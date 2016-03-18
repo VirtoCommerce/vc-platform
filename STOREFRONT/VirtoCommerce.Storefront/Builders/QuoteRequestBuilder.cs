@@ -202,7 +202,7 @@ namespace VirtoCommerce.Storefront.Builders
                         {
                             existingItem.ProposalPrices.Add(new TierPrice
                             {
-                                Price = existingItem.SalePrice,
+                                Price = new Money(proposalPrice.Price, _quoteRequest.Currency),
                                 Quantity = proposalPrice.Quantity
                             });
                         }

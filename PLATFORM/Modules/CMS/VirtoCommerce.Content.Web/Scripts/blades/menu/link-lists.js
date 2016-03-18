@@ -19,8 +19,8 @@
 
 		var newBlade = {
 			id: 'editMenuLinkListBlade',
-			choosenStoreId: blade.storeId,
-			choosenListId: data.id,
+			chosenStoreId: blade.storeId,
+			chosenListId: data.id,
 			newList: false,
 			title: 'content.blades.menu-link-list.title',
 			titleValues: { name: data.name },
@@ -36,7 +36,7 @@
 
 		var newBlade = {
 			id: 'addMenuLinkListBlade',
-			choosenStoreId: blade.storeId,
+			chosenStoreId: blade.storeId,
 			newList: true,
 			title: 'content.blades.menu-link-list.title-new',
 			subtitle: 'content.blades.menu-link-list.subtitle-new',

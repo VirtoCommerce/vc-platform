@@ -126,6 +126,11 @@ namespace VirtoCommerce.CustomerModule.Data.Repositories
             get { return GetAsQueryable<Organization>(); }
         }
 
+        public IQueryable<Contact> Contacts
+        {
+            get { return GetAsQueryable<Contact>(); }
+        }
+
         public IQueryable<Member> Members
         {
             get { return GetAsQueryable<Member>(); }
@@ -136,33 +141,17 @@ namespace VirtoCommerce.CustomerModule.Data.Repositories
             get { return GetAsQueryable<MemberRelation>(); }
         }
 
-        public Contact GetContactById(string id)
+        public Member[] GetMembersByIds(params string[] ids)
         {
-            var query = Members.Where(x => x.Id == id)
-                               .OfType<Contact>()
-                               .Include(x => x.Notes)
-                               .Include(x => x.Emails)
-                               .Include(x => x.Addresses)
-                               .Include(x => x.Phones)
-                               .Include(x => x.MemberRelations.Select(y => y.Ancestor));
+            var retVal = Members.Include(x => x.MemberRelations.Select(y => y.Ancestor))
+                                .Where(x => ids.Contains(x.Id)).ToArray();
+            var notes = Notes.Where(x => ids.Contains(x.MemberId)).ToArray();
+            var emails = Emails.Where(x => ids.Contains(x.MemberId)).ToArray();
+            var addresses = Addresses.Where(x => ids.Contains(x.MemberId)).ToArray();
+            var phones = Phones.Where(x => ids.Contains(x.MemberId)).ToArray();
 
-            return query.FirstOrDefault();
+            return retVal;
         }
-
-        public Organization GetOrganizationById(string id)
-        {
-            var query = Members.Where(x => x.Id == id)
-                               .OfType<Organization>()
-                               .Include(x => x.Notes)
-                               .Include(x => x.Emails)
-                               .Include(x => x.Addresses)
-                               .Include(x => x.Phones)
-                               .Include(x => x.MemberRelations);
-
-            return query.FirstOrDefault();
-
-        }
-
         #endregion
     }
 

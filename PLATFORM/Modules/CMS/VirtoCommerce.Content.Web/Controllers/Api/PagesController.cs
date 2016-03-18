@@ -85,12 +85,12 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
         {
             CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Read, new ContentScopeObject { StoreId = storeId });
 
-            var blobItem = _contentStorageProvider.GetBlobInfo("/Pages/" + storeId + "/" + pageName);
+            var blobItem = _contentStorageProvider.GetBlobInfo(GetFolderRelativeUrl(storeId, pageName));
 
             if (blobItem != null)
             {
                 var page = blobItem.ToPageWebModel();
-                page.Id = "/" +  pageName;
+                page.Id = "/" + pageName;
                 using (var stream = _contentStorageProvider.OpenRead(blobItem.Url))
                 {
                     var data = stream.ReadFully();
@@ -162,7 +162,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
                 }
             }
 
-            using (var stream = _contentStorageProvider.OpenWrite("/Pages/" + storeId + "/" + page.Id))
+            using (var stream = _contentStorageProvider.OpenWrite(GetFolderRelativeUrl(storeId, page.Id)))
             using (var memStream = new MemoryStream(data))
             {
                 memStream.CopyTo(stream);
@@ -185,7 +185,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
             CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Delete, new ContentScopeObject { StoreId = storeId });
 
             var pages = PagesUtility.GetShortPageInfoFromString(pageNamesAndLanguges);
-            _contentStorageProvider.Remove(pages.Select(x => "/Pages/" + storeId + "/" + x.Name).ToArray());
+            _contentStorageProvider.Remove(pages.Select(x => GetFolderRelativeUrl(storeId, x.Name)).ToArray());
 
             return StatusCode(HttpStatusCode.NoContent);
         }
@@ -208,7 +208,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
         [Route("blog/{blogName}")]
         public IHttpActionResult DeleteBlog(string storeId, string blogName)
         {
-            _contentStorageProvider.Remove(new[] { "/Pages/" + storeId + "/blogs/" + blogName });
+            _contentStorageProvider.Remove(new[] { GetFolderRelativeUrl(storeId, "blogs/" + blogName) });
 
             return StatusCode(HttpStatusCode.NoContent);
         }
@@ -238,7 +238,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
         private GetPagesResult InnerGetPages(string storeId)
         {
             var retVal = new GetPagesResult();
-            var result = _contentStorageProvider.Search("/Pages/" + storeId, null);
+            var result = _contentStorageProvider.Search(GetFolderRelativeUrl(storeId), null);
             foreach (var folder in result.Folders)
             {
                 var pageFolder = LoadFolderRecursive(folder, folder.Name);
@@ -273,6 +273,14 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
                 retVal.Pages.Add(page);
             }
             return retVal;
+        }
+
+        private static string GetFolderRelativeUrl(string storeId, string folderName = null)
+        {
+            if (folderName == null)
+                return string.Format("/Pages/{0}", storeId);
+            else
+                return string.Format("/Pages/{0}/{1}", storeId, folderName);
         }
     }
 }

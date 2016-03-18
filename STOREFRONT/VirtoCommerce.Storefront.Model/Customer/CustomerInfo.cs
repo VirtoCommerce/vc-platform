@@ -75,9 +75,9 @@ namespace VirtoCommerce.Storefront.Model.Customer
         public ICollection<string> Tags { get; set; }
 
         [IgnoreDataMember]
-        public IStorefrontPagedList<CustomerOrder> Orders { get; set; }
+        public IMutablePagedList<CustomerOrder> Orders { get; set; }
         [IgnoreDataMember]
-        public IStorefrontPagedList<QuoteRequest> QuoteRequests { get; set; }
+        public IMutablePagedList<QuoteRequest> QuoteRequests { get; set; }
 
         /// <summary>
         /// The user ID of an operator who has loggen in on behalf of a customer

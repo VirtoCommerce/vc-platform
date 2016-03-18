@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,9 +17,12 @@ namespace VirtoCommerce.Storefront.Model.StaticContent
         public override string Type { get { return "post"; } }
 
         public string Excerpt { get; set; }
+
+        public string BlogName { get; set; }
+
         public string ImageUrl { get; set; }
 
-        public override void LoadContent(string content, IDictionary<string, IEnumerable<string>> metaInfoMap)
+        public override void LoadContent(string content, IDictionary<string, IEnumerable<string>> metaInfoMap, IDictionary themeSettings)
         {
             var parts = content.Split(new[] { _excerpToken }, StringSplitOptions.None);
             if(parts.Count() > 1)
@@ -26,7 +30,7 @@ namespace VirtoCommerce.Storefront.Model.StaticContent
                 Excerpt = parts[0];
                 content.Replace(_excerpToken, String.Empty);
             }
-            base.LoadContent(content, metaInfoMap);
+            base.LoadContent(content, metaInfoMap, themeSettings);
             //TODO: load image from meta info
         }
     }

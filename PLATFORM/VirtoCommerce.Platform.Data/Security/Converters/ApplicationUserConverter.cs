@@ -89,7 +89,7 @@ namespace VirtoCommerce.Platform.Data.Security.Converters
                 }).ToList();
 
                 var comparer = AnonymousComparer.Create((IdentityUserLogin x) => x.LoginProvider);
-                dbUser.Logins.Patch(changedLogins, comparer, (sourceItem, targetItem) => { targetItem.ProviderKey = sourceItem.ProviderKey; });
+                changedLogins.Patch(dbUser.Logins, comparer, (sourceItem, targetItem) => { sourceItem.ProviderKey = targetItem.ProviderKey; });
             }
         
         }

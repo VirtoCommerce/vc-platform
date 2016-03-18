@@ -16,10 +16,17 @@
 
     function initializeBlade(data) {
         if (data.properties) {
-            var numberProps = _.where(data.properties, { valueType: 'Number', multivalue: false, dictionary: false });
-            _.forEach(numberProps, function (prop) {
+            var selection = _.where(data.properties, { valueType: 'Number', multivalue: false, dictionary: false });
+            _.forEach(selection, function (prop) {
                 _.forEach(prop.values, function (value) {
                     value.value = parseFloat(value.value);
+                });
+            });
+
+            selection = _.where(data.properties, { valueType: 'Boolean' });
+            _.forEach(selection, function (prop) {
+                _.forEach(prop.values, function (value) {
+                    value.value = value.value && value.value.toLowerCase() === 'true';
                 });
             });
         }

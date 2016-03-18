@@ -41,6 +41,8 @@ using VirtoCommerce.Storefront.Model.Services;
 using VirtoCommerce.Storefront.Owin;
 using VirtoCommerce.Storefront.Services;
 using VirtoCommerce.Storefront.Model.Quote.Events;
+using Microsoft.Owin.Security.Google;
+using Microsoft.Owin.Security.Facebook;
 
 [assembly: OwinStartup(typeof(Startup))]
 [assembly: PreApplicationStartMethod(typeof(Startup), "PreApplicationStart")]
@@ -182,7 +184,7 @@ namespace VirtoCommerce.Storefront
 
             var staticContentPath = ConfigurationManager.AppSettings["vc-public-pages"] ?? "~/App_data/Pages";
             //Static content service
-            var staticContentService = new StaticContentServiceImpl(ResolveLocalPath(staticContentPath), new Markdown(), shopifyLiquidEngine, cacheManager, workContextFactory, () => container.Resolve<IStorefrontUrlBuilder>());
+            var staticContentService = new StaticContentServiceImpl(ResolveLocalPath(staticContentPath), new Markdown(), shopifyLiquidEngine, cacheManager, workContextFactory, () => container.Resolve<IStorefrontUrlBuilder>(), StaticContentItemFactory.GetContentItemFromPath);
             container.RegisterInstance<IStaticContentService>(staticContentService);
 
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters, workContextFactory);

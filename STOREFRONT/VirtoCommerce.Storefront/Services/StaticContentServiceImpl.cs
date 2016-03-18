@@ -1,17 +1,13 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Web;
 using CacheManager.Core;
 using MarkdownDeep;
-using PagedList;
 using VirtoCommerce.LiquidThemeEngine;
 using VirtoCommerce.LiquidThemeEngine.Converters;
-using VirtoCommerce.LiquidThemeEngine.Extensions;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Services;
@@ -34,12 +30,13 @@ namespace VirtoCommerce.Storefront.Services
         private readonly ICacheManager<object> _cacheManager;
         private readonly Func<WorkContext> _workContextFactory;
         private readonly Func<IStorefrontUrlBuilder> _urlBuilderFactory;
-        private readonly LinkHelper _linkHelper;
+        private readonly Func<string, ContentItem> _contentItemFactory;
 
+     
         [CLSCompliant(false)]
         public StaticContentServiceImpl(string baseLocalPath, Markdown markdownRender, ILiquidThemeEngine liquidEngine,
                                         ICacheManager<object> cacheManager, Func<WorkContext> workContextFactory,
-                                        Func<IStorefrontUrlBuilder> urlBuilderFactory)
+                                        Func<IStorefrontUrlBuilder> urlBuilderFactory, Func<string, ContentItem> contentItemFactory)
         {
             _baseLocalPath = baseLocalPath;
             _markdownRender = markdownRender;
@@ -48,30 +45,20 @@ namespace VirtoCommerce.Storefront.Services
             _cacheManager = cacheManager;
             _workContextFactory = workContextFactory;
             _urlBuilderFactory = urlBuilderFactory;
-            _linkHelper = new LinkHelper();
+            _contentItemFactory = contentItemFactory;
         }
 
         #region IStaticContentService Members
-        /// <summary>
-        /// Search store static contents by path and for specified language
-        /// </summary>
-        /// <param name="url"></param>
-        /// <param name="store"></param>
-        /// <param name="language"></param>
-        /// <param name="contentItemFactory"></param>
-        /// <param name="pageIndex"></param>
-        /// <param name="pageSize"></param>
-        /// <returns></returns>
-        public IPagedList<ContentItem> LoadContentItemsByUrl(string url, Store store, Language language, Func<ContentItem> contentItemFactory, string[] excludingNames = null, int pageIndex = 1, int pageSize = 10, bool renderContent = true)
+
+        public IEnumerable<ContentItem> LoadStoreStaticContent(Store store)
         {
             var retVal = new List<ContentItem>();
             var totalCount = 0;
-            url = Uri.UnescapeDataString(url);
-            //construct local path {base path}\{store}\{url}
             var baseStorePath = _baseLocalPath + "\\" + store.Id + "\\";
-            var localSearchPath = baseStorePath + url.Replace('/', '\\');
+            var localSearchPath = baseStorePath;
             var isDirectorySearch = Directory.Exists(localSearchPath);
             var searchPattern = "*.*";
+
             if (!isDirectorySearch)
             {
                 searchPattern = Path.GetFileNameWithoutExtension(localSearchPath) + ".*";
@@ -81,46 +68,47 @@ namespace VirtoCommerce.Storefront.Services
 
             if (Directory.Exists(localSearchPath))
             {
+                var config = _liquidEngine.GetSettings();
+
                 //Search files by requested search pattern
                 var files = Directory.GetFiles(localSearchPath, searchPattern, SearchOption.AllDirectories)
                                              .Where(x => _extensions.Any(y => x.EndsWith(y)))
-                                             .Select(x=>x.Replace("\\\\", "\\"));
-                //Because can be exist files with same name but for different languages
-                //need filter and leave only files for requested language in file extension or without it (default)
-                //each content file  has a name pattern {name}.{language?}.{ext}
-                var localizedFiles = files.Select(x => new LocalizedFileInfo(x))
-                             .GroupBy(x => x.Name).Select(x => x.OrderByDescending(y => y.Language).FirstOrDefault(y => language.Equals(y.Language) || String.IsNullOrEmpty(y.Language)))
-                             .Where(x => x != null);
+                                             .Select(x => x.Replace("\\\\", "\\"));
 
-                if(excludingNames != null && excludingNames.Any())
-                {
-                    localizedFiles = localizedFiles.Where(x => !excludingNames.Contains(x.Name.ToLowerInvariant()));
-                }
+                //each content file  has a name pattern {name}.{language?}.{ext}
+                var localizedFiles = files.Select(x => new LocalizedFileInfo(x));
 
                 totalCount = localizedFiles.Count();
-                foreach (var localizedFile in localizedFiles.OrderBy(x => x.Name).Skip((pageIndex - 1) * pageSize).Take(pageSize))
+                foreach (var localizedFile in localizedFiles.OrderBy(x => x.Name))
                 {
-                    var relativePath = localizedFile.LocalPath.Replace(baseStorePath, string.Empty);
-                    var contentItem = contentItemFactory();
-                    contentItem.Name = localizedFile.Name;
-                    contentItem.Language = language;
-                    contentItem.RelativePath = relativePath;
-                    contentItem.FileName = Path.GetFileName(relativePath);
-                    contentItem.LocalPath = localizedFile.LocalPath;
+                    var relativePath = localizedFile.LocalPath.Replace(baseStorePath, string.Empty).Replace("\\", "/");
 
-                    LoadAndRenderContentItem(contentItem, renderContent);
+                    var contentItem = _contentItemFactory(relativePath);
+                    if (contentItem != null)
+                    {
+                        if (contentItem.Name == null)
+                        {
+                            contentItem.Name = localizedFile.Name;
+                        }
+                        contentItem.Language = localizedFile.Language;
 
-                    contentItem.Url = _linkHelper.EvaluatePermalink("none", contentItem); // TODO: replace with setting "permalink"
+                        contentItem.RelativePath = relativePath;
+                        contentItem.FileName = Path.GetFileName(relativePath);
+                        contentItem.LocalPath = localizedFile.LocalPath;
+                    
+                        LoadAndRenderContentItem(contentItem);
 
-
-                    retVal.Add(contentItem);
+                        retVal.Add(contentItem);
+                    }
                 }
             }
 
-            return new StaticPagedList<ContentItem>(retVal, pageIndex, pageSize, totalCount);
+            return retVal.ToArray();
         }
+
         #endregion
-         private void LoadAndRenderContentItem(ContentItem contentItem, bool renderContent)
+
+        private void LoadAndRenderContentItem(ContentItem contentItem)
         {
             var fileInfo = new FileInfo(contentItem.LocalPath);
 
@@ -128,29 +116,39 @@ namespace VirtoCommerce.Storefront.Services
 
             //Load raw content with metadata
             var content = File.ReadAllText(contentItem.LocalPath);
-            var metaHeaders = ReadYamlHeader(content);
-            content = RemoveYamlHeader(content);
-
-            if (renderContent)
+            IDictionary<string, IEnumerable<string>> metaHeaders = null;
+            IDictionary themeSettings = null;
+            try
             {
-                var workContext = _workContextFactory();
-                if (workContext != null)
-                {
-                    var shopifyContext = workContext.ToShopifyModel(_urlBuilderFactory());
-                    var parameters = shopifyContext.ToLiquid() as Dictionary<string, object>;
-                    parameters.Add("settings", _liquidEngine.GetSettings());
-                    //Render content by liquid engine
-                    content = _liquidEngine.RenderTemplate(content, parameters);
-                }
-
-                //Render markdown content
-                if (String.Equals(Path.GetExtension(contentItem.LocalPath), ".md", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    content = _markdownRender.Transform(content);
-                }
+                metaHeaders = ReadYamlHeader(content);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException(String.Format("Failed to read yaml header from \"{0}\"", contentItem.RelativePath), ex);
             }
 
-            contentItem.LoadContent(content, metaHeaders);
+            content = RemoveYamlHeader(content);
+
+            var workContext = _workContextFactory();
+            if (workContext != null)
+            {
+                var shopifyContext = workContext.ToShopifyModel(_urlBuilderFactory());
+                var parameters = shopifyContext.ToLiquid() as Dictionary<string, object>;
+              
+                themeSettings = _liquidEngine.GetSettings();
+                parameters.Add("settings", themeSettings);
+                //Render content by liquid engine
+                content = _liquidEngine.RenderTemplate(content, parameters);
+            }
+
+            //Render markdown content
+            if (string.Equals(Path.GetExtension(contentItem.LocalPath), ".md", StringComparison.InvariantCultureIgnoreCase))
+            {
+                content = _markdownRender.Transform(content);
+            }
+
+
+            contentItem.LoadContent(content, metaHeaders, themeSettings);
         }
 
         private static string RemoveYamlHeader(string text)
@@ -254,16 +252,17 @@ namespace VirtoCommerce.Storefront.Services
         {
             public LocalizedFileInfo(string filePath)
             {
+                Language = Language.InvariantLanguage;
                 LocalPath = filePath;
                 var parts = Path.GetFileName(filePath).Split('.');
                 Name = parts.FirstOrDefault();
                 if (parts.Count() == 3)
                 {
-                    Language = parts[1];
+                    Language = new Language(parts[1]);
                 }
             }
             public string Name { get; private set; }
-            public string Language { get; private set; }
+            public Language Language { get; private set; }
             public string LocalPath { get; private set; }
         }
     }

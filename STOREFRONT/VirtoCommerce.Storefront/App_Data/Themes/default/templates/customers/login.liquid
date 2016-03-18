@@ -8,13 +8,10 @@
       We've sent you an email with a link to update your password.
     </div>
 
-   <!-- {% form 'external_login' %}
-        {% for login_provider in login_providers %}
-            <input name="context[authentication_type]" type="submit" class="btn" value="{{ login_provider.authentication_type }}" title="{{ login_provider.caption }}" />
-        {% endfor %} 
-
-    {% endform %}
-	-->
+    {% for login_provider in external_login_providers %}
+        {% assign external_login_url = 'account/externallogin?authType=' | append: login_provider.authentication_type %}
+        <a class="btn" href="{{ external_login_url | absolute_url }}">{{ login_provider.caption }}</a>
+    {% endfor %}
 
     {% form 'customer_login' %}
 

@@ -34,26 +34,6 @@
           "description": "Enter description"
         }
       },
-      "seo-detail": {
-        "subtitle": "SEO information",
-        "labels": {
-          "note": "Store doesn't have any language set. Assign some languages first.",
-          "url-keyword": "URL keyword",
-          "page-title": "Page title",
-          "meta-description": "Meta description",
-          "image-alternative-text": "Image alternative text"
-        },
-        "placeholders": {
-          "url-keyword": "Enter keyword",
-          "page-title": "Enter title",
-          "meta-description": "Enter description",
-          "image-alternative-text": "Enter text"
-        },
-        "validations": {
-          "url-keyword-required": "Required",
-          "url-keyword-invalid": "Invalid characters in URL found"
-        }
-      },
       "shippingMethod-detail": {
         "subtitle": "Edit shipping method",
         "labels": {
@@ -165,8 +145,8 @@
       }
     },
     "widgets": {
-      "seoWidget": {
-        "title": "SEO"
+      "assetsWidget": {
+        "title": "Assets"
       },
       "storeAdvancedWidget": {
         "title": "Advanced properties",
@@ -207,10 +187,6 @@
       "store-save": {
         "title": "Save changes",
         "message": "The Store has been modified. Do you want to save changes?"
-      },
-      "seo-save": {
-        "title": "Save changes",
-        "message": "The SEO information has been modified. Do you want to save changes?"
       }
     },
     "commands": {

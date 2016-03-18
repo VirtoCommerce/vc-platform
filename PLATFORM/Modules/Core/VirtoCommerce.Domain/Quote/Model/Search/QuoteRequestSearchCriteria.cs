@@ -12,7 +12,7 @@ namespace VirtoCommerce.Domain.Quote.Model
 		{
 			Count = 20;
 		}
-
+        public string Number { get; set; }
 		public string Keyword { get; set; }
 		public string CustomerId { get; set; }
 		public string StoreId { get; set; }

@@ -13,7 +13,7 @@ namespace AvaTax.TaxModule.Web.Converters
 {
     public static class CustomerOrderConverter
     {
-        public static GetTaxRequest ToAvaTaxRequest(this VirtoCommerce.Domain.Order.Model.CustomerOrder order, string companyCode, Contact contact, bool commit = false)
+        public static GetTaxRequest ToAvaTaxRequest(this VirtoCommerce.Domain.Order.Model.CustomerOrder order, string companyCode, Member member, bool commit = false)
         {
             if (order.Addresses != null && order.Addresses.Any() && order.Items != null && order.Items.Any())
             {
@@ -54,7 +54,7 @@ namespace AvaTax.TaxModule.Web.Converters
                 //getTaxRequest.PosLaneCode = "09";
 
                 //add customer tax exemption code to cart if exists
-                getTaxRequest.ExemptionNo = contact.GetDynamicPropertyValue("Tax exempt", string.Empty);
+                getTaxRequest.ExemptionNo = member.GetDynamicPropertyValue("Tax exempt", string.Empty);
 
                 string destinationAddressIndex = "0";
 

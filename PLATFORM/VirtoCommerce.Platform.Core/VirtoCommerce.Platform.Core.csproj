@@ -98,6 +98,7 @@
     <Compile Include="Common\AsyncLock.cs" />
     <Compile Include="Common\ConfigManagerExtensions.cs" />
     <Compile Include="Common\IEntity.cs" />
+    <Compile Include="Common\IFactory.cs" />
     <Compile Include="Common\ObservableChangeTracker.cs" />
     <Compile Include="Common\PlatformVersion.cs" />
     <Compile Include="Common\PrimaryKeyResolvingMap.cs" />

@@ -59,7 +59,10 @@ namespace VirtoCommerce.CartModule.Data.Model
 		[StringLength(2048)]
 		public string Comment { get; set; }
 
-		public bool IsReccuring { get; set; }
+        [StringLength(64)]
+        public string ValidationType { get; set; }
+
+        public bool IsReccuring { get; set; }
 
 		public bool TaxIncluded { get; set; }
 

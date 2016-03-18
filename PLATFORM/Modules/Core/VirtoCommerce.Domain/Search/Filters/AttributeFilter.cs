@@ -1,9 +1,13 @@
 ﻿using System.Text;
+using System.Xml.Serialization;
 
 namespace VirtoCommerce.Domain.Search.Filters
 {
     public partial class AttributeFilter
     {
+        [XmlElement("display")]
+        public FilterDisplayName[] DisplayNames { get; set; }
+
         public string CacheKey
         {
             get

@@ -42,6 +42,9 @@ namespace VirtoCommerce.CustomerModule.Data.Model
 
         public virtual Member Ancestor { get; set; }
 
+        [StringLength(64)]
+        public string RelationType { get; set; }
+
         /// <summary>
         /// Gets or sets the descendant member id.
         /// </summary>

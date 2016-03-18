@@ -10,7 +10,7 @@ namespace VirtoCommerce.Storefront.Converters
         public static Store ToWebModel(this VirtoCommerce.Client.Model.VirtoCommerceStoreModuleWebModelStore storeDto)
         {
             var retVal = new Store();
-            retVal.InjectFrom(storeDto);
+            retVal.InjectFrom<NullableAndEnumValueInjecter>(storeDto);
             if(!storeDto.SeoInfos.IsNullOrEmpty())
             {
                 retVal.SeoInfos = storeDto.SeoInfos.Select(x => x.ToWebModel()).ToList();
@@ -32,7 +32,10 @@ namespace VirtoCommerce.Storefront.Converters
                 retVal.DynamicProperties = storeDto.DynamicProperties.Select(x => x.ToWebModel()).ToList();
                 retVal.ThemeName = retVal.DynamicProperties.GetDynamicPropertyValue("DefaultThemeName");
             }
-
+            if(!storeDto.DynamicProperties.IsNullOrEmpty())
+            {
+                retVal.Settings = storeDto.Settings.Select(x => x.ToWebModel()).ToList();
+            }
             retVal.TrustedGroups = storeDto.TrustedGroups;
             retVal.StoreState = EnumUtility.SafeParse(storeDto.StoreState, StoreStatus.Open);
 

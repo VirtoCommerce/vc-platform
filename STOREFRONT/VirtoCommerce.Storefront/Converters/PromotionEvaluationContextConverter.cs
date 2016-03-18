@@ -4,12 +4,14 @@ using VirtoCommerce.Client.Model;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Marketing;
 using VirtoCommerce.Storefront.Model;
+using System.Collections.Generic;
+using VirtoCommerce.Storefront.Model.Catalog;
 
 namespace VirtoCommerce.Storefront.Converters
 {
     public static class PromotionEvaluationContextConverter
     {
-        public static PromotionEvaluationContext ToPromotionEvaluationContext(this WorkContext workContext)
+        public static PromotionEvaluationContext ToPromotionEvaluationContext(this WorkContext workContext, IEnumerable<Product> products = null)
         {
             var retVal = new PromotionEvaluationContext
             {
@@ -28,9 +30,10 @@ namespace VirtoCommerce.Storefront.Converters
             {
                 retVal.PromoEntry = workContext.CurrentProduct.ToPromotionItem();
             }
-            if(workContext.CurrentCatalogSearchResult != null && workContext.CurrentCatalogSearchResult.Products != null )
+
+            if(products != null )
             {
-                retVal.PromoEntries = workContext.CurrentCatalogSearchResult.Products.Select(x => x.ToPromotionItem()).ToList();
+                retVal.PromoEntries = products.Select(x => x.ToPromotionItem()).ToList();
             }
             return retVal;
         }

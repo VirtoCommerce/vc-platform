@@ -136,14 +136,15 @@
             restrict: 'A',
             link: {
                 pre: function (scope, element) {
-                    var setGridHeight = function () {
-                        var bladeInner = $(element).parents('.blade-inner'),
-                            hh = bladeInner.height();
+                    var bladeInner = $(element).parents('.blade-inner');
+                    bladeInner.addClass('ui-grid-no-scroll');
 
-                        $(element).height(hh);
-                        bladeInner.addClass('ui-grid-no-scroll');
+                    var setGridHeight = function () {
+                        $timeout(function () {
+                            $(element).height(bladeInner.height());
+                        });
                     };
-                    $timeout(setGridHeight);
+                    scope.$watch('pageSettings.totalItems', setGridHeight);
                     angular.element($window).bind('resize', setGridHeight);
                 }
             }

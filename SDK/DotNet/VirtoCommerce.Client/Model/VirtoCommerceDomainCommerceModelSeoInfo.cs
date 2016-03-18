@@ -64,6 +64,13 @@ namespace VirtoCommerce.Client.Model
   
         
         /// <summary>
+        /// Gets or Sets StoreId
+        /// </summary>
+        [DataMember(Name="storeId", EmitDefaultValue=false)]
+        public string StoreId { get; set; }
+  
+        
+        /// <summary>
         /// Gets or Sets ObjectId
         /// </summary>
         [DataMember(Name="objectId", EmitDefaultValue=false)]
@@ -140,6 +147,7 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  MetaDescription: ").Append(MetaDescription).Append("\n");
             sb.Append("  ImageAltDescription: ").Append(ImageAltDescription).Append("\n");
             sb.Append("  MetaKeywords: ").Append(MetaKeywords).Append("\n");
+            sb.Append("  StoreId: ").Append(StoreId).Append("\n");
             sb.Append("  ObjectId: ").Append(ObjectId).Append("\n");
             sb.Append("  ObjectType: ").Append(ObjectType).Append("\n");
             sb.Append("  IsActive: ").Append(IsActive).Append("\n");
@@ -210,6 +218,11 @@ namespace VirtoCommerce.Client.Model
                     this.MetaKeywords == other.MetaKeywords ||
                     this.MetaKeywords != null &&
                     this.MetaKeywords.Equals(other.MetaKeywords)
+                ) && 
+                (
+                    this.StoreId == other.StoreId ||
+                    this.StoreId != null &&
+                    this.StoreId.Equals(other.StoreId)
                 ) && 
                 (
                     this.ObjectId == other.ObjectId ||
@@ -284,6 +297,9 @@ namespace VirtoCommerce.Client.Model
                 
                 if (this.MetaKeywords != null)
                     hash = hash * 59 + this.MetaKeywords.GetHashCode();
+                
+                if (this.StoreId != null)
+                    hash = hash * 59 + this.StoreId.GetHashCode();
                 
                 if (this.ObjectId != null)
                     hash = hash * 59 + this.ObjectId.GetHashCode();

@@ -31,7 +31,7 @@ function ($scope, catalogs, listEntries, bladeUtils, uiGridConstants, uiGridHelp
                 },
             function (data, headers) {
                 blade.isLoading = false;
-                $scope.pageSettings.totalItems = angular.isDefined(data.totalCount) ? data.totalCount : 0;
+                $scope.pageSettings.totalItems = data.totalCount;
                 $scope.items = data.listEntries;
 
                 //Set navigation breadcrumbs

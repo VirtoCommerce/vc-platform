@@ -37,7 +37,7 @@ namespace SwashbuckleModule.Web
             Func<ISwaggerProvider, ISwaggerProvider> providerFactory = (defaultProvider) => new CachedSwaggerProviderWrapper(defaultProvider, _container.Resolve<ICacheManager<object>>());
 
             GlobalConfiguration.Configuration.
-                 EnableSwagger(moduleInitializerOptions.RoutPrefix + "docs/{apiVersion}",
+                 EnableSwagger(moduleInitializerOptions.RoutePrefix + "docs/{apiVersion}",
                  c =>
                  {
                      c.CustomProvider(providerFactory);
@@ -63,7 +63,7 @@ namespace SwashbuckleModule.Web
                          .Name("api_key")
                          .In("header");
                  }
-                ).EnableSwaggerUi(moduleInitializerOptions.RoutPrefix + "docs/ui/{*assetPath}",
+                ).EnableSwaggerUi(moduleInitializerOptions.RoutePrefix + "docs/ui/{*assetPath}",
                 c =>
                 {
                     c.CustomAsset("index", assembly, "SwashbuckleModule.Web.SwaggerUi.CustomAssets.index.html");

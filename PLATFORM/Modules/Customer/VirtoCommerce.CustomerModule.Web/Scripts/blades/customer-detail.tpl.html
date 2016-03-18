@@ -13,35 +13,27 @@
                         <va-widget-container group="customerDetail1" blade="blade" gridster-opts="{width: 396}"></va-widget-container>
                     </div>
                 </fieldset>
-                <fieldset>
-                    <div class="form-group">
-                        <label class="form-label">{{ 'customer.blades.customer-detail.labels.birthday' | translate }}</label>
-                        <div class="form-input __calendar">
-                            <input type="text" class="form-control" ng-model="blade.currentEntity.birthDate" datepicker-popup="{{format}}" name="bd" is-open="datepickers.bd" max-date="today" datepicker-options="dateOptions" close-text="Close" placeholder="{{ 'customer.blades.customer-detail.placeholders.full-name' | translate }}" />
-                            <button class="btn" type="button" ng-click="open($event,'bd')">
-                                <i class="btn-ico fa fa-calendar"></i>
-                            </button>
-                        </div>
+                <div class="form-group">
+                    <label class="form-label">{{ 'customer.blades.customer-detail.labels.birthday' | translate }}</label>
+                    <div class="form-input __calendar">
+                        <input type="text" class="form-control" ng-model="blade.currentEntity.birthDate" datepicker-popup="{{format}}" name="bd" is-open="datepickers.bd" max-date="today" datepicker-options="dateOptions" close-text="Close" placeholder="{{ 'customer.blades.customer-detail.placeholders.full-name' | translate }}" />
+                        <button class="btn" type="button" ng-click="open($event,'bd')">
+                            <i class="btn-ico fa fa-calendar"></i>
+                        </button>
                     </div>
-                    <ul class="list __info">
-                        <li class="list-item">
-                            <label class="form-label">{{ 'customer.blades.customer-detail.labels.account-state' | translate }}</label>
-                            <div class="list-descr">{{blade.currentEntity.userState}}</div>
-                        </li>
-                    </ul>
-                    <div class="form-group">
-                        <label class="form-label">{{ 'customer.blades.customer-detail.labels.organizations' | translate }}</label>
-                        <ui-select multiple ng-model="blade.currentEntity.organizations">
-                            <ui-select-match placeholder="{{ 'customer.blades.customer-detail.placeholders.organizations' | translate }}">{{$item.name}}</ui-select-match>
-                            <ui-select-choices repeat="x.id as x in organizations | filter: {name: $select.search}">
-                                <span ng-bind-html="x.name | highlight: $select.search"></span>
-                            </ui-select-choices>
-                        </ui-select>
-                    </div>
-                    <div class="form-group">
-                        <va-widget-container group="customerDetail2" blade="blade" gridster-opts="{width: 396}"></va-widget-container>
-                    </div>
-                </fieldset>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">{{ 'customer.blades.customer-detail.labels.organizations' | translate }}</label>
+                    <ui-select multiple ng-model="blade.currentEntity.organizations">
+                        <ui-select-match placeholder="{{ 'customer.blades.customer-detail.placeholders.organizations' | translate }}">{{$item.name}}</ui-select-match>
+                        <ui-select-choices repeat="x.id as x in organizations | filter: {name: $select.search}">
+                            <span ng-bind-html="x.name | highlight: $select.search"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+                <div class="form-group">
+                    <va-widget-container group="customerDetail2" blade="blade" gridster-opts="{width: 396}"></va-widget-container>
+                </div>
             </form>
         </div>
     </div>
