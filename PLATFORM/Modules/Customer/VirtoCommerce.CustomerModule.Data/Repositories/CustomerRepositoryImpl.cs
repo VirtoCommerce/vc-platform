@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Data.Entity;
 using System.Linq;
 using VirtoCommerce.CustomerModule.Data.Model;
 using VirtoCommerce.Platform.Data.Infrastructure;
@@ -150,7 +151,20 @@ namespace VirtoCommerce.CustomerModule.Data.Repositories
             var addresses = Addresses.Where(x => ids.Contains(x.MemberId)).ToArray();
             var phones = Phones.Where(x => ids.Contains(x.MemberId)).ToArray();
 
-            return retVal;
+            return retVal.ToArray();
+        }
+
+        public void RemoveMembersByIds(string[] ids)
+        {
+            var dbMembers = GetMembersByIds(ids);
+            foreach (var dbMember in dbMembers)
+            {
+                foreach (var relation in dbMember.MemberRelations.ToArray())
+                {
+                    Remove(relation);
+                }
+                Remove(dbMember);
+            }
         }
         #endregion
     }

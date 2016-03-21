@@ -5,8 +5,10 @@ using VirtoCommerce.CustomerModule.Data.Repositories;
 using VirtoCommerce.CustomerModule.Data.Services;
 using VirtoCommerce.CustomerModule.Web.ExportImport;
 using VirtoCommerce.Domain.Customer.Services;
+using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Modularity;
+using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
@@ -38,10 +40,20 @@ namespace VirtoCommerce.CustomerModule.Web
         public override void Initialize()
         {
             _container.RegisterType<ICustomerRepository>(new InjectionFactory(c => new CustomerRepositoryImpl(_connectionStringName, new EntityPrimaryKeyGeneratorInterceptor(), _container.Resolve<AuditableInterceptor>())));
-
-            _container.RegisterType<IMemberService, MemberServiceImpl>();
+            _container.RegisterType<IMemberServicesFactory, DefaultMembersServiceFactory>(new ContainerControlledLifetimeManager());
+            _container.RegisterType<IMemberService, GenericMemberService>();
         }
 
+        public override void PostInitialize()
+        {
+            var memberServiceFactory = _container.Resolve<IMemberServicesFactory>();
+            var contactMemberService = new ContactMemberServiceImpl(_container.Resolve<Func<ICustomerRepository>>(), _container.Resolve<ISecurityService>(), _container.Resolve<IDynamicPropertyService>());
+            var orgMemberService = new OrganizationMemberServiceImpl(_container.Resolve<Func<ICustomerRepository>>(), _container.Resolve<IDynamicPropertyService>());
+            memberServiceFactory.RegisterMemberService(orgMemberService, 0);
+            memberServiceFactory.RegisterMemberService(contactMemberService, 1);
+
+            base.PostInitialize();
+        }
         #endregion
 
         #region ISupportExportImportModule Members

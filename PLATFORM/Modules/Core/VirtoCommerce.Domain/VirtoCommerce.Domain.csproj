@@ -128,6 +128,8 @@
     <Compile Include="Customer\Model\PropertyValueType.cs" />
     <Compile Include="Customer\Model\Search\SearchCriteria.cs" />
     <Compile Include="Customer\Model\Search\SearchResult.cs" />
+    <Compile Include="Customer\Services\DefaultMembersServiceFactory.cs" />
+    <Compile Include="Customer\Services\IMemberServicesFactory.cs" />
     <Compile Include="Customer\Services\IMemberService.cs" />
     <Compile Include="Commerce\Model\FulfillmentCenter.cs" />
     <Compile Include="Commerce\Services\ICommerceService.cs" />

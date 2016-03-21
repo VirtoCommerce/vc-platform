@@ -141,13 +141,8 @@ namespace VirtoCommerce.CustomerModule.Test
 
         private static CustomerModuleController GetContactController()
         {
-            Func<IPlatformRepository> platformRepositoryFactory = () => new PlatformRepository("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor(null));
-            Func<ICustomerRepository> customerRepositoryFactory = () => new CustomerRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor(null));
-
-            var dynamicPropertyService = new DynamicPropertyService(platformRepositoryFactory);
-            var memberService = new MemberServiceImpl(customerRepositoryFactory, dynamicPropertyService, null);
-      
-            return new CustomerModuleController(memberService, null);
+       
+            return new CustomerModuleController(null, null);
         }
     }
 }

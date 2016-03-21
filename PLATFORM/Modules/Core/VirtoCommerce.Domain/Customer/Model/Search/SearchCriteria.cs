@@ -17,6 +17,24 @@ namespace VirtoCommerce.Domain.Customer.Model
         /// Search member type (Contact, Organization etc)
         /// </summary>
         public string MemberType { get; set; }
+
+        private string[] _memberTypes;
+        public string[] MemberTypes
+        {
+            get
+            {
+                if (_memberTypes == null && !string.IsNullOrEmpty(MemberType))
+                {
+                    _memberTypes = new[] { MemberType };
+                }
+                return _memberTypes;
+            }
+            set
+            {
+                _memberTypes = value;
+            }
+        }
+
         /// <summary>
         /// Word, part of word or phrase to search
         /// </summary>

@@ -105,7 +105,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\CustomerRepositoryImpl.cs" />
     <Compile Include="Repositories\ICustomerRepository.cs" />
-    <Compile Include="Services\MemberServiceImpl.cs" />
+    <Compile Include="Services\ContactMemberService.cs" />
+    <Compile Include="Services\GenericMemberService.cs" />
+    <Compile Include="Services\OrganizationMemberService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj">
