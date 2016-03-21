@@ -204,13 +204,13 @@ namespace VirtoCommerce.Platform.Data.Asset
 
         #endregion
 
-        private string GetAbsoluteUrlFromPath(string path)
+        protected string GetAbsoluteUrlFromPath(string path)
         {
             var retVal = _basePublicUrl + "/" + path.Replace(_storagePath, String.Empty).TrimStart('\\').Replace('\\', '/');
             return Uri.EscapeUriString(retVal);
         }
 
-        private string GetStoragePathFromUrl(string url)
+        protected string GetStoragePathFromUrl(string url)
         {
             var retVal = _storagePath;
             if (url != null)

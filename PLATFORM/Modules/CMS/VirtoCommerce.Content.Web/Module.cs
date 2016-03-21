@@ -19,6 +19,7 @@ using VirtoCommerce.Content.Web.Security;
 using VirtoCommerce.Domain.Store.Services;
 using System.Configuration;
 using VirtoCommerce.Platform.Core.Common;
+using System.Linq;
 
 namespace VirtoCommerce.Content.Web
 {
@@ -26,6 +27,7 @@ namespace VirtoCommerce.Content.Web
     {
         private const string _connectionStringName = "VirtoCommerce";
         private readonly IUnityContainer _container;
+        private static string[] _possibleContentTypes = new [] { "pages", "themes" };
 
 
         public Module(IUnityContainer container)
@@ -47,7 +49,7 @@ namespace VirtoCommerce.Content.Web
             var settingsManager = _container.Resolve<ISettingsManager>();
             var contentStoragePath = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Storefront.AppData.Path", settingsManager.GetValue("VirtoCommerce.Content.StoragePath", string.Empty));
 
-            Func<IContentStorageProvider> contentProviderFactory = () => new ContentStorageProviderImpl(NormalizePath(contentStoragePath));
+            Func<string, string, IContentStorageProvider> contentProviderFactory = (contentType, storeId) =>  new ContentStorageProviderImpl(Path.Combine(NormalizePath(contentStoragePath), SanitizeContentType(contentType), storeId));
             _container.RegisterInstance(contentProviderFactory);
         }
 
@@ -111,6 +113,15 @@ namespace VirtoCommerce.Content.Web
 
         #endregion
 
+        private static string SanitizeContentType(string contentType)
+        {
+            var retVal = _possibleContentTypes.FirstOrDefault(x => x.Equals(contentType, StringComparison.OrdinalIgnoreCase));
+            if(retVal == null)
+            {
+                throw new ArgumentException("Unknown contentType - " + contentType);
+            }
+            return retVal;
+        }
         private string NormalizePath(string path)
         {
             var retVal = path;
@@ -127,7 +138,7 @@ namespace VirtoCommerce.Content.Web
                 retVal = HostingEnvironment.MapPath("~/");
                 retVal += path;
             }
-            return retVal;
+            return Path.GetFullPath(retVal);
         }
     }
 }

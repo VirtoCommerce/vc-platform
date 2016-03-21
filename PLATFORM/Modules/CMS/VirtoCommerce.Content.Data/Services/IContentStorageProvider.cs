@@ -9,5 +9,7 @@ namespace VirtoCommerce.Content.Data.Services
 {
     public interface IContentStorageProvider : IBlobStorageProvider
     {
+        void MoveContentItem(string oldUrl, string newUrl);
+
     }
 }
