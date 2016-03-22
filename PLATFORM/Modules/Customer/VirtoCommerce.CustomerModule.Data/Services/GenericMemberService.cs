@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,9 +18,9 @@ namespace VirtoCommerce.CustomerModule.Data.Services
     {
         private readonly IDynamicPropertyService _dynamicPropertyService;
         private readonly ISecurityService _securityService;
-        private readonly IMemberServicesFactory _memberFactory;
+        private readonly IMembersFactory _memberFactory;
 
-        public GenericMemberService(IDynamicPropertyService dynamicPropertyService, ISecurityService securityService, IMemberServicesFactory memberFactory)
+        public GenericMemberService(IDynamicPropertyService dynamicPropertyService, ISecurityService securityService, IMembersFactory memberFactory)
         {
             _dynamicPropertyService = dynamicPropertyService;
             _securityService = securityService;
@@ -27,6 +28,11 @@ namespace VirtoCommerce.CustomerModule.Data.Services
         }
 
         #region IMemberService Members
+        public virtual Member TryCreateMember(string memberType)
+        {
+           return _memberFactory.GetAllServices().Select(x => x.TryCreateMember(memberType)).Where(x => x != null).FirstOrDefault();
+        }
+
         public virtual void CreateOrUpdate(Member[] members)
         {
             foreach (var memberService in _memberFactory.GetAllServices())
@@ -45,9 +51,14 @@ namespace VirtoCommerce.CustomerModule.Data.Services
 
         public virtual Member[] GetByIds(string[] memberIds)
         {
-            var retVal = _memberFactory.GetAllServices().SelectMany(x => x.GetByIds(memberIds)).ToArray();
-
-           
+            var retVal = new ConcurrentBag<Member>();
+            Parallel.ForEach(_memberFactory.GetAllServices(), (x) =>
+            {
+                foreach(var member in x.GetByIds(memberIds))
+                {
+                    retVal.Add(member);
+                }
+            });
             return retVal.ToArray();
         }
 

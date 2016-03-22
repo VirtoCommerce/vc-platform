@@ -1,6 +1,6 @@
 ﻿angular.module('virtoCommerce.customerModule')
-.controller('virtoCommerce.customerModule.memberListController', ['$scope', 'virtoCommerce.customerModule.members', 'virtoCommerce.customerModule.contacts', 'virtoCommerce.customerModule.organizations', 'platformWebApp.dialogService', 'platformWebApp.bladeUtils', 'platformWebApp.uiGridHelper',
-    function ($scope, members, contacts, organizations, dialogService, bladeUtils, uiGridHelper) {
+.controller('virtoCommerce.customerModule.memberListController', ['$scope', 'virtoCommerce.customerModule.members', 'platformWebApp.dialogService', 'platformWebApp.bladeUtils', 'platformWebApp.uiGridHelper',
+    function ($scope, members, dialogService, bladeUtils, uiGridHelper) {
         $scope.uiGridConstants = uiGridHelper.uiGridConstants;
 
         var blade = $scope.blade;
@@ -122,16 +122,10 @@
                 callback: function (remove) {
                     if (remove) {
                         bladeNavigationService.closeChildrenBlades(blade, function () {
-                            var organizationIds = _.pluck(_.where(selection, { memberType: 'Organization' }), 'id');
-                            var customerIds = _.pluck(_.where(selection, { memberType: 'Contact' }), 'id');
-
-                            if (_.any(organizationIds)) {
-                                organizations.remove({ ids: organizationIds },
-                                blade.refresh,
-                                function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
-                            }
-                            if (_.any(customerIds)) {
-                                contacts.remove({ ids: customerIds },
+                            var memberIds = _.pluck(selection, 'id');
+                         
+                            if (_.any(memberIds)) {
+                            	members.remove({ ids: memberIds },
                                 blade.refresh,
                                 function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
                             }

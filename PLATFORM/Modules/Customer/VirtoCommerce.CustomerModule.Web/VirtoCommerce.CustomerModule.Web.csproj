@@ -102,6 +102,10 @@
     </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.3\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
@@ -151,6 +155,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\Api\CustomerModuleController.cs" />
+    <Compile Include="Converters\PolymorphicMemberJsonConverter.cs" />
     <Compile Include="Security\CustomerPredefinedPermissions.cs" />
     <Compile Include="ExportImport\CustomerExportImport.cs" />
     <Compile Include="Module.cs" />

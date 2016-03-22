@@ -4,11 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.Domain.Customer.Model;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Domain.Customer.Services
 {
     public interface IMemberService
     {
+        Member TryCreateMember(string memberType);
         SearchResult SearchMembers(SearchCriteria criteria);
         Member[] GetByIds(string[] memberIds);
         void CreateOrUpdate(Member[] members);

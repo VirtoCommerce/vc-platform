@@ -26,6 +26,15 @@ namespace VirtoCommerce.CustomerModule.Data.Services
         }
 
         #region IMemberService Members
+        public virtual Member TryCreateMember(string memberType)
+        {
+            Member retVal = null;
+            if (string.Equals(memberType, "organization", StringComparison.OrdinalIgnoreCase))
+            {
+                retVal = new Organization();
+            }
+            return retVal;
+        }
 
         public Member[] GetByIds(params string[] memberIds)
         {

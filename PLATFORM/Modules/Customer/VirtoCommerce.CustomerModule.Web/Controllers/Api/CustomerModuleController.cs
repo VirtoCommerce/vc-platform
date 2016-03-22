@@ -30,7 +30,7 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
         /// <remarks>Get array of all organizations.</remarks>
         [HttpGet]
         [ResponseType(typeof(coreModel.Organization[]))]
-        [Route("organizations")]
+        [Route("members/organizations")]
         public IHttpActionResult ListOrganizations()
         {
             var searchCriteria = new coreModel.SearchCriteria
@@ -84,7 +84,7 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
         [ResponseType(typeof(coreModel.Member))]
         [Route("members")]
         [CheckPermission(Permission = CustomerPredefinedPermissions.Create)]
-        public IHttpActionResult CreateMember(coreModel.Member member)
+        public IHttpActionResult CreateMember([FromBody]coreModel.Member member)
         {
             _memberService.CreateOrUpdate(new [] { member });
             var retVal = _memberService.GetByIds(new[] { member.Id }).FirstOrDefault();
@@ -122,8 +122,7 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-
-
+        #region Special members for storefront C# API client  (because it not support polymorph types)
         /// <summary>
         /// Create contact
         /// </summary>
@@ -149,13 +148,11 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
             return UpdateMember(contact);
         }
 
-    
-
         /// <summary>
         /// Create organization
         /// </summary>
+        [Obsolete("Use CreateMember instead")]
         [HttpPost]
-        [ResponseType(typeof(coreModel.Organization))]
         [Route("organizations")]
         [CheckPermission(Permission = CustomerPredefinedPermissions.Create)]
         public IHttpActionResult CreateOrganization(coreModel.Organization organization)
@@ -176,17 +173,12 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
             return UpdateMember(organization);
         }
 
-
-
-        #region Obsolete members
-
         /// <summary>
         /// Delete organizations
         /// </summary>
         /// <remarks>Delete organizations by given array of ids.</remarks>
         /// <param name="ids">An array of organizations ids</param>
         /// <response code="204">Operation completed.</response>
-        [Obsolete("Use DeleteMembers instead")]
         [HttpDelete]
         [ResponseType(typeof(void))]
         [Route("organizations")]
@@ -202,7 +194,6 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
         /// <remarks>Delete contacts by given array of ids.</remarks>
         /// <param name="ids">An array of contacts ids</param>
         /// <response code="204">Operation completed.</response>
-        [Obsolete("Use DeleteMembers instead")]
         [HttpDelete]
         [ResponseType(typeof(void))]
         [Route("contacts")]
@@ -220,7 +211,6 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
         /// <param name="id">Organization id</param>
         /// <response code="200"></response>
         /// <response code="404">Organization not found.</response>
-        [Obsolete("Use GetMemberById  instead")]
         [HttpGet]
         [ResponseType(typeof(coreModel.Organization))]
         [Route("organizations/{id}")]
@@ -233,7 +223,6 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
         /// Get contact
         /// </summary>
         /// <param name="id">Contact ID</param>
-        [Obsolete("Use GetMemberById instead")]
         [HttpGet]
         [ResponseType(typeof(coreModel.Contact))]
         [Route("contacts/{id}")]
@@ -241,9 +230,6 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
         {
             return GetMemberById(id);
         }
-
-
-
         #endregion
     }
 }

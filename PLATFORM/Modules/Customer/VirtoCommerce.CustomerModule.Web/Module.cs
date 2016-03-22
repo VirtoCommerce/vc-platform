@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Data.Entity;
+using System.Web;
+using System.Web.Http;
 using Microsoft.Practices.Unity;
 using VirtoCommerce.CustomerModule.Data.Repositories;
 using VirtoCommerce.CustomerModule.Data.Services;
+using VirtoCommerce.CustomerModule.Web.Converters;
 using VirtoCommerce.CustomerModule.Web.ExportImport;
 using VirtoCommerce.Domain.Customer.Services;
 using VirtoCommerce.Platform.Core.DynamicProperties;
@@ -40,17 +43,22 @@ namespace VirtoCommerce.CustomerModule.Web
         public override void Initialize()
         {
             _container.RegisterType<ICustomerRepository>(new InjectionFactory(c => new CustomerRepositoryImpl(_connectionStringName, new EntityPrimaryKeyGeneratorInterceptor(), _container.Resolve<AuditableInterceptor>())));
-            _container.RegisterType<IMemberServicesFactory, DefaultMembersServiceFactory>(new ContainerControlledLifetimeManager());
+            _container.RegisterType<IMembersFactory, DefaultMembersServiceFactory>(new ContainerControlledLifetimeManager());
             _container.RegisterType<IMemberService, GenericMemberService>();
+
+         
         }
 
         public override void PostInitialize()
         {
-            var memberServiceFactory = _container.Resolve<IMemberServicesFactory>();
+            var membersFactory = _container.Resolve<IMembersFactory>();
             var contactMemberService = new ContactMemberServiceImpl(_container.Resolve<Func<ICustomerRepository>>(), _container.Resolve<ISecurityService>(), _container.Resolve<IDynamicPropertyService>());
             var orgMemberService = new OrganizationMemberServiceImpl(_container.Resolve<Func<ICustomerRepository>>(), _container.Resolve<IDynamicPropertyService>());
-            memberServiceFactory.RegisterMemberService(orgMemberService, 0);
-            memberServiceFactory.RegisterMemberService(contactMemberService, 1);
+            membersFactory.RegisterMemberService(orgMemberService, 0);
+            membersFactory.RegisterMemberService(contactMemberService, 1);
+
+            var formatters = GlobalConfiguration.Configuration.Formatters;
+            formatters.JsonFormatter.SerializerSettings.Converters.Add(new PolymorphicMemberJsonConverter(membersFactory));
 
             base.PostInitialize();
         }

@@ -1,8 +1,8 @@
 ﻿angular.module('virtoCommerce.customerModule')
-.controller('virtoCommerce.customerModule.memberDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.customerModule.contacts', 'virtoCommerce.customerModule.organizations', 'platformWebApp.dynamicProperties.api', function ($scope, bladeNavigationService, contacts, organizations, dynamicPropertiesApi) {
+.controller('virtoCommerce.customerModule.memberDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.customerModule.members', 'virtoCommerce.customerModule.organizations', 'platformWebApp.dynamicProperties.api', function ($scope, bladeNavigationService, members, organizations, dynamicPropertiesApi) {
     var blade = $scope.blade;
     blade.updatePermission = 'customer:update';
-    blade.currentResource = blade.isOrganization ? organizations : contacts;
+    blade.currentResource = members;
 
     blade.refresh = function (parentRefresh) {
         if (blade.currentEntityId) {
