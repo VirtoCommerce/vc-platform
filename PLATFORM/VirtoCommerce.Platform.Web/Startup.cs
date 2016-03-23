@@ -124,8 +124,6 @@ namespace VirtoCommerce.Platform.Web
                 FileSystem = new Microsoft.Owin.FileSystems.PhysicalFileSystem(scriptsRelativePath)
             });
 
-
-
             // Register URL rewriter before modules initialization
             if (Directory.Exists(modulesPhysicalPath))
             {

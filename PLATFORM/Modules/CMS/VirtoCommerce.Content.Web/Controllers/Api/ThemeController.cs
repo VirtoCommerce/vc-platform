@@ -1,28 +1,21 @@
-﻿#region
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
-using System.Web.Hosting;
+using System.Text;
 using System.Web.Http;
 using System.Web.Http.Description;
 using VirtoCommerce.Content.Data.Services;
 using VirtoCommerce.Content.Data.Utility;
-using VirtoCommerce.Platform.Core.Common;
-using VirtoCommerce.Platform.Core.Security;
-using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Content.Web.Converters;
 using VirtoCommerce.Content.Web.Models;
-using VirtoCommerce.Platform.Core.PushNotifications;
 using VirtoCommerce.Content.Web.Security;
-using System.Collections.Generic;
 using VirtoCommerce.Platform.Core.Asset;
-using System.Text;
+using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Security;
 
-#endregion
 
 namespace VirtoCommerce.Content.Web.Controllers.Api
 {
@@ -31,14 +24,12 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
     {
         private readonly IContentStorageProvider _contentStorageProvider;
 
-        #region Constructors and Destructors
         public ThemeController(Func<IContentStorageProvider> contentStorageProviderFactory, ISecurityService securityService, IPermissionScopeService permissionScopeService)
             : base(securityService, permissionScopeService)
         {
             _contentStorageProvider = contentStorageProviderFactory();
 
         }
-        #endregion
 
         /// <summary>
         /// Get theme asset
