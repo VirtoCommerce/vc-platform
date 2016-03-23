@@ -97,7 +97,7 @@
     <Compile Include="Services\IMenuService.cs" />
     <Compile Include="Services\IContentStorageProvider.cs" />
     <Compile Include="Services\MenuServiceImpl.cs" />
-    <Compile Include="Services\ContentStorageProviderImpl.cs" />
+    <Compile Include="Services\FileSystemContentStorageProviderImpl.cs" />
     <Compile Include="Utility\ContentTypeUtility.cs" />
   </ItemGroup>
   <ItemGroup>

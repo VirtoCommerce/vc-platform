@@ -8,9 +8,11 @@ namespace VirtoCommerce.Content.Web.Models
     public class ContentFile : ContentItem
     {
         public ContentFile()
-            :base("ContentFile")
+            :base("blob")
         {
-
         }
+
+        public string MimeType { get; set; }
+        public string Size { get; set; }
     }
 }

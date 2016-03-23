@@ -20,6 +20,7 @@ using VirtoCommerce.Domain.Store.Services;
 using System.Configuration;
 using VirtoCommerce.Platform.Core.Common;
 using System.Linq;
+using VirtoCommerce.Platform.Data.Asset;
 
 namespace VirtoCommerce.Content.Web
 {
@@ -47,9 +48,26 @@ namespace VirtoCommerce.Content.Web
             _container.RegisterType<IMenuService, MenuServiceImpl>();
 
             var settingsManager = _container.Resolve<ISettingsManager>();
-            var contentStoragePath = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Storefront.AppData.Path", settingsManager.GetValue("VirtoCommerce.Content.StoragePath", string.Empty));
+            var assetsConnection = ConfigurationManager.ConnectionStrings["CmsConnectionString"];
 
-            Func<string, string, IContentStorageProvider> contentProviderFactory = (contentType, storeId) =>  new ContentStorageProviderImpl(Path.Combine(NormalizePath(contentStoragePath), SanitizeContentType(contentType), storeId));
+            var properties = assetsConnection.ConnectionString.ToDictionary(";", "=");
+            var provider = properties["provider"];
+            var cmsContentConnectionString = properties.ToString(";", "=", "provider");
+
+            Func<string, string, IContentStorageProvider> contentProviderFactory = (contentType, storeId) =>
+            {
+                if (string.Equals(provider, FileSystemBlobProvider.ProviderName, StringComparison.OrdinalIgnoreCase))
+                {
+                    var storagePath = Path.Combine(NormalizePath(properties["rootPath"]), SanitizeContentType(contentType), storeId);
+                    var publicUrl = properties["publicUrl"] + "/" + SanitizeContentType(contentType) + "/" + storeId;
+                   return new FileSystemContentStorageProviderImpl(storagePath, publicUrl);
+                }
+                else if (string.Equals(provider, AzureBlobProvider.ProviderName, StringComparison.OrdinalIgnoreCase))
+                {
+                    throw new NotImplementedException();
+                }
+                throw new NotImplementedException();
+            };
             _container.RegisterInstance(contentProviderFactory);
         }
 

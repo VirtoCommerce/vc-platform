@@ -8,7 +8,7 @@ namespace VirtoCommerce.Content.Web.Models
     public class ContentFolder : ContentItem
     {
         public ContentFolder()
-            : base("ContentFolder")
+            : base("folder")
         {
 
         }

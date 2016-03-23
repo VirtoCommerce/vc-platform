@@ -1,6 +1,7 @@
 ﻿using Omu.ValueInjecter;
 using VirtoCommerce.Content.Web.Models;
 using VirtoCommerce.Platform.Core.Asset;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Content.Web.Converters
 {
@@ -24,6 +25,10 @@ namespace VirtoCommerce.Content.Web.Converters
         {
             var retVal = new ContentFile();
             retVal.InjectFrom(blobInfo);
+            retVal.Name = blobInfo.FileName;
+            retVal.MimeType = blobInfo.ContentType;
+            retVal.Size = blobInfo.Size.ToHumanReadableSize();
+            retVal.ModifiedDate = blobInfo.ModifiedDate;
             return retVal;
         }
 
