@@ -27,13 +27,13 @@ namespace VirtoCommerce.Storefront.Services
         private readonly Func<WorkContext> _workContextFactory;
         private readonly IQuoteModuleApi _quoteApi;
         private readonly IStoreModuleApi _storeApi;
-        private readonly ICacheManager<object> _cacheManager;
+        private readonly ILocalCacheManager _cacheManager;
         private const string _customerOrdersCacheRegionFormat = "customer/{0}/orders/region";
         private const string _customerQuotesCacheRegionFormat = "customer/{0}/quotes/region";
         private const string _customerCacheKeyFormat = "customer/{0}";
         private const string _customerCacheRegionFormat = "customer/{0}/region";
         public CustomerServiceImpl(Func<WorkContext> workContextFactory, ICustomerManagementModuleApi customerApi, IOrderModuleApi orderApi,
-                                   IQuoteModuleApi quoteApi, IStoreModuleApi storeApi, ICacheManager<object> cacheManager)
+                                   IQuoteModuleApi quoteApi, IStoreModuleApi storeApi, ILocalCacheManager cacheManager)
         {
             _workContextFactory = workContextFactory;
             _customerApi = customerApi;

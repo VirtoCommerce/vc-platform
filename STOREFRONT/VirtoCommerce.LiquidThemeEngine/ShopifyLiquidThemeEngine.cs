@@ -47,11 +47,11 @@ namespace VirtoCommerce.LiquidThemeEngine
         private readonly string _globalThemeAssetsRelativeUrl;
         private readonly Func<WorkContext> _workContextFactory;
         private readonly Func<IStorefrontUrlBuilder> _storeFrontUrlBuilderFactory;
-        private readonly ICacheManager<object> _cacheManager;
+        private readonly ILocalCacheManager _cacheManager;
         private readonly FileSystemWatcher _fileSystemWatcher;
         private readonly SassCompilerProxy _saasCompiler = new SassCompilerProxy();
 
-        public ShopifyLiquidThemeEngine(ICacheManager<object> cacheManager, Func<WorkContext> workContextFactory, Func<IStorefrontUrlBuilder> storeFrontUrlBuilderFactory, string themesLocalPath, string themesAssetsRelativeUrl, string globalThemeAssetsRelativeUrl)
+        public ShopifyLiquidThemeEngine(ILocalCacheManager cacheManager, Func<WorkContext> workContextFactory, Func<IStorefrontUrlBuilder> storeFrontUrlBuilderFactory, string themesLocalPath, string themesAssetsRelativeUrl, string globalThemeAssetsRelativeUrl)
         {
             _workContextFactory = workContextFactory;
             _storeFrontUrlBuilderFactory = storeFrontUrlBuilderFactory;
@@ -282,7 +282,7 @@ namespace VirtoCommerce.LiquidThemeEngine
             var parsedTemplate = _cacheManager.Get(GetCacheKey("ParseTemplate", templateContent.GetHashCode().ToString()), "LiquidTheme", () => { return Template.Parse(templateContent); });
 
             var retVal = parsedTemplate.RenderWithTracing(renderParams);
-            
+
             //Copy key values which were generated in rendering to out parameters
             if (parameters != null && parsedTemplate.Registers != null)
             {
@@ -381,7 +381,7 @@ namespace VirtoCommerce.LiquidThemeEngine
         public string GetGlobalAssetAbsoluteUrl(string assetName)
         {
             return UrlBuilder.ToAppAbsolute(_globalThemeAssetsRelativeUrl.TrimEnd('/') + "/" + assetName.TrimStart('/'), WorkContext.CurrentStore, WorkContext.CurrentLanguage);
-        } 
+        }
         #endregion
 
 

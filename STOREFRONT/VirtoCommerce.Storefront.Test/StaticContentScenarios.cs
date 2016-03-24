@@ -86,7 +86,7 @@ namespace VirtoCommerce.Storefront.Test
 
         private IStaticContentService GetStaticContentService()
         {
-            var cacheManager = new Moq.Mock<ICacheManager<object>>();
+            var cacheManager = new Moq.Mock<ILocalCacheManager>();
             cacheManager.Setup(cache => cache.Get<ContentItem[]>(It.IsAny<string>(), It.IsAny<string>())).Returns<ContentItem[]>(null);
             var urlBuilder = new Moq.Mock<IStorefrontUrlBuilder>();
             var liquidEngine = new Moq.Mock<ILiquidThemeEngine>();

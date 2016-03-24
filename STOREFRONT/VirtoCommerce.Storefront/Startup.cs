@@ -83,7 +83,6 @@ namespace VirtoCommerce.Storefront
             // Be cautious with SystemWebCacheHandle because it does not work in native threads (Hangfire jobs).
             var localCache = CacheFactory.FromConfiguration<object>("storefrontCache");
             var localCacheManager = new LocalCacheManager(localCache);
-            container.RegisterInstance<ICacheManager<object>>(localCacheManager);
             container.RegisterInstance<ILocalCacheManager>(localCacheManager);
 
             //Because CacheManagerOutputCacheProvider used diff cache manager instance need translate clear region by this way

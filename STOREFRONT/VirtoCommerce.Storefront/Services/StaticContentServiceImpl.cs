@@ -27,7 +27,7 @@ namespace VirtoCommerce.Storefront.Services
         private readonly ILiquidThemeEngine _liquidEngine;
         private readonly string _baseLocalPath;
         private FileSystemWatcher _fileSystemWatcher;
-        private readonly ICacheManager<object> _cacheManager;
+        private readonly ILocalCacheManager _cacheManager;
         private readonly Func<WorkContext> _workContextFactory;
         private readonly Func<IStorefrontUrlBuilder> _urlBuilderFactory;
         private readonly Func<string, ContentItem> _contentItemFactory;
@@ -35,7 +35,7 @@ namespace VirtoCommerce.Storefront.Services
      
         [CLSCompliant(false)]
         public StaticContentServiceImpl(string baseLocalPath, Markdown markdownRender, ILiquidThemeEngine liquidEngine,
-                                        ICacheManager<object> cacheManager, Func<WorkContext> workContextFactory,
+                                        ILocalCacheManager cacheManager, Func<WorkContext> workContextFactory,
                                         Func<IStorefrontUrlBuilder> urlBuilderFactory, Func<string, ContentItem> contentItemFactory)
         {
             _baseLocalPath = baseLocalPath;
