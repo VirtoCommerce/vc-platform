@@ -31,8 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CacheManager.Core, Version=0.7.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CacheManager.Core.0.7.1\lib\net45\CacheManager.Core.dll</HintPath>
+    <Reference Include="CacheManager.Core, Version=0.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CacheManager.Core.0.8.0\lib\net45\CacheManager.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Omu.ValueInjecter, Version=2.3.3.0, Culture=neutral, PublicKeyToken=c7694541b0ac80e4, processorArchitecture=MSIL">
@@ -88,9 +88,14 @@
     <Compile Include="Catalog\Term.cs" />
     <Compile Include="Catalog\TermExtensions.cs" />
     <Compile Include="Common\AnonymousComparer.cs" />
+    <Compile Include="Common\CacheManagerBase.cs" />
+    <Compile Include="Common\DistributedCacheManager.cs" />
     <Compile Include="Common\EntryState.cs" />
     <Compile Include="Common\EnumerableExtension.cs" />
+    <Compile Include="Common\IDistributedCacheManager.cs" />
+    <Compile Include="Common\ILocalCacheManager.cs" />
     <Compile Include="Common\IMutablePagedList.cs" />
+    <Compile Include="Common\LocalCacheManager.cs" />
     <Compile Include="Common\MutablePagedList.cs" />
     <Compile Include="IHasSettings.cs" />
     <Compile Include="SettingEntry.cs" />
