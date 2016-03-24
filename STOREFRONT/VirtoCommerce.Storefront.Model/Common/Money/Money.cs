@@ -29,22 +29,21 @@
  */
 
 using System;
-using System.Globalization;
 
 namespace VirtoCommerce.Storefront.Model.Common
 {
-	public class Money : IComparable<Money>, IEquatable<Money>, IComparable, IConvertible<Money>
-	{
-		private Currency _currency;
-		private decimal _amount;
+    public class Money : IComparable<Money>, IEquatable<Money>, IComparable, IConvertible<Money>
+    {
+        private Currency _currency;
+        private decimal _amount;
 
         #region Constructors
-        private Money()
+        public Money()
         {
         }
 
         public Money(Currency currency)
-            :this(0m, currency)
+            : this(0m, currency)
         {
         }
 
@@ -54,53 +53,53 @@ namespace VirtoCommerce.Storefront.Model.Common
         }
 
         public Money(decimal amount, Currency currency)
-		{
-            if(currency == null)
+        {
+            if (currency == null)
             {
                 throw new ArgumentNullException("currency");
             }
-			_currency = currency;
-			_amount = amount;
-		}
+            _currency = currency;
+            _amount = amount;
+        }
 
-		#endregion
+        #endregion
 
-		#region Public Properties
-		/// <summary>
-		/// Accesses the internal representation of the value of the Money
-		/// </summary>
-		/// <returns>A decimal with the internal amount stored for this Money.</returns>
-		public decimal InternalAmount
-		{
-			get { return _amount; }
-			set { _amount = value; }
-		}
+        #region Public Properties
+        /// <summary>
+        /// Accesses the internal representation of the value of the Money
+        /// </summary>
+        /// <returns>A decimal with the internal amount stored for this Money.</returns>
+        public decimal InternalAmount
+        {
+            get { return _amount; }
+            set { _amount = value; }
+        }
 
-		/// <summary>
-		/// Rounds the amount to the number of significant decimal digits
-		/// of the associated currency using MidpointRounding.AwayFromZero.
-		/// </summary>
-		/// <returns>A decimal with the amount rounded to the significant number of decimal digits.</returns>
-		public decimal Amount
-		{
-			get
-			{
-				return Decimal.Round((Decimal)_amount, this.DecimalDigits, MidpointRounding.AwayFromZero);
-			}
-		}
+        /// <summary>
+        /// Rounds the amount to the number of significant decimal digits
+        /// of the associated currency using MidpointRounding.AwayFromZero.
+        /// </summary>
+        /// <returns>A decimal with the amount rounded to the significant number of decimal digits.</returns>
+        public decimal Amount
+        {
+            get
+            {
+                return decimal.Round(_amount, DecimalDigits, MidpointRounding.AwayFromZero);
+            }
+        }
 
-		/// <summary>
-		/// Truncates the amount to the number of significant decimal digits
-		/// of the associated currency.
-		/// </summary>
-		/// <returns>A decimal with the amount truncated to the significant number of decimal digits.</returns>
-		public decimal TruncatedAmount
-		{
-			get
-			{
-				return (decimal)((long)Math.Truncate(_amount * this.DecimalDigits)) / this.DecimalDigits;
-			}
-		}
+        /// <summary>
+        /// Truncates the amount to the number of significant decimal digits
+        /// of the associated currency.
+        /// </summary>
+        /// <returns>A decimal with the amount truncated to the significant number of decimal digits.</returns>
+        public decimal TruncatedAmount
+        {
+            get
+            {
+                return (decimal)((long)Math.Truncate(_amount * DecimalDigits)) / DecimalDigits;
+            }
+        }
         public string FormatedAmount
         {
             get
@@ -109,224 +108,232 @@ namespace VirtoCommerce.Storefront.Model.Common
             }
         }
 
-		public Currency Currency
-		{
-			get { return _currency; }
-		}
+        public Currency Currency
+        {
+            get { return _currency; }
+            set { _currency = value; }
+        }
 
-	
-		/// <summary>
-		/// Gets the number of decimal digits for the associated currency.
-		/// </summary>
-		/// <returns>An int containing the number of decimal digits.</returns>
-		public int DecimalDigits
-		{
-			get { return _currency.NumberFormat.CurrencyDecimalDigits; }
-		}
-		#endregion
 
-		#region Money Operators
+        /// <summary>
+        /// Gets the number of decimal digits for the associated currency.
+        /// </summary>
+        /// <returns>An int containing the number of decimal digits.</returns>
+        public int DecimalDigits
+        {
+            get { return _currency.NumberFormat.CurrencyDecimalDigits; }
+        }
+        #endregion
 
-		public override int GetHashCode()
-		{
-			return Amount.GetHashCode() ^ _currency.Code.GetHashCode();
-		}
+        #region Money Operators
 
-		public override bool Equals(object obj)
-		{
-			return (obj is Money) && Equals((Money)obj);
-		}
+        public override int GetHashCode()
+        {
+            return Amount.GetHashCode() ^ _currency.Code.GetHashCode();
+        }
 
-		public bool Equals(Money other)
-		{
+        public override bool Equals(object obj)
+        {
+            return (obj is Money) && Equals((Money)obj);
+        }
+
+        public bool Equals(Money other)
+        {
             if (other == null)
                 return false;
 
-            if (Object.ReferenceEquals(this, other))
+            if (ReferenceEquals(this, other))
                 return true;
 
             return ((Currency.Equals(other.Currency)) && (Amount == other.Amount));
-		}
+        }
 
-		public static bool operator ==(Money first, Money second)
-		{
-			if (object.ReferenceEquals(first, second)) return true;
-			if (object.ReferenceEquals(first, null) || object.ReferenceEquals(second, null)) return false;
-			return first.Equals(second);
-		}
+        public static bool operator ==(Money first, Money second)
+        {
+            if (ReferenceEquals(first, second)) return true;
+            if (ReferenceEquals(first, null) || ReferenceEquals(second, null)) return false;
+            return first.Equals(second);
+        }
 
-		public static bool operator !=(Money first, Money second)
-		{
+        public static bool operator !=(Money first, Money second)
+        {
             return !(first == second);
-		}
+        }
 
-		public static bool operator >(Money first, Money second)
-		{
-			return first.Amount > second.ConvertTo(first.Currency).Amount
-			  && second.Amount < first.ConvertTo(second.Currency).Amount;
-		}
+        public static bool operator >(Money first, Money second)
+        {
+            return first.Amount > second.ConvertTo(first.Currency).Amount
+              && second.Amount < first.ConvertTo(second.Currency).Amount;
+        }
 
-		public static bool operator >=(Money first, Money second)
-		{
-			return first.Amount >= second.ConvertTo(first.Currency).Amount
-			  && second.Amount <= first.ConvertTo(second.Currency).Amount;
-		}
+        public static bool operator >=(Money first, Money second)
+        {
+            return first.Amount >= second.ConvertTo(first.Currency).Amount
+              && second.Amount <= first.ConvertTo(second.Currency).Amount;
+        }
 
-		public static bool operator <=(Money first, Money second)
-		{
-			return first.Amount <= second.ConvertTo(first.Currency).Amount
-			  && second.Amount >= first.ConvertTo(second.Currency).Amount;
-		}
+        public static bool operator <=(Money first, Money second)
+        {
+            return first.Amount <= second.ConvertTo(first.Currency).Amount
+              && second.Amount >= first.ConvertTo(second.Currency).Amount;
+        }
 
-		public static bool operator <(Money first, Money second)
-		{
-			return first.Amount < second.ConvertTo(first.Currency).Amount
-			  && second.Amount > first.ConvertTo(second.Currency).Amount;
-		}
+        public static bool operator <(Money first, Money second)
+        {
+            return first.Amount < second.ConvertTo(first.Currency).Amount
+              && second.Amount > first.ConvertTo(second.Currency).Amount;
+        }
 
-		public int CompareTo(object obj)
-		{
-			if (obj == null)
-				return 1;
-			if (!(obj is Money))
-				throw new ArgumentException("Argument must be Money");
-			return CompareTo((Money)obj);
-		}
+        public int CompareTo(object obj)
+        {
+            if (obj == null)
+                return 1;
+            if (!(obj is Money))
+                throw new ArgumentException("Argument must be Money");
+            return CompareTo((Money)obj);
+        }
 
-		public int CompareTo(Money other)
-		{
-			if (this < other)
-				return -1;
-			if (this > other)
-				return 1;
-			return 0;
-		}
+        public int CompareTo(Money other)
+        {
+            if (this < other)
+                return -1;
+            if (this > other)
+                return 1;
+            return 0;
+        }
 
-		public static Money operator +(Money first, Money second)
-		{
-			return new Money(first.Amount + second.ConvertTo(first.Currency).Amount, first.Currency);
-		}
+        public static Money operator +(Money first, Money second)
+        {
+            return new Money(first.Amount + second.ConvertTo(first.Currency).Amount, first.Currency);
+        }
 
-		public static Money operator -(Money first, Money second)
-		{
-			return new Money(first.Amount - second.ConvertTo(first.Currency).Amount, first.Currency);
-		}
+        public static Money operator -(Money first, Money second)
+        {
+            return new Money(first.Amount - second.ConvertTo(first.Currency).Amount, first.Currency);
+        }
 
-		public static Money operator *(Money first, Money second)
-		{
-			return new Money(first.Amount * second.ConvertTo(first.Currency).Amount, first.Currency);
-		}
+        public static Money operator *(Money first, Money second)
+        {
+            return new Money(first.Amount * second.ConvertTo(first.Currency).Amount, first.Currency);
+        }
 
-		public static Money operator /(Money first, Money second)
-		{
-			return new Money(first.Amount / second.ConvertTo(first.Currency).Amount, first.Currency);
-		}
+        public static Money operator /(Money first, Money second)
+        {
+            return new Money(first.Amount / second.ConvertTo(first.Currency).Amount, first.Currency);
+        }
 
-		#endregion
+        #endregion
 
-		#region Cast Operators
+        #region Cast Operators
 
-		public static bool operator ==(Money money, long value)
-		{
-			if (object.ReferenceEquals(money, null) || object.ReferenceEquals(value, null)) return false;
-			return (money.Amount == (decimal)value);
-		}
-		public static bool operator !=(Money money, long value)
-		{
-			return !(money == value);
-		}
+        public static bool operator ==(Money money, long value)
+        {
+            if (ReferenceEquals(money, null))
+                return false;
+            return (money.Amount == value);
+        }
+        public static bool operator !=(Money money, long value)
+        {
+            return !(money == value);
+        }
 
-		public static bool operator ==(Money money, decimal value)
-		{
-			if (object.ReferenceEquals(money, null) || object.ReferenceEquals(value, null)) return false;
-			return (money.Amount == value);
-		}
-		public static bool operator !=(Money money, decimal value)
-		{
-			return !(money == value);
-		}
+        public static bool operator ==(Money money, decimal value)
+        {
+            if (ReferenceEquals(money, null))
+                return false;
+            return (money.Amount == value);
+        }
+        public static bool operator !=(Money money, decimal value)
+        {
+            return !(money == value);
+        }
 
-		public static bool operator ==(Money money, double value)
-		{
-			if (object.ReferenceEquals(money, null) || object.ReferenceEquals(value, null)) return false;
-			return (money.Amount == (decimal)value);
-		}
-		public static bool operator !=(Money money, double value)
-		{
-			return !(money == value);
-		}
+        public static bool operator ==(Money money, double value)
+        {
+            if (ReferenceEquals(money, null))
+                return false;
+            return (money.Amount == (decimal)value);
+        }
+        public static bool operator !=(Money money, double value)
+        {
+            return !(money == value);
+        }
 
-		public static Money operator +(Money money, long value)
-		{
-			return money + (decimal)value;
-		}
-		public static Money operator +(Money money, double value)
-		{
+        public static Money operator +(Money money, long value)
+        {
+            return money + (decimal)value;
+        }
+        public static Money operator +(Money money, double value)
+        {
             return money + (decimal)value;
         }
         public static Money operator +(Money money, decimal value)
         {
-            if (money == null) throw new ArgumentNullException("money");
+            if (money == null)
+                throw new ArgumentNullException("money");
             return new Money(money.Amount + value, money.Currency);
         }
 
         public static Money operator -(Money money, long value)
-		{
-			return money - (decimal)value;
-		}
-		public static Money operator -(Money money, double value)
-		{
+        {
+            return money - (decimal)value;
+        }
+        public static Money operator -(Money money, double value)
+        {
             return money - (decimal)value;
         }
         public static Money operator -(Money money, decimal value)
         {
-            if (money == null) throw new ArgumentNullException("money");
+            if (money == null)
+                throw new ArgumentNullException("money");
             return new Money(money.Amount - value, money.Currency);
         }
 
         public static Money operator *(Money money, long value)
-		{
-			return money * (decimal)value;
-		}
-		public static Money operator *(Money money, double value)
-		{
+        {
+            return money * (decimal)value;
+        }
+        public static Money operator *(Money money, double value)
+        {
             return money * (decimal)value;
         }
         public static Money operator *(Money money, decimal value)
         {
-            if (money == null) throw new ArgumentNullException("money");
+            if (money == null)
+                throw new ArgumentNullException("money");
             return new Money(money.Amount * value, money.Currency);
         }
 
         public static Money operator /(Money money, long value)
-		{
-			return money / (decimal)value;
-		}
-		public static Money operator /(Money money, double value)
-		{
-			return money / (decimal)value;
-		}
+        {
+            return money / (decimal)value;
+        }
+        public static Money operator /(Money money, double value)
+        {
+            return money / (decimal)value;
+        }
 
-		public static Money operator /(Money money, decimal value)
-		{
-			if (money == null) throw new ArgumentNullException("money");
-			return new Money(money.Amount / value, money.Currency);
-		}
+        public static Money operator /(Money money, decimal value)
+        {
+            if (money == null)
+                throw new ArgumentNullException("money");
+            return new Money(money.Amount / value, money.Currency);
+        }
 
-		#endregion
+        #endregion
 
-		#region Functions
+        #region Functions
 
-		public override string ToString()
-		{
-            string retVal = Amount.ToString();
+        public override string ToString()
+        {
+            var retVal = Amount.ToString();
             if (Currency != null)
             {
-                if (!String.IsNullOrEmpty(Currency.CustomFormatting))
+                if (!string.IsNullOrEmpty(Currency.CustomFormatting))
                 {
                     retVal = Amount.ToString(Currency.CustomFormatting);
                 }
-                else if(Currency.NumberFormat != null)
+                else if (Currency.NumberFormat != null)
                 {
                     retVal = Amount.ToString("C", Currency.NumberFormat);
                 }
@@ -334,26 +341,26 @@ namespace VirtoCommerce.Storefront.Model.Common
             return retVal;
         }
 
-		/// <summary>
-		/// Evenly distributes the amount over n parts, resolving remainders that occur due to rounding 
-		/// errors, thereby garuanteeing the postcondition: result->sum(r|r.amount) = this.amount and
-		/// x elements in result are greater than at least one of the other elements, where x = amount mod n.
-		/// </summary>
-		/// <param name="n">Number of parts over which the amount is to be distibuted.</param>
-		/// <returns>Array with distributed Money amounts.</returns>
-		public Money[] Allocate(int n)
-		{
-			double cents = Math.Pow(10, this.DecimalDigits);
-			double lowResult = ((long)Math.Truncate((double)_amount / n * cents)) / cents;
-			double highResult = lowResult + 1.0d / cents;
-			Money[] results = new Money[n];
-			int remainder = (int)(((double)_amount * cents) % n);
-			for (int i = 0; i < remainder; i++)
-				results[i] = new Money((decimal)highResult, _currency);
-			for (int i = remainder; i < n; i++)
-				results[i] = new Money((decimal)lowResult, _currency);
-			return results;
-		}
+        /// <summary>
+        /// Evenly distributes the amount over n parts, resolving remainders that occur due to rounding 
+        /// errors, thereby garuanteeing the postcondition: result->sum(r|r.amount) = this.amount and
+        /// x elements in result are greater than at least one of the other elements, where x = amount mod n.
+        /// </summary>
+        /// <param name="n">Number of parts over which the amount is to be distibuted.</param>
+        /// <returns>Array with distributed Money amounts.</returns>
+        public Money[] Allocate(int n)
+        {
+            var cents = Math.Pow(10, DecimalDigits);
+            var lowResult = ((long)Math.Truncate((double)_amount / n * cents)) / cents;
+            var highResult = lowResult + 1.0d / cents;
+            var results = new Money[n];
+            var remainder = (int)(((double)_amount * cents) % n);
+            for (var i = 0; i < remainder; i++)
+                results[i] = new Money((decimal)highResult, _currency);
+            for (var i = remainder; i < n; i++)
+                results[i] = new Money((decimal)lowResult, _currency);
+            return results;
+        }
 
         #endregion
 
@@ -363,8 +370,7 @@ namespace VirtoCommerce.Storefront.Model.Common
             if (Currency == toCurrency)
                 return this;
             return new Money((_amount * Currency.ExchangeRate) / toCurrency.ExchangeRate, toCurrency);
-        } 
+        }
         #endregion
-
     }
 }
