@@ -24,15 +24,15 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
         /// <exception cref="System.ArgumentNullException">catalog</exception>
         public static coreModel.Category ToCoreModel(this dataModel.Category dbCategory, bool convertProps = true)
         {
- 			var retVal = new coreModel.Category();
-			retVal.InjectFrom(dbCategory);
-			retVal.CatalogId = dbCategory.CatalogId;
-			retVal.Catalog = dbCategory.Catalog.ToCoreModel();
-			retVal.ParentId = dbCategory.ParentCategoryId;
-			retVal.IsActive = dbCategory.IsActive;
-		
-			retVal.Virtual = dbCategory.Catalog.Virtual;
-			retVal.Links = dbCategory.OutgoingLinks.Select(x => x.ToCoreModel(retVal)).ToList();
+            var retVal = new coreModel.Category();
+            retVal.InjectFrom(dbCategory);
+            retVal.CatalogId = dbCategory.CatalogId;
+            retVal.Catalog = dbCategory.Catalog.ToCoreModel();
+            retVal.ParentId = dbCategory.ParentCategoryId;
+            retVal.IsActive = dbCategory.IsActive;
+
+            retVal.IsVirtual = dbCategory.Catalog.Virtual;
+            retVal.Links = dbCategory.OutgoingLinks.Select(x => x.ToCoreModel(retVal)).ToList();
 
 
             if (dbCategory.AllParents != null)
@@ -41,16 +41,16 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
                 retVal.Level = retVal.Parents.Count();
             }
 
-			//Try to inherit taxType from parent category
-			if(retVal.TaxType == null && retVal.Parents != null)
-			{
-				retVal.TaxType = retVal.Parents.Select(x => x.TaxType).Where(x => x != null).FirstOrDefault();
-			}
+            //Try to inherit taxType from parent category
+            if (retVal.TaxType == null && retVal.Parents != null)
+            {
+                retVal.TaxType = retVal.Parents.Select(x => x.TaxType).Where(x => x != null).FirstOrDefault();
+            }
 
-			if (dbCategory.Images != null)
-			{
-				retVal.Images = dbCategory.Images.OrderBy(x => x.SortOrder).Select(x => x.ToCoreModel()).ToList();
-			}
+            if (dbCategory.Images != null)
+            {
+                retVal.Images = dbCategory.Images.OrderBy(x => x.SortOrder).Select(x => x.ToCoreModel()).ToList();
+            }
 
             if (convertProps)
             {
@@ -97,15 +97,15 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
         /// <returns></returns>
         public static dataModel.Category ToDataModel(this coreModel.Category category, PrimaryKeyResolvingMap pkMap)
         {
-			var retVal = new dataModel.Category();
+            var retVal = new dataModel.Category();
             pkMap.AddPair(category, retVal);
             retVal.InjectFrom(category);
-	
-			retVal.ParentCategoryId = category.ParentId;
-			retVal.EndDate = DateTime.UtcNow.AddYears(100);
-			retVal.StartDate = DateTime.UtcNow;
-			retVal.IsActive = category.IsActive ?? true;
-          
+
+            retVal.ParentCategoryId = category.ParentId;
+            retVal.EndDate = DateTime.UtcNow.AddYears(100);
+            retVal.StartDate = DateTime.UtcNow;
+            retVal.IsActive = category.IsActive ?? true;
+
             if (category.PropertyValues != null)
             {
                 retVal.CategoryPropertyValues = new ObservableCollection<dataModel.PropertyValue>();
@@ -114,16 +114,16 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 
             if (category.Links != null)
             {
-				retVal.OutgoingLinks = new ObservableCollection<dataModel.CategoryRelation>();
-				retVal.OutgoingLinks.AddRange(category.Links.Select(x => x.ToDataModel(category)));
+                retVal.OutgoingLinks = new ObservableCollection<dataModel.CategoryRelation>();
+                retVal.OutgoingLinks.AddRange(category.Links.Select(x => x.ToDataModel(category)));
             }
 
-			#region Images
-			if (category.Images != null)
-			{
-				retVal.Images = new ObservableCollection<dataModel.Image>(category.Images.Select(x=>x.ToDataModel(pkMap)));
-			}
-			#endregion
+            #region Images
+            if (category.Images != null)
+            {
+                retVal.Images = new ObservableCollection<dataModel.Image>(category.Images.Select(x => x.ToDataModel(pkMap)));
+            }
+            #endregion
 
             return retVal;
         }
@@ -138,9 +138,9 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
             if (target == null)
                 throw new ArgumentNullException("target");
 
-			//TODO: temporary solution because partial update replaced not nullable properties in db entity
-			if (source.IsActive != null)
-				target.IsActive = source.IsActive.Value;
+            //TODO: temporary solution because partial update replaced not nullable properties in db entity
+            if (source.IsActive != null)
+                target.IsActive = source.IsActive.Value;
             //Handle three valuable states (null, empty and have value states) for case when need reset catalog or category
             if (source.CatalogId == String.Empty)
                 target.CatalogId = null;
@@ -149,7 +149,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 
 
             var dbSource = source.ToDataModel(pkMap) as dataModel.Category;
-			var dbTarget = target as dataModel.Category;
+            var dbTarget = target as dataModel.Category;
 
             if (dbSource != null && dbTarget != null)
             {
@@ -161,15 +161,15 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
                     dbSource.CategoryPropertyValues.Patch(dbTarget.CategoryPropertyValues, (sourcePropValue, targetPropValue) => sourcePropValue.Patch(targetPropValue));
                 }
 
-				if(!dbSource.OutgoingLinks.IsNullCollection())
-				{
-					dbSource.OutgoingLinks.Patch(dbTarget.OutgoingLinks, new LinkedCategoryComparer(), (sourceLink, targetLink) => sourceLink.Patch(targetLink));
-				}
+                if (!dbSource.OutgoingLinks.IsNullCollection())
+                {
+                    dbSource.OutgoingLinks.Patch(dbTarget.OutgoingLinks, new LinkedCategoryComparer(), (sourceLink, targetLink) => sourceLink.Patch(targetLink));
+                }
 
-				if (!dbSource.Images.IsNullCollection())
-				{
-					dbSource.Images.Patch(dbTarget.Images, (sourceImage, targetImage) => sourceImage.Patch(targetImage));
-				}
+                if (!dbSource.Images.IsNullCollection())
+                {
+                    dbSource.Images.Patch(dbTarget.Images, (sourceImage, targetImage) => sourceImage.Patch(targetImage));
+                }
             }
         }
     }
