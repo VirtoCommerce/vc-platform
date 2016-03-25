@@ -62,7 +62,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
         [HttpGet]
         [ResponseType(typeof(void))]
         [Route("move")]
-        [CheckPermission(Permission = ContentPredefinedPermissions.Create)]
+        [CheckPermission(Permission = ContentPredefinedPermissions.Update)]
         public IHttpActionResult MoveContentItem(string contentType, string storeId, string oldUrl, string newUrl)
         {
             var storageProvider = _contentStorageProviderFactory(contentType, storeId);

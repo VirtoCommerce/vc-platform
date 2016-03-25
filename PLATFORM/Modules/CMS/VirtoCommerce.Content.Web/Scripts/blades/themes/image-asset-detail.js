@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.contentModule')
-.controller('virtoCommerce.contentModule.editImageAssetController', ['$scope', 'platformWebApp.validators', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'virtoCommerce.contentModule.themes', 'FileUploader', function ($scope, validators, dialogService, bladeNavigationService, themes, FileUploader) {
+.controller('virtoCommerce.contentModule.imageAssetDetailController', ['$scope', 'platformWebApp.validators', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'virtoCommerce.contentModule.contentApi', 'FileUploader', function ($scope, validators, dialogService, bladeNavigationService, contentApi, FileUploader) {
     var blade = $scope.blade;
     blade.updatePermission = 'content:update';
 
@@ -8,8 +8,8 @@
     $scope.setForm = function (form) { formScope = form; }
 
     blade.initializeBlade = function () {
-        if (!blade.newAsset) {
-            themes.getAsset({ storeId: blade.chosenStoreId, themeId: blade.chosenThemeId, assetId: blade.chosenAssetId }, function (data) {
+        if (!blade.isNew) {
+            contentApi.get({ contentType: 'themes', storeId: blade.chosenStoreId, themeId: blade.chosenThemeId, assetId: blade.chosenAssetId }, function (data) {
                 blade.isLoading = false;
 
                 data.content = "data:" + data.contentType + ";base64," + data.byteContent;
@@ -96,12 +96,12 @@
         blade.isLoading = true;
         blade.currentEntity.id = blade.chosenFolder + '/' + blade.currentEntity.name;
 
-        themes.updateAsset({ storeId: blade.chosenStoreId, themeId: blade.chosenThemeId }, blade.currentEntity, function () {
+        contentApi.save({ contentType: 'themes', storeId: blade.chosenStoreId, themeId: blade.chosenThemeId }, blade.currentEntity, function () {
             blade.parentBlade.initialize();
             blade.chosenAssetId = blade.currentEntity.id;
             blade.title = blade.currentEntity.id;
             blade.subtitle = 'Edit asset';
-            blade.newAsset = false;
+            blade.isNew = false;
             blade.initializeBlade();
         },
         function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
@@ -120,7 +120,7 @@
                 if (remove) {
                     $scope.blade.isLoading = true;
 
-                    themes.deleteAsset({ storeId: blade.chosenStoreId, themeId: blade.chosenThemeId, assetIds: blade.chosenAssetId }, function () {
+                    contentApi.delete({ contentType: 'themes', storeId: blade.chosenStoreId, themeId: blade.chosenThemeId, assetIds: blade.chosenAssetId }, function () {
                         $scope.bladeClose();
                         $scope.blade.parentBlade.initialize(true);
                     },
@@ -158,7 +158,7 @@
             blade.currentEntity.assetUrl = image[0].url;
             blade.currentEntity.contentType = image[0].mimeType;
 
-            if (blade.newAsset) {
+            if (blade.isNew) {
                 blade.currentEntity.name = image[0].name;
                 blade.currentEntity.id = blade.chosenFolder + '/' + image[0].name;
             }

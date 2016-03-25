@@ -1,6 +1,7 @@
 ﻿<div class="gridster-cnt">
-    <div class="cnt-inner" ng-click="openBlade()">
-        <div class="list-count">{{pagesCount}}</div>
-        <div class="list-t">{{ 'content.widgets.pages.title' | translate }}</div>
+    <div class="cnt-inner" ng-click="blade.openPages(data)">
+        <div class="tile-descr">{{ 'content.blades.content-main.labels.pages' | translate }}</div>
+        <div class="tile-count">{{data.pagesCount}}</div>
+        <a class="btn" ng-click="blade.addNewPage(data); $event.stopPropagation();">{{ 'platform.commands.add' | translate }}</a>
     </div>
 </div>

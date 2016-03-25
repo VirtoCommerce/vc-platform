@@ -1,0 +1,7 @@
+﻿<div class="gridster-cnt">
+    <div class="cnt-inner" ng-click="blade.openLinkLists(data)">
+        <div class="tile-descr">{{ 'content.blades.content-main.labels.link-lists' | translate }}</div>
+        <div class="tile-count">{{data.listLinksCount}}</div>
+        <a class="btn" ng-click="blade.addNewLinkList(data); $event.stopPropagation();">{{ 'platform.commands.add' | translate }}</a>
+    </div>
+</div>

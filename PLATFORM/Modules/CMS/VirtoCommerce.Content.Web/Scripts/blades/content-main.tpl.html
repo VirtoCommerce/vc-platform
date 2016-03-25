@@ -1,11 +1,22 @@
-﻿<div class="blade-content __xlarge-wide">
+﻿<div class="blade-static" ng-if="blade.currentEntities.length">
+    <div class="form-group">
+        <div class="form-input __search">
+            <input placeholder="{{'platform.placeholders.search-keyword' | translate }}" ng-model="blade.searchText">
+            <button class="btn __other" style="position: relative;right: 45px;">
+                <i class="btn-ico fa fa-remove" title="Clear" ng-click="blade.searchText=''"></i>
+            </button>
+        </div>
+        <p class="form-count">{{ 'platform.list.count' | translate }}: <span class="count">{{filteredEntities.length}}</span></p>
+    </div>
+</div>
+<div class="blade-content __xlarge-wide">
     <div class="blade-inner">
         <div class="inner-block">
             <div class="form">
-                <div class="tile-group six" ng-repeat="data in blade.currentEntities | orderBy:'store.name'">
+                <div class="tile-group six" ng-repeat-start="data in (filteredEntities = (blade.currentEntities | filter: {store: {name: blade.searchText}})) | orderBy:'store.name'">
                     <div class="tile double __brand">
-                        <div class="tile-descr">{{data.store.name}}</div>
-                        <div class="tile-image"></div>
+                        <div class="tile-descr" style="line-height:30px">{{data.store.name}}</div>
+                        <div class="tile-image"><img src="Modules/$(VirtoCommerce.Content)/Content/logo.png" /></div>
                     </div>
                     <div class="tile quadro wide mini __informer" ng-if="!data.defaultThemeName" ng-click="blade.openThemes(data.store.id, data.store.name)">
                         <p>{{ 'content.blades.content-main.labels.no-active-theme' | translate }}</p>
@@ -53,6 +64,9 @@
                         <div class="tile-count">{{data.blogsCount}}</div>
                         <a class="btn" ng-click="blade.addBlog(data); $event.stopPropagation();">{{ 'platform.commands.add' | translate }}</a>
                     </div>
+                </div>
+                <div ng-repeat-end class="form-group" ng-if="thereIsWidgetToShow">
+                    <va-widget-container group="contentMainListItem" gridster-opts="{columns: 6}" data="data" blade="blade"></va-widget-container>
                 </div>
             </div>
             <p class="text" ng-if="!blade.currentEntities.length">
