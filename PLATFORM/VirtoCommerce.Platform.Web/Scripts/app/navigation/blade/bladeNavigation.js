@@ -268,6 +268,10 @@ angular.module('platformWebApp')
             blade.isLoading = true;
             blade.parentBlade = parentBlade;
             blade.childrenBlades = [];
+            if (parentBlade) {
+                blade.headIcon = parentBlade.headIcon;
+                blade.updatePermission = parentBlade.updatePermission;
+            }
             //copy securityscopes from parent blade
             if (parentBlade != null && parentBlade.securityScopes) {
                 //need merge scopes

@@ -149,26 +149,26 @@
                         mode: 'htmlmixed'
                         // mode: getEditorMode()
                     };
-                }                
+                }
 
                 var templateName = getTemplateName(scope.currentEntity);
                 //load input template and display
-                $http.get(templateName, { cache: $templateCache }).success(function (tplContent) {
-                    //Need to add ngForm to isolate form validation into sub form
-                    //var innerContainer = "<div id='innerContainer' />";
+                $http.get(templateName, { cache: $templateCache }).then(function (results) {
+			            //Need to add ngForm to isolate form validation into sub form
+			            //var innerContainer = "<div id='innerContainer' />";
 
-                    //We must destroy scope of elements we are removing from DOM to avoid angular firing events
-                    var el = element.find('#valuePlaceHolder #innerContainer');
-                    if (el.length > 0) {
-                        el.scope().$destroy();
-                    }
-                    var container = element.find('#valuePlaceHolder');
-                    var result = container.html(tplContent.trim());
+			            //We must destroy scope of elements we are removing from DOM to avoid angular firing events
+			            var el = element.find('#valuePlaceHolder #innerContainer');
+			            if (el.length > 0) {
+			                el.scope().$destroy();
+			            }
+			            var container = element.find('#valuePlaceHolder');
+			            var result = container.html(results.data.trim());
 
-                    //Create new scope, otherwise we would destroy our directive scope
-                    var newScope = scope.$new();
-                    $compile(result)(newScope);
-                });
+			            //Create new scope, otherwise we would destroy our directive scope
+			            var newScope = scope.$new();
+			            $compile(result)(newScope);
+			        });
             };
 
             /* Datepicker */

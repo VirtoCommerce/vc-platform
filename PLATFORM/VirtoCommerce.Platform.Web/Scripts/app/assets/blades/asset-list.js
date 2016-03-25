@@ -1,8 +1,6 @@
 ﻿angular.module('platformWebApp')
 .controller('platformWebApp.assets.assetListController', ['$scope', 'platformWebApp.assets.api', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', '$sessionStorage', 'uiGridConstants', 'platformWebApp.uiGridHelper',
     function ($scope, assets, bladeNavigationService, dialogService, $storage, uiGridConstants, uiGridHelper) {
-        var preventFolderListingOnce; // prevent from unwanted additional actions after command was activated from context menu
-
         //pagination settings
         $scope.pageSettings = {};
         $scope.pageSettings.totalItems = 0;
@@ -88,9 +86,6 @@
 
         $scope.copyUrl = function (data) {
             window.prompt("Copy to clipboard: Ctrl+C, Enter", data.url);
-            if (data.type === 'folder') {
-                preventFolderListingOnce = true;
-            }
         };
 
         $scope.downloadUrl = function (data) {
@@ -98,9 +93,6 @@
         };
 
         //$scope.rename = function (listItem) {
-        //    if (listItem.type === 'folder') {
-        //        preventFolderListingOnce = true;
-        //    }
         //    rename(listItem);
         //};
 
@@ -117,8 +109,6 @@
 
         $scope.delete = function (data) {
             deleteList([data]);
-
-            preventFolderListingOnce = true;
         };
 
         function deleteList(selection) {
@@ -142,24 +132,20 @@
 
         $scope.selectNode = function (listItem) {
             if (listItem.type === 'folder') {
-                if (preventFolderListingOnce) {
-                    preventFolderListingOnce = false;
-                } else {
-                    var newBlade = {
-                        id: blade.id,
-                        breadcrumbs: blade.breadcrumbs,
-                        currentEntity: listItem,
-                        disableOpenAnimation: true,
-                        controller: blade.controller,
-                        template: blade.template,
-                        isClosingDisabled: blade.isClosingDisabled
-                    };
+                var newBlade = {
+                    id: blade.id,
+                    breadcrumbs: blade.breadcrumbs,
+                    currentEntity: listItem,
+                    disableOpenAnimation: true,
+                    controller: blade.controller,
+                    template: blade.template,
+                    isClosingDisabled: blade.isClosingDisabled
+                };
 
-                    bladeNavigationService.showBlade(newBlade, blade.parentBlade);
-                }
+                bladeNavigationService.showBlade(newBlade, blade.parentBlade);
             }
         };
-
+        
         blade.headIcon = 'fa-folder-o';
 
         blade.toolbarCommands = [

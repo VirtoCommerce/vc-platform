@@ -8,7 +8,7 @@
             subtitle: blade.title,
             controller: 'platformWebApp.assets.assetListController',
             template: '$(Platform)/Scripts/app/assets/blades/asset-list.tpl.html',
-            currentEntity: { url: '/stores/' + blade.currentEntityId },
+            currentEntity: { url: '/stores/' + blade.currentEntityId }
         };
 
         bladeNavigationService.showBlade(newBlade, blade);
