@@ -8,7 +8,7 @@ namespace VirtoCommerce.Storefront.Converters
 {
     public static class MenuLinkConverter
     {
-        public static MenuLinkList ToWebModel(this VirtoCommerceContentWebModelsMenuLinkList serviceModel, IStorefrontUrlBuilder urlBuilder)
+        public static MenuLinkList ToWebModel(this VirtoCommerceContentWebModelsMenuLinkList serviceModel)
         {
             var webModel = new MenuLinkList();
 
@@ -18,13 +18,13 @@ namespace VirtoCommerce.Storefront.Converters
 
             if (serviceModel.MenuLinks != null)
             {
-                webModel.MenuLinks = serviceModel.MenuLinks.Select(ml => ml.ToWebModel(urlBuilder)).ToList();
+                webModel.MenuLinks = serviceModel.MenuLinks.Select(ml => ml.ToWebModel()).ToList();
             }
           
             return webModel;
         }
 
-        public static MenuLink ToWebModel(this VirtoCommerceContentWebModelsMenuLink serviceModel, IStorefrontUrlBuilder urlBuilder)
+        public static MenuLink ToWebModel(this VirtoCommerceContentWebModelsMenuLink serviceModel)
         {
             var webModel = new MenuLink();
 
@@ -41,8 +41,6 @@ namespace VirtoCommerce.Storefront.Converters
             }
 
             webModel.InjectFrom(serviceModel);
-
-            webModel.Url = urlBuilder.ToAppAbsolute("/" + serviceModel.Url);
 
             return webModel;
         }

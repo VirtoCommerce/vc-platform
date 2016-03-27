@@ -176,7 +176,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
         {
             get
             {
-                return SalePrice - DiscountTotal;
+                return SalePrice - SingleItemDiscountTotal;
             }
         }
 
@@ -192,9 +192,9 @@ namespace VirtoCommerce.Storefront.Model.Cart
         }
 
         /// <summary>
-        /// Gets the value of line item total discount amount
+        /// Gets the value of the single line item discount amount
         /// </summary>
-        public Money DiscountTotal
+        public Money SingleItemDiscountTotal
         {
             get
             {
@@ -204,6 +204,16 @@ namespace VirtoCommerce.Storefront.Model.Cart
             }
         }
 
+        /// <summary>
+        /// Gets the value of line item total discount amount
+        /// </summary>
+        public Money DiscountTotal
+        {
+            get
+            {
+                return SingleItemDiscountTotal* Quantity;
+            }
+        }
 
         /// <summary>
         /// Used for dynamic properties management, contains object type string
@@ -216,6 +226,11 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// </summary>
         /// <value>Dynamic properties collections</value>
         public ICollection<DynamicProperty> DynamicProperties { get; set; }
+
+        /// <summary>
+        /// Gets or sets the cart validation type
+        /// </summary>
+        public ValidationType ValidationType { get; set; }
 
         public ICollection<ValidationError> ValidationErrors { get; set; }
 

@@ -23,7 +23,7 @@ storefrontApp.factory('httpErrorInterceptor', ['$q', '$rootScope', function ($q,
     return httpErrorInterceptor;
 }])
 
-storefrontApp.config(['$interpolateProvider', '$routeProvider', '$httpProvider', function ($interpolateProvider, $routeProvider, $httpProvider) {
+storefrontApp.config(['$routeProvider', '$httpProvider', function ($routeProvider, $httpProvider) {
     $httpProvider.interceptors.push('httpErrorInterceptor');
 
     $routeProvider
@@ -36,6 +36,4 @@ storefrontApp.config(['$interpolateProvider', '$routeProvider', '$httpProvider',
         .when('/payment-method', {
             templateUrl: 'storefront.checkout.payment-method.tpl'
         });
-
-    return $interpolateProvider.startSymbol('{(').endSymbol(')}');
 }]);

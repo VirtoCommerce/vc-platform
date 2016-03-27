@@ -1,0 +1,42 @@
+﻿<div class="blade-static __expanded">
+    <div class="form-group">
+        <label class="form-label">{{ 'core.blades.store-list.labels.new-store' | translate }}</label>
+        <div class="form-input">
+            <ui-select ng-model="blade.newStore" ng-change="addNewSeo()">
+                <ui-select-match placeholder="{{ 'core.blades.store-list.placeholders.store' | translate }}">{{$select.selected.name}}</ui-select-match>
+                <ui-select-choices repeat="store in stores | filter: { name: $select.search }">
+                    <span ng-bind-html="store.name | highlight: $select.search"></span>
+                </ui-select-choices>
+            </ui-select>
+        </div>
+    </div>
+</div>
+<div class="blade-content __tree">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <div class="table-wrapper" ng-init="setGridOptions({
+                    rowTemplate: 'list.row.html',
+                    columnDefs: [
+                                { name: 'actions', displayName: '', enableColumnResizing: false, enableSorting: false, width: 30, cellTemplate: 'list-actions.cell.html', pinnedLeft:true },
+                                { name: 'name', displayName: 'core.blades.store-list.labels.name', sort: { direction: uiGridConstants.ASC }}
+                        ]})">
+                <div ui-grid="gridOptions" ui-grid-auto-resize ui-grid-save-state ui-grid-resize-columns ui-grid-move-columns ui-grid-pinning ui-grid-height></div>
+                <ul class="menu __context" role="menu" id="seo_menu">
+                    <li class="menu-item" ng-click='blade.selectNode(contextMenuEntity)'>
+                        <i class="menu-ico fa fa-edit"></i> {{'platform.commands.manage' | translate}}
+                    </li>
+                </ul>
+            </div>
+            <p class="note" ng-if="!blade.currentEntities.length">{{ 'core.blades.store-list.labels.no-stores' | translate }}</p>
+        </div>
+    </div>
+</div>
+
+<script type="text/ng-template" id="list.row.html">
+    <div ng-click="grid.appScope.blade.selectNode(row.entity)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + '-' + col.uid + '-cell'" class="ui-grid-cell" ng-class="{'ui-grid-row-header-cell': col.isRowHeader, '__hovered': grid.appScope.contextMenuEntity === row.entity, '__selected': row.entity.id===grid.appScope.selectedNodeId }" role="{{col.isRowHeader ? 'rowheader' : 'gridcell' }}" ui-grid-cell context-menu="grid.appScope.contextMenuEntity = row.entity" data-target="seo_menu"></div>
+</script>
+<script type="text/ng-template" id="list-actions.cell.html">
+    <div class="ui-grid-actions" left-click-menu="grid.appScope.contextMenuEntity = row.entity" data-target="seo_menu">
+        <i class="fa fa-ellipsis-v"></i>
+    </div>
+</script>

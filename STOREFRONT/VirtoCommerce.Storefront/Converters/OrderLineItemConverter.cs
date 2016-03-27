@@ -19,7 +19,7 @@ namespace VirtoCommerce.Storefront.Converters
             webModel.InjectFrom(lineItem);
 
             webModel.Currency = currency;
-            webModel.DiscountAmount = new Money(lineItem.DiscountAmount ?? 0, currency);
+            webModel.DiscountAmount = new Money((lineItem.DiscountAmount ?? 0) * (lineItem.Quantity ?? 0), currency);
 
             if (lineItem.DynamicProperties != null)
             {

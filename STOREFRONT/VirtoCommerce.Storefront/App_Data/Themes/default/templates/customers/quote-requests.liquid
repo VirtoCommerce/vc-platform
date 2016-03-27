@@ -4,7 +4,7 @@
 <div class="grid">
     <div class="grid-item two-thirds medium-down--one-whole">
         <h4>{{ 'customer.quotes.title' | t }}</h4>
-        {% paginate customer.quote_requests by 2 %}
+        {% paginate customer.quote_requests by 5 %}
         {% if customer.quote_requests.size > 0 %}
             <table class="full">
                 <thead>
@@ -18,7 +18,7 @@
                     {% for quote_request in customer.quote_requests %}
                         <tr>
                             <td>
-                                {% assign quote_request_url = '/quoterequest/#/' | append: quote_request.id %}
+                                {% assign quote_request_url = '/quoterequest/#/' | append: quote_request.number %}
                                 <a href="{{ quote_request_url | absolute_url }}">{{ quote_request.number }}</a>
                             </td>
                             <td>{{ quote_request.created_date | date: format: 'month_day_year' }}</td>

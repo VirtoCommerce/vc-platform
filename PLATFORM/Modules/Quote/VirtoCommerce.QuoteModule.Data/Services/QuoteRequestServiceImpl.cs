@@ -122,10 +122,16 @@ namespace VirtoCommerce.QuoteModule.Data.Services
                 {
                     query = query.Where(x => x.StoreId == criteria.StoreId);
                 }
-                if(criteria.Keyword != null)
+
+                if(criteria.Number != null)
+                {
+                    query = query.Where(x => x.Number == criteria.Number);
+                }
+                else if(criteria.Keyword != null)
                 {
                     query = query.Where(x => x.Number.Contains(criteria.Keyword));
                 }
+
                 if(criteria.Tag != null)
                 {
                     query = query.Where(x => x.Tag == criteria.Tag);

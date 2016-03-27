@@ -13,12 +13,12 @@ namespace VirtoCommerce.CustomerModule.Data.Repositories
         IQueryable<Member> Members { get; }
         IQueryable<Address> Addresses { get; }
         IQueryable<Organization> Organizations { get; }
+        IQueryable<Contact> Contacts { get; }
         IQueryable<Email> Emails { get; }
         IQueryable<Note> Notes { get; }
         IQueryable<Phone> Phones { get; }
         IQueryable<MemberRelation> MemberRelations { get; }
 
-        Contact GetContactById(string id);
-        Organization GetOrganizationById(string id);
+        Member[] GetMembersByIds(string[] ids);
     }
 }

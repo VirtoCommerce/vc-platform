@@ -8,12 +8,10 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
 {
     public class Collections : ItemCollection<Collection>
     {
-        #region Constructors and Destructors
         public Collections(IEnumerable<Collection> collections)
             : base(collections)
         {
         }
-        #endregion
 
         #region Public Methods and Operators
         public override object BeforeMethod(string method)

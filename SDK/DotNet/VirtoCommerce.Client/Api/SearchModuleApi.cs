@@ -282,7 +282,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
     
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling SearchModuleSearch: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling SearchModuleSearch: " + response.ErrorMessage, response.ErrorMessage);
@@ -358,7 +358,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
  
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling SearchModuleSearch: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling SearchModuleSearch: " + response.ErrorMessage, response.ErrorMessage);
@@ -435,7 +435,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
     
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling SearchModuleGetFilterProperties: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling SearchModuleGetFilterProperties: " + response.ErrorMessage, response.ErrorMessage);
@@ -511,7 +511,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
  
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling SearchModuleGetFilterProperties: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling SearchModuleGetFilterProperties: " + response.ErrorMessage, response.ErrorMessage);
@@ -600,7 +600,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
     
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling SearchModuleSetFilterProperties: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling SearchModuleSetFilterProperties: " + response.ErrorMessage, response.ErrorMessage);
@@ -680,7 +680,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
  
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling SearchModuleSetFilterProperties: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling SearchModuleSetFilterProperties: " + response.ErrorMessage, response.ErrorMessage);

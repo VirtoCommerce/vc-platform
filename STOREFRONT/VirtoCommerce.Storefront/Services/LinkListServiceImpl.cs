@@ -33,7 +33,7 @@ namespace VirtoCommerce.Storefront.Services
             var linkLists = await _cmsApi.MenuGetListsAsync(storeId);
             if (linkLists != null)
             {
-                retVal.AddRange(linkLists.Select(x => x.ToWebModel(_urlBuilder)));
+                retVal.AddRange(linkLists.Select(x => x.ToWebModel()));
                 var allMenuLinks = retVal.SelectMany(x => x.MenuLinks);
                 var productLinks = allMenuLinks.OfType<ProductMenuLink>();
                 var categoryLinks = allMenuLinks.OfType<CategoryMenuLink>();

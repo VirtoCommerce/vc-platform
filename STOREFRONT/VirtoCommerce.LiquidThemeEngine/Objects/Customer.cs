@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Common;
+using PagedList;
 
 namespace VirtoCommerce.LiquidThemeEngine.Objects
 {
@@ -92,7 +93,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         /// Returns an array of all addresses associated with a customer.
         /// See customer_address for a full list of available attributes.
         /// </summary>
-        public IStorefrontPagedList<Address> Addresses { get; set; }
+        public IMutablePagedList<Address> Addresses { get; set; }
 
         /// <summary>
         /// Returns the number of addresses associated with a customer.
@@ -114,7 +115,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         /// <summary>
         /// Returns an array of all orders placed by the customer.
         /// </summary>
-        public IStorefrontPagedList<Order> Orders { get; set; }
+        public IMutablePagedList<Order> Orders { get; set; }
 
         /// <summary>
         /// Returns the total number of orders a customer has placed.
@@ -122,7 +123,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         [DataMember]
         public int OrdersCount { get; set; }
 
-        public IStorefrontPagedList<QuoteRequest> QuoteRequests { get; set; }
+        public IMutablePagedList<QuoteRequest> QuoteRequests { get; set; }
 
         /// <summary>
         /// The user ID of an operator who has loggen in on behalf of a customer

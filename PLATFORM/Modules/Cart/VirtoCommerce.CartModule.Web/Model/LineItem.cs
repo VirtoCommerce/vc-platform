@@ -148,6 +148,12 @@ namespace VirtoCommerce.CartModule.Web.Model
         public decimal? Width { get; set; }
 
         /// <summary>
+        /// Represent any line item validation type (noPriceValidate, noQuantityValidate etc) this value can be used in storefront 
+        /// to select appropriate validation strategy
+        /// </summary>
+        public string ValidationType { get; set; }
+
+        /// <summary>
         /// Price id which that was used in the formation of this line item
         /// </summary>
         public string PriceId { get; set; }

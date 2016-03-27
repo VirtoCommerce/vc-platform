@@ -77,9 +77,11 @@
     <Compile Include="Catalog\Aggregation.cs" />
     <Compile Include="Catalog\AggregationItem.cs" />
     <Compile Include="Catalog\Asset.cs" />
+    <Compile Include="Catalog\CatalogProperty.cs" />
     <Compile Include="Catalog\CatalogSearchResponseGroup.cs" />
     <Compile Include="Catalog\CatalogSearchResult.cs" />
     <Compile Include="Catalog\CategoryResponseGroup.cs" />
+    <Compile Include="Catalog\IHasProperties.cs" />
     <Compile Include="Catalog\InventoryStatus.cs" />
     <Compile Include="Catalog\ItemResponseGroup.cs" />
     <Compile Include="Catalog\CatalogSearchCriteria.cs" />
@@ -88,6 +90,11 @@
     <Compile Include="Common\AnonymousComparer.cs" />
     <Compile Include="Common\EntryState.cs" />
     <Compile Include="Common\EnumerableExtension.cs" />
+    <Compile Include="Common\IMutablePagedList.cs" />
+    <Compile Include="Common\MutablePagedList.cs" />
+    <Compile Include="IHasSettings.cs" />
+    <Compile Include="SettingEntry.cs" />
+    <Compile Include="LoginProvider.cs" />
     <Compile Include="Tax\ITaxable.cs" />
     <Compile Include="LinkList\CategoryMenuLink.cs" />
     <Compile Include="Common\Events\EventPublisher.cs" />
@@ -119,12 +126,10 @@
     <Compile Include="Common\CollectionExtensions.cs" />
     <Compile Include="Common\DynamicPropertyExtension.cs" />
     <Compile Include="Common\EventThrottlingExtensions.cs" />
-    <Compile Include="Common\IStorefrontPagedList.cs" />
     <Compile Include="Common\Money\IConvertible.cs" />
     <Compile Include="Marketing\IDiscountable.cs" />
     <Compile Include="Marketing\Services\IPromotionEvaluator.cs" />
     <Compile Include="Common\ValueInjecter\NullableAndEnumValueInjecter.cs" />
-    <Compile Include="Common\StoreFrontPagedList.cs" />
     <Compile Include="ContactForm.cs" />
     <Compile Include="Country.cs" />
     <Compile Include="CountryRegion.cs" />
@@ -177,7 +182,6 @@
     <Compile Include="Security\Register.cs" />
     <Compile Include="ChangePassword.cs" />
     <Compile Include="Security\ResetPassword.cs" />
-    <Compile Include="Catalog\ProductProperty.cs" />
     <Compile Include="SeoInfo.cs" />
     <Compile Include="Catalog\Services\ICatalogSearchService.cs" />
     <Compile Include="Marketing\Services\IMarketingService.cs" />
@@ -196,6 +200,7 @@
     <Compile Include="Cart\ShoppingCart.cs" />
     <Compile Include="Store\Store.cs" />
     <Compile Include="Tax\TaxDetail.cs" />
+    <Compile Include="ValidationType.cs" />
     <Compile Include="WorkContext.cs" />
   </ItemGroup>
   <ItemGroup>

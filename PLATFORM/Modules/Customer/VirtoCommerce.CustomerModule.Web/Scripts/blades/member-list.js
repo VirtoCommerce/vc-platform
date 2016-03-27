@@ -11,7 +11,7 @@
             blade.isLoading = true;
             members.search(
             {
-                organizationId: blade.currentEntity.id,
+                memberId: blade.currentEntity.id,
                 keyword: filter.keyword ? filter.keyword : undefined,
                 sort: uiGridHelper.getSortExpression($scope),
                 skip: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
@@ -37,7 +37,7 @@
 
                 //prevent duplicate items
                 if (_.all(breadcrumbs, function (x) { return x.id !== blade.currentEntity.id; })) {
-                    var breadCrumb = generateBreadcrumb(blade.currentEntity.id, blade.currentEntity.displayName);
+                    var breadCrumb = generateBreadcrumb(blade.currentEntity.id, blade.currentEntity.name);
                     breadcrumbs.push(breadCrumb);
                 }
                 blade.breadcrumbs = breadcrumbs;
@@ -154,7 +154,7 @@
                     id: 'memberList',
                     breadcrumbs: blade.breadcrumbs,
                     subtitle: 'customer.blades.member-list.subtitle',
-                    subtitleValues: { name: listItem.displayName },
+                    subtitleValues: { name: listItem.name },
                     currentEntity: listItem,
                     disableOpenAnimation: true,
                     controller: blade.controller,
@@ -163,7 +163,7 @@
                 };
                 bladeNavigationService.showBlade(newBlade, blade.parentBlade);
             } else {
-                blade.showDetailBlade(listItem, listItem.displayName);
+                blade.showDetailBlade(listItem, listItem.name);
             }
         };
 

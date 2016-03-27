@@ -271,5 +271,7 @@ namespace VirtoCommerce.Client.Client
 
             return report;
         }
+
+        public bool ThrowExceptionWhenStatusCodeIs404 { get; set; }
     }
 }

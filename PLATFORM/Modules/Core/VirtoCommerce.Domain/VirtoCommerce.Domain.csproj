@@ -83,6 +83,7 @@
     <Compile Include="Catalog\Model\Search\Aggregation.cs" />
     <Compile Include="Catalog\Model\Search\AggregationItem.cs" />
     <Compile Include="Catalog\Model\PropertyDisplayName.cs" />
+    <Compile Include="Catalog\Model\Search\AggregationLabel.cs" />
     <Compile Include="Commerce\Model\Address.cs" />
     <Compile Include="Commerce\Model\AddressType.cs" />
     <Compile Include="Commerce\Model\Currency.cs" />
@@ -121,14 +122,13 @@
     <Compile Include="Common\Expressions\IDynamicExpression.cs" />
     <Compile Include="Common\IEvaluationContext.cs" />
     <Compile Include="Customer\Model\Contact.cs" />
+    <Compile Include="Customer\Model\Member.cs" />
     <Compile Include="Customer\Model\Note.cs" />
     <Compile Include="Customer\Model\Organization.cs" />
     <Compile Include="Customer\Model\PropertyValueType.cs" />
     <Compile Include="Customer\Model\Search\SearchCriteria.cs" />
     <Compile Include="Customer\Model\Search\SearchResult.cs" />
-    <Compile Include="Customer\Services\ICustomerSearchService.cs" />
-    <Compile Include="Customer\Services\IContactService.cs" />
-    <Compile Include="Customer\Services\IOrganizationService.cs" />
+    <Compile Include="Customer\Services\IMemberService.cs" />
     <Compile Include="Commerce\Model\FulfillmentCenter.cs" />
     <Compile Include="Commerce\Services\ICommerceService.cs" />
     <Compile Include="Inventory\Model\InventoryInfo.cs" />
@@ -234,6 +234,7 @@
     <Compile Include="Quote\Services\IQuoteRequestService.cs" />
     <Compile Include="Quote\Services\IQuoteTotalsCalculator.cs" />
     <Compile Include="Search\Filters\AttributeFilter.cs" />
+    <Compile Include="Search\Filters\FilterDisplayName.cs" />
     <Compile Include="Search\Filters\Filters.cs">
       <DependentUpon>Filters.xsd</DependentUpon>
     </Compile>
@@ -247,6 +248,7 @@
     <Compile Include="Search\Model\DocumentField.cs" />
     <Compile Include="Search\Model\Facet.cs" />
     <Compile Include="Search\Model\FacetGroup.cs" />
+    <Compile Include="Search\Model\FacetLabel.cs" />
     <Compile Include="Search\Model\IDocument.cs" />
     <Compile Include="Search\Model\IDocumentField.cs" />
     <Compile Include="Search\Model\IDocuments.cs" />

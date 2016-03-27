@@ -29,13 +29,6 @@ namespace VirtoCommerce.Client.Model
 
         
         /// <summary>
-        /// Gets or Sets Id
-        /// </summary>
-        [DataMember(Name="id", EmitDefaultValue=false)]
-        public string Id { get; set; }
-  
-        
-        /// <summary>
         /// Gets or sets the manufacturer part number for this product.
         /// </summary>
         /// <value>Gets or sets the manufacturer part number for this product.</value>
@@ -339,14 +332,6 @@ namespace VirtoCommerce.Client.Model
   
         
         /// <summary>
-        /// Gets or sets the list of SEO information records.
-        /// </summary>
-        /// <value>Gets or sets the list of SEO information records.</value>
-        [DataMember(Name="seoInfos", EmitDefaultValue=false)]
-        public List<VirtoCommerceDomainCommerceModelSeoInfo> SeoInfos { get; set; }
-  
-        
-        /// <summary>
         /// Gets or sets the reviews.
         /// </summary>
         /// <value>Gets or sets the reviews.</value>
@@ -369,6 +354,49 @@ namespace VirtoCommerce.Client.Model
         public List<string> SecurityScopes { get; set; }
   
         
+        /// <summary>
+        /// Gets or sets the list of SEO information records.
+        /// </summary>
+        /// <value>Gets or sets the list of SEO information records.</value>
+        [DataMember(Name="seoInfos", EmitDefaultValue=false)]
+        public List<VirtoCommerceDomainCommerceModelSeoInfo> SeoInfos { get; set; }
+  
+        
+        /// <summary>
+        /// Gets or Sets CreatedDate
+        /// </summary>
+        [DataMember(Name="createdDate", EmitDefaultValue=false)]
+        public DateTime? CreatedDate { get; set; }
+  
+        
+        /// <summary>
+        /// Gets or Sets ModifiedDate
+        /// </summary>
+        [DataMember(Name="modifiedDate", EmitDefaultValue=false)]
+        public DateTime? ModifiedDate { get; set; }
+  
+        
+        /// <summary>
+        /// Gets or Sets CreatedBy
+        /// </summary>
+        [DataMember(Name="createdBy", EmitDefaultValue=false)]
+        public string CreatedBy { get; set; }
+  
+        
+        /// <summary>
+        /// Gets or Sets ModifiedBy
+        /// </summary>
+        [DataMember(Name="modifiedBy", EmitDefaultValue=false)]
+        public string ModifiedBy { get; set; }
+  
+        
+        /// <summary>
+        /// Gets or Sets Id
+        /// </summary>
+        [DataMember(Name="id", EmitDefaultValue=false)]
+        public string Id { get; set; }
+  
+        
   
         /// <summary>
         /// Returns the string presentation of the object
@@ -378,7 +406,6 @@ namespace VirtoCommerce.Client.Model
         {
             var sb = new StringBuilder();
             sb.Append("class VirtoCommerceCatalogModuleWebModelProduct {\n");
-            sb.Append("  Id: ").Append(Id).Append("\n");
             sb.Append("  ManufacturerPartNumber: ").Append(ManufacturerPartNumber).Append("\n");
             sb.Append("  Gtin: ").Append(Gtin).Append("\n");
             sb.Append("  Code: ").Append(Code).Append("\n");
@@ -417,10 +444,15 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Assets: ").Append(Assets).Append("\n");
             sb.Append("  Variations: ").Append(Variations).Append("\n");
             sb.Append("  Links: ").Append(Links).Append("\n");
-            sb.Append("  SeoInfos: ").Append(SeoInfos).Append("\n");
             sb.Append("  Reviews: ").Append(Reviews).Append("\n");
             sb.Append("  Associations: ").Append(Associations).Append("\n");
             sb.Append("  SecurityScopes: ").Append(SecurityScopes).Append("\n");
+            sb.Append("  SeoInfos: ").Append(SeoInfos).Append("\n");
+            sb.Append("  CreatedDate: ").Append(CreatedDate).Append("\n");
+            sb.Append("  ModifiedDate: ").Append(ModifiedDate).Append("\n");
+            sb.Append("  CreatedBy: ").Append(CreatedBy).Append("\n");
+            sb.Append("  ModifiedBy: ").Append(ModifiedBy).Append("\n");
+            sb.Append("  Id: ").Append(Id).Append("\n");
             
             sb.Append("}\n");
             return sb.ToString();
@@ -458,11 +490,6 @@ namespace VirtoCommerce.Client.Model
                 return false;
 
             return 
-                (
-                    this.Id == other.Id ||
-                    this.Id != null &&
-                    this.Id.Equals(other.Id)
-                ) && 
                 (
                     this.ManufacturerPartNumber == other.ManufacturerPartNumber ||
                     this.ManufacturerPartNumber != null &&
@@ -654,11 +681,6 @@ namespace VirtoCommerce.Client.Model
                     this.Links.SequenceEqual(other.Links)
                 ) && 
                 (
-                    this.SeoInfos == other.SeoInfos ||
-                    this.SeoInfos != null &&
-                    this.SeoInfos.SequenceEqual(other.SeoInfos)
-                ) && 
-                (
                     this.Reviews == other.Reviews ||
                     this.Reviews != null &&
                     this.Reviews.SequenceEqual(other.Reviews)
@@ -672,6 +694,36 @@ namespace VirtoCommerce.Client.Model
                     this.SecurityScopes == other.SecurityScopes ||
                     this.SecurityScopes != null &&
                     this.SecurityScopes.SequenceEqual(other.SecurityScopes)
+                ) && 
+                (
+                    this.SeoInfos == other.SeoInfos ||
+                    this.SeoInfos != null &&
+                    this.SeoInfos.SequenceEqual(other.SeoInfos)
+                ) && 
+                (
+                    this.CreatedDate == other.CreatedDate ||
+                    this.CreatedDate != null &&
+                    this.CreatedDate.Equals(other.CreatedDate)
+                ) && 
+                (
+                    this.ModifiedDate == other.ModifiedDate ||
+                    this.ModifiedDate != null &&
+                    this.ModifiedDate.Equals(other.ModifiedDate)
+                ) && 
+                (
+                    this.CreatedBy == other.CreatedBy ||
+                    this.CreatedBy != null &&
+                    this.CreatedBy.Equals(other.CreatedBy)
+                ) && 
+                (
+                    this.ModifiedBy == other.ModifiedBy ||
+                    this.ModifiedBy != null &&
+                    this.ModifiedBy.Equals(other.ModifiedBy)
+                ) && 
+                (
+                    this.Id == other.Id ||
+                    this.Id != null &&
+                    this.Id.Equals(other.Id)
                 );
         }
 
@@ -686,9 +738,6 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
-                if (this.Id != null)
-                    hash = hash * 59 + this.Id.GetHashCode();
                 
                 if (this.ManufacturerPartNumber != null)
                     hash = hash * 59 + this.ManufacturerPartNumber.GetHashCode();
@@ -804,9 +853,6 @@ namespace VirtoCommerce.Client.Model
                 if (this.Links != null)
                     hash = hash * 59 + this.Links.GetHashCode();
                 
-                if (this.SeoInfos != null)
-                    hash = hash * 59 + this.SeoInfos.GetHashCode();
-                
                 if (this.Reviews != null)
                     hash = hash * 59 + this.Reviews.GetHashCode();
                 
@@ -815,6 +861,24 @@ namespace VirtoCommerce.Client.Model
                 
                 if (this.SecurityScopes != null)
                     hash = hash * 59 + this.SecurityScopes.GetHashCode();
+                
+                if (this.SeoInfos != null)
+                    hash = hash * 59 + this.SeoInfos.GetHashCode();
+                
+                if (this.CreatedDate != null)
+                    hash = hash * 59 + this.CreatedDate.GetHashCode();
+                
+                if (this.ModifiedDate != null)
+                    hash = hash * 59 + this.ModifiedDate.GetHashCode();
+                
+                if (this.CreatedBy != null)
+                    hash = hash * 59 + this.CreatedBy.GetHashCode();
+                
+                if (this.ModifiedBy != null)
+                    hash = hash * 59 + this.ModifiedBy.GetHashCode();
+                
+                if (this.Id != null)
+                    hash = hash * 59 + this.Id.GetHashCode();
                 
                 return hash;
             }

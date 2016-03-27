@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using Lucene.Net.Index;
 using Lucene.Net.Search;
@@ -8,12 +7,12 @@ using Lucene.Net.Util;
 using SpellChecker.Net.Search.Spell;
 using VirtoCommerce.Domain.Search.Filters;
 using VirtoCommerce.Domain.Search.Model;
+using VirtoCommerce.SearchModule.Data.Services;
 
 namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
 {
     public class LuceneSearchResults
     {
-
         /// <summary>
         ///     Initializes a new instance of the <see cref="SearchResults" /> class.
         /// </summary>
@@ -22,8 +21,7 @@ namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
         /// <param name="docs">The hits.</param>
         /// <param name="criteria">The criteria.</param>
         /// <param name="query">The query.</param>
-        public LuceneSearchResults(
-            Searcher searcher, IndexReader reader, TopDocs docs, ISearchCriteria criteria, Query query)
+        public LuceneSearchResults(Searcher searcher, IndexReader reader, TopDocs docs, ISearchCriteria criteria, Query query)
         {
             Results = new SearchResults(criteria, null);
             CreateDocuments(searcher, docs);
@@ -31,8 +29,6 @@ namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
             CreateSuggestions(reader, criteria);
         }
 
-
-        #region Public Properties
         /// <summary>
         ///     Gets or sets the results.
         /// </summary>
@@ -40,150 +36,7 @@ namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
         ///     The results.
         /// </value>
         public SearchResults Results { get; set; }
-        #endregion
 
-        #region Methods
-
-        /// <summary>
-        ///     Gets the description.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="locale">The locale.</param>
-        /// <returns></returns>
-        private string GetDescription(ISearchFilterValue value, string locale)
-        {
-            if (value is AttributeFilterValue)
-            {
-                var v = value as AttributeFilterValue;
-                return v.Value;
-            }
-            if (value is RangeFilterValue)
-            {
-                var v = value as RangeFilterValue;
-                if (v.Displays != null)
-                {
-                    var returnVal = from d in v.Displays
-                                    where d.Language.Equals(locale, StringComparison.OrdinalIgnoreCase)
-                                    select d.Value;
-
-                    if (!returnVal.Any())
-                    {
-                        try
-                        {
-                            var localeShort = new CultureInfo(locale).TwoLetterISOLanguageName;
-                            returnVal = v.Displays.Where(d => d.Language.Equals(localeShort, StringComparison.OrdinalIgnoreCase)).Select(d => d.Value);
-                        }
-                        catch
-                        {
-                        }
-                    }
-
-                    if (returnVal.Any())
-                        return returnVal.SingleOrDefault();
-                }
-                return v.Id;
-            }
-            if (value is CategoryFilterValue)
-            {
-                var v = value as CategoryFilterValue;
-                return v.Name;
-            }
-
-            return string.Empty;
-        }
-
-        /// <summary>
-        ///     Calculates number of facets found in the filter doc set.
-        /// </summary>
-        /// <param name="baseBitSet">The base bit set.</param>
-        /// <param name="filterDocSet">The filter bit set.</param>
-        /// <returns></returns>
-        private long CalculateFacetCount(DocIdSet baseBitSet, DocIdSet filterDocSet)
-        {
-            var baseDISI = new OpenBitSetDISI(baseBitSet.Iterator(), 25000);
-            var filterIterator = filterDocSet.Iterator();
-            baseDISI.InPlaceAnd(filterIterator);
-            var total = baseDISI.Cardinality();
-            return total;
-        }
-
-        /// <summary>
-        /// Calculates the result count.
-        /// </summary>
-        /// <param name="reader">The reader.</param>
-        /// <param name="baseDocIdSet">The base doc id set.</param>
-        /// <param name="facetGroup">The facet group.</param>
-        /// <param name="filter">The filter.</param>
-        /// <param name="criteria">The criteria.</param>
-        /// <returns></returns>
-        private int CalculateResultCount(IndexReader reader, DocIdSet baseDocIdSet, FacetGroup facetGroup, ISearchFilter filter, ISearchCriteria criteria)
-        {
-            var count = 0;
-
-            var values = LuceneQueryHelper.GetFilterValues(filter);
-
-            if (values == null)
-            {
-                return 0;
-            }
-
-            BooleanFilter ffilter = null;
-            foreach (var f in criteria.CurrentFilters)
-            {
-                if (!f.Key.Equals(facetGroup.FieldName))
-                {
-                    if (ffilter == null)
-                        ffilter = new BooleanFilter();
-
-                    var q = LuceneQueryHelper.CreateQuery(criteria, f, Occur.SHOULD);
-                    ffilter.Add(new FilterClause(q, Occur.MUST));
-                }
-            }
-
-            foreach (var value in values)
-            {
-                var queryFilter = new BooleanFilter();
-
-                var valueFilter = LuceneQueryHelper.CreateQueryForValue(Results.SearchCriteria, filter, value);
-
-                if (valueFilter == null)
-                    continue;
-
-                queryFilter.Add(new FilterClause(valueFilter, Occur.MUST));
-                if (ffilter != null)
-                    queryFilter.Add(new FilterClause(ffilter, Occur.MUST));
-
-                var filterArray = queryFilter.GetDocIdSet(reader);
-                var newCount = (int)CalculateFacetCount(baseDocIdSet, filterArray);
-                if (newCount == 0)
-                    continue;
-
-                var newFacet = new Facet(facetGroup, value.Id, GetDescription(value, Results.SearchCriteria.Locale), newCount);
-                facetGroup.Facets.Add(newFacet);
-                count += newCount;
-            }
-
-            return count;
-        }
-
-        /// <summary>
-        /// Gets the similar words.
-        /// </summary>
-        /// <param name="reader">The reader.</param>
-        /// <param name="fieldName">Name of the field.</param>
-        /// <param name="word">The word.</param>
-        /// <returns></returns>
-        private string[] SuggestSimilar(IndexReader reader, string fieldName, string word)
-        {
-            var spell = new SpellChecker.Net.Search.Spell.SpellChecker(reader.Directory());
-            spell.IndexDictionary(new LuceneDictionary(reader, fieldName));
-            var similarWords = spell.SuggestSimilar(word, 2);
-
-            // now make sure to close the spell checker
-            spell.Close();
-
-            return similarWords;
-        }
 
         /// <summary>
         /// Creates result document collection from Lucene documents.
@@ -232,7 +85,7 @@ namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
             var searchDocuments = new ResultDocumentSet
             {
                 Name = "Items",
-                Documents = entries.ToArray(),
+                Documents = entries.OfType<IDocument>().ToArray(),
                 TotalCount = totalCount
             };
 
@@ -290,8 +143,6 @@ namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
             {
                 foreach (var filter in Results.SearchCriteria.Filters)
                 {
-                    var group = new FacetGroup(filter.Key);
-                    var groupCount = 0;
 
                     if (!string.IsNullOrEmpty(Results.SearchCriteria.Currency) && filter is PriceRangeFilter)
                     {
@@ -302,17 +153,80 @@ namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
                         }
                     }
 
-                    groupCount += CalculateResultCount(reader, baseDocIdSet, group, filter, Results.SearchCriteria);
-
-                    // Add only if items exist under
-                    if (groupCount > 0)
+                    var facetGroup = CalculateResultCount(reader, baseDocIdSet, filter, Results.SearchCriteria);
+                    if (facetGroup != null)
                     {
-                        groups.Add(group);
+                        groups.Add(facetGroup);
                     }
                 }
             }
 
             Results.FacetGroups = groups.ToArray();
+        }
+
+        private FacetGroup CalculateResultCount(IndexReader reader, DocIdSet baseDocIdSet, ISearchFilter filter, ISearchCriteria criteria)
+        {
+            FacetGroup result = null;
+
+            var values = filter.GetValues();
+            if (values != null)
+            {
+                BooleanFilter ffilter = null;
+                foreach (var f in criteria.CurrentFilters)
+                {
+                    if (!f.Key.Equals(filter.Key))
+                    {
+                        if (ffilter == null)
+                            ffilter = new BooleanFilter();
+
+                        var q = LuceneQueryHelper.CreateQuery(criteria, f, Occur.SHOULD);
+                        ffilter.Add(new FilterClause(q, Occur.MUST));
+                    }
+                }
+
+                var groupLabels = filter.GetLabels();
+                var facetGroup = new FacetGroup(filter.Key, groupLabels);
+
+                foreach (var group in values.GroupBy(v => v.Id))
+                {
+                    var value = group.FirstOrDefault();
+                    var valueFilter = LuceneQueryHelper.CreateQueryForValue(Results.SearchCriteria, filter, value);
+
+                    if (valueFilter != null)
+                    {
+                        var queryFilter = new BooleanFilter();
+                        queryFilter.Add(new FilterClause(valueFilter, Occur.MUST));
+                        if (ffilter != null)
+                            queryFilter.Add(new FilterClause(ffilter, Occur.MUST));
+
+                        var filterArray = queryFilter.GetDocIdSet(reader);
+                        var newCount = (int)CalculateFacetCount(baseDocIdSet, filterArray);
+
+                        if (newCount > 0)
+                        {
+                            var valueLabels = group.GetValueLabels();
+                            var newFacet = new Facet(facetGroup, group.Key, newCount, valueLabels);
+                            facetGroup.Facets.Add(newFacet);
+                        }
+                    }
+                }
+
+                if (facetGroup.Facets.Any())
+                {
+                    result = facetGroup;
+                }
+            }
+
+            return result;
+        }
+
+        private static long CalculateFacetCount(DocIdSet baseBitSet, DocIdSet filterDocSet)
+        {
+            var baseDisi = new OpenBitSetDISI(baseBitSet.Iterator(), 25000);
+            var filterIterator = filterDocSet.Iterator();
+            baseDisi.InPlaceAnd(filterIterator);
+            var total = baseDisi.Cardinality();
+            return total;
         }
 
         /// <summary>
@@ -322,9 +236,10 @@ namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
         /// <param name="criteria">The criteria.</param>
         private void CreateSuggestions(IndexReader reader, ISearchCriteria criteria)
         {
-            if (criteria is KeywordSearchCriteria)
+            var keywordSearchCriteria = criteria as KeywordSearchCriteria;
+            if (keywordSearchCriteria != null)
             {
-                var c = criteria as KeywordSearchCriteria;
+                var c = keywordSearchCriteria;
                 var phrase = c.SearchPhrase;
                 if (!string.IsNullOrEmpty(phrase))
                 {
@@ -333,6 +248,23 @@ namespace VirtoCommerce.SearchModule.Data.Providers.Lucene
             }
         }
 
-        #endregion
+        /// <summary>
+        /// Gets the similar words.
+        /// </summary>
+        /// <param name="reader">The reader.</param>
+        /// <param name="fieldName">Name of the field.</param>
+        /// <param name="word">The word.</param>
+        /// <returns></returns>
+        private static string[] SuggestSimilar(IndexReader reader, string fieldName, string word)
+        {
+            var spell = new SpellChecker.Net.Search.Spell.SpellChecker(reader.Directory());
+            spell.IndexDictionary(new LuceneDictionary(reader, fieldName));
+            var similarWords = spell.SuggestSimilar(word, 2);
+
+            // now make sure to close the spell checker
+            spell.Close();
+
+            return similarWords;
+        }
     }
 }

@@ -678,6 +678,50 @@ namespace VirtoCommerce.Client.Api
         System.Threading.Tasks.Task<ApiResponse<VirtoCommerceCoreModuleWebModelSignInResult>> StorefrontSecurityPasswordSignInAsyncWithHttpInfo (string userName, string password);
         
         /// <summary>
+        /// Find all SEO records for object by slug in specified store
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="slug">slug</param>
+        /// <param name="storeId">storeId</param>
+        /// <returns>List&lt;VirtoCommerceDomainCommerceModelSeoInfo&gt;</returns>
+        List<VirtoCommerceDomainCommerceModelSeoInfo> CommerceGetSeoInfoBySlugInStore (string slug, string storeId);
+  
+        /// <summary>
+        /// Find all SEO records for object by slug in specified store
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="slug">slug</param>
+        /// <param name="storeId">storeId</param>
+        /// <returns>ApiResponse of List&lt;VirtoCommerceDomainCommerceModelSeoInfo&gt;</returns>
+        ApiResponse<List<VirtoCommerceDomainCommerceModelSeoInfo>> CommerceGetSeoInfoBySlugInStoreWithHttpInfo (string slug, string storeId);
+
+        /// <summary>
+        /// Find all SEO records for object by slug in specified store
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="slug">slug</param>
+        /// <param name="storeId">storeId</param>
+        /// <returns>Task of List&lt;VirtoCommerceDomainCommerceModelSeoInfo&gt;</returns>
+        System.Threading.Tasks.Task<List<VirtoCommerceDomainCommerceModelSeoInfo>> CommerceGetSeoInfoBySlugInStoreAsync (string slug, string storeId);
+
+        /// <summary>
+        /// Find all SEO records for object by slug in specified store
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <param name="slug">slug</param>
+        /// <param name="storeId">storeId</param>
+        /// <returns>Task of ApiResponse (List&lt;VirtoCommerceDomainCommerceModelSeoInfo&gt;)</returns>
+        System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceDomainCommerceModelSeoInfo>>> CommerceGetSeoInfoBySlugInStoreAsyncWithHttpInfo (string slug, string storeId);
+        
+        /// <summary>
         /// Evaluate and return all tax rates for specified store and evaluation context
         /// </summary>
         /// <remarks>
@@ -849,7 +893,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
     
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CommerceGetAllCurrencies: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CommerceGetAllCurrencies: " + response.ErrorMessage, response.ErrorMessage);
@@ -920,7 +964,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
  
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CommerceGetAllCurrencies: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CommerceGetAllCurrencies: " + response.ErrorMessage, response.ErrorMessage);
@@ -1002,7 +1046,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
     
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CommerceUpdateCurrency: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CommerceUpdateCurrency: " + response.ErrorMessage, response.ErrorMessage);
@@ -1077,7 +1121,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
  
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CommerceUpdateCurrency: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CommerceUpdateCurrency: " + response.ErrorMessage, response.ErrorMessage);
@@ -1159,7 +1203,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
     
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CommerceCreateCurrency: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CommerceCreateCurrency: " + response.ErrorMessage, response.ErrorMessage);
@@ -1234,7 +1278,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
  
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CommerceCreateCurrency: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CommerceCreateCurrency: " + response.ErrorMessage, response.ErrorMessage);
@@ -1310,7 +1354,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
     
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CommerceDeleteCurrencies: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CommerceDeleteCurrencies: " + response.ErrorMessage, response.ErrorMessage);
@@ -1385,7 +1429,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
  
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CommerceDeleteCurrencies: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CommerceDeleteCurrencies: " + response.ErrorMessage, response.ErrorMessage);
@@ -1455,7 +1499,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
     
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CommerceGetFulfillmentCenters: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CommerceGetFulfillmentCenters: " + response.ErrorMessage, response.ErrorMessage);
@@ -1526,7 +1570,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
  
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CommerceGetFulfillmentCenters: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CommerceGetFulfillmentCenters: " + response.ErrorMessage, response.ErrorMessage);
@@ -1609,7 +1653,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
     
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CommerceUpdateFulfillmentCenter: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CommerceUpdateFulfillmentCenter: " + response.ErrorMessage, response.ErrorMessage);
@@ -1685,7 +1729,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
  
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CommerceUpdateFulfillmentCenter: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CommerceUpdateFulfillmentCenter: " + response.ErrorMessage, response.ErrorMessage);
@@ -1762,7 +1806,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
     
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CommerceGetFulfillmentCenter: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CommerceGetFulfillmentCenter: " + response.ErrorMessage, response.ErrorMessage);
@@ -1838,7 +1882,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
  
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CommerceGetFulfillmentCenter: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CommerceGetFulfillmentCenter: " + response.ErrorMessage, response.ErrorMessage);
@@ -1921,7 +1965,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
     
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CommercePostProcessPayment: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CommercePostProcessPayment: " + response.ErrorMessage, response.ErrorMessage);
@@ -1997,7 +2041,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
  
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CommercePostProcessPayment: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CommercePostProcessPayment: " + response.ErrorMessage, response.ErrorMessage);
@@ -2074,7 +2118,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
     
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CommerceGetSeoInfoBySlug: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CommerceGetSeoInfoBySlug: " + response.ErrorMessage, response.ErrorMessage);
@@ -2150,7 +2194,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
  
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CommerceGetSeoInfoBySlug: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CommerceGetSeoInfoBySlug: " + response.ErrorMessage, response.ErrorMessage);
@@ -2233,7 +2277,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
     
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling StorefrontSecurityCreate: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling StorefrontSecurityCreate: " + response.ErrorMessage, response.ErrorMessage);
@@ -2309,7 +2353,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
  
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling StorefrontSecurityCreate: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling StorefrontSecurityCreate: " + response.ErrorMessage, response.ErrorMessage);
@@ -2393,7 +2437,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
     
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling StorefrontSecurityGetUserByLogin: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling StorefrontSecurityGetUserByLogin: " + response.ErrorMessage, response.ErrorMessage);
@@ -2474,7 +2518,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
  
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling StorefrontSecurityGetUserByLogin: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling StorefrontSecurityGetUserByLogin: " + response.ErrorMessage, response.ErrorMessage);
@@ -2551,7 +2595,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
     
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling StorefrontSecurityGetUserById: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling StorefrontSecurityGetUserById: " + response.ErrorMessage, response.ErrorMessage);
@@ -2627,7 +2671,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
  
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling StorefrontSecurityGetUserById: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling StorefrontSecurityGetUserById: " + response.ErrorMessage, response.ErrorMessage);
@@ -2704,7 +2748,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
     
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling StorefrontSecurityGetUserByName: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling StorefrontSecurityGetUserByName: " + response.ErrorMessage, response.ErrorMessage);
@@ -2780,7 +2824,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
  
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling StorefrontSecurityGetUserByName: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling StorefrontSecurityGetUserByName: " + response.ErrorMessage, response.ErrorMessage);
@@ -2871,7 +2915,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
     
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling StorefrontSecurityResetPassword: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling StorefrontSecurityResetPassword: " + response.ErrorMessage, response.ErrorMessage);
@@ -2957,7 +3001,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
  
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling StorefrontSecurityResetPassword: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling StorefrontSecurityResetPassword: " + response.ErrorMessage, response.ErrorMessage);
@@ -3054,7 +3098,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
     
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling StorefrontSecurityGenerateResetPasswordToken: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling StorefrontSecurityGenerateResetPasswordToken: " + response.ErrorMessage, response.ErrorMessage);
@@ -3144,7 +3188,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
  
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling StorefrontSecurityGenerateResetPasswordToken: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling StorefrontSecurityGenerateResetPasswordToken: " + response.ErrorMessage, response.ErrorMessage);
@@ -3228,7 +3272,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
     
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling StorefrontSecurityPasswordSignIn: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling StorefrontSecurityPasswordSignIn: " + response.ErrorMessage, response.ErrorMessage);
@@ -3309,7 +3353,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
  
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling StorefrontSecurityPasswordSignIn: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling StorefrontSecurityPasswordSignIn: " + response.ErrorMessage, response.ErrorMessage);
@@ -3317,6 +3361,171 @@ namespace VirtoCommerce.Client.Api
             return new ApiResponse<VirtoCommerceCoreModuleWebModelSignInResult>(statusCode,
                 response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 (VirtoCommerceCoreModuleWebModelSignInResult) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceCoreModuleWebModelSignInResult)));
+            
+        }
+        
+        /// <summary>
+        /// Find all SEO records for object by slug in specified store 
+        /// </summary>
+        /// <param name="slug">slug</param> 
+        /// <param name="storeId">storeId</param> 
+        /// <returns>List&lt;VirtoCommerceDomainCommerceModelSeoInfo&gt;</returns>
+        public List<VirtoCommerceDomainCommerceModelSeoInfo> CommerceGetSeoInfoBySlugInStore (string slug, string storeId)
+        {
+             ApiResponse<List<VirtoCommerceDomainCommerceModelSeoInfo>> response = CommerceGetSeoInfoBySlugInStoreWithHttpInfo(slug, storeId);
+             return response.Data;
+        }
+
+        /// <summary>
+        /// Find all SEO records for object by slug in specified store 
+        /// </summary>
+        /// <param name="slug">slug</param> 
+        /// <param name="storeId">storeId</param> 
+        /// <returns>ApiResponse of List&lt;VirtoCommerceDomainCommerceModelSeoInfo&gt;</returns>
+        public ApiResponse< List<VirtoCommerceDomainCommerceModelSeoInfo> > CommerceGetSeoInfoBySlugInStoreWithHttpInfo (string slug, string storeId)
+        {
+            
+            // verify the required parameter 'slug' is set
+            if (slug == null)
+                throw new ApiException(400, "Missing required parameter 'slug' when calling CommerceCoreModuleApi->CommerceGetSeoInfoBySlugInStore");
+            
+            // verify the required parameter 'storeId' is set
+            if (storeId == null)
+                throw new ApiException(400, "Missing required parameter 'storeId' when calling CommerceCoreModuleApi->CommerceGetSeoInfoBySlugInStore");
+            
+    
+            var path_ = "/api/stores/{storeId}/seoinfos/{slug}";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            Object postBody = null;
+
+            // to determine the Content-Type header
+            String[] httpContentTypes = new String[] {
+                
+            };
+            String httpContentType = Configuration.ApiClient.SelectHeaderContentType(httpContentTypes);
+
+            // to determine the Accept header
+            String[] httpHeaderAccepts = new String[] {
+                "application/json", "text/json"
+            };
+            String httpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(httpHeaderAccepts);
+            if (httpHeaderAccept != null)
+                headerParams.Add("Accept", httpHeaderAccept);
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            if (slug != null) pathParams.Add("slug", Configuration.ApiClient.ParameterToString(slug)); // path parameter
+            if (storeId != null) pathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
+            
+            
+            
+            
+            
+
+            
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, 
+                Method.GET, queryParams, postBody, headerParams, formParams, fileParams,
+                pathParams, httpContentType);
+
+            int statusCode = (int) response.StatusCode;
+    
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
+                throw new ApiException (statusCode, "Error calling CommerceGetSeoInfoBySlugInStore: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling CommerceGetSeoInfoBySlugInStore: " + response.ErrorMessage, response.ErrorMessage);
+    
+            return new ApiResponse<List<VirtoCommerceDomainCommerceModelSeoInfo>>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (List<VirtoCommerceDomainCommerceModelSeoInfo>) Configuration.ApiClient.Deserialize(response, typeof(List<VirtoCommerceDomainCommerceModelSeoInfo>)));
+            
+        }
+    
+        /// <summary>
+        /// Find all SEO records for object by slug in specified store 
+        /// </summary>
+        /// <param name="slug">slug</param>
+        /// <param name="storeId">storeId</param>
+        /// <returns>Task of List&lt;VirtoCommerceDomainCommerceModelSeoInfo&gt;</returns>
+        public async System.Threading.Tasks.Task<List<VirtoCommerceDomainCommerceModelSeoInfo>> CommerceGetSeoInfoBySlugInStoreAsync (string slug, string storeId)
+        {
+             ApiResponse<List<VirtoCommerceDomainCommerceModelSeoInfo>> response = await CommerceGetSeoInfoBySlugInStoreAsyncWithHttpInfo(slug, storeId);
+             return response.Data;
+
+        }
+
+        /// <summary>
+        /// Find all SEO records for object by slug in specified store 
+        /// </summary>
+        /// <param name="slug">slug</param>
+        /// <param name="storeId">storeId</param>
+        /// <returns>Task of ApiResponse (List&lt;VirtoCommerceDomainCommerceModelSeoInfo&gt;)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceDomainCommerceModelSeoInfo>>> CommerceGetSeoInfoBySlugInStoreAsyncWithHttpInfo (string slug, string storeId)
+        {
+            // verify the required parameter 'slug' is set
+            if (slug == null) throw new ApiException(400, "Missing required parameter 'slug' when calling CommerceGetSeoInfoBySlugInStore");
+            // verify the required parameter 'storeId' is set
+            if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling CommerceGetSeoInfoBySlugInStore");
+            
+    
+            var path_ = "/api/stores/{storeId}/seoinfos/{slug}";
+    
+            var pathParams = new Dictionary<String, String>();
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            Object postBody = null;
+
+            // to determine the Content-Type header
+            String[] httpContentTypes = new String[] {
+                
+            };
+            String httpContentType = Configuration.ApiClient.SelectHeaderContentType(httpContentTypes);
+
+            // to determine the Accept header
+            String[] httpHeaderAccepts = new String[] {
+                "application/json", "text/json"
+            };
+            String httpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(httpHeaderAccepts);
+            if (httpHeaderAccept != null)
+                headerParams.Add("Accept", httpHeaderAccept);
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            pathParams.Add("format", "json");
+            if (slug != null) pathParams.Add("slug", Configuration.ApiClient.ParameterToString(slug)); // path parameter
+            if (storeId != null) pathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
+            
+            
+            
+            
+            
+
+            
+
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, 
+                Method.GET, queryParams, postBody, headerParams, formParams, fileParams, 
+                pathParams, httpContentType);
+
+            int statusCode = (int) response.StatusCode;
+ 
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
+                throw new ApiException (statusCode, "Error calling CommerceGetSeoInfoBySlugInStore: " + response.Content, response.Content);
+            else if (statusCode == 0)
+                throw new ApiException (statusCode, "Error calling CommerceGetSeoInfoBySlugInStore: " + response.ErrorMessage, response.ErrorMessage);
+
+            return new ApiResponse<List<VirtoCommerceDomainCommerceModelSeoInfo>>(statusCode,
+                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (List<VirtoCommerceDomainCommerceModelSeoInfo>) Configuration.ApiClient.Deserialize(response, typeof(List<VirtoCommerceDomainCommerceModelSeoInfo>)));
             
         }
         
@@ -3399,7 +3608,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
     
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CommerceEvaluateTaxes: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CommerceEvaluateTaxes: " + response.ErrorMessage, response.ErrorMessage);
@@ -3480,7 +3689,7 @@ namespace VirtoCommerce.Client.Api
 
             int statusCode = (int) response.StatusCode;
  
-            if (statusCode >= 400)
+            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (statusCode, "Error calling CommerceEvaluateTaxes: " + response.Content, response.Content);
             else if (statusCode == 0)
                 throw new ApiException (statusCode, "Error calling CommerceEvaluateTaxes: " + response.ErrorMessage, response.ErrorMessage);

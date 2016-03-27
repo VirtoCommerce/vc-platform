@@ -237,6 +237,14 @@ namespace VirtoCommerce.Client.Model
   
         
         /// <summary>
+        /// Represent any line item validation type (noPriceValidate, noQuantityValidate etc) this value can be used in storefront \r\n            to select appropriate validation strategy
+        /// </summary>
+        /// <value>Represent any line item validation type (noPriceValidate, noQuantityValidate etc) this value can be used in storefront \r\n            to select appropriate validation strategy</value>
+        [DataMember(Name="validationType", EmitDefaultValue=false)]
+        public string ValidationType { get; set; }
+  
+        
+        /// <summary>
         /// Price id which that was used in the formation of this line item
         /// </summary>
         /// <value>Price id which that was used in the formation of this line item</value>
@@ -394,6 +402,7 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Height: ").Append(Height).Append("\n");
             sb.Append("  Length: ").Append(Length).Append("\n");
             sb.Append("  Width: ").Append(Width).Append("\n");
+            sb.Append("  ValidationType: ").Append(ValidationType).Append("\n");
             sb.Append("  PriceId: ").Append(PriceId).Append("\n");
             sb.Append("  ListPrice: ").Append(ListPrice).Append("\n");
             sb.Append("  SalePrice: ").Append(SalePrice).Append("\n");
@@ -578,6 +587,11 @@ namespace VirtoCommerce.Client.Model
                     this.Width.Equals(other.Width)
                 ) && 
                 (
+                    this.ValidationType == other.ValidationType ||
+                    this.ValidationType != null &&
+                    this.ValidationType.Equals(other.ValidationType)
+                ) && 
+                (
                     this.PriceId == other.PriceId ||
                     this.PriceId != null &&
                     this.PriceId.Equals(other.PriceId)
@@ -748,6 +762,9 @@ namespace VirtoCommerce.Client.Model
                 
                 if (this.Width != null)
                     hash = hash * 59 + this.Width.GetHashCode();
+                
+                if (this.ValidationType != null)
+                    hash = hash * 59 + this.ValidationType.GetHashCode();
                 
                 if (this.PriceId != null)
                     hash = hash * 59 + this.PriceId.GetHashCode();

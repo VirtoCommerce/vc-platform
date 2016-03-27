@@ -126,7 +126,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                     taxLines.Add(new Objects.TaxLine
                     {
                         Title = "Shipping",
-                        Price = shipmentsWithTax.Sum(s => s.Tax.Amount)
+                        Price = shipmentsWithTax.Sum(s => s.Tax.Amount) * 100
                     });
                 }
 
@@ -191,7 +191,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
 
             result.Discounts = discounts.ToArray();
 
-            result.TotalPrice = result.SubtotalPrice + result.ShippingPrice + result.TaxPrice - discountTotal;
+            result.TotalPrice = result.SubtotalPrice + result.ShippingPrice + result.TaxPrice;
 
             return result;
         }

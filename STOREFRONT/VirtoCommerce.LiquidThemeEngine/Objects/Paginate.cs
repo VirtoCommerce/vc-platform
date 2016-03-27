@@ -15,6 +15,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
     public class Paginate : Drop
     {
         private readonly IPagedList _pagedList;
+    
         public Paginate(IPagedList pagedList)
         {
             _pagedList = pagedList;

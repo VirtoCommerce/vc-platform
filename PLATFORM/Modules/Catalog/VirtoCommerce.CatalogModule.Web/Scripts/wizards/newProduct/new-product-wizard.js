@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.newProductWizardController', ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
+.controller('virtoCommerce.catalogModule.newProductWizardController', ['$scope', 'platformWebApp.bladeNavigationService', '$http', function ($scope, bladeNavigationService, $http) {
     var blade = $scope.blade;
     blade.headIcon = blade.item.productType === 'Digital' ? 'fa fa-file-archive-o' : 'fa fa-truck';
 
@@ -53,15 +53,19 @@
                 };
                 break;
             case 'seo':
-                newBlade = {
-                    id: "newProductSeoDetail",
-                    item: blade.item,
-                    title: blade.item.name,
-                    subtitle: 'catalog.blades.seo-detail.subtitle',
-                    isNew: true,
-                    controller: 'virtoCommerce.catalogModule.newProductSeoDetailController',
-                    template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/seo-detail.tpl.html'
-                };
+                initializeSEO(blade.item, function () {
+                    blade.currentEntity = blade.item; // reference for child blade
+                    blade.seoLanguages = _.pluck(getCatalog().languages, 'languageCode');
+
+                    newBlade = {
+                        id: 'seoDetails',
+                        store: { name: 'default store' },
+                        updatePermission: 'catalog:create',
+                        controller: 'virtoCommerce.coreModule.seo.seoDetailController',
+                        template: 'Modules/$(VirtoCommerce.Core)/Scripts/SEO/blades/seo-detail.tpl.html'
+                    };
+                    bladeNavigationService.showBlade(newBlade, blade);
+                });
                 break;
             case 'review':
                 if (blade.item.reviews != undefined && blade.item.reviews.length > 0) {
@@ -114,6 +118,41 @@
             parentBlade = parentBlade.parentBlade;
         }
         return parentBlade.catalog;
+    }
+
+    function initializeSEO(item, callback) {
+        if (!item.seoInfos)
+            item.seoInfos = [];
+        var data = item.seoInfos;
+        var seoLanguages = _.pluck(getCatalog().languages, 'languageCode');
+        if (data.length < seoLanguages.length) {
+            var stringForSlug = item.name;
+            _.each(item.properties, function (prop) {
+                _.each(prop.values, function (val) {
+                    stringForSlug += ' ' + val.value;
+                });
+            });
+
+            if (stringForSlug) {
+                _.each(seoLanguages, function (lang) {
+                    if (_.every(data, function (seoInfo) { return seoInfo.languageCode.toLowerCase().indexOf(lang.toLowerCase()) < 0; })) {
+                        data.push({ languageCode: lang });
+                    }
+                });
+
+                $http.get('api/catalog/getslug?text=' + stringForSlug)
+                    .success(function (slug) {
+                        _.each(data, function (seo) {
+                            if (angular.isUndefined(seo.semanticUrl)) {
+                                seo.semanticUrl = slug;
+                            }
+                        });
+                        callback();
+                    });
+            } else
+                callback();
+        } else
+            callback();
     }
 
     $scope.$watch('blade.item.properties', function (currentEntities) {

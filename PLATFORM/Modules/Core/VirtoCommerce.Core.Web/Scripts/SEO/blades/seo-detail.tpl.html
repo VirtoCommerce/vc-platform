@@ -1,0 +1,51 @@
+﻿<div class="blade-static __bottom" ng-include="'$(Platform)/Scripts/common/templates/ok-cancel.tpl.html'"></div>
+<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <form name="formScope" class="form" novalidate>
+                <fieldset>
+                    <legend>{{ 'core.blades.seo-detail.labels.url-keyword' | translate }}</legend>
+                    <div class="form-group" ng-repeat="data in blade.currentEntities | orderBy:'languageCode'">
+                        <ng-form name="form">
+                            <div class="form-input __langs">
+                                <span class="flag flag-{{data.languageCode.substr(3).toLowerCase()}}"></span>
+                                <input ng-model="data.semanticUrl" name="semanticUrl{{$index}}" required ui-validate=" 'semanticUrlValidator($value)' " placeholder="{{ 'core.blades.seo-detail.placeholders.url-keyword' | translate }}" />
+                            </div>
+                            <div class="form-error" data-ng-show="form.semanticUrl{{$index}}.$dirty">
+                                <span data-ng-show="form.semanticUrl{{$index}}.$error.required">{{ 'core.blades.seo-detail.validations.url-keyword-required' | translate }}</span>
+                                <span data-ng-show="form.semanticUrl{{$index}}.$error.validator">{{ 'core.blades.seo-detail.validations.url-keyword-invalid' | translate }}</span>
+                            </div>
+                        </ng-form>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>{{ 'core.blades.seo-detail.labels.page-title' | translate }}</legend>
+                    <div class="form-group" ng-repeat="data in blade.currentEntities | orderBy:'languageCode'">
+                        <div class="form-input __langs">
+                            <span class="flag flag-{{data.languageCode.substr(3).toLowerCase()}}"></span>
+                            <input ng-model="data.pageTitle" class="form-control" placeholder="{{ 'core.blades.seo-detail.placeholders.page-title' | translate }}" />
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>{{ 'core.blades.seo-detail.labels.meta-description' | translate }}</legend>
+                    <div class="form-group" ng-repeat="data in blade.currentEntities | orderBy:'languageCode'">
+                        <div class="form-input __langs">
+                            <span class="flag flag-{{data.languageCode.substr(3).toLowerCase()}}"></span>
+                            <textarea ng-model="data.metaDescription" class="form-control" cols="30" rows="3" placeholder="{{ 'core.blades.seo-detail.placeholders.meta-description' | translate }}"></textarea>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>{{ 'core.blades.seo-detail.labels.alternative-text' | translate }}</legend>
+                   <div class="form-group" ng-repeat="data in blade.currentEntities | orderBy:'languageCode'">
+                        <div class="form-input __langs">
+                            <span class="flag flag-{{data.languageCode.substr(3).toLowerCase()}}"></span>
+                            <input ng-model="data.imageAltDescription" class="form-control" placeholder="{{ 'core.blades.seo-detail.placeholders.alternative-text' | translate }}" />
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>

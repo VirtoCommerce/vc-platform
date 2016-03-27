@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using VirtoCommerce.Domain.Commerce.Model;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.CatalogModule.Web.Model
 {
     /// <summary>
     /// Merchandising item.
     /// </summary>
-    public class Product
+    public class Product : AuditableEntity, ISeoSupport
     {
-        public string Id { get; set; }
         /// <summary>
         /// Gets or sets the manufacturer part number for this product.
         /// </summary>
@@ -275,20 +275,14 @@ namespace VirtoCommerce.CatalogModule.Web.Model
         /// The links.
         /// </value>
 		public ICollection<CategoryLink> Links { get; set; }
-        /// <summary>
-        /// Gets or sets the list of SEO information records.
-        /// </summary>
-        /// <value>
-        /// The seo infos.
-        /// </value>
-		public ICollection<SeoInfo> SeoInfos { get; set; }
+      
         /// <summary>
         /// Gets or sets the reviews.
         /// </summary>
         /// <value>
         /// The reviews.
         /// </value>
-		public ICollection<EditorialReview> Reviews { get; set; }
+        public ICollection<EditorialReview> Reviews { get; set; }
         /// <summary>
         /// Gets or sets the associations.
         /// </summary>
@@ -298,5 +292,15 @@ namespace VirtoCommerce.CatalogModule.Web.Model
 		public ICollection<ProductAssociation> Associations { get; set; }
 
         public string[] SecurityScopes { get; set; }
+
+        #region ISeoSupport Members 
+        /// <summary>
+        /// Gets or sets the list of SEO information records.
+        /// </summary>
+        /// <value>
+        /// The seo infos.
+        /// </value>
+        public ICollection<SeoInfo> SeoInfos { get; set; }
+        #endregion
     }
 }

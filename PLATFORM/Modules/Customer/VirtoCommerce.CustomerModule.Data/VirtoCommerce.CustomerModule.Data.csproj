@@ -61,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Converters\AddressConverter.cs" />
+    <Compile Include="Converters\MemberConverter.cs" />
     <Compile Include="Converters\ContactConverter.cs" />
     <Compile Include="Converters\NoteConverter.cs" />
     <Compile Include="Converters\OrganizationConverter.cs" />
@@ -80,6 +81,18 @@
     <Compile Include="Migrations\201602191500249_Refactoring.Designer.cs">
       <DependentUpon>201602191500249_Refactoring.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201603151150335_AddMemberTypeToMember.cs" />
+    <Compile Include="Migrations\201603151150335_AddMemberTypeToMember.Designer.cs">
+      <DependentUpon>201603151150335_AddMemberTypeToMember.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201603160823229_AddRelationType.cs" />
+    <Compile Include="Migrations\201603160823229_AddRelationType.Designer.cs">
+      <DependentUpon>201603160823229_AddRelationType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201603160938316_AddNameToMember.cs" />
+    <Compile Include="Migrations\201603160938316_AddNameToMember.Designer.cs">
+      <DependentUpon>201603160938316_AddNameToMember.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Address.cs" />
     <Compile Include="Model\Contact.cs" />
@@ -92,9 +105,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\CustomerRepositoryImpl.cs" />
     <Compile Include="Repositories\ICustomerRepository.cs" />
-    <Compile Include="Services\ContactServiceImpl.cs" />
-    <Compile Include="Services\CustomerSearchServiceImpl.cs" />
-    <Compile Include="Services\OrganizationServiceImpl.cs" />
+    <Compile Include="Services\MemberServiceImpl.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj">
@@ -126,6 +137,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201602191500249_Refactoring.resx">
       <DependentUpon>201602191500249_Refactoring.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603151150335_AddMemberTypeToMember.resx">
+      <DependentUpon>201603151150335_AddMemberTypeToMember.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603160823229_AddRelationType.resx">
+      <DependentUpon>201603160823229_AddRelationType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603160938316_AddNameToMember.resx">
+      <DependentUpon>201603160938316_AddNameToMember.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

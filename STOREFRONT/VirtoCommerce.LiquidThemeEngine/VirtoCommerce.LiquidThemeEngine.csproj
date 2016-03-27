@@ -121,6 +121,7 @@
     <Compile Include="Converters\ProductConverter.cs" />
     <Compile Include="Converters\ProductPropertyConverter.cs" />
     <Compile Include="Converters\QuoteRequestConverter.cs" />
+    <Compile Include="Converters\SearchConverter.cs" />
     <Compile Include="Converters\ShippingMethodConverter.cs" />
     <Compile Include="Converters\ShopConverter.cs" />
     <Compile Include="Converters\ShopifyContextConverter.cs" />
@@ -167,7 +168,10 @@
     <Compile Include="Objects\LineItem.cs" />
     <Compile Include="Objects\Link.cs" />
     <Compile Include="Objects\Linklist.cs" />
+    <Compile Include="Objects\Blogs.cs" />
+    <Compile Include="Objects\Pages.cs" />
     <Compile Include="Objects\Linklists.cs" />
+    <Compile Include="Objects\LoginProvider.cs" />
     <Compile Include="Objects\MetafieldsCollections.cs" />
     <Compile Include="Objects\Notification.cs" />
     <Compile Include="Objects\Order.cs" />
@@ -179,6 +183,7 @@
     <Compile Include="Objects\QuoteItem.cs" />
     <Compile Include="Objects\QuoteRequest.cs" />
     <Compile Include="Objects\QuoteRequestTotals.cs" />
+    <Compile Include="Objects\Search.cs" />
     <Compile Include="Objects\ShippingMethod.cs" />
     <Compile Include="Objects\Shop.cs" />
     <Compile Include="Objects\ShopifyThemeWorkContext.cs" />

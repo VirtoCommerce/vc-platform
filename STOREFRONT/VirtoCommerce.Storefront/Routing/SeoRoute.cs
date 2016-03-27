@@ -6,10 +6,9 @@ using System.Web.Routing;
 using CacheManager.Core;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.Client.Model;
+using VirtoCommerce.Storefront.Common;
 using VirtoCommerce.Storefront.Model;
-using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
-using VirtoCommerce.Storefront.Model.Services;
 using VirtoCommerce.Storefront.Model.StaticContent;
 
 namespace VirtoCommerce.Storefront.Routing
@@ -18,15 +17,13 @@ namespace VirtoCommerce.Storefront.Routing
     {
         private readonly Func<WorkContext> _workContextFactory;
         private readonly ICommerceCoreModuleApi _commerceCoreApi;
-        private readonly IStaticContentService _contentService;
         private readonly ICacheManager<object> _cacheManager;
 
-        public SeoRoute(string url, IRouteHandler routeHandler, Func<WorkContext> workContextFactory, ICommerceCoreModuleApi commerceCoreApi, IStaticContentService staticContentService, ICacheManager<object> cacheManager)
+        public SeoRoute(string url, IRouteHandler routeHandler, Func<WorkContext> workContextFactory, ICommerceCoreModuleApi commerceCoreApi, ICacheManager<object> cacheManager)
             : base(url, routeHandler)
         {
             _workContextFactory = workContextFactory;
             _commerceCoreApi = commerceCoreApi;
-            _contentService = staticContentService;
             _cacheManager = cacheManager;
         }
 
@@ -42,84 +39,94 @@ namespace VirtoCommerce.Storefront.Routing
                 var path = data.Values["path"] as string;
                 var store = data.Values["store"] as string;
                 //Special workaround for case when url contains only slug without store (one store case)
-                if(string.IsNullOrEmpty(path) && !string.IsNullOrEmpty(store) && workContext.AllStores != null)
+                if (string.IsNullOrEmpty(path) && !string.IsNullOrEmpty(store) && workContext.AllStores != null)
                 {
-                        //use {store} as {path} if not exist any store with name {store} 
-                        path = workContext.AllStores.Any(x => string.Equals(store, x.Id, StringComparison.InvariantCultureIgnoreCase)) ? null : store;
+                    //use {store} as {path} if not exist any store with name {store} 
+                    path = workContext.AllStores.Any(x => string.Equals(store, x.Id, StringComparison.InvariantCultureIgnoreCase)) ? null : store;
                 }
-               
+                //Get all seo records for requested slug and also all other seo records with different slug and languages but related to same object
+                // GetSeoRecords('A') returns 
+                // { objectType: 'Product', objectId: '1',  SemanticUrl: 'A', Language: 'en-us', active : false }
+                // { objectType: 'Product', objectId: '1',  SemanticUrl: 'AA', Language: 'en-us', active : true }
                 var seoRecords = GetSeoRecords(path);
-                var seoRecord = seoRecords.FirstOrDefault();
-             
-                if(seoRecord != null)
+                if (seoRecords != null)
                 {
-                    // Ensure the slug is active
-                    if (seoRecord.IsActive == null || !seoRecord.IsActive.Value)
-                    {
-                        // Slug is not active. Try to find the active one for the same entity and language.
-                        var activeSlug = FindActiveSlug(seoRecords, seoRecord.ObjectType, seoRecord.ObjectId, seoRecord.LanguageCode);
+                    var seoRecord = seoRecords
+                        .Where(x => string.Equals(path, x.SemanticUrl, StringComparison.OrdinalIgnoreCase))
+                        .FindBestSeoMatch(workContext.CurrentLanguage, workContext.CurrentStore);
 
-                        if (string.IsNullOrWhiteSpace(activeSlug))
-                        {
-                            // No active slug found
-                            data.Values["controller"] = "Error";
-                            data.Values["action"] = "Http404";
-                        }
-                        else
-                        {
-                            // The active slug is found
-                            var response = httpContext.Response;
-                            response.Status = "301 Moved Permanently";
-                            response.RedirectLocation = string.Format("{0}{1}", workContext.CurrentStore.Url, activeSlug);
-                            response.End();
-                            data = null;
-                        }
-                    }
-                    else
+                    if (seoRecord != null)
                     {
-                        // Redirect to the slug for the current language if it differs from the requested slug
-                        var slugForCurrentLanguage = GetSlug(seoRecords, workContext, seoRecord.ObjectType, seoRecord.ObjectId, workContext.CurrentLanguage.CultureName);
+                        // Ensure the slug is active
+                        if (seoRecord.IsActive == null || !seoRecord.IsActive.Value)
+                        {
+                            // Slug is not active. Try to find the active one for the same entity and language.
+                            seoRecord = seoRecords.Where(x => x.ObjectType == seoRecord.ObjectType && x.ObjectId == seoRecord.ObjectId && x.IsActive != null && x.IsActive.Value)
+                                                  .FindBestSeoMatch(workContext.CurrentLanguage, workContext.CurrentStore);
 
-                        if (!string.IsNullOrEmpty(slugForCurrentLanguage) && !slugForCurrentLanguage.Equals(seoRecord.SemanticUrl, StringComparison.OrdinalIgnoreCase))
-                        {
-                            var response = httpContext.Response;
-                            response.Status = "302 Moved Temporarily";
-                            response.RedirectLocation = string.Format("{0}{1}", workContext.CurrentStore.Url, slugForCurrentLanguage);
-                            response.End();
-                            data = null;
-                        }
-                        else
-                        {
-                            // Process the URL
-                            switch (seoRecord.ObjectType)
+                            if (seoRecord == null)
                             {
-                                case "CatalogProduct":
-                                    data.Values["controller"] = "Product";
-                                    data.Values["action"] = "ProductDetails";
-                                    data.Values["productId"] = seoRecord.ObjectId;
-                                    break;
-                                case "Category":
-                                    data.Values["controller"] = "CatalogSearch";
-                                    data.Values["action"] = "CategoryBrowsing";
-                                    data.Values["categoryId"] = seoRecord.ObjectId;
-                                    break;
+                                // No active slug found
+                                data.Values["controller"] = "Error";
+                                data.Values["action"] = "Http404";
+                            }
+                            else
+                            {
+                                // The active slug is found
+                                var response = httpContext.Response;
+                                response.Status = "301 Moved Permanently";
+                                response.RedirectLocation = string.Format("{0}{1}", workContext.CurrentStore.Url, seoRecord.SemanticUrl);
+                                response.End();
+                                data = null;
+                            }
+                        }
+                        else
+                        {
+                            // Redirect to the slug for the current language if it differs from the requested slug
+                            var actualActiveSeoRecord = seoRecords.Where(x => x.ObjectType == seoRecord.ObjectType && x.ObjectId == seoRecord.ObjectId && x.IsActive != null && x.IsActive.Value)
+                                .FindBestSeoMatch(workContext.CurrentLanguage, workContext.CurrentStore);
+                            //If actual seo different that requested need redirect 302
+                            if (!string.Equals(actualActiveSeoRecord.SemanticUrl, seoRecord.SemanticUrl, StringComparison.OrdinalIgnoreCase))
+                            {
+                                var response = httpContext.Response;
+                                response.Status = "302 Moved Temporarily";
+                                response.RedirectLocation = string.Concat(workContext.CurrentStore.Url, actualActiveSeoRecord.SemanticUrl);
+                                response.End();
+                                data = null;
+                            }
+                            else
+                            {
+                                // Process the URL
+                                switch (seoRecord.ObjectType)
+                                {
+                                    case "CatalogProduct":
+                                        data.Values["controller"] = "Product";
+                                        data.Values["action"] = "ProductDetails";
+                                        data.Values["productId"] = seoRecord.ObjectId;
+                                        break;
+                                    case "Category":
+                                        data.Values["controller"] = "CatalogSearch";
+                                        data.Values["action"] = "CategoryBrowsing";
+                                        data.Values["categoryId"] = seoRecord.ObjectId;
+                                        break;
+                                }
                             }
                         }
                     }
-                }
-                else if(!String.IsNullOrEmpty(path))
-                {
-                    var contentPage = TryToFindContentPageWithUrl(path, workContext.CurrentStore, workContext.CurrentLanguage);
-                    if(contentPage != null)
+                    else if (!string.IsNullOrEmpty(path))
                     {
-                        data.Values["controller"] = "Page";
-                        data.Values["action"] = "GetContentPage";
-                        data.Values["page"] = contentPage;
-                    }
-                    else
-                    {
-                        data.Values["controller"] = "Error";
-                        data.Values["action"] = "Http404";
+                        var contentPage = TryToFindContentPageWithUrl(workContext, path);
+                        if (contentPage != null)
+                        {
+                            data.Values["controller"] = "Page";
+                            data.Values["action"] = "GetContentPage";
+                            data.Values["page"] = contentPage;
+                        }
+                        else
+                        {
+                            data.Values["controller"] = "Error";
+                            data.Values["action"] = "Http404";
+                        }
                     }
                 }
             }
@@ -127,17 +134,29 @@ namespace VirtoCommerce.Storefront.Routing
             return data;
         }
 
-        private ContentPage TryToFindContentPageWithUrl(string url, Store store, Language language)
+
+        private static ContentItem TryToFindContentPageWithUrl(WorkContext workContext, string url)
         {
-            if (store == null)
-                return null;
-            var cacheKey = String.Join(":", "AllStaticContentForLanguage", store.Id, language.CultureName);
-            var retVal = _cacheManager.Get(cacheKey, "ContentRegion", () =>
+            ContentItem result = null;
+
+            if (workContext.Pages != null)
             {
-                return _contentService.LoadContentItemsByUrl("/", store, language, () => new ContentPage(), null,  1, int.MaxValue, renderContent: false).OfType<ContentPage>().ToArray();
-            });
-            url = url.TrimStart('/');
-            return retVal.FirstOrDefault(x => string.Equals(x.Permalink, url, StringComparison.CurrentCultureIgnoreCase) || string.Equals(x.Url, url, StringComparison.InvariantCultureIgnoreCase));
+                url = url.TrimStart('/');
+                var pages = workContext.Pages
+                    .Where(x =>
+                            string.Equals(x.Permalink, url, StringComparison.CurrentCultureIgnoreCase) ||
+                            string.Equals(x.Url, url, StringComparison.InvariantCultureIgnoreCase))
+                    .ToList();
+
+                // Return page with current language or invariant language
+                result = pages.FirstOrDefault(x => x.Language == workContext.CurrentLanguage);
+                if (result == null)
+                {
+                    result = pages.FirstOrDefault(x => x.Language.IsInvariant);
+                }
+            }
+
+            return result;
         }
 
         private List<VirtoCommerceDomainCommerceModelSeoInfo> GetSeoRecords(string path)
@@ -149,40 +168,13 @@ namespace VirtoCommerce.Storefront.Routing
                 var tokens = path.Split('/');
                 // TODO: Store path tokens as breadcrumbs to the work context
                 var slug = tokens.LastOrDefault();
-                if (!String.IsNullOrEmpty(slug))
+                if (!string.IsNullOrEmpty(slug))
                 {
-                    seoRecords = _cacheManager.Get("CommerceGetSeoInfoBySlug-" + slug, "ApiRegion", () => { return _commerceCoreApi.CommerceGetSeoInfoBySlug(slug); });
+                    seoRecords = _cacheManager.Get(string.Join(":", "CommerceGetSeoInfoBySlug", slug), "ApiRegion", () => _commerceCoreApi.CommerceGetSeoInfoBySlug(slug));
                 }
             }
 
             return seoRecords;
-        }
-
-        private string GetSlug(List<VirtoCommerceDomainCommerceModelSeoInfo> seoRecords, WorkContext workContext, string entityType, string entityId, string language)
-        {
-            var result = string.Empty;
-
-            // Get slug for requested language
-            if (!string.IsNullOrEmpty(language) && workContext.CurrentStore.Languages.Count >= 2)
-            {
-                result = FindActiveSlug(seoRecords, entityType, entityId, language);
-            }
-
-            // Get slug for default language
-            if (string.IsNullOrEmpty(result))
-            {
-                result = FindActiveSlug(seoRecords, entityType, entityId, null);
-            }
-
-            return result;
-        }
-
-        private string FindActiveSlug(List<VirtoCommerceDomainCommerceModelSeoInfo> seoRecords, string entityType, string entityId, string language)
-        {
-            return seoRecords
-                .Where(r => r.ObjectType == entityType && r.ObjectId == entityId && string.Equals(r.LanguageCode, language, StringComparison.OrdinalIgnoreCase) && r.IsActive != null && r.IsActive.Value)
-                .Select(r => r.SemanticUrl)
-                .FirstOrDefault();
         }
     }
 }

@@ -74,19 +74,17 @@ namespace VirtoCommerce.Storefront.Converters
                 webModel.TaxDetails = serviceModel.TaxDetails.Select(td => td.ToWebModel(currency)).ToList();
             }
 
-          
             webModel.HandlingTotal = new Money(serviceModel.HandlingTotal ?? 0, currency);
             webModel.Height = (decimal)(serviceModel.Height ?? 0);
             webModel.IsAnonymous = serviceModel.IsAnonymous == true;
             webModel.IsRecuring = serviceModel.IsRecuring == true;
             webModel.Length = (decimal)(serviceModel.Length ?? 0);
-         
             webModel.TaxIncluded = serviceModel.TaxIncluded == true;
             webModel.TaxTotal = new Money(serviceModel.TaxTotal ?? 0, currency);
-
             webModel.VolumetricWeight = (decimal)(serviceModel.VolumetricWeight ?? 0);
             webModel.Weight = (decimal)(serviceModel.Weight ?? 0);
             webModel.Width = (decimal)(serviceModel.Width ?? 0);
+            webModel.ValidationType = EnumUtility.SafeParse(serviceModel.ValidationType, ValidationType.PriceAndQuantity);
 
             return webModel;
         }
@@ -152,6 +150,7 @@ namespace VirtoCommerce.Storefront.Converters
             serviceModel.VolumetricWeight = (double)webModel.VolumetricWeight;
             serviceModel.Weight = (double)webModel.Weight;
             serviceModel.Width = (double)webModel.Width;
+            serviceModel.ValidationType = webModel.ValidationType.ToString();
 
             return serviceModel;
         }

@@ -7,8 +7,13 @@ using VirtoCommerce.Platform.Core.Security;
 
 namespace VirtoCommerce.Domain.Customer.Model
 {
-    public class Contact : AuditableEntity, IHasDynamicProperties
+    public class Contact : Member, IHasDynamicProperties
     {
+        public Contact()
+            :base("Contact")
+        {
+
+        }
         public string FirstName { get; set; }
         public string MiddleName { get; set; }
         public string LastName { get; set; }
@@ -22,19 +27,9 @@ namespace VirtoCommerce.Domain.Customer.Model
         public string PreferredCommunication { get; set; }
         public string Salutation { get; set; }
         public ICollection<string> Organizations { get; set; }
-        public ICollection<Address> Addresses { get; set; }
-        public ICollection<string> Phones { get; set; }
-        public ICollection<string> Emails { get; set; }
         /// <summary>
         /// All security accounts associated with this contact
         /// </summary>
         public ICollection<ApplicationUserExtended> SecurityAccounts { get; set; }
-        public ICollection<Note> Notes { get; set; }
-
-        #region IHasDynamicProperties Members
-		public string ObjectType { get; set; }
-		public ICollection<DynamicObjectProperty> DynamicProperties { get; set; }
-
-        #endregion
     }
 }

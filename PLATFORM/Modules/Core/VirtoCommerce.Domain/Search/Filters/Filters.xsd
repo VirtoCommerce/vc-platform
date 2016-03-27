@@ -7,7 +7,8 @@
 	</xs:complexType>
 
 	<xs:complexType name="FilterProperty">
-		<xs:sequence>
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" name="display" type="PropertyDisplay"/>
 			<xs:element maxOccurs="unbounded" name="simple" type="PropertyValue"/>
 		</xs:sequence>
 		<xs:attribute name="key" type="xs:string" use="required" />

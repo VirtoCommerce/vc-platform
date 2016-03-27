@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Omu.ValueInjecter;
 using VirtoCommerce.Client.Model;
+using VirtoCommerce.Storefront.Common;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
@@ -13,7 +14,7 @@ namespace VirtoCommerce.Storefront.Converters
 {
     public static class ProductConverter
     {
-        public static Product ToWebModel(this VirtoCommerceCatalogModuleWebModelProduct product, Language currentLanguage, Currency currentCurrency)
+        public static Product ToWebModel(this VirtoCommerceCatalogModuleWebModelProduct product, Language currentLanguage, Currency currentCurrency, Store store)
         {
             var retVal = new Product();
 
@@ -24,14 +25,10 @@ namespace VirtoCommerce.Storefront.Converters
 
             retVal.Sku = product.Code;
 
-            if(product.Category != null)
-            {
-                retVal.Category = product.Category.ToWebModel(currentLanguage);
-            }
-
+          
             if (product.Properties != null)
             {
-                retVal.Properties = product.Properties.Where(x => !String.Equals(x.Type, "Variation", StringComparison.InvariantCultureIgnoreCase))
+                retVal.Properties = product.Properties.Where(x => String.Equals(x.Type, "Product", StringComparison.InvariantCultureIgnoreCase))
                                                       .Select(p => p.ToWebModel(currentLanguage))
                                                       .ToList();
                 retVal.VariationProperties = product.Properties.Where(x => String.Equals(x.Type, "Variation", StringComparison.InvariantCultureIgnoreCase))
@@ -51,11 +48,18 @@ namespace VirtoCommerce.Storefront.Converters
 
             if (product.Variations != null)
             {
-                retVal.Variations = product.Variations.Select(v => v.ToWebModel(currentLanguage, currentCurrency)).ToList();
+                retVal.Variations = product.Variations.Select(v => v.ToWebModel(currentLanguage, currentCurrency, store)).ToList();
             }
 
             if (product.SeoInfos != null)
-                retVal.SeoInfo = product.SeoInfos.Select(s => s.ToWebModel()).FirstOrDefault(x => x.Language == currentLanguage);
+            {
+                //Select best matched SEO by StoreId and Language
+                var bestMatchSeo = product.SeoInfos.FindBestSeoMatch(currentLanguage, store);
+                if (bestMatchSeo != null)
+                {
+                    retVal.SeoInfo = bestMatchSeo.ToWebModel();
+                }
+            }
 
             if (product.Reviews != null)
             {
@@ -81,7 +85,7 @@ namespace VirtoCommerce.Storefront.Converters
             quoteItem.SalePrice = product.Price.SalePrice;
             quoteItem.ProposalPrices.Add(new TierPrice
             {
-                Price = product.Price.ActualPrice,
+                Price = product.Price.SalePrice,
                 Quantity = quantity
             });
             quoteItem.SelectedTierPrice = quoteItem.ProposalPrices.First();

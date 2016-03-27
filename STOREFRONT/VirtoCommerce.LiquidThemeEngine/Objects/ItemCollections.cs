@@ -9,18 +9,42 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
     public abstract class ItemCollection<T> : Drop, IEnumerable<T>, ICollection, ILiquidContains
         where T : class
     {
-        private readonly ICollection<T> _collection;
-        public ItemCollection(IEnumerable<T> collection)
+        private readonly IEnumerable<T> _superset;
+        public ItemCollection(IEnumerable<T> superset)
         {
-            _collection = (collection ?? Enumerable.Empty<T>()).ToList();
+            _superset = superset ?? Enumerable.Empty<T>();
         }
-        public long Size { get { return _collection.Count(); } }
+        public long Size
+        {
+            get
+            {
+                return _superset.Count();
+            }
+        }
         #region ICollection members
-        public object SyncRoot { get { return _collection; } }
+        public object SyncRoot
+        {
+            get
+            {
+                return _superset;
+            }
+        }
 
-        public bool IsSynchronized { get { return true; } }
+        public bool IsSynchronized
+        {
+            get
+            {
+                return true;
+            }
+        }
 
-        public int Count { get { return _collection.Count; } }
+        public int Count
+        {
+            get
+            {
+                return _superset.Count();
+            }
+        }
 
         public void CopyTo(Array array, int index)
         {
@@ -31,12 +55,12 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         #region IEnumerable<T> Members
         public IEnumerator<T> GetEnumerator()
         {
-            return _collection.GetEnumerator();
+            return _superset.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return _collection.GetEnumerator();
+            return _superset.GetEnumerator();
         }
         #endregion
 
@@ -46,7 +70,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
             var other = value as T;
             if(other != null)
             {
-                return _collection.Any(x => x.Equals(other));
+                return _superset.Any(x => x.Equals(other));
             }
             return false;
         }

@@ -15,7 +15,6 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         public Article()
         {
             this.User = new ArticleUser();
-            Comments = new StorefrontPagedList<Comment>(new Comment[] { }, 1, 10, 0, null);
         }
 
         /// <summary>
@@ -23,7 +22,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         /// </summary>
         public string CommentPostUrl { get; set; }
 
-        public IStorefrontPagedList<Comment> Comments { get; set; }
+        public IMutablePagedList<Comment> Comments { get; set; }
 
         public string CommentsCount { get; set; }
 

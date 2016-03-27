@@ -35,7 +35,7 @@
 		//first check admin permission
 		// var hasPermission = $.inArray('admin', authContext.permissions) > -1;
 		var hasPermission = authContext.isAdministrator;
-		if (!hasPermission) {
+		if (!hasPermission && permission) {
 			permission = permission.trim();
 			//first check global permissions
 			hasPermission = $.inArray(permission, authContext.permissions) > -1;
