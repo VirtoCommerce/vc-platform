@@ -34,7 +34,7 @@
                     <h4>Remarks</h4>
                     <p>Do you have a general remark with this Quote Request?</p>
                     <textarea id="Comment" name="Comment" ng-model="quoteRequest.comment"></textarea>
-                    <input id="RequestShippingQuote" name="RequestShippingQuote" style="display: inline-block;" type="checkbox" ng-model="quoteRequest.requestShippingQuote" />
+                    <input id="RequestShippingQuote" name="RequestShippingQuote" style="display: inline-block;" type="checkbox" ng-model="quoteRequest.requestShippingQuote" ng-change="setRequestShippingQuote()" />
                     <label for="RequestShippingQuote" style="display: inline-block;">Request a shipping quote</label>
                 </div>
             </div>
@@ -168,6 +168,12 @@
                     <div class="h3">Billing address</div>
                     <input id="BillingAddressType" name="BillingAddressType" type="hidden" value="Billing" ng-model="quoteRequest.billingAddress.type" ng-init="quoteRequest.billingAddress.type = 'Billing'" />
                     <div class="grid">
+                        <div class="grid-item" ng-if="customer.addresses.length">
+                            <select id="BillingAddressFromCustomerAddresses" name="BillingAddressFromCustomerAddresses" required="required" ng-model="quoteRequest.billingAddress.id" ng-change="selectCustomerAddress('Billing')">
+                                <option disabled="disabled" value="">Select address</option>
+                                <option ng-repeat="address in customer.addresses" ng-value="address.id" ng-selected="address.id === quoteRequest.billingAddress.id" ng-bind="stringifyAddress(address)"></option>
+                            </select>
+                        </div>
                         <div class="grid-item large--one-half">
                             <label for="BillingAddressFirstName" style="float: left;">First name</label>
                             <span style="color: #ff0000; float: left; margin-left: 5px;">*</span>
@@ -221,7 +227,7 @@
                 <div class="ublock" ng-if="quoteRequest.requestShippingQuote">
                     <div class="h3">Shipping address</div>
                     <input id="ShippingAddressEqualsBilling" name="ShippingAddressEqualsBilling" type="checkbox" style="display: inline-block;" ng-model="quoteRequest.shippingAddressEqualsBilling" ng-change="setShippingAddressEqualsBilling()" />
-                    <label for="ShippingAddressEqualsBilling" style="display: inline-block;">Billing Address is same as Shipping Address</label>
+                    <label for="ShippingAddressEqualsBilling" style="display: inline-block;">Shipping address is same as billing address</label>
                     <input id="ShippingAddressType" name="ShippingAddressType" type="hidden" value="Shipping" ng-model="quoteRequest.shippingAddress.type" ng-init="quoteRequest.shippingAddress.type = 'Shipping'" />
                     <div class="grid">
                         <div class="grid-item large--one-half">

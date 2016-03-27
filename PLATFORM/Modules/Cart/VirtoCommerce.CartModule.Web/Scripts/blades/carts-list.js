@@ -26,7 +26,7 @@ function ($scope, carts, bladeNavigationService, dialogService) {
             blade.isLoading = false;
             $scope.selectedAll = false;
 
-            $scope.pageSettings.totalItems = angular.isDefined(data.totalCount) ? data.totalCount : 0;
+            $scope.pageSettings.totalItems = data.totalCount;
             $scope.objects = data.shopingCarts;
 
             if (selectedNode != null) {

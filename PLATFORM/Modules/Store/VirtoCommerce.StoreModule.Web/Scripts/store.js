@@ -46,6 +46,10 @@ angular.module(moduleName, [
 
 	    //Register widgets in store details
 	    widgetService.registerWidget({
+	        controller: 'virtoCommerce.storeModule.assetsWidgetController',
+	        template: 'Modules/$(VirtoCommerce.Store)/Scripts/widgets/assetsWidget.tpl.html'
+	    }, 'storeDetail');
+	    widgetService.registerWidget({
 	        controller: 'virtoCommerce.storeModule.seoWidgetController',
 	        template: 'Modules/$(VirtoCommerce.Store)/Scripts/widgets/seoWidget.tpl.html'
 	    }, 'storeDetail');

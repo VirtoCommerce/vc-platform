@@ -49,9 +49,11 @@ using VirtoCommerce.Platform.Data.Settings;
 using VirtoCommerce.Platform.Web;
 using VirtoCommerce.Platform.Web.BackgroundJobs;
 using VirtoCommerce.Platform.Web.Controllers.Api;
+using VirtoCommerce.Platform.Web.Hangfire;
 using VirtoCommerce.Platform.Web.Resources;
 using VirtoCommerce.Platform.Web.SignalR;
 using WebGrease.Extensions;
+using GlobalConfiguration = System.Web.Http.GlobalConfiguration;
 
 [assembly: OwinStartup(typeof(Startup))]
 
@@ -90,11 +92,20 @@ namespace VirtoCommerce.Platform.Web
 
             var moduleInitializerOptions = (ModuleInitializerOptions)container.Resolve<IModuleInitializerOptions>();
             moduleInitializerOptions.VirtualRoot = virtualRoot;
-            moduleInitializerOptions.RoutPrefix = routPrefix;
+            moduleInitializerOptions.RoutePrefix = routPrefix;
 
             //Initialize Platform dependencies
             const string connectionStringName = "VirtoCommerce";
-            InitializePlatform(app, container, connectionStringName);
+
+            var hangfireOptions = new HangfireOptions
+            {
+                StartServer = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Jobs.Enabled", true),
+                JobStorageType = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Jobs.StorageType", "Memory"),
+                DatabaseConnectionStringName = connectionStringName,
+            };
+            var hangfireLauncher = new HangfireLauncher(hangfireOptions);
+
+            InitializePlatform(app, container, connectionStringName, hangfireLauncher);
 
             var moduleManager = container.Resolve<IModuleManager>();
             var moduleCatalog = container.Resolve<IModuleCatalog>();
@@ -171,7 +182,9 @@ namespace VirtoCommerce.Platform.Web
                 ApiKeysHttpHeaderName = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Authentication:ApiKeys.HttpHeaderName", "api_key"),
                 ApiKeysQueryStringParameterName = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Authentication:ApiKeys.QueryStringParameterName", "api_key"),
             };
-            OwinConfig.Configure(app, container, connectionStringName, authenticationOptions);
+            OwinConfig.Configure(app, container, authenticationOptions);
+
+            hangfireLauncher.ConfigureOwin(app, container);
 
             RecurringJob.AddOrUpdate<SendNotificationsJobs>("SendNotificationsJob", x => x.Process(), "*/1 * * * *");
 
@@ -213,7 +226,7 @@ namespace VirtoCommerce.Platform.Web
             var tempCounterManager = new TempPerformanceCounterManager();
             GlobalHost.DependencyResolver.Register(typeof(IPerformanceCounterManager), () => tempCounterManager);
             var hubConfiguration = new HubConfiguration { EnableJavaScriptProxies = false };
-            app.MapSignalR("/" + moduleInitializerOptions.RoutPrefix + "signalr", hubConfiguration);
+            app.MapSignalR("/" + moduleInitializerOptions.RoutePrefix + "signalr", hubConfiguration);
 
             //Start background sample data installation if in config set concrete zip path (need for demo)
             var settingManager = container.Resolve<ISettingsManager>();
@@ -247,7 +260,7 @@ namespace VirtoCommerce.Platform.Web
             return assembly;
         }
 
-        private static void InitializePlatform(IAppBuilder app, IUnityContainer container, string connectionStringName)
+        private static void InitializePlatform(IAppBuilder app, IUnityContainer container, string connectionStringName, HangfireLauncher hangfireLauncher)
         {
             container.RegisterType<ICurrentUser, CurrentUser>(new HttpContextLifetimeManager());
             container.RegisterType<IUserNameResolver, UserNameResolver>();
@@ -264,8 +277,7 @@ namespace VirtoCommerce.Platform.Web
                 new PlatformDatabaseInitializer().InitializeDatabase(context);
             }
 
-            // Create Hangfire tables
-            new SqlServerStorage(connectionStringName);
+            hangfireLauncher.ConfigureDatabase();
 
             #endregion
 

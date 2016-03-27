@@ -71,6 +71,7 @@
         objects = _.map(objects, function (x) {
             x.value = x.isDictionary ? x.values[0].value.id : x.values[0].value;
             x.values = undefined;
+            x.allowedValues = undefined;
             return x;
         });
 
@@ -99,7 +100,7 @@
         {
             name: "platform.commands.save", icon: 'fa fa-save',
             executeMethod: saveChanges,
-            canExecuteMethod: canSave            
+            canExecuteMethod: canSave
         },
         {
             name: "platform.commands.reset", icon: 'fa fa-undo',
@@ -109,7 +110,7 @@
             canExecuteMethod: isDirty
         }
     ];
-    
+
     blade.onClose = function (closeCallback) {
         bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, saveChanges, closeCallback, "platform.dialogs.settings-delete.title", "platform.dialogs.settings-delete.message");
     };

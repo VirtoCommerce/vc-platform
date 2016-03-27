@@ -12,7 +12,7 @@
         blade.origEntity = angular.copy(blade.currentEntity);
 
         if (!blade.newAsset) {
-            themes.getAsset({ storeId: blade.choosenStoreId, themeId: blade.choosenThemeId, assetId: blade.choosenAssetId }, function (data) {
+            themes.getAsset({ storeId: blade.chosenStoreId, themeId: blade.chosenThemeId, assetId: blade.chosenAssetId }, function (data) {
                 blade.isLoading = false;
                 blade.currentEntity = data;
                 blade.origEntity = angular.copy(blade.currentEntity);
@@ -104,9 +104,9 @@
     $scope.saveChanges = function () {
         blade.isLoading = true;
 
-        blade.currentEntity.id = blade.choosenFolder + '/' + blade.currentEntity.name;
+        blade.currentEntity.id = blade.chosenFolder + '/' + blade.currentEntity.name;
 
-        themes.updateAsset({ storeId: blade.choosenStoreId, themeId: blade.choosenThemeId }, blade.currentEntity, function () {
+        themes.updateAsset({ storeId: blade.chosenStoreId, themeId: blade.chosenThemeId }, blade.currentEntity, function () {
             blade.origEntity = angular.copy(blade.currentEntity);
             blade.parentBlade.initialize();
             if (blade.newAsset) {
@@ -114,7 +114,7 @@
                 bladeNavigationService.closeBlade(blade);
             }
             else {
-                blade.choosenAssetId = blade.currentEntity.id;
+                blade.chosenAssetId = blade.currentEntity.id;
                 blade.title = blade.currentEntity.id;
                 blade.subtitle = 'Edit ' + blade.currentEntity.name;
                 blade.newAsset = false;
@@ -133,7 +133,7 @@
                 if (remove) {
                     blade.isLoading = true;
 
-                    themes.deleteAsset({ storeId: blade.choosenStoreId, themeId: blade.choosenThemeId, assetIds: blade.choosenAssetId }, function () {
+                    themes.deleteAsset({ storeId: blade.chosenStoreId, themeId: blade.chosenThemeId, assetIds: blade.chosenAssetId }, function () {
                         $scope.bladeClose();
                         blade.parentBlade.initialize(true);
                     },
@@ -157,25 +157,25 @@
         // mode: "liquid-javascript" // liquid css
 
         if (!blade.newAsset) {
-            if (endsWith(blade.choosenAssetId, ".json")) {
+            if (endsWith(blade.chosenAssetId, ".json")) {
                 return { name: "javascript", json: true };
             }
-            else if (endsWith(blade.choosenAssetId, ".js")) {
+            else if (endsWith(blade.chosenAssetId, ".js")) {
                 return "javascript";
             }
-            else if (endsWith(blade.choosenAssetId, ".js.liquid")) {
+            else if (endsWith(blade.chosenAssetId, ".js.liquid")) {
                 return "liquid-javascript";
             }
-            else if (endsWith(blade.choosenAssetId, ".css.liquid")) {
+            else if (endsWith(blade.chosenAssetId, ".css.liquid")) {
                 return "liquid-css";
             }
-            else if (endsWith(blade.choosenAssetId, ".css")) {
+            else if (endsWith(blade.chosenAssetId, ".css")) {
                 return "css";
             }
-            else if (endsWith(blade.choosenAssetId, ".scss.liquid")) {
+            else if (endsWith(blade.chosenAssetId, ".scss.liquid")) {
                 return "liquid-css";
             }
-            else if (endsWith(blade.choosenAssetId, ".liquid")) {
+            else if (endsWith(blade.chosenAssetId, ".liquid")) {
                 return "liquid-html";
             }
 

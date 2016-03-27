@@ -91,6 +91,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StaticContentTests.cs" />
     <Compile Include="StorefrontTestBase.cs" />
+    <Compile Include="UrlBuilderTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

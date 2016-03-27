@@ -1,7 +1,5 @@
 ﻿using System;
 using CacheManager.Core;
-using Hangfire;
-using Hangfire.SqlServer;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
@@ -9,14 +7,12 @@ using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
 using Microsoft.Practices.Unity;
 using Owin;
-using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data;
 using VirtoCommerce.Platform.Data.Security;
 using VirtoCommerce.Platform.Data.Security.Authentication.ApiKeys;
 using VirtoCommerce.Platform.Data.Security.Authentication.Hmac;
 using VirtoCommerce.Platform.Data.Security.Identity;
-using VirtoCommerce.Platform.Web.Hangfire;
 
 namespace VirtoCommerce.Platform.Web
 {
@@ -24,7 +20,7 @@ namespace VirtoCommerce.Platform.Web
     {
         public const string PublicClientId = "web";
 
-        public static void Configure(IAppBuilder app, IUnityContainer container, string databaseConnectionStringName, AuthenticationOptions authenticationOptions)
+        public static void Configure(IAppBuilder app, IUnityContainer container, AuthenticationOptions authenticationOptions)
         {
             app.CreatePerOwinContext(() => container.Resolve<SecurityDbContext>());
             app.CreatePerOwinContext(() => container.Resolve<ApplicationUserManager>());
@@ -93,17 +89,6 @@ namespace VirtoCommerce.Platform.Web
             }
 
             app.Use<CurrentUserOwinMiddleware>(container.Resolve<Func<ICurrentUser>>());
-
-            var securityService = container.Resolve<ISecurityService>();
-            var moduleInitializerOptions = container.Resolve<IModuleInitializerOptions>();
-            app.UseHangfire(config =>
-            {
-                config.UseUnityActivator(container);
-                config.UseSqlServerStorage(databaseConnectionStringName, new SqlServerStorageOptions { PrepareSchemaIfNecessary = false, QueuePollInterval = TimeSpan.FromSeconds(60) /* 15 Default value */ });
-                config.UseAuthorizationFilters(new PermissionBasedAuthorizationFilter(securityService) { Permission = PredefinedPermissions.BackgroundJobsManage });
-                config.UseDashboardPath("/" + moduleInitializerOptions.RoutPrefix + "hangfire");
-                config.UseServer();
-            });
         }
     }
 }

@@ -15,7 +15,7 @@ function ($scope, roles, bladeUtils, bladeNavigationService, dialogService, uiGr
         }, function (data) {
             blade.isLoading = false;
 
-            $scope.pageSettings.totalItems = angular.isDefined(data.totalCount) ? data.totalCount : 0;
+            $scope.pageSettings.totalItems = data.totalCount;
             blade.currentEntities = data.roles;
         }, function (error) {
             bladeNavigationService.setError('Error ' + error.status, blade);

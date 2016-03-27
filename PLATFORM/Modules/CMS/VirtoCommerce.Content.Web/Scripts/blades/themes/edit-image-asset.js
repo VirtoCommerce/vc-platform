@@ -9,7 +9,7 @@
 
     blade.initializeBlade = function () {
         if (!blade.newAsset) {
-            themes.getAsset({ storeId: blade.choosenStoreId, themeId: blade.choosenThemeId, assetId: blade.choosenAssetId }, function (data) {
+            themes.getAsset({ storeId: blade.chosenStoreId, themeId: blade.chosenThemeId, assetId: blade.chosenAssetId }, function (data) {
                 blade.isLoading = false;
 
                 data.content = "data:" + data.contentType + ";base64," + data.byteContent;
@@ -94,11 +94,11 @@
 
     blade.saveChanges = function () {
         blade.isLoading = true;
-        blade.currentEntity.id = blade.choosenFolder + '/' + blade.currentEntity.name;
+        blade.currentEntity.id = blade.chosenFolder + '/' + blade.currentEntity.name;
 
-        themes.updateAsset({ storeId: blade.choosenStoreId, themeId: blade.choosenThemeId }, blade.currentEntity, function () {
+        themes.updateAsset({ storeId: blade.chosenStoreId, themeId: blade.chosenThemeId }, blade.currentEntity, function () {
             blade.parentBlade.initialize();
-            blade.choosenAssetId = blade.currentEntity.id;
+            blade.chosenAssetId = blade.currentEntity.id;
             blade.title = blade.currentEntity.id;
             blade.subtitle = 'Edit asset';
             blade.newAsset = false;
@@ -120,7 +120,7 @@
                 if (remove) {
                     $scope.blade.isLoading = true;
 
-                    themes.deleteAsset({ storeId: blade.choosenStoreId, themeId: blade.choosenThemeId, assetIds: blade.choosenAssetId }, function () {
+                    themes.deleteAsset({ storeId: blade.chosenStoreId, themeId: blade.chosenThemeId, assetIds: blade.chosenAssetId }, function () {
                         $scope.bladeClose();
                         $scope.blade.parentBlade.initialize(true);
                     },
@@ -160,7 +160,7 @@
 
             if (blade.newAsset) {
                 blade.currentEntity.name = image[0].name;
-                blade.currentEntity.id = blade.choosenFolder + '/' + image[0].name;
+                blade.currentEntity.id = blade.chosenFolder + '/' + image[0].name;
             }
         };
 

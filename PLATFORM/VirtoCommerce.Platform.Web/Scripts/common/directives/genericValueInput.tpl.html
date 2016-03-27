@@ -122,27 +122,23 @@
     </script>
 
     <script type="text/ng-template" id="dShortText-multilang.html">
-        <div class="form-group" ng-repeat="propValue in context.currentPropValues">
-            <div class="form-input __langs">
-                <span class="flag flag-{{propValue.locale.substr(3).toLowerCase()}}"></span>
-                <input ng-required="currentEntity.isRequired"
-                       ng-model="propValue.value"
-                       placeholder="{{ 'platform.genericValueInput.placeholders.short-text-multilang' | translate}}">
-            </div>
+        <div class="form-input __langs" ng-repeat="propValue in context.currentPropValues | orderBy: 'locale'">
+            <span class="flag flag-{{propValue.locale.substr(3).toLowerCase()}}"></span>
+            <input ng-required="currentEntity.isRequired"
+                   ng-model="propValue.value"
+                   placeholder="{{ 'platform.genericValueInput.placeholders.short-text-multilang' | translate}}">
         </div>
     </script>
     <script type="text/ng-template" id="dLongText-multilang.html">
-        <div class="form-group" ng-repeat="propValue in context.currentPropValues">
-            <div class="form-input __langs">
-                <span class="flag flag-{{propValue.locale.substr(3).toLowerCase()}}"></span>
-                <textarea ng-required="currentEntity.isRequired"
-                          ng-model="propValue.value"
-                          placeholder="{{ 'platform.genericValueInput.placeholders.long-text-multilang' | translate}}" />
-            </div>
+        <div class="form-input __langs" ng-repeat="propValue in context.currentPropValues | orderBy: 'locale'">
+            <span class="flag flag-{{propValue.locale.substr(3).toLowerCase()}}"></span>
+            <textarea ng-required="currentEntity.isRequired"
+                      ng-model="propValue.value"
+                      placeholder="{{ 'platform.genericValueInput.placeholders.long-text-multilang' | translate}}" />
         </div>
     </script>
     <script type="text/ng-template" id="dHtml-multilang.html">
-        <div ng-class="{'form-group': !$first}" ng-repeat="propValue in context.currentPropValues">
+        <div ng-class="{'form-group': !$first}" ng-repeat="propValue in context.currentPropValues | orderBy: 'locale'">
             <span class="flag flag-{{propValue.locale.substr(3).toLowerCase()}}"></span>
             <div ng-required="currentEntity.isRequired"
                  ng-model="propValue.value"
@@ -153,34 +149,30 @@
 
 
     <script type="text/ng-template" id="dShortText-multivalue-multilang.html">
-        <div class="form-group" ng-repeat="propValue in context.currentPropValues">
-            <div class="form-input __langs">
-                <span class="flag flag-{{propValue.locale.substr(3).toLowerCase()}}"></span>
-                <tags-input ng-model="propValue.values"
-                            min-tags="{{currentEntity.isRequired ? 1 : undefined}}"
-                            add-on-blur="true"
-                            min-length="1"
-                            display-property="value"
-                            placeholder="{{ 'platform.genericValueInput.placeholders.short-text-multivalue-multilang' | translate}}">
-                </tags-input>
-            </div>
+        <div class="form-input __langs" ng-repeat="propValue in context.currentPropValues | orderBy: 'locale'">
+            <span class="flag flag-{{propValue.locale.substr(3).toLowerCase()}}"></span>
+            <tags-input ng-model="propValue.values"
+                        min-tags="{{currentEntity.isRequired ? 1 : undefined}}"
+                        add-on-blur="true"
+                        min-length="1"
+                        display-property="value"
+                        placeholder="{{ 'platform.genericValueInput.placeholders.short-text-multivalue-multilang' | translate}}">
+            </tags-input>
         </div>
     </script>
 
     <script type="text/ng-template" id="dShortText-dictionary-multilang.html">
-        <div class="form-group">
-            <div class="form-input">
-                <ui-select ng-model="context.currentPropValues[0]">
-                    <ui-select-match placeholder="{{ 'platform.genericValueInput.placeholders.short-text-dictionary-multilang' | translate}}">{{$select.selected.name}}</ui-select-match>
-                    <ui-select-choices repeat="propValue in context.allDictionaryValues | filter: {name: $select.search}">
-                        <span ng-bind-html="propValue.name | highlight: $select.search"></span>
-                    </ui-select-choices>
-                </ui-select>
-            </div>
-            <div ng-repeat="data in context.currentPropValues[0].displayNames" style="margin:5px 0;">
-                <span class="flag flag-{{data.locale.substr(3, 2).toLowerCase()}}"></span>
-                {{data.name}}
-            </div>
+        <div class="form-input">
+            <ui-select ng-model="context.currentPropValues[0]">
+                <ui-select-match placeholder="{{ 'platform.genericValueInput.placeholders.short-text-dictionary-multilang' | translate}}">{{$select.selected.name}}</ui-select-match>
+                <ui-select-choices repeat="propValue in context.allDictionaryValues | filter: {name: $select.search}">
+                    <span ng-bind-html="propValue.name | highlight: $select.search"></span>
+                </ui-select-choices>
+            </ui-select>
+        </div>
+        <div ng-repeat="data in context.currentPropValues[0].displayNames | orderBy: 'locale'" style="margin:5px 0;">
+            <span class="flag flag-{{data.locale.substr(3, 2).toLowerCase()}}"></span>
+            {{data.name}}
         </div>
     </script>
 
