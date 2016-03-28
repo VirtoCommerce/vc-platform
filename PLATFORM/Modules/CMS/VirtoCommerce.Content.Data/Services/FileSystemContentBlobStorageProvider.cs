@@ -4,15 +4,18 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VirtoCommerce.Platform.Core.Asset;
 using VirtoCommerce.Platform.Data.Asset;
 
 namespace VirtoCommerce.Content.Data.Services
 {
-    public class FileSystemContentStorageProviderImpl : FileSystemBlobProvider, IContentStorageProvider
+    public class FileSystemContentBlobStorageProvider : FileSystemBlobProvider, IContentBlobStorageProvider
     {
-        public FileSystemContentStorageProviderImpl(string storagePath, string publicUrl = "")
+        private readonly string[] _ignoreUrls;
+        public FileSystemContentBlobStorageProvider(string storagePath, string publicUrl, params string[] ignoreUrls)
             : base(storagePath, publicUrl)
         {
+            _ignoreUrls = ignoreUrls;
         }
 
         #region IContentStorageProvider Members
@@ -34,5 +37,14 @@ namespace VirtoCommerce.Content.Data.Services
             }
         }
         #endregion
+
+        public override BlobSearchResult Search(string folderUrl, string keyword)
+        {
+            if(!string.IsNullOrEmpty(folderUrl) && _ignoreUrls != null && _ignoreUrls.Any(x=> folderUrl.StartsWith(x, StringComparison.OrdinalIgnoreCase)))
+            {
+                return new BlobSearchResult();
+            }
+            return base.Search(folderUrl, keyword);
+        }
     }
 }

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VirtoCommerce.Platform.Core.Common
+namespace VirtoCommerce.Storefront.Model.Common
 {
     public static class StreamExtensions
     {

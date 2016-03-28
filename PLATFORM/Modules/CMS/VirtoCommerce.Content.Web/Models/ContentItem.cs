@@ -15,6 +15,7 @@ namespace VirtoCommerce.Content.Web.Models
         public string Name { get; set; }
         public string Type { get; set; }
         public string Url { get; set; }
+        public string RelativeUrl { get; set; }
         public string ParentUrl { get; set; }
 
         public DateTime? ModifiedDate { get; set; }

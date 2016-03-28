@@ -21,6 +21,7 @@ using System.Configuration;
 using VirtoCommerce.Platform.Core.Common;
 using System.Linq;
 using VirtoCommerce.Platform.Data.Asset;
+using VirtoCommerce.Platform.Core.Asset;
 
 namespace VirtoCommerce.Content.Web
 {
@@ -48,23 +49,20 @@ namespace VirtoCommerce.Content.Web
             _container.RegisterType<IMenuService, MenuServiceImpl>();
 
             var settingsManager = _container.Resolve<ISettingsManager>();
-            var assetsConnection = ConfigurationManager.ConnectionStrings["CmsConnectionString"];
+            var blobConnectionString = BlobConnectionString.Parse(ConfigurationManager.ConnectionStrings["CmsContentConnectionString"].ConnectionString);
 
-            var properties = assetsConnection.ConnectionString.ToDictionary(";", "=");
-            var provider = properties["provider"];
-            var cmsContentConnectionString = properties.ToString(";", "=", "provider");
-
-            Func<string, string, IContentStorageProvider> contentProviderFactory = (contentType, storeId) =>
+             Func<string, string, IContentBlobStorageProvider> contentProviderFactory = (contentType, storeId) =>
             {
-                if (string.Equals(provider, FileSystemBlobProvider.ProviderName, StringComparison.OrdinalIgnoreCase))
+                if (string.Equals(blobConnectionString.Provider, FileSystemBlobProvider.ProviderName, StringComparison.OrdinalIgnoreCase))
                 {
-                    var storagePath = Path.Combine(NormalizePath(properties["rootPath"]), SanitizeContentType(contentType), storeId);
-                    var publicUrl = properties["publicUrl"] + "/" + SanitizeContentType(contentType) + "/" + storeId;
-                   return new FileSystemContentStorageProviderImpl(storagePath, publicUrl);
+                    var storagePath = Path.Combine(NormalizePath(blobConnectionString.RootPath), contentType, storeId);
+                    var publicUrl = blobConnectionString.PublicUrl + "/" + contentType + "/" + storeId;
+                    //Do not export default theme (Themes/default) its will distributed with code
+                    return new FileSystemContentBlobStorageProvider(storagePath, publicUrl, "/Themes/default");
                 }
-                else if (string.Equals(provider, AzureBlobProvider.ProviderName, StringComparison.OrdinalIgnoreCase))
+                else if (string.Equals(blobConnectionString.Provider, AzureBlobProvider.ProviderName, StringComparison.OrdinalIgnoreCase))
                 {
-                    throw new NotImplementedException();
+                    return new AzureContentBlobStorageProvider(blobConnectionString.ConnectionString, Path.Combine(blobConnectionString.RootPath, contentType, storeId));
                 }
                 throw new NotImplementedException();
             };
@@ -131,15 +129,7 @@ namespace VirtoCommerce.Content.Web
 
         #endregion
 
-        private static string SanitizeContentType(string contentType)
-        {
-            var retVal = _possibleContentTypes.FirstOrDefault(x => x.Equals(contentType, StringComparison.OrdinalIgnoreCase));
-            if(retVal == null)
-            {
-                throw new ArgumentException("Unknown contentType - " + contentType);
-            }
-            return retVal;
-        }
+   
         private string NormalizePath(string path)
         {
             var retVal = path;

@@ -18,8 +18,7 @@ namespace VirtoCommerce.Storefront.Test
         {
             var contentItem = new ContentPage
             {
-                LocalPath = @"C:\temp\foobar_baz.md",
-                RelativePath = @"temp\foobar_baz.md"
+                StoragePath = @"/temp/foobar_baz.md",
             };
             contentItem.Permalink = ":folder/:title";
             contentItem.LoadContent(string.Empty, null, null);
@@ -31,8 +30,7 @@ namespace VirtoCommerce.Storefront.Test
         {
             var contentItem = new ContentPage
             {
-                LocalPath = @"c:\foobar_baz.en-us.md",
-                RelativePath = @"foobar_baz.en-us.md"
+                StoragePath = @"/foobar_baz.en-us.md",
             };
             contentItem.Permalink = ":title";
             contentItem.LoadContent(string.Empty, null, null);
@@ -45,8 +43,7 @@ namespace VirtoCommerce.Storefront.Test
         {
             var contentItem = new ContentPage
             {
-                LocalPath = @"c:\temp\2012-01-03-foobar_baz.md",
-                RelativePath = @"temp\2012-01-03-foobar_baz.md"
+                StoragePath = @"/temp/2012-01-03-foobar_baz.md",
             };
             contentItem.Permalink = ":title";
             contentItem.LoadContent(string.Empty, null, null);
@@ -58,8 +55,7 @@ namespace VirtoCommerce.Storefront.Test
         {
             var contentItem = new ContentPage
             {
-                LocalPath = @"c:\temp\foo-bar-baz-qak-foobar_baz.md",
-                RelativePath = @"\temp\foo-bar-baz-qak-foobar_baz.md"
+                StoragePath = @"/temp/foo-bar-baz-qak-foobar_baz.md",
             };
             contentItem.Permalink = ":title";
             contentItem.LoadContent(string.Empty, null, null);
@@ -88,8 +84,7 @@ namespace VirtoCommerce.Storefront.Test
             {
                 Categories = categories == null ? new List<string>() : categories.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList(),
                 PublishedDate = new DateTime(2015, 03, 09),
-                RelativePath = @"temp\2015-03-09-foobar-baz.md",
-                LocalPath = @"c:\temp\2015-03-09-foobar-baz.md",
+                StoragePath = @"/temp/2015-03-09-foobar-baz.md",
                 Permalink = permalink
             };
             page.LoadContent(string.Empty, null, null);

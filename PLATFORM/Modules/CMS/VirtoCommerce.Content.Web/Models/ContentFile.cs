@@ -14,5 +14,6 @@ namespace VirtoCommerce.Content.Web.Models
 
         public string MimeType { get; set; }
         public string Size { get; set; }
+        public byte[] Data { get; set; }
     }
 }

@@ -20,9 +20,9 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
     [RoutePrefix("api/content/{contentType}/{storeId}")]
     public class ContentController : ContentBaseController
     {
-        private readonly Func<string, string, IContentStorageProvider> _contentStorageProviderFactory;
+        private readonly Func<string, string, IContentBlobStorageProvider> _contentStorageProviderFactory;
         private readonly IBlobUrlResolver _urlResolver;
-        public ContentController(Func<string, string, IContentStorageProvider> contentStorageProviderFactory, IBlobUrlResolver urlResolver, ISecurityService securityService, IPermissionScopeService permissionScopeService)
+        public ContentController(Func<string, string, IContentBlobStorageProvider> contentStorageProviderFactory, IBlobUrlResolver urlResolver, ISecurityService securityService, IPermissionScopeService permissionScopeService)
             : base(securityService, permissionScopeService)
         {
             _contentStorageProviderFactory = contentStorageProviderFactory;

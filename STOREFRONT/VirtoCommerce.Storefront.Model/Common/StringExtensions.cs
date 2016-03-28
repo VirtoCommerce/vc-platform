@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace VirtoCommerce.Storefront.Model.Common
@@ -29,6 +30,12 @@ namespace VirtoCommerce.Storefront.Model.Common
                 sb.Append(str[i]);
             }
             return sb.ToString().ToLowerInvariant();
+        }
+
+        public static bool FitsMask(this string fileName, string fileMask)
+        {
+            Regex mask = new Regex(fileMask.Replace(".", "[.]").Replace("*", ".*").Replace("?", "."));
+            return mask.IsMatch(fileName);
         }
     }
 }
