@@ -62,7 +62,7 @@ namespace VirtoCommerce.Content.Web
                 }
                 else if (string.Equals(blobConnectionString.Provider, AzureBlobProvider.ProviderName, StringComparison.OrdinalIgnoreCase))
                 {
-                    return new AzureContentBlobStorageProvider(blobConnectionString.ConnectionString, Path.Combine(blobConnectionString.RootPath, contentType, storeId));
+                    return new AzureContentBlobStorageProvider(blobConnectionString.ConnectionString, Path.Combine(blobConnectionString.RootPath, contentType.FirstCharToUpper(), storeId));
                 }
                 throw new NotImplementedException();
             };

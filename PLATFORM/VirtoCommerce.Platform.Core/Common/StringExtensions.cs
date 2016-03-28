@@ -282,5 +282,15 @@ namespace VirtoCommerce.Platform.Core.Common
 
             return left.Join(right.DefaultIfEmpty(String.Empty), x => true, y => true, (x, y) => String.Join(delimiter, new[] { x, y }.Where(z => !String.IsNullOrEmpty(z)))).ToArray();
         }
+
+        public static string FirstCharToUpper(this string input)
+        {
+            if (String.IsNullOrEmpty(input))
+            {
+                throw new ArgumentException("input");
+            }
+            return input.First().ToString().ToUpper() + input.Substring(1);
+        }
+
     }
 }
