@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using CacheManager.Core;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using VirtoCommerce.Storefront.Model.Common;
@@ -17,9 +18,11 @@ namespace VirtoCommerce.Storefront.Services
         private readonly CloudBlobDirectory _directory;
         private readonly string _containerName;
         private readonly string _baseDirectoryPath;
+        private readonly ICacheManager<object> _cacheManager;
 
-        public AzureBlobContentProvider(string connectionString, string basePath)
+        public AzureBlobContentProvider(string connectionString, string basePath, ICacheManager<object> cacheManager)
         {
+            _cacheManager = cacheManager;
             var parts = basePath.Split(new[] { "/", "\\" }, StringSplitOptions.RemoveEmptyEntries);
 
             _containerName = parts.FirstOrDefault();
@@ -69,22 +72,25 @@ namespace VirtoCommerce.Storefront.Services
         public virtual bool PathExists(string path)
         {
             path = NormalizePath(path);
-            //If requested path is a directory we should return always true because Azure blob storage not support checking directories exist
-            var retVal = string.IsNullOrEmpty(Path.GetExtension(path));
-            if (!retVal)
+            return _cacheManager.Get("AzureBlobContentProvider.PathExists:" + path.GetHashCode(), "ContentRegion", () =>
             {
-                var url = GetAbsoluteUrl(path);
-                try
+                //If requested path is a directory we should return always true because Azure blob storage not support checking directories exist
+                var retVal = string.IsNullOrEmpty(Path.GetExtension(path));
+                if (!retVal)
                 {
-                    retVal = _cloudBlobClient.GetBlobReferenceFromServer(new Uri(url)).Exists();
+                    var url = GetAbsoluteUrl(path);
+                    try
+                    {
+                        retVal = _cloudBlobClient.GetBlobReferenceFromServer(new Uri(url)).Exists();
+                    }
+                    catch (Exception)
+                    {
+                        //Azure blob storage client does not provide method to check blob url exist without throwing exception
+                    }
                 }
-                catch (Exception)
-                {
-                    //Azure blob storage client does not provide method to check blob url exist without throwing exception
-                }
-            }
 
-            return retVal;
+                return retVal;
+            });
         }
 
         /// <summary>
