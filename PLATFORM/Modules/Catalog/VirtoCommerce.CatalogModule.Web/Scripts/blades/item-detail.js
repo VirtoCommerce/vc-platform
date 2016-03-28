@@ -86,7 +86,7 @@
             permission: blade.updatePermission
         },
         {
-            name: "Clone", icon: 'fa fa-files-o',
+            name: "platform.commands.clone", icon: 'fa fa-files-o',
             executeMethod: function () {
                 blade.isLoading = true;
                 items.cloneItem({ itemId: blade.itemId }, function (data) {

@@ -19,6 +19,7 @@
         replace: true,
         templateUrl: '$(Platform)/Scripts/app/navigation/widget/widgetContainer.tpl.html',
         scope: {
+            data: '=?',
             gridsterOpts: '=?',
             group: '@',
             blade: '='

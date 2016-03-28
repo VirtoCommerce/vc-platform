@@ -171,6 +171,10 @@ angular.module('platformWebApp', AppDependencies).
             return hash;
         };
 
+        String.prototype.endsWith = function (suffix) {
+            return this.indexOf(suffix, this.length - suffix.length) !== -1;
+        };
+
         // textAngular
         taOptions.toolbar = [
         ['bold', 'italics', 'underline', 'strikeThrough', 'ul', 'ol', 'redo', 'undo', 'clear', 'quote'],
