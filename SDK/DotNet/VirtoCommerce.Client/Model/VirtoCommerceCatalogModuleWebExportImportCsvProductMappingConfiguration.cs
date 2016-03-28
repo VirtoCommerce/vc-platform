@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,49 +21,55 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebExportImportCsvProductMappingConfiguration" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebExportImportCsvProductMappingConfiguration" />class.
         /// </summary>
-        public VirtoCommerceCatalogModuleWebExportImportCsvProductMappingConfiguration()
+        /// <param name="ETag">ETag.</param>
+        /// <param name="Delimiter">Delimiter.</param>
+        /// <param name="CsvColumns">CsvColumns.</param>
+        /// <param name="PropertyMaps">PropertyMaps.</param>
+        /// <param name="PropertyCsvColumns">PropertyCsvColumns.</param>
+
+        public VirtoCommerceCatalogModuleWebExportImportCsvProductMappingConfiguration(string ETag = null, string Delimiter = null, List<string> CsvColumns = null, List<VirtoCommerceCatalogModuleWebExportImportCsvProductPropertyMap> PropertyMaps = null, List<string> PropertyCsvColumns = null)
         {
+            this.ETag = ETag;
+            this.Delimiter = Delimiter;
+            this.CsvColumns = CsvColumns;
+            this.PropertyMaps = PropertyMaps;
+            this.PropertyCsvColumns = PropertyCsvColumns;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets ETag
         /// </summary>
         [DataMember(Name="eTag", EmitDefaultValue=false)]
         public string ETag { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Delimiter
         /// </summary>
         [DataMember(Name="delimiter", EmitDefaultValue=false)]
         public string Delimiter { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CsvColumns
         /// </summary>
         [DataMember(Name="csvColumns", EmitDefaultValue=false)]
         public List<string> CsvColumns { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets PropertyMaps
         /// </summary>
         [DataMember(Name="propertyMaps", EmitDefaultValue=false)]
         public List<VirtoCommerceCatalogModuleWebExportImportCsvProductPropertyMap> PropertyMaps { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets PropertyCsvColumns
         /// </summary>
         [DataMember(Name="propertyCsvColumns", EmitDefaultValue=false)]
         public List<string> PropertyCsvColumns { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,35 +21,39 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceDomainCommerceModelTaxDetail" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCommerceModelTaxDetail" />class.
         /// </summary>
-        public VirtoCommerceDomainCommerceModelTaxDetail()
+        /// <param name="Rate">Rate.</param>
+        /// <param name="Amount">Amount.</param>
+        /// <param name="Name">Name.</param>
+
+        public VirtoCommerceDomainCommerceModelTaxDetail(double? Rate = null, double? Amount = null, string Name = null)
         {
+            this.Rate = Rate;
+            this.Amount = Amount;
+            this.Name = Name;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets Rate
         /// </summary>
         [DataMember(Name="rate", EmitDefaultValue=false)]
         public double? Rate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Amount
         /// </summary>
         [DataMember(Name="amount", EmitDefaultValue=false)]
         public double? Amount { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

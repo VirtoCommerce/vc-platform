@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,49 +21,55 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceDomainMarketingModelMarketingSearchCriteria" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainMarketingModelMarketingSearchCriteria" />class.
         /// </summary>
-        public VirtoCommerceDomainMarketingModelMarketingSearchCriteria()
+        /// <param name="FolderId">FolderId.</param>
+        /// <param name="ResponseGroup">ResponseGroup.</param>
+        /// <param name="Keyword">Keyword.</param>
+        /// <param name="Start">Start.</param>
+        /// <param name="Count">Count.</param>
+
+        public VirtoCommerceDomainMarketingModelMarketingSearchCriteria(string FolderId = null, string ResponseGroup = null, string Keyword = null, int? Start = null, int? Count = null)
         {
+            this.FolderId = FolderId;
+            this.ResponseGroup = ResponseGroup;
+            this.Keyword = Keyword;
+            this.Start = Start;
+            this.Count = Count;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets FolderId
         /// </summary>
         [DataMember(Name="folderId", EmitDefaultValue=false)]
         public string FolderId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ResponseGroup
         /// </summary>
         [DataMember(Name="responseGroup", EmitDefaultValue=false)]
         public string ResponseGroup { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Keyword
         /// </summary>
         [DataMember(Name="keyword", EmitDefaultValue=false)]
         public string Keyword { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Start
         /// </summary>
         [DataMember(Name="start", EmitDefaultValue=false)]
         public int? Start { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Count
         /// </summary>
         [DataMember(Name="count", EmitDefaultValue=false)]
         public int? Count { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

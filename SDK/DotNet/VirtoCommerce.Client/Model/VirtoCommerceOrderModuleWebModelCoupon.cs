@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// Represent coupon entered by customer on checkout
     /// </summary>
@@ -21,28 +21,31 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceOrderModuleWebModelCoupon" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceOrderModuleWebModelCoupon" />class.
         /// </summary>
-        public VirtoCommerceOrderModuleWebModelCoupon()
+        /// <param name="Code">Code.</param>
+        /// <param name="InvalidDescription">InvalidDescription.</param>
+
+        public VirtoCommerceOrderModuleWebModelCoupon(string Code = null, string InvalidDescription = null)
         {
+            this.Code = Code;
+            this.InvalidDescription = InvalidDescription;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets Code
         /// </summary>
         [DataMember(Name="code", EmitDefaultValue=false)]
         public string Code { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets InvalidDescription
         /// </summary>
         [DataMember(Name="invalidDescription", EmitDefaultValue=false)]
         public string InvalidDescription { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// Merchandising item.
     /// </summary>
@@ -21,383 +21,431 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelProduct" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelProduct" />class.
         /// </summary>
-        public VirtoCommerceCatalogModuleWebModelProduct()
+        /// <param name="ManufacturerPartNumber">Gets or sets the manufacturer part number for this product..</param>
+        /// <param name="Gtin">Gets or sets the Global Trade Item Number..</param>
+        /// <param name="Code">Code.</param>
+        /// <param name="Name">Gets or sets the name..</param>
+        /// <param name="CatalogId">Gets or sets the catalog id that this product belongs to..</param>
+        /// <param name="Catalog">Gets or sets the catalog that this product belongs to..</param>
+        /// <param name="CategoryId">Gets or sets the category id that this product belongs to..</param>
+        /// <param name="Category">Gets or sets the category that this product belongs to..</param>
+        /// <param name="Outline">Gets or sets the all parent categories ids concatenated. E.g. (1;21;344).</param>
+        /// <param name="Parents">All parents categories.</param>
+        /// <param name="IndexingDate">Gets or sets the date and time that this product was last indexed at..</param>
+        /// <param name="TitularItemId">Gets or sets the titular item id for a variation..</param>
+        /// <param name="IsBuyable">Gets or sets a value indicating whether this {VirtoCommerce.CatalogModule.Web.Model.Product} is buyable..</param>
+        /// <param name="IsActive">Gets or sets a value indicating whether this {VirtoCommerce.CatalogModule.Web.Model.Product} is active..</param>
+        /// <param name="TrackInventory">Gets or sets a value indicating whether this {VirtoCommerce.CatalogModule.Web.Model.Product} inventory is tracked..</param>
+        /// <param name="MaxQuantity">Gets or sets the maximum quantity of the product that a customer can buy..</param>
+        /// <param name="MinQuantity">Gets or sets the minimum quantity of the product that a customer can buy..</param>
+        /// <param name="ProductType">Gets or sets the type of the product. (can be Physical, Digital or Subscription).</param>
+        /// <param name="WeightUnit">Gets or sets the weight unit. (for physical product only).</param>
+        /// <param name="Weight">Gets or sets the weight. (for physical product only).</param>
+        /// <param name="MeasureUnit">Gets or sets the dimensions measure unit. (for physical product only).</param>
+        /// <param name="Height">Gets or sets the height. (for physical product only).</param>
+        /// <param name="Length">Gets or sets the length. (for physical product only).</param>
+        /// <param name="Width">Gets or sets the width. (for physical product only).</param>
+        /// <param name="EnableReview">Gets or sets a value indicating whether this {VirtoCommerce.CatalogModule.Web.Model.Product} can be reviewed in storefront..</param>
+        /// <param name="MaxNumberOfDownload">Gets or sets the maximum number of download. (for digital product only).</param>
+        /// <param name="DownloadExpiration">Gets or sets the download expiration. (for digital product only).</param>
+        /// <param name="DownloadType">Gets or sets the type of the download. (for digital product only).</param>
+        /// <param name="HasUserAgreement">Gets or sets a value indicating whether this {VirtoCommerce.CatalogModule.Web.Model.Product} has user agreement. (for digital product only).</param>
+        /// <param name="ShippingType">Gets or sets the type of the shipping..</param>
+        /// <param name="TaxType">Gets or sets the type of the tax..</param>
+        /// <param name="Vendor">Gets or sets the product vendor..</param>
+        /// <param name="ImgSrc">Gets the default image for the product..</param>
+        /// <param name="Properties">Gets or sets the properties..</param>
+        /// <param name="Images">Gets or sets the images..</param>
+        /// <param name="Assets">Gets or sets the assets..</param>
+        /// <param name="Variations">Gets or sets the variations..</param>
+        /// <param name="Links">Gets or sets the links..</param>
+        /// <param name="Reviews">Gets or sets the reviews..</param>
+        /// <param name="Associations">Gets or sets the associations..</param>
+        /// <param name="SecurityScopes">SecurityScopes.</param>
+        /// <param name="SeoInfos">Gets or sets the list of SEO information records..</param>
+        /// <param name="CreatedDate">CreatedDate.</param>
+        /// <param name="ModifiedDate">ModifiedDate.</param>
+        /// <param name="CreatedBy">CreatedBy.</param>
+        /// <param name="ModifiedBy">ModifiedBy.</param>
+        /// <param name="Id">Id.</param>
+
+        public VirtoCommerceCatalogModuleWebModelProduct(string ManufacturerPartNumber = null, string Gtin = null, string Code = null, string Name = null, string CatalogId = null, VirtoCommerceCatalogModuleWebModelCatalog Catalog = null, string CategoryId = null, VirtoCommerceCatalogModuleWebModelCategory Category = null, string Outline = null, List<VirtoCommerceCatalogModuleWebModelCategory> Parents = null, DateTime? IndexingDate = null, string TitularItemId = null, bool? IsBuyable = null, bool? IsActive = null, bool? TrackInventory = null, int? MaxQuantity = null, int? MinQuantity = null, string ProductType = null, string WeightUnit = null, double? Weight = null, string MeasureUnit = null, double? Height = null, double? Length = null, double? Width = null, bool? EnableReview = null, int? MaxNumberOfDownload = null, DateTime? DownloadExpiration = null, string DownloadType = null, bool? HasUserAgreement = null, string ShippingType = null, string TaxType = null, string Vendor = null, string ImgSrc = null, List<VirtoCommerceCatalogModuleWebModelProperty> Properties = null, List<VirtoCommerceCatalogModuleWebModelImage> Images = null, List<VirtoCommerceCatalogModuleWebModelAsset> Assets = null, List<VirtoCommerceCatalogModuleWebModelProduct> Variations = null, List<VirtoCommerceCatalogModuleWebModelCategoryLink> Links = null, List<VirtoCommerceCatalogModuleWebModelEditorialReview> Reviews = null, List<VirtoCommerceCatalogModuleWebModelProductAssociation> Associations = null, List<string> SecurityScopes = null, List<VirtoCommerceDomainCommerceModelSeoInfo> SeoInfos = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
         {
+            this.ManufacturerPartNumber = ManufacturerPartNumber;
+            this.Gtin = Gtin;
+            this.Code = Code;
+            this.Name = Name;
+            this.CatalogId = CatalogId;
+            this.Catalog = Catalog;
+            this.CategoryId = CategoryId;
+            this.Category = Category;
+            this.Outline = Outline;
+            this.Parents = Parents;
+            this.IndexingDate = IndexingDate;
+            this.TitularItemId = TitularItemId;
+            this.IsBuyable = IsBuyable;
+            this.IsActive = IsActive;
+            this.TrackInventory = TrackInventory;
+            this.MaxQuantity = MaxQuantity;
+            this.MinQuantity = MinQuantity;
+            this.ProductType = ProductType;
+            this.WeightUnit = WeightUnit;
+            this.Weight = Weight;
+            this.MeasureUnit = MeasureUnit;
+            this.Height = Height;
+            this.Length = Length;
+            this.Width = Width;
+            this.EnableReview = EnableReview;
+            this.MaxNumberOfDownload = MaxNumberOfDownload;
+            this.DownloadExpiration = DownloadExpiration;
+            this.DownloadType = DownloadType;
+            this.HasUserAgreement = HasUserAgreement;
+            this.ShippingType = ShippingType;
+            this.TaxType = TaxType;
+            this.Vendor = Vendor;
+            this.ImgSrc = ImgSrc;
+            this.Properties = Properties;
+            this.Images = Images;
+            this.Assets = Assets;
+            this.Variations = Variations;
+            this.Links = Links;
+            this.Reviews = Reviews;
+            this.Associations = Associations;
+            this.SecurityScopes = SecurityScopes;
+            this.SeoInfos = SeoInfos;
+            this.CreatedDate = CreatedDate;
+            this.ModifiedDate = ModifiedDate;
+            this.CreatedBy = CreatedBy;
+            this.ModifiedBy = ModifiedBy;
+            this.Id = Id;
             
         }
 
-        
         /// <summary>
         /// Gets or sets the manufacturer part number for this product.
         /// </summary>
         /// <value>Gets or sets the manufacturer part number for this product.</value>
         [DataMember(Name="manufacturerPartNumber", EmitDefaultValue=false)]
         public string ManufacturerPartNumber { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the Global Trade Item Number.
         /// </summary>
         /// <value>Gets or sets the Global Trade Item Number.</value>
         [DataMember(Name="gtin", EmitDefaultValue=false)]
         public string Gtin { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Code
         /// </summary>
         [DataMember(Name="code", EmitDefaultValue=false)]
         public string Code { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the name.
         /// </summary>
         /// <value>Gets or sets the name.</value>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the catalog id that this product belongs to.
         /// </summary>
         /// <value>Gets or sets the catalog id that this product belongs to.</value>
         [DataMember(Name="catalogId", EmitDefaultValue=false)]
         public string CatalogId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the catalog that this product belongs to.
         /// </summary>
         /// <value>Gets or sets the catalog that this product belongs to.</value>
         [DataMember(Name="catalog", EmitDefaultValue=false)]
         public VirtoCommerceCatalogModuleWebModelCatalog Catalog { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the category id that this product belongs to.
         /// </summary>
         /// <value>Gets or sets the category id that this product belongs to.</value>
         [DataMember(Name="categoryId", EmitDefaultValue=false)]
         public string CategoryId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the category that this product belongs to.
         /// </summary>
         /// <value>Gets or sets the category that this product belongs to.</value>
         [DataMember(Name="category", EmitDefaultValue=false)]
         public VirtoCommerceCatalogModuleWebModelCategory Category { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the all parent categories ids concatenated. E.g. (1;21;344)
         /// </summary>
         /// <value>Gets or sets the all parent categories ids concatenated. E.g. (1;21;344)</value>
         [DataMember(Name="outline", EmitDefaultValue=false)]
         public string Outline { get; set; }
-  
-        
+
         /// <summary>
         /// All parents categories
         /// </summary>
         /// <value>All parents categories</value>
         [DataMember(Name="parents", EmitDefaultValue=false)]
         public List<VirtoCommerceCatalogModuleWebModelCategory> Parents { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the date and time that this product was last indexed at.
         /// </summary>
         /// <value>Gets or sets the date and time that this product was last indexed at.</value>
         [DataMember(Name="indexingDate", EmitDefaultValue=false)]
         public DateTime? IndexingDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the titular item id for a variation.
         /// </summary>
         /// <value>Gets or sets the titular item id for a variation.</value>
         [DataMember(Name="titularItemId", EmitDefaultValue=false)]
         public string TitularItemId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets a value indicating whether this {VirtoCommerce.CatalogModule.Web.Model.Product} is buyable.
         /// </summary>
         /// <value>Gets or sets a value indicating whether this {VirtoCommerce.CatalogModule.Web.Model.Product} is buyable.</value>
         [DataMember(Name="isBuyable", EmitDefaultValue=false)]
         public bool? IsBuyable { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets a value indicating whether this {VirtoCommerce.CatalogModule.Web.Model.Product} is active.
         /// </summary>
         /// <value>Gets or sets a value indicating whether this {VirtoCommerce.CatalogModule.Web.Model.Product} is active.</value>
         [DataMember(Name="isActive", EmitDefaultValue=false)]
         public bool? IsActive { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets a value indicating whether this {VirtoCommerce.CatalogModule.Web.Model.Product} inventory is tracked.
         /// </summary>
         /// <value>Gets or sets a value indicating whether this {VirtoCommerce.CatalogModule.Web.Model.Product} inventory is tracked.</value>
         [DataMember(Name="trackInventory", EmitDefaultValue=false)]
         public bool? TrackInventory { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the maximum quantity of the product that a customer can buy.
         /// </summary>
         /// <value>Gets or sets the maximum quantity of the product that a customer can buy.</value>
         [DataMember(Name="maxQuantity", EmitDefaultValue=false)]
         public int? MaxQuantity { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the minimum quantity of the product that a customer can buy.
         /// </summary>
         /// <value>Gets or sets the minimum quantity of the product that a customer can buy.</value>
         [DataMember(Name="minQuantity", EmitDefaultValue=false)]
         public int? MinQuantity { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the type of the product. (can be Physical, Digital or Subscription)
         /// </summary>
         /// <value>Gets or sets the type of the product. (can be Physical, Digital or Subscription)</value>
         [DataMember(Name="productType", EmitDefaultValue=false)]
         public string ProductType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the weight unit. (for physical product only)
         /// </summary>
         /// <value>Gets or sets the weight unit. (for physical product only)</value>
         [DataMember(Name="weightUnit", EmitDefaultValue=false)]
         public string WeightUnit { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the weight. (for physical product only)
         /// </summary>
         /// <value>Gets or sets the weight. (for physical product only)</value>
         [DataMember(Name="weight", EmitDefaultValue=false)]
         public double? Weight { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the dimensions measure unit. (for physical product only)
         /// </summary>
         /// <value>Gets or sets the dimensions measure unit. (for physical product only)</value>
         [DataMember(Name="measureUnit", EmitDefaultValue=false)]
         public string MeasureUnit { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the height. (for physical product only)
         /// </summary>
         /// <value>Gets or sets the height. (for physical product only)</value>
         [DataMember(Name="height", EmitDefaultValue=false)]
         public double? Height { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the length. (for physical product only)
         /// </summary>
         /// <value>Gets or sets the length. (for physical product only)</value>
         [DataMember(Name="length", EmitDefaultValue=false)]
         public double? Length { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the width. (for physical product only)
         /// </summary>
         /// <value>Gets or sets the width. (for physical product only)</value>
         [DataMember(Name="width", EmitDefaultValue=false)]
         public double? Width { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets a value indicating whether this {VirtoCommerce.CatalogModule.Web.Model.Product} can be reviewed in storefront.
         /// </summary>
         /// <value>Gets or sets a value indicating whether this {VirtoCommerce.CatalogModule.Web.Model.Product} can be reviewed in storefront.</value>
         [DataMember(Name="enableReview", EmitDefaultValue=false)]
         public bool? EnableReview { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the maximum number of download. (for digital product only)
         /// </summary>
         /// <value>Gets or sets the maximum number of download. (for digital product only)</value>
         [DataMember(Name="maxNumberOfDownload", EmitDefaultValue=false)]
         public int? MaxNumberOfDownload { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the download expiration. (for digital product only)
         /// </summary>
         /// <value>Gets or sets the download expiration. (for digital product only)</value>
         [DataMember(Name="downloadExpiration", EmitDefaultValue=false)]
         public DateTime? DownloadExpiration { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the type of the download. (for digital product only)
         /// </summary>
         /// <value>Gets or sets the type of the download. (for digital product only)</value>
         [DataMember(Name="downloadType", EmitDefaultValue=false)]
         public string DownloadType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets a value indicating whether this {VirtoCommerce.CatalogModule.Web.Model.Product} has user agreement. (for digital product only)
         /// </summary>
         /// <value>Gets or sets a value indicating whether this {VirtoCommerce.CatalogModule.Web.Model.Product} has user agreement. (for digital product only)</value>
         [DataMember(Name="hasUserAgreement", EmitDefaultValue=false)]
         public bool? HasUserAgreement { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the type of the shipping.
         /// </summary>
         /// <value>Gets or sets the type of the shipping.</value>
         [DataMember(Name="shippingType", EmitDefaultValue=false)]
         public string ShippingType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the type of the tax.
         /// </summary>
         /// <value>Gets or sets the type of the tax.</value>
         [DataMember(Name="taxType", EmitDefaultValue=false)]
         public string TaxType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the product vendor.
         /// </summary>
         /// <value>Gets or sets the product vendor.</value>
         [DataMember(Name="vendor", EmitDefaultValue=false)]
         public string Vendor { get; set; }
-  
-        
+
         /// <summary>
         /// Gets the default image for the product.
         /// </summary>
         /// <value>Gets the default image for the product.</value>
         [DataMember(Name="imgSrc", EmitDefaultValue=false)]
-        public string ImgSrc { get; set; }
-  
-        
+        public string ImgSrc { get; private set; }
+
         /// <summary>
         /// Gets or sets the properties.
         /// </summary>
         /// <value>Gets or sets the properties.</value>
         [DataMember(Name="properties", EmitDefaultValue=false)]
         public List<VirtoCommerceCatalogModuleWebModelProperty> Properties { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the images.
         /// </summary>
         /// <value>Gets or sets the images.</value>
         [DataMember(Name="images", EmitDefaultValue=false)]
         public List<VirtoCommerceCatalogModuleWebModelImage> Images { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the assets.
         /// </summary>
         /// <value>Gets or sets the assets.</value>
         [DataMember(Name="assets", EmitDefaultValue=false)]
         public List<VirtoCommerceCatalogModuleWebModelAsset> Assets { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the variations.
         /// </summary>
         /// <value>Gets or sets the variations.</value>
         [DataMember(Name="variations", EmitDefaultValue=false)]
         public List<VirtoCommerceCatalogModuleWebModelProduct> Variations { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the links.
         /// </summary>
         /// <value>Gets or sets the links.</value>
         [DataMember(Name="links", EmitDefaultValue=false)]
         public List<VirtoCommerceCatalogModuleWebModelCategoryLink> Links { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the reviews.
         /// </summary>
         /// <value>Gets or sets the reviews.</value>
         [DataMember(Name="reviews", EmitDefaultValue=false)]
         public List<VirtoCommerceCatalogModuleWebModelEditorialReview> Reviews { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the associations.
         /// </summary>
         /// <value>Gets or sets the associations.</value>
         [DataMember(Name="associations", EmitDefaultValue=false)]
         public List<VirtoCommerceCatalogModuleWebModelProductAssociation> Associations { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets SecurityScopes
         /// </summary>
         [DataMember(Name="securityScopes", EmitDefaultValue=false)]
         public List<string> SecurityScopes { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the list of SEO information records.
         /// </summary>
         /// <value>Gets or sets the list of SEO information records.</value>
         [DataMember(Name="seoInfos", EmitDefaultValue=false)]
         public List<VirtoCommerceDomainCommerceModelSeoInfo> SeoInfos { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedDate
         /// </summary>
         [DataMember(Name="createdDate", EmitDefaultValue=false)]
         public DateTime? CreatedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedDate
         /// </summary>
         [DataMember(Name="modifiedDate", EmitDefaultValue=false)]
         public DateTime? ModifiedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedBy
         /// </summary>
         [DataMember(Name="createdBy", EmitDefaultValue=false)]
         public string CreatedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedBy
         /// </summary>
         [DataMember(Name="modifiedBy", EmitDefaultValue=false)]
         public string ModifiedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

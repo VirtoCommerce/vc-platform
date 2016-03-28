@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,70 +21,79 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceDomainTaxModelTaxEvaluationContext" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainTaxModelTaxEvaluationContext" />class.
         /// </summary>
-        public VirtoCommerceDomainTaxModelTaxEvaluationContext()
+        /// <param name="Code">Code.</param>
+        /// <param name="Type">Type.</param>
+        /// <param name="Customer">Customer.</param>
+        /// <param name="Organization">Organization.</param>
+        /// <param name="Address">Address.</param>
+        /// <param name="Currency">Currency.</param>
+        /// <param name="Lines">Lines.</param>
+        /// <param name="Id">Id.</param>
+
+        public VirtoCommerceDomainTaxModelTaxEvaluationContext(string Code = null, string Type = null, VirtoCommerceDomainCustomerModelContact Customer = null, VirtoCommerceDomainCustomerModelOrganization Organization = null, VirtoCommerceDomainCommerceModelAddress Address = null, string Currency = null, List<VirtoCommerceDomainTaxModelTaxLine> Lines = null, string Id = null)
         {
+            this.Code = Code;
+            this.Type = Type;
+            this.Customer = Customer;
+            this.Organization = Organization;
+            this.Address = Address;
+            this.Currency = Currency;
+            this.Lines = Lines;
+            this.Id = Id;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets Code
         /// </summary>
         [DataMember(Name="code", EmitDefaultValue=false)]
         public string Code { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name="type", EmitDefaultValue=false)]
         public string Type { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Customer
         /// </summary>
         [DataMember(Name="customer", EmitDefaultValue=false)]
         public VirtoCommerceDomainCustomerModelContact Customer { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Organization
         /// </summary>
         [DataMember(Name="organization", EmitDefaultValue=false)]
         public VirtoCommerceDomainCustomerModelOrganization Organization { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Address
         /// </summary>
         [DataMember(Name="address", EmitDefaultValue=false)]
         public VirtoCommerceDomainCommerceModelAddress Address { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Currency
         /// </summary>
         [DataMember(Name="currency", EmitDefaultValue=false)]
         public string Currency { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Lines
         /// </summary>
         [DataMember(Name="lines", EmitDefaultValue=false)]
         public List<VirtoCommerceDomainTaxModelTaxLine> Lines { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

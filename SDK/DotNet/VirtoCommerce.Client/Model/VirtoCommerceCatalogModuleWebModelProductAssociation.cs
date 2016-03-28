@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// Class containing associated product information like &#39;Accessory&#39;, &#39;Related Item&#39;, etc.
     /// </summary>
@@ -21,69 +21,77 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelProductAssociation" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelProductAssociation" />class.
         /// </summary>
-        public VirtoCommerceCatalogModuleWebModelProductAssociation()
+        /// <param name="Name">Gets or sets the ProductAssociation name..</param>
+        /// <param name="Description">Description.</param>
+        /// <param name="Priority">Gets or sets the order in which the associated product is displayed..</param>
+        /// <param name="ProductId">Gets or sets the identifier of the associated product..</param>
+        /// <param name="ProductName">Gets or sets the name of the associated product..</param>
+        /// <param name="ProductCode">Gets or sets the associated product code..</param>
+        /// <param name="ProductImg">Gets or sets the associated product image..</param>
+
+        public VirtoCommerceCatalogModuleWebModelProductAssociation(string Name = null, string Description = null, int? Priority = null, string ProductId = null, string ProductName = null, string ProductCode = null, string ProductImg = null)
         {
+            this.Name = Name;
+            this.Description = Description;
+            this.Priority = Priority;
+            this.ProductId = ProductId;
+            this.ProductName = ProductName;
+            this.ProductCode = ProductCode;
+            this.ProductImg = ProductImg;
             
         }
 
-        
         /// <summary>
         /// Gets or sets the ProductAssociation name.
         /// </summary>
         /// <value>Gets or sets the ProductAssociation name.</value>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Description
         /// </summary>
         [DataMember(Name="description", EmitDefaultValue=false)]
         public string Description { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the order in which the associated product is displayed.
         /// </summary>
         /// <value>Gets or sets the order in which the associated product is displayed.</value>
         [DataMember(Name="priority", EmitDefaultValue=false)]
         public int? Priority { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the identifier of the associated product.
         /// </summary>
         /// <value>Gets or sets the identifier of the associated product.</value>
         [DataMember(Name="productId", EmitDefaultValue=false)]
         public string ProductId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the name of the associated product.
         /// </summary>
         /// <value>Gets or sets the name of the associated product.</value>
         [DataMember(Name="productName", EmitDefaultValue=false)]
         public string ProductName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the associated product code.
         /// </summary>
         /// <value>Gets or sets the associated product code.</value>
         [DataMember(Name="productCode", EmitDefaultValue=false)]
         public string ProductCode { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the associated product image.
         /// </summary>
         /// <value>Gets or sets the associated product image.</value>
         [DataMember(Name="productImg", EmitDefaultValue=false)]
         public string ProductImg { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

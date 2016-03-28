@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,28 +21,31 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreDynamicPropertiesDynamicPropertyObjectValue" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreDynamicPropertiesDynamicPropertyObjectValue" />class.
         /// </summary>
-        public VirtoCommercePlatformCoreDynamicPropertiesDynamicPropertyObjectValue()
+        /// <param name="Locale">Locale.</param>
+        /// <param name="Value">Value.</param>
+
+        public VirtoCommercePlatformCoreDynamicPropertiesDynamicPropertyObjectValue(string Locale = null, Object Value = null)
         {
+            this.Locale = Locale;
+            this.Value = Value;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets Locale
         /// </summary>
         [DataMember(Name="locale", EmitDefaultValue=false)]
         public string Locale { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Value
         /// </summary>
         [DataMember(Name="value", EmitDefaultValue=false)]
         public Object Value { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

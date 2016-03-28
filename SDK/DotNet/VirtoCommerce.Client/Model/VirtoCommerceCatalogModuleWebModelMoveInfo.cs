@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// Represent move operation detail
     /// </summary>
@@ -21,35 +21,39 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelMoveInfo" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelMoveInfo" />class.
         /// </summary>
-        public VirtoCommerceCatalogModuleWebModelMoveInfo()
+        /// <param name="Catalog">Catalog.</param>
+        /// <param name="Category">Category.</param>
+        /// <param name="ListEntries">ListEntries.</param>
+
+        public VirtoCommerceCatalogModuleWebModelMoveInfo(string Catalog = null, string Category = null, List<VirtoCommerceCatalogModuleWebModelListEntry> ListEntries = null)
         {
+            this.Catalog = Catalog;
+            this.Category = Category;
+            this.ListEntries = ListEntries;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets Catalog
         /// </summary>
         [DataMember(Name="catalog", EmitDefaultValue=false)]
         public string Catalog { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Category
         /// </summary>
         [DataMember(Name="category", EmitDefaultValue=false)]
         public string Category { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ListEntries
         /// </summary>
         [DataMember(Name="listEntries", EmitDefaultValue=false)]
         public List<VirtoCommerceCatalogModuleWebModelListEntry> ListEntries { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

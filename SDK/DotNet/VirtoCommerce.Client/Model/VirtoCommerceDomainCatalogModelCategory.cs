@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,175 +21,199 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceDomainCatalogModelCategory" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCatalogModelCategory" />class.
         /// </summary>
-        public VirtoCommerceDomainCatalogModelCategory()
+        /// <param name="CatalogId">CatalogId.</param>
+        /// <param name="Catalog">Catalog.</param>
+        /// <param name="ParentId">ParentId.</param>
+        /// <param name="Code">Code.</param>
+        /// <param name="TaxType">TaxType.</param>
+        /// <param name="Name">Name.</param>
+        /// <param name="Path">Path.</param>
+        /// <param name="IsVirtual">IsVirtual.</param>
+        /// <param name="Level">Level.</param>
+        /// <param name="Parents">Parents.</param>
+        /// <param name="Priority">Priority.</param>
+        /// <param name="IsActive">IsActive.</param>
+        /// <param name="Children">Children.</param>
+        /// <param name="Properties">Properties.</param>
+        /// <param name="PropertyValues">PropertyValues.</param>
+        /// <param name="Links">Links.</param>
+        /// <param name="SeoInfos">SeoInfos.</param>
+        /// <param name="Images">Images.</param>
+        /// <param name="CreatedDate">CreatedDate.</param>
+        /// <param name="ModifiedDate">ModifiedDate.</param>
+        /// <param name="CreatedBy">CreatedBy.</param>
+        /// <param name="ModifiedBy">ModifiedBy.</param>
+        /// <param name="Id">Id.</param>
+
+        public VirtoCommerceDomainCatalogModelCategory(string CatalogId = null, VirtoCommerceDomainCatalogModelCatalog Catalog = null, string ParentId = null, string Code = null, string TaxType = null, string Name = null, string Path = null, bool? IsVirtual = null, int? Level = null, List<VirtoCommerceDomainCatalogModelCategory> Parents = null, int? Priority = null, bool? IsActive = null, List<VirtoCommerceDomainCatalogModelCategory> Children = null, List<VirtoCommerceDomainCatalogModelProperty> Properties = null, List<VirtoCommerceDomainCatalogModelPropertyValue> PropertyValues = null, List<VirtoCommerceDomainCatalogModelCategoryLink> Links = null, List<VirtoCommerceDomainCommerceModelSeoInfo> SeoInfos = null, List<VirtoCommerceDomainCatalogModelImage> Images = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
         {
+            this.CatalogId = CatalogId;
+            this.Catalog = Catalog;
+            this.ParentId = ParentId;
+            this.Code = Code;
+            this.TaxType = TaxType;
+            this.Name = Name;
+            this.Path = Path;
+            this.IsVirtual = IsVirtual;
+            this.Level = Level;
+            this.Parents = Parents;
+            this.Priority = Priority;
+            this.IsActive = IsActive;
+            this.Children = Children;
+            this.Properties = Properties;
+            this.PropertyValues = PropertyValues;
+            this.Links = Links;
+            this.SeoInfos = SeoInfos;
+            this.Images = Images;
+            this.CreatedDate = CreatedDate;
+            this.ModifiedDate = ModifiedDate;
+            this.CreatedBy = CreatedBy;
+            this.ModifiedBy = ModifiedBy;
+            this.Id = Id;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets CatalogId
         /// </summary>
         [DataMember(Name="catalogId", EmitDefaultValue=false)]
         public string CatalogId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Catalog
         /// </summary>
         [DataMember(Name="catalog", EmitDefaultValue=false)]
         public VirtoCommerceDomainCatalogModelCatalog Catalog { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ParentId
         /// </summary>
         [DataMember(Name="parentId", EmitDefaultValue=false)]
         public string ParentId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Code
         /// </summary>
         [DataMember(Name="code", EmitDefaultValue=false)]
         public string Code { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets TaxType
         /// </summary>
         [DataMember(Name="taxType", EmitDefaultValue=false)]
         public string TaxType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Path
         /// </summary>
         [DataMember(Name="path", EmitDefaultValue=false)]
         public string Path { get; set; }
-  
-        
+
         /// <summary>
-        /// Gets or Sets Virtual
+        /// Gets or Sets IsVirtual
         /// </summary>
-        [DataMember(Name="virtual", EmitDefaultValue=false)]
-        public bool? Virtual { get; set; }
-  
-        
+        [DataMember(Name="isVirtual", EmitDefaultValue=false)]
+        public bool? IsVirtual { get; set; }
+
         /// <summary>
         /// Gets or Sets Level
         /// </summary>
         [DataMember(Name="level", EmitDefaultValue=false)]
         public int? Level { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Parents
         /// </summary>
         [DataMember(Name="parents", EmitDefaultValue=false)]
         public List<VirtoCommerceDomainCatalogModelCategory> Parents { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Priority
         /// </summary>
         [DataMember(Name="priority", EmitDefaultValue=false)]
         public int? Priority { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets IsActive
         /// </summary>
         [DataMember(Name="isActive", EmitDefaultValue=false)]
         public bool? IsActive { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Children
         /// </summary>
         [DataMember(Name="children", EmitDefaultValue=false)]
         public List<VirtoCommerceDomainCatalogModelCategory> Children { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Properties
         /// </summary>
         [DataMember(Name="properties", EmitDefaultValue=false)]
         public List<VirtoCommerceDomainCatalogModelProperty> Properties { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets PropertyValues
         /// </summary>
         [DataMember(Name="propertyValues", EmitDefaultValue=false)]
         public List<VirtoCommerceDomainCatalogModelPropertyValue> PropertyValues { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Links
         /// </summary>
         [DataMember(Name="links", EmitDefaultValue=false)]
         public List<VirtoCommerceDomainCatalogModelCategoryLink> Links { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets SeoInfos
         /// </summary>
         [DataMember(Name="seoInfos", EmitDefaultValue=false)]
         public List<VirtoCommerceDomainCommerceModelSeoInfo> SeoInfos { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Images
         /// </summary>
         [DataMember(Name="images", EmitDefaultValue=false)]
         public List<VirtoCommerceDomainCatalogModelImage> Images { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedDate
         /// </summary>
         [DataMember(Name="createdDate", EmitDefaultValue=false)]
         public DateTime? CreatedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedDate
         /// </summary>
         [DataMember(Name="modifiedDate", EmitDefaultValue=false)]
         public DateTime? ModifiedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedBy
         /// </summary>
         [DataMember(Name="createdBy", EmitDefaultValue=false)]
         public string CreatedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedBy
         /// </summary>
         [DataMember(Name="modifiedBy", EmitDefaultValue=false)]
         public string ModifiedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -205,7 +229,7 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  TaxType: ").Append(TaxType).Append("\n");
             sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  Path: ").Append(Path).Append("\n");
-            sb.Append("  Virtual: ").Append(Virtual).Append("\n");
+            sb.Append("  IsVirtual: ").Append(IsVirtual).Append("\n");
             sb.Append("  Level: ").Append(Level).Append("\n");
             sb.Append("  Parents: ").Append(Parents).Append("\n");
             sb.Append("  Priority: ").Append(Priority).Append("\n");
@@ -294,9 +318,9 @@ namespace VirtoCommerce.Client.Model
                     this.Path.Equals(other.Path)
                 ) && 
                 (
-                    this.Virtual == other.Virtual ||
-                    this.Virtual != null &&
-                    this.Virtual.Equals(other.Virtual)
+                    this.IsVirtual == other.IsVirtual ||
+                    this.IsVirtual != null &&
+                    this.IsVirtual.Equals(other.IsVirtual)
                 ) && 
                 (
                     this.Level == other.Level ||
@@ -408,8 +432,8 @@ namespace VirtoCommerce.Client.Model
                 if (this.Path != null)
                     hash = hash * 59 + this.Path.GetHashCode();
                 
-                if (this.Virtual != null)
-                    hash = hash * 59 + this.Virtual.GetHashCode();
+                if (this.IsVirtual != null)
+                    hash = hash * 59 + this.IsVirtual.GetHashCode();
                 
                 if (this.Level != null)
                     hash = hash * 59 + this.Level.GetHashCode();

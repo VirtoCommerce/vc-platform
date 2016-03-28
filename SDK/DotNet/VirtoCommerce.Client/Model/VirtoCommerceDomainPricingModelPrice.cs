@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,98 +21,111 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceDomainPricingModelPrice" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainPricingModelPrice" />class.
         /// </summary>
-        public VirtoCommerceDomainPricingModelPrice()
+        /// <param name="PricelistId">PricelistId.</param>
+        /// <param name="Currency">Currency.</param>
+        /// <param name="ProductId">ProductId.</param>
+        /// <param name="Sale">Sale.</param>
+        /// <param name="List">List.</param>
+        /// <param name="MinQuantity">MinQuantity.</param>
+        /// <param name="EffectiveValue">EffectiveValue.</param>
+        /// <param name="CreatedDate">CreatedDate.</param>
+        /// <param name="ModifiedDate">ModifiedDate.</param>
+        /// <param name="CreatedBy">CreatedBy.</param>
+        /// <param name="ModifiedBy">ModifiedBy.</param>
+        /// <param name="Id">Id.</param>
+
+        public VirtoCommerceDomainPricingModelPrice(string PricelistId = null, string Currency = null, string ProductId = null, double? Sale = null, double? List = null, int? MinQuantity = null, double? EffectiveValue = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
         {
+            this.PricelistId = PricelistId;
+            this.Currency = Currency;
+            this.ProductId = ProductId;
+            this.Sale = Sale;
+            this.List = List;
+            this.MinQuantity = MinQuantity;
+            this.EffectiveValue = EffectiveValue;
+            this.CreatedDate = CreatedDate;
+            this.ModifiedDate = ModifiedDate;
+            this.CreatedBy = CreatedBy;
+            this.ModifiedBy = ModifiedBy;
+            this.Id = Id;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets PricelistId
         /// </summary>
         [DataMember(Name="pricelistId", EmitDefaultValue=false)]
         public string PricelistId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Currency
         /// </summary>
         [DataMember(Name="currency", EmitDefaultValue=false)]
         public string Currency { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ProductId
         /// </summary>
         [DataMember(Name="productId", EmitDefaultValue=false)]
         public string ProductId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Sale
         /// </summary>
         [DataMember(Name="sale", EmitDefaultValue=false)]
         public double? Sale { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets List
         /// </summary>
         [DataMember(Name="list", EmitDefaultValue=false)]
         public double? List { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets MinQuantity
         /// </summary>
         [DataMember(Name="minQuantity", EmitDefaultValue=false)]
         public int? MinQuantity { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets EffectiveValue
         /// </summary>
         [DataMember(Name="effectiveValue", EmitDefaultValue=false)]
-        public double? EffectiveValue { get; set; }
-  
-        
+        public double? EffectiveValue { get; private set; }
+
         /// <summary>
         /// Gets or Sets CreatedDate
         /// </summary>
         [DataMember(Name="createdDate", EmitDefaultValue=false)]
         public DateTime? CreatedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedDate
         /// </summary>
         [DataMember(Name="modifiedDate", EmitDefaultValue=false)]
         public DateTime? ModifiedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedBy
         /// </summary>
         [DataMember(Name="createdBy", EmitDefaultValue=false)]
         public string CreatedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedBy
         /// </summary>
         [DataMember(Name="modifiedBy", EmitDefaultValue=false)]
         public string ModifiedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

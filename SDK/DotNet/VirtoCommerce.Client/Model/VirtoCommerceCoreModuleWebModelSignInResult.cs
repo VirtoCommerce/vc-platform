@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,21 +21,23 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceCoreModuleWebModelSignInResult" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceCoreModuleWebModelSignInResult" />class.
         /// </summary>
-        public VirtoCommerceCoreModuleWebModelSignInResult()
+        /// <param name="Status">Status.</param>
+
+        public VirtoCommerceCoreModuleWebModelSignInResult(string Status = null)
         {
+            this.Status = Status;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets Status
         /// </summary>
         [DataMember(Name="status", EmitDefaultValue=false)]
         public string Status { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

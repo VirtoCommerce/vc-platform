@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,35 +21,39 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebExportImportCsvImportInfo" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebExportImportCsvImportInfo" />class.
         /// </summary>
-        public VirtoCommerceCatalogModuleWebExportImportCsvImportInfo()
+        /// <param name="CatalogId">CatalogId.</param>
+        /// <param name="FileUrl">FileUrl.</param>
+        /// <param name="Configuration">Configuration.</param>
+
+        public VirtoCommerceCatalogModuleWebExportImportCsvImportInfo(string CatalogId = null, string FileUrl = null, VirtoCommerceCatalogModuleWebExportImportCsvProductMappingConfiguration Configuration = null)
         {
+            this.CatalogId = CatalogId;
+            this.FileUrl = FileUrl;
+            this.Configuration = Configuration;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets CatalogId
         /// </summary>
         [DataMember(Name="catalogId", EmitDefaultValue=false)]
         public string CatalogId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets FileUrl
         /// </summary>
         [DataMember(Name="fileUrl", EmitDefaultValue=false)]
         public string FileUrl { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Configuration
         /// </summary>
         [DataMember(Name="configuration", EmitDefaultValue=false)]
         public VirtoCommerceCatalogModuleWebExportImportCsvProductMappingConfiguration Configuration { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

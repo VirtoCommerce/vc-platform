@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,42 +21,47 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceOrderModuleWebModelQuarterPeriodMoney" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceOrderModuleWebModelQuarterPeriodMoney" />class.
         /// </summary>
-        public VirtoCommerceOrderModuleWebModelQuarterPeriodMoney()
+        /// <param name="Year">Year.</param>
+        /// <param name="Quarter">Quarter.</param>
+        /// <param name="Currency">Currency.</param>
+        /// <param name="Amount">Amount.</param>
+
+        public VirtoCommerceOrderModuleWebModelQuarterPeriodMoney(int? Year = null, int? Quarter = null, string Currency = null, double? Amount = null)
         {
+            this.Year = Year;
+            this.Quarter = Quarter;
+            this.Currency = Currency;
+            this.Amount = Amount;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets Year
         /// </summary>
         [DataMember(Name="year", EmitDefaultValue=false)]
         public int? Year { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Quarter
         /// </summary>
         [DataMember(Name="quarter", EmitDefaultValue=false)]
         public int? Quarter { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Currency
         /// </summary>
         [DataMember(Name="currency", EmitDefaultValue=false)]
         public string Currency { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Amount
         /// </summary>
         [DataMember(Name="amount", EmitDefaultValue=false)]
         public double? Amount { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

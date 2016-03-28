@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,133 +21,151 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceDomainInventoryModelInventoryInfo" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainInventoryModelInventoryInfo" />class.
         /// </summary>
-        public VirtoCommerceDomainInventoryModelInventoryInfo()
+        /// <param name="CreatedDate">CreatedDate.</param>
+        /// <param name="CreatedBy">CreatedBy.</param>
+        /// <param name="ModifiedDate">ModifiedDate.</param>
+        /// <param name="ModifiedBy">ModifiedBy.</param>
+        /// <param name="FulfillmentCenterId">FulfillmentCenterId.</param>
+        /// <param name="ProductId">ProductId.</param>
+        /// <param name="InStockQuantity">InStockQuantity.</param>
+        /// <param name="ReservedQuantity">ReservedQuantity.</param>
+        /// <param name="ReorderMinQuantity">ReorderMinQuantity.</param>
+        /// <param name="PreorderQuantity">PreorderQuantity.</param>
+        /// <param name="BackorderQuantity">BackorderQuantity.</param>
+        /// <param name="AllowBackorder">AllowBackorder.</param>
+        /// <param name="AllowPreorder">AllowPreorder.</param>
+        /// <param name="InTransit">InTransit.</param>
+        /// <param name="PreorderAvailabilityDate">PreorderAvailabilityDate.</param>
+        /// <param name="BackorderAvailabilityDate">BackorderAvailabilityDate.</param>
+        /// <param name="Status">Status.</param>
+
+        public VirtoCommerceDomainInventoryModelInventoryInfo(DateTime? CreatedDate = null, string CreatedBy = null, DateTime? ModifiedDate = null, string ModifiedBy = null, string FulfillmentCenterId = null, string ProductId = null, long? InStockQuantity = null, long? ReservedQuantity = null, long? ReorderMinQuantity = null, long? PreorderQuantity = null, long? BackorderQuantity = null, bool? AllowBackorder = null, bool? AllowPreorder = null, long? InTransit = null, DateTime? PreorderAvailabilityDate = null, DateTime? BackorderAvailabilityDate = null, string Status = null)
         {
+            this.CreatedDate = CreatedDate;
+            this.CreatedBy = CreatedBy;
+            this.ModifiedDate = ModifiedDate;
+            this.ModifiedBy = ModifiedBy;
+            this.FulfillmentCenterId = FulfillmentCenterId;
+            this.ProductId = ProductId;
+            this.InStockQuantity = InStockQuantity;
+            this.ReservedQuantity = ReservedQuantity;
+            this.ReorderMinQuantity = ReorderMinQuantity;
+            this.PreorderQuantity = PreorderQuantity;
+            this.BackorderQuantity = BackorderQuantity;
+            this.AllowBackorder = AllowBackorder;
+            this.AllowPreorder = AllowPreorder;
+            this.InTransit = InTransit;
+            this.PreorderAvailabilityDate = PreorderAvailabilityDate;
+            this.BackorderAvailabilityDate = BackorderAvailabilityDate;
+            this.Status = Status;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets CreatedDate
         /// </summary>
         [DataMember(Name="createdDate", EmitDefaultValue=false)]
         public DateTime? CreatedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedBy
         /// </summary>
         [DataMember(Name="createdBy", EmitDefaultValue=false)]
         public string CreatedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedDate
         /// </summary>
         [DataMember(Name="modifiedDate", EmitDefaultValue=false)]
         public DateTime? ModifiedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedBy
         /// </summary>
         [DataMember(Name="modifiedBy", EmitDefaultValue=false)]
         public string ModifiedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets FulfillmentCenterId
         /// </summary>
         [DataMember(Name="fulfillmentCenterId", EmitDefaultValue=false)]
         public string FulfillmentCenterId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ProductId
         /// </summary>
         [DataMember(Name="productId", EmitDefaultValue=false)]
         public string ProductId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets InStockQuantity
         /// </summary>
         [DataMember(Name="inStockQuantity", EmitDefaultValue=false)]
         public long? InStockQuantity { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ReservedQuantity
         /// </summary>
         [DataMember(Name="reservedQuantity", EmitDefaultValue=false)]
         public long? ReservedQuantity { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ReorderMinQuantity
         /// </summary>
         [DataMember(Name="reorderMinQuantity", EmitDefaultValue=false)]
         public long? ReorderMinQuantity { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets PreorderQuantity
         /// </summary>
         [DataMember(Name="preorderQuantity", EmitDefaultValue=false)]
         public long? PreorderQuantity { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets BackorderQuantity
         /// </summary>
         [DataMember(Name="backorderQuantity", EmitDefaultValue=false)]
         public long? BackorderQuantity { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets AllowBackorder
         /// </summary>
         [DataMember(Name="allowBackorder", EmitDefaultValue=false)]
         public bool? AllowBackorder { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets AllowPreorder
         /// </summary>
         [DataMember(Name="allowPreorder", EmitDefaultValue=false)]
         public bool? AllowPreorder { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets InTransit
         /// </summary>
         [DataMember(Name="inTransit", EmitDefaultValue=false)]
         public long? InTransit { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets PreorderAvailabilityDate
         /// </summary>
         [DataMember(Name="preorderAvailabilityDate", EmitDefaultValue=false)]
         public DateTime? PreorderAvailabilityDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets BackorderAvailabilityDate
         /// </summary>
         [DataMember(Name="backorderAvailabilityDate", EmitDefaultValue=false)]
         public DateTime? BackorderAvailabilityDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Status
         /// </summary>
         [DataMember(Name="status", EmitDefaultValue=false)]
         public string Status { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,66 +21,74 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelNotificationsNotificationParameter" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelNotificationsNotificationParameter" />class.
         /// </summary>
-        public VirtoCommercePlatformWebModelNotificationsNotificationParameter()
+        /// <param name="ParameterName">ParameterName.</param>
+        /// <param name="ParameterDescription">Parameter description, can be used for display detailed information about parameter.</param>
+        /// <param name="ParameterCodeInView">Code template for notification parameter for template resolver.</param>
+        /// <param name="IsDictionary">.</param>
+        /// <param name="IsArray">IsArray.</param>
+        /// <param name="Type">Type.</param>
+        /// <param name="Value">Value.</param>
+
+        public VirtoCommercePlatformWebModelNotificationsNotificationParameter(string ParameterName = null, string ParameterDescription = null, string ParameterCodeInView = null, bool? IsDictionary = null, bool? IsArray = null, string Type = null, Object Value = null)
         {
+            this.ParameterName = ParameterName;
+            this.ParameterDescription = ParameterDescription;
+            this.ParameterCodeInView = ParameterCodeInView;
+            this.IsDictionary = IsDictionary;
+            this.IsArray = IsArray;
+            this.Type = Type;
+            this.Value = Value;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets ParameterName
         /// </summary>
         [DataMember(Name="parameterName", EmitDefaultValue=false)]
         public string ParameterName { get; set; }
-  
-        
+
         /// <summary>
         /// Parameter description, can be used for display detailed information about parameter
         /// </summary>
         /// <value>Parameter description, can be used for display detailed information about parameter</value>
         [DataMember(Name="parameterDescription", EmitDefaultValue=false)]
         public string ParameterDescription { get; set; }
-  
-        
+
         /// <summary>
         /// Code template for notification parameter for template resolver
         /// </summary>
         /// <value>Code template for notification parameter for template resolver</value>
         [DataMember(Name="parameterCodeInView", EmitDefaultValue=false)]
         public string ParameterCodeInView { get; set; }
-  
-        
+
         /// <summary>
         /// 
         /// </summary>
         /// <value></value>
         [DataMember(Name="isDictionary", EmitDefaultValue=false)]
         public bool? IsDictionary { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets IsArray
         /// </summary>
         [DataMember(Name="isArray", EmitDefaultValue=false)]
         public bool? IsArray { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name="type", EmitDefaultValue=false)]
         public string Type { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Value
         /// </summary>
         [DataMember(Name="value", EmitDefaultValue=false)]
         public Object Value { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

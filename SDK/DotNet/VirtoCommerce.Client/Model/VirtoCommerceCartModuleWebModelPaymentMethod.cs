@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,85 +21,95 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceCartModuleWebModelPaymentMethod" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceCartModuleWebModelPaymentMethod" />class.
         /// </summary>
-        public VirtoCommerceCartModuleWebModelPaymentMethod()
+        /// <param name="GatewayCode">Gets or sets the value of payment gateway code.</param>
+        /// <param name="Name">Gets or sets the value of payment method name.</param>
+        /// <param name="IconUrl">Gets or sets the value of payment method logo absolute URL.</param>
+        /// <param name="Description">Gets or sets the value of payment method description.</param>
+        /// <param name="Type">Gets or sets the value of payment method type.</param>
+        /// <param name="Group">Gets or sets the value of payment method group type.</param>
+        /// <param name="Priority">Gets or sets the value of payment method priority.</param>
+        /// <param name="IsAvailableForPartial">Is payment method available for partial payments.</param>
+        /// <param name="Settings">Settings.</param>
+
+        public VirtoCommerceCartModuleWebModelPaymentMethod(string GatewayCode = null, string Name = null, string IconUrl = null, string Description = null, string Type = null, string Group = null, int? Priority = null, bool? IsAvailableForPartial = null, List<VirtoCommercePlatformCoreSettingsSettingEntry> Settings = null)
         {
+            this.GatewayCode = GatewayCode;
+            this.Name = Name;
+            this.IconUrl = IconUrl;
+            this.Description = Description;
+            this.Type = Type;
+            this.Group = Group;
+            this.Priority = Priority;
+            this.IsAvailableForPartial = IsAvailableForPartial;
+            this.Settings = Settings;
             
         }
 
-        
         /// <summary>
         /// Gets or sets the value of payment gateway code
         /// </summary>
         /// <value>Gets or sets the value of payment gateway code</value>
         [DataMember(Name="gatewayCode", EmitDefaultValue=false)]
         public string GatewayCode { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of payment method name
         /// </summary>
         /// <value>Gets or sets the value of payment method name</value>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of payment method logo absolute URL
         /// </summary>
         /// <value>Gets or sets the value of payment method logo absolute URL</value>
         [DataMember(Name="iconUrl", EmitDefaultValue=false)]
         public string IconUrl { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of payment method description
         /// </summary>
         /// <value>Gets or sets the value of payment method description</value>
         [DataMember(Name="description", EmitDefaultValue=false)]
         public string Description { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of payment method type
         /// </summary>
         /// <value>Gets or sets the value of payment method type</value>
         [DataMember(Name="type", EmitDefaultValue=false)]
         public string Type { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of payment method group type
         /// </summary>
         /// <value>Gets or sets the value of payment method group type</value>
         [DataMember(Name="group", EmitDefaultValue=false)]
         public string Group { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of payment method priority
         /// </summary>
         /// <value>Gets or sets the value of payment method priority</value>
         [DataMember(Name="priority", EmitDefaultValue=false)]
         public int? Priority { get; set; }
-  
-        
+
         /// <summary>
         /// Is payment method available for partial payments
         /// </summary>
         /// <value>Is payment method available for partial payments</value>
         [DataMember(Name="isAvailableForPartial", EmitDefaultValue=false)]
         public bool? IsAvailableForPartial { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Settings
         /// </summary>
         [DataMember(Name="settings", EmitDefaultValue=false)]
         public List<VirtoCommercePlatformCoreSettingsSettingEntry> Settings { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

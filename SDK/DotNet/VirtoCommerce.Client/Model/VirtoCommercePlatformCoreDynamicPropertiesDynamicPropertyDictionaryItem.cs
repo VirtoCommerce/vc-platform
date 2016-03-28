@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,70 +21,79 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreDynamicPropertiesDynamicPropertyDictionaryItem" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreDynamicPropertiesDynamicPropertyDictionaryItem" />class.
         /// </summary>
-        public VirtoCommercePlatformCoreDynamicPropertiesDynamicPropertyDictionaryItem()
+        /// <param name="PropertyId">PropertyId.</param>
+        /// <param name="Name">Name.</param>
+        /// <param name="DisplayNames">DisplayNames.</param>
+        /// <param name="CreatedDate">CreatedDate.</param>
+        /// <param name="ModifiedDate">ModifiedDate.</param>
+        /// <param name="CreatedBy">CreatedBy.</param>
+        /// <param name="ModifiedBy">ModifiedBy.</param>
+        /// <param name="Id">Id.</param>
+
+        public VirtoCommercePlatformCoreDynamicPropertiesDynamicPropertyDictionaryItem(string PropertyId = null, string Name = null, List<VirtoCommercePlatformCoreDynamicPropertiesDynamicPropertyDictionaryItemName> DisplayNames = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
         {
+            this.PropertyId = PropertyId;
+            this.Name = Name;
+            this.DisplayNames = DisplayNames;
+            this.CreatedDate = CreatedDate;
+            this.ModifiedDate = ModifiedDate;
+            this.CreatedBy = CreatedBy;
+            this.ModifiedBy = ModifiedBy;
+            this.Id = Id;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets PropertyId
         /// </summary>
         [DataMember(Name="propertyId", EmitDefaultValue=false)]
         public string PropertyId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets DisplayNames
         /// </summary>
         [DataMember(Name="displayNames", EmitDefaultValue=false)]
         public List<VirtoCommercePlatformCoreDynamicPropertiesDynamicPropertyDictionaryItemName> DisplayNames { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedDate
         /// </summary>
         [DataMember(Name="createdDate", EmitDefaultValue=false)]
         public DateTime? CreatedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedDate
         /// </summary>
         [DataMember(Name="modifiedDate", EmitDefaultValue=false)]
         public DateTime? ModifiedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedBy
         /// </summary>
         [DataMember(Name="createdBy", EmitDefaultValue=false)]
         public string CreatedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedBy
         /// </summary>
         [DataMember(Name="modifiedBy", EmitDefaultValue=false)]
         public string ModifiedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

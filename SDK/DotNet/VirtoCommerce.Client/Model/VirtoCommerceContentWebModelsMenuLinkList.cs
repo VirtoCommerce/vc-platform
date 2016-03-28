@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,59 +21,66 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceContentWebModelsMenuLinkList" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceContentWebModelsMenuLinkList" />class.
         /// </summary>
-        public VirtoCommerceContentWebModelsMenuLinkList()
+        /// <param name="Id">Id.</param>
+        /// <param name="Name">Name of menu link list, can be used as title of list in frontend.</param>
+        /// <param name="StoreId">Store identifier, for which the list belongs.</param>
+        /// <param name="Language">Locale of this menu link list.</param>
+        /// <param name="MenuLinks">MenuLinks.</param>
+        /// <param name="SecurityScopes">SecurityScopes.</param>
+
+        public VirtoCommerceContentWebModelsMenuLinkList(string Id = null, string Name = null, string StoreId = null, string Language = null, List<VirtoCommerceContentWebModelsMenuLink> MenuLinks = null, List<string> SecurityScopes = null)
         {
+            this.Id = Id;
+            this.Name = Name;
+            this.StoreId = StoreId;
+            this.Language = Language;
+            this.MenuLinks = MenuLinks;
+            this.SecurityScopes = SecurityScopes;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
+
         /// <summary>
         /// Name of menu link list, can be used as title of list in frontend
         /// </summary>
         /// <value>Name of menu link list, can be used as title of list in frontend</value>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
         /// Store identifier, for which the list belongs
         /// </summary>
         /// <value>Store identifier, for which the list belongs</value>
         [DataMember(Name="storeId", EmitDefaultValue=false)]
         public string StoreId { get; set; }
-  
-        
+
         /// <summary>
         /// Locale of this menu link list
         /// </summary>
         /// <value>Locale of this menu link list</value>
         [DataMember(Name="language", EmitDefaultValue=false)]
         public string Language { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets MenuLinks
         /// </summary>
         [DataMember(Name="menuLinks", EmitDefaultValue=false)]
         public List<VirtoCommerceContentWebModelsMenuLink> MenuLinks { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets SecurityScopes
         /// </summary>
         [DataMember(Name="securityScopes", EmitDefaultValue=false)]
         public List<string> SecurityScopes { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,93 +21,104 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceCartModuleWebModelShippingMethod" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceCartModuleWebModelShippingMethod" />class.
         /// </summary>
-        public VirtoCommerceCartModuleWebModelShippingMethod()
+        /// <param name="ShipmentMethodCode">Gets or sets the value of shipping method code.</param>
+        /// <param name="Name">Gets or sets the value of shipping method name.</param>
+        /// <param name="OptionName">Gets or sets the value of shipping method option name.</param>
+        /// <param name="OptionDescription">Gets or sets the value of shipping method option description.</param>
+        /// <param name="LogoUrl">Gets or sets the value of shipping method logo absolute URL.</param>
+        /// <param name="TaxType">Gets or sets the value of shipping method tax type.</param>
+        /// <param name="Currency">Gets or sets the value of shipping method currency.</param>
+        /// <param name="Price">Gets or sets the value of shipping method price.</param>
+        /// <param name="Discounts">Gets or sets the collection of shipping method discounts.</param>
+        /// <param name="Settings">Settings.</param>
+
+        public VirtoCommerceCartModuleWebModelShippingMethod(string ShipmentMethodCode = null, string Name = null, string OptionName = null, string OptionDescription = null, string LogoUrl = null, string TaxType = null, string Currency = null, double? Price = null, List<VirtoCommerceCartModuleWebModelDiscount> Discounts = null, List<VirtoCommercePlatformCoreSettingsSettingEntry> Settings = null)
         {
+            this.ShipmentMethodCode = ShipmentMethodCode;
+            this.Name = Name;
+            this.OptionName = OptionName;
+            this.OptionDescription = OptionDescription;
+            this.LogoUrl = LogoUrl;
+            this.TaxType = TaxType;
+            this.Currency = Currency;
+            this.Price = Price;
+            this.Discounts = Discounts;
+            this.Settings = Settings;
             
         }
 
-        
         /// <summary>
         /// Gets or sets the value of shipping method code
         /// </summary>
         /// <value>Gets or sets the value of shipping method code</value>
         [DataMember(Name="shipmentMethodCode", EmitDefaultValue=false)]
         public string ShipmentMethodCode { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of shipping method name
         /// </summary>
         /// <value>Gets or sets the value of shipping method name</value>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of shipping method option name
         /// </summary>
         /// <value>Gets or sets the value of shipping method option name</value>
         [DataMember(Name="optionName", EmitDefaultValue=false)]
         public string OptionName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of shipping method option description
         /// </summary>
         /// <value>Gets or sets the value of shipping method option description</value>
         [DataMember(Name="optionDescription", EmitDefaultValue=false)]
         public string OptionDescription { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of shipping method logo absolute URL
         /// </summary>
         /// <value>Gets or sets the value of shipping method logo absolute URL</value>
         [DataMember(Name="logoUrl", EmitDefaultValue=false)]
         public string LogoUrl { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of shipping method tax type
         /// </summary>
         /// <value>Gets or sets the value of shipping method tax type</value>
         [DataMember(Name="taxType", EmitDefaultValue=false)]
         public string TaxType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of shipping method currency
         /// </summary>
         /// <value>Gets or sets the value of shipping method currency</value>
         [DataMember(Name="currency", EmitDefaultValue=false)]
         public string Currency { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of shipping method price
         /// </summary>
         /// <value>Gets or sets the value of shipping method price</value>
         [DataMember(Name="price", EmitDefaultValue=false)]
         public double? Price { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the collection of shipping method discounts
         /// </summary>
         /// <value>Gets or sets the collection of shipping method discounts</value>
         [DataMember(Name="discounts", EmitDefaultValue=false)]
         public List<VirtoCommerceCartModuleWebModelDiscount> Discounts { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Settings
         /// </summary>
         [DataMember(Name="settings", EmitDefaultValue=false)]
         public List<VirtoCommercePlatformCoreSettingsSettingEntry> Settings { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

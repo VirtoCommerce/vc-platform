@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// Editorial review for an item.
     /// </summary>
@@ -21,53 +21,59 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelEditorialReview" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelEditorialReview" />class.
         /// </summary>
-        public VirtoCommerceCatalogModuleWebModelEditorialReview()
+        /// <param name="Id">Id.</param>
+        /// <param name="Content">Gets or sets the review content..</param>
+        /// <param name="ReviewType">Gets or sets the type of the review..</param>
+        /// <param name="LanguageCode">Gets or sets the review language..</param>
+        /// <param name="IsInherited">System flag used to mark that object was inherited from other.</param>
+
+        public VirtoCommerceCatalogModuleWebModelEditorialReview(string Id = null, string Content = null, string ReviewType = null, string LanguageCode = null, bool? IsInherited = null)
         {
+            this.Id = Id;
+            this.Content = Content;
+            this.ReviewType = ReviewType;
+            this.LanguageCode = LanguageCode;
+            this.IsInherited = IsInherited;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the review content.
         /// </summary>
         /// <value>Gets or sets the review content.</value>
         [DataMember(Name="content", EmitDefaultValue=false)]
         public string Content { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the type of the review.
         /// </summary>
         /// <value>Gets or sets the type of the review.</value>
         [DataMember(Name="reviewType", EmitDefaultValue=false)]
         public string ReviewType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the review language.
         /// </summary>
         /// <value>Gets or sets the review language.</value>
         [DataMember(Name="languageCode", EmitDefaultValue=false)]
         public string LanguageCode { get; set; }
-  
-        
+
         /// <summary>
         /// System flag used to mark that object was inherited from other
         /// </summary>
         /// <value>System flag used to mark that object was inherited from other</value>
         [DataMember(Name="isInherited", EmitDefaultValue=false)]
         public bool? IsInherited { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
