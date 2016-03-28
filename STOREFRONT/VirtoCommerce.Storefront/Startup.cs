@@ -178,7 +178,7 @@ namespace VirtoCommerce.Storefront
             var themesBasePath = cmsContentConnectionString.RootPath.TrimEnd('/') + "/" + "Themes";
             var staticContentBasePath = cmsContentConnectionString.RootPath.TrimEnd('/') + "/" + "Pages";
             //Use always file system provider for global theme
-            var globalThemesBlobProvider = new FileSystemContentBlobProvider(ResolveLocalPath(themesBasePath + "/default"));
+            var globalThemesBlobProvider = new FileSystemContentBlobProvider(ResolveLocalPath("~/App_Data/Themes/default"));
             IContentBlobProvider themesBlobProvider;
             IContentBlobProvider staticContentBlobProvider;
             if ("AzureBlobStorage".Equals(cmsContentConnectionString.Provider, StringComparison.OrdinalIgnoreCase))
