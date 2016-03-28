@@ -13,8 +13,8 @@ namespace VirtoCommerce.Storefront.Model.StaticContent
 {
     public abstract class ContentItem
     {
-        private static readonly Regex _timestampAndTitleFromPathRegex = new Regex(string.Format(@"{0}(?:(?<timestamp>\d+-\d+-\d+)-)?(?<title>[^{0}]*)\.[^\.]+$", Regex.Escape(Path.DirectorySeparatorChar.ToString())), RegexOptions.Compiled);
-        private static readonly Regex _timestampAndTitleAndLanguageFromPathRegex = new Regex(string.Format(@"{0}(?:(?<timestamp>\d+-\d+-\d+)-)?(?<title>[^{0}]*)\.(?<language>[A-z]{{2}}-[A-z]{{2}})\.[^\.]+$", Regex.Escape(Path.DirectorySeparatorChar.ToString())), RegexOptions.Compiled);
+        private static readonly Regex _timestampAndTitleFromPathRegex = new Regex(string.Format(@"{0}(?:(?<timestamp>\d+-\d+-\d+)-)?(?<title>[^{0}]*)\.[^\.]+$", Regex.Escape("/")), RegexOptions.Compiled);
+        private static readonly Regex _timestampAndTitleAndLanguageFromPathRegex = new Regex(string.Format(@"{0}(?:(?<timestamp>\d+-\d+-\d+)-)?(?<title>[^{0}]*)\.(?<language>[A-z]{{2}}-[A-z]{{2}})\.[^\.]+$", Regex.Escape("/")), RegexOptions.Compiled);
         private static readonly Regex _categoryRegex = new Regex(@":category(\d*)", RegexOptions.Compiled);
         private static readonly Regex _slashesRegex = new Regex(@"/{1,}", RegexOptions.Compiled);
         private static readonly string[] _htmlExtensions = new[] { ".markdown", ".mdown", ".mkdn", ".mkd", ".md", ".textile", ".cshtml" };
@@ -66,9 +66,9 @@ namespace VirtoCommerce.Storefront.Model.StaticContent
         public string Name { get; set; }
 
         /// <summary>
-        /// Storage path in file system
+        /// Relative storage path in storage system (/blogs/page1)
         /// </summary>
-        public string LocalPath { get; set; }
+        public string StoragePath { get; set; }
 
         public string Content { get; set; }
 
@@ -79,8 +79,7 @@ namespace VirtoCommerce.Storefront.Model.StaticContent
 
         public string FileName { get; set; }
 
-        public string RelativePath { get; set; }
-
+     
         public virtual void LoadContent(string content, IDictionary<string, IEnumerable<string>> metaInfoMap, IDictionary themeSettings)
         {
             if (metaInfoMap != null)
@@ -161,7 +160,7 @@ namespace VirtoCommerce.Storefront.Model.StaticContent
 
             var date = PublishedDate ?? CreatedDate;
 
-            permalink = permalink.Replace(":folder", Path.GetDirectoryName(RelativePath).Replace("\\", "/"));
+            permalink = permalink.Replace(":folder", Path.GetDirectoryName(StoragePath).Replace("\\", "/"));
 
             if (!String.IsNullOrEmpty(Category))
                 permalink = permalink.Replace(":categories", Category);
@@ -172,7 +171,7 @@ namespace VirtoCommerce.Storefront.Model.StaticContent
             permalink = permalink.Replace(":year", date.Year.ToString(CultureInfo.InvariantCulture));
             permalink = permalink.Replace(":month", date.ToString("MM"));
             permalink = permalink.Replace(":day", date.ToString("dd"));
-            permalink = permalink.Replace(":title", GetTitle(LocalPath));
+            permalink = permalink.Replace(":title", GetTitle(StoragePath));
             permalink = permalink.Replace(":y_day", date.DayOfYear.ToString("000"));
             permalink = permalink.Replace(":short_year", date.ToString("yy"));
             permalink = permalink.Replace(":i_month", date.Month.ToString());
@@ -221,6 +220,11 @@ namespace VirtoCommerce.Storefront.Model.StaticContent
                 title = _timestampAndTitleFromPathRegex.Match(file).Groups["title"].Value;
 
             return title;
+        }
+
+        public override string ToString()
+        {
+            return Url ?? Name;
         }
     }
 }

@@ -10,7 +10,7 @@ namespace VirtoCommerce.Storefront.Services
 {
     public static class StaticContentItemFactory
     {
-        private static readonly Regex _blogMatchRegex = new Regex(@"blogs\/(?<blog>[^\/]*)\/([^\/]*)\.[^\.]+$", RegexOptions.Compiled);
+        private static readonly Regex _blogMatchRegex = new Regex(@"blogs/(?<blog>[^\/]*)\/([^\/]*)\.[^\.]+$", RegexOptions.Compiled);
 
         public static ContentItem GetContentItemFromPath(string path)
         {

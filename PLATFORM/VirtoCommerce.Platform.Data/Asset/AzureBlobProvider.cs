@@ -33,7 +33,7 @@ namespace VirtoCommerce.Platform.Data.Asset
         /// </summary>
         /// <param name="blobUrl"></param>
         /// <returns></returns>
-        public BlobInfo GetBlobInfo(string url)
+        public virtual BlobInfo GetBlobInfo(string url)
         {
             if (string.IsNullOrEmpty(url))
                 throw new ArgumentNullException("url");
@@ -56,7 +56,7 @@ namespace VirtoCommerce.Platform.Data.Asset
         /// </summary>
         /// <param name="url"></param>
         /// <returns>blob stream</returns>
-        public Stream OpenRead(string url)
+        public virtual Stream OpenRead(string url)
         {
             if (string.IsNullOrEmpty(url))
                 throw new ArgumentNullException("url");
@@ -71,7 +71,7 @@ namespace VirtoCommerce.Platform.Data.Asset
         /// </summary>
         /// <param name="url"></param>
         /// <returns>blob stream</returns>
-        public Stream OpenWrite(string url)
+        public virtual Stream OpenWrite(string url)
         {
             //Container name
             var containerName = GetContainerNameFromUrl(url);
@@ -92,7 +92,7 @@ namespace VirtoCommerce.Platform.Data.Asset
         }
 
 
-        public void Remove(string[] urls)
+        public virtual void Remove(string[] urls)
         {
             foreach (var url in urls)
             {
@@ -118,7 +118,7 @@ namespace VirtoCommerce.Platform.Data.Asset
         }
 
 
-        public BlobSearchResult Search(string folderUrl, string keyword)
+        public virtual BlobSearchResult Search(string folderUrl, string keyword)
         {
             var retVal = new BlobSearchResult();
 
@@ -150,6 +150,7 @@ namespace VirtoCommerce.Platform.Data.Asset
                                 Size = block.Properties.Length,
                                 ModifiedDate = block.Properties.LastModified != null ? block.Properties.LastModified.Value.DateTime : (DateTime?)null
                             };
+                            blobInfo.RelativeUrl = blobInfo.Url.Replace(_cloudBlobClient.BaseUri.ToString(), string.Empty);
                             //Do not return empty blob (created with directory because azure blob not support direct directory creation)
                             if (!String.IsNullOrEmpty(blobInfo.FileName))
                             {
@@ -164,6 +165,7 @@ namespace VirtoCommerce.Platform.Data.Asset
                                 Url = Uri.EscapeUriString(directory.Uri.ToString()),
                                 ParentUrl = directory.Parent != null ? Uri.EscapeUriString(directory.Parent.Uri.ToString()) : null
                             };
+                            folder.RelativeUrl = folder.Url.Replace(_cloudBlobClient.BaseUri.ToString(), string.Empty);
                             retVal.Folders.Add(folder);
                         }
                     }
@@ -184,7 +186,7 @@ namespace VirtoCommerce.Platform.Data.Asset
             return retVal;
         }
 
-        public void CreateFolder(BlobFolder folder)
+        public virtual void CreateFolder(BlobFolder folder)
         {
             var path = (folder.ParentUrl != null ? folder.ParentUrl + "/" : String.Empty) + folder.Name;
 
@@ -216,7 +218,6 @@ namespace VirtoCommerce.Platform.Data.Asset
         }
 
         #endregion
-
         /// <summary>
         /// Return outline folder from absolute or relative url
         /// </summary>

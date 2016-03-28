@@ -141,10 +141,10 @@
                 });
 
                 $http.get('api/catalog/getslug?text=' + stringForSlug)
-                    .success(function (slug) {
+                    .then(function (results) {
                         _.each(data, function (seo) {
                             if (angular.isUndefined(seo.semanticUrl)) {
-                                seo.semanticUrl = slug;
+                                seo.semanticUrl = results.data;
                             }
                         });
                         callback();

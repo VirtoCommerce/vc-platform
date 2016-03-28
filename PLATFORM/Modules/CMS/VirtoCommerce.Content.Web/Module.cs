@@ -19,6 +19,9 @@ using VirtoCommerce.Content.Web.Security;
 using VirtoCommerce.Domain.Store.Services;
 using System.Configuration;
 using VirtoCommerce.Platform.Core.Common;
+using System.Linq;
+using VirtoCommerce.Platform.Data.Asset;
+using VirtoCommerce.Platform.Core.Asset;
 
 namespace VirtoCommerce.Content.Web
 {
@@ -26,6 +29,7 @@ namespace VirtoCommerce.Content.Web
     {
         private const string _connectionStringName = "VirtoCommerce";
         private readonly IUnityContainer _container;
+        private static string[] _possibleContentTypes = new [] { "pages", "themes" };
 
 
         public Module(IUnityContainer container)
@@ -45,9 +49,23 @@ namespace VirtoCommerce.Content.Web
             _container.RegisterType<IMenuService, MenuServiceImpl>();
 
             var settingsManager = _container.Resolve<ISettingsManager>();
-            var contentStoragePath = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Storefront.AppData.Path", settingsManager.GetValue("VirtoCommerce.Content.StoragePath", string.Empty));
+            var blobConnectionString = BlobConnectionString.Parse(ConfigurationManager.ConnectionStrings["CmsContentConnectionString"].ConnectionString);
 
-            Func<IContentStorageProvider> contentProviderFactory = () => new ContentStorageProviderImpl(NormalizePath(contentStoragePath));
+             Func<string, string, IContentBlobStorageProvider> contentProviderFactory = (contentType, storeId) =>
+            {
+                if (string.Equals(blobConnectionString.Provider, FileSystemBlobProvider.ProviderName, StringComparison.OrdinalIgnoreCase))
+                {
+                    var storagePath = Path.Combine(NormalizePath(blobConnectionString.RootPath), contentType, storeId);
+                    var publicUrl = blobConnectionString.PublicUrl + "/" + contentType + "/" + storeId;
+                    //Do not export default theme (Themes/default) its will distributed with code
+                    return new FileSystemContentBlobStorageProvider(storagePath, publicUrl, "/Themes/default");
+                }
+                else if (string.Equals(blobConnectionString.Provider, AzureBlobProvider.ProviderName, StringComparison.OrdinalIgnoreCase))
+                {
+                    return new AzureContentBlobStorageProvider(blobConnectionString.ConnectionString, Path.Combine(blobConnectionString.RootPath, contentType.FirstCharToUpper(), storeId));
+                }
+                throw new NotImplementedException();
+            };
             _container.RegisterInstance(contentProviderFactory);
         }
 
@@ -111,6 +129,7 @@ namespace VirtoCommerce.Content.Web
 
         #endregion
 
+   
         private string NormalizePath(string path)
         {
             var retVal = path;
@@ -127,7 +146,7 @@ namespace VirtoCommerce.Content.Web
                 retVal = HostingEnvironment.MapPath("~/");
                 retVal += path;
             }
-            return retVal;
+            return Path.GetFullPath(retVal);
         }
     }
 }

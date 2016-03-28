@@ -35,5 +35,12 @@ namespace VirtoCommerce.Platform.Core.Common
                 return ms.ToArray();
             }
         }
+
+        public static string ReadToString(this Stream stream)
+        {
+            // convert stream to string
+            StreamReader reader = new StreamReader(stream);
+            return reader.ReadToEnd();
+        }
     }
 }

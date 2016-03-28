@@ -73,15 +73,14 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
 		/// <param name="language">Language of menu link list</param>
 		/// <param name="id">Menu link list id</param>
 		[HttpGet]
-		[ResponseType(typeof(CheckNameResult))]
+		[ResponseType(typeof(bool))]
 		[Route("menu/checkname")]
 		public IHttpActionResult CheckName(string storeId, string name, string language, string id = "")
 		{
             base.CheckCurrentUserHasPermissionForObjects(ContentPredefinedPermissions.Read, new ContentScopeObject { StoreId = storeId });
 
             var retVal = _menuService.CheckList(storeId, name, language, id);
-			var response = new CheckNameResult { Result = retVal };
-			return Ok(response);
+			return Ok(retVal);
 		}
 
 		/// <summary>
