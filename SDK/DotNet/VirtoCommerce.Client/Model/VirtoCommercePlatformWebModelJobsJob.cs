@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,35 +21,39 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelJobsJob" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelJobsJob" />class.
         /// </summary>
-        public VirtoCommercePlatformWebModelJobsJob()
+        /// <param name="Id">Id.</param>
+        /// <param name="State">State.</param>
+        /// <param name="Completed">Completed.</param>
+
+        public VirtoCommercePlatformWebModelJobsJob(string Id = null, string State = null, bool? Completed = null)
         {
+            this.Id = Id;
+            this.State = State;
+            this.Completed = Completed;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets State
         /// </summary>
         [DataMember(Name="state", EmitDefaultValue=false)]
         public string State { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Completed
         /// </summary>
         [DataMember(Name="completed", EmitDefaultValue=false)]
         public bool? Completed { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

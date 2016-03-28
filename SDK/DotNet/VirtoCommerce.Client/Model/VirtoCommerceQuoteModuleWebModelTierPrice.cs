@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,28 +21,31 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceQuoteModuleWebModelTierPrice" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceQuoteModuleWebModelTierPrice" />class.
         /// </summary>
-        public VirtoCommerceQuoteModuleWebModelTierPrice()
+        /// <param name="Price">Price.</param>
+        /// <param name="Quantity">Quantity.</param>
+
+        public VirtoCommerceQuoteModuleWebModelTierPrice(double? Price = null, long? Quantity = null)
         {
+            this.Price = Price;
+            this.Quantity = Quantity;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets Price
         /// </summary>
         [DataMember(Name="price", EmitDefaultValue=false)]
         public double? Price { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Quantity
         /// </summary>
         [DataMember(Name="quantity", EmitDefaultValue=false)]
         public long? Quantity { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

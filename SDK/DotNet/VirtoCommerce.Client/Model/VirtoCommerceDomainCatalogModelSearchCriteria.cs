@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,238 +21,271 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceDomainCatalogModelSearchCriteria" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCatalogModelSearchCriteria" />class.
         /// </summary>
-        public VirtoCommerceDomainCatalogModelSearchCriteria()
+        /// <param name="StoreId">StoreId.</param>
+        /// <param name="ResponseGroup">ResponseGroup.</param>
+        /// <param name="Keyword">Keyword.</param>
+        /// <param name="SearchInChildren">SearchInChildren.</param>
+        /// <param name="SearchInVariations">SearchInVariations.</param>
+        /// <param name="CategoryId">CategoryId.</param>
+        /// <param name="CategoryIds">CategoryIds.</param>
+        /// <param name="CatalogId">CatalogId.</param>
+        /// <param name="CatalogIds">CatalogIds.</param>
+        /// <param name="LanguageCode">LanguageCode.</param>
+        /// <param name="Code">Code.</param>
+        /// <param name="Sort">Sort.</param>
+        /// <param name="SortInfos">SortInfos.</param>
+        /// <param name="HideDirectLinkedCategories">HideDirectLinkedCategories.</param>
+        /// <param name="PropertyValues">PropertyValues.</param>
+        /// <param name="Currency">Currency.</param>
+        /// <param name="StartPrice">StartPrice.</param>
+        /// <param name="EndPrice">EndPrice.</param>
+        /// <param name="Skip">Skip.</param>
+        /// <param name="Take">Take.</param>
+        /// <param name="IndexDate">IndexDate.</param>
+        /// <param name="PricelistId">PricelistId.</param>
+        /// <param name="PricelistIds">PricelistIds.</param>
+        /// <param name="Terms">Terms.</param>
+        /// <param name="Facets">Facets.</param>
+        /// <param name="Outline">Outline.</param>
+        /// <param name="WithHidden">WithHidden.</param>
+        /// <param name="OnlyBuyable">OnlyBuyable.</param>
+        /// <param name="OnlyWithTrackingInventory">OnlyWithTrackingInventory.</param>
+        /// <param name="ProductType">ProductType.</param>
+        /// <param name="ProductTypes">ProductTypes.</param>
+        /// <param name="StartDateFrom">StartDateFrom.</param>
+
+        public VirtoCommerceDomainCatalogModelSearchCriteria(string StoreId = null, string ResponseGroup = null, string Keyword = null, bool? SearchInChildren = null, bool? SearchInVariations = null, string CategoryId = null, List<string> CategoryIds = null, string CatalogId = null, List<string> CatalogIds = null, string LanguageCode = null, string Code = null, string Sort = null, List<VirtoCommercePlatformCoreCommonSortInfo> SortInfos = null, bool? HideDirectLinkedCategories = null, List<VirtoCommerceDomainCatalogModelPropertyValue> PropertyValues = null, string Currency = null, double? StartPrice = null, double? EndPrice = null, int? Skip = null, int? Take = null, DateTime? IndexDate = null, string PricelistId = null, List<string> PricelistIds = null, List<string> Terms = null, List<string> Facets = null, string Outline = null, bool? WithHidden = null, bool? OnlyBuyable = null, bool? OnlyWithTrackingInventory = null, string ProductType = null, List<string> ProductTypes = null, DateTime? StartDateFrom = null)
         {
+            this.StoreId = StoreId;
+            this.ResponseGroup = ResponseGroup;
+            this.Keyword = Keyword;
+            this.SearchInChildren = SearchInChildren;
+            this.SearchInVariations = SearchInVariations;
+            this.CategoryId = CategoryId;
+            this.CategoryIds = CategoryIds;
+            this.CatalogId = CatalogId;
+            this.CatalogIds = CatalogIds;
+            this.LanguageCode = LanguageCode;
+            this.Code = Code;
+            this.Sort = Sort;
+            this.SortInfos = SortInfos;
+            this.HideDirectLinkedCategories = HideDirectLinkedCategories;
+            this.PropertyValues = PropertyValues;
+            this.Currency = Currency;
+            this.StartPrice = StartPrice;
+            this.EndPrice = EndPrice;
+            this.Skip = Skip;
+            this.Take = Take;
+            this.IndexDate = IndexDate;
+            this.PricelistId = PricelistId;
+            this.PricelistIds = PricelistIds;
+            this.Terms = Terms;
+            this.Facets = Facets;
+            this.Outline = Outline;
+            this.WithHidden = WithHidden;
+            this.OnlyBuyable = OnlyBuyable;
+            this.OnlyWithTrackingInventory = OnlyWithTrackingInventory;
+            this.ProductType = ProductType;
+            this.ProductTypes = ProductTypes;
+            this.StartDateFrom = StartDateFrom;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets StoreId
         /// </summary>
         [DataMember(Name="storeId", EmitDefaultValue=false)]
         public string StoreId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ResponseGroup
         /// </summary>
         [DataMember(Name="responseGroup", EmitDefaultValue=false)]
         public string ResponseGroup { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Keyword
         /// </summary>
         [DataMember(Name="keyword", EmitDefaultValue=false)]
         public string Keyword { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets SearchInChildren
         /// </summary>
         [DataMember(Name="searchInChildren", EmitDefaultValue=false)]
         public bool? SearchInChildren { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets SearchInVariations
         /// </summary>
         [DataMember(Name="searchInVariations", EmitDefaultValue=false)]
         public bool? SearchInVariations { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CategoryId
         /// </summary>
         [DataMember(Name="categoryId", EmitDefaultValue=false)]
         public string CategoryId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CategoryIds
         /// </summary>
         [DataMember(Name="categoryIds", EmitDefaultValue=false)]
         public List<string> CategoryIds { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CatalogId
         /// </summary>
         [DataMember(Name="catalogId", EmitDefaultValue=false)]
         public string CatalogId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CatalogIds
         /// </summary>
         [DataMember(Name="catalogIds", EmitDefaultValue=false)]
         public List<string> CatalogIds { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets LanguageCode
         /// </summary>
         [DataMember(Name="languageCode", EmitDefaultValue=false)]
         public string LanguageCode { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Code
         /// </summary>
         [DataMember(Name="code", EmitDefaultValue=false)]
         public string Code { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Sort
         /// </summary>
         [DataMember(Name="sort", EmitDefaultValue=false)]
         public string Sort { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets SortInfos
         /// </summary>
         [DataMember(Name="sortInfos", EmitDefaultValue=false)]
         public List<VirtoCommercePlatformCoreCommonSortInfo> SortInfos { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets HideDirectLinkedCategories
         /// </summary>
         [DataMember(Name="hideDirectLinkedCategories", EmitDefaultValue=false)]
         public bool? HideDirectLinkedCategories { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets PropertyValues
         /// </summary>
         [DataMember(Name="propertyValues", EmitDefaultValue=false)]
         public List<VirtoCommerceDomainCatalogModelPropertyValue> PropertyValues { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Currency
         /// </summary>
         [DataMember(Name="currency", EmitDefaultValue=false)]
         public string Currency { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets StartPrice
         /// </summary>
         [DataMember(Name="startPrice", EmitDefaultValue=false)]
         public double? StartPrice { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets EndPrice
         /// </summary>
         [DataMember(Name="endPrice", EmitDefaultValue=false)]
         public double? EndPrice { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Skip
         /// </summary>
         [DataMember(Name="skip", EmitDefaultValue=false)]
         public int? Skip { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Take
         /// </summary>
         [DataMember(Name="take", EmitDefaultValue=false)]
         public int? Take { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets IndexDate
         /// </summary>
         [DataMember(Name="indexDate", EmitDefaultValue=false)]
         public DateTime? IndexDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets PricelistId
         /// </summary>
         [DataMember(Name="pricelistId", EmitDefaultValue=false)]
         public string PricelistId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets PricelistIds
         /// </summary>
         [DataMember(Name="pricelistIds", EmitDefaultValue=false)]
         public List<string> PricelistIds { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Terms
         /// </summary>
         [DataMember(Name="terms", EmitDefaultValue=false)]
         public List<string> Terms { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Facets
         /// </summary>
         [DataMember(Name="facets", EmitDefaultValue=false)]
         public List<string> Facets { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Outline
         /// </summary>
         [DataMember(Name="outline", EmitDefaultValue=false)]
         public string Outline { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets WithHidden
         /// </summary>
         [DataMember(Name="withHidden", EmitDefaultValue=false)]
         public bool? WithHidden { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets OnlyBuyable
         /// </summary>
         [DataMember(Name="onlyBuyable", EmitDefaultValue=false)]
         public bool? OnlyBuyable { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets OnlyWithTrackingInventory
         /// </summary>
         [DataMember(Name="onlyWithTrackingInventory", EmitDefaultValue=false)]
         public bool? OnlyWithTrackingInventory { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ProductType
         /// </summary>
         [DataMember(Name="productType", EmitDefaultValue=false)]
         public string ProductType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ProductTypes
         /// </summary>
         [DataMember(Name="productTypes", EmitDefaultValue=false)]
         public List<string> ProductTypes { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets StartDateFrom
         /// </summary>
         [DataMember(Name="startDateFrom", EmitDefaultValue=false)]
         public DateTime? StartDateFrom { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

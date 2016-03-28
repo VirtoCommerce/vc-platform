@@ -121,7 +121,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             var retVal = new webModel.Catalog
             {
                 Name = "New virtual catalog",
-                Virtual = true,
+                IsVirtual = true,
                 Languages = new List<webModel.CatalogLanguage>
                 {
                     new webModel.CatalogLanguage

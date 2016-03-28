@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,81 +21,91 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceContentWebModelsPage" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceContentWebModelsPage" />class.
         /// </summary>
-        public VirtoCommerceContentWebModelsPage()
+        /// <param name="Id">Id.</param>
+        /// <param name="Name">Page element name, contains the path relative to the root pages folder.</param>
+        /// <param name="Content">Page element text content (text page element), based on content type.</param>
+        /// <param name="ByteContent">Page element byte content (non-text page element), bases on content type.</param>
+        /// <param name="ContentType">ContentType.</param>
+        /// <param name="Language">Locale.</param>
+        /// <param name="ModifiedDate">ModifiedDate.</param>
+        /// <param name="FileUrl">FileUrl.</param>
+        /// <param name="SecurityScopes">SecurityScopes.</param>
+
+        public VirtoCommerceContentWebModelsPage(string Id = null, string Name = null, string Content = null, byte[] ByteContent = null, string ContentType = null, string Language = null, DateTime? ModifiedDate = null, string FileUrl = null, List<string> SecurityScopes = null)
         {
+            this.Id = Id;
+            this.Name = Name;
+            this.Content = Content;
+            this.ByteContent = ByteContent;
+            this.ContentType = ContentType;
+            this.Language = Language;
+            this.ModifiedDate = ModifiedDate;
+            this.FileUrl = FileUrl;
+            this.SecurityScopes = SecurityScopes;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
+
         /// <summary>
         /// Page element name, contains the path relative to the root pages folder
         /// </summary>
         /// <value>Page element name, contains the path relative to the root pages folder</value>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
         /// Page element text content (text page element), based on content type
         /// </summary>
         /// <value>Page element text content (text page element), based on content type</value>
         [DataMember(Name="content", EmitDefaultValue=false)]
         public string Content { get; set; }
-  
-        
+
         /// <summary>
         /// Page element byte content (non-text page element), bases on content type
         /// </summary>
         /// <value>Page element byte content (non-text page element), bases on content type</value>
         [DataMember(Name="byteContent", EmitDefaultValue=false)]
-        public string ByteContent { get; set; }
-  
-        
+        public byte[] ByteContent { get; set; }
+
         /// <summary>
         /// Gets or Sets ContentType
         /// </summary>
         [DataMember(Name="contentType", EmitDefaultValue=false)]
         public string ContentType { get; set; }
-  
-        
+
         /// <summary>
         /// Locale
         /// </summary>
         /// <value>Locale</value>
         [DataMember(Name="language", EmitDefaultValue=false)]
         public string Language { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedDate
         /// </summary>
         [DataMember(Name="modifiedDate", EmitDefaultValue=false)]
         public DateTime? ModifiedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets FileUrl
         /// </summary>
         [DataMember(Name="fileUrl", EmitDefaultValue=false)]
         public string FileUrl { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets SecurityScopes
         /// </summary>
         [DataMember(Name="securityScopes", EmitDefaultValue=false)]
         public List<string> SecurityScopes { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

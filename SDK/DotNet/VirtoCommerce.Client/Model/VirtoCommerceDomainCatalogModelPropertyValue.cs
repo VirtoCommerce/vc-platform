@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,112 +21,127 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceDomainCatalogModelPropertyValue" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCatalogModelPropertyValue" />class.
         /// </summary>
-        public VirtoCommerceDomainCatalogModelPropertyValue()
+        /// <param name="PropertyId">PropertyId.</param>
+        /// <param name="PropertyName">PropertyName.</param>
+        /// <param name="Property">Property.</param>
+        /// <param name="Alias">Alias.</param>
+        /// <param name="ValueId">ValueId.</param>
+        /// <param name="Value">Value.</param>
+        /// <param name="ValueType">ValueType.</param>
+        /// <param name="LanguageCode">LanguageCode.</param>
+        /// <param name="IsInherited">IsInherited.</param>
+        /// <param name="CreatedDate">CreatedDate.</param>
+        /// <param name="ModifiedDate">ModifiedDate.</param>
+        /// <param name="CreatedBy">CreatedBy.</param>
+        /// <param name="ModifiedBy">ModifiedBy.</param>
+        /// <param name="Id">Id.</param>
+
+        public VirtoCommerceDomainCatalogModelPropertyValue(string PropertyId = null, string PropertyName = null, VirtoCommerceDomainCatalogModelProperty Property = null, string Alias = null, string ValueId = null, Object Value = null, string ValueType = null, string LanguageCode = null, bool? IsInherited = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
         {
+            this.PropertyId = PropertyId;
+            this.PropertyName = PropertyName;
+            this.Property = Property;
+            this.Alias = Alias;
+            this.ValueId = ValueId;
+            this.Value = Value;
+            this.ValueType = ValueType;
+            this.LanguageCode = LanguageCode;
+            this.IsInherited = IsInherited;
+            this.CreatedDate = CreatedDate;
+            this.ModifiedDate = ModifiedDate;
+            this.CreatedBy = CreatedBy;
+            this.ModifiedBy = ModifiedBy;
+            this.Id = Id;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets PropertyId
         /// </summary>
         [DataMember(Name="propertyId", EmitDefaultValue=false)]
         public string PropertyId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets PropertyName
         /// </summary>
         [DataMember(Name="propertyName", EmitDefaultValue=false)]
         public string PropertyName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Property
         /// </summary>
         [DataMember(Name="property", EmitDefaultValue=false)]
         public VirtoCommerceDomainCatalogModelProperty Property { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Alias
         /// </summary>
         [DataMember(Name="alias", EmitDefaultValue=false)]
         public string Alias { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ValueId
         /// </summary>
         [DataMember(Name="valueId", EmitDefaultValue=false)]
         public string ValueId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Value
         /// </summary>
         [DataMember(Name="value", EmitDefaultValue=false)]
         public Object Value { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ValueType
         /// </summary>
         [DataMember(Name="valueType", EmitDefaultValue=false)]
         public string ValueType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets LanguageCode
         /// </summary>
         [DataMember(Name="languageCode", EmitDefaultValue=false)]
         public string LanguageCode { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets IsInherited
         /// </summary>
         [DataMember(Name="isInherited", EmitDefaultValue=false)]
         public bool? IsInherited { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedDate
         /// </summary>
         [DataMember(Name="createdDate", EmitDefaultValue=false)]
         public DateTime? CreatedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedDate
         /// </summary>
         [DataMember(Name="modifiedDate", EmitDefaultValue=false)]
         public DateTime? ModifiedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedBy
         /// </summary>
         [DataMember(Name="createdBy", EmitDefaultValue=false)]
         public string CreatedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedBy
         /// </summary>
         [DataMember(Name="modifiedBy", EmitDefaultValue=false)]
         public string ModifiedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

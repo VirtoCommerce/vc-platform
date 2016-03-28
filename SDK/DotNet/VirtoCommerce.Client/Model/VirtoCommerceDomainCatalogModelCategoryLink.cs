@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,42 +21,47 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceDomainCatalogModelCategoryLink" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCatalogModelCategoryLink" />class.
         /// </summary>
-        public VirtoCommerceDomainCatalogModelCategoryLink()
+        /// <param name="CatalogId">CatalogId.</param>
+        /// <param name="Catalog">Catalog.</param>
+        /// <param name="CategoryId">CategoryId.</param>
+        /// <param name="Category">Category.</param>
+
+        public VirtoCommerceDomainCatalogModelCategoryLink(string CatalogId = null, VirtoCommerceDomainCatalogModelCatalog Catalog = null, string CategoryId = null, VirtoCommerceDomainCatalogModelCategory Category = null)
         {
+            this.CatalogId = CatalogId;
+            this.Catalog = Catalog;
+            this.CategoryId = CategoryId;
+            this.Category = Category;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets CatalogId
         /// </summary>
         [DataMember(Name="catalogId", EmitDefaultValue=false)]
         public string CatalogId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Catalog
         /// </summary>
         [DataMember(Name="catalog", EmitDefaultValue=false)]
         public VirtoCommerceDomainCatalogModelCatalog Catalog { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CategoryId
         /// </summary>
         [DataMember(Name="categoryId", EmitDefaultValue=false)]
         public string CategoryId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Category
         /// </summary>
         [DataMember(Name="category", EmitDefaultValue=false)]
         public VirtoCommerceDomainCatalogModelCategory Category { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

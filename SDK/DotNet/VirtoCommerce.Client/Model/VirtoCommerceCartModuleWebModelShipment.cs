@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,233 +21,262 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceCartModuleWebModelShipment" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceCartModuleWebModelShipment" />class.
         /// </summary>
-        public VirtoCommerceCartModuleWebModelShipment()
+        /// <param name="ShipmentMethodCode">Gets or sets the value of shipping method code.</param>
+        /// <param name="ShipmentMethodOption">Gets or sets the value of shipping method option.</param>
+        /// <param name="FulfilmentCenterId">Gets or sets the value of fulfillment center id.</param>
+        /// <param name="DeliveryAddress">Gets or sets the delivery address.</param>
+        /// <param name="Currency">Gets or sets the value of shipping currency.</param>
+        /// <param name="VolumetricWeight">Gets or sets the value of volumetric weight.</param>
+        /// <param name="WeightUnit">Gets or sets the value of weight unit.</param>
+        /// <param name="Weight">Gets or sets the value of weight.</param>
+        /// <param name="MeasureUnit">Gets or sets the value of measurement units.</param>
+        /// <param name="Height">Gets or sets the value of height.</param>
+        /// <param name="Length">Gets or sets the value of length.</param>
+        /// <param name="Width">Gets or sets the value of width.</param>
+        /// <param name="TaxIncluded">Gets or sets the flag of shipping has tax.</param>
+        /// <param name="ShippingPrice">Gets or sets the value of shipping price.</param>
+        /// <param name="Total">Gets or sets the value of total shipping price.</param>
+        /// <param name="DiscountTotal">Gets or sets the value of total shipping discount amount.</param>
+        /// <param name="TaxTotal">Gets or sets the value of total shipping tax amount.</param>
+        /// <param name="ItemSubtotal">Gets or sets the value of shipping items subtotal.</param>
+        /// <param name="Subtotal">Gets or sets the value of shipping subtotal.</param>
+        /// <param name="Discounts">Gets or sets the collection of shipping discounts.</param>
+        /// <param name="Items">Gets or sets the collection of shipping items.</param>
+        /// <param name="TaxType">Gets or sets the value of shipping tax type.</param>
+        /// <param name="TaxDetails">Gets or sets the collection of line item tax detalization lines.</param>
+        /// <param name="CreatedDate">CreatedDate.</param>
+        /// <param name="ModifiedDate">ModifiedDate.</param>
+        /// <param name="CreatedBy">CreatedBy.</param>
+        /// <param name="ModifiedBy">ModifiedBy.</param>
+        /// <param name="Id">Id.</param>
+
+        public VirtoCommerceCartModuleWebModelShipment(string ShipmentMethodCode = null, string ShipmentMethodOption = null, string FulfilmentCenterId = null, VirtoCommerceCartModuleWebModelAddress DeliveryAddress = null, string Currency = null, double? VolumetricWeight = null, string WeightUnit = null, double? Weight = null, string MeasureUnit = null, double? Height = null, double? Length = null, double? Width = null, bool? TaxIncluded = null, double? ShippingPrice = null, double? Total = null, double? DiscountTotal = null, double? TaxTotal = null, double? ItemSubtotal = null, double? Subtotal = null, List<VirtoCommerceCartModuleWebModelDiscount> Discounts = null, List<VirtoCommerceCartModuleWebModelShipmentItem> Items = null, string TaxType = null, List<VirtoCommerceDomainCommerceModelTaxDetail> TaxDetails = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
         {
+            this.ShipmentMethodCode = ShipmentMethodCode;
+            this.ShipmentMethodOption = ShipmentMethodOption;
+            this.FulfilmentCenterId = FulfilmentCenterId;
+            this.DeliveryAddress = DeliveryAddress;
+            this.Currency = Currency;
+            this.VolumetricWeight = VolumetricWeight;
+            this.WeightUnit = WeightUnit;
+            this.Weight = Weight;
+            this.MeasureUnit = MeasureUnit;
+            this.Height = Height;
+            this.Length = Length;
+            this.Width = Width;
+            this.TaxIncluded = TaxIncluded;
+            this.ShippingPrice = ShippingPrice;
+            this.Total = Total;
+            this.DiscountTotal = DiscountTotal;
+            this.TaxTotal = TaxTotal;
+            this.ItemSubtotal = ItemSubtotal;
+            this.Subtotal = Subtotal;
+            this.Discounts = Discounts;
+            this.Items = Items;
+            this.TaxType = TaxType;
+            this.TaxDetails = TaxDetails;
+            this.CreatedDate = CreatedDate;
+            this.ModifiedDate = ModifiedDate;
+            this.CreatedBy = CreatedBy;
+            this.ModifiedBy = ModifiedBy;
+            this.Id = Id;
             
         }
 
-        
         /// <summary>
         /// Gets or sets the value of shipping method code
         /// </summary>
         /// <value>Gets or sets the value of shipping method code</value>
         [DataMember(Name="shipmentMethodCode", EmitDefaultValue=false)]
         public string ShipmentMethodCode { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of shipping method option
         /// </summary>
         /// <value>Gets or sets the value of shipping method option</value>
         [DataMember(Name="shipmentMethodOption", EmitDefaultValue=false)]
         public string ShipmentMethodOption { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of fulfillment center id
         /// </summary>
         /// <value>Gets or sets the value of fulfillment center id</value>
         [DataMember(Name="fulfilmentCenterId", EmitDefaultValue=false)]
         public string FulfilmentCenterId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the delivery address
         /// </summary>
         /// <value>Gets or sets the delivery address</value>
         [DataMember(Name="deliveryAddress", EmitDefaultValue=false)]
         public VirtoCommerceCartModuleWebModelAddress DeliveryAddress { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of shipping currency
         /// </summary>
         /// <value>Gets or sets the value of shipping currency</value>
         [DataMember(Name="currency", EmitDefaultValue=false)]
         public string Currency { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of volumetric weight
         /// </summary>
         /// <value>Gets or sets the value of volumetric weight</value>
         [DataMember(Name="volumetricWeight", EmitDefaultValue=false)]
         public double? VolumetricWeight { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of weight unit
         /// </summary>
         /// <value>Gets or sets the value of weight unit</value>
         [DataMember(Name="weightUnit", EmitDefaultValue=false)]
         public string WeightUnit { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of weight
         /// </summary>
         /// <value>Gets or sets the value of weight</value>
         [DataMember(Name="weight", EmitDefaultValue=false)]
         public double? Weight { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of measurement units
         /// </summary>
         /// <value>Gets or sets the value of measurement units</value>
         [DataMember(Name="measureUnit", EmitDefaultValue=false)]
         public string MeasureUnit { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of height
         /// </summary>
         /// <value>Gets or sets the value of height</value>
         [DataMember(Name="height", EmitDefaultValue=false)]
         public double? Height { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of length
         /// </summary>
         /// <value>Gets or sets the value of length</value>
         [DataMember(Name="length", EmitDefaultValue=false)]
         public double? Length { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of width
         /// </summary>
         /// <value>Gets or sets the value of width</value>
         [DataMember(Name="width", EmitDefaultValue=false)]
         public double? Width { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the flag of shipping has tax
         /// </summary>
         /// <value>Gets or sets the flag of shipping has tax</value>
         [DataMember(Name="taxIncluded", EmitDefaultValue=false)]
         public bool? TaxIncluded { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of shipping price
         /// </summary>
         /// <value>Gets or sets the value of shipping price</value>
         [DataMember(Name="shippingPrice", EmitDefaultValue=false)]
         public double? ShippingPrice { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of total shipping price
         /// </summary>
         /// <value>Gets or sets the value of total shipping price</value>
         [DataMember(Name="total", EmitDefaultValue=false)]
         public double? Total { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of total shipping discount amount
         /// </summary>
         /// <value>Gets or sets the value of total shipping discount amount</value>
         [DataMember(Name="discountTotal", EmitDefaultValue=false)]
         public double? DiscountTotal { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of total shipping tax amount
         /// </summary>
         /// <value>Gets or sets the value of total shipping tax amount</value>
         [DataMember(Name="taxTotal", EmitDefaultValue=false)]
         public double? TaxTotal { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of shipping items subtotal
         /// </summary>
         /// <value>Gets or sets the value of shipping items subtotal</value>
         [DataMember(Name="itemSubtotal", EmitDefaultValue=false)]
         public double? ItemSubtotal { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of shipping subtotal
         /// </summary>
         /// <value>Gets or sets the value of shipping subtotal</value>
         [DataMember(Name="subtotal", EmitDefaultValue=false)]
         public double? Subtotal { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the collection of shipping discounts
         /// </summary>
         /// <value>Gets or sets the collection of shipping discounts</value>
         [DataMember(Name="discounts", EmitDefaultValue=false)]
         public List<VirtoCommerceCartModuleWebModelDiscount> Discounts { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the collection of shipping items
         /// </summary>
         /// <value>Gets or sets the collection of shipping items</value>
         [DataMember(Name="items", EmitDefaultValue=false)]
         public List<VirtoCommerceCartModuleWebModelShipmentItem> Items { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of shipping tax type
         /// </summary>
         /// <value>Gets or sets the value of shipping tax type</value>
         [DataMember(Name="taxType", EmitDefaultValue=false)]
         public string TaxType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the collection of line item tax detalization lines
         /// </summary>
         /// <value>Gets or sets the collection of line item tax detalization lines</value>
         [DataMember(Name="taxDetails", EmitDefaultValue=false)]
         public List<VirtoCommerceDomainCommerceModelTaxDetail> TaxDetails { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedDate
         /// </summary>
         [DataMember(Name="createdDate", EmitDefaultValue=false)]
         public DateTime? CreatedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedDate
         /// </summary>
         [DataMember(Name="modifiedDate", EmitDefaultValue=false)]
         public DateTime? ModifiedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedBy
         /// </summary>
         [DataMember(Name="createdBy", EmitDefaultValue=false)]
         public string CreatedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedBy
         /// </summary>
         [DataMember(Name="modifiedBy", EmitDefaultValue=false)]
         public string ModifiedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

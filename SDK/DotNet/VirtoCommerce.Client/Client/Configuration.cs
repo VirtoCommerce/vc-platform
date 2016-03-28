@@ -34,7 +34,8 @@ namespace VirtoCommerce.Client.Client
                              Dictionary<String, String> apiKeyPrefix = null,
                              string tempFolderPath = null,
                              string dateTimeFormat = null,
-                             int timeout = 100000
+                             int timeout = 100000,
+                             string userAgent = "Swagger-Codegen/1.0.0/csharp"
                             )
         {
             setApiClientUsingDefault(apiClient);
@@ -42,6 +43,7 @@ namespace VirtoCommerce.Client.Client
             Username = username;
             Password = password;
             AccessToken = accessToken;
+            UserAgent = userAgent;
 
             if (defaultHeader != null)
                 DefaultHeader = defaultHeader;
@@ -98,9 +100,9 @@ namespace VirtoCommerce.Client.Client
         public ApiClient ApiClient;
 
         /// <summary>
-        /// Set the ApiClient using Default or ApiClient instance
+        /// Set the ApiClient using Default or ApiClient instance.
         /// </summary>
-        /// <param name="apiClient">An instance of ApiClient
+        /// <param name="apiClient">An instance of ApiClient.</param>
         /// <returns></returns>
         public void setApiClientUsingDefault (ApiClient apiClient = null)
         {
@@ -145,6 +147,12 @@ namespace VirtoCommerce.Client.Client
         {
             _defaultHeaderMap.Add(key, value);
         }
+
+        /// <summary>
+        /// Gets or sets the HTTP user agent.
+        /// </summary>
+        /// <value>Http user agent.</value>
+        public String UserAgent { get; set; }
 
         /// <summary>
         /// Gets or sets the username (HTTP basic authentication).

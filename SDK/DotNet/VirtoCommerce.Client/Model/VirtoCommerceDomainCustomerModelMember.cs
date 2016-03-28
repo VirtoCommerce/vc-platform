@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,105 +21,119 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceDomainCustomerModelMember" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCustomerModelMember" />class.
         /// </summary>
-        public VirtoCommerceDomainCustomerModelMember()
+        /// <param name="Name">Name.</param>
+        /// <param name="MemberType">MemberType.</param>
+        /// <param name="Addresses">Addresses.</param>
+        /// <param name="Phones">Phones.</param>
+        /// <param name="Emails">Emails.</param>
+        /// <param name="Notes">Notes.</param>
+        /// <param name="ObjectType">ObjectType.</param>
+        /// <param name="DynamicProperties">DynamicProperties.</param>
+        /// <param name="CreatedDate">CreatedDate.</param>
+        /// <param name="ModifiedDate">ModifiedDate.</param>
+        /// <param name="CreatedBy">CreatedBy.</param>
+        /// <param name="ModifiedBy">ModifiedBy.</param>
+        /// <param name="Id">Id.</param>
+
+        public VirtoCommerceDomainCustomerModelMember(string Name = null, string MemberType = null, List<VirtoCommerceDomainCommerceModelAddress> Addresses = null, List<string> Phones = null, List<string> Emails = null, List<VirtoCommerceDomainCustomerModelNote> Notes = null, string ObjectType = null, List<VirtoCommercePlatformCoreDynamicPropertiesDynamicObjectProperty> DynamicProperties = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
         {
+            this.Name = Name;
+            this.MemberType = MemberType;
+            this.Addresses = Addresses;
+            this.Phones = Phones;
+            this.Emails = Emails;
+            this.Notes = Notes;
+            this.ObjectType = ObjectType;
+            this.DynamicProperties = DynamicProperties;
+            this.CreatedDate = CreatedDate;
+            this.ModifiedDate = ModifiedDate;
+            this.CreatedBy = CreatedBy;
+            this.ModifiedBy = ModifiedBy;
+            this.Id = Id;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets MemberType
         /// </summary>
         [DataMember(Name="memberType", EmitDefaultValue=false)]
         public string MemberType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Addresses
         /// </summary>
         [DataMember(Name="addresses", EmitDefaultValue=false)]
         public List<VirtoCommerceDomainCommerceModelAddress> Addresses { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Phones
         /// </summary>
         [DataMember(Name="phones", EmitDefaultValue=false)]
         public List<string> Phones { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Emails
         /// </summary>
         [DataMember(Name="emails", EmitDefaultValue=false)]
         public List<string> Emails { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Notes
         /// </summary>
         [DataMember(Name="notes", EmitDefaultValue=false)]
         public List<VirtoCommerceDomainCustomerModelNote> Notes { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ObjectType
         /// </summary>
         [DataMember(Name="objectType", EmitDefaultValue=false)]
         public string ObjectType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets DynamicProperties
         /// </summary>
         [DataMember(Name="dynamicProperties", EmitDefaultValue=false)]
         public List<VirtoCommercePlatformCoreDynamicPropertiesDynamicObjectProperty> DynamicProperties { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedDate
         /// </summary>
         [DataMember(Name="createdDate", EmitDefaultValue=false)]
         public DateTime? CreatedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedDate
         /// </summary>
         [DataMember(Name="modifiedDate", EmitDefaultValue=false)]
         public DateTime? ModifiedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedBy
         /// </summary>
         [DataMember(Name="createdBy", EmitDefaultValue=false)]
         public string CreatedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedBy
         /// </summary>
         [DataMember(Name="modifiedBy", EmitDefaultValue=false)]
         public string ModifiedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

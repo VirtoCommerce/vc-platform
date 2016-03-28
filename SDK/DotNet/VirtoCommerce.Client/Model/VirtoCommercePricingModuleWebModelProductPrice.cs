@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,36 +21,40 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePricingModuleWebModelProductPrice" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommercePricingModuleWebModelProductPrice" />class.
         /// </summary>
-        public VirtoCommercePricingModuleWebModelProductPrice()
+        /// <param name="ProductId">ProductId.</param>
+        /// <param name="ProductName">ProductName.</param>
+        /// <param name="Prices">List prices for the products. It includes tiered prices also. (Depending on the quantity, for example).</param>
+
+        public VirtoCommercePricingModuleWebModelProductPrice(string ProductId = null, string ProductName = null, List<VirtoCommercePricingModuleWebModelPrice> Prices = null)
         {
+            this.ProductId = ProductId;
+            this.ProductName = ProductName;
+            this.Prices = Prices;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets ProductId
         /// </summary>
         [DataMember(Name="productId", EmitDefaultValue=false)]
         public string ProductId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ProductName
         /// </summary>
         [DataMember(Name="productName", EmitDefaultValue=false)]
         public string ProductName { get; set; }
-  
-        
+
         /// <summary>
         /// List prices for the products. It includes tiered prices also. (Depending on the quantity, for example)
         /// </summary>
         /// <value>List prices for the products. It includes tiered prices also. (Depending on the quantity, for example)</value>
         [DataMember(Name="prices", EmitDefaultValue=false)]
         public List<VirtoCommercePricingModuleWebModelPrice> Prices { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

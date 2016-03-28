@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,42 +21,47 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreSecurityRole" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreSecurityRole" />class.
         /// </summary>
-        public VirtoCommercePlatformCoreSecurityRole()
+        /// <param name="Name">Name.</param>
+        /// <param name="Description">Description.</param>
+        /// <param name="Permissions">Permissions.</param>
+        /// <param name="Id">Id.</param>
+
+        public VirtoCommercePlatformCoreSecurityRole(string Name = null, string Description = null, List<VirtoCommercePlatformCoreSecurityPermission> Permissions = null, string Id = null)
         {
+            this.Name = Name;
+            this.Description = Description;
+            this.Permissions = Permissions;
+            this.Id = Id;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Description
         /// </summary>
         [DataMember(Name="description", EmitDefaultValue=false)]
         public string Description { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Permissions
         /// </summary>
         [DataMember(Name="permissions", EmitDefaultValue=false)]
         public List<VirtoCommercePlatformCoreSecurityPermission> Permissions { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

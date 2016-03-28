@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,119 +21,135 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceDomainCommerceModelSeoInfo" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCommerceModelSeoInfo" />class.
         /// </summary>
-        public VirtoCommerceDomainCommerceModelSeoInfo()
+        /// <param name="SemanticUrl">SemanticUrl.</param>
+        /// <param name="PageTitle">PageTitle.</param>
+        /// <param name="MetaDescription">MetaDescription.</param>
+        /// <param name="ImageAltDescription">ImageAltDescription.</param>
+        /// <param name="MetaKeywords">MetaKeywords.</param>
+        /// <param name="StoreId">StoreId.</param>
+        /// <param name="ObjectId">ObjectId.</param>
+        /// <param name="ObjectType">ObjectType.</param>
+        /// <param name="IsActive">IsActive.</param>
+        /// <param name="LanguageCode">LanguageCode.</param>
+        /// <param name="CreatedDate">CreatedDate.</param>
+        /// <param name="ModifiedDate">ModifiedDate.</param>
+        /// <param name="CreatedBy">CreatedBy.</param>
+        /// <param name="ModifiedBy">ModifiedBy.</param>
+        /// <param name="Id">Id.</param>
+
+        public VirtoCommerceDomainCommerceModelSeoInfo(string SemanticUrl = null, string PageTitle = null, string MetaDescription = null, string ImageAltDescription = null, string MetaKeywords = null, string StoreId = null, string ObjectId = null, string ObjectType = null, bool? IsActive = null, string LanguageCode = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
         {
+            this.SemanticUrl = SemanticUrl;
+            this.PageTitle = PageTitle;
+            this.MetaDescription = MetaDescription;
+            this.ImageAltDescription = ImageAltDescription;
+            this.MetaKeywords = MetaKeywords;
+            this.StoreId = StoreId;
+            this.ObjectId = ObjectId;
+            this.ObjectType = ObjectType;
+            this.IsActive = IsActive;
+            this.LanguageCode = LanguageCode;
+            this.CreatedDate = CreatedDate;
+            this.ModifiedDate = ModifiedDate;
+            this.CreatedBy = CreatedBy;
+            this.ModifiedBy = ModifiedBy;
+            this.Id = Id;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets SemanticUrl
         /// </summary>
         [DataMember(Name="semanticUrl", EmitDefaultValue=false)]
         public string SemanticUrl { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets PageTitle
         /// </summary>
         [DataMember(Name="pageTitle", EmitDefaultValue=false)]
         public string PageTitle { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets MetaDescription
         /// </summary>
         [DataMember(Name="metaDescription", EmitDefaultValue=false)]
         public string MetaDescription { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ImageAltDescription
         /// </summary>
         [DataMember(Name="imageAltDescription", EmitDefaultValue=false)]
         public string ImageAltDescription { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets MetaKeywords
         /// </summary>
         [DataMember(Name="metaKeywords", EmitDefaultValue=false)]
         public string MetaKeywords { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets StoreId
         /// </summary>
         [DataMember(Name="storeId", EmitDefaultValue=false)]
         public string StoreId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ObjectId
         /// </summary>
         [DataMember(Name="objectId", EmitDefaultValue=false)]
         public string ObjectId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ObjectType
         /// </summary>
         [DataMember(Name="objectType", EmitDefaultValue=false)]
         public string ObjectType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets IsActive
         /// </summary>
         [DataMember(Name="isActive", EmitDefaultValue=false)]
         public bool? IsActive { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets LanguageCode
         /// </summary>
         [DataMember(Name="languageCode", EmitDefaultValue=false)]
         public string LanguageCode { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedDate
         /// </summary>
         [DataMember(Name="createdDate", EmitDefaultValue=false)]
         public DateTime? CreatedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedDate
         /// </summary>
         [DataMember(Name="modifiedDate", EmitDefaultValue=false)]
         public DateTime? ModifiedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedBy
         /// </summary>
         [DataMember(Name="createdBy", EmitDefaultValue=false)]
         public string CreatedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedBy
         /// </summary>
         [DataMember(Name="modifiedBy", EmitDefaultValue=false)]
         public string ModifiedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

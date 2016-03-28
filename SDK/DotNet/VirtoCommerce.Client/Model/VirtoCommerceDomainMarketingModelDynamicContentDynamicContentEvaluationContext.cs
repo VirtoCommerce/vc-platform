@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,168 +21,191 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceDomainMarketingModelDynamicContentDynamicContentEvaluationContext" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainMarketingModelDynamicContentDynamicContentEvaluationContext" />class.
         /// </summary>
-        public VirtoCommerceDomainMarketingModelDynamicContentDynamicContentEvaluationContext()
+        /// <param name="StoreId">StoreId.</param>
+        /// <param name="PlaceName">PlaceName.</param>
+        /// <param name="Tags">Tags.</param>
+        /// <param name="ToDate">ToDate.</param>
+        /// <param name="ContextObject">ContextObject.</param>
+        /// <param name="GeoCity">GeoCity.</param>
+        /// <param name="GeoState">GeoState.</param>
+        /// <param name="GeoCountry">GeoCountry.</param>
+        /// <param name="GeoContinent">GeoContinent.</param>
+        /// <param name="GeoZipCode">GeoZipCode.</param>
+        /// <param name="GeoConnectionType">GeoConnectionType.</param>
+        /// <param name="GeoTimeZone">GeoTimeZone.</param>
+        /// <param name="GeoIpRoutingType">GeoIpRoutingType.</param>
+        /// <param name="GeoIspSecondLevel">GeoIspSecondLevel.</param>
+        /// <param name="GeoIspTopLevel">GeoIspTopLevel.</param>
+        /// <param name="ShopperAge">ShopperAge.</param>
+        /// <param name="ShopperGender">ShopperGender.</param>
+        /// <param name="Language">Language.</param>
+        /// <param name="ShopperSearchedPhraseInStore">ShopperSearchedPhraseInStore.</param>
+        /// <param name="ShopperSearchedPhraseOnInternet">ShopperSearchedPhraseOnInternet.</param>
+        /// <param name="CurrentUrl">CurrentUrl.</param>
+        /// <param name="ReferredUrl">ReferredUrl.</param>
+
+        public VirtoCommerceDomainMarketingModelDynamicContentDynamicContentEvaluationContext(string StoreId = null, string PlaceName = null, List<string> Tags = null, DateTime? ToDate = null, Object ContextObject = null, string GeoCity = null, string GeoState = null, string GeoCountry = null, string GeoContinent = null, string GeoZipCode = null, string GeoConnectionType = null, string GeoTimeZone = null, string GeoIpRoutingType = null, string GeoIspSecondLevel = null, string GeoIspTopLevel = null, int? ShopperAge = null, string ShopperGender = null, string Language = null, string ShopperSearchedPhraseInStore = null, string ShopperSearchedPhraseOnInternet = null, string CurrentUrl = null, string ReferredUrl = null)
         {
+            this.StoreId = StoreId;
+            this.PlaceName = PlaceName;
+            this.Tags = Tags;
+            this.ToDate = ToDate;
+            this.ContextObject = ContextObject;
+            this.GeoCity = GeoCity;
+            this.GeoState = GeoState;
+            this.GeoCountry = GeoCountry;
+            this.GeoContinent = GeoContinent;
+            this.GeoZipCode = GeoZipCode;
+            this.GeoConnectionType = GeoConnectionType;
+            this.GeoTimeZone = GeoTimeZone;
+            this.GeoIpRoutingType = GeoIpRoutingType;
+            this.GeoIspSecondLevel = GeoIspSecondLevel;
+            this.GeoIspTopLevel = GeoIspTopLevel;
+            this.ShopperAge = ShopperAge;
+            this.ShopperGender = ShopperGender;
+            this.Language = Language;
+            this.ShopperSearchedPhraseInStore = ShopperSearchedPhraseInStore;
+            this.ShopperSearchedPhraseOnInternet = ShopperSearchedPhraseOnInternet;
+            this.CurrentUrl = CurrentUrl;
+            this.ReferredUrl = ReferredUrl;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets StoreId
         /// </summary>
         [DataMember(Name="storeId", EmitDefaultValue=false)]
         public string StoreId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets PlaceName
         /// </summary>
         [DataMember(Name="placeName", EmitDefaultValue=false)]
         public string PlaceName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Tags
         /// </summary>
         [DataMember(Name="tags", EmitDefaultValue=false)]
         public List<string> Tags { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ToDate
         /// </summary>
         [DataMember(Name="toDate", EmitDefaultValue=false)]
         public DateTime? ToDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ContextObject
         /// </summary>
         [DataMember(Name="contextObject", EmitDefaultValue=false)]
         public Object ContextObject { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets GeoCity
         /// </summary>
         [DataMember(Name="geoCity", EmitDefaultValue=false)]
         public string GeoCity { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets GeoState
         /// </summary>
         [DataMember(Name="geoState", EmitDefaultValue=false)]
         public string GeoState { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets GeoCountry
         /// </summary>
         [DataMember(Name="geoCountry", EmitDefaultValue=false)]
         public string GeoCountry { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets GeoContinent
         /// </summary>
         [DataMember(Name="geoContinent", EmitDefaultValue=false)]
         public string GeoContinent { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets GeoZipCode
         /// </summary>
         [DataMember(Name="geoZipCode", EmitDefaultValue=false)]
         public string GeoZipCode { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets GeoConnectionType
         /// </summary>
         [DataMember(Name="geoConnectionType", EmitDefaultValue=false)]
         public string GeoConnectionType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets GeoTimeZone
         /// </summary>
         [DataMember(Name="geoTimeZone", EmitDefaultValue=false)]
         public string GeoTimeZone { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets GeoIpRoutingType
         /// </summary>
         [DataMember(Name="geoIpRoutingType", EmitDefaultValue=false)]
         public string GeoIpRoutingType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets GeoIspSecondLevel
         /// </summary>
         [DataMember(Name="geoIspSecondLevel", EmitDefaultValue=false)]
         public string GeoIspSecondLevel { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets GeoIspTopLevel
         /// </summary>
         [DataMember(Name="geoIspTopLevel", EmitDefaultValue=false)]
         public string GeoIspTopLevel { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ShopperAge
         /// </summary>
         [DataMember(Name="shopperAge", EmitDefaultValue=false)]
         public int? ShopperAge { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ShopperGender
         /// </summary>
         [DataMember(Name="shopperGender", EmitDefaultValue=false)]
         public string ShopperGender { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Language
         /// </summary>
         [DataMember(Name="language", EmitDefaultValue=false)]
         public string Language { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ShopperSearchedPhraseInStore
         /// </summary>
         [DataMember(Name="shopperSearchedPhraseInStore", EmitDefaultValue=false)]
         public string ShopperSearchedPhraseInStore { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ShopperSearchedPhraseOnInternet
         /// </summary>
         [DataMember(Name="shopperSearchedPhraseOnInternet", EmitDefaultValue=false)]
         public string ShopperSearchedPhraseOnInternet { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CurrentUrl
         /// </summary>
         [DataMember(Name="currentUrl", EmitDefaultValue=false)]
         public string CurrentUrl { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ReferredUrl
         /// </summary>
         [DataMember(Name="referredUrl", EmitDefaultValue=false)]
         public string ReferredUrl { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

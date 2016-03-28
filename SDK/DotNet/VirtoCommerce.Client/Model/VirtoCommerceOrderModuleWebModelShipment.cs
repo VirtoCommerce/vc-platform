@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// Represent customer order shipment operation (document)\r\n            contains information as delivery address, items, dimensions etc.
     /// </summary>
@@ -21,324 +21,367 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceOrderModuleWebModelShipment" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceOrderModuleWebModelShipment" />class.
         /// </summary>
-        public VirtoCommerceOrderModuleWebModelShipment()
+        /// <param name="OrganizationName">Customer organization.</param>
+        /// <param name="OrganizationId">OrganizationId.</param>
+        /// <param name="FulfillmentCenterName">Fulfillment center where shipment will be handled.</param>
+        /// <param name="FulfillmentCenterId">FulfillmentCenterId.</param>
+        /// <param name="ShippingMethod">Selected shipping method to deliver current shipment.</param>
+        /// <param name="EmployeeName">Employee who responsible for handling current shipment.</param>
+        /// <param name="EmployeeId">EmployeeId.</param>
+        /// <param name="DiscountAmount">DiscountAmount.</param>
+        /// <param name="WeightUnit">WeightUnit.</param>
+        /// <param name="Weight">Weight.</param>
+        /// <param name="MeasureUnit">MeasureUnit.</param>
+        /// <param name="Height">Height.</param>
+        /// <param name="Length">Length.</param>
+        /// <param name="Width">Width.</param>
+        /// <param name="TaxType">TaxType.</param>
+        /// <param name="Items">Information about quantity and order items belongs to current shipment.</param>
+        /// <param name="Packages">Information about packages belongs to current shipment.</param>
+        /// <param name="InPayments">InPayments.</param>
+        /// <param name="DeliveryAddress">DeliveryAddress.</param>
+        /// <param name="Discount">Discount.</param>
+        /// <param name="TaxDetails">TaxDetails.</param>
+        /// <param name="OperationType">Operation type string representation (CustomerOrder, Shipment etc).</param>
+        /// <param name="Number">Unique user friendly document number (generate automatically based on special algorithm realization).</param>
+        /// <param name="IsApproved">Flag can be used to refer to a specific order status in a variety of user scenarios with combination of Status\r\n            (Order completion, Shipment send etc).</param>
+        /// <param name="Status">Current operation status may have any values defined by concrete business process.</param>
+        /// <param name="Comment">Comment.</param>
+        /// <param name="Currency">Currency code.</param>
+        /// <param name="TaxIncluded">TaxIncluded.</param>
+        /// <param name="Sum">Money amount without tax.</param>
+        /// <param name="Tax">Tax total.</param>
+        /// <param name="IsCancelled">IsCancelled.</param>
+        /// <param name="CancelledDate">CancelledDate.</param>
+        /// <param name="CancelReason">CancelReason.</param>
+        /// <param name="ParentOperationId">Used for construct hierarchy of operation and represent parent operation id.</param>
+        /// <param name="ChildrenOperations">ChildrenOperations.</param>
+        /// <param name="ObjectType">Used for dynamic properties management, contains object type string.</param>
+        /// <param name="DynamicProperties">Dynamic properties collections.</param>
+        /// <param name="CreatedDate">CreatedDate.</param>
+        /// <param name="ModifiedDate">ModifiedDate.</param>
+        /// <param name="CreatedBy">CreatedBy.</param>
+        /// <param name="ModifiedBy">ModifiedBy.</param>
+        /// <param name="Id">Id.</param>
+
+        public VirtoCommerceOrderModuleWebModelShipment(string OrganizationName = null, string OrganizationId = null, string FulfillmentCenterName = null, string FulfillmentCenterId = null, VirtoCommerceOrderModuleWebModelShippingMethod ShippingMethod = null, string EmployeeName = null, string EmployeeId = null, double? DiscountAmount = null, string WeightUnit = null, double? Weight = null, string MeasureUnit = null, double? Height = null, double? Length = null, double? Width = null, string TaxType = null, List<VirtoCommerceOrderModuleWebModelShipmentItem> Items = null, List<VirtoCommerceOrderModuleWebModelShipmentPackage> Packages = null, List<VirtoCommerceOrderModuleWebModelPaymentIn> InPayments = null, VirtoCommerceOrderModuleWebModelAddress DeliveryAddress = null, VirtoCommerceOrderModuleWebModelDiscount Discount = null, List<VirtoCommerceDomainCommerceModelTaxDetail> TaxDetails = null, string OperationType = null, string Number = null, bool? IsApproved = null, string Status = null, string Comment = null, string Currency = null, bool? TaxIncluded = null, double? Sum = null, double? Tax = null, bool? IsCancelled = null, DateTime? CancelledDate = null, string CancelReason = null, string ParentOperationId = null, List<VirtoCommerceOrderModuleWebModelOperation> ChildrenOperations = null, string ObjectType = null, List<VirtoCommercePlatformCoreDynamicPropertiesDynamicObjectProperty> DynamicProperties = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
         {
+            this.OrganizationName = OrganizationName;
+            this.OrganizationId = OrganizationId;
+            this.FulfillmentCenterName = FulfillmentCenterName;
+            this.FulfillmentCenterId = FulfillmentCenterId;
+            this.ShippingMethod = ShippingMethod;
+            this.EmployeeName = EmployeeName;
+            this.EmployeeId = EmployeeId;
+            this.DiscountAmount = DiscountAmount;
+            this.WeightUnit = WeightUnit;
+            this.Weight = Weight;
+            this.MeasureUnit = MeasureUnit;
+            this.Height = Height;
+            this.Length = Length;
+            this.Width = Width;
+            this.TaxType = TaxType;
+            this.Items = Items;
+            this.Packages = Packages;
+            this.InPayments = InPayments;
+            this.DeliveryAddress = DeliveryAddress;
+            this.Discount = Discount;
+            this.TaxDetails = TaxDetails;
+            this.OperationType = OperationType;
+            this.Number = Number;
+            this.IsApproved = IsApproved;
+            this.Status = Status;
+            this.Comment = Comment;
+            this.Currency = Currency;
+            this.TaxIncluded = TaxIncluded;
+            this.Sum = Sum;
+            this.Tax = Tax;
+            this.IsCancelled = IsCancelled;
+            this.CancelledDate = CancelledDate;
+            this.CancelReason = CancelReason;
+            this.ParentOperationId = ParentOperationId;
+            this.ChildrenOperations = ChildrenOperations;
+            this.ObjectType = ObjectType;
+            this.DynamicProperties = DynamicProperties;
+            this.CreatedDate = CreatedDate;
+            this.ModifiedDate = ModifiedDate;
+            this.CreatedBy = CreatedBy;
+            this.ModifiedBy = ModifiedBy;
+            this.Id = Id;
             
         }
 
-        
         /// <summary>
         /// Customer organization
         /// </summary>
         /// <value>Customer organization</value>
         [DataMember(Name="organizationName", EmitDefaultValue=false)]
         public string OrganizationName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets OrganizationId
         /// </summary>
         [DataMember(Name="organizationId", EmitDefaultValue=false)]
         public string OrganizationId { get; set; }
-  
-        
+
         /// <summary>
         /// Fulfillment center where shipment will be handled
         /// </summary>
         /// <value>Fulfillment center where shipment will be handled</value>
         [DataMember(Name="fulfillmentCenterName", EmitDefaultValue=false)]
         public string FulfillmentCenterName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets FulfillmentCenterId
         /// </summary>
         [DataMember(Name="fulfillmentCenterId", EmitDefaultValue=false)]
         public string FulfillmentCenterId { get; set; }
-  
-        
+
         /// <summary>
         /// Selected shipping method to deliver current shipment
         /// </summary>
         /// <value>Selected shipping method to deliver current shipment</value>
         [DataMember(Name="shippingMethod", EmitDefaultValue=false)]
         public VirtoCommerceOrderModuleWebModelShippingMethod ShippingMethod { get; set; }
-  
-        
+
         /// <summary>
         /// Employee who responsible for handling current shipment
         /// </summary>
         /// <value>Employee who responsible for handling current shipment</value>
         [DataMember(Name="employeeName", EmitDefaultValue=false)]
         public string EmployeeName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets EmployeeId
         /// </summary>
         [DataMember(Name="employeeId", EmitDefaultValue=false)]
         public string EmployeeId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets DiscountAmount
         /// </summary>
         [DataMember(Name="discountAmount", EmitDefaultValue=false)]
         public double? DiscountAmount { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets WeightUnit
         /// </summary>
         [DataMember(Name="weightUnit", EmitDefaultValue=false)]
         public string WeightUnit { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Weight
         /// </summary>
         [DataMember(Name="weight", EmitDefaultValue=false)]
         public double? Weight { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets MeasureUnit
         /// </summary>
         [DataMember(Name="measureUnit", EmitDefaultValue=false)]
         public string MeasureUnit { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Height
         /// </summary>
         [DataMember(Name="height", EmitDefaultValue=false)]
         public double? Height { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Length
         /// </summary>
         [DataMember(Name="length", EmitDefaultValue=false)]
         public double? Length { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Width
         /// </summary>
         [DataMember(Name="width", EmitDefaultValue=false)]
         public double? Width { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets TaxType
         /// </summary>
         [DataMember(Name="taxType", EmitDefaultValue=false)]
         public string TaxType { get; set; }
-  
-        
+
         /// <summary>
         /// Information about quantity and order items belongs to current shipment
         /// </summary>
         /// <value>Information about quantity and order items belongs to current shipment</value>
         [DataMember(Name="items", EmitDefaultValue=false)]
         public List<VirtoCommerceOrderModuleWebModelShipmentItem> Items { get; set; }
-  
-        
+
         /// <summary>
         /// Information about packages belongs to current shipment
         /// </summary>
         /// <value>Information about packages belongs to current shipment</value>
         [DataMember(Name="packages", EmitDefaultValue=false)]
         public List<VirtoCommerceOrderModuleWebModelShipmentPackage> Packages { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets InPayments
         /// </summary>
         [DataMember(Name="inPayments", EmitDefaultValue=false)]
         public List<VirtoCommerceOrderModuleWebModelPaymentIn> InPayments { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets DeliveryAddress
         /// </summary>
         [DataMember(Name="deliveryAddress", EmitDefaultValue=false)]
         public VirtoCommerceOrderModuleWebModelAddress DeliveryAddress { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Discount
         /// </summary>
         [DataMember(Name="discount", EmitDefaultValue=false)]
         public VirtoCommerceOrderModuleWebModelDiscount Discount { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets TaxDetails
         /// </summary>
         [DataMember(Name="taxDetails", EmitDefaultValue=false)]
         public List<VirtoCommerceDomainCommerceModelTaxDetail> TaxDetails { get; set; }
-  
-        
+
         /// <summary>
         /// Operation type string representation (CustomerOrder, Shipment etc)
         /// </summary>
         /// <value>Operation type string representation (CustomerOrder, Shipment etc)</value>
         [DataMember(Name="operationType", EmitDefaultValue=false)]
         public string OperationType { get; set; }
-  
-        
+
         /// <summary>
         /// Unique user friendly document number (generate automatically based on special algorithm realization)
         /// </summary>
         /// <value>Unique user friendly document number (generate automatically based on special algorithm realization)</value>
         [DataMember(Name="number", EmitDefaultValue=false)]
         public string Number { get; set; }
-  
-        
+
         /// <summary>
         /// Flag can be used to refer to a specific order status in a variety of user scenarios with combination of Status\r\n            (Order completion, Shipment send etc)
         /// </summary>
         /// <value>Flag can be used to refer to a specific order status in a variety of user scenarios with combination of Status\r\n            (Order completion, Shipment send etc)</value>
         [DataMember(Name="isApproved", EmitDefaultValue=false)]
         public bool? IsApproved { get; set; }
-  
-        
+
         /// <summary>
         /// Current operation status may have any values defined by concrete business process
         /// </summary>
         /// <value>Current operation status may have any values defined by concrete business process</value>
         [DataMember(Name="status", EmitDefaultValue=false)]
         public string Status { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Comment
         /// </summary>
         [DataMember(Name="comment", EmitDefaultValue=false)]
         public string Comment { get; set; }
-  
-        
+
         /// <summary>
         /// Currency code
         /// </summary>
         /// <value>Currency code</value>
         [DataMember(Name="currency", EmitDefaultValue=false)]
         public string Currency { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets TaxIncluded
         /// </summary>
         [DataMember(Name="taxIncluded", EmitDefaultValue=false)]
         public bool? TaxIncluded { get; set; }
-  
-        
+
         /// <summary>
         /// Money amount without tax
         /// </summary>
         /// <value>Money amount without tax</value>
         [DataMember(Name="sum", EmitDefaultValue=false)]
         public double? Sum { get; set; }
-  
-        
+
         /// <summary>
         /// Tax total
         /// </summary>
         /// <value>Tax total</value>
         [DataMember(Name="tax", EmitDefaultValue=false)]
         public double? Tax { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets IsCancelled
         /// </summary>
         [DataMember(Name="isCancelled", EmitDefaultValue=false)]
         public bool? IsCancelled { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CancelledDate
         /// </summary>
         [DataMember(Name="cancelledDate", EmitDefaultValue=false)]
         public DateTime? CancelledDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CancelReason
         /// </summary>
         [DataMember(Name="cancelReason", EmitDefaultValue=false)]
         public string CancelReason { get; set; }
-  
-        
+
         /// <summary>
         /// Used for construct hierarchy of operation and represent parent operation id
         /// </summary>
         /// <value>Used for construct hierarchy of operation and represent parent operation id</value>
         [DataMember(Name="parentOperationId", EmitDefaultValue=false)]
         public string ParentOperationId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ChildrenOperations
         /// </summary>
         [DataMember(Name="childrenOperations", EmitDefaultValue=false)]
         public List<VirtoCommerceOrderModuleWebModelOperation> ChildrenOperations { get; set; }
-  
-        
+
         /// <summary>
         /// Used for dynamic properties management, contains object type string
         /// </summary>
         /// <value>Used for dynamic properties management, contains object type string</value>
         [DataMember(Name="objectType", EmitDefaultValue=false)]
         public string ObjectType { get; set; }
-  
-        
+
         /// <summary>
         /// Dynamic properties collections
         /// </summary>
         /// <value>Dynamic properties collections</value>
         [DataMember(Name="dynamicProperties", EmitDefaultValue=false)]
         public List<VirtoCommercePlatformCoreDynamicPropertiesDynamicObjectProperty> DynamicProperties { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedDate
         /// </summary>
         [DataMember(Name="createdDate", EmitDefaultValue=false)]
         public DateTime? CreatedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedDate
         /// </summary>
         [DataMember(Name="modifiedDate", EmitDefaultValue=false)]
         public DateTime? ModifiedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedBy
         /// </summary>
         [DataMember(Name="createdBy", EmitDefaultValue=false)]
         public string CreatedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedBy
         /// </summary>
         [DataMember(Name="modifiedBy", EmitDefaultValue=false)]
         public string ModifiedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

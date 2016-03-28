@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,56 +21,63 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceQuoteModuleWebModelShipmentMethod" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceQuoteModuleWebModelShipmentMethod" />class.
         /// </summary>
-        public VirtoCommerceQuoteModuleWebModelShipmentMethod()
+        /// <param name="ShipmentMethodCode">ShipmentMethodCode.</param>
+        /// <param name="OptionName">OptionName.</param>
+        /// <param name="Name">Name.</param>
+        /// <param name="LogoUrl">LogoUrl.</param>
+        /// <param name="Currency">Currency.</param>
+        /// <param name="Price">Price.</param>
+
+        public VirtoCommerceQuoteModuleWebModelShipmentMethod(string ShipmentMethodCode = null, string OptionName = null, string Name = null, string LogoUrl = null, string Currency = null, double? Price = null)
         {
+            this.ShipmentMethodCode = ShipmentMethodCode;
+            this.OptionName = OptionName;
+            this.Name = Name;
+            this.LogoUrl = LogoUrl;
+            this.Currency = Currency;
+            this.Price = Price;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets ShipmentMethodCode
         /// </summary>
         [DataMember(Name="shipmentMethodCode", EmitDefaultValue=false)]
         public string ShipmentMethodCode { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets OptionName
         /// </summary>
         [DataMember(Name="optionName", EmitDefaultValue=false)]
         public string OptionName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets LogoUrl
         /// </summary>
         [DataMember(Name="logoUrl", EmitDefaultValue=false)]
         public string LogoUrl { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Currency
         /// </summary>
         [DataMember(Name="currency", EmitDefaultValue=false)]
         public string Currency { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Price
         /// </summary>
         [DataMember(Name="price", EmitDefaultValue=false)]
         public double? Price { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

@@ -11,6 +11,7 @@ using VirtoCommerce.Storefront.Model.Customer;
 using VirtoCommerce.Storefront.Services;
 using Xunit;
 using VirtoCommerce.Storefront.Model;
+using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Test
 {
@@ -62,7 +63,7 @@ namespace VirtoCommerce.Storefront.Test
             var apiClientCfg = new Client.Client.Configuration(GetApiClient());
             var marketingApi = new MarketingModuleApi(apiClientCfg);
             var cartApi = new ShoppingCartModuleApi(apiClientCfg);
-            var cacheManager = new Moq.Mock<ICacheManager<object>>();
+            var cacheManager = new Moq.Mock<ILocalCacheManager>();
             var workContextFactory = new Func<WorkContext>(GetTestWorkContext);
             var promotionEvaluator = new PromotionEvaluator(marketingApi);
             var catalogModuleApi = new CatalogModuleApi(apiClientCfg);

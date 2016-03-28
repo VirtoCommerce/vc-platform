@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,35 +21,39 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreSecurityPermissionScope" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreSecurityPermissionScope" />class.
         /// </summary>
-        public VirtoCommercePlatformCoreSecurityPermissionScope()
+        /// <param name="Type">Type.</param>
+        /// <param name="Label">Label.</param>
+        /// <param name="Scope">Scope.</param>
+
+        public VirtoCommercePlatformCoreSecurityPermissionScope(string Type = null, string Label = null, string Scope = null)
         {
+            this.Type = Type;
+            this.Label = Label;
+            this.Scope = Scope;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name="type", EmitDefaultValue=false)]
         public string Type { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Label
         /// </summary>
         [DataMember(Name="label", EmitDefaultValue=false)]
         public string Label { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Scope
         /// </summary>
         [DataMember(Name="scope", EmitDefaultValue=false)]
         public string Scope { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

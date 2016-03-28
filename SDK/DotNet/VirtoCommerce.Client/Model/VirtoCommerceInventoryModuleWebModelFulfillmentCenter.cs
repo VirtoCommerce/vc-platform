@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,134 +21,152 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceInventoryModuleWebModelFulfillmentCenter" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceInventoryModuleWebModelFulfillmentCenter" />class.
         /// </summary>
-        public VirtoCommerceInventoryModuleWebModelFulfillmentCenter()
+        /// <param name="Name">Name.</param>
+        /// <param name="Description">Description.</param>
+        /// <param name="MaxReleasesPerPickBatch">MaxReleasesPerPickBatch.</param>
+        /// <param name="PickDelay">PickDelay.</param>
+        /// <param name="DaytimePhoneNumber">DaytimePhoneNumber.</param>
+        /// <param name="Line1">Line1.</param>
+        /// <param name="Line2">Line2.</param>
+        /// <param name="City">City.</param>
+        /// <param name="StateProvince">StateProvince.</param>
+        /// <param name="CountryCode">ISO 3166-1 alpha-3.</param>
+        /// <param name="CountryName">CountryName.</param>
+        /// <param name="PostalCode">PostalCode.</param>
+        /// <param name="CreatedDate">CreatedDate.</param>
+        /// <param name="ModifiedDate">ModifiedDate.</param>
+        /// <param name="CreatedBy">CreatedBy.</param>
+        /// <param name="ModifiedBy">ModifiedBy.</param>
+        /// <param name="Id">Id.</param>
+
+        public VirtoCommerceInventoryModuleWebModelFulfillmentCenter(string Name = null, string Description = null, int? MaxReleasesPerPickBatch = null, int? PickDelay = null, string DaytimePhoneNumber = null, string Line1 = null, string Line2 = null, string City = null, string StateProvince = null, string CountryCode = null, string CountryName = null, string PostalCode = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
         {
+            this.Name = Name;
+            this.Description = Description;
+            this.MaxReleasesPerPickBatch = MaxReleasesPerPickBatch;
+            this.PickDelay = PickDelay;
+            this.DaytimePhoneNumber = DaytimePhoneNumber;
+            this.Line1 = Line1;
+            this.Line2 = Line2;
+            this.City = City;
+            this.StateProvince = StateProvince;
+            this.CountryCode = CountryCode;
+            this.CountryName = CountryName;
+            this.PostalCode = PostalCode;
+            this.CreatedDate = CreatedDate;
+            this.ModifiedDate = ModifiedDate;
+            this.CreatedBy = CreatedBy;
+            this.ModifiedBy = ModifiedBy;
+            this.Id = Id;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Description
         /// </summary>
         [DataMember(Name="description", EmitDefaultValue=false)]
         public string Description { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets MaxReleasesPerPickBatch
         /// </summary>
         [DataMember(Name="maxReleasesPerPickBatch", EmitDefaultValue=false)]
         public int? MaxReleasesPerPickBatch { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets PickDelay
         /// </summary>
         [DataMember(Name="pickDelay", EmitDefaultValue=false)]
         public int? PickDelay { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets DaytimePhoneNumber
         /// </summary>
         [DataMember(Name="daytimePhoneNumber", EmitDefaultValue=false)]
         public string DaytimePhoneNumber { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Line1
         /// </summary>
         [DataMember(Name="line1", EmitDefaultValue=false)]
         public string Line1 { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Line2
         /// </summary>
         [DataMember(Name="line2", EmitDefaultValue=false)]
         public string Line2 { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets City
         /// </summary>
         [DataMember(Name="city", EmitDefaultValue=false)]
         public string City { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets StateProvince
         /// </summary>
         [DataMember(Name="stateProvince", EmitDefaultValue=false)]
         public string StateProvince { get; set; }
-  
-        
+
         /// <summary>
         /// ISO 3166-1 alpha-3
         /// </summary>
         /// <value>ISO 3166-1 alpha-3</value>
         [DataMember(Name="countryCode", EmitDefaultValue=false)]
         public string CountryCode { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CountryName
         /// </summary>
         [DataMember(Name="countryName", EmitDefaultValue=false)]
         public string CountryName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets PostalCode
         /// </summary>
         [DataMember(Name="postalCode", EmitDefaultValue=false)]
         public string PostalCode { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedDate
         /// </summary>
         [DataMember(Name="createdDate", EmitDefaultValue=false)]
         public DateTime? CreatedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedDate
         /// </summary>
         [DataMember(Name="modifiedDate", EmitDefaultValue=false)]
         public DateTime? ModifiedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedBy
         /// </summary>
         [DataMember(Name="createdBy", EmitDefaultValue=false)]
         public string CreatedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedBy
         /// </summary>
         [DataMember(Name="modifiedBy", EmitDefaultValue=false)]
         public string ModifiedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

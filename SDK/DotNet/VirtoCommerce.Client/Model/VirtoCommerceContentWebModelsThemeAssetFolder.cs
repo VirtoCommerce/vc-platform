@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,36 +21,40 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceContentWebModelsThemeAssetFolder" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceContentWebModelsThemeAssetFolder" />class.
         /// </summary>
-        public VirtoCommerceContentWebModelsThemeAssetFolder()
+        /// <param name="FolderName">Theme asset folder name, one of the predefined values - &#39;assets&#39;, &#39;templates&#39;, &#39;snippets&#39;, &#39;layout&#39;, &#39;config&#39;, &#39;locales&#39;.</param>
+        /// <param name="Assets">Assets.</param>
+        /// <param name="SecurityScopes">SecurityScopes.</param>
+
+        public VirtoCommerceContentWebModelsThemeAssetFolder(string FolderName = null, List<VirtoCommerceContentWebModelsThemeAsset> Assets = null, List<string> SecurityScopes = null)
         {
+            this.FolderName = FolderName;
+            this.Assets = Assets;
+            this.SecurityScopes = SecurityScopes;
             
         }
 
-        
         /// <summary>
-        /// Theme asset folder name, one of the predefined values - 'assets', 'templates', 'snippets', 'layout', 'config', 'locales'
+        /// Theme asset folder name, one of the predefined values - &#39;assets&#39;, &#39;templates&#39;, &#39;snippets&#39;, &#39;layout&#39;, &#39;config&#39;, &#39;locales&#39;
         /// </summary>
-        /// <value>Theme asset folder name, one of the predefined values - 'assets', 'templates', 'snippets', 'layout', 'config', 'locales'</value>
+        /// <value>Theme asset folder name, one of the predefined values - &#39;assets&#39;, &#39;templates&#39;, &#39;snippets&#39;, &#39;layout&#39;, &#39;config&#39;, &#39;locales&#39;</value>
         [DataMember(Name="folderName", EmitDefaultValue=false)]
         public string FolderName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Assets
         /// </summary>
         [DataMember(Name="assets", EmitDefaultValue=false)]
         public List<VirtoCommerceContentWebModelsThemeAsset> Assets { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets SecurityScopes
         /// </summary>
         [DataMember(Name="securityScopes", EmitDefaultValue=false)]
         public List<string> SecurityScopes { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

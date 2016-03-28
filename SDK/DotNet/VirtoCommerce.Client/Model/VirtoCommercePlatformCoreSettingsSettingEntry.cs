@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,105 +21,119 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreSettingsSettingEntry" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreSettingsSettingEntry" />class.
         /// </summary>
-        public VirtoCommercePlatformCoreSettingsSettingEntry()
+        /// <param name="ModuleId">ModuleId.</param>
+        /// <param name="ObjectId">ObjectId.</param>
+        /// <param name="ObjectType">ObjectType.</param>
+        /// <param name="GroupName">GroupName.</param>
+        /// <param name="Name">Name.</param>
+        /// <param name="Value">Value.</param>
+        /// <param name="ValueType">ValueType.</param>
+        /// <param name="AllowedValues">AllowedValues.</param>
+        /// <param name="DefaultValue">DefaultValue.</param>
+        /// <param name="IsArray">IsArray.</param>
+        /// <param name="ArrayValues">ArrayValues.</param>
+        /// <param name="Title">Title.</param>
+        /// <param name="Description">Description.</param>
+
+        public VirtoCommercePlatformCoreSettingsSettingEntry(string ModuleId = null, string ObjectId = null, string ObjectType = null, string GroupName = null, string Name = null, string Value = null, string ValueType = null, List<string> AllowedValues = null, string DefaultValue = null, bool? IsArray = null, List<string> ArrayValues = null, string Title = null, string Description = null)
         {
+            this.ModuleId = ModuleId;
+            this.ObjectId = ObjectId;
+            this.ObjectType = ObjectType;
+            this.GroupName = GroupName;
+            this.Name = Name;
+            this.Value = Value;
+            this.ValueType = ValueType;
+            this.AllowedValues = AllowedValues;
+            this.DefaultValue = DefaultValue;
+            this.IsArray = IsArray;
+            this.ArrayValues = ArrayValues;
+            this.Title = Title;
+            this.Description = Description;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets ModuleId
         /// </summary>
         [DataMember(Name="moduleId", EmitDefaultValue=false)]
         public string ModuleId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ObjectId
         /// </summary>
         [DataMember(Name="objectId", EmitDefaultValue=false)]
         public string ObjectId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ObjectType
         /// </summary>
         [DataMember(Name="objectType", EmitDefaultValue=false)]
         public string ObjectType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets GroupName
         /// </summary>
         [DataMember(Name="groupName", EmitDefaultValue=false)]
         public string GroupName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Value
         /// </summary>
         [DataMember(Name="value", EmitDefaultValue=false)]
         public string Value { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ValueType
         /// </summary>
         [DataMember(Name="valueType", EmitDefaultValue=false)]
         public string ValueType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets AllowedValues
         /// </summary>
         [DataMember(Name="allowedValues", EmitDefaultValue=false)]
         public List<string> AllowedValues { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets DefaultValue
         /// </summary>
         [DataMember(Name="defaultValue", EmitDefaultValue=false)]
         public string DefaultValue { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets IsArray
         /// </summary>
         [DataMember(Name="isArray", EmitDefaultValue=false)]
         public bool? IsArray { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ArrayValues
         /// </summary>
         [DataMember(Name="arrayValues", EmitDefaultValue=false)]
         public List<string> ArrayValues { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Title
         /// </summary>
         [DataMember(Name="title", EmitDefaultValue=false)]
         public string Title { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Description
         /// </summary>
         [DataMember(Name="description", EmitDefaultValue=false)]
         public string Description { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

@@ -28,6 +28,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 
             var retVal = new coreModel.Catalog();
             retVal.InjectFrom(dbCatalog);
+            retVal.IsVirtual = dbCatalog.Virtual;
             retVal.Languages = new List<coreModel.CatalogLanguage>();
 
             var defaultLanguage = (new dataModel.CatalogLanguage { Language = string.IsNullOrEmpty(dbCatalog.DefaultLanguage) ? "en-us" : dbCatalog.DefaultLanguage }).ToCoreModel(retVal);
@@ -79,8 +80,8 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
             if (catalog == null)
                 throw new ArgumentNullException("catalog");
 
-			if(catalog.DefaultLanguage == null)
-				throw new NullReferenceException("DefaultLanguage");
+            if (catalog.DefaultLanguage == null)
+                throw new NullReferenceException("DefaultLanguage");
 
             var retVal = new dataModel.Catalog();
             pkMap.AddPair(catalog, retVal);
@@ -92,6 +93,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
             }
 
             retVal.InjectFrom(catalog);
+            retVal.Virtual = catalog.IsVirtual;
 
             retVal.DefaultLanguage = catalog.DefaultLanguage.LanguageCode;
 
@@ -129,7 +131,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
             }
 
             //Property values
-			if (sourceCatalog != null && !sourceCatalog.CatalogPropertyValues.IsNullCollection())
+            if (sourceCatalog != null && !sourceCatalog.CatalogPropertyValues.IsNullCollection())
             {
                 sourceCatalog.CatalogPropertyValues.Patch(targetCatalog.CatalogPropertyValues, (sourcePropValue, targetPropValue) => sourcePropValue.Patch(targetPropValue));
             }

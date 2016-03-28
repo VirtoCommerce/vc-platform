@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,105 +21,119 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreDynamicPropertiesDynamicProperty" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreDynamicPropertiesDynamicProperty" />class.
         /// </summary>
-        public VirtoCommercePlatformCoreDynamicPropertiesDynamicProperty()
+        /// <param name="Name">Name.</param>
+        /// <param name="ObjectType">ObjectType.</param>
+        /// <param name="IsArray">IsArray.</param>
+        /// <param name="IsDictionary">IsDictionary.</param>
+        /// <param name="IsMultilingual">IsMultilingual.</param>
+        /// <param name="IsRequired">IsRequired.</param>
+        /// <param name="ValueType">ValueType.</param>
+        /// <param name="DisplayNames">DisplayNames.</param>
+        /// <param name="CreatedDate">CreatedDate.</param>
+        /// <param name="ModifiedDate">ModifiedDate.</param>
+        /// <param name="CreatedBy">CreatedBy.</param>
+        /// <param name="ModifiedBy">ModifiedBy.</param>
+        /// <param name="Id">Id.</param>
+
+        public VirtoCommercePlatformCoreDynamicPropertiesDynamicProperty(string Name = null, string ObjectType = null, bool? IsArray = null, bool? IsDictionary = null, bool? IsMultilingual = null, bool? IsRequired = null, string ValueType = null, List<VirtoCommercePlatformCoreDynamicPropertiesDynamicPropertyName> DisplayNames = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
         {
+            this.Name = Name;
+            this.ObjectType = ObjectType;
+            this.IsArray = IsArray;
+            this.IsDictionary = IsDictionary;
+            this.IsMultilingual = IsMultilingual;
+            this.IsRequired = IsRequired;
+            this.ValueType = ValueType;
+            this.DisplayNames = DisplayNames;
+            this.CreatedDate = CreatedDate;
+            this.ModifiedDate = ModifiedDate;
+            this.CreatedBy = CreatedBy;
+            this.ModifiedBy = ModifiedBy;
+            this.Id = Id;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ObjectType
         /// </summary>
         [DataMember(Name="objectType", EmitDefaultValue=false)]
         public string ObjectType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets IsArray
         /// </summary>
         [DataMember(Name="isArray", EmitDefaultValue=false)]
         public bool? IsArray { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets IsDictionary
         /// </summary>
         [DataMember(Name="isDictionary", EmitDefaultValue=false)]
         public bool? IsDictionary { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets IsMultilingual
         /// </summary>
         [DataMember(Name="isMultilingual", EmitDefaultValue=false)]
         public bool? IsMultilingual { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets IsRequired
         /// </summary>
         [DataMember(Name="isRequired", EmitDefaultValue=false)]
         public bool? IsRequired { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ValueType
         /// </summary>
         [DataMember(Name="valueType", EmitDefaultValue=false)]
         public string ValueType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets DisplayNames
         /// </summary>
         [DataMember(Name="displayNames", EmitDefaultValue=false)]
         public List<VirtoCommercePlatformCoreDynamicPropertiesDynamicPropertyName> DisplayNames { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedDate
         /// </summary>
         [DataMember(Name="createdDate", EmitDefaultValue=false)]
         public DateTime? CreatedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedDate
         /// </summary>
         [DataMember(Name="modifiedDate", EmitDefaultValue=false)]
         public DateTime? ModifiedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedBy
         /// </summary>
         [DataMember(Name="createdBy", EmitDefaultValue=false)]
         public string CreatedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedBy
         /// </summary>
         [DataMember(Name="modifiedBy", EmitDefaultValue=false)]
         public string ModifiedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,28 +21,31 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreSecurityRoleSearchResponse" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreSecurityRoleSearchResponse" />class.
         /// </summary>
-        public VirtoCommercePlatformCoreSecurityRoleSearchResponse()
+        /// <param name="Roles">Roles.</param>
+        /// <param name="TotalCount">TotalCount.</param>
+
+        public VirtoCommercePlatformCoreSecurityRoleSearchResponse(List<VirtoCommercePlatformCoreSecurityRole> Roles = null, int? TotalCount = null)
         {
+            this.Roles = Roles;
+            this.TotalCount = TotalCount;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets Roles
         /// </summary>
         [DataMember(Name="roles", EmitDefaultValue=false)]
         public List<VirtoCommercePlatformCoreSecurityRole> Roles { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets TotalCount
         /// </summary>
         [DataMember(Name="totalCount", EmitDefaultValue=false)]
         public int? TotalCount { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

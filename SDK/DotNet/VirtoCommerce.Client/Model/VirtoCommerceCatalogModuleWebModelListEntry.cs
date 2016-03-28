@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// Base class for all entries used in catalog categories browsing.
     /// </summary>
@@ -21,85 +21,95 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelListEntry" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelListEntry" />class.
         /// </summary>
-        public VirtoCommerceCatalogModuleWebModelListEntry()
+        /// <param name="Id">Id.</param>
+        /// <param name="Type">Gets or sets the type. E.g. \&quot;product\&quot;, \&quot;category\&quot;.</param>
+        /// <param name="IsActive">Gets or sets a value indicating whether this entry is active..</param>
+        /// <param name="ImageUrl">Gets or sets the image URL..</param>
+        /// <param name="Code">Gets or sets the entry code..</param>
+        /// <param name="Name">Gets or sets the name..</param>
+        /// <param name="Links">Gets or sets the links..</param>
+        /// <param name="Outline">All entry parents ids.</param>
+        /// <param name="Path">All entry parents names.</param>
+
+        public VirtoCommerceCatalogModuleWebModelListEntry(string Id = null, string Type = null, bool? IsActive = null, string ImageUrl = null, string Code = null, string Name = null, List<VirtoCommerceCatalogModuleWebModelListEntryLink> Links = null, List<string> Outline = null, List<string> Path = null)
         {
+            this.Id = Id;
+            this.Type = Type;
+            this.IsActive = IsActive;
+            this.ImageUrl = ImageUrl;
+            this.Code = Code;
+            this.Name = Name;
+            this.Links = Links;
+            this.Outline = Outline;
+            this.Path = Path;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
+
         /// <summary>
-        /// Gets or sets the type. E.g. \"product\", \"category\"
+        /// Gets or sets the type. E.g. \&quot;product\&quot;, \&quot;category\&quot;
         /// </summary>
-        /// <value>Gets or sets the type. E.g. \"product\", \"category\"</value>
+        /// <value>Gets or sets the type. E.g. \&quot;product\&quot;, \&quot;category\&quot;</value>
         [DataMember(Name="type", EmitDefaultValue=false)]
         public string Type { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets a value indicating whether this entry is active.
         /// </summary>
         /// <value>Gets or sets a value indicating whether this entry is active.</value>
         [DataMember(Name="isActive", EmitDefaultValue=false)]
         public bool? IsActive { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the image URL.
         /// </summary>
         /// <value>Gets or sets the image URL.</value>
         [DataMember(Name="imageUrl", EmitDefaultValue=false)]
         public string ImageUrl { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the entry code.
         /// </summary>
         /// <value>Gets or sets the entry code.</value>
         [DataMember(Name="code", EmitDefaultValue=false)]
         public string Code { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the name.
         /// </summary>
         /// <value>Gets or sets the name.</value>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the links.
         /// </summary>
         /// <value>Gets or sets the links.</value>
         [DataMember(Name="links", EmitDefaultValue=false)]
         public List<VirtoCommerceCatalogModuleWebModelListEntryLink> Links { get; set; }
-  
-        
+
         /// <summary>
         /// All entry parents ids
         /// </summary>
         /// <value>All entry parents ids</value>
         [DataMember(Name="outline", EmitDefaultValue=false)]
         public List<string> Outline { get; set; }
-  
-        
+
         /// <summary>
         /// All entry parents names
         /// </summary>
         /// <value>All entry parents names</value>
         [DataMember(Name="path", EmitDefaultValue=false)]
         public List<string> Path { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

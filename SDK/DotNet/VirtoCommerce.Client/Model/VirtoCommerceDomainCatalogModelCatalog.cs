@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,63 +21,71 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceDomainCatalogModelCatalog" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCatalogModelCatalog" />class.
         /// </summary>
-        public VirtoCommerceDomainCatalogModelCatalog()
+        /// <param name="Name">Name.</param>
+        /// <param name="IsVirtual">IsVirtual.</param>
+        /// <param name="DefaultLanguage">DefaultLanguage.</param>
+        /// <param name="Languages">Languages.</param>
+        /// <param name="Properties">Properties.</param>
+        /// <param name="PropertyValues">PropertyValues.</param>
+        /// <param name="Id">Id.</param>
+
+        public VirtoCommerceDomainCatalogModelCatalog(string Name = null, bool? IsVirtual = null, VirtoCommerceDomainCatalogModelCatalogLanguage DefaultLanguage = null, List<VirtoCommerceDomainCatalogModelCatalogLanguage> Languages = null, List<VirtoCommerceDomainCatalogModelProperty> Properties = null, List<VirtoCommerceDomainCatalogModelPropertyValue> PropertyValues = null, string Id = null)
         {
+            this.Name = Name;
+            this.IsVirtual = IsVirtual;
+            this.DefaultLanguage = DefaultLanguage;
+            this.Languages = Languages;
+            this.Properties = Properties;
+            this.PropertyValues = PropertyValues;
+            this.Id = Id;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
-        /// Gets or Sets Virtual
+        /// Gets or Sets IsVirtual
         /// </summary>
-        [DataMember(Name="virtual", EmitDefaultValue=false)]
-        public bool? Virtual { get; set; }
-  
-        
+        [DataMember(Name="isVirtual", EmitDefaultValue=false)]
+        public bool? IsVirtual { get; set; }
+
         /// <summary>
         /// Gets or Sets DefaultLanguage
         /// </summary>
         [DataMember(Name="defaultLanguage", EmitDefaultValue=false)]
         public VirtoCommerceDomainCatalogModelCatalogLanguage DefaultLanguage { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Languages
         /// </summary>
         [DataMember(Name="languages", EmitDefaultValue=false)]
         public List<VirtoCommerceDomainCatalogModelCatalogLanguage> Languages { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Properties
         /// </summary>
         [DataMember(Name="properties", EmitDefaultValue=false)]
         public List<VirtoCommerceDomainCatalogModelProperty> Properties { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets PropertyValues
         /// </summary>
         [DataMember(Name="propertyValues", EmitDefaultValue=false)]
         public List<VirtoCommerceDomainCatalogModelPropertyValue> PropertyValues { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -87,7 +95,7 @@ namespace VirtoCommerce.Client.Model
             var sb = new StringBuilder();
             sb.Append("class VirtoCommerceDomainCatalogModelCatalog {\n");
             sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  Virtual: ").Append(Virtual).Append("\n");
+            sb.Append("  IsVirtual: ").Append(IsVirtual).Append("\n");
             sb.Append("  DefaultLanguage: ").Append(DefaultLanguage).Append("\n");
             sb.Append("  Languages: ").Append(Languages).Append("\n");
             sb.Append("  Properties: ").Append(Properties).Append("\n");
@@ -136,9 +144,9 @@ namespace VirtoCommerce.Client.Model
                     this.Name.Equals(other.Name)
                 ) && 
                 (
-                    this.Virtual == other.Virtual ||
-                    this.Virtual != null &&
-                    this.Virtual.Equals(other.Virtual)
+                    this.IsVirtual == other.IsVirtual ||
+                    this.IsVirtual != null &&
+                    this.IsVirtual.Equals(other.IsVirtual)
                 ) && 
                 (
                     this.DefaultLanguage == other.DefaultLanguage ||
@@ -182,8 +190,8 @@ namespace VirtoCommerce.Client.Model
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
                 
-                if (this.Virtual != null)
-                    hash = hash * 59 + this.Virtual.GetHashCode();
+                if (this.IsVirtual != null)
+                    hash = hash * 59 + this.IsVirtual.GetHashCode();
                 
                 if (this.DefaultLanguage != null)
                     hash = hash * 59 + this.DefaultLanguage.GetHashCode();

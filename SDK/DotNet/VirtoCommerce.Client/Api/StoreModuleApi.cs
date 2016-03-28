@@ -16,82 +16,7 @@ namespace VirtoCommerce.Client.Api
     /// </summary>
     public interface IStoreModuleApi
     {
-        
-        /// <summary>
-        /// Get all stores
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <returns>List&lt;VirtoCommerceStoreModuleWebModelStore&gt;</returns>
-        List<VirtoCommerceStoreModuleWebModelStore> StoreModuleGetStores ();
-  
-        /// <summary>
-        /// Get all stores
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <returns>ApiResponse of List&lt;VirtoCommerceStoreModuleWebModelStore&gt;</returns>
-        ApiResponse<List<VirtoCommerceStoreModuleWebModelStore>> StoreModuleGetStoresWithHttpInfo ();
-
-        /// <summary>
-        /// Get all stores
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <returns>Task of List&lt;VirtoCommerceStoreModuleWebModelStore&gt;</returns>
-        System.Threading.Tasks.Task<List<VirtoCommerceStoreModuleWebModelStore>> StoreModuleGetStoresAsync ();
-
-        /// <summary>
-        /// Get all stores
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <returns>Task of ApiResponse (List&lt;VirtoCommerceStoreModuleWebModelStore&gt;)</returns>
-        System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceStoreModuleWebModelStore>>> StoreModuleGetStoresAsyncWithHttpInfo ();
-        
-        /// <summary>
-        /// Update store
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <param name="store">Store</param>
-        /// <returns></returns>
-        void StoreModuleUpdate (VirtoCommerceStoreModuleWebModelStore store);
-  
-        /// <summary>
-        /// Update store
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <param name="store">Store</param>
-        /// <returns>ApiResponse of Object(void)</returns>
-        ApiResponse<Object> StoreModuleUpdateWithHttpInfo (VirtoCommerceStoreModuleWebModelStore store);
-
-        /// <summary>
-        /// Update store
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <param name="store">Store</param>
-        /// <returns>Task of void</returns>
-        System.Threading.Tasks.Task StoreModuleUpdateAsync (VirtoCommerceStoreModuleWebModelStore store);
-
-        /// <summary>
-        /// Update store
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <param name="store">Store</param>
-        /// <returns>Task of ApiResponse</returns>
-        System.Threading.Tasks.Task<ApiResponse<Object>> StoreModuleUpdateAsyncWithHttpInfo (VirtoCommerceStoreModuleWebModelStore store);
+        #region Synchronous Operations
         
         /// <summary>
         /// Create store
@@ -99,6 +24,7 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// 
         /// </remarks>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="store">Store</param>
         /// <returns>VirtoCommerceStoreModuleWebModelStore</returns>
         VirtoCommerceStoreModuleWebModelStore StoreModuleCreate (VirtoCommerceStoreModuleWebModelStore store);
@@ -109,29 +35,10 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// 
         /// </remarks>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="store">Store</param>
         /// <returns>ApiResponse of VirtoCommerceStoreModuleWebModelStore</returns>
         ApiResponse<VirtoCommerceStoreModuleWebModelStore> StoreModuleCreateWithHttpInfo (VirtoCommerceStoreModuleWebModelStore store);
-
-        /// <summary>
-        /// Create store
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <param name="store">Store</param>
-        /// <returns>Task of VirtoCommerceStoreModuleWebModelStore</returns>
-        System.Threading.Tasks.Task<VirtoCommerceStoreModuleWebModelStore> StoreModuleCreateAsync (VirtoCommerceStoreModuleWebModelStore store);
-
-        /// <summary>
-        /// Create store
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <param name="store">Store</param>
-        /// <returns>Task of ApiResponse (VirtoCommerceStoreModuleWebModelStore)</returns>
-        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceStoreModuleWebModelStore>> StoreModuleCreateAsyncWithHttpInfo (VirtoCommerceStoreModuleWebModelStore store);
         
         /// <summary>
         /// Delete stores
@@ -139,6 +46,7 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// 
         /// </remarks>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="ids">Ids of store that needed to delete</param>
         /// <returns></returns>
         void StoreModuleDelete (List<string> ids);
@@ -149,189 +57,10 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// 
         /// </remarks>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="ids">Ids of store that needed to delete</param>
         /// <returns>ApiResponse of Object(void)</returns>
         ApiResponse<Object> StoreModuleDeleteWithHttpInfo (List<string> ids);
-
-        /// <summary>
-        /// Delete stores
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <param name="ids">Ids of store that needed to delete</param>
-        /// <returns>Task of void</returns>
-        System.Threading.Tasks.Task StoreModuleDeleteAsync (List<string> ids);
-
-        /// <summary>
-        /// Delete stores
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <param name="ids">Ids of store that needed to delete</param>
-        /// <returns>Task of ApiResponse</returns>
-        System.Threading.Tasks.Task<ApiResponse<Object>> StoreModuleDeleteAsyncWithHttpInfo (List<string> ids);
-        
-        /// <summary>
-        /// Returns list of stores which user can sign in
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <param name="userId"></param>
-        /// <returns>List&lt;VirtoCommerceStoreModuleWebModelStore&gt;</returns>
-        List<VirtoCommerceStoreModuleWebModelStore> StoreModuleGetUserAllowedStores (string userId);
-  
-        /// <summary>
-        /// Returns list of stores which user can sign in
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <param name="userId"></param>
-        /// <returns>ApiResponse of List&lt;VirtoCommerceStoreModuleWebModelStore&gt;</returns>
-        ApiResponse<List<VirtoCommerceStoreModuleWebModelStore>> StoreModuleGetUserAllowedStoresWithHttpInfo (string userId);
-
-        /// <summary>
-        /// Returns list of stores which user can sign in
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <param name="userId"></param>
-        /// <returns>Task of List&lt;VirtoCommerceStoreModuleWebModelStore&gt;</returns>
-        System.Threading.Tasks.Task<List<VirtoCommerceStoreModuleWebModelStore>> StoreModuleGetUserAllowedStoresAsync (string userId);
-
-        /// <summary>
-        /// Returns list of stores which user can sign in
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <param name="userId"></param>
-        /// <returns>Task of ApiResponse (List&lt;VirtoCommerceStoreModuleWebModelStore&gt;)</returns>
-        System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceStoreModuleWebModelStore>>> StoreModuleGetUserAllowedStoresAsyncWithHttpInfo (string userId);
-        
-        /// <summary>
-        /// Search stores
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <param name="criteria"></param>
-        /// <returns>VirtoCommerceStoreModuleWebModelSearchResult</returns>
-        VirtoCommerceStoreModuleWebModelSearchResult StoreModuleSearchStores (VirtoCommerceDomainStoreModelSearchCriteria criteria);
-  
-        /// <summary>
-        /// Search stores
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <param name="criteria"></param>
-        /// <returns>ApiResponse of VirtoCommerceStoreModuleWebModelSearchResult</returns>
-        ApiResponse<VirtoCommerceStoreModuleWebModelSearchResult> StoreModuleSearchStoresWithHttpInfo (VirtoCommerceDomainStoreModelSearchCriteria criteria);
-
-        /// <summary>
-        /// Search stores
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <param name="criteria"></param>
-        /// <returns>Task of VirtoCommerceStoreModuleWebModelSearchResult</returns>
-        System.Threading.Tasks.Task<VirtoCommerceStoreModuleWebModelSearchResult> StoreModuleSearchStoresAsync (VirtoCommerceDomainStoreModelSearchCriteria criteria);
-
-        /// <summary>
-        /// Search stores
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <param name="criteria"></param>
-        /// <returns>Task of ApiResponse (VirtoCommerceStoreModuleWebModelSearchResult)</returns>
-        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceStoreModuleWebModelSearchResult>> StoreModuleSearchStoresAsyncWithHttpInfo (VirtoCommerceDomainStoreModelSearchCriteria criteria);
-        
-        /// <summary>
-        /// Send dynamic notification (contains custom list of properties) an store or adminsitrator email
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        void StoreModuleSendDynamicNotificationAnStoreEmail (VirtoCommerceStoreModuleWebModelSendDynamicNotificationRequest request);
-  
-        /// <summary>
-        /// Send dynamic notification (contains custom list of properties) an store or adminsitrator email
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <param name="request"></param>
-        /// <returns>ApiResponse of Object(void)</returns>
-        ApiResponse<Object> StoreModuleSendDynamicNotificationAnStoreEmailWithHttpInfo (VirtoCommerceStoreModuleWebModelSendDynamicNotificationRequest request);
-
-        /// <summary>
-        /// Send dynamic notification (contains custom list of properties) an store or adminsitrator email
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <param name="request"></param>
-        /// <returns>Task of void</returns>
-        System.Threading.Tasks.Task StoreModuleSendDynamicNotificationAnStoreEmailAsync (VirtoCommerceStoreModuleWebModelSendDynamicNotificationRequest request);
-
-        /// <summary>
-        /// Send dynamic notification (contains custom list of properties) an store or adminsitrator email
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <param name="request"></param>
-        /// <returns>Task of ApiResponse</returns>
-        System.Threading.Tasks.Task<ApiResponse<Object>> StoreModuleSendDynamicNotificationAnStoreEmailAsyncWithHttpInfo (VirtoCommerceStoreModuleWebModelSendDynamicNotificationRequest request);
-        
-        /// <summary>
-        /// Get store by id
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <param name="id">Store id</param>
-        /// <returns>VirtoCommerceStoreModuleWebModelStore</returns>
-        VirtoCommerceStoreModuleWebModelStore StoreModuleGetStoreById (string id);
-  
-        /// <summary>
-        /// Get store by id
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <param name="id">Store id</param>
-        /// <returns>ApiResponse of VirtoCommerceStoreModuleWebModelStore</returns>
-        ApiResponse<VirtoCommerceStoreModuleWebModelStore> StoreModuleGetStoreByIdWithHttpInfo (string id);
-
-        /// <summary>
-        /// Get store by id
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <param name="id">Store id</param>
-        /// <returns>Task of VirtoCommerceStoreModuleWebModelStore</returns>
-        System.Threading.Tasks.Task<VirtoCommerceStoreModuleWebModelStore> StoreModuleGetStoreByIdAsync (string id);
-
-        /// <summary>
-        /// Get store by id
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <param name="id">Store id</param>
-        /// <returns>Task of ApiResponse (VirtoCommerceStoreModuleWebModelStore)</returns>
-        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceStoreModuleWebModelStore>> StoreModuleGetStoreByIdAsyncWithHttpInfo (string id);
         
         /// <summary>
         /// Check if given contact has login on behalf permission
@@ -339,6 +68,7 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// 
         /// </remarks>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="storeId">Store ID</param>
         /// <param name="id">Contact ID</param>
         /// <returns>VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo</returns>
@@ -350,17 +80,197 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// 
         /// </remarks>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="storeId">Store ID</param>
         /// <param name="id">Contact ID</param>
         /// <returns>ApiResponse of VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo</returns>
         ApiResponse<VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo> StoreModuleGetLoginOnBehalfInfoWithHttpInfo (string storeId, string id);
+        
+        /// <summary>
+        /// Get store by id
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Store id</param>
+        /// <returns>VirtoCommerceStoreModuleWebModelStore</returns>
+        VirtoCommerceStoreModuleWebModelStore StoreModuleGetStoreById (string id);
+  
+        /// <summary>
+        /// Get store by id
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Store id</param>
+        /// <returns>ApiResponse of VirtoCommerceStoreModuleWebModelStore</returns>
+        ApiResponse<VirtoCommerceStoreModuleWebModelStore> StoreModuleGetStoreByIdWithHttpInfo (string id);
+        
+        /// <summary>
+        /// Get all stores
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <returns>List&lt;VirtoCommerceStoreModuleWebModelStore&gt;</returns>
+        List<VirtoCommerceStoreModuleWebModelStore> StoreModuleGetStores ();
+  
+        /// <summary>
+        /// Get all stores
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <returns>ApiResponse of List&lt;VirtoCommerceStoreModuleWebModelStore&gt;</returns>
+        ApiResponse<List<VirtoCommerceStoreModuleWebModelStore>> StoreModuleGetStoresWithHttpInfo ();
+        
+        /// <summary>
+        /// Returns list of stores which user can sign in
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="userId"></param>
+        /// <returns>List&lt;VirtoCommerceStoreModuleWebModelStore&gt;</returns>
+        List<VirtoCommerceStoreModuleWebModelStore> StoreModuleGetUserAllowedStores (string userId);
+  
+        /// <summary>
+        /// Returns list of stores which user can sign in
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="userId"></param>
+        /// <returns>ApiResponse of List&lt;VirtoCommerceStoreModuleWebModelStore&gt;</returns>
+        ApiResponse<List<VirtoCommerceStoreModuleWebModelStore>> StoreModuleGetUserAllowedStoresWithHttpInfo (string userId);
+        
+        /// <summary>
+        /// Search stores
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="criteria"></param>
+        /// <returns>VirtoCommerceStoreModuleWebModelSearchResult</returns>
+        VirtoCommerceStoreModuleWebModelSearchResult StoreModuleSearchStores (VirtoCommerceDomainStoreModelSearchCriteria criteria);
+  
+        /// <summary>
+        /// Search stores
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="criteria"></param>
+        /// <returns>ApiResponse of VirtoCommerceStoreModuleWebModelSearchResult</returns>
+        ApiResponse<VirtoCommerceStoreModuleWebModelSearchResult> StoreModuleSearchStoresWithHttpInfo (VirtoCommerceDomainStoreModelSearchCriteria criteria);
+        
+        /// <summary>
+        /// Send dynamic notification (contains custom list of properties) an store or adminsitrator email
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        void StoreModuleSendDynamicNotificationAnStoreEmail (VirtoCommerceStoreModuleWebModelSendDynamicNotificationRequest request);
+  
+        /// <summary>
+        /// Send dynamic notification (contains custom list of properties) an store or adminsitrator email
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="request"></param>
+        /// <returns>ApiResponse of Object(void)</returns>
+        ApiResponse<Object> StoreModuleSendDynamicNotificationAnStoreEmailWithHttpInfo (VirtoCommerceStoreModuleWebModelSendDynamicNotificationRequest request);
+        
+        /// <summary>
+        /// Update store
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="store">Store</param>
+        /// <returns></returns>
+        void StoreModuleUpdate (VirtoCommerceStoreModuleWebModelStore store);
+  
+        /// <summary>
+        /// Update store
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="store">Store</param>
+        /// <returns>ApiResponse of Object(void)</returns>
+        ApiResponse<Object> StoreModuleUpdateWithHttpInfo (VirtoCommerceStoreModuleWebModelStore store);
+        
+        #endregion Synchronous Operations
+        
+        #region Asynchronous Operations
+        
+        /// <summary>
+        /// Create store
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="store">Store</param>
+        /// <returns>Task of VirtoCommerceStoreModuleWebModelStore</returns>
+        System.Threading.Tasks.Task<VirtoCommerceStoreModuleWebModelStore> StoreModuleCreateAsync (VirtoCommerceStoreModuleWebModelStore store);
 
+        /// <summary>
+        /// Create store
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="store">Store</param>
+        /// <returns>Task of ApiResponse (VirtoCommerceStoreModuleWebModelStore)</returns>
+        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceStoreModuleWebModelStore>> StoreModuleCreateAsyncWithHttpInfo (VirtoCommerceStoreModuleWebModelStore store);
+        
+        /// <summary>
+        /// Delete stores
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="ids">Ids of store that needed to delete</param>
+        /// <returns>Task of void</returns>
+        System.Threading.Tasks.Task StoreModuleDeleteAsync (List<string> ids);
+
+        /// <summary>
+        /// Delete stores
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="ids">Ids of store that needed to delete</param>
+        /// <returns>Task of ApiResponse</returns>
+        System.Threading.Tasks.Task<ApiResponse<Object>> StoreModuleDeleteAsyncWithHttpInfo (List<string> ids);
+        
         /// <summary>
         /// Check if given contact has login on behalf permission
         /// </summary>
         /// <remarks>
         /// 
         /// </remarks>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="storeId">Store ID</param>
         /// <param name="id">Contact ID</param>
         /// <returns>Task of VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo</returns>
@@ -372,10 +282,143 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// 
         /// </remarks>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="storeId">Store ID</param>
         /// <param name="id">Contact ID</param>
         /// <returns>Task of ApiResponse (VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo)</returns>
         System.Threading.Tasks.Task<ApiResponse<VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo>> StoreModuleGetLoginOnBehalfInfoAsyncWithHttpInfo (string storeId, string id);
+        
+        /// <summary>
+        /// Get store by id
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Store id</param>
+        /// <returns>Task of VirtoCommerceStoreModuleWebModelStore</returns>
+        System.Threading.Tasks.Task<VirtoCommerceStoreModuleWebModelStore> StoreModuleGetStoreByIdAsync (string id);
+
+        /// <summary>
+        /// Get store by id
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Store id</param>
+        /// <returns>Task of ApiResponse (VirtoCommerceStoreModuleWebModelStore)</returns>
+        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceStoreModuleWebModelStore>> StoreModuleGetStoreByIdAsyncWithHttpInfo (string id);
+        
+        /// <summary>
+        /// Get all stores
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <returns>Task of List&lt;VirtoCommerceStoreModuleWebModelStore&gt;</returns>
+        System.Threading.Tasks.Task<List<VirtoCommerceStoreModuleWebModelStore>> StoreModuleGetStoresAsync ();
+
+        /// <summary>
+        /// Get all stores
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <returns>Task of ApiResponse (List&lt;VirtoCommerceStoreModuleWebModelStore&gt;)</returns>
+        System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceStoreModuleWebModelStore>>> StoreModuleGetStoresAsyncWithHttpInfo ();
+        
+        /// <summary>
+        /// Returns list of stores which user can sign in
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="userId"></param>
+        /// <returns>Task of List&lt;VirtoCommerceStoreModuleWebModelStore&gt;</returns>
+        System.Threading.Tasks.Task<List<VirtoCommerceStoreModuleWebModelStore>> StoreModuleGetUserAllowedStoresAsync (string userId);
+
+        /// <summary>
+        /// Returns list of stores which user can sign in
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="userId"></param>
+        /// <returns>Task of ApiResponse (List&lt;VirtoCommerceStoreModuleWebModelStore&gt;)</returns>
+        System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceStoreModuleWebModelStore>>> StoreModuleGetUserAllowedStoresAsyncWithHttpInfo (string userId);
+        
+        /// <summary>
+        /// Search stores
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="criteria"></param>
+        /// <returns>Task of VirtoCommerceStoreModuleWebModelSearchResult</returns>
+        System.Threading.Tasks.Task<VirtoCommerceStoreModuleWebModelSearchResult> StoreModuleSearchStoresAsync (VirtoCommerceDomainStoreModelSearchCriteria criteria);
+
+        /// <summary>
+        /// Search stores
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="criteria"></param>
+        /// <returns>Task of ApiResponse (VirtoCommerceStoreModuleWebModelSearchResult)</returns>
+        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceStoreModuleWebModelSearchResult>> StoreModuleSearchStoresAsyncWithHttpInfo (VirtoCommerceDomainStoreModelSearchCriteria criteria);
+        
+        /// <summary>
+        /// Send dynamic notification (contains custom list of properties) an store or adminsitrator email
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="request"></param>
+        /// <returns>Task of void</returns>
+        System.Threading.Tasks.Task StoreModuleSendDynamicNotificationAnStoreEmailAsync (VirtoCommerceStoreModuleWebModelSendDynamicNotificationRequest request);
+
+        /// <summary>
+        /// Send dynamic notification (contains custom list of properties) an store or adminsitrator email
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="request"></param>
+        /// <returns>Task of ApiResponse</returns>
+        System.Threading.Tasks.Task<ApiResponse<Object>> StoreModuleSendDynamicNotificationAnStoreEmailAsyncWithHttpInfo (VirtoCommerceStoreModuleWebModelSendDynamicNotificationRequest request);
+        
+        /// <summary>
+        /// Update store
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="store">Store</param>
+        /// <returns>Task of void</returns>
+        System.Threading.Tasks.Task StoreModuleUpdateAsync (VirtoCommerceStoreModuleWebModelStore store);
+
+        /// <summary>
+        /// Update store
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="store">Store</param>
+        /// <returns>Task of ApiResponse</returns>
+        System.Threading.Tasks.Task<ApiResponse<Object>> StoreModuleUpdateAsyncWithHttpInfo (VirtoCommerceStoreModuleWebModelStore store);
+        
+        #endregion Asynchronous Operations
         
     }
   
@@ -396,6 +439,12 @@ namespace VirtoCommerce.Client.Api
                 this.Configuration = Configuration.Default; 
             else
                 this.Configuration = configuration;
+
+            // ensure API client has configuration ready
+            if (Configuration.ApiClient.Configuration == null)
+            {
+                this.Configuration.ApiClient.Configuration = this.Configuration;
+            }
         }
 
         /// <summary>
@@ -447,317 +496,21 @@ namespace VirtoCommerce.Client.Api
    
         
         /// <summary>
-        /// Get all stores 
-        /// </summary>
-        /// <returns>List&lt;VirtoCommerceStoreModuleWebModelStore&gt;</returns>
-        public List<VirtoCommerceStoreModuleWebModelStore> StoreModuleGetStores ()
-        {
-             ApiResponse<List<VirtoCommerceStoreModuleWebModelStore>> response = StoreModuleGetStoresWithHttpInfo();
-             return response.Data;
-        }
-
-        /// <summary>
-        /// Get all stores 
-        /// </summary>
-        /// <returns>ApiResponse of List&lt;VirtoCommerceStoreModuleWebModelStore&gt;</returns>
-        public ApiResponse< List<VirtoCommerceStoreModuleWebModelStore> > StoreModuleGetStoresWithHttpInfo ()
-        {
-            
-    
-            var path_ = "/api/stores";
-    
-            var pathParams = new Dictionary<String, String>();
-            var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var formParams = new Dictionary<String, String>();
-            var fileParams = new Dictionary<String, FileParameter>();
-            Object postBody = null;
-
-            // to determine the Content-Type header
-            String[] httpContentTypes = new String[] {
-                
-            };
-            String httpContentType = Configuration.ApiClient.SelectHeaderContentType(httpContentTypes);
-
-            // to determine the Accept header
-            String[] httpHeaderAccepts = new String[] {
-                "application/json", "text/json"
-            };
-            String httpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(httpHeaderAccepts);
-            if (httpHeaderAccept != null)
-                headerParams.Add("Accept", httpHeaderAccept);
-
-            // set "format" to json by default
-            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
-            pathParams.Add("format", "json");
-            
-            
-            
-            
-            
-
-            
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, 
-                Method.GET, queryParams, postBody, headerParams, formParams, fileParams,
-                pathParams, httpContentType);
-
-            int statusCode = (int) response.StatusCode;
-    
-            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (statusCode, "Error calling StoreModuleGetStores: " + response.Content, response.Content);
-            else if (statusCode == 0)
-                throw new ApiException (statusCode, "Error calling StoreModuleGetStores: " + response.ErrorMessage, response.ErrorMessage);
-    
-            return new ApiResponse<List<VirtoCommerceStoreModuleWebModelStore>>(statusCode,
-                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (List<VirtoCommerceStoreModuleWebModelStore>) Configuration.ApiClient.Deserialize(response, typeof(List<VirtoCommerceStoreModuleWebModelStore>)));
-            
-        }
-    
-        /// <summary>
-        /// Get all stores 
-        /// </summary>
-        /// <returns>Task of List&lt;VirtoCommerceStoreModuleWebModelStore&gt;</returns>
-        public async System.Threading.Tasks.Task<List<VirtoCommerceStoreModuleWebModelStore>> StoreModuleGetStoresAsync ()
-        {
-             ApiResponse<List<VirtoCommerceStoreModuleWebModelStore>> response = await StoreModuleGetStoresAsyncWithHttpInfo();
-             return response.Data;
-
-        }
-
-        /// <summary>
-        /// Get all stores 
-        /// </summary>
-        /// <returns>Task of ApiResponse (List&lt;VirtoCommerceStoreModuleWebModelStore&gt;)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceStoreModuleWebModelStore>>> StoreModuleGetStoresAsyncWithHttpInfo ()
-        {
-            
-    
-            var path_ = "/api/stores";
-    
-            var pathParams = new Dictionary<String, String>();
-            var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var formParams = new Dictionary<String, String>();
-            var fileParams = new Dictionary<String, FileParameter>();
-            Object postBody = null;
-
-            // to determine the Content-Type header
-            String[] httpContentTypes = new String[] {
-                
-            };
-            String httpContentType = Configuration.ApiClient.SelectHeaderContentType(httpContentTypes);
-
-            // to determine the Accept header
-            String[] httpHeaderAccepts = new String[] {
-                "application/json", "text/json"
-            };
-            String httpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(httpHeaderAccepts);
-            if (httpHeaderAccept != null)
-                headerParams.Add("Accept", httpHeaderAccept);
-
-            // set "format" to json by default
-            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
-            pathParams.Add("format", "json");
-            
-            
-            
-            
-            
-
-            
-
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, 
-                Method.GET, queryParams, postBody, headerParams, formParams, fileParams, 
-                pathParams, httpContentType);
-
-            int statusCode = (int) response.StatusCode;
- 
-            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (statusCode, "Error calling StoreModuleGetStores: " + response.Content, response.Content);
-            else if (statusCode == 0)
-                throw new ApiException (statusCode, "Error calling StoreModuleGetStores: " + response.ErrorMessage, response.ErrorMessage);
-
-            return new ApiResponse<List<VirtoCommerceStoreModuleWebModelStore>>(statusCode,
-                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (List<VirtoCommerceStoreModuleWebModelStore>) Configuration.ApiClient.Deserialize(response, typeof(List<VirtoCommerceStoreModuleWebModelStore>)));
-            
-        }
-        
-        /// <summary>
-        /// Update store 
-        /// </summary>
-        /// <param name="store">Store</param> 
-        /// <returns></returns>
-        public void StoreModuleUpdate (VirtoCommerceStoreModuleWebModelStore store)
-        {
-             StoreModuleUpdateWithHttpInfo(store);
-        }
-
-        /// <summary>
-        /// Update store 
-        /// </summary>
-        /// <param name="store">Store</param> 
-        /// <returns>ApiResponse of Object(void)</returns>
-        public ApiResponse<Object> StoreModuleUpdateWithHttpInfo (VirtoCommerceStoreModuleWebModelStore store)
-        {
-            
-            // verify the required parameter 'store' is set
-            if (store == null)
-                throw new ApiException(400, "Missing required parameter 'store' when calling StoreModuleApi->StoreModuleUpdate");
-            
-    
-            var path_ = "/api/stores";
-    
-            var pathParams = new Dictionary<String, String>();
-            var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var formParams = new Dictionary<String, String>();
-            var fileParams = new Dictionary<String, FileParameter>();
-            Object postBody = null;
-
-            // to determine the Content-Type header
-            String[] httpContentTypes = new String[] {
-                "application/json", "text/json", "application/x-www-form-urlencoded"
-            };
-            String httpContentType = Configuration.ApiClient.SelectHeaderContentType(httpContentTypes);
-
-            // to determine the Accept header
-            String[] httpHeaderAccepts = new String[] {
-                
-            };
-            String httpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(httpHeaderAccepts);
-            if (httpHeaderAccept != null)
-                headerParams.Add("Accept", httpHeaderAccept);
-
-            // set "format" to json by default
-            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
-            pathParams.Add("format", "json");
-            
-            
-            
-            
-            if (store.GetType() != typeof(byte[]))
-            {
-                postBody = Configuration.ApiClient.Serialize(store); // http body (model) parameter
-            }
-            else
-            {
-                postBody = store; // byte array
-            }
-
-            
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, 
-                Method.PUT, queryParams, postBody, headerParams, formParams, fileParams,
-                pathParams, httpContentType);
-
-            int statusCode = (int) response.StatusCode;
-    
-            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (statusCode, "Error calling StoreModuleUpdate: " + response.Content, response.Content);
-            else if (statusCode == 0)
-                throw new ApiException (statusCode, "Error calling StoreModuleUpdate: " + response.ErrorMessage, response.ErrorMessage);
-    
-            
-            return new ApiResponse<Object>(statusCode,
-                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                null);
-        }
-    
-        /// <summary>
-        /// Update store 
-        /// </summary>
-        /// <param name="store">Store</param>
-        /// <returns>Task of void</returns>
-        public async System.Threading.Tasks.Task StoreModuleUpdateAsync (VirtoCommerceStoreModuleWebModelStore store)
-        {
-             await StoreModuleUpdateAsyncWithHttpInfo(store);
-
-        }
-
-        /// <summary>
-        /// Update store 
-        /// </summary>
-        /// <param name="store">Store</param>
-        /// <returns>Task of ApiResponse</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Object>> StoreModuleUpdateAsyncWithHttpInfo (VirtoCommerceStoreModuleWebModelStore store)
-        {
-            // verify the required parameter 'store' is set
-            if (store == null) throw new ApiException(400, "Missing required parameter 'store' when calling StoreModuleUpdate");
-            
-    
-            var path_ = "/api/stores";
-    
-            var pathParams = new Dictionary<String, String>();
-            var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var formParams = new Dictionary<String, String>();
-            var fileParams = new Dictionary<String, FileParameter>();
-            Object postBody = null;
-
-            // to determine the Content-Type header
-            String[] httpContentTypes = new String[] {
-                "application/json", "text/json", "application/x-www-form-urlencoded"
-            };
-            String httpContentType = Configuration.ApiClient.SelectHeaderContentType(httpContentTypes);
-
-            // to determine the Accept header
-            String[] httpHeaderAccepts = new String[] {
-                
-            };
-            String httpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(httpHeaderAccepts);
-            if (httpHeaderAccept != null)
-                headerParams.Add("Accept", httpHeaderAccept);
-
-            // set "format" to json by default
-            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
-            pathParams.Add("format", "json");
-            
-            
-            
-            
-            postBody = Configuration.ApiClient.Serialize(store); // http body (model) parameter
-            
-
-            
-
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, 
-                Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, 
-                pathParams, httpContentType);
-
-            int statusCode = (int) response.StatusCode;
- 
-            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (statusCode, "Error calling StoreModuleUpdate: " + response.Content, response.Content);
-            else if (statusCode == 0)
-                throw new ApiException (statusCode, "Error calling StoreModuleUpdate: " + response.ErrorMessage, response.ErrorMessage);
-
-            
-            return new ApiResponse<Object>(statusCode,
-                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                null);
-        }
-        
-        /// <summary>
         /// Create store 
         /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="store">Store</param> 
         /// <returns>VirtoCommerceStoreModuleWebModelStore</returns>
         public VirtoCommerceStoreModuleWebModelStore StoreModuleCreate (VirtoCommerceStoreModuleWebModelStore store)
         {
-             ApiResponse<VirtoCommerceStoreModuleWebModelStore> response = StoreModuleCreateWithHttpInfo(store);
-             return response.Data;
+             ApiResponse<VirtoCommerceStoreModuleWebModelStore> localVarResponse = StoreModuleCreateWithHttpInfo(store);
+             return localVarResponse.Data;
         }
 
         /// <summary>
         /// Create store 
         /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="store">Store</param> 
         /// <returns>ApiResponse of VirtoCommerceStoreModuleWebModelStore</returns>
         public ApiResponse< VirtoCommerceStoreModuleWebModelStore > StoreModuleCreateWithHttpInfo (VirtoCommerceStoreModuleWebModelStore store)
@@ -768,80 +521,83 @@ namespace VirtoCommerce.Client.Api
                 throw new ApiException(400, "Missing required parameter 'store' when calling StoreModuleApi->StoreModuleCreate");
             
     
-            var path_ = "/api/stores";
+            var localVarPath = "/api/stores";
     
-            var pathParams = new Dictionary<String, String>();
-            var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var formParams = new Dictionary<String, String>();
-            var fileParams = new Dictionary<String, FileParameter>();
-            Object postBody = null;
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] httpContentTypes = new String[] {
+            String[] localVarHttpContentTypes = new String[] {
                 "application/json", "text/json", "application/x-www-form-urlencoded"
             };
-            String httpContentType = Configuration.ApiClient.SelectHeaderContentType(httpContentTypes);
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] httpHeaderAccepts = new String[] {
+            String[] localVarHttpHeaderAccepts = new String[] {
                 "application/json", "text/json"
             };
-            String httpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(httpHeaderAccepts);
-            if (httpHeaderAccept != null)
-                headerParams.Add("Accept", httpHeaderAccept);
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
-            pathParams.Add("format", "json");
+            localVarPathParams.Add("format", "json");
             
             
             
             
             if (store.GetType() != typeof(byte[]))
             {
-                postBody = Configuration.ApiClient.Serialize(store); // http body (model) parameter
+                localVarPostBody = Configuration.ApiClient.Serialize(store); // http body (model) parameter
             }
             else
             {
-                postBody = store; // byte array
+                localVarPostBody = store; // byte array
             }
 
             
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, 
-                Method.POST, queryParams, postBody, headerParams, formParams, fileParams,
-                pathParams, httpContentType);
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath, 
+                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
 
-            int statusCode = (int) response.StatusCode;
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
     
-            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (statusCode, "Error calling StoreModuleCreate: " + response.Content, response.Content);
-            else if (statusCode == 0)
-                throw new ApiException (statusCode, "Error calling StoreModuleCreate: " + response.ErrorMessage, response.ErrorMessage);
+            if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
+                throw new ApiException (localVarStatusCode, "Error calling StoreModuleCreate: " + localVarResponse.Content, localVarResponse.Content);
+            else if (localVarStatusCode == 0)
+                throw new ApiException (localVarStatusCode, "Error calling StoreModuleCreate: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
     
-            return new ApiResponse<VirtoCommerceStoreModuleWebModelStore>(statusCode,
-                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommerceStoreModuleWebModelStore) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceStoreModuleWebModelStore)));
+            return new ApiResponse<VirtoCommerceStoreModuleWebModelStore>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (VirtoCommerceStoreModuleWebModelStore) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceStoreModuleWebModelStore)));
             
         }
-    
+
+        
         /// <summary>
         /// Create store 
         /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="store">Store</param>
         /// <returns>Task of VirtoCommerceStoreModuleWebModelStore</returns>
         public async System.Threading.Tasks.Task<VirtoCommerceStoreModuleWebModelStore> StoreModuleCreateAsync (VirtoCommerceStoreModuleWebModelStore store)
         {
-             ApiResponse<VirtoCommerceStoreModuleWebModelStore> response = await StoreModuleCreateAsyncWithHttpInfo(store);
-             return response.Data;
+             ApiResponse<VirtoCommerceStoreModuleWebModelStore> localVarResponse = await StoreModuleCreateAsyncWithHttpInfo(store);
+             return localVarResponse.Data;
 
         }
 
         /// <summary>
         /// Create store 
         /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="store">Store</param>
         /// <returns>Task of ApiResponse (VirtoCommerceStoreModuleWebModelStore)</returns>
         public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceStoreModuleWebModelStore>> StoreModuleCreateAsyncWithHttpInfo (VirtoCommerceStoreModuleWebModelStore store)
@@ -850,62 +606,69 @@ namespace VirtoCommerce.Client.Api
             if (store == null) throw new ApiException(400, "Missing required parameter 'store' when calling StoreModuleCreate");
             
     
-            var path_ = "/api/stores";
+            var localVarPath = "/api/stores";
     
-            var pathParams = new Dictionary<String, String>();
-            var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var formParams = new Dictionary<String, String>();
-            var fileParams = new Dictionary<String, FileParameter>();
-            Object postBody = null;
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] httpContentTypes = new String[] {
+            String[] localVarHttpContentTypes = new String[] {
                 "application/json", "text/json", "application/x-www-form-urlencoded"
             };
-            String httpContentType = Configuration.ApiClient.SelectHeaderContentType(httpContentTypes);
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] httpHeaderAccepts = new String[] {
+            String[] localVarHttpHeaderAccepts = new String[] {
                 "application/json", "text/json"
             };
-            String httpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(httpHeaderAccepts);
-            if (httpHeaderAccept != null)
-                headerParams.Add("Accept", httpHeaderAccept);
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
-            pathParams.Add("format", "json");
+            localVarPathParams.Add("format", "json");
             
             
             
             
-            postBody = Configuration.ApiClient.Serialize(store); // http body (model) parameter
-            
+            if (store.GetType() != typeof(byte[]))
+            {
+                localVarPostBody = Configuration.ApiClient.Serialize(store); // http body (model) parameter
+            }
+            else
+            {
+                localVarPostBody = store; // byte array
+            }
 
             
 
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, 
-                Method.POST, queryParams, postBody, headerParams, formParams, fileParams, 
-                pathParams, httpContentType);
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath, 
+                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams, 
+                localVarPathParams, localVarHttpContentType);
 
-            int statusCode = (int) response.StatusCode;
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
  
-            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (statusCode, "Error calling StoreModuleCreate: " + response.Content, response.Content);
-            else if (statusCode == 0)
-                throw new ApiException (statusCode, "Error calling StoreModuleCreate: " + response.ErrorMessage, response.ErrorMessage);
+            if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
+                throw new ApiException (localVarStatusCode, "Error calling StoreModuleCreate: " + localVarResponse.Content, localVarResponse.Content);
+            else if (localVarStatusCode == 0)
+                throw new ApiException (localVarStatusCode, "Error calling StoreModuleCreate: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
-            return new ApiResponse<VirtoCommerceStoreModuleWebModelStore>(statusCode,
-                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommerceStoreModuleWebModelStore) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceStoreModuleWebModelStore)));
+            return new ApiResponse<VirtoCommerceStoreModuleWebModelStore>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (VirtoCommerceStoreModuleWebModelStore) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceStoreModuleWebModelStore)));
             
         }
         
         /// <summary>
         /// Delete stores 
         /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="ids">Ids of store that needed to delete</param> 
         /// <returns></returns>
         public void StoreModuleDelete (List<string> ids)
@@ -916,6 +679,7 @@ namespace VirtoCommerce.Client.Api
         /// <summary>
         /// Delete stores 
         /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="ids">Ids of store that needed to delete</param> 
         /// <returns>ApiResponse of Object(void)</returns>
         public ApiResponse<Object> StoreModuleDeleteWithHttpInfo (List<string> ids)
@@ -926,34 +690,34 @@ namespace VirtoCommerce.Client.Api
                 throw new ApiException(400, "Missing required parameter 'ids' when calling StoreModuleApi->StoreModuleDelete");
             
     
-            var path_ = "/api/stores";
+            var localVarPath = "/api/stores";
     
-            var pathParams = new Dictionary<String, String>();
-            var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var formParams = new Dictionary<String, String>();
-            var fileParams = new Dictionary<String, FileParameter>();
-            Object postBody = null;
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] httpContentTypes = new String[] {
+            String[] localVarHttpContentTypes = new String[] {
                 
             };
-            String httpContentType = Configuration.ApiClient.SelectHeaderContentType(httpContentTypes);
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] httpHeaderAccepts = new String[] {
+            String[] localVarHttpHeaderAccepts = new String[] {
                 
             };
-            String httpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(httpHeaderAccepts);
-            if (httpHeaderAccept != null)
-                headerParams.Add("Accept", httpHeaderAccept);
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
-            pathParams.Add("format", "json");
+            localVarPathParams.Add("format", "json");
             
-            if (ids != null) queryParams.Add("ids", Configuration.ApiClient.ParameterToString(ids)); // query parameter
+            if (ids != null) localVarQueryParams.Add("ids", Configuration.ApiClient.ParameterToString(ids)); // query parameter
             
             
             
@@ -962,26 +726,28 @@ namespace VirtoCommerce.Client.Api
             
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, 
-                Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams,
-                pathParams, httpContentType);
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath, 
+                Method.DELETE, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
 
-            int statusCode = (int) response.StatusCode;
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
     
-            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (statusCode, "Error calling StoreModuleDelete: " + response.Content, response.Content);
-            else if (statusCode == 0)
-                throw new ApiException (statusCode, "Error calling StoreModuleDelete: " + response.ErrorMessage, response.ErrorMessage);
+            if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
+                throw new ApiException (localVarStatusCode, "Error calling StoreModuleDelete: " + localVarResponse.Content, localVarResponse.Content);
+            else if (localVarStatusCode == 0)
+                throw new ApiException (localVarStatusCode, "Error calling StoreModuleDelete: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
     
             
-            return new ApiResponse<Object>(statusCode,
-                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+            return new ApiResponse<Object>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 null);
         }
-    
+
+        
         /// <summary>
         /// Delete stores 
         /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="ids">Ids of store that needed to delete</param>
         /// <returns>Task of void</returns>
         public async System.Threading.Tasks.Task StoreModuleDeleteAsync (List<string> ids)
@@ -993,6 +759,7 @@ namespace VirtoCommerce.Client.Api
         /// <summary>
         /// Delete stores 
         /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="ids">Ids of store that needed to delete</param>
         /// <returns>Task of ApiResponse</returns>
         public async System.Threading.Tasks.Task<ApiResponse<Object>> StoreModuleDeleteAsyncWithHttpInfo (List<string> ids)
@@ -1001,34 +768,34 @@ namespace VirtoCommerce.Client.Api
             if (ids == null) throw new ApiException(400, "Missing required parameter 'ids' when calling StoreModuleDelete");
             
     
-            var path_ = "/api/stores";
+            var localVarPath = "/api/stores";
     
-            var pathParams = new Dictionary<String, String>();
-            var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var formParams = new Dictionary<String, String>();
-            var fileParams = new Dictionary<String, FileParameter>();
-            Object postBody = null;
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] httpContentTypes = new String[] {
+            String[] localVarHttpContentTypes = new String[] {
                 
             };
-            String httpContentType = Configuration.ApiClient.SelectHeaderContentType(httpContentTypes);
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] httpHeaderAccepts = new String[] {
+            String[] localVarHttpHeaderAccepts = new String[] {
                 
             };
-            String httpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(httpHeaderAccepts);
-            if (httpHeaderAccept != null)
-                headerParams.Add("Accept", httpHeaderAccept);
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
-            pathParams.Add("format", "json");
+            localVarPathParams.Add("format", "json");
             
-            if (ids != null) queryParams.Add("ids", Configuration.ApiClient.ParameterToString(ids)); // query parameter
+            if (ids != null) localVarQueryParams.Add("ids", Configuration.ApiClient.ParameterToString(ids)); // query parameter
             
             
             
@@ -1037,660 +804,40 @@ namespace VirtoCommerce.Client.Api
             
 
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, 
-                Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, 
-                pathParams, httpContentType);
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath, 
+                Method.DELETE, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams, 
+                localVarPathParams, localVarHttpContentType);
 
-            int statusCode = (int) response.StatusCode;
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
  
-            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (statusCode, "Error calling StoreModuleDelete: " + response.Content, response.Content);
-            else if (statusCode == 0)
-                throw new ApiException (statusCode, "Error calling StoreModuleDelete: " + response.ErrorMessage, response.ErrorMessage);
+            if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
+                throw new ApiException (localVarStatusCode, "Error calling StoreModuleDelete: " + localVarResponse.Content, localVarResponse.Content);
+            else if (localVarStatusCode == 0)
+                throw new ApiException (localVarStatusCode, "Error calling StoreModuleDelete: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
             
-            return new ApiResponse<Object>(statusCode,
-                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+            return new ApiResponse<Object>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 null);
-        }
-        
-        /// <summary>
-        /// Returns list of stores which user can sign in 
-        /// </summary>
-        /// <param name="userId"></param> 
-        /// <returns>List&lt;VirtoCommerceStoreModuleWebModelStore&gt;</returns>
-        public List<VirtoCommerceStoreModuleWebModelStore> StoreModuleGetUserAllowedStores (string userId)
-        {
-             ApiResponse<List<VirtoCommerceStoreModuleWebModelStore>> response = StoreModuleGetUserAllowedStoresWithHttpInfo(userId);
-             return response.Data;
-        }
-
-        /// <summary>
-        /// Returns list of stores which user can sign in 
-        /// </summary>
-        /// <param name="userId"></param> 
-        /// <returns>ApiResponse of List&lt;VirtoCommerceStoreModuleWebModelStore&gt;</returns>
-        public ApiResponse< List<VirtoCommerceStoreModuleWebModelStore> > StoreModuleGetUserAllowedStoresWithHttpInfo (string userId)
-        {
-            
-            // verify the required parameter 'userId' is set
-            if (userId == null)
-                throw new ApiException(400, "Missing required parameter 'userId' when calling StoreModuleApi->StoreModuleGetUserAllowedStores");
-            
-    
-            var path_ = "/api/stores/allowed/{userId}";
-    
-            var pathParams = new Dictionary<String, String>();
-            var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var formParams = new Dictionary<String, String>();
-            var fileParams = new Dictionary<String, FileParameter>();
-            Object postBody = null;
-
-            // to determine the Content-Type header
-            String[] httpContentTypes = new String[] {
-                
-            };
-            String httpContentType = Configuration.ApiClient.SelectHeaderContentType(httpContentTypes);
-
-            // to determine the Accept header
-            String[] httpHeaderAccepts = new String[] {
-                "application/json", "text/json"
-            };
-            String httpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(httpHeaderAccepts);
-            if (httpHeaderAccept != null)
-                headerParams.Add("Accept", httpHeaderAccept);
-
-            // set "format" to json by default
-            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
-            pathParams.Add("format", "json");
-            if (userId != null) pathParams.Add("userId", Configuration.ApiClient.ParameterToString(userId)); // path parameter
-            
-            
-            
-            
-            
-
-            
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, 
-                Method.GET, queryParams, postBody, headerParams, formParams, fileParams,
-                pathParams, httpContentType);
-
-            int statusCode = (int) response.StatusCode;
-    
-            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (statusCode, "Error calling StoreModuleGetUserAllowedStores: " + response.Content, response.Content);
-            else if (statusCode == 0)
-                throw new ApiException (statusCode, "Error calling StoreModuleGetUserAllowedStores: " + response.ErrorMessage, response.ErrorMessage);
-    
-            return new ApiResponse<List<VirtoCommerceStoreModuleWebModelStore>>(statusCode,
-                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (List<VirtoCommerceStoreModuleWebModelStore>) Configuration.ApiClient.Deserialize(response, typeof(List<VirtoCommerceStoreModuleWebModelStore>)));
-            
-        }
-    
-        /// <summary>
-        /// Returns list of stores which user can sign in 
-        /// </summary>
-        /// <param name="userId"></param>
-        /// <returns>Task of List&lt;VirtoCommerceStoreModuleWebModelStore&gt;</returns>
-        public async System.Threading.Tasks.Task<List<VirtoCommerceStoreModuleWebModelStore>> StoreModuleGetUserAllowedStoresAsync (string userId)
-        {
-             ApiResponse<List<VirtoCommerceStoreModuleWebModelStore>> response = await StoreModuleGetUserAllowedStoresAsyncWithHttpInfo(userId);
-             return response.Data;
-
-        }
-
-        /// <summary>
-        /// Returns list of stores which user can sign in 
-        /// </summary>
-        /// <param name="userId"></param>
-        /// <returns>Task of ApiResponse (List&lt;VirtoCommerceStoreModuleWebModelStore&gt;)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceStoreModuleWebModelStore>>> StoreModuleGetUserAllowedStoresAsyncWithHttpInfo (string userId)
-        {
-            // verify the required parameter 'userId' is set
-            if (userId == null) throw new ApiException(400, "Missing required parameter 'userId' when calling StoreModuleGetUserAllowedStores");
-            
-    
-            var path_ = "/api/stores/allowed/{userId}";
-    
-            var pathParams = new Dictionary<String, String>();
-            var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var formParams = new Dictionary<String, String>();
-            var fileParams = new Dictionary<String, FileParameter>();
-            Object postBody = null;
-
-            // to determine the Content-Type header
-            String[] httpContentTypes = new String[] {
-                
-            };
-            String httpContentType = Configuration.ApiClient.SelectHeaderContentType(httpContentTypes);
-
-            // to determine the Accept header
-            String[] httpHeaderAccepts = new String[] {
-                "application/json", "text/json"
-            };
-            String httpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(httpHeaderAccepts);
-            if (httpHeaderAccept != null)
-                headerParams.Add("Accept", httpHeaderAccept);
-
-            // set "format" to json by default
-            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
-            pathParams.Add("format", "json");
-            if (userId != null) pathParams.Add("userId", Configuration.ApiClient.ParameterToString(userId)); // path parameter
-            
-            
-            
-            
-            
-
-            
-
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, 
-                Method.GET, queryParams, postBody, headerParams, formParams, fileParams, 
-                pathParams, httpContentType);
-
-            int statusCode = (int) response.StatusCode;
- 
-            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (statusCode, "Error calling StoreModuleGetUserAllowedStores: " + response.Content, response.Content);
-            else if (statusCode == 0)
-                throw new ApiException (statusCode, "Error calling StoreModuleGetUserAllowedStores: " + response.ErrorMessage, response.ErrorMessage);
-
-            return new ApiResponse<List<VirtoCommerceStoreModuleWebModelStore>>(statusCode,
-                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (List<VirtoCommerceStoreModuleWebModelStore>) Configuration.ApiClient.Deserialize(response, typeof(List<VirtoCommerceStoreModuleWebModelStore>)));
-            
-        }
-        
-        /// <summary>
-        /// Search stores 
-        /// </summary>
-        /// <param name="criteria"></param> 
-        /// <returns>VirtoCommerceStoreModuleWebModelSearchResult</returns>
-        public VirtoCommerceStoreModuleWebModelSearchResult StoreModuleSearchStores (VirtoCommerceDomainStoreModelSearchCriteria criteria)
-        {
-             ApiResponse<VirtoCommerceStoreModuleWebModelSearchResult> response = StoreModuleSearchStoresWithHttpInfo(criteria);
-             return response.Data;
-        }
-
-        /// <summary>
-        /// Search stores 
-        /// </summary>
-        /// <param name="criteria"></param> 
-        /// <returns>ApiResponse of VirtoCommerceStoreModuleWebModelSearchResult</returns>
-        public ApiResponse< VirtoCommerceStoreModuleWebModelSearchResult > StoreModuleSearchStoresWithHttpInfo (VirtoCommerceDomainStoreModelSearchCriteria criteria)
-        {
-            
-            // verify the required parameter 'criteria' is set
-            if (criteria == null)
-                throw new ApiException(400, "Missing required parameter 'criteria' when calling StoreModuleApi->StoreModuleSearchStores");
-            
-    
-            var path_ = "/api/stores/search";
-    
-            var pathParams = new Dictionary<String, String>();
-            var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var formParams = new Dictionary<String, String>();
-            var fileParams = new Dictionary<String, FileParameter>();
-            Object postBody = null;
-
-            // to determine the Content-Type header
-            String[] httpContentTypes = new String[] {
-                "application/json", "text/json", "application/x-www-form-urlencoded"
-            };
-            String httpContentType = Configuration.ApiClient.SelectHeaderContentType(httpContentTypes);
-
-            // to determine the Accept header
-            String[] httpHeaderAccepts = new String[] {
-                "application/json", "text/json"
-            };
-            String httpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(httpHeaderAccepts);
-            if (httpHeaderAccept != null)
-                headerParams.Add("Accept", httpHeaderAccept);
-
-            // set "format" to json by default
-            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
-            pathParams.Add("format", "json");
-            
-            
-            
-            
-            if (criteria.GetType() != typeof(byte[]))
-            {
-                postBody = Configuration.ApiClient.Serialize(criteria); // http body (model) parameter
-            }
-            else
-            {
-                postBody = criteria; // byte array
-            }
-
-            
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, 
-                Method.POST, queryParams, postBody, headerParams, formParams, fileParams,
-                pathParams, httpContentType);
-
-            int statusCode = (int) response.StatusCode;
-    
-            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (statusCode, "Error calling StoreModuleSearchStores: " + response.Content, response.Content);
-            else if (statusCode == 0)
-                throw new ApiException (statusCode, "Error calling StoreModuleSearchStores: " + response.ErrorMessage, response.ErrorMessage);
-    
-            return new ApiResponse<VirtoCommerceStoreModuleWebModelSearchResult>(statusCode,
-                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommerceStoreModuleWebModelSearchResult) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceStoreModuleWebModelSearchResult)));
-            
-        }
-    
-        /// <summary>
-        /// Search stores 
-        /// </summary>
-        /// <param name="criteria"></param>
-        /// <returns>Task of VirtoCommerceStoreModuleWebModelSearchResult</returns>
-        public async System.Threading.Tasks.Task<VirtoCommerceStoreModuleWebModelSearchResult> StoreModuleSearchStoresAsync (VirtoCommerceDomainStoreModelSearchCriteria criteria)
-        {
-             ApiResponse<VirtoCommerceStoreModuleWebModelSearchResult> response = await StoreModuleSearchStoresAsyncWithHttpInfo(criteria);
-             return response.Data;
-
-        }
-
-        /// <summary>
-        /// Search stores 
-        /// </summary>
-        /// <param name="criteria"></param>
-        /// <returns>Task of ApiResponse (VirtoCommerceStoreModuleWebModelSearchResult)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceStoreModuleWebModelSearchResult>> StoreModuleSearchStoresAsyncWithHttpInfo (VirtoCommerceDomainStoreModelSearchCriteria criteria)
-        {
-            // verify the required parameter 'criteria' is set
-            if (criteria == null) throw new ApiException(400, "Missing required parameter 'criteria' when calling StoreModuleSearchStores");
-            
-    
-            var path_ = "/api/stores/search";
-    
-            var pathParams = new Dictionary<String, String>();
-            var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var formParams = new Dictionary<String, String>();
-            var fileParams = new Dictionary<String, FileParameter>();
-            Object postBody = null;
-
-            // to determine the Content-Type header
-            String[] httpContentTypes = new String[] {
-                "application/json", "text/json", "application/x-www-form-urlencoded"
-            };
-            String httpContentType = Configuration.ApiClient.SelectHeaderContentType(httpContentTypes);
-
-            // to determine the Accept header
-            String[] httpHeaderAccepts = new String[] {
-                "application/json", "text/json"
-            };
-            String httpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(httpHeaderAccepts);
-            if (httpHeaderAccept != null)
-                headerParams.Add("Accept", httpHeaderAccept);
-
-            // set "format" to json by default
-            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
-            pathParams.Add("format", "json");
-            
-            
-            
-            
-            postBody = Configuration.ApiClient.Serialize(criteria); // http body (model) parameter
-            
-
-            
-
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, 
-                Method.POST, queryParams, postBody, headerParams, formParams, fileParams, 
-                pathParams, httpContentType);
-
-            int statusCode = (int) response.StatusCode;
- 
-            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (statusCode, "Error calling StoreModuleSearchStores: " + response.Content, response.Content);
-            else if (statusCode == 0)
-                throw new ApiException (statusCode, "Error calling StoreModuleSearchStores: " + response.ErrorMessage, response.ErrorMessage);
-
-            return new ApiResponse<VirtoCommerceStoreModuleWebModelSearchResult>(statusCode,
-                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommerceStoreModuleWebModelSearchResult) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceStoreModuleWebModelSearchResult)));
-            
-        }
-        
-        /// <summary>
-        /// Send dynamic notification (contains custom list of properties) an store or adminsitrator email 
-        /// </summary>
-        /// <param name="request"></param> 
-        /// <returns></returns>
-        public void StoreModuleSendDynamicNotificationAnStoreEmail (VirtoCommerceStoreModuleWebModelSendDynamicNotificationRequest request)
-        {
-             StoreModuleSendDynamicNotificationAnStoreEmailWithHttpInfo(request);
-        }
-
-        /// <summary>
-        /// Send dynamic notification (contains custom list of properties) an store or adminsitrator email 
-        /// </summary>
-        /// <param name="request"></param> 
-        /// <returns>ApiResponse of Object(void)</returns>
-        public ApiResponse<Object> StoreModuleSendDynamicNotificationAnStoreEmailWithHttpInfo (VirtoCommerceStoreModuleWebModelSendDynamicNotificationRequest request)
-        {
-            
-            // verify the required parameter 'request' is set
-            if (request == null)
-                throw new ApiException(400, "Missing required parameter 'request' when calling StoreModuleApi->StoreModuleSendDynamicNotificationAnStoreEmail");
-            
-    
-            var path_ = "/api/stores/send/dynamicnotification";
-    
-            var pathParams = new Dictionary<String, String>();
-            var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var formParams = new Dictionary<String, String>();
-            var fileParams = new Dictionary<String, FileParameter>();
-            Object postBody = null;
-
-            // to determine the Content-Type header
-            String[] httpContentTypes = new String[] {
-                "application/json", "text/json", "application/x-www-form-urlencoded"
-            };
-            String httpContentType = Configuration.ApiClient.SelectHeaderContentType(httpContentTypes);
-
-            // to determine the Accept header
-            String[] httpHeaderAccepts = new String[] {
-                
-            };
-            String httpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(httpHeaderAccepts);
-            if (httpHeaderAccept != null)
-                headerParams.Add("Accept", httpHeaderAccept);
-
-            // set "format" to json by default
-            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
-            pathParams.Add("format", "json");
-            
-            
-            
-            
-            if (request.GetType() != typeof(byte[]))
-            {
-                postBody = Configuration.ApiClient.Serialize(request); // http body (model) parameter
-            }
-            else
-            {
-                postBody = request; // byte array
-            }
-
-            
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, 
-                Method.POST, queryParams, postBody, headerParams, formParams, fileParams,
-                pathParams, httpContentType);
-
-            int statusCode = (int) response.StatusCode;
-    
-            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (statusCode, "Error calling StoreModuleSendDynamicNotificationAnStoreEmail: " + response.Content, response.Content);
-            else if (statusCode == 0)
-                throw new ApiException (statusCode, "Error calling StoreModuleSendDynamicNotificationAnStoreEmail: " + response.ErrorMessage, response.ErrorMessage);
-    
-            
-            return new ApiResponse<Object>(statusCode,
-                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                null);
-        }
-    
-        /// <summary>
-        /// Send dynamic notification (contains custom list of properties) an store or adminsitrator email 
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns>Task of void</returns>
-        public async System.Threading.Tasks.Task StoreModuleSendDynamicNotificationAnStoreEmailAsync (VirtoCommerceStoreModuleWebModelSendDynamicNotificationRequest request)
-        {
-             await StoreModuleSendDynamicNotificationAnStoreEmailAsyncWithHttpInfo(request);
-
-        }
-
-        /// <summary>
-        /// Send dynamic notification (contains custom list of properties) an store or adminsitrator email 
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns>Task of ApiResponse</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Object>> StoreModuleSendDynamicNotificationAnStoreEmailAsyncWithHttpInfo (VirtoCommerceStoreModuleWebModelSendDynamicNotificationRequest request)
-        {
-            // verify the required parameter 'request' is set
-            if (request == null) throw new ApiException(400, "Missing required parameter 'request' when calling StoreModuleSendDynamicNotificationAnStoreEmail");
-            
-    
-            var path_ = "/api/stores/send/dynamicnotification";
-    
-            var pathParams = new Dictionary<String, String>();
-            var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var formParams = new Dictionary<String, String>();
-            var fileParams = new Dictionary<String, FileParameter>();
-            Object postBody = null;
-
-            // to determine the Content-Type header
-            String[] httpContentTypes = new String[] {
-                "application/json", "text/json", "application/x-www-form-urlencoded"
-            };
-            String httpContentType = Configuration.ApiClient.SelectHeaderContentType(httpContentTypes);
-
-            // to determine the Accept header
-            String[] httpHeaderAccepts = new String[] {
-                
-            };
-            String httpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(httpHeaderAccepts);
-            if (httpHeaderAccept != null)
-                headerParams.Add("Accept", httpHeaderAccept);
-
-            // set "format" to json by default
-            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
-            pathParams.Add("format", "json");
-            
-            
-            
-            
-            postBody = Configuration.ApiClient.Serialize(request); // http body (model) parameter
-            
-
-            
-
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, 
-                Method.POST, queryParams, postBody, headerParams, formParams, fileParams, 
-                pathParams, httpContentType);
-
-            int statusCode = (int) response.StatusCode;
- 
-            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (statusCode, "Error calling StoreModuleSendDynamicNotificationAnStoreEmail: " + response.Content, response.Content);
-            else if (statusCode == 0)
-                throw new ApiException (statusCode, "Error calling StoreModuleSendDynamicNotificationAnStoreEmail: " + response.ErrorMessage, response.ErrorMessage);
-
-            
-            return new ApiResponse<Object>(statusCode,
-                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                null);
-        }
-        
-        /// <summary>
-        /// Get store by id 
-        /// </summary>
-        /// <param name="id">Store id</param> 
-        /// <returns>VirtoCommerceStoreModuleWebModelStore</returns>
-        public VirtoCommerceStoreModuleWebModelStore StoreModuleGetStoreById (string id)
-        {
-             ApiResponse<VirtoCommerceStoreModuleWebModelStore> response = StoreModuleGetStoreByIdWithHttpInfo(id);
-             return response.Data;
-        }
-
-        /// <summary>
-        /// Get store by id 
-        /// </summary>
-        /// <param name="id">Store id</param> 
-        /// <returns>ApiResponse of VirtoCommerceStoreModuleWebModelStore</returns>
-        public ApiResponse< VirtoCommerceStoreModuleWebModelStore > StoreModuleGetStoreByIdWithHttpInfo (string id)
-        {
-            
-            // verify the required parameter 'id' is set
-            if (id == null)
-                throw new ApiException(400, "Missing required parameter 'id' when calling StoreModuleApi->StoreModuleGetStoreById");
-            
-    
-            var path_ = "/api/stores/{id}";
-    
-            var pathParams = new Dictionary<String, String>();
-            var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var formParams = new Dictionary<String, String>();
-            var fileParams = new Dictionary<String, FileParameter>();
-            Object postBody = null;
-
-            // to determine the Content-Type header
-            String[] httpContentTypes = new String[] {
-                
-            };
-            String httpContentType = Configuration.ApiClient.SelectHeaderContentType(httpContentTypes);
-
-            // to determine the Accept header
-            String[] httpHeaderAccepts = new String[] {
-                "application/json", "text/json"
-            };
-            String httpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(httpHeaderAccepts);
-            if (httpHeaderAccept != null)
-                headerParams.Add("Accept", httpHeaderAccept);
-
-            // set "format" to json by default
-            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
-            pathParams.Add("format", "json");
-            if (id != null) pathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
-            
-            
-            
-            
-            
-
-            
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, 
-                Method.GET, queryParams, postBody, headerParams, formParams, fileParams,
-                pathParams, httpContentType);
-
-            int statusCode = (int) response.StatusCode;
-    
-            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (statusCode, "Error calling StoreModuleGetStoreById: " + response.Content, response.Content);
-            else if (statusCode == 0)
-                throw new ApiException (statusCode, "Error calling StoreModuleGetStoreById: " + response.ErrorMessage, response.ErrorMessage);
-    
-            return new ApiResponse<VirtoCommerceStoreModuleWebModelStore>(statusCode,
-                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommerceStoreModuleWebModelStore) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceStoreModuleWebModelStore)));
-            
-        }
-    
-        /// <summary>
-        /// Get store by id 
-        /// </summary>
-        /// <param name="id">Store id</param>
-        /// <returns>Task of VirtoCommerceStoreModuleWebModelStore</returns>
-        public async System.Threading.Tasks.Task<VirtoCommerceStoreModuleWebModelStore> StoreModuleGetStoreByIdAsync (string id)
-        {
-             ApiResponse<VirtoCommerceStoreModuleWebModelStore> response = await StoreModuleGetStoreByIdAsyncWithHttpInfo(id);
-             return response.Data;
-
-        }
-
-        /// <summary>
-        /// Get store by id 
-        /// </summary>
-        /// <param name="id">Store id</param>
-        /// <returns>Task of ApiResponse (VirtoCommerceStoreModuleWebModelStore)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceStoreModuleWebModelStore>> StoreModuleGetStoreByIdAsyncWithHttpInfo (string id)
-        {
-            // verify the required parameter 'id' is set
-            if (id == null) throw new ApiException(400, "Missing required parameter 'id' when calling StoreModuleGetStoreById");
-            
-    
-            var path_ = "/api/stores/{id}";
-    
-            var pathParams = new Dictionary<String, String>();
-            var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var formParams = new Dictionary<String, String>();
-            var fileParams = new Dictionary<String, FileParameter>();
-            Object postBody = null;
-
-            // to determine the Content-Type header
-            String[] httpContentTypes = new String[] {
-                
-            };
-            String httpContentType = Configuration.ApiClient.SelectHeaderContentType(httpContentTypes);
-
-            // to determine the Accept header
-            String[] httpHeaderAccepts = new String[] {
-                "application/json", "text/json"
-            };
-            String httpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(httpHeaderAccepts);
-            if (httpHeaderAccept != null)
-                headerParams.Add("Accept", httpHeaderAccept);
-
-            // set "format" to json by default
-            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
-            pathParams.Add("format", "json");
-            if (id != null) pathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
-            
-            
-            
-            
-            
-
-            
-
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, 
-                Method.GET, queryParams, postBody, headerParams, formParams, fileParams, 
-                pathParams, httpContentType);
-
-            int statusCode = (int) response.StatusCode;
- 
-            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (statusCode, "Error calling StoreModuleGetStoreById: " + response.Content, response.Content);
-            else if (statusCode == 0)
-                throw new ApiException (statusCode, "Error calling StoreModuleGetStoreById: " + response.ErrorMessage, response.ErrorMessage);
-
-            return new ApiResponse<VirtoCommerceStoreModuleWebModelStore>(statusCode,
-                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommerceStoreModuleWebModelStore) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceStoreModuleWebModelStore)));
-            
         }
         
         /// <summary>
         /// Check if given contact has login on behalf permission 
         /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="storeId">Store ID</param> 
         /// <param name="id">Contact ID</param> 
         /// <returns>VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo</returns>
         public VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo StoreModuleGetLoginOnBehalfInfo (string storeId, string id)
         {
-             ApiResponse<VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo> response = StoreModuleGetLoginOnBehalfInfoWithHttpInfo(storeId, id);
-             return response.Data;
+             ApiResponse<VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo> localVarResponse = StoreModuleGetLoginOnBehalfInfoWithHttpInfo(storeId, id);
+             return localVarResponse.Data;
         }
 
         /// <summary>
         /// Check if given contact has login on behalf permission 
         /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="storeId">Store ID</param> 
         /// <param name="id">Contact ID</param> 
         /// <returns>ApiResponse of VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo</returns>
@@ -1706,34 +853,34 @@ namespace VirtoCommerce.Client.Api
                 throw new ApiException(400, "Missing required parameter 'id' when calling StoreModuleApi->StoreModuleGetLoginOnBehalfInfo");
             
     
-            var path_ = "/api/stores/{storeId}/accounts/{id}/loginonbehalf";
+            var localVarPath = "/api/stores/{storeId}/accounts/{id}/loginonbehalf";
     
-            var pathParams = new Dictionary<String, String>();
-            var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var formParams = new Dictionary<String, String>();
-            var fileParams = new Dictionary<String, FileParameter>();
-            Object postBody = null;
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] httpContentTypes = new String[] {
+            String[] localVarHttpContentTypes = new String[] {
                 
             };
-            String httpContentType = Configuration.ApiClient.SelectHeaderContentType(httpContentTypes);
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] httpHeaderAccepts = new String[] {
+            String[] localVarHttpHeaderAccepts = new String[] {
                 "application/json", "text/json"
             };
-            String httpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(httpHeaderAccepts);
-            if (httpHeaderAccept != null)
-                headerParams.Add("Accept", httpHeaderAccept);
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
-            pathParams.Add("format", "json");
-            if (storeId != null) pathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
-            if (id != null) pathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
+            localVarPathParams.Add("format", "json");
+            if (storeId != null) localVarPathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
+            if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
             
             
             
@@ -1743,39 +890,42 @@ namespace VirtoCommerce.Client.Api
             
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, 
-                Method.GET, queryParams, postBody, headerParams, formParams, fileParams,
-                pathParams, httpContentType);
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath, 
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
 
-            int statusCode = (int) response.StatusCode;
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
     
-            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (statusCode, "Error calling StoreModuleGetLoginOnBehalfInfo: " + response.Content, response.Content);
-            else if (statusCode == 0)
-                throw new ApiException (statusCode, "Error calling StoreModuleGetLoginOnBehalfInfo: " + response.ErrorMessage, response.ErrorMessage);
+            if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
+                throw new ApiException (localVarStatusCode, "Error calling StoreModuleGetLoginOnBehalfInfo: " + localVarResponse.Content, localVarResponse.Content);
+            else if (localVarStatusCode == 0)
+                throw new ApiException (localVarStatusCode, "Error calling StoreModuleGetLoginOnBehalfInfo: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
     
-            return new ApiResponse<VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo>(statusCode,
-                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo)));
+            return new ApiResponse<VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo)));
             
         }
-    
+
+        
         /// <summary>
         /// Check if given contact has login on behalf permission 
         /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="storeId">Store ID</param>
         /// <param name="id">Contact ID</param>
         /// <returns>Task of VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo</returns>
         public async System.Threading.Tasks.Task<VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo> StoreModuleGetLoginOnBehalfInfoAsync (string storeId, string id)
         {
-             ApiResponse<VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo> response = await StoreModuleGetLoginOnBehalfInfoAsyncWithHttpInfo(storeId, id);
-             return response.Data;
+             ApiResponse<VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo> localVarResponse = await StoreModuleGetLoginOnBehalfInfoAsyncWithHttpInfo(storeId, id);
+             return localVarResponse.Data;
 
         }
 
         /// <summary>
         /// Check if given contact has login on behalf permission 
         /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="storeId">Store ID</param>
         /// <param name="id">Contact ID</param>
         /// <returns>Task of ApiResponse (VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo)</returns>
@@ -1787,34 +937,34 @@ namespace VirtoCommerce.Client.Api
             if (id == null) throw new ApiException(400, "Missing required parameter 'id' when calling StoreModuleGetLoginOnBehalfInfo");
             
     
-            var path_ = "/api/stores/{storeId}/accounts/{id}/loginonbehalf";
+            var localVarPath = "/api/stores/{storeId}/accounts/{id}/loginonbehalf";
     
-            var pathParams = new Dictionary<String, String>();
-            var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var formParams = new Dictionary<String, String>();
-            var fileParams = new Dictionary<String, FileParameter>();
-            Object postBody = null;
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] httpContentTypes = new String[] {
+            String[] localVarHttpContentTypes = new String[] {
                 
             };
-            String httpContentType = Configuration.ApiClient.SelectHeaderContentType(httpContentTypes);
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] httpHeaderAccepts = new String[] {
+            String[] localVarHttpHeaderAccepts = new String[] {
                 "application/json", "text/json"
             };
-            String httpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(httpHeaderAccepts);
-            if (httpHeaderAccept != null)
-                headerParams.Add("Accept", httpHeaderAccept);
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
-            pathParams.Add("format", "json");
-            if (storeId != null) pathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
-            if (id != null) pathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
+            localVarPathParams.Add("format", "json");
+            if (storeId != null) localVarPathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
+            if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
             
             
             
@@ -1824,21 +974,989 @@ namespace VirtoCommerce.Client.Api
             
 
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, 
-                Method.GET, queryParams, postBody, headerParams, formParams, fileParams, 
-                pathParams, httpContentType);
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath, 
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams, 
+                localVarPathParams, localVarHttpContentType);
 
-            int statusCode = (int) response.StatusCode;
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
  
-            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (statusCode, "Error calling StoreModuleGetLoginOnBehalfInfo: " + response.Content, response.Content);
-            else if (statusCode == 0)
-                throw new ApiException (statusCode, "Error calling StoreModuleGetLoginOnBehalfInfo: " + response.ErrorMessage, response.ErrorMessage);
+            if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
+                throw new ApiException (localVarStatusCode, "Error calling StoreModuleGetLoginOnBehalfInfo: " + localVarResponse.Content, localVarResponse.Content);
+            else if (localVarStatusCode == 0)
+                throw new ApiException (localVarStatusCode, "Error calling StoreModuleGetLoginOnBehalfInfo: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
-            return new ApiResponse<VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo>(statusCode,
-                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo)));
+            return new ApiResponse<VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo)));
             
+        }
+        
+        /// <summary>
+        /// Get store by id 
+        /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Store id</param> 
+        /// <returns>VirtoCommerceStoreModuleWebModelStore</returns>
+        public VirtoCommerceStoreModuleWebModelStore StoreModuleGetStoreById (string id)
+        {
+             ApiResponse<VirtoCommerceStoreModuleWebModelStore> localVarResponse = StoreModuleGetStoreByIdWithHttpInfo(id);
+             return localVarResponse.Data;
+        }
+
+        /// <summary>
+        /// Get store by id 
+        /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Store id</param> 
+        /// <returns>ApiResponse of VirtoCommerceStoreModuleWebModelStore</returns>
+        public ApiResponse< VirtoCommerceStoreModuleWebModelStore > StoreModuleGetStoreByIdWithHttpInfo (string id)
+        {
+            
+            // verify the required parameter 'id' is set
+            if (id == null)
+                throw new ApiException(400, "Missing required parameter 'id' when calling StoreModuleApi->StoreModuleGetStoreById");
+            
+    
+            var localVarPath = "/api/stores/{id}";
+    
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+                
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json", "text/json"
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            localVarPathParams.Add("format", "json");
+            if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
+            
+            
+            
+            
+            
+
+            
+    
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath, 
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+    
+            if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
+                throw new ApiException (localVarStatusCode, "Error calling StoreModuleGetStoreById: " + localVarResponse.Content, localVarResponse.Content);
+            else if (localVarStatusCode == 0)
+                throw new ApiException (localVarStatusCode, "Error calling StoreModuleGetStoreById: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+    
+            return new ApiResponse<VirtoCommerceStoreModuleWebModelStore>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (VirtoCommerceStoreModuleWebModelStore) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceStoreModuleWebModelStore)));
+            
+        }
+
+        
+        /// <summary>
+        /// Get store by id 
+        /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Store id</param>
+        /// <returns>Task of VirtoCommerceStoreModuleWebModelStore</returns>
+        public async System.Threading.Tasks.Task<VirtoCommerceStoreModuleWebModelStore> StoreModuleGetStoreByIdAsync (string id)
+        {
+             ApiResponse<VirtoCommerceStoreModuleWebModelStore> localVarResponse = await StoreModuleGetStoreByIdAsyncWithHttpInfo(id);
+             return localVarResponse.Data;
+
+        }
+
+        /// <summary>
+        /// Get store by id 
+        /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Store id</param>
+        /// <returns>Task of ApiResponse (VirtoCommerceStoreModuleWebModelStore)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceStoreModuleWebModelStore>> StoreModuleGetStoreByIdAsyncWithHttpInfo (string id)
+        {
+            // verify the required parameter 'id' is set
+            if (id == null) throw new ApiException(400, "Missing required parameter 'id' when calling StoreModuleGetStoreById");
+            
+    
+            var localVarPath = "/api/stores/{id}";
+    
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+                
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json", "text/json"
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            localVarPathParams.Add("format", "json");
+            if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
+            
+            
+            
+            
+            
+
+            
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath, 
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams, 
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+ 
+            if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
+                throw new ApiException (localVarStatusCode, "Error calling StoreModuleGetStoreById: " + localVarResponse.Content, localVarResponse.Content);
+            else if (localVarStatusCode == 0)
+                throw new ApiException (localVarStatusCode, "Error calling StoreModuleGetStoreById: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+
+            return new ApiResponse<VirtoCommerceStoreModuleWebModelStore>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (VirtoCommerceStoreModuleWebModelStore) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceStoreModuleWebModelStore)));
+            
+        }
+        
+        /// <summary>
+        /// Get all stores 
+        /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <returns>List&lt;VirtoCommerceStoreModuleWebModelStore&gt;</returns>
+        public List<VirtoCommerceStoreModuleWebModelStore> StoreModuleGetStores ()
+        {
+             ApiResponse<List<VirtoCommerceStoreModuleWebModelStore>> localVarResponse = StoreModuleGetStoresWithHttpInfo();
+             return localVarResponse.Data;
+        }
+
+        /// <summary>
+        /// Get all stores 
+        /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <returns>ApiResponse of List&lt;VirtoCommerceStoreModuleWebModelStore&gt;</returns>
+        public ApiResponse< List<VirtoCommerceStoreModuleWebModelStore> > StoreModuleGetStoresWithHttpInfo ()
+        {
+            
+    
+            var localVarPath = "/api/stores";
+    
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+                
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json", "text/json"
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            localVarPathParams.Add("format", "json");
+            
+            
+            
+            
+            
+
+            
+    
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath, 
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+    
+            if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
+                throw new ApiException (localVarStatusCode, "Error calling StoreModuleGetStores: " + localVarResponse.Content, localVarResponse.Content);
+            else if (localVarStatusCode == 0)
+                throw new ApiException (localVarStatusCode, "Error calling StoreModuleGetStores: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+    
+            return new ApiResponse<List<VirtoCommerceStoreModuleWebModelStore>>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (List<VirtoCommerceStoreModuleWebModelStore>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<VirtoCommerceStoreModuleWebModelStore>)));
+            
+        }
+
+        
+        /// <summary>
+        /// Get all stores 
+        /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <returns>Task of List&lt;VirtoCommerceStoreModuleWebModelStore&gt;</returns>
+        public async System.Threading.Tasks.Task<List<VirtoCommerceStoreModuleWebModelStore>> StoreModuleGetStoresAsync ()
+        {
+             ApiResponse<List<VirtoCommerceStoreModuleWebModelStore>> localVarResponse = await StoreModuleGetStoresAsyncWithHttpInfo();
+             return localVarResponse.Data;
+
+        }
+
+        /// <summary>
+        /// Get all stores 
+        /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <returns>Task of ApiResponse (List&lt;VirtoCommerceStoreModuleWebModelStore&gt;)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceStoreModuleWebModelStore>>> StoreModuleGetStoresAsyncWithHttpInfo ()
+        {
+            
+    
+            var localVarPath = "/api/stores";
+    
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+                
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json", "text/json"
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            localVarPathParams.Add("format", "json");
+            
+            
+            
+            
+            
+
+            
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath, 
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams, 
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+ 
+            if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
+                throw new ApiException (localVarStatusCode, "Error calling StoreModuleGetStores: " + localVarResponse.Content, localVarResponse.Content);
+            else if (localVarStatusCode == 0)
+                throw new ApiException (localVarStatusCode, "Error calling StoreModuleGetStores: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+
+            return new ApiResponse<List<VirtoCommerceStoreModuleWebModelStore>>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (List<VirtoCommerceStoreModuleWebModelStore>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<VirtoCommerceStoreModuleWebModelStore>)));
+            
+        }
+        
+        /// <summary>
+        /// Returns list of stores which user can sign in 
+        /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="userId"></param> 
+        /// <returns>List&lt;VirtoCommerceStoreModuleWebModelStore&gt;</returns>
+        public List<VirtoCommerceStoreModuleWebModelStore> StoreModuleGetUserAllowedStores (string userId)
+        {
+             ApiResponse<List<VirtoCommerceStoreModuleWebModelStore>> localVarResponse = StoreModuleGetUserAllowedStoresWithHttpInfo(userId);
+             return localVarResponse.Data;
+        }
+
+        /// <summary>
+        /// Returns list of stores which user can sign in 
+        /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="userId"></param> 
+        /// <returns>ApiResponse of List&lt;VirtoCommerceStoreModuleWebModelStore&gt;</returns>
+        public ApiResponse< List<VirtoCommerceStoreModuleWebModelStore> > StoreModuleGetUserAllowedStoresWithHttpInfo (string userId)
+        {
+            
+            // verify the required parameter 'userId' is set
+            if (userId == null)
+                throw new ApiException(400, "Missing required parameter 'userId' when calling StoreModuleApi->StoreModuleGetUserAllowedStores");
+            
+    
+            var localVarPath = "/api/stores/allowed/{userId}";
+    
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+                
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json", "text/json"
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            localVarPathParams.Add("format", "json");
+            if (userId != null) localVarPathParams.Add("userId", Configuration.ApiClient.ParameterToString(userId)); // path parameter
+            
+            
+            
+            
+            
+
+            
+    
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath, 
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+    
+            if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
+                throw new ApiException (localVarStatusCode, "Error calling StoreModuleGetUserAllowedStores: " + localVarResponse.Content, localVarResponse.Content);
+            else if (localVarStatusCode == 0)
+                throw new ApiException (localVarStatusCode, "Error calling StoreModuleGetUserAllowedStores: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+    
+            return new ApiResponse<List<VirtoCommerceStoreModuleWebModelStore>>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (List<VirtoCommerceStoreModuleWebModelStore>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<VirtoCommerceStoreModuleWebModelStore>)));
+            
+        }
+
+        
+        /// <summary>
+        /// Returns list of stores which user can sign in 
+        /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="userId"></param>
+        /// <returns>Task of List&lt;VirtoCommerceStoreModuleWebModelStore&gt;</returns>
+        public async System.Threading.Tasks.Task<List<VirtoCommerceStoreModuleWebModelStore>> StoreModuleGetUserAllowedStoresAsync (string userId)
+        {
+             ApiResponse<List<VirtoCommerceStoreModuleWebModelStore>> localVarResponse = await StoreModuleGetUserAllowedStoresAsyncWithHttpInfo(userId);
+             return localVarResponse.Data;
+
+        }
+
+        /// <summary>
+        /// Returns list of stores which user can sign in 
+        /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="userId"></param>
+        /// <returns>Task of ApiResponse (List&lt;VirtoCommerceStoreModuleWebModelStore&gt;)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceStoreModuleWebModelStore>>> StoreModuleGetUserAllowedStoresAsyncWithHttpInfo (string userId)
+        {
+            // verify the required parameter 'userId' is set
+            if (userId == null) throw new ApiException(400, "Missing required parameter 'userId' when calling StoreModuleGetUserAllowedStores");
+            
+    
+            var localVarPath = "/api/stores/allowed/{userId}";
+    
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+                
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json", "text/json"
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            localVarPathParams.Add("format", "json");
+            if (userId != null) localVarPathParams.Add("userId", Configuration.ApiClient.ParameterToString(userId)); // path parameter
+            
+            
+            
+            
+            
+
+            
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath, 
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams, 
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+ 
+            if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
+                throw new ApiException (localVarStatusCode, "Error calling StoreModuleGetUserAllowedStores: " + localVarResponse.Content, localVarResponse.Content);
+            else if (localVarStatusCode == 0)
+                throw new ApiException (localVarStatusCode, "Error calling StoreModuleGetUserAllowedStores: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+
+            return new ApiResponse<List<VirtoCommerceStoreModuleWebModelStore>>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (List<VirtoCommerceStoreModuleWebModelStore>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<VirtoCommerceStoreModuleWebModelStore>)));
+            
+        }
+        
+        /// <summary>
+        /// Search stores 
+        /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="criteria"></param> 
+        /// <returns>VirtoCommerceStoreModuleWebModelSearchResult</returns>
+        public VirtoCommerceStoreModuleWebModelSearchResult StoreModuleSearchStores (VirtoCommerceDomainStoreModelSearchCriteria criteria)
+        {
+             ApiResponse<VirtoCommerceStoreModuleWebModelSearchResult> localVarResponse = StoreModuleSearchStoresWithHttpInfo(criteria);
+             return localVarResponse.Data;
+        }
+
+        /// <summary>
+        /// Search stores 
+        /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="criteria"></param> 
+        /// <returns>ApiResponse of VirtoCommerceStoreModuleWebModelSearchResult</returns>
+        public ApiResponse< VirtoCommerceStoreModuleWebModelSearchResult > StoreModuleSearchStoresWithHttpInfo (VirtoCommerceDomainStoreModelSearchCriteria criteria)
+        {
+            
+            // verify the required parameter 'criteria' is set
+            if (criteria == null)
+                throw new ApiException(400, "Missing required parameter 'criteria' when calling StoreModuleApi->StoreModuleSearchStores");
+            
+    
+            var localVarPath = "/api/stores/search";
+    
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+                "application/json", "text/json", "application/x-www-form-urlencoded"
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json", "text/json"
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            localVarPathParams.Add("format", "json");
+            
+            
+            
+            
+            if (criteria.GetType() != typeof(byte[]))
+            {
+                localVarPostBody = Configuration.ApiClient.Serialize(criteria); // http body (model) parameter
+            }
+            else
+            {
+                localVarPostBody = criteria; // byte array
+            }
+
+            
+    
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath, 
+                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+    
+            if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
+                throw new ApiException (localVarStatusCode, "Error calling StoreModuleSearchStores: " + localVarResponse.Content, localVarResponse.Content);
+            else if (localVarStatusCode == 0)
+                throw new ApiException (localVarStatusCode, "Error calling StoreModuleSearchStores: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+    
+            return new ApiResponse<VirtoCommerceStoreModuleWebModelSearchResult>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (VirtoCommerceStoreModuleWebModelSearchResult) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceStoreModuleWebModelSearchResult)));
+            
+        }
+
+        
+        /// <summary>
+        /// Search stores 
+        /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="criteria"></param>
+        /// <returns>Task of VirtoCommerceStoreModuleWebModelSearchResult</returns>
+        public async System.Threading.Tasks.Task<VirtoCommerceStoreModuleWebModelSearchResult> StoreModuleSearchStoresAsync (VirtoCommerceDomainStoreModelSearchCriteria criteria)
+        {
+             ApiResponse<VirtoCommerceStoreModuleWebModelSearchResult> localVarResponse = await StoreModuleSearchStoresAsyncWithHttpInfo(criteria);
+             return localVarResponse.Data;
+
+        }
+
+        /// <summary>
+        /// Search stores 
+        /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="criteria"></param>
+        /// <returns>Task of ApiResponse (VirtoCommerceStoreModuleWebModelSearchResult)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceStoreModuleWebModelSearchResult>> StoreModuleSearchStoresAsyncWithHttpInfo (VirtoCommerceDomainStoreModelSearchCriteria criteria)
+        {
+            // verify the required parameter 'criteria' is set
+            if (criteria == null) throw new ApiException(400, "Missing required parameter 'criteria' when calling StoreModuleSearchStores");
+            
+    
+            var localVarPath = "/api/stores/search";
+    
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+                "application/json", "text/json", "application/x-www-form-urlencoded"
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json", "text/json"
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            localVarPathParams.Add("format", "json");
+            
+            
+            
+            
+            if (criteria.GetType() != typeof(byte[]))
+            {
+                localVarPostBody = Configuration.ApiClient.Serialize(criteria); // http body (model) parameter
+            }
+            else
+            {
+                localVarPostBody = criteria; // byte array
+            }
+
+            
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath, 
+                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams, 
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+ 
+            if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
+                throw new ApiException (localVarStatusCode, "Error calling StoreModuleSearchStores: " + localVarResponse.Content, localVarResponse.Content);
+            else if (localVarStatusCode == 0)
+                throw new ApiException (localVarStatusCode, "Error calling StoreModuleSearchStores: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+
+            return new ApiResponse<VirtoCommerceStoreModuleWebModelSearchResult>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (VirtoCommerceStoreModuleWebModelSearchResult) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceStoreModuleWebModelSearchResult)));
+            
+        }
+        
+        /// <summary>
+        /// Send dynamic notification (contains custom list of properties) an store or adminsitrator email 
+        /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="request"></param> 
+        /// <returns></returns>
+        public void StoreModuleSendDynamicNotificationAnStoreEmail (VirtoCommerceStoreModuleWebModelSendDynamicNotificationRequest request)
+        {
+             StoreModuleSendDynamicNotificationAnStoreEmailWithHttpInfo(request);
+        }
+
+        /// <summary>
+        /// Send dynamic notification (contains custom list of properties) an store or adminsitrator email 
+        /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="request"></param> 
+        /// <returns>ApiResponse of Object(void)</returns>
+        public ApiResponse<Object> StoreModuleSendDynamicNotificationAnStoreEmailWithHttpInfo (VirtoCommerceStoreModuleWebModelSendDynamicNotificationRequest request)
+        {
+            
+            // verify the required parameter 'request' is set
+            if (request == null)
+                throw new ApiException(400, "Missing required parameter 'request' when calling StoreModuleApi->StoreModuleSendDynamicNotificationAnStoreEmail");
+            
+    
+            var localVarPath = "/api/stores/send/dynamicnotification";
+    
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+                "application/json", "text/json", "application/x-www-form-urlencoded"
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            localVarPathParams.Add("format", "json");
+            
+            
+            
+            
+            if (request.GetType() != typeof(byte[]))
+            {
+                localVarPostBody = Configuration.ApiClient.Serialize(request); // http body (model) parameter
+            }
+            else
+            {
+                localVarPostBody = request; // byte array
+            }
+
+            
+    
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath, 
+                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+    
+            if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
+                throw new ApiException (localVarStatusCode, "Error calling StoreModuleSendDynamicNotificationAnStoreEmail: " + localVarResponse.Content, localVarResponse.Content);
+            else if (localVarStatusCode == 0)
+                throw new ApiException (localVarStatusCode, "Error calling StoreModuleSendDynamicNotificationAnStoreEmail: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+    
+            
+            return new ApiResponse<Object>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                null);
+        }
+
+        
+        /// <summary>
+        /// Send dynamic notification (contains custom list of properties) an store or adminsitrator email 
+        /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="request"></param>
+        /// <returns>Task of void</returns>
+        public async System.Threading.Tasks.Task StoreModuleSendDynamicNotificationAnStoreEmailAsync (VirtoCommerceStoreModuleWebModelSendDynamicNotificationRequest request)
+        {
+             await StoreModuleSendDynamicNotificationAnStoreEmailAsyncWithHttpInfo(request);
+
+        }
+
+        /// <summary>
+        /// Send dynamic notification (contains custom list of properties) an store or adminsitrator email 
+        /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="request"></param>
+        /// <returns>Task of ApiResponse</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<Object>> StoreModuleSendDynamicNotificationAnStoreEmailAsyncWithHttpInfo (VirtoCommerceStoreModuleWebModelSendDynamicNotificationRequest request)
+        {
+            // verify the required parameter 'request' is set
+            if (request == null) throw new ApiException(400, "Missing required parameter 'request' when calling StoreModuleSendDynamicNotificationAnStoreEmail");
+            
+    
+            var localVarPath = "/api/stores/send/dynamicnotification";
+    
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+                "application/json", "text/json", "application/x-www-form-urlencoded"
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            localVarPathParams.Add("format", "json");
+            
+            
+            
+            
+            if (request.GetType() != typeof(byte[]))
+            {
+                localVarPostBody = Configuration.ApiClient.Serialize(request); // http body (model) parameter
+            }
+            else
+            {
+                localVarPostBody = request; // byte array
+            }
+
+            
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath, 
+                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams, 
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+ 
+            if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
+                throw new ApiException (localVarStatusCode, "Error calling StoreModuleSendDynamicNotificationAnStoreEmail: " + localVarResponse.Content, localVarResponse.Content);
+            else if (localVarStatusCode == 0)
+                throw new ApiException (localVarStatusCode, "Error calling StoreModuleSendDynamicNotificationAnStoreEmail: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+
+            
+            return new ApiResponse<Object>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                null);
+        }
+        
+        /// <summary>
+        /// Update store 
+        /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="store">Store</param> 
+        /// <returns></returns>
+        public void StoreModuleUpdate (VirtoCommerceStoreModuleWebModelStore store)
+        {
+             StoreModuleUpdateWithHttpInfo(store);
+        }
+
+        /// <summary>
+        /// Update store 
+        /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="store">Store</param> 
+        /// <returns>ApiResponse of Object(void)</returns>
+        public ApiResponse<Object> StoreModuleUpdateWithHttpInfo (VirtoCommerceStoreModuleWebModelStore store)
+        {
+            
+            // verify the required parameter 'store' is set
+            if (store == null)
+                throw new ApiException(400, "Missing required parameter 'store' when calling StoreModuleApi->StoreModuleUpdate");
+            
+    
+            var localVarPath = "/api/stores";
+    
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+                "application/json", "text/json", "application/x-www-form-urlencoded"
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            localVarPathParams.Add("format", "json");
+            
+            
+            
+            
+            if (store.GetType() != typeof(byte[]))
+            {
+                localVarPostBody = Configuration.ApiClient.Serialize(store); // http body (model) parameter
+            }
+            else
+            {
+                localVarPostBody = store; // byte array
+            }
+
+            
+    
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath, 
+                Method.PUT, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+    
+            if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
+                throw new ApiException (localVarStatusCode, "Error calling StoreModuleUpdate: " + localVarResponse.Content, localVarResponse.Content);
+            else if (localVarStatusCode == 0)
+                throw new ApiException (localVarStatusCode, "Error calling StoreModuleUpdate: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+    
+            
+            return new ApiResponse<Object>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                null);
+        }
+
+        
+        /// <summary>
+        /// Update store 
+        /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="store">Store</param>
+        /// <returns>Task of void</returns>
+        public async System.Threading.Tasks.Task StoreModuleUpdateAsync (VirtoCommerceStoreModuleWebModelStore store)
+        {
+             await StoreModuleUpdateAsyncWithHttpInfo(store);
+
+        }
+
+        /// <summary>
+        /// Update store 
+        /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="store">Store</param>
+        /// <returns>Task of ApiResponse</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<Object>> StoreModuleUpdateAsyncWithHttpInfo (VirtoCommerceStoreModuleWebModelStore store)
+        {
+            // verify the required parameter 'store' is set
+            if (store == null) throw new ApiException(400, "Missing required parameter 'store' when calling StoreModuleUpdate");
+            
+    
+            var localVarPath = "/api/stores";
+    
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+                "application/json", "text/json", "application/x-www-form-urlencoded"
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            localVarPathParams.Add("format", "json");
+            
+            
+            
+            
+            if (store.GetType() != typeof(byte[]))
+            {
+                localVarPostBody = Configuration.ApiClient.Serialize(store); // http body (model) parameter
+            }
+            else
+            {
+                localVarPostBody = store; // byte array
+            }
+
+            
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath, 
+                Method.PUT, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams, 
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+ 
+            if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
+                throw new ApiException (localVarStatusCode, "Error calling StoreModuleUpdate: " + localVarResponse.Content, localVarResponse.Content);
+            else if (localVarStatusCode == 0)
+                throw new ApiException (localVarStatusCode, "Error calling StoreModuleUpdate: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+
+            
+            return new ApiResponse<Object>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                null);
         }
         
     }

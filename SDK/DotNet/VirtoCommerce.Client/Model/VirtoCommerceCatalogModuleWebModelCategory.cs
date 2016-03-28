@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// Merchandising Category
     /// </summary>
@@ -21,175 +21,197 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelCategory" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelCategory" />class.
         /// </summary>
-        public VirtoCommerceCatalogModuleWebModelCategory()
+        /// <param name="ParentId">Gets or sets the parent category id..</param>
+        /// <param name="IsVirtual">Gets or sets a value indicating whether this {VirtoCommerce.CatalogModule.Web.Model.Category} is virtual or common..</param>
+        /// <param name="Code">Gets or sets the code..</param>
+        /// <param name="TaxType">Gets or sets the type of the tax..</param>
+        /// <param name="Catalog">Gets or sets the catalog that this category belongs to..</param>
+        /// <param name="CatalogId">Gets or sets the catalog id that this category belongs to..</param>
+        /// <param name="Name">Gets or sets the name..</param>
+        /// <param name="Path">Path.</param>
+        /// <param name="IsActive">Gets or sets a value indicating whether this {VirtoCommerce.CatalogModule.Web.Model.Category} is active..</param>
+        /// <param name="Parents">All parents categories.</param>
+        /// <param name="Children">Gets or sets the children categories..</param>
+        /// <param name="Properties">Gets or sets the properties..</param>
+        /// <param name="Links">Gets or sets the links..</param>
+        /// <param name="Images">Gets or sets the images..</param>
+        /// <param name="SecurityScopes">SecurityScopes.</param>
+        /// <param name="SeoInfos">Gets or sets the list of SEO information records..</param>
+        /// <param name="CreatedDate">CreatedDate.</param>
+        /// <param name="ModifiedDate">ModifiedDate.</param>
+        /// <param name="CreatedBy">CreatedBy.</param>
+        /// <param name="ModifiedBy">ModifiedBy.</param>
+        /// <param name="Id">Id.</param>
+
+        public VirtoCommerceCatalogModuleWebModelCategory(string ParentId = null, bool? IsVirtual = null, string Code = null, string TaxType = null, VirtoCommerceCatalogModuleWebModelCatalog Catalog = null, string CatalogId = null, string Name = null, string Path = null, bool? IsActive = null, List<VirtoCommerceCatalogModuleWebModelCategory> Parents = null, List<VirtoCommerceCatalogModuleWebModelCategory> Children = null, List<VirtoCommerceCatalogModuleWebModelProperty> Properties = null, List<VirtoCommerceCatalogModuleWebModelCategoryLink> Links = null, List<VirtoCommerceCatalogModuleWebModelImage> Images = null, List<string> SecurityScopes = null, List<VirtoCommerceDomainCommerceModelSeoInfo> SeoInfos = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
         {
+            this.ParentId = ParentId;
+            this.IsVirtual = IsVirtual;
+            this.Code = Code;
+            this.TaxType = TaxType;
+            this.Catalog = Catalog;
+            this.CatalogId = CatalogId;
+            this.Name = Name;
+            this.Path = Path;
+            this.IsActive = IsActive;
+            this.Parents = Parents;
+            this.Children = Children;
+            this.Properties = Properties;
+            this.Links = Links;
+            this.Images = Images;
+            this.SecurityScopes = SecurityScopes;
+            this.SeoInfos = SeoInfos;
+            this.CreatedDate = CreatedDate;
+            this.ModifiedDate = ModifiedDate;
+            this.CreatedBy = CreatedBy;
+            this.ModifiedBy = ModifiedBy;
+            this.Id = Id;
             
         }
 
-        
         /// <summary>
         /// Gets or sets the parent category id.
         /// </summary>
         /// <value>Gets or sets the parent category id.</value>
         [DataMember(Name="parentId", EmitDefaultValue=false)]
         public string ParentId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets a value indicating whether this {VirtoCommerce.CatalogModule.Web.Model.Category} is virtual or common.
         /// </summary>
         /// <value>Gets or sets a value indicating whether this {VirtoCommerce.CatalogModule.Web.Model.Category} is virtual or common.</value>
-        [DataMember(Name="virtual", EmitDefaultValue=false)]
-        public bool? Virtual { get; set; }
-  
-        
+        [DataMember(Name="isVirtual", EmitDefaultValue=false)]
+        public bool? IsVirtual { get; set; }
+
         /// <summary>
         /// Gets or sets the code.
         /// </summary>
         /// <value>Gets or sets the code.</value>
         [DataMember(Name="code", EmitDefaultValue=false)]
         public string Code { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the type of the tax.
         /// </summary>
         /// <value>Gets or sets the type of the tax.</value>
         [DataMember(Name="taxType", EmitDefaultValue=false)]
         public string TaxType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the catalog that this category belongs to.
         /// </summary>
         /// <value>Gets or sets the catalog that this category belongs to.</value>
         [DataMember(Name="catalog", EmitDefaultValue=false)]
         public VirtoCommerceCatalogModuleWebModelCatalog Catalog { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the catalog id that this category belongs to.
         /// </summary>
         /// <value>Gets or sets the catalog id that this category belongs to.</value>
         [DataMember(Name="catalogId", EmitDefaultValue=false)]
         public string CatalogId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the name.
         /// </summary>
         /// <value>Gets or sets the name.</value>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Path
         /// </summary>
         [DataMember(Name="path", EmitDefaultValue=false)]
         public string Path { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets a value indicating whether this {VirtoCommerce.CatalogModule.Web.Model.Category} is active.
         /// </summary>
         /// <value>Gets or sets a value indicating whether this {VirtoCommerce.CatalogModule.Web.Model.Category} is active.</value>
         [DataMember(Name="isActive", EmitDefaultValue=false)]
         public bool? IsActive { get; set; }
-  
-        
+
         /// <summary>
         /// All parents categories
         /// </summary>
         /// <value>All parents categories</value>
         [DataMember(Name="parents", EmitDefaultValue=false)]
         public List<VirtoCommerceCatalogModuleWebModelCategory> Parents { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the children categories.
         /// </summary>
         /// <value>Gets or sets the children categories.</value>
         [DataMember(Name="children", EmitDefaultValue=false)]
         public List<VirtoCommerceCatalogModuleWebModelCategory> Children { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the properties.
         /// </summary>
         /// <value>Gets or sets the properties.</value>
         [DataMember(Name="properties", EmitDefaultValue=false)]
         public List<VirtoCommerceCatalogModuleWebModelProperty> Properties { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the links.
         /// </summary>
         /// <value>Gets or sets the links.</value>
         [DataMember(Name="links", EmitDefaultValue=false)]
         public List<VirtoCommerceCatalogModuleWebModelCategoryLink> Links { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the images.
         /// </summary>
         /// <value>Gets or sets the images.</value>
         [DataMember(Name="images", EmitDefaultValue=false)]
         public List<VirtoCommerceCatalogModuleWebModelImage> Images { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets SecurityScopes
         /// </summary>
         [DataMember(Name="securityScopes", EmitDefaultValue=false)]
         public List<string> SecurityScopes { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the list of SEO information records.
         /// </summary>
         /// <value>Gets or sets the list of SEO information records.</value>
         [DataMember(Name="seoInfos", EmitDefaultValue=false)]
         public List<VirtoCommerceDomainCommerceModelSeoInfo> SeoInfos { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedDate
         /// </summary>
         [DataMember(Name="createdDate", EmitDefaultValue=false)]
         public DateTime? CreatedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedDate
         /// </summary>
         [DataMember(Name="modifiedDate", EmitDefaultValue=false)]
         public DateTime? ModifiedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedBy
         /// </summary>
         [DataMember(Name="createdBy", EmitDefaultValue=false)]
         public string CreatedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedBy
         /// </summary>
         [DataMember(Name="modifiedBy", EmitDefaultValue=false)]
         public string ModifiedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -199,7 +221,7 @@ namespace VirtoCommerce.Client.Model
             var sb = new StringBuilder();
             sb.Append("class VirtoCommerceCatalogModuleWebModelCategory {\n");
             sb.Append("  ParentId: ").Append(ParentId).Append("\n");
-            sb.Append("  Virtual: ").Append(Virtual).Append("\n");
+            sb.Append("  IsVirtual: ").Append(IsVirtual).Append("\n");
             sb.Append("  Code: ").Append(Code).Append("\n");
             sb.Append("  TaxType: ").Append(TaxType).Append("\n");
             sb.Append("  Catalog: ").Append(Catalog).Append("\n");
@@ -262,9 +284,9 @@ namespace VirtoCommerce.Client.Model
                     this.ParentId.Equals(other.ParentId)
                 ) && 
                 (
-                    this.Virtual == other.Virtual ||
-                    this.Virtual != null &&
-                    this.Virtual.Equals(other.Virtual)
+                    this.IsVirtual == other.IsVirtual ||
+                    this.IsVirtual != null &&
+                    this.IsVirtual.Equals(other.IsVirtual)
                 ) && 
                 (
                     this.Code == other.Code ||
@@ -378,8 +400,8 @@ namespace VirtoCommerce.Client.Model
                 if (this.ParentId != null)
                     hash = hash * 59 + this.ParentId.GetHashCode();
                 
-                if (this.Virtual != null)
-                    hash = hash * 59 + this.Virtual.GetHashCode();
+                if (this.IsVirtual != null)
+                    hash = hash * 59 + this.IsVirtual.GetHashCode();
                 
                 if (this.Code != null)
                     hash = hash * 59 + this.Code.GetHashCode();

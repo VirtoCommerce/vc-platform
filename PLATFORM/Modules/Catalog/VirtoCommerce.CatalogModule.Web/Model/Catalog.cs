@@ -22,7 +22,7 @@ namespace VirtoCommerce.CatalogModule.Web.Model
         /// <value>
         ///   <c>true</c> if virtual; otherwise, <c>false</c>.
         /// </value>
-        public bool Virtual { get; set; }
+        public bool IsVirtual { get; set; }
         /// <summary>
         /// Gets the language from languages list marked as default.
         /// </summary>
@@ -33,11 +33,11 @@ namespace VirtoCommerce.CatalogModule.Web.Model
         {
             get
             {
-				if (Languages != null)
-				{
-					return Languages.FirstOrDefault(x => x.IsDefault);
-				}
-				return null;
+                if (Languages != null)
+                {
+                    return Languages.FirstOrDefault(x => x.IsDefault);
+                }
+                return null;
             }
         }
         /// <summary>

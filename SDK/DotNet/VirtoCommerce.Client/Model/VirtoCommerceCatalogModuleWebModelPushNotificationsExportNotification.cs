@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// Notification for catalog data export job.
     /// </summary>
@@ -21,118 +21,133 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelPushNotificationsExportNotification" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelPushNotificationsExportNotification" />class.
         /// </summary>
-        public VirtoCommerceCatalogModuleWebModelPushNotificationsExportNotification()
+        /// <param name="DownloadUrl">Gets or sets the URL for downloading exported data..</param>
+        /// <param name="Finished">Gets or sets the job finish date and time..</param>
+        /// <param name="TotalCount">Gets or sets the total count of objects to process..</param>
+        /// <param name="ProcessedCount">Gets or sets the count of processed objects..</param>
+        /// <param name="ErrorCount">Gets or sets the count of errors during processing..</param>
+        /// <param name="Errors">Gets or sets the errors that has occurred during processing..</param>
+        /// <param name="Id">Id.</param>
+        /// <param name="Creator">Creator.</param>
+        /// <param name="Created">Created.</param>
+        /// <param name="IsNew">IsNew.</param>
+        /// <param name="NotifyType">NotifyType.</param>
+        /// <param name="Description">Description.</param>
+        /// <param name="Title">Title.</param>
+        /// <param name="RepeatCount">RepeatCount.</param>
+
+        public VirtoCommerceCatalogModuleWebModelPushNotificationsExportNotification(string DownloadUrl = null, DateTime? Finished = null, long? TotalCount = null, long? ProcessedCount = null, long? ErrorCount = null, List<string> Errors = null, string Id = null, string Creator = null, DateTime? Created = null, bool? IsNew = null, string NotifyType = null, string Description = null, string Title = null, int? RepeatCount = null)
         {
+            this.DownloadUrl = DownloadUrl;
+            this.Finished = Finished;
+            this.TotalCount = TotalCount;
+            this.ProcessedCount = ProcessedCount;
+            this.ErrorCount = ErrorCount;
+            this.Errors = Errors;
+            this.Id = Id;
+            this.Creator = Creator;
+            this.Created = Created;
+            this.IsNew = IsNew;
+            this.NotifyType = NotifyType;
+            this.Description = Description;
+            this.Title = Title;
+            this.RepeatCount = RepeatCount;
             
         }
 
-        
         /// <summary>
         /// Gets or sets the URL for downloading exported data.
         /// </summary>
         /// <value>Gets or sets the URL for downloading exported data.</value>
         [DataMember(Name="downloadUrl", EmitDefaultValue=false)]
         public string DownloadUrl { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the job finish date and time.
         /// </summary>
         /// <value>Gets or sets the job finish date and time.</value>
         [DataMember(Name="finished", EmitDefaultValue=false)]
         public DateTime? Finished { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the total count of objects to process.
         /// </summary>
         /// <value>Gets or sets the total count of objects to process.</value>
         [DataMember(Name="totalCount", EmitDefaultValue=false)]
         public long? TotalCount { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the count of processed objects.
         /// </summary>
         /// <value>Gets or sets the count of processed objects.</value>
         [DataMember(Name="processedCount", EmitDefaultValue=false)]
         public long? ProcessedCount { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the count of errors during processing.
         /// </summary>
         /// <value>Gets or sets the count of errors during processing.</value>
         [DataMember(Name="errorCount", EmitDefaultValue=false)]
         public long? ErrorCount { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the errors that has occurred during processing.
         /// </summary>
         /// <value>Gets or sets the errors that has occurred during processing.</value>
         [DataMember(Name="errors", EmitDefaultValue=false)]
         public List<string> Errors { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Creator
         /// </summary>
         [DataMember(Name="creator", EmitDefaultValue=false)]
         public string Creator { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Created
         /// </summary>
         [DataMember(Name="created", EmitDefaultValue=false)]
         public DateTime? Created { get; set; }
-  
-        
+
         /// <summary>
-        /// Gets or Sets New
+        /// Gets or Sets IsNew
         /// </summary>
-        [DataMember(Name="new", EmitDefaultValue=false)]
-        public bool? New { get; set; }
-  
-        
+        [DataMember(Name="isNew", EmitDefaultValue=false)]
+        public bool? IsNew { get; set; }
+
         /// <summary>
         /// Gets or Sets NotifyType
         /// </summary>
         [DataMember(Name="notifyType", EmitDefaultValue=false)]
         public string NotifyType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Description
         /// </summary>
         [DataMember(Name="description", EmitDefaultValue=false)]
         public string Description { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Title
         /// </summary>
         [DataMember(Name="title", EmitDefaultValue=false)]
         public string Title { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets RepeatCount
         /// </summary>
         [DataMember(Name="repeatCount", EmitDefaultValue=false)]
         public int? RepeatCount { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -150,7 +165,7 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Id: ").Append(Id).Append("\n");
             sb.Append("  Creator: ").Append(Creator).Append("\n");
             sb.Append("  Created: ").Append(Created).Append("\n");
-            sb.Append("  New: ").Append(New).Append("\n");
+            sb.Append("  IsNew: ").Append(IsNew).Append("\n");
             sb.Append("  NotifyType: ").Append(NotifyType).Append("\n");
             sb.Append("  Description: ").Append(Description).Append("\n");
             sb.Append("  Title: ").Append(Title).Append("\n");
@@ -238,9 +253,9 @@ namespace VirtoCommerce.Client.Model
                     this.Created.Equals(other.Created)
                 ) && 
                 (
-                    this.New == other.New ||
-                    this.New != null &&
-                    this.New.Equals(other.New)
+                    this.IsNew == other.IsNew ||
+                    this.IsNew != null &&
+                    this.IsNew.Equals(other.IsNew)
                 ) && 
                 (
                     this.NotifyType == other.NotifyType ||
@@ -303,8 +318,8 @@ namespace VirtoCommerce.Client.Model
                 if (this.Created != null)
                     hash = hash * 59 + this.Created.GetHashCode();
                 
-                if (this.New != null)
-                    hash = hash * 59 + this.New.GetHashCode();
+                if (this.IsNew != null)
+                    hash = hash * 59 + this.IsNew.GetHashCode();
                 
                 if (this.NotifyType != null)
                     hash = hash * 59 + this.NotifyType.GetHashCode();

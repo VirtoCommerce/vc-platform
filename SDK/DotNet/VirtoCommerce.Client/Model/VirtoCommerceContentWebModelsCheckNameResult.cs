@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,22 +21,24 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceContentWebModelsCheckNameResult" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceContentWebModelsCheckNameResult" />class.
         /// </summary>
-        public VirtoCommerceContentWebModelsCheckNameResult()
+        /// <param name="Result">Result of checking (if true - enable to save object, if false - unable to save object).</param>
+
+        public VirtoCommerceContentWebModelsCheckNameResult(bool? Result = null)
         {
+            this.Result = Result;
             
         }
 
-        
         /// <summary>
         /// Result of checking (if true - enable to save object, if false - unable to save object)
         /// </summary>
         /// <value>Result of checking (if true - enable to save object, if false - unable to save object)</value>
         [DataMember(Name="result", EmitDefaultValue=false)]
         public bool? Result { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

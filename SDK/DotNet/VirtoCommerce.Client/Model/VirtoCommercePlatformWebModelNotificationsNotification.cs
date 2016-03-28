@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,174 +21,197 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelNotificationsNotification" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelNotificationsNotification" />class.
         /// </summary>
-        public VirtoCommercePlatformWebModelNotificationsNotification()
+        /// <param name="Id">Id.</param>
+        /// <param name="DisplayName">DisplayName.</param>
+        /// <param name="Description">Description.</param>
+        /// <param name="IsEmail">IsEmail.</param>
+        /// <param name="IsSms">IsSms.</param>
+        /// <param name="Type">Type.</param>
+        /// <param name="IsActive">IsActive.</param>
+        /// <param name="IsSuccessSend">IsSuccessSend.</param>
+        /// <param name="ObjectId">ObjectId.</param>
+        /// <param name="ObjectTypeId">ObjectTypeId.</param>
+        /// <param name="Language">Language.</param>
+        /// <param name="SendingGateway">Type of notificaiton sending gateway.</param>
+        /// <param name="Subject">Subject.</param>
+        /// <param name="Body">Body.</param>
+        /// <param name="Sender">Sender.</param>
+        /// <param name="Recipient">Recipient.</param>
+        /// <param name="AttemptCount">Sending attempts count.</param>
+        /// <param name="MaxAttemptCount">Max sending attempt count, if MaxAttemptCount less or equal AttemptCount IsActive = false and IsSent = false, notification stop sending.</param>
+        /// <param name="LastFailAttemptMessage">Last fail sending attempt error message.</param>
+        /// <param name="LastFailAttemptDate">Last fail sending attempt date.</param>
+        /// <param name="StartSendingDate">Start sending date, if not null notification will be sending after that date.</param>
+        /// <param name="SentDate">SentDate.</param>
+
+        public VirtoCommercePlatformWebModelNotificationsNotification(string Id = null, string DisplayName = null, string Description = null, bool? IsEmail = null, bool? IsSms = null, string Type = null, bool? IsActive = null, bool? IsSuccessSend = null, string ObjectId = null, string ObjectTypeId = null, string Language = null, string SendingGateway = null, string Subject = null, string Body = null, string Sender = null, string Recipient = null, int? AttemptCount = null, int? MaxAttemptCount = null, string LastFailAttemptMessage = null, DateTime? LastFailAttemptDate = null, DateTime? StartSendingDate = null, DateTime? SentDate = null)
         {
+            this.Id = Id;
+            this.DisplayName = DisplayName;
+            this.Description = Description;
+            this.IsEmail = IsEmail;
+            this.IsSms = IsSms;
+            this.Type = Type;
+            this.IsActive = IsActive;
+            this.IsSuccessSend = IsSuccessSend;
+            this.ObjectId = ObjectId;
+            this.ObjectTypeId = ObjectTypeId;
+            this.Language = Language;
+            this.SendingGateway = SendingGateway;
+            this.Subject = Subject;
+            this.Body = Body;
+            this.Sender = Sender;
+            this.Recipient = Recipient;
+            this.AttemptCount = AttemptCount;
+            this.MaxAttemptCount = MaxAttemptCount;
+            this.LastFailAttemptMessage = LastFailAttemptMessage;
+            this.LastFailAttemptDate = LastFailAttemptDate;
+            this.StartSendingDate = StartSendingDate;
+            this.SentDate = SentDate;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets DisplayName
         /// </summary>
         [DataMember(Name="displayName", EmitDefaultValue=false)]
         public string DisplayName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Description
         /// </summary>
         [DataMember(Name="description", EmitDefaultValue=false)]
         public string Description { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets IsEmail
         /// </summary>
         [DataMember(Name="isEmail", EmitDefaultValue=false)]
         public bool? IsEmail { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets IsSms
         /// </summary>
         [DataMember(Name="isSms", EmitDefaultValue=false)]
         public bool? IsSms { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name="type", EmitDefaultValue=false)]
         public string Type { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets IsActive
         /// </summary>
         [DataMember(Name="isActive", EmitDefaultValue=false)]
         public bool? IsActive { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets IsSuccessSend
         /// </summary>
         [DataMember(Name="isSuccessSend", EmitDefaultValue=false)]
         public bool? IsSuccessSend { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ObjectId
         /// </summary>
         [DataMember(Name="objectId", EmitDefaultValue=false)]
         public string ObjectId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ObjectTypeId
         /// </summary>
         [DataMember(Name="objectTypeId", EmitDefaultValue=false)]
         public string ObjectTypeId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Language
         /// </summary>
         [DataMember(Name="language", EmitDefaultValue=false)]
         public string Language { get; set; }
-  
-        
+
         /// <summary>
         /// Type of notificaiton sending gateway
         /// </summary>
         /// <value>Type of notificaiton sending gateway</value>
         [DataMember(Name="sendingGateway", EmitDefaultValue=false)]
         public string SendingGateway { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Subject
         /// </summary>
         [DataMember(Name="subject", EmitDefaultValue=false)]
         public string Subject { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Body
         /// </summary>
         [DataMember(Name="body", EmitDefaultValue=false)]
         public string Body { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Sender
         /// </summary>
         [DataMember(Name="sender", EmitDefaultValue=false)]
         public string Sender { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Recipient
         /// </summary>
         [DataMember(Name="recipient", EmitDefaultValue=false)]
         public string Recipient { get; set; }
-  
-        
+
         /// <summary>
         /// Sending attempts count
         /// </summary>
         /// <value>Sending attempts count</value>
         [DataMember(Name="attemptCount", EmitDefaultValue=false)]
         public int? AttemptCount { get; set; }
-  
-        
+
         /// <summary>
         /// Max sending attempt count, if MaxAttemptCount less or equal AttemptCount IsActive = false and IsSent = false, notification stop sending
         /// </summary>
         /// <value>Max sending attempt count, if MaxAttemptCount less or equal AttemptCount IsActive = false and IsSent = false, notification stop sending</value>
         [DataMember(Name="maxAttemptCount", EmitDefaultValue=false)]
         public int? MaxAttemptCount { get; set; }
-  
-        
+
         /// <summary>
         /// Last fail sending attempt error message
         /// </summary>
         /// <value>Last fail sending attempt error message</value>
         [DataMember(Name="lastFailAttemptMessage", EmitDefaultValue=false)]
         public string LastFailAttemptMessage { get; set; }
-  
-        
+
         /// <summary>
         /// Last fail sending attempt date
         /// </summary>
         /// <value>Last fail sending attempt date</value>
         [DataMember(Name="lastFailAttemptDate", EmitDefaultValue=false)]
         public DateTime? LastFailAttemptDate { get; set; }
-  
-        
+
         /// <summary>
         /// Start sending date, if not null notification will be sending after that date
         /// </summary>
         /// <value>Start sending date, if not null notification will be sending after that date</value>
         [DataMember(Name="startSendingDate", EmitDefaultValue=false)]
         public DateTime? StartSendingDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets SentDate
         /// </summary>
         [DataMember(Name="sentDate", EmitDefaultValue=false)]
         public DateTime? SentDate { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,28 +21,31 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceDomainCustomerModelSearchResult" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCustomerModelSearchResult" />class.
         /// </summary>
-        public VirtoCommerceDomainCustomerModelSearchResult()
+        /// <param name="TotalCount">TotalCount.</param>
+        /// <param name="Members">Members.</param>
+
+        public VirtoCommerceDomainCustomerModelSearchResult(int? TotalCount = null, List<VirtoCommerceDomainCustomerModelMember> Members = null)
         {
+            this.TotalCount = TotalCount;
+            this.Members = Members;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets TotalCount
         /// </summary>
         [DataMember(Name="totalCount", EmitDefaultValue=false)]
         public int? TotalCount { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Members
         /// </summary>
         [DataMember(Name="members", EmitDefaultValue=false)]
         public List<VirtoCommerceDomainCustomerModelMember> Members { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

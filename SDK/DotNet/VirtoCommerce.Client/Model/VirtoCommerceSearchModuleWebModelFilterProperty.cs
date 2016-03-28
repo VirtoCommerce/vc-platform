@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,28 +21,31 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceSearchModuleWebModelFilterProperty" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceSearchModuleWebModelFilterProperty" />class.
         /// </summary>
-        public VirtoCommerceSearchModuleWebModelFilterProperty()
+        /// <param name="Name">Name.</param>
+        /// <param name="IsSelected">IsSelected.</param>
+
+        public VirtoCommerceSearchModuleWebModelFilterProperty(string Name = null, bool? IsSelected = null)
         {
+            this.Name = Name;
+            this.IsSelected = IsSelected;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets IsSelected
         /// </summary>
         [DataMember(Name="isSelected", EmitDefaultValue=false)]
         public bool? IsSelected { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

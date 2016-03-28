@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,21 +21,23 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceCoreModuleWebModelPaymentCallbackParameters" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceCoreModuleWebModelPaymentCallbackParameters" />class.
         /// </summary>
-        public VirtoCommerceCoreModuleWebModelPaymentCallbackParameters()
+        /// <param name="Parameters">Parameters.</param>
+
+        public VirtoCommerceCoreModuleWebModelPaymentCallbackParameters(List<VirtoCommerceCoreModuleWebModelKeyValuePair> Parameters = null)
         {
+            this.Parameters = Parameters;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets Parameters
         /// </summary>
         [DataMember(Name="parameters", EmitDefaultValue=false)]
         public List<VirtoCommerceCoreModuleWebModelKeyValuePair> Parameters { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,151 +21,171 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceQuoteModuleWebModelQuoteItem" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceQuoteModuleWebModelQuoteItem" />class.
         /// </summary>
-        public VirtoCommerceQuoteModuleWebModelQuoteItem()
+        /// <param name="Currency">Currency.</param>
+        /// <param name="ListPrice">Base catalog price.</param>
+        /// <param name="SalePrice">Sale price for buyer.</param>
+        /// <param name="ProductId">ProductId.</param>
+        /// <param name="Product">Product.</param>
+        /// <param name="CatalogId">CatalogId.</param>
+        /// <param name="CategoryId">CategoryId.</param>
+        /// <param name="Name">Name.</param>
+        /// <param name="Comment">Comment.</param>
+        /// <param name="ImageUrl">ImageUrl.</param>
+        /// <param name="Sku">Sku.</param>
+        /// <param name="TaxType">TaxType.</param>
+        /// <param name="SelectedTierPrice">Selected proposal tier price.</param>
+        /// <param name="ProposalPrices">Proposal tier prices.</param>
+        /// <param name="CreatedDate">CreatedDate.</param>
+        /// <param name="ModifiedDate">ModifiedDate.</param>
+        /// <param name="CreatedBy">CreatedBy.</param>
+        /// <param name="ModifiedBy">ModifiedBy.</param>
+        /// <param name="Id">Id.</param>
+
+        public VirtoCommerceQuoteModuleWebModelQuoteItem(string Currency = null, double? ListPrice = null, double? SalePrice = null, string ProductId = null, VirtoCommerceDomainCatalogModelCatalogProduct Product = null, string CatalogId = null, string CategoryId = null, string Name = null, string Comment = null, string ImageUrl = null, string Sku = null, string TaxType = null, VirtoCommerceQuoteModuleWebModelTierPrice SelectedTierPrice = null, List<VirtoCommerceQuoteModuleWebModelTierPrice> ProposalPrices = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
         {
+            this.Currency = Currency;
+            this.ListPrice = ListPrice;
+            this.SalePrice = SalePrice;
+            this.ProductId = ProductId;
+            this.Product = Product;
+            this.CatalogId = CatalogId;
+            this.CategoryId = CategoryId;
+            this.Name = Name;
+            this.Comment = Comment;
+            this.ImageUrl = ImageUrl;
+            this.Sku = Sku;
+            this.TaxType = TaxType;
+            this.SelectedTierPrice = SelectedTierPrice;
+            this.ProposalPrices = ProposalPrices;
+            this.CreatedDate = CreatedDate;
+            this.ModifiedDate = ModifiedDate;
+            this.CreatedBy = CreatedBy;
+            this.ModifiedBy = ModifiedBy;
+            this.Id = Id;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets Currency
         /// </summary>
         [DataMember(Name="currency", EmitDefaultValue=false)]
         public string Currency { get; set; }
-  
-        
+
         /// <summary>
         /// Base catalog price
         /// </summary>
         /// <value>Base catalog price</value>
         [DataMember(Name="listPrice", EmitDefaultValue=false)]
         public double? ListPrice { get; set; }
-  
-        
+
         /// <summary>
         /// Sale price for buyer
         /// </summary>
         /// <value>Sale price for buyer</value>
         [DataMember(Name="salePrice", EmitDefaultValue=false)]
         public double? SalePrice { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ProductId
         /// </summary>
         [DataMember(Name="productId", EmitDefaultValue=false)]
         public string ProductId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Product
         /// </summary>
         [DataMember(Name="product", EmitDefaultValue=false)]
         public VirtoCommerceDomainCatalogModelCatalogProduct Product { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CatalogId
         /// </summary>
         [DataMember(Name="catalogId", EmitDefaultValue=false)]
         public string CatalogId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CategoryId
         /// </summary>
         [DataMember(Name="categoryId", EmitDefaultValue=false)]
         public string CategoryId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Comment
         /// </summary>
         [DataMember(Name="comment", EmitDefaultValue=false)]
         public string Comment { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ImageUrl
         /// </summary>
         [DataMember(Name="imageUrl", EmitDefaultValue=false)]
         public string ImageUrl { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Sku
         /// </summary>
         [DataMember(Name="sku", EmitDefaultValue=false)]
         public string Sku { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets TaxType
         /// </summary>
         [DataMember(Name="taxType", EmitDefaultValue=false)]
         public string TaxType { get; set; }
-  
-        
+
         /// <summary>
         /// Selected proposal tier price
         /// </summary>
         /// <value>Selected proposal tier price</value>
         [DataMember(Name="selectedTierPrice", EmitDefaultValue=false)]
         public VirtoCommerceQuoteModuleWebModelTierPrice SelectedTierPrice { get; set; }
-  
-        
+
         /// <summary>
         /// Proposal tier prices
         /// </summary>
         /// <value>Proposal tier prices</value>
         [DataMember(Name="proposalPrices", EmitDefaultValue=false)]
         public List<VirtoCommerceQuoteModuleWebModelTierPrice> ProposalPrices { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedDate
         /// </summary>
         [DataMember(Name="createdDate", EmitDefaultValue=false)]
         public DateTime? CreatedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedDate
         /// </summary>
         [DataMember(Name="modifiedDate", EmitDefaultValue=false)]
         public DateTime? ModifiedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedBy
         /// </summary>
         [DataMember(Name="createdBy", EmitDefaultValue=false)]
         public string CreatedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedBy
         /// </summary>
         [DataMember(Name="modifiedBy", EmitDefaultValue=false)]
         public string ModifiedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
