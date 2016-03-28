@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
@@ -30,6 +31,13 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
         }
 
    
+        /// <summary>
+        /// Delete content from server
+        /// </summary>
+        /// <param name="contentType">possible values Themes or Pages</param>
+        /// <param name="storeId">Store id </param>
+        /// <param name="urls">relative content urls to delete</param>
+        /// <returns></returns>
         [HttpDelete]
         [ResponseType(typeof(void))]
         [Route("")]
@@ -42,7 +50,35 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
             return StatusCode(HttpStatusCode.NoContent);
         }
 
+        /// <summary>
+        /// Return streamed data for requested by relativeUrl content (Used to prevent Cross domain requests in manager)
+        /// </summary>
+        /// <param name="contentType">possible values Themes or Pages</param>
+        /// <param name="storeId">Store id</param>
+        /// <param name="relativeUrl">content relative url</param>
+        /// <returns>stream</returns>
+        [HttpGet]
+        [Route("")]
+        [CheckPermission(Permission = ContentPredefinedPermissions.Read)]
+        public HttpResponseMessage GetContentItemDataStream(string contentType, string storeId, string relativeUrl)
+        {
+            var storageProvider = _contentStorageProviderFactory(contentType, storeId);
+            var stream = storageProvider.OpenRead(relativeUrl);
+            HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
+            result.Content = new StreamContent(stream);
+            result.Content.Headers.ContentType = new MediaTypeHeaderValue(MimeMapping.GetMimeMapping(relativeUrl));
+            return result;
+        }
 
+
+        /// <summary>
+        /// Search content items in specified folder and using search keyword
+        /// </summary>
+        /// <param name="contentType">possible values Themes or Pages</param>
+        /// <param name="storeId">Store id</param>
+        /// <param name="folderUrl">relative path for folder where content items will be searched</param>
+        /// <param name="keyword">search keyword</param>
+        /// <returns>content items</returns>
         [HttpGet]
         [ResponseType(typeof(ContentItem[]))]
         [Route("")]
@@ -59,6 +95,14 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
             return Ok(retVal);
         }
 
+        /// <summary>
+        /// Rename or move content item
+        /// </summary>
+        /// <param name="contentType">possible values Themes or Pages</param>
+        /// <param name="storeId">Store id</param>
+        /// <param name="oldUrl">old content item relative url</param>
+        /// <param name="newUrl">new content item relative url</param>
+        /// <returns></returns>
         [HttpGet]
         [ResponseType(typeof(void))]
         [Route("move")]
@@ -71,7 +115,13 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-
+        /// <summary>
+        /// Create content folder 
+        /// </summary>
+        /// <param name="contentType">possible values Themes or Pages</param>
+        /// <param name="storeId">Store id</param>
+        /// <param name="folder">content folder</param>
+        /// <returns></returns>
         [HttpPost]
         [ResponseType(typeof(void))]
         [Route("folder")]
@@ -84,7 +134,15 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-      
+
+        /// <summary>
+        /// Upload content item 
+        /// </summary>
+        /// <param name="contentType">possible values Themes or Pages</param>
+        /// <param name="storeId">Store id</param>
+        /// <param name="folderUrl">folder relative url where content will be uploaded</param>
+        /// <param name="url">external url which will be used to download content item data</param>
+        /// <returns></returns>
         [HttpPost]
         [Route("")]
         [ResponseType(typeof(ContentItem[]))]
