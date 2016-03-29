@@ -21,7 +21,7 @@ namespace VirtoCommerce.CustomerModule.Test
         public void SearchContactsTest()
         {
             var controller = GetContactController();
-            var result = controller.Search(new SearchCriteria()) as OkNegotiatedContentResult<SearchResult>;
+            var result = controller.Search(new MembersSearchCriteria()) as OkNegotiatedContentResult<MembersSearchResult>;
             Assert.IsNotNull(result.Content);
         }
 
@@ -46,7 +46,7 @@ namespace VirtoCommerce.CustomerModule.Test
         public void SearchTest()
         {
             var controller = GetContactController();
-            var result = controller.Search(new SearchCriteria { MemberId = "org1" }) as OkNegotiatedContentResult<SearchResult>;
+            var result = controller.Search(new MembersSearchCriteria { MemberId = "org1" }) as OkNegotiatedContentResult<MembersSearchResult>;
         }
 
         [TestMethod]

@@ -10,7 +10,7 @@ namespace VirtoCommerce.Domain.Customer.Services
     /// <summary>
     /// Default members service abstract factory implementation 
     /// </summary>
-    public class DefaultMembersServiceFactory : IMembersFactory
+    public class DefaultMembersServiceFactory : IMemberServicesFactory
     {
         private List<IMemberService> _memberServices = new List<IMemberService>();
         public DefaultMembersServiceFactory()
@@ -18,14 +18,20 @@ namespace VirtoCommerce.Domain.Customer.Services
         }
 
         #region IMemberServicesFactory Members
-        public IEnumerable<IMemberService> GetAllServices()
+        public IEnumerable<IMemberService> MemberServices
         {
-            return _memberServices;
+            get
+            {
+                return _memberServices;
+            }
         }
 
-        public void RegisterMemberService(IMemberService memberService, uint priority)
+        public void RegisterMemberService(IMemberService memberService)
         {
-            _memberServices.Insert((int)Math.Min(priority, _memberServices.Count()), memberService);
+            if (!_memberServices.Contains(memberService))
+            {
+                _memberServices.Add(memberService);
+            }
         } 
         #endregion
     }

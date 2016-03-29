@@ -8,11 +8,13 @@ using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Data.Infrastructure;
+using VirtoCommerce.Platform.Data.Common.ConventionInjections;
+using Omu.ValueInjecter;
 
 namespace VirtoCommerce.CustomerModule.Data.Model
 {
 	public class Address : AuditableEntity
-	{
+    {
 		[Required]
 		[StringLength(128)]
 		public string Name { get; set; }
@@ -94,5 +96,16 @@ namespace VirtoCommerce.CustomerModule.Data.Model
             
         }
         #endregion
+
+        public virtual void Patch(Address target)
+        {
+            var patchInjectionPolicy = new PatchInjection<Address>(x => x.City, x => x.CountryCode,
+                                                                                      x => x.CountryName, x => x.DaytimePhoneNumber,
+                                                                                      x => x.Email, x => x.EveningPhoneNumber, x => x.FaxNumber,
+                                                                                      x => x.FirstName, x => x.LastName, x => x.Line1,
+                                                                                      x => x.Line2, x => x.Name, x => x.Organization, x => x.PostalCode,
+                                                                                      x => x.RegionName, x => x.RegionId, x => x.StateProvince, x => x.Type);
+            target.InjectFrom(patchInjectionPolicy, this);
+        }
     }
 }

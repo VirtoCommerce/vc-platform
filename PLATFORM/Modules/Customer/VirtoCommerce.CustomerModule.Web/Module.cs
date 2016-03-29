@@ -43,22 +43,24 @@ namespace VirtoCommerce.CustomerModule.Web
         public override void Initialize()
         {
             _container.RegisterType<ICustomerRepository>(new InjectionFactory(c => new CustomerRepositoryImpl(_connectionStringName, new EntityPrimaryKeyGeneratorInterceptor(), _container.Resolve<AuditableInterceptor>())));
-            _container.RegisterType<IMembersFactory, DefaultMembersServiceFactory>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IMemberService, GenericMemberService>();
+            _container.RegisterType<IMemberServicesFactory, DefaultMembersServiceFactory>(new ContainerControlledLifetimeManager());
+            _container.RegisterType<IMemberService, MemberServicesProxy>();
 
          
         }
 
         public override void PostInitialize()
         {
-            var membersFactory = _container.Resolve<IMembersFactory>();
-            var contactMemberService = new ContactMemberServiceImpl(_container.Resolve<Func<ICustomerRepository>>(), _container.Resolve<ISecurityService>(), _container.Resolve<IDynamicPropertyService>());
-            var orgMemberService = new OrganizationMemberServiceImpl(_container.Resolve<Func<ICustomerRepository>>(), _container.Resolve<IDynamicPropertyService>());
-            membersFactory.RegisterMemberService(orgMemberService, 0);
-            membersFactory.RegisterMemberService(contactMemberService, 1);
+            var membersFactory = _container.Resolve<IMemberServicesFactory>();
+            //Default memebrs service support Contact, Organization, Vendor and Employee types
+            var defaultMemberService = new DefaultMemberService(_container.Resolve<Func<ICustomerRepository>>(),_container.Resolve<IDynamicPropertyService>(), _container.Resolve<ISecurityService>());
+        
+            membersFactory.RegisterMemberService(defaultMemberService);
 
+            //Next lines allow to use polymorph types in API controller methods
             var formatters = GlobalConfiguration.Configuration.Formatters;
             formatters.JsonFormatter.SerializerSettings.Converters.Add(new PolymorphicMemberJsonConverter(membersFactory));
+            formatters.JsonFormatter.SerializerSettings.Converters.Add(new PolymorphicMemberSearchCriteriaJsonConverter());
 
             base.PostInitialize();
         }

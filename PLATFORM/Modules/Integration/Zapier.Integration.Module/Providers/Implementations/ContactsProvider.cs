@@ -17,7 +17,7 @@ namespace Zapier.IntegrationModule.Web.Providers.Implementations
 
         public IEnumerable<Contact> GetNewContacts()
         {
-            var searchCrit = new SearchCriteria
+            var searchCrit = new MembersSearchCriteria
             {
                 MemberType = "Contact",
                 Take = 100,

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace VirtoCommerce.Domain.Customer.Model
 {
-	public class SearchResult
+	public class MembersSearchResult
 	{
-        public SearchResult()
+        public MembersSearchResult()
         {
             Members = new List<Member>();
         }

@@ -7,6 +7,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Data.Common.ConventionInjections;
+using Omu.ValueInjecter;
 
 namespace VirtoCommerce.CustomerModule.Data.Model
 {
@@ -32,6 +34,10 @@ namespace VirtoCommerce.CustomerModule.Data.Model
 
 		#endregion
 
-
+        public virtual void Patch(Note target)
+        {
+            var patchInjectionPolicy = new PatchInjection<Note>(x => x.Body, x => x.Title);
+            target.InjectFrom(patchInjectionPolicy, this);
+        }
 	}
 }

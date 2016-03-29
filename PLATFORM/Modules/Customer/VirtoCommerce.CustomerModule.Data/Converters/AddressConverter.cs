@@ -22,7 +22,7 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
 
             var retVal = new Domain.Commerce.Model.Address();
             retVal.InjectFrom(entity);
-			retVal.Phone = entity.DaytimePhoneNumber;
+            retVal.Phone = entity.DaytimePhoneNumber;
             retVal.AddressType = EnumUtility.SafeParse(entity.Type, AddressType.BillingAndShipping);
 
             return retVal;
@@ -38,46 +38,6 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
             retVal.DaytimePhoneNumber = address.Phone;
             retVal.Type = address.AddressType.ToString();
             return retVal;
-        }
-
-
-        /// <summary>
-        /// Patch 
-        /// </summary>
-        /// <param name="source"></param>
-        /// <param name="target"></param>
-        public static void Patch(this dataModel.Address source, dataModel.Address target)
-        {
-            var patchInjectionPolicy = new PatchInjection<dataModel.Address>(x => x.City, x => x.CountryCode,
-                                                                                      x => x.CountryName, x => x.DaytimePhoneNumber,
-                                                                                      x => x.Email, x => x.EveningPhoneNumber, x => x.FaxNumber,
-                                                                                      x => x.FirstName, x => x.LastName, x => x.Line1,
-                                                                                      x => x.Line2, x => x.Name, x => x.Organization, x => x.PostalCode,
-                                                                                      x => x.RegionName, x => x.RegionId, x => x.StateProvince, x => x.Type);
-            target.InjectFrom(patchInjectionPolicy, source);
-        }
-
-    }
-
-    public class AddressComparer : IEqualityComparer<dataModel.Address>
-    {
-        #region IEqualityComparer<Discount> Members
-
-        public bool Equals(dataModel.Address x, dataModel.Address y)
-        {
-            return GetHashCode(x) == GetHashCode(y);
-        }
-
-        public int GetHashCode(dataModel.Address obj)
-        {
-            var result = String.Join(":", obj.Organization, obj.City, obj.CountryCode, obj.CountryName, obj.FaxNumber, obj.Name, obj.RegionName,
-                                          obj.RegionId, obj.StateProvince, obj.Email, obj.FirstName, obj.LastName, obj.Line1, obj.Line2, 
-                                          obj.DaytimePhoneNumber, obj.PostalCode, obj.DaytimePhoneNumber, obj.EveningPhoneNumber, 
-                                          obj.Type);
-            return result.GetHashCode();
-        }
-
-
-        #endregion
+        }      
     }
 }

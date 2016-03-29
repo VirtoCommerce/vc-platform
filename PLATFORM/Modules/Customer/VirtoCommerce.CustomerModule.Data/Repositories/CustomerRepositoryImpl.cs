@@ -44,6 +44,20 @@ namespace VirtoCommerce.CustomerModule.Data.Repositories
             modelBuilder.Entity<Organization>().ToTable("Organization");
             #endregion
 
+            #region Employee
+            modelBuilder.Entity<Employee>().HasKey(x => x.Id)
+                .Property(x => x.Id);
+            modelBuilder.Entity<Employee>().ToTable("Employee");
+
+            #endregion
+
+            #region Vendor
+            modelBuilder.Entity<Vendor>().HasKey(x => x.Id)
+                .Property(x => x.Id);
+            modelBuilder.Entity<Vendor>().ToTable("Vendor");
+
+            #endregion
+
             #region MemberRelation
             modelBuilder.Entity<MemberRelation>().HasKey(x => x.Id)
                 .Property(x => x.Id);
@@ -93,8 +107,6 @@ namespace VirtoCommerce.CustomerModule.Data.Repositories
                                           .WillCascadeOnDelete(true);
             #endregion
 
-     
-
             base.OnModelCreating(modelBuilder);
         }
 
@@ -132,6 +144,16 @@ namespace VirtoCommerce.CustomerModule.Data.Repositories
             get { return GetAsQueryable<Contact>(); }
         }
 
+        public IQueryable<Employee> Employees
+        {
+            get { return GetAsQueryable<Employee>(); }
+        }
+
+        public IQueryable<Vendor> Vendors
+        {
+            get { return GetAsQueryable<Vendor>(); }
+        }
+
         public IQueryable<Member> Members
         {
             get { return GetAsQueryable<Member>(); }
@@ -142,7 +164,7 @@ namespace VirtoCommerce.CustomerModule.Data.Repositories
             get { return GetAsQueryable<MemberRelation>(); }
         }
 
-        public Member[] GetMembersByIds(params string[] ids)
+        public virtual Member[] GetMembersByIds(params string[] ids)
         {
             var retVal = Members.Include(x => x.MemberRelations.Select(y => y.Ancestor))
                                 .Where(x => ids.Contains(x.Id)).ToArray();
@@ -154,7 +176,7 @@ namespace VirtoCommerce.CustomerModule.Data.Repositories
             return retVal.ToArray();
         }
 
-        public void RemoveMembersByIds(string[] ids)
+        public virtual void RemoveMembersByIds(string[] ids)
         {
             var dbMembers = GetMembersByIds(ids);
             foreach (var dbMember in dbMembers)

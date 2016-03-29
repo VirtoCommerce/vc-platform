@@ -11,7 +11,7 @@ namespace VirtoCommerce.Domain.Customer.Services
     public interface IMemberService
     {
         Member TryCreateMember(string memberType);
-        SearchResult SearchMembers(SearchCriteria criteria);
+        MembersSearchResult SearchMembers(MembersSearchCriteria criteria);
         Member[] GetByIds(string[] memberIds);
         void CreateOrUpdate(Member[] members);
         void Delete(string[] ids);

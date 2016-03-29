@@ -7,6 +7,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Data.Common.ConventionInjections;
+using Omu.ValueInjecter;
 
 namespace VirtoCommerce.CustomerModule.Data.Model
 {
@@ -54,5 +56,15 @@ namespace VirtoCommerce.CustomerModule.Data.Model
         public string Salutation { get; set; }
 
         #endregion
+
+        public override void Patch(Member target)
+        {
+            var patchInjection = new PatchInjection<Contact>(x => x.FirstName, x => x.MiddleName, x => x.LastName, x => x.BirthDate, x => x.DefaultLanguage,
+                                                                        x => x.FullName, x => x.Salutation,
+                                                                        x => x.TimeZone);
+            target.InjectFrom(patchInjection, this);
+
+            base.Patch(target);
+        }
     }
 }

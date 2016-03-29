@@ -1,18 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
-using VirtoCommerce.Domain.Commerce.Model;
-using VirtoCommerce.Platform.Core.Common;
-using VirtoCommerce.Platform.Core.DynamicProperties;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using VirtoCommerce.Platform.Core.Security;
 
 namespace VirtoCommerce.Domain.Customer.Model
 {
-    public class Contact : Member, IHasSecurityAccounts
+    public class Employee : Member, IHasSecurityAccounts
     {
-        public Contact()
+        public Employee()
         {
             SecurityAccounts = new List<ApplicationUserExtended>();
         }
+        public string PhotoUrl { get; set; }
+        /// <summary>
+        /// Employee type
+        /// </summary>
+        public string Type { get; set; }
+        /// <summary>
+        /// Flag mean employee activity
+        /// </summary>
+        public bool IsActive { get; set; }
+
         public string FirstName { get; set; }
         public string MiddleName { get; set; }
         public string LastName { get; set; }
@@ -21,15 +31,11 @@ namespace VirtoCommerce.Domain.Customer.Model
         public string TimeZone { get; set; }
         public string DefaultLanguage { get; set; }
         public DateTime? BirthDate { get; set; }
-        public string TaxpayerId { get; set; }
-        public string PreferredDelivery { get; set; }
-        public string PreferredCommunication { get; set; }
-        public string Salutation { get; set; }
-        public ICollection<string> Organizations { get; set; }
 
+        public ICollection<string> Organizations { get; set; }
         #region IHasSecurityAccounts Members
         /// <summary>
-        /// All security accounts associated with this contact
+        /// All security accounts associated with this employee
         /// </summary>
         public ICollection<ApplicationUserExtended> SecurityAccounts { get; private set; } 
         #endregion

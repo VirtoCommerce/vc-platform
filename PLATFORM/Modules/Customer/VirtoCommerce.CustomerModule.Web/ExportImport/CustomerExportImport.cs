@@ -49,7 +49,7 @@ namespace VirtoCommerce.CustomerModule.Web.ExportImport
 			progressInfo.Description = "loading members...";
 			progressCallback(progressInfo);
 
-            var members = _memberService.SearchMembers(new SearchCriteria { DeepSearch = true, Take = int.MaxValue }).Members;
+            var members = _memberService.SearchMembers(new MembersSearchCriteria { DeepSearch = true, Take = int.MaxValue }).Members;
 
             var result = new BackupObject();
             result.Members = _memberService.GetByIds(members.Select(x => x.Id).ToArray()).OrderByDescending(x=> x.MemberType).ToArray();

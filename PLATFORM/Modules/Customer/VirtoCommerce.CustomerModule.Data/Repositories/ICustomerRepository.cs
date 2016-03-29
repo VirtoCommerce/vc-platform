@@ -14,6 +14,8 @@ namespace VirtoCommerce.CustomerModule.Data.Repositories
         IQueryable<Address> Addresses { get; }
         IQueryable<Organization> Organizations { get; }
         IQueryable<Contact> Contacts { get; }
+        IQueryable<Vendor> Vendors { get; }
+        IQueryable<Employee> Employees { get; }
         IQueryable<Email> Emails { get; }
         IQueryable<Note> Notes { get; }
         IQueryable<Phone> Phones { get; }

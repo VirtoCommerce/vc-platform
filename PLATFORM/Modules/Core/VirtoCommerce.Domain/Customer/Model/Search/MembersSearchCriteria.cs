@@ -7,9 +7,12 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Domain.Customer.Model
 {
-	public class SearchCriteria
+    /// <summary>
+    /// represent common members search criteria. More specialized criteria should be derived for this type.
+    /// </summary>
+	public class MembersSearchCriteria
 	{
-		public SearchCriteria()
+		public MembersSearchCriteria()
 		{
             Take = 20;
 		}

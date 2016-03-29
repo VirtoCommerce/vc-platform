@@ -35,18 +35,5 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
             retVal.ModifierName = note.ModifiedBy;
             return retVal;
         }
-
-
-        /// <summary>
-        /// Patch 
-        /// </summary>
-        /// <param name="source"></param>
-        /// <param name="target"></param>
-        public static void Patch(this dataModel.Note source, dataModel.Note target)
-        {
-            var patchInjectionPolicy = new PatchInjection<dataModel.Note>(x => x.Body, x => x.Title);
-            target.InjectFrom(patchInjectionPolicy, source);
-        }
-
     }
 }

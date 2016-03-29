@@ -20,64 +20,39 @@ namespace VirtoCommerce.CustomerModule.Data.Converters
         /// </summary>
         /// <param name="catalogBase"></param>
         /// <returns></returns>
-        public static coreModel.Organization ToCoreModel(this dataModel.Organization dbEntity)
+        public static void ToCoreModel(this dataModel.Organization dbOrg, coreModel.Organization org)
         {
-            if (dbEntity == null)
-                throw new ArgumentNullException("dbEntity");
+            if (dbOrg == null)
+                throw new ArgumentNullException("dbOrg");
+            if (org == null)
+                throw new ArgumentNullException("org");
 
-            var retVal = new coreModel.Organization();
-            dbEntity.ToCoreModel(retVal);
-
-            if (dbEntity.MemberRelations.Any())
+            if (dbOrg.MemberRelations.Any())
             {
-                retVal.ParentId = dbEntity.MemberRelations.FirstOrDefault().AncestorId;
+                org.ParentId = dbOrg.MemberRelations.FirstOrDefault().AncestorId;
             }
-            return retVal;
         }
 
 
-        public static dataModel.Organization ToDataModel(this coreModel.Organization organization, PrimaryKeyResolvingMap pkMap)
+        public static void ToDataModel(this coreModel.Organization org, dataModel.Organization dbOrg, PrimaryKeyResolvingMap pkMap)
         {
-            if (organization == null)
-                throw new ArgumentNullException("organization");
+            if (org == null)
+                throw new ArgumentNullException("org");
 
-            var retVal = new dataModel.Organization();
-
-            organization.ToDataModel(retVal);
-
-            pkMap.AddPair(organization, retVal);
+            pkMap.AddPair(org, dbOrg);
          
-            if (organization.ParentId != null)
+            if (org.ParentId != null)
             {
-                retVal.MemberRelations = new ObservableCollection<dataModel.MemberRelation>();
+                dbOrg.MemberRelations = new ObservableCollection<dataModel.MemberRelation>();
                 var memberRelation = new dataModel.MemberRelation
                 {
-                    AncestorId = organization.ParentId,
-                    DescendantId = organization.Id,
+                    AncestorId = org.ParentId,
+                    DescendantId = org.Id,
                     AncestorSequence = 1
                 };
-                retVal.MemberRelations.Add(memberRelation);
+                dbOrg.MemberRelations.Add(memberRelation);
             }
-            return retVal;
         }
-
-        /// <summary>
-        /// Patch changes
-        /// </summary>
-        /// <param name="source"></param>
-        /// <param name="target"></param>
-        public static void Patch(this dataModel.Organization source, dataModel.Organization target)
-        {
-            if (target == null)
-                throw new ArgumentNullException("target");
-            var patchInjection = new PatchInjection<dataModel.Organization>(x => x.Name, x => x.Description,
-                                                                           x => x.OwnerId, x => x.OrgType,
-                                                                           x => x.BusinessCategory);
-            target.InjectFrom(patchInjection, source);
-            //Path base type properties
-            ((dataModel.Member)source).Patch(target);
-        }
-
 
     }
 }

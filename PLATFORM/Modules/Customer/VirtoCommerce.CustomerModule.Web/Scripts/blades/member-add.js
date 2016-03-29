@@ -10,7 +10,7 @@
 
     $scope.addCustomer = function () {
         bladeNavigationService.closeBlade($scope.blade, function () {
-            pb.showDetailBlade({}, 'customer.blades.new-customer.title');
+        	pb.showDetailBlade({ memberType: 'Contact' }, 'customer.blades.new-customer.title');
         });
     };
 

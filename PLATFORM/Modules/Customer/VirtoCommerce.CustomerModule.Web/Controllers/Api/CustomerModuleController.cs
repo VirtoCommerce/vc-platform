@@ -33,7 +33,7 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
         [Route("members/organizations")]
         public IHttpActionResult ListOrganizations()
         {
-            var searchCriteria = new coreModel.SearchCriteria
+            var searchCriteria = new coreModel.MembersSearchCriteria
             {
                 MemberType = typeof(coreModel.Organization).Name,
                 DeepSearch = true,
@@ -48,11 +48,11 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
         /// Get members
         /// </summary>
         /// <remarks>Get array of members satisfied search criteria.</remarks>
-        /// <param name="criteria">Search criteria</param>
+        /// <param name="criteria">concrete instance of SearchCriteria type type will be created by using PolymorphicMemberSearchCriteriaJsonConverter</param>
         [HttpPost]
-        [ResponseType(typeof(coreModel.SearchResult))]
+        [ResponseType(typeof(coreModel.MembersSearchResult))]
         [Route("members/search")]
-        public IHttpActionResult Search(coreModel.SearchCriteria criteria)
+        public IHttpActionResult Search(coreModel.MembersSearchCriteria criteria)
         {
             var result = _memberService.SearchMembers(criteria);
 
@@ -78,15 +78,17 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
 
 
         /// <summary>
-        /// Create member
+        /// Create new member (can be any object inherited from Member type)
         /// </summary>
+        /// <param name="member">concrete instance of abstract member type will be created by using PolymorphicMemberJsonConverter</param>
+        /// <returns></returns>
         [HttpPost]
         [ResponseType(typeof(coreModel.Member))]
         [Route("members")]
         [CheckPermission(Permission = CustomerPredefinedPermissions.Create)]
         public IHttpActionResult CreateMember([FromBody]coreModel.Member member)
         {
-            _memberService.CreateOrUpdate(new [] { member });
+            _memberService.CreateOrUpdate(new[] { member });
             var retVal = _memberService.GetByIds(new[] { member.Id }).FirstOrDefault();
             return Ok(retVal);
         }
@@ -94,6 +96,7 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
         /// <summary>
         /// Update member
         /// </summary>
+        /// <param name="member">concrete instance of abstract member type will be created by using PolymorphicMemberJsonConverter</param>
         /// <response code="204">Operation completed.</response>
         [HttpPut]
         [ResponseType(typeof(void))]
