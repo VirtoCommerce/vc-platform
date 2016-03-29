@@ -90,7 +90,7 @@
         bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, $scope.saveChanges, closeCallback, "customer.dialogs.customer-save.title", "customer.dialogs.customer-save.message");
     };
 
-    blade.headIcon = blade.isOrganization ? 'fa fa-university' : 'fa fa-user';
+    blade.headIcon = blade.isOrganization ? 'fa-university' : ' fa-user';
     blade.toolbarCommands = [
         {
             name: "platform.commands.save",

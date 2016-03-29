@@ -14,5 +14,6 @@
         });
     };
 
+    blade.headIcon = pb.headIcon;
     $scope.blade.isLoading = false;
 }]);

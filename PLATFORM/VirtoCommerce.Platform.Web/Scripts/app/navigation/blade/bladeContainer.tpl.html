@@ -30,8 +30,8 @@
                 </ul>
             </div>
             <div class="blade-t" ng-class="{'__secondary': blade.subtitle}">
-                <i class="blade-t_ico fa {{blade.headIcon == 'fa fa-user' ? '__customers' : ''}}" ng-class="blade.headIcon ? blade.headIcon : 'fa-folder'">
-                    <i ng-if="blade.headIcon == 'fa fa-user'"></i>
+                <i class="blade-t_ico fa {{blade.headIcon == 'fa-user' ? '__customers' : ''}}" ng-class="blade.headIcon ? blade.headIcon : 'fa-folder'">
+                    <i ng-if="blade.headIcon == 'fa-user'"></i>
                 </i>
                 <p class="blade-t_head">{{ blade.title | translate: blade.titleValues }}</p>
                 <p class="blade-t_subhead">{{ blade.subtitle | translate: blade.subtitleValues }}</p>
