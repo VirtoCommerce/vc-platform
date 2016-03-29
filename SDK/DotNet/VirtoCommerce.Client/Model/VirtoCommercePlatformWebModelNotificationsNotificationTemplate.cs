@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,74 +21,83 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelNotificationsNotificationTemplate" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelNotificationsNotificationTemplate" />class.
         /// </summary>
-        public VirtoCommercePlatformWebModelNotificationsNotificationTemplate()
+        /// <param name="Id">Id.</param>
+        /// <param name="Body">Body.</param>
+        /// <param name="Subject">Subject.</param>
+        /// <param name="NotificationTypeId">NotificationTypeId.</param>
+        /// <param name="ObjectId">Id of object, that used this template for sending notification.</param>
+        /// <param name="ObjectTypeId">Type id of object, that used this template for sending notification.</param>
+        /// <param name="Language">Locale of template.</param>
+        /// <param name="IsDefault">Flag, that shows if this template is default dor notification type.</param>
+
+        public VirtoCommercePlatformWebModelNotificationsNotificationTemplate(string Id = null, string Body = null, string Subject = null, string NotificationTypeId = null, string ObjectId = null, string ObjectTypeId = null, string Language = null, bool? IsDefault = null)
         {
+            this.Id = Id;
+            this.Body = Body;
+            this.Subject = Subject;
+            this.NotificationTypeId = NotificationTypeId;
+            this.ObjectId = ObjectId;
+            this.ObjectTypeId = ObjectTypeId;
+            this.Language = Language;
+            this.IsDefault = IsDefault;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Body
         /// </summary>
         [DataMember(Name="body", EmitDefaultValue=false)]
         public string Body { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Subject
         /// </summary>
         [DataMember(Name="subject", EmitDefaultValue=false)]
         public string Subject { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets NotificationTypeId
         /// </summary>
         [DataMember(Name="notificationTypeId", EmitDefaultValue=false)]
         public string NotificationTypeId { get; set; }
-  
-        
+
         /// <summary>
         /// Id of object, that used this template for sending notification
         /// </summary>
         /// <value>Id of object, that used this template for sending notification</value>
         [DataMember(Name="objectId", EmitDefaultValue=false)]
         public string ObjectId { get; set; }
-  
-        
+
         /// <summary>
         /// Type id of object, that used this template for sending notification
         /// </summary>
         /// <value>Type id of object, that used this template for sending notification</value>
         [DataMember(Name="objectTypeId", EmitDefaultValue=false)]
         public string ObjectTypeId { get; set; }
-  
-        
+
         /// <summary>
         /// Locale of template
         /// </summary>
         /// <value>Locale of template</value>
         [DataMember(Name="language", EmitDefaultValue=false)]
         public string Language { get; set; }
-  
-        
+
         /// <summary>
         /// Flag, that shows if this template is default dor notification type
         /// </summary>
         /// <value>Flag, that shows if this template is default dor notification type</value>
         [DataMember(Name="isDefault", EmitDefaultValue=false)]
         public bool? IsDefault { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

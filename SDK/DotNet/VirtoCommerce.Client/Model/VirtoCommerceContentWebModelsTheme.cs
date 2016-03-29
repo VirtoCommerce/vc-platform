@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// Theme
     /// </summary>
@@ -21,44 +21,49 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceContentWebModelsTheme" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceContentWebModelsTheme" />class.
         /// </summary>
-        public VirtoCommerceContentWebModelsTheme()
+        /// <param name="Name">Name.</param>
+        /// <param name="Path">Theme path, contains store id.</param>
+        /// <param name="Modified">Last modified date of any element in theme.</param>
+        /// <param name="SecurityScopes">SecurityScopes.</param>
+
+        public VirtoCommerceContentWebModelsTheme(string Name = null, string Path = null, DateTime? Modified = null, List<string> SecurityScopes = null)
         {
+            this.Name = Name;
+            this.Path = Path;
+            this.Modified = Modified;
+            this.SecurityScopes = SecurityScopes;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
         /// Theme path, contains store id
         /// </summary>
         /// <value>Theme path, contains store id</value>
         [DataMember(Name="path", EmitDefaultValue=false)]
         public string Path { get; set; }
-  
-        
+
         /// <summary>
         /// Last modified date of any element in theme
         /// </summary>
         /// <value>Last modified date of any element in theme</value>
         [DataMember(Name="modified", EmitDefaultValue=false)]
         public DateTime? Modified { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets SecurityScopes
         /// </summary>
         [DataMember(Name="securityScopes", EmitDefaultValue=false)]
         public List<string> SecurityScopes { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,91 +21,103 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelPackagingModulePushNotification" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelPackagingModulePushNotification" />class.
         /// </summary>
-        public VirtoCommercePlatformWebModelPackagingModulePushNotification()
+        /// <param name="ProgressLog">ProgressLog.</param>
+        /// <param name="Started">Started.</param>
+        /// <param name="Finished">Finished.</param>
+        /// <param name="Id">Id.</param>
+        /// <param name="Creator">Creator.</param>
+        /// <param name="Created">Created.</param>
+        /// <param name="IsNew">IsNew.</param>
+        /// <param name="NotifyType">NotifyType.</param>
+        /// <param name="Description">Description.</param>
+        /// <param name="Title">Title.</param>
+        /// <param name="RepeatCount">RepeatCount.</param>
+
+        public VirtoCommercePlatformWebModelPackagingModulePushNotification(List<VirtoCommercePlatformWebModelPackagingProgressMessage> ProgressLog = null, DateTime? Started = null, DateTime? Finished = null, string Id = null, string Creator = null, DateTime? Created = null, bool? IsNew = null, string NotifyType = null, string Description = null, string Title = null, int? RepeatCount = null)
         {
+            this.ProgressLog = ProgressLog;
+            this.Started = Started;
+            this.Finished = Finished;
+            this.Id = Id;
+            this.Creator = Creator;
+            this.Created = Created;
+            this.IsNew = IsNew;
+            this.NotifyType = NotifyType;
+            this.Description = Description;
+            this.Title = Title;
+            this.RepeatCount = RepeatCount;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets ProgressLog
         /// </summary>
         [DataMember(Name="progressLog", EmitDefaultValue=false)]
         public List<VirtoCommercePlatformWebModelPackagingProgressMessage> ProgressLog { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Started
         /// </summary>
         [DataMember(Name="started", EmitDefaultValue=false)]
         public DateTime? Started { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Finished
         /// </summary>
         [DataMember(Name="finished", EmitDefaultValue=false)]
         public DateTime? Finished { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Creator
         /// </summary>
         [DataMember(Name="creator", EmitDefaultValue=false)]
         public string Creator { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Created
         /// </summary>
         [DataMember(Name="created", EmitDefaultValue=false)]
         public DateTime? Created { get; set; }
-  
-        
+
         /// <summary>
-        /// Gets or Sets New
+        /// Gets or Sets IsNew
         /// </summary>
-        [DataMember(Name="new", EmitDefaultValue=false)]
-        public bool? New { get; set; }
-  
-        
+        [DataMember(Name="isNew", EmitDefaultValue=false)]
+        public bool? IsNew { get; set; }
+
         /// <summary>
         /// Gets or Sets NotifyType
         /// </summary>
         [DataMember(Name="notifyType", EmitDefaultValue=false)]
         public string NotifyType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Description
         /// </summary>
         [DataMember(Name="description", EmitDefaultValue=false)]
         public string Description { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Title
         /// </summary>
         [DataMember(Name="title", EmitDefaultValue=false)]
         public string Title { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets RepeatCount
         /// </summary>
         [DataMember(Name="repeatCount", EmitDefaultValue=false)]
         public int? RepeatCount { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -120,7 +132,7 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Id: ").Append(Id).Append("\n");
             sb.Append("  Creator: ").Append(Creator).Append("\n");
             sb.Append("  Created: ").Append(Created).Append("\n");
-            sb.Append("  New: ").Append(New).Append("\n");
+            sb.Append("  IsNew: ").Append(IsNew).Append("\n");
             sb.Append("  NotifyType: ").Append(NotifyType).Append("\n");
             sb.Append("  Description: ").Append(Description).Append("\n");
             sb.Append("  Title: ").Append(Title).Append("\n");
@@ -193,9 +205,9 @@ namespace VirtoCommerce.Client.Model
                     this.Created.Equals(other.Created)
                 ) && 
                 (
-                    this.New == other.New ||
-                    this.New != null &&
-                    this.New.Equals(other.New)
+                    this.IsNew == other.IsNew ||
+                    this.IsNew != null &&
+                    this.IsNew.Equals(other.IsNew)
                 ) && 
                 (
                     this.NotifyType == other.NotifyType ||
@@ -249,8 +261,8 @@ namespace VirtoCommerce.Client.Model
                 if (this.Created != null)
                     hash = hash * 59 + this.Created.GetHashCode();
                 
-                if (this.New != null)
-                    hash = hash * 59 + this.New.GetHashCode();
+                if (this.IsNew != null)
+                    hash = hash * 59 + this.IsNew.GetHashCode();
                 
                 if (this.NotifyType != null)
                     hash = hash * 59 + this.NotifyType.GetHashCode();

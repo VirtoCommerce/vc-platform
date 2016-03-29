@@ -9,6 +9,10 @@ namespace VirtoCommerce.Storefront.Model.Quote
 {
     public class QuoteRequest : Entity
     {
+        public QuoteRequest()
+        {
+        }
+
         public QuoteRequest(Currency currency, Language language)
         {
             Addresses = new List<Address>();

@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,56 +21,63 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceMarketingModuleWebModelMarketingSearchResult" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceMarketingModuleWebModelMarketingSearchResult" />class.
         /// </summary>
-        public VirtoCommerceMarketingModuleWebModelMarketingSearchResult()
+        /// <param name="TotalCount">TotalCount.</param>
+        /// <param name="Promotions">Promotions.</param>
+        /// <param name="ContentPlaces">ContentPlaces.</param>
+        /// <param name="ContentItems">ContentItems.</param>
+        /// <param name="ContentPublications">ContentPublications.</param>
+        /// <param name="ContentFolders">ContentFolders.</param>
+
+        public VirtoCommerceMarketingModuleWebModelMarketingSearchResult(int? TotalCount = null, List<VirtoCommerceMarketingModuleWebModelPromotion> Promotions = null, List<VirtoCommerceMarketingModuleWebModelDynamicContentPlace> ContentPlaces = null, List<VirtoCommerceMarketingModuleWebModelDynamicContentItem> ContentItems = null, List<VirtoCommerceMarketingModuleWebModelDynamicContentPublication> ContentPublications = null, List<VirtoCommerceMarketingModuleWebModelDynamicContentFolder> ContentFolders = null)
         {
+            this.TotalCount = TotalCount;
+            this.Promotions = Promotions;
+            this.ContentPlaces = ContentPlaces;
+            this.ContentItems = ContentItems;
+            this.ContentPublications = ContentPublications;
+            this.ContentFolders = ContentFolders;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets TotalCount
         /// </summary>
         [DataMember(Name="totalCount", EmitDefaultValue=false)]
         public int? TotalCount { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Promotions
         /// </summary>
         [DataMember(Name="promotions", EmitDefaultValue=false)]
         public List<VirtoCommerceMarketingModuleWebModelPromotion> Promotions { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ContentPlaces
         /// </summary>
         [DataMember(Name="contentPlaces", EmitDefaultValue=false)]
         public List<VirtoCommerceMarketingModuleWebModelDynamicContentPlace> ContentPlaces { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ContentItems
         /// </summary>
         [DataMember(Name="contentItems", EmitDefaultValue=false)]
         public List<VirtoCommerceMarketingModuleWebModelDynamicContentItem> ContentItems { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ContentPublications
         /// </summary>
         [DataMember(Name="contentPublications", EmitDefaultValue=false)]
         public List<VirtoCommerceMarketingModuleWebModelDynamicContentPublication> ContentPublications { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ContentFolders
         /// </summary>
         [DataMember(Name="contentFolders", EmitDefaultValue=false)]
         public List<VirtoCommerceMarketingModuleWebModelDynamicContentFolder> ContentFolders { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

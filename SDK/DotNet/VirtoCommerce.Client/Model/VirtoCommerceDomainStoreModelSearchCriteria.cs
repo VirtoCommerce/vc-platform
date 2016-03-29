@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,56 +21,63 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceDomainStoreModelSearchCriteria" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainStoreModelSearchCriteria" />class.
         /// </summary>
-        public VirtoCommerceDomainStoreModelSearchCriteria()
+        /// <param name="StoreIds">StoreIds.</param>
+        /// <param name="Keyword">Keyword.</param>
+        /// <param name="Sort">Sort.</param>
+        /// <param name="SortInfos">SortInfos.</param>
+        /// <param name="Skip">Skip.</param>
+        /// <param name="Take">Take.</param>
+
+        public VirtoCommerceDomainStoreModelSearchCriteria(List<string> StoreIds = null, string Keyword = null, string Sort = null, List<VirtoCommercePlatformCoreCommonSortInfo> SortInfos = null, int? Skip = null, int? Take = null)
         {
+            this.StoreIds = StoreIds;
+            this.Keyword = Keyword;
+            this.Sort = Sort;
+            this.SortInfos = SortInfos;
+            this.Skip = Skip;
+            this.Take = Take;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets StoreIds
         /// </summary>
         [DataMember(Name="storeIds", EmitDefaultValue=false)]
         public List<string> StoreIds { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Keyword
         /// </summary>
         [DataMember(Name="keyword", EmitDefaultValue=false)]
         public string Keyword { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Sort
         /// </summary>
         [DataMember(Name="sort", EmitDefaultValue=false)]
         public string Sort { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets SortInfos
         /// </summary>
         [DataMember(Name="sortInfos", EmitDefaultValue=false)]
         public List<VirtoCommercePlatformCoreCommonSortInfo> SortInfos { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Skip
         /// </summary>
         [DataMember(Name="skip", EmitDefaultValue=false)]
         public int? Skip { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Take
         /// </summary>
         [DataMember(Name="take", EmitDefaultValue=false)]
         public int? Take { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

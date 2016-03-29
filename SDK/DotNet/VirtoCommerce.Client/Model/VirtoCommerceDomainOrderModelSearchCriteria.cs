@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,77 +21,87 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceDomainOrderModelSearchCriteria" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainOrderModelSearchCriteria" />class.
         /// </summary>
-        public VirtoCommerceDomainOrderModelSearchCriteria()
+        /// <param name="ResponseGroup">ResponseGroup.</param>
+        /// <param name="Keyword">Keyword.</param>
+        /// <param name="CustomerId">CustomerId.</param>
+        /// <param name="EmployeeId">EmployeeId.</param>
+        /// <param name="StoreIds">StoreIds.</param>
+        /// <param name="StartDate">StartDate.</param>
+        /// <param name="EndDate">EndDate.</param>
+        /// <param name="Start">Start.</param>
+        /// <param name="Count">Count.</param>
+
+        public VirtoCommerceDomainOrderModelSearchCriteria(string ResponseGroup = null, string Keyword = null, string CustomerId = null, string EmployeeId = null, List<string> StoreIds = null, DateTime? StartDate = null, DateTime? EndDate = null, int? Start = null, int? Count = null)
         {
+            this.ResponseGroup = ResponseGroup;
+            this.Keyword = Keyword;
+            this.CustomerId = CustomerId;
+            this.EmployeeId = EmployeeId;
+            this.StoreIds = StoreIds;
+            this.StartDate = StartDate;
+            this.EndDate = EndDate;
+            this.Start = Start;
+            this.Count = Count;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets ResponseGroup
         /// </summary>
         [DataMember(Name="responseGroup", EmitDefaultValue=false)]
         public string ResponseGroup { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Keyword
         /// </summary>
         [DataMember(Name="keyword", EmitDefaultValue=false)]
         public string Keyword { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CustomerId
         /// </summary>
         [DataMember(Name="customerId", EmitDefaultValue=false)]
         public string CustomerId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets EmployeeId
         /// </summary>
         [DataMember(Name="employeeId", EmitDefaultValue=false)]
         public string EmployeeId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets StoreIds
         /// </summary>
         [DataMember(Name="storeIds", EmitDefaultValue=false)]
         public List<string> StoreIds { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets StartDate
         /// </summary>
         [DataMember(Name="startDate", EmitDefaultValue=false)]
         public DateTime? StartDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets EndDate
         /// </summary>
         [DataMember(Name="endDate", EmitDefaultValue=false)]
         public DateTime? EndDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Start
         /// </summary>
         [DataMember(Name="start", EmitDefaultValue=false)]
         public int? Start { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Count
         /// </summary>
         [DataMember(Name="count", EmitDefaultValue=false)]
         public int? Count { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

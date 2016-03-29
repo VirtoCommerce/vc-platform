@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,63 +21,71 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebExportImportCsvProductPropertyMap" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebExportImportCsvProductPropertyMap" />class.
         /// </summary>
-        public VirtoCommerceCatalogModuleWebExportImportCsvProductPropertyMap()
+        /// <param name="EntityColumnName">EntityColumnName.</param>
+        /// <param name="CsvColumnName">CsvColumnName.</param>
+        /// <param name="IsSystemProperty">IsSystemProperty.</param>
+        /// <param name="IsRequired">IsRequired.</param>
+        /// <param name="CustomValue">CustomValue.</param>
+        /// <param name="StringFormat">StringFormat.</param>
+        /// <param name="Locale">Locale.</param>
+
+        public VirtoCommerceCatalogModuleWebExportImportCsvProductPropertyMap(string EntityColumnName = null, string CsvColumnName = null, bool? IsSystemProperty = null, bool? IsRequired = null, string CustomValue = null, string StringFormat = null, string Locale = null)
         {
+            this.EntityColumnName = EntityColumnName;
+            this.CsvColumnName = CsvColumnName;
+            this.IsSystemProperty = IsSystemProperty;
+            this.IsRequired = IsRequired;
+            this.CustomValue = CustomValue;
+            this.StringFormat = StringFormat;
+            this.Locale = Locale;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets EntityColumnName
         /// </summary>
         [DataMember(Name="entityColumnName", EmitDefaultValue=false)]
         public string EntityColumnName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CsvColumnName
         /// </summary>
         [DataMember(Name="csvColumnName", EmitDefaultValue=false)]
         public string CsvColumnName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets IsSystemProperty
         /// </summary>
         [DataMember(Name="isSystemProperty", EmitDefaultValue=false)]
         public bool? IsSystemProperty { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets IsRequired
         /// </summary>
         [DataMember(Name="isRequired", EmitDefaultValue=false)]
         public bool? IsRequired { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CustomValue
         /// </summary>
         [DataMember(Name="customValue", EmitDefaultValue=false)]
         public string CustomValue { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets StringFormat
         /// </summary>
         [DataMember(Name="stringFormat", EmitDefaultValue=false)]
         public string StringFormat { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Locale
         /// </summary>
         [DataMember(Name="locale", EmitDefaultValue=false)]
         public string Locale { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

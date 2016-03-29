@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,196 +21,223 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceDomainCustomerModelContact" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCustomerModelContact" />class.
         /// </summary>
-        public VirtoCommerceDomainCustomerModelContact()
+        /// <param name="FirstName">FirstName.</param>
+        /// <param name="MiddleName">MiddleName.</param>
+        /// <param name="LastName">LastName.</param>
+        /// <param name="FullName">FullName.</param>
+        /// <param name="TimeZone">TimeZone.</param>
+        /// <param name="DefaultLanguage">DefaultLanguage.</param>
+        /// <param name="BirthDate">BirthDate.</param>
+        /// <param name="TaxpayerId">TaxpayerId.</param>
+        /// <param name="PreferredDelivery">PreferredDelivery.</param>
+        /// <param name="PreferredCommunication">PreferredCommunication.</param>
+        /// <param name="Salutation">Salutation.</param>
+        /// <param name="Organizations">Organizations.</param>
+        /// <param name="SecurityAccounts">SecurityAccounts.</param>
+        /// <param name="Name">Name.</param>
+        /// <param name="MemberType">MemberType.</param>
+        /// <param name="Addresses">Addresses.</param>
+        /// <param name="Phones">Phones.</param>
+        /// <param name="Emails">Emails.</param>
+        /// <param name="Notes">Notes.</param>
+        /// <param name="ObjectType">ObjectType.</param>
+        /// <param name="DynamicProperties">DynamicProperties.</param>
+        /// <param name="CreatedDate">CreatedDate.</param>
+        /// <param name="ModifiedDate">ModifiedDate.</param>
+        /// <param name="CreatedBy">CreatedBy.</param>
+        /// <param name="ModifiedBy">ModifiedBy.</param>
+        /// <param name="Id">Id.</param>
+
+        public VirtoCommerceDomainCustomerModelContact(string FirstName = null, string MiddleName = null, string LastName = null, string FullName = null, string TimeZone = null, string DefaultLanguage = null, DateTime? BirthDate = null, string TaxpayerId = null, string PreferredDelivery = null, string PreferredCommunication = null, string Salutation = null, List<string> Organizations = null, List<VirtoCommercePlatformCoreSecurityApplicationUserExtended> SecurityAccounts = null, string Name = null, string MemberType = null, List<VirtoCommerceDomainCommerceModelAddress> Addresses = null, List<string> Phones = null, List<string> Emails = null, List<VirtoCommerceDomainCustomerModelNote> Notes = null, string ObjectType = null, List<VirtoCommercePlatformCoreDynamicPropertiesDynamicObjectProperty> DynamicProperties = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
         {
+            this.FirstName = FirstName;
+            this.MiddleName = MiddleName;
+            this.LastName = LastName;
+            this.FullName = FullName;
+            this.TimeZone = TimeZone;
+            this.DefaultLanguage = DefaultLanguage;
+            this.BirthDate = BirthDate;
+            this.TaxpayerId = TaxpayerId;
+            this.PreferredDelivery = PreferredDelivery;
+            this.PreferredCommunication = PreferredCommunication;
+            this.Salutation = Salutation;
+            this.Organizations = Organizations;
+            this.SecurityAccounts = SecurityAccounts;
+            this.Name = Name;
+            this.MemberType = MemberType;
+            this.Addresses = Addresses;
+            this.Phones = Phones;
+            this.Emails = Emails;
+            this.Notes = Notes;
+            this.ObjectType = ObjectType;
+            this.DynamicProperties = DynamicProperties;
+            this.CreatedDate = CreatedDate;
+            this.ModifiedDate = ModifiedDate;
+            this.CreatedBy = CreatedBy;
+            this.ModifiedBy = ModifiedBy;
+            this.Id = Id;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets FirstName
         /// </summary>
         [DataMember(Name="firstName", EmitDefaultValue=false)]
         public string FirstName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets MiddleName
         /// </summary>
         [DataMember(Name="middleName", EmitDefaultValue=false)]
         public string MiddleName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets LastName
         /// </summary>
         [DataMember(Name="lastName", EmitDefaultValue=false)]
         public string LastName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets FullName
         /// </summary>
         [DataMember(Name="fullName", EmitDefaultValue=false)]
         public string FullName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets TimeZone
         /// </summary>
         [DataMember(Name="timeZone", EmitDefaultValue=false)]
         public string TimeZone { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets DefaultLanguage
         /// </summary>
         [DataMember(Name="defaultLanguage", EmitDefaultValue=false)]
         public string DefaultLanguage { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets BirthDate
         /// </summary>
         [DataMember(Name="birthDate", EmitDefaultValue=false)]
         public DateTime? BirthDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets TaxpayerId
         /// </summary>
         [DataMember(Name="taxpayerId", EmitDefaultValue=false)]
         public string TaxpayerId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets PreferredDelivery
         /// </summary>
         [DataMember(Name="preferredDelivery", EmitDefaultValue=false)]
         public string PreferredDelivery { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets PreferredCommunication
         /// </summary>
         [DataMember(Name="preferredCommunication", EmitDefaultValue=false)]
         public string PreferredCommunication { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Salutation
         /// </summary>
         [DataMember(Name="salutation", EmitDefaultValue=false)]
         public string Salutation { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Organizations
         /// </summary>
         [DataMember(Name="organizations", EmitDefaultValue=false)]
         public List<string> Organizations { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets SecurityAccounts
         /// </summary>
         [DataMember(Name="securityAccounts", EmitDefaultValue=false)]
         public List<VirtoCommercePlatformCoreSecurityApplicationUserExtended> SecurityAccounts { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets MemberType
         /// </summary>
         [DataMember(Name="memberType", EmitDefaultValue=false)]
         public string MemberType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Addresses
         /// </summary>
         [DataMember(Name="addresses", EmitDefaultValue=false)]
         public List<VirtoCommerceDomainCommerceModelAddress> Addresses { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Phones
         /// </summary>
         [DataMember(Name="phones", EmitDefaultValue=false)]
         public List<string> Phones { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Emails
         /// </summary>
         [DataMember(Name="emails", EmitDefaultValue=false)]
         public List<string> Emails { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Notes
         /// </summary>
         [DataMember(Name="notes", EmitDefaultValue=false)]
         public List<VirtoCommerceDomainCustomerModelNote> Notes { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ObjectType
         /// </summary>
         [DataMember(Name="objectType", EmitDefaultValue=false)]
         public string ObjectType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets DynamicProperties
         /// </summary>
         [DataMember(Name="dynamicProperties", EmitDefaultValue=false)]
         public List<VirtoCommercePlatformCoreDynamicPropertiesDynamicObjectProperty> DynamicProperties { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedDate
         /// </summary>
         [DataMember(Name="createdDate", EmitDefaultValue=false)]
         public DateTime? CreatedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedDate
         /// </summary>
         [DataMember(Name="modifiedDate", EmitDefaultValue=false)]
         public DateTime? ModifiedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedBy
         /// </summary>
         [DataMember(Name="createdBy", EmitDefaultValue=false)]
         public string CreatedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedBy
         /// </summary>
         [DataMember(Name="modifiedBy", EmitDefaultValue=false)]
         public string ModifiedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

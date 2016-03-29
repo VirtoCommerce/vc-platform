@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,141 +21,160 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceCoreModuleWebModelStorefrontUser" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceCoreModuleWebModelStorefrontUser" />class.
         /// </summary>
-        public VirtoCommerceCoreModuleWebModelStorefrontUser()
+        /// <param name="AllowedStores">List of stores which  user can sing in.</param>
+        /// <param name="Id">Id.</param>
+        /// <param name="UserName">UserName.</param>
+        /// <param name="Email">Email.</param>
+        /// <param name="PhoneNumber">PhoneNumber.</param>
+        /// <param name="StoreId">StoreId.</param>
+        /// <param name="MemberId">MemberId.</param>
+        /// <param name="Icon">Icon.</param>
+        /// <param name="IsAdministrator">IsAdministrator.</param>
+        /// <param name="UserType">UserType.</param>
+        /// <param name="UserState">UserState.</param>
+        /// <param name="Password">Password.</param>
+        /// <param name="PasswordHash">PasswordHash.</param>
+        /// <param name="SecurityStamp">SecurityStamp.</param>
+        /// <param name="Logins">Logins.</param>
+        /// <param name="Roles">Roles.</param>
+        /// <param name="Permissions">Permissions.</param>
+        /// <param name="ApiAccounts">ApiAccounts.</param>
+
+        public VirtoCommerceCoreModuleWebModelStorefrontUser(List<string> AllowedStores = null, string Id = null, string UserName = null, string Email = null, string PhoneNumber = null, string StoreId = null, string MemberId = null, string Icon = null, bool? IsAdministrator = null, string UserType = null, string UserState = null, string Password = null, string PasswordHash = null, string SecurityStamp = null, List<VirtoCommercePlatformCoreSecurityApplicationUserLogin> Logins = null, List<VirtoCommercePlatformCoreSecurityRole> Roles = null, List<string> Permissions = null, List<VirtoCommercePlatformCoreSecurityApiAccount> ApiAccounts = null)
         {
+            this.AllowedStores = AllowedStores;
+            this.Id = Id;
+            this.UserName = UserName;
+            this.Email = Email;
+            this.PhoneNumber = PhoneNumber;
+            this.StoreId = StoreId;
+            this.MemberId = MemberId;
+            this.Icon = Icon;
+            this.IsAdministrator = IsAdministrator;
+            this.UserType = UserType;
+            this.UserState = UserState;
+            this.Password = Password;
+            this.PasswordHash = PasswordHash;
+            this.SecurityStamp = SecurityStamp;
+            this.Logins = Logins;
+            this.Roles = Roles;
+            this.Permissions = Permissions;
+            this.ApiAccounts = ApiAccounts;
             
         }
 
-        
         /// <summary>
         /// List of stores which  user can sing in
         /// </summary>
         /// <value>List of stores which  user can sing in</value>
         [DataMember(Name="allowedStores", EmitDefaultValue=false)]
         public List<string> AllowedStores { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets UserName
         /// </summary>
         [DataMember(Name="userName", EmitDefaultValue=false)]
         public string UserName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Email
         /// </summary>
         [DataMember(Name="email", EmitDefaultValue=false)]
         public string Email { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets PhoneNumber
         /// </summary>
         [DataMember(Name="phoneNumber", EmitDefaultValue=false)]
         public string PhoneNumber { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets StoreId
         /// </summary>
         [DataMember(Name="storeId", EmitDefaultValue=false)]
         public string StoreId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets MemberId
         /// </summary>
         [DataMember(Name="memberId", EmitDefaultValue=false)]
         public string MemberId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Icon
         /// </summary>
         [DataMember(Name="icon", EmitDefaultValue=false)]
         public string Icon { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets IsAdministrator
         /// </summary>
         [DataMember(Name="isAdministrator", EmitDefaultValue=false)]
         public bool? IsAdministrator { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets UserType
         /// </summary>
         [DataMember(Name="userType", EmitDefaultValue=false)]
         public string UserType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets UserState
         /// </summary>
         [DataMember(Name="userState", EmitDefaultValue=false)]
         public string UserState { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Password
         /// </summary>
         [DataMember(Name="password", EmitDefaultValue=false)]
         public string Password { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets PasswordHash
         /// </summary>
         [DataMember(Name="passwordHash", EmitDefaultValue=false)]
         public string PasswordHash { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets SecurityStamp
         /// </summary>
         [DataMember(Name="securityStamp", EmitDefaultValue=false)]
         public string SecurityStamp { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Logins
         /// </summary>
         [DataMember(Name="logins", EmitDefaultValue=false)]
         public List<VirtoCommercePlatformCoreSecurityApplicationUserLogin> Logins { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Roles
         /// </summary>
         [DataMember(Name="roles", EmitDefaultValue=false)]
         public List<VirtoCommercePlatformCoreSecurityRole> Roles { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Permissions
         /// </summary>
         [DataMember(Name="permissions", EmitDefaultValue=false)]
         public List<string> Permissions { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ApiAccounts
         /// </summary>
         [DataMember(Name="apiAccounts", EmitDefaultValue=false)]
         public List<VirtoCommercePlatformCoreSecurityApiAccount> ApiAccounts { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

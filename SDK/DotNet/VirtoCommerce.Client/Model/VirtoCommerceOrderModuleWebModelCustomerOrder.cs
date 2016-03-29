@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// Represent customer order
     /// </summary>
@@ -21,299 +21,338 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceOrderModuleWebModelCustomerOrder" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceOrderModuleWebModelCustomerOrder" />class.
         /// </summary>
-        public VirtoCommerceOrderModuleWebModelCustomerOrder()
+        /// <param name="CustomerName">CustomerName.</param>
+        /// <param name="CustomerId">CustomerId.</param>
+        /// <param name="ChannelId">Chanel (Web site, mobile application etc).</param>
+        /// <param name="StoreId">StoreId.</param>
+        /// <param name="StoreName">StoreName.</param>
+        /// <param name="OrganizationName">OrganizationName.</param>
+        /// <param name="OrganizationId">OrganizationId.</param>
+        /// <param name="EmployeeName">Employee who should handle that order.</param>
+        /// <param name="EmployeeId">EmployeeId.</param>
+        /// <param name="DiscountAmount">DiscountAmount.</param>
+        /// <param name="Addresses">All shipping and billing order addresses.</param>
+        /// <param name="InPayments">Incoming payments operations.</param>
+        /// <param name="Items">All customer order line items.</param>
+        /// <param name="Shipments">All customer order shipments.</param>
+        /// <param name="Discount">All customer order discount.</param>
+        /// <param name="TaxDetails">Tax details.</param>
+        /// <param name="Scopes">Security permission scopes used for security check on UI.</param>
+        /// <param name="OperationType">Operation type string representation (CustomerOrder, Shipment etc).</param>
+        /// <param name="Number">Unique user friendly document number (generate automatically based on special algorithm realization).</param>
+        /// <param name="IsApproved">Flag can be used to refer to a specific order status in a variety of user scenarios with combination of Status\r\n            (Order completion, Shipment send etc).</param>
+        /// <param name="Status">Current operation status may have any values defined by concrete business process.</param>
+        /// <param name="Comment">Comment.</param>
+        /// <param name="Currency">Currency code.</param>
+        /// <param name="TaxIncluded">TaxIncluded.</param>
+        /// <param name="Sum">Money amount without tax.</param>
+        /// <param name="Tax">Tax total.</param>
+        /// <param name="IsCancelled">IsCancelled.</param>
+        /// <param name="CancelledDate">CancelledDate.</param>
+        /// <param name="CancelReason">CancelReason.</param>
+        /// <param name="ParentOperationId">Used for construct hierarchy of operation and represent parent operation id.</param>
+        /// <param name="ChildrenOperations">ChildrenOperations.</param>
+        /// <param name="ObjectType">Used for dynamic properties management, contains object type string.</param>
+        /// <param name="DynamicProperties">Dynamic properties collections.</param>
+        /// <param name="CreatedDate">CreatedDate.</param>
+        /// <param name="ModifiedDate">ModifiedDate.</param>
+        /// <param name="CreatedBy">CreatedBy.</param>
+        /// <param name="ModifiedBy">ModifiedBy.</param>
+        /// <param name="Id">Id.</param>
+
+        public VirtoCommerceOrderModuleWebModelCustomerOrder(string CustomerName = null, string CustomerId = null, string ChannelId = null, string StoreId = null, string StoreName = null, string OrganizationName = null, string OrganizationId = null, string EmployeeName = null, string EmployeeId = null, double? DiscountAmount = null, List<VirtoCommerceOrderModuleWebModelAddress> Addresses = null, List<VirtoCommerceOrderModuleWebModelPaymentIn> InPayments = null, List<VirtoCommerceOrderModuleWebModelLineItem> Items = null, List<VirtoCommerceOrderModuleWebModelShipment> Shipments = null, VirtoCommerceOrderModuleWebModelDiscount Discount = null, List<VirtoCommerceDomainCommerceModelTaxDetail> TaxDetails = null, List<string> Scopes = null, string OperationType = null, string Number = null, bool? IsApproved = null, string Status = null, string Comment = null, string Currency = null, bool? TaxIncluded = null, double? Sum = null, double? Tax = null, bool? IsCancelled = null, DateTime? CancelledDate = null, string CancelReason = null, string ParentOperationId = null, List<VirtoCommerceOrderModuleWebModelOperation> ChildrenOperations = null, string ObjectType = null, List<VirtoCommercePlatformCoreDynamicPropertiesDynamicObjectProperty> DynamicProperties = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
         {
+            this.CustomerName = CustomerName;
+            this.CustomerId = CustomerId;
+            this.ChannelId = ChannelId;
+            this.StoreId = StoreId;
+            this.StoreName = StoreName;
+            this.OrganizationName = OrganizationName;
+            this.OrganizationId = OrganizationId;
+            this.EmployeeName = EmployeeName;
+            this.EmployeeId = EmployeeId;
+            this.DiscountAmount = DiscountAmount;
+            this.Addresses = Addresses;
+            this.InPayments = InPayments;
+            this.Items = Items;
+            this.Shipments = Shipments;
+            this.Discount = Discount;
+            this.TaxDetails = TaxDetails;
+            this.Scopes = Scopes;
+            this.OperationType = OperationType;
+            this.Number = Number;
+            this.IsApproved = IsApproved;
+            this.Status = Status;
+            this.Comment = Comment;
+            this.Currency = Currency;
+            this.TaxIncluded = TaxIncluded;
+            this.Sum = Sum;
+            this.Tax = Tax;
+            this.IsCancelled = IsCancelled;
+            this.CancelledDate = CancelledDate;
+            this.CancelReason = CancelReason;
+            this.ParentOperationId = ParentOperationId;
+            this.ChildrenOperations = ChildrenOperations;
+            this.ObjectType = ObjectType;
+            this.DynamicProperties = DynamicProperties;
+            this.CreatedDate = CreatedDate;
+            this.ModifiedDate = ModifiedDate;
+            this.CreatedBy = CreatedBy;
+            this.ModifiedBy = ModifiedBy;
+            this.Id = Id;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets CustomerName
         /// </summary>
         [DataMember(Name="customerName", EmitDefaultValue=false)]
         public string CustomerName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CustomerId
         /// </summary>
         [DataMember(Name="customerId", EmitDefaultValue=false)]
         public string CustomerId { get; set; }
-  
-        
+
         /// <summary>
         /// Chanel (Web site, mobile application etc)
         /// </summary>
         /// <value>Chanel (Web site, mobile application etc)</value>
         [DataMember(Name="channelId", EmitDefaultValue=false)]
         public string ChannelId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets StoreId
         /// </summary>
         [DataMember(Name="storeId", EmitDefaultValue=false)]
         public string StoreId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets StoreName
         /// </summary>
         [DataMember(Name="storeName", EmitDefaultValue=false)]
         public string StoreName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets OrganizationName
         /// </summary>
         [DataMember(Name="organizationName", EmitDefaultValue=false)]
         public string OrganizationName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets OrganizationId
         /// </summary>
         [DataMember(Name="organizationId", EmitDefaultValue=false)]
         public string OrganizationId { get; set; }
-  
-        
+
         /// <summary>
         /// Employee who should handle that order
         /// </summary>
         /// <value>Employee who should handle that order</value>
         [DataMember(Name="employeeName", EmitDefaultValue=false)]
         public string EmployeeName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets EmployeeId
         /// </summary>
         [DataMember(Name="employeeId", EmitDefaultValue=false)]
         public string EmployeeId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets DiscountAmount
         /// </summary>
         [DataMember(Name="discountAmount", EmitDefaultValue=false)]
         public double? DiscountAmount { get; set; }
-  
-        
+
         /// <summary>
         /// All shipping and billing order addresses
         /// </summary>
         /// <value>All shipping and billing order addresses</value>
         [DataMember(Name="addresses", EmitDefaultValue=false)]
         public List<VirtoCommerceOrderModuleWebModelAddress> Addresses { get; set; }
-  
-        
+
         /// <summary>
         /// Incoming payments operations
         /// </summary>
         /// <value>Incoming payments operations</value>
         [DataMember(Name="inPayments", EmitDefaultValue=false)]
         public List<VirtoCommerceOrderModuleWebModelPaymentIn> InPayments { get; set; }
-  
-        
+
         /// <summary>
         /// All customer order line items
         /// </summary>
         /// <value>All customer order line items</value>
         [DataMember(Name="items", EmitDefaultValue=false)]
         public List<VirtoCommerceOrderModuleWebModelLineItem> Items { get; set; }
-  
-        
+
         /// <summary>
         /// All customer order shipments
         /// </summary>
         /// <value>All customer order shipments</value>
         [DataMember(Name="shipments", EmitDefaultValue=false)]
         public List<VirtoCommerceOrderModuleWebModelShipment> Shipments { get; set; }
-  
-        
+
         /// <summary>
         /// All customer order discount
         /// </summary>
         /// <value>All customer order discount</value>
         [DataMember(Name="discount", EmitDefaultValue=false)]
         public VirtoCommerceOrderModuleWebModelDiscount Discount { get; set; }
-  
-        
+
         /// <summary>
         /// Tax details
         /// </summary>
         /// <value>Tax details</value>
         [DataMember(Name="taxDetails", EmitDefaultValue=false)]
         public List<VirtoCommerceDomainCommerceModelTaxDetail> TaxDetails { get; set; }
-  
-        
+
         /// <summary>
         /// Security permission scopes used for security check on UI
         /// </summary>
         /// <value>Security permission scopes used for security check on UI</value>
         [DataMember(Name="scopes", EmitDefaultValue=false)]
         public List<string> Scopes { get; set; }
-  
-        
+
         /// <summary>
         /// Operation type string representation (CustomerOrder, Shipment etc)
         /// </summary>
         /// <value>Operation type string representation (CustomerOrder, Shipment etc)</value>
         [DataMember(Name="operationType", EmitDefaultValue=false)]
         public string OperationType { get; set; }
-  
-        
+
         /// <summary>
         /// Unique user friendly document number (generate automatically based on special algorithm realization)
         /// </summary>
         /// <value>Unique user friendly document number (generate automatically based on special algorithm realization)</value>
         [DataMember(Name="number", EmitDefaultValue=false)]
         public string Number { get; set; }
-  
-        
+
         /// <summary>
         /// Flag can be used to refer to a specific order status in a variety of user scenarios with combination of Status\r\n            (Order completion, Shipment send etc)
         /// </summary>
         /// <value>Flag can be used to refer to a specific order status in a variety of user scenarios with combination of Status\r\n            (Order completion, Shipment send etc)</value>
         [DataMember(Name="isApproved", EmitDefaultValue=false)]
         public bool? IsApproved { get; set; }
-  
-        
+
         /// <summary>
         /// Current operation status may have any values defined by concrete business process
         /// </summary>
         /// <value>Current operation status may have any values defined by concrete business process</value>
         [DataMember(Name="status", EmitDefaultValue=false)]
         public string Status { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Comment
         /// </summary>
         [DataMember(Name="comment", EmitDefaultValue=false)]
         public string Comment { get; set; }
-  
-        
+
         /// <summary>
         /// Currency code
         /// </summary>
         /// <value>Currency code</value>
         [DataMember(Name="currency", EmitDefaultValue=false)]
         public string Currency { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets TaxIncluded
         /// </summary>
         [DataMember(Name="taxIncluded", EmitDefaultValue=false)]
         public bool? TaxIncluded { get; set; }
-  
-        
+
         /// <summary>
         /// Money amount without tax
         /// </summary>
         /// <value>Money amount without tax</value>
         [DataMember(Name="sum", EmitDefaultValue=false)]
         public double? Sum { get; set; }
-  
-        
+
         /// <summary>
         /// Tax total
         /// </summary>
         /// <value>Tax total</value>
         [DataMember(Name="tax", EmitDefaultValue=false)]
         public double? Tax { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets IsCancelled
         /// </summary>
         [DataMember(Name="isCancelled", EmitDefaultValue=false)]
         public bool? IsCancelled { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CancelledDate
         /// </summary>
         [DataMember(Name="cancelledDate", EmitDefaultValue=false)]
         public DateTime? CancelledDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CancelReason
         /// </summary>
         [DataMember(Name="cancelReason", EmitDefaultValue=false)]
         public string CancelReason { get; set; }
-  
-        
+
         /// <summary>
         /// Used for construct hierarchy of operation and represent parent operation id
         /// </summary>
         /// <value>Used for construct hierarchy of operation and represent parent operation id</value>
         [DataMember(Name="parentOperationId", EmitDefaultValue=false)]
         public string ParentOperationId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ChildrenOperations
         /// </summary>
         [DataMember(Name="childrenOperations", EmitDefaultValue=false)]
         public List<VirtoCommerceOrderModuleWebModelOperation> ChildrenOperations { get; set; }
-  
-        
+
         /// <summary>
         /// Used for dynamic properties management, contains object type string
         /// </summary>
         /// <value>Used for dynamic properties management, contains object type string</value>
         [DataMember(Name="objectType", EmitDefaultValue=false)]
         public string ObjectType { get; set; }
-  
-        
+
         /// <summary>
         /// Dynamic properties collections
         /// </summary>
         /// <value>Dynamic properties collections</value>
         [DataMember(Name="dynamicProperties", EmitDefaultValue=false)]
         public List<VirtoCommercePlatformCoreDynamicPropertiesDynamicObjectProperty> DynamicProperties { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedDate
         /// </summary>
         [DataMember(Name="createdDate", EmitDefaultValue=false)]
         public DateTime? CreatedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedDate
         /// </summary>
         [DataMember(Name="modifiedDate", EmitDefaultValue=false)]
         public DateTime? ModifiedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedBy
         /// </summary>
         [DataMember(Name="createdBy", EmitDefaultValue=false)]
         public string CreatedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedBy
         /// </summary>
         [DataMember(Name="modifiedBy", EmitDefaultValue=false)]
         public string ModifiedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,35 +21,39 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreSecurityRoleSearchRequest" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreSecurityRoleSearchRequest" />class.
         /// </summary>
-        public VirtoCommercePlatformCoreSecurityRoleSearchRequest()
+        /// <param name="Keyword">Keyword.</param>
+        /// <param name="SkipCount">SkipCount.</param>
+        /// <param name="TakeCount">TakeCount.</param>
+
+        public VirtoCommercePlatformCoreSecurityRoleSearchRequest(string Keyword = null, int? SkipCount = null, int? TakeCount = null)
         {
+            this.Keyword = Keyword;
+            this.SkipCount = SkipCount;
+            this.TakeCount = TakeCount;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets Keyword
         /// </summary>
         [DataMember(Name="keyword", EmitDefaultValue=false)]
         public string Keyword { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets SkipCount
         /// </summary>
         [DataMember(Name="skipCount", EmitDefaultValue=false)]
         public int? SkipCount { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets TakeCount
         /// </summary>
         [DataMember(Name="takeCount", EmitDefaultValue=false)]
         public int? TakeCount { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

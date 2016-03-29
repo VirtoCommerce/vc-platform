@@ -6,6 +6,7 @@ using VirtoCommerce.Client.Api;
 using VirtoCommerce.Storefront.Builders;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Catalog;
+using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Common.Events;
 using VirtoCommerce.Storefront.Model.Customer;
 using VirtoCommerce.Storefront.Model.Quote.Events;
@@ -161,7 +162,7 @@ namespace VirtoCommerce.Storefront.Test
         {
             var apiClientConfiguration = new Client.Client.Configuration(GetApiClient());
             var quoteApi = new QuoteModuleApi(apiClientConfiguration);
-            var cacheManager = new Mock<ICacheManager<object>>();
+            var cacheManager = new Mock<ILocalCacheManager>();
             var quoteRequestEventPublisher = new Mock<IEventPublisher<QuoteRequestUpdatedEvent>>();
 
             return new QuoteRequestBuilder(quoteApi, cacheManager.Object, quoteRequestEventPublisher.Object);

@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,49 +21,55 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceDomainCatalogModelCatalogLanguage" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCatalogModelCatalogLanguage" />class.
         /// </summary>
-        public VirtoCommerceDomainCatalogModelCatalogLanguage()
+        /// <param name="CatalogId">CatalogId.</param>
+        /// <param name="Catalog">Catalog.</param>
+        /// <param name="IsDefault">IsDefault.</param>
+        /// <param name="LanguageCode">LanguageCode.</param>
+        /// <param name="Id">Id.</param>
+
+        public VirtoCommerceDomainCatalogModelCatalogLanguage(string CatalogId = null, VirtoCommerceDomainCatalogModelCatalog Catalog = null, bool? IsDefault = null, string LanguageCode = null, string Id = null)
         {
+            this.CatalogId = CatalogId;
+            this.Catalog = Catalog;
+            this.IsDefault = IsDefault;
+            this.LanguageCode = LanguageCode;
+            this.Id = Id;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets CatalogId
         /// </summary>
         [DataMember(Name="catalogId", EmitDefaultValue=false)]
         public string CatalogId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Catalog
         /// </summary>
         [DataMember(Name="catalog", EmitDefaultValue=false)]
         public VirtoCommerceDomainCatalogModelCatalog Catalog { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets IsDefault
         /// </summary>
         [DataMember(Name="isDefault", EmitDefaultValue=false)]
         public bool? IsDefault { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets LanguageCode
         /// </summary>
         [DataMember(Name="languageCode", EmitDefaultValue=false)]
         public string LanguageCode { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

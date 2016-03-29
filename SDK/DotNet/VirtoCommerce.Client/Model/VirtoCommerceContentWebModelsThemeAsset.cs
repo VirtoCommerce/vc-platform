@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,74 +21,83 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceContentWebModelsThemeAsset" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceContentWebModelsThemeAsset" />class.
         /// </summary>
-        public VirtoCommerceContentWebModelsThemeAsset()
+        /// <param name="Id">Id, contains full path relative to theme root folder.</param>
+        /// <param name="Name">Name.</param>
+        /// <param name="Content">Theme asset text content (text files - html, css, js &amp;amp; etc), based on content type.</param>
+        /// <param name="ByteContent">Theme asset byte content (non-text files - images, fonts, zips &amp;amp; etc), based on content type.</param>
+        /// <param name="AssetUrl">AssetUrl.</param>
+        /// <param name="ContentType">ContentType.</param>
+        /// <param name="Updated">Theme asset last update date.</param>
+        /// <param name="SecurityScopes">SecurityScopes.</param>
+
+        public VirtoCommerceContentWebModelsThemeAsset(string Id = null, string Name = null, string Content = null, byte[] ByteContent = null, string AssetUrl = null, string ContentType = null, DateTime? Updated = null, List<string> SecurityScopes = null)
         {
+            this.Id = Id;
+            this.Name = Name;
+            this.Content = Content;
+            this.ByteContent = ByteContent;
+            this.AssetUrl = AssetUrl;
+            this.ContentType = ContentType;
+            this.Updated = Updated;
+            this.SecurityScopes = SecurityScopes;
             
         }
 
-        
         /// <summary>
         /// Id, contains full path relative to theme root folder
         /// </summary>
         /// <value>Id, contains full path relative to theme root folder</value>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
-        /// Theme asset text content (text files - html, css, js &amp; etc), based on content type
+        /// Theme asset text content (text files - html, css, js &amp;amp; etc), based on content type
         /// </summary>
-        /// <value>Theme asset text content (text files - html, css, js &amp; etc), based on content type</value>
+        /// <value>Theme asset text content (text files - html, css, js &amp;amp; etc), based on content type</value>
         [DataMember(Name="content", EmitDefaultValue=false)]
         public string Content { get; set; }
-  
-        
+
         /// <summary>
-        /// Theme asset byte content (non-text files - images, fonts, zips &amp; etc), based on content type
+        /// Theme asset byte content (non-text files - images, fonts, zips &amp;amp; etc), based on content type
         /// </summary>
-        /// <value>Theme asset byte content (non-text files - images, fonts, zips &amp; etc), based on content type</value>
+        /// <value>Theme asset byte content (non-text files - images, fonts, zips &amp;amp; etc), based on content type</value>
         [DataMember(Name="byteContent", EmitDefaultValue=false)]
-        public string ByteContent { get; set; }
-  
-        
+        public byte[] ByteContent { get; set; }
+
         /// <summary>
         /// Gets or Sets AssetUrl
         /// </summary>
         [DataMember(Name="assetUrl", EmitDefaultValue=false)]
         public string AssetUrl { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ContentType
         /// </summary>
         [DataMember(Name="contentType", EmitDefaultValue=false)]
         public string ContentType { get; set; }
-  
-        
+
         /// <summary>
         /// Theme asset last update date
         /// </summary>
         /// <value>Theme asset last update date</value>
         [DataMember(Name="updated", EmitDefaultValue=false)]
         public DateTime? Updated { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets SecurityScopes
         /// </summary>
         [DataMember(Name="securityScopes", EmitDefaultValue=false)]
         public List<string> SecurityScopes { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

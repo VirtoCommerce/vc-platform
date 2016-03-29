@@ -17,9 +17,9 @@ namespace VirtoCommerce.Storefront.Routing
     {
         private readonly Func<WorkContext> _workContextFactory;
         private readonly ICommerceCoreModuleApi _commerceCoreApi;
-        private readonly ICacheManager<object> _cacheManager;
+        private readonly ILocalCacheManager _cacheManager;
 
-        public SeoRoute(string url, IRouteHandler routeHandler, Func<WorkContext> workContextFactory, ICommerceCoreModuleApi commerceCoreApi, ICacheManager<object> cacheManager)
+        public SeoRoute(string url, IRouteHandler routeHandler, Func<WorkContext> workContextFactory, ICommerceCoreModuleApi commerceCoreApi, ILocalCacheManager cacheManager)
             : base(url, routeHandler)
         {
             _workContextFactory = workContextFactory;

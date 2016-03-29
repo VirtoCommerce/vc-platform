@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,35 +21,39 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelSecurityUserLogin" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelSecurityUserLogin" />class.
         /// </summary>
-        public VirtoCommercePlatformWebModelSecurityUserLogin()
+        /// <param name="UserName">UserName.</param>
+        /// <param name="Password">Password.</param>
+        /// <param name="RememberMe">RememberMe.</param>
+
+        public VirtoCommercePlatformWebModelSecurityUserLogin(string UserName = null, string Password = null, bool? RememberMe = null)
         {
+            this.UserName = UserName;
+            this.Password = Password;
+            this.RememberMe = RememberMe;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets UserName
         /// </summary>
         [DataMember(Name="userName", EmitDefaultValue=false)]
         public string UserName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Password
         /// </summary>
         [DataMember(Name="password", EmitDefaultValue=false)]
         public string Password { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets RememberMe
         /// </summary>
         [DataMember(Name="rememberMe", EmitDefaultValue=false)]
         public bool? RememberMe { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

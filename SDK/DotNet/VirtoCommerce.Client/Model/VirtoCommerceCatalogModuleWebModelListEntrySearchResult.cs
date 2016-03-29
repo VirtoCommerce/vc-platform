@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// Class representing the result of ListEntries search.
     /// </summary>
@@ -21,30 +21,33 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelListEntrySearchResult" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelListEntrySearchResult" />class.
         /// </summary>
-        public VirtoCommerceCatalogModuleWebModelListEntrySearchResult()
+        /// <param name="TotalCount">Gets or sets the total entries count matching the search criteria..</param>
+        /// <param name="ListEntries">Gets or sets the list entries..</param>
+
+        public VirtoCommerceCatalogModuleWebModelListEntrySearchResult(int? TotalCount = null, List<VirtoCommerceCatalogModuleWebModelListEntry> ListEntries = null)
         {
+            this.TotalCount = TotalCount;
+            this.ListEntries = ListEntries;
             
         }
 
-        
         /// <summary>
         /// Gets or sets the total entries count matching the search criteria.
         /// </summary>
         /// <value>Gets or sets the total entries count matching the search criteria.</value>
         [DataMember(Name="totalCount", EmitDefaultValue=false)]
         public int? TotalCount { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the list entries.
         /// </summary>
         /// <value>Gets or sets the list entries.</value>
         [DataMember(Name="listEntries", EmitDefaultValue=false)]
         public List<VirtoCommerceCatalogModuleWebModelListEntry> ListEntries { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

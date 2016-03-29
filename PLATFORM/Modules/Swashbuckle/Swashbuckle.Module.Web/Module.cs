@@ -58,6 +58,7 @@ namespace SwashbuckleModule.Web
                      c.OperationFilter(tagsFilterFactory);
                      c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
                      c.RootUrl(GetRootUrl);
+                     c.PrettyPrint();
                      c.ApiKey("apiKey")
                          .Description("API Key Authentication")
                          .Name("api_key")

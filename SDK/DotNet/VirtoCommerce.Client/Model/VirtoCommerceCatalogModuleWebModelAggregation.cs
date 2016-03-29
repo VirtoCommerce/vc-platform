@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,46 +21,51 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelAggregation" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelAggregation" />class.
         /// </summary>
-        public VirtoCommerceCatalogModuleWebModelAggregation()
+        /// <param name="AggregationType">Gets or sets the value of the aggregation type.</param>
+        /// <param name="Field">Gets or sets the value of the aggregation field.</param>
+        /// <param name="Labels">Gets or sets the collection of aggregation labels.</param>
+        /// <param name="Items">Gets or sets the collection of the aggregation items.</param>
+
+        public VirtoCommerceCatalogModuleWebModelAggregation(string AggregationType = null, string Field = null, List<VirtoCommerceCatalogModuleWebModelAggregationLabel> Labels = null, List<VirtoCommerceCatalogModuleWebModelAggregationItem> Items = null)
         {
+            this.AggregationType = AggregationType;
+            this.Field = Field;
+            this.Labels = Labels;
+            this.Items = Items;
             
         }
 
-        
         /// <summary>
         /// Gets or sets the value of the aggregation type
         /// </summary>
         /// <value>Gets or sets the value of the aggregation type</value>
         [DataMember(Name="aggregationType", EmitDefaultValue=false)]
         public string AggregationType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of the aggregation field
         /// </summary>
         /// <value>Gets or sets the value of the aggregation field</value>
         [DataMember(Name="field", EmitDefaultValue=false)]
         public string Field { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the collection of aggregation labels
         /// </summary>
         /// <value>Gets or sets the collection of aggregation labels</value>
         [DataMember(Name="labels", EmitDefaultValue=false)]
         public List<VirtoCommerceCatalogModuleWebModelAggregationLabel> Labels { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the collection of the aggregation items
         /// </summary>
         /// <value>Gets or sets the collection of the aggregation items</value>
         [DataMember(Name="items", EmitDefaultValue=false)]
         public List<VirtoCommerceCatalogModuleWebModelAggregationItem> Items { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

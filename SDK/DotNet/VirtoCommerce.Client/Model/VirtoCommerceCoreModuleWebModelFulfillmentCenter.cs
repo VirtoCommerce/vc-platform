@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// Represent fulfillment center information
     /// </summary>
@@ -21,105 +21,119 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceCoreModuleWebModelFulfillmentCenter" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceCoreModuleWebModelFulfillmentCenter" />class.
         /// </summary>
-        public VirtoCommerceCoreModuleWebModelFulfillmentCenter()
+        /// <param name="Name">Name.</param>
+        /// <param name="Description">Description.</param>
+        /// <param name="MaxReleasesPerPickBatch">MaxReleasesPerPickBatch.</param>
+        /// <param name="PickDelay">PickDelay.</param>
+        /// <param name="DaytimePhoneNumber">DaytimePhoneNumber.</param>
+        /// <param name="Line1">Line1.</param>
+        /// <param name="Line2">Line2.</param>
+        /// <param name="City">City.</param>
+        /// <param name="StateProvince">StateProvince.</param>
+        /// <param name="CountryCode">CountryCode.</param>
+        /// <param name="CountryName">CountryName.</param>
+        /// <param name="PostalCode">PostalCode.</param>
+        /// <param name="Id">Id.</param>
+
+        public VirtoCommerceCoreModuleWebModelFulfillmentCenter(string Name = null, string Description = null, int? MaxReleasesPerPickBatch = null, int? PickDelay = null, string DaytimePhoneNumber = null, string Line1 = null, string Line2 = null, string City = null, string StateProvince = null, string CountryCode = null, string CountryName = null, string PostalCode = null, string Id = null)
         {
+            this.Name = Name;
+            this.Description = Description;
+            this.MaxReleasesPerPickBatch = MaxReleasesPerPickBatch;
+            this.PickDelay = PickDelay;
+            this.DaytimePhoneNumber = DaytimePhoneNumber;
+            this.Line1 = Line1;
+            this.Line2 = Line2;
+            this.City = City;
+            this.StateProvince = StateProvince;
+            this.CountryCode = CountryCode;
+            this.CountryName = CountryName;
+            this.PostalCode = PostalCode;
+            this.Id = Id;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Description
         /// </summary>
         [DataMember(Name="description", EmitDefaultValue=false)]
         public string Description { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets MaxReleasesPerPickBatch
         /// </summary>
         [DataMember(Name="maxReleasesPerPickBatch", EmitDefaultValue=false)]
         public int? MaxReleasesPerPickBatch { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets PickDelay
         /// </summary>
         [DataMember(Name="pickDelay", EmitDefaultValue=false)]
         public int? PickDelay { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets DaytimePhoneNumber
         /// </summary>
         [DataMember(Name="daytimePhoneNumber", EmitDefaultValue=false)]
         public string DaytimePhoneNumber { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Line1
         /// </summary>
         [DataMember(Name="line1", EmitDefaultValue=false)]
         public string Line1 { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Line2
         /// </summary>
         [DataMember(Name="line2", EmitDefaultValue=false)]
         public string Line2 { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets City
         /// </summary>
         [DataMember(Name="city", EmitDefaultValue=false)]
         public string City { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets StateProvince
         /// </summary>
         [DataMember(Name="stateProvince", EmitDefaultValue=false)]
         public string StateProvince { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CountryCode
         /// </summary>
         [DataMember(Name="countryCode", EmitDefaultValue=false)]
         public string CountryCode { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CountryName
         /// </summary>
         [DataMember(Name="countryName", EmitDefaultValue=false)]
         public string CountryName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets PostalCode
         /// </summary>
         [DataMember(Name="postalCode", EmitDefaultValue=false)]
         public string PostalCode { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

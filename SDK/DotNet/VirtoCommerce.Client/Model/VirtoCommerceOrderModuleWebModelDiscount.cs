@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,49 +21,55 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceOrderModuleWebModelDiscount" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceOrderModuleWebModelDiscount" />class.
         /// </summary>
-        public VirtoCommerceOrderModuleWebModelDiscount()
+        /// <param name="PromotionId">PromotionId.</param>
+        /// <param name="Currency">Currency.</param>
+        /// <param name="DiscountAmount">DiscountAmount.</param>
+        /// <param name="Coupon">Coupon.</param>
+        /// <param name="Description">Description.</param>
+
+        public VirtoCommerceOrderModuleWebModelDiscount(string PromotionId = null, string Currency = null, double? DiscountAmount = null, VirtoCommerceOrderModuleWebModelCoupon Coupon = null, string Description = null)
         {
+            this.PromotionId = PromotionId;
+            this.Currency = Currency;
+            this.DiscountAmount = DiscountAmount;
+            this.Coupon = Coupon;
+            this.Description = Description;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets PromotionId
         /// </summary>
         [DataMember(Name="promotionId", EmitDefaultValue=false)]
         public string PromotionId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Currency
         /// </summary>
         [DataMember(Name="currency", EmitDefaultValue=false)]
         public string Currency { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets DiscountAmount
         /// </summary>
         [DataMember(Name="discountAmount", EmitDefaultValue=false)]
         public double? DiscountAmount { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Coupon
         /// </summary>
         [DataMember(Name="coupon", EmitDefaultValue=false)]
         public VirtoCommerceOrderModuleWebModelCoupon Coupon { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Description
         /// </summary>
         [DataMember(Name="description", EmitDefaultValue=false)]
         public string Description { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

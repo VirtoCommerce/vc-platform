@@ -16,46 +16,7 @@ namespace VirtoCommerce.Client.Api
     /// </summary>
     public interface ISearchModuleApi
     {
-        
-        /// <summary>
-        /// Search for products and categories
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <param name="criteria">Search parameters</param>
-        /// <returns>VirtoCommerceCatalogModuleWebModelCatalogSearchResult</returns>
-        VirtoCommerceCatalogModuleWebModelCatalogSearchResult SearchModuleSearch (VirtoCommerceDomainCatalogModelSearchCriteria criteria);
-  
-        /// <summary>
-        /// Search for products and categories
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <param name="criteria">Search parameters</param>
-        /// <returns>ApiResponse of VirtoCommerceCatalogModuleWebModelCatalogSearchResult</returns>
-        ApiResponse<VirtoCommerceCatalogModuleWebModelCatalogSearchResult> SearchModuleSearchWithHttpInfo (VirtoCommerceDomainCatalogModelSearchCriteria criteria);
-
-        /// <summary>
-        /// Search for products and categories
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <param name="criteria">Search parameters</param>
-        /// <returns>Task of VirtoCommerceCatalogModuleWebModelCatalogSearchResult</returns>
-        System.Threading.Tasks.Task<VirtoCommerceCatalogModuleWebModelCatalogSearchResult> SearchModuleSearchAsync (VirtoCommerceDomainCatalogModelSearchCriteria criteria);
-
-        /// <summary>
-        /// Search for products and categories
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <param name="criteria">Search parameters</param>
-        /// <returns>Task of ApiResponse (VirtoCommerceCatalogModuleWebModelCatalogSearchResult)</returns>
-        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceCatalogModuleWebModelCatalogSearchResult>> SearchModuleSearchAsyncWithHttpInfo (VirtoCommerceDomainCatalogModelSearchCriteria criteria);
+        #region Synchronous Operations
         
         /// <summary>
         /// Get filter properties for store
@@ -63,6 +24,7 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// Returns all store catalog properties: selected properties are ordered manually, unselected properties are ordered by name.
         /// </remarks>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="storeId">Store ID</param>
         /// <returns>List&lt;VirtoCommerceSearchModuleWebModelFilterProperty&gt;</returns>
         List<VirtoCommerceSearchModuleWebModelFilterProperty> SearchModuleGetFilterProperties (string storeId);
@@ -73,29 +35,32 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// Returns all store catalog properties: selected properties are ordered manually, unselected properties are ordered by name.
         /// </remarks>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="storeId">Store ID</param>
         /// <returns>ApiResponse of List&lt;VirtoCommerceSearchModuleWebModelFilterProperty&gt;</returns>
         ApiResponse<List<VirtoCommerceSearchModuleWebModelFilterProperty>> SearchModuleGetFilterPropertiesWithHttpInfo (string storeId);
-
+        
         /// <summary>
-        /// Get filter properties for store
+        /// Search for products and categories
         /// </summary>
         /// <remarks>
-        /// Returns all store catalog properties: selected properties are ordered manually, unselected properties are ordered by name.
+        /// 
         /// </remarks>
-        /// <param name="storeId">Store ID</param>
-        /// <returns>Task of List&lt;VirtoCommerceSearchModuleWebModelFilterProperty&gt;</returns>
-        System.Threading.Tasks.Task<List<VirtoCommerceSearchModuleWebModelFilterProperty>> SearchModuleGetFilterPropertiesAsync (string storeId);
-
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="criteria">Search parameters</param>
+        /// <returns>VirtoCommerceCatalogModuleWebModelCatalogSearchResult</returns>
+        VirtoCommerceCatalogModuleWebModelCatalogSearchResult SearchModuleSearch (VirtoCommerceDomainCatalogModelSearchCriteria criteria);
+  
         /// <summary>
-        /// Get filter properties for store
+        /// Search for products and categories
         /// </summary>
         /// <remarks>
-        /// Returns all store catalog properties: selected properties are ordered manually, unselected properties are ordered by name.
+        /// 
         /// </remarks>
-        /// <param name="storeId">Store ID</param>
-        /// <returns>Task of ApiResponse (List&lt;VirtoCommerceSearchModuleWebModelFilterProperty&gt;)</returns>
-        System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceSearchModuleWebModelFilterProperty>>> SearchModuleGetFilterPropertiesAsyncWithHttpInfo (string storeId);
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="criteria">Search parameters</param>
+        /// <returns>ApiResponse of VirtoCommerceCatalogModuleWebModelCatalogSearchResult</returns>
+        ApiResponse<VirtoCommerceCatalogModuleWebModelCatalogSearchResult> SearchModuleSearchWithHttpInfo (VirtoCommerceDomainCatalogModelSearchCriteria criteria);
         
         /// <summary>
         /// Set filter properties for store
@@ -103,6 +68,7 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// 
         /// </remarks>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="storeId">Store ID</param>
         /// <param name="filterProperties"></param>
         /// <returns></returns>
@@ -114,17 +80,67 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// 
         /// </remarks>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="storeId">Store ID</param>
         /// <param name="filterProperties"></param>
         /// <returns>ApiResponse of Object(void)</returns>
         ApiResponse<Object> SearchModuleSetFilterPropertiesWithHttpInfo (string storeId, List<VirtoCommerceSearchModuleWebModelFilterProperty> filterProperties);
+        
+        #endregion Synchronous Operations
+        
+        #region Asynchronous Operations
+        
+        /// <summary>
+        /// Get filter properties for store
+        /// </summary>
+        /// <remarks>
+        /// Returns all store catalog properties: selected properties are ordered manually, unselected properties are ordered by name.
+        /// </remarks>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="storeId">Store ID</param>
+        /// <returns>Task of List&lt;VirtoCommerceSearchModuleWebModelFilterProperty&gt;</returns>
+        System.Threading.Tasks.Task<List<VirtoCommerceSearchModuleWebModelFilterProperty>> SearchModuleGetFilterPropertiesAsync (string storeId);
 
+        /// <summary>
+        /// Get filter properties for store
+        /// </summary>
+        /// <remarks>
+        /// Returns all store catalog properties: selected properties are ordered manually, unselected properties are ordered by name.
+        /// </remarks>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="storeId">Store ID</param>
+        /// <returns>Task of ApiResponse (List&lt;VirtoCommerceSearchModuleWebModelFilterProperty&gt;)</returns>
+        System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceSearchModuleWebModelFilterProperty>>> SearchModuleGetFilterPropertiesAsyncWithHttpInfo (string storeId);
+        
+        /// <summary>
+        /// Search for products and categories
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="criteria">Search parameters</param>
+        /// <returns>Task of VirtoCommerceCatalogModuleWebModelCatalogSearchResult</returns>
+        System.Threading.Tasks.Task<VirtoCommerceCatalogModuleWebModelCatalogSearchResult> SearchModuleSearchAsync (VirtoCommerceDomainCatalogModelSearchCriteria criteria);
+
+        /// <summary>
+        /// Search for products and categories
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="criteria">Search parameters</param>
+        /// <returns>Task of ApiResponse (VirtoCommerceCatalogModuleWebModelCatalogSearchResult)</returns>
+        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceCatalogModuleWebModelCatalogSearchResult>> SearchModuleSearchAsyncWithHttpInfo (VirtoCommerceDomainCatalogModelSearchCriteria criteria);
+        
         /// <summary>
         /// Set filter properties for store
         /// </summary>
         /// <remarks>
         /// 
         /// </remarks>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="storeId">Store ID</param>
         /// <param name="filterProperties"></param>
         /// <returns>Task of void</returns>
@@ -136,10 +152,13 @@ namespace VirtoCommerce.Client.Api
         /// <remarks>
         /// 
         /// </remarks>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="storeId">Store ID</param>
         /// <param name="filterProperties"></param>
         /// <returns>Task of ApiResponse</returns>
         System.Threading.Tasks.Task<ApiResponse<Object>> SearchModuleSetFilterPropertiesAsyncWithHttpInfo (string storeId, List<VirtoCommerceSearchModuleWebModelFilterProperty> filterProperties);
+        
+        #endregion Asynchronous Operations
         
     }
   
@@ -160,6 +179,12 @@ namespace VirtoCommerce.Client.Api
                 this.Configuration = Configuration.Default; 
             else
                 this.Configuration = configuration;
+
+            // ensure API client has configuration ready
+            if (Configuration.ApiClient.Configuration == null)
+            {
+                this.Configuration.ApiClient.Configuration = this.Configuration;
+            }
         }
 
         /// <summary>
@@ -211,178 +236,21 @@ namespace VirtoCommerce.Client.Api
    
         
         /// <summary>
-        /// Search for products and categories 
-        /// </summary>
-        /// <param name="criteria">Search parameters</param> 
-        /// <returns>VirtoCommerceCatalogModuleWebModelCatalogSearchResult</returns>
-        public VirtoCommerceCatalogModuleWebModelCatalogSearchResult SearchModuleSearch (VirtoCommerceDomainCatalogModelSearchCriteria criteria)
-        {
-             ApiResponse<VirtoCommerceCatalogModuleWebModelCatalogSearchResult> response = SearchModuleSearchWithHttpInfo(criteria);
-             return response.Data;
-        }
-
-        /// <summary>
-        /// Search for products and categories 
-        /// </summary>
-        /// <param name="criteria">Search parameters</param> 
-        /// <returns>ApiResponse of VirtoCommerceCatalogModuleWebModelCatalogSearchResult</returns>
-        public ApiResponse< VirtoCommerceCatalogModuleWebModelCatalogSearchResult > SearchModuleSearchWithHttpInfo (VirtoCommerceDomainCatalogModelSearchCriteria criteria)
-        {
-            
-            // verify the required parameter 'criteria' is set
-            if (criteria == null)
-                throw new ApiException(400, "Missing required parameter 'criteria' when calling SearchModuleApi->SearchModuleSearch");
-            
-    
-            var path_ = "/api/search";
-    
-            var pathParams = new Dictionary<String, String>();
-            var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var formParams = new Dictionary<String, String>();
-            var fileParams = new Dictionary<String, FileParameter>();
-            Object postBody = null;
-
-            // to determine the Content-Type header
-            String[] httpContentTypes = new String[] {
-                "application/json", "text/json", "application/x-www-form-urlencoded"
-            };
-            String httpContentType = Configuration.ApiClient.SelectHeaderContentType(httpContentTypes);
-
-            // to determine the Accept header
-            String[] httpHeaderAccepts = new String[] {
-                "application/json", "text/json"
-            };
-            String httpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(httpHeaderAccepts);
-            if (httpHeaderAccept != null)
-                headerParams.Add("Accept", httpHeaderAccept);
-
-            // set "format" to json by default
-            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
-            pathParams.Add("format", "json");
-            
-            
-            
-            
-            if (criteria.GetType() != typeof(byte[]))
-            {
-                postBody = Configuration.ApiClient.Serialize(criteria); // http body (model) parameter
-            }
-            else
-            {
-                postBody = criteria; // byte array
-            }
-
-            
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, 
-                Method.POST, queryParams, postBody, headerParams, formParams, fileParams,
-                pathParams, httpContentType);
-
-            int statusCode = (int) response.StatusCode;
-    
-            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (statusCode, "Error calling SearchModuleSearch: " + response.Content, response.Content);
-            else if (statusCode == 0)
-                throw new ApiException (statusCode, "Error calling SearchModuleSearch: " + response.ErrorMessage, response.ErrorMessage);
-    
-            return new ApiResponse<VirtoCommerceCatalogModuleWebModelCatalogSearchResult>(statusCode,
-                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommerceCatalogModuleWebModelCatalogSearchResult) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceCatalogModuleWebModelCatalogSearchResult)));
-            
-        }
-    
-        /// <summary>
-        /// Search for products and categories 
-        /// </summary>
-        /// <param name="criteria">Search parameters</param>
-        /// <returns>Task of VirtoCommerceCatalogModuleWebModelCatalogSearchResult</returns>
-        public async System.Threading.Tasks.Task<VirtoCommerceCatalogModuleWebModelCatalogSearchResult> SearchModuleSearchAsync (VirtoCommerceDomainCatalogModelSearchCriteria criteria)
-        {
-             ApiResponse<VirtoCommerceCatalogModuleWebModelCatalogSearchResult> response = await SearchModuleSearchAsyncWithHttpInfo(criteria);
-             return response.Data;
-
-        }
-
-        /// <summary>
-        /// Search for products and categories 
-        /// </summary>
-        /// <param name="criteria">Search parameters</param>
-        /// <returns>Task of ApiResponse (VirtoCommerceCatalogModuleWebModelCatalogSearchResult)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceCatalogModuleWebModelCatalogSearchResult>> SearchModuleSearchAsyncWithHttpInfo (VirtoCommerceDomainCatalogModelSearchCriteria criteria)
-        {
-            // verify the required parameter 'criteria' is set
-            if (criteria == null) throw new ApiException(400, "Missing required parameter 'criteria' when calling SearchModuleSearch");
-            
-    
-            var path_ = "/api/search";
-    
-            var pathParams = new Dictionary<String, String>();
-            var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var formParams = new Dictionary<String, String>();
-            var fileParams = new Dictionary<String, FileParameter>();
-            Object postBody = null;
-
-            // to determine the Content-Type header
-            String[] httpContentTypes = new String[] {
-                "application/json", "text/json", "application/x-www-form-urlencoded"
-            };
-            String httpContentType = Configuration.ApiClient.SelectHeaderContentType(httpContentTypes);
-
-            // to determine the Accept header
-            String[] httpHeaderAccepts = new String[] {
-                "application/json", "text/json"
-            };
-            String httpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(httpHeaderAccepts);
-            if (httpHeaderAccept != null)
-                headerParams.Add("Accept", httpHeaderAccept);
-
-            // set "format" to json by default
-            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
-            pathParams.Add("format", "json");
-            
-            
-            
-            
-            postBody = Configuration.ApiClient.Serialize(criteria); // http body (model) parameter
-            
-
-            
-
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, 
-                Method.POST, queryParams, postBody, headerParams, formParams, fileParams, 
-                pathParams, httpContentType);
-
-            int statusCode = (int) response.StatusCode;
- 
-            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (statusCode, "Error calling SearchModuleSearch: " + response.Content, response.Content);
-            else if (statusCode == 0)
-                throw new ApiException (statusCode, "Error calling SearchModuleSearch: " + response.ErrorMessage, response.ErrorMessage);
-
-            return new ApiResponse<VirtoCommerceCatalogModuleWebModelCatalogSearchResult>(statusCode,
-                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommerceCatalogModuleWebModelCatalogSearchResult) Configuration.ApiClient.Deserialize(response, typeof(VirtoCommerceCatalogModuleWebModelCatalogSearchResult)));
-            
-        }
-        
-        /// <summary>
         /// Get filter properties for store Returns all store catalog properties: selected properties are ordered manually, unselected properties are ordered by name.
         /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="storeId">Store ID</param> 
         /// <returns>List&lt;VirtoCommerceSearchModuleWebModelFilterProperty&gt;</returns>
         public List<VirtoCommerceSearchModuleWebModelFilterProperty> SearchModuleGetFilterProperties (string storeId)
         {
-             ApiResponse<List<VirtoCommerceSearchModuleWebModelFilterProperty>> response = SearchModuleGetFilterPropertiesWithHttpInfo(storeId);
-             return response.Data;
+             ApiResponse<List<VirtoCommerceSearchModuleWebModelFilterProperty>> localVarResponse = SearchModuleGetFilterPropertiesWithHttpInfo(storeId);
+             return localVarResponse.Data;
         }
 
         /// <summary>
         /// Get filter properties for store Returns all store catalog properties: selected properties are ordered manually, unselected properties are ordered by name.
         /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="storeId">Store ID</param> 
         /// <returns>ApiResponse of List&lt;VirtoCommerceSearchModuleWebModelFilterProperty&gt;</returns>
         public ApiResponse< List<VirtoCommerceSearchModuleWebModelFilterProperty> > SearchModuleGetFilterPropertiesWithHttpInfo (string storeId)
@@ -393,33 +261,33 @@ namespace VirtoCommerce.Client.Api
                 throw new ApiException(400, "Missing required parameter 'storeId' when calling SearchModuleApi->SearchModuleGetFilterProperties");
             
     
-            var path_ = "/api/search/storefilterproperties/{storeId}";
+            var localVarPath = "/api/search/storefilterproperties/{storeId}";
     
-            var pathParams = new Dictionary<String, String>();
-            var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var formParams = new Dictionary<String, String>();
-            var fileParams = new Dictionary<String, FileParameter>();
-            Object postBody = null;
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] httpContentTypes = new String[] {
+            String[] localVarHttpContentTypes = new String[] {
                 
             };
-            String httpContentType = Configuration.ApiClient.SelectHeaderContentType(httpContentTypes);
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] httpHeaderAccepts = new String[] {
+            String[] localVarHttpHeaderAccepts = new String[] {
                 "application/json", "text/json"
             };
-            String httpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(httpHeaderAccepts);
-            if (httpHeaderAccept != null)
-                headerParams.Add("Accept", httpHeaderAccept);
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
-            pathParams.Add("format", "json");
-            if (storeId != null) pathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
+            localVarPathParams.Add("format", "json");
+            if (storeId != null) localVarPathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
             
             
             
@@ -429,38 +297,41 @@ namespace VirtoCommerce.Client.Api
             
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, 
-                Method.GET, queryParams, postBody, headerParams, formParams, fileParams,
-                pathParams, httpContentType);
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath, 
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
 
-            int statusCode = (int) response.StatusCode;
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
     
-            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (statusCode, "Error calling SearchModuleGetFilterProperties: " + response.Content, response.Content);
-            else if (statusCode == 0)
-                throw new ApiException (statusCode, "Error calling SearchModuleGetFilterProperties: " + response.ErrorMessage, response.ErrorMessage);
+            if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
+                throw new ApiException (localVarStatusCode, "Error calling SearchModuleGetFilterProperties: " + localVarResponse.Content, localVarResponse.Content);
+            else if (localVarStatusCode == 0)
+                throw new ApiException (localVarStatusCode, "Error calling SearchModuleGetFilterProperties: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
     
-            return new ApiResponse<List<VirtoCommerceSearchModuleWebModelFilterProperty>>(statusCode,
-                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (List<VirtoCommerceSearchModuleWebModelFilterProperty>) Configuration.ApiClient.Deserialize(response, typeof(List<VirtoCommerceSearchModuleWebModelFilterProperty>)));
+            return new ApiResponse<List<VirtoCommerceSearchModuleWebModelFilterProperty>>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (List<VirtoCommerceSearchModuleWebModelFilterProperty>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<VirtoCommerceSearchModuleWebModelFilterProperty>)));
             
         }
-    
+
+        
         /// <summary>
         /// Get filter properties for store Returns all store catalog properties: selected properties are ordered manually, unselected properties are ordered by name.
         /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="storeId">Store ID</param>
         /// <returns>Task of List&lt;VirtoCommerceSearchModuleWebModelFilterProperty&gt;</returns>
         public async System.Threading.Tasks.Task<List<VirtoCommerceSearchModuleWebModelFilterProperty>> SearchModuleGetFilterPropertiesAsync (string storeId)
         {
-             ApiResponse<List<VirtoCommerceSearchModuleWebModelFilterProperty>> response = await SearchModuleGetFilterPropertiesAsyncWithHttpInfo(storeId);
-             return response.Data;
+             ApiResponse<List<VirtoCommerceSearchModuleWebModelFilterProperty>> localVarResponse = await SearchModuleGetFilterPropertiesAsyncWithHttpInfo(storeId);
+             return localVarResponse.Data;
 
         }
 
         /// <summary>
         /// Get filter properties for store Returns all store catalog properties: selected properties are ordered manually, unselected properties are ordered by name.
         /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="storeId">Store ID</param>
         /// <returns>Task of ApiResponse (List&lt;VirtoCommerceSearchModuleWebModelFilterProperty&gt;)</returns>
         public async System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceSearchModuleWebModelFilterProperty>>> SearchModuleGetFilterPropertiesAsyncWithHttpInfo (string storeId)
@@ -469,33 +340,33 @@ namespace VirtoCommerce.Client.Api
             if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling SearchModuleGetFilterProperties");
             
     
-            var path_ = "/api/search/storefilterproperties/{storeId}";
+            var localVarPath = "/api/search/storefilterproperties/{storeId}";
     
-            var pathParams = new Dictionary<String, String>();
-            var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var formParams = new Dictionary<String, String>();
-            var fileParams = new Dictionary<String, FileParameter>();
-            Object postBody = null;
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] httpContentTypes = new String[] {
+            String[] localVarHttpContentTypes = new String[] {
                 
             };
-            String httpContentType = Configuration.ApiClient.SelectHeaderContentType(httpContentTypes);
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] httpHeaderAccepts = new String[] {
+            String[] localVarHttpHeaderAccepts = new String[] {
                 "application/json", "text/json"
             };
-            String httpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(httpHeaderAccepts);
-            if (httpHeaderAccept != null)
-                headerParams.Add("Accept", httpHeaderAccept);
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
-            pathParams.Add("format", "json");
-            if (storeId != null) pathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
+            localVarPathParams.Add("format", "json");
+            if (storeId != null) localVarPathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
             
             
             
@@ -505,26 +376,197 @@ namespace VirtoCommerce.Client.Api
             
 
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, 
-                Method.GET, queryParams, postBody, headerParams, formParams, fileParams, 
-                pathParams, httpContentType);
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath, 
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams, 
+                localVarPathParams, localVarHttpContentType);
 
-            int statusCode = (int) response.StatusCode;
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
  
-            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (statusCode, "Error calling SearchModuleGetFilterProperties: " + response.Content, response.Content);
-            else if (statusCode == 0)
-                throw new ApiException (statusCode, "Error calling SearchModuleGetFilterProperties: " + response.ErrorMessage, response.ErrorMessage);
+            if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
+                throw new ApiException (localVarStatusCode, "Error calling SearchModuleGetFilterProperties: " + localVarResponse.Content, localVarResponse.Content);
+            else if (localVarStatusCode == 0)
+                throw new ApiException (localVarStatusCode, "Error calling SearchModuleGetFilterProperties: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
-            return new ApiResponse<List<VirtoCommerceSearchModuleWebModelFilterProperty>>(statusCode,
-                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (List<VirtoCommerceSearchModuleWebModelFilterProperty>) Configuration.ApiClient.Deserialize(response, typeof(List<VirtoCommerceSearchModuleWebModelFilterProperty>)));
+            return new ApiResponse<List<VirtoCommerceSearchModuleWebModelFilterProperty>>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (List<VirtoCommerceSearchModuleWebModelFilterProperty>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<VirtoCommerceSearchModuleWebModelFilterProperty>)));
+            
+        }
+        
+        /// <summary>
+        /// Search for products and categories 
+        /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="criteria">Search parameters</param> 
+        /// <returns>VirtoCommerceCatalogModuleWebModelCatalogSearchResult</returns>
+        public VirtoCommerceCatalogModuleWebModelCatalogSearchResult SearchModuleSearch (VirtoCommerceDomainCatalogModelSearchCriteria criteria)
+        {
+             ApiResponse<VirtoCommerceCatalogModuleWebModelCatalogSearchResult> localVarResponse = SearchModuleSearchWithHttpInfo(criteria);
+             return localVarResponse.Data;
+        }
+
+        /// <summary>
+        /// Search for products and categories 
+        /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="criteria">Search parameters</param> 
+        /// <returns>ApiResponse of VirtoCommerceCatalogModuleWebModelCatalogSearchResult</returns>
+        public ApiResponse< VirtoCommerceCatalogModuleWebModelCatalogSearchResult > SearchModuleSearchWithHttpInfo (VirtoCommerceDomainCatalogModelSearchCriteria criteria)
+        {
+            
+            // verify the required parameter 'criteria' is set
+            if (criteria == null)
+                throw new ApiException(400, "Missing required parameter 'criteria' when calling SearchModuleApi->SearchModuleSearch");
+            
+    
+            var localVarPath = "/api/search";
+    
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+                "application/json", "text/json", "application/x-www-form-urlencoded"
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json", "text/json"
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            localVarPathParams.Add("format", "json");
+            
+            
+            
+            
+            if (criteria.GetType() != typeof(byte[]))
+            {
+                localVarPostBody = Configuration.ApiClient.Serialize(criteria); // http body (model) parameter
+            }
+            else
+            {
+                localVarPostBody = criteria; // byte array
+            }
+
+            
+    
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath, 
+                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+    
+            if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
+                throw new ApiException (localVarStatusCode, "Error calling SearchModuleSearch: " + localVarResponse.Content, localVarResponse.Content);
+            else if (localVarStatusCode == 0)
+                throw new ApiException (localVarStatusCode, "Error calling SearchModuleSearch: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+    
+            return new ApiResponse<VirtoCommerceCatalogModuleWebModelCatalogSearchResult>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (VirtoCommerceCatalogModuleWebModelCatalogSearchResult) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceCatalogModuleWebModelCatalogSearchResult)));
+            
+        }
+
+        
+        /// <summary>
+        /// Search for products and categories 
+        /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="criteria">Search parameters</param>
+        /// <returns>Task of VirtoCommerceCatalogModuleWebModelCatalogSearchResult</returns>
+        public async System.Threading.Tasks.Task<VirtoCommerceCatalogModuleWebModelCatalogSearchResult> SearchModuleSearchAsync (VirtoCommerceDomainCatalogModelSearchCriteria criteria)
+        {
+             ApiResponse<VirtoCommerceCatalogModuleWebModelCatalogSearchResult> localVarResponse = await SearchModuleSearchAsyncWithHttpInfo(criteria);
+             return localVarResponse.Data;
+
+        }
+
+        /// <summary>
+        /// Search for products and categories 
+        /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="criteria">Search parameters</param>
+        /// <returns>Task of ApiResponse (VirtoCommerceCatalogModuleWebModelCatalogSearchResult)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceCatalogModuleWebModelCatalogSearchResult>> SearchModuleSearchAsyncWithHttpInfo (VirtoCommerceDomainCatalogModelSearchCriteria criteria)
+        {
+            // verify the required parameter 'criteria' is set
+            if (criteria == null) throw new ApiException(400, "Missing required parameter 'criteria' when calling SearchModuleSearch");
+            
+    
+            var localVarPath = "/api/search";
+    
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+                "application/json", "text/json", "application/x-www-form-urlencoded"
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json", "text/json"
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            localVarPathParams.Add("format", "json");
+            
+            
+            
+            
+            if (criteria.GetType() != typeof(byte[]))
+            {
+                localVarPostBody = Configuration.ApiClient.Serialize(criteria); // http body (model) parameter
+            }
+            else
+            {
+                localVarPostBody = criteria; // byte array
+            }
+
+            
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath, 
+                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams, 
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+ 
+            if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
+                throw new ApiException (localVarStatusCode, "Error calling SearchModuleSearch: " + localVarResponse.Content, localVarResponse.Content);
+            else if (localVarStatusCode == 0)
+                throw new ApiException (localVarStatusCode, "Error calling SearchModuleSearch: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+
+            return new ApiResponse<VirtoCommerceCatalogModuleWebModelCatalogSearchResult>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (VirtoCommerceCatalogModuleWebModelCatalogSearchResult) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceCatalogModuleWebModelCatalogSearchResult)));
             
         }
         
         /// <summary>
         /// Set filter properties for store 
         /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="storeId">Store ID</param> 
         /// <param name="filterProperties"></param> 
         /// <returns></returns>
@@ -536,6 +578,7 @@ namespace VirtoCommerce.Client.Api
         /// <summary>
         /// Set filter properties for store 
         /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="storeId">Store ID</param> 
         /// <param name="filterProperties"></param> 
         /// <returns>ApiResponse of Object(void)</returns>
@@ -551,69 +594,71 @@ namespace VirtoCommerce.Client.Api
                 throw new ApiException(400, "Missing required parameter 'filterProperties' when calling SearchModuleApi->SearchModuleSetFilterProperties");
             
     
-            var path_ = "/api/search/storefilterproperties/{storeId}";
+            var localVarPath = "/api/search/storefilterproperties/{storeId}";
     
-            var pathParams = new Dictionary<String, String>();
-            var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var formParams = new Dictionary<String, String>();
-            var fileParams = new Dictionary<String, FileParameter>();
-            Object postBody = null;
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] httpContentTypes = new String[] {
+            String[] localVarHttpContentTypes = new String[] {
                 "application/json", "text/json", "application/x-www-form-urlencoded"
             };
-            String httpContentType = Configuration.ApiClient.SelectHeaderContentType(httpContentTypes);
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] httpHeaderAccepts = new String[] {
+            String[] localVarHttpHeaderAccepts = new String[] {
                 
             };
-            String httpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(httpHeaderAccepts);
-            if (httpHeaderAccept != null)
-                headerParams.Add("Accept", httpHeaderAccept);
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
-            pathParams.Add("format", "json");
-            if (storeId != null) pathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
+            localVarPathParams.Add("format", "json");
+            if (storeId != null) localVarPathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
             
             
             
             
             if (filterProperties.GetType() != typeof(byte[]))
             {
-                postBody = Configuration.ApiClient.Serialize(filterProperties); // http body (model) parameter
+                localVarPostBody = Configuration.ApiClient.Serialize(filterProperties); // http body (model) parameter
             }
             else
             {
-                postBody = filterProperties; // byte array
+                localVarPostBody = filterProperties; // byte array
             }
 
             
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) Configuration.ApiClient.CallApi(path_, 
-                Method.PUT, queryParams, postBody, headerParams, formParams, fileParams,
-                pathParams, httpContentType);
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath, 
+                Method.PUT, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
 
-            int statusCode = (int) response.StatusCode;
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
     
-            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (statusCode, "Error calling SearchModuleSetFilterProperties: " + response.Content, response.Content);
-            else if (statusCode == 0)
-                throw new ApiException (statusCode, "Error calling SearchModuleSetFilterProperties: " + response.ErrorMessage, response.ErrorMessage);
+            if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
+                throw new ApiException (localVarStatusCode, "Error calling SearchModuleSetFilterProperties: " + localVarResponse.Content, localVarResponse.Content);
+            else if (localVarStatusCode == 0)
+                throw new ApiException (localVarStatusCode, "Error calling SearchModuleSetFilterProperties: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
     
             
-            return new ApiResponse<Object>(statusCode,
-                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+            return new ApiResponse<Object>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 null);
         }
-    
+
+        
         /// <summary>
         /// Set filter properties for store 
         /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="storeId">Store ID</param>
         /// <param name="filterProperties"></param>
         /// <returns>Task of void</returns>
@@ -626,6 +671,7 @@ namespace VirtoCommerce.Client.Api
         /// <summary>
         /// Set filter properties for store 
         /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="storeId">Store ID</param>
         /// <param name="filterProperties"></param>
         /// <returns>Task of ApiResponse</returns>
@@ -637,57 +683,63 @@ namespace VirtoCommerce.Client.Api
             if (filterProperties == null) throw new ApiException(400, "Missing required parameter 'filterProperties' when calling SearchModuleSetFilterProperties");
             
     
-            var path_ = "/api/search/storefilterproperties/{storeId}";
+            var localVarPath = "/api/search/storefilterproperties/{storeId}";
     
-            var pathParams = new Dictionary<String, String>();
-            var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var formParams = new Dictionary<String, String>();
-            var fileParams = new Dictionary<String, FileParameter>();
-            Object postBody = null;
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] httpContentTypes = new String[] {
+            String[] localVarHttpContentTypes = new String[] {
                 "application/json", "text/json", "application/x-www-form-urlencoded"
             };
-            String httpContentType = Configuration.ApiClient.SelectHeaderContentType(httpContentTypes);
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] httpHeaderAccepts = new String[] {
+            String[] localVarHttpHeaderAccepts = new String[] {
                 
             };
-            String httpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(httpHeaderAccepts);
-            if (httpHeaderAccept != null)
-                headerParams.Add("Accept", httpHeaderAccept);
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
-            pathParams.Add("format", "json");
-            if (storeId != null) pathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
+            localVarPathParams.Add("format", "json");
+            if (storeId != null) localVarPathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
             
             
             
             
-            postBody = Configuration.ApiClient.Serialize(filterProperties); // http body (model) parameter
-            
+            if (filterProperties.GetType() != typeof(byte[]))
+            {
+                localVarPostBody = Configuration.ApiClient.Serialize(filterProperties); // http body (model) parameter
+            }
+            else
+            {
+                localVarPostBody = filterProperties; // byte array
+            }
 
             
 
             // make the HTTP request
-            IRestResponse response = (IRestResponse) await Configuration.ApiClient.CallApiAsync(path_, 
-                Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, 
-                pathParams, httpContentType);
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath, 
+                Method.PUT, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams, 
+                localVarPathParams, localVarHttpContentType);
 
-            int statusCode = (int) response.StatusCode;
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
  
-            if (statusCode >= 400 && (statusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (statusCode, "Error calling SearchModuleSetFilterProperties: " + response.Content, response.Content);
-            else if (statusCode == 0)
-                throw new ApiException (statusCode, "Error calling SearchModuleSetFilterProperties: " + response.ErrorMessage, response.ErrorMessage);
+            if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
+                throw new ApiException (localVarStatusCode, "Error calling SearchModuleSetFilterProperties: " + localVarResponse.Content, localVarResponse.Content);
+            else if (localVarStatusCode == 0)
+                throw new ApiException (localVarStatusCode, "Error calling SearchModuleSetFilterProperties: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
             
-            return new ApiResponse<Object>(statusCode,
-                response.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+            return new ApiResponse<Object>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 null);
         }
         

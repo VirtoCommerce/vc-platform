@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,329 +21,370 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceCartModuleWebModelShoppingCart" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceCartModuleWebModelShoppingCart" />class.
         /// </summary>
-        public VirtoCommerceCartModuleWebModelShoppingCart()
+        /// <param name="Name">Gets or sets the value of shopping cart name.</param>
+        /// <param name="StoreId">Gets or sets the value of store id.</param>
+        /// <param name="ChannelId">Gets or sets the value of channel id.</param>
+        /// <param name="IsAnonymous">Gets or sets the flag of shopping cart is anonymous.</param>
+        /// <param name="CustomerId">Gets or sets the value of shopping cart customer id.</param>
+        /// <param name="CustomerName">Gets or sets the value of shopping cart customer name.</param>
+        /// <param name="OrganizationId">Gets or sets the value of shopping cart organization id.</param>
+        /// <param name="Currency">Gets or sets the value of shopping cart currency.</param>
+        /// <param name="Coupon">Gets or sets the shopping cart coupon.</param>
+        /// <param name="LanguageCode">Gets or sets the value of shopping cart language code.</param>
+        /// <param name="TaxIncluded">Gets or sets the flag of shopping cart has tax.</param>
+        /// <param name="IsRecuring">Gets or sets the flag of shopping cart is recurring.</param>
+        /// <param name="Comment">Gets or sets the value of shopping cart text comment.</param>
+        /// <param name="VolumetricWeight">Gets or sets the value of volumetric weight.</param>
+        /// <param name="WeightUnit">Gets or sets the value of weight unit.</param>
+        /// <param name="Weight">Gets or sets the value of shopping cart weight.</param>
+        /// <param name="MeasureUnit">Gets or sets the value of measurement unit.</param>
+        /// <param name="Height">Gets or sets the value of height.</param>
+        /// <param name="Length">Gets or sets the value of length.</param>
+        /// <param name="Width">Gets or sets the value of width.</param>
+        /// <param name="ValidationType">Represent any line item validation type (noPriceValidate, noQuantityValidate etc) this value can be used in storefront \r\n            to select appropriate validation strategy.</param>
+        /// <param name="Total">Gets or sets the value of shopping cart total cost.</param>
+        /// <param name="SubTotal">Gets or sets the value of shopping cart subtotal.</param>
+        /// <param name="ShippingTotal">Gets or sets the value of shipping total cost.</param>
+        /// <param name="HandlingTotal">Gets or sets the value of handling total cost.</param>
+        /// <param name="DiscountTotal">Gets or sets the value of total discount amount.</param>
+        /// <param name="TaxTotal">Gets or sets the value of total tax cost.</param>
+        /// <param name="Addresses">Gets or sets the collection of shopping cart addresses.</param>
+        /// <param name="Items">Gets or sets the value of shopping cart line items.</param>
+        /// <param name="Payments">Gets or sets the collection of shopping cart payments.</param>
+        /// <param name="Shipments">Gets or sets the collection of shopping cart shipments.</param>
+        /// <param name="Discounts">Gets or sets the collection of shopping cart discounts.</param>
+        /// <param name="TaxDetails">Gets or sets the collection of line item tax detalization lines.</param>
+        /// <param name="ObjectType">Used for dynamic properties management, contains object type string.</param>
+        /// <param name="DynamicProperties">Dynamic properties collections.</param>
+        /// <param name="CreatedDate">CreatedDate.</param>
+        /// <param name="ModifiedDate">ModifiedDate.</param>
+        /// <param name="CreatedBy">CreatedBy.</param>
+        /// <param name="ModifiedBy">ModifiedBy.</param>
+        /// <param name="Id">Id.</param>
+
+        public VirtoCommerceCartModuleWebModelShoppingCart(string Name = null, string StoreId = null, string ChannelId = null, bool? IsAnonymous = null, string CustomerId = null, string CustomerName = null, string OrganizationId = null, string Currency = null, string Coupon = null, string LanguageCode = null, bool? TaxIncluded = null, bool? IsRecuring = null, string Comment = null, double? VolumetricWeight = null, string WeightUnit = null, double? Weight = null, string MeasureUnit = null, double? Height = null, double? Length = null, double? Width = null, string ValidationType = null, double? Total = null, double? SubTotal = null, double? ShippingTotal = null, double? HandlingTotal = null, double? DiscountTotal = null, double? TaxTotal = null, List<VirtoCommerceCartModuleWebModelAddress> Addresses = null, List<VirtoCommerceCartModuleWebModelLineItem> Items = null, List<VirtoCommerceCartModuleWebModelPayment> Payments = null, List<VirtoCommerceCartModuleWebModelShipment> Shipments = null, List<VirtoCommerceCartModuleWebModelDiscount> Discounts = null, List<VirtoCommerceDomainCommerceModelTaxDetail> TaxDetails = null, string ObjectType = null, List<VirtoCommercePlatformCoreDynamicPropertiesDynamicObjectProperty> DynamicProperties = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
         {
+            this.Name = Name;
+            this.StoreId = StoreId;
+            this.ChannelId = ChannelId;
+            this.IsAnonymous = IsAnonymous;
+            this.CustomerId = CustomerId;
+            this.CustomerName = CustomerName;
+            this.OrganizationId = OrganizationId;
+            this.Currency = Currency;
+            this.Coupon = Coupon;
+            this.LanguageCode = LanguageCode;
+            this.TaxIncluded = TaxIncluded;
+            this.IsRecuring = IsRecuring;
+            this.Comment = Comment;
+            this.VolumetricWeight = VolumetricWeight;
+            this.WeightUnit = WeightUnit;
+            this.Weight = Weight;
+            this.MeasureUnit = MeasureUnit;
+            this.Height = Height;
+            this.Length = Length;
+            this.Width = Width;
+            this.ValidationType = ValidationType;
+            this.Total = Total;
+            this.SubTotal = SubTotal;
+            this.ShippingTotal = ShippingTotal;
+            this.HandlingTotal = HandlingTotal;
+            this.DiscountTotal = DiscountTotal;
+            this.TaxTotal = TaxTotal;
+            this.Addresses = Addresses;
+            this.Items = Items;
+            this.Payments = Payments;
+            this.Shipments = Shipments;
+            this.Discounts = Discounts;
+            this.TaxDetails = TaxDetails;
+            this.ObjectType = ObjectType;
+            this.DynamicProperties = DynamicProperties;
+            this.CreatedDate = CreatedDate;
+            this.ModifiedDate = ModifiedDate;
+            this.CreatedBy = CreatedBy;
+            this.ModifiedBy = ModifiedBy;
+            this.Id = Id;
             
         }
 
-        
         /// <summary>
         /// Gets or sets the value of shopping cart name
         /// </summary>
         /// <value>Gets or sets the value of shopping cart name</value>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of store id
         /// </summary>
         /// <value>Gets or sets the value of store id</value>
         [DataMember(Name="storeId", EmitDefaultValue=false)]
         public string StoreId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of channel id
         /// </summary>
         /// <value>Gets or sets the value of channel id</value>
         [DataMember(Name="channelId", EmitDefaultValue=false)]
         public string ChannelId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the flag of shopping cart is anonymous
         /// </summary>
         /// <value>Gets or sets the flag of shopping cart is anonymous</value>
         [DataMember(Name="isAnonymous", EmitDefaultValue=false)]
         public bool? IsAnonymous { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of shopping cart customer id
         /// </summary>
         /// <value>Gets or sets the value of shopping cart customer id</value>
         [DataMember(Name="customerId", EmitDefaultValue=false)]
         public string CustomerId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of shopping cart customer name
         /// </summary>
         /// <value>Gets or sets the value of shopping cart customer name</value>
         [DataMember(Name="customerName", EmitDefaultValue=false)]
         public string CustomerName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of shopping cart organization id
         /// </summary>
         /// <value>Gets or sets the value of shopping cart organization id</value>
         [DataMember(Name="organizationId", EmitDefaultValue=false)]
         public string OrganizationId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of shopping cart currency
         /// </summary>
         /// <value>Gets or sets the value of shopping cart currency</value>
         [DataMember(Name="currency", EmitDefaultValue=false)]
         public string Currency { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the shopping cart coupon
         /// </summary>
         /// <value>Gets or sets the shopping cart coupon</value>
         [DataMember(Name="coupon", EmitDefaultValue=false)]
         public string Coupon { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of shopping cart language code
         /// </summary>
         /// <value>Gets or sets the value of shopping cart language code</value>
         [DataMember(Name="languageCode", EmitDefaultValue=false)]
         public string LanguageCode { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the flag of shopping cart has tax
         /// </summary>
         /// <value>Gets or sets the flag of shopping cart has tax</value>
         [DataMember(Name="taxIncluded", EmitDefaultValue=false)]
         public bool? TaxIncluded { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the flag of shopping cart is recurring
         /// </summary>
         /// <value>Gets or sets the flag of shopping cart is recurring</value>
         [DataMember(Name="isRecuring", EmitDefaultValue=false)]
         public bool? IsRecuring { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of shopping cart text comment
         /// </summary>
         /// <value>Gets or sets the value of shopping cart text comment</value>
         [DataMember(Name="comment", EmitDefaultValue=false)]
         public string Comment { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of volumetric weight
         /// </summary>
         /// <value>Gets or sets the value of volumetric weight</value>
         [DataMember(Name="volumetricWeight", EmitDefaultValue=false)]
         public double? VolumetricWeight { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of weight unit
         /// </summary>
         /// <value>Gets or sets the value of weight unit</value>
         [DataMember(Name="weightUnit", EmitDefaultValue=false)]
         public string WeightUnit { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of shopping cart weight
         /// </summary>
         /// <value>Gets or sets the value of shopping cart weight</value>
         [DataMember(Name="weight", EmitDefaultValue=false)]
         public double? Weight { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of measurement unit
         /// </summary>
         /// <value>Gets or sets the value of measurement unit</value>
         [DataMember(Name="measureUnit", EmitDefaultValue=false)]
         public string MeasureUnit { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of height
         /// </summary>
         /// <value>Gets or sets the value of height</value>
         [DataMember(Name="height", EmitDefaultValue=false)]
         public double? Height { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of length
         /// </summary>
         /// <value>Gets or sets the value of length</value>
         [DataMember(Name="length", EmitDefaultValue=false)]
         public double? Length { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of width
         /// </summary>
         /// <value>Gets or sets the value of width</value>
         [DataMember(Name="width", EmitDefaultValue=false)]
         public double? Width { get; set; }
-  
-        
+
         /// <summary>
         /// Represent any line item validation type (noPriceValidate, noQuantityValidate etc) this value can be used in storefront \r\n            to select appropriate validation strategy
         /// </summary>
         /// <value>Represent any line item validation type (noPriceValidate, noQuantityValidate etc) this value can be used in storefront \r\n            to select appropriate validation strategy</value>
         [DataMember(Name="validationType", EmitDefaultValue=false)]
         public string ValidationType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of shopping cart total cost
         /// </summary>
         /// <value>Gets or sets the value of shopping cart total cost</value>
         [DataMember(Name="total", EmitDefaultValue=false)]
         public double? Total { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of shopping cart subtotal
         /// </summary>
         /// <value>Gets or sets the value of shopping cart subtotal</value>
         [DataMember(Name="subTotal", EmitDefaultValue=false)]
         public double? SubTotal { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of shipping total cost
         /// </summary>
         /// <value>Gets or sets the value of shipping total cost</value>
         [DataMember(Name="shippingTotal", EmitDefaultValue=false)]
         public double? ShippingTotal { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of handling total cost
         /// </summary>
         /// <value>Gets or sets the value of handling total cost</value>
         [DataMember(Name="handlingTotal", EmitDefaultValue=false)]
         public double? HandlingTotal { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of total discount amount
         /// </summary>
         /// <value>Gets or sets the value of total discount amount</value>
         [DataMember(Name="discountTotal", EmitDefaultValue=false)]
         public double? DiscountTotal { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of total tax cost
         /// </summary>
         /// <value>Gets or sets the value of total tax cost</value>
         [DataMember(Name="taxTotal", EmitDefaultValue=false)]
         public double? TaxTotal { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the collection of shopping cart addresses
         /// </summary>
         /// <value>Gets or sets the collection of shopping cart addresses</value>
         [DataMember(Name="addresses", EmitDefaultValue=false)]
         public List<VirtoCommerceCartModuleWebModelAddress> Addresses { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of shopping cart line items
         /// </summary>
         /// <value>Gets or sets the value of shopping cart line items</value>
         [DataMember(Name="items", EmitDefaultValue=false)]
         public List<VirtoCommerceCartModuleWebModelLineItem> Items { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the collection of shopping cart payments
         /// </summary>
         /// <value>Gets or sets the collection of shopping cart payments</value>
         [DataMember(Name="payments", EmitDefaultValue=false)]
         public List<VirtoCommerceCartModuleWebModelPayment> Payments { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the collection of shopping cart shipments
         /// </summary>
         /// <value>Gets or sets the collection of shopping cart shipments</value>
         [DataMember(Name="shipments", EmitDefaultValue=false)]
         public List<VirtoCommerceCartModuleWebModelShipment> Shipments { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the collection of shopping cart discounts
         /// </summary>
         /// <value>Gets or sets the collection of shopping cart discounts</value>
         [DataMember(Name="discounts", EmitDefaultValue=false)]
         public List<VirtoCommerceCartModuleWebModelDiscount> Discounts { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the collection of line item tax detalization lines
         /// </summary>
         /// <value>Gets or sets the collection of line item tax detalization lines</value>
         [DataMember(Name="taxDetails", EmitDefaultValue=false)]
         public List<VirtoCommerceDomainCommerceModelTaxDetail> TaxDetails { get; set; }
-  
-        
+
         /// <summary>
         /// Used for dynamic properties management, contains object type string
         /// </summary>
         /// <value>Used for dynamic properties management, contains object type string</value>
         [DataMember(Name="objectType", EmitDefaultValue=false)]
         public string ObjectType { get; set; }
-  
-        
+
         /// <summary>
         /// Dynamic properties collections
         /// </summary>
         /// <value>Dynamic properties collections</value>
         [DataMember(Name="dynamicProperties", EmitDefaultValue=false)]
         public List<VirtoCommercePlatformCoreDynamicPropertiesDynamicObjectProperty> DynamicProperties { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedDate
         /// </summary>
         [DataMember(Name="createdDate", EmitDefaultValue=false)]
         public DateTime? CreatedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedDate
         /// </summary>
         [DataMember(Name="modifiedDate", EmitDefaultValue=false)]
         public DateTime? ModifiedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedBy
         /// </summary>
         [DataMember(Name="createdBy", EmitDefaultValue=false)]
         public string CreatedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedBy
         /// </summary>
         [DataMember(Name="modifiedBy", EmitDefaultValue=false)]
         public string ModifiedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

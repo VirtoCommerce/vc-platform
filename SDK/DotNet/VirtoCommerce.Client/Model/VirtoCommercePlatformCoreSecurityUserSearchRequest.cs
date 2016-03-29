@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,49 +21,55 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreSecurityUserSearchRequest" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreSecurityUserSearchRequest" />class.
         /// </summary>
-        public VirtoCommercePlatformCoreSecurityUserSearchRequest()
+        /// <param name="AccountTypes">AccountTypes.</param>
+        /// <param name="Keyword">Keyword.</param>
+        /// <param name="MemberId">MemberId.</param>
+        /// <param name="SkipCount">SkipCount.</param>
+        /// <param name="TakeCount">TakeCount.</param>
+
+        public VirtoCommercePlatformCoreSecurityUserSearchRequest(List<string> AccountTypes = null, string Keyword = null, string MemberId = null, int? SkipCount = null, int? TakeCount = null)
         {
+            this.AccountTypes = AccountTypes;
+            this.Keyword = Keyword;
+            this.MemberId = MemberId;
+            this.SkipCount = SkipCount;
+            this.TakeCount = TakeCount;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets AccountTypes
         /// </summary>
         [DataMember(Name="accountTypes", EmitDefaultValue=false)]
         public List<string> AccountTypes { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Keyword
         /// </summary>
         [DataMember(Name="keyword", EmitDefaultValue=false)]
         public string Keyword { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets MemberId
         /// </summary>
         [DataMember(Name="memberId", EmitDefaultValue=false)]
         public string MemberId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets SkipCount
         /// </summary>
         [DataMember(Name="skipCount", EmitDefaultValue=false)]
         public int? SkipCount { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets TakeCount
         /// </summary>
         [DataMember(Name="takeCount", EmitDefaultValue=false)]
         public int? TakeCount { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

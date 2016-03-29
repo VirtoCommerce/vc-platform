@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// Represent marketing promotion, define applicable rules and rewards amount in marketing system
     /// </summary>
@@ -21,147 +21,166 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceMarketingModuleWebModelPromotion" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceMarketingModuleWebModelPromotion" />class.
         /// </summary>
-        public VirtoCommerceMarketingModuleWebModelPromotion()
+        /// <param name="Type">It contains the name of realizing this type promotion.\r\n            DynamicPromotion is build in implementation allow to construct promotion with dynamic conditions and rewards.\r\n            For complex custom scenarios user may define personal &#39;hard-coded&#39; promotion types.</param>
+        /// <param name="Name">Name.</param>
+        /// <param name="Store">Store id that is covered by this promotion.</param>
+        /// <param name="Catalog">Catalog id that is covered by this promotion.</param>
+        /// <param name="Description">Description.</param>
+        /// <param name="IsActive">IsActive.</param>
+        /// <param name="MaxUsageCount">Maximum promotion usage count.</param>
+        /// <param name="MaxPersonalUsageCount">MaxPersonalUsageCount.</param>
+        /// <param name="Coupons">List of coupons codes which may be used for activate that promotion.</param>
+        /// <param name="Priority">Used for choosing in combination.</param>
+        /// <param name="StartDate">StartDate.</param>
+        /// <param name="EndDate">EndDate.</param>
+        /// <param name="DynamicExpression">Dynamic conditions tree determine the applicability of this promotion and reward definition.</param>
+        /// <param name="CreatedDate">CreatedDate.</param>
+        /// <param name="ModifiedDate">ModifiedDate.</param>
+        /// <param name="CreatedBy">CreatedBy.</param>
+        /// <param name="ModifiedBy">ModifiedBy.</param>
+        /// <param name="Id">Id.</param>
+
+        public VirtoCommerceMarketingModuleWebModelPromotion(string Type = null, string Name = null, string Store = null, string Catalog = null, string Description = null, bool? IsActive = null, int? MaxUsageCount = null, int? MaxPersonalUsageCount = null, List<string> Coupons = null, int? Priority = null, DateTime? StartDate = null, DateTime? EndDate = null, VirtoCommerceDomainMarketingModelPromoDynamicExpressionTree DynamicExpression = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
         {
+            this.Type = Type;
+            this.Name = Name;
+            this.Store = Store;
+            this.Catalog = Catalog;
+            this.Description = Description;
+            this.IsActive = IsActive;
+            this.MaxUsageCount = MaxUsageCount;
+            this.MaxPersonalUsageCount = MaxPersonalUsageCount;
+            this.Coupons = Coupons;
+            this.Priority = Priority;
+            this.StartDate = StartDate;
+            this.EndDate = EndDate;
+            this.DynamicExpression = DynamicExpression;
+            this.CreatedDate = CreatedDate;
+            this.ModifiedDate = ModifiedDate;
+            this.CreatedBy = CreatedBy;
+            this.ModifiedBy = ModifiedBy;
+            this.Id = Id;
             
         }
 
-        
         /// <summary>
-        /// It contains the name of realizing this type promotion.\r\n            DynamicPromotion is build in implementation allow to construct promotion with dynamic conditions and rewards.\r\n            For complex custom scenarios user may define personal 'hard-coded' promotion types
+        /// It contains the name of realizing this type promotion.\r\n            DynamicPromotion is build in implementation allow to construct promotion with dynamic conditions and rewards.\r\n            For complex custom scenarios user may define personal &#39;hard-coded&#39; promotion types
         /// </summary>
-        /// <value>It contains the name of realizing this type promotion.\r\n            DynamicPromotion is build in implementation allow to construct promotion with dynamic conditions and rewards.\r\n            For complex custom scenarios user may define personal 'hard-coded' promotion types</value>
+        /// <value>It contains the name of realizing this type promotion.\r\n            DynamicPromotion is build in implementation allow to construct promotion with dynamic conditions and rewards.\r\n            For complex custom scenarios user may define personal &#39;hard-coded&#39; promotion types</value>
         [DataMember(Name="type", EmitDefaultValue=false)]
         public string Type { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
         /// Store id that is covered by this promotion
         /// </summary>
         /// <value>Store id that is covered by this promotion</value>
         [DataMember(Name="store", EmitDefaultValue=false)]
         public string Store { get; set; }
-  
-        
+
         /// <summary>
         /// Catalog id that is covered by this promotion
         /// </summary>
         /// <value>Catalog id that is covered by this promotion</value>
         [DataMember(Name="catalog", EmitDefaultValue=false)]
         public string Catalog { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Description
         /// </summary>
         [DataMember(Name="description", EmitDefaultValue=false)]
         public string Description { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets IsActive
         /// </summary>
         [DataMember(Name="isActive", EmitDefaultValue=false)]
         public bool? IsActive { get; set; }
-  
-        
+
         /// <summary>
         /// Maximum promotion usage count
         /// </summary>
         /// <value>Maximum promotion usage count</value>
         [DataMember(Name="maxUsageCount", EmitDefaultValue=false)]
         public int? MaxUsageCount { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets MaxPersonalUsageCount
         /// </summary>
         [DataMember(Name="maxPersonalUsageCount", EmitDefaultValue=false)]
         public int? MaxPersonalUsageCount { get; set; }
-  
-        
+
         /// <summary>
         /// List of coupons codes which may be used for activate that promotion
         /// </summary>
         /// <value>List of coupons codes which may be used for activate that promotion</value>
         [DataMember(Name="coupons", EmitDefaultValue=false)]
         public List<string> Coupons { get; set; }
-  
-        
+
         /// <summary>
         /// Used for choosing in combination
         /// </summary>
         /// <value>Used for choosing in combination</value>
         [DataMember(Name="priority", EmitDefaultValue=false)]
         public int? Priority { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets StartDate
         /// </summary>
         [DataMember(Name="startDate", EmitDefaultValue=false)]
         public DateTime? StartDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets EndDate
         /// </summary>
         [DataMember(Name="endDate", EmitDefaultValue=false)]
         public DateTime? EndDate { get; set; }
-  
-        
+
         /// <summary>
         /// Dynamic conditions tree determine the applicability of this promotion and reward definition
         /// </summary>
         /// <value>Dynamic conditions tree determine the applicability of this promotion and reward definition</value>
         [DataMember(Name="dynamicExpression", EmitDefaultValue=false)]
         public VirtoCommerceDomainMarketingModelPromoDynamicExpressionTree DynamicExpression { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedDate
         /// </summary>
         [DataMember(Name="createdDate", EmitDefaultValue=false)]
         public DateTime? CreatedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedDate
         /// </summary>
         [DataMember(Name="modifiedDate", EmitDefaultValue=false)]
         public DateTime? ModifiedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedBy
         /// </summary>
         [DataMember(Name="createdBy", EmitDefaultValue=false)]
         public string CreatedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedBy
         /// </summary>
         [DataMember(Name="modifiedBy", EmitDefaultValue=false)]
         public string ModifiedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

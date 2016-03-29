@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,141 +21,160 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelPackagingModuleDescriptor" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelPackagingModuleDescriptor" />class.
         /// </summary>
-        public VirtoCommercePlatformWebModelPackagingModuleDescriptor()
+        /// <param name="Id">Id.</param>
+        /// <param name="Version">Version.</param>
+        /// <param name="PlatformVersion">PlatformVersion.</param>
+        /// <param name="Title">Title.</param>
+        /// <param name="Description">Description.</param>
+        /// <param name="Authors">Authors.</param>
+        /// <param name="Owners">Owners.</param>
+        /// <param name="LicenseUrl">LicenseUrl.</param>
+        /// <param name="ProjectUrl">ProjectUrl.</param>
+        /// <param name="IconUrl">IconUrl.</param>
+        /// <param name="RequireLicenseAcceptance">RequireLicenseAcceptance.</param>
+        /// <param name="ReleaseNotes">ReleaseNotes.</param>
+        /// <param name="Copyright">Copyright.</param>
+        /// <param name="Tags">Tags.</param>
+        /// <param name="Dependencies">Dependencies.</param>
+        /// <param name="ValidationErrors">ValidationErrors.</param>
+        /// <param name="IsRemovable">IsRemovable.</param>
+        /// <param name="FileName">Module package file name.</param>
+
+        public VirtoCommercePlatformWebModelPackagingModuleDescriptor(string Id = null, string Version = null, string PlatformVersion = null, string Title = null, string Description = null, List<string> Authors = null, List<string> Owners = null, string LicenseUrl = null, string ProjectUrl = null, string IconUrl = null, bool? RequireLicenseAcceptance = null, string ReleaseNotes = null, string Copyright = null, string Tags = null, List<VirtoCommercePlatformWebModelPackagingModuleIdentity> Dependencies = null, List<string> ValidationErrors = null, bool? IsRemovable = null, string FileName = null)
         {
+            this.Id = Id;
+            this.Version = Version;
+            this.PlatformVersion = PlatformVersion;
+            this.Title = Title;
+            this.Description = Description;
+            this.Authors = Authors;
+            this.Owners = Owners;
+            this.LicenseUrl = LicenseUrl;
+            this.ProjectUrl = ProjectUrl;
+            this.IconUrl = IconUrl;
+            this.RequireLicenseAcceptance = RequireLicenseAcceptance;
+            this.ReleaseNotes = ReleaseNotes;
+            this.Copyright = Copyright;
+            this.Tags = Tags;
+            this.Dependencies = Dependencies;
+            this.ValidationErrors = ValidationErrors;
+            this.IsRemovable = IsRemovable;
+            this.FileName = FileName;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Version
         /// </summary>
         [DataMember(Name="version", EmitDefaultValue=false)]
         public string Version { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets PlatformVersion
         /// </summary>
         [DataMember(Name="platformVersion", EmitDefaultValue=false)]
         public string PlatformVersion { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Title
         /// </summary>
         [DataMember(Name="title", EmitDefaultValue=false)]
         public string Title { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Description
         /// </summary>
         [DataMember(Name="description", EmitDefaultValue=false)]
         public string Description { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Authors
         /// </summary>
         [DataMember(Name="authors", EmitDefaultValue=false)]
         public List<string> Authors { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Owners
         /// </summary>
         [DataMember(Name="owners", EmitDefaultValue=false)]
         public List<string> Owners { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets LicenseUrl
         /// </summary>
         [DataMember(Name="licenseUrl", EmitDefaultValue=false)]
         public string LicenseUrl { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ProjectUrl
         /// </summary>
         [DataMember(Name="projectUrl", EmitDefaultValue=false)]
         public string ProjectUrl { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets IconUrl
         /// </summary>
         [DataMember(Name="iconUrl", EmitDefaultValue=false)]
         public string IconUrl { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets RequireLicenseAcceptance
         /// </summary>
         [DataMember(Name="requireLicenseAcceptance", EmitDefaultValue=false)]
         public bool? RequireLicenseAcceptance { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ReleaseNotes
         /// </summary>
         [DataMember(Name="releaseNotes", EmitDefaultValue=false)]
         public string ReleaseNotes { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Copyright
         /// </summary>
         [DataMember(Name="copyright", EmitDefaultValue=false)]
         public string Copyright { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Tags
         /// </summary>
         [DataMember(Name="tags", EmitDefaultValue=false)]
         public string Tags { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Dependencies
         /// </summary>
         [DataMember(Name="dependencies", EmitDefaultValue=false)]
         public List<VirtoCommercePlatformWebModelPackagingModuleIdentity> Dependencies { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ValidationErrors
         /// </summary>
         [DataMember(Name="validationErrors", EmitDefaultValue=false)]
         public List<string> ValidationErrors { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets IsRemovable
         /// </summary>
         [DataMember(Name="isRemovable", EmitDefaultValue=false)]
         public bool? IsRemovable { get; set; }
-  
-        
+
         /// <summary>
         /// Module package file name
         /// </summary>
         /// <value>Module package file name</value>
         [DataMember(Name="fileName", EmitDefaultValue=false)]
         public string FileName { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

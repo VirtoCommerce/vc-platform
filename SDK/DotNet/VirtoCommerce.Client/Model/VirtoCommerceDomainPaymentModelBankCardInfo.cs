@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,49 +21,55 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceDomainPaymentModelBankCardInfo" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainPaymentModelBankCardInfo" />class.
         /// </summary>
-        public VirtoCommerceDomainPaymentModelBankCardInfo()
+        /// <param name="BankCardNumber">BankCardNumber.</param>
+        /// <param name="BankCardType">BankCardType.</param>
+        /// <param name="BankCardMonth">BankCardMonth.</param>
+        /// <param name="BankCardYear">BankCardYear.</param>
+        /// <param name="BankCardCVV2">BankCardCVV2.</param>
+
+        public VirtoCommerceDomainPaymentModelBankCardInfo(string BankCardNumber = null, string BankCardType = null, int? BankCardMonth = null, int? BankCardYear = null, string BankCardCVV2 = null)
         {
+            this.BankCardNumber = BankCardNumber;
+            this.BankCardType = BankCardType;
+            this.BankCardMonth = BankCardMonth;
+            this.BankCardYear = BankCardYear;
+            this.BankCardCVV2 = BankCardCVV2;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets BankCardNumber
         /// </summary>
         [DataMember(Name="bankCardNumber", EmitDefaultValue=false)]
         public string BankCardNumber { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets BankCardType
         /// </summary>
         [DataMember(Name="bankCardType", EmitDefaultValue=false)]
         public string BankCardType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets BankCardMonth
         /// </summary>
         [DataMember(Name="bankCardMonth", EmitDefaultValue=false)]
         public int? BankCardMonth { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets BankCardYear
         /// </summary>
         [DataMember(Name="bankCardYear", EmitDefaultValue=false)]
         public int? BankCardYear { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets BankCardCVV2
         /// </summary>
         [DataMember(Name="bankCardCVV2", EmitDefaultValue=false)]
         public string BankCardCVV2 { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

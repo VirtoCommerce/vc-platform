@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,91 +21,103 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceDomainMarketingModelProductPromoEntry" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainMarketingModelProductPromoEntry" />class.
         /// </summary>
-        public VirtoCommerceDomainMarketingModelProductPromoEntry()
+        /// <param name="Code">Code.</param>
+        /// <param name="Quantity">Quantity.</param>
+        /// <param name="Price">Price.</param>
+        /// <param name="Discount">Discount.</param>
+        /// <param name="CatalogId">CatalogId.</param>
+        /// <param name="CategoryId">CategoryId.</param>
+        /// <param name="ProductId">ProductId.</param>
+        /// <param name="Owner">Owner.</param>
+        /// <param name="Outline">Outline.</param>
+        /// <param name="Variations">Variations.</param>
+        /// <param name="Attributes">Attributes.</param>
+
+        public VirtoCommerceDomainMarketingModelProductPromoEntry(string Code = null, int? Quantity = null, double? Price = null, double? Discount = null, string CatalogId = null, string CategoryId = null, string ProductId = null, Object Owner = null, string Outline = null, List<VirtoCommerceDomainMarketingModelProductPromoEntry> Variations = null, Dictionary<string, string> Attributes = null)
         {
+            this.Code = Code;
+            this.Quantity = Quantity;
+            this.Price = Price;
+            this.Discount = Discount;
+            this.CatalogId = CatalogId;
+            this.CategoryId = CategoryId;
+            this.ProductId = ProductId;
+            this.Owner = Owner;
+            this.Outline = Outline;
+            this.Variations = Variations;
+            this.Attributes = Attributes;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets Code
         /// </summary>
         [DataMember(Name="code", EmitDefaultValue=false)]
         public string Code { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Quantity
         /// </summary>
         [DataMember(Name="quantity", EmitDefaultValue=false)]
         public int? Quantity { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Price
         /// </summary>
         [DataMember(Name="price", EmitDefaultValue=false)]
         public double? Price { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Discount
         /// </summary>
         [DataMember(Name="discount", EmitDefaultValue=false)]
         public double? Discount { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CatalogId
         /// </summary>
         [DataMember(Name="catalogId", EmitDefaultValue=false)]
         public string CatalogId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CategoryId
         /// </summary>
         [DataMember(Name="categoryId", EmitDefaultValue=false)]
         public string CategoryId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ProductId
         /// </summary>
         [DataMember(Name="productId", EmitDefaultValue=false)]
         public string ProductId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Owner
         /// </summary>
         [DataMember(Name="owner", EmitDefaultValue=false)]
         public Object Owner { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Outline
         /// </summary>
         [DataMember(Name="outline", EmitDefaultValue=false)]
         public string Outline { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Variations
         /// </summary>
         [DataMember(Name="variations", EmitDefaultValue=false)]
         public List<VirtoCommerceDomainMarketingModelProductPromoEntry> Variations { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Attributes
         /// </summary>
         [DataMember(Name="attributes", EmitDefaultValue=false)]
         public Dictionary<string, string> Attributes { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,70 +21,79 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceDomainTaxModelTaxProvider" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainTaxModelTaxProvider" />class.
         /// </summary>
-        public VirtoCommerceDomainTaxModelTaxProvider()
+        /// <param name="Code">Code.</param>
+        /// <param name="Name">Name.</param>
+        /// <param name="Description">Description.</param>
+        /// <param name="LogoUrl">LogoUrl.</param>
+        /// <param name="IsActive">IsActive.</param>
+        /// <param name="Priority">Priority.</param>
+        /// <param name="Settings">Settings.</param>
+        /// <param name="Id">Id.</param>
+
+        public VirtoCommerceDomainTaxModelTaxProvider(string Code = null, string Name = null, string Description = null, string LogoUrl = null, bool? IsActive = null, int? Priority = null, List<VirtoCommercePlatformCoreSettingsSettingEntry> Settings = null, string Id = null)
         {
+            this.Code = Code;
+            this.Name = Name;
+            this.Description = Description;
+            this.LogoUrl = LogoUrl;
+            this.IsActive = IsActive;
+            this.Priority = Priority;
+            this.Settings = Settings;
+            this.Id = Id;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets Code
         /// </summary>
         [DataMember(Name="code", EmitDefaultValue=false)]
         public string Code { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Description
         /// </summary>
         [DataMember(Name="description", EmitDefaultValue=false)]
         public string Description { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets LogoUrl
         /// </summary>
         [DataMember(Name="logoUrl", EmitDefaultValue=false)]
         public string LogoUrl { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets IsActive
         /// </summary>
         [DataMember(Name="isActive", EmitDefaultValue=false)]
         public bool? IsActive { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Priority
         /// </summary>
         [DataMember(Name="priority", EmitDefaultValue=false)]
         public int? Priority { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Settings
         /// </summary>
         [DataMember(Name="settings", EmitDefaultValue=false)]
         public List<VirtoCommercePlatformCoreSettingsSettingEntry> Settings { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

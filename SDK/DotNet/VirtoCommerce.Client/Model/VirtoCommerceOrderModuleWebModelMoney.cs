@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,28 +21,31 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceOrderModuleWebModelMoney" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceOrderModuleWebModelMoney" />class.
         /// </summary>
-        public VirtoCommerceOrderModuleWebModelMoney()
+        /// <param name="Currency">Currency.</param>
+        /// <param name="Amount">Amount.</param>
+
+        public VirtoCommerceOrderModuleWebModelMoney(string Currency = null, double? Amount = null)
         {
+            this.Currency = Currency;
+            this.Amount = Amount;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets Currency
         /// </summary>
         [DataMember(Name="currency", EmitDefaultValue=false)]
         public string Currency { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Amount
         /// </summary>
         [DataMember(Name="amount", EmitDefaultValue=false)]
         public double? Amount { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

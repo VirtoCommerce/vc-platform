@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,54 +21,60 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceCartModuleWebModelSearchCriteria" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceCartModuleWebModelSearchCriteria" />class.
         /// </summary>
-        public VirtoCommerceCartModuleWebModelSearchCriteria()
+        /// <param name="Keyword">Gets or sets the value of search criteria keyword.</param>
+        /// <param name="CustomerId">Gets or sets the value of search criteria customer id.</param>
+        /// <param name="StoreId">Gets or sets the value of search criteria store id.</param>
+        /// <param name="Start">Gets or sets the value of search criteria skip records count.</param>
+        /// <param name="Count">Gets or sets the value of search criteria page size.</param>
+
+        public VirtoCommerceCartModuleWebModelSearchCriteria(string Keyword = null, string CustomerId = null, string StoreId = null, int? Start = null, int? Count = null)
         {
+            this.Keyword = Keyword;
+            this.CustomerId = CustomerId;
+            this.StoreId = StoreId;
+            this.Start = Start;
+            this.Count = Count;
             
         }
 
-        
         /// <summary>
         /// Gets or sets the value of search criteria keyword
         /// </summary>
         /// <value>Gets or sets the value of search criteria keyword</value>
         [DataMember(Name="keyword", EmitDefaultValue=false)]
         public string Keyword { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of search criteria customer id
         /// </summary>
         /// <value>Gets or sets the value of search criteria customer id</value>
         [DataMember(Name="customerId", EmitDefaultValue=false)]
         public string CustomerId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of search criteria store id
         /// </summary>
         /// <value>Gets or sets the value of search criteria store id</value>
         [DataMember(Name="storeId", EmitDefaultValue=false)]
         public string StoreId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of search criteria skip records count
         /// </summary>
         /// <value>Gets or sets the value of search criteria skip records count</value>
         [DataMember(Name="start", EmitDefaultValue=false)]
         public int? Start { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of search criteria page size
         /// </summary>
         /// <value>Gets or sets the value of search criteria page size</value>
         [DataMember(Name="count", EmitDefaultValue=false)]
         public int? Count { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,42 +21,47 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceStoreModuleWebModelSendDynamicNotificationRequest" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceStoreModuleWebModelSendDynamicNotificationRequest" />class.
         /// </summary>
-        public VirtoCommerceStoreModuleWebModelSendDynamicNotificationRequest()
+        /// <param name="StoreId">StoreId.</param>
+        /// <param name="Type">Type.</param>
+        /// <param name="Fields">Fields.</param>
+        /// <param name="Language">Language.</param>
+
+        public VirtoCommerceStoreModuleWebModelSendDynamicNotificationRequest(string StoreId = null, string Type = null, Dictionary<string, string> Fields = null, string Language = null)
         {
+            this.StoreId = StoreId;
+            this.Type = Type;
+            this.Fields = Fields;
+            this.Language = Language;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets StoreId
         /// </summary>
         [DataMember(Name="storeId", EmitDefaultValue=false)]
         public string StoreId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name="type", EmitDefaultValue=false)]
         public string Type { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Fields
         /// </summary>
         [DataMember(Name="fields", EmitDefaultValue=false)]
         public Dictionary<string, string> Fields { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Language
         /// </summary>
         [DataMember(Name="language", EmitDefaultValue=false)]
         public string Language { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

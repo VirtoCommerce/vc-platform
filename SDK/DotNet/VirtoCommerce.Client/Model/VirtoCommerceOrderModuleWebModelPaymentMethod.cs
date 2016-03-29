@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,78 +21,87 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceOrderModuleWebModelPaymentMethod" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceOrderModuleWebModelPaymentMethod" />class.
         /// </summary>
-        public VirtoCommerceOrderModuleWebModelPaymentMethod()
+        /// <param name="Code">Gets or sets the value of payment gateway code.</param>
+        /// <param name="Name">Gets or sets the value of payment method name.</param>
+        /// <param name="IconUrl">Gets or sets the value of payment method logo absolute URL.</param>
+        /// <param name="Description">Gets or sets the value of payment method description.</param>
+        /// <param name="PaymentMethodType">Gets or sets the value of payment method type.</param>
+        /// <param name="PaymentMethodGroupType">Gets or sets the value of payment method group type.</param>
+        /// <param name="Priority">Gets or sets the value of payment method priority.</param>
+        /// <param name="IsAvailableForPartial">Is payment method available for partial payments.</param>
+
+        public VirtoCommerceOrderModuleWebModelPaymentMethod(string Code = null, string Name = null, string IconUrl = null, string Description = null, string PaymentMethodType = null, string PaymentMethodGroupType = null, int? Priority = null, bool? IsAvailableForPartial = null)
         {
+            this.Code = Code;
+            this.Name = Name;
+            this.IconUrl = IconUrl;
+            this.Description = Description;
+            this.PaymentMethodType = PaymentMethodType;
+            this.PaymentMethodGroupType = PaymentMethodGroupType;
+            this.Priority = Priority;
+            this.IsAvailableForPartial = IsAvailableForPartial;
             
         }
 
-        
         /// <summary>
         /// Gets or sets the value of payment gateway code
         /// </summary>
         /// <value>Gets or sets the value of payment gateway code</value>
         [DataMember(Name="code", EmitDefaultValue=false)]
         public string Code { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of payment method name
         /// </summary>
         /// <value>Gets or sets the value of payment method name</value>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of payment method logo absolute URL
         /// </summary>
         /// <value>Gets or sets the value of payment method logo absolute URL</value>
         [DataMember(Name="iconUrl", EmitDefaultValue=false)]
         public string IconUrl { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of payment method description
         /// </summary>
         /// <value>Gets or sets the value of payment method description</value>
         [DataMember(Name="description", EmitDefaultValue=false)]
         public string Description { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of payment method type
         /// </summary>
         /// <value>Gets or sets the value of payment method type</value>
         [DataMember(Name="paymentMethodType", EmitDefaultValue=false)]
         public string PaymentMethodType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of payment method group type
         /// </summary>
         /// <value>Gets or sets the value of payment method group type</value>
         [DataMember(Name="paymentMethodGroupType", EmitDefaultValue=false)]
         public string PaymentMethodGroupType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of payment method priority
         /// </summary>
         /// <value>Gets or sets the value of payment method priority</value>
         [DataMember(Name="priority", EmitDefaultValue=false)]
         public int? Priority { get; set; }
-  
-        
+
         /// <summary>
         /// Is payment method available for partial payments
         /// </summary>
         /// <value>Is payment method available for partial payments</value>
         [DataMember(Name="isAvailableForPartial", EmitDefaultValue=false)]
         public bool? IsAvailableForPartial { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// Request for quotation (RFQ) is a standard business process whose purpose is to invite suppliers into a\r\n             bidding process to bid on specific products or services.
     /// </summary>
@@ -21,318 +21,360 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceQuoteModuleWebModelQuoteRequest" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceQuoteModuleWebModelQuoteRequest" />class.
         /// </summary>
-        public VirtoCommerceQuoteModuleWebModelQuoteRequest()
+        /// <param name="Number">Unique user friendly document number (generate automatically based on special algorithm realization).</param>
+        /// <param name="StoreId">StoreId.</param>
+        /// <param name="ChannelId">ChannelId.</param>
+        /// <param name="IsAnonymous">IsAnonymous.</param>
+        /// <param name="CustomerId">CustomerId.</param>
+        /// <param name="CustomerName">CustomerName.</param>
+        /// <param name="OrganizationName">OrganizationName.</param>
+        /// <param name="OrganizationId">OrganizationId.</param>
+        /// <param name="EmployeeId">Id employee who responsible for processing RFQ.</param>
+        /// <param name="EmployeeName">Employee who responsible for processing RFQ.</param>
+        /// <param name="ExpirationDate">Date when RFQ will be expired.</param>
+        /// <param name="ReminderDate">Date used for notification.</param>
+        /// <param name="EnableNotification">Flag of managing the need to send notifications.</param>
+        /// <param name="IsLocked">If is set it restrict any changes on RFQ.</param>
+        /// <param name="Status">Status.</param>
+        /// <param name="Tag">Tag for auxiliary information.</param>
+        /// <param name="Comment">Public comment visible for customer.</param>
+        /// <param name="InnerComment">Private comment not visible to customer.</param>
+        /// <param name="Currency">Currency.</param>
+        /// <param name="Totals">Resulting totals for selected proposals.</param>
+        /// <param name="Coupon">Coupon.</param>
+        /// <param name="ManualShippingTotal">Manual shipping total for quote request.</param>
+        /// <param name="ManualSubTotal">Manual sub total for quote request.</param>
+        /// <param name="ManualRelDiscountAmount">Relative manual discount amount for quote request in percent.</param>
+        /// <param name="ShipmentMethod">Predefined shipment method used for delivery order created from current RFQ.</param>
+        /// <param name="Addresses">Addresses.</param>
+        /// <param name="Items">RFQ items.</param>
+        /// <param name="Attachments">Attachments.</param>
+        /// <param name="LanguageCode">LanguageCode.</param>
+        /// <param name="TaxDetails">TaxDetails.</param>
+        /// <param name="IsCancelled">IsCancelled.</param>
+        /// <param name="CancelledDate">CancelledDate.</param>
+        /// <param name="CancelReason">CancelReason.</param>
+        /// <param name="ObjectType">System property.</param>
+        /// <param name="DynamicProperties">DynamicProperties.</param>
+        /// <param name="OperationsLog">OperationsLog.</param>
+        /// <param name="CreatedDate">CreatedDate.</param>
+        /// <param name="ModifiedDate">ModifiedDate.</param>
+        /// <param name="CreatedBy">CreatedBy.</param>
+        /// <param name="ModifiedBy">ModifiedBy.</param>
+        /// <param name="Id">Id.</param>
+
+        public VirtoCommerceQuoteModuleWebModelQuoteRequest(string Number = null, string StoreId = null, string ChannelId = null, bool? IsAnonymous = null, string CustomerId = null, string CustomerName = null, string OrganizationName = null, string OrganizationId = null, string EmployeeId = null, string EmployeeName = null, DateTime? ExpirationDate = null, DateTime? ReminderDate = null, bool? EnableNotification = null, bool? IsLocked = null, string Status = null, string Tag = null, string Comment = null, string InnerComment = null, string Currency = null, VirtoCommerceQuoteModuleWebModelQuoteRequestTotals Totals = null, string Coupon = null, double? ManualShippingTotal = null, double? ManualSubTotal = null, double? ManualRelDiscountAmount = null, VirtoCommerceQuoteModuleWebModelShipmentMethod ShipmentMethod = null, List<VirtoCommerceQuoteModuleWebModelAddress> Addresses = null, List<VirtoCommerceQuoteModuleWebModelQuoteItem> Items = null, List<VirtoCommerceQuoteModuleWebModelQuoteAttachment> Attachments = null, string LanguageCode = null, List<VirtoCommerceDomainCommerceModelTaxDetail> TaxDetails = null, bool? IsCancelled = null, DateTime? CancelledDate = null, string CancelReason = null, string ObjectType = null, List<VirtoCommercePlatformCoreDynamicPropertiesDynamicObjectProperty> DynamicProperties = null, List<VirtoCommercePlatformCoreChangeLogOperationLog> OperationsLog = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
         {
+            this.Number = Number;
+            this.StoreId = StoreId;
+            this.ChannelId = ChannelId;
+            this.IsAnonymous = IsAnonymous;
+            this.CustomerId = CustomerId;
+            this.CustomerName = CustomerName;
+            this.OrganizationName = OrganizationName;
+            this.OrganizationId = OrganizationId;
+            this.EmployeeId = EmployeeId;
+            this.EmployeeName = EmployeeName;
+            this.ExpirationDate = ExpirationDate;
+            this.ReminderDate = ReminderDate;
+            this.EnableNotification = EnableNotification;
+            this.IsLocked = IsLocked;
+            this.Status = Status;
+            this.Tag = Tag;
+            this.Comment = Comment;
+            this.InnerComment = InnerComment;
+            this.Currency = Currency;
+            this.Totals = Totals;
+            this.Coupon = Coupon;
+            this.ManualShippingTotal = ManualShippingTotal;
+            this.ManualSubTotal = ManualSubTotal;
+            this.ManualRelDiscountAmount = ManualRelDiscountAmount;
+            this.ShipmentMethod = ShipmentMethod;
+            this.Addresses = Addresses;
+            this.Items = Items;
+            this.Attachments = Attachments;
+            this.LanguageCode = LanguageCode;
+            this.TaxDetails = TaxDetails;
+            this.IsCancelled = IsCancelled;
+            this.CancelledDate = CancelledDate;
+            this.CancelReason = CancelReason;
+            this.ObjectType = ObjectType;
+            this.DynamicProperties = DynamicProperties;
+            this.OperationsLog = OperationsLog;
+            this.CreatedDate = CreatedDate;
+            this.ModifiedDate = ModifiedDate;
+            this.CreatedBy = CreatedBy;
+            this.ModifiedBy = ModifiedBy;
+            this.Id = Id;
             
         }
 
-        
         /// <summary>
         /// Unique user friendly document number (generate automatically based on special algorithm realization)
         /// </summary>
         /// <value>Unique user friendly document number (generate automatically based on special algorithm realization)</value>
         [DataMember(Name="number", EmitDefaultValue=false)]
         public string Number { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets StoreId
         /// </summary>
         [DataMember(Name="storeId", EmitDefaultValue=false)]
         public string StoreId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ChannelId
         /// </summary>
         [DataMember(Name="channelId", EmitDefaultValue=false)]
         public string ChannelId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets IsAnonymous
         /// </summary>
         [DataMember(Name="isAnonymous", EmitDefaultValue=false)]
         public bool? IsAnonymous { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CustomerId
         /// </summary>
         [DataMember(Name="customerId", EmitDefaultValue=false)]
         public string CustomerId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CustomerName
         /// </summary>
         [DataMember(Name="customerName", EmitDefaultValue=false)]
         public string CustomerName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets OrganizationName
         /// </summary>
         [DataMember(Name="organizationName", EmitDefaultValue=false)]
         public string OrganizationName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets OrganizationId
         /// </summary>
         [DataMember(Name="organizationId", EmitDefaultValue=false)]
         public string OrganizationId { get; set; }
-  
-        
+
         /// <summary>
         /// Id employee who responsible for processing RFQ
         /// </summary>
         /// <value>Id employee who responsible for processing RFQ</value>
         [DataMember(Name="employeeId", EmitDefaultValue=false)]
         public string EmployeeId { get; set; }
-  
-        
+
         /// <summary>
         /// Employee who responsible for processing RFQ
         /// </summary>
         /// <value>Employee who responsible for processing RFQ</value>
         [DataMember(Name="employeeName", EmitDefaultValue=false)]
         public string EmployeeName { get; set; }
-  
-        
+
         /// <summary>
         /// Date when RFQ will be expired
         /// </summary>
         /// <value>Date when RFQ will be expired</value>
         [DataMember(Name="expirationDate", EmitDefaultValue=false)]
         public DateTime? ExpirationDate { get; set; }
-  
-        
+
         /// <summary>
         /// Date used for notification
         /// </summary>
         /// <value>Date used for notification</value>
         [DataMember(Name="reminderDate", EmitDefaultValue=false)]
         public DateTime? ReminderDate { get; set; }
-  
-        
+
         /// <summary>
         /// Flag of managing the need to send notifications
         /// </summary>
         /// <value>Flag of managing the need to send notifications</value>
         [DataMember(Name="enableNotification", EmitDefaultValue=false)]
         public bool? EnableNotification { get; set; }
-  
-        
+
         /// <summary>
         /// If is set it restrict any changes on RFQ
         /// </summary>
         /// <value>If is set it restrict any changes on RFQ</value>
         [DataMember(Name="isLocked", EmitDefaultValue=false)]
         public bool? IsLocked { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Status
         /// </summary>
         [DataMember(Name="status", EmitDefaultValue=false)]
         public string Status { get; set; }
-  
-        
+
         /// <summary>
         /// Tag for auxiliary information
         /// </summary>
         /// <value>Tag for auxiliary information</value>
         [DataMember(Name="tag", EmitDefaultValue=false)]
         public string Tag { get; set; }
-  
-        
+
         /// <summary>
         /// Public comment visible for customer
         /// </summary>
         /// <value>Public comment visible for customer</value>
         [DataMember(Name="comment", EmitDefaultValue=false)]
         public string Comment { get; set; }
-  
-        
+
         /// <summary>
         /// Private comment not visible to customer
         /// </summary>
         /// <value>Private comment not visible to customer</value>
         [DataMember(Name="innerComment", EmitDefaultValue=false)]
         public string InnerComment { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Currency
         /// </summary>
         [DataMember(Name="currency", EmitDefaultValue=false)]
         public string Currency { get; set; }
-  
-        
+
         /// <summary>
         /// Resulting totals for selected proposals
         /// </summary>
         /// <value>Resulting totals for selected proposals</value>
         [DataMember(Name="totals", EmitDefaultValue=false)]
         public VirtoCommerceQuoteModuleWebModelQuoteRequestTotals Totals { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Coupon
         /// </summary>
         [DataMember(Name="coupon", EmitDefaultValue=false)]
         public string Coupon { get; set; }
-  
-        
+
         /// <summary>
         /// Manual shipping total for quote request
         /// </summary>
         /// <value>Manual shipping total for quote request</value>
         [DataMember(Name="manualShippingTotal", EmitDefaultValue=false)]
         public double? ManualShippingTotal { get; set; }
-  
-        
+
         /// <summary>
         /// Manual sub total for quote request
         /// </summary>
         /// <value>Manual sub total for quote request</value>
         [DataMember(Name="manualSubTotal", EmitDefaultValue=false)]
         public double? ManualSubTotal { get; set; }
-  
-        
+
         /// <summary>
         /// Relative manual discount amount for quote request in percent
         /// </summary>
         /// <value>Relative manual discount amount for quote request in percent</value>
         [DataMember(Name="manualRelDiscountAmount", EmitDefaultValue=false)]
         public double? ManualRelDiscountAmount { get; set; }
-  
-        
+
         /// <summary>
         /// Predefined shipment method used for delivery order created from current RFQ
         /// </summary>
         /// <value>Predefined shipment method used for delivery order created from current RFQ</value>
         [DataMember(Name="shipmentMethod", EmitDefaultValue=false)]
         public VirtoCommerceQuoteModuleWebModelShipmentMethod ShipmentMethod { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Addresses
         /// </summary>
         [DataMember(Name="addresses", EmitDefaultValue=false)]
         public List<VirtoCommerceQuoteModuleWebModelAddress> Addresses { get; set; }
-  
-        
+
         /// <summary>
         /// RFQ items
         /// </summary>
         /// <value>RFQ items</value>
         [DataMember(Name="items", EmitDefaultValue=false)]
         public List<VirtoCommerceQuoteModuleWebModelQuoteItem> Items { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Attachments
         /// </summary>
         [DataMember(Name="attachments", EmitDefaultValue=false)]
         public List<VirtoCommerceQuoteModuleWebModelQuoteAttachment> Attachments { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets LanguageCode
         /// </summary>
         [DataMember(Name="languageCode", EmitDefaultValue=false)]
         public string LanguageCode { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets TaxDetails
         /// </summary>
         [DataMember(Name="taxDetails", EmitDefaultValue=false)]
         public List<VirtoCommerceDomainCommerceModelTaxDetail> TaxDetails { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets IsCancelled
         /// </summary>
         [DataMember(Name="isCancelled", EmitDefaultValue=false)]
         public bool? IsCancelled { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CancelledDate
         /// </summary>
         [DataMember(Name="cancelledDate", EmitDefaultValue=false)]
         public DateTime? CancelledDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CancelReason
         /// </summary>
         [DataMember(Name="cancelReason", EmitDefaultValue=false)]
         public string CancelReason { get; set; }
-  
-        
+
         /// <summary>
         /// System property
         /// </summary>
         /// <value>System property</value>
         [DataMember(Name="objectType", EmitDefaultValue=false)]
         public string ObjectType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets DynamicProperties
         /// </summary>
         [DataMember(Name="dynamicProperties", EmitDefaultValue=false)]
         public List<VirtoCommercePlatformCoreDynamicPropertiesDynamicObjectProperty> DynamicProperties { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets OperationsLog
         /// </summary>
         [DataMember(Name="operationsLog", EmitDefaultValue=false)]
         public List<VirtoCommercePlatformCoreChangeLogOperationLog> OperationsLog { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedDate
         /// </summary>
         [DataMember(Name="createdDate", EmitDefaultValue=false)]
         public DateTime? CreatedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedDate
         /// </summary>
         [DataMember(Name="modifiedDate", EmitDefaultValue=false)]
         public DateTime? ModifiedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedBy
         /// </summary>
         [DataMember(Name="createdBy", EmitDefaultValue=false)]
         public string CreatedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedBy
         /// </summary>
         [DataMember(Name="modifiedBy", EmitDefaultValue=false)]
         public string ModifiedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

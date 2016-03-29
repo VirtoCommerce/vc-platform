@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,56 +21,63 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceDomainTaxModelTaxLine" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainTaxModelTaxLine" />class.
         /// </summary>
-        public VirtoCommerceDomainTaxModelTaxLine()
+        /// <param name="Code">Code.</param>
+        /// <param name="Name">Name.</param>
+        /// <param name="Amount">Amount.</param>
+        /// <param name="Price">Price.</param>
+        /// <param name="TaxType">TaxType.</param>
+        /// <param name="Id">Id.</param>
+
+        public VirtoCommerceDomainTaxModelTaxLine(string Code = null, string Name = null, double? Amount = null, double? Price = null, string TaxType = null, string Id = null)
         {
+            this.Code = Code;
+            this.Name = Name;
+            this.Amount = Amount;
+            this.Price = Price;
+            this.TaxType = TaxType;
+            this.Id = Id;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets Code
         /// </summary>
         [DataMember(Name="code", EmitDefaultValue=false)]
         public string Code { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Amount
         /// </summary>
         [DataMember(Name="amount", EmitDefaultValue=false)]
         public double? Amount { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Price
         /// </summary>
         [DataMember(Name="price", EmitDefaultValue=false)]
         public double? Price { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets TaxType
         /// </summary>
         [DataMember(Name="taxType", EmitDefaultValue=false)]
         public string TaxType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

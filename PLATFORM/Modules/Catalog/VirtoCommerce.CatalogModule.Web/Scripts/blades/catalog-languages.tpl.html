@@ -14,8 +14,8 @@
                         </ui-select>
                     </div>
                 </div>
-                <div class="sub-t" ng-if="!blade.data.virtual">{{'catalog.blades.catalog-languages.labels.additional-languages' | translate}}</div>
-                <div class="form-group" ng-if="!blade.data.virtual">
+                <div class="sub-t" ng-if="!blade.data.isVirtual">{{'catalog.blades.catalog-languages.labels.additional-languages' | translate}}</div>
+                <div class="form-group" ng-if="!blade.data.isVirtual">
                     <div class="form-input" data-role="input-control">
                         <ui-select multiple ng-model="blade.currentEntity.selectedValues">
                             <ui-select-match placeholder="{{'catalog.blades.catalog-languages.placeholders.select' | translate}}">{{$item}}</ui-select-match>

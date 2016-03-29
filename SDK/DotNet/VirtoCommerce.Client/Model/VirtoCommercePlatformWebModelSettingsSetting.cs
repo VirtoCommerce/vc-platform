@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,90 +21,101 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelSettingsSetting" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelSettingsSetting" />class.
         /// </summary>
-        public VirtoCommercePlatformWebModelSettingsSetting()
+        /// <param name="GroupName">GroupName.</param>
+        /// <param name="Name">System name (ID) of the setting.</param>
+        /// <param name="Value">Current value for non-array setting.</param>
+        /// <param name="ValueType">ValueType.</param>
+        /// <param name="AllowedValues">Predefined set of allowed values for this setting.</param>
+        /// <param name="DefaultValue">DefaultValue.</param>
+        /// <param name="IsArray">Defines whether the setting can have multiple values.</param>
+        /// <param name="ArrayValues">Current values for array setting.</param>
+        /// <param name="Title">User-friendly name of the setting.</param>
+        /// <param name="Description">Description.</param>
+
+        public VirtoCommercePlatformWebModelSettingsSetting(string GroupName = null, string Name = null, string Value = null, string ValueType = null, List<string> AllowedValues = null, string DefaultValue = null, bool? IsArray = null, List<string> ArrayValues = null, string Title = null, string Description = null)
         {
+            this.GroupName = GroupName;
+            this.Name = Name;
+            this.Value = Value;
+            this.ValueType = ValueType;
+            this.AllowedValues = AllowedValues;
+            this.DefaultValue = DefaultValue;
+            this.IsArray = IsArray;
+            this.ArrayValues = ArrayValues;
+            this.Title = Title;
+            this.Description = Description;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets GroupName
         /// </summary>
         [DataMember(Name="groupName", EmitDefaultValue=false)]
         public string GroupName { get; set; }
-  
-        
+
         /// <summary>
         /// System name (ID) of the setting
         /// </summary>
         /// <value>System name (ID) of the setting</value>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
         /// Current value for non-array setting
         /// </summary>
         /// <value>Current value for non-array setting</value>
         [DataMember(Name="value", EmitDefaultValue=false)]
         public string Value { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ValueType
         /// </summary>
         [DataMember(Name="valueType", EmitDefaultValue=false)]
         public string ValueType { get; set; }
-  
-        
+
         /// <summary>
         /// Predefined set of allowed values for this setting
         /// </summary>
         /// <value>Predefined set of allowed values for this setting</value>
         [DataMember(Name="allowedValues", EmitDefaultValue=false)]
         public List<string> AllowedValues { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets DefaultValue
         /// </summary>
         [DataMember(Name="defaultValue", EmitDefaultValue=false)]
         public string DefaultValue { get; set; }
-  
-        
+
         /// <summary>
         /// Defines whether the setting can have multiple values
         /// </summary>
         /// <value>Defines whether the setting can have multiple values</value>
         [DataMember(Name="isArray", EmitDefaultValue=false)]
         public bool? IsArray { get; set; }
-  
-        
+
         /// <summary>
         /// Current values for array setting
         /// </summary>
         /// <value>Current values for array setting</value>
         [DataMember(Name="arrayValues", EmitDefaultValue=false)]
         public List<string> ArrayValues { get; set; }
-  
-        
+
         /// <summary>
         /// User-friendly name of the setting
         /// </summary>
         /// <value>User-friendly name of the setting</value>
         [DataMember(Name="title", EmitDefaultValue=false)]
         public string Title { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Description
         /// </summary>
         [DataMember(Name="description", EmitDefaultValue=false)]
         public string Description { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
