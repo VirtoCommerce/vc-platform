@@ -92,6 +92,7 @@
     <Compile Include="Common\EnumerableExtension.cs" />
     <Compile Include="Common\IMutablePagedList.cs" />
     <Compile Include="Common\MutablePagedList.cs" />
+    <Compile Include="EditorialReview.cs" />
     <Compile Include="IHasSettings.cs" />
     <Compile Include="SettingEntry.cs" />
     <Compile Include="LoginProvider.cs" />

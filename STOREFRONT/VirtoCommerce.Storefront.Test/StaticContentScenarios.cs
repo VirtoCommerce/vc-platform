@@ -90,7 +90,7 @@ namespace VirtoCommerce.Storefront.Test
             cacheManager.Setup(cache => cache.Get<ContentItem[]>(It.IsAny<string>(), It.IsAny<string>())).Returns<ContentItem[]>(null);
             var urlBuilder = new Moq.Mock<IStorefrontUrlBuilder>();
             var liquidEngine = new Moq.Mock<ILiquidThemeEngine>();
-            var markdown = new Moq.Mock<MarkdownDeep.Markdown>();
+            var markdown = new Moq.Mock<MarkdownSharp.Markdown>();
             var path = Path.Combine(Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory).Parent.FullName, "Pages");
             var retVal = new StaticContentServiceImpl(path, markdown.Object, liquidEngine.Object, cacheManager.Object, ()=> null, ()=> urlBuilder.Object, StaticContentItemFactory.GetContentItemFromPath);
             return retVal;

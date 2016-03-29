@@ -17,7 +17,7 @@ namespace VirtoCommerce.Storefront.Model.Catalog
             Assets = new List<Asset>();
             Variations = new List<Product>();
             Images = new List<Image>();
-            Descriptions = new List<LocalizedString>();
+            Descriptions = new List<EditorialReview>();
             Discounts = new List<Discount>();
         }
 
@@ -189,7 +189,7 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         /// <summary>
         /// Product editorial reviews
         /// </summary>
-        public ICollection<LocalizedString> Descriptions { get; set; }
+        public ICollection<EditorialReview> Descriptions { get; set; }
 
         /// <summary>
         /// Current product price

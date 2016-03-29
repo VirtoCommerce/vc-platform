@@ -13,7 +13,7 @@ namespace VirtoCommerce.Storefront.Model.Common
         static LocalizationExtensions()
         {
             _cachedRegionInfos = CultureInfo.GetCultures(CultureTypes.AllCultures)
-                                            .Where(c => !c.IsNeutralCulture)
+                                            .Where(c => !c.IsNeutralCulture && c.LCID != 127)
                 .Select(x => 
                 {
                     try
