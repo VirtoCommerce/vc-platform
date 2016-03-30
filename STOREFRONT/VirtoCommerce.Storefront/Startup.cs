@@ -219,7 +219,7 @@ namespace VirtoCommerce.Storefront
             {
                 LinkEmails = false // Render mailto: links as is without markup transformations
             };
-            var staticContentService = new StaticContentServiceImpl(ResolveLocalPath(staticContentPath), new Markdown(markdownOptions), shopifyLiquidEngine, cacheManager, workContextFactory, () => container.Resolve<IStorefrontUrlBuilder>(), StaticContentItemFactory.GetContentItemFromPath);
+            var staticContentService = new StaticContentServiceImpl(ResolveLocalPath(staticContentPath), new Markdown(markdownOptions), shopifyLiquidEngine, localCacheManager, workContextFactory, () => container.Resolve<IStorefrontUrlBuilder>(), StaticContentItemFactory.GetContentItemFromPath);
             container.RegisterInstance<IStaticContentService>(staticContentService);
 
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters, workContextFactory);
