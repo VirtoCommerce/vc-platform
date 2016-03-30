@@ -35,6 +35,10 @@
                     <div class="list-t">{{ 'platform.blades.account-detail.labels.account-state' | translate }}</div>
                     <div class="list-descr">{{blade.currentEntity.userState}}</div>
                 </li>
+                <li class="list-item">
+                    <div class="list-t">{{ 'platform.blades.account-detail.labels.container-id' | translate }}</div>
+                    <div class="list-descr">{{blade.currentEntity.storeId?blade.currentEntity.storeId:'N/A'}}</div>
+                </li>
             </ul>
             <va-widget-container group="accountDetail" blade="blade" gridster-opts="{width: 396}"></va-widget-container>
         </div>

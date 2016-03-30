@@ -42,8 +42,8 @@ angular.module(moduleName, [])
 
       //Register widgets in customer details
       widgetService.registerWidget({
-          controller: 'virtoCommerce.customerModule.memberAccountsWidgetController',
-          template: 'Modules/$(VirtoCommerce.Customer)/Scripts/widgets/memberAccountsWidget.tpl.html'
+          controller: 'virtoCommerce.customerModule.customerAccountsWidgetController',
+          template: 'Modules/$(VirtoCommerce.Customer)/Scripts/widgets/customerAccountsWidget.tpl.html'
       }, 'customerDetail1');
       widgetService.registerWidget({
           controller: 'virtoCommerce.customerModule.memberAddressesWidgetController',

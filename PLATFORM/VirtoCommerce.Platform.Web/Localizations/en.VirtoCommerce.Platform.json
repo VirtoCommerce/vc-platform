@@ -410,7 +410,8 @@
           "is-administrator": "Is administrator",
           "account-type": "Account type",
           "login": "Login",
-          "account-state": "Account state"
+          "account-state": "Account state",
+          "container-id": "Container (store) ID"
         },
         "placeholders": {
           "account-type": "Select ..."
