@@ -28,7 +28,7 @@ angular.module(moduleName, [])
   }]
 )
 .run(
-  ['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', function ($rootScope, mainMenuService, widgetService, $state) {
+  ['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', 'virtoCommerce.customerModule.memberTypesResolverService', function ($rootScope, mainMenuService, widgetService, $state, memberTypesResolverService) {
       //Register module in main menu
       var menuItem = {
           path: 'browse/member',
@@ -40,43 +40,50 @@ angular.module(moduleName, [])
       };
       mainMenuService.addMenuItem(menuItem);
 
+      var addressesWidget = {
+          controller: 'virtoCommerce.customerModule.memberAddressesWidgetController',
+          template: 'Modules/$(VirtoCommerce.Customer)/Scripts/widgets/memberAddressesWidget.tpl.html'
+      };
+      var emailsWidget = {
+          controller: 'virtoCommerce.customerModule.memberEmailsWidgetController',
+          template: 'Modules/$(VirtoCommerce.Customer)/Scripts/widgets/memberEmailsWidget.tpl.html'
+      };
+      var phonesWidget = {
+          controller: 'virtoCommerce.customerModule.memberPhonesWidgetController',
+          template: 'Modules/$(VirtoCommerce.Customer)/Scripts/widgets/memberPhonesWidget.tpl.html'
+      };
+      var dynamicPropertyWidget ={
+          controller: 'platformWebApp.dynamicPropertyWidgetController',
+          template: '$(Platform)/Scripts/app/dynamicProperties/widgets/dynamicPropertyWidget.tpl.html'
+      }
       //Register widgets in customer details
       widgetService.registerWidget({
           controller: 'virtoCommerce.customerModule.customerAccountsWidgetController',
           template: 'Modules/$(VirtoCommerce.Customer)/Scripts/widgets/customerAccountsWidget.tpl.html'
       }, 'customerDetail1');
-      widgetService.registerWidget({
-          controller: 'virtoCommerce.customerModule.memberAddressesWidgetController',
-          template: 'Modules/$(VirtoCommerce.Customer)/Scripts/widgets/memberAddressesWidget.tpl.html'
-      }, 'customerDetail1');
-      widgetService.registerWidget({
-          controller: 'virtoCommerce.customerModule.memberEmailsWidgetController',
-          template: 'Modules/$(VirtoCommerce.Customer)/Scripts/widgets/memberEmailsWidget.tpl.html'
-      }, 'customerDetail1');
-      widgetService.registerWidget({
-          controller: 'virtoCommerce.customerModule.memberPhonesWidgetController',
-          template: 'Modules/$(VirtoCommerce.Customer)/Scripts/widgets/memberPhonesWidget.tpl.html'
-      }, 'customerDetail2');
-      widgetService.registerWidget({
-          controller: 'platformWebApp.dynamicPropertyWidgetController',
-          template: '$(Platform)/Scripts/app/dynamicProperties/widgets/dynamicPropertyWidget.tpl.html'
-      }, 'customerDetail2');
+      widgetService.registerWidget(addressesWidget, 'customerDetail1');
+      widgetService.registerWidget(emailsWidget, 'customerDetail1');
+      widgetService.registerWidget(phonesWidget, 'customerDetail2');
+      widgetService.registerWidget(dynamicPropertyWidget, 'customerDetail2');
 
       //Register widgets in organization details
-      widgetService.registerWidget({
-          controller: 'virtoCommerce.customerModule.memberAddressesWidgetController',
-          template: 'Modules/$(VirtoCommerce.Customer)/Scripts/widgets/memberAddressesWidget.tpl.html'
-      }, 'organizationDetail1');
-      widgetService.registerWidget({
-          controller: 'virtoCommerce.customerModule.memberEmailsWidgetController',
-          template: 'Modules/$(VirtoCommerce.Customer)/Scripts/widgets/memberEmailsWidget.tpl.html'
-      }, 'organizationDetail1');
-      widgetService.registerWidget({
-          controller: 'virtoCommerce.customerModule.memberPhonesWidgetController',
-          template: 'Modules/$(VirtoCommerce.Customer)/Scripts/widgets/memberPhonesWidget.tpl.html'
-      }, 'organizationDetail1');
-      widgetService.registerWidget({
-          controller: 'platformWebApp.dynamicPropertyWidgetController',
-          template: '$(Platform)/Scripts/app/dynamicProperties/widgets/dynamicPropertyWidget.tpl.html'
-      }, 'organizationDetail2');
+      widgetService.registerWidget(addressesWidget, 'organizationDetail1');
+      widgetService.registerWidget(emailsWidget, 'organizationDetail1');
+      widgetService.registerWidget(phonesWidget, 'organizationDetail1');
+      widgetService.registerWidget(dynamicPropertyWidget, 'organizationDetail2');
+
+      //Register widgets in employee details
+      widgetService.registerWidget(addressesWidget, 'employeeDetail1');
+      widgetService.registerWidget(emailsWidget, 'employeeDetail1');
+      widgetService.registerWidget(phonesWidget, 'employeeDetail1');
+
+      //Register widgets in vendor details
+      widgetService.registerWidget(addressesWidget, 'vendorDetail1');
+      widgetService.registerWidget(emailsWidget, 'vendorDetail1');
+      widgetService.registerWidget(phonesWidget, 'vendorDetail1');
+
+      memberTypesResolverService.registerType({ memberType: 'Organization', icon: 'fa-university', template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/organization-detail.tpl.html' });
+      memberTypesResolverService.registerType({ memberType: 'Employee', icon: ' fa-user', template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/employee-detail.tpl.html' });
+      memberTypesResolverService.registerType({ memberType: 'Contact', icon: 'fa-smile-o', template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/customer-detail.tpl.html' });
+      memberTypesResolverService.registerType({ memberType: 'Vendor', icon: 'fa-balance-scale', template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/vendor-detail.tpl.html' });
   }]);

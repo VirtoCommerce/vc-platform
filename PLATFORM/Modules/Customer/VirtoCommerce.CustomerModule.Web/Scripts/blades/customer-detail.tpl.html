@@ -1,38 +1,39 @@
-﻿<div class="blade-content">
+﻿<div class="blade-static __bottom" ng-include="'$(Platform)/Scripts/common/templates/create.tpl.html'" ng-if="blade.isNew"></div>
+<div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block clearfix">
             <form class="form" name="detailForm">
                 <fieldset>
                     <div class="form-group" ng-init="setForm(detailForm)">
-                        <label class="form-label">{{ 'customer.blades.customer-detail.labels.full-name' | translate }}</label>
+                        <label class="form-label">{{'customer.blades.customer-detail.labels.full-name' | translate}}</label>
                         <div class="form-input">
-                            <input ng-model="blade.currentEntity.fullName" focus-on="" required placeholder="{{ 'customer.blades.customer-detail.placeholders.full-name' | translate }}" />
+                            <input ng-model="blade.currentEntity.fullName" focus-on="" required placeholder="{{'customer.blades.customer-detail.placeholders.full-name' | translate}}" />
                         </div>
                     </div>
                     <div class="form-group">
-                        <va-widget-container group="customerDetail1" blade="blade" gridster-opts="{width: 396}"></va-widget-container>
+                        <va-widget-container group="customerDetail1" blade="blade" gridster-opts="{columns: 3}"></va-widget-container>
                     </div>
                 </fieldset>
                 <div class="form-group">
-                    <label class="form-label">{{ 'customer.blades.customer-detail.labels.birthday' | translate }}</label>
+                    <label class="form-label">{{'customer.blades.customer-detail.labels.birthday' | translate}}</label>
                     <div class="form-input __calendar">
-                        <input type="text" class="form-control" ng-model="blade.currentEntity.birthDate" datepicker-popup="{{format}}" name="bd" is-open="datepickers.bd" max-date="today" datepicker-options="dateOptions" close-text="Close" placeholder="{{ 'customer.blades.customer-detail.placeholders.full-name' | translate }}" />
+                        <input type="text" class="form-control" ng-model="blade.currentEntity.birthDate" datepicker-popup="{{format}}" name="bd" is-open="datepickers.bd" max-date="today" datepicker-options="dateOptions" close-text="Close" placeholder="{{'customer.blades.customer-detail.placeholders.full-name' | translate}}" />
                         <button class="btn" type="button" ng-click="open($event,'bd')">
                             <i class="btn-ico fa fa-calendar"></i>
                         </button>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">{{ 'customer.blades.customer-detail.labels.organizations' | translate }}</label>
+                    <label class="form-label">{{'customer.blades.customer-detail.labels.organizations' | translate}}</label>
                     <ui-select multiple ng-model="blade.currentEntity.organizations">
-                        <ui-select-match placeholder="{{ 'customer.blades.customer-detail.placeholders.organizations' | translate }}">{{$item.name}}</ui-select-match>
+                        <ui-select-match placeholder="{{'customer.blades.customer-detail.placeholders.organizations' | translate}}">{{$item.name}}</ui-select-match>
                         <ui-select-choices repeat="x.id as x in organizations | filter: {name: $select.search}">
                             <span ng-bind-html="x.name | highlight: $select.search"></span>
                         </ui-select-choices>
                     </ui-select>
                 </div>
                 <div class="form-group">
-                    <va-widget-container group="customerDetail2" blade="blade" gridster-opts="{width: 396}"></va-widget-container>
+                    <va-widget-container group="customerDetail2" blade="blade" gridster-opts="{columns: 3}"></va-widget-container>
                 </div>
             </form>
         </div>

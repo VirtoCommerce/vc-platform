@@ -9,11 +9,11 @@
                             <tr class="table-item" ng-repeat="data in blade.currentEntities" ng-class="{'__selected': data === selectedItem}" context-menu data-target="cel_menu_{{data}}" ng-click='selectItem(data)'>
                                 <td class="table-col">
                                     <div class="form-input">
-                                        <input type="tel" ng-model="data.value" required placeholder="{{ 'customer.blades.member-phones-list.placeholders.phone' | translate }}" />
+                                        <input type="tel" ng-model="data.value" required placeholder="{{'customer.blades.member-phones-list.placeholders.phone' | translate}}" />
                                     </div>
                                     <ul class="menu __context" role="menu" id="cel_menu_{{data}}">
                                         <li class="menu-item" ng-click='delete()'>
-                                            <i class="menu-ico fa fa-trash-o"></i> {{ 'platform.commands.delete' | translate }}
+                                            <i class="menu-ico fa fa-trash-o"></i> {{'platform.commands.delete' | translate}}
                                         </li>
                                     </ul>
                                 </td>
@@ -22,7 +22,7 @@
                     </table>
                 </form>
             </div>
-            <p class="note" ng-if="!blade.currentEntities.length">{{ 'customer.blades.member-phones-list.labels.no-phones' | translate }}</p>
+            <p class="note" ng-if="!blade.currentEntities.length">{{'customer.blades.member-phones-list.labels.no-phones' | translate}}</p>
         </div>
     </div>
 </div>

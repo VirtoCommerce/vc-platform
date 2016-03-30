@@ -1,40 +1,41 @@
 ﻿angular.module('virtoCommerce.customerModule')
-.controller('virtoCommerce.customerModule.memberDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.customerModule.members', 'virtoCommerce.customerModule.organizations', 'platformWebApp.dynamicProperties.api', function ($scope, bladeNavigationService, members, organizations, dynamicPropertiesApi) {
+.controller('virtoCommerce.customerModule.memberDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.customerModule.members', 'virtoCommerce.customerModule.organizations', 'platformWebApp.dynamicProperties.api', 'virtoCommerce.customerModule.memberTypesResolverService', 'platformWebApp.dialogService', function ($scope, bladeNavigationService, members, organizations, dynamicPropertiesApi, memberTypesResolverService, dialogService) {
     var blade = $scope.blade;
     blade.updatePermission = 'customer:update';
-    blade.currentResource = members;
+    blade.isNew = !blade.currentEntity.id;
 
     blade.refresh = function (parentRefresh) {
-        if (blade.currentEntityId) {
-            blade.isLoading = true;
-
-            blade.currentResource.get({ _id: blade.currentEntityId }, function (data) {
-                initializeBlade(data);
-                if (parentRefresh) {
-                    blade.parentBlade.refresh();
-                }
-            },
-            function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
-        } else {
-            var newEntity = {
+        if (blade.isNew) {
+            var newEntity = angular.extend({
                 dynamicProperties: [],
                 addresses: [],
                 phones: [],
                 emails: []
-            };
+            }, blade.currentEntity);
 
-            if (blade.isOrganization) {
+            if (newEntity.memberType === 'Organization') {
                 newEntity.parentId = blade.parentBlade.currentEntity.id;
                 fillDynamicProperties(newEntity, 'VirtoCommerce.Domain.Customer.Model.Organization');
-            } else {
+            } else if (newEntity.memberType === 'Contact') {
                 newEntity.organizations = [];
                 if (blade.parentBlade.currentEntity.id) {
                     newEntity.organizations.push(blade.parentBlade.currentEntity.id);
                 }
                 fillDynamicProperties(newEntity, 'VirtoCommerce.Domain.Customer.Model.Contact');
+            } else {
+                initializeBlade(newEntity);
+            }
+        } else {
+            blade.isLoading = true;
+
+            members.get({ id: blade.currentEntity.id }, initializeBlade,
+                function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
+
+            if (parentRefresh) {
+                blade.parentBlade.refresh();
             }
         }
-    }
+    };
 
     function fillDynamicProperties(newEntity, typeName) {
         dynamicPropertiesApi.query({ id: typeName }, function (results) {
@@ -64,34 +65,27 @@
     $scope.saveChanges = function () {
         blade.isLoading = true;
 
-        if (blade.currentEntityId) {
-            blade.currentResource.update({}, blade.currentEntity, function (data) {
-                blade.refresh(true);
-            }, function (error) {
-                bladeNavigationService.setError('Error ' + error.status, blade);
-            });
-        } else {
-            blade.currentResource.save({}, blade.currentEntity, function (data) {
-                blade.title = data.name;
-                blade.currentEntityId = data.id;
-                initializeBlade(data);
+        if (blade.isNew) {
+            members.save(blade.currentEntity, function (data) {
                 blade.parentBlade.refresh();
-            }, function (error) {
-                bladeNavigationService.setError('Error ' + error.status, blade);
-            });
+                blade.origEntity = blade.currentEntity;
+                $scope.bladeClose();
+            }, function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
+        } else {
+            members.update(blade.currentEntity, function (data) {
+                blade.refresh(true);
+            }, function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
         }
     };
 
-    $scope.setForm = function (form) {
-        $scope.formScope = form;
-    }
+    $scope.setForm = function (form) { $scope.formScope = form; }
 
     blade.onClose = function (closeCallback) {
-        bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, $scope.saveChanges, closeCallback, "customer.dialogs.customer-save.title", "customer.dialogs.customer-save.message");
+        bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, $scope.saveChanges, closeCallback, "customer.dialogs.member-save.title", "customer.dialogs.member-save.message");
     };
 
-    blade.headIcon = blade.isOrganization ? 'fa-university' : ' fa-user';
-    blade.toolbarCommands = [
+    if (!blade.isNew) {
+        blade.toolbarCommands = [
         {
             name: "platform.commands.save",
             icon: 'fa fa-save',
@@ -108,7 +102,8 @@
             canExecuteMethod: isDirty,
             permission: blade.updatePermission
         }
-    ];
+        ];
+    }
 
     // datepicker
     $scope.datepickers = {
@@ -131,8 +126,13 @@
     $scope.formats = ['shortDate', 'dd-MMMM-yyyy', 'yyyy/MM/dd'];
     $scope.format = $scope.formats[0];
 
-    // other on load
-    if (!blade.isOrganization) {
+    blade.headIcon = blade.memberTypeDefinition.icon;
+    if (!blade.isNew) {
+        blade.subtitle = blade.memberTypeDefinition.subtitle;
+    }
+
+    // on load
+    if (blade.currentEntity.memberType === 'Contact') {
         $scope.organizations = organizations.query();
     }
 

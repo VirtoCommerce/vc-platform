@@ -31,28 +31,53 @@
         },
         "placeholders": {
           "name": "Enter name",
-          "description": "Enter value",
-          "business-category": "Enter description"
+          "business-category": "Enter value",
+          "description": "Enter description"
+        }
+      },
+      "vendor-detail": {
+        "subtitle": "Vendor details",
+        "labels": {
+          "name": "Name",
+          "group-name": "Group name",
+          "description": "Description"
+        },
+        "placeholders": {
+          "name": "Enter name",
+          "group-name": "Enter value",
+          "description": "Enter description"
         }
       },
       "new-organization": {
         "title": "New Organization"
       },
+      "new-employee": {
+        "title": "New Employee"
+      },
       "new-customer": {
         "title": "New Customer"
       },
+      "new-vendor": {
+        "title": "New Vendor"
+      },
       "member-add": {
-        "title": "New member",
-        "subtitle": "Choose new member type",
-        "menu": {
-          "organization": {
-            "title": "Organization",
-            "description": "A container for other Organizations and Customers."
-          },
-          "customer": {
-            "title": "Customer",
-            "description": "The shop Customer. Can belong to Organizations or represent an individual shopper."
-          }
+        "title": "New contact",
+        "subtitle": "Choose new contact type",
+        "organization": {
+          "title": "Organization",
+          "description": "A container for other Organizations and Customers."
+        },
+        "employee": {
+          "title": "Employee",
+          "description": "The Organization Employee."
+        },
+        "contact": {
+          "title": "Customer",
+          "description": "The shop Customer. Can belong to Organizations or represent an individual shopper."
+        },
+        "vendor": {
+          "title": "Vendor",
+          "description": "The shop Vendor."
         }
       },
       "member-emails-list": {
@@ -92,11 +117,11 @@
       },
       "member-emails-list": {
         "title": "Emails",
-        "blade-subtitle": "Manage customer emails"
+        "blade-subtitle": "Manage emails"
       },
       "member-phones-list": {
         "title": "Phones",
-        "blade-subtitle": "Manage customer phones"
+        "blade-subtitle": "Manage phones"
       },
       "customer-accounts-list": {
         "title": "Accounts",
@@ -104,21 +129,17 @@
       }
     },
     "dialogs": {
-      "organizations-delete": {
+      "members-delete": {
         "title": "Delete confirmation",
-        "message": "Are you sure you want to delete selected Organizations or Customers?"
+        "message": "Are you sure you want to delete selected Organizations or Contacts?"
       },
-      "property-delete": {
-        "title": "Delete confirmation",
-        "message": "Are you sure you want to delete Property '{{name}}'?"
+      "unknown-member-type": {
+        "title": "Error",
+        "message": "Can't edit a member of unknown type '{{memberType}}'."
       },
-      "property-save": {
+      "member-save": {
         "title": "Save changes",
-        "message": "The property has been modified. Do you want to save changes??"
-      },
-      "customer-save": {
-        "title": "Save changes",
-        "message": "The Customer has been modified. Do you want to save changes?"
+        "message": "This Contact has been modified. Do you want to save changes?"
       },
       "email-save": {
         "title": "Save changes",
