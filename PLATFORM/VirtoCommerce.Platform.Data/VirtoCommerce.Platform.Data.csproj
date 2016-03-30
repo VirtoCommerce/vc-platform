@@ -202,7 +202,6 @@
     <Compile Include="Model\NotificationTemplateEntity.cs" />
     <Compile Include="Model\OperationLogEntity.cs" />
     <Compile Include="Model\PermissionEntity.cs" />
-    <Compile Include="Model\RegisterType.cs" />
     <Compile Include="Model\RoleAssignmentEntity.cs" />
     <Compile Include="Model\RoleEntity.cs" />
     <Compile Include="Model\RolePermissionEntity.cs" />

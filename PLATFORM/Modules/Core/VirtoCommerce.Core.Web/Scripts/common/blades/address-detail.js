@@ -62,7 +62,7 @@
         dialogService.showConfirmationDialog(dialog);
     }
 
-    blade.headIcon = 'fa-user';
+    blade.headIcon = blade.parentBlade.headIcon;
 
     blade.toolbarCommands = [
         {

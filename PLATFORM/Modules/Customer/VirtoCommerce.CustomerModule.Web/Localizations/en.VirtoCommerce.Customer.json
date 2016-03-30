@@ -15,6 +15,13 @@
           "organizations": "Select organization"
         }
       },
+      "pick-store-list": {
+        "title": "New Account",
+        "subtitle": "Select a store for the new Account",
+        "labels": {
+          "name": "Store name"
+        }
+      },
       "organization-detail": {
         "subtitle": "Organization details",
         "labels": {
@@ -91,7 +98,7 @@
         "title": "Phones",
         "blade-subtitle": "Manage customer phones"
       },
-      "member-accounts-list": {
+      "customer-accounts-list": {
         "title": "Accounts",
         "blade-subtitle": "Manage customer accounts"
       }
