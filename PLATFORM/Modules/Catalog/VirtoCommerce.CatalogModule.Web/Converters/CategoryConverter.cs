@@ -33,7 +33,7 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
                 }
             }
 			//For virtual category links not needed
-			if (!category.Virtual && category.Links != null)
+			if (!category.IsVirtual && category.Links != null)
 			{
 				retVal.Links = category.Links.Select(x => x.ToWebModel()).ToList();
 			}

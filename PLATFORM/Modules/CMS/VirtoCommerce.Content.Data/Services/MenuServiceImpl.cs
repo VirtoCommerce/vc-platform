@@ -47,6 +47,10 @@ namespace VirtoCommerce.Content.Data.Services
                         changeTracker.Attach(existList);
                         list.Patch(existList);
                     }
+                    else
+                    {
+                        repository.Add(list);
+                    }
                 }
                 else
                 {

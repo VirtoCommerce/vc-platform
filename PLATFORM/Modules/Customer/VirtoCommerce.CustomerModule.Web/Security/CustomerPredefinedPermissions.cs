@@ -6,7 +6,6 @@
             Create = "customer:create",
             Access = "customer:access",
             Update = "customer:update",
-            Delete = "customer:delete",
-            LoginOnBehalf = "customer:loginOnBehalf";
+            Delete = "customer:delete";
     }
 }

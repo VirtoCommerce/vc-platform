@@ -34,26 +34,6 @@
           "description": "Enter description"
         }
       },
-      "seo-detail": {
-        "subtitle": "SEO information",
-        "labels": {
-          "note": "Store doesn't have any language set. Assign some languages first.",
-          "url-keyword": "URL keyword",
-          "page-title": "Page title",
-          "meta-description": "Meta description",
-          "image-alternative-text": "Image alternative text"
-        },
-        "placeholders": {
-          "url-keyword": "Enter keyword",
-          "page-title": "Enter title",
-          "meta-description": "Enter description",
-          "image-alternative-text": "Enter text"
-        },
-        "validations": {
-          "url-keyword-required": "Required",
-          "url-keyword-invalid": "Invalid characters in URL found"
-        }
-      },
       "shippingMethod-detail": {
         "subtitle": "Edit shipping method",
         "labels": {
@@ -114,7 +94,8 @@
           "default-language": "Default language",
           "additional-languages": "Additional languages",
           "default-currency": "Default currency",
-          "additional-currencies": "Additional currencies"
+          "additional-currencies": "Additional currencies",
+          "linked-stores": "Linked stores. (Customers can use theirs credentials here.)"
         },
         "placeholders": {
           "code": "Enter code",
@@ -124,7 +105,8 @@
           "default-language": "Select...",
           "additional-languages": "Select...",
           "default-currency": "Select...",
-          "additional-currencies": "Select..."
+          "additional-currencies": "Select...",
+          "linked-stores": "This store has no linked stores"
         }
       },
       "new-store-wizard": {
@@ -149,11 +131,22 @@
           "is-active": "Is active",
           "tax-provider": "Tax provider"
         }
+      },
+      "loginOnBehalf-list": {
+        "title": "Login as {{name}}",
+        "labels": {
+          "pick-store-to-login": "Pick a Store to login",
+          "no-stores": "No Stores yet"
+        },
+        "validations": {
+          "secure-url-missing": "Secure URL is missing. Click to open Store details.",
+          "default-language-missing": "Default language is missing. Click to open Store details."
+        }
       }
     },
     "widgets": {
-      "seoWidget": {
-        "title": "SEO"
+      "assetsWidget": {
+        "title": "Assets"
       },
       "storeAdvancedWidget": {
         "title": "Advanced properties",
@@ -194,11 +187,10 @@
       "store-save": {
         "title": "Save changes",
         "message": "The Store has been modified. Do you want to save changes?"
-      },
-      "seo-save": {
-        "title": "Save changes",
-        "message": "The SEO information has been modified. Do you want to save changes?"
       }
+    },
+    "commands": {
+      "login-on-behalf": "Login on behalf"
     }
   }
 }

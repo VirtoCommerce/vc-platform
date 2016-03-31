@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,142 +21,159 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceCartModuleWebModelAddress" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceCartModuleWebModelAddress" />class.
         /// </summary>
-        public VirtoCommerceCartModuleWebModelAddress()
+        /// <param name="Type">Gets or sets the value of address type.</param>
+        /// <param name="Organization">Gets or sets the value of organization name.</param>
+        /// <param name="CountryCode">Gets or sets the value of country code.</param>
+        /// <param name="CountryName">Gets or sets the value of country name.</param>
+        /// <param name="City">Gets or sets the value of city name.</param>
+        /// <param name="PostalCode">Gets or sets the value of postal code.</param>
+        /// <param name="Zip">Gets or sets the value of zip code.</param>
+        /// <param name="Line1">Gets or sets the value of address line 1.</param>
+        /// <param name="Line2">Gets or sets the value of address line 2.</param>
+        /// <param name="RegionId">Gets or sets the value of region code.</param>
+        /// <param name="RegionName">Gets or sets the value of region name.</param>
+        /// <param name="FirstName">Gets or sets the value of first name.</param>
+        /// <param name="MiddleName">Gets or sets the value of middle name.</param>
+        /// <param name="LastName">Gets or sets the value of last name.</param>
+        /// <param name="Phone">Gets or sets the value of phone number.</param>
+        /// <param name="Email">Gets or sets the value of E-mail address.</param>
+
+        public VirtoCommerceCartModuleWebModelAddress(string Type = null, string Organization = null, string CountryCode = null, string CountryName = null, string City = null, string PostalCode = null, string Zip = null, string Line1 = null, string Line2 = null, string RegionId = null, string RegionName = null, string FirstName = null, string MiddleName = null, string LastName = null, string Phone = null, string Email = null)
         {
+            this.Type = Type;
+            this.Organization = Organization;
+            this.CountryCode = CountryCode;
+            this.CountryName = CountryName;
+            this.City = City;
+            this.PostalCode = PostalCode;
+            this.Zip = Zip;
+            this.Line1 = Line1;
+            this.Line2 = Line2;
+            this.RegionId = RegionId;
+            this.RegionName = RegionName;
+            this.FirstName = FirstName;
+            this.MiddleName = MiddleName;
+            this.LastName = LastName;
+            this.Phone = Phone;
+            this.Email = Email;
             
         }
 
-        
         /// <summary>
         /// Gets or sets the value of address type
         /// </summary>
         /// <value>Gets or sets the value of address type</value>
         [DataMember(Name="type", EmitDefaultValue=false)]
         public string Type { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of organization name
         /// </summary>
         /// <value>Gets or sets the value of organization name</value>
         [DataMember(Name="organization", EmitDefaultValue=false)]
         public string Organization { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of country code
         /// </summary>
         /// <value>Gets or sets the value of country code</value>
         [DataMember(Name="countryCode", EmitDefaultValue=false)]
         public string CountryCode { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of country name
         /// </summary>
         /// <value>Gets or sets the value of country name</value>
         [DataMember(Name="countryName", EmitDefaultValue=false)]
         public string CountryName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of city name
         /// </summary>
         /// <value>Gets or sets the value of city name</value>
         [DataMember(Name="city", EmitDefaultValue=false)]
         public string City { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of postal code
         /// </summary>
         /// <value>Gets or sets the value of postal code</value>
         [DataMember(Name="postalCode", EmitDefaultValue=false)]
         public string PostalCode { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of zip code
         /// </summary>
         /// <value>Gets or sets the value of zip code</value>
         [DataMember(Name="zip", EmitDefaultValue=false)]
         public string Zip { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of address line 1
         /// </summary>
         /// <value>Gets or sets the value of address line 1</value>
         [DataMember(Name="line1", EmitDefaultValue=false)]
         public string Line1 { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of address line 2
         /// </summary>
         /// <value>Gets or sets the value of address line 2</value>
         [DataMember(Name="line2", EmitDefaultValue=false)]
         public string Line2 { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of region code
         /// </summary>
         /// <value>Gets or sets the value of region code</value>
         [DataMember(Name="regionId", EmitDefaultValue=false)]
         public string RegionId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of region name
         /// </summary>
         /// <value>Gets or sets the value of region name</value>
         [DataMember(Name="regionName", EmitDefaultValue=false)]
         public string RegionName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of first name
         /// </summary>
         /// <value>Gets or sets the value of first name</value>
         [DataMember(Name="firstName", EmitDefaultValue=false)]
         public string FirstName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of middle name
         /// </summary>
         /// <value>Gets or sets the value of middle name</value>
         [DataMember(Name="middleName", EmitDefaultValue=false)]
         public string MiddleName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of last name
         /// </summary>
         /// <value>Gets or sets the value of last name</value>
         [DataMember(Name="lastName", EmitDefaultValue=false)]
         public string LastName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of phone number
         /// </summary>
         /// <value>Gets or sets the value of phone number</value>
         [DataMember(Name="phone", EmitDefaultValue=false)]
         public string Phone { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of E-mail address
         /// </summary>
         /// <value>Gets or sets the value of E-mail address</value>
         [DataMember(Name="email", EmitDefaultValue=false)]
         public string Email { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// Additional metainformation for a Property
     /// </summary>
@@ -21,42 +21,47 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelPropertyAttribute" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelPropertyAttribute" />class.
         /// </summary>
-        public VirtoCommerceCatalogModuleWebModelPropertyAttribute()
+        /// <param name="Id">Id.</param>
+        /// <param name="Property">Property.</param>
+        /// <param name="Value">Value.</param>
+        /// <param name="Name">Name.</param>
+
+        public VirtoCommerceCatalogModuleWebModelPropertyAttribute(string Id = null, VirtoCommerceCatalogModuleWebModelProperty Property = null, string Value = null, string Name = null)
         {
+            this.Id = Id;
+            this.Property = Property;
+            this.Value = Value;
+            this.Name = Name;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Property
         /// </summary>
         [DataMember(Name="property", EmitDefaultValue=false)]
         public VirtoCommerceCatalogModuleWebModelProperty Property { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Value
         /// </summary>
         [DataMember(Name="value", EmitDefaultValue=false)]
         public string Value { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

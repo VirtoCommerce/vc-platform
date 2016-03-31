@@ -1,7 +1,7 @@
 ﻿<ul class="list __prices">
     <li class="list-item">{{'orders.widgets.customerOrder-totals.sub-total' | translate}} <span class="list-price">{{customerOrder._subTotal | number:2}}&nbsp;{{customerOrder.currency}}</span></li>
     <li class="list-item">{{'orders.widgets.customerOrder-totals.shipping-total' | translate}} <span class="list-price">{{customerOrder._shippingTotal | number:2}}&nbsp;{{customerOrder.currency}}</span></li>
-    <!--<li class="list-item">Tax total <span class="list-price">{{customerOrder._taxTotal | number:2}}&nbsp;{{customerOrder.currency}}</span></li>-->
+    <li class="list-item">Tax total <span class="list-price">{{customerOrder._taxTotal | number:2}}&nbsp;{{customerOrder.currency}}</span></li>
     <li class="list-item">{{'orders.widgets.customerOrder-totals.discount-total' | translate}} <span class="list-price">{{customerOrder._discountTotal | number:2}}&nbsp;{{customerOrder.currency}}</span></li>
     <li class="list-item __total">{{'orders.widgets.customerOrder-totals.total' | translate}} <span class="list-price">{{customerOrder._total | number:2}}&nbsp;{{customerOrder.currency}}</span></li>
 </ul>

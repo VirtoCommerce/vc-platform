@@ -9,7 +9,7 @@ using VirtoCommerce.Storefront.Model.Marketing;
 
 namespace VirtoCommerce.Storefront.Model.Cart
 {
-    public class LineItem : Entity, IDiscountable, IValidatable
+    public class LineItem : Entity, IDiscountable, IValidatable, ITaxable
     {
         public LineItem(Currency currency, Language language)
         {
@@ -176,7 +176,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
         {
             get
             {
-                return SalePrice - DiscountTotal;
+                return SalePrice - SingleItemDiscountTotal;
             }
         }
 
@@ -192,9 +192,9 @@ namespace VirtoCommerce.Storefront.Model.Cart
         }
 
         /// <summary>
-        /// Gets the value of line item total discount amount
+        /// Gets the value of the single line item discount amount
         /// </summary>
-        public Money DiscountTotal
+        public Money SingleItemDiscountTotal
         {
             get
             {
@@ -205,22 +205,15 @@ namespace VirtoCommerce.Storefront.Model.Cart
         }
 
         /// <summary>
-        /// Gets or sets the value of line item total tax amount
+        /// Gets the value of line item total discount amount
         /// </summary>
-        public Money TaxTotal { get; set; }
-
-        /// <summary>
-        /// Gets or sets the value of line item tax type
-        /// </summary>
-        public string TaxType { get; set; }
-
-        /// <summary>
-        /// Gets or sets the collection of line item tax detalization lines
-        /// </summary>
-        /// <value>
-        /// Collection of TaxDetail objects
-        /// </value>
-        public ICollection<TaxDetail> TaxDetails { get; set; }
+        public Money DiscountTotal
+        {
+            get
+            {
+                return SingleItemDiscountTotal* Quantity;
+            }
+        }
 
         /// <summary>
         /// Used for dynamic properties management, contains object type string
@@ -234,9 +227,45 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// <value>Dynamic properties collections</value>
         public ICollection<DynamicProperty> DynamicProperties { get; set; }
 
+        /// <summary>
+        /// Gets or sets the cart validation type
+        /// </summary>
+        public ValidationType ValidationType { get; set; }
+
         public ICollection<ValidationError> ValidationErrors { get; set; }
 
         public ICollection<ValidationError> ValidationWarnings { get; set; }
+
+        #region ITaxable Members
+        /// <summary>
+        /// Gets or sets the value of total shipping tax amount
+        /// </summary>
+        public Money TaxTotal { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of shipping tax type
+        /// </summary>
+        public string TaxType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the collection of line item tax details lines
+        /// </summary>
+        /// <value>
+        /// Collection of TaxDetail objects
+        /// </value>
+        public ICollection<TaxDetail> TaxDetails { get; set; }
+
+        public void ApplyTaxRates(IEnumerable<TaxRate> taxRates)
+        {
+            var lineItemTaxRates = taxRates.Where(x => x.Line.Id == Id);
+            TaxTotal = new Money(TaxTotal.Currency);
+            foreach (var lineItemTaxRate in lineItemTaxRates)
+            {
+                TaxTotal += lineItemTaxRate.Rate;
+            }
+        }
+        #endregion
+
 
         #region IDiscountable  Members
         public Currency Currency { get; private set; }

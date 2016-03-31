@@ -68,7 +68,7 @@ angular.module(moduleName, ['virtoCommerce.catalogModule', 'virtoCommerce.pricin
 
 	    var customerOrderTotalsWidget = {
 	        controller: 'virtoCommerce.orderModule.customerOrderTotalsWidgetController',
-	        size: [2, 1],
+	        size: [2, 2],
 	        template: 'Modules/$(VirtoCommerce.Orders)/Scripts/widgets/customerOrder-totals-widget.tpl.html'
 	    };
 	    widgetService.registerWidget(customerOrderTotalsWidget, 'customerOrderDetailWidgets');
@@ -82,6 +82,7 @@ angular.module(moduleName, ['virtoCommerce.catalogModule', 'virtoCommerce.pricin
 
 	    var shipmentAddressWidget = {
 	        controller: 'virtoCommerce.orderModule.shipmentAddressWidgetController',
+	        size: [2, 1],
 	        template: 'Modules/$(VirtoCommerce.Orders)/Scripts/widgets/shipment-address-widget.tpl.html'
 	    };
 	    widgetService.registerWidget(shipmentAddressWidget, 'shipmentDetailWidgets');

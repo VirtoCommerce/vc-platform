@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,46 +21,51 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelAggregation" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelAggregation" />class.
         /// </summary>
-        public VirtoCommerceCatalogModuleWebModelAggregation()
+        /// <param name="AggregationType">Gets or sets the value of the aggregation type.</param>
+        /// <param name="Field">Gets or sets the value of the aggregation field.</param>
+        /// <param name="Labels">Gets or sets the collection of aggregation labels.</param>
+        /// <param name="Items">Gets or sets the collection of the aggregation items.</param>
+
+        public VirtoCommerceCatalogModuleWebModelAggregation(string AggregationType = null, string Field = null, List<VirtoCommerceCatalogModuleWebModelAggregationLabel> Labels = null, List<VirtoCommerceCatalogModuleWebModelAggregationItem> Items = null)
         {
+            this.AggregationType = AggregationType;
+            this.Field = Field;
+            this.Labels = Labels;
+            this.Items = Items;
             
         }
 
-        
         /// <summary>
         /// Gets or sets the value of the aggregation type
         /// </summary>
         /// <value>Gets or sets the value of the aggregation type</value>
         [DataMember(Name="aggregationType", EmitDefaultValue=false)]
         public string AggregationType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of the aggregation field
         /// </summary>
         /// <value>Gets or sets the value of the aggregation field</value>
         [DataMember(Name="field", EmitDefaultValue=false)]
         public string Field { get; set; }
-  
-        
+
         /// <summary>
-        /// Gets or sets the value of the aggregation label
+        /// Gets or sets the collection of aggregation labels
         /// </summary>
-        /// <value>Gets or sets the value of the aggregation label</value>
-        [DataMember(Name="label", EmitDefaultValue=false)]
-        public string Label { get; set; }
-  
-        
+        /// <value>Gets or sets the collection of aggregation labels</value>
+        [DataMember(Name="labels", EmitDefaultValue=false)]
+        public List<VirtoCommerceCatalogModuleWebModelAggregationLabel> Labels { get; set; }
+
         /// <summary>
         /// Gets or sets the collection of the aggregation items
         /// </summary>
         /// <value>Gets or sets the collection of the aggregation items</value>
         [DataMember(Name="items", EmitDefaultValue=false)]
         public List<VirtoCommerceCatalogModuleWebModelAggregationItem> Items { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -71,7 +76,7 @@ namespace VirtoCommerce.Client.Model
             sb.Append("class VirtoCommerceCatalogModuleWebModelAggregation {\n");
             sb.Append("  AggregationType: ").Append(AggregationType).Append("\n");
             sb.Append("  Field: ").Append(Field).Append("\n");
-            sb.Append("  Label: ").Append(Label).Append("\n");
+            sb.Append("  Labels: ").Append(Labels).Append("\n");
             sb.Append("  Items: ").Append(Items).Append("\n");
             
             sb.Append("}\n");
@@ -121,9 +126,9 @@ namespace VirtoCommerce.Client.Model
                     this.Field.Equals(other.Field)
                 ) && 
                 (
-                    this.Label == other.Label ||
-                    this.Label != null &&
-                    this.Label.Equals(other.Label)
+                    this.Labels == other.Labels ||
+                    this.Labels != null &&
+                    this.Labels.SequenceEqual(other.Labels)
                 ) && 
                 (
                     this.Items == other.Items ||
@@ -150,8 +155,8 @@ namespace VirtoCommerce.Client.Model
                 if (this.Field != null)
                     hash = hash * 59 + this.Field.GetHashCode();
                 
-                if (this.Label != null)
-                    hash = hash * 59 + this.Label.GetHashCode();
+                if (this.Labels != null)
+                    hash = hash * 59 + this.Labels.GetHashCode();
                 
                 if (this.Items != null)
                     hash = hash * 59 + this.Items.GetHashCode();

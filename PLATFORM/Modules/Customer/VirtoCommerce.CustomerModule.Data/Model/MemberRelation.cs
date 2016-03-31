@@ -42,6 +42,9 @@ namespace VirtoCommerce.CustomerModule.Data.Model
 
         public virtual Member Ancestor { get; set; }
 
+        [StringLength(64)]
+        public string RelationType { get; set; }
+
         /// <summary>
         /// Gets or sets the descendant member id.
         /// </summary>
@@ -51,8 +54,6 @@ namespace VirtoCommerce.CustomerModule.Data.Model
  		[StringLength(128, ErrorMessage = "Only 128 characters allowed.")]
 		public string DescendantId { get; set; }
 
-        [ForeignKey("DescendantId")]
-        [Parent]
         public virtual Member Descendant { get; set; }
         #endregion
     }

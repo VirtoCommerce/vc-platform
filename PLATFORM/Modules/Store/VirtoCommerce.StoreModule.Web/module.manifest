@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <module>
   <id>VirtoCommerce.Store</id>
-  <version>2.7.0</version>
-  <platformVersion>2.7.0</platformVersion>
+  <version>2.9.0</version>
+  <platformVersion>2.9.0</platformVersion>
   <dependencies>
-    <dependency id="VirtoCommerce.Core" version="2.7.0" />
-    <!--using catalog api, seo UI? -->
-    <dependency id="VirtoCommerce.Catalog" version="2.7.0" />
+    <dependency id="VirtoCommerce.Core" version="2.9.0" />
+    <!--using catalog api -->
+    <dependency id="VirtoCommerce.Catalog" version="2.9.0" />
   </dependencies>
 
   <title>Store module</title>
@@ -47,10 +47,10 @@
           <value>RestrictedAccess</value>
         </arrayValues>
       </setting>
-	  <setting>
+      <setting>
         <name>Stores.ExportImport.Description</name>
         <valueType>string</valueType>
-        <defaultValue>Export/Import stores with all related informations</defaultValue>
+        <defaultValue>Export/Import stores with all related information</defaultValue>
         <title>Export/Import description</title>
         <description>Module description in platform export/import wizard</description>
       </setting>
@@ -61,7 +61,7 @@
         <valueType>boolean</valueType>
         <defaultValue>true</defaultValue>
         <title>Caching Enabled</title>
-        <description>Specified if caching is enabled for Stores</description>
+        <description>Specify if caching is enabled for store entity</description>
       </setting>
       <setting>
         <name>Stores.Caching.StoreTimeout</name>
@@ -79,6 +79,8 @@
       <permission id="store:read" name="View store data"/>
       <permission id="store:update" name="Update store"/>
       <permission id="store:delete" name="Delete store"/>
+
+      <permission id="store:loginOnBehalf" name="Login on behalf of a customer" description="Permission to login on behalf of a customer to Storefront."/>
     </group>
   </permissions>
 </module>

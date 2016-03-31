@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,63 +21,71 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePlatformCorePushNotificationsPushNotificationSearchCriteria" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCorePushNotificationsPushNotificationSearchCriteria" />class.
         /// </summary>
-        public VirtoCommercePlatformCorePushNotificationsPushNotificationSearchCriteria()
+        /// <param name="Ids">Ids.</param>
+        /// <param name="OnlyNew">OnlyNew.</param>
+        /// <param name="StartDate">StartDate.</param>
+        /// <param name="EndDate">EndDate.</param>
+        /// <param name="Start">Start.</param>
+        /// <param name="Count">Count.</param>
+        /// <param name="OrderBy">OrderBy.</param>
+
+        public VirtoCommercePlatformCorePushNotificationsPushNotificationSearchCriteria(List<string> Ids = null, bool? OnlyNew = null, DateTime? StartDate = null, DateTime? EndDate = null, int? Start = null, int? Count = null, string OrderBy = null)
         {
+            this.Ids = Ids;
+            this.OnlyNew = OnlyNew;
+            this.StartDate = StartDate;
+            this.EndDate = EndDate;
+            this.Start = Start;
+            this.Count = Count;
+            this.OrderBy = OrderBy;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets Ids
         /// </summary>
         [DataMember(Name="ids", EmitDefaultValue=false)]
         public List<string> Ids { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets OnlyNew
         /// </summary>
         [DataMember(Name="onlyNew", EmitDefaultValue=false)]
         public bool? OnlyNew { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets StartDate
         /// </summary>
         [DataMember(Name="startDate", EmitDefaultValue=false)]
         public DateTime? StartDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets EndDate
         /// </summary>
         [DataMember(Name="endDate", EmitDefaultValue=false)]
         public DateTime? EndDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Start
         /// </summary>
         [DataMember(Name="start", EmitDefaultValue=false)]
         public int? Start { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Count
         /// </summary>
         [DataMember(Name="count", EmitDefaultValue=false)]
         public int? Count { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets OrderBy
         /// </summary>
         [DataMember(Name="orderBy", EmitDefaultValue=false)]
         public string OrderBy { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

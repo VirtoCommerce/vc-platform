@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,56 +21,63 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreSecurityApiAccount" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreSecurityApiAccount" />class.
         /// </summary>
-        public VirtoCommercePlatformCoreSecurityApiAccount()
+        /// <param name="Id">Id.</param>
+        /// <param name="Name">Name.</param>
+        /// <param name="ApiAccountType">ApiAccountType.</param>
+        /// <param name="IsActive">IsActive.</param>
+        /// <param name="AppId">AppId.</param>
+        /// <param name="SecretKey">SecretKey.</param>
+
+        public VirtoCommercePlatformCoreSecurityApiAccount(string Id = null, string Name = null, string ApiAccountType = null, bool? IsActive = null, string AppId = null, string SecretKey = null)
         {
+            this.Id = Id;
+            this.Name = Name;
+            this.ApiAccountType = ApiAccountType;
+            this.IsActive = IsActive;
+            this.AppId = AppId;
+            this.SecretKey = SecretKey;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ApiAccountType
         /// </summary>
         [DataMember(Name="apiAccountType", EmitDefaultValue=false)]
         public string ApiAccountType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets IsActive
         /// </summary>
         [DataMember(Name="isActive", EmitDefaultValue=false)]
         public bool? IsActive { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets AppId
         /// </summary>
         [DataMember(Name="appId", EmitDefaultValue=false)]
         public string AppId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets SecretKey
         /// </summary>
         [DataMember(Name="secretKey", EmitDefaultValue=false)]
         public string SecretKey { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

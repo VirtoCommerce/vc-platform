@@ -13,8 +13,9 @@ using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 
 namespace VirtoCommerce.CustomerModule.Web
 {
-	public class Module : ModuleBase, ISupportExportImportModule
+    public class Module : ModuleBase, ISupportExportImportModule
     {
+        private const string _connectionStringName = "VirtoCommerce";
         private readonly IUnityContainer _container;
 
         public Module(IUnityContainer container)
@@ -26,9 +27,9 @@ namespace VirtoCommerce.CustomerModule.Web
 
         public override void SetupDatabase()
         {
-            using (var db = new CustomerRepositoryImpl("VirtoCommerce"))
+            using (var db = new CustomerRepositoryImpl(_connectionStringName, _container.Resolve<AuditableInterceptor>()))
             {
-				var initializer = new SetupDatabaseInitializer<CustomerRepositoryImpl, Data.Migrations.Configuration>();
+                var initializer = new SetupDatabaseInitializer<CustomerRepositoryImpl, Data.Migrations.Configuration>();
                 initializer.InitializeDatabase(db);
             }
 
@@ -36,37 +37,35 @@ namespace VirtoCommerce.CustomerModule.Web
 
         public override void Initialize()
         {
-            _container.RegisterType<ICustomerRepository>(new InjectionFactory(c => new CustomerRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor())));
+            _container.RegisterType<ICustomerRepository>(new InjectionFactory(c => new CustomerRepositoryImpl(_connectionStringName, new EntityPrimaryKeyGeneratorInterceptor(), _container.Resolve<AuditableInterceptor>())));
 
-            _container.RegisterType<IOrganizationService, OrganizationServiceImpl>();
-            _container.RegisterType<IContactService, ContactServiceImpl>();
-            _container.RegisterType<ICustomerSearchService, CustomerSearchServiceImpl>();
+            _container.RegisterType<IMemberService, MemberServiceImpl>();
         }
 
         #endregion
 
-		#region ISupportExportImportModule Members
+        #region ISupportExportImportModule Members
 
-		public void DoExport(System.IO.Stream outStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
+        public void DoExport(System.IO.Stream outStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
         {
             var exportJob = _container.Resolve<CustomerExportImport>();
             exportJob.DoExport(outStream, progressCallback);
         }
 
-		public void DoImport(System.IO.Stream inputStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
+        public void DoImport(System.IO.Stream inputStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
         {
             var exportJob = _container.Resolve<CustomerExportImport>();
             exportJob.DoImport(inputStream, progressCallback);
         }
 
-		public string ExportDescription
-		{
-			get
-			{
-				var settingManager = _container.Resolve<ISettingsManager>();
-				return settingManager.GetValue("Customer.ExportImport.Description", String.Empty);
-			}
-		}
+        public string ExportDescription
+        {
+            get
+            {
+                var settingManager = _container.Resolve<ISettingsManager>();
+                return settingManager.GetValue("Customer.ExportImport.Description", String.Empty);
+            }
+        }
 
         #endregion
     }

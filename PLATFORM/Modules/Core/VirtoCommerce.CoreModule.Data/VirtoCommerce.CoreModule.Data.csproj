@@ -89,6 +89,10 @@
     <Compile Include="Migrations\201601281427210_NewIndexes.Designer.cs">
       <DependentUpon>201601281427210_NewIndexes.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201603150925356_AddStoreIdToSeoKeywords.cs" />
+    <Compile Include="Migrations\201603150925356_AddStoreIdToSeoKeywords.Designer.cs">
+      <DependentUpon>201603150925356_AddStoreIdToSeoKeywords.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Currency.cs" />
     <Compile Include="Model\FulfillmentCenter.cs" />
@@ -134,6 +138,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201601281427210_NewIndexes.resx">
       <DependentUpon>201601281427210_NewIndexes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603150925356_AddStoreIdToSeoKeywords.resx">
+      <DependentUpon>201603150925356_AddStoreIdToSeoKeywords.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

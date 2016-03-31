@@ -26,11 +26,8 @@ namespace VirtoCommerce.CustomerModule.Data.Model
 
 		#region Navigation Properties
 
-		[StringLength(128)]
 		public string MemberId { get; set; }
-
-        [ForeignKey("MemberId")]
-        [Parent]
+       
         public virtual Member Member { get; set; }
 
 

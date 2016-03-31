@@ -24,7 +24,7 @@ namespace VirtoCommerce.Content.Web
 {
     public class Module : ModuleBase, ISupportExportImportModule
     {
-
+        private const string _connectionStringName = "VirtoCommerce";
         private readonly IUnityContainer _container;
 
 
@@ -39,7 +39,7 @@ namespace VirtoCommerce.Content.Web
         public override void Initialize()
         {
             Func<IMenuRepository> menuRepFactory = () =>
-                new ContentRepositoryImpl("VirtoCommerce", new AuditableInterceptor(), new EntityPrimaryKeyGeneratorInterceptor());
+                new ContentRepositoryImpl(_connectionStringName, _container.Resolve<AuditableInterceptor>(), new EntityPrimaryKeyGeneratorInterceptor());
 
             _container.RegisterInstance(menuRepFactory);
             _container.RegisterType<IMenuService, MenuServiceImpl>();
@@ -47,7 +47,7 @@ namespace VirtoCommerce.Content.Web
             var settingsManager = _container.Resolve<ISettingsManager>();
             var contentStoragePath = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Storefront.AppData.Path", settingsManager.GetValue("VirtoCommerce.Content.StoragePath", string.Empty));
 
-            Func<IContentStorageProvider> contentProviderFactory = () =>  new ContentStorageProviderImpl(NormalizePath(contentStoragePath));
+            Func<IContentStorageProvider> contentProviderFactory = () => new ContentStorageProviderImpl(NormalizePath(contentStoragePath));
             _container.RegisterInstance(contentProviderFactory);
         }
 
@@ -75,48 +75,50 @@ namespace VirtoCommerce.Content.Web
 
         public override void SetupDatabase()
         {
-            using (var context = new ContentRepositoryImpl())
+            base.SetupDatabase();
+
+            using (var context = new ContentRepositoryImpl(_connectionStringName, _container.Resolve<AuditableInterceptor>()))
             {
-				var initializer = new SetupDatabaseInitializer<ContentRepositoryImpl, Data.Migrations.Configuration>();
+                var initializer = new SetupDatabaseInitializer<ContentRepositoryImpl, Data.Migrations.Configuration>();
                 initializer.InitializeDatabase(context);
             }
         }
 
         #endregion
 
-		#region ISupportExportImportModule Members
+        #region ISupportExportImportModule Members
 
-		public void DoExport(System.IO.Stream outStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
-		{
-			var exportJob = _container.Resolve<ContentExportImport>();
-			exportJob.DoExport(outStream, manifest, progressCallback);
-		}
+        public void DoExport(System.IO.Stream outStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
+        {
+            var exportJob = _container.Resolve<ContentExportImport>();
+            exportJob.DoExport(outStream, manifest, progressCallback);
+        }
 
-		public void DoImport(System.IO.Stream inputStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
-		{
-			var exportJob = _container.Resolve<ContentExportImport>();
-			exportJob.DoImport(inputStream, manifest, progressCallback);
-		}
+        public void DoImport(System.IO.Stream inputStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
+        {
+            var exportJob = _container.Resolve<ContentExportImport>();
+            exportJob.DoImport(inputStream, manifest, progressCallback);
+        }
 
-		public string ExportDescription
-		{
-			get
-			{
-				var settingManager = _container.Resolve<ISettingsManager>();
-				return settingManager.GetValue("VirtoCommerce.Content.ExportImport.Description", String.Empty);
-			}
-		}
+        public string ExportDescription
+        {
+            get
+            {
+                var settingManager = _container.Resolve<ISettingsManager>();
+                return settingManager.GetValue("VirtoCommerce.Content.ExportImport.Description", String.Empty);
+            }
+        }
 
-		#endregion
+        #endregion
 
         private string NormalizePath(string path)
         {
             var retVal = path;
-            if(path.StartsWith("~"))
+            if (path.StartsWith("~"))
             {
                 retVal = HostingEnvironment.MapPath(path);
             }
-            else if(Path.IsPathRooted(path))
+            else if (Path.IsPathRooted(path))
             {
                 retVal = path;
             }
@@ -127,5 +129,5 @@ namespace VirtoCommerce.Content.Web
             }
             return retVal;
         }
-	}
+    }
 }

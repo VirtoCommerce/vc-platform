@@ -314,6 +314,7 @@ angular.module('platformWebApp')
                 return authService.checkPermission(blade.updatePermission, blade.securityScopes);
             };
         },
+        checkPermission: authService.checkPermission,
         setError: function (msg, blade) {
             blade.isLoading = false;
             blade.error = msg;

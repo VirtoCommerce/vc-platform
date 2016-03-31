@@ -35,9 +35,9 @@ namespace AvaTax.TaxModule.Web.Observers
 		private void CancelCustomerOrderTaxes(OrderChangeEvent context)
 		{
             if (!context.ModifiedOrder.IsCancelled)
-		    {
-		        return;
-		    }
+            {
+                return;
+            }
 
             var order = context.ModifiedOrder;
             var store = _storeService.GetById(order.StoreId);

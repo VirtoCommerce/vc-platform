@@ -3,7 +3,7 @@
     <div class="blade-inner">
         <div class="inner-block">
             <form name="formScope" class="form">
-                <fieldset ng-init="setForm(formScope);">
+                <fieldset ng-init="setForm(formScope)">
                     <div class="form-group" ng-repeat="property in blade.currentEntities | orderBy: 'name'">
                         <label class="form-label" for="">
                             {{property.name}}

@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,63 +21,71 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebExportImportCsvExportInfo" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebExportImportCsvExportInfo" />class.
         /// </summary>
-        public VirtoCommerceCatalogModuleWebExportImportCsvExportInfo()
+        /// <param name="CatalogId">CatalogId.</param>
+        /// <param name="ProductIds">ProductIds.</param>
+        /// <param name="CategoryIds">CategoryIds.</param>
+        /// <param name="PriceListId">PriceListId.</param>
+        /// <param name="FulfilmentCenterId">FulfilmentCenterId.</param>
+        /// <param name="Currency">Currency.</param>
+        /// <param name="Configuration">Configuration.</param>
+
+        public VirtoCommerceCatalogModuleWebExportImportCsvExportInfo(string CatalogId = null, List<string> ProductIds = null, List<string> CategoryIds = null, string PriceListId = null, string FulfilmentCenterId = null, string Currency = null, VirtoCommerceCatalogModuleWebExportImportCsvProductMappingConfiguration Configuration = null)
         {
+            this.CatalogId = CatalogId;
+            this.ProductIds = ProductIds;
+            this.CategoryIds = CategoryIds;
+            this.PriceListId = PriceListId;
+            this.FulfilmentCenterId = FulfilmentCenterId;
+            this.Currency = Currency;
+            this.Configuration = Configuration;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets CatalogId
         /// </summary>
         [DataMember(Name="catalogId", EmitDefaultValue=false)]
         public string CatalogId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ProductIds
         /// </summary>
         [DataMember(Name="productIds", EmitDefaultValue=false)]
         public List<string> ProductIds { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CategoryIds
         /// </summary>
         [DataMember(Name="categoryIds", EmitDefaultValue=false)]
         public List<string> CategoryIds { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets PriceListId
         /// </summary>
         [DataMember(Name="priceListId", EmitDefaultValue=false)]
         public string PriceListId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets FulfilmentCenterId
         /// </summary>
         [DataMember(Name="fulfilmentCenterId", EmitDefaultValue=false)]
         public string FulfilmentCenterId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Currency
         /// </summary>
         [DataMember(Name="currency", EmitDefaultValue=false)]
         public string Currency { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Configuration
         /// </summary>
         [DataMember(Name="configuration", EmitDefaultValue=false)]
         public VirtoCommerceCatalogModuleWebExportImportCsvProductMappingConfiguration Configuration { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

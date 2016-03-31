@@ -4,7 +4,7 @@
     </a>
 </div>
 <div class="sidebar__content">
-    <div class="order-summary" ng-class="{ 'order-summary--is-expanded': checkout.OrderSummaryVisible, 'order-summary--is-collapsed': !checkout.OrderSummaryVisible }">
+    <div class="order-summary" ng-class="{ 'order-summary--is-expanded': checkout.orderSummaryVisible, 'order-summary--is-collapsed': !checkout.orderSummaryVisible }">
         <div class="order-summary__section order-summary__section--product-list">
             <table class="product-table">
                 <thead>
@@ -18,26 +18,26 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="product" ng-repeat="lineItem in checkout.Items">
+                    <tr class="product" ng-repeat="lineItem in checkout.items">
                         <td class="product__image">
                             <div class="product__image__inner">
-                                <span class="product__quantity" ng-bind="lineItem.Quantity"></span>
+                                <span class="product__quantity" ng-bind="lineItem.quantity"></span>
                                 <div class="product__image__wrapper">
-                                    <img alt="{( lineItem.Name )}" ng-src="{( lineItem.ImageUrl )}" />
+                                    <img alt="{( lineItem.name )}" ng-src="{( lineItem.imageUrl )}" ng-if="lineItem.imageUrl" />
+                                    <div class="no-product-image" ng-if="!lineItem.imageUrl">
+                                        <img src="{{ 'no-image.svg' | asset_url }}" />
+                                    </div>
                                 </div>
                             </div>
                         </td>
                         <td class="product__description">
-                            <span class="product__description__name order-summary__emphasis" ng-bind="lineItem.Name"></span>
-                            <span class="product__description__variant order-summary__small-text">
-                                <!-- TODO: Add properties -->
-                            </span>
+                            <span class="product__description__name order-summary__emphasis" ng-bind="lineItem.name"></span>
                         </td>
                         <td class="product__price">
-                            <span class="order-summary__emphasis" ng-bind="lineItem.PlacedPrice.FormatedAmount"></span>
-                            <span ng-if="lineItem.ListPrice.Amount > lineItem.PlacedPrice.Amount">
+                            <span class="order-summary__emphasis" ng-bind="lineItem.placedPrice.formatedAmount"></span>
+                            <span ng-if="lineItem.listPrice.amount > lineItem.placedPrice.amount">
                                 <br />
-                                <span class="order-summary__small-text strikethrough" ng-bind="lineItem.ListPrice.FormatedAmount"></span>
+                                <span class="order-summary__small-text strikethrough" ng-bind="lineItem.listPrice.formatedAmount"></span>
                             </span>
                         </td>
                     </tr>
@@ -47,34 +47,34 @@
         <div class="order-summary__section order-summary__section--discount">
             <form accept-charset="UTF-8" action="" class="edit_checkout animate-floating-labels" method="post" name="formCoupon" novalidate="novalidate" ng-submit="addCoupon($event)">
                 <div class="fieldset">
-                    <div class="field" ng-class="{ 'field--show-floating-label': checkout.Coupon.Code.length, 'field--error': checkout.Coupon.ErrorCode == 'InvalidCouponCode' }" ng-if="!checkout.Coupon.AppliedSuccessfully">
+                    <div class="field" ng-class="{ 'field--show-floating-label': checkout.coupon.code, 'field--error': checkout.coupon.errorCode === 'InvalidCouponCode' }" ng-if="!checkout.coupon.appliedSuccessfully">
                         <div class="field__input-btn-wrapper">
                             <div class="field__input-wrapper">
                                 <label class="field__label" for="CouponCode">{{ 'checkout.coupon_code' | t }}</label>
-                                <input class="field__input" id="CouponCode" name="CouponCode" placeholder="{{ 'checkout.coupon_code' | t }}" required="required" size="30" type="text" ng-model="checkout.Coupon.Code" ng-change="checkout.Coupon.ErrorCode = null" ng-disabled="checkout.CouponProcessing" />
+                                <input class="field__input" id="CouponCode" name="CouponCode" placeholder="{{ 'checkout.coupon_code' | t }}" required="required" size="30" type="text" ng-model="checkout.coupon.code" ng-change="checkout.coupon.errorCode = null" ng-disabled="checkout.couponProcessing" />
                             </div>
-                            <button class="field__input-btn btn btn--default" type="submit" ng-class="{ 'btn--loading': checkout.CouponProcessing, 'btn--disabled': formCoupon.$invalid }" ng-disabled="formCoupon.$invalid || checkout.CouponProcessing">
+                            <button class="field__input-btn btn btn--default" type="submit" ng-class="{ 'btn--loading': checkout.couponProcessing, 'btn--disabled': formCoupon.$invalid }" ng-disabled="formCoupon.$invalid || checkout.couponProcessing">
                                 <span class="btn__content visually-hidden-on-mobile">{{ 'checkout.apply' | t }}</span>
                                 <i class="btn__content shown-on-mobile icon icon--arrow"></i>
                                 <i class="btn__spinner icon icon--button-spinner"></i>
                             </button>
                         </div>
-                        <p class="field__message field__message--error" ng-if="checkout.Coupon.ErrorCode == 'InvalidCouponCode'">
+                        <p class="field__message field__message--error" ng-if="checkout.coupon.errorCode === 'InvalidCouponCode'">
                             {{ 'checkout.invalid_coupon_code' | t }}
                         </p>
                     </div>
-                    <div class="field" ng-if="checkout.Coupon.Code && checkout.Coupon.AppliedSuccessfully">
+                    <div class="field" ng-if="checkout.coupon.code && checkout.coupon.appliedSuccessfully">
                         <div class="field__input-btn-wrapper">
                             <div class="field__input-wrapper">
-                                <span style="font-size: 1.71em; font-weight: 500; line-height: 40px;" ng-bind="checkout.Coupon.Code"></span>
+                                <span style="font-size: 1.71em; font-weight: 500; line-height: 40px;" ng-bind="checkout.coupon.code"></span>
                             </div>
-                            <button class="field__input-btn btn btn--default" type="button" ng-click="removeCoupon()" ng-class="{ 'btn--loading': checkout.CouponProcessing }">
+                            <button class="field__input-btn btn btn--default" type="button" ng-click="removeCoupon()" ng-class="{ 'btn--loading': checkout.couponProcessing }">
                                 <span class="btn__content visually-hidden-on-mobile">{{ 'checkout.remove' | t }}</span>
                                 <i class="btn__content shown-on-mobile icon icon--arrow"></i>
                                 <i class="btn__spinner icon icon--button-spinner"></i>
                             </button>
                         </div>
-                        <p class="field__message" ng-bind="checkout.Coupon.Description"></p>
+                        <p class="field__message" ng-bind="checkout.coupon.description"></p>
                     </div>
                 </div>
             </form>
@@ -95,25 +95,25 @@
                     <tr class="total-line total-line--subtotal">
                         <td class="total-line__name">{{ 'checkout.subtotal' | t }}</td>
                         <td class="total-line__price">
-                            <span class="order-summary__emphasis" ng-bind="checkout.Subtotal.FormatedAmount"></span>
+                            <span class="order-summary__emphasis" ng-bind="checkout.subtotal.formatedAmount"></span>
                         </td>
                     </tr>
                     <tr class="total-line total-line--subtotal">
                         <td class="total-line__name">{{ 'checkout.discount' | t }}</td>
                         <td class="total-line__price">
-                            <span class="order-summary__emphasis" ng-bind="checkout.DiscountTotal.FormatedAmount"></span>
+                            <span class="order-summary__emphasis" ng-bind="checkout.discountTotal.formatedAmount"></span>
                         </td>
                     </tr>
                     <tr class="total-line total-line--shipping">
                         <td class="total-line__name">{{ 'checkout.shipping' | t }}</td>
                         <td class="total-line__price">
-                            <span class="order-summary__emphasis" ng-bind="checkout.ShippingTotal.FormatedAmount"></span>
+                            <span class="order-summary__emphasis" ng-bind="checkout.shippingTotal.formatedAmount"></span>
                         </td>
                     </tr>
                     <tr class="total-line total-line--taxes">
                         <td class="total-line__name">{{ 'checkout.taxes' | t }}</td>
                         <td class="total-line__price">
-                            <span class="order-summary__emphasis" ng-bind="checkout.TaxTotal.FormatedAmount"></span>
+                            <span class="order-summary__emphasis" ng-bind="checkout.taxTotal.formatedAmount"></span>
                         </td>
                     </tr>
                 </tbody>
@@ -135,8 +135,8 @@
                     <tr class="total-line">
                         <td class="total-line__name payment-due-label">{{ 'checkout.total' | t }}</td>
                         <td class="total-line__price payment-due">
-                            <span class="payment-due__currency" ng-bind="checkout.Total.Currency.Code"></span>
-                            <span class="payment-due__price" ng-bind="checkout.Total.FormatedAmount"></span>
+                            <span class="payment-due__currency" ng-bind="checkout.total.currency.code"></span>
+                            <span class="payment-due__price" ng-bind="checkout.total.formatedAmount"></span>
                         </td>
                     </tr>
                 </tbody>

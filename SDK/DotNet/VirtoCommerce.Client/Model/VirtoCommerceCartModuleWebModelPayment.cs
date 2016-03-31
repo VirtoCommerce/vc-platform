@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,61 +21,68 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceCartModuleWebModelPayment" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceCartModuleWebModelPayment" />class.
         /// </summary>
-        public VirtoCommerceCartModuleWebModelPayment()
+        /// <param name="OuterId">Gets or sets the value of payment outer id.</param>
+        /// <param name="PaymentGatewayCode">Gets or sets the value of payment gateway code.</param>
+        /// <param name="Currency">Gets or sets the value of payment currency.</param>
+        /// <param name="Amount">Gets or sets the value of payment amount.</param>
+        /// <param name="BillingAddress">Gets or sets the billing address.</param>
+        /// <param name="Id">Id.</param>
+
+        public VirtoCommerceCartModuleWebModelPayment(string OuterId = null, string PaymentGatewayCode = null, string Currency = null, double? Amount = null, VirtoCommerceCartModuleWebModelAddress BillingAddress = null, string Id = null)
         {
+            this.OuterId = OuterId;
+            this.PaymentGatewayCode = PaymentGatewayCode;
+            this.Currency = Currency;
+            this.Amount = Amount;
+            this.BillingAddress = BillingAddress;
+            this.Id = Id;
             
         }
 
-        
         /// <summary>
         /// Gets or sets the value of payment outer id
         /// </summary>
         /// <value>Gets or sets the value of payment outer id</value>
         [DataMember(Name="outerId", EmitDefaultValue=false)]
         public string OuterId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of payment gateway code
         /// </summary>
         /// <value>Gets or sets the value of payment gateway code</value>
         [DataMember(Name="paymentGatewayCode", EmitDefaultValue=false)]
         public string PaymentGatewayCode { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of payment currency
         /// </summary>
         /// <value>Gets or sets the value of payment currency</value>
         [DataMember(Name="currency", EmitDefaultValue=false)]
         public string Currency { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of payment amount
         /// </summary>
         /// <value>Gets or sets the value of payment amount</value>
         [DataMember(Name="amount", EmitDefaultValue=false)]
         public double? Amount { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the billing address
         /// </summary>
         /// <value>Gets or sets the billing address</value>
         [DataMember(Name="billingAddress", EmitDefaultValue=false)]
         public VirtoCommerceCartModuleWebModelAddress BillingAddress { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

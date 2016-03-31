@@ -9,6 +9,10 @@ namespace VirtoCommerce.Storefront.Model.Quote
 {
     public class QuoteRequest : Entity
     {
+        public QuoteRequest()
+        {
+        }
+
         public QuoteRequest(Currency currency, Language language)
         {
             Addresses = new List<Address>();
@@ -126,19 +130,35 @@ namespace VirtoCommerce.Storefront.Model.Quote
             }
         }
 
-        public QuoteItem RecentlyAddedItem
-        {
-            get
-            {
-                return Items.OrderByDescending(i => i.CreatedDate).FirstOrDefault();
-            }
-        }
-
         public int ItemsCount
         {
             get
             {
                 return Items.Count;
+            }
+        }
+
+        public string Email
+        {
+            get
+            {
+                string email = null;
+
+                if (Customer != null)
+                {
+                    email = Customer.Email;
+                }
+                if (BillingAddress != null)
+                {
+                    email = BillingAddress.Email;
+                }
+
+                if (string.IsNullOrEmpty(email) && ShippingAddress != null)
+                {
+                    email = ShippingAddress.Email;
+                }
+
+                return email;
             }
         }
     }

@@ -19,6 +19,7 @@ namespace VirtoCommerce.StoreModule.Data.Model
 			PaymentMethods = new NullCollection<StorePaymentMethod>();
 			ShippingMethods = new NullCollection<StoreShippingMethod>();
             TaxProviders = new NullCollection<StoreTaxProvider>();
+            TrustedGroups = new NullCollection<StoreTrustedGroup>();
         }
 
 		[Required]
@@ -75,10 +76,12 @@ namespace VirtoCommerce.StoreModule.Data.Model
 		public virtual ObservableCollection<StoreLanguage> Languages { get; set; }
 
 		public virtual ObservableCollection<StoreCurrency> Currencies { get; set; }
+        public virtual ObservableCollection<StoreTrustedGroup> TrustedGroups { get; set; }
 
-		public virtual ObservableCollection<StorePaymentMethod> PaymentMethods { get; set; }
+        public virtual ObservableCollection<StorePaymentMethod> PaymentMethods { get; set; }
 		public virtual ObservableCollection<StoreShippingMethod> ShippingMethods { get; set; }
         public virtual ObservableCollection<StoreTaxProvider> TaxProviders { get; set; }
+
         #endregion
 
         public static ValidationResult ValidateStoreId(string value, ValidationContext context)

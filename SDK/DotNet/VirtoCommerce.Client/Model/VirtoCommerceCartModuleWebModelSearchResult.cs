@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,30 +21,33 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceCartModuleWebModelSearchResult" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceCartModuleWebModelSearchResult" />class.
         /// </summary>
-        public VirtoCommerceCartModuleWebModelSearchResult()
+        /// <param name="TotalCount">Gets or sets the value of search result total shopping cart count.</param>
+        /// <param name="ShopingCarts">Gets or sets the collection of search result shopping carts.</param>
+
+        public VirtoCommerceCartModuleWebModelSearchResult(int? TotalCount = null, List<VirtoCommerceCartModuleWebModelShoppingCart> ShopingCarts = null)
         {
+            this.TotalCount = TotalCount;
+            this.ShopingCarts = ShopingCarts;
             
         }
 
-        
         /// <summary>
         /// Gets or sets the value of search result total shopping cart count
         /// </summary>
         /// <value>Gets or sets the value of search result total shopping cart count</value>
         [DataMember(Name="totalCount", EmitDefaultValue=false)]
         public int? TotalCount { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the collection of search result shopping carts
         /// </summary>
         /// <value>Gets or sets the collection of search result shopping carts</value>
         [DataMember(Name="shopingCarts", EmitDefaultValue=false)]
         public List<VirtoCommerceCartModuleWebModelShoppingCart> ShopingCarts { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

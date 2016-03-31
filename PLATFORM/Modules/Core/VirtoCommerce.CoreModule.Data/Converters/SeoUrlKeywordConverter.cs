@@ -47,7 +47,7 @@ namespace VirtoCommerce.CoreModule.Data.Converters
 			if (target == null)
 				throw new ArgumentNullException("target");
 			var patchInjection = new PatchInjection<dataModel.SeoUrlKeyword>(x => x.ImageAltDescription, x => x.IsActive,
-																			   x => x.Keyword,  x => x.Language,
+																			   x => x.Keyword,  x => x.Language, x=> x.StoreId,
 																			   x => x.MetaDescription, x => x.MetaKeywords, x => x.Title);
 			target.InjectFrom(patchInjection, source);
 		}
@@ -69,7 +69,7 @@ namespace VirtoCommerce.CoreModule.Data.Converters
             var result = obj.Id;
             if (String.IsNullOrEmpty(result))
             {
-                result = String.Join(":", obj.ObjectId, obj.ObjectType, obj.Language);
+                result = String.Join(":", obj.StoreId, obj.ObjectId, obj.ObjectType, obj.Language);
             }
 
             return result.GetHashCode();

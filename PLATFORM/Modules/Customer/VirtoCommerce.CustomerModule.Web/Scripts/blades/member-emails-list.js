@@ -1,6 +1,7 @@
 ﻿angular.module('virtoCommerce.customerModule')
 .controller('virtoCommerce.customerModule.memberEmailsListController', ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
     var blade = $scope.blade;
+    blade.updatePermission = 'customer:update';
     $scope.selectedItem = null;
 
     function transformDataElement(data) {
@@ -8,13 +9,15 @@
     }
 
     function initializeBlade(data) {
+        blade.data = data;
+
         // transform simple string to complex object. Simple string isn't editable.
         data = _.map(data, transformDataElement);
 
         blade.currentEntities = angular.copy(data);
         blade.origEntity = data;
         blade.isLoading = false;
-    };
+    }
 
     $scope.selectItem = function (listItem) {
         $scope.selectedItem = listItem;
@@ -25,7 +28,7 @@
     };
 
     function isDirty() {
-        return !angular.equals(blade.currentEntities, blade.origEntity);
+        return !angular.equals(blade.currentEntities, blade.origEntity) && blade.hasUpdatePermission();
     }
 
     function canSave() {
@@ -46,7 +49,7 @@
         $scope.bladeClose();
     };
 
-    blade.headIcon = 'fa-user';
+    blade.headIcon = blade.parentBlade.headIcon;
 
     blade.toolbarCommands = [
         {
@@ -57,7 +60,7 @@
             canExecuteMethod: function () {
                 return true;
             },
-            permission: 'customer:update'
+            permission: blade.updatePermission
         },
         {
             name: "platform.commands.reset", icon: 'fa fa-undo',
@@ -65,7 +68,7 @@
                 angular.copy(blade.origEntity, blade.currentEntities);
             },
             canExecuteMethod: isDirty,
-            permission: 'customer:update'
+            permission: blade.updatePermission
         },
         {
             name: "platform.commands.delete", icon: 'fa fa-trash-o',
@@ -78,15 +81,12 @@
             canExecuteMethod: function () {
                 return $scope.selectedItem;
             },
-            permission: 'customer:update'
+            permission: blade.updatePermission
         }
     ];
 
-    $scope.$watch('blade.parentBlade.currentEntity.emails', function (currentEntities) {
-        blade.data = currentEntities;
-        initializeBlade(blade.data);
-    });
+    $scope.$watch('blade.parentBlade.currentEntity.emails', initializeBlade);
 
-    // on load: 
+    // on load:
     // $scope.$watch('blade.parentBlade.currentEntity.emails' gets fired
 }]);

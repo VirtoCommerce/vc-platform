@@ -1,0 +1,15 @@
+﻿<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <div class="sub-t">{{ 'stores.blades.loginOnBehalf-list.labels.pick-store-to-login' | translate }}</div>
+            <ul class="list __items" ng-if="blade.currentEntities.length">
+                <li class="list-item" ng-click='selectNode(data)' ng-repeat="data in blade.currentEntities | orderBy:name track by data.id" ng-class="{'__selected': data.id === selectedNodeId}">
+                    {{data.name}}
+                    <span class="error" ng-if="!data.secureUrl">{{ 'stores.blades.loginOnBehalf-list.validations.secure-url-missing' | translate }}</span>
+                    <span class="error" ng-if="!data.defaultLanguage">{{ 'stores.blades.loginOnBehalf-list.validations.default-language-missing' | translate }}</span>
+                </li>
+            </ul>
+            <p class="note" ng-if="!blade.currentEntities.length">{{ 'stores.blades.loginOnBehalf-list.labels.no-stores' | translate }}</p>
+        </div>
+    </div>
+</div>

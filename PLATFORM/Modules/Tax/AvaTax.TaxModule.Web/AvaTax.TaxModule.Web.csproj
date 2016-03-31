@@ -139,6 +139,8 @@
     <Compile Include="AvaTaxClasses\TaxSvc.cs" />
     <Compile Include="AvaTaxClasses\ValidateResult.cs" />
     <Compile Include="Converters\TaxDetailConverter.cs" />
+    <Compile Include="Observers\CalculateCartTaxesObserver.cs" />
+    <Compile Include="Observers\CalculateOrderTaxesObserver.cs" />
     <Compile Include="Providers\AvaTaxRateProvider.cs" />
     <Compile Include="Controller\AvaTaxController.cs" />
     <Compile Include="Converters\CustomerAddressConverter.cs" />
@@ -157,8 +159,6 @@
     <Compile Include="Observers\CancelOrderTaxesObserver.cs" />
     <Compile Include="Services\AvaTaxSettings.cs" />
     <Compile Include="Module.cs" />
-    <Compile Include="Observers\CalculateCartTaxesObserver.cs" />
-    <Compile Include="Observers\CalculateOrderTaxesObserver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ITaxSettings.cs" />
   </ItemGroup>

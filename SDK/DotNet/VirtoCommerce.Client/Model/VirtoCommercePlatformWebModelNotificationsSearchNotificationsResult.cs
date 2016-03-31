@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,28 +21,31 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelNotificationsSearchNotificationsResult" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelNotificationsSearchNotificationsResult" />class.
         /// </summary>
-        public VirtoCommercePlatformWebModelNotificationsSearchNotificationsResult()
+        /// <param name="Notifications">Notifications.</param>
+        /// <param name="TotalCount">TotalCount.</param>
+
+        public VirtoCommercePlatformWebModelNotificationsSearchNotificationsResult(List<VirtoCommercePlatformWebModelNotificationsNotification> Notifications = null, int? TotalCount = null)
         {
+            this.Notifications = Notifications;
+            this.TotalCount = TotalCount;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets Notifications
         /// </summary>
         [DataMember(Name="notifications", EmitDefaultValue=false)]
         public List<VirtoCommercePlatformWebModelNotificationsNotification> Notifications { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets TotalCount
         /// </summary>
         [DataMember(Name="totalCount", EmitDefaultValue=false)]
         public int? TotalCount { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

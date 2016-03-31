@@ -34,29 +34,7 @@ namespace VirtoCommerce.CartModule.Data.Converters
             return retVal;
 		}
 
-        public static taxCoreModel.TaxEvaluationContext ToTaxEvalContext(this ShoppingCart cart)
-        {
-            var retVal = new taxCoreModel.TaxEvaluationContext();
-            retVal.Id = cart.Id;
-            retVal.Code = cart.Name;
-            retVal.Currency = cart.Currency;
-            retVal.Address = cart.Addresses != null ? cart.Addresses.FirstOrDefault() : null;
-            retVal.Type = cart.GetType().Name;
-            foreach (var cartItem in cart.Items)
-            {
-                var line = new taxCoreModel.TaxLine
-                {
-                    Id = cartItem.Id,
-                    Code = cartItem.Sku,
-                    Name = cartItem.Name,
-                    TaxType = cartItem.TaxType,
-                    Amount = cartItem.SalePrice * cartItem.Quantity
-                };
-                retVal.Lines.Add(line);
-            }
-            return retVal;
-        }
-
+     
         public static ShoppingCartEntity ToDataModel(this ShoppingCart cart, PrimaryKeyResolvingMap pkMap)
 		{
 			if (cart == null)
@@ -67,7 +45,7 @@ namespace VirtoCommerce.CartModule.Data.Converters
 
             retVal.InjectFrom(cart);
 
-			retVal.Currency = cart.Currency.ToString();
+			retVal.Currency = cart.Currency;
 
 			if (cart.Addresses != null)
 			{
@@ -109,7 +87,7 @@ namespace VirtoCommerce.CartModule.Data.Converters
 			if (target == null)
 				throw new ArgumentNullException("target");
 
-			var patchInjectionPolicy = new PatchInjection<ShoppingCartEntity>(x => x.Currency, x => x.Name,
+			var patchInjectionPolicy = new PatchInjection<ShoppingCartEntity>(x => x.Currency, x => x.Name, x=> x.ValidationType,
 																						  x => x.CustomerId, x => x.CustomerName,
 																						  x => x.IsAnonymous, x => x.IsRecuring, x => x.LanguageCode, x => x.Comment,
 																						  x => x.OrganizationId, x => x.Total, x => x.SubTotal, x => x.ShippingTotal,

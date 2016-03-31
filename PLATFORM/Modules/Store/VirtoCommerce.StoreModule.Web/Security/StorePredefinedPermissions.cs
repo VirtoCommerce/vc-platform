@@ -6,6 +6,7 @@
             Create = "store:create",
             Access = "store:access",
             Update = "store:update",
-            Delete = "store:delete";
+            Delete = "store:delete",
+            LoginOnBehalf = "store:loginOnBehalf";
     }
 }

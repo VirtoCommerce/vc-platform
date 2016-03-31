@@ -43,7 +43,6 @@ namespace VirtoCommerce.Storefront.Converters
                 {
                     billingAddress = new Address { Type = AddressType.Billing };
                 }
-                webModel.DefaultBillingAddress = billingAddress;
 
                 if (webModel.HasPhysicalProducts)
                 {
@@ -52,7 +51,6 @@ namespace VirtoCommerce.Storefront.Converters
                     {
                         shippingAddress = new Address { Type = AddressType.Shipping };
                     }
-                    webModel.DefaultShippingAddress = shippingAddress;
                 }
             }
 
@@ -73,24 +71,57 @@ namespace VirtoCommerce.Storefront.Converters
 
             if (serviceModel.TaxDetails != null)
             {
-                webModel.TaxDetails = serviceModel.TaxDetails.Select(td => td.ToWebModel()).ToList();
+                webModel.TaxDetails = serviceModel.TaxDetails.Select(td => td.ToWebModel(currency)).ToList();
             }
 
-          
             webModel.HandlingTotal = new Money(serviceModel.HandlingTotal ?? 0, currency);
             webModel.Height = (decimal)(serviceModel.Height ?? 0);
             webModel.IsAnonymous = serviceModel.IsAnonymous == true;
             webModel.IsRecuring = serviceModel.IsRecuring == true;
             webModel.Length = (decimal)(serviceModel.Length ?? 0);
-         
             webModel.TaxIncluded = serviceModel.TaxIncluded == true;
             webModel.TaxTotal = new Money(serviceModel.TaxTotal ?? 0, currency);
-
             webModel.VolumetricWeight = (decimal)(serviceModel.VolumetricWeight ?? 0);
             webModel.Weight = (decimal)(serviceModel.Weight ?? 0);
             webModel.Width = (decimal)(serviceModel.Width ?? 0);
+            webModel.ValidationType = EnumUtility.SafeParse(serviceModel.ValidationType, ValidationType.PriceAndQuantity);
 
             return webModel;
+        }
+
+        public static VirtoCommerceDomainTaxModelTaxEvaluationContext ToTaxEvalContext(this ShoppingCart cart)
+        {
+            var retVal = new VirtoCommerceDomainTaxModelTaxEvaluationContext();
+            retVal.Id = cart.Id;
+            retVal.Code = cart.Name;
+            retVal.Currency = cart.Currency.Code;
+            retVal.Type = "Cart";
+            retVal.Lines = new System.Collections.Generic.List<VirtoCommerceDomainTaxModelTaxLine>();
+            foreach (var lineItem in cart.Items)
+            {
+                var line = new VirtoCommerceDomainTaxModelTaxLine
+                {
+                    Id = lineItem.Id,
+                    Code = lineItem.Sku,
+                    Name = lineItem.Name,
+                    TaxType = lineItem.TaxType,
+                    Amount = (double)lineItem.ExtendedPrice.Amount
+                };
+                retVal.Lines.Add(line);
+            }
+            foreach (var shipment in cart.Shipments)
+            {
+                var line = new VirtoCommerceDomainTaxModelTaxLine
+                {
+                    Id = shipment.Id,
+                    Code = shipment.ShipmentMethodCode,
+                    Name = shipment.ShipmentMethodCode,
+                    TaxType = shipment.TaxType,
+                    Amount = (double)shipment.ShippingPrice.Amount
+                };
+                retVal.Lines.Add(line);
+            }
+            return retVal;
         }
 
         public static VirtoCommerceCartModuleWebModelShoppingCart ToServiceModel(this ShoppingCart webModel)
@@ -119,6 +150,7 @@ namespace VirtoCommerce.Storefront.Converters
             serviceModel.VolumetricWeight = (double)webModel.VolumetricWeight;
             serviceModel.Weight = (double)webModel.Weight;
             serviceModel.Width = (double)webModel.Width;
+            serviceModel.ValidationType = webModel.ValidationType.ToString();
 
             return serviceModel;
         }

@@ -60,7 +60,7 @@
   ['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', 'platformWebApp.pushNotificationTemplateResolver', 'platformWebApp.bladeNavigationService', 'platformWebApp.exportImport.resource', function ($rootScope, mainMenuService, widgetService, $state, pushNotificationTemplateResolver, bladeNavigationService, exportImportResourse) {
   	var menuItem = {
   		path: 'configuration/exportImport',
-  		icon: 'fa fa-download',
+  		icon: 'fa fa-database',
   		title: 'platform.menu.export-import',
   		priority: 10,
   		action: function () { $state.go('workspace.exportImport'); },

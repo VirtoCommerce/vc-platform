@@ -6,9 +6,9 @@
 
     blade.initialize = function () {
         blade.isLoading = true;
-        themes.getAssets({ storeId: blade.choosenStoreId, themeId: blade.choosenThemeId }, function (data) {
+        themes.getAssets({ storeId: blade.chosenStoreId, themeId: blade.chosenThemeId }, function (data) {
             blade.currentEntities = data;
-            themesStores.get({ id: blade.choosenStoreId }, function (data) {
+            themesStores.get({ id: blade.chosenStoreId }, function (data) {
                 blade.store = data;
                 blade.isLoading = false;
             },
@@ -75,10 +75,10 @@
         if (asset.contentType === 'text/html' || asset.contentType === 'application/json' || asset.contentType === 'application/javascript') {
             var newBlade = {
                 id: 'editAssetBlade',
-                choosenStoreId: blade.choosenStoreId,
-                choosenThemeId: blade.choosenThemeId,
-                choosenAssetId: asset.id,
-                choosenFolder: data.folderName,
+                chosenStoreId: blade.chosenStoreId,
+                chosenThemeId: blade.chosenThemeId,
+                chosenAssetId: asset.id,
+                chosenFolder: data.folderName,
                 newAsset: false,
                 title: asset.id,
                 subtitle: 'content.blades.edit-asset.subtitle',
@@ -91,10 +91,10 @@
         else {
             var newBlade = {
                 id: 'editImageAssetBlade',
-                choosenStoreId: blade.choosenStoreId,
-                choosenThemeId: blade.choosenThemeId,
-                choosenAssetId: asset.id,
-                choosenFolder: data.folderName,
+                chosenStoreId: blade.chosenStoreId,
+                chosenThemeId: blade.chosenThemeId,
+                chosenAssetId: asset.id,
+                chosenFolder: data.folderName,
                 newAsset: false,
                 title: asset.id,
                 subtitle: 'content.blades.edit-image-asset.subtitle',
@@ -131,9 +131,9 @@
         if (contentType === 'text/html') {
             var newBlade = {
                 id: 'addAsset',
-                choosenStoreId: blade.choosenStoreId,
-                choosenThemeId: blade.choosenThemeId,
-                choosenFolder: data.folderName,
+                chosenStoreId: blade.chosenStoreId,
+                chosenThemeId: blade.chosenThemeId,
+                chosenFolder: data.folderName,
                 newAsset: true,
                 currentEntity: { id: undefined, content: undefined, contentType: contentType, assetUrl: undefined, name: name },
                 titleValues: { name: folder.oneItemName },
@@ -148,9 +148,9 @@
         else {
             var newBlade = {
                 id: 'addImageAsset',
-                choosenStoreId: blade.choosenStoreId,
-                choosenThemeId: blade.choosenThemeId,
-                choosenFolder: data.folderName,
+                chosenStoreId: blade.chosenStoreId,
+                chosenThemeId: blade.chosenThemeId,
+                chosenFolder: data.folderName,
                 newAsset: true,
                 currentEntity: { id: undefined, content: undefined, contentType: undefined, assetUrl: undefined, name: undefined },
                 titleValues: { name: folder.oneItemName },

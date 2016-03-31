@@ -71,15 +71,11 @@
         objects = _.map(objects, function (x) {
             x.value = x.isDictionary ? x.values[0].value.id : x.values[0].value;
             x.values = undefined;
+            x.allowedValues = undefined;
             return x;
         });
 
-        var selectedSettings = _.where(objects, { isArray: true });
-        _.forEach(selectedSettings, function (setting) {
-            if (setting.arrayValues) {
-                setting.arrayValues = _.pluck(setting.arrayValues, 'value');
-            }
-        });
+        settingsHelper.toApiFormat(objects);
 
         //console.log('saveChanges3: ' + angular.toJson(objects, true));
         settings.update({}, objects, function (data, headers) {
@@ -99,7 +95,7 @@
         {
             name: "platform.commands.save", icon: 'fa fa-save',
             executeMethod: saveChanges,
-            canExecuteMethod: canSave            
+            canExecuteMethod: canSave
         },
         {
             name: "platform.commands.reset", icon: 'fa fa-undo',
@@ -109,14 +105,14 @@
             canExecuteMethod: isDirty
         }
     ];
-    
+
     blade.onClose = function (closeCallback) {
         bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, saveChanges, closeCallback, "platform.dialogs.settings-delete.title", "platform.dialogs.settings-delete.message");
     };
 
     $scope.getDictionaryValues = function (setting, callback) {
         callback(setting.allowedValues);
-    }
+    };
 
     // actions on load
     blade.refresh();

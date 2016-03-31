@@ -7,7 +7,7 @@ using VirtoCommerce.Storefront.Model.Marketing;
 
 namespace VirtoCommerce.Storefront.Model.Cart
 {
-    public class Shipment : Entity, IDiscountable, IValidatable
+    public class Shipment : Entity, IDiscountable, IValidatable, ITaxable
     {
         public Shipment(Currency currency)
         {
@@ -90,13 +90,13 @@ namespace VirtoCommerce.Storefront.Model.Cart
         public Money ShippingPrice { get; set; }
 
         /// <summary>
-        /// Gets the value of total shipping price
+        /// Gets the value of total shipping price without taxes
         /// </summary>
         public Money Total
         {
             get
             {
-                return ShippingPrice + TaxTotal - DiscountTotal;
+                return ShippingPrice - DiscountTotal;
             }
         }
 
@@ -113,11 +113,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
             }
         }
 
-        /// <summary>
-        /// Gets or sets the value of total shipping tax amount
-        /// </summary>
-        public Money TaxTotal { get; set; }
-
+     
         /// <summary>
         /// Gets the value of shipping items subtotal
         /// </summary>
@@ -150,6 +146,12 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// </value>
         public ICollection<CartShipmentItem> Items { get; set; }
 
+        #region ITaxable Members
+        /// <summary>
+        /// Gets or sets the value of total shipping tax amount
+        /// </summary>
+        public Money TaxTotal { get; set; }
+
         /// <summary>
         /// Gets or sets the value of shipping tax type
         /// </summary>
@@ -161,7 +163,19 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// <value>
         /// Collection of TaxDetail objects
         /// </value>
-        public ICollection<TaxDetail> TaxDetails { get; set; }
+        public ICollection<TaxDetail> TaxDetails { get; set; } 
+
+        public void ApplyTaxRates(IEnumerable<TaxRate> taxRates)
+        {
+            var shipmentTaxRates = taxRates.Where(x=>x.Line.Id == Id);
+            TaxTotal = new Money(TaxTotal.Currency);
+            foreach(var shipmentTaxRate in shipmentTaxRates)
+            {
+                TaxTotal += shipmentTaxRate.Rate;
+            }
+
+        }
+        #endregion
 
         public ICollection<ValidationError> ValidationErrors { get; set; }
 

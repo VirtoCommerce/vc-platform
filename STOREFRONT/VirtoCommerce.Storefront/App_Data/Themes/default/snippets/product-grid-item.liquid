@@ -29,7 +29,13 @@
                         <span class="badge-label">{{ 'products.product.sold_out' | t }}</span>
                     </div>
                 {% endif %}
-                <img src="{{ product.featured_image.src | img_url: image_size }}" alt="{{ product.featured_image.alt | escape }}" />
+                {% if product.featured_image %}
+                    <img src="{{ product.featured_image.src | img_url: image_size }}" alt="{{ product.featured_image.alt | escape }}" />
+                {% else %}
+                    <div class="no-product-image">
+                        <img src="{{ 'no-image.svg' | asset_url }}" />
+                    </div>
+                {% endif %}
             </div>
         </div>
         <p>{{ product.title }}</p>
@@ -53,12 +59,12 @@
 
         <div class="product-item--price" ng-if="productPricesLoaded">
             <span class="h1 medium--left">
-                <span class="old" ng-if="productPrices['{{ product.id }}'].AbsoluteBenefit.Amount > 0">
-                    <small ng-bind="productPrices['{{ product.id }}'].ListPrice.FormatedAmount"></small>
+                <span class="old" ng-if="productPrices['{{ product.id }}'].absoluteBenefit.amount > 0">
+                    <small ng-bind="productPrices['{{ product.id }}'].listPrice.formatedAmount"></small>
                 </span>
-                <small ng-bind="productPrices['{{ product.id }}'].ActualPrice.FormatedAmount"></small>
+                <small ng-bind="productPrices['{{ product.id }}'].actualPrice.formatedAmount"></small>
             </span>
-            <span class="sale-tag medium--right" ng-if="productPrices['{{ product.id }}'].AbsoluteBenefit.Amount > 0" ng-bind="'{{ 'products.general.save_html' | t }}'  + productPrices['{{ product.id }}'].AbsoluteBenefit.FormatedAmount"></span>
+            <span class="sale-tag medium--right" ng-if="productPrices['{{ product.id }}'].absoluteBenefit.amount > 0" ng-bind="'{{ 'products.general.save_html' | t }}'  + productPrices['{{ product.id }}'].absoluteBenefit.formatedAmount"></span>
         </div>
 
         <div class="product-item--other">

@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,46 +21,51 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceCartModuleWebModelDiscount" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceCartModuleWebModelDiscount" />class.
         /// </summary>
-        public VirtoCommerceCartModuleWebModelDiscount()
+        /// <param name="PromotionId">Gets or sets the value of promotion id.</param>
+        /// <param name="Currency">Gets or sets the value of currency.</param>
+        /// <param name="DiscountAmount">Gets or sets the value of discount amount.</param>
+        /// <param name="Description">Gets or sets the value of discount description.</param>
+
+        public VirtoCommerceCartModuleWebModelDiscount(string PromotionId = null, string Currency = null, double? DiscountAmount = null, string Description = null)
         {
+            this.PromotionId = PromotionId;
+            this.Currency = Currency;
+            this.DiscountAmount = DiscountAmount;
+            this.Description = Description;
             
         }
 
-        
         /// <summary>
         /// Gets or sets the value of promotion id
         /// </summary>
         /// <value>Gets or sets the value of promotion id</value>
         [DataMember(Name="promotionId", EmitDefaultValue=false)]
         public string PromotionId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of currency
         /// </summary>
         /// <value>Gets or sets the value of currency</value>
         [DataMember(Name="currency", EmitDefaultValue=false)]
         public string Currency { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of discount amount
         /// </summary>
         /// <value>Gets or sets the value of discount amount</value>
         [DataMember(Name="discountAmount", EmitDefaultValue=false)]
         public double? DiscountAmount { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of discount description
         /// </summary>
         /// <value>Gets or sets the value of discount description</value>
         [DataMember(Name="description", EmitDefaultValue=false)]
         public string Description { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

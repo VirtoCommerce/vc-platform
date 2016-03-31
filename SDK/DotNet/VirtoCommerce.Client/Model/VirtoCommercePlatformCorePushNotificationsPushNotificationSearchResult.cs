@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,35 +21,39 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult" />class.
         /// </summary>
-        public VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult()
+        /// <param name="TotalCount">TotalCount.</param>
+        /// <param name="NewCount">NewCount.</param>
+        /// <param name="NotifyEvents">NotifyEvents.</param>
+
+        public VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult(int? TotalCount = null, int? NewCount = null, List<VirtoCommercePlatformCorePushNotificationsPushNotification> NotifyEvents = null)
         {
+            this.TotalCount = TotalCount;
+            this.NewCount = NewCount;
+            this.NotifyEvents = NotifyEvents;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets TotalCount
         /// </summary>
         [DataMember(Name="totalCount", EmitDefaultValue=false)]
         public int? TotalCount { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets NewCount
         /// </summary>
         [DataMember(Name="newCount", EmitDefaultValue=false)]
         public int? NewCount { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets NotifyEvents
         /// </summary>
         [DataMember(Name="notifyEvents", EmitDefaultValue=false)]
         public List<VirtoCommercePlatformCorePushNotificationsPushNotification> NotifyEvents { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

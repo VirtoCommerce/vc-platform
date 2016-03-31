@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,56 +21,63 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceDomainCatalogModelPropertyDictionaryValue" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCatalogModelPropertyDictionaryValue" />class.
         /// </summary>
-        public VirtoCommerceDomainCatalogModelPropertyDictionaryValue()
+        /// <param name="PropertyId">PropertyId.</param>
+        /// <param name="Property">Property.</param>
+        /// <param name="Alias">Alias.</param>
+        /// <param name="LanguageCode">LanguageCode.</param>
+        /// <param name="Value">Value.</param>
+        /// <param name="Id">Id.</param>
+
+        public VirtoCommerceDomainCatalogModelPropertyDictionaryValue(string PropertyId = null, VirtoCommerceDomainCatalogModelProperty Property = null, string Alias = null, string LanguageCode = null, string Value = null, string Id = null)
         {
+            this.PropertyId = PropertyId;
+            this.Property = Property;
+            this.Alias = Alias;
+            this.LanguageCode = LanguageCode;
+            this.Value = Value;
+            this.Id = Id;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets PropertyId
         /// </summary>
         [DataMember(Name="propertyId", EmitDefaultValue=false)]
         public string PropertyId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Property
         /// </summary>
         [DataMember(Name="property", EmitDefaultValue=false)]
         public VirtoCommerceDomainCatalogModelProperty Property { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Alias
         /// </summary>
         [DataMember(Name="alias", EmitDefaultValue=false)]
         public string Alias { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets LanguageCode
         /// </summary>
         [DataMember(Name="languageCode", EmitDefaultValue=false)]
         public string LanguageCode { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Value
         /// </summary>
         [DataMember(Name="value", EmitDefaultValue=false)]
         public string Value { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

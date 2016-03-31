@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,91 +21,103 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceOrderModuleWebModelDashboardStatisticsResult" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceOrderModuleWebModelDashboardStatisticsResult" />class.
         /// </summary>
-        public VirtoCommerceOrderModuleWebModelDashboardStatisticsResult()
+        /// <param name="StartDate">StartDate.</param>
+        /// <param name="EndDate">EndDate.</param>
+        /// <param name="Revenue">Revenue.</param>
+        /// <param name="RevenuePeriodDetails">RevenuePeriodDetails.</param>
+        /// <param name="OrderCount">OrderCount.</param>
+        /// <param name="CustomersCount">CustomersCount.</param>
+        /// <param name="RevenuePerCustomer">RevenuePerCustomer.</param>
+        /// <param name="AvgOrderValue">AvgOrderValue.</param>
+        /// <param name="AvgOrderValuePeriodDetails">AvgOrderValuePeriodDetails.</param>
+        /// <param name="ItemsPurchased">ItemsPurchased.</param>
+        /// <param name="LineitemsPerOrder">LineitemsPerOrder.</param>
+
+        public VirtoCommerceOrderModuleWebModelDashboardStatisticsResult(DateTime? StartDate = null, DateTime? EndDate = null, List<VirtoCommerceOrderModuleWebModelMoney> Revenue = null, List<VirtoCommerceOrderModuleWebModelQuarterPeriodMoney> RevenuePeriodDetails = null, int? OrderCount = null, int? CustomersCount = null, List<VirtoCommerceOrderModuleWebModelMoney> RevenuePerCustomer = null, List<VirtoCommerceOrderModuleWebModelMoney> AvgOrderValue = null, List<VirtoCommerceOrderModuleWebModelQuarterPeriodMoney> AvgOrderValuePeriodDetails = null, int? ItemsPurchased = null, double? LineitemsPerOrder = null)
         {
+            this.StartDate = StartDate;
+            this.EndDate = EndDate;
+            this.Revenue = Revenue;
+            this.RevenuePeriodDetails = RevenuePeriodDetails;
+            this.OrderCount = OrderCount;
+            this.CustomersCount = CustomersCount;
+            this.RevenuePerCustomer = RevenuePerCustomer;
+            this.AvgOrderValue = AvgOrderValue;
+            this.AvgOrderValuePeriodDetails = AvgOrderValuePeriodDetails;
+            this.ItemsPurchased = ItemsPurchased;
+            this.LineitemsPerOrder = LineitemsPerOrder;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets StartDate
         /// </summary>
         [DataMember(Name="startDate", EmitDefaultValue=false)]
         public DateTime? StartDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets EndDate
         /// </summary>
         [DataMember(Name="endDate", EmitDefaultValue=false)]
         public DateTime? EndDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Revenue
         /// </summary>
         [DataMember(Name="revenue", EmitDefaultValue=false)]
         public List<VirtoCommerceOrderModuleWebModelMoney> Revenue { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets RevenuePeriodDetails
         /// </summary>
         [DataMember(Name="revenuePeriodDetails", EmitDefaultValue=false)]
         public List<VirtoCommerceOrderModuleWebModelQuarterPeriodMoney> RevenuePeriodDetails { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets OrderCount
         /// </summary>
         [DataMember(Name="orderCount", EmitDefaultValue=false)]
         public int? OrderCount { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CustomersCount
         /// </summary>
         [DataMember(Name="customersCount", EmitDefaultValue=false)]
         public int? CustomersCount { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets RevenuePerCustomer
         /// </summary>
         [DataMember(Name="revenuePerCustomer", EmitDefaultValue=false)]
         public List<VirtoCommerceOrderModuleWebModelMoney> RevenuePerCustomer { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets AvgOrderValue
         /// </summary>
         [DataMember(Name="avgOrderValue", EmitDefaultValue=false)]
         public List<VirtoCommerceOrderModuleWebModelMoney> AvgOrderValue { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets AvgOrderValuePeriodDetails
         /// </summary>
         [DataMember(Name="avgOrderValuePeriodDetails", EmitDefaultValue=false)]
         public List<VirtoCommerceOrderModuleWebModelQuarterPeriodMoney> AvgOrderValuePeriodDetails { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ItemsPurchased
         /// </summary>
         [DataMember(Name="itemsPurchased", EmitDefaultValue=false)]
         public int? ItemsPurchased { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets LineitemsPerOrder
         /// </summary>
         [DataMember(Name="lineitemsPerOrder", EmitDefaultValue=false)]
         public double? LineitemsPerOrder { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

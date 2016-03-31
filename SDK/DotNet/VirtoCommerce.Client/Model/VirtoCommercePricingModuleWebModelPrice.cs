@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// Represents a price of a Product in depends on batch quantity.
     /// </summary>
@@ -21,94 +21,106 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePricingModuleWebModelPrice" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommercePricingModuleWebModelPrice" />class.
         /// </summary>
-        public VirtoCommercePricingModuleWebModelPrice()
+        /// <param name="PricelistId">PricelistId.</param>
+        /// <param name="Currency">Currency.</param>
+        /// <param name="ProductId">ProductId.</param>
+        /// <param name="Sale">Sale price of a product. It can be null, then Sale price will be equal List price.</param>
+        /// <param name="List">Price of a product. It can be catalog price or purchase price.</param>
+        /// <param name="MinQuantity">It defines the minimum quantity of Products. Use it for creating tier prices..</param>
+        /// <param name="CreatedDate">CreatedDate.</param>
+        /// <param name="ModifiedDate">ModifiedDate.</param>
+        /// <param name="CreatedBy">CreatedBy.</param>
+        /// <param name="ModifiedBy">ModifiedBy.</param>
+        /// <param name="Id">Id.</param>
+
+        public VirtoCommercePricingModuleWebModelPrice(string PricelistId = null, string Currency = null, string ProductId = null, double? Sale = null, double? List = null, int? MinQuantity = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
         {
+            this.PricelistId = PricelistId;
+            this.Currency = Currency;
+            this.ProductId = ProductId;
+            this.Sale = Sale;
+            this.List = List;
+            this.MinQuantity = MinQuantity;
+            this.CreatedDate = CreatedDate;
+            this.ModifiedDate = ModifiedDate;
+            this.CreatedBy = CreatedBy;
+            this.ModifiedBy = ModifiedBy;
+            this.Id = Id;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets PricelistId
         /// </summary>
         [DataMember(Name="pricelistId", EmitDefaultValue=false)]
         public string PricelistId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Currency
         /// </summary>
         [DataMember(Name="currency", EmitDefaultValue=false)]
         public string Currency { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ProductId
         /// </summary>
         [DataMember(Name="productId", EmitDefaultValue=false)]
         public string ProductId { get; set; }
-  
-        
+
         /// <summary>
         /// Sale price of a product. It can be null, then Sale price will be equal List price
         /// </summary>
         /// <value>Sale price of a product. It can be null, then Sale price will be equal List price</value>
         [DataMember(Name="sale", EmitDefaultValue=false)]
         public double? Sale { get; set; }
-  
-        
+
         /// <summary>
         /// Price of a product. It can be catalog price or purchase price
         /// </summary>
         /// <value>Price of a product. It can be catalog price or purchase price</value>
         [DataMember(Name="list", EmitDefaultValue=false)]
         public double? List { get; set; }
-  
-        
+
         /// <summary>
         /// It defines the minimum quantity of Products. Use it for creating tier prices.
         /// </summary>
         /// <value>It defines the minimum quantity of Products. Use it for creating tier prices.</value>
         [DataMember(Name="minQuantity", EmitDefaultValue=false)]
         public int? MinQuantity { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedDate
         /// </summary>
         [DataMember(Name="createdDate", EmitDefaultValue=false)]
         public DateTime? CreatedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedDate
         /// </summary>
         [DataMember(Name="modifiedDate", EmitDefaultValue=false)]
         public DateTime? ModifiedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedBy
         /// </summary>
         [DataMember(Name="createdBy", EmitDefaultValue=false)]
         public string CreatedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedBy
         /// </summary>
         [DataMember(Name="modifiedBy", EmitDefaultValue=false)]
         public string ModifiedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

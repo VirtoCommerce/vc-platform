@@ -40,7 +40,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var retVal = _pushNotifier.SearchNotifies(User.Identity.Name, criteria);
             foreach (var notifyEvent in retVal.NotifyEvents)
             {
-                notifyEvent.New = false;
+                notifyEvent.IsNew = false;
                 _pushNotifier.Upsert(notifyEvent);
             }
 

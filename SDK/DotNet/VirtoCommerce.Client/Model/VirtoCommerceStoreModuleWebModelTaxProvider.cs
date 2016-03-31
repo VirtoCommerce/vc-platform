@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,67 +21,75 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceStoreModuleWebModelTaxProvider" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceStoreModuleWebModelTaxProvider" />class.
         /// </summary>
-        public VirtoCommerceStoreModuleWebModelTaxProvider()
+        /// <param name="Code">Inner unique method code.</param>
+        /// <param name="Name">Display name of shipping method.</param>
+        /// <param name="Description">Description.</param>
+        /// <param name="LogoUrl">Absolute logo url of shipping method, can be used in UI.</param>
+        /// <param name="IsActive">If true - method can be available on storefront.</param>
+        /// <param name="Priority">Priority.</param>
+        /// <param name="Settings">Settings.</param>
+
+        public VirtoCommerceStoreModuleWebModelTaxProvider(string Code = null, string Name = null, string Description = null, string LogoUrl = null, bool? IsActive = null, int? Priority = null, List<VirtoCommerceStoreModuleWebModelSetting> Settings = null)
         {
+            this.Code = Code;
+            this.Name = Name;
+            this.Description = Description;
+            this.LogoUrl = LogoUrl;
+            this.IsActive = IsActive;
+            this.Priority = Priority;
+            this.Settings = Settings;
             
         }
 
-        
         /// <summary>
         /// Inner unique method code
         /// </summary>
         /// <value>Inner unique method code</value>
         [DataMember(Name="code", EmitDefaultValue=false)]
         public string Code { get; set; }
-  
-        
+
         /// <summary>
         /// Display name of shipping method
         /// </summary>
         /// <value>Display name of shipping method</value>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Description
         /// </summary>
         [DataMember(Name="description", EmitDefaultValue=false)]
         public string Description { get; set; }
-  
-        
+
         /// <summary>
         /// Absolute logo url of shipping method, can be used in UI
         /// </summary>
         /// <value>Absolute logo url of shipping method, can be used in UI</value>
         [DataMember(Name="logoUrl", EmitDefaultValue=false)]
         public string LogoUrl { get; set; }
-  
-        
+
         /// <summary>
         /// If true - method can be available on storefront
         /// </summary>
         /// <value>If true - method can be available on storefront</value>
         [DataMember(Name="isActive", EmitDefaultValue=false)]
         public bool? IsActive { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Priority
         /// </summary>
         [DataMember(Name="priority", EmitDefaultValue=false)]
         public int? Priority { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Settings
         /// </summary>
         [DataMember(Name="settings", EmitDefaultValue=false)]
         public List<VirtoCommerceStoreModuleWebModelSetting> Settings { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

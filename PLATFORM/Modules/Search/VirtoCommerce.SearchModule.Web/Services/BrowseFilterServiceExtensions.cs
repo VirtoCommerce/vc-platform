@@ -4,6 +4,7 @@ using Omu.ValueInjecter;
 using VirtoCommerce.Domain.Search.Filters;
 using VirtoCommerce.Domain.Search.Model;
 using VirtoCommerce.Domain.Search.Services;
+using VirtoCommerce.SearchModule.Data.Services;
 
 namespace VirtoCommerce.SearchModule.Web.Services
 {
@@ -212,35 +213,6 @@ namespace VirtoCommerce.SearchModule.Web.Services
                     newFilter.Values = values.OfType<CategoryFilterValue>().ToArray();
                     return newFilter;
                 }
-            }
-
-            return null;
-        }
-
-        public static ISearchFilterValue[] GetValues(this ISearchFilter filter)
-        {
-            var attributeFilter = filter as AttributeFilter;
-            if (attributeFilter != null)
-            {
-                return attributeFilter.Values;
-            }
-
-            var rangeFilter = filter as RangeFilter;
-            if (rangeFilter != null)
-            {
-                return rangeFilter.Values;
-            }
-
-            var priceRangeFilter = filter as PriceRangeFilter;
-            if (priceRangeFilter != null)
-            {
-                return priceRangeFilter.Values;
-            }
-
-            var categoryFilter = filter as CategoryFilter;
-            if (categoryFilter != null)
-            {
-                return categoryFilter.Values;
             }
 
             return null;

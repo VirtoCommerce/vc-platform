@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,56 +21,63 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceDomainPaymentModelPostProcessPaymentResult" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainPaymentModelPostProcessPaymentResult" />class.
         /// </summary>
-        public VirtoCommerceDomainPaymentModelPostProcessPaymentResult()
+        /// <param name="NewPaymentStatus">NewPaymentStatus.</param>
+        /// <param name="IsSuccess">IsSuccess.</param>
+        /// <param name="ErrorMessage">ErrorMessage.</param>
+        /// <param name="ReturnUrl">ReturnUrl.</param>
+        /// <param name="OrderId">OrderId.</param>
+        /// <param name="OuterId">OuterId.</param>
+
+        public VirtoCommerceDomainPaymentModelPostProcessPaymentResult(string NewPaymentStatus = null, bool? IsSuccess = null, string ErrorMessage = null, string ReturnUrl = null, string OrderId = null, string OuterId = null)
         {
+            this.NewPaymentStatus = NewPaymentStatus;
+            this.IsSuccess = IsSuccess;
+            this.ErrorMessage = ErrorMessage;
+            this.ReturnUrl = ReturnUrl;
+            this.OrderId = OrderId;
+            this.OuterId = OuterId;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets NewPaymentStatus
         /// </summary>
         [DataMember(Name="newPaymentStatus", EmitDefaultValue=false)]
         public string NewPaymentStatus { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets IsSuccess
         /// </summary>
         [DataMember(Name="isSuccess", EmitDefaultValue=false)]
         public bool? IsSuccess { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ErrorMessage
         /// </summary>
         [DataMember(Name="errorMessage", EmitDefaultValue=false)]
         public string ErrorMessage { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ReturnUrl
         /// </summary>
         [DataMember(Name="returnUrl", EmitDefaultValue=false)]
         public string ReturnUrl { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets OrderId
         /// </summary>
         [DataMember(Name="orderId", EmitDefaultValue=false)]
         public string OrderId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets OuterId
         /// </summary>
         [DataMember(Name="outerId", EmitDefaultValue=false)]
         public string OuterId { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

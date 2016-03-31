@@ -61,6 +61,8 @@ namespace VirtoCommerce.CartModule.Data.Model
 		public decimal DiscountTotal { get; set; }
 		[Column(TypeName = "Money")]
 		public decimal TaxTotal { get; set; }
+        [StringLength(64)]
+        public string ValidationType { get; set; }
 
         public virtual ObservableCollection<DiscountEntity> Discounts { get; set; }
         public virtual ObservableCollection<AddressEntity> Addresses { get; set; }

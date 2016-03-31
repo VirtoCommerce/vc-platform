@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using PagedList;
 using VirtoCommerce.Storefront.Model.Cart;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
@@ -21,6 +22,7 @@ namespace VirtoCommerce.Storefront.Model
         {
             CurrentPricelists = new List<Pricelist>();
             CurrentLinkLists = new List<MenuLinkList>();
+            ExternalLoginProviders = new List<LoginProvider>();
         }
         /// <summary>
         /// Current request url example: http:/host/app/store/en-us/search?page=2
@@ -79,6 +81,7 @@ namespace VirtoCommerce.Storefront.Model
         /// Represent current quotes search criteria taken from request url
         /// </summary>
         public QuoteSearchCriteria CurrentQuoteSearchCriteria { get; set; }
+
         public QuoteRequest CurrentQuoteRequest { get; set; }
 
         /// <summary>
@@ -112,15 +115,27 @@ namespace VirtoCommerce.Storefront.Model
         /// Represent current product
         /// </summary>
         public Product CurrentProduct { get; set; }
-
+        /// <summary>
+        /// Represent current category
+        /// </summary>
         public Category CurrentCategory { get; set; }
+        /// <summary>
+        /// Represent all store catalog categories filtered by current search criteria CurrentCatalogSearchCriteria (loaded on first access by lazy loading)
+        /// </summary>
+        public IMutablePagedList<Category> Categories { get; set; }
+        /// <summary>
+        /// Represent products filtered by current search criteria CurrentCatalogSearchCriteria (loaded on first access by lazy loading)
+        /// </summary>
+        public IMutablePagedList<Product> Products { get; set; }
+        /// <summary>
+        /// Represent bucket, aggregated data based on a search query resulted by current search criteria CurrentCatalogSearchCriteria (example  color 33, gr
+        /// </summary>
+        public IMutablePagedList<Aggregation> Aggregations { get; set; }
 
         /// <summary>
         /// Current search catalog criterias
         /// </summary>
         public CatalogSearchCriteria CurrentCatalogSearchCriteria { get; set; }
-
-        public CatalogSearchResult CurrentCatalogSearchResult { get; set; }
 
         #endregion
 
@@ -158,6 +173,21 @@ namespace VirtoCommerce.Storefront.Model
         public ContactUsForm ContactUsForm { get; set; }
 
         public StorefrontNotification StorefrontNotification { get; set; }
+
+        /// <summary>
+        /// All static content items (Pages, blog articles etc) for current store and theme
+        /// </summary>
+        public IMutablePagedList<ContentItem> Pages { get; set; }
+
+        /// <summary>
+        ///  All blogs with articles for current store and theme
+        /// </summary>
+        public IMutablePagedList<Blog> Blogs { get; set; }
+
+        /// <summary>
+        /// Gets or sets the collection of external login providers
+        /// </summary>
+        public ICollection<LoginProvider> ExternalLoginProviders { get; set; }
 
         #region IDisposable Implementation
 

@@ -3,11 +3,9 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
-using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.DynamicProperties;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Platform.Data.Repositories;
-using VirtoCommerce.Platform.Data.Security;
 
 namespace VirtoCommerce.Platform.Tests
 {
@@ -19,8 +17,8 @@ namespace VirtoCommerce.Platform.Tests
             LineItems = new List<LineItem>();
             DynamicProperties = new List<DynamicObjectProperty>();
         }
-		public string ObjectType { get; set; }
-		public ICollection<DynamicObjectProperty> DynamicProperties { get; set; }
+        public string ObjectType { get; set; }
+        public ICollection<DynamicObjectProperty> DynamicProperties { get; set; }
         public ICollection<LineItem> LineItems { get; set; }
     }
 
@@ -111,8 +109,8 @@ namespace VirtoCommerce.Platform.Tests
 
             var obj = new Cart("1");
             //Add new properties values for object
-            obj.DynamicProperties.Add(new DynamicObjectProperty { Name = "Property1",  Values = new[] { new DynamicPropertyObjectValue { Value = "value1" } } });
-            obj.DynamicProperties.Add(new DynamicObjectProperty { Name = "Property2",  Values = new[] { new DynamicPropertyObjectValue { Value = "value2" } } });
+            obj.DynamicProperties.Add(new DynamicObjectProperty { Name = "Property1", Values = new[] { new DynamicPropertyObjectValue { Value = "value1" } } });
+            obj.DynamicProperties.Add(new DynamicObjectProperty { Name = "Property2", Values = new[] { new DynamicPropertyObjectValue { Value = "value2" } } });
             propertyService.SaveDynamicPropertyValues(obj);
 
             obj.DynamicProperties.Clear();
@@ -135,14 +133,14 @@ namespace VirtoCommerce.Platform.Tests
             Assert.IsTrue(obj.DynamicProperties.Count() == 2);
             //All has values
             Assert.IsTrue(obj.DynamicProperties.All(x => x.Values.Any()));
-      
+
         }
 
-        
+
         private IDynamicPropertyService GetDynamicPropertyService()
         {
-            return new DynamicPropertyService(() => new PlatformRepository("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor()));
+            return new DynamicPropertyService(() => new PlatformRepository("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor(null)));
         }
-     
+
     }
 }

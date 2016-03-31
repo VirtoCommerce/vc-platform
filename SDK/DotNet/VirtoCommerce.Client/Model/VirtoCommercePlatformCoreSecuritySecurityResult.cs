@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,28 +21,31 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreSecuritySecurityResult" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreSecuritySecurityResult" />class.
         /// </summary>
-        public VirtoCommercePlatformCoreSecuritySecurityResult()
+        /// <param name="Succeeded">Succeeded.</param>
+        /// <param name="Errors">Errors.</param>
+
+        public VirtoCommercePlatformCoreSecuritySecurityResult(bool? Succeeded = null, List<string> Errors = null)
         {
+            this.Succeeded = Succeeded;
+            this.Errors = Errors;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets Succeeded
         /// </summary>
         [DataMember(Name="succeeded", EmitDefaultValue=false)]
         public bool? Succeeded { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Errors
         /// </summary>
         [DataMember(Name="errors", EmitDefaultValue=false)]
         public List<string> Errors { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

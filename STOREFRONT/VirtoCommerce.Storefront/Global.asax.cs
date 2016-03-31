@@ -52,14 +52,14 @@ namespace VirtoCommerce.Storefront
         {
             Exception exception = Server.GetLastError();
             HttpException httpException = exception as HttpException;
-            ApiException apiException = exception as ApiException;
+            //ApiException apiException = exception as ApiException;
 
             var isNotFound = false;
-            if (apiException != null)
-            {
-                isNotFound = apiException.ErrorCode == 404;
-            }
-            else if (httpException != null)
+            //if (apiException != null)
+            //{
+            //    isNotFound = apiException.ErrorCode == 404;
+            //}
+            if (httpException != null)
             {
                 isNotFound = httpException.GetHttpCode() == 404;
             }

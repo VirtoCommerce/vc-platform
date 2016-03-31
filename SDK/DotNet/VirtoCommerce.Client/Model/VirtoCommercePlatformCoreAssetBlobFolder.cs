@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,35 +21,39 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreAssetBlobFolder" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreAssetBlobFolder" />class.
         /// </summary>
-        public VirtoCommercePlatformCoreAssetBlobFolder()
+        /// <param name="Name">Name.</param>
+        /// <param name="Url">Url.</param>
+        /// <param name="ParentUrl">ParentUrl.</param>
+
+        public VirtoCommercePlatformCoreAssetBlobFolder(string Name = null, string Url = null, string ParentUrl = null)
         {
+            this.Name = Name;
+            this.Url = Url;
+            this.ParentUrl = ParentUrl;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Url
         /// </summary>
         [DataMember(Name="url", EmitDefaultValue=false)]
         public string Url { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ParentUrl
         /// </summary>
         [DataMember(Name="parentUrl", EmitDefaultValue=false)]
         public string ParentUrl { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

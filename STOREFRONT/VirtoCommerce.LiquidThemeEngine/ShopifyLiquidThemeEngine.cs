@@ -35,6 +35,8 @@ namespace VirtoCommerce.LiquidThemeEngine
     /// </summary>
     public class ShopifyLiquidThemeEngine : IFileSystem, ILiquidThemeEngine
     {
+        private const string _angularInterpolateTagStart = "{(";
+        private const string _angularInterpolateTagStop = ")}";
         private const string _globalThemeName = "default";
         private const string _defaultMasterView = "theme";
         private const string _liquidTemplateFormat = "{0}.liquid";
@@ -45,11 +47,11 @@ namespace VirtoCommerce.LiquidThemeEngine
         private readonly string _globalThemeAssetsRelativeUrl;
         private readonly Func<WorkContext> _workContextFactory;
         private readonly Func<IStorefrontUrlBuilder> _storeFrontUrlBuilderFactory;
-        private readonly ICacheManager<object> _cacheManager;
+        private readonly ILocalCacheManager _cacheManager;
         private readonly FileSystemWatcher _fileSystemWatcher;
         private readonly SassCompilerProxy _saasCompiler = new SassCompilerProxy();
 
-        public ShopifyLiquidThemeEngine(ICacheManager<object> cacheManager, Func<WorkContext> workContextFactory, Func<IStorefrontUrlBuilder> storeFrontUrlBuilderFactory, string themesLocalPath, string themesAssetsRelativeUrl, string globalThemeAssetsRelativeUrl)
+        public ShopifyLiquidThemeEngine(ILocalCacheManager cacheManager, Func<WorkContext> workContextFactory, Func<IStorefrontUrlBuilder> storeFrontUrlBuilderFactory, string themesLocalPath, string themesAssetsRelativeUrl, string globalThemeAssetsRelativeUrl)
         {
             _workContextFactory = workContextFactory;
             _storeFrontUrlBuilderFactory = storeFrontUrlBuilderFactory;
@@ -74,6 +76,7 @@ namespace VirtoCommerce.LiquidThemeEngine
             Template.RegisterTag<LayoutTag>("layout");
             Template.RegisterTag<FormTag>("form");
             Template.RegisterTag<PaginateTag>("paginate");
+
             //Observe themes file system changes to invalidate cache if changes occur
             _fileSystemWatcher = MonitorThemeFileSystemChanges();
         }
@@ -275,8 +278,11 @@ namespace VirtoCommerce.LiquidThemeEngine
             {
                 LocalVariables = Hash.FromDictionary(parameters)
             };
+
             var parsedTemplate = _cacheManager.Get(GetCacheKey("ParseTemplate", templateContent.GetHashCode().ToString()), "LiquidTheme", () => { return Template.Parse(templateContent); });
+
             var retVal = parsedTemplate.RenderWithTracing(renderParams);
+
             //Copy key values which were generated in rendering to out parameters
             if (parameters != null && parsedTemplate.Registers != null)
             {
@@ -284,6 +290,13 @@ namespace VirtoCommerce.LiquidThemeEngine
                 {
                     parameters[registerPair.Key] = registerPair.Value;
                 }
+            }
+            //Replace escaped angular interpolated tag symbols to standard
+            if(retVal != null)
+            {
+                //TODO: Need make it in more by liquid processor compatible way (may be using exist tokenizer or something like that)
+                retVal = retVal.Replace(_angularInterpolateTagStart, "{{");
+                retVal = retVal.Replace(_angularInterpolateTagStop, "}}");
             }
             return retVal;
         }
@@ -368,7 +381,7 @@ namespace VirtoCommerce.LiquidThemeEngine
         public string GetGlobalAssetAbsoluteUrl(string assetName)
         {
             return UrlBuilder.ToAppAbsolute(_globalThemeAssetsRelativeUrl.TrimEnd('/') + "/" + assetName.TrimStart('/'), WorkContext.CurrentStore, WorkContext.CurrentLanguage);
-        } 
+        }
         #endregion
 
 

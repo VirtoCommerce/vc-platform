@@ -5,37 +5,37 @@
     blade.selectedItemIds = [];
 
     blade.initialize = function () {
-        menusStores.get({ id: blade.choosenStoreId }, function (data) {
+        menusStores.get({ id: blade.chosenStoreId }, function (data) {
             blade.languages = data.languages;
             blade.defaultStoreLanguage = data.defaultLanguage;
 
             if (blade.newList) {
-                blade.currentEntity = { title: undefined, language: blade.defaultStoreLanguage, storeId: blade.choosenStoreId, menuLinks: [] };
-                blade.choosenListId = blade.currentEntity.id;
+                blade.currentEntity = { title: undefined, language: blade.defaultStoreLanguage, storeId: blade.chosenStoreId, menuLinks: [] };
+                blade.chosenListId = blade.currentEntity.id;
                 $scope.blade.toolbarCommands = [{
                     name: "content.commands.add-link", icon: 'fa fa-plus',
                     executeMethod: function () {
-                        var newEntity = { url: undefined, title: undefined, type: undefined, priority: 0, isActive: false, language: undefined, menuLinkListId: blade.choosenListId };
+                        var newEntity = { url: undefined, title: undefined, type: undefined, priority: 0, isActive: false, language: undefined, menuLinkListId: blade.chosenListId };
                         blade.currentEntity.menuLinks.push(newEntity);
                         blade.recalculatePriority();
                     },
                     canExecuteMethod: function () {
                         return true;
                     },
-                    permission: 'content:update'
+                    permission: blade.updatePermission
                 },
 				{
 				    name: "content.commands.save-list", icon: 'fa fa-save',
 				    executeMethod: blade.saveChanges,
 				    canExecuteMethod: canSave,
-				    permission: 'content:update'
+				    permission: blade.updatePermission
 				}];
 
                 blade.isLoading = false;
             }
             else {
                 blade.isLoading = true;
-                menus.getList({ storeId: blade.choosenStoreId, listId: blade.choosenListId }, function (data) {
+                menus.getList({ storeId: blade.chosenStoreId, listId: blade.chosenListId }, function (data) {
                     _.each(data.menuLinks, function (x) {
                         if (x.associatedObjectType) {
                             x.associatedObject = _.findWhere($scope.associatedObjectTypes, { id: x.associatedObjectType });
@@ -49,18 +49,18 @@
                     $scope.blade.toolbarCommands = [{
                         name: "content.commands.add-link", icon: 'fa fa-plus',
                         executeMethod: function () {
-                            var newEntity = { url: undefined, title: undefined, isActive: false, priority: 0, menuLinkListId: blade.choosenListId };
+                            var newEntity = { url: undefined, title: undefined, isActive: false, priority: 0, menuLinkListId: blade.chosenListId };
                             blade.currentEntity.menuLinks.push(newEntity);
                             blade.recalculatePriority();
                         },
                         canExecuteMethod: function () { return true; },
-                        permission: 'content:update'
+                        permission: blade.updatePermission
                     },
 					{
 					    name: "content.commands.save-list", icon: 'fa fa-save',
 					    executeMethod: blade.saveChanges,
 					    canExecuteMethod: canSave,
-					    permission: 'content:update'
+					    permission: blade.updatePermission
 					},
 					{
 					    name: "content.commands.reset-list", icon: 'fa fa-undo',
@@ -70,7 +70,7 @@
 					    canExecuteMethod: function () {
 					        return !angular.equals(blade.origEntity, blade.currentEntity) && blade.hasUpdatePermission();
 					    },
-					    permission: 'content:update'
+					    permission: blade.updatePermission
 					},
 					{
 					    name: "content.commands.delete-list", icon: 'fa fa-trash-o',
@@ -106,9 +106,9 @@
     blade.saveChanges = function () {
         //checkForNull();
         blade.isLoading = true;
-        menus.checkList({ storeId: blade.choosenStoreId, id: blade.currentEntity.id, name: blade.currentEntity.name, language: blade.currentEntity.language }, function (data) {
+        menus.checkList({ storeId: blade.chosenStoreId, id: blade.currentEntity.id, name: blade.currentEntity.name, language: blade.currentEntity.language }, function (data) {
             if (Boolean(data.result)) {
-                menus.update({ storeId: blade.choosenStoreId }, blade.currentEntity, function (data) {
+                menus.update({ storeId: blade.chosenStoreId }, blade.currentEntity, function (data) {
                     blade.parentBlade.initialize();
                     blade.newList = false;
                     blade.isLoading = false;
@@ -153,7 +153,7 @@
                 if (remove) {
                     blade.isLoading = true;
 
-                    menus.delete({ storeId: blade.choosenStoreId, listId: blade.choosenListId }, function () {
+                    menus.delete({ storeId: blade.chosenStoreId, listId: blade.chosenListId }, function () {
                         $scope.bladeClose();
                         blade.parentBlade.initialize();
                     },

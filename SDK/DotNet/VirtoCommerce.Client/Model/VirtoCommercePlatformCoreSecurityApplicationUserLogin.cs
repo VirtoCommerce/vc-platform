@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,28 +21,31 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreSecurityApplicationUserLogin" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreSecurityApplicationUserLogin" />class.
         /// </summary>
-        public VirtoCommercePlatformCoreSecurityApplicationUserLogin()
+        /// <param name="LoginProvider">LoginProvider.</param>
+        /// <param name="ProviderKey">ProviderKey.</param>
+
+        public VirtoCommercePlatformCoreSecurityApplicationUserLogin(string LoginProvider = null, string ProviderKey = null)
         {
+            this.LoginProvider = LoginProvider;
+            this.ProviderKey = ProviderKey;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets LoginProvider
         /// </summary>
         [DataMember(Name="loginProvider", EmitDefaultValue=false)]
         public string LoginProvider { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ProviderKey
         /// </summary>
         [DataMember(Name="providerKey", EmitDefaultValue=false)]
         public string ProviderKey { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

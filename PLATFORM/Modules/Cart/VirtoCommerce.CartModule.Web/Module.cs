@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.Practices.Unity;
-using VirtoCommerce.CartModule.Data.Observers;
 using VirtoCommerce.CartModule.Data.Repositories;
 using VirtoCommerce.CartModule.Data.Services;
 using VirtoCommerce.Domain.Cart.Events;
@@ -14,6 +13,7 @@ namespace VirtoCommerce.CartModule.Web
 {
     public class Module : ModuleBase
     {
+        private const string _connectionStringName = "VirtoCommerce";
         private readonly IUnityContainer _container;
 
         public Module(IUnityContainer container)
@@ -25,7 +25,7 @@ namespace VirtoCommerce.CartModule.Web
 
         public override void SetupDatabase()
         {
-            using (var context = new CartRepositoryImpl())
+            using (var context = new CartRepositoryImpl(_connectionStringName, _container.Resolve<AuditableInterceptor>()))
             {
                 var initializer = new SetupDatabaseInitializer<CartRepositoryImpl, VirtoCommerce.CartModule.Data.Migrations.Configuration>();
                 initializer.InitializeDatabase(context);
@@ -35,12 +35,14 @@ namespace VirtoCommerce.CartModule.Web
 
         public override void Initialize()
         {
+            _container.RegisterType<ICartTotalsCalculator, DefaultCartTotalsCalculator>();
+
             _container.RegisterType<IEventPublisher<CartChangeEvent>, EventPublisher<CartChangeEvent>>();
 
             //Subscribe to cart changes. Calculate totals  
-            _container.RegisterType<IObserver<CartChangeEvent>, CalculateCartTotalsObserver>("CalculateCartTotalsObserver");
+            _container.RegisterType<IObserver<CartChangeEvent>, DefaultCartTotalsCalculator>("DefaultCartTotalsCalculator");
 
-            _container.RegisterType<ICartRepository>(new InjectionFactory(c => new CartRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor())));
+            _container.RegisterType<ICartRepository>(new InjectionFactory(c => new CartRepositoryImpl(_connectionStringName, new EntityPrimaryKeyGeneratorInterceptor(), _container.Resolve<AuditableInterceptor>())));
 
             _container.RegisterType<IShoppingCartService, ShoppingCartServiceImpl>();
             _container.RegisterType<IShoppingCartSearchService, ShoppingCartSearchServiceImpl>();

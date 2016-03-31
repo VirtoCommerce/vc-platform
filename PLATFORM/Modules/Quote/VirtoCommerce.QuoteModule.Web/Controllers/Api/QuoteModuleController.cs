@@ -58,8 +58,13 @@ namespace VirtoCommerce.QuoteModule.Web.Controllers.Api
             var quote = _quoteRequestService.GetByIds(id).FirstOrDefault();
             if (quote == null)
             {
+                quote = _quoteRequestService.Search(new Domain.Quote.Model.QuoteRequestSearchCriteria { Number = id }).QuoteRequests.FirstOrDefault();
+            }
+            if(quote == null)
+            {
                 return NotFound();
             }
+
             quote.Totals = _totalsCalculator.CalculateTotals(quote);
             var retVal = quote.ToWebModel();
             return Ok(retVal);

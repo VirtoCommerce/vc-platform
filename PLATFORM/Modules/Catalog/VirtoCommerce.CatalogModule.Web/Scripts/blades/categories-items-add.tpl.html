@@ -7,17 +7,17 @@
                     <span class="list-t">{{'catalog.blades.categories-items-add.menu.category.title' | translate}}</span>
                     <span class="list-descr">{{ 'catalog.blades.categories-items-add.menu.category.description' | translate }}</span>
                 </li>
-                <li class="list-item" ng-mouseup="addLinkedCategory()" ng-if="blade.parentBlade.catalog.virtual" va-permission="catalog:create">
+                <li class="list-item" ng-mouseup="addLinkedCategory()" ng-if="blade.parentBlade.catalog.isVirtual" va-permission="catalog:create">
                     <i class="list-ico fa fa-link"></i>
                     <span class="list-t">{{ 'catalog.blades.categories-items-add.menu.link.title' | translate }}</span>
                     <span class="list-descr">{{ 'catalog.blades.categories-items-add.menu.link.description' | translate }}</span>
                 </li>
-                <li class="list-item" ng-mouseup="addProduct('Physical')" ng-if="!blade.parentBlade.catalog.virtual" va-permission="catalog:create">
+                <li class="list-item" ng-mouseup="addProduct('Physical')" ng-if="!blade.parentBlade.catalog.isVirtual" va-permission="catalog:create">
                     <i class="list-ico fa fa-truck"></i>
                     <span class="list-t">{{ 'catalog.blades.categories-items-add.menu.physical-product.title' | translate }}</span>
                     <span class="list-descr">{{ 'catalog.blades.categories-items-add.menu.physical-product.description' | translate }}</span>
                 </li>
-                <li class="list-item" ng-mouseup="addProduct('Digital')" ng-if="!blade.parentBlade.catalog.virtual" va-permission="catalog:create">
+                <li class="list-item" ng-mouseup="addProduct('Digital')" ng-if="!blade.parentBlade.catalog.isVirtual" va-permission="catalog:create">
                     <i class="list-ico fa fa-file-archive-o"></i>
                     <span class="list-t">{{ 'catalog.blades.categories-items-add.menu.digital-product.title' | translate }}</span>
                     <span class="list-descr">{{ 'catalog.blades.categories-items-add.menu.digital-product.description' | translate }}</span>

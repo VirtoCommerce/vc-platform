@@ -52,12 +52,30 @@ namespace VirtoCommerce.Domain.Cart.Model
 		public decimal? Length { get; set; }
 		public decimal? Width { get; set; }
 
+        /// <summary>
+        /// Represent any line item validation type (noPriceValidate, noQuantityValidate etc) this value can be used in storefront 
+        /// to select appropriate validation strategy
+        /// </summary>
+        public string ValidationType { get; set; }
+
         public string PriceId { get; set; }
         public Price Price { get; set; }
 
+        /// <summary>
+        /// old price
+        /// </summary>
         public decimal ListPrice { get; set; }
+        /// <summary>
+        /// new price
+        /// </summary>
 		public decimal SalePrice { get; set; }
+        /// <summary>
+        /// Resulting price with discount 
+        /// </summary>
 		public decimal PlacedPrice { get; set; }
+        /// <summary>
+        /// PlacedPrice * Quantity
+        /// </summary>
 		public decimal ExtendedPrice { get; set; }
 
 		public decimal DiscountTotal { get; set; }

@@ -11,8 +11,8 @@ namespace VirtoCommerce.Storefront.Model.Catalog
     {
         public Product()
         {
-            Properties = new List<ProductProperty>();
-            VariationProperties = new List<ProductProperty>();
+            Properties = new List<CatalogProperty>();
+            VariationProperties = new List<CatalogProperty>();
             Prices = new List<ProductPrice>();
             Assets = new List<Asset>();
             Variations = new List<Product>();
@@ -46,7 +46,6 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         /// </summary>
         public string CatalogId { get; set; }
 
-        public Category Category { get; set; }
         /// <summary>
         /// Category id of this product
         /// </summary>
@@ -170,13 +169,8 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         /// <summary>
         /// List og variation properties
         /// </summary>
-        public ICollection<ProductProperty> VariationProperties { get; set; }
-        /// <summary>
-        /// List of product properties
-        /// </summary>
-        public ICollection<ProductProperty> Properties { get; set; }
-
-
+        public ICollection<CatalogProperty> VariationProperties { get; set; }
+      
         /// <summary>
         /// List of product assets
         /// </summary>
@@ -235,6 +229,11 @@ namespace VirtoCommerce.Storefront.Model.Catalog
             }
         }
 
+        #region IHasProperties Members
+        public ICollection<CatalogProperty> Properties { get; set; }
+        #endregion
+
+        #region IDiscountable Members
         public ICollection<Discount> Discounts { get; private set; }
 
         public Currency Currency { get; set; }
@@ -259,7 +258,8 @@ namespace VirtoCommerce.Storefront.Model.Catalog
                     Price.ActiveDiscount = discount;
                 }
             }
-        }
+        } 
+        #endregion
 
         public override string ToString()
         {

@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// Represent process payment request result
     /// </summary>
@@ -21,65 +21,73 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceOrderModuleWebModelProcessPaymentResult" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceOrderModuleWebModelProcessPaymentResult" />class.
         /// </summary>
-        public VirtoCommerceOrderModuleWebModelProcessPaymentResult()
+        /// <param name="NewPaymentStatus">NewPaymentStatus.</param>
+        /// <param name="PaymentMethodType">PaymentMethodType.</param>
+        /// <param name="RedirectUrl">Redirect url used for OutSite payment processing.</param>
+        /// <param name="IsSuccess">IsSuccess.</param>
+        /// <param name="Error">Error.</param>
+        /// <param name="HtmlForm">Generated Html form used for InSite payment processing.</param>
+        /// <param name="OuterId">OuterId.</param>
+
+        public VirtoCommerceOrderModuleWebModelProcessPaymentResult(string NewPaymentStatus = null, string PaymentMethodType = null, string RedirectUrl = null, bool? IsSuccess = null, string Error = null, string HtmlForm = null, string OuterId = null)
         {
+            this.NewPaymentStatus = NewPaymentStatus;
+            this.PaymentMethodType = PaymentMethodType;
+            this.RedirectUrl = RedirectUrl;
+            this.IsSuccess = IsSuccess;
+            this.Error = Error;
+            this.HtmlForm = HtmlForm;
+            this.OuterId = OuterId;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets NewPaymentStatus
         /// </summary>
         [DataMember(Name="newPaymentStatus", EmitDefaultValue=false)]
         public string NewPaymentStatus { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets PaymentMethodType
         /// </summary>
         [DataMember(Name="paymentMethodType", EmitDefaultValue=false)]
         public string PaymentMethodType { get; set; }
-  
-        
+
         /// <summary>
         /// Redirect url used for OutSite payment processing
         /// </summary>
         /// <value>Redirect url used for OutSite payment processing</value>
         [DataMember(Name="redirectUrl", EmitDefaultValue=false)]
         public string RedirectUrl { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets IsSuccess
         /// </summary>
         [DataMember(Name="isSuccess", EmitDefaultValue=false)]
         public bool? IsSuccess { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Error
         /// </summary>
         [DataMember(Name="error", EmitDefaultValue=false)]
         public string Error { get; set; }
-  
-        
+
         /// <summary>
         /// Generated Html form used for InSite payment processing
         /// </summary>
         /// <value>Generated Html form used for InSite payment processing</value>
         [DataMember(Name="htmlForm", EmitDefaultValue=false)]
         public string HtmlForm { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets OuterId
         /// </summary>
         [DataMember(Name="outerId", EmitDefaultValue=false)]
         public string OuterId { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

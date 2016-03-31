@@ -9,10 +9,6 @@ namespace VirtoCommerce.CustomerModule.Data.Model
 {
     public class Organization : Member
 	{
-        [Required]
-		[StringLength(128)]
-		public string Name { get; set; }
-
 		public int OrgType { get; set; }
 
  		[StringLength(256)]

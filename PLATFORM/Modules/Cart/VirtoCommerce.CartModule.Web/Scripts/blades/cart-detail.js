@@ -1,6 +1,7 @@
 ﻿angular.module('virtoCommerce.cartModule')
 .controller('virtoCommerce.cartModule.cartDetailController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'virtoCommerce.cartModule.carts', function ($scope, dialogService, bladeNavigationService, carts) {
     var blade = $scope.blade;
+    blade.updatePermission = 'cart:update';
 
     blade.refresh = function () {
         blade.isLoading = true;
@@ -16,7 +17,7 @@
     };
 
     function isDirty() {
-        return !angular.equals(blade.currentEntity, blade.origEntity);
+        return !angular.equals(blade.currentEntity, blade.origEntity) && blade.hasUpdatePermission();
     }
 
     function saveChanges() {
@@ -33,7 +34,7 @@
             name: "platform.commands.save", icon: 'fa fa-save',
             executeMethod: saveChanges,
             canExecuteMethod: isDirty,
-            permission: 'cart:update'
+            permission: blade.updatePermission
         },
         {
             name: "platform.commands.reset", icon: 'fa fa-undo',
@@ -41,7 +42,7 @@
                 angular.copy(blade.origEntity, blade.currentEntity);
             },
             canExecuteMethod: isDirty,
-            permission: 'cart:update'
+            permission: blade.updatePermission
         }
     ];
 

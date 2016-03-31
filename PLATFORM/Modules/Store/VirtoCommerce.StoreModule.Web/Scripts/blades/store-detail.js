@@ -3,6 +3,7 @@
     function ($scope, bladeNavigationService, stores, catalogs, settings, settingsHelper, dialogService, currencyUtils) {
         var blade = $scope.blade;
         blade.updatePermission = 'store:update';
+        blade.subtitle = 'stores.blades.store-detail.subtitle';
 
         blade.refresh = function (parentRefresh) {
             stores.get({ id: blade.currentEntityId }, function (data) {
@@ -21,12 +22,14 @@
             blade.currentEntityId = data.id;
             blade.title = data.name;
 
+            settingsHelper.fixValues(data.settings);
+
             data.shippingMethods.sort(function (a, b) { return a.priority - b.priority; });
             data.paymentMethods.sort(function (a, b) { return a.priority - b.priority; });
 
-            _.each(data.shippingMethods, function (x) { settingsHelper.fixValues(x.settings); })
-            _.each(data.paymentMethods, function (x) { settingsHelper.fixValues(x.settings); })
-            _.each(data.taxProviders, function (x) { settingsHelper.fixValues(x.settings); })
+            _.each(data.shippingMethods, function (x) { settingsHelper.fixValues(x.settings); });
+            _.each(data.paymentMethods, function (x) { settingsHelper.fixValues(x.settings); });
+            _.each(data.taxProviders, function (x) { settingsHelper.fixValues(x.settings); });
 
             blade.currentEntity = angular.copy(data);
             blade.origEntity = data;
@@ -39,7 +42,7 @@
         }
 
         function isDirty() {
-            return blade.hasUpdatePermission() && !angular.equals(blade.currentEntity, blade.origEntity);
+            return !angular.equals(blade.currentEntity, blade.origEntity) && blade.hasUpdatePermission();
         }
 
         function canSave() {
@@ -49,14 +52,18 @@
         $scope.saveChanges = function () {
             blade.isLoading = true;
 
-            blade.currentEntity.languages = _.union([blade.currentEntity.defaultLanguage], blade.currentEntity.additionalLanguages);
-            blade.currentEntity.currencies = _.union([blade.currentEntity.defaultCurrency], blade.currentEntity.additionalCurrencies);
+            var entityToSave = angular.copy(blade.currentEntity);
+            entityToSave.languages = _.union([entityToSave.defaultLanguage], entityToSave.additionalLanguages);
+            entityToSave.currencies = _.union([entityToSave.defaultCurrency], entityToSave.additionalCurrencies);
 
-            stores.update({}, blade.currentEntity, function (data) {
+            settingsHelper.toApiFormat(entityToSave.settings);
+            _.each(entityToSave.shippingMethods, function (x) { settingsHelper.toApiFormat(x.settings); });
+            _.each(entityToSave.paymentMethods, function (x) { settingsHelper.toApiFormat(x.settings); });
+            _.each(entityToSave.taxProviders, function (x) { settingsHelper.toApiFormat(x.settings); });
+
+            stores.update({}, entityToSave, function (data) {
                 blade.refresh(true);
-            }, function (error) {
-                bladeNavigationService.setError('Error ' + error.status, blade);
-            });
+            }, function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
         };
 
         function deleteEntry() {
@@ -93,7 +100,7 @@
                 icon: 'fa fa-save',
                 executeMethod: $scope.saveChanges,
                 canExecuteMethod: canSave,
-                permission: 'store:update'
+                permission: blade.updatePermission
             },
             {
                 name: "platform.commands.reset",
@@ -102,7 +109,16 @@
                     angular.copy(blade.origEntity, blade.currentEntity);
                 },
                 canExecuteMethod: isDirty,
-                permission: 'store:update'
+                permission: blade.updatePermission
+            },
+            {
+                name: "platform.commands.open-browser", icon: 'fa fa-external-link',
+                executeMethod: function () {
+                    window.open(blade.currentEntity.url, '_blank');
+                },
+                canExecuteMethod: function () {
+                    return blade.currentEntity && blade.currentEntity.url;
+                }
             },
             {
                 name: "platform.commands.delete", icon: 'fa fa-trash-o',
@@ -124,9 +140,22 @@
             bladeNavigationService.showBlade(newBlade, blade);
         };
 
+        $scope.openStatesDictionarySettingManagement = function () {
+            var newBlade = {
+                id: 'settingDetailChild',
+                isApiSave: true,
+                currentEntityId: 'Stores.States',
+                parentRefresh: function (data) { $scope.storeStates = data; },
+                controller: 'platformWebApp.settingDictionaryController',
+                template: '$(Platform)/Scripts/app/settings/blades/setting-dictionary.tpl.html'
+            };
+            bladeNavigationService.showBlade(newBlade, blade);
+        };
+
         blade.refresh(false);
         $scope.catalogs = catalogs.getCatalogs();
         $scope.storeStates = settings.getValues({ id: 'Stores.States' });
         $scope.languages = settings.getValues({ id: 'VirtoCommerce.Core.General.Languages' });
+        $scope.allStores = stores.query();
         $scope.currencyUtils = currencyUtils;
     }]);

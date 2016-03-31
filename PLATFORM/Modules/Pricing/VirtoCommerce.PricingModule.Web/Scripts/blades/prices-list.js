@@ -1,6 +1,7 @@
 ﻿angular.module('virtoCommerce.pricingModule')
 .controller('virtoCommerce.pricingModule.pricesListController', ['$scope', 'virtoCommerce.pricingModule.prices', 'platformWebApp.objCompareService', 'platformWebApp.bladeNavigationService', function ($scope, prices, objCompareService, bladeNavigationService) {
     var blade = $scope.blade;
+    blade.updatePermission = 'pricing:update';
     blade.selectedAll = false;
 
     blade.refresh = function (parentRefresh) {
@@ -40,11 +41,7 @@
     };
 
     function isDirty() {
-        var retVal = false;
-        if (blade.currentEntities) {
-            retVal = !objCompareService.equal(blade.origEntity, blade.currentEntities);
-        }
-        return retVal;
+        return blade.currentEntities && !objCompareService.equal(blade.origEntity, blade.currentEntities) && blade.hasUpdatePermission()
     }
 
     function canSave() {
@@ -103,13 +100,13 @@
             canExecuteMethod: function () {
                 return true;
             },
-            permission: 'pricing:update'
+            permission: blade.updatePermission
         },
         {
             name: "platform.commands.save", icon: 'fa fa-save',
             executeMethod: $scope.saveChanges,
             canExecuteMethod: canSave,
-            permission: 'pricing:update'
+            permission: blade.updatePermission
         },
         {
             name: "platform.commands.reset", icon: 'fa fa-undo',
@@ -118,7 +115,7 @@
                 blade.selectedAll = false;
             },
             canExecuteMethod: isDirty,
-            permission: 'pricing:update'
+            permission: blade.updatePermission
         },
         {
             name: "platform.commands.delete", icon: 'fa fa-trash-o',
@@ -131,7 +128,7 @@
             canExecuteMethod: function () {
                 return _.some(blade.currentEntities, function (x) { return x._selected; });
             },
-            permission: 'pricing:update'
+            permission: blade.updatePermission
         }
     ];
 

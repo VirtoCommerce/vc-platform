@@ -1,16 +1,15 @@
 ﻿{% include 'breadcrumb' %}
-{% include 'quote-informer' %}
 <div class="grid" itemscope itemtype="http://schema.org/Product" ng-controller="productController">
     <meta itemprop="url" content="{{ product.url | absolute_url}}">
     <meta itemprop="image" content="{{ product.featured_image.src | img_url: 'grande' }}">
 
     <!--default product images if product doesn't no have variations or variation not selected also it for search craulers-->
-    <div ng-if="!selectedVariation.Id" class="grid-item large--two-fifths">
+    <div ng-if="!selectedVariation.id" class="grid-item large--two-fifths">
         <div class="grid">
             <div class="grid-item large--eleven-twelfths text-center">
                 <div class="product-photo-container" id="productPhoto">
                     {% assign featured_image = product.selected_or_first_available_variant.featured_image | default: product.featured_image %}
-                    <img ng-if="!product.PrimaryImage" id="productPhotoImg" src="{{ featured_image | img_url: 'large' }}" alt="{{ featured_image.alt | escape }}" {% if settings.product_image_zoom_enable %} data-zoom="{{ featured_image | img_url: '1024x1024' }}" {% endif %}>
+                    <img ng-if="!product.primaryImage" id="productPhotoImg" src="{{ featured_image | img_url: 'large' }}" alt="{{ featured_image.alt | escape }}" {% if settings.product_image_zoom_enable %} data-zoom="{{ featured_image | img_url: '1024x1024' }}" {% endif %}>
                 </div>
                 {% if product.images.size > 1 %}
                 <ul class="product-photo-thumbs grid-uniform" id="productThumbs">
@@ -27,7 +26,7 @@
         </div>
     </div>
    <!--angular block for display images for selected variation -->
-    <ng-include ng-if="selectedVariation.Id" src="'storefront.product-images.tpl'"></ng-include>
+    <ng-include ng-if="selectedVariation.id" src="'storefront.product-images.tpl'"></ng-include>
 
     <div class="grid-item large--three-fifths">
         <h2 itemprop="name">{{ product.title }}</h2>
@@ -44,7 +43,7 @@
             {% endif %}
 
             <ul class="inline-list product-meta">
-                <li ng-if="!selectedVariation.Id">
+                <li ng-if="!selectedVariation.id">
                     {% if product.compare_at_price > product.price %}
                         <span class="old">
                             {% include 'price' with variant.compare_at_price %}
@@ -60,14 +59,14 @@
                     </span>
                 </li>
                  <!--For sku-selector variations switches-->
-                <li ng-if="selectedVariation.Id">
-                    <span ng-if="selectedVariation.Price.AbsoluteBenefit.Amount > 0" class="old">
-                        <small ng-bind="selectedVariation.Price.ListPrice.FormatedAmount"></small>
+                <li ng-if="selectedVariation.id">
+                    <span ng-if="selectedVariation.price.absoluteBenefit.amount > 0" class="old">
+                        <small ng-bind="selectedVariation.price.listPrice.formatedAmount"></small>
                     </span>
-                    <span ng-if="selectedVariation.Price.AbsoluteBenefit.Amount > 0" id="comparePrice" class="sale-tag large" ng-bind="'{{ 'products.general.save_html' | t }}' + selectedVariation.Price.AbsoluteBenefit.FormatedAmount">
+                    <span ng-if="selectedVariation.price.absoluteBenefit.amount > 0" id="comparePrice" class="sale-tag large" ng-bind="'{{ 'products.general.save_html' | t }}' + selectedVariation.price.absoluteBenefit.formatedAmount">
                     </span>
                     <span id="productPrice" class="h1">
-                        <small ng-bind="selectedVariation.Price.ActualPrice.FormatedAmount"></small>
+                        <small ng-bind="selectedVariation.price.actualPrice.formatedAmount"></small>
                     </span>
                 </li>
 
@@ -89,7 +88,7 @@
                         <p ng-bind="propName"></p>
                         <ul class="size">
                             <li ng-repeat="prop in props" ng-class="{'active': prop.selected}">
-                                <a href="" ng-click="checkProperty(prop)" ng-bind="prop.Value ? prop.Value : 'undef'"></a>
+                                <a href="" ng-click="checkProperty(prop)" ng-bind="prop.value ? prop.value : 'undef'"></a>
                             </li>
                         </ul>
                     </div>
@@ -101,12 +100,12 @@
                 <input type="number" id="quantity" name="quantity" value="1" min="1" class="quantity-selector">
                 {% endif %}
 
-                <button type="button" name="add" id="addToCart" class="btn" ng-disabled="!selectedVariation.Id" ng-click="addToCart(selectedVariation, 1)">
+                <button type="button" name="add" id="addToCart" class="btn" ng-disabled="!selectedVariation.id" ng-click="addProductToCart(selectedVariation, 1)">
                     <span class="icon icon-cart"></span>
                     <span id="addToCartText">{{ 'products.product.add_to_cart' | t }}</span>
                 </button>
                 {% if shop.quotes_enabled %}
-                    <button class="btn" id="addToQuote" type="button" ng-if="quotesEnabled && selectedVariation.IsQuotable" ng-disabled="!selectedVariation.Id" ng-click="addItemToQuoteRequest(selectedVariation, 1)">
+                    <button class="btn" id="addToQuote" type="button" ng-if="selectedVariation.isQuotable" ng-disabled="!selectedVariation.id" ng-click="addProductToActualQuoteRequest(selectedVariation, 1)">
                         <span class="fa fa-calculator"></span>
                         {{ 'products.general.add_to_quote' | t }}
                     </button>
@@ -155,12 +154,15 @@
         <div class="grid">
             <div class="grid-item large--eleven-twelfths text-center">
                 <div class="product-photo-container" id="productPhoto">
-                    <img id="productPhotoImg" ng-src="{( selectedVariation.PrimaryImage.Url )}" alt="{( selectedVariation.PrimaryImage.Alt )}">
+                    <img id="productPhotoImg" ng-src="{( selectedVariation.primaryImage.url )}" alt="{( selectedVariation.primaryImage.alt )}" ng-if="selectedVariation.primaryImage">
+                    <div class="no-product-image" ng-if="!selectedVariation.primaryImage">
+                        <img src="{{ 'no-image.svg' | asset_url }}" />
+                    </div>
                 </div>
-                <ul ng-if="selectedVariation.Images.length > 0" class="product-photo-thumbs grid-uniform" id="productThumbs">
-                    <li class="grid-item medium--down-one-quarter large--one-quarter" ng-repeat="image in selectedVariation.Images">
-                        <a href="" ng-click="selectedVariation.PrimaryImage = image" class="product-photo-thumb">
-                            <img ng-src="{(image.Url)}"  alt="{(image.Alt)}">
+                <ul ng-if="selectedVariation.images.length > 0" class="product-photo-thumbs grid-uniform" id="productThumbs">
+                    <li class="grid-item medium--down-one-quarter large--one-quarter" ng-repeat="image in selectedVariation.images">
+                        <a href="" ng-click="selectedVariation.primaryImage = image" class="product-photo-thumb">
+                            <img ng-src="{(image.url)}"  alt="{(image.alt)}">
                         </a>
                     </li>
                 </ul>

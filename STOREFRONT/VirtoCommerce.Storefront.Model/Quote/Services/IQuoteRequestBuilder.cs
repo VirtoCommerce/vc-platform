@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Customer;
@@ -10,6 +11,13 @@ namespace VirtoCommerce.Storefront.Model.Quote.Services
     /// </summary>
     public interface IQuoteRequestBuilder
     {
+        /// <summary>
+        /// Load quotes from service by number or id and capture it for next changes
+        /// </summary>
+        /// <param name="number"></param>
+        /// <returns></returns>
+        Task<IQuoteRequestBuilder> LoadQuoteRequestAsync(string number, Language language, IEnumerable<Currency> availCurrencies);
+
         /// <summary>
         /// Capture passed RFQ and all next changes will be implemented on it
         /// </summary>
@@ -43,10 +51,22 @@ namespace VirtoCommerce.Storefront.Model.Quote.Services
         IQuoteRequestBuilder AddItem(Product product, long quantity);
 
         /// <summary>
+        /// Submit captured RFQ
+        /// </summary>
+        /// <returns></returns>
+        IQuoteRequestBuilder Submit();
+
+        /// <summary>
         /// Reject captured RFQ
         /// </summary>
         /// <returns></returns>
         IQuoteRequestBuilder Reject();
+
+        /// <summary>
+        /// Confirm captured RFQ
+        /// </summary>
+        /// <returns></returns>
+        IQuoteRequestBuilder Confirm();
 
         /// <summary>
         /// Remove item from captured RFQ
@@ -60,8 +80,13 @@ namespace VirtoCommerce.Storefront.Model.Quote.Services
         /// </summary>
         /// <param name="otherQuoteRequest"></param>
         /// <returns></returns>
-        Task <IQuoteRequestBuilder> MergeWithQuoteRequest(QuoteRequest otherQuoteRequest);
+        Task <IQuoteRequestBuilder> MergeFromOtherAsync(QuoteRequest otherQuoteRequest);
 
+        /// <summary>
+        /// Calculated totals for current quote
+        /// </summary>
+        /// <returns></returns>
+        Task<IQuoteRequestBuilder> CalculateTotalsAsync();
         /// <summary>
         /// Save captured RFQ changes
         /// </summary>

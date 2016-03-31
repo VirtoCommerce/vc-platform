@@ -1,12 +1,14 @@
 ﻿angular.module('virtoCommerce.catalogModule')
 .controller('virtoCommerce.catalogModule.itemAssetController', ['$scope', '$translate', 'virtoCommerce.catalogModule.items', 'platformWebApp.bladeNavigationService', '$filter', 'FileUploader', function ($scope, $translate, items, bladeNavigationService, $filter, FileUploader) {
     var blade = $scope.blade;
+    blade.updatePermission = 'catalog:update';
     $scope.item = {};
     $scope.origItem = {};
 
     blade.refresh = function (parentRefresh) {
         items.get({ id: blade.itemId }, function (data) {
-            $scope.uploader.url = 'api/platform/assets?folderUrl=catalog/' + data.code;
+            if ($scope.uploader)
+                $scope.uploader.url = 'api/platform/assets?folderUrl=catalog/' + data.code;
             $scope.origItem = data;
             $scope.item = angular.copy(data);
             blade.isLoading = false;
@@ -18,7 +20,7 @@
     }
 
     $scope.isDirty = function () {
-        return !angular.equals($scope.item, $scope.origItem);
+        return !angular.equals($scope.item, $scope.origItem) && blade.hasUpdatePermission();
     };
 
     $scope.reset = function () {
@@ -38,7 +40,7 @@
     };
 
     function initialize() {
-        if (!$scope.uploader) {
+        if (!$scope.uploader && blade.hasUpdatePermission()) {
             // create the uploader
             var uploader = $scope.uploader = new FileUploader({
                 scope: $scope,
@@ -102,7 +104,7 @@
             canExecuteMethod: function () {
                 return $scope.isDirty();
             },
-            permission: 'catalog:update'
+            permission: blade.updatePermission
         }
     ];
 

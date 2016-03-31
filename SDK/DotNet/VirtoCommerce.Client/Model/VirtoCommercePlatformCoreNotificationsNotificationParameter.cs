@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,63 +21,71 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreNotificationsNotificationParameter" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreNotificationsNotificationParameter" />class.
         /// </summary>
-        public VirtoCommercePlatformCoreNotificationsNotificationParameter()
+        /// <param name="ParameterName">ParameterName.</param>
+        /// <param name="ParameterDescription">ParameterDescription.</param>
+        /// <param name="ParameterCodeInView">ParameterCodeInView.</param>
+        /// <param name="IsDictionary">IsDictionary.</param>
+        /// <param name="IsArray">IsArray.</param>
+        /// <param name="Type">Type.</param>
+        /// <param name="Value">Value.</param>
+
+        public VirtoCommercePlatformCoreNotificationsNotificationParameter(string ParameterName = null, string ParameterDescription = null, string ParameterCodeInView = null, bool? IsDictionary = null, bool? IsArray = null, string Type = null, Object Value = null)
         {
+            this.ParameterName = ParameterName;
+            this.ParameterDescription = ParameterDescription;
+            this.ParameterCodeInView = ParameterCodeInView;
+            this.IsDictionary = IsDictionary;
+            this.IsArray = IsArray;
+            this.Type = Type;
+            this.Value = Value;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets ParameterName
         /// </summary>
         [DataMember(Name="parameterName", EmitDefaultValue=false)]
         public string ParameterName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ParameterDescription
         /// </summary>
         [DataMember(Name="parameterDescription", EmitDefaultValue=false)]
         public string ParameterDescription { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ParameterCodeInView
         /// </summary>
         [DataMember(Name="parameterCodeInView", EmitDefaultValue=false)]
         public string ParameterCodeInView { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets IsDictionary
         /// </summary>
         [DataMember(Name="isDictionary", EmitDefaultValue=false)]
         public bool? IsDictionary { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets IsArray
         /// </summary>
         [DataMember(Name="isArray", EmitDefaultValue=false)]
         public bool? IsArray { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name="type", EmitDefaultValue=false)]
         public string Type { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Value
         /// </summary>
         [DataMember(Name="value", EmitDefaultValue=false)]
         public Object Value { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

@@ -1,6 +1,7 @@
 ﻿angular.module('platformWebApp')
 .controller('platformWebApp.accountRolesListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', function ($scope, bladeNavigationService, dialogService) {
     var blade = $scope.blade;
+    blade.updatePermission = 'platform:security:update';
 
     function initializeBlade(data) {
         blade.currentEntity = data;
@@ -69,7 +70,7 @@
                canExecuteMethod: function () {
                    return true;
                },
-               permission: 'platform:security:update'
+               permission: blade.updatePermission
            },
             {
                 name: "platform.commands.remove", icon: 'fa fa-trash-o',
@@ -79,7 +80,7 @@
                 canExecuteMethod: function () {
                     return isItemsChecked();
                 },
-                permission: 'platform:security:update'
+                permission: blade.updatePermission
             }
     ];
 

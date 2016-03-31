@@ -2,8 +2,8 @@
     <div class="blade-inner">
         <div class="inner-block">
             <div class="inner">
-                <div class="sub-t">{{ 'catalog.blades.item-asset-detail.labels.select-files' | translate }}</div>
-                <form class="form">
+                <div class="sub-t" va-permission="{{blade.updatePermission}}">{{ 'catalog.blades.item-asset-detail.labels.select-files' | translate }}</div>
+                <form class="form" ng-if="blade.hasUpdatePermission()">
                     <div ng-show="uploader.isHTML5">
                         <!-- 3. ng-file-over | ng-file-over="className" -->
                         <div class="well my-drop-zone panel drag-area" uploader="uploader" nv-file-drop nv-file-over>
@@ -46,7 +46,7 @@
                             <td class="table-col __product-name"> <a ng-href="{{data.url}}" target="_blank">{{data.name}}</a></td>
                             <td class="table-col __center">
                                 <ul class="menu __actions">
-                                    <li class="menu-item" ng-click="removeAction(data)">
+                                    <li class="menu-item" ng-click="removeAction(data)" va-permission="{{blade.updatePermission}}">
                                         <a class="menu-link" title="Remove">
                                             <i class="menu-ico fa fa-trash-o"></i>
                                         </a>

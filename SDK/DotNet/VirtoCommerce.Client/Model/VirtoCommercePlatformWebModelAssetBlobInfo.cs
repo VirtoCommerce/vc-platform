@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,56 +21,63 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelAssetBlobInfo" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelAssetBlobInfo" />class.
         /// </summary>
-        public VirtoCommercePlatformWebModelAssetBlobInfo()
+        /// <param name="RelativeUrl">RelativeUrl.</param>
+        /// <param name="Url">Url.</param>
+        /// <param name="Name">Name.</param>
+        /// <param name="Size">Size.</param>
+        /// <param name="MimeType">MimeType.</param>
+        /// <param name="ModifiedDate">ModifiedDate.</param>
+
+        public VirtoCommercePlatformWebModelAssetBlobInfo(string RelativeUrl = null, string Url = null, string Name = null, string Size = null, string MimeType = null, DateTime? ModifiedDate = null)
         {
+            this.RelativeUrl = RelativeUrl;
+            this.Url = Url;
+            this.Name = Name;
+            this.Size = Size;
+            this.MimeType = MimeType;
+            this.ModifiedDate = ModifiedDate;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets RelativeUrl
         /// </summary>
         [DataMember(Name="relativeUrl", EmitDefaultValue=false)]
         public string RelativeUrl { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Url
         /// </summary>
         [DataMember(Name="url", EmitDefaultValue=false)]
         public string Url { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Size
         /// </summary>
         [DataMember(Name="size", EmitDefaultValue=false)]
         public string Size { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets MimeType
         /// </summary>
         [DataMember(Name="mimeType", EmitDefaultValue=false)]
         public string MimeType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedDate
         /// </summary>
         [DataMember(Name="modifiedDate", EmitDefaultValue=false)]
         public DateTime? ModifiedDate { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

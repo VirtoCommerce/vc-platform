@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,77 +21,95 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria" />class.
         /// </summary>
-        public VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria()
+        /// <param name="Number">Number.</param>
+        /// <param name="Keyword">Keyword.</param>
+        /// <param name="CustomerId">CustomerId.</param>
+        /// <param name="StoreId">StoreId.</param>
+        /// <param name="StartDate">StartDate.</param>
+        /// <param name="EndDate">EndDate.</param>
+        /// <param name="Status">Status.</param>
+        /// <param name="Tag">Tag.</param>
+        /// <param name="Start">Start.</param>
+        /// <param name="Count">Count.</param>
+
+        public VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria(string Number = null, string Keyword = null, string CustomerId = null, string StoreId = null, DateTime? StartDate = null, DateTime? EndDate = null, string Status = null, string Tag = null, int? Start = null, int? Count = null)
         {
+            this.Number = Number;
+            this.Keyword = Keyword;
+            this.CustomerId = CustomerId;
+            this.StoreId = StoreId;
+            this.StartDate = StartDate;
+            this.EndDate = EndDate;
+            this.Status = Status;
+            this.Tag = Tag;
+            this.Start = Start;
+            this.Count = Count;
             
         }
 
-        
+        /// <summary>
+        /// Gets or Sets Number
+        /// </summary>
+        [DataMember(Name="number", EmitDefaultValue=false)]
+        public string Number { get; set; }
+
         /// <summary>
         /// Gets or Sets Keyword
         /// </summary>
         [DataMember(Name="keyword", EmitDefaultValue=false)]
         public string Keyword { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CustomerId
         /// </summary>
         [DataMember(Name="customerId", EmitDefaultValue=false)]
         public string CustomerId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets StoreId
         /// </summary>
         [DataMember(Name="storeId", EmitDefaultValue=false)]
         public string StoreId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets StartDate
         /// </summary>
         [DataMember(Name="startDate", EmitDefaultValue=false)]
         public DateTime? StartDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets EndDate
         /// </summary>
         [DataMember(Name="endDate", EmitDefaultValue=false)]
         public DateTime? EndDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Status
         /// </summary>
         [DataMember(Name="status", EmitDefaultValue=false)]
         public string Status { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Tag
         /// </summary>
         [DataMember(Name="tag", EmitDefaultValue=false)]
         public string Tag { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Start
         /// </summary>
         [DataMember(Name="start", EmitDefaultValue=false)]
         public int? Start { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Count
         /// </summary>
         [DataMember(Name="count", EmitDefaultValue=false)]
         public int? Count { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -100,6 +118,7 @@ namespace VirtoCommerce.Client.Model
         {
             var sb = new StringBuilder();
             sb.Append("class VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria {\n");
+            sb.Append("  Number: ").Append(Number).Append("\n");
             sb.Append("  Keyword: ").Append(Keyword).Append("\n");
             sb.Append("  CustomerId: ").Append(CustomerId).Append("\n");
             sb.Append("  StoreId: ").Append(StoreId).Append("\n");
@@ -146,6 +165,11 @@ namespace VirtoCommerce.Client.Model
                 return false;
 
             return 
+                (
+                    this.Number == other.Number ||
+                    this.Number != null &&
+                    this.Number.Equals(other.Number)
+                ) && 
                 (
                     this.Keyword == other.Keyword ||
                     this.Keyword != null &&
@@ -204,6 +228,9 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
+                
+                if (this.Number != null)
+                    hash = hash * 59 + this.Number.GetHashCode();
                 
                 if (this.Keyword != null)
                     hash = hash * 59 + this.Keyword.GetHashCode();

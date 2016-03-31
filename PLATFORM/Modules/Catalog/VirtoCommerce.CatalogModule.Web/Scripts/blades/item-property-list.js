@@ -1,17 +1,26 @@
 ﻿angular.module('virtoCommerce.catalogModule')
 .controller('virtoCommerce.catalogModule.itemPropertyListController', ['$scope', 'virtoCommerce.catalogModule.items', 'virtoCommerce.catalogModule.properties', 'platformWebApp.bladeNavigationService', function ($scope, items, properties, bladeNavigationService) {
     var blade = $scope.blade;
+    blade.updatePermission = 'catalog:update';
 
     blade.refresh = function (parentRefresh) {
         items.get({ id: blade.itemId }, function (data) {
             if (data.properties) {
-                var numberProps = _.where(data.properties, { valueType: 'Number', multivalue: false, dictionary: false });
-                _.forEach(numberProps, function (prop) {
+                var selection = _.where(data.properties, { valueType: 'Number', multivalue: false, dictionary: false });
+                _.forEach(selection, function (prop) {
                     _.forEach(prop.values, function (value) {
                         value.value = parseFloat(value.value);
                     });
                 });
+
+                selection = _.where(data.properties, { valueType: 'Boolean' });
+                _.forEach(selection, function (prop) {
+                    _.forEach(prop.values, function (value) {
+                        value.value = value.value && value.value.toLowerCase() === 'true';
+                    });
+                });
             }
+
             //if (data.titularItemId != null) {
             //    $scope.propGroups = [{ title: 'Variation properties', type: 1 }];
             //} else {
@@ -29,7 +38,7 @@
     }
 
     function isDirty() {
-        return !angular.equals(blade.item, blade.origItem);
+        return !angular.equals(blade.item, blade.origItem) && blade.hasUpdatePermission();
     }
 
     function canSave() {
@@ -100,7 +109,7 @@
 		        saveChanges();
 		    },
 		    canExecuteMethod: canSave,
-		    permission: 'catalog:update'
+		    permission: blade.updatePermission
 		},
         {
             name: "platform.commands.reset", icon: 'fa fa-undo',
@@ -108,7 +117,7 @@
                 angular.copy(blade.origItem, blade.item);
             },
             canExecuteMethod: isDirty,
-            permission: 'catalog:update'
+            permission: blade.updatePermission
         },
 		{
 		    name: "catalog.commands.add-property", icon: 'fa fa-plus',
@@ -119,12 +128,12 @@
 		            origEntity: {
 		                type: "Product",
 		                valueType: "ShortText",
-                        values:[]
+		                values: []
 		            }
 		        });
 		    },
 		    canExecuteMethod: function () { return true; },
-		    permission: 'catalog:update'
+		    permission: blade.updatePermission
 		}
     ];
 

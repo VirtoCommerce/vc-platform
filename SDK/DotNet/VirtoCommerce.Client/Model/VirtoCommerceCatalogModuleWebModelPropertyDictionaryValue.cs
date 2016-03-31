@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// Individual dictionary value record for dictionary supporting property.
     /// </summary>
@@ -21,53 +21,59 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelPropertyDictionaryValue" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelPropertyDictionaryValue" />class.
         /// </summary>
-        public VirtoCommerceCatalogModuleWebModelPropertyDictionaryValue()
+        /// <param name="Id">Id.</param>
+        /// <param name="PropertyId">Gets or sets the property id that this dictionary value belongs to..</param>
+        /// <param name="Alias">Gets or sets the value of this dictionary value in default language..</param>
+        /// <param name="LanguageCode">Gets or sets the language code..</param>
+        /// <param name="Value">Gets or sets the value..</param>
+
+        public VirtoCommerceCatalogModuleWebModelPropertyDictionaryValue(string Id = null, string PropertyId = null, string Alias = null, string LanguageCode = null, string Value = null)
         {
+            this.Id = Id;
+            this.PropertyId = PropertyId;
+            this.Alias = Alias;
+            this.LanguageCode = LanguageCode;
+            this.Value = Value;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the property id that this dictionary value belongs to.
         /// </summary>
         /// <value>Gets or sets the property id that this dictionary value belongs to.</value>
         [DataMember(Name="propertyId", EmitDefaultValue=false)]
         public string PropertyId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of this dictionary value in default language.
         /// </summary>
         /// <value>Gets or sets the value of this dictionary value in default language.</value>
         [DataMember(Name="alias", EmitDefaultValue=false)]
         public string Alias { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the language code.
         /// </summary>
         /// <value>Gets or sets the language code.</value>
         [DataMember(Name="languageCode", EmitDefaultValue=false)]
         public string LanguageCode { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value.
         /// </summary>
         /// <value>Gets or sets the value.</value>
         [DataMember(Name="value", EmitDefaultValue=false)]
         public string Value { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

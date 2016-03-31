@@ -2,6 +2,7 @@
     .controller('virtoCommerce.pricingModule.pricelistDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.pricingModule.pricelists', 'platformWebApp.settings', 'virtoCommerce.coreModule.currency.currencyUtils',
         function ($scope, bladeNavigationService, pricelists, settings, currencyUtils) {
             var blade = $scope.blade;
+            blade.updatePermission = 'pricing:update';
 
             blade.refresh = function (parentRefresh) {
                 if (blade.isNew) {
@@ -28,7 +29,7 @@
             }
 
             function isDirty() {
-                return !angular.equals(blade.currentEntity, blade.origEntity);
+                return !angular.equals(blade.currentEntity, blade.origEntity) && blade.hasUpdatePermission();
             }
 
             function canSave() {
@@ -77,7 +78,7 @@
                             icon: 'fa fa-save',
                             executeMethod: $scope.saveChanges,
                             canExecuteMethod: canSave,
-                            permission: 'pricing:update'
+                            permission: blade.updatePermission
                         },
                         {
                             name: "platform.commands.reset",
@@ -86,7 +87,7 @@
                                 angular.copy(blade.origEntity, blade.currentEntity);
                             },
                             canExecuteMethod: isDirty,
-                            permission: 'pricing:update'
+                            permission: blade.updatePermission
                         }
                     ];
                 }
