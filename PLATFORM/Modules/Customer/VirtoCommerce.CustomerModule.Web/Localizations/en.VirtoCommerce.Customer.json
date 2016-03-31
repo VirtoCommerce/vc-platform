@@ -1,18 +1,64 @@
 ﻿{
   "customer": {
-    "main-menu-title": "Customers",
+    "main-menu-title": "Contacts",
     "blades": {
-      "customer-detail": {
+      "contact-detail": {
         "subtitle": "Customer details",
         "labels": {
+          "first-name": "First name",
+          "middle-name": "Middle name",
+          "last-name": "Last name",
           "full-name": "Full name",
           "birthday": "Birthday",
-          "organizations": "Organization(s)"
+          "salutation": "Salutation",
+          "defaultLanguage": "Default language",
+          "organizations": "Organization(s)",
+          "taxpayerId": "Taxpayer ID",
+          "preferred-communication": "Preferred communication",
+          "preferred-delivery": "Preferred delivery",
+          "timezone": "Time zone"
         },
         "placeholders": {
+          "first-name": "Enter value",
+          "middle-name": "Enter value",
+          "last-name": "Enter value",
           "full-name": "Enter value",
           "birthday": "Enter value",
-          "organizations": "Select organization"
+          "salutation": "Enter value",
+          "defaultLanguage": "Enter value",
+          "preferred-communication": "Enter value",
+          "preferred-delivery": "Enter value",
+          "taxpayerId": "Enter value",
+          "organizations": "Select organization",
+          "timezone": "Select value"
+        }
+      },
+      "employee-detail": {
+        "subtitle": "Employee details",
+        "labels": {
+          "is-active": "Is active",
+          "first-name": "First name",
+          "middle-name": "Middle name",
+          "last-name": "Last name",
+          "full-name": "Full name",
+          "type": "Employee type",
+          "birthday": "Birthday",
+          "photo-url": "Photo URL",
+          "defaultLanguage": "Default language",
+          "organizations": "Organization(s)",
+          "timezone": "Time zone"
+        },
+        "placeholders": {
+          "first-name": "Enter value",
+          "middle-name": "Enter value",
+          "last-name": "Enter value",
+          "full-name": "Enter value",
+          "type": "Enter value",
+          "birthday": "Enter value",
+          "photo-url": "Enter URL",
+          "defaultLanguage": "Enter value",
+          "organizations": "Select organization",
+          "timezone": "Select value"
         }
       },
       "pick-store-list": {
@@ -39,11 +85,15 @@
         "subtitle": "Vendor details",
         "labels": {
           "name": "Name",
+          "site-url": "Site URL",
+          "logo-url": "Logo URL",
           "group-name": "Group name",
           "description": "Description"
         },
         "placeholders": {
           "name": "Enter name",
+          "site-url": "Enter URL",
+          "logo-url": "Enter URL",
           "group-name": "Enter value",
           "description": "Enter description"
         }
@@ -54,7 +104,7 @@
       "new-employee": {
         "title": "New Employee"
       },
-      "new-customer": {
+      "new-contact": {
         "title": "New Customer"
       },
       "new-vendor": {
@@ -92,11 +142,11 @@
         }
       },
       "member-list": {
-        "title": "Organizations & Customers",
+        "title": "Organizations & Contacts",
         "subtitle": "Browsing '{{name}}'",
         "labels": {
           "type": "Type",
-          "name": "Name",
+          "_displayName": "Display name",
           "address": "Address",
           "email": "Email"
         }

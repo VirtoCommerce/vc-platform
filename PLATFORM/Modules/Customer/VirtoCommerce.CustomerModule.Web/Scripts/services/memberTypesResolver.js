@@ -5,18 +5,16 @@
         registerType: function (memberTypeDefinition) {
             var memberTypeName = memberTypeDefinition.memberType.toLowerCase();
 
-            if (!memberTypeDefinition.titleAdd) {
+            if (_.isUndefined(memberTypeDefinition.titleAdd)) {
                 memberTypeDefinition.titleAdd = 'customer.blades.member-add.' + memberTypeName + '.title';
             }
-            if (!memberTypeDefinition.descriptionAdd) {
+            if (_.isUndefined(memberTypeDefinition.descriptionAdd)) {
                 memberTypeDefinition.descriptionAdd = 'customer.blades.member-add.' + memberTypeName + '.description';
             }
-            if (!memberTypeDefinition.newInstanceBladeTitle) {
+            if (_.isUndefined(memberTypeDefinition.newInstanceBladeTitle)) {
                 memberTypeDefinition.newInstanceBladeTitle = 'customer.blades.new-' + memberTypeName + '.title';
             }
-
-
-            if (!memberTypeDefinition.subtitle) {
+            if (_.isUndefined(memberTypeDefinition.subtitle)) {
                 memberTypeDefinition.subtitle = 'customer.blades.' + memberTypeName + '-detail.subtitle';
             }
             if (!memberTypeDefinition.controller) {

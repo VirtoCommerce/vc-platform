@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.customerModule')
-.controller('virtoCommerce.customerModule.memberDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.customerModule.members', 'virtoCommerce.customerModule.organizations', 'platformWebApp.dynamicProperties.api', 'virtoCommerce.customerModule.memberTypesResolverService', 'platformWebApp.dialogService', function ($scope, bladeNavigationService, members, organizations, dynamicPropertiesApi, memberTypesResolverService, dialogService) {
+.controller('virtoCommerce.customerModule.memberDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.customerModule.members', 'virtoCommerce.customerModule.organizations', 'platformWebApp.dynamicProperties.api', 'virtoCommerce.customerModule.memberTypesResolverService', 'platformWebApp.dialogService', 'virtoCommerce.coreModule.common.countries', function ($scope, bladeNavigationService, members, organizations, dynamicPropertiesApi, memberTypesResolverService, dialogService, countries) {
     var blade = $scope.blade;
     blade.updatePermission = 'customer:update';
     blade.isNew = !blade.currentEntity.id;
@@ -15,16 +15,18 @@
 
             if (newEntity.memberType === 'Organization') {
                 newEntity.parentId = blade.parentBlade.currentEntity.id;
-                fillDynamicProperties(newEntity, 'VirtoCommerce.Domain.Customer.Model.Organization');
-            } else if (newEntity.memberType === 'Contact') {
+            } else if (newEntity.memberType === 'Contact' || newEntity.memberType === 'Employee') {
                 newEntity.organizations = [];
                 if (blade.parentBlade.currentEntity.id) {
                     newEntity.organizations.push(blade.parentBlade.currentEntity.id);
                 }
-                fillDynamicProperties(newEntity, 'VirtoCommerce.Domain.Customer.Model.Contact');
-            } else {
-                initializeBlade(newEntity);
+
+                if (newEntity.memberType === 'Employee') {
+                    newEntity.isActive = true;
+                }
             }
+
+            fillDynamicProperties(newEntity, blade.memberTypeDefinition.fullTypeName);
         } else {
             blade.isLoading = true;
 
@@ -78,7 +80,9 @@
         }
     };
 
-    $scope.setForm = function (form) { $scope.formScope = form; }
+    $scope.setForm = function (form) {
+        $scope.formScope = form;
+    }
 
     blade.onClose = function (closeCallback) {
         bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, $scope.saveChanges, closeCallback, "customer.dialogs.member-save.title", "customer.dialogs.member-save.message");
@@ -132,8 +136,9 @@
     }
 
     // on load
-    if (blade.currentEntity.memberType === 'Contact') {
+    if (blade.currentEntity.memberType === 'Contact' || blade.currentEntity.memberType === 'Employee') {
         $scope.organizations = organizations.query();
+        $scope.timeZones = countries.getTimeZones();
     }
 
     blade.refresh(false);

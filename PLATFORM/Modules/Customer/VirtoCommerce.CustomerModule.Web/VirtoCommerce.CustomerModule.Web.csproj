@@ -130,6 +130,7 @@
   <ItemGroup>
     <Content Include="Scripts\blades\customer-accounts-list.js" />
     <Content Include="Scripts\blades\customer-accounts-list.tpl.html" />
+    <Content Include="Scripts\blades\employee-detail.tpl.html" />
     <Content Include="Scripts\blades\member-add.js" />
     <Content Include="Scripts\blades\member-add.tpl.html" />
     <Content Include="Scripts\blades\vendor-detail.tpl.html" />

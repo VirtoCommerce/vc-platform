@@ -33,13 +33,18 @@ angular.module(moduleName, [])
       var menuItem = {
           path: 'browse/member',
           icon: 'fa fa-user',
-          title: 'customers',
+          title: 'customer.main-menu-title',
           priority: 180,
           action: function () { $state.go('workspace.customerModule'); },
           permission: 'customer:access'
       };
       mainMenuService.addMenuItem(menuItem);
 
+      var accountsWidget = {
+          isVisible: function (blade) { return !blade.isNew; },
+          controller: 'virtoCommerce.customerModule.customerAccountsWidgetController',
+          template: 'Modules/$(VirtoCommerce.Customer)/Scripts/widgets/customerAccountsWidget.tpl.html'
+      };
       var addressesWidget = {
           controller: 'virtoCommerce.customerModule.memberAddressesWidgetController',
           template: 'Modules/$(VirtoCommerce.Customer)/Scripts/widgets/memberAddressesWidget.tpl.html'
@@ -52,15 +57,12 @@ angular.module(moduleName, [])
           controller: 'virtoCommerce.customerModule.memberPhonesWidgetController',
           template: 'Modules/$(VirtoCommerce.Customer)/Scripts/widgets/memberPhonesWidget.tpl.html'
       };
-      var dynamicPropertyWidget ={
+      var dynamicPropertyWidget = {
           controller: 'platformWebApp.dynamicPropertyWidgetController',
           template: '$(Platform)/Scripts/app/dynamicProperties/widgets/dynamicPropertyWidget.tpl.html'
       }
       //Register widgets in customer details
-      widgetService.registerWidget({
-          controller: 'virtoCommerce.customerModule.customerAccountsWidgetController',
-          template: 'Modules/$(VirtoCommerce.Customer)/Scripts/widgets/customerAccountsWidget.tpl.html'
-      }, 'customerDetail1');
+      widgetService.registerWidget(accountsWidget, 'customerDetail1');
       widgetService.registerWidget(addressesWidget, 'customerDetail1');
       widgetService.registerWidget(emailsWidget, 'customerDetail1');
       widgetService.registerWidget(phonesWidget, 'customerDetail2');
@@ -73,17 +75,21 @@ angular.module(moduleName, [])
       widgetService.registerWidget(dynamicPropertyWidget, 'organizationDetail2');
 
       //Register widgets in employee details
+      widgetService.registerWidget(accountsWidget, 'employeeDetail1');
       widgetService.registerWidget(addressesWidget, 'employeeDetail1');
       widgetService.registerWidget(emailsWidget, 'employeeDetail1');
-      widgetService.registerWidget(phonesWidget, 'employeeDetail1');
+      widgetService.registerWidget(phonesWidget, 'employeeDetail2');
+      widgetService.registerWidget(dynamicPropertyWidget, 'employeeDetail2');
 
       //Register widgets in vendor details
       widgetService.registerWidget(addressesWidget, 'vendorDetail1');
       widgetService.registerWidget(emailsWidget, 'vendorDetail1');
       widgetService.registerWidget(phonesWidget, 'vendorDetail1');
+      widgetService.registerWidget(dynamicPropertyWidget, 'vendorDetail2');
 
-      memberTypesResolverService.registerType({ memberType: 'Organization', icon: 'fa-university', template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/organization-detail.tpl.html' });
-      memberTypesResolverService.registerType({ memberType: 'Employee', icon: ' fa-user', template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/employee-detail.tpl.html' });
-      memberTypesResolverService.registerType({ memberType: 'Contact', icon: 'fa-smile-o', template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/customer-detail.tpl.html' });
-      memberTypesResolverService.registerType({ memberType: 'Vendor', icon: 'fa-balance-scale', template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/vendor-detail.tpl.html' });
+      // register member types
+      memberTypesResolverService.registerType({ memberType: 'Organization', fullTypeName: 'VirtoCommerce.Domain.Customer.Model.Organization', icon: 'fa-university', template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/organization-detail.tpl.html', getDisplayName: function (x) { return x.name; } });
+      memberTypesResolverService.registerType({ memberType: 'Employee', fullTypeName: 'VirtoCommerce.Domain.Customer.Model.Employee', icon: ' fa-user', template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/employee-detail.tpl.html', getDisplayName: function (x) { return x.fullName; } });
+      memberTypesResolverService.registerType({ memberType: 'Contact', fullTypeName: 'VirtoCommerce.Domain.Customer.Model.Contact', icon: 'fa-smile-o', template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/customer-detail.tpl.html', getDisplayName: function (x) { return x.fullName; } });
+      memberTypesResolverService.registerType({ memberType: 'Vendor', fullTypeName: 'VirtoCommerce.Domain.Customer.Model.Vendor', icon: 'fa-balance-scale', template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/vendor-detail.tpl.html', getDisplayName: function (x) { return x.name; }, topLevelElementOnly: true });
   }]);

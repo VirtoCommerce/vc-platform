@@ -20,6 +20,16 @@ function ($scope, members, dialogService, bladeUtils, uiGridHelper, memberTypesR
             function (data) {
                 blade.isLoading = false;
                 $scope.pageSettings.totalItems = data.totalCount;
+                // precalculate icon and displayName
+                var memberTypeDefinition;
+                _.each(data.members, function (x) {
+                    if (memberTypeDefinition = _.findWhere(memberTypesResolverService.objects, { memberType: x.memberType })) {
+                        x._memberTypeIcon = memberTypeDefinition.icon;
+                        x._displayName = memberTypeDefinition.getDisplayName(x);
+                    } else {
+                        x._displayName = x.name;
+                    }
+                });
                 $scope.listEntries = data.members;
 
                 //Set navigation breadcrumbs
@@ -159,7 +169,7 @@ function ($scope, members, dialogService, bladeUtils, uiGridHelper, memberTypesR
             };
             bladeNavigationService.showBlade(newBlade, blade.parentBlade);
         } else {
-            blade.showDetailBlade(listItem, listItem.name);
+            blade.showDetailBlade(listItem, listItem._displayName);
         }
     };
 
