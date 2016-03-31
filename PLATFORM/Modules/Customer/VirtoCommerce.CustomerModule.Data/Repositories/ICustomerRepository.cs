@@ -8,20 +8,12 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.CustomerModule.Data.Repositories
 {
-    public interface ICustomerRepository : IRepository
+    public interface ICustomerRepository : IMemberRepository
     {
-        IQueryable<Member> Members { get; }
-        IQueryable<Address> Addresses { get; }
-        IQueryable<Organization> Organizations { get; }
-        IQueryable<Contact> Contacts { get; }
-        IQueryable<Vendor> Vendors { get; }
-        IQueryable<Employee> Employees { get; }
-        IQueryable<Email> Emails { get; }
-        IQueryable<Note> Notes { get; }
-        IQueryable<Phone> Phones { get; }
-        IQueryable<MemberRelation> MemberRelations { get; }
-
-        Member[] GetMembersByIds(string[] ids);
-        void RemoveMembersByIds(string[] ids);
+        IQueryable<OrganizationDataEntity> Organizations { get; }
+        IQueryable<ContactDataEntity> Contacts { get; }
+        IQueryable<VendorDataEntity> Vendors { get; }
+        IQueryable<EmployeeDataEntity> Employees { get; }
+    
     }
 }

@@ -60,7 +60,7 @@ namespace VirtoCommerce.Platform.Core.Common
 
 			retVal.Add(type);
 			var baseType = type.BaseType;
-			while (baseType != typeof(Entity))
+			while (baseType != typeof(Entity) && baseType != typeof(object) )
 			{
 				retVal.Add(baseType);
 				baseType = baseType.BaseType;
@@ -68,7 +68,21 @@ namespace VirtoCommerce.Platform.Core.Common
 			return retVal.ToArray();
 		}
 
-		public static bool IsDerivativeOf(this Type type, Type typeToCompare)
+        public static Type[] GetTypeInheritanceChainTo(this Type type, Type toBaseType)
+        {
+            var retVal = new List<Type>();
+
+            retVal.Add(type);
+            var baseType = type.BaseType;
+            while (baseType != toBaseType && baseType != typeof(object))
+            {
+                retVal.Add(baseType);
+                baseType = baseType.BaseType;
+            }
+            return retVal.ToArray();
+        }
+
+        public static bool IsDerivativeOf(this Type type, Type typeToCompare)
 		{
 			if (type == null)
 			{

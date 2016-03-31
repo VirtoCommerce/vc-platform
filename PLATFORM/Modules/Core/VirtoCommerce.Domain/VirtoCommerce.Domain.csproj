@@ -130,11 +130,11 @@
     <Compile Include="Customer\Model\Search\MembersSearchCriteria.cs" />
     <Compile Include="Customer\Model\Search\MembersSearchResult.cs" />
     <Compile Include="Customer\Model\Vendor.cs" />
-    <Compile Include="Customer\Services\DefaultMembersServiceFactory.cs" />
-    <Compile Include="Customer\Services\IMemberServicesFactory.cs" />
+    <Compile Include="Customer\Services\IMemberFactory.cs" />
     <Compile Include="Customer\Services\IMemberService.cs" />
     <Compile Include="Commerce\Model\FulfillmentCenter.cs" />
     <Compile Include="Commerce\Services\ICommerceService.cs" />
+    <Compile Include="Customer\Services\IMemberSearchService.cs" />
     <Compile Include="Inventory\Model\InventoryInfo.cs" />
     <Compile Include="Inventory\Model\InventoryStatus.cs" />
     <Compile Include="Inventory\Services\IInventoryService.cs" />

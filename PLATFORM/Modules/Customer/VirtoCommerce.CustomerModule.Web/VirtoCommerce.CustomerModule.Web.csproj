@@ -155,8 +155,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\Api\CustomerModuleController.cs" />
-    <Compile Include="Converters\PolymorphicMemberSearchCriteriaJsonConverter.cs" />
-    <Compile Include="Converters\PolymorphicMemberJsonConverter.cs" />
+    <Compile Include="JsonConverters\PolymorphicMemberJsonConverter.cs" />
     <Compile Include="Security\CustomerPredefinedPermissions.cs" />
     <Compile Include="ExportImport\CustomerExportImport.cs" />
     <Compile Include="Module.cs" />

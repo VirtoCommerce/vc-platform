@@ -11,17 +11,9 @@ namespace VirtoCommerce.Domain.Customer.Services
     /// <summary>
     /// Represent abstract factory for any custom members  services (with this extension point developer can extend exist members system by new types)
     /// </summary>
-    public interface IMemberServicesFactory 
+    public interface IMemberFactory 
     {
-        /// <summary>
-        /// Register new service for customer member type
-        /// </summary>
-        /// <param name="memberService"></param>
-        void RegisterMemberService(IMemberService memberService);
-        /// <summary>
-        /// Returns all registered members services
-        /// </summary>
-        /// <returns></returns>
-        IEnumerable<IMemberService> MemberServices { get; }
+        Member TryCreateMember(string memberType);
+        MembersSearchCriteria CreateMemberSearchCriteria();
     }
 }

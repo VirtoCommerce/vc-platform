@@ -12,15 +12,15 @@ using VirtoCommerce.Domain.Customer.Model;
 using VirtoCommerce.Domain.Customer.Services;
 using VirtoCommerce.Platform.Core.Common;
 
-namespace VirtoCommerce.CustomerModule.Web.Converters
+namespace VirtoCommerce.CustomerModule.Web.JsonConverters
 {
     /// <summary>
     /// Used to deserialize from JSON derived Member types
     /// </summary>
     public class PolymorphicMemberJsonConverter : JsonConverter
     {
-        private readonly IMemberServicesFactory _membersFactory;
-        public PolymorphicMemberJsonConverter(IMemberServicesFactory membersFactory)
+        private readonly IMemberFactory _membersFactory;
+        public PolymorphicMemberJsonConverter(IMemberFactory membersFactory)
         {
             _membersFactory = membersFactory;
         }
@@ -31,25 +31,33 @@ namespace VirtoCommerce.CustomerModule.Web.Converters
 
         public override bool CanConvert(Type objectType)
         {
-            return objectType == typeof(Member);
+            return objectType == typeof(Member) || objectType == typeof(MembersSearchCriteria);
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            var obj = JObject.Load(reader);   
-            var pt = obj["memberType"];
-            if (pt == null)
+            object retVal = null;
+            var obj = JObject.Load(reader);
+            if (objectType == typeof(Member))
             {
-                throw new ArgumentException("Missing memberType", "memberType");
-            }
+                var pt = obj["memberType"];
+                if (pt == null)
+                {
+                    throw new ArgumentException("Missing memberType", "memberType");
+                }
 
-            string memberType = pt.Value<string>();
-            var retVal = _membersFactory.MemberServices.Select(x => x.TryCreateMember(memberType)).Where(x => x != null).FirstOrDefault();
-            if(retVal == null)
+                string memberType = pt.Value<string>();
+                retVal = _membersFactory.TryCreateMember(memberType);
+                if (retVal == null)
+                {
+                    throw new NotSupportedException("Unknown memberType: " + memberType);
+                }
+
+            }
+            else if(objectType == typeof(MembersSearchCriteria))
             {
-                throw new NotSupportedException("Unknown memberType: " + memberType);
+                retVal = _membersFactory.CreateMemberSearchCriteria();
             }
-
             serializer.Populate(obj.CreateReader(), retVal);
             return retVal;
         }

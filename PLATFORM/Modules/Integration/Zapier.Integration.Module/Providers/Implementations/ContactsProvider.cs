@@ -9,9 +9,11 @@ namespace Zapier.IntegrationModule.Web.Providers.Implementations
     public class ContactsProvider: IContactsProvider
     {
         private readonly IMemberService _memberService;
-        public ContactsProvider(IMemberService memberService)
+        private readonly IMemberSearchService _memberSearchService;
+        public ContactsProvider(IMemberService memberService, IMemberSearchService memberSearchService)
         {
             _memberService = memberService;
+            _memberSearchService = memberSearchService;
         }
 
 
@@ -24,7 +26,7 @@ namespace Zapier.IntegrationModule.Web.Providers.Implementations
                 Sort = "CreatedDate:desc"
             };
 
-            return _memberService.SearchMembers(searchCrit).Members.OfType<Contact>();
+            return _memberSearchService.SearchMembers(searchCrit).Members.OfType<Contact>();
           
         }
 

@@ -5,7 +5,7 @@ using VirtoCommerce.Platform.Data.Infrastructure;
 
 namespace VirtoCommerce.CustomerModule.Data.Model
 {
-	public class Phone : Entity
+	public class PhoneDataEntity : Entity
 	{
 		[StringLength(64)]
 		public string Number { get; set; }
@@ -18,7 +18,7 @@ namespace VirtoCommerce.CustomerModule.Data.Model
 
 		public string MemberId { get; set; }
 
-		public virtual Member Member { get; set; }
+		public virtual MemberDataEntity Member { get; set; }
 
 
 		#endregion

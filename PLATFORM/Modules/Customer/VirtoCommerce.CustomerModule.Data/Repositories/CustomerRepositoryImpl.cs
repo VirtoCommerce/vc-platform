@@ -7,14 +7,14 @@ using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 
 namespace VirtoCommerce.CustomerModule.Data.Repositories
 {
-    public class CustomerRepositoryImpl : EFRepositoryBase, ICustomerRepository
+    public class CustomerRepositoryImpl : MemberRepositoryBase, ICustomerRepository
     {
         public CustomerRepositoryImpl()
         {
         }
 
         public CustomerRepositoryImpl(string nameOrConnectionString, params IInterceptor[] interceptors)
-            : base(nameOrConnectionString, null, interceptors)
+            : base(nameOrConnectionString, interceptors)
         {
             //Configuration.AutoDetectChangesEnabled = true;
             Configuration.ProxyCreationEnabled = false;
@@ -23,170 +23,56 @@ namespace VirtoCommerce.CustomerModule.Data.Repositories
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
 
-            #region Member
-            modelBuilder.Entity<Member>().HasKey(x => x.Id)
-                .Property(x => x.Id);
-            modelBuilder.Entity<Member>().ToTable("Member");
-
-            #endregion
-
-
             #region Contact
-            modelBuilder.Entity<Contact>().HasKey(x => x.Id)
+            modelBuilder.Entity<ContactDataEntity>().HasKey(x => x.Id)
                 .Property(x => x.Id);
-            modelBuilder.Entity<Contact>().ToTable("Contact");
+            modelBuilder.Entity<ContactDataEntity>().ToTable("Contact");
 
             #endregion
 
             #region Organization
-            modelBuilder.Entity<Organization>().HasKey(x => x.Id)
+            modelBuilder.Entity<OrganizationDataEntity>().HasKey(x => x.Id)
                 .Property(x => x.Id);
-            modelBuilder.Entity<Organization>().ToTable("Organization");
+            modelBuilder.Entity<OrganizationDataEntity>().ToTable("Organization");
             #endregion
 
             #region Employee
-            modelBuilder.Entity<Employee>().HasKey(x => x.Id)
+            modelBuilder.Entity<EmployeeDataEntity>().HasKey(x => x.Id)
                 .Property(x => x.Id);
-            modelBuilder.Entity<Employee>().ToTable("Employee");
+            modelBuilder.Entity<EmployeeDataEntity>().ToTable("Employee");
 
             #endregion
 
             #region Vendor
-            modelBuilder.Entity<Vendor>().HasKey(x => x.Id)
+            modelBuilder.Entity<VendorDataEntity>().HasKey(x => x.Id)
                 .Property(x => x.Id);
-            modelBuilder.Entity<Vendor>().ToTable("Vendor");
+            modelBuilder.Entity<VendorDataEntity>().ToTable("Vendor");
 
             #endregion
-
-            #region MemberRelation
-            modelBuilder.Entity<MemberRelation>().HasKey(x => x.Id)
-                .Property(x => x.Id);
-            modelBuilder.Entity<MemberRelation>().ToTable("MemberRelation");
-
-            modelBuilder.Entity<MemberRelation>().HasRequired(m => m.Descendant)
-                                                 .WithMany(m => m.MemberRelations).WillCascadeOnDelete(false);
-            #endregion
-
-            #region Address
-            modelBuilder.Entity<Address>().HasKey(x => x.Id)
-                .Property(x => x.Id);
-            modelBuilder.Entity<Address>().ToTable("Address");
-
-            modelBuilder.Entity<Address>().HasRequired(m => m.Member)
-                                          .WithMany(m => m.Addresses).HasForeignKey(m => m.MemberId)
-                                          .WillCascadeOnDelete(true);
-            #endregion
-
-            #region Email
-            modelBuilder.Entity<Email>().HasKey(x => x.Id)
-                .Property(x => x.Id);
-            modelBuilder.Entity<Email>().ToTable("Email");
-
-            modelBuilder.Entity<Email>().HasRequired(m => m.Member)
-                                          .WithMany(m => m.Emails).HasForeignKey(m => m.MemberId)
-                                          .WillCascadeOnDelete(true);
-            #endregion
-
-            #region Phone
-            modelBuilder.Entity<Phone>().HasKey(x => x.Id)
-                .Property(x => x.Id);
-            modelBuilder.Entity<Phone>().ToTable("Phone");
-
-            modelBuilder.Entity<Phone>().HasRequired(m => m.Member)
-                                          .WithMany(m => m.Phones).HasForeignKey(m => m.MemberId)
-                                          .WillCascadeOnDelete(true);
-            #endregion
-
-            #region Note
-            modelBuilder.Entity<Note>().HasKey(x => x.Id)
-                .Property(x => x.Id);
-            modelBuilder.Entity<Note>().ToTable("Note");
-
-            modelBuilder.Entity<Note>().HasOptional(m => m.Member)
-                                          .WithMany(m => m.Notes).HasForeignKey(m => m.MemberId)
-                                          .WillCascadeOnDelete(true);
-            #endregion
-
+      
             base.OnModelCreating(modelBuilder);
         }
 
-    
-        #region IFoundationCustomerRepository Members
 
-
-        public IQueryable<Address> Addresses
+        #region ICustomerRepository Members
+        public IQueryable<OrganizationDataEntity> Organizations
         {
-            get { return GetAsQueryable<Address>(); }
+            get { return GetAsQueryable<OrganizationDataEntity>(); }
         }
 
-        public IQueryable<Email> Emails
+        public IQueryable<ContactDataEntity> Contacts
         {
-            get { return GetAsQueryable<Email>(); }
+            get { return GetAsQueryable<ContactDataEntity>(); }
         }
 
-        public IQueryable<Note> Notes
+        public IQueryable<EmployeeDataEntity> Employees
         {
-            get { return GetAsQueryable<Note>(); }
+            get { return GetAsQueryable<EmployeeDataEntity>(); }
         }
 
-        public IQueryable<Phone> Phones
+        public IQueryable<VendorDataEntity> Vendors
         {
-            get { return GetAsQueryable<Phone>(); }
-        }
-
-        public IQueryable<Organization> Organizations
-        {
-            get { return GetAsQueryable<Organization>(); }
-        }
-
-        public IQueryable<Contact> Contacts
-        {
-            get { return GetAsQueryable<Contact>(); }
-        }
-
-        public IQueryable<Employee> Employees
-        {
-            get { return GetAsQueryable<Employee>(); }
-        }
-
-        public IQueryable<Vendor> Vendors
-        {
-            get { return GetAsQueryable<Vendor>(); }
-        }
-
-        public IQueryable<Member> Members
-        {
-            get { return GetAsQueryable<Member>(); }
-        }
-
-        public IQueryable<MemberRelation> MemberRelations
-        {
-            get { return GetAsQueryable<MemberRelation>(); }
-        }
-
-        public virtual Member[] GetMembersByIds(params string[] ids)
-        {
-            var retVal = Members.Include(x => x.MemberRelations.Select(y => y.Ancestor))
-                                .Where(x => ids.Contains(x.Id)).ToArray();
-            var notes = Notes.Where(x => ids.Contains(x.MemberId)).ToArray();
-            var emails = Emails.Where(x => ids.Contains(x.MemberId)).ToArray();
-            var addresses = Addresses.Where(x => ids.Contains(x.MemberId)).ToArray();
-            var phones = Phones.Where(x => ids.Contains(x.MemberId)).ToArray();
-
-            return retVal.ToArray();
-        }
-
-        public virtual void RemoveMembersByIds(string[] ids)
-        {
-            var dbMembers = GetMembersByIds(ids);
-            foreach (var dbMember in dbMembers)
-            {
-                foreach (var relation in dbMember.MemberRelations.ToArray())
-                {
-                    Remove(relation);
-                }
-                Remove(dbMember);
-            }
+            get { return GetAsQueryable<VendorDataEntity>(); }
         }
         #endregion
     }

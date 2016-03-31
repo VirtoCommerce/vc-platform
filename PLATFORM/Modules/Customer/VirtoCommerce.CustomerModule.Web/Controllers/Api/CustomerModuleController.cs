@@ -16,12 +16,14 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
     public class CustomerModuleController : ApiController
     {
         private readonly IMemberService _memberService;
+        private readonly IMemberSearchService _memberSearchService;
         private readonly ISecurityService _securityService;
 
-        public CustomerModuleController(IMemberService memberService, ISecurityService securityService)
+        public CustomerModuleController(IMemberService memberService, IMemberSearchService memberSearchService, ISecurityService securityService)
         {
             _memberService = memberService;
             _securityService = securityService;
+            _memberSearchService = memberSearchService;
         }
 
         /// <summary>
@@ -39,7 +41,7 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
                 DeepSearch = true,
                 Take = int.MaxValue
             };
-            var result = _memberService.SearchMembers(searchCriteria);
+            var result = _memberSearchService.SearchMembers(searchCriteria);
 
             return Ok(result.Members);
         }
@@ -54,7 +56,7 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
         [Route("members/search")]
         public IHttpActionResult Search(coreModel.MembersSearchCriteria criteria)
         {
-            var result = _memberService.SearchMembers(criteria);
+            var result = _memberSearchService.SearchMembers(criteria);
 
             return Ok(result);
         }

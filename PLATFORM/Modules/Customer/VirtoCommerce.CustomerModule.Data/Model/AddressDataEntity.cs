@@ -10,10 +10,11 @@ using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Common.ConventionInjections;
 using Omu.ValueInjecter;
+using VirtoCommerce.Domain.Commerce.Model;
 
 namespace VirtoCommerce.CustomerModule.Data.Model
 {
-	public class Address : AuditableEntity
+	public class AddressDataEntity : AuditableEntity
     {
 		[Required]
 		[StringLength(128)]
@@ -82,7 +83,7 @@ namespace VirtoCommerce.CustomerModule.Data.Model
 
 		public string MemberId { get; set; }
 
-		public virtual Member Member { get; set; }
+		public virtual MemberDataEntity Member { get; set; }
 
 
 		#endregion
@@ -97,9 +98,34 @@ namespace VirtoCommerce.CustomerModule.Data.Model
         }
         #endregion
 
-        public virtual void Patch(Address target)
+
+        public virtual Address ToAddress(Address address)
         {
-            var patchInjectionPolicy = new PatchInjection<Address>(x => x.City, x => x.CountryCode,
+            if (address == null)
+                throw new ArgumentNullException("address");
+
+            var retVal = new Domain.Commerce.Model.Address();
+            retVal.InjectFrom(this);
+            retVal.Phone = this.DaytimePhoneNumber;
+            retVal.AddressType = EnumUtility.SafeParse(this.Type, AddressType.BillingAndShipping);
+
+            return retVal;
+        }
+
+        public virtual AddressDataEntity FromAddress(Address address)
+        {
+            if (address == null)
+                throw new ArgumentNullException("address");
+         
+            this.InjectFrom(address);
+            this.DaytimePhoneNumber = address.Phone;
+            this.Type = address.AddressType.ToString();
+            return this;
+        }
+
+        public virtual void Patch(AddressDataEntity target)
+        {
+            var patchInjectionPolicy = new PatchInjection<AddressDataEntity>(x => x.City, x => x.CountryCode,
                                                                                       x => x.CountryName, x => x.DaytimePhoneNumber,
                                                                                       x => x.Email, x => x.EveningPhoneNumber, x => x.FaxNumber,
                                                                                       x => x.FirstName, x => x.LastName, x => x.Line1,

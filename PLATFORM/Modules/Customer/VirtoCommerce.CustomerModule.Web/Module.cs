@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Data.Entity;
-using System.Web;
 using System.Web.Http;
 using Microsoft.Practices.Unity;
 using VirtoCommerce.CustomerModule.Data.Repositories;
 using VirtoCommerce.CustomerModule.Data.Services;
-using VirtoCommerce.CustomerModule.Web.Converters;
 using VirtoCommerce.CustomerModule.Web.ExportImport;
+using VirtoCommerce.CustomerModule.Web.JsonConverters;
+using VirtoCommerce.Domain.Customer.Model;
 using VirtoCommerce.Domain.Customer.Services;
 using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Core.ExportImport;
@@ -42,25 +41,29 @@ namespace VirtoCommerce.CustomerModule.Web
 
         public override void Initialize()
         {
-            _container.RegisterType<ICustomerRepository>(new InjectionFactory(c => new CustomerRepositoryImpl(_connectionStringName, new EntityPrimaryKeyGeneratorInterceptor(), _container.Resolve<AuditableInterceptor>())));
-            _container.RegisterType<IMemberServicesFactory, DefaultMembersServiceFactory>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IMemberService, MemberServicesProxy>();
-
-         
+            var memberServiceDecorator = new MemberServiceDecorator();
+            _container.RegisterInstance(memberServiceDecorator);
+            _container.RegisterInstance<IMemberService>(memberServiceDecorator);
+            _container.RegisterInstance<IMemberFactory>(memberServiceDecorator);
+            _container.RegisterInstance<IMemberSearchService>(memberServiceDecorator);
         }
 
         public override void PostInitialize()
         {
-            var membersFactory = _container.Resolve<IMemberServicesFactory>();
-            //Default memebrs service support Contact, Organization, Vendor and Employee types
-            var defaultMemberService = new DefaultMemberService(_container.Resolve<Func<ICustomerRepository>>(),_container.Resolve<IDynamicPropertyService>(), _container.Resolve<ISecurityService>());
+            var memberServiceDecorator = _container.Resolve<MemberServiceDecorator>();
         
-            membersFactory.RegisterMemberService(defaultMemberService);
+            Func<CustomerRepositoryImpl> customerRepositoryFactory = () => new CustomerRepositoryImpl(_connectionStringName, new EntityPrimaryKeyGeneratorInterceptor(), _container.Resolve<AuditableInterceptor>());
+            var customerService = new CustomerMemberServiceImpl(customerRepositoryFactory, _container.Resolve<IDynamicPropertyService>(), _container.Resolve<ISecurityService>(), memberServiceDecorator);
+
+            memberServiceDecorator.RegisterMemberType<Contact>(customerService, customerService);
+            memberServiceDecorator.RegisterMemberType<Organization>(customerService, customerService);
+            memberServiceDecorator.RegisterMemberType<Vendor>(customerService, customerService);
+            memberServiceDecorator.RegisterMemberType<Employee>(customerService, customerService);
+
 
             //Next lines allow to use polymorph types in API controller methods
             var formatters = GlobalConfiguration.Configuration.Formatters;
-            formatters.JsonFormatter.SerializerSettings.Converters.Add(new PolymorphicMemberJsonConverter(membersFactory));
-            formatters.JsonFormatter.SerializerSettings.Converters.Add(new PolymorphicMemberSearchCriteriaJsonConverter());
+            formatters.JsonFormatter.SerializerSettings.Converters.Add(new PolymorphicMemberJsonConverter(memberServiceDecorator));
 
             base.PostInitialize();
         }
@@ -88,7 +91,6 @@ namespace VirtoCommerce.CustomerModule.Web
                 return settingManager.GetValue("Customer.ExportImport.Description", String.Empty);
             }
         }
-
         #endregion
     }
 
