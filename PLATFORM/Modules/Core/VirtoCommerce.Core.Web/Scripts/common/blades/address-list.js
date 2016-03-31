@@ -1,5 +1,6 @@
 ﻿angular.module('virtoCommerce.coreModule.common')
 .controller('virtoCommerce.coreModule.common.coreAddressListController', ['$timeout', '$scope', 'platformWebApp.bladeNavigationService', function ($timeout, $scope, bladeNavigationService) {
+    var blade = $scope.blade;
     $scope.selectedItem = null;
 
     $scope.openDetailBlade = function (address) {
@@ -11,26 +12,26 @@
         var newBlade = {
             id: 'coreAddressDetail',
             currentEntity: address,
-            title: $scope.blade.title,
+            title: blade.title,
             subtitle: 'core.blades.address-detail.subtitle',
             controller: 'virtoCommerce.coreModule.common.coreAddressDetailController',
             confirmChangesFn: function (address) {
                 address.name = $scope.getAddressName(address);
                 if (address.isNew) {
                     address.isNew = undefined;
-                    $scope.blade.currentEntities.push(address);
-                    if ($scope.blade.confirmChangesFn) {
-                        $scope.blade.confirmChangesFn(address);
+                    blade.currentEntities.push(address);
+                    if (blade.confirmChangesFn) {
+                        blade.confirmChangesFn(address);
                     }
                 }
             },
             deleteFn: function (address) {
-                var toRemove = _.find($scope.blade.currentEntities, function (x) { return angular.equals(x, address) });
+                var toRemove = _.find(blade.currentEntities, function (x) { return angular.equals(x, address) });
                 if (toRemove) {
-                    var idx = $scope.blade.currentEntities.indexOf(toRemove);
-                    $scope.blade.currentEntities.splice(idx, 1);
-                    if ($scope.blade.deleteFn) {
-                        $scope.blade.deleteFn(address);
+                    var idx = blade.currentEntities.indexOf(toRemove);
+                    blade.currentEntities.splice(idx, 1);
+                    if (blade.deleteFn) {
+                        blade.deleteFn(address);
                     }
                 }
             },
@@ -44,9 +45,9 @@
         return [address.countryCode, address.regionName, address.city, address.line1].join(",");
     };
 
-    $scope.blade.headIcon = 'fa-user';
+    blade.headIcon = blade.parentBlade.headIcon;
 
-    $scope.blade.toolbarCommands = [
+    blade.toolbarCommands = [
         {
             name: "platform.commands.add", icon: 'fa fa-plus',
             executeMethod: function () {
@@ -58,10 +59,10 @@
         }
     ];
 
-    $scope.blade.isLoading = false;
+    blade.isLoading = false;
 
     // open blade for new setting
-    if (!_.some($scope.blade.currentEntities)) {
+    if (!_.some(blade.currentEntities)) {
         $timeout($scope.openDetailBlade, 60, false);
     }
 }]);

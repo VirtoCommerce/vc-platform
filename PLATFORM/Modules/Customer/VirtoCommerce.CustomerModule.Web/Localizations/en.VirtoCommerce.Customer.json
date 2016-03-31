@@ -1,18 +1,71 @@
 ﻿{
   "customer": {
-    "main-menu-title": "Customers",
+    "main-menu-title": "Contacts",
     "blades": {
-      "customer-detail": {
+      "contact-detail": {
         "subtitle": "Customer details",
         "labels": {
+          "first-name": "First name",
+          "middle-name": "Middle name",
+          "last-name": "Last name",
           "full-name": "Full name",
           "birthday": "Birthday",
-          "organizations": "Organization(s)"
+          "salutation": "Salutation",
+          "defaultLanguage": "Default language",
+          "organizations": "Organization(s)",
+          "taxpayerId": "Taxpayer ID",
+          "preferred-communication": "Preferred communication",
+          "preferred-delivery": "Preferred delivery",
+          "timezone": "Time zone"
         },
         "placeholders": {
+          "first-name": "Enter value",
+          "middle-name": "Enter value",
+          "last-name": "Enter value",
           "full-name": "Enter value",
           "birthday": "Enter value",
-          "organizations": "Select organization"
+          "salutation": "Enter value",
+          "defaultLanguage": "Enter value",
+          "preferred-communication": "Enter value",
+          "preferred-delivery": "Enter value",
+          "taxpayerId": "Enter value",
+          "organizations": "Select organization",
+          "timezone": "Select value"
+        }
+      },
+      "employee-detail": {
+        "subtitle": "Employee details",
+        "labels": {
+          "is-active": "Is active",
+          "first-name": "First name",
+          "middle-name": "Middle name",
+          "last-name": "Last name",
+          "full-name": "Full name",
+          "type": "Employee type",
+          "birthday": "Birthday",
+          "photo-url": "Photo URL",
+          "defaultLanguage": "Default language",
+          "organizations": "Organization(s)",
+          "timezone": "Time zone"
+        },
+        "placeholders": {
+          "first-name": "Enter value",
+          "middle-name": "Enter value",
+          "last-name": "Enter value",
+          "full-name": "Enter value",
+          "type": "Enter value",
+          "birthday": "Enter value",
+          "photo-url": "Enter URL",
+          "defaultLanguage": "Enter value",
+          "organizations": "Select organization",
+          "timezone": "Select value"
+        }
+      },
+      "pick-store-list": {
+        "title": "New Account",
+        "subtitle": "Select a store for the new Account",
+        "labels": {
+          "name": "Store name"
         }
       },
       "organization-detail": {
@@ -24,28 +77,57 @@
         },
         "placeholders": {
           "name": "Enter name",
-          "description": "Enter value",
-          "business-category": "Enter description"
+          "business-category": "Enter value",
+          "description": "Enter description"
+        }
+      },
+      "vendor-detail": {
+        "subtitle": "Vendor details",
+        "labels": {
+          "name": "Name",
+          "site-url": "Site URL",
+          "logo-url": "Logo URL",
+          "group-name": "Group name",
+          "description": "Description"
+        },
+        "placeholders": {
+          "name": "Enter name",
+          "site-url": "Enter URL",
+          "logo-url": "Enter URL",
+          "group-name": "Enter value",
+          "description": "Enter description"
         }
       },
       "new-organization": {
         "title": "New Organization"
       },
-      "new-customer": {
+      "new-employee": {
+        "title": "New Employee"
+      },
+      "new-contact": {
         "title": "New Customer"
       },
+      "new-vendor": {
+        "title": "New Vendor"
+      },
       "member-add": {
-        "title": "New member",
-        "subtitle": "Choose new member type",
-        "menu": {
-          "organization": {
-            "title": "Organization",
-            "description": "A container for other Organizations and Customers."
-          },
-          "customer": {
-            "title": "Customer",
-            "description": "The shop Customer. Can belong to Organizations or represent an individual shopper."
-          }
+        "title": "New contact",
+        "subtitle": "Choose new contact type",
+        "organization": {
+          "title": "Organization",
+          "description": "A container for other Organizations and Customers."
+        },
+        "employee": {
+          "title": "Employee",
+          "description": "The Organization Employee."
+        },
+        "contact": {
+          "title": "Customer",
+          "description": "The shop Customer. Can belong to Organizations or represent an individual shopper."
+        },
+        "vendor": {
+          "title": "Vendor",
+          "description": "The shop Vendor."
         }
       },
       "member-emails-list": {
@@ -60,7 +142,7 @@
         }
       },
       "member-list": {
-        "title": "Organizations & Customers",
+        "title": "Organizations & Contacts",
         "subtitle": "Browsing '{{name}}'",
         "labels": {
           "type": "Type",
@@ -85,33 +167,29 @@
       },
       "member-emails-list": {
         "title": "Emails",
-        "blade-subtitle": "Manage customer emails"
+        "blade-subtitle": "Manage emails"
       },
       "member-phones-list": {
         "title": "Phones",
-        "blade-subtitle": "Manage customer phones"
+        "blade-subtitle": "Manage phones"
       },
-      "member-accounts-list": {
+      "customer-accounts-list": {
         "title": "Accounts",
         "blade-subtitle": "Manage customer accounts"
       }
     },
     "dialogs": {
-      "organizations-delete": {
+      "members-delete": {
         "title": "Delete confirmation",
-        "message": "Are you sure you want to delete selected Organizations or Customers?"
+        "message": "Are you sure you want to delete selected Organizations or Contacts?"
       },
-      "property-delete": {
-        "title": "Delete confirmation",
-        "message": "Are you sure you want to delete Property '{{name}}'?"
+      "unknown-member-type": {
+        "title": "Error",
+        "message": "Can't edit a member of unknown type '{{memberType}}'."
       },
-      "property-save": {
+      "member-save": {
         "title": "Save changes",
-        "message": "The property has been modified. Do you want to save changes??"
-      },
-      "customer-save": {
-        "title": "Save changes",
-        "message": "The Customer has been modified. Do you want to save changes?"
+        "message": "This Contact has been modified. Do you want to save changes?"
       },
       "email-save": {
         "title": "Save changes",

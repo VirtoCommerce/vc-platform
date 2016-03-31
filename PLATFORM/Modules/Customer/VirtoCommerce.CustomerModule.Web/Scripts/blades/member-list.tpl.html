@@ -7,7 +7,7 @@
                 <i class="btn-ico fa fa-times-circle" title="Clear" ng-click="filter.keyword=null;filter.criteriaChanged()"></i>
             </button>
         </div>
-        <p class="form-count">{{ 'platform.list.count' | translate }}: <span class="count">{{pageSettings.totalItems}}</span></p>
+        <p class="form-count">{{'platform.list.count' | translate}}: <span class="count">{{pageSettings.totalItems}}</span></p>
     </div>
 </div>
 <div class="blade-static __bottom" ng-if="pageSettings.itemsPerPageCount < pageSettings.totalItems" ng-include="'pagerTemplate.html'"></div>
@@ -22,10 +22,10 @@
                     columnDefs: [
                                 { name: 'actions', displayName: '', enableColumnResizing: false, enableSorting: false, width: 30, cellTemplate: 'list-actions.cell.html', pinnedLeft:true },
                                 {
-                                    name: 'memberType', displayName: 'customer.blades.member-list.labels.type', headerTooltip: 'Organization or individual Customer',
-                                    enableSorting: true, enableColumnResizing: false, width: 60, cellTemplate: 'member-list-icon.cell.html', sort: { direction: uiGridConstants.DESC }
+                                    name: 'memberType', displayName: 'customer.blades.member-list.labels.type', headerTooltip: 'Type of contact',
+                                    enableColumnResizing: false, width: 60, cellTemplate: 'member-list-icon.cell.html', sort: { direction: uiGridConstants.DESC }
                                 },
-                                { name: 'name', displayName: 'customer.blades.member-list.labels.name', enableSorting: true}
+                                { name: 'name', displayName: 'customer.blades.member-list.labels.name'}
                         ]})">
                 <!--{ name: 'customAddress', displayName: 'customer.blades.member-list.labels.address', field: 'grid.appScope.getMainAddress(row)' },
                 { name: 'customEmail', displayName: 'customer.blades.member-list.labels.email' }-->
@@ -54,7 +54,7 @@
 <script type="text/ng-template" id="member-list-icon.cell.html">
     <div class="ui-grid-cell-contents">
         <div class="product-img" ng-attr-title="{{COL_FIELD}}">
-            <i class="table-ico fa" ng-class="COL_FIELD === 'Organization' ? 'fa-university' : 'fa-user'"></i>
+            <i class="table-ico fa" ng-class="row.entity._memberTypeIcon ? row.entity._memberTypeIcon : 'fa-user'"></i>
         </div>
     </div>
 </script>

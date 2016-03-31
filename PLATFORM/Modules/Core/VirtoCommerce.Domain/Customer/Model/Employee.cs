@@ -19,7 +19,7 @@ namespace VirtoCommerce.Domain.Customer.Model
         /// </summary>
         public string Type { get; set; }
         /// <summary>
-        /// Flag mean employee activity
+        /// Employee activity flag
         /// </summary>
         public bool IsActive { get; set; }
 
