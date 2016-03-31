@@ -371,6 +371,7 @@
     </CodeAnalysisDictionary>
     <Content Include="Content\angular-gridster.css" />
     <Content Include="Content\themes\main\css\font-awesome.css" />
+    <Content Include="Content\themes\main\css\lang-rtl.css" />
     <Content Include="Content\ui-grid.eot" />
     <Content Include="Content\ui-grid.svg" />
     <Content Include="Content\ui-grid.ttf" />
