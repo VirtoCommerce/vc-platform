@@ -114,8 +114,9 @@ namespace VirtoCommerce.Storefront.Model
 
         #region IhasSettings Member
         public ICollection<SettingEntry> Settings { get; set; }
-        
         #endregion
+
+        public SeoLinksType SeoLinksType { get; set; }
 
         //Need sync store currencies with system avail currencies for specific language
         public void SyncCurrencies(IEnumerable<Currency> availableCurrencies, Language language)

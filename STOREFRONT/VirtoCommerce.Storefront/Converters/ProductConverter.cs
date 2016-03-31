@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Omu.ValueInjecter;
 using VirtoCommerce.Client.Model;
@@ -25,20 +24,24 @@ namespace VirtoCommerce.Storefront.Converters
 
             retVal.Sku = product.Code;
 
-          
+
             if (product.Properties != null)
             {
-                retVal.Properties = product.Properties.Where(x => String.Equals(x.Type, "Product", StringComparison.InvariantCultureIgnoreCase))
-                                                      .Select(p => p.ToWebModel(currentLanguage))
-                                                      .ToList();
-                retVal.VariationProperties = product.Properties.Where(x => String.Equals(x.Type, "Variation", StringComparison.InvariantCultureIgnoreCase))
-                                                      .Select(p => p.ToWebModel(currentLanguage))
-                                                      .ToList();
+                retVal.Properties = product.Properties
+                    .Where(x => string.Equals(x.Type, "Product", StringComparison.InvariantCultureIgnoreCase))
+                    .Select(p => p.ToWebModel(currentLanguage))
+                    .ToList();
+
+                retVal.VariationProperties = product.Properties
+                    .Where(x => string.Equals(x.Type, "Variation", StringComparison.InvariantCultureIgnoreCase))
+                    .Select(p => p.ToWebModel(currentLanguage))
+                    .ToList();
             }
+
             if (product.Images != null)
             {
                 retVal.Images = product.Images.Select(i => i.ToWebModel()).ToArray();
-                retVal.PrimaryImage = retVal.Images.FirstOrDefault(x => String.Equals(x.Url, product.ImgSrc, StringComparison.InvariantCultureIgnoreCase));
+                retVal.PrimaryImage = retVal.Images.FirstOrDefault(x => string.Equals(x.Url, product.ImgSrc, StringComparison.InvariantCultureIgnoreCase));
             }
 
             if (product.Assets != null)
@@ -51,22 +54,34 @@ namespace VirtoCommerce.Storefront.Converters
                 retVal.Variations = product.Variations.Select(v => v.ToWebModel(currentLanguage, currentCurrency, store)).ToList();
             }
 
+            retVal.Url = "~/product/" + product.Id;
+
             if (product.SeoInfos != null)
             {
                 //Select best matched SEO by StoreId and Language
-                var bestMatchSeo = product.SeoInfos.FindBestSeoMatch(currentLanguage, store);
-                if (bestMatchSeo != null)
+                var bestMatchedSeo = product.SeoInfos.GetBestMatchedSeoInfo(store, currentLanguage);
+                if (bestMatchedSeo != null)
                 {
-                    retVal.SeoInfo = bestMatchSeo.ToWebModel();
+                    retVal.SeoInfo = bestMatchedSeo.ToWebModel();
+
+                    if (store.SeoLinksType != SeoLinksType.None)
+                    {
+                        var seoPath = store.SeoLinksType == SeoLinksType.Short ? retVal.SeoInfo.Slug : product.GetSeoPath(store, currentLanguage, null);
+                        if (seoPath != null)
+                        {
+                            retVal.Url = "~/" + seoPath;
+                        }
+                    }
                 }
             }
 
             if (product.Reviews != null)
             {
                 retVal.Descriptions = product.Reviews.Select(r => new LocalizedString(new Language(r.LanguageCode), r.Content)).ToList();
-                retVal.Description = retVal.Descriptions.Where(x => x.Language.Equals(currentLanguage))
-                                                        .Select(x => x.Value)
-                                                        .FirstOrDefault();
+                retVal.Description = retVal.Descriptions
+                    .Where(x => x.Language.Equals(currentLanguage))
+                    .Select(x => x.Value)
+                    .FirstOrDefault();
             }
 
             return retVal;
@@ -104,7 +119,7 @@ namespace VirtoCommerce.Storefront.Converters
                 promoItem.Discount = new Money(product.Price.ActiveDiscount != null ? product.Price.ActiveDiscount.Amount.Amount : 0m, product.Price.Currency);
                 promoItem.Price = product.Price.SalePrice;
             }
-         
+
             promoItem.ProductId = product.Id;
             promoItem.Quantity = 1;
             promoItem.Variations = product.Variations.Select(v => v.ToPromotionItem()).ToList();

@@ -16,13 +16,24 @@ namespace VirtoCommerce.Storefront.Converters
             var retVal = new Category();
             retVal.InjectFrom<NullableAndEnumValueInjecter>(category);
 
+            retVal.Url = "~/category/" + category.Id;
+
             if (category.SeoInfos != null)
             {
                 //Select best matched SEO by StoreId and Language
-                var bestMatchSeo = category.SeoInfos.FindBestSeoMatch(currentLanguage, store);
-                if(bestMatchSeo != null)
+                var bestMatchedSeo = category.SeoInfos.GetBestMatchedSeoInfo(store, currentLanguage);
+                if (bestMatchedSeo != null)
                 {
-                    retVal.SeoInfo = bestMatchSeo.ToWebModel();
+                    retVal.SeoInfo = bestMatchedSeo.ToWebModel();
+
+                    if (store.SeoLinksType != SeoLinksType.None)
+                    {
+                        var seoPath = store.SeoLinksType == SeoLinksType.Short ? retVal.SeoInfo.Slug : category.GetSeoPath(store, currentLanguage, null);
+                        if (seoPath != null)
+                        {
+                            retVal.Url = "~/" + seoPath;
+                        }
+                    }
                 }
             }
 
@@ -34,10 +45,12 @@ namespace VirtoCommerce.Storefront.Converters
 
             if (category.Properties != null)
             {
-                retVal.Properties = category.Properties.Where(x => string.Equals(x.Type, "Category", StringComparison.InvariantCultureIgnoreCase))
-                                                      .Select(p => p.ToWebModel(currentLanguage))
-                                                      .ToList();
+                retVal.Properties = category.Properties
+                    .Where(x => string.Equals(x.Type, "Category", StringComparison.OrdinalIgnoreCase))
+                    .Select(p => p.ToWebModel(currentLanguage))
+                    .ToList();
             }
+
             return retVal;
         }
     }
