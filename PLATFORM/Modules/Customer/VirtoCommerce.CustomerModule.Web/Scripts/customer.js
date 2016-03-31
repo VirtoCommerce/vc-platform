@@ -88,8 +88,8 @@ angular.module(moduleName, [])
       widgetService.registerWidget(dynamicPropertyWidget, 'vendorDetail2');
 
       // register member types
-      memberTypesResolverService.registerType({ memberType: 'Organization', fullTypeName: 'VirtoCommerce.Domain.Customer.Model.Organization', icon: 'fa-university', template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/organization-detail.tpl.html', getDisplayName: function (x) { return x.name; } });
-      memberTypesResolverService.registerType({ memberType: 'Employee', fullTypeName: 'VirtoCommerce.Domain.Customer.Model.Employee', icon: ' fa-user', template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/employee-detail.tpl.html', getDisplayName: function (x) { return x.fullName; } });
-      memberTypesResolverService.registerType({ memberType: 'Contact', fullTypeName: 'VirtoCommerce.Domain.Customer.Model.Contact', icon: 'fa-smile-o', template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/customer-detail.tpl.html', getDisplayName: function (x) { return x.fullName; } });
-      memberTypesResolverService.registerType({ memberType: 'Vendor', fullTypeName: 'VirtoCommerce.Domain.Customer.Model.Vendor', icon: 'fa-balance-scale', template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/vendor-detail.tpl.html', getDisplayName: function (x) { return x.name; }, topLevelElementOnly: true });
+      memberTypesResolverService.registerType({ memberType: 'Organization', fullTypeName: 'VirtoCommerce.Domain.Customer.Model.Organization', icon: 'fa-university', template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/organization-detail.tpl.html' });
+      memberTypesResolverService.registerType({ memberType: 'Employee', fullTypeName: 'VirtoCommerce.Domain.Customer.Model.Employee', icon: ' fa-user', template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/employee-detail.tpl.html' });
+      memberTypesResolverService.registerType({ memberType: 'Contact', fullTypeName: 'VirtoCommerce.Domain.Customer.Model.Contact', icon: 'fa-smile-o', template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/customer-detail.tpl.html' });
+      memberTypesResolverService.registerType({ memberType: 'Vendor', fullTypeName: 'VirtoCommerce.Domain.Customer.Model.Vendor', icon: 'fa-balance-scale', template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/vendor-detail.tpl.html', topLevelElementOnly: true });
   }]);

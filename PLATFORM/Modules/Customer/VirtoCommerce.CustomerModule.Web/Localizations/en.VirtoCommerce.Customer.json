@@ -146,7 +146,7 @@
         "subtitle": "Browsing '{{name}}'",
         "labels": {
           "type": "Type",
-          "_displayName": "Display name",
+          "name": "Name",
           "address": "Address",
           "email": "Email"
         }
