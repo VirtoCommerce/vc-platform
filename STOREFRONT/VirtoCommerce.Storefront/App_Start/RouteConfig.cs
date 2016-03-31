@@ -50,6 +50,7 @@ namespace VirtoCommerce.Storefront
             //Common storefront API
             routes.MapLocalizedStorefrontRoute("API.Common.GetCountries", "storefrontapi/countries", defaults: new { controller = "ApiCommon", action = "GetCountries" });
             routes.MapLocalizedStorefrontRoute("API.Common.GetCountryRegions", "storefrontapi/countries/{countryCode}/regions", defaults: new { controller = "ApiCommon", action = "GetCountryRegions" });
+            routes.MapLocalizedStorefrontRoute("API.Common.ContactUs", "storefrontapi/contactus", defaults: new { controller = "ApiCommon", action = "ContactUs" });
 
             //Pricing API
             routes.MapLocalizedStorefrontRoute("API.Pricing.GetActualProductPrices", "storefrontapi/pricing/actualprices", defaults: new { controller = "ApiPricing", action = "GetActualProductPrices" }, constraints: new { httpMethod = new HttpMethodConstraint(new string[] { "POST" }) });
@@ -119,7 +120,6 @@ namespace VirtoCommerce.Storefront
             routes.MapLocalizedStorefrontRoute("Common.ContactUs", "contact/{viewName}", defaults: new { controller = "Common", action = "СontactUs", viewName = UrlParameter.Optional }, constraints: new { httpMethod = new HttpMethodConstraint(new string[] { "GET" }) });
             routes.MapLocalizedStorefrontRoute("Common.NoStore", "common/nostore", defaults: new { controller = "Common", action = "NoStore" });
             routes.MapLocalizedStorefrontRoute("Common.Maintenance", "maintenance", defaults: new { controller = "Common", action = "Maintenance" });
-
 
             //Product routes
             routes.MapLocalizedStorefrontRoute("Product.GetProduct", "product/{productId}", defaults: new { controller = "Product", action = "ProductDetails" });
