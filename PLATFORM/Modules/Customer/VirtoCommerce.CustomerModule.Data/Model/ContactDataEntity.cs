@@ -62,9 +62,12 @@ namespace VirtoCommerce.CustomerModule.Data.Model
         {
             //Call base converter first
             base.ToMember(member);
-
             var contact = member as Contact;
             contact.Organizations = this.MemberRelations.Select(x => x.Ancestor).OfType<OrganizationDataEntity>().Select(x => x.Id).ToList();
+            if(string.IsNullOrEmpty(member.Name))
+            {
+                member.Name = contact.FullName;
+            }
             return member;
         }
 
