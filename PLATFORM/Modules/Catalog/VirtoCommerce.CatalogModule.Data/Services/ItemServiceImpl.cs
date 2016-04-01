@@ -46,8 +46,9 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                 if ((respGroup & coreModel.ItemResponseGroup.Seo) == coreModel.ItemResponseGroup.Seo)
                 {
                     var expandedProducts = retVal.Concat(retVal.Where(x => x.Variations != null).SelectMany(x => x.Variations)).ToArray();
-                    var allCategories = expandedProducts.Select(x => x.Category).ToArray();
-                    var allSeoObjects = expandedProducts.OfType<ISeoSupport>().Concat(allCategories.OfType<ISeoSupport>()).ToArray();
+                    var categories = expandedProducts.Select(x => x.Category).ToArray();
+                    var allCategories = categories.Concat(categories.Where(c => c.Parents != null).SelectMany(c => c.Parents)).ToArray();
+                    var allSeoObjects = expandedProducts.OfType<ISeoSupport>().Concat(allCategories).ToArray();
                     _commerceService.LoadSeoForObjects(allSeoObjects);
 
                 }
@@ -78,7 +79,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                 CommitChanges(repository);
                 pkMap.ResolvePrimaryKeys();
             }
-       
+
             //Update SEO 
             var itemsWithVariations = items.Concat(items.Where(x => x.Variations != null).SelectMany(x => x.Variations)).ToArray();
             _commerceService.UpsertSeoForObjects(itemsWithVariations);

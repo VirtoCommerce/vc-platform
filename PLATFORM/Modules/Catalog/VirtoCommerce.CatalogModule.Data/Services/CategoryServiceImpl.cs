@@ -15,14 +15,14 @@ using System.Collections.Generic;
 
 namespace VirtoCommerce.CatalogModule.Data.Services
 {
-	public class CategoryServiceImpl : ServiceBase, ICategoryService
+    public class CategoryServiceImpl : ServiceBase, ICategoryService
     {
         private readonly Func<ICatalogRepository> _catalogRepositoryFactory;
-		private readonly ICommerceService _commerceService;
+        private readonly ICommerceService _commerceService;
         public CategoryServiceImpl(Func<ICatalogRepository> catalogRepositoryFactory, ICommerceService commerceService)
         {
             _catalogRepositoryFactory = catalogRepositoryFactory;
-			_commerceService = commerceService;
+            _commerceService = commerceService;
         }
 
         #region ICategoryService Members
@@ -35,11 +35,12 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                 retVal.AddRange(categories);
                 if ((responseGroup & coreModel.CategoryResponseGroup.WithSeo) == coreModel.CategoryResponseGroup.WithSeo)
                 {
-                    _commerceService.LoadSeoForObjects(categories);
+                    var objectsWithSeo = categories.Concat(categories.Where(c => c.Parents != null).SelectMany(c => c.Parents)).ToArray<ISeoSupport>();
+                    _commerceService.LoadSeoForObjects(objectsWithSeo);
                 }
-            
+
             }
-           
+
             return retVal.ToArray();
         }
 
@@ -55,9 +56,9 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 
             var pkMap = new PrimaryKeyResolvingMap();
             var dbCategory = category.ToDataModel(pkMap);
-            
+
             using (var repository = _catalogRepositoryFactory())
-            {	
+            {
                 repository.Add(dbCategory);
                 CommitChanges(repository);
                 pkMap.ResolvePrimaryKeys();
@@ -71,21 +72,21 @@ namespace VirtoCommerce.CatalogModule.Data.Services
         {
             var pkMap = new PrimaryKeyResolvingMap();
             using (var repository = _catalogRepositoryFactory())
-			using (var changeTracker = base.GetChangeTracker(repository))
+            using (var changeTracker = base.GetChangeTracker(repository))
             {
-				foreach (var category in categories)
-				{
+                foreach (var category in categories)
+                {
                     var dbCategory = repository.GetCategoriesByIds(new[] { category.Id }, Domain.Catalog.Model.CategoryResponseGroup.Full).FirstOrDefault();
-					
-					if (dbCategory == null)
-					{
-						throw new NullReferenceException("dbCategory");
-					}
-					changeTracker.Attach(dbCategory);
 
-					category.Patch(dbCategory, pkMap);
-				}
-				CommitChanges(repository);
+                    if (dbCategory == null)
+                    {
+                        throw new NullReferenceException("dbCategory");
+                    }
+                    changeTracker.Attach(dbCategory);
+
+                    category.Patch(dbCategory, pkMap);
+                }
+                CommitChanges(repository);
                 pkMap.ResolvePrimaryKeys();
             }
             //Update seo

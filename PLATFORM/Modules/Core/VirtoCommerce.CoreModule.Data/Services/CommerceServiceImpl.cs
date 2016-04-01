@@ -76,7 +76,7 @@ namespace VirtoCommerce.CoreModule.Data.Repositories
         {
             using (var repository = _repositoryFactory())
             {
-                var objectIds = seoSupportObjects.Where(x => x.Id != null).Select(x => x.Id).ToArray();
+                var objectIds = seoSupportObjects.Where(x => x.Id != null).Select(x => x.Id).Distinct().ToArray();
                 var seoInfos = repository.SeoUrlKeywords.Where(x => objectIds.Contains(x.ObjectId))
                                                         .ToArray()
                                                         .Select(x => x.ToCoreModel())
