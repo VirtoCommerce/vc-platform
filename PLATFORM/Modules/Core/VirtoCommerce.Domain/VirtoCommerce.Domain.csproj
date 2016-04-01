@@ -121,6 +121,7 @@
     <Compile Include="Common\Expressions\IConditionExpression.cs" />
     <Compile Include="Common\Expressions\IDynamicExpression.cs" />
     <Compile Include="Common\IEvaluationContext.cs" />
+    <Compile Include="Customer\Events\MemberChangingEvent.cs" />
     <Compile Include="Customer\Model\Contact.cs" />
     <Compile Include="Customer\Model\Employee.cs" />
     <Compile Include="Customer\Model\Member.cs" />

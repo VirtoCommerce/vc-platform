@@ -6,10 +6,12 @@ using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.CustomerModule.Data.Model;
 using VirtoCommerce.CustomerModule.Data.Repositories;
+using VirtoCommerce.Domain.Customer.Events;
 using VirtoCommerce.Domain.Customer.Model;
 using VirtoCommerce.Domain.Customer.Services;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
+using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Infrastructure;
 
@@ -18,7 +20,7 @@ namespace VirtoCommerce.CustomerModule.Data.Services
     /// <summary>
     /// Members service support CRUD and search for Contact, Organization, Vendor and Employee member types
     /// </summary>
-    public class CustomerMemberServiceImpl : MemberServiceBase
+    public class CommerceMembersServiceImpl : MemberServiceBase
     {
         private Dictionary<Type, Type> _knownMemberTypesMap = new Dictionary<Type, Type>()
          {
@@ -29,8 +31,8 @@ namespace VirtoCommerce.CustomerModule.Data.Services
         };
 
         private readonly ISecurityService _securityService;
-        public CustomerMemberServiceImpl(Func<ICustomerRepository> repositoryFactory, IDynamicPropertyService dynamicPropertyService, ISecurityService securityService, IMemberFactory memberFactory)
-            : base(repositoryFactory, dynamicPropertyService, memberFactory)
+        public CommerceMembersServiceImpl(Func<ICustomerRepository> repositoryFactory, IDynamicPropertyService dynamicPropertyService, ISecurityService securityService, IMemberFactory memberFactory, IEventPublisher<MemberChangingEvent> eventPublisher)
+            : base(repositoryFactory, dynamicPropertyService, memberFactory, eventPublisher)
         {
             _securityService = securityService;
         }

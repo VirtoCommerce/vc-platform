@@ -4,10 +4,12 @@ using System.Linq;
 using System.Linq.Expressions;
 using VirtoCommerce.CustomerModule.Data.Model;
 using VirtoCommerce.CustomerModule.Data.Repositories;
+using VirtoCommerce.Domain.Customer.Events;
 using VirtoCommerce.Domain.Customer.Model;
 using VirtoCommerce.Domain.Customer.Services;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
+using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Data.Infrastructure;
 
 namespace VirtoCommerce.CustomerModule.Data.Services
@@ -17,12 +19,15 @@ namespace VirtoCommerce.CustomerModule.Data.Services
     /// </summary>
     public abstract class MemberServiceBase : ServiceBase, IMemberService, IMemberSearchService
     {
-        public MemberServiceBase(Func<IMemberRepository> repositoryFactory, IDynamicPropertyService dynamicPropertyService, IMemberFactory memberFactory)
+        public MemberServiceBase(Func<IMemberRepository> repositoryFactory, IDynamicPropertyService dynamicPropertyService,
+                                 IMemberFactory memberFactory, IEventPublisher<MemberChangingEvent> eventPublisher)
         {
             RepositoryFactory = repositoryFactory;
             DynamicPropertyService = dynamicPropertyService;
             MemberFactory = memberFactory;
+            MemberEventventPublisher = eventPublisher;
         }
+        protected IEventPublisher<MemberChangingEvent> MemberEventventPublisher { get; private set; }
         protected IMemberFactory MemberFactory { get; private set; }
         protected Func<IMemberRepository> RepositoryFactory { get; private set; }
         protected IDynamicPropertyService DynamicPropertyService { get; private set; }
@@ -88,12 +93,14 @@ namespace VirtoCommerce.CustomerModule.Data.Services
                         {
                             changeTracker.Attach(dataTargetMember);
                             dataSourceMember.Patch(dataTargetMember);
+                            MemberEventventPublisher.Publish(new MemberChangingEvent(EntryState.Modified, member));
                         }
                         else
                         {
                             repository.Add(dataSourceMember);
+                            MemberEventventPublisher.Publish(new MemberChangingEvent(EntryState.Added, member));
                         }
-                    }
+                    }                 
                 }
                 CommitChanges(repository);
                 pkMap.ResolvePrimaryKeys();
@@ -112,6 +119,10 @@ namespace VirtoCommerce.CustomerModule.Data.Services
                 var members = GetByIds(ids, memberTypes);
                 if (!members.IsNullOrEmpty())
                 {
+                    foreach (var member in members)
+                    {
+                        MemberEventventPublisher.Publish(new MemberChangingEvent(EntryState.Deleted, member));
+                    }
                     repository.RemoveMembersByIds(members.Select(x => x.Id).ToArray());
                     CommitChanges(repository);
                     foreach (var member in members)

@@ -5,9 +5,11 @@ using VirtoCommerce.CustomerModule.Data.Repositories;
 using VirtoCommerce.CustomerModule.Data.Services;
 using VirtoCommerce.CustomerModule.Web.ExportImport;
 using VirtoCommerce.CustomerModule.Web.JsonConverters;
+using VirtoCommerce.Domain.Customer.Events;
 using VirtoCommerce.Domain.Customer.Model;
 using VirtoCommerce.Domain.Customer.Services;
 using VirtoCommerce.Platform.Core.DynamicProperties;
+using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
@@ -41,6 +43,9 @@ namespace VirtoCommerce.CustomerModule.Web
 
         public override void Initialize()
         {
+            //Member changing event publisher.
+            _container.RegisterType<IEventPublisher<MemberChangingEvent>, EventPublisher<MemberChangingEvent>>();
+
             var memberServiceDecorator = new MemberServiceDecorator();
             _container.RegisterInstance(memberServiceDecorator);
             _container.RegisterInstance<IMemberService>(memberServiceDecorator);
@@ -53,11 +58,11 @@ namespace VirtoCommerce.CustomerModule.Web
             var memberServiceDecorator = _container.Resolve<MemberServiceDecorator>();
         
             Func<CustomerRepositoryImpl> customerRepositoryFactory = () => new CustomerRepositoryImpl(_connectionStringName, new EntityPrimaryKeyGeneratorInterceptor(), _container.Resolve<AuditableInterceptor>());
-            var customerService = new CustomerMemberServiceImpl(customerRepositoryFactory, _container.Resolve<IDynamicPropertyService>(), _container.Resolve<ISecurityService>(), memberServiceDecorator);
+            var commerceMembersService = new CommerceMembersServiceImpl(customerRepositoryFactory, _container.Resolve<IDynamicPropertyService>(), _container.Resolve<ISecurityService>(), memberServiceDecorator, _container.Resolve<IEventPublisher<MemberChangingEvent>>());
 
             memberServiceDecorator.RegisterMemberTypes(typeof(Organization), typeof(Contact), typeof(Vendor), typeof(Employee))
-                                  .WithService(customerService)
-                                  .WithSearchService(customerService);          
+                                  .WithService(commerceMembersService)
+                                  .WithSearchService(commerceMembersService);          
 
 
             //Next lines allow to use polymorph types in API controller methods

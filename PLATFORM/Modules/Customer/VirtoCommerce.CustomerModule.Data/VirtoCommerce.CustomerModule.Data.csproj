@@ -113,7 +113,7 @@
     <Compile Include="Repositories\ICustomerRepository.cs" />
     <Compile Include="Repositories\IMemberRepository.cs" />
     <Compile Include="Repositories\MemberRepositoryBase.cs" />
-    <Compile Include="Services\CustomerMemberServiceImpl.cs" />
+    <Compile Include="Services\CommerceMembersServiceImpl.cs" />
     <Compile Include="Services\MemberServiceBase.cs" />
     <Compile Include="Services\MemberServiceDecorator.cs" />
   </ItemGroup>

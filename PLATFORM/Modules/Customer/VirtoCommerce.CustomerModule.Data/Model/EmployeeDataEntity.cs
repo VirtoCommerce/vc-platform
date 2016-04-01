@@ -55,10 +55,7 @@ namespace VirtoCommerce.CustomerModule.Data.Model
             var employee = member as Employee;
             if (employee != null)
             {
-                if (string.IsNullOrEmpty(this.Name))
-                {
-                    this.Name = employee.FullName;
-                }
+                member.Name = employee.FullName;
                 pkMap.AddPair(employee, this);
                 if (employee.Organizations != null)
                 {
