@@ -76,7 +76,7 @@ namespace VirtoCommerce.CustomerModule.Data.Model
             var contact = member as Contact;
             if (contact != null)
             {
-                if (this.Name == null)
+                if (string.IsNullOrEmpty(this.Name))
                 {
                     this.Name = contact.FullName;
                 }

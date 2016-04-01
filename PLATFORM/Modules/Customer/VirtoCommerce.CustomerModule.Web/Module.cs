@@ -55,10 +55,9 @@ namespace VirtoCommerce.CustomerModule.Web
             Func<CustomerRepositoryImpl> customerRepositoryFactory = () => new CustomerRepositoryImpl(_connectionStringName, new EntityPrimaryKeyGeneratorInterceptor(), _container.Resolve<AuditableInterceptor>());
             var customerService = new CustomerMemberServiceImpl(customerRepositoryFactory, _container.Resolve<IDynamicPropertyService>(), _container.Resolve<ISecurityService>(), memberServiceDecorator);
 
-            memberServiceDecorator.RegisterMemberType<Contact>(customerService, customerService);
-            memberServiceDecorator.RegisterMemberType<Organization>(customerService, customerService);
-            memberServiceDecorator.RegisterMemberType<Vendor>(customerService, customerService);
-            memberServiceDecorator.RegisterMemberType<Employee>(customerService, customerService);
+            memberServiceDecorator.RegisterMemberTypes(typeof(Organization), typeof(Contact), typeof(Vendor), typeof(Employee))
+                                  .WithService(customerService)
+                                  .WithSearchService(customerService);          
 
 
             //Next lines allow to use polymorph types in API controller methods

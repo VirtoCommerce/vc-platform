@@ -12,6 +12,9 @@ using VirtoCommerce.Platform.Data.Infrastructure;
 
 namespace VirtoCommerce.CustomerModule.Data.Services
 {
+    /// <summary>
+    /// Abstract base class for all derived custom members services used IMemberRepository for persistent
+    /// </summary>
     public abstract class MemberServiceBase : ServiceBase, IMemberService, IMemberSearchService
     {
         public MemberServiceBase(Func<IMemberRepository> repositoryFactory, IDynamicPropertyService dynamicPropertyService, IMemberFactory memberFactory)
@@ -24,15 +27,26 @@ namespace VirtoCommerce.CustomerModule.Data.Services
         protected Func<IMemberRepository> RepositoryFactory { get; private set; }
         protected IDynamicPropertyService DynamicPropertyService { get; private set; }
 
+        /// <summary>
+        /// Create database persistent type DataMember instance for Member instance (domain -> data mapping)
+        /// </summary>
+        /// <param name="member"></param>
+        /// <returns></returns>
         protected abstract MemberDataEntity TryCreateDataMember(Member member);
 
         #region IMemberService Members
-        public virtual Member[] GetByIds(params string[] memberIds)
+        /// <summary>
+        /// Return members by requested ids can be override for load extra data for resulting members
+        /// </summary>
+        /// <param name="memberIds"></param>
+        /// <param name="memberTypes"></param>
+        /// <returns></returns>
+        public virtual Member[] GetByIds(string[] memberIds, string[] memberTypes = null)
         {
             var retVal = new List<Member>();
             using (var repository = RepositoryFactory())
             {
-                var dataMembers = repository.GetMembersByIds(memberIds);
+                var dataMembers = repository.GetMembersByIds(memberIds, memberTypes);
                 foreach (var dataMember in dataMembers)
                 {
                     var member = MemberFactory.TryCreateMember(dataMember.MemberType);
@@ -51,6 +65,10 @@ namespace VirtoCommerce.CustomerModule.Data.Services
             return retVal.ToArray();
         }
 
+        /// <summary>
+        /// Create or update members in database
+        /// </summary>
+        /// <param name="members"></param>
         public virtual void CreateOrUpdate(Member[] members)
         {
             var pkMap = new PrimaryKeyResolvingMap();
@@ -87,11 +105,11 @@ namespace VirtoCommerce.CustomerModule.Data.Services
             }
         }
 
-        public virtual void Delete(string[] ids)
+        public virtual void Delete(string[] ids, string[] memberTypes = null)
         {
             using (var repository = RepositoryFactory())
             {
-                var members = GetByIds(ids);
+                var members = GetByIds(ids, memberTypes);
                 if (!members.IsNullOrEmpty())
                 {
                     repository.RemoveMembersByIds(members.Select(x => x.Id).ToArray());
@@ -106,6 +124,11 @@ namespace VirtoCommerce.CustomerModule.Data.Services
         #endregion
 
         #region IMemberSearchService Members
+        /// <summary>
+        /// Search members in database by given criteria
+        /// </summary>
+        /// <param name="criteria"></param>
+        /// <returns></returns>
         public virtual MembersSearchResult SearchMembers(MembersSearchCriteria criteria)
         {
             var retVal = new MembersSearchResult();
@@ -137,7 +160,7 @@ namespace VirtoCommerce.CustomerModule.Data.Services
                 query = query.Where(LinqKit.Extensions.Expand(predicate));
 
                 var sortInfos = criteria.SortInfos;
-                if (EnumerableExtensions.IsNullOrEmpty(sortInfos))
+                if (sortInfos.IsNullOrEmpty())
                 {
                     sortInfos = new[] { new SortInfo { SortColumn = ReflectionUtility.GetPropertyName<Member>(x => x.MemberType), SortDirection = SortDirection.Descending } };
                 }
@@ -151,7 +174,12 @@ namespace VirtoCommerce.CustomerModule.Data.Services
             }
         }
         #endregion
-       
+
+       /// <summary>
+       /// Used to define extra where clause for members search
+       /// </summary>
+       /// <param name="criteria"></param>
+       /// <returns></returns>
         protected virtual  Expression<Func<MemberDataEntity, bool>> GetQueryPredicate(MembersSearchCriteria criteria)
         {
             if (!String.IsNullOrEmpty(criteria.Keyword))

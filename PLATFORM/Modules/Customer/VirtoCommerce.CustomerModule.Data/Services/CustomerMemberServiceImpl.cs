@@ -15,6 +15,9 @@ using VirtoCommerce.Platform.Data.Infrastructure;
 
 namespace VirtoCommerce.CustomerModule.Data.Services
 {
+    /// <summary>
+    /// Members service support CRUD and search for Contact, Organization, Vendor and Employee member types
+    /// </summary>
     public class CustomerMemberServiceImpl : MemberServiceBase
     {
         private Dictionary<Type, Type> _knownMemberTypesMap = new Dictionary<Type, Type>()
@@ -48,9 +51,9 @@ namespace VirtoCommerce.CustomerModule.Data.Services
 
         #region IMemberService Members
 
-        public override Member[] GetByIds(params string[] memberIds)
+        public override Member[] GetByIds(string[] memberIds, string[] memberTypes = null)
         {
-            var retVal = base.GetByIds(memberIds);
+            var retVal = base.GetByIds(memberIds, memberTypes);
             Parallel.ForEach(retVal, new ParallelOptions { MaxDegreeOfParallelism = 10 }, (member) =>
             {
                 //Load security accounts for members which support them 
@@ -72,6 +75,7 @@ namespace VirtoCommerce.CustomerModule.Data.Services
             {
                 //where x or (y1 or y2)
                 var predicate = PredicateBuilder.False<MemberDataEntity>();
+                //search in special properties
                 predicate = predicate.Or(x => (x is ContactDataEntity && (x as ContactDataEntity).FullName.Contains(criteria.Keyword)));
                 predicate = predicate.Or(x => (x is EmployeeDataEntity && (x as EmployeeDataEntity).FullName.Contains(criteria.Keyword)));
                 //Should use Expand() to all predicates to prevent EF error

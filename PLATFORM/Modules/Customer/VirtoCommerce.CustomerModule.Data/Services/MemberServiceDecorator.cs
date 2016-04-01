@@ -2,94 +2,105 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.Domain.Customer.Model;
 using VirtoCommerce.Domain.Customer.Services;
 using VirtoCommerce.Platform.Core.Common;
-using VirtoCommerce.Platform.Core.DynamicProperties;
-using VirtoCommerce.Platform.Core.Security;
 
 namespace VirtoCommerce.CustomerModule.Data.Services
 {
     /// <summary>
-    /// Translate all IMemberServices calls to multiple different same service instances with other member types getting from IMembersFactory. 
+    /// Translate all IMemberServices calls to IMemberServices depend on configuration 
+    /// Also represent Members types factory
+    /// Usage:
     /// </summary>
+    /// <example>
+    /// To register new member type:
+    ///   MemberServiceDecorator.RegisterMemberTypes(typeof(Contact))
+    ///                              .WithService(contactService)
+    ///                              .WithSearchService(contactSearchService);
+    ///  To override already exist member type:
+    ///    MemberServiceDecorator.OverrideMemberType<Contact>()
+    ///                              .WithType<NewContact>()
+    ///                              .WithService(newContactService)
+    ///                              .WithSearchService(newContactSearchService);
+    ///  To override MembersSearchCriteria type to other derived type:
+    ///  MemberServiceDecorator.UseMemberSearchCriteriaType<NewmemberSearchCriteria>();
+    /// </example>
     public sealed class MemberServiceDecorator : IMemberService, IMemberFactory, IMemberSearchService
     {
-        private List<Type> _knownMemberTypes = new List<Type>(); 
-        private Dictionary<Type, IMemberService> _memberServicesMap = new Dictionary<Type, IMemberService>();
-        private Dictionary<Type, IMemberSearchService> _memberSearchServicesMap = new Dictionary<Type, IMemberSearchService>();
+        private List<MemberTypeMappingConfig> _memberMappings = new List<MemberTypeMappingConfig>();
+        
         private Type _memberSearchCriteriaType = typeof(MembersSearchCriteria);
 
-        public MemberServiceDecorator UseMemberSearchCriteriaType<T>()
+        /// <summary>
+        /// Override MembersSearchCriteria to other (used in API controllers to construct criteria from input JSON)
+        /// </summary>
+        /// <typeparam name="T">MembersSearchCriteria derived type</typeparam>
+        /// <returns></returns>
+        public MemberServiceDecorator UseMemberSearchCriteriaType<T>() where T : MembersSearchCriteria
         {
             _memberSearchCriteriaType = typeof(T);
             return this;
         }
 
-        public MemberServiceDecorator RegisterMemberType<T>(IMemberService memberService, IMemberSearchService memberSearchService) where T : Member
+        /// <summary>
+        /// Register new member type (fluent method)
+        /// </summary>
+        /// <param name="memberTypes">new member types</param>
+        /// <returns>MemberTypeMappingConfig instance to continue configuration through fluent syntax</returns>
+        public MemberTypeMappingConfig RegisterMemberTypes(params Type[] memberTypes)
         {
-            var memberType = typeof(T);
-            if(_knownMemberTypes.Contains(memberType))
+            var intersection = _memberMappings.SelectMany(x => x.AllSupportedMemberTypes).Intersect(memberTypes);
+            if (intersection.Any())
             {
-                throw new ArgumentException("Already exist");
+                throw new ArgumentException("Types already registered " + string.Join(", ", intersection.Select(x=>x.Name)));
             }
-            _knownMemberTypes.Add(memberType);
-            if (memberService != null)
+            var notMemberTypes = memberTypes.Where(x => !x.IsDerivativeOf(typeof(Member)));
+            if(notMemberTypes.Any())
             {
-                _memberServicesMap[memberType] = memberService;
+                throw new ArgumentException(string.Join(", ", notMemberTypes.Select(x => x.Name)), " should be inherited from Member type");
             }
-            if (memberSearchService != null)
-            {
-                _memberSearchServicesMap[memberType] = memberSearchService;
-            }
-            return this;
+            var retVal = new MemberTypeMappingConfig(memberTypes);
+            _memberMappings.Add(retVal);
+            return retVal;
         }
 
-        public MemberServiceDecorator OverrideMemberType<TOld, TNew>(IMemberService memberService = null, IMemberSearchService memberSearchService = null) where TOld : Member where TNew : Member
+        /// <summary>
+        /// Override already registered member type to new 
+        /// </summary>
+        /// <typeparam name="T">overridden  member type</typeparam>
+        /// <returns>MemberTypeMappingConfig instance to continue configuration through fluent syntax</returns>
+        public MemberTypeMappingConfig OverrideMemberType<T>() where T : Member
         {
-            var oldMemberType = typeof(TOld);
-            var newMemberType = typeof(TNew);
-            if (!_knownMemberTypes.Contains(oldMemberType))
+            var memberType = typeof(T);           
+            var existMapping = _memberMappings.FirstOrDefault(x => x.MemberTypes.Contains(memberType));
+            if(existMapping == null)
             {
-                throw new ArgumentException("Type not exist");
+                throw new ArgumentException("Not found");
             }
-            if(!newMemberType.IsDerivativeOf(oldMemberType))
-            {
-                throw new ArgumentException("The new type must be inherited from the old");
-            }
-            _knownMemberTypes.Remove(oldMemberType);
-            _knownMemberTypes.Add(newMemberType);
+            existMapping.MemberTypes.Remove(memberType);
 
-            if (memberService != null)
+            var newMemberMapping = new MemberTypeMappingConfig()
             {
-                _memberServicesMap.Remove(oldMemberType);
-                _memberServicesMap[newMemberType] = memberService;
-            }
-            if (memberSearchService != null)
-            {
-                _memberSearchServicesMap.Remove(oldMemberType);
-                _memberSearchServicesMap[newMemberType] = memberSearchService;
-            }
-
-            return this;
+                MemberService = existMapping.MemberService,
+                MemberSearchService = existMapping.MemberSearchService
+            };
+            _memberMappings.Add(newMemberMapping);
+            return newMemberMapping;
         }
 
-        private IEnumerable<IMemberService> AllMemberServices
-        {
-            get
-            {
-                return _memberServicesMap.GroupBy(x => x.Value).Select(x => x.Key);
-            }
-        }
-       
+      
         #region IMembersFactory Members
-        public Member TryCreateMember(string memberType)
+        /// <summary>
+        /// Factory method created concrete Member type instance base on member type name
+        /// </summary>
+        /// <param name="memberTypeName"></param>
+        /// <returns></returns>
+        public Member TryCreateMember(string memberTypeName)
         {
             Member retVal = null;
-            //Find in known types inheritance chain to support derived member type
-            var knownMemberType = _knownMemberTypes.FirstOrDefault(x => x.GetTypeInheritanceChainTo(typeof(Member)).Any(y=>string.Equals(y.Name, memberType, StringComparison.OrdinalIgnoreCase)));
+            var knownMemberType = _memberMappings.Select(x => x.ResolveMemberType(memberTypeName)).FirstOrDefault(x => x != null);
             if (knownMemberType != null)
             {
                 retVal = Activator.CreateInstance(knownMemberType) as Member;
@@ -105,34 +116,12 @@ namespace VirtoCommerce.CustomerModule.Data.Services
 
         #region IMemberService Members
 
-        public void CreateOrUpdate(Member[] members)
-        {
-            var memberServicesGroups = _memberServicesMap.GroupBy(x => x.Value);
-            foreach (var memberServiceGroup in memberServicesGroups)
-            {
-                var supportMemberTypes = memberServiceGroup.SelectMany(x => x.Key.GetTypeInheritanceChainTo(typeof(Member))).Distinct().ToArray();
-                var supportMembers = members.Where(x => supportMemberTypes.Contains(x.GetType())).ToArray();
-                if (!supportMembers.IsNullOrEmpty())
-                {
-                    memberServiceGroup.Key.CreateOrUpdate(members);
-                }
-            }         
-        }
-
-        public void Delete(string[] ids)
-        {
-            foreach(var memberService in AllMemberServices)
-            {
-                memberService.Delete(ids);
-            }
-        }
-
-        public  Member[] GetByIds(string[] memberIds)
+        public Member[] GetByIds(string[] memberIds, string[] memberTypes = null)
         {
             var retVal = new ConcurrentBag<Member>();
-            Parallel.ForEach(AllMemberServices, (x) =>
+            Parallel.ForEach(_memberMappings, (x) =>
             {
-                foreach(var member in x.GetByIds(memberIds))
+                foreach (var member in x.MemberService.GetByIds(memberIds, x.AllSupportedMemberTypeNames.ToArray()))
                 {
                     retVal.Add(member);
                 }
@@ -140,23 +129,53 @@ namespace VirtoCommerce.CustomerModule.Data.Services
             return retVal.ToArray();
         }
 
+        public void CreateOrUpdate(Member[] members)
+        {
+            Parallel.ForEach(_memberMappings, (memberMapping) =>
+            {
+                var matchMembers = members.Where(x => memberMapping.AllSupportedMemberTypeNames.Contains(x.MemberType, StringComparer.OrdinalIgnoreCase)).ToArray();
+                if(!matchMembers.IsNullOrEmpty())
+                {
+                    memberMapping.MemberService.CreateOrUpdate(matchMembers);
+                }              
+            });
+        }
+
+        public void Delete(string[] ids, string[] memberTypes = null)
+        {
+            var retVal = new ConcurrentBag<Member>();
+            Parallel.ForEach(_memberMappings, (x) =>
+            {
+                x.MemberService.Delete(ids, x.AllSupportedMemberTypeNames.ToArray());
+
+            });
+        }
         #endregion
 
         #region IMemberSearchService Members
+        /// <summary>
+        /// Search in multiple data sources. 
+        /// !!!Ahtung!!!: Unable to correct search with pagination and sorting on different data sources
+        /// </summary>
+        /// <param name="criteria"></param>
+        /// <returns></returns>
         public MembersSearchResult SearchMembers(MembersSearchCriteria criteria)
         {
             var retVal = new MembersSearchResult();
             var skip = criteria.Skip;
             var take = criteria.Take;
             var memberTypes = criteria.MemberTypes;
-            foreach (var memberSearchServiceGroup in _memberSearchServicesMap.GroupBy(x => x.Value))
+            //Do not allow unsorted search
+            if (criteria.SortInfos.IsNullOrEmpty())
             {
-                //Get all inheritance chain
-                var searchServiceSupportedMemberTypes = memberSearchServiceGroup.SelectMany(x => x.Key.GetTypeInheritanceChainTo(typeof(Member))).Select(x => x.Name).Distinct().ToArray();
-                criteria.MemberTypes = memberTypes.IsNullOrEmpty() ? searchServiceSupportedMemberTypes : searchServiceSupportedMemberTypes.Intersect(criteria.MemberTypes, StringComparer.OrdinalIgnoreCase).ToArray();
+                criteria.Sort = "memberType:desc;name:asc";
+            }
+            foreach (var memberMapping in _memberMappings)
+            {            
+                criteria.MemberTypes = memberTypes.IsNullOrEmpty() ? memberMapping.AllSupportedMemberTypeNames.ToArray() : memberMapping.AllSupportedMemberTypeNames.Intersect(criteria.MemberTypes, StringComparer.OrdinalIgnoreCase).ToArray();
                 if (!criteria.MemberTypes.IsNullOrEmpty() && criteria.Take >= 0)
                 {
-                    var result = memberSearchServiceGroup.Key.SearchMembers(criteria);
+                    var result = memberMapping.MemberSearchService.SearchMembers(criteria);
                     retVal.Members.AddRange(result.Members);
                     retVal.TotalCount += result.TotalCount;
                     criteria.Skip = Math.Max(0, skip - retVal.TotalCount);
@@ -170,11 +189,78 @@ namespace VirtoCommerce.CustomerModule.Data.Services
             return retVal;
         } 
         #endregion
-
-
-
-
     }
 
-    
+    /// <summary>
+    /// Helper class contains member type mapping information
+    /// </summary>
+    public sealed class MemberTypeMappingConfig
+    {
+        public MemberTypeMappingConfig(Type[] memberTypes = null)
+        {
+            MemberTypes = new List<Type>();
+            if(memberTypes != null)
+            {
+                MemberTypes.AddRange(memberTypes);
+            }
+        }
+        /// <summary>
+        /// Supported member types
+        /// </summary>
+        public ICollection<Type> MemberTypes { get; private set; }
+        /// <summary>
+        /// CRUD service for supported member types
+        /// </summary>
+        public IMemberService MemberService { get; set; }
+        /// <summary>
+        /// Search service for supported member types
+        /// </summary>
+        public IMemberSearchService MemberSearchService { get; set; }
+
+        public MemberTypeMappingConfig WithService(IMemberService memberService)
+        {
+            MemberService = memberService;
+            return this;
+        }
+        public MemberTypeMappingConfig WithSearchService(IMemberSearchService memberSearchService)
+        {
+            MemberSearchService = memberSearchService;
+            return this;
+        }
+
+        public MemberTypeMappingConfig WithType<T>() where T : Member
+        {
+            var memberType = typeof(T);
+            if(MemberTypes.Contains(memberType))
+            {
+                throw new ArgumentException("Already exist");
+            }
+            MemberTypes.Add(memberType);
+            return this;                   
+        }
+
+        public Type ResolveMemberType(string memberTypeName)
+        {
+            return MemberTypes.FirstOrDefault(x => x.GetTypeInheritanceChainTo(typeof(Member)).Any(t=> string.Equals(memberTypeName, t.Name, StringComparison.OrdinalIgnoreCase)));
+        }
+
+        public IEnumerable<string> AllSupportedMemberTypeNames
+        {
+            get
+            {
+                return AllSupportedMemberTypes.Select(x => x.Name);
+            }
+        }
+
+        public IEnumerable<Type> AllSupportedMemberTypes
+        {
+            get
+            {
+                return MemberTypes.SelectMany(x => x.GetTypeInheritanceChainTo(typeof(Member))).Distinct().ToArray();
+            }
+        }
+    }
+
+
+
 }

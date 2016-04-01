@@ -18,7 +18,7 @@ namespace VirtoCommerce.CustomerModule.Data.Repositories
         IQueryable<MemberRelationDataEntity> MemberRelations { get; }
 
 
-        MemberDataEntity[] GetMembersByIds(string[] ids);
-        void RemoveMembersByIds(string[] ids);
+        MemberDataEntity[] GetMembersByIds(string[] ids, string[] memberTypes = null);
+        void RemoveMembersByIds(string[] ids, string[] memberTypes = null);
     }
 }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.CustomerModule.Data.Model;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 
@@ -120,21 +121,28 @@ namespace VirtoCommerce.CustomerModule.Data.Repositories
             get { return GetAsQueryable<MemberRelationDataEntity>(); }
         }
 
-        public virtual MemberDataEntity[] GetMembersByIds(params string[] ids)
+        public virtual MemberDataEntity[] GetMembersByIds(string[] ids, string[] memberTypes = null)
         {
-            var retVal = Members.Include(x => x.MemberRelations.Select(y => y.Ancestor))
-                                .Where(x => ids.Contains(x.Id)).ToArray();
+            var query = Members.Include(x => x.MemberRelations.Select(y => y.Ancestor))
+                                .Where(x => ids.Contains(x.Id));
+            if(!memberTypes.IsNullOrEmpty())
+            {
+                query = query.Where(x => memberTypes.Contains(x.MemberType));
+            }
+
+            var retVal = query.ToArray();
+
             var notes = Notes.Where(x => ids.Contains(x.MemberId)).ToArray();
             var emails = Emails.Where(x => ids.Contains(x.MemberId)).ToArray();
             var addresses = Addresses.Where(x => ids.Contains(x.MemberId)).ToArray();
             var phones = Phones.Where(x => ids.Contains(x.MemberId)).ToArray();
 
-            return retVal.ToArray();
+            return retVal;
         }
 
-        public virtual void RemoveMembersByIds(string[] ids)
+        public virtual void RemoveMembersByIds(string[] ids, string[] memberTypes = null)
         {
-            var dbMembers = GetMembersByIds(ids);
+            var dbMembers = GetMembersByIds(ids, memberTypes);
             foreach (var dbMember in dbMembers)
             {
                 foreach (var relation in dbMember.MemberRelations.ToArray())

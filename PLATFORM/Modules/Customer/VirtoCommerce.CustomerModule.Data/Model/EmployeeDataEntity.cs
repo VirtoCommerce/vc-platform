@@ -55,7 +55,7 @@ namespace VirtoCommerce.CustomerModule.Data.Model
             var employee = member as Employee;
             if (employee != null)
             {
-                if (this.Name == null)
+                if (string.IsNullOrEmpty(this.Name))
                 {
                     this.Name = employee.FullName;
                 }

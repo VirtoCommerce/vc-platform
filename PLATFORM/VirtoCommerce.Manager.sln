@@ -179,8 +179,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Amazon.MerchantModule.Web",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiBs", "Modules\PaymentGateways\DiBs\DiBs.csproj", "{0933D572-27E9-454A-A530-52A50C089C0D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContactExtModule.Web", "Modules\Integration\ContactExtModule.Web\ContactExtModule.Web.csproj", "{721DDDD1-4972-4543-BE3C-87DC9D704435}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -423,10 +421,6 @@ Global
 		{0933D572-27E9-454A-A530-52A50C089C0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0933D572-27E9-454A-A530-52A50C089C0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0933D572-27E9-454A-A530-52A50C089C0D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{721DDDD1-4972-4543-BE3C-87DC9D704435}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{721DDDD1-4972-4543-BE3C-87DC9D704435}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{721DDDD1-4972-4543-BE3C-87DC9D704435}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{721DDDD1-4972-4543-BE3C-87DC9D704435}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -512,6 +506,5 @@ Global
 		{C91DB74E-9907-4467-9AF0-25E7539A47FD} = {4E79CE95-D200-41C9-B191-324B741494BE}
 		{6573AFB8-742B-426D-B656-7505333FB444} = {7202A695-A43F-47D2-BFB9-8F1FCD9E1262}
 		{0933D572-27E9-454A-A530-52A50C089C0D} = {4E79CE95-D200-41C9-B191-324B741494BE}
-		{721DDDD1-4972-4543-BE3C-87DC9D704435} = {CCE8E709-77BB-4E19-9332-F7B9E4CE5BD1}
 	EndGlobalSection
 EndGlobal
