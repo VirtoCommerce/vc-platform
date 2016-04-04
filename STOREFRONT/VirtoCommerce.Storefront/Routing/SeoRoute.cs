@@ -29,8 +29,6 @@ namespace VirtoCommerce.Storefront.Routing
 
         public override RouteData GetRouteData(HttpContextBase httpContext)
         {
-            var requestUrl = httpContext.Request.Url.ToString();
-
             var data = base.GetRouteData(httpContext);
 
             if (data != null)
@@ -38,14 +36,7 @@ namespace VirtoCommerce.Storefront.Routing
                 //get workContext
                 var workContext = _workContextFactory();
 
-                //var path = data.Values["path"] as string;
-                string path = data.Values["path"] as string;
-                if (!string.IsNullOrEmpty(workContext.CurrentStore.Url))
-                {
-                    var pathStartPosition = requestUrl.IndexOf(workContext.CurrentStore.Url) + workContext.CurrentStore.Url.Length;
-                    path = requestUrl.Substring(pathStartPosition, requestUrl.Length - pathStartPosition).Trim('/');
-                }
-
+                var path = data.Values["path"] as string;
                 var store = data.Values["store"] as string;
                 //Special workaround for case when url contains only slug without store (one store case)
                 if (string.IsNullOrEmpty(path) && !string.IsNullOrEmpty(store) && workContext.AllStores != null)
@@ -71,7 +62,7 @@ namespace VirtoCommerce.Storefront.Routing
                         {
                             // Slug is not active. Try to find the active one for the same entity and language.
                             seoRecord = seoRecords.Where(x => x.ObjectType == seoRecord.ObjectType && x.ObjectId == seoRecord.ObjectId && x.IsActive != null && x.IsActive.Value)
-                                                    .FindBestSeoMatch(workContext.CurrentLanguage, workContext.CurrentStore);
+                                                  .FindBestSeoMatch(workContext.CurrentLanguage, workContext.CurrentStore);
 
                             if (seoRecord == null)
                             {
