@@ -18,8 +18,8 @@ storefrontApp.service('dialogService', ['$uibModal', function ($uibModal) {
 
 storefrontApp.service('feedbackService', ['$http', function ($http) {
     return {
-        postContactUsData: function (data) {
-            return $http.post('storefrontapi/contactus', { model: data });
+        postFeedback: function (data) {
+            return $http.post('storefrontapi/feedback', { model: data });
         }
     }
 }]);

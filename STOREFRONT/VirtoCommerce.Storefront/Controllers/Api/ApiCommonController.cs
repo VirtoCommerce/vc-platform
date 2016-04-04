@@ -45,9 +45,9 @@ namespace VirtoCommerce.Storefront.Controllers.Api
             return new HttpStatusCodeResult(HttpStatusCode.OK);
         }
 
-        // POST: storefrontapi/contactus
+        // POST: storefrontapi/feedback
         [HttpPost]
-        public async Task<ActionResult> ContactUs(ContactUsForm model)
+        public async Task<ActionResult> Feedback(ContactUsForm model)
         {
             await _storeModuleApi.StoreModuleSendDynamicNotificationAnStoreEmailAsync(model.ToServiceModel(WorkContext));
 

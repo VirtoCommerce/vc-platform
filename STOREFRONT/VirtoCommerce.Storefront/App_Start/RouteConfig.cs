@@ -50,7 +50,7 @@ namespace VirtoCommerce.Storefront
             //Common storefront API
             routes.MapLocalizedStorefrontRoute("API.Common.GetCountries", "storefrontapi/countries", defaults: new { controller = "ApiCommon", action = "GetCountries" });
             routes.MapLocalizedStorefrontRoute("API.Common.GetCountryRegions", "storefrontapi/countries/{countryCode}/regions", defaults: new { controller = "ApiCommon", action = "GetCountryRegions" });
-            routes.MapLocalizedStorefrontRoute("API.Common.ContactUs", "storefrontapi/contactus", defaults: new { controller = "ApiCommon", action = "ContactUs" });
+            routes.MapLocalizedStorefrontRoute("API.Common.Feedback", "storefrontapi/feedback", defaults: new { controller = "ApiCommon", action = "Feedback" });
 
             //Pricing API
             routes.MapLocalizedStorefrontRoute("API.Pricing.GetActualProductPrices", "storefrontapi/pricing/actualprices", defaults: new { controller = "ApiPricing", action = "GetActualProductPrices" }, constraints: new { httpMethod = new HttpMethodConstraint(new string[] { "POST" }) });
