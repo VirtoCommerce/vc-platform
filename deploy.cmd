@@ -89,7 +89,7 @@ IF /I "%APPSETTING_VirtoCommerce_DeployApplications%" NEQ "Web Admin Only" (
     call :ExecuteCmd "%NUGET%" restore "%STORE_SOLUTION_FILE%"
     IF !ERRORLEVEL! NEQ 0 goto error
 
-    call :ExecuteCmd "%MSBUILD_PATH%" "%STORE_SOLUTION_FILE%" /nologo /verbosity:m /t:Build /p:Configuration=Release;DebugType=none;AllowedReferenceRelatedFileExtensions=":";SolutionDir="%STORE_SOLUTION_DIR%\.\\";OutputPath="%DEPLOYMENT_TEMP%" %SCM_BUILD_ARGS%
+    call :ExecuteCmd "%MSBUILD_PATH%" "%STORE_SOLUTION_FILE%" /nologo /verbosity:m /t:Build /p:Configuration=Release;Platform="Any CPU";DebugType=none;AllowedReferenceRelatedFileExtensions=":";SolutionDir="%STORE_SOLUTION_DIR%\.\\";OutputPath="%DEPLOYMENT_TEMP%" %SCM_BUILD_ARGS%
     IF !ERRORLEVEL! NEQ 0 goto error
 
     call :ExecuteCmd rename "%PUBLISHED_WEBSITES%\VirtoCommerce.Storefront" store
@@ -104,7 +104,7 @@ call :ExecuteCmd "%NUGET%" restore "%ADMIN_SOLUTION_FILE%"
 IF !ERRORLEVEL! NEQ 0 goto error
 
 :: 2. Build to the temporary path
-call :ExecuteCmd "%MSBUILD_PATH%" "%ADMIN_SOLUTION_FILE%" /nologo /verbosity:m /t:Build /p:Configuration=Release;DebugType=none;AllowedReferenceRelatedFileExtensions=".xml";SolutionDir="%ADMIN_SOLUTION_DIR%\.\\";OutputPath="%DEPLOYMENT_TEMP%";VCModulesOutputDir="%PUBLISHED_MODULES%" %SCM_BUILD_ARGS%
+call :ExecuteCmd "%MSBUILD_PATH%" "%ADMIN_SOLUTION_FILE%" /nologo /verbosity:m /t:Build /p:Configuration=Release;Platform="Any CPU";DebugType=none;AllowedReferenceRelatedFileExtensions=".xml";SolutionDir="%ADMIN_SOLUTION_DIR%\.\\";OutputPath="%DEPLOYMENT_TEMP%";VCModulesOutputDir="%PUBLISHED_MODULES%" %SCM_BUILD_ARGS%
 IF !ERRORLEVEL! NEQ 0 goto error
 
 call :ExecuteCmd rename "%PUBLISHED_WEBSITES%\VirtoCommerce.Platform.Web" admin
@@ -117,7 +117,7 @@ IF EXIST "%PUBLISHED_MODULES%" (
 )
 
 :: Clear build output
-call :ExecuteCmd "%MSBUILD_PATH%" "%ADMIN_SOLUTION_FILE%" /nologo /verbosity:m /t:Clean /p:Configuration=Release;SolutionDir="%ADMIN_SOLUTION_DIR%\.\\" %SCM_BUILD_ARGS%
+call :ExecuteCmd "%MSBUILD_PATH%" "%ADMIN_SOLUTION_FILE%" /nologo /verbosity:m /t:Clean /p:Configuration=Release;Platform="Any CPU";SolutionDir="%ADMIN_SOLUTION_DIR%\.\\" %SCM_BUILD_ARGS%
 
 :: 3. KuduSync
 IF /I "%IN_PLACE_DEPLOYMENT%" NEQ "1" (
