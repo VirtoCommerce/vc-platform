@@ -33,6 +33,9 @@
                  })">
                 <div ui-grid="gridOptions" ui-grid-auto-resize ui-grid-save-state ui-grid-selection ui-grid-resize-columns ui-grid-move-columns ui-grid-pinning ui-grid-pagination ui-grid-height></div>
                 <ul class="menu __context" role="menu" id="ast_menu">
+                    <li class="menu-item" ng-click="command.action(contextMenuEntity)" ng-repeat="command in blade.contextMenuItems" va-permission="{{command.permission}}">
+                        <i class="menu-ico fa {{command.icon}}"></i> {{command.name | translate}}
+                    </li>
                     <li class="menu-item" ng-click="downloadUrl(contextMenuEntity)" ng-if="contextMenuEntity.type !== 'folder'">
                         <i class="menu-ico fa fa-download"></i> Download
                     </li>

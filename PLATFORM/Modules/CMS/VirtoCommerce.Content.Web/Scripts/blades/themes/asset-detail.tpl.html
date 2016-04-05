@@ -11,13 +11,12 @@
         </div>
     </form>
 </div>
-
 <div class="blade-static __collapsed" ng-if="!blade.isNew">
     <div class="form-group">
         <label>{{blade.currentEntity.name}}</label> | <a href="http://docs.virtocommerce.com/display/vc2devguide/Liquid+Reference" target="_blank">{{ 'content.blades.edit-asset.labels.liquid-documentation' | translate }}</a>
     </div>
 </div>
-
+<div class="blade-static __bottom" ng-include="'$(Platform)/Scripts/common/templates/create.tpl.html'" ng-if="blade.isNew"></div>
 <div class="blade-content __code-editor" style="{{blade.getBladeStyle()}}">
     <div class="blade-inner" style="padding: 0">
         <div class="inner-block">

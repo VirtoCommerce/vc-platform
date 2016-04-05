@@ -149,7 +149,7 @@
     <Content Include="Scripts\blades\themes\theme-detail.tpl.html" />
     <Content Include="Scripts\blades\themes\edit-asset.js" />
     <Content Include="Scripts\blades\themes\edit-asset.tpl.html" />
-    <Content Include="Scripts\blades\themes\image-asset-detail.js" />
+    <Content Include="Scripts\blades\themes\image-asset-detail.bak.js" />
     <Content Include="Scripts\blades\themes\image-asset-detail.tpl.html" />
     <Content Include="Scripts\blades\pages\page-detail.js" />
     <Content Include="Scripts\blades\pages\page-detail.tpl.html" />
@@ -158,7 +158,7 @@
     <Content Include="Scripts\blades\menu\menu-link-list.js" />
     <Content Include="Scripts\blades\menu\menu-link-list.tpl.html" />
     <Content Include="Scripts\blades\pages\pages-list.js" />
-    <Content Include="Scripts\blades\pages\pages-list.tpl.html" />
+    <Content Include="Scripts\blades\pages\pages-list.tpl.bak.html" />
     <Content Include="Scripts\blades\themes\theme-asset-list.js" />
     <Content Include="Scripts\blades\themes\theme-asset-list.tpl.html" />
     <Content Include="Scripts\blades\themes\themes-list.js" />
