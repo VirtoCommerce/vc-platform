@@ -10,6 +10,7 @@ using VirtoCommerce.Platform.Core.Common;
 namespace VirtoCommerce.CustomerModule.Data.Services
 {
     /// <summary>
+    /// Used for decorate multiple members services (members extension point)
     /// Translate all IMemberServices calls to IMemberServices depend on configuration 
     /// Also represent Members types factory
     /// Usage:
@@ -155,7 +156,6 @@ namespace VirtoCommerce.CustomerModule.Data.Services
         #region IMemberSearchService Members
         /// <summary>
         /// Search in multiple data sources. 
-        /// !!!Ahtung!!!: Unable to correct search with pagination and sorting on different data sources
         /// </summary>
         /// <param name="criteria"></param>
         /// <returns></returns>
@@ -165,11 +165,12 @@ namespace VirtoCommerce.CustomerModule.Data.Services
             var skip = criteria.Skip;
             var take = criteria.Take;
             var memberTypes = criteria.MemberTypes;
-            //Do not allow unsorted search
-            if (criteria.SortInfos.IsNullOrEmpty())
-            {
-                criteria.Sort = "memberType:desc;name:asc";
-            }
+            /// !!!Ahtung!!!: Because members can be searched in multiple data sources we have to always use sorting by memberType field (asc or desc) 
+            /// instead pagination will not works properly
+            var sortByMemberType = criteria.SortInfos.FirstOrDefault(x => string.Equals(x.SortColumn, "memberType", StringComparison.OrdinalIgnoreCase)) ?? new SortInfo { SortColumn = "memberType" };
+            var sortInfos = criteria.SortInfos.Where(x => x != sortByMemberType);
+            criteria.Sort = SortInfo.ToString(new[] { sortByMemberType }.Concat(sortInfos));
+           
             foreach (var memberMapping in _memberMappings)
             {            
                 criteria.MemberTypes = memberTypes.IsNullOrEmpty() ? memberMapping.AllSupportedMemberTypeNames.ToArray() : memberMapping.AllSupportedMemberTypeNames.Intersect(criteria.MemberTypes, StringComparer.OrdinalIgnoreCase).ToArray();

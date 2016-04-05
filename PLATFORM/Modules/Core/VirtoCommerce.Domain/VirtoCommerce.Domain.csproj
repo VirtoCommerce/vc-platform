@@ -115,6 +115,7 @@
     <Compile Include="Commerce\Model\ISupportCancellation.cs" />
     <Compile Include="Commerce\Model\SeoInfo.cs" />
     <Compile Include="Commerce\Model\TaxDetail.cs" />
+    <Compile Include="Commerce\Services\ISeoDuplicatesDetector.cs" />
     <Compile Include="Common\Expressions\ConditionExpressionTree.cs" />
     <Compile Include="Common\Expressions\DynamicExpression.cs" />
     <Compile Include="Common\EvaluationContextBase.cs" />

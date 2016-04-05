@@ -31,7 +31,7 @@
             scope.$watch('gridsterOpts', function () {
                 scope.widgets = _.filter(widgetService.widgetsMap[scope.group], function (w) { return !angular.isFunction(w.isVisible) || w.isVisible(scope.blade); });
                 angular.forEach(scope.widgets, function (w) {
-                    w.blade = scope.blade;
+                	w.blade = scope.blade;
                     w.widgetsInContainer = scope.widgets;
                 });
             }, true);

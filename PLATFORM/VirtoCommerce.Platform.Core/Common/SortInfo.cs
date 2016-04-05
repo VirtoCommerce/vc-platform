@@ -23,6 +23,14 @@ namespace VirtoCommerce.Platform.Core.Common
 
     public sealed class SortInfo : IEquatable<SortInfo>
     {
+        public override string ToString()
+        {
+            return SortColumn + ":" + (SortDirection == SortDirection.Descending ? "desc" : "asc");
+        }
+        public static string ToString(IEnumerable<SortInfo> sortInfos)
+        {
+            return string.Join(";", sortInfos);
+        }
         public static IEnumerable<SortInfo> Parse(string sortExpr)
         {
             var retVal = new List<SortInfo>();

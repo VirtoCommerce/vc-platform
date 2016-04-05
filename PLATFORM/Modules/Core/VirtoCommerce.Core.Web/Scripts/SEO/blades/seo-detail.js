@@ -1,24 +1,22 @@
 ﻿angular.module('virtoCommerce.coreModule.seo')
-.controller('virtoCommerce.coreModule.seo.seoDetailController', ['$scope', 'virtoCommerce.catalogModule.categories', 'virtoCommerce.catalogModule.items', 'platformWebApp.bladeNavigationService', function ($scope, categories, items, bladeNavigationService) {
+.controller('virtoCommerce.coreModule.seo.seoDetailController', ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
     var blade = $scope.blade;
-    // blade.updatePermission = // Use predefined (parent) permission
+   
+    function initializeBlade() {
+    	var seoInfos = blade.seoContainerObject.seoInfos;
+    	if (blade.store) {
+    		seoInfos = _.filter(seoInfos, function (x) { return x.storeId === blade.store.id; });
+    	}
+    	// generate seo for missing languages
+    	_.each(blade.seoLanguages, function (lang) {
+    		if (_.every(seoInfos, function (seoInfo) { return seoInfo.languageCode.toLowerCase().indexOf(lang.toLowerCase()) < 0; })) {
+    			seoInfos.push({ isNew: true, languageCode: lang });
+    		}
+    	});
 
-    function initializeBlade(parentEntity) {
-        if (parentEntity) {
-            blade.data = parentEntity;
-            var data = _.filter(parentEntity.seoInfos, function (x) { return x.storeId === blade.store.id; });
-
-            // generate seo for missing languages
-            _.each(blade.parentBlade.seoLanguages, function (lang) {
-                if (_.every(data, function (seoInfo) { return seoInfo.languageCode.toLowerCase().indexOf(lang.toLowerCase()) < 0; })) {
-                    data.push({ isNew: true, languageCode: lang });
-                }
-            });
-
-            blade.currentEntities = angular.copy(data);
-            blade.origEntity = data;
-            blade.isLoading = false;
-        }
+    	blade.currentEntities = angular.copy(seoInfos);
+    	blade.origEntity = seoInfos;
+    	blade.isLoading = false;
     };
 
     $scope.cancelChanges = function () {
@@ -33,7 +31,7 @@
             if (x.isNew) {
                 x.isNew = undefined;
                 x.storeId = blade.store.id;
-                blade.data.seoInfos.push(x);
+                blade.seoContainerObject.seoInfos.push(x);
             } else {
                 var foundObject = _.find(blade.origEntity, function (seoInfo) { return seoInfo.languageCode.toLowerCase().indexOf(x.languageCode.toLowerCase()) === 0; });
                 angular.copy(x, foundObject);
@@ -85,8 +83,8 @@
 
     blade.headIcon = 'fa-globe';
     blade.title = 'core.blades.seo-detail.title';
-    blade.titleValues = { store: blade.store.name };
+    //blade.titleValues = { store: blade.store.id };
     blade.subtitle = 'core.blades.seo-detail.subtitle';
 
-    $scope.$watch('blade.parentBlade.currentEntity', initializeBlade);
+    initializeBlade();
 }]);
