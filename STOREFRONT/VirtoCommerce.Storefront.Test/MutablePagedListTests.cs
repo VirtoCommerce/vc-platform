@@ -17,7 +17,7 @@ namespace VirtoCommerce.Storefront.Test
         {
             int totalCount;
             var superset = GetTestData(0, int.MaxValue, out totalCount);
-            var mutablePagedList = new MutablePagedList<int>(superset, 1, 5);
+            var mutablePagedList = new MutablePagedList<int>(superset);
 
             Assert.True(mutablePagedList.TotalItemCount == 0);
             Assert.True(mutablePagedList.PageCount == 0);

@@ -126,7 +126,7 @@ namespace VirtoCommerce.Storefront.Owin
                                 var searchResult = catalogSearchService.SearchProducts(criteria);
                                 //Because catalog search products returns also aggregations we can use it to populate workContext using C# closure
                                 //now workContext.Aggregation will be contains preloaded aggregations for current category
-                                workContext.Aggregations = new MutablePagedList<Aggregation>(searchResult.Aggregations, 1, int.MaxValue);
+                                workContext.Aggregations = new MutablePagedList<Aggregation>(searchResult.Aggregations);
                                 return searchResult.Products;
                             });
                         }
@@ -143,7 +143,7 @@ namespace VirtoCommerce.Storefront.Owin
                         //Prevent double api request for get aggregations
                         //Because catalog search products returns also aggregations we can use it to populate workContext using C# closure
                         //now workContext.Aggregation will be contains preloaded aggregations for current search criteria
-                        workContext.Aggregations = new MutablePagedList<Aggregation>(result.Aggregations, 1, int.MaxValue);
+                        workContext.Aggregations = new MutablePagedList<Aggregation>(result.Aggregations);
                         return result.Products;
                     });
                     //This line make delay aggregation loading initialization (aggregation can be evaluated on view rendering time)

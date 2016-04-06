@@ -37,7 +37,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                     address.Id = id.ToString(CultureInfo.InvariantCulture);
                     id++;
                 }
-                result.Addresses = new MutablePagedList<Address>(addresses, 1, 20);
+                result.Addresses = new MutablePagedList<Address>(addresses);
                 result.AddressesCount = addresses.Count;
             }
 

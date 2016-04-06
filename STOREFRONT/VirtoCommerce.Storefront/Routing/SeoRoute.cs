@@ -29,6 +29,8 @@ namespace VirtoCommerce.Storefront.Routing
 
         public override RouteData GetRouteData(HttpContextBase httpContext)
         {
+            var requestUrl = httpContext.Request.Url.ToString();
+
             var data = base.GetRouteData(httpContext);
 
             if (data != null)
@@ -36,7 +38,13 @@ namespace VirtoCommerce.Storefront.Routing
                 //get workContext
                 var workContext = _workContextFactory();
 
-                var path = data.Values["path"] as string;
+                string path = data.Values["path"] as string;
+                if (!string.IsNullOrEmpty(workContext.CurrentStore.Url))
+                {
+                    var pathStartPosition = requestUrl.IndexOf(workContext.CurrentStore.Url) + workContext.CurrentStore.Url.Length;
+                    path = requestUrl.Substring(pathStartPosition, requestUrl.Length - pathStartPosition).Trim('/');
+                }
+
                 var store = data.Values["store"] as string;
                 //Special workaround for case when url contains only slug without store (one store case)
                 if (string.IsNullOrEmpty(path) && !string.IsNullOrEmpty(store) && workContext.AllStores != null)
