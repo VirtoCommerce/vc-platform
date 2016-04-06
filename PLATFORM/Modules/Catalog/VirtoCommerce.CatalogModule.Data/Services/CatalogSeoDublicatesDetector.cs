@@ -13,6 +13,9 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.CatalogModule.Data.Services
 {
+    /// <summary>
+    /// Detect SEO duplicates based on store, catalog, categories structure knowledge
+    /// </summary>
     public class CatalogSeoDublicatesDetector : ISeoDuplicatesDetector
     {
         private readonly IItemService _productService;
