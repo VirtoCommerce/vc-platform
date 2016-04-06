@@ -361,7 +361,7 @@ namespace VirtoCommerce.OrderModule.Test
             var cartService = new ShoppingCartServiceImpl(repositoryFactory, cartEventPublisher, null, dynamicPropertyService);
 
 
-            var orderService = new CustomerOrderServiceImpl(GetOrderRepositoryFactory(), new TimeBasedNumberGeneratorImpl(), orderEventPublisher, cartService, null, dynamicPropertyService, null, null, null);
+            var orderService = new CustomerOrderServiceImpl(GetOrderRepositoryFactory(), new TimeBasedNumberGeneratorImpl(), orderEventPublisher, cartService, null, dynamicPropertyService, null, null, null, null);
 
             return orderService;
         }

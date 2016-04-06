@@ -1,23 +1,21 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using Microsoft.Practices.Unity;
 using VirtoCommerce.Domain.Pricing.Services;
 using VirtoCommerce.Domain.Quote.Events;
 using VirtoCommerce.Domain.Quote.Services;
-using VirtoCommerce.Domain.Store.Model;
-using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
-using VirtoCommerce.Platform.Data.Repositories;
 using VirtoCommerce.QuoteModule.Data.Observers;
 using VirtoCommerce.QuoteModule.Data.Repositories;
 using VirtoCommerce.QuoteModule.Data.Services;
 using VirtoCommerce.QuoteModule.Web.ExportImport;
-using dataModel = VirtoCommerce.QuoteModule.Data.Model;
+
 
 namespace VirtoCommerce.QuoteModule.Web
 {
@@ -61,18 +59,11 @@ namespace VirtoCommerce.QuoteModule.Web
         public override void PostInitialize()
         {
             base.PostInitialize();
-            //Create EnableQuote dynamic propertiy for  Store 
-            var dynamicPropertyService = _container.Resolve<IDynamicPropertyService>();
-            var enableQuotesProperty = new DynamicProperty
-            {
-                Id = "Quote_Enable_Property",
-                Name = "EnableQuotes",
-                ObjectType = typeof(Store).FullName,
-                ValueType = DynamicPropertyValueType.Boolean,
-                CreatedBy = "Auto",
-            };
 
-            dynamicPropertyService.SaveProperties(new[] { enableQuotesProperty });
+            var settingManager = _container.Resolve<ISettingsManager>();
+            var storeSettings = new[] { "Quotes.QuoteRequestNewNumberTemplate", "Quotes.EnableQuotes" };
+            settingManager.RegisterModuleSettings("VirtoCommerce.Store", settingManager.GetModuleSettings("VirtoCommerce.Quote").Where(x=> storeSettings.Contains(x.Name)).ToArray());
+        
         }
         #endregion
 
