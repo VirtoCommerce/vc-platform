@@ -32,15 +32,27 @@ namespace VirtoCommerce.CatalogModule.Data.Services
             string catalogId = null;
             if(string.Equals(objectType, typeof(Store).Name, StringComparison.OrdinalIgnoreCase))
             {
-                catalogId = _storeService.GetById(objectId).Catalog;
+                var store = _storeService.GetById(objectId);
+                if (store != null)
+                {
+                    catalogId = store.Catalog;
+                }
             }
             if (string.Equals(objectType, typeof(Category).Name, StringComparison.OrdinalIgnoreCase))
             {
-                catalogId = _categoryService.GetById(objectId, CategoryResponseGroup.Info).CatalogId;
+                var category = _categoryService.GetById(objectId, CategoryResponseGroup.Info);
+                if (category != null)
+                {
+                    catalogId = category.CatalogId;
+                }
             }
             if (string.Equals(objectType, typeof(CatalogProduct).Name, StringComparison.OrdinalIgnoreCase))
             {
-                catalogId = _productService.GetById(objectId, ItemResponseGroup.ItemInfo).CatalogId;
+                var product = _productService.GetById(objectId, ItemResponseGroup.ItemInfo);
+                if (product != null)
+                {
+                    catalogId = product.CatalogId;
+                }
             }
 
             if(!string.IsNullOrEmpty(catalogId))
@@ -63,12 +75,14 @@ namespace VirtoCommerce.CatalogModule.Data.Services
             foreach (var product in products.Where(x => x.CatalogId == catalogId || x.Links.Any(y => y.CatalogId == catalogId)))
             {
                 var productSeo = productsSeo.First(x => x.ObjectId == product.Id);
+                productSeo.Name = product.Name;
                 retVal.Add(productSeo);
 
             }
             foreach (var category in categories.Where(x => x.CatalogId == catalogId || x.Links.Any(y => y.CatalogId == catalogId)))
             {
                 var categorySeo = categoriesSeo.First(x => x.ObjectId == category.Id);
+                categorySeo.Name = category.Name;
                 retVal.Add(categorySeo);
 
             }

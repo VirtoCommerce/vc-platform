@@ -21,7 +21,7 @@ namespace VirtoCommerce.Storefront.Common
                 {
                     var score = 0;
                     score += language.Equals(x.LanguageCode) ? 2 : 0;
-                    score += store.Id.Equals(x.StoreId, StringComparison.OrdinalIgnoreCase) ? 3 : 0;
+                    score += store.Id.Equals(x.StoreId, StringComparison.OrdinalIgnoreCase) ? 4 : 0;
                     score += store.DefaultLanguage.Equals(x.LanguageCode) ? 1 : 0;
                     return new { SeoRecord = x, Score = score };
                 }).OrderByDescending(x => x.Score).Select(x => x.SeoRecord).FirstOrDefault();

@@ -167,7 +167,7 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
         [Route("seoinfos/duplicates")]
         public IHttpActionResult GetSeoDuplicates(string objectId, string objectType)
         {
-            var retVal = _seoDuplicateDetector.DetectSeoDuplicates(objectId, objectType, _commerceService.GetAllSeoDuplicates());
+            var retVal = _seoDuplicateDetector.DetectSeoDuplicates(objectType, objectId, _commerceService.GetAllSeoDuplicates());
             return Ok(retVal.ToArray());       
         }
         /// <summary>
