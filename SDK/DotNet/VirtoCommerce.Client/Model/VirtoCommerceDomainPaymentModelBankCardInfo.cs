@@ -29,7 +29,7 @@ namespace VirtoCommerce.Client.Model
         /// <param name="BankCardYear">BankCardYear.</param>
         /// <param name="BankCardCVV2">BankCardCVV2.</param>
 
-        public VirtoCommerceDomainPaymentModelBankCardInfo(string BankCardNumber = null, string BankCardType = null, int? BankCardMonth = null, int? BankCardYear = null, string BankCardCVV2 = null)
+        public VirtoCommerceDomainPaymentModelBankCardInfo()
         {
             this.BankCardNumber = BankCardNumber;
             this.BankCardType = BankCardType;

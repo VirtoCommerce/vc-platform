@@ -54,23 +54,7 @@
         <title>Export/Import description</title>
         <description>Module description in platform export/import wizard</description>
       </setting>
-    </group>
-    <group name="Store|Caching">
-      <setting>
-        <name>Stores.Caching.Enabled</name>
-        <valueType>boolean</valueType>
-        <defaultValue>true</defaultValue>
-        <title>Caching Enabled</title>
-        <description>Specify if caching is enabled for store entity</description>
-      </setting>
-      <setting>
-        <name>Stores.Caching.StoreTimeout</name>
-        <valueType>integer</valueType>
-        <defaultValue>30</defaultValue>
-        <title>Store Timeout (in seconds)</title>
-        <description>Specify caching timeout in seconds for store entity</description>
-      </setting>
-    </group>
+    </group>    
   </settings>
   <permissions>
     <group name="Store">

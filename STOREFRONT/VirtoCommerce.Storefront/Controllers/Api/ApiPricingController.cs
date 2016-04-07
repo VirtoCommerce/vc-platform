@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using VirtoCommerce.Storefront.Common;
@@ -33,20 +34,20 @@ namespace VirtoCommerce.Storefront.Controllers.Api
         [HttpPost]
         public async Task<ActionResult> GetActualProductPrices(Product[] products)
         {
-            if (products == null)
+            if (products != null)
             {
-                throw new ArgumentNullException("products");
+                //Evaluate products prices
+                await _pricingService.EvaluateProductPricesAsync(products);
+                //Evaluate discounts
+                var promotionContext = WorkContext.ToPromotionEvaluationContext(products);
+                promotionContext.PromoEntries = products.Select(x => x.ToPromotionItem()).ToList();
+
+                await _promotionEvaluator.EvaluateDiscountsAsync(promotionContext, products);
+                var retVal = products.Select(x => x.Price).ToArray();
+
+                return Json(retVal);
             }
-            //Evaluate products prices
-            await _pricingService.EvaluateProductPricesAsync(products);
-            //Evaluate discounts
-            var promotionContext = WorkContext.ToPromotionEvaluationContext(products);
-            promotionContext.PromoEntries = products.Select(x => x.ToPromotionItem()).ToList();
-
-            await _promotionEvaluator.EvaluateDiscountsAsync(promotionContext, products);
-            var retVal = products.Select(x => x.Price).ToArray();
-
-            return Json(retVal);
+            return new HttpStatusCodeResult(HttpStatusCode.OK);
         }
     }
 }

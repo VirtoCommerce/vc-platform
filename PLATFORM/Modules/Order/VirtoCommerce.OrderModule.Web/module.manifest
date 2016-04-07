@@ -16,7 +16,7 @@
 		<owner>Virto Commerce</owner>
 	</owners>
 	<projectUrl>http://virtocommerce.com/</projectUrl>
-  <iconUrl>Modules/$(VirtoCommerce.Orders)/Content/logo.png</iconUrl>
+	<iconUrl>Modules/$(VirtoCommerce.Orders)/Content/logo.png</iconUrl>
 	<releaseNotes>First version.</releaseNotes>
 	<copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
 	<tags>order system</tags>
@@ -80,27 +80,27 @@
 					<value>Cancelled</value>
 				</arrayValues>
 			</setting>
-		  <setting>
-			<name>Order.CustomerOrderNewNumberTemplate</name>
-			<valueType>string</valueType>
-			<defaultValue>CO{0:yyMMdd}-{1:D5}</defaultValue>
-			<title>New Customer Order number template (e.g., "CO{0:yyMMdd}-{1:D5}")</title>
-			<description>The template (pattern) that will be used to generate the number for new Customer Order. Parameters: 0 - date (the UTC time of number generation); 1 - the sequence number.</description>
-		  </setting>
-		  <setting>
-			<name>Order.ShipmentNewNumberTemplate</name>
-			<valueType>string</valueType>
-			<defaultValue>SH{0:yyMMdd}-{1:D5}</defaultValue>
-			<title>New Shipment number template (e.g., "SH{0:yyMMdd}-{1:D5}")</title>
-			<description>The template (pattern) that will be used to generate the number for new Shipment. Parameters: 0 - date (the UTC time of number generation); 1 - the sequence number.</description>
-		  </setting>
-		  <setting>
-			<name>Order.PaymentInNewNumberTemplate</name>
-			<valueType>string</valueType>
-			<defaultValue>PI{0:yyMMdd}-{1:D5}</defaultValue>
-			<title>New incoming Payment number template (e.g., "PI{0:yyMMdd}-{1:D5}")</title>
-			<description>The template (pattern) that will be used to generate the number for new incoming Payment. Parameters: 0 - date (the UTC time of number generation); 1 - the sequence number.</description>
-		  </setting>
+			<setting>
+				<name>Order.CustomerOrderNewNumberTemplate</name>
+				<valueType>string</valueType>
+				<defaultValue>CO{0:yyMMdd}-{1:D5}</defaultValue>
+				<title>Order number template</title>
+				<description>The template (pattern) that will be used to generate the number for new Customer Order. Parameters: 0 - date (the UTC time of number generation); 1 - the sequence number.</description>
+			</setting>
+			<setting>
+				<name>Order.ShipmentNewNumberTemplate</name>
+				<valueType>string</valueType>
+				<defaultValue>SH{0:yyMMdd}-{1:D5}</defaultValue>
+				<title>Order shipment number template</title>
+				<description>The template (pattern) that will be used to generate the number for new Shipment. Parameters: 0 - date (the UTC time of number generation); 1 - the sequence number.</description>
+			</setting>
+			<setting>
+				<name>Order.PaymentInNewNumberTemplate</name>
+				<valueType>string</valueType>
+				<defaultValue>PI{0:yyMMdd}-{1:D5}</defaultValue>
+				<title>Order payment number template</title>
+				<description>The template (pattern) that will be used to generate the number for new incoming Payment. Parameters: 0 - date (the UTC time of number generation); 1 - the sequence number.</description>
+			</setting>
 			<setting>
 				<name>Order.ExportImport.Description</name>
 				<valueType>string</valueType>
@@ -113,10 +113,10 @@
 	<permissions>
 		<group name="Order">
 			<permission id="order:access" name="Open orders menu" description="Permission to open orders menu."/>
-      <permission id="order:create" name="Create order data" description="Permission to create order data."/>
-      <permission id="order:read" name="View order data" description="Permission to browse and view order data."/>
-      <permission id="order:update" name="Update order data" description="Permission to update order data."/>
-      <permission id="order:delete" name="Delete order" description="Permission to delete orders."/>
-    </group>
+			<permission id="order:create" name="Create order data" description="Permission to create order data."/>
+			<permission id="order:read" name="View order data" description="Permission to browse and view order data."/>
+			<permission id="order:update" name="Update order data" description="Permission to update order data."/>
+			<permission id="order:delete" name="Delete order" description="Permission to delete orders."/>
+		</group>
 	</permissions>
 </module>

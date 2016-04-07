@@ -103,12 +103,7 @@ namespace VirtoCommerce.Storefront.Model
         {
             get
             {
-                bool isEnabled = false;
-
-                var dynamicPropertyValue = DynamicProperties.GetDynamicPropertyValue("EnableQuotes");
-                bool.TryParse(dynamicPropertyValue, out isEnabled);
-
-                return isEnabled;
+                return Settings.GetSettingValue("Quotes.EnableQuotes", false);
             }
         }
 
