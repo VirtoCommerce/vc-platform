@@ -1,53 +1,56 @@
 ﻿angular.module('virtoCommerce.coreModule.seo')
 .controller('virtoCommerce.coreModule.seo.seoDetailController', ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
     var blade = $scope.blade;
-   
-    function initializeBlade() {
-    	var seoInfos = blade.seoContainerObject.seoInfos;
-    	if (blade.store) {
-    		seoInfos = _.filter(seoInfos, function (x) { return x.storeId === blade.store.id; });
-    	}
-    	// generate seo for missing languages
-    	_.each(blade.seoLanguages, function (lang) {
-    		if (_.every(seoInfos, function (seoInfo) { return seoInfo.languageCode.toLowerCase().indexOf(lang.toLowerCase()) < 0; })) {
-    			seoInfos.push({ isNew: true, languageCode: lang });
-    		}
-    	});
 
-    	blade.currentEntities = angular.copy(seoInfos);
-    	blade.origEntity = seoInfos;
-    	blade.isLoading = false;
+    function initializeBlade() {
+        blade.origEntity = blade.data;
+        blade.currentEntity = angular.copy(blade.origEntity);
+        blade.isLoading = false;
     };
 
     $scope.cancelChanges = function () {
-        angular.copy(blade.origEntity, blade.currentEntities);
+        angular.copy(blade.origEntity, blade.currentEntity);
         $scope.bladeClose();
     };
 
     $scope.saveChanges = function () {
-        var seoInfos = _.filter(blade.currentEntities, isValid);
+        if (blade.isNew) {
+            blade.seoContainerObject.seoInfos.push(blade.currentEntity);
+        }
 
-        _.each(seoInfos, function (x) {
-            if (x.isNew) {
-                x.isNew = undefined;
-                x.storeId = blade.store.id;
-                blade.seoContainerObject.seoInfos.push(x);
-            } else {
-                var foundObject = _.find(blade.origEntity, function (seoInfo) { return seoInfo.languageCode.toLowerCase().indexOf(x.languageCode.toLowerCase()) === 0; });
-                angular.copy(x, foundObject);
-            }
-        });
-
-        angular.copy(blade.currentEntities, blade.origEntity);
+        angular.copy(blade.currentEntity, blade.origEntity);
         $scope.bladeClose();
 
         if (blade.parentRefresh)
             blade.parentRefresh();
     }
 
+    $scope.storeDuplicateValidator = function (value) {
+        var data = blade.currentEntity;
+        return _.all(blade.seoContainerObject.seoInfos, function (x) {
+            return x === blade.origEntity ||
+                   !x.isActive ||
+                   x.storeId !== value ||
+                   x.languageCode !== data.languageCode; // && x.semanticUrl !== data.semanticUrl
+        });
+    };
+
+    $scope.languageDuplicateValidator = function (value) {
+        var data = blade.currentEntity;
+        return _.all(blade.seoContainerObject.seoInfos, function (x) {
+            return x === blade.origEntity ||
+                   !x.isActive ||
+                   x.storeId !== data.storeId ||
+                   x.languageCode !== value; // && x.semanticUrl !== data.semanticUrl
+        });
+    };
+
     function isValid(data) {
         // check required and valid Url requirements
-        return data.semanticUrl && $scope.semanticUrlValidator(data.semanticUrl);
+        return data.semanticUrl &&
+               $scope.semanticUrlValidator(data.semanticUrl) &&
+               (!data.isActive ||
+                 $scope.duplicateValidator(data.semanticUrl));
     }
 
     $scope.semanticUrlValidator = function (value) {
@@ -56,12 +59,22 @@
         return !pattern.test(value);
     };
 
+    $scope.duplicateValidator = function (value) {
+        var data = blade.currentEntity;
+        return _.all(blade.seoContainerObject.seoInfos, function (x) {
+            return x === blade.origEntity ||
+                   !x.isActive ||
+                   x.storeId !== data.storeId ||
+                   x.languageCode !== data.languageCode; // && x.semanticUrl !== data.semanticUrl
+        });
+    };
+
     function isDirty() {
-        return !angular.equals(blade.currentEntities, blade.origEntity) && blade.hasUpdatePermission();
+        return !angular.equals(blade.currentEntity, blade.origEntity) && blade.hasUpdatePermission();
     }
 
     function canSave() {
-        return isDirty() && _.every(_.filter(blade.currentEntities, function (data) { return !data.isNew; }), isValid) && _.some(blade.currentEntities, isValid); // isValid formScope && formScope.$valid;
+        return isDirty() && isValid(blade.currentEntity); // isValid formScope && formScope.$valid;
     }
 
     $scope.isValid = canSave;
@@ -74,7 +87,7 @@
         {
             name: "platform.commands.reset", icon: 'fa fa-undo',
             executeMethod: function () {
-                angular.copy(blade.origEntity, blade.currentEntities);
+                angular.copy(blade.origEntity, blade.currentEntity);
             },
             canExecuteMethod: isDirty,
             permission: blade.updatePermission
@@ -82,8 +95,7 @@
     ];
 
     blade.headIcon = 'fa-globe';
-    blade.title = 'core.blades.seo-detail.title';
-    //blade.titleValues = { store: blade.store.id };
+    blade.title = blade.isNew ? 'core.blades.seo-detail.title-new' : blade.data.semanticUrl;
     blade.subtitle = 'core.blades.seo-detail.subtitle';
 
     initializeBlade();

@@ -1,10 +1,11 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.newProductWizardController', ['$scope', 'platformWebApp.bladeNavigationService', '$http', function ($scope, bladeNavigationService, $http) {
+.controller('virtoCommerce.catalogModule.newProductWizardController', ['$scope', 'platformWebApp.bladeNavigationService', '$http', 'virtoCommerce.storeModule.stores', function ($scope, bladeNavigationService, $http, stores) {
     var blade = $scope.blade;
     blade.headIcon = blade.item.productType === 'Digital' ? 'fa fa-file-archive-o' : 'fa fa-truck';
 
     var initialName = blade.item.name ? blade.item.name : '';
     var lastGeneratedName = initialName;
+    var storesPromise = stores.query().$promise;
 
     $scope.createItem = function () {
         blade.isLoading = true;
@@ -54,17 +55,24 @@
                 break;
             case 'seo':
                 initializeSEO(blade.item, function () {
-                    blade.currentEntity = blade.item; // reference for child blade
-                    blade.seoLanguages = _.pluck(getCatalog().languages, 'languageCode');
+                    if (!_.any(blade.item.seoInfos)) {
+                        blade.item.seoInfos.push({ isActive: true });
+                    }
 
-                    newBlade = {
-                        id: 'seoDetails',
-                        store: { name: 'default store' },
-                        updatePermission: 'catalog:create',
-                        controller: 'virtoCommerce.coreModule.seo.seoDetailController',
-                        template: 'Modules/$(VirtoCommerce.Core)/Scripts/SEO/blades/seo-detail.tpl.html'
-                    };
-                    bladeNavigationService.showBlade(newBlade, blade);
+                    storesPromise.then(function (promiseData) {
+                        newBlade = {
+                            id: 'seoDetails',
+                            data: blade.item.seoInfos[0],
+                            isNew: false,
+                            seoContainerObject: blade.item,
+                            stores: promiseData,
+                            languages: _.pluck(getCatalog().languages, 'languageCode'),
+                            updatePermission: 'catalog:create',
+                            controller: 'virtoCommerce.coreModule.seo.seoDetailController',
+                            template: 'Modules/$(VirtoCommerce.Core)/Scripts/SEO/blades/seo-detail.tpl.html'
+                        };
+                        bladeNavigationService.showBlade(newBlade, blade);
+                    });
                 });
                 break;
             case 'review':
@@ -136,7 +144,7 @@
             if (stringForSlug) {
                 _.each(seoLanguages, function (lang) {
                     if (_.every(data, function (seoInfo) { return seoInfo.languageCode.toLowerCase().indexOf(lang.toLowerCase()) < 0; })) {
-                        data.push({ languageCode: lang });
+                        data.push({ isActive: true, languageCode: lang });
                     }
                 });
 

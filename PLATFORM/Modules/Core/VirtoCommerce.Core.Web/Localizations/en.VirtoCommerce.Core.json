@@ -93,35 +93,40 @@
         "title": "Fulfillment centers",
         "subtitle": "Manage Fulfillment centers"
       },
-      "store-list": {
-        "subtitle": "Manage SEO in stores",
+      "seo-list": {
+        "subtitle": "Manage SEOs",
         "labels": {
-          "new-store": "Add SEO for other store",
-          "name": "Store name",
-          "no-store": "No SEO defined"
-        },
-        "placeholders": {
-          "store": "Pick store"
+          "language-code": "Language",
+          "store": "Store",
+          "semanticUrl": "Semantic URL"
         }
       },
       "seo-detail": {
-        "title": "SEO for {{store}}",
-        "subtitle": "Seo details",
+        "title-new": "New SEO",
+        "subtitle": "SEO details",
         "labels": {
+          "is-active": "Is active",
+          "store": "Store",
+          "language": "Language",
           "url-keyword": "URL keyword",
           "page-title": "Page title",
           "meta-description": "Meta description",
           "alternative-text": "Image alternative text"
         },
         "placeholders": {
+          "store": "Select Store",
+          "language": "Select Language",
           "url-keyword": "Enter keyword",
           "page-title": "Enter title",
           "meta-description": "Enter description",
           "alternative-text": "Enter text"
         },
         "validations": {
+          "store-duplicate": "SEO with same store found",
+          "language-duplicate": "SEO with same language found",
           "url-keyword-required": "Required",
-          "url-keyword-invalid": "Invalid characters in URL found"
+          "url-keyword-invalid": "Invalid characters in URL found",
+          "url-keyword-duplicate": "Duplicate URL found"
         }
       }
     },
