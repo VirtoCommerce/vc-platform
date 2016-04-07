@@ -64,7 +64,12 @@
         if (blade.newExternalImageUrl) {
             blade.uploadCompleted = false;
 
-            contentApi.save({ contentType: blade.contentType, folderUrl: blade.currentEntityId, url: blade.newExternalImageUrl }, function (data) {
+            contentApi.save({
+                contentType: blade.contentType,
+                storeId: blade.storeId,
+                folderUrl: blade.currentEntityId,
+                url: blade.newExternalImageUrl
+            }, null, function (data) {
                 blade.parentBlade.refresh();
                 blade.newExternalImageUrl = undefined;
                 blade.uploadCompleted = true;

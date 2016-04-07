@@ -43,7 +43,8 @@
         if (blade.isNew) {
             contentApi.createFolder({ contentType: 'themes', storeId: blade.storeId }, blade.currentEntity, function (data) {
                 blade.parentBlade.initialize();
-                blade.parentBlade.parentBlade.refresh(blade.storeId, 'themes');
+                if (blade.parentBlade.parentBlade)
+                    blade.parentBlade.parentBlade.refresh(blade.storeId, 'themes');
                 angular.copy(blade.currentEntity, blade.origEntity);
                 bladeNavigationService.closeBlade(blade);
             }, function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });

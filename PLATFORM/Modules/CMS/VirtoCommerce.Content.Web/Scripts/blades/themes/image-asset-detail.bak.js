@@ -9,15 +9,15 @@
 
     blade.initializeBlade = function () {
         if (!blade.isNew) {
-            contentApi.get({ contentType: 'themes', storeId: blade.chosenStoreId, themeId: blade.chosenThemeId, assetId: blade.chosenAssetId }, function (data) {
-                blade.isLoading = false;
+            contentApi.get({ contentType: blade.contentType, storeId: blade.storeId,  relativeUrl: blade.currentEntity.relativeUrl }, function (data) {
+                    blade.isLoading = false;
 
-                data.content = "data:" + data.contentType + ";base64," + data.byteContent;
+                    data.content = "data:" + data.contentType + ";base64," + data.byteContent;
 
-                blade.currentEntity = angular.copy(data);
-                blade.origEntity = data;
-            },
-            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+                    blade.currentEntity = angular.copy(data);
+                    blade.origEntity = data;
+                },
+                function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
 
             $scope.blade.toolbarCommands = [
 			{
@@ -66,7 +66,7 @@
     }
 
     blade.check = function () {
-        if (!angular.isUndefined(blade.currentEntity)) {
+        if (blade.currentEntity) {
             if (blade.currentEntity.contentType === 'image/png' || blade.currentEntity.contentType === 'image/jpeg' || blade.currentEntity.contentType === 'image/bmp' || blade.currentEntity.contentType === 'image/gif') {
                 return true;
             }
@@ -79,7 +79,7 @@
     }
 
     blade.isImage = function () {
-        if (!angular.isUndefined(blade.currentEntity)) {
+        if (blade.currentEntity) {
             if (blade.currentEntity.contentType === 'image/png' ||
 				blade.currentEntity.contentType === 'image/bmp' ||
 				blade.currentEntity.contentType === 'image/gif' ||
@@ -94,11 +94,11 @@
 
     blade.saveChanges = function () {
         blade.isLoading = true;
-        blade.currentEntity.id = blade.chosenFolder + '/' + blade.currentEntity.name;
+        blade.currentEntity.id = blade.folderUrl + '/' + blade.currentEntity.name;
 
-        contentApi.save({ contentType: 'themes', storeId: blade.chosenStoreId, themeId: blade.chosenThemeId }, blade.currentEntity, function () {
+        contentApi.save({ contentType: 'themes', storeId: blade.storeId, themeId: blade.themeId }, blade.currentEntity, function () {
             blade.parentBlade.initialize();
-            blade.chosenAssetId = blade.currentEntity.id;
+            blade.assetId = blade.currentEntity.id;
             blade.title = blade.currentEntity.id;
             blade.subtitle = 'Edit asset';
             blade.isNew = false;
@@ -120,7 +120,7 @@
                 if (remove) {
                     $scope.blade.isLoading = true;
 
-                    contentApi.delete({ contentType: 'themes', storeId: blade.chosenStoreId, themeId: blade.chosenThemeId, assetIds: blade.chosenAssetId }, function () {
+                    contentApi.delete({ contentType: 'themes', storeId: blade.storeId, themeId: blade.themeId, assetIds: blade.currentEntity.url }, function () {
                         $scope.bladeClose();
                         $scope.blade.parentBlade.initialize(true);
                     },
@@ -132,8 +132,8 @@
     }
 
     function isCanSave() {
-        if (!angular.isUndefined(blade.currentEntity)) {
-            if (!angular.isUndefined(blade.currentEntity.id) && !angular.isUndefined(blade.currentEntity.assetUrl) && formScope.$valid) {
+        if (blade.currentEntity) {
+            if (blade.currentEntity.id && blade.currentEntity.assetUrl && formScope.$valid) {
                 return true;
             }
             return false;
@@ -160,7 +160,7 @@
 
             if (blade.isNew) {
                 blade.currentEntity.name = image[0].name;
-                blade.currentEntity.id = blade.chosenFolder + '/' + image[0].name;
+                blade.currentEntity.id = blade.folderUrl + '/' + image[0].name;
             }
         };
 

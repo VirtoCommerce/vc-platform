@@ -1,13 +1,6 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.assets.assetListController', ['$scope', 'platformWebApp.assets.api', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', '$sessionStorage', 'uiGridConstants', 'platformWebApp.uiGridHelper',
-    function ($scope, assets, bladeNavigationService, dialogService, $storage, uiGridConstants, uiGridHelper) {
-        //pagination settings
-        $scope.pageSettings = {};
-        $scope.pageSettings.totalItems = 0;
-        $scope.pageSettings.currentPage = 1;
-        $scope.pageSettings.numPages = 5;
-        $scope.pageSettings.itemsPerPageCount = 20;
-
+.controller('platformWebApp.assets.assetListController', ['$scope', 'platformWebApp.assets.api', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', '$sessionStorage', 'platformWebApp.bladeUtils', 'platformWebApp.uiGridHelper',
+    function ($scope, assets, bladeNavigationService, dialogService, $storage, bladeUtils, uiGridHelper) {
         var blade = $scope.blade;
         blade.title = 'platform.blades.asset-list.title';
         if (!blade.currentEntity) {
@@ -145,7 +138,7 @@
                 bladeNavigationService.showBlade(newBlade, blade.parentBlade);
             }
         };
-        
+
         blade.headIcon = 'fa-folder-o';
 
         blade.toolbarCommands = [
@@ -231,6 +224,8 @@
             function (gridApi) {
                 $scope.$watch('pageSettings.currentPage', gridApi.pagination.seek);
             });
+
+            bladeUtils.initializePagination($scope, true);
         };
 
 

@@ -1,108 +1,71 @@
 ﻿angular.module('virtoCommerce.contentModule')
-.controller('virtoCommerce.contentModule.pageDetailController', ['$scope', 'platformWebApp.validators', 'platformWebApp.dialogService', 'virtoCommerce.contentModule.contentApi', '$http', 'platformWebApp.bladeNavigationService', function ($scope, validators, dialogService, contentApi, $http, bladeNavigationService) {
-    $scope.validators = validators;
-    var formScope;
-    $scope.setForm = function (form) { formScope = form; }
-
+.controller('virtoCommerce.contentModule.pageDetailController', ['$scope', 'platformWebApp.validators', 'platformWebApp.dialogService', 'virtoCommerce.contentModule.contentApi', '$timeout', 'platformWebApp.bladeNavigationService', 'platformWebApp.dynamicProperties.api', 'platformWebApp.settings', function ($scope, validators, dialogService, contentApi, $timeout, bladeNavigationService, dynamicPropertiesApi, settings) {
     var blade = $scope.blade;
+    $scope.validators = validators;
+
     blade.editAsMarkdown = true;
     blade.editAsHtml = false;
 
     blade.initializeBlade = function () {
         if (blade.isNew) {
-            blade.toolbarCommands = [
-                {
-                    name: "platform.commands.create", icon: 'fa fa-save',
-                    executeMethod: $scope.saveChanges,
-                    canExecuteMethod: function () { return isDirty() && formScope && formScope.$valid; },
-                    permission: 'content:create'
-                }
-            ];
-
-            blade.isLoading = false;
+            fillDynamicProperties({});
         } else {
-            $http.get(blade.currentEntity.url, {
-                responseType: 'text',
-            }).then(function (results) {
-                blade.isLoading = false;
-                blade.currentEntity.content = results.data;
-                blade.origEntity = angular.copy(blade.currentEntity);
-                $scope.$broadcast('resetContent', { body: blade.currentEntity.content });
+            contentApi.getWithMetadata({
+                contentType: blade.contentType,
+                storeId: blade.storeId,
+                relativeUrl: blade.currentEntity.relativeUrl
             },
+            fillDynamicProperties,
             function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
-
-
-            blade.toolbarCommands = [
-                {
-                    name: "content.commands.save-page", icon: 'fa fa-save',
-                    executeMethod: $scope.saveChanges,
-                    canExecuteMethod: function () { return isDirty() && formScope && formScope.$valid; },
-                    permission: blade.updatePermission
-                },
-                {
-                    name: "content.commands.reset-page", icon: 'fa fa-undo',
-                    executeMethod: function () {
-                        angular.copy(blade.origEntity, blade.currentEntity);
-                        $scope.$broadcast('resetContent', { body: blade.currentEntity.content });
-                    },
-                    canExecuteMethod: isDirty,
-                    permission: blade.updatePermission
-                },
-                {
-                    name: "content.commands.delete-page", icon: 'fa fa-trash-o',
-                    executeMethod: blade.deleteEntry,
-                    canExecuteMethod: function () { return true; },
-                    permission: 'content:delete'
-                },
-                {
-                    name: "content.commands.edit-as-markdown", icon: 'fa fa-code',
-                    executeMethod: function () {
-                        blade.editAsMarkdown = true;
-                        blade.editAsHtml = false;
-                        $scope.$broadcast('changeEditType', { editAsMarkdown: true, editAsHtml: false });
-                    },
-                    canExecuteMethod: function () { return !blade.editAsMarkdown; },
-                    permission: blade.updatePermission
-                },
-                {
-                    name: "content.commands.edit-as-html", icon: 'fa fa-code',
-                    executeMethod: function () {
-                        blade.editAsHtml = true;
-                        blade.editAsMarkdown = false;
-                        $scope.$broadcast('changeEditType', { editAsHtml: true, editAsMarkdown: false });
-                    },
-                    canExecuteMethod: function () { return !blade.editAsHtml; },
-                    permission: blade.updatePermission
-                }
-            ];
         }
-        blade.isLoading = false;
     };
 
-    function isDirty() {
-        return !angular.equals(blade.currentEntity, blade.origEntity) && blade.hasUpdatePermission();
+    function fillDynamicProperties(data) {
+        var blobName = blade.currentEntity.name || '';
+        var idx = blobName.lastIndexOf('.');
+        if (idx >= 0) {
+            blobName = blobName.substring(0, idx);
+            idx = blobName.lastIndexOf('.'); // language
+            if (idx >= 0) {
+                blade.currentEntity.language = blobName.substring(idx + 1);
+            }
+        }
+
+        blade.currentEntity.content = data.content;
+
+        dynamicPropertiesApi.query({ id: 'VirtoCommerce.Content.Web.FrontMatterHeaders' }, function (results) {
+            _.each(results, function (x) {
+                x.displayNames = undefined;
+                var metadataRecord = _.findWhere(data.metadata, { name: x.name });
+                x.values = metadataRecord ? metadataRecord.values : [];
+            });
+
+            blade.currentEntity.dynamicProperties = results;
+            $scope.$broadcast('resetContent', { body: blade.currentEntity.content });
+            $timeout(function () {
+                blade.origEntity = angular.copy(blade.currentEntity);
+            });
+            blade.isLoading = false;
+        }, function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
     }
 
     $scope.saveChanges = function () {
         blade.isLoading = true;
 
-        var fd = new FormData();
-        fd.append(blade.currentEntity.name, blade.currentEntity.content);
-        var folderParameter = '?folderUrl=' + (blade.folderUrl ? blade.folderUrl : '');
-        $http.post('api/content/' + blade.contentType + '/' + blade.storeId + folderParameter, fd,
-            {
-                transformRequest: angular.identity,
-                headers: { 'Content-Type': undefined }
-            }).then(function (results) {
-                blade.parentBlade.refresh();
-                if (blade.isNew) {
-                    blade.origEntity = blade.currentEntity;
-                    $scope.bladeClose();
-                } else {
-                    blade.initializeBlade();
-                }
+        contentApi.saveWithMetadata({
+            contentType: blade.contentType,
+            storeId: blade.storeId,
+            folderUrl: blade.folderUrl || ''
+        }, blade.currentEntity,
+        function () {
+            blade.isLoading = false;
+            blade.origEntity = angular.copy(blade.currentEntity);
+            if (blade.isNew) {
+                $scope.bladeClose();
+            }
 
-            }, function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
+            blade.parentBlade.refresh();
+        }, function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
     };
 
     blade.deleteEntry = function () {
@@ -130,6 +93,58 @@
         dialogService.showConfirmationDialog(dialog);
     };
 
+    if (!blade.isNew)
+        blade.toolbarCommands = [
+            {
+                name: "platform.commands.save", icon: 'fa fa-save',
+                executeMethod: $scope.saveChanges,
+                canExecuteMethod: function () { return isDirty() && formScope && formScope.$valid; },
+                permission: blade.updatePermission
+            },
+            {
+                name: "platform.commands.reset", icon: 'fa fa-undo',
+                executeMethod: function () {
+                    angular.copy(blade.origEntity, blade.currentEntity);
+                    $scope.$broadcast('resetContent', { body: blade.currentEntity.content });
+                },
+                canExecuteMethod: isDirty,
+                permission: blade.updatePermission
+            },
+            //{
+            //    name: "platform.commands.delete", icon: 'fa fa-trash-o',
+            //    executeMethod: blade.deleteEntry,
+            //    canExecuteMethod: function () { return true; },
+            //    permission: 'content:delete'
+            //},
+            {
+                name: "content.commands.edit-as-markdown", icon: 'fa fa-code',
+                executeMethod: function () {
+                    blade.editAsMarkdown = true;
+                    blade.editAsHtml = false;
+                    $scope.$broadcast('changeEditType', { editAsMarkdown: true, editAsHtml: false });
+                },
+                canExecuteMethod: function () { return !blade.editAsMarkdown; },
+                permission: blade.updatePermission
+            },
+            {
+                name: "content.commands.edit-as-html", icon: 'fa fa-code',
+                executeMethod: function () {
+                    blade.editAsHtml = true;
+                    blade.editAsMarkdown = false;
+                    $scope.$broadcast('changeEditType', { editAsHtml: true, editAsMarkdown: false });
+                },
+                canExecuteMethod: function () { return !blade.editAsHtml; },
+                permission: blade.updatePermission
+            }
+        ];
+
+    var formScope;
+    $scope.setForm = function (form) { formScope = form; }
+
+    function isDirty() {
+        return !angular.equals(blade.currentEntity, blade.origEntity) && blade.hasUpdatePermission();
+    }
+
     function canSave() {
         return blade.currentEntity && blade.currentEntity.name && ((isDirty() && !blade.isNew) || (blade.currentEntity.content && blade.isNew));
     }
@@ -138,6 +153,29 @@
         bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, $scope.saveChanges, closeCallback, "content.dialogs.page-save.title", "content.dialogs.page-save.message");
     };
 
+    // dynamic properties (metadata)
+    //$scope.editDictionary = function (property) {
+    //    var newBlade = {
+    //        id: "propertyDictionary",
+    //        isApiSave: true,
+    //        currentEntity: property,
+    //        controller: 'platformWebApp.propertyDictionaryController',
+    //        template: '$(Platform)/Scripts/app/dynamicProperties/blades/property-dictionary.tpl.html',
+    //        onChangesConfirmedFn: function () {
+    //            // blade.entity.dynamicProperties = angular.copy(blade.entity.dynamicProperties);
+    //        }
+    //    };
+    //    bladeNavigationService.showBlade(newBlade, blade);
+    //};
+
+    //$scope.getDictionaryValues = function (property, callback) {
+    //    dictionaryItemsApi.query({ id: property.objectType, propertyId: property.id }, callback);
+    //}
+
+    ////settings.getValues({ id: 'VirtoCommerce.Core.General.Languages' }, function (data) {
+    ////    $scope.languages = data;
+    ////});
+    //$scope.languages = settings.getValues({ id: 'VirtoCommerce.Core.General.Languages' });
 
     blade.headIcon = 'fa-file-o';
     blade.initializeBlade();

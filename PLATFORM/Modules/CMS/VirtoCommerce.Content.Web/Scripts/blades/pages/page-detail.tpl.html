@@ -1,14 +1,14 @@
 ﻿<div class="blade-static __expanded">
-    <form class="form" name="pageForm">
+    <form class="form" name="formScope">
         <div class="columns clearfix">
             <div class="column">
-                <div class="form-group" ng-init="setForm(pageForm)">
+                <div class="form-group" ng-init="setForm(formScope)">
                     <label class="form-label">{{ 'content.blades.edit-page.labels.name' | translate }}</label>
                     <div class="form-input">
                         <input focus-on="" required class="form-control" ng-model="blade.currentEntity.name" placeholder="{{ 'content.blades.edit-page.placeholders.name' | translate }}" name="pageName" ui-validate=" 'validators.webSafeFileNameValidator($value)' " />
                     </div>
-                    <div class="form-error" ng-show="pageForm.pageName.$dirty">
-                        <span ng-show="pageForm.pageName.$error.validator">{{ 'content.blades.edit-page.validations.pageName-invalid' | translate }}</span>
+                    <div class="form-error" ng-show="formScope.pageName.$dirty">
+                        <span ng-show="formScope.pageName.$error.validator">{{ 'content.blades.edit-page.validations.pageName-invalid' | translate }}</span>
                     </div>
                 </div>
             </div>
@@ -17,9 +17,9 @@
                     <label class="form-label">{{ 'content.blades.edit-page.labels.language' | translate }}</label>
                     <div class="form-input">
                         <ui-select ng-model="blade.currentEntity.language">
-                            <ui-select-match placeholder="{{ 'content.blades.edit-page.placeholders.language' | translate }}">{{$select.selected}}</ui-select-match>
+                            <ui-select-match allow-clear placeholder="{{ 'content.blades.edit-page.placeholders.language' | translate }}">{{$select.selected}}</ui-select-match>
                             <ui-select-choices repeat="x in blade.languages">
-                                <span class="flag flag-{{blade.getFlag(x)}}"></span>
+                                <span class="flag flag-{{x.substr(3).toLowerCase()}}"></span>
                                 <span ng-bind-html="x"></span>
                             </ui-select-choices>
                         </ui-select>
@@ -29,6 +29,7 @@
         </div>
     </form>
 </div>
+<div class="blade-static __bottom" ng-include="'$(Platform)/Scripts/common/templates/create.tpl.html'" ng-if="blade.isNew"></div>
 
 <div class="blade-content __xxlarge-wide">
     <div class="blade-inner">
@@ -45,10 +46,12 @@
                 </div>
                 <div class="tab-cnt">
                     <form class="form">
-                        <div class="form-group">
-                            <div class="form-input">
-                                <textarea cols="30" rows="30" ng-model="blade.metadata" placeholder="{{ 'content.blades.edit-page.placeholders.metadata' | translate }}"></textarea>
-                            </div>
+                        <div class="form-group" ng-repeat="property in blade.currentEntity.dynamicProperties | orderBy: 'name'">
+                            <label class="form-label" for="">
+                                {{property.name}}
+                                <a href="" ng-click="editDictionary(property)" ng-show="property.isDictionary" class="form-edit"><i class="form-ico fa fa-pencil"></i></a>
+                            </label>
+                            <va-generic-value-input ng-model="property" languages="languages" get-dictionary-values="getDictionaryValues" />
                         </div>
                     </form>
                 </div>
