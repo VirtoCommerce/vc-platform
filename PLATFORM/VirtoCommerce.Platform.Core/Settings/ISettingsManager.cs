@@ -22,6 +22,12 @@ namespace VirtoCommerce.Platform.Core.Settings
 		SettingEntry GetSettingByName(string name);
 		SettingEntry[] GetModuleSettings(string moduleId);
 		void SaveSettings(SettingEntry[] settings);
+        /// <summary>
+        /// Used to runtime settings registration
+        /// </summary>
+        /// <param name="moduleId"></param>
+        /// <param name="settings"></param>
+        void RegisterModuleSettings(string moduleId, params SettingEntry[] settings);
 
         T GetValue<T>(string name, T defaultValue);
         T[] GetArray<T>(string name, T[] defaultValue);
