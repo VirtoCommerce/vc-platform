@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// Image asset
     /// </summary>
@@ -21,75 +21,84 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelImage" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelImage" />class.
         /// </summary>
-        public VirtoCommerceCatalogModuleWebModelImage()
+        /// <param name="Id">Id.</param>
+        /// <param name="RelativeUrl">RelativeUrl.</param>
+        /// <param name="Url">Url.</param>
+        /// <param name="TypeId">Gets or sets the asset type identifier..</param>
+        /// <param name="Group">Gets or sets the asset group name..</param>
+        /// <param name="Name">Gets or sets the asset name..</param>
+        /// <param name="LanguageCode">Gets or sets the asset language..</param>
+        /// <param name="IsInherited">System flag used to mark that object was inherited from other.</param>
+
+        public VirtoCommerceCatalogModuleWebModelImage(string Id = null, string RelativeUrl = null, string Url = null, string TypeId = null, string Group = null, string Name = null, string LanguageCode = null, bool? IsInherited = null)
         {
+            this.Id = Id;
+            this.RelativeUrl = RelativeUrl;
+            this.Url = Url;
+            this.TypeId = TypeId;
+            this.Group = Group;
+            this.Name = Name;
+            this.LanguageCode = LanguageCode;
+            this.IsInherited = IsInherited;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets RelativeUrl
         /// </summary>
         [DataMember(Name="relativeUrl", EmitDefaultValue=false)]
         public string RelativeUrl { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Url
         /// </summary>
         [DataMember(Name="url", EmitDefaultValue=false)]
         public string Url { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the asset type identifier.
         /// </summary>
         /// <value>Gets or sets the asset type identifier.</value>
         [DataMember(Name="typeId", EmitDefaultValue=false)]
         public string TypeId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the asset group name.
         /// </summary>
         /// <value>Gets or sets the asset group name.</value>
         [DataMember(Name="group", EmitDefaultValue=false)]
         public string Group { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the asset name.
         /// </summary>
         /// <value>Gets or sets the asset name.</value>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the asset language.
         /// </summary>
         /// <value>Gets or sets the asset language.</value>
         [DataMember(Name="languageCode", EmitDefaultValue=false)]
         public string LanguageCode { get; set; }
-  
-        
+
         /// <summary>
         /// System flag used to mark that object was inherited from other
         /// </summary>
         /// <value>System flag used to mark that object was inherited from other</value>
         [DataMember(Name="isInherited", EmitDefaultValue=false)]
         public bool? IsInherited { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

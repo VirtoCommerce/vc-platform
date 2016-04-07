@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,42 +21,47 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceDomainTaxModelTaxRate" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainTaxModelTaxRate" />class.
         /// </summary>
-        public VirtoCommerceDomainTaxModelTaxRate()
+        /// <param name="Rate">Rate.</param>
+        /// <param name="Currency">Currency.</param>
+        /// <param name="Line">Line.</param>
+        /// <param name="TaxProvider">TaxProvider.</param>
+
+        public VirtoCommerceDomainTaxModelTaxRate(double? Rate = null, string Currency = null, VirtoCommerceDomainTaxModelTaxLine Line = null, VirtoCommerceDomainTaxModelTaxProvider TaxProvider = null)
         {
+            this.Rate = Rate;
+            this.Currency = Currency;
+            this.Line = Line;
+            this.TaxProvider = TaxProvider;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets Rate
         /// </summary>
         [DataMember(Name="rate", EmitDefaultValue=false)]
         public double? Rate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Currency
         /// </summary>
         [DataMember(Name="currency", EmitDefaultValue=false)]
         public string Currency { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Line
         /// </summary>
         [DataMember(Name="line", EmitDefaultValue=false)]
         public VirtoCommerceDomainTaxModelTaxLine Line { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets TaxProvider
         /// </summary>
         [DataMember(Name="taxProvider", EmitDefaultValue=false)]
         public VirtoCommerceDomainTaxModelTaxProvider TaxProvider { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

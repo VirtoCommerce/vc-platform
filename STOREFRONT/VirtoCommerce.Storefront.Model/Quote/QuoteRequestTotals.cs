@@ -4,6 +4,10 @@ namespace VirtoCommerce.Storefront.Model.Quote
 {
     public class QuoteRequestTotals
     {
+        public QuoteRequestTotals()
+        {
+        }
+
         public QuoteRequestTotals(Currency currency)
         {
             OriginalSubTotalExlTax = new Money(currency);

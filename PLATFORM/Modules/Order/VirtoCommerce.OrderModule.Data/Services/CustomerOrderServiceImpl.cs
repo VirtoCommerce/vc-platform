@@ -8,6 +8,7 @@ using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.Domain.Order.Services;
 using VirtoCommerce.Domain.Payment.Services;
 using VirtoCommerce.Domain.Shipping.Services;
+using VirtoCommerce.Domain.Store.Services;
 using VirtoCommerce.OrderModule.Data.Converters;
 using VirtoCommerce.OrderModule.Data.Repositories;
 using VirtoCommerce.Platform.Core.Common;
@@ -26,12 +27,13 @@ namespace VirtoCommerce.OrderModule.Data.Services
         private readonly IItemService _productService;
         private readonly IEventPublisher<OrderChangeEvent> _eventPublisher;
         private readonly IDynamicPropertyService _dynamicPropertyService;
-        private readonly ISettingsManager _settingManager;
         private readonly IShippingMethodsService _shippingMethodsService;
         private readonly IPaymentMethodsService _paymentMethodsService;
+        private readonly IStoreService _storeService;
 
         public CustomerOrderServiceImpl(Func<IOrderRepository> orderRepositoryFactory, IUniqueNumberGenerator uniqueNumberGenerator, IEventPublisher<OrderChangeEvent> eventPublisher, IShoppingCartService shoppingCartService, IItemService productService, 
-                                      IDynamicPropertyService dynamicPropertyService, ISettingsManager settingManager, IShippingMethodsService shippingMethodsService, IPaymentMethodsService paymentMethodsService)
+                                       IDynamicPropertyService dynamicPropertyService, IShippingMethodsService shippingMethodsService, IPaymentMethodsService paymentMethodsService,
+                                       IStoreService storeService)
         {
             _repositoryFactory = orderRepositoryFactory;
             _shoppingCartService = shoppingCartService;
@@ -39,9 +41,9 @@ namespace VirtoCommerce.OrderModule.Data.Services
             _eventPublisher = eventPublisher;
             _productService = productService;
             _dynamicPropertyService = dynamicPropertyService;
-            _settingManager = settingManager;
             _shippingMethodsService = shippingMethodsService;
             _paymentMethodsService = paymentMethodsService;
+            _storeService = storeService;
         }
 
         #region ICustomerOrderService Members
@@ -202,6 +204,7 @@ namespace VirtoCommerce.OrderModule.Data.Services
 
         private void EnsureThatAllOperationsHaveNumber(CustomerOrder order)
         {
+            var store = _storeService.GetById(order.StoreId);
             foreach (var operation in order.GetFlatObjectsListWithInterface<IOperation>())
             {
                 if (operation.Number == null)
@@ -213,8 +216,7 @@ namespace VirtoCommerce.OrderModule.Data.Services
                     {
                         objectType = objectTypeName.Substring(0, 2).ToUpper();
                     }
-
-                    var numberTemplate = _settingManager.GetValue("Order." + objectTypeName + "NewNumberTemplate", objectType + "{0:yyMMdd}-{1:D5}");
+                    var numberTemplate = store.Settings.GetSettingValue("Order." + objectTypeName + "NewNumberTemplate", objectType + "{0:yyMMdd}-{1:D5}");
                     operation.Number = _uniqueNumberGenerator.GenerateNumber(numberTemplate);
                 }
             }

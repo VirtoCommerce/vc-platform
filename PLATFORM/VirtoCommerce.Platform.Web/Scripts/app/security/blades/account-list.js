@@ -48,26 +48,20 @@ function ($scope, accounts, dialogService, uiGridHelper, bladeNavigationService,
             message: "platform.dialogs.account-delete.message",
             callback: function (remove) {
                 if (remove) {
-                    closeChildrenBlades();
-
-                    var itemIds = _.pluck(selection, 'userName');
-                    accounts.remove({ names: itemIds }, function (data, headers) {
-                        blade.refresh();
-                    }, function (error) {
-                        bladeNavigationService.setError('Error ' + error.status, blade);
+                    bladeNavigationService.closeChildrenBlades(blade, function () {
+                        var itemIds = _.pluck(selection, 'userName');
+                        accounts.remove({ names: itemIds }, function (data, headers) {
+                            blade.refresh();
+                        }, function (error) {
+                            bladeNavigationService.setError('Error ' + error.status, blade);
+                        });
                     });
                 }
             }
-        }
+        };
         dialogService.showConfirmationDialog(dialog);
     }
-
-    function closeChildrenBlades() {
-        angular.forEach(blade.childrenBlades.slice(), function (child) {
-            bladeNavigationService.closeBlade(child);
-        });
-    }
-
+    
     blade.headIcon = 'fa-key';
 
     blade.toolbarCommands = [
@@ -81,17 +75,17 @@ function ($scope, accounts, dialogService, uiGridHelper, bladeNavigationService,
         {
             name: "platform.commands.add", icon: 'fa fa-plus',
             executeMethod: function () {
-                closeChildrenBlades();
-
-                var newBlade = {
-                    id: 'listItemChild',
-                    currentEntity: { roles: [], userType: 'SiteAdministrator' },
-                    title: 'New Account',
-                    subtitle: blade.subtitle,
-                    controller: 'platformWebApp.newAccountWizardController',
-                    template: '$(Platform)/Scripts/app/security/wizards/newAccount/new-account-wizard.tpl.html'
-                };
-                bladeNavigationService.showBlade(newBlade, blade);
+                bladeNavigationService.closeChildrenBlades(blade, function () {
+                    var newBlade = {
+                        id: 'listItemChild',
+                        currentEntity: { roles: [], userType: 'Manager' },
+                        title: 'platform.blades.account-detail.title-new',
+                        subtitle: blade.subtitle,
+                        controller: 'platformWebApp.newAccountWizardController',
+                        template: '$(Platform)/Scripts/app/security/wizards/newAccount/new-account-wizard.tpl.html'
+                    };
+                    bladeNavigationService.showBlade(newBlade, blade);
+                });                
             },
             canExecuteMethod: function () {
                 return true;

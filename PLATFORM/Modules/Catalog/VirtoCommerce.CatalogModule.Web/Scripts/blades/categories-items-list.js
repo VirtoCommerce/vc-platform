@@ -116,13 +116,13 @@
                     var deletingLink = false;
 
                     if (listItem.type === 'category') {
-                        if (blade.catalog.virtual && _.some(listItem.links, function (x) { return x.categoryId === blade.categoryId; })) {
+                        if (blade.catalog.isVirtual && _.some(listItem.links, function (x) { return x.categoryId === blade.categoryId; })) {
                             deletingLink = true;
                         } else {
                             categoryIds.push(listItem.id);
                         }
                     } else {
-                        if (blade.catalog.virtual) {
+                        if (blade.catalog.isVirtual) {
                             deletingLink = true;
                         } else {
                             itemIds.push(listItem.id);
@@ -311,7 +311,7 @@
             }
 
             $scope.hasLinks = function (listEntry) {
-                return blade.catalog.virtual && listEntry.links && (listEntry.type === 'category' ? listEntry.links.length > 0 : listEntry.links.length > 1);
+                return blade.catalog.isVirtual && listEntry.links && (listEntry.type === 'category' ? listEntry.links.length > 0 : listEntry.links.length > 1);
             }
 
             blade.toolbarCommands = [

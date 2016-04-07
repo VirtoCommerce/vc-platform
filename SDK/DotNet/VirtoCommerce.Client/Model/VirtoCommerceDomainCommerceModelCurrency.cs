@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,56 +21,63 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceDomainCommerceModelCurrency" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCommerceModelCurrency" />class.
         /// </summary>
-        public VirtoCommerceDomainCommerceModelCurrency()
+        /// <param name="Code">Code.</param>
+        /// <param name="Name">Name.</param>
+        /// <param name="IsPrimary">IsPrimary.</param>
+        /// <param name="ExchangeRate">ExchangeRate.</param>
+        /// <param name="Symbol">Symbol.</param>
+        /// <param name="CustomFormatting">CustomFormatting.</param>
+
+        public VirtoCommerceDomainCommerceModelCurrency(string Code = null, string Name = null, bool? IsPrimary = null, double? ExchangeRate = null, string Symbol = null, string CustomFormatting = null)
         {
+            this.Code = Code;
+            this.Name = Name;
+            this.IsPrimary = IsPrimary;
+            this.ExchangeRate = ExchangeRate;
+            this.Symbol = Symbol;
+            this.CustomFormatting = CustomFormatting;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets Code
         /// </summary>
         [DataMember(Name="code", EmitDefaultValue=false)]
         public string Code { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets IsPrimary
         /// </summary>
         [DataMember(Name="isPrimary", EmitDefaultValue=false)]
         public bool? IsPrimary { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ExchangeRate
         /// </summary>
         [DataMember(Name="exchangeRate", EmitDefaultValue=false)]
         public double? ExchangeRate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Symbol
         /// </summary>
         [DataMember(Name="symbol", EmitDefaultValue=false)]
         public string Symbol { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CustomFormatting
         /// </summary>
         [DataMember(Name="customFormatting", EmitDefaultValue=false)]
         public string CustomFormatting { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

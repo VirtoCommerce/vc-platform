@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,28 +21,31 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelPackagingProgressMessage" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelPackagingProgressMessage" />class.
         /// </summary>
-        public VirtoCommercePlatformWebModelPackagingProgressMessage()
+        /// <param name="Message">Message.</param>
+        /// <param name="Level">Level.</param>
+
+        public VirtoCommercePlatformWebModelPackagingProgressMessage(string Message = null, string Level = null)
         {
+            this.Message = Message;
+            this.Level = Level;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets Message
         /// </summary>
         [DataMember(Name="message", EmitDefaultValue=false)]
         public string Message { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Level
         /// </summary>
         [DataMember(Name="level", EmitDefaultValue=false)]
         public string Level { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

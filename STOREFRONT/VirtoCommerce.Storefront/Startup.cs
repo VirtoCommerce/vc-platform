@@ -6,7 +6,6 @@ using System.Reflection;
 using System.Web;
 using System.Web.Compilation;
 using System.Web.Hosting;
-using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Routing;
 using CacheManager.Core;
@@ -17,6 +16,7 @@ using Microsoft.Owin.Extensions;
 using Microsoft.Owin.Security;
 using Microsoft.Practices.Unity;
 using Microsoft.Practices.Unity.Mvc;
+using Newtonsoft.Json;
 using NLog;
 using Owin;
 using VirtoCommerce.Client.Api;
@@ -36,13 +36,11 @@ using VirtoCommerce.Storefront.Model.LinkList.Services;
 using VirtoCommerce.Storefront.Model.Marketing.Services;
 using VirtoCommerce.Storefront.Model.Order.Events;
 using VirtoCommerce.Storefront.Model.Pricing.Services;
+using VirtoCommerce.Storefront.Model.Quote.Events;
 using VirtoCommerce.Storefront.Model.Quote.Services;
 using VirtoCommerce.Storefront.Model.Services;
 using VirtoCommerce.Storefront.Owin;
 using VirtoCommerce.Storefront.Services;
-using VirtoCommerce.Storefront.Model.Quote.Events;
-using Microsoft.Owin.Security.Google;
-using Microsoft.Owin.Security.Facebook;
 
 [assembly: OwinStartup(typeof(Startup))]
 [assembly: PreApplicationStartMethod(typeof(Startup), "PreApplicationStart")]
@@ -81,12 +79,15 @@ namespace VirtoCommerce.Storefront
             UnityWebActivator.Start();
             var container = UnityConfig.GetConfiguredContainer();
 
-            //Caching configuration (system runtime memory handle)
-            var cacheManager = CacheFactory.FromConfiguration<object>("storefrontCache");
-            container.RegisterInstance(cacheManager);
+            // Caching configuration
+            // Be cautious with SystemWebCacheHandle because it does not work in native threads (Hangfire jobs).
+            var localCache = CacheFactory.FromConfiguration<object>("storefrontCache");
+            var localCacheManager = new LocalCacheManager(localCache);
+            container.RegisterInstance<ILocalCacheManager>(localCacheManager);
+
             //Because CacheManagerOutputCacheProvider used diff cache manager instance need translate clear region by this way
             //https://github.com/MichaCo/CacheManager/issues/32
-            cacheManager.OnClearRegion += (sender, region) =>
+            localCacheManager.OnClearRegion += (sender, region) =>
             {
                 try
                 {
@@ -97,7 +98,7 @@ namespace VirtoCommerce.Storefront
 
                 }
             };
-            cacheManager.OnClear += (sender, args) =>
+            localCacheManager.OnClear += (sender, args) =>
             {
                 try
                 {
@@ -108,6 +109,35 @@ namespace VirtoCommerce.Storefront
 
                 }
             };
+
+            var distributedCache = CacheFactory.Build("distributedCache", settings =>
+            {
+                var jsonSerializerSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All };
+                var redisCacheEnabled = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Storefront:RedisCache:Enabled", false);
+
+                var memoryHandlePart = settings
+                    .WithJsonSerializer(jsonSerializerSettings, jsonSerializerSettings)
+                    .WithUpdateMode(CacheUpdateMode.Up)
+                    .WithSystemRuntimeCacheHandle("memory")
+                    .WithExpiration(ExpirationMode.Absolute, TimeSpan.FromHours(1));
+
+                if (redisCacheEnabled)
+                {
+                    var redisCacheConnectionStringName = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Storefront:RedisCache:ConnectionStringName", "RedisCache");
+                    var redisConnectionString = ConfigurationManager.ConnectionStrings[redisCacheConnectionStringName].ConnectionString;
+
+                    memoryHandlePart
+                        .And
+                        .WithRedisConfiguration("redis", redisConnectionString)
+                        .WithRetryTimeout(100)
+                        .WithMaxRetries(1000)
+                        .WithRedisBackplane("redis")
+                        .WithRedisCacheHandle("redis", true)
+                        .WithExpiration(ExpirationMode.Absolute, TimeSpan.FromHours(1));
+                }
+            });
+            var distributedCacheManager = new DistributedCacheManager(distributedCache);
+            container.RegisterInstance<IDistributedCacheManager>(distributedCacheManager);
 
             var logger = LogManager.GetLogger("default");
             container.RegisterInstance<ILogger>(logger);
@@ -191,7 +221,7 @@ namespace VirtoCommerce.Storefront
                 themesBlobProvider = new FileSystemContentBlobProvider(ResolveLocalPath(themesBasePath));
                 staticContentBlobProvider = new FileSystemContentBlobProvider(ResolveLocalPath(staticContentBasePath));
             }
-            var shopifyLiquidEngine = new ShopifyLiquidThemeEngine(cacheManager, workContextFactory, () => container.Resolve<IStorefrontUrlBuilder>(), themesBlobProvider , globalThemesBlobProvider, "~/themes/assets", "~/themes/global/assets");
+            var shopifyLiquidEngine = new ShopifyLiquidThemeEngine(localCacheManager, workContextFactory, () => container.Resolve<IStorefrontUrlBuilder>(), themesBlobProvider , globalThemesBlobProvider, "~/themes/assets", "~/themes/global/assets");
             container.RegisterInstance<ILiquidThemeEngine>(shopifyLiquidEngine);
 
             //Register liquid engine
@@ -201,11 +231,11 @@ namespace VirtoCommerce.Storefront
             container.RegisterType<IModelBinderProvider, ShopifyModelBinderProvider>("shopify");
 
             //Static content service
-            var staticContentService = new StaticContentServiceImpl(new Markdown(), shopifyLiquidEngine, cacheManager, workContextFactory, () => container.Resolve<IStorefrontUrlBuilder>(), StaticContentItemFactory.GetContentItemFromPath, staticContentBlobProvider);
+            var staticContentService = new StaticContentServiceImpl(new Markdown(), shopifyLiquidEngine, localCacheManager, workContextFactory, () => container.Resolve<IStorefrontUrlBuilder>(), StaticContentItemFactory.GetContentItemFromPath, staticContentBlobProvider);
             container.RegisterInstance<IStaticContentService>(staticContentService);
 
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters, workContextFactory);
-            RouteConfig.RegisterRoutes(RouteTable.Routes, workContextFactory, container.Resolve<ICommerceCoreModuleApi>(), container.Resolve<IStaticContentService>(), cacheManager);
+            RouteConfig.RegisterRoutes(RouteTable.Routes, workContextFactory, container.Resolve<ICommerceCoreModuleApi>(), container.Resolve<IStaticContentService>(), localCacheManager);
             AuthConfig.ConfigureAuth(app, () => container.Resolve<IStorefrontUrlBuilder>());
 
             app.Use<WorkContextOwinMiddleware>(container);

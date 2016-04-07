@@ -45,7 +45,7 @@ namespace VirtoCommerce.Platform.Data.PushNotifications
                 var lastEvent = _innerList.OrderByDescending(x => x.Created).FirstOrDefault();
                 if (lastEvent != null && lastEvent.ItHasSameContent(notify))
                 {
-                    lastEvent.New = true;
+                    lastEvent.IsNew = true;
                     lastEvent.RepeatCount++;
                     lastEvent.Created = DateTime.UtcNow;
                 }
@@ -68,7 +68,7 @@ namespace VirtoCommerce.Platform.Data.PushNotifications
 			}
             if (criteria.OnlyNew)
             {
-                query = query.Where(x => x.New);
+                query = query.Where(x => x.IsNew);
             }
             if (criteria.StartDate != null)
             {
@@ -99,7 +99,7 @@ namespace VirtoCommerce.Platform.Data.PushNotifications
 			var retVal = new core.PushNotificationSearchResult
             {
                 TotalCount = query.Count(),
-                NewCount = query.Where(x => x.New).Count(),
+                NewCount = query.Where(x => x.IsNew).Count(),
                 NotifyEvents = query.Skip(criteria.Start).Take(criteria.Count).ToList()
             };
 

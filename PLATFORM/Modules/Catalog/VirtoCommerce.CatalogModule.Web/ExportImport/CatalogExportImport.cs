@@ -82,11 +82,11 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
             progressCallback(progressInfo);
             //Categories should be sorted right way 
             //first need to create virtual categories
-            var orderedCategories = backupObject.Categories.Where(x => x.Catalog.Virtual)
+            var orderedCategories = backupObject.Categories.Where(x => x.Catalog.IsVirtual)
                                                              .OrderBy(x => x.Level)
                                                              .ToList();
             //second need to create physical categories
-            orderedCategories.AddRange(backupObject.Categories.Where(x => !x.Catalog.Virtual)
+            orderedCategories.AddRange(backupObject.Categories.Where(x => !x.Catalog.IsVirtual)
                                                              .OrderBy(x => x.Level));
 
             backupObject.Products = backupObject.Products.OrderBy(x => x.MainProductId).ToList();

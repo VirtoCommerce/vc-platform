@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,56 +21,63 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceDomainCatalogModelProductAssociation" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCatalogModelProductAssociation" />class.
         /// </summary>
-        public VirtoCommerceDomainCatalogModelProductAssociation()
+        /// <param name="Name">Name.</param>
+        /// <param name="Description">Description.</param>
+        /// <param name="Priority">Priority.</param>
+        /// <param name="Type">Type.</param>
+        /// <param name="AssociatedProductId">AssociatedProductId.</param>
+        /// <param name="AssociatedProduct">AssociatedProduct.</param>
+
+        public VirtoCommerceDomainCatalogModelProductAssociation(string Name = null, string Description = null, int? Priority = null, string Type = null, string AssociatedProductId = null, VirtoCommerceDomainCatalogModelCatalogProduct AssociatedProduct = null)
         {
+            this.Name = Name;
+            this.Description = Description;
+            this.Priority = Priority;
+            this.Type = Type;
+            this.AssociatedProductId = AssociatedProductId;
+            this.AssociatedProduct = AssociatedProduct;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Description
         /// </summary>
         [DataMember(Name="description", EmitDefaultValue=false)]
         public string Description { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Priority
         /// </summary>
         [DataMember(Name="priority", EmitDefaultValue=false)]
         public int? Priority { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name="type", EmitDefaultValue=false)]
         public string Type { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets AssociatedProductId
         /// </summary>
         [DataMember(Name="associatedProductId", EmitDefaultValue=false)]
         public string AssociatedProductId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets AssociatedProduct
         /// </summary>
         [DataMember(Name="associatedProduct", EmitDefaultValue=false)]
         public VirtoCommerceDomainCatalogModelCatalogProduct AssociatedProduct { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

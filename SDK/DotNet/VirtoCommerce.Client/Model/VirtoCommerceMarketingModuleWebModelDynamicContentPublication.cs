@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// Represent dynamic content publication and link content and places together\r\n            may contain conditional expressions applicability
     /// </summary>
@@ -21,122 +21,138 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceMarketingModuleWebModelDynamicContentPublication" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceMarketingModuleWebModelDynamicContentPublication" />class.
         /// </summary>
-        public VirtoCommerceMarketingModuleWebModelDynamicContentPublication()
+        /// <param name="Name">Name.</param>
+        /// <param name="Description">Description.</param>
+        /// <param name="Priority">Priority used for chose publication in combination.</param>
+        /// <param name="IsActive">IsActive.</param>
+        /// <param name="StoreId">Store where the publication is active.</param>
+        /// <param name="StartDate">StartDate.</param>
+        /// <param name="EndDate">EndDate.</param>
+        /// <param name="ContentItems">ContentItems.</param>
+        /// <param name="ContentPlaces">ContentPlaces.</param>
+        /// <param name="DynamicExpression">Dynamic conditions tree determine the applicability of this publication.</param>
+        /// <param name="CreatedDate">CreatedDate.</param>
+        /// <param name="ModifiedDate">ModifiedDate.</param>
+        /// <param name="CreatedBy">CreatedBy.</param>
+        /// <param name="ModifiedBy">ModifiedBy.</param>
+        /// <param name="Id">Id.</param>
+
+        public VirtoCommerceMarketingModuleWebModelDynamicContentPublication(string Name = null, string Description = null, int? Priority = null, bool? IsActive = null, string StoreId = null, DateTime? StartDate = null, DateTime? EndDate = null, List<VirtoCommerceMarketingModuleWebModelDynamicContentItem> ContentItems = null, List<VirtoCommerceMarketingModuleWebModelDynamicContentPlace> ContentPlaces = null, VirtoCommerceDomainCommonConditionExpressionTree DynamicExpression = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
         {
+            this.Name = Name;
+            this.Description = Description;
+            this.Priority = Priority;
+            this.IsActive = IsActive;
+            this.StoreId = StoreId;
+            this.StartDate = StartDate;
+            this.EndDate = EndDate;
+            this.ContentItems = ContentItems;
+            this.ContentPlaces = ContentPlaces;
+            this.DynamicExpression = DynamicExpression;
+            this.CreatedDate = CreatedDate;
+            this.ModifiedDate = ModifiedDate;
+            this.CreatedBy = CreatedBy;
+            this.ModifiedBy = ModifiedBy;
+            this.Id = Id;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Description
         /// </summary>
         [DataMember(Name="description", EmitDefaultValue=false)]
         public string Description { get; set; }
-  
-        
+
         /// <summary>
         /// Priority used for chose publication in combination
         /// </summary>
         /// <value>Priority used for chose publication in combination</value>
         [DataMember(Name="priority", EmitDefaultValue=false)]
         public int? Priority { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets IsActive
         /// </summary>
         [DataMember(Name="isActive", EmitDefaultValue=false)]
         public bool? IsActive { get; set; }
-  
-        
+
         /// <summary>
         /// Store where the publication is active
         /// </summary>
         /// <value>Store where the publication is active</value>
         [DataMember(Name="storeId", EmitDefaultValue=false)]
         public string StoreId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets StartDate
         /// </summary>
         [DataMember(Name="startDate", EmitDefaultValue=false)]
         public DateTime? StartDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets EndDate
         /// </summary>
         [DataMember(Name="endDate", EmitDefaultValue=false)]
         public DateTime? EndDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ContentItems
         /// </summary>
         [DataMember(Name="contentItems", EmitDefaultValue=false)]
         public List<VirtoCommerceMarketingModuleWebModelDynamicContentItem> ContentItems { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ContentPlaces
         /// </summary>
         [DataMember(Name="contentPlaces", EmitDefaultValue=false)]
         public List<VirtoCommerceMarketingModuleWebModelDynamicContentPlace> ContentPlaces { get; set; }
-  
-        
+
         /// <summary>
         /// Dynamic conditions tree determine the applicability of this publication
         /// </summary>
         /// <value>Dynamic conditions tree determine the applicability of this publication</value>
         [DataMember(Name="dynamicExpression", EmitDefaultValue=false)]
         public VirtoCommerceDomainCommonConditionExpressionTree DynamicExpression { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedDate
         /// </summary>
         [DataMember(Name="createdDate", EmitDefaultValue=false)]
         public DateTime? CreatedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedDate
         /// </summary>
         [DataMember(Name="modifiedDate", EmitDefaultValue=false)]
         public DateTime? ModifiedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedBy
         /// </summary>
         [DataMember(Name="createdBy", EmitDefaultValue=false)]
         public string CreatedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedBy
         /// </summary>
         [DataMember(Name="modifiedBy", EmitDefaultValue=false)]
         public string ModifiedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

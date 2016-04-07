@@ -24,7 +24,7 @@ namespace VirtoCommerce.CatalogModule.Web.Model
         /// <value>
         ///   <c>true</c> if virtual; otherwise, <c>false</c>.
         /// </value>
-        public bool Virtual { get; set; }
+        public bool IsVirtual { get; set; }
 
         /// <summary>
         /// Gets or sets the code.
@@ -71,7 +71,7 @@ namespace VirtoCommerce.CatalogModule.Web.Model
         /// All parents categories
         /// </summary>
         public ICollection<Category> Parents { get; set; }
-     
+
         /// <summary>
         /// Gets or sets the children categories.
         /// </summary>
@@ -93,14 +93,14 @@ namespace VirtoCommerce.CatalogModule.Web.Model
         /// The links.
         /// </value>
 		public ICollection<CategoryLink> Links { get; set; }
-      
+
         /// <summary>
         /// Gets or sets the images.
         /// </summary>
         /// <value>
         /// The images.
         /// </value>
-		public ICollection<Image> Images { get; set; }
+        public ICollection<Image> Images { get; set; }
 
         public string[] SecurityScopes { get; set; }
 

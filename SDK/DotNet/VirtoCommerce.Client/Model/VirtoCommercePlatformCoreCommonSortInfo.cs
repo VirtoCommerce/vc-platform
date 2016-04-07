@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,28 +21,31 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreCommonSortInfo" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreCommonSortInfo" />class.
         /// </summary>
-        public VirtoCommercePlatformCoreCommonSortInfo()
+        /// <param name="SortColumn">SortColumn.</param>
+        /// <param name="SortDirection">SortDirection.</param>
+
+        public VirtoCommercePlatformCoreCommonSortInfo(string SortColumn = null, string SortDirection = null)
         {
+            this.SortColumn = SortColumn;
+            this.SortDirection = SortDirection;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets SortColumn
         /// </summary>
         [DataMember(Name="sortColumn", EmitDefaultValue=false)]
         public string SortColumn { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets SortDirection
         /// </summary>
         [DataMember(Name="sortDirection", EmitDefaultValue=false)]
         public string SortDirection { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

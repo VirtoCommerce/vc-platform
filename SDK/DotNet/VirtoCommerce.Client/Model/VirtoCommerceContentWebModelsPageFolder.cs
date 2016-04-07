@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,45 +21,50 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceContentWebModelsPageFolder" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceContentWebModelsPageFolder" />class.
         /// </summary>
-        public VirtoCommerceContentWebModelsPageFolder()
+        /// <param name="FolderName">Page folder name, by-default &#39;pages&#39; and &#39;includes&#39;.</param>
+        /// <param name="Pages">Collection of page elements in this folder.</param>
+        /// <param name="Folders">Collection of folders.</param>
+        /// <param name="SecurityScopes">SecurityScopes.</param>
+
+        public VirtoCommerceContentWebModelsPageFolder(string FolderName = null, List<VirtoCommerceContentWebModelsPage> Pages = null, List<VirtoCommerceContentWebModelsPageFolder> Folders = null, List<string> SecurityScopes = null)
         {
+            this.FolderName = FolderName;
+            this.Pages = Pages;
+            this.Folders = Folders;
+            this.SecurityScopes = SecurityScopes;
             
         }
 
-        
         /// <summary>
-        /// Page folder name, by-default 'pages' and 'includes'
+        /// Page folder name, by-default &#39;pages&#39; and &#39;includes&#39;
         /// </summary>
-        /// <value>Page folder name, by-default 'pages' and 'includes'</value>
+        /// <value>Page folder name, by-default &#39;pages&#39; and &#39;includes&#39;</value>
         [DataMember(Name="folderName", EmitDefaultValue=false)]
         public string FolderName { get; set; }
-  
-        
+
         /// <summary>
         /// Collection of page elements in this folder
         /// </summary>
         /// <value>Collection of page elements in this folder</value>
         [DataMember(Name="pages", EmitDefaultValue=false)]
         public List<VirtoCommerceContentWebModelsPage> Pages { get; set; }
-  
-        
+
         /// <summary>
         /// Collection of folders
         /// </summary>
         /// <value>Collection of folders</value>
         [DataMember(Name="folders", EmitDefaultValue=false)]
         public List<VirtoCommerceContentWebModelsPageFolder> Folders { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets SecurityScopes
         /// </summary>
         [DataMember(Name="securityScopes", EmitDefaultValue=false)]
         public List<string> SecurityScopes { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

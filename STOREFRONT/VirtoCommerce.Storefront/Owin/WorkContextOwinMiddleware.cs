@@ -48,7 +48,7 @@ namespace VirtoCommerce.Storefront.Owin
         private readonly IPricingModuleApi _pricingModuleApi;
         private readonly IQuoteRequestBuilder _quoteRequestBuilder;
         private readonly ICMSContentModuleApi _cmsApi;
-        private readonly ICacheManager<object> _cacheManager;
+        private readonly ILocalCacheManager _cacheManager;
         private readonly ICatalogModuleApi _catalogModuleApi;
         private readonly ISearchModuleApi _searchApi;
         private readonly IStaticContentService _staticContentService;
@@ -66,7 +66,7 @@ namespace VirtoCommerce.Storefront.Owin
             _cmsApi = container.Resolve<ICMSContentModuleApi>();
             _pricingModuleApi = container.Resolve<IPricingModuleApi>();
             _commerceApi = container.Resolve<ICommerceCoreModuleApi>();
-            _cacheManager = container.Resolve<ICacheManager<object>>();
+            _cacheManager = container.Resolve<ILocalCacheManager>();
             _catalogModuleApi = container.Resolve<ICatalogModuleApi>();
             _searchApi = container.Resolve<ISearchModuleApi>();
             _staticContentService = container.Resolve<IStaticContentService>();

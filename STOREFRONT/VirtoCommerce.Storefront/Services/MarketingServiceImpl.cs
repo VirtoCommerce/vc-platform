@@ -12,9 +12,9 @@ namespace VirtoCommerce.Storefront.Services
     public class MarketingServiceImpl : IMarketingService
     {
         private readonly IMarketingModuleApi _marketingApi;
-        private readonly ICacheManager<object> _cacheManager;
+        private readonly ILocalCacheManager _cacheManager;
 
-        public MarketingServiceImpl(IMarketingModuleApi marketingApi, ICacheManager<object> cacheManager)
+        public MarketingServiceImpl(IMarketingModuleApi marketingApi, ILocalCacheManager cacheManager)
         {
             _marketingApi = marketingApi;
             _cacheManager = cacheManager;

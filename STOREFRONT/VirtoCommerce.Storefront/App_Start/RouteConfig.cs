@@ -7,13 +7,14 @@ using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Services;
 using VirtoCommerce.Storefront.Routing;
 using VirtoCommerce.Storefront.Controllers.Api;
+using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront
 {
     public class RouteConfig
     {
 
-        public static void RegisterRoutes(RouteCollection routes, Func<WorkContext> workContextFactory, ICommerceCoreModuleApi commerceCoreApi, IStaticContentService staticContentService, ICacheManager<object> cacheManager)
+        public static void RegisterRoutes(RouteCollection routes, Func<WorkContext> workContextFactory, ICommerceCoreModuleApi commerceCoreApi, IStaticContentService staticContentService, ILocalCacheManager cacheManager)
         {
             routes.IgnoreRoute("favicon.ico");
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");

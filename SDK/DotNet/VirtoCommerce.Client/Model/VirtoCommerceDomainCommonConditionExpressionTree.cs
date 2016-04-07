@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,35 +21,39 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceDomainCommonConditionExpressionTree" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCommonConditionExpressionTree" />class.
         /// </summary>
-        public VirtoCommerceDomainCommonConditionExpressionTree()
+        /// <param name="Id">Id.</param>
+        /// <param name="AvailableChildren">AvailableChildren.</param>
+        /// <param name="Children">Children.</param>
+
+        public VirtoCommerceDomainCommonConditionExpressionTree(string Id = null, List<VirtoCommerceDomainCommonDynamicExpression> AvailableChildren = null, List<VirtoCommerceDomainCommonDynamicExpression> Children = null)
         {
+            this.Id = Id;
+            this.AvailableChildren = AvailableChildren;
+            this.Children = Children;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets AvailableChildren
         /// </summary>
         [DataMember(Name="availableChildren", EmitDefaultValue=false)]
         public List<VirtoCommerceDomainCommonDynamicExpression> AvailableChildren { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Children
         /// </summary>
         [DataMember(Name="children", EmitDefaultValue=false)]
         public List<VirtoCommerceDomainCommonDynamicExpression> Children { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

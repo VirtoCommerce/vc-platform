@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,49 +21,55 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelCatalogSearchResult" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelCatalogSearchResult" />class.
         /// </summary>
-        public VirtoCommerceCatalogModuleWebModelCatalogSearchResult()
+        /// <param name="ProductsTotalCount">ProductsTotalCount.</param>
+        /// <param name="Products">Products.</param>
+        /// <param name="Categories">Categories.</param>
+        /// <param name="Catalogs">Catalogs.</param>
+        /// <param name="Aggregations">Aggregations.</param>
+
+        public VirtoCommerceCatalogModuleWebModelCatalogSearchResult(int? ProductsTotalCount = null, List<VirtoCommerceCatalogModuleWebModelProduct> Products = null, List<VirtoCommerceCatalogModuleWebModelCategory> Categories = null, List<VirtoCommerceCatalogModuleWebModelCatalog> Catalogs = null, List<VirtoCommerceCatalogModuleWebModelAggregation> Aggregations = null)
         {
+            this.ProductsTotalCount = ProductsTotalCount;
+            this.Products = Products;
+            this.Categories = Categories;
+            this.Catalogs = Catalogs;
+            this.Aggregations = Aggregations;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets ProductsTotalCount
         /// </summary>
         [DataMember(Name="productsTotalCount", EmitDefaultValue=false)]
         public int? ProductsTotalCount { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Products
         /// </summary>
         [DataMember(Name="products", EmitDefaultValue=false)]
         public List<VirtoCommerceCatalogModuleWebModelProduct> Products { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Categories
         /// </summary>
         [DataMember(Name="categories", EmitDefaultValue=false)]
         public List<VirtoCommerceCatalogModuleWebModelCategory> Categories { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Catalogs
         /// </summary>
         [DataMember(Name="catalogs", EmitDefaultValue=false)]
         public List<VirtoCommerceCatalogModuleWebModelCatalog> Catalogs { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Aggregations
         /// </summary>
         [DataMember(Name="aggregations", EmitDefaultValue=false)]
         public List<VirtoCommerceCatalogModuleWebModelAggregation> Aggregations { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

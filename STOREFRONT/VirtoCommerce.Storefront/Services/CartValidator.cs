@@ -20,9 +20,9 @@ namespace VirtoCommerce.Storefront.Services
         private readonly Func<WorkContext> _workContextFactory;
         private readonly IShoppingCartModuleApi _cartApi;
         private readonly ICatalogSearchService _catalogService;
-        private readonly ICacheManager<object> _cacheManager;
+        private readonly ILocalCacheManager _cacheManager;
 
-        public CartValidator(Func<WorkContext> workContextFaxtory, IShoppingCartModuleApi cartApi, ICatalogSearchService catalogService, ICacheManager<object> cacheManager)
+        public CartValidator(Func<WorkContext> workContextFaxtory, IShoppingCartModuleApi cartApi, ICatalogSearchService catalogService, ILocalCacheManager cacheManager)
         {
             _workContextFactory = workContextFaxtory;
             _cartApi = cartApi;

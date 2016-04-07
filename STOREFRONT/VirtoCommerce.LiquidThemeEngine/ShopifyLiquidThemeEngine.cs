@@ -51,7 +51,7 @@ namespace VirtoCommerce.LiquidThemeEngine
         private readonly IContentBlobProvider _themeBlobProvider;
         private readonly IContentBlobProvider _globalThemeBlobProvider;
 
-        public ShopifyLiquidThemeEngine(ICacheManager<object> cacheManager, Func<WorkContext> workContextFactory, Func<IStorefrontUrlBuilder> storeFrontUrlBuilderFactory, IContentBlobProvider themeBlobProvider, IContentBlobProvider globalThemeBlobProvider, string themesAssetsRelativeUrl, string globalThemeAssetsRelativeUrl)
+        public ShopifyLiquidThemeEngine(ILocalCacheManager cacheManager, Func<WorkContext> workContextFactory, Func<IStorefrontUrlBuilder> storeFrontUrlBuilderFactory, IContentBlobProvider themeBlobProvider, IContentBlobProvider globalThemeBlobProvider, string themesAssetsRelativeUrl, string globalThemeAssetsRelativeUrl)
         {
             _workContextFactory = workContextFactory;
             _storeFrontUrlBuilderFactory = storeFrontUrlBuilderFactory;
@@ -288,7 +288,7 @@ namespace VirtoCommerce.LiquidThemeEngine
             var parsedTemplate = _cacheManager.Get(GetCacheKey("ParseTemplate", templateContent.GetHashCode().ToString()), "LiquidTheme", () => { return Template.Parse(templateContent); });
 
             var retVal = parsedTemplate.RenderWithTracing(renderParams);
-            
+
             //Copy key values which were generated in rendering to out parameters
             if (parameters != null && parsedTemplate.Registers != null)
             {
@@ -385,7 +385,7 @@ namespace VirtoCommerce.LiquidThemeEngine
         public string GetGlobalAssetAbsoluteUrl(string assetName)
         {
             return UrlBuilder.ToAppAbsolute(_globalThemeAssetsRelativeUrl.TrimEnd('/') + "/" + assetName.TrimStart('/'), WorkContext.CurrentStore, WorkContext.CurrentLanguage);
-        } 
+        }
         #endregion
 
 

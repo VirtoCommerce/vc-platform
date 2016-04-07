@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,30 +21,33 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceContentWebModelsGetPagesResult" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceContentWebModelsGetPagesResult" />class.
         /// </summary>
-        public VirtoCommerceContentWebModelsGetPagesResult()
+        /// <param name="Folders">Collection of pages folders (by default - &#39;pages&#39;, &#39;includes&#39;), that contains page elements.</param>
+        /// <param name="Pages">Collection of page elements (used in pages rendering (page html, images, etc.)).</param>
+
+        public VirtoCommerceContentWebModelsGetPagesResult(List<VirtoCommerceContentWebModelsPageFolder> Folders = null, List<VirtoCommerceContentWebModelsPage> Pages = null)
         {
+            this.Folders = Folders;
+            this.Pages = Pages;
             
         }
 
-        
         /// <summary>
-        /// Collection of pages folders (by default - 'pages', 'includes'), that contains page elements
+        /// Collection of pages folders (by default - &#39;pages&#39;, &#39;includes&#39;), that contains page elements
         /// </summary>
-        /// <value>Collection of pages folders (by default - 'pages', 'includes'), that contains page elements</value>
+        /// <value>Collection of pages folders (by default - &#39;pages&#39;, &#39;includes&#39;), that contains page elements</value>
         [DataMember(Name="folders", EmitDefaultValue=false)]
         public List<VirtoCommerceContentWebModelsPageFolder> Folders { get; set; }
-  
-        
+
         /// <summary>
         /// Collection of page elements (used in pages rendering (page html, images, etc.))
         /// </summary>
         /// <value>Collection of page elements (used in pages rendering (page html, images, etc.))</value>
         [DataMember(Name="pages", EmitDefaultValue=false)]
         public List<VirtoCommerceContentWebModelsPage> Pages { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

@@ -1,14 +1,18 @@
 ﻿angular.module('virtoCommerce.customerModule')
-.controller('virtoCommerce.customerModule.memberAccountsListController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.uiGridHelper', 'platformWebApp.bladeNavigationService', 'filterFilter',
+.controller('virtoCommerce.customerModule.customerAccountsListController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.uiGridHelper', 'platformWebApp.bladeNavigationService', 'filterFilter',
 function ($scope, dialogService, uiGridHelper, bladeNavigationService, filterFilter) {
     $scope.uiGridConstants = uiGridHelper.uiGridConstants;
     var blade = $scope.blade;
 
-    function initializeBlade(data) {
-        // blade.data = data;
+    blade.refresh = function () {
+        blade.isLoading = true;
+        blade.parentBlade.refresh();
+    };
 
-        blade.currentEntities = angular.copy(data);
-        blade.origEntity = data;
+    function initializeBlade(data) {
+        blade.memberId = data.id;
+        blade.currentEntities = angular.copy(data.securityAccounts);
+        blade.origEntity = data.securityAccounts;
         blade.isLoading = false;
     }
 
@@ -31,9 +35,39 @@ function ($scope, dialogService, uiGridHelper, bladeNavigationService, filterFil
         }
     };
 
+    function openNewAccountWizard(store) {
+        var newBlade = {
+            id: 'newAccountWizard',
+            currentEntity: { roles: [], userType: 'Customer', storeId: store.id, memberId: blade.memberId },
+            title: 'platform.blades.account-detail.title-new',
+            subtitle: blade.subtitle,
+            controller: 'platformWebApp.newAccountWizardController',
+            template: '$(Platform)/Scripts/app/security/wizards/newAccount/new-account-wizard.tpl.html'
+        };
+        bladeNavigationService.showBlade(newBlade, blade);
+    }
+
     blade.headIcon = 'fa-key';
 
     blade.toolbarCommands = [
+        {
+            name: "platform.commands.add", icon: 'fa fa-plus',
+            executeMethod: function () {
+                bladeNavigationService.closeChildrenBlades(blade, function () {
+                    var newBlade = {
+                        id: 'pickStoreList',
+                        title: 'customer.blades.pick-store-list.title',
+                        subtitle: 'customer.blades.pick-store-list.subtitle',
+                        onAfterNodeSelected: openNewAccountWizard,
+                        controller: 'virtoCommerce.customerModule.pickStoreListController',
+                        template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/pick-store-list.tpl.html'
+                    };
+                    bladeNavigationService.showBlade(newBlade, blade);
+                });
+            },
+            canExecuteMethod: function () { return true; },
+            permission: 'platform:security:create'
+        }
         //{
         //    name: "platform.commands.delete", icon: 'fa fa-trash-o',
         //    executeMethod: function () { deleteList($scope.gridApi.selection.getSelectedRows()); },
@@ -62,7 +96,7 @@ function ($scope, dialogService, uiGridHelper, bladeNavigationService, filterFil
         return renderableRows;
     };
 
-    $scope.$watch('blade.parentBlade.currentEntity.securityAccounts', initializeBlade);
+    $scope.$watch('blade.parentBlade.currentEntity', initializeBlade);
 
     // on load:
     // $scope.$watch('blade.parentBlade.currentEntity.securityAccounts' gets fired    

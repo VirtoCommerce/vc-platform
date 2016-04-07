@@ -25,7 +25,7 @@ namespace VirtoCommerce.Storefront.Services
         private static string[] _extensions = new[] { ".md", ".html" };
         private readonly Markdown _markdownRender;
         private readonly ILiquidThemeEngine _liquidEngine;
-        private readonly ICacheManager<object> _cacheManager;
+        private readonly ILocalCacheManager<object> _cacheManager;
         private readonly Func<WorkContext> _workContextFactory;
         private readonly Func<IStorefrontUrlBuilder> _urlBuilderFactory;
         private readonly Func<string, ContentItem> _contentItemFactory;
@@ -33,7 +33,7 @@ namespace VirtoCommerce.Storefront.Services
      
         [CLSCompliant(false)]
         public StaticContentServiceImpl(Markdown markdownRender, ILiquidThemeEngine liquidEngine,
-                                        ICacheManager<object> cacheManager, Func<WorkContext> workContextFactory,
+                                        ILocalCacheManager cacheManager, Func<WorkContext> workContextFactory,
                                         Func<IStorefrontUrlBuilder> urlBuilderFactory, Func<string, ContentItem> contentItemFactory,
                                         IContentBlobProvider contentBlobProvider)
         {

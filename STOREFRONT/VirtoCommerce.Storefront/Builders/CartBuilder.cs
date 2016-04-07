@@ -28,13 +28,13 @@ namespace VirtoCommerce.Storefront.Builders
         private readonly IShoppingCartModuleApi _cartApi;
         private readonly IPromotionEvaluator _promotionEvaluator;
         private readonly ICatalogSearchService _catalogSearchService;
-        private readonly ICacheManager<object> _cacheManager;
+        private readonly ILocalCacheManager _cacheManager;
 
         private ShoppingCart _cart;
         private const string _cartCacheRegion = "CartRegion";
 
         [CLSCompliant(false)]
-        public CartBuilder(IShoppingCartModuleApi cartApi, IPromotionEvaluator promotionEvaluator, ICatalogSearchService catalogSearchService, ICommerceCoreModuleApi commerceApi, ICacheManager<object> cacheManager)
+        public CartBuilder(IShoppingCartModuleApi cartApi, IPromotionEvaluator promotionEvaluator, ICatalogSearchService catalogSearchService, ICommerceCoreModuleApi commerceApi, ILocalCacheManager cacheManager)
         {
             _cartApi = cartApi;
             _promotionEvaluator = promotionEvaluator;

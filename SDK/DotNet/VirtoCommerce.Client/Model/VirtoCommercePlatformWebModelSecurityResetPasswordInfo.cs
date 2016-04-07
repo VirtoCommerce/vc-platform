@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,21 +21,23 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelSecurityResetPasswordInfo" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelSecurityResetPasswordInfo" />class.
         /// </summary>
-        public VirtoCommercePlatformWebModelSecurityResetPasswordInfo()
+        /// <param name="NewPassword">NewPassword.</param>
+
+        public VirtoCommercePlatformWebModelSecurityResetPasswordInfo(string NewPassword = null)
         {
+            this.NewPassword = NewPassword;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets NewPassword
         /// </summary>
         [DataMember(Name="newPassword", EmitDefaultValue=false)]
         public string NewPassword { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

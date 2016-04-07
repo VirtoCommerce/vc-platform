@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,28 +21,31 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelAggregationLabel" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelAggregationLabel" />class.
         /// </summary>
-        public VirtoCommerceCatalogModuleWebModelAggregationLabel()
+        /// <param name="Language">Language.</param>
+        /// <param name="Label">Label.</param>
+
+        public VirtoCommerceCatalogModuleWebModelAggregationLabel(string Language = null, string Label = null)
         {
+            this.Language = Language;
+            this.Label = Label;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets Language
         /// </summary>
         [DataMember(Name="language", EmitDefaultValue=false)]
         public string Language { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Label
         /// </summary>
         [DataMember(Name="label", EmitDefaultValue=false)]
         public string Label { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

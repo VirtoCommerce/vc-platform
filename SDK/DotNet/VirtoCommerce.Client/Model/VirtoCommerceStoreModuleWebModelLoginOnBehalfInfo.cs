@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// Represent result for checking of possibility login on behalf request
     /// </summary>
@@ -21,28 +21,31 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo" />class.
         /// </summary>
-        public VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo()
+        /// <param name="UserName">UserName.</param>
+        /// <param name="CanLoginOnBehalf">CanLoginOnBehalf.</param>
+
+        public VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo(string UserName = null, bool? CanLoginOnBehalf = null)
         {
+            this.UserName = UserName;
+            this.CanLoginOnBehalf = CanLoginOnBehalf;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets UserName
         /// </summary>
         [DataMember(Name="userName", EmitDefaultValue=false)]
         public string UserName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CanLoginOnBehalf
         /// </summary>
         [DataMember(Name="canLoginOnBehalf", EmitDefaultValue=false)]
         public bool? CanLoginOnBehalf { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

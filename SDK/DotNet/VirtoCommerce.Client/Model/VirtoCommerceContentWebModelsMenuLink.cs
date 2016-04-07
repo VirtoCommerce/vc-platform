@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,91 +21,102 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceContentWebModelsMenuLink" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceContentWebModelsMenuLink" />class.
         /// </summary>
-        public VirtoCommerceContentWebModelsMenuLink()
+        /// <param name="Id">Id.</param>
+        /// <param name="Title">Title of menu link element, displayed as link text or link title.</param>
+        /// <param name="Url">Url of menu link element, inserts in href attribute of link.</param>
+        /// <param name="Priority">Priority of menu link element, the higher the value, the higher in the list.</param>
+        /// <param name="IsActive">If true - will displayed in the list, if false - not.</param>
+        /// <param name="MenuLinkListId">MenuLinkListId.</param>
+        /// <param name="AssociatedObjectId">Each link element can have an associated object like Product, Category, Promotion, etc.\r\n            Is a primary key of associated object.</param>
+        /// <param name="AssociatedObjectName">Display name for associated object.</param>
+        /// <param name="AssociatedObjectType">Associated object type.</param>
+        /// <param name="SecurityScopes">SecurityScopes.</param>
+
+        public VirtoCommerceContentWebModelsMenuLink(string Id = null, string Title = null, string Url = null, int? Priority = null, bool? IsActive = null, string MenuLinkListId = null, string AssociatedObjectId = null, string AssociatedObjectName = null, string AssociatedObjectType = null, List<string> SecurityScopes = null)
         {
+            this.Id = Id;
+            this.Title = Title;
+            this.Url = Url;
+            this.Priority = Priority;
+            this.IsActive = IsActive;
+            this.MenuLinkListId = MenuLinkListId;
+            this.AssociatedObjectId = AssociatedObjectId;
+            this.AssociatedObjectName = AssociatedObjectName;
+            this.AssociatedObjectType = AssociatedObjectType;
+            this.SecurityScopes = SecurityScopes;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
+
         /// <summary>
         /// Title of menu link element, displayed as link text or link title
         /// </summary>
         /// <value>Title of menu link element, displayed as link text or link title</value>
         [DataMember(Name="title", EmitDefaultValue=false)]
         public string Title { get; set; }
-  
-        
+
         /// <summary>
         /// Url of menu link element, inserts in href attribute of link
         /// </summary>
         /// <value>Url of menu link element, inserts in href attribute of link</value>
         [DataMember(Name="url", EmitDefaultValue=false)]
         public string Url { get; set; }
-  
-        
+
         /// <summary>
         /// Priority of menu link element, the higher the value, the higher in the list
         /// </summary>
         /// <value>Priority of menu link element, the higher the value, the higher in the list</value>
         [DataMember(Name="priority", EmitDefaultValue=false)]
         public int? Priority { get; set; }
-  
-        
+
         /// <summary>
         /// If true - will displayed in the list, if false - not
         /// </summary>
         /// <value>If true - will displayed in the list, if false - not</value>
         [DataMember(Name="isActive", EmitDefaultValue=false)]
         public bool? IsActive { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets MenuLinkListId
         /// </summary>
         [DataMember(Name="menuLinkListId", EmitDefaultValue=false)]
         public string MenuLinkListId { get; set; }
-  
-        
+
         /// <summary>
         /// Each link element can have an associated object like Product, Category, Promotion, etc.\r\n            Is a primary key of associated object
         /// </summary>
         /// <value>Each link element can have an associated object like Product, Category, Promotion, etc.\r\n            Is a primary key of associated object</value>
         [DataMember(Name="associatedObjectId", EmitDefaultValue=false)]
         public string AssociatedObjectId { get; set; }
-  
-        
+
         /// <summary>
         /// Display name for associated object
         /// </summary>
         /// <value>Display name for associated object</value>
         [DataMember(Name="associatedObjectName", EmitDefaultValue=false)]
         public string AssociatedObjectName { get; set; }
-  
-        
+
         /// <summary>
         /// Associated object type
         /// </summary>
         /// <value>Associated object type</value>
         [DataMember(Name="associatedObjectType", EmitDefaultValue=false)]
         public string AssociatedObjectType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets SecurityScopes
         /// </summary>
         [DataMember(Name="securityScopes", EmitDefaultValue=false)]
         public List<string> SecurityScopes { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

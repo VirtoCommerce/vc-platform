@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,63 +21,71 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreSecurityPermission" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreSecurityPermission" />class.
         /// </summary>
-        public VirtoCommercePlatformCoreSecurityPermission()
+        /// <param name="Name">Name.</param>
+        /// <param name="Description">Description.</param>
+        /// <param name="ModuleId">ModuleId.</param>
+        /// <param name="GroupName">GroupName.</param>
+        /// <param name="AssignedScopes">AssignedScopes.</param>
+        /// <param name="AvailableScopes">AvailableScopes.</param>
+        /// <param name="Id">Id.</param>
+
+        public VirtoCommercePlatformCoreSecurityPermission(string Name = null, string Description = null, string ModuleId = null, string GroupName = null, List<VirtoCommercePlatformCoreSecurityPermissionScope> AssignedScopes = null, List<VirtoCommercePlatformCoreSecurityPermissionScope> AvailableScopes = null, string Id = null)
         {
+            this.Name = Name;
+            this.Description = Description;
+            this.ModuleId = ModuleId;
+            this.GroupName = GroupName;
+            this.AssignedScopes = AssignedScopes;
+            this.AvailableScopes = AvailableScopes;
+            this.Id = Id;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Description
         /// </summary>
         [DataMember(Name="description", EmitDefaultValue=false)]
         public string Description { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModuleId
         /// </summary>
         [DataMember(Name="moduleId", EmitDefaultValue=false)]
         public string ModuleId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets GroupName
         /// </summary>
         [DataMember(Name="groupName", EmitDefaultValue=false)]
         public string GroupName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets AssignedScopes
         /// </summary>
         [DataMember(Name="assignedScopes", EmitDefaultValue=false)]
         public List<VirtoCommercePlatformCoreSecurityPermissionScope> AssignedScopes { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets AvailableScopes
         /// </summary>
         [DataMember(Name="availableScopes", EmitDefaultValue=false)]
         public List<VirtoCommercePlatformCoreSecurityPermissionScope> AvailableScopes { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

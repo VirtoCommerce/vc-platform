@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,245 +21,279 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceDomainMarketingModelPromotionEvaluationContext" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainMarketingModelPromotionEvaluationContext" />class.
         /// </summary>
-        public VirtoCommerceDomainMarketingModelPromotionEvaluationContext()
+        /// <param name="RefusedGiftIds">RefusedGiftIds.</param>
+        /// <param name="StoreId">StoreId.</param>
+        /// <param name="Currency">Currency.</param>
+        /// <param name="CustomerId">CustomerId.</param>
+        /// <param name="IsRegisteredUser">IsRegisteredUser.</param>
+        /// <param name="IsFirstTimeBuyer">IsFirstTimeBuyer.</param>
+        /// <param name="IsEveryone">IsEveryone.</param>
+        /// <param name="CartTotal">CartTotal.</param>
+        /// <param name="ShipmentMethodCode">ShipmentMethodCode.</param>
+        /// <param name="ShipmentMethodPrice">ShipmentMethodPrice.</param>
+        /// <param name="AvailableShipmentMethodCodes">AvailableShipmentMethodCodes.</param>
+        /// <param name="Coupon">Coupon.</param>
+        /// <param name="CartPromoEntries">CartPromoEntries.</param>
+        /// <param name="PromoEntries">PromoEntries.</param>
+        /// <param name="PromoEntry">PromoEntry.</param>
+        /// <param name="ContextObject">ContextObject.</param>
+        /// <param name="GeoCity">GeoCity.</param>
+        /// <param name="GeoState">GeoState.</param>
+        /// <param name="GeoCountry">GeoCountry.</param>
+        /// <param name="GeoContinent">GeoContinent.</param>
+        /// <param name="GeoZipCode">GeoZipCode.</param>
+        /// <param name="GeoConnectionType">GeoConnectionType.</param>
+        /// <param name="GeoTimeZone">GeoTimeZone.</param>
+        /// <param name="GeoIpRoutingType">GeoIpRoutingType.</param>
+        /// <param name="GeoIspSecondLevel">GeoIspSecondLevel.</param>
+        /// <param name="GeoIspTopLevel">GeoIspTopLevel.</param>
+        /// <param name="ShopperAge">ShopperAge.</param>
+        /// <param name="ShopperGender">ShopperGender.</param>
+        /// <param name="Language">Language.</param>
+        /// <param name="ShopperSearchedPhraseInStore">ShopperSearchedPhraseInStore.</param>
+        /// <param name="ShopperSearchedPhraseOnInternet">ShopperSearchedPhraseOnInternet.</param>
+        /// <param name="CurrentUrl">CurrentUrl.</param>
+        /// <param name="ReferredUrl">ReferredUrl.</param>
+
+        public VirtoCommerceDomainMarketingModelPromotionEvaluationContext(List<string> RefusedGiftIds = null, string StoreId = null, string Currency = null, string CustomerId = null, bool? IsRegisteredUser = null, bool? IsFirstTimeBuyer = null, bool? IsEveryone = null, double? CartTotal = null, string ShipmentMethodCode = null, double? ShipmentMethodPrice = null, List<string> AvailableShipmentMethodCodes = null, string Coupon = null, List<VirtoCommerceDomainMarketingModelProductPromoEntry> CartPromoEntries = null, List<VirtoCommerceDomainMarketingModelProductPromoEntry> PromoEntries = null, VirtoCommerceDomainMarketingModelProductPromoEntry PromoEntry = null, Object ContextObject = null, string GeoCity = null, string GeoState = null, string GeoCountry = null, string GeoContinent = null, string GeoZipCode = null, string GeoConnectionType = null, string GeoTimeZone = null, string GeoIpRoutingType = null, string GeoIspSecondLevel = null, string GeoIspTopLevel = null, int? ShopperAge = null, string ShopperGender = null, string Language = null, string ShopperSearchedPhraseInStore = null, string ShopperSearchedPhraseOnInternet = null, string CurrentUrl = null, string ReferredUrl = null)
         {
+            this.RefusedGiftIds = RefusedGiftIds;
+            this.StoreId = StoreId;
+            this.Currency = Currency;
+            this.CustomerId = CustomerId;
+            this.IsRegisteredUser = IsRegisteredUser;
+            this.IsFirstTimeBuyer = IsFirstTimeBuyer;
+            this.IsEveryone = IsEveryone;
+            this.CartTotal = CartTotal;
+            this.ShipmentMethodCode = ShipmentMethodCode;
+            this.ShipmentMethodPrice = ShipmentMethodPrice;
+            this.AvailableShipmentMethodCodes = AvailableShipmentMethodCodes;
+            this.Coupon = Coupon;
+            this.CartPromoEntries = CartPromoEntries;
+            this.PromoEntries = PromoEntries;
+            this.PromoEntry = PromoEntry;
+            this.ContextObject = ContextObject;
+            this.GeoCity = GeoCity;
+            this.GeoState = GeoState;
+            this.GeoCountry = GeoCountry;
+            this.GeoContinent = GeoContinent;
+            this.GeoZipCode = GeoZipCode;
+            this.GeoConnectionType = GeoConnectionType;
+            this.GeoTimeZone = GeoTimeZone;
+            this.GeoIpRoutingType = GeoIpRoutingType;
+            this.GeoIspSecondLevel = GeoIspSecondLevel;
+            this.GeoIspTopLevel = GeoIspTopLevel;
+            this.ShopperAge = ShopperAge;
+            this.ShopperGender = ShopperGender;
+            this.Language = Language;
+            this.ShopperSearchedPhraseInStore = ShopperSearchedPhraseInStore;
+            this.ShopperSearchedPhraseOnInternet = ShopperSearchedPhraseOnInternet;
+            this.CurrentUrl = CurrentUrl;
+            this.ReferredUrl = ReferredUrl;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets RefusedGiftIds
         /// </summary>
         [DataMember(Name="refusedGiftIds", EmitDefaultValue=false)]
         public List<string> RefusedGiftIds { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets StoreId
         /// </summary>
         [DataMember(Name="storeId", EmitDefaultValue=false)]
         public string StoreId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Currency
         /// </summary>
         [DataMember(Name="currency", EmitDefaultValue=false)]
         public string Currency { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CustomerId
         /// </summary>
         [DataMember(Name="customerId", EmitDefaultValue=false)]
         public string CustomerId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets IsRegisteredUser
         /// </summary>
         [DataMember(Name="isRegisteredUser", EmitDefaultValue=false)]
         public bool? IsRegisteredUser { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets IsFirstTimeBuyer
         /// </summary>
         [DataMember(Name="isFirstTimeBuyer", EmitDefaultValue=false)]
         public bool? IsFirstTimeBuyer { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets IsEveryone
         /// </summary>
         [DataMember(Name="isEveryone", EmitDefaultValue=false)]
         public bool? IsEveryone { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CartTotal
         /// </summary>
         [DataMember(Name="cartTotal", EmitDefaultValue=false)]
         public double? CartTotal { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ShipmentMethodCode
         /// </summary>
         [DataMember(Name="shipmentMethodCode", EmitDefaultValue=false)]
         public string ShipmentMethodCode { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ShipmentMethodPrice
         /// </summary>
         [DataMember(Name="shipmentMethodPrice", EmitDefaultValue=false)]
         public double? ShipmentMethodPrice { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets AvailableShipmentMethodCodes
         /// </summary>
         [DataMember(Name="availableShipmentMethodCodes", EmitDefaultValue=false)]
         public List<string> AvailableShipmentMethodCodes { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Coupon
         /// </summary>
         [DataMember(Name="coupon", EmitDefaultValue=false)]
         public string Coupon { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CartPromoEntries
         /// </summary>
         [DataMember(Name="cartPromoEntries", EmitDefaultValue=false)]
         public List<VirtoCommerceDomainMarketingModelProductPromoEntry> CartPromoEntries { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets PromoEntries
         /// </summary>
         [DataMember(Name="promoEntries", EmitDefaultValue=false)]
         public List<VirtoCommerceDomainMarketingModelProductPromoEntry> PromoEntries { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets PromoEntry
         /// </summary>
         [DataMember(Name="promoEntry", EmitDefaultValue=false)]
         public VirtoCommerceDomainMarketingModelProductPromoEntry PromoEntry { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ContextObject
         /// </summary>
         [DataMember(Name="contextObject", EmitDefaultValue=false)]
         public Object ContextObject { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets GeoCity
         /// </summary>
         [DataMember(Name="geoCity", EmitDefaultValue=false)]
         public string GeoCity { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets GeoState
         /// </summary>
         [DataMember(Name="geoState", EmitDefaultValue=false)]
         public string GeoState { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets GeoCountry
         /// </summary>
         [DataMember(Name="geoCountry", EmitDefaultValue=false)]
         public string GeoCountry { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets GeoContinent
         /// </summary>
         [DataMember(Name="geoContinent", EmitDefaultValue=false)]
         public string GeoContinent { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets GeoZipCode
         /// </summary>
         [DataMember(Name="geoZipCode", EmitDefaultValue=false)]
         public string GeoZipCode { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets GeoConnectionType
         /// </summary>
         [DataMember(Name="geoConnectionType", EmitDefaultValue=false)]
         public string GeoConnectionType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets GeoTimeZone
         /// </summary>
         [DataMember(Name="geoTimeZone", EmitDefaultValue=false)]
         public string GeoTimeZone { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets GeoIpRoutingType
         /// </summary>
         [DataMember(Name="geoIpRoutingType", EmitDefaultValue=false)]
         public string GeoIpRoutingType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets GeoIspSecondLevel
         /// </summary>
         [DataMember(Name="geoIspSecondLevel", EmitDefaultValue=false)]
         public string GeoIspSecondLevel { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets GeoIspTopLevel
         /// </summary>
         [DataMember(Name="geoIspTopLevel", EmitDefaultValue=false)]
         public string GeoIspTopLevel { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ShopperAge
         /// </summary>
         [DataMember(Name="shopperAge", EmitDefaultValue=false)]
         public int? ShopperAge { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ShopperGender
         /// </summary>
         [DataMember(Name="shopperGender", EmitDefaultValue=false)]
         public string ShopperGender { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Language
         /// </summary>
         [DataMember(Name="language", EmitDefaultValue=false)]
         public string Language { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ShopperSearchedPhraseInStore
         /// </summary>
         [DataMember(Name="shopperSearchedPhraseInStore", EmitDefaultValue=false)]
         public string ShopperSearchedPhraseInStore { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ShopperSearchedPhraseOnInternet
         /// </summary>
         [DataMember(Name="shopperSearchedPhraseOnInternet", EmitDefaultValue=false)]
         public string ShopperSearchedPhraseOnInternet { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CurrentUrl
         /// </summary>
         [DataMember(Name="currentUrl", EmitDefaultValue=false)]
         public string CurrentUrl { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ReferredUrl
         /// </summary>
         [DataMember(Name="referredUrl", EmitDefaultValue=false)]
         public string ReferredUrl { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

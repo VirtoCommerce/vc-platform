@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// Information to define linking information from item or category to category.
     /// </summary>
@@ -21,46 +21,51 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelCategoryLink" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelCategoryLink" />class.
         /// </summary>
-        public VirtoCommerceCatalogModuleWebModelCategoryLink()
+        /// <param name="SourceItemId">Gets or sets the source item id..</param>
+        /// <param name="SourceCategoryId">Gets or sets the source category identifier..</param>
+        /// <param name="CatalogId">Gets or sets the target catalog identifier..</param>
+        /// <param name="CategoryId">Gets or sets the target category identifier..</param>
+
+        public VirtoCommerceCatalogModuleWebModelCategoryLink(string SourceItemId = null, string SourceCategoryId = null, string CatalogId = null, string CategoryId = null)
         {
+            this.SourceItemId = SourceItemId;
+            this.SourceCategoryId = SourceCategoryId;
+            this.CatalogId = CatalogId;
+            this.CategoryId = CategoryId;
             
         }
 
-        
         /// <summary>
         /// Gets or sets the source item id.
         /// </summary>
         /// <value>Gets or sets the source item id.</value>
         [DataMember(Name="sourceItemId", EmitDefaultValue=false)]
         public string SourceItemId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the source category identifier.
         /// </summary>
         /// <value>Gets or sets the source category identifier.</value>
         [DataMember(Name="sourceCategoryId", EmitDefaultValue=false)]
         public string SourceCategoryId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the target catalog identifier.
         /// </summary>
         /// <value>Gets or sets the target catalog identifier.</value>
         [DataMember(Name="catalogId", EmitDefaultValue=false)]
         public string CatalogId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the target category identifier.
         /// </summary>
         /// <value>Gets or sets the target category identifier.</value>
         [DataMember(Name="categoryId", EmitDefaultValue=false)]
         public string CategoryId { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

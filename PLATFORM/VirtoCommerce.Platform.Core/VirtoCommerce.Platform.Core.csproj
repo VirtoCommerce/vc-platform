@@ -260,6 +260,7 @@
     <Compile Include="Settings\ISettingsManager.cs" />
     <Compile Include="Settings\ModuleDescriptor.cs" />
     <Compile Include="Settings\SettingEntry.cs" />
+    <Compile Include="Settings\SettingsExtension.cs" />
     <Compile Include="Settings\SettingValueType.cs" />
     <Compile Include="UnityBootstrapper.cs" />
     <Compile Include="UnityBootstrapperExtension.cs" />

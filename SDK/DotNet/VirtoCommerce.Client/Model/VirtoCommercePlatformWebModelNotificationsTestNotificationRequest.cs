@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,49 +21,55 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelNotificationsTestNotificationRequest" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelNotificationsTestNotificationRequest" />class.
         /// </summary>
-        public VirtoCommercePlatformWebModelNotificationsTestNotificationRequest()
+        /// <param name="Type">Type.</param>
+        /// <param name="ObjectId">ObjectId.</param>
+        /// <param name="ObjectTypeId">ObjectTypeId.</param>
+        /// <param name="Language">Language.</param>
+        /// <param name="NotificationParameters">NotificationParameters.</param>
+
+        public VirtoCommercePlatformWebModelNotificationsTestNotificationRequest(string Type = null, string ObjectId = null, string ObjectTypeId = null, string Language = null, List<VirtoCommercePlatformWebModelNotificationsNotificationParameter> NotificationParameters = null)
         {
+            this.Type = Type;
+            this.ObjectId = ObjectId;
+            this.ObjectTypeId = ObjectTypeId;
+            this.Language = Language;
+            this.NotificationParameters = NotificationParameters;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name="type", EmitDefaultValue=false)]
         public string Type { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ObjectId
         /// </summary>
         [DataMember(Name="objectId", EmitDefaultValue=false)]
         public string ObjectId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ObjectTypeId
         /// </summary>
         [DataMember(Name="objectTypeId", EmitDefaultValue=false)]
         public string ObjectTypeId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Language
         /// </summary>
         [DataMember(Name="language", EmitDefaultValue=false)]
         public string Language { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets NotificationParameters
         /// </summary>
         [DataMember(Name="notificationParameters", EmitDefaultValue=false)]
         public List<VirtoCommercePlatformWebModelNotificationsNotificationParameter> NotificationParameters { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

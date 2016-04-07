@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// Represent information about quantity and line item belongs to shipment
     /// </summary>
@@ -21,77 +21,87 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceOrderModuleWebModelShipmentItem" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceOrderModuleWebModelShipmentItem" />class.
         /// </summary>
-        public VirtoCommerceOrderModuleWebModelShipmentItem()
+        /// <param name="LineItemId">LineItemId.</param>
+        /// <param name="LineItem">LineItem.</param>
+        /// <param name="BarCode">BarCode.</param>
+        /// <param name="Quantity">Quantity.</param>
+        /// <param name="CreatedDate">CreatedDate.</param>
+        /// <param name="ModifiedDate">ModifiedDate.</param>
+        /// <param name="CreatedBy">CreatedBy.</param>
+        /// <param name="ModifiedBy">ModifiedBy.</param>
+        /// <param name="Id">Id.</param>
+
+        public VirtoCommerceOrderModuleWebModelShipmentItem(string LineItemId = null, VirtoCommerceOrderModuleWebModelLineItem LineItem = null, string BarCode = null, int? Quantity = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
         {
+            this.LineItemId = LineItemId;
+            this.LineItem = LineItem;
+            this.BarCode = BarCode;
+            this.Quantity = Quantity;
+            this.CreatedDate = CreatedDate;
+            this.ModifiedDate = ModifiedDate;
+            this.CreatedBy = CreatedBy;
+            this.ModifiedBy = ModifiedBy;
+            this.Id = Id;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets LineItemId
         /// </summary>
         [DataMember(Name="lineItemId", EmitDefaultValue=false)]
         public string LineItemId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets LineItem
         /// </summary>
         [DataMember(Name="lineItem", EmitDefaultValue=false)]
         public VirtoCommerceOrderModuleWebModelLineItem LineItem { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets BarCode
         /// </summary>
         [DataMember(Name="barCode", EmitDefaultValue=false)]
         public string BarCode { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Quantity
         /// </summary>
         [DataMember(Name="quantity", EmitDefaultValue=false)]
         public int? Quantity { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedDate
         /// </summary>
         [DataMember(Name="createdDate", EmitDefaultValue=false)]
         public DateTime? CreatedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedDate
         /// </summary>
         [DataMember(Name="modifiedDate", EmitDefaultValue=false)]
         public DateTime? ModifiedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedBy
         /// </summary>
         [DataMember(Name="createdBy", EmitDefaultValue=false)]
         public string CreatedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedBy
         /// </summary>
         [DataMember(Name="modifiedBy", EmitDefaultValue=false)]
         public string ModifiedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

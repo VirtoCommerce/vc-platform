@@ -1,0 +1,115 @@
+.lang-ar
+{
+	direction: rtl;
+}
+
+.lang-ar .nav-bar
+{
+	left: auto;
+	right: 0;
+}
+
+.lang-ar .nav-bar .dropdown
+{
+	-webkit-transform: translateX(275px);
+			transform: translateX(275px);
+}
+
+.lang-ar .nav-bar .dropdown.__opened
+{
+	-webkit-transform: translateX(-90px);
+			transform: translateX(-90px);
+}
+
+.lang-ar .dropdown .dropdown-close
+{
+	left: 15px;
+	right: auto;
+}
+
+.lang-ar .dropdown .dropdown-head
+{
+	text-align: left;
+}
+
+.lang-ar .dropdown-content .list-ico
+{
+	margin: 0 0 0 20px
+}
+
+.lang-ar .cnt
+{
+	left: 0;
+	right: 90px;
+}
+
+.lang-ar .cnt .cnt-inner
+{
+	padding: 0 0 0 90px;
+}
+
+.lang-ar .dashboard .dashboard-area
+{
+	margin: 0 0 0 3px;
+}
+
+.lang-ar .dashboard .dashboard-title
+{
+	left: auto;
+	right: 90px;
+}
+
+.lang-ar .dashboard .dashboard-account
+{
+	left: 93px;
+	right: auto;
+}
+
+.lang-ar .dashboard .dashboard-account::before
+{
+	left: auto;
+	right: 10px;
+}
+
+.lang-ar .dashboard .dashboard-account .user-name
+{
+	padding: 0 50px 0 0;
+}
+
+.lang-ar .__items .list-item
+{
+	padding: 10px 20px 10px 50px
+}
+
+.lang-ar .__items .list-ico, .__files .list-ico
+{
+	margin: 0 0 0 5px;
+}
+
+.lang-ar .__items .list-item::after
+{
+	content: '';
+	left: 30px;
+	right: auto;
+
+	-webkit-transition: left 0.25s ease-in-out 0s;
+			transition: left 0.25s ease-in-out 0s;
+}
+
+.lang-ar .__items .list-item:hover::after
+{
+	left: 25px;
+	right: auto;
+}
+
+.lang-ar .blade-static .form-count
+{
+	left: 0;
+	right: auto;
+}
+
+.lang-ar .form-input.__langs .flag
+{
+	left: auto;
+	right: 11px;
+}

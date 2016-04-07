@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,70 +21,79 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelAssetAssetListItem" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelAssetAssetListItem" />class.
         /// </summary>
-        public VirtoCommercePlatformWebModelAssetAssetListItem()
+        /// <param name="Type">Type.</param>
+        /// <param name="Name">Name.</param>
+        /// <param name="ContentType">ContentType.</param>
+        /// <param name="Url">Url.</param>
+        /// <param name="Size">Size.</param>
+        /// <param name="ParentUrl">ParentUrl.</param>
+        /// <param name="ModifiedDate">ModifiedDate.</param>
+        /// <param name="CreatedDate">CreatedDate.</param>
+
+        public VirtoCommercePlatformWebModelAssetAssetListItem(string Type = null, string Name = null, string ContentType = null, string Url = null, string Size = null, string ParentUrl = null, DateTime? ModifiedDate = null, DateTime? CreatedDate = null)
         {
+            this.Type = Type;
+            this.Name = Name;
+            this.ContentType = ContentType;
+            this.Url = Url;
+            this.Size = Size;
+            this.ParentUrl = ParentUrl;
+            this.ModifiedDate = ModifiedDate;
+            this.CreatedDate = CreatedDate;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name="type", EmitDefaultValue=false)]
         public string Type { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ContentType
         /// </summary>
         [DataMember(Name="contentType", EmitDefaultValue=false)]
         public string ContentType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Url
         /// </summary>
         [DataMember(Name="url", EmitDefaultValue=false)]
         public string Url { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Size
         /// </summary>
         [DataMember(Name="size", EmitDefaultValue=false)]
         public string Size { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ParentUrl
         /// </summary>
         [DataMember(Name="parentUrl", EmitDefaultValue=false)]
         public string ParentUrl { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedDate
         /// </summary>
         [DataMember(Name="modifiedDate", EmitDefaultValue=false)]
         public DateTime? ModifiedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedDate
         /// </summary>
         [DataMember(Name="createdDate", EmitDefaultValue=false)]
         public DateTime? CreatedDate { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

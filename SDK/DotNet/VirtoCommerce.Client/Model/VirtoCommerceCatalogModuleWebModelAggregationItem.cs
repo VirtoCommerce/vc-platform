@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,46 +21,51 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelAggregationItem" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelAggregationItem" />class.
         /// </summary>
-        public VirtoCommerceCatalogModuleWebModelAggregationItem()
+        /// <param name="Value">Gets or sets the aggregation item value.</param>
+        /// <param name="Count">Gets or sets the aggregation item count.</param>
+        /// <param name="IsApplied">Gets or sets the flag for aggregation item is applied.</param>
+        /// <param name="Labels">Gets or sets the collection of aggregation item labels.</param>
+
+        public VirtoCommerceCatalogModuleWebModelAggregationItem(Object Value = null, int? Count = null, bool? IsApplied = null, List<VirtoCommerceCatalogModuleWebModelAggregationLabel> Labels = null)
         {
+            this.Value = Value;
+            this.Count = Count;
+            this.IsApplied = IsApplied;
+            this.Labels = Labels;
             
         }
 
-        
         /// <summary>
         /// Gets or sets the aggregation item value
         /// </summary>
         /// <value>Gets or sets the aggregation item value</value>
         [DataMember(Name="value", EmitDefaultValue=false)]
         public Object Value { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the aggregation item count
         /// </summary>
         /// <value>Gets or sets the aggregation item count</value>
         [DataMember(Name="count", EmitDefaultValue=false)]
         public int? Count { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the flag for aggregation item is applied
         /// </summary>
         /// <value>Gets or sets the flag for aggregation item is applied</value>
         [DataMember(Name="isApplied", EmitDefaultValue=false)]
         public bool? IsApplied { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the collection of aggregation item labels
         /// </summary>
         /// <value>Gets or sets the collection of aggregation item labels</value>
         [DataMember(Name="labels", EmitDefaultValue=false)]
         public List<VirtoCommerceCatalogModuleWebModelAggregationLabel> Labels { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

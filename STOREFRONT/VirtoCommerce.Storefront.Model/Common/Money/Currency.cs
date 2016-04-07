@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Runtime.Serialization;
 
@@ -10,6 +9,9 @@ namespace VirtoCommerce.Storefront.Model.Common
     /// </summary>
     public class Currency
     {
+        private Language _language;
+        private string _code;
+
         protected Currency()
         {
         }
@@ -18,12 +20,12 @@ namespace VirtoCommerce.Storefront.Model.Common
             : this(language, code)
         {
             ExchangeRate = exchangeRate;
-      
-            if (!String.IsNullOrEmpty(name))
+
+            if (!string.IsNullOrEmpty(name))
             {
                 EnglishName = name;
             }
-            if (!String.IsNullOrEmpty(symbol))
+            if (!string.IsNullOrEmpty(symbol))
             {
                 Symbol = symbol;
                 NumberFormat.CurrencySymbol = symbol;
@@ -32,29 +34,37 @@ namespace VirtoCommerce.Storefront.Model.Common
 
         public Currency(Language language, string code)
         {
-            Code = code;
+            _language = language;
+            _code = code;
             ExchangeRate = 1;
-            if (!language.IsInvariant)
-            {
-                var cultureInfo = CultureInfo.GetCultureInfo(language.CultureName);
-                NumberFormat = cultureInfo.NumberFormat.Clone() as NumberFormatInfo;
-                var region = new RegionInfo(cultureInfo.LCID);
-                EnglishName = region.CurrencyEnglishName;
-                Symbol = CurrencySymbolFromCodeISO(code) ?? "N/A";
-                NumberFormat.CurrencySymbol = Symbol;
-            }
-            else
-            {
-                NumberFormat = CultureInfo.InvariantCulture.NumberFormat.Clone() as NumberFormatInfo;
-            }
+            Initialize();
         }
 
         /// <summary>
         /// Currency code may be used ISO 4217
         /// </summary>
-        public string Code { get; set; }
+        public string Code
+        {
+            get { return _code; }
+            set
+            {
+                _code = value;
+                Initialize();
+            }
+        }
+
+        public string CultureName
+        {
+            get { return _language.CultureName; }
+            set
+            {
+                _language = new Language(value);
+                Initialize();
+            }
+        }
+
         [IgnoreDataMember]
-        public NumberFormatInfo NumberFormat { get; set; }
+        public NumberFormatInfo NumberFormat { get; private set; }
         public string Symbol { get; set; }
         public string EnglishName { get; set; }
         /// <summary>
@@ -62,28 +72,52 @@ namespace VirtoCommerce.Storefront.Model.Common
         /// </summary>
         public decimal ExchangeRate { get; set; }
         /// <summary>
-        /// https://msdn.microsoft.com/en-us/library/dwhawy9k%28v=vs.110%29.aspx?f=255&MSPPError=-2147217396
+        /// https://msdn.microsoft.com/en-us/library/dwhawy9k%28v=vs.110%29.aspx?f=255&amp;MSPPError=-2147217396
         /// </summary>
         public string CustomFormatting { get; set; }
 
 
-        private static string CurrencySymbolFromCodeISO(string isoCode)
+        private void Initialize()
         {
-            foreach (CultureInfo ci in CultureInfo.GetCultures(CultureTypes.SpecificCultures))
+            if (_language != null)
             {
-                RegionInfo ri = new RegionInfo(ci.LCID);
+                if (!_language.IsInvariant)
+                {
+                    var cultureInfo = CultureInfo.GetCultureInfo(_language.CultureName);
+                    NumberFormat = (NumberFormatInfo)cultureInfo.NumberFormat.Clone();
+                    var region = new RegionInfo(cultureInfo.LCID);
+                    EnglishName = region.CurrencyEnglishName;
+
+                    if (_code != null)
+                    {
+                        Symbol = CurrencySymbolFromCodeIso(_code) ?? "N/A";
+                        NumberFormat.CurrencySymbol = Symbol;
+                    }
+                }
+                else
+                {
+                    NumberFormat = CultureInfo.InvariantCulture.NumberFormat.Clone() as NumberFormatInfo;
+                }
+            }
+        }
+
+        private static string CurrencySymbolFromCodeIso(string isoCode)
+        {
+            foreach (var ci in CultureInfo.GetCultures(CultureTypes.SpecificCultures))
+            {
+                var ri = new RegionInfo(ci.LCID);
                 if (ri.ISOCurrencySymbol == isoCode)
                     return ri.CurrencySymbol;
             }
             return null;
         }
 
+
         public static bool operator ==(Currency left, Currency right)
         {
-            if (Object.Equals(left, null))
-                return (Object.Equals(right, null)) ? true : false;
-            else
-                return left.Equals(right);
+            return Equals(left, null)
+                ? Equals(right, null)
+                : left.Equals(right);
         }
 
         public static bool operator !=(Currency left, Currency right)
@@ -101,18 +135,20 @@ namespace VirtoCommerce.Storefront.Model.Common
             if (obj == null)
                 return false;
 
-            if (Object.ReferenceEquals(this, obj))
+            if (ReferenceEquals(this, obj))
                 return true;
 
             var other = obj as Currency;
             var code = obj as string;
+
             if (other != null)
             {
-                return String.Equals(Code, other.Code, StringComparison.InvariantCultureIgnoreCase);
+                return string.Equals(Code, other.Code, StringComparison.InvariantCultureIgnoreCase);
             }
-            if(code != null)
+
+            if (code != null)
             {
-                return String.Equals(Code, code, StringComparison.InvariantCultureIgnoreCase);
+                return string.Equals(Code, code, StringComparison.InvariantCultureIgnoreCase);
             }
 
             return false;
@@ -126,8 +162,5 @@ namespace VirtoCommerce.Storefront.Model.Common
         {
             return Code.ToUpper().GetHashCode();
         }
-
     }
-
-
 }

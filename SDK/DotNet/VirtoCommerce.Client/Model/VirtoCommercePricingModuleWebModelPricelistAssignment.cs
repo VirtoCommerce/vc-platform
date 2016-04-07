@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -21,116 +21,131 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePricingModuleWebModelPricelistAssignment" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommercePricingModuleWebModelPricelistAssignment" />class.
         /// </summary>
-        public VirtoCommercePricingModuleWebModelPricelistAssignment()
+        /// <param name="CatalogName">CatalogName.</param>
+        /// <param name="CatalogId">CatalogId.</param>
+        /// <param name="PricelistId">PricelistId.</param>
+        /// <param name="Name">Name.</param>
+        /// <param name="Description">Description.</param>
+        /// <param name="Priority">If two PricelistAssignments satisfies the conditions and rules, will use one with the greater priority.</param>
+        /// <param name="StartDate">Start of period when Prices Assignment is valid. Null value means no limit.</param>
+        /// <param name="EndDate">End of period when Prices Assignment is valid. Null value means no limit.</param>
+        /// <param name="DynamicExpression">List of conditions and rules to define Prices Assignment is valid.</param>
+        /// <param name="CreatedDate">CreatedDate.</param>
+        /// <param name="ModifiedDate">ModifiedDate.</param>
+        /// <param name="CreatedBy">CreatedBy.</param>
+        /// <param name="ModifiedBy">ModifiedBy.</param>
+        /// <param name="Id">Id.</param>
+
+        public VirtoCommercePricingModuleWebModelPricelistAssignment(string CatalogName = null, string CatalogId = null, string PricelistId = null, string Name = null, string Description = null, int? Priority = null, DateTime? StartDate = null, DateTime? EndDate = null, VirtoCommerceDomainCommonConditionExpressionTree DynamicExpression = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
         {
+            this.CatalogName = CatalogName;
+            this.CatalogId = CatalogId;
+            this.PricelistId = PricelistId;
+            this.Name = Name;
+            this.Description = Description;
+            this.Priority = Priority;
+            this.StartDate = StartDate;
+            this.EndDate = EndDate;
+            this.DynamicExpression = DynamicExpression;
+            this.CreatedDate = CreatedDate;
+            this.ModifiedDate = ModifiedDate;
+            this.CreatedBy = CreatedBy;
+            this.ModifiedBy = ModifiedBy;
+            this.Id = Id;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets CatalogName
         /// </summary>
         [DataMember(Name="catalogName", EmitDefaultValue=false)]
         public string CatalogName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CatalogId
         /// </summary>
         [DataMember(Name="catalogId", EmitDefaultValue=false)]
         public string CatalogId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets PricelistId
         /// </summary>
         [DataMember(Name="pricelistId", EmitDefaultValue=false)]
         public string PricelistId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Description
         /// </summary>
         [DataMember(Name="description", EmitDefaultValue=false)]
         public string Description { get; set; }
-  
-        
+
         /// <summary>
         /// If two PricelistAssignments satisfies the conditions and rules, will use one with the greater priority
         /// </summary>
         /// <value>If two PricelistAssignments satisfies the conditions and rules, will use one with the greater priority</value>
         [DataMember(Name="priority", EmitDefaultValue=false)]
         public int? Priority { get; set; }
-  
-        
+
         /// <summary>
         /// Start of period when Prices Assignment is valid. Null value means no limit
         /// </summary>
         /// <value>Start of period when Prices Assignment is valid. Null value means no limit</value>
         [DataMember(Name="startDate", EmitDefaultValue=false)]
         public DateTime? StartDate { get; set; }
-  
-        
+
         /// <summary>
         /// End of period when Prices Assignment is valid. Null value means no limit
         /// </summary>
         /// <value>End of period when Prices Assignment is valid. Null value means no limit</value>
         [DataMember(Name="endDate", EmitDefaultValue=false)]
         public DateTime? EndDate { get; set; }
-  
-        
+
         /// <summary>
         /// List of conditions and rules to define Prices Assignment is valid
         /// </summary>
         /// <value>List of conditions and rules to define Prices Assignment is valid</value>
         [DataMember(Name="dynamicExpression", EmitDefaultValue=false)]
         public VirtoCommerceDomainCommonConditionExpressionTree DynamicExpression { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedDate
         /// </summary>
         [DataMember(Name="createdDate", EmitDefaultValue=false)]
         public DateTime? CreatedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedDate
         /// </summary>
         [DataMember(Name="modifiedDate", EmitDefaultValue=false)]
         public DateTime? ModifiedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedBy
         /// </summary>
         [DataMember(Name="createdBy", EmitDefaultValue=false)]
         public string CreatedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedBy
         /// </summary>
         [DataMember(Name="modifiedBy", EmitDefaultValue=false)]
         public string ModifiedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// Represent content entry for presentation (Images, Html, Banner etc)
     /// </summary>
@@ -21,107 +21,121 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceMarketingModuleWebModelDynamicContentItem" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceMarketingModuleWebModelDynamicContentItem" />class.
         /// </summary>
-        public VirtoCommerceMarketingModuleWebModelDynamicContentItem()
+        /// <param name="Name">Name.</param>
+        /// <param name="Description">Description.</param>
+        /// <param name="ContentType">ContentType.</param>
+        /// <param name="FolderId">FolderId.</param>
+        /// <param name="Outline">all parent folders ids concatenated (1;21;344).</param>
+        /// <param name="Path">all parent folders names concatenated (Root\Child\Child2).</param>
+        /// <param name="ObjectType">ObjectType.</param>
+        /// <param name="DynamicProperties">DynamicProperties.</param>
+        /// <param name="CreatedDate">CreatedDate.</param>
+        /// <param name="ModifiedDate">ModifiedDate.</param>
+        /// <param name="CreatedBy">CreatedBy.</param>
+        /// <param name="ModifiedBy">ModifiedBy.</param>
+        /// <param name="Id">Id.</param>
+
+        public VirtoCommerceMarketingModuleWebModelDynamicContentItem(string Name = null, string Description = null, string ContentType = null, string FolderId = null, string Outline = null, string Path = null, string ObjectType = null, List<VirtoCommercePlatformCoreDynamicPropertiesDynamicObjectProperty> DynamicProperties = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
         {
+            this.Name = Name;
+            this.Description = Description;
+            this.ContentType = ContentType;
+            this.FolderId = FolderId;
+            this.Outline = Outline;
+            this.Path = Path;
+            this.ObjectType = ObjectType;
+            this.DynamicProperties = DynamicProperties;
+            this.CreatedDate = CreatedDate;
+            this.ModifiedDate = ModifiedDate;
+            this.CreatedBy = CreatedBy;
+            this.ModifiedBy = ModifiedBy;
+            this.Id = Id;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Description
         /// </summary>
         [DataMember(Name="description", EmitDefaultValue=false)]
         public string Description { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ContentType
         /// </summary>
         [DataMember(Name="contentType", EmitDefaultValue=false)]
         public string ContentType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets FolderId
         /// </summary>
         [DataMember(Name="folderId", EmitDefaultValue=false)]
         public string FolderId { get; set; }
-  
-        
+
         /// <summary>
         /// all parent folders ids concatenated (1;21;344)
         /// </summary>
         /// <value>all parent folders ids concatenated (1;21;344)</value>
         [DataMember(Name="outline", EmitDefaultValue=false)]
         public string Outline { get; set; }
-  
-        
+
         /// <summary>
         /// all parent folders names concatenated (Root\Child\Child2)
         /// </summary>
         /// <value>all parent folders names concatenated (Root\Child\Child2)</value>
         [DataMember(Name="path", EmitDefaultValue=false)]
         public string Path { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ObjectType
         /// </summary>
         [DataMember(Name="objectType", EmitDefaultValue=false)]
         public string ObjectType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets DynamicProperties
         /// </summary>
         [DataMember(Name="dynamicProperties", EmitDefaultValue=false)]
         public List<VirtoCommercePlatformCoreDynamicPropertiesDynamicObjectProperty> DynamicProperties { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedDate
         /// </summary>
         [DataMember(Name="createdDate", EmitDefaultValue=false)]
         public DateTime? CreatedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedDate
         /// </summary>
         [DataMember(Name="modifiedDate", EmitDefaultValue=false)]
         public DateTime? ModifiedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedBy
         /// </summary>
         [DataMember(Name="createdBy", EmitDefaultValue=false)]
         public string CreatedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedBy
         /// </summary>
         [DataMember(Name="modifiedBy", EmitDefaultValue=false)]
         public string ModifiedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

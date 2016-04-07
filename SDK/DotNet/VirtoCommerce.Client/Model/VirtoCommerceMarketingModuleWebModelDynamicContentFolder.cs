@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// Represent folder contains dynamic content system entries, used for hierarchy storing and easy management
     /// </summary>
@@ -21,93 +21,105 @@ namespace VirtoCommerce.Client.Model
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceMarketingModuleWebModelDynamicContentFolder" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceMarketingModuleWebModelDynamicContentFolder" />class.
         /// </summary>
-        public VirtoCommerceMarketingModuleWebModelDynamicContentFolder()
+        /// <param name="Name">Name.</param>
+        /// <param name="Description">Description.</param>
+        /// <param name="Outline">Folder all parent ids concatenated (1;21;344).</param>
+        /// <param name="Path">Represent folder path with folder names in hierarchy (Root\Child\Child2).</param>
+        /// <param name="ParentFolderId">ParentFolderId.</param>
+        /// <param name="ImageUrl">ImageUrl.</param>
+        /// <param name="CreatedDate">CreatedDate.</param>
+        /// <param name="ModifiedDate">ModifiedDate.</param>
+        /// <param name="CreatedBy">CreatedBy.</param>
+        /// <param name="ModifiedBy">ModifiedBy.</param>
+        /// <param name="Id">Id.</param>
+
+        public VirtoCommerceMarketingModuleWebModelDynamicContentFolder(string Name = null, string Description = null, string Outline = null, string Path = null, string ParentFolderId = null, string ImageUrl = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
         {
+            this.Name = Name;
+            this.Description = Description;
+            this.Outline = Outline;
+            this.Path = Path;
+            this.ParentFolderId = ParentFolderId;
+            this.ImageUrl = ImageUrl;
+            this.CreatedDate = CreatedDate;
+            this.ModifiedDate = ModifiedDate;
+            this.CreatedBy = CreatedBy;
+            this.ModifiedBy = ModifiedBy;
+            this.Id = Id;
             
         }
 
-        
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Description
         /// </summary>
         [DataMember(Name="description", EmitDefaultValue=false)]
         public string Description { get; set; }
-  
-        
+
         /// <summary>
         /// Folder all parent ids concatenated (1;21;344)
         /// </summary>
         /// <value>Folder all parent ids concatenated (1;21;344)</value>
         [DataMember(Name="outline", EmitDefaultValue=false)]
         public string Outline { get; set; }
-  
-        
+
         /// <summary>
         /// Represent folder path with folder names in hierarchy (Root\Child\Child2)
         /// </summary>
         /// <value>Represent folder path with folder names in hierarchy (Root\Child\Child2)</value>
         [DataMember(Name="path", EmitDefaultValue=false)]
         public string Path { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ParentFolderId
         /// </summary>
         [DataMember(Name="parentFolderId", EmitDefaultValue=false)]
         public string ParentFolderId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ImageUrl
         /// </summary>
         [DataMember(Name="imageUrl", EmitDefaultValue=false)]
         public string ImageUrl { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedDate
         /// </summary>
         [DataMember(Name="createdDate", EmitDefaultValue=false)]
         public DateTime? CreatedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedDate
         /// </summary>
         [DataMember(Name="modifiedDate", EmitDefaultValue=false)]
         public DateTime? ModifiedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedBy
         /// </summary>
         [DataMember(Name="createdBy", EmitDefaultValue=false)]
         public string CreatedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedBy
         /// </summary>
         [DataMember(Name="modifiedBy", EmitDefaultValue=false)]
         public string ModifiedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
-  
+
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
