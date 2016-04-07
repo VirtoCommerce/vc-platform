@@ -25,7 +25,7 @@ namespace VirtoCommerce.Storefront.Services
         private static string[] _extensions = new[] { ".md", ".html" };
         private readonly Markdown _markdownRender;
         private readonly ILiquidThemeEngine _liquidEngine;
-        private readonly ILocalCacheManager<object> _cacheManager;
+        private readonly ILocalCacheManager _cacheManager;
         private readonly Func<WorkContext> _workContextFactory;
         private readonly Func<IStorefrontUrlBuilder> _urlBuilderFactory;
         private readonly Func<string, ContentItem> _contentItemFactory;

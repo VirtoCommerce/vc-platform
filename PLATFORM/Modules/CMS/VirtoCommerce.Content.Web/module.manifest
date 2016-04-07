@@ -34,10 +34,13 @@
 	<settings>
 		<group name="CMS Content|General">
 			<setting>
-				<name>VirtoCommerce.Content.StoragePath</name>
+				<name>VirtoCommerce.Content.BaseThemes</name>
 				<valueType>string</valueType>
-				<defaultValue>..\..\STOREFRONT\VirtoCommerce.Storefront\App_Data\</defaultValue>
-				<title>CMS folder relative, app relative or absolute  path in file system</title>
+				<isArray>true</isArray>
+				<arrayValues>
+					<value>default</value>			
+				</arrayValues>
+				<title>Base names of themes that can be used to create derivative themes in stores (by copy operation)</title>
 			</setting>
 			<setting>
 				<name>VirtoCommerce.Content.ExportImport.Description</name>
