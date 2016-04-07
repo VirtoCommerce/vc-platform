@@ -131,6 +131,7 @@
     <Compile Include="Converters\TagConverter.cs" />
     <Compile Include="Converters\TaxLineConverter.cs" />
     <Compile Include="Converters\TierPriceConverter.cs" />
+    <Compile Include="Converters\VendorConverter.cs" />
     <Compile Include="DotLiquidThemedView.cs" />
     <Compile Include="DotLiquidThemedViewEngine.cs" />
     <Compile Include="Exceptions\SaasCompileException.cs" />
@@ -195,6 +196,7 @@
     <Compile Include="Objects\TaxLine.cs" />
     <Compile Include="Objects\TierPrice.cs" />
     <Compile Include="Objects\Variant.cs" />
+    <Compile Include="Objects\Vendor.cs" />
     <Compile Include="Tags\FormTag.cs" />
     <Compile Include="Operators\CommonOperators.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
