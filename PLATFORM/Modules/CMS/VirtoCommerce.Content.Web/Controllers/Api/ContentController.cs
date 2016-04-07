@@ -100,18 +100,39 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
         /// </summary>
         /// <param name="contentType">possible values Themes or Pages</param>
         /// <param name="storeId">Store id</param>
-        /// <param name="oldUrl">old content item relative url</param>
-        /// <param name="newUrl">new content item relative url</param>
+        /// <param name="oldUrl">old content item relative or absolute url</param>
+        /// <param name="newUrl">new content item relative or absolute url</param>
         /// <returns></returns>
         [HttpGet]
         [ResponseType(typeof(void))]
         [Route("move")]
         [CheckPermission(Permission = ContentPredefinedPermissions.Update)]
-        public IHttpActionResult MoveContentItem(string contentType, string storeId, string oldUrl, string newUrl)
+        public IHttpActionResult MoveContent(string contentType, string storeId, string oldUrl, string newUrl)
         {
             var storageProvider = _contentStorageProviderFactory(contentType, storeId);
 
-            storageProvider.MoveContentItem(oldUrl, newUrl);
+            storageProvider.MoveContent(oldUrl, newUrl);
+            return StatusCode(HttpStatusCode.NoContent);
+        }
+
+        /// <summary>
+        /// Copy contents
+        /// </summary>
+        /// <param name="contentType">possible values Themes or Pages</param>
+        /// <param name="storeId">Store id</param>
+        /// <param name="srcPath">source content  relative path</param>
+        /// <param name="destPath">destination content relative path</param>
+        /// <returns></returns>
+        [HttpGet]
+        [ResponseType(typeof(void))]
+        [Route("copy")]
+        [CheckPermission(Permission = ContentPredefinedPermissions.Update)]
+        public IHttpActionResult CopyContent(string contentType, string storeId, string srcPath, string destPath)
+        {
+            //This method used only for default themes copying that we use string.Empty instead storeId because default themes placed only in root content folder
+            var storageProvider = _contentStorageProviderFactory(contentType, string.Empty);
+
+            storageProvider.CopyContent(srcPath, storeId + "/" + destPath);
             return StatusCode(HttpStatusCode.NoContent);
         }
 

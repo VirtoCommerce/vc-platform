@@ -18,25 +18,36 @@ namespace VirtoCommerce.Content.Data.Services
             _ignoreUrls = ignoreUrls;
         }
 
+ 
         #region IContentStorageProvider Members
-        public void MoveContentItem(string oldUrl, string newUrl)
+       
+        public void MoveContent(string srcUrl, string dstUrl)
         {
-            var oldPath = GetStoragePathFromUrl(oldUrl);
-            var newPath = GetStoragePathFromUrl(newUrl);
+            var srcPath = GetStoragePathFromUrl(srcUrl);
+            var dstPath = GetStoragePathFromUrl(dstUrl);
         
-            if (oldPath != newPath)
+            if (srcPath != dstPath)
             {
-                if (Directory.Exists(oldPath) && !Directory.Exists(newPath))
+                if (Directory.Exists(srcPath) && !Directory.Exists(dstPath))
                 {
-                    Directory.Move(oldPath, newPath);
+                    Directory.Move(srcPath, dstPath);
                 }
-                else if (File.Exists(oldPath) && !File.Exists(newPath))
+                else if (File.Exists(srcPath) && !File.Exists(dstPath))
                 {
-                    File.Move(oldPath, newPath);
+                    File.Move(srcPath, dstPath);
                 }
             }
         }
+  
+        public void CopyContent(string srcUrl, string destUrl)
+        {
+            var srcPath = GetStoragePathFromUrl(srcUrl);
+            var destPath = GetStoragePathFromUrl(destUrl);
+
+            CopyDirectoryRecursive(srcPath, destPath);
+        }
         #endregion
+
 
         public override BlobSearchResult Search(string folderUrl, string keyword)
         {
@@ -45,6 +56,26 @@ namespace VirtoCommerce.Content.Data.Services
                 return new BlobSearchResult();
             }
             return base.Search(folderUrl, keyword);
+        }
+
+        private static void CopyDirectoryRecursive(string sourcePath, string destPath)
+        {
+            if (!Directory.Exists(destPath))
+            {
+                Directory.CreateDirectory(destPath);
+            }
+
+            foreach (string file in Directory.GetFiles(sourcePath))
+            {
+                string dest = Path.Combine(destPath, Path.GetFileName(file));
+                File.Copy(file, dest);
+            }
+
+            foreach (string folder in Directory.GetDirectories(sourcePath))
+            {
+                string dest = Path.Combine(destPath, Path.GetFileName(folder));
+                CopyDirectoryRecursive(folder, dest);
+            }
         }
     }
 }

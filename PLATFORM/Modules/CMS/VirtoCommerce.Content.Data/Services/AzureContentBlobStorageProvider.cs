@@ -21,7 +21,12 @@ namespace VirtoCommerce.Content.Data.Services
         }
 
         #region IContentStorageProvider Members
-        public void MoveContentItem(string oldUrl, string newUrl)
+        public void MoveContent(string oldUrl, string newUrl)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void CopyContent(string fromUrl, string toUrl)
         {
             throw new NotImplementedException();
         }

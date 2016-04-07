@@ -12,7 +12,8 @@ namespace VirtoCommerce.Content.Data.Services
     /// </summary>
     public interface IContentBlobStorageProvider : IBlobStorageProvider
     {
-        void MoveContentItem(string oldUrl, string newUrl);
+        void MoveContent(string srcUrl, string destUrl);
+        void CopyContent(string srcUrl, string destUrl);
 
     }
 }
