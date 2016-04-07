@@ -415,6 +415,11 @@ namespace VirtoCommerce.SearchModule.Web.Controllers.Api
                 responseGroup |= ItemResponseGroup.Variations;
             }
 
+            if ((criteria.ResponseGroup & SearchResponseGroup.WithOutlines) == SearchResponseGroup.WithOutlines)
+            {
+                responseGroup |= ItemResponseGroup.Outlines;
+            }
+
             //Load ALL products 
             var searchResults = _browseService.SearchItems(serviceCriteria, responseGroup);
 
