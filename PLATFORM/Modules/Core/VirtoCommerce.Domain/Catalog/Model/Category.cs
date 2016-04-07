@@ -4,7 +4,7 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Domain.Catalog.Model
 {
-    public class Category : AuditableEntity, ILinkSupport, ISeoSupport
+    public class Category : AuditableEntity, ILinkSupport, ISeoSupport, IHasOutlines
     {
         public Category()
         {

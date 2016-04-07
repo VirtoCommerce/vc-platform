@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using VirtoCommerce.Domain.Catalog.Model;
 using VirtoCommerce.Domain.Commerce.Model;
 using VirtoCommerce.Platform.Core.Common;
 
@@ -9,7 +10,7 @@ namespace VirtoCommerce.CatalogModule.Web.Model
     /// <summary>
     /// Merchandising item.
     /// </summary>
-    public class Product : AuditableEntity, ISeoSupport
+    public class Product : AuditableEntity, ISeoSupport, IHasOutlines
     {
         /// <summary>
         /// Gets or sets the manufacturer part number for this product.
@@ -302,6 +303,12 @@ namespace VirtoCommerce.CatalogModule.Web.Model
         /// The seo infos.
         /// </value>
         public ICollection<SeoInfo> SeoInfos { get; set; }
+        #endregion
+
+        #region Implementation of IHasOutlines
+
+        public ICollection<Outline> Outlines { get; set; }
+
         #endregion
     }
 }

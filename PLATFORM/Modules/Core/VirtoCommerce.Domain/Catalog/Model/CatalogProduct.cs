@@ -5,7 +5,7 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Domain.Catalog.Model
 {
-    public class CatalogProduct : AuditableEntity, ILinkSupport, ISeoSupport
+    public class CatalogProduct : AuditableEntity, ILinkSupport, ISeoSupport, IHasOutlines
     {
         /// <summary>
         /// SKU code

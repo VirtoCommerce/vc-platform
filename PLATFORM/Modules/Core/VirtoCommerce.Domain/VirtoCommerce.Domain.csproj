@@ -78,6 +78,7 @@
     <Compile Include="Catalog\Model\CatalogProduct.cs" />
     <Compile Include="Catalog\Model\Category.cs" />
     <Compile Include="Catalog\Model\CategoryLink.cs" />
+    <Compile Include="Catalog\Model\IHasOutlines.cs" />
     <Compile Include="Catalog\Model\Outline.cs" />
     <Compile Include="Catalog\Model\CategoryResponseGroup.cs" />
     <Compile Include="Catalog\Model\EditorialReview.cs" />
