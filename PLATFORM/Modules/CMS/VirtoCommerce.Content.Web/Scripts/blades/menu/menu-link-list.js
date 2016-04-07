@@ -215,24 +215,16 @@
 
     blade.getFlag = function (lang) {
         switch (lang) {
-            case 'ru-RU':
-                return 'ru';
-
             case 'en-US':
                 return 'us';
-
             case 'fr-FR':
                 return 'fr';
-
             case 'zh-CN':
                 return 'ch';
-
             case 'ru-RU':
                 return 'ru';
-
             case 'ja-JP':
                 return 'jp';
-
             case 'de-DE':
                 return 'de';
         }

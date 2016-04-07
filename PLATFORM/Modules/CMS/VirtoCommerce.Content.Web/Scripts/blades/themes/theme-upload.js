@@ -32,8 +32,8 @@
 
         themes.createTheme({ storeId: blade.storeId, themeName: blade.themeName, themeFileUrl: blade.themeFileUrl }, function (data) {
             blade.parentBlade.initialize();
-            blade.parentBlade.parentBlade.refresh(blade.storeId, 'themes');
-            // blade.isLoading = false;
+            if (blade.parentBlade.parentBlade)
+                blade.parentBlade.parentBlade.refresh(blade.storeId, 'themes');
             bladeNavigationService.closeBlade(blade);
         },
         function (error) {
@@ -45,7 +45,7 @@
     uploader.onErrorItem = function (item, response, status, headers) {
         bladeNavigationService.setError(item._file.name + ' failed: ' + (response.message ? response.message : status), blade);
     };
-    
+
     blade.title = 'content.blades.theme-upload.title',
     blade.isLoading = false;
 }]);

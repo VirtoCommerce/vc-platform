@@ -408,7 +408,7 @@ namespace VirtoCommerce.Platform.Web
 
             #region Dynamic Properties
 
-            container.RegisterType<IDynamicPropertyService, DynamicPropertyService>();
+            container.RegisterType<IDynamicPropertyService, DynamicPropertyService>(new ContainerControlledLifetimeManager());
 
             #endregion
 

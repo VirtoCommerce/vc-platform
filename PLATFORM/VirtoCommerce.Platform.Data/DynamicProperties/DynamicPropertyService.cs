@@ -14,33 +14,43 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
 {
     public class DynamicPropertyService : ServiceBase, IDynamicPropertyService
     {
+        private List<string> _availableTypeNames = new List<string>();
         private readonly Func<IPlatformRepository> _repositoryFactory;
 
         public DynamicPropertyService(Func<IPlatformRepository> repositoryFactory)
         {
             _repositoryFactory = repositoryFactory;
+            _availableTypeNames.AddRange(LoadTypesFromReflection());
+        }
+
+        private IEnumerable<string> LoadTypesFromReflection()
+        {
+            var typeName = typeof(IHasDynamicProperties).Name;
+            return AppDomain.CurrentDomain.GetAssemblies()
+                   .SelectMany(a => a.GetTypes())
+                   .Where(t => t.IsClass && t.IsPublic && !t.IsAbstract && t.GetInterface(typeName) != null)
+                   .Select(GetObjectTypeName);
         }
 
         #region IDynamicPropertyService Members
 
+        public void RegisterType(string typeName)
+        {
+            if (!_availableTypeNames.Contains(typeName, StringComparer.OrdinalIgnoreCase))
+            {
+                _availableTypeNames.Add(typeName);
+            }
+        }
+
         public string[] GetAvailableObjectTypeNames()
         {
-            var typeName = typeof(IHasDynamicProperties).Name;
-
-            var result = AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(a => a.GetTypes())
-                .Where(t => t.IsClass && t.IsPublic && !t.IsAbstract && t.GetInterface(typeName) != null)
-                .Select(GetObjectTypeName)
-                .ToArray();
-
-            return result;
+            return _availableTypeNames.ToArray();
         }
 
         public string GetObjectTypeName(Type type)
         {
             return type.FullName;
         }
-
 
         public DynamicProperty[] GetProperties(string objectType)
         {

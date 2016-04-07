@@ -76,8 +76,8 @@
           "title-new": "New content item element",
           "subtitle-new": "Add new content item element",
           "labels": {
-            "content-item-name": "Content item name:",
-            "content-item-description": "Content item description:",
+            "content-item-name": "Content item name",
+            "content-item-description": "Content item description",
             "none": "None"
           },
           "placeholders": {
@@ -236,27 +236,27 @@
     "dialogs": {
       "content-item-delete": {
         "title": "Delete confirmation",
-        "message": "Are you sure want to delete content item?"
+        "message": "Are you sure you want to delete content item?"
       },
       "placeholders-folder-delete": {
         "title": "Delete confirmation",
-        "message": "Are you sure want to delete content placeholders folder?"
+        "message": "Are you sure you want to delete content placeholders folder?"
       },
       "content-item-folder-delete": {
         "title": "Delete confirmation",
-        "message": "Are you sure want to delete content items folder?"
+        "message": "Are you sure you want to delete content items folder?"
       },
       "content-folder-delete": {
         "title": "Delete confirmation",
-        "message": "Are you sure want to delete this folder?"
+        "message": "Are you sure you want to delete this folder?"
       },
       "publication-delete": {
         "title": "Delete confirmation",
-        "message": "Are you sure want to delete publication?"
+        "message": "Are you sure you want to delete publication?"
       },
       "content-placeholder-delete": {
         "title": "Delete confirmation",
-        "message": "Are you sure want to delete content placeholder?"
+        "message": "Are you sure you want to delete content placeholder?"
       },
       "promotions-delete": {
         "title": "Delete confirmation",

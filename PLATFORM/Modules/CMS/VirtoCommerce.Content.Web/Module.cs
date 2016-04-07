@@ -72,9 +72,71 @@ namespace VirtoCommerce.Content.Web
         public override void PostInitialize()
         {
             base.PostInitialize();
-            //Create EnableQuote dynamic property for  Store 
+
             var dynamicPropertyService = _container.Resolve<IDynamicPropertyService>();
 
+            //https://jekyllrb.com/docs/frontmatter/
+            //Register special ContentItem.FrontMatterHeaders type which will be used to define YAML headers for pages, blogs and posts
+            var frontMatterHeaderType = "VirtoCommerce.Content.Web.FrontMatterHeaders";
+            dynamicPropertyService.RegisterType(frontMatterHeaderType);
+            //If set, this specifies the layout file to use. Use the layout file name without the file extension. 
+            var layoutHeader = new DynamicProperty
+            {
+                Id = "Layout_FrontMatterHeader",
+                Name = "layout",                 
+                ObjectType = frontMatterHeaderType,
+                ValueType = DynamicPropertyValueType.ShortText,
+                CreatedBy = "Auto"
+            };
+            //If you need your processed blog post URLs to be something other than the site-wide style (default /year/month/day/title.html), then you can set this variable and it will be used as the final URL.
+            var permalinkHeader = new DynamicProperty
+            {
+                Id = "Permalink_FrontMatterHeader",
+                Name = "permalink",
+                ObjectType = frontMatterHeaderType,
+                ValueType = DynamicPropertyValueType.ShortText,
+                CreatedBy = "Auto"
+            };
+            //Set to false if you don’t want a specific post to show up when the site is generated.
+            var publishedHeader = new DynamicProperty
+            {
+                Id = "Published_FrontMatterHeader",
+                Name = "published",
+                ObjectType = frontMatterHeaderType,
+                ValueType = DynamicPropertyValueType.ShortText,
+                CreatedBy = "Auto"
+            };
+            //Instead of placing posts inside of folders, you can specify one or more categories that the post belongs to. When the site is generated the post will act as though it had been set with these categories normally. Categories (plural key) can be specified as a YAML list or a comma-separated string.
+            var categoryHeader = new DynamicProperty
+            {
+                Id = "Category_FrontMatterHeader",
+                Name = "category",
+                ObjectType = frontMatterHeaderType,
+                ValueType = DynamicPropertyValueType.ShortText,
+                CreatedBy = "Auto"
+            };
+            var categoriesHeader = new DynamicProperty
+            {
+                Id = "Categories_FrontMatterHeader",
+                Name = "categories",
+                IsArray = true,
+                ObjectType = frontMatterHeaderType,
+                ValueType = DynamicPropertyValueType.ShortText,
+                CreatedBy = "Auto"
+            };
+            //Similar to categories, one or multiple tags can be added to a post. Also like categories, tags can be specified as a YAML list or a comma-separated string.
+            var tagsHeader = new DynamicProperty
+            {
+                Id = "Tags_FrontMatterHeader",
+                Name = "tags",
+                IsArray = true,
+                ObjectType = frontMatterHeaderType,
+                ValueType = DynamicPropertyValueType.ShortText,
+                CreatedBy = "Auto"
+            };
+
+
+            //Create DefaultTheme dynamic property for  Store 
             var defaultThemeNameProperty = new DynamicProperty
             {
                 Id = "Default_Theme_Name_Property",
@@ -84,7 +146,7 @@ namespace VirtoCommerce.Content.Web
                 CreatedBy = "Auto"
             };
 
-            dynamicPropertyService.SaveProperties(new[] { defaultThemeNameProperty });
+            dynamicPropertyService.SaveProperties(new[] { defaultThemeNameProperty, layoutHeader, publishedHeader, categoryHeader, categoriesHeader, tagsHeader });
 
             //Register bounded security scope types
             var securityScopeService = _container.Resolve<IPermissionScopeService>();

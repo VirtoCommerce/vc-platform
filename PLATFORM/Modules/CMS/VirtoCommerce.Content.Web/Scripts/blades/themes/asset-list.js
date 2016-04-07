@@ -14,7 +14,7 @@
                 },
             function (data) {
                 $scope.pageSettings.totalItems = data.length;
-                // _.each(data, function (x) { x.isImage = x.type && x.type.startsWith('image/'); });
+                _.each(data, function (x) { x.isImage = x.mimeType && x.mimeType.startsWith('image/'); });
                 $scope.listEntries = data;
                 blade.isLoading = false;
 
@@ -114,7 +114,7 @@
         };
 
         function openDetailsBlade(listItem, isNew) {
-            if (isNew || listItem.url.endsWith('.liquid') || listItem.url.endsWith('.js') || listItem.url.endsWith('.json')) { // html??
+            if (isNew || listItem.mimeType.startsWith('application/') || listItem.mimeType.startsWith('text/')) {
                 var newBlade = {
                     id: 'assetDetail',
                     contentType: blade.contentType,
@@ -140,28 +140,29 @@
 
                 bladeNavigationService.showBlade(newBlade, blade);
             }
-            else {
-                var newBlade = {
-                    id: 'imageAssetDetail',
-                    storeId: blade.storeId,
-                    themeId: blade.themeId,
-                    folderUrl: blade.currentEntity.url,
-                    assetId: listItem.url,
-                    isNew: isNew,
-                    title: listItem.url,
-                    subtitle: 'content.blades.edit-image-asset.subtitle',
-                    subtitleValues: { name: listItem.name },
-                    controller: 'virtoCommerce.contentModule.imageAssetDetailController',
-                    template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/image-asset-detail.tpl.html'
-                };
+            //else {
+            //    var newBlade = {
+            //        id: 'imageAssetDetail',
+            //        contentType: blade.contentType,
+            //        storeId: blade.storeId,
+            //        themeId: blade.themeId,
+            //        folderUrl: blade.currentEntity.url,
+            //        currentEntity: listItem,
+            //        isNew: isNew,
+            //        title: listItem.name,
+            //        subtitle: 'content.blades.edit-image-asset.subtitle',
+            //        subtitleValues: { name: listItem.name },
+            //        controller: 'virtoCommerce.contentModule.imageAssetDetailController',
+            //        template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/image-asset-detail.tpl.html'
+            //    };
 
-                //var newBlade = {
-                //    subtitle: { name: folder.oneItemName },
-                //    subtitle: 'content.blades.edit-image-asset.subtitle-new'
-                //};
+            //    //var newBlade = {
+            //    //    subtitle: { name: folder.oneItemName },
+            //    //    subtitle: 'content.blades.edit-image-asset.subtitle-new'
+            //    //};
 
-                bladeNavigationService.showBlade(newBlade, blade);
-            }
+            //    bladeNavigationService.showBlade(newBlade, blade);
+            //}
         }
 
         blade.toolbarCommands = [
@@ -193,6 +194,7 @@
                 executeMethod: function () {
                     var newBlade = {
                         id: "assetUpload",
+                        contentType: blade.contentType,
                         storeId: blade.storeId,
                         currentEntityId: blade.currentEntity.url,
                         title: 'platform.blades.asset-upload.title',

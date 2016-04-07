@@ -11,26 +11,14 @@
 
         blade.initializeBlade = function () {
             if (blade.isNew) {
-                blade.toolbarCommands = [
-                {
-                    name: "platform.commands.create", icon: 'fa fa-save',
-                    executeMethod: $scope.saveChanges,
-                    canExecuteMethod: function () {
-                        return isDirty() && formScope.$valid;
-                    },
-                    permission: 'content:create'
-                }];
-
                 blade.isLoading = false;
             }
             else {
-                // storeId: blade.storeId, themeId: blade.themeId,
-                $http.get(blade.currentEntity.url, {
-                    responseType: 'text',
-                    //cache: false,
-                    //contentType: false,
-                    //processData: false,
-                }).then(function (results) {
+                contentApi.get({
+                    contentType: blade.contentType,
+                    storeId: blade.storeId,
+                    relativeUrl: blade.currentEntity.relativeUrl
+                }, function (results) {
                     blade.isLoading = false;
                     blade.currentEntity.content = results.data;
                     blade.origEntity = angular.copy(blade.currentEntity);
@@ -66,7 +54,7 @@
                         blade.origEntity = angular.copy(blade.currentEntity);
                     }, 1);
                 },
-                function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
+                    function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
 
                 blade.toolbarCommands = [
                 {
@@ -96,36 +84,27 @@
             }
         };
 
-        function isCanSave() {
-            return blade.currentEntity && blade.currentEntity.name && blade.currentEntity.content;
-        }
-
         function isDirty() {
             return !angular.equals(blade.currentEntity, blade.origEntity)
-                && isCanSave()
                 && (blade.isNew || blade.hasUpdatePermission());
         };
 
         $scope.saveChanges = function () {
             blade.isLoading = true;
 
-            var fd = new FormData();
-            fd.append(blade.currentEntity.name, blade.currentEntity.content);
+            contentApi.save({
+                contentType: blade.contentType,
+                storeId: blade.storeId,
+                folderUrl: blade.folderUrl
+            }, blade.currentEntity, function () {
+                blade.isLoading = false;
+                blade.origEntity = angular.copy(blade.currentEntity);
+                if (blade.isNew) {
+                    $scope.bladeClose();
+                }
 
-            $http.post('api/content/' + blade.contentType + '/' + blade.storeId + '?folderUrl=' + blade.folderUrl, fd,
-                {
-                    transformRequest: angular.identity,
-                    headers: { 'Content-Type': undefined }
-                }).then(function (results) {
-                    blade.parentBlade.refresh();
-                    if (blade.isNew) {
-                        blade.isNew = false;
-                        blade.subtitle = 'Edit ' + blade.currentEntity.name;
-                        blade.currentEntity.url = results.data[0].url;
-                    }
-                    blade.initializeBlade();
-
-                }, function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
+                blade.parentBlade.refresh();
+            }, function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
         };
 
         function deleteEntry() {
@@ -182,9 +161,12 @@
             return "htmlmixed";
         }
 
+        function canSave() {
+            return blade.currentEntity && blade.currentEntity.name && ((isDirty() && !blade.isNew) || (blade.currentEntity.content && blade.isNew));
+        }
+
         blade.onClose = function (closeCallback) {
-            bladeNavigationService.showConfirmationIfNeeded((isDirty() && !blade.isNew) || (isCanSave() && blade.isNew),
-                true, blade, $scope.saveChanges, closeCallback, "content.dialogs.asset-save.title", "content.dialogs.asset-save.message");
+            bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, $scope.saveChanges, closeCallback, "content.dialogs.asset-save.title", "content.dialogs.asset-save.message");
         };
 
         // Codemirror configuration

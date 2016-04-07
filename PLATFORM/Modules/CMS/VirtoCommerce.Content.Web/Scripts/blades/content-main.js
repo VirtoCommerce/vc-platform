@@ -168,9 +168,10 @@
 
 	    blade.openPages = function (data) {
 	        var newBlade = {
-	            id: "pagesListBlade",
+	            id: "pagesList",
 	            contentType: 'pages',
 	            storeId: data.store.id,
+	            languages: data.store.languages,
 	            currentEntity: data,
 	            title: data.store.name,
 	            subtitle: 'content.blades.pages-list.subtitle-pages',
@@ -198,6 +199,7 @@
 	            id: "blogsListBlade",
 	            contentType: 'blogs',
 	            storeId: data.store.id,
+	            languages: data.store.languages,
 	            currentEntity: data,
 	            title: data.store.name,
 	            subtitle: 'content.blades.pages-list.subtitle-blogs',
@@ -210,6 +212,7 @@
 	    blade.addNewTheme = function (data) {
 	        var newBlade = {
 	            id: 'addTheme',
+	            isNew: true,
 	            storeId: data.store.id,
 	            controller: 'virtoCommerce.contentModule.themeDetailController',
 	            template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/theme-detail.tpl.html',
@@ -219,10 +222,12 @@
 
 	    blade.addNewPage = function (data) {
 	        var newBlade = {
-	            id: 'addPageBlade',
-	            chosenStoreId: data.store.id,
-	            currentEntity: { name: null, content: null },
-	            newPage: true,
+	            id: 'addPage',
+	            contentType: 'pages',
+	            storeId: data.store.id,
+	            languages: data.store.languages,
+	            currentEntity: {},
+	            isNew: true,
 	            title: 'content.blades.edit-page.title-new',
 	            subtitle: 'content.blades.edit-page.subtitle-new',
 	            controller: 'virtoCommerce.contentModule.pageDetailController',
@@ -246,10 +251,11 @@
 
 	    blade.addBlog = function (data) {
 	        var newBlade = {
-	            id: 'openBlogNew',
-	            chosenStoreId: data.store.id,
+	            id: 'newBlog',
+	            contentType: 'blogs',
+	            storeId: data.store.id,
+	            currentEntity: {},
 	            isNew: true,
-	            entity: { name: undefined },
 	            title: 'content.blades.edit-blog.title-new',
 	            subtitle: 'content.blades.edit-blog.subtitle-new',
 	            controller: 'virtoCommerce.contentModule.editBlogController',

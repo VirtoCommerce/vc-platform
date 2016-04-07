@@ -89,7 +89,7 @@
         "title": "Theme upload",
         "labels": {
           "select-files": "Select theme file",
-          "drag-note": "Drag and drop file here",
+          "drag-note": "Drop theme (.zip) file here",
           "progress": "Progress",
           "file-selected": "Theme file: ",
           "asset-uploaded": "Theme file uploaded."
@@ -101,8 +101,11 @@
       "edit-page": {
         "title": "Edit '{{name}}'",
         "subtitle": "Page edit",
-        "title-new": "Add new page",
+        "title-new": "New page",
         "subtitle-new": "Create new page",
+        "subtitle-post": "Blogpost edit",
+        "title-new-post": "New post",
+        "subtitle-new-post": "Create new blogpost",
         "labels": {
           "name": "Name",
           "language": "Language",
@@ -146,10 +149,12 @@
         "title-category": "Pick Category for link"
       },
       "edit-blog": {
-        "title-new": "Add blog",
+        "subtitle": "Edit blog",
+        "title-new": "New blog",
         "subtitle-new": "Create new blog",
         "labels": {
-          "blog-name": "Blog name:"
+          "blog-name": "Blog name",
+          "metadata": "Metadata"
         },
         "placeholders": {
           "blog-name": "Enter blog name"
@@ -202,11 +207,15 @@
       },
       "blog-delete": {
         "title": "Delete confirmation",
-        "message": "Are you sure want to delete blog?"
+        "message": "Are you sure you want to delete selected Blog?"
       },
       "page-delete": {
         "title": "Delete confirmation",
         "message": "Are you sure you want to delete this page?"
+      },
+      "blog-save": {
+        "title": "Save changes",
+        "message": "The blog has been modified. Do you want to save changes?"
       },
       "page-save": {
         "title": "Save changes",
@@ -246,15 +255,13 @@
       "add-link": "Add link",
       "add-list": "Add list",
       "add-blog": "Add blog",
+      "add-post": "Add post",
       "add-page": "Add",
       "save-list": "Save list",
-      "save-page": "Save page",
       "delete-links": "Delete links",
       "delete-list": "Delete list",
-      "delete-page": "Delete page",
       "delete-theme": "Delete",
       "reset-list": "Reset list",
-      "reset-page": "Reset page",
       "edit-as-markdown": "Edit as markdown",
       "edit-as-html": "Edit as html",
       "preview-theme": "Preview",

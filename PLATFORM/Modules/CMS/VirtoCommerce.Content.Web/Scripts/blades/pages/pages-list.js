@@ -37,18 +37,20 @@
         }
     }
 
-    $scope.rename = function (listItem) {
-        var result = prompt("Enter new name", listItem.name);
-        if (result) {
-            contentApi.move({
-                contentType: blade.contentType,
-                storeId: blade.storeId,
-                oldUrl: listItem.url,
-                newUrl: listItem.url.substring(0, listItem.url.length - listItem.name.length) + result
-            }, blade.refresh,
-            function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
-        }
-    };
+    if (!isBlogs()) {
+        $scope.rename = function (listItem) {
+            var result = prompt("Enter new name", listItem.name);
+            if (result) {
+                contentApi.move({
+                    contentType: blade.contentType,
+                    storeId: blade.storeId,
+                    oldUrl: listItem.url,
+                    newUrl: listItem.url.substring(0, listItem.url.length - listItem.name.length) + result
+                }, blade.refresh,
+                function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
+            }
+        };
+    }
 
     $scope.selectNode = function (listItem) {
         if (listItem.type === 'folder') {
@@ -56,6 +58,7 @@
                 id: blade.id,
                 contentType: blade.contentType,
                 storeId: blade.storeId,
+                languages: blade.languages,
                 currentEntity: listItem,
                 breadcrumbs: blade.breadcrumbs,
                 title: blade.title,
@@ -77,49 +80,62 @@
             id: 'pageDetail',
             contentType: blade.contentType,
             storeId: blade.storeId,
+            languages: blade.languages,
             folderUrl: blade.currentEntity.url,
             currentEntity: listItem,
             isNew: isNew,
             title: listItem.name,
-            subtitle: 'content.blades.edit-page.subtitle',
             controller: 'virtoCommerce.contentModule.pageDetailController',
             template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/pages/page-detail.tpl.html'
         };
 
-        if (isNew) {
-            angular.extend(newBlade, {
-                // currentEntity: { name: path + 'new_page.md', pageName: 'new_page', content: null, contentType: 'text/html', language: null, storeId: blade.storeId },
-                title: 'content.blades.edit-page.title-new',
-                subtitle: 'content.blades.edit-page.subtitle-new',
-            });
+        if (isBlogs()) {
+            if (isNew) {
+                angular.extend(newBlade, {
+                    title: 'content.blades.edit-page.title-new-post',
+                    subtitle: 'content.blades.edit-page.subtitle-new-post',
+                });
+            } else {
+                angular.extend(newBlade, {
+                    subtitle: 'content.blades.edit-page.subtitle-post',
+                });
+            }
+        } else {
+            if (isNew) {
+                angular.extend(newBlade, {
+                    title: 'content.blades.edit-page.title-new',
+                    subtitle: 'content.blades.edit-page.subtitle-new',
+                });
+            } else {
+                angular.extend(newBlade, {
+                    subtitle: 'content.blades.edit-page.subtitle',
+                });
+            }
         }
-
-        //var newBlade = {
-        //    body: body,
-        //    metadata: metadata,
-        //    title: 'content.blades.edit-page.title',
-        //    titleValues: { name: data.name }            
-        //};
 
         bladeNavigationService.showBlade(newBlade, blade);
     }
 
     function openBlogDetailsBlade(listItem, isNew) {
-        var title = isNew ? '+++add' : 'Edit blog';
-        var subTitle = isNew ? 'Create new blog' : 'Edit blog folder';
-
         var newBlade = {
-            id: 'openBlogNew',
+            id: 'blogDetail',
             contentType: blade.contentType,
             storeId: blade.storeId,
-            folderUrl: blade.currentEntity.url,
             currentEntity: listItem,
             isNew: isNew,
-            title: title,
-            subtitle: subTitle,
+            title: listItem.name,
+            subtitle: 'content.blades.edit-blog.subtitle',
             controller: 'virtoCommerce.contentModule.editBlogController',
             template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/pages/edit-blog.tpl.html'
         };
+
+        if (isNew) {
+            angular.extend(newBlade, {
+                title: 'content.blades.edit-blog.title-new',
+                subtitle: 'content.blades.edit-blog.subtitle-new',
+            });
+        }
+
         bladeNavigationService.showBlade(newBlade, blade);
     }
 
@@ -146,6 +162,14 @@
                     }
                 }
             }
+
+            if (isBlogs() && !blade.currentEntity.type) {
+                angular.extend(dialog, {
+                    title: 'content.dialogs.blog-delete.title',
+                    message: 'content.dialogs.blog-delete.message',
+                });
+            }
+
             dialogService.showConfirmationDialog(dialog);
         });
     }
@@ -188,12 +212,21 @@
             }
         );
     } else if (isBlogs()) {
-        blade.toolbarCommands.splice(1, 0, {
-            name: 'content.commands.add-blog', icon: 'fa fa-plus',
-            executeMethod: function () { openBlogDetailsBlade({}, true); },
-            canExecuteMethod: function () { return true; },
-            permission: 'content:create'
-        });
+        if (blade.currentEntity.type && blade.currentEntity.type === 'folder') {
+            blade.toolbarCommands.splice(1, 0, {
+                name: "content.commands.add-post", icon: 'fa fa-plus',
+                executeMethod: function () { openDetailsBlade({}, true); },
+                canExecuteMethod: function () { return true; },
+                permission: 'content:create'
+            });
+        } else {
+            blade.toolbarCommands.splice(1, 0, {
+                name: 'content.commands.add-blog', icon: 'fa fa-plus',
+                executeMethod: function () { openBlogDetailsBlade({}, true); },
+                canExecuteMethod: function () { return true; },
+                permission: 'content:create'
+            });
+        }
     }
 
     blade.toolbarCommands.push({
@@ -202,6 +235,16 @@
         canExecuteMethod: isItemsChecked,
         permission: 'content:delete'
     });
+
+    if (isBlogs() && !blade.currentEntity.type) {
+        blade.contextMenuItems = [
+            {
+                name: 'platform.commands.manage', icon: 'fa fa-edit',
+                action: function (data) { openBlogDetailsBlade(data); },
+                permission: blade.updatePermission
+            }
+        ];
+    }
 
     // ui-grid
     $scope.setGridOptions = function (gridOptions) {
@@ -243,6 +286,6 @@
         }
     }
 
-    blade.headIcon = 'fa-folder-o';
+    blade.headIcon = isBlogs() ? 'fa-inbox' : 'fa-folder-o';
     blade.refresh();
 }]);

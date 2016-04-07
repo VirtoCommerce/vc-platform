@@ -368,7 +368,7 @@
           "download-url": "Download Url",
           "note": "All catalog products information should be exported to csv file, download url will be available after export will be finished.",
           "caution": "Caution:",
-          "caution-description": "Sorting your CSV file in a spreadsheet program can cause product variants or image URLs to become dissassociated. Importing a CSV file that has been sorted may overwrite your existing products with bad data, which cannot be recovered."
+          "caution-description": "Sorting your CSV file in a spreadsheet program can cause product variants or image URLs to become disassociated. Importing a CSV file that has been sorted may overwrite your existing products with bad data, which cannot be recovered."
         },
         "placeholders": {
           "select-fulfillment": "Select fulfillment or leave empty for default...",
