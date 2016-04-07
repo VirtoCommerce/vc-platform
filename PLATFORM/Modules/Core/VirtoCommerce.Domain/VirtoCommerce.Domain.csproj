@@ -78,12 +78,15 @@
     <Compile Include="Catalog\Model\CatalogProduct.cs" />
     <Compile Include="Catalog\Model\Category.cs" />
     <Compile Include="Catalog\Model\CategoryLink.cs" />
+    <Compile Include="Catalog\Model\Outline.cs" />
     <Compile Include="Catalog\Model\CategoryResponseGroup.cs" />
     <Compile Include="Catalog\Model\EditorialReview.cs" />
+    <Compile Include="Catalog\Model\OutlineItem.cs" />
     <Compile Include="Catalog\Model\Search\Aggregation.cs" />
     <Compile Include="Catalog\Model\Search\AggregationItem.cs" />
     <Compile Include="Catalog\Model\PropertyDisplayName.cs" />
     <Compile Include="Catalog\Model\Search\AggregationLabel.cs" />
+    <Compile Include="Catalog\Services\IOutlineService.cs" />
     <Compile Include="Commerce\Model\Address.cs" />
     <Compile Include="Commerce\Model\AddressType.cs" />
     <Compile Include="Commerce\Model\Currency.cs" />

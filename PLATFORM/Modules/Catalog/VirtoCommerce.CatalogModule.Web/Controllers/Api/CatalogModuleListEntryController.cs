@@ -56,13 +56,13 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             }
 
             var retVal = new webModel.ListEntrySearchResult();
-           
+
             int categorySkip = 0;
             int categoryTake = 0;
             //Because products and categories represent in search result as two separated collections for handle paging request 
             //we should join two resulting collection artificially
             //search categories
-            if (searchCriteria.ResponseGroup.HasFlag(coreModel.SearchResponseGroup.WithCategories))
+            if ((searchCriteria.ResponseGroup & coreModel.SearchResponseGroup.WithCategories) == coreModel.SearchResponseGroup.WithCategories)
             {
                 searchCriteria.ResponseGroup = searchCriteria.ResponseGroup & ~coreModel.SearchResponseGroup.WithProducts;
                 var categoriesSearchResult = _searchService.Search(searchCriteria);
@@ -79,13 +79,13 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             }
 
             //search products
-            if (searchCriteria.ResponseGroup.HasFlag(coreModel.SearchResponseGroup.WithProducts))
+            if ((searchCriteria.ResponseGroup & coreModel.SearchResponseGroup.WithProducts) == coreModel.SearchResponseGroup.WithProducts)
             {
                 searchCriteria.ResponseGroup = searchCriteria.ResponseGroup & ~coreModel.SearchResponseGroup.WithCategories;
                 searchCriteria.Skip = searchCriteria.Skip - categorySkip;
                 searchCriteria.Take = searchCriteria.Take - categoryTake;
                 var productsSearchResult = _searchService.Search(searchCriteria);
-      
+
                 var products = productsSearchResult.Products.Select(x => new webModel.ListEntryProduct(x.ToWebModel(_blobUrlResolver)));
 
                 retVal.TotalCount += productsSearchResult.ProductsTotalCount;

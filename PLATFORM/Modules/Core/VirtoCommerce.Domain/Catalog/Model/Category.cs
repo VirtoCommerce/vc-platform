@@ -30,7 +30,9 @@ namespace VirtoCommerce.Domain.Catalog.Model
         public ICollection<Property> Properties { get; set; }
         public ICollection<PropertyValue> PropertyValues { get; set; }
         public ICollection<CategoryLink> Links { get; set; }
+        public string SeoObjectType { get { return GetType().Name; } }
         public ICollection<SeoInfo> SeoInfos { get; set; }
         public ICollection<Image> Images { get; set; }
+        public ICollection<Outline> Outlines { get; set; }
     }
 }

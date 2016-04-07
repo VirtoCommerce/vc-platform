@@ -3,6 +3,7 @@ using System.Linq;
 using System.Web.Http.Results;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VirtoCommerce.CoreModule.Data.Repositories;
+using VirtoCommerce.CoreModule.Data.Services;
 using VirtoCommerce.Domain.Commerce.Services;
 using VirtoCommerce.Platform.Data.DynamicProperties;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;

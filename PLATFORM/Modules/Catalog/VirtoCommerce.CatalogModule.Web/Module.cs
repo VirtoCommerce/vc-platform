@@ -27,7 +27,7 @@ namespace VirtoCommerce.CatalogModule.Web
             _container = container;
         }
 
-        #region IDatabaseModule Members
+        #region IModule Members
 
         public override void SetupDatabase()
         {
@@ -59,6 +59,7 @@ namespace VirtoCommerce.CatalogModule.Web
             _container.RegisterType<IPropertyService, PropertyServiceImpl>();
             _container.RegisterType<ICatalogSearchService, CatalogSearchServiceImpl>();
             _container.RegisterType<ISkuGenerator, DefaultSkuGenerator>();
+            _container.RegisterType<IOutlineService, OutlineService>();
 
             #endregion
         }
@@ -69,6 +70,7 @@ namespace VirtoCommerce.CatalogModule.Web
             securityScopeService.RegisterSope(() => new CatalogSelectedScope());
             securityScopeService.RegisterSope(() => new CatalogSelectedCategoryScope(_container.Resolve<ICategoryService>()));
         }
+
         #endregion
 
         #region ISupportExportImportModule Members

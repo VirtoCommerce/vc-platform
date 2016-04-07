@@ -105,6 +105,7 @@ namespace VirtoCommerce.CatalogModule.Web.Model
         public string[] SecurityScopes { get; set; }
 
         #region ISeoSupport Members 
+        public string SeoObjectType { get { return GetType().Name; } }
         /// <summary>
         /// Gets or sets the list of SEO information records.
         /// </summary>

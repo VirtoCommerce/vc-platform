@@ -8,22 +8,23 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Domain.Catalog.Model
 {
-	public class Asset : AuditableEntity, ISeoSupport, ILanguageSupport, IInheritable, ICloneable
+    public class Asset : AuditableEntity, ISeoSupport, ILanguageSupport, IInheritable, ICloneable
     {
-		public string Name { get; set; }
-		public string Url { get; set; }
-		public string Group { get; set; }
-		public string MimeType { get; set; }
-		public long Size { get; set; }
-		public byte[] BinaryData { get; set; }
+        public string Name { get; set; }
+        public string Url { get; set; }
+        public string Group { get; set; }
+        public string MimeType { get; set; }
+        public long Size { get; set; }
+        public byte[] BinaryData { get; set; }
 
 
-		#region ISeoSupport Members
-		public ICollection<SeoInfo> SeoInfos { get; set; }
-		#endregion
+        #region ISeoSupport Members
+        public string SeoObjectType { get { return GetType().Name; } }
+        public ICollection<SeoInfo> SeoInfos { get; set; }
+        #endregion
 
-		#region ILanguageSupport Members
-		public string LanguageCode { get; set; }
+        #region ILanguageSupport Members
+        public string LanguageCode { get; set; }
         #endregion
 
         #region IInheritable Members

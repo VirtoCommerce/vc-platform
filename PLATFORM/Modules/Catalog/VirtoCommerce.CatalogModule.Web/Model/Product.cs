@@ -218,27 +218,27 @@ namespace VirtoCommerce.CatalogModule.Web.Model
         /// </value>
 		public string Vendor { get; set; }
 
-		private string _imgSrc;
+        private string _imgSrc;
         /// <summary>
         /// Gets the default image for the product.
         /// </summary>
         /// <value>
         /// The image source URL.
         /// </value>
-        public string ImgSrc 
-		{ 
-			get
-			{
-				if (_imgSrc == null)
-				{
-					if (Images != null && Images.Any())
-					{
-						_imgSrc = Images.First().Url;
-					}
-				}
-				return _imgSrc;
-			}
-		}
+        public string ImgSrc
+        {
+            get
+            {
+                if (_imgSrc == null)
+                {
+                    if (Images != null && Images.Any())
+                    {
+                        _imgSrc = Images.First().Url;
+                    }
+                }
+                return _imgSrc;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the properties.
@@ -275,7 +275,7 @@ namespace VirtoCommerce.CatalogModule.Web.Model
         /// The links.
         /// </value>
 		public ICollection<CategoryLink> Links { get; set; }
-      
+
         /// <summary>
         /// Gets or sets the reviews.
         /// </summary>
@@ -294,6 +294,7 @@ namespace VirtoCommerce.CatalogModule.Web.Model
         public string[] SecurityScopes { get; set; }
 
         #region ISeoSupport Members 
+        public string SeoObjectType { get { return GetType().Name; } }
         /// <summary>
         /// Gets or sets the list of SEO information records.
         /// </summary>
