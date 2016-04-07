@@ -74,7 +74,7 @@ namespace VirtoCommerce.Content.Web
             base.PostInitialize();
             //Register BaseThemes setting in store module, allows to individual configuration base themes names for each store
             var settingManager = _container.Resolve<ISettingsManager>();
-            var baseThemesSetting = settingManager.GetSettingByName("VirtoCommerce.Content.BaseThemes");
+            var baseThemesSetting = settingManager.GetModuleSettings("VirtoCommerce.Content").FirstOrDefault(x => x.Name == "VirtoCommerce.Content.BaseThemes");
             settingManager.RegisterModuleSettings("VirtoCommerce.Store", baseThemesSetting);
 
             var dynamicPropertyService = _container.Resolve<IDynamicPropertyService>();
