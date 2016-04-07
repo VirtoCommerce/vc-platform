@@ -22,14 +22,8 @@ namespace VirtoCommerce.Storefront.Common
         public static string GetSeoPath(this VirtoCommerceCatalogModuleWebModelCategory category, Store store, Language language, string defaultValue)
         {
             // Path: GrandParentCategory/ParentCategory/Category
-            var seoRecords = new List<List<VirtoCommerceDomainCommerceModelSeoInfo>> { category.SeoInfos };
-
-            if (category.Parents != null)
-            {
-                seoRecords.InsertRange(0, category.Parents.Select(p => p.SeoInfos));
-            }
-
-            var result = GetSeoPath(seoRecords, store, language, defaultValue);
+            var outline = category.Outlines != null ? category.Outlines.FirstOrDefault() : null;
+            var result = GetSeoPath(outline, store, language, defaultValue);
             return result;
         }
 
@@ -44,14 +38,8 @@ namespace VirtoCommerce.Storefront.Common
         public static string GetSeoPath(this VirtoCommerceCatalogModuleWebModelProduct product, Store store, Language language, string defaultValue)
         {
             // Path: GrandParentCategory/ParentCategory/ProductCategory/Product
-            var seoRecords = new List<List<VirtoCommerceDomainCommerceModelSeoInfo>> { product.Category.SeoInfos, product.SeoInfos };
-
-            if (product.Category.Parents != null)
-            {
-                seoRecords.InsertRange(0, product.Category.Parents.Select(p => p.SeoInfos));
-            }
-
-            var result = GetSeoPath(seoRecords, store, language, defaultValue);
+            var outline = product.Outlines != null ? product.Outlines.FirstOrDefault() : null;
+            var result = GetSeoPath(outline, store, language, defaultValue);
             return result;
         }
 
@@ -79,14 +67,21 @@ namespace VirtoCommerce.Storefront.Common
         }
 
 
-        private static string GetSeoPath(IEnumerable<IEnumerable<VirtoCommerceDomainCommerceModelSeoInfo>> seoRecords, Store store, Language language, string defaultValue)
+        private static string GetSeoPath(VirtoCommerceDomainCatalogModelOutline outline, Store store, Language language, string defaultValue)
         {
             var result = defaultValue;
 
-            var pathSegments = seoRecords.Select(x => GetBestMatchedSeoKeyword(x, store, language)).ToList();
-            if (pathSegments.All(s => s != null))
+            if (outline != null)
             {
-                result = string.Join("/", pathSegments);
+                var pathSegments = outline.Items
+                    .Where(i => i.SeoObjectType != "Catalog")
+                    .Select(i => GetBestMatchedSeoKeyword(i.SeoInfos, store, language))
+                    .ToList();
+
+                if (pathSegments.All(s => s != null))
+                {
+                    result = string.Join("/", pathSegments);
+                }
             }
 
             return result;

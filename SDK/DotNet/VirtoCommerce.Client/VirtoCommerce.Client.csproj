@@ -133,6 +133,8 @@
     <Compile Include="Model\VirtoCommerceDomainCatalogModelCategoryLink.cs" />
     <Compile Include="Model\VirtoCommerceDomainCatalogModelEditorialReview.cs" />
     <Compile Include="Model\VirtoCommerceDomainCatalogModelImage.cs" />
+    <Compile Include="Model\VirtoCommerceDomainCatalogModelOutline.cs" />
+    <Compile Include="Model\VirtoCommerceDomainCatalogModelOutlineItem.cs" />
     <Compile Include="Model\VirtoCommerceDomainCatalogModelProductAssociation.cs" />
     <Compile Include="Model\VirtoCommerceDomainCatalogModelProperty.cs" />
     <Compile Include="Model\VirtoCommerceDomainCatalogModelPropertyAttribute.cs" />

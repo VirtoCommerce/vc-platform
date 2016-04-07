@@ -29,6 +29,7 @@ namespace VirtoCommerce.Client.Model
         /// <param name="MimeType">MimeType.</param>
         /// <param name="Size">Size.</param>
         /// <param name="BinaryData">BinaryData.</param>
+        /// <param name="SeoObjectType">SeoObjectType.</param>
         /// <param name="SeoInfos">SeoInfos.</param>
         /// <param name="LanguageCode">LanguageCode.</param>
         /// <param name="IsInherited">IsInherited.</param>
@@ -38,7 +39,7 @@ namespace VirtoCommerce.Client.Model
         /// <param name="ModifiedBy">ModifiedBy.</param>
         /// <param name="Id">Id.</param>
 
-        public VirtoCommerceDomainCatalogModelAsset(string Name = null, string Url = null, string Group = null, string MimeType = null, long? Size = null, byte[] BinaryData = null, List<VirtoCommerceDomainCommerceModelSeoInfo> SeoInfos = null, string LanguageCode = null, bool? IsInherited = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
+        public VirtoCommerceDomainCatalogModelAsset(string Name = null, string Url = null, string Group = null, string MimeType = null, long? Size = null, byte[] BinaryData = null, string SeoObjectType = null, List<VirtoCommerceDomainCommerceModelSeoInfo> SeoInfos = null, string LanguageCode = null, bool? IsInherited = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
         {
             this.Name = Name;
             this.Url = Url;
@@ -46,6 +47,7 @@ namespace VirtoCommerce.Client.Model
             this.MimeType = MimeType;
             this.Size = Size;
             this.BinaryData = BinaryData;
+            this.SeoObjectType = SeoObjectType;
             this.SeoInfos = SeoInfos;
             this.LanguageCode = LanguageCode;
             this.IsInherited = IsInherited;
@@ -92,6 +94,12 @@ namespace VirtoCommerce.Client.Model
         /// </summary>
         [DataMember(Name="binaryData", EmitDefaultValue=false)]
         public byte[] BinaryData { get; set; }
+
+        /// <summary>
+        /// Gets or Sets SeoObjectType
+        /// </summary>
+        [DataMember(Name="seoObjectType", EmitDefaultValue=false)]
+        public string SeoObjectType { get; private set; }
 
         /// <summary>
         /// Gets or Sets SeoInfos
@@ -156,6 +164,7 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  MimeType: ").Append(MimeType).Append("\n");
             sb.Append("  Size: ").Append(Size).Append("\n");
             sb.Append("  BinaryData: ").Append(BinaryData).Append("\n");
+            sb.Append("  SeoObjectType: ").Append(SeoObjectType).Append("\n");
             sb.Append("  SeoInfos: ").Append(SeoInfos).Append("\n");
             sb.Append("  LanguageCode: ").Append(LanguageCode).Append("\n");
             sb.Append("  IsInherited: ").Append(IsInherited).Append("\n");
@@ -232,6 +241,11 @@ namespace VirtoCommerce.Client.Model
                     this.BinaryData.Equals(other.BinaryData)
                 ) && 
                 (
+                    this.SeoObjectType == other.SeoObjectType ||
+                    this.SeoObjectType != null &&
+                    this.SeoObjectType.Equals(other.SeoObjectType)
+                ) && 
+                (
                     this.SeoInfos == other.SeoInfos ||
                     this.SeoInfos != null &&
                     this.SeoInfos.SequenceEqual(other.SeoInfos)
@@ -302,6 +316,9 @@ namespace VirtoCommerce.Client.Model
                 
                 if (this.BinaryData != null)
                     hash = hash * 59 + this.BinaryData.GetHashCode();
+                
+                if (this.SeoObjectType != null)
+                    hash = hash * 59 + this.SeoObjectType.GetHashCode();
                 
                 if (this.SeoInfos != null)
                     hash = hash * 59 + this.SeoInfos.GetHashCode();

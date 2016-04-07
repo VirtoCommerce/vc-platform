@@ -23,7 +23,7 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         {
             Language = language;
             Currency = currency;
-            ResponseGroup = CatalogSearchResponseGroup.WithProducts | CatalogSearchResponseGroup.WithCategories | CatalogSearchResponseGroup.WithProperties;
+            ResponseGroup = CatalogSearchResponseGroup.WithProducts | CatalogSearchResponseGroup.WithCategories | CatalogSearchResponseGroup.WithProperties | CatalogSearchResponseGroup.WithOutlines;
             SearchInChildren = true;
 
             Parse(queryString);

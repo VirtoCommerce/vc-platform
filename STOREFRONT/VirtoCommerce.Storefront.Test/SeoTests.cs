@@ -33,10 +33,27 @@ namespace VirtoCommerce.Storefront.Test
         {
             var category = new VirtoCommerceCatalogModuleWebModelCategory
             {
-                SeoInfos = new List<VirtoCommerceDomainCommerceModelSeoInfo>
+                Outlines = new List<VirtoCommerceDomainCatalogModelOutline>
                 {
-                    new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "en-US", SemanticUrl = "category1" },
-                    new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "ru-RU", SemanticUrl = "category2" },
+                    new VirtoCommerceDomainCatalogModelOutline
+                    {
+                        Items = new List<VirtoCommerceDomainCatalogModelOutlineItem>
+                        {
+                            new VirtoCommerceDomainCatalogModelOutlineItem
+                            {
+                                SeoObjectType = "Catalog",
+                            },
+                            new VirtoCommerceDomainCatalogModelOutlineItem
+                            {
+                                SeoObjectType = "Category",
+                                SeoInfos = new List<VirtoCommerceDomainCommerceModelSeoInfo>
+                                {
+                                    new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "en-US", SemanticUrl = "category1" },
+                                    new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "ru-RU", SemanticUrl = "category2" },
+                                },
+                            }
+                        },
+                    },
                 },
             };
 
@@ -49,30 +66,46 @@ namespace VirtoCommerce.Storefront.Test
         {
             var category = new VirtoCommerceCatalogModuleWebModelCategory
             {
-                SeoInfos = new List<VirtoCommerceDomainCommerceModelSeoInfo>
+                Outlines = new List<VirtoCommerceDomainCatalogModelOutline>
                 {
-                    new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "en-US", SemanticUrl = "category1" },
-                    new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "ru-RU", SemanticUrl = "category2" },
+                    new VirtoCommerceDomainCatalogModelOutline
+                    {
+                        Items = new List<VirtoCommerceDomainCatalogModelOutlineItem>
+                        {
+                            new VirtoCommerceDomainCatalogModelOutlineItem
+                            {
+                                SeoObjectType = "Catalog",
+                            },
+                            new VirtoCommerceDomainCatalogModelOutlineItem
+                            {
+                                SeoObjectType = "Category",
+                                SeoInfos = new List<VirtoCommerceDomainCommerceModelSeoInfo>
+                                {
+                                    new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "en-US", SemanticUrl = "grandparent1" },
+                                    new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "ru-RU", SemanticUrl = "grandparent2" },
+                                }
+                            },
+                            new VirtoCommerceDomainCatalogModelOutlineItem
+                            {
+                                SeoObjectType = "Category",
+                                SeoInfos = new List<VirtoCommerceDomainCommerceModelSeoInfo>
+                                {
+                                    new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "en-US", SemanticUrl = "parent1" },
+                                    new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "ru-RU", SemanticUrl = "parent2" },
+                                }
+                            },
+                            new VirtoCommerceDomainCatalogModelOutlineItem
+                            {
+                                SeoObjectType = "Category",
+                                SeoInfos = new List<VirtoCommerceDomainCommerceModelSeoInfo>
+                                {
+                                    new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "en-US", SemanticUrl = "category1" },
+                                    new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "ru-RU", SemanticUrl = "category2" },
+                                },
+                            },
+                        },
+                    },
                 },
-                Parents = new List<VirtoCommerceCatalogModuleWebModelCategory>
-                {
-                    new VirtoCommerceCatalogModuleWebModelCategory
-                    {
-                        SeoInfos = new List<VirtoCommerceDomainCommerceModelSeoInfo>
-                        {
-                            new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "en-US", SemanticUrl = "grandparent1" },
-                            new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "ru-RU", SemanticUrl = "grandparent2" },
-                        }
-                    },
-                    new VirtoCommerceCatalogModuleWebModelCategory
-                    {
-                        SeoInfos = new List<VirtoCommerceDomainCommerceModelSeoInfo>
-                        {
-                            new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "en-US", SemanticUrl = "parent1" },
-                            new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "ru-RU", SemanticUrl = "parent2" },
-                        }
-                    },
-                }
             };
 
             var result = category.GetSeoPath(_store, new Language("ru-RU"), null);
@@ -84,23 +117,42 @@ namespace VirtoCommerce.Storefront.Test
         {
             var category = new VirtoCommerceCatalogModuleWebModelCategory
             {
-                SeoInfos = new List<VirtoCommerceDomainCommerceModelSeoInfo>
+                Outlines = new List<VirtoCommerceDomainCatalogModelOutline>
                 {
-                    new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "en-US", SemanticUrl = "category1" },
-                    new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "ru-RU", SemanticUrl = "category2" },
-                },
-                Parents = new List<VirtoCommerceCatalogModuleWebModelCategory>
-                {
-                    new VirtoCommerceCatalogModuleWebModelCategory(),
-                    new VirtoCommerceCatalogModuleWebModelCategory
+                    new VirtoCommerceDomainCatalogModelOutline
                     {
-                        SeoInfos = new List<VirtoCommerceDomainCommerceModelSeoInfo>
+                        Items = new List<VirtoCommerceDomainCatalogModelOutlineItem>
                         {
-                            new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "en-US", SemanticUrl = "parent1" },
-                            new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "ru-RU", SemanticUrl = "parent2" },
-                        }
+                            new VirtoCommerceDomainCatalogModelOutlineItem
+                            {
+                                SeoObjectType = "Catalog",
+                            },
+                            new VirtoCommerceDomainCatalogModelOutlineItem
+                            {
+                                SeoObjectType = "Category",
+                                SeoInfos = new List<VirtoCommerceDomainCommerceModelSeoInfo>(),
+                            },
+                            new VirtoCommerceDomainCatalogModelOutlineItem
+                            {
+                                SeoObjectType = "Category",
+                                SeoInfos = new List<VirtoCommerceDomainCommerceModelSeoInfo>
+                                {
+                                    new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "en-US", SemanticUrl = "parent1" },
+                                    new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "ru-RU", SemanticUrl = "parent2" },
+                                }
+                            },
+                            new VirtoCommerceDomainCatalogModelOutlineItem
+                            {
+                                SeoObjectType = "Category",
+                                SeoInfos = new List<VirtoCommerceDomainCommerceModelSeoInfo>
+                                {
+                                    new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "en-US", SemanticUrl = "category1" },
+                                    new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "ru-RU", SemanticUrl = "category2" },
+                                },
+                            },
+                        },
                     },
-                }
+                },
             };
 
             var result = category.GetSeoPath(_store, new Language("ru-RU"), null);
@@ -138,12 +190,32 @@ namespace VirtoCommerce.Storefront.Test
         {
             var product = new VirtoCommerceCatalogModuleWebModelProduct
             {
-                SeoInfos = new List<VirtoCommerceDomainCommerceModelSeoInfo>
+                Outlines = new List<VirtoCommerceDomainCatalogModelOutline>
                 {
-                    new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "en-US", SemanticUrl = "product1" },
-                    new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "ru-RU", SemanticUrl = "product2" },
+                    new VirtoCommerceDomainCatalogModelOutline
+                    {
+                        Items = new List<VirtoCommerceDomainCatalogModelOutlineItem>
+                        {
+                            new VirtoCommerceDomainCatalogModelOutlineItem
+                            {
+                                SeoObjectType = "Catalog",
+                            },
+                            new VirtoCommerceDomainCatalogModelOutlineItem
+                            {
+                                SeoObjectType = "Category",
+                            },
+                            new VirtoCommerceDomainCatalogModelOutlineItem
+                            {
+                                SeoObjectType = "CatalogProduct",
+                                SeoInfos = new List<VirtoCommerceDomainCommerceModelSeoInfo>
+                                {
+                                    new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "en-US", SemanticUrl = "product1" },
+                                    new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "ru-RU", SemanticUrl = "product2" },
+                                },
+                            },
+                        },
+                    },
                 },
-                Category = new VirtoCommerceCatalogModuleWebModelCategory(),
             };
 
             var result = product.GetSeoPath(_store, new Language("ru-RU"), null);
@@ -155,19 +227,37 @@ namespace VirtoCommerce.Storefront.Test
         {
             var product = new VirtoCommerceCatalogModuleWebModelProduct
             {
-                SeoInfos = new List<VirtoCommerceDomainCommerceModelSeoInfo>
+                Outlines = new List<VirtoCommerceDomainCatalogModelOutline>
                 {
-                    new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "en-US", SemanticUrl = "product1" },
-                    new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "ru-RU", SemanticUrl = "product2" },
-                },
-                Category = new VirtoCommerceCatalogModuleWebModelCategory
-                {
-                    SeoInfos = new List<VirtoCommerceDomainCommerceModelSeoInfo>
+                    new VirtoCommerceDomainCatalogModelOutline
                     {
-                        new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "en-US", SemanticUrl = "category1" },
-                        new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "ru-RU", SemanticUrl = "category2" },
+                        Items = new List<VirtoCommerceDomainCatalogModelOutlineItem>
+                        {
+                            new VirtoCommerceDomainCatalogModelOutlineItem
+                            {
+                                SeoObjectType = "Catalog",
+                            },
+                            new VirtoCommerceDomainCatalogModelOutlineItem
+                            {
+                                SeoObjectType = "Category",
+                                SeoInfos = new List<VirtoCommerceDomainCommerceModelSeoInfo>
+                                {
+                                    new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "en-US", SemanticUrl = "category1" },
+                                    new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "ru-RU", SemanticUrl = "category2" },
+                                },
+                            },
+                            new VirtoCommerceDomainCatalogModelOutlineItem
+                            {
+                                SeoObjectType = "CatalogProduct",
+                                SeoInfos = new List<VirtoCommerceDomainCommerceModelSeoInfo>
+                                {
+                                    new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "en-US", SemanticUrl = "product1" },
+                                    new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "ru-RU", SemanticUrl = "product2" },
+                                },
+                            },
+                        },
                     },
-                }
+                },
             };
 
             var result = product.GetSeoPath(_store, new Language("ru-RU"), null);
@@ -179,38 +269,55 @@ namespace VirtoCommerce.Storefront.Test
         {
             var product = new VirtoCommerceCatalogModuleWebModelProduct
             {
-                SeoInfos = new List<VirtoCommerceDomainCommerceModelSeoInfo>
+                Outlines = new List<VirtoCommerceDomainCatalogModelOutline>
                 {
-                    new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "en-US", SemanticUrl = "product1" },
-                    new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "ru-RU", SemanticUrl = "product2" },
-                },
-                Category = new VirtoCommerceCatalogModuleWebModelCategory
-                {
-                    SeoInfos = new List<VirtoCommerceDomainCommerceModelSeoInfo>
+                    new VirtoCommerceDomainCatalogModelOutline
                     {
-                        new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "en-US", SemanticUrl = "category1" },
-                        new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "ru-RU", SemanticUrl = "category2" },
+                        Items = new List<VirtoCommerceDomainCatalogModelOutlineItem>
+                        {
+                            new VirtoCommerceDomainCatalogModelOutlineItem
+                            {
+                                SeoObjectType = "Catalog",
+                            },
+                            new VirtoCommerceDomainCatalogModelOutlineItem
+                            {
+                                SeoObjectType = "Category",
+                                SeoInfos = new List<VirtoCommerceDomainCommerceModelSeoInfo>
+                                {
+                                    new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "en-US", SemanticUrl = "grandparent1" },
+                                    new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "ru-RU", SemanticUrl = "grandparent2" },
+                                }
+                            },
+                            new VirtoCommerceDomainCatalogModelOutlineItem
+                            {
+                                SeoObjectType = "Category",
+                                SeoInfos = new List<VirtoCommerceDomainCommerceModelSeoInfo>
+                                {
+                                    new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "en-US", SemanticUrl = "parent1" },
+                                    new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "ru-RU", SemanticUrl = "parent2" },
+                                }
+                            },
+                            new VirtoCommerceDomainCatalogModelOutlineItem
+                            {
+                                SeoObjectType = "Category",
+                                SeoInfos = new List<VirtoCommerceDomainCommerceModelSeoInfo>
+                                {
+                                    new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "en-US", SemanticUrl = "category1" },
+                                    new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "ru-RU", SemanticUrl = "category2" },
+                                },
+                            },
+                            new VirtoCommerceDomainCatalogModelOutlineItem
+                            {
+                                SeoObjectType = "CatalogProduct",
+                                SeoInfos = new List<VirtoCommerceDomainCommerceModelSeoInfo>
+                                {
+                                    new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "en-US", SemanticUrl = "product1" },
+                                    new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "ru-RU", SemanticUrl = "product2" },
+                                },
+                            },
+                        },
                     },
-                    Parents = new List<VirtoCommerceCatalogModuleWebModelCategory>
-                    {
-                        new VirtoCommerceCatalogModuleWebModelCategory
-                        {
-                            SeoInfos = new List<VirtoCommerceDomainCommerceModelSeoInfo>
-                            {
-                                new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "en-US", SemanticUrl = "grandparent1" },
-                                new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "ru-RU", SemanticUrl = "grandparent2" },
-                            }
-                        },
-                        new VirtoCommerceCatalogModuleWebModelCategory
-                        {
-                            SeoInfos = new List<VirtoCommerceDomainCommerceModelSeoInfo>
-                            {
-                                new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "en-US", SemanticUrl = "parent1" },
-                                new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "ru-RU", SemanticUrl = "parent2" },
-                            }
-                        },
-                    }
-                }
+                },
             };
 
             var result = product.GetSeoPath(_store, new Language("ru-RU"), null);
@@ -222,34 +329,51 @@ namespace VirtoCommerce.Storefront.Test
         {
             var product = new VirtoCommerceCatalogModuleWebModelProduct
             {
-                SeoInfos = new List<VirtoCommerceDomainCommerceModelSeoInfo>
+                Outlines = new List<VirtoCommerceDomainCatalogModelOutline>
                 {
-                    new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "en-US", SemanticUrl = "product1" },
-                    new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "ru-RU", SemanticUrl = "product2" },
-                },
-                Category = new VirtoCommerceCatalogModuleWebModelCategory
-                {
-                    SeoInfos = new List<VirtoCommerceDomainCommerceModelSeoInfo>
+                    new VirtoCommerceDomainCatalogModelOutline
                     {
-                        new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "en-US", SemanticUrl = "category1" },
-                        new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "ru-RU", SemanticUrl = "category2" },
-                    },
-                    Parents = new List<VirtoCommerceCatalogModuleWebModelCategory>
-                    {
-                        new VirtoCommerceCatalogModuleWebModelCategory
+                        Items = new List<VirtoCommerceDomainCatalogModelOutlineItem>
                         {
-                            SeoInfos = new List<VirtoCommerceDomainCommerceModelSeoInfo>()
-                        },
-                        new VirtoCommerceCatalogModuleWebModelCategory
-                        {
-                            SeoInfos = new List<VirtoCommerceDomainCommerceModelSeoInfo>
+                            new VirtoCommerceDomainCatalogModelOutlineItem
                             {
-                                new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "en-US", SemanticUrl = "parent1" },
-                                new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "ru-RU", SemanticUrl = "parent2" },
-                            }
+                                SeoObjectType = "Catalog",
+                            },
+                            new VirtoCommerceDomainCatalogModelOutlineItem
+                            {
+                                SeoObjectType = "Category",
+                                SeoInfos = new List<VirtoCommerceDomainCommerceModelSeoInfo>(),
+                            },
+                            new VirtoCommerceDomainCatalogModelOutlineItem
+                            {
+                                SeoObjectType = "Category",
+                                SeoInfos = new List<VirtoCommerceDomainCommerceModelSeoInfo>
+                                {
+                                    new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "en-US", SemanticUrl = "parent1" },
+                                    new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "ru-RU", SemanticUrl = "parent2" },
+                                }
+                            },
+                            new VirtoCommerceDomainCatalogModelOutlineItem
+                            {
+                                SeoObjectType = "Category",
+                                SeoInfos = new List<VirtoCommerceDomainCommerceModelSeoInfo>
+                                {
+                                    new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "en-US", SemanticUrl = "category1" },
+                                    new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "ru-RU", SemanticUrl = "category2" },
+                                },
+                            },
+                            new VirtoCommerceDomainCatalogModelOutlineItem
+                            {
+                                SeoObjectType = "Category",
+                                SeoInfos = new List<VirtoCommerceDomainCommerceModelSeoInfo>
+                                {
+                                    new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "en-US", SemanticUrl = "product1" },
+                                    new VirtoCommerceDomainCommerceModelSeoInfo { StoreId = "Store1", LanguageCode = "ru-RU", SemanticUrl = "product2" },
+                                },
+                            },
                         },
-                    }
-                }
+                    },
+                },
             };
 
             var result = product.GetSeoPath(_store, new Language("ru-RU"), null);

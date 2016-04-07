@@ -29,6 +29,7 @@ namespace VirtoCommerce.Client.Model
         /// <param name="SortOrder">SortOrder.</param>
         /// <param name="BinaryData">BinaryData.</param>
         /// <param name="IsInherited">IsInherited.</param>
+        /// <param name="SeoObjectType">SeoObjectType.</param>
         /// <param name="SeoInfos">SeoInfos.</param>
         /// <param name="LanguageCode">LanguageCode.</param>
         /// <param name="CreatedDate">CreatedDate.</param>
@@ -37,7 +38,7 @@ namespace VirtoCommerce.Client.Model
         /// <param name="ModifiedBy">ModifiedBy.</param>
         /// <param name="Id">Id.</param>
 
-        public VirtoCommerceDomainCatalogModelImage(string Name = null, string Url = null, string Group = null, int? SortOrder = null, byte[] BinaryData = null, bool? IsInherited = null, List<VirtoCommerceDomainCommerceModelSeoInfo> SeoInfos = null, string LanguageCode = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
+        public VirtoCommerceDomainCatalogModelImage(string Name = null, string Url = null, string Group = null, int? SortOrder = null, byte[] BinaryData = null, bool? IsInherited = null, string SeoObjectType = null, List<VirtoCommerceDomainCommerceModelSeoInfo> SeoInfos = null, string LanguageCode = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
         {
             this.Name = Name;
             this.Url = Url;
@@ -45,6 +46,7 @@ namespace VirtoCommerce.Client.Model
             this.SortOrder = SortOrder;
             this.BinaryData = BinaryData;
             this.IsInherited = IsInherited;
+            this.SeoObjectType = SeoObjectType;
             this.SeoInfos = SeoInfos;
             this.LanguageCode = LanguageCode;
             this.CreatedDate = CreatedDate;
@@ -90,6 +92,12 @@ namespace VirtoCommerce.Client.Model
         /// </summary>
         [DataMember(Name="isInherited", EmitDefaultValue=false)]
         public bool? IsInherited { get; set; }
+
+        /// <summary>
+        /// Gets or Sets SeoObjectType
+        /// </summary>
+        [DataMember(Name="seoObjectType", EmitDefaultValue=false)]
+        public string SeoObjectType { get; private set; }
 
         /// <summary>
         /// Gets or Sets SeoInfos
@@ -148,6 +156,7 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  SortOrder: ").Append(SortOrder).Append("\n");
             sb.Append("  BinaryData: ").Append(BinaryData).Append("\n");
             sb.Append("  IsInherited: ").Append(IsInherited).Append("\n");
+            sb.Append("  SeoObjectType: ").Append(SeoObjectType).Append("\n");
             sb.Append("  SeoInfos: ").Append(SeoInfos).Append("\n");
             sb.Append("  LanguageCode: ").Append(LanguageCode).Append("\n");
             sb.Append("  CreatedDate: ").Append(CreatedDate).Append("\n");
@@ -223,6 +232,11 @@ namespace VirtoCommerce.Client.Model
                     this.IsInherited.Equals(other.IsInherited)
                 ) && 
                 (
+                    this.SeoObjectType == other.SeoObjectType ||
+                    this.SeoObjectType != null &&
+                    this.SeoObjectType.Equals(other.SeoObjectType)
+                ) && 
+                (
                     this.SeoInfos == other.SeoInfos ||
                     this.SeoInfos != null &&
                     this.SeoInfos.SequenceEqual(other.SeoInfos)
@@ -288,6 +302,9 @@ namespace VirtoCommerce.Client.Model
                 
                 if (this.IsInherited != null)
                     hash = hash * 59 + this.IsInherited.GetHashCode();
+                
+                if (this.SeoObjectType != null)
+                    hash = hash * 59 + this.SeoObjectType.GetHashCode();
                 
                 if (this.SeoInfos != null)
                     hash = hash * 59 + this.SeoInfos.GetHashCode();

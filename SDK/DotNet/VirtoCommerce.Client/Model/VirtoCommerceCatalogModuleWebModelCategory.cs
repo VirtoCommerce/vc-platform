@@ -38,14 +38,16 @@ namespace VirtoCommerce.Client.Model
         /// <param name="Links">Gets or sets the links..</param>
         /// <param name="Images">Gets or sets the images..</param>
         /// <param name="SecurityScopes">SecurityScopes.</param>
+        /// <param name="SeoObjectType">SeoObjectType.</param>
         /// <param name="SeoInfos">Gets or sets the list of SEO information records..</param>
+        /// <param name="Outlines">Outlines.</param>
         /// <param name="CreatedDate">CreatedDate.</param>
         /// <param name="ModifiedDate">ModifiedDate.</param>
         /// <param name="CreatedBy">CreatedBy.</param>
         /// <param name="ModifiedBy">ModifiedBy.</param>
         /// <param name="Id">Id.</param>
 
-        public VirtoCommerceCatalogModuleWebModelCategory(string ParentId = null, bool? IsVirtual = null, string Code = null, string TaxType = null, VirtoCommerceCatalogModuleWebModelCatalog Catalog = null, string CatalogId = null, string Name = null, string Path = null, bool? IsActive = null, List<VirtoCommerceCatalogModuleWebModelCategory> Parents = null, List<VirtoCommerceCatalogModuleWebModelCategory> Children = null, List<VirtoCommerceCatalogModuleWebModelProperty> Properties = null, List<VirtoCommerceCatalogModuleWebModelCategoryLink> Links = null, List<VirtoCommerceCatalogModuleWebModelImage> Images = null, List<string> SecurityScopes = null, List<VirtoCommerceDomainCommerceModelSeoInfo> SeoInfos = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
+        public VirtoCommerceCatalogModuleWebModelCategory(string ParentId = null, bool? IsVirtual = null, string Code = null, string TaxType = null, VirtoCommerceCatalogModuleWebModelCatalog Catalog = null, string CatalogId = null, string Name = null, string Path = null, bool? IsActive = null, List<VirtoCommerceCatalogModuleWebModelCategory> Parents = null, List<VirtoCommerceCatalogModuleWebModelCategory> Children = null, List<VirtoCommerceCatalogModuleWebModelProperty> Properties = null, List<VirtoCommerceCatalogModuleWebModelCategoryLink> Links = null, List<VirtoCommerceCatalogModuleWebModelImage> Images = null, List<string> SecurityScopes = null, string SeoObjectType = null, List<VirtoCommerceDomainCommerceModelSeoInfo> SeoInfos = null, List<VirtoCommerceDomainCatalogModelOutline> Outlines = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
         {
             this.ParentId = ParentId;
             this.IsVirtual = IsVirtual;
@@ -62,7 +64,9 @@ namespace VirtoCommerce.Client.Model
             this.Links = Links;
             this.Images = Images;
             this.SecurityScopes = SecurityScopes;
+            this.SeoObjectType = SeoObjectType;
             this.SeoInfos = SeoInfos;
+            this.Outlines = Outlines;
             this.CreatedDate = CreatedDate;
             this.ModifiedDate = ModifiedDate;
             this.CreatedBy = CreatedBy;
@@ -175,11 +179,23 @@ namespace VirtoCommerce.Client.Model
         public List<string> SecurityScopes { get; set; }
 
         /// <summary>
+        /// Gets or Sets SeoObjectType
+        /// </summary>
+        [DataMember(Name="seoObjectType", EmitDefaultValue=false)]
+        public string SeoObjectType { get; private set; }
+
+        /// <summary>
         /// Gets or sets the list of SEO information records.
         /// </summary>
         /// <value>Gets or sets the list of SEO information records.</value>
         [DataMember(Name="seoInfos", EmitDefaultValue=false)]
         public List<VirtoCommerceDomainCommerceModelSeoInfo> SeoInfos { get; set; }
+
+        /// <summary>
+        /// Gets or Sets Outlines
+        /// </summary>
+        [DataMember(Name="outlines", EmitDefaultValue=false)]
+        public List<VirtoCommerceDomainCatalogModelOutline> Outlines { get; set; }
 
         /// <summary>
         /// Gets or Sets CreatedDate
@@ -235,7 +251,9 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Links: ").Append(Links).Append("\n");
             sb.Append("  Images: ").Append(Images).Append("\n");
             sb.Append("  SecurityScopes: ").Append(SecurityScopes).Append("\n");
+            sb.Append("  SeoObjectType: ").Append(SeoObjectType).Append("\n");
             sb.Append("  SeoInfos: ").Append(SeoInfos).Append("\n");
+            sb.Append("  Outlines: ").Append(Outlines).Append("\n");
             sb.Append("  CreatedDate: ").Append(CreatedDate).Append("\n");
             sb.Append("  ModifiedDate: ").Append(ModifiedDate).Append("\n");
             sb.Append("  CreatedBy: ").Append(CreatedBy).Append("\n");
@@ -354,9 +372,19 @@ namespace VirtoCommerce.Client.Model
                     this.SecurityScopes.SequenceEqual(other.SecurityScopes)
                 ) && 
                 (
+                    this.SeoObjectType == other.SeoObjectType ||
+                    this.SeoObjectType != null &&
+                    this.SeoObjectType.Equals(other.SeoObjectType)
+                ) && 
+                (
                     this.SeoInfos == other.SeoInfos ||
                     this.SeoInfos != null &&
                     this.SeoInfos.SequenceEqual(other.SeoInfos)
+                ) && 
+                (
+                    this.Outlines == other.Outlines ||
+                    this.Outlines != null &&
+                    this.Outlines.SequenceEqual(other.Outlines)
                 ) && 
                 (
                     this.CreatedDate == other.CreatedDate ||
@@ -442,8 +470,14 @@ namespace VirtoCommerce.Client.Model
                 if (this.SecurityScopes != null)
                     hash = hash * 59 + this.SecurityScopes.GetHashCode();
                 
+                if (this.SeoObjectType != null)
+                    hash = hash * 59 + this.SeoObjectType.GetHashCode();
+                
                 if (this.SeoInfos != null)
                     hash = hash * 59 + this.SeoInfos.GetHashCode();
+                
+                if (this.Outlines != null)
+                    hash = hash * 59 + this.Outlines.GetHashCode();
                 
                 if (this.CreatedDate != null)
                     hash = hash * 59 + this.CreatedDate.GetHashCode();
