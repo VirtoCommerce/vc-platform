@@ -87,7 +87,7 @@ namespace VirtoCommerce.SearchModule.Web.Services
                 itemsOrderedList.AddRange(uniqueKeys);
 
                 // Now load items from repository
-                var currentItems = _itemService.GetByIds(uniqueKeys.ToArray(), responseGroup);
+                var currentItems = _itemService.GetByIds(uniqueKeys.ToArray(), responseGroup, criteria.Catalog);
 
                 var orderedList = currentItems.OrderBy(i => itemsOrderedList.IndexOf(i.Id));
                 items.AddRange(orderedList);
