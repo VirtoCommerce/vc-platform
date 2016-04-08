@@ -14,7 +14,7 @@ using VirtoCommerce.Platform.Core.Common;
 namespace VirtoCommerce.CatalogModule.Data.Services
 {
     /// <summary>
-    /// Detect SEO duplicates based on store, catalog, categories structure knowledge
+    /// Detect SEO duplicates based on  store, catalog, categories relationships and structure knowledge
     /// </summary>
     public class CatalogSeoDublicatesDetector : ISeoDuplicatesDetector
     {
@@ -33,7 +33,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
         {
             var retVal = new List<SeoInfo>();
             string catalogId = null;
-            if(string.Equals(objectType, typeof(Store).Name, StringComparison.OrdinalIgnoreCase))
+            if(objectType.EqualsInvariant(typeof(Store).Name))
             {
                 var store = _storeService.GetById(objectId);
                 if (store != null)
@@ -41,7 +41,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                     catalogId = store.Catalog;
                 }
             }
-            if (string.Equals(objectType, typeof(Category).Name, StringComparison.OrdinalIgnoreCase))
+            else if (objectType.EqualsInvariant(typeof(Category).Name))
             {
                 var category = _categoryService.GetById(objectId, CategoryResponseGroup.Info);
                 if (category != null)
@@ -49,7 +49,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                     catalogId = category.CatalogId;
                 }
             }
-            if (string.Equals(objectType, typeof(CatalogProduct).Name, StringComparison.OrdinalIgnoreCase))
+            else if (objectType.EqualsInvariant(typeof(CatalogProduct).Name))
             {
                 var product = _productService.GetById(objectId, ItemResponseGroup.ItemInfo);
                 if (product != null)
@@ -65,7 +65,12 @@ namespace VirtoCommerce.CatalogModule.Data.Services
             return retVal;
         }
         #endregion
-
+        /// <summary>
+        /// Detect SEO duplicates for object belongs to catalog  (physical or virtual) based on links information
+        /// </summary>
+        /// <param name="catalogId"></param>
+        /// <param name="allDublicatedSeos"></param>
+        /// <returns></returns>
         private IEnumerable<SeoInfo> DetectSeoDublicatesForCatalog(string catalogId, IEnumerable<SeoInfo> allDublicatedSeos)
         {
             var productsSeo = allDublicatedSeos.Where(x => string.Equals(x.ObjectType, typeof(CatalogProduct).Name, StringComparison.OrdinalIgnoreCase));
@@ -75,21 +80,42 @@ namespace VirtoCommerce.CatalogModule.Data.Services
             var categories = _categoryService.GetByIds(categoriesSeo.Select(x => x.ObjectId).Distinct().ToArray(), CategoryResponseGroup.WithLinks);
 
             var retVal = new List<SeoInfo>();
-            foreach (var product in products.Where(x => x.CatalogId == catalogId || x.Links.Any(y => y.CatalogId == catalogId)))
+            //Here we try to find between SEO duplicates records for products with directly or indirectly related to requested catalog
+            foreach (var product in products)
             {
-                var productSeo = productsSeo.First(x => x.ObjectId == product.Id);
-                productSeo.Name = product.Name;
-                retVal.Add(productSeo);
-
+                var allLinks = product.Links;
+                if (product.Category != null)
+                {
+                    allLinks = allLinks.AddRange(product.Category.Links);
+                    if (!product.Category.Parents.IsNullOrEmpty())
+                    {
+                        allLinks.AddRange(product.Category.Parents.SelectMany(x => x.Links));
+                    }
+                }
+                if (product.CatalogId == catalogId || allLinks.Any(x => x.CatalogId == catalogId))
+                {
+                    var productSeo = productsSeo.First(x => x.ObjectId == product.Id);
+                    productSeo.Name = product.Name;
+                    retVal.Add(productSeo);
+                }
             }
-            foreach (var category in categories.Where(x => x.CatalogId == catalogId || x.Links.Any(y => y.CatalogId == catalogId)))
+            //Here we try to find between SEO duplicates records for categories with directly or indirectly related to requested catalog
+            foreach (var category in categories)
             {
-                var categorySeo = categoriesSeo.First(x => x.ObjectId == category.Id);
-                categorySeo.Name = category.Name;
-                retVal.Add(categorySeo);
-
+                var allLinks = category.Links;
+                if (!category.Parents.IsNullOrEmpty())
+                {
+                    allLinks.AddRange(category.Parents.SelectMany(x => x.Links));
+                }
+                if (category.CatalogId == catalogId || allLinks.Any(x => x.CatalogId == catalogId))
+                {
+                    var categorySeo = categoriesSeo.First(x => x.ObjectId == category.Id);
+                    categorySeo.Name = category.Name;
+                    retVal.Add(categorySeo);
+                }
             }
-            return retVal;
+            //Return only duplicated SEO records
+            return retVal.GroupBy(x => x.SemanticUrl).Where(x => x.Count() > 1).SelectMany(x => x);
         }
     }
 }

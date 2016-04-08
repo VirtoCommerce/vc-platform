@@ -51,9 +51,8 @@ namespace VirtoCommerce.Storefront.Routing
                 var seoRecords = GetSeoRecords(path);
                 if (seoRecords != null)
                 {
-                    var seoRecord = seoRecords
-                        .Where(x => string.Equals(path, x.SemanticUrl, StringComparison.OrdinalIgnoreCase))
-                        .FindBestSeoMatch(workContext.CurrentLanguage, workContext.CurrentStore);
+                    var seoRecord = seoRecords.Where(x => string.Equals(path, x.SemanticUrl, StringComparison.OrdinalIgnoreCase))
+                                              .FindBestSeoMatch(workContext.CurrentLanguage, workContext.CurrentStore);
 
                     if (seoRecord != null)
                     {
@@ -84,7 +83,7 @@ namespace VirtoCommerce.Storefront.Routing
                         {
                             // Redirect to the slug for the current language if it differs from the requested slug
                             var actualActiveSeoRecord = seoRecords.Where(x => x.ObjectType == seoRecord.ObjectType && x.ObjectId == seoRecord.ObjectId && x.IsActive != null && x.IsActive.Value)
-                                .FindBestSeoMatch(workContext.CurrentLanguage, workContext.CurrentStore);
+                                                                  .FindBestSeoMatch(workContext.CurrentLanguage, workContext.CurrentStore);
                             //If actual seo different that requested need redirect 302
                             if (!string.Equals(actualActiveSeoRecord.SemanticUrl, seoRecord.SemanticUrl, StringComparison.OrdinalIgnoreCase))
                             {

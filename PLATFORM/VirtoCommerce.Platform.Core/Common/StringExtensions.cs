@@ -100,7 +100,19 @@ namespace VirtoCommerce.Platform.Core.Common
 			return String.Compare(str1 ?? "", str2 ?? "", comparisonType) == 0;
 		}
 
-		public static string GetCurrencyName(this string isoCurrencySymbol)
+        /// <summary>
+        /// Equals invariant
+        /// </summary>
+        /// <param name="str1">The STR1.</param>
+        /// <param name="str2">The STR2.</param>
+        /// <returns></returns>
+        public static bool EqualsInvariant(this string str1, string str2)
+        {
+            return string.Equals(str1, str2, StringComparison.OrdinalIgnoreCase);
+        }
+
+
+        public static string GetCurrencyName(this string isoCurrencySymbol)
 		{
 			return CultureInfo
 				.GetCultures(CultureTypes.AllCultures)

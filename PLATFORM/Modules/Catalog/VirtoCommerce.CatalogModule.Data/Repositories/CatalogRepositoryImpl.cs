@@ -255,21 +255,19 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
             var result = Categories.Include(x => x.Catalog.CatalogLanguages)
                                    .Where(x => categoriesIds.Contains(x.Id)).ToArray();
 
-            if ((respGroup & coreModel.CategoryResponseGroup.WithLinks) == coreModel.CategoryResponseGroup.WithLinks)
+            if (respGroup.HasFlag(coreModel.CategoryResponseGroup.WithLinks))
             {
                 var incommingLinks = CategoryLinks.Where(x => categoriesIds.Contains(x.TargetCategoryId)).ToArray();
                 var outgoingLinks = CategoryLinks.Where(x => categoriesIds.Contains(x.SourceCategoryId)).ToArray();
             }
 
-            if ((respGroup & coreModel.CategoryResponseGroup.WithImages) == coreModel.CategoryResponseGroup.WithImages)
+            if (respGroup.HasFlag(coreModel.CategoryResponseGroup.WithImages))
             {
                 var images = Images.Where(x => categoriesIds.Contains(x.CategoryId)).ToArray();
             }
 
-            if (((respGroup & coreModel.CategoryResponseGroup.WithParents) == coreModel.CategoryResponseGroup.WithParents)
-                || ((respGroup & coreModel.CategoryResponseGroup.WithProperties) == coreModel.CategoryResponseGroup.WithProperties))
+            if (respGroup.HasFlag(coreModel.CategoryResponseGroup.WithParents) || respGroup.HasFlag(coreModel.CategoryResponseGroup.WithProperties))
             {
-
                 var parentsMap = GetAllCategoriesParents(categoriesIds);
                 foreach (var categoryId in categoriesIds)
                 {
@@ -284,7 +282,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
             //Load category property values by separate query
             var propertyValues = PropertyValues.Where(x => categoriesIds.Contains(x.CategoryId)).ToArray();
             //Load all properties meta information and information for inheritance
-            if ((respGroup & coreModel.CategoryResponseGroup.WithProperties) == coreModel.CategoryResponseGroup.WithProperties)
+            if (respGroup.HasFlag(coreModel.CategoryResponseGroup.WithProperties))
             {
                 //Need load inherited from parents categories and catalogs
                 var allParents = result.SelectMany(x => x.AllParents).ToArray();
@@ -323,14 +321,19 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 
             //Load product categories separately
             var categoryIds = retVal.Select(x => x.CategoryId).Where(x => !String.IsNullOrEmpty(x)).Distinct().ToArray();
-            var categories = GetCategoriesByIds(categoryIds, coreModel.CategoryResponseGroup.WithParents);
+            var categoryRespGroup = coreModel.CategoryResponseGroup.WithParents;
+            if(respGroup.HasFlag(coreModel.ItemResponseGroup.Links))
+            {
+                categoryRespGroup |= coreModel.CategoryResponseGroup.WithLinks;
+            }
+            var categories = GetCategoriesByIds(categoryIds, categoryRespGroup);
 
-            if ((respGroup & coreModel.ItemResponseGroup.Links) == coreModel.ItemResponseGroup.Links)
+            if (respGroup.HasFlag(coreModel.ItemResponseGroup.Links))
             {
                 var relations = CategoryItemRelations.Where(x => itemIds.Contains(x.ItemId)).ToArray();
             }
             //Load all properties meta information and data for inheritance from parent categories and catalog
-            if ((respGroup & coreModel.ItemResponseGroup.ItemProperties) == coreModel.ItemResponseGroup.ItemProperties)
+            if (respGroup.HasFlag(coreModel.ItemResponseGroup.ItemProperties))
             {
                 //Load categories with all properties for property inheritance
                 categories = GetCategoriesByIds(categoryIds, coreModel.CategoryResponseGroup.WithProperties);
@@ -340,15 +343,15 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
                     var catalog = GetCatalogById(catalogId);
                 }
             }
-            if ((respGroup & coreModel.ItemResponseGroup.ItemAssets) == coreModel.ItemResponseGroup.ItemAssets)
+            if (respGroup.HasFlag(coreModel.ItemResponseGroup.ItemAssets))
             {
                 var assets = Assets.Where(x => itemIds.Contains(x.ItemId)).ToArray();
             }
-            if ((respGroup & coreModel.ItemResponseGroup.ItemEditorialReviews) == coreModel.ItemResponseGroup.ItemEditorialReviews)
+            if (respGroup.HasFlag(coreModel.ItemResponseGroup.ItemEditorialReviews))
             {
                 var editorialReviews = EditorialReviews.Where(x => itemIds.Contains(x.ItemId)).ToArray();
             }
-            if ((respGroup & coreModel.ItemResponseGroup.Variations) == coreModel.ItemResponseGroup.Variations)
+            if (respGroup.HasFlag(coreModel.ItemResponseGroup.Variations))
             {
                 var variationIds = Items.Where(x => itemIds.Contains(x.ParentId)).Select(x => x.Id).ToArray();
                 //For variations loads only info and images
@@ -356,7 +359,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
                 //load variations property values separately
                 var variationPropertyValues = PropertyValues.Where(x => variationIds.Contains(x.ItemId)).ToArray();
             }
-            if ((respGroup & coreModel.ItemResponseGroup.ItemAssociations) == coreModel.ItemResponseGroup.ItemAssociations)
+            if (respGroup.HasFlag(coreModel.ItemResponseGroup.ItemAssociations))
             {
                 var assosiationGroups = AssociationGroups.Include(x => x.Associations).ToArray();
                 var assosiatedItemIds = assosiationGroups.SelectMany(x => x.Associations).Select(x => x.ItemId).Distinct().ToArray();
@@ -525,7 +528,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 
             var outlines = ObjectContext.ExecuteStoreQuery<CategoryOutline>(query).ToArray();
             var parentCategoriesIds = outlines.SelectMany(x => x.Path.Split('|')).Distinct().ToArray();
-            var allParentCategories = GetCategoriesByIds(parentCategoriesIds, coreModel.CategoryResponseGroup.Info);
+            var allParentCategories = GetCategoriesByIds(parentCategoriesIds, coreModel.CategoryResponseGroup.Info | coreModel.CategoryResponseGroup.WithLinks);
 
             var retVal = new Dictionary<string, dataModel.Category[]>();
             foreach (var categoryId in categoryIds)
