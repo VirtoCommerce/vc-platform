@@ -224,10 +224,8 @@
             function (gridApi) {
                 $scope.$watch('pageSettings.currentPage', gridApi.pagination.seek);
             });
-
-            bladeUtils.initializePagination($scope, true);
         };
-
+        bladeUtils.initializePagination($scope, true);
 
         blade.refresh();
     }]);

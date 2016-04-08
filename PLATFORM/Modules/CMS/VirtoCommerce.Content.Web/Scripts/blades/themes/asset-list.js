@@ -14,7 +14,10 @@
                 },
             function (data) {
                 $scope.pageSettings.totalItems = data.length;
-                _.each(data, function (x) { x.isImage = x.mimeType && x.mimeType.startsWith('image/'); });
+                _.each(data, function (x) {
+                    x.isImage = x.mimeType && x.mimeType.startsWith('image/');
+                    x.isOpenable = x.mimeType && (x.mimeType.startsWith('application/j') || x.mimeType.startsWith('text/'));
+                });
                 $scope.listEntries = data;
                 blade.isLoading = false;
 
@@ -114,7 +117,7 @@
         };
 
         function openDetailsBlade(listItem, isNew) {
-            if (isNew || listItem.mimeType.startsWith('application/') || listItem.mimeType.startsWith('text/')) {
+            if (isNew || listItem.isOpenable) {
                 var newBlade = {
                     id: 'assetDetail',
                     contentType: blade.contentType,
@@ -230,9 +233,8 @@
             function (gridApi) {
                 $scope.$watch('pageSettings.currentPage', gridApi.pagination.seek);
             });
-
-            bladeUtils.initializePagination($scope, true);
         };
+        bladeUtils.initializePagination($scope, true);
 
         //Breadcrumbs
         function setBreadcrumbs() {

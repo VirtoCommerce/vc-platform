@@ -3,12 +3,12 @@
     <div class="blade-inner">
         <div class="inner-block">
             <form name="formScope">
-                <div class="list __info form-group" ng-if="defaultThemes.length > 1">
+                <div class="list __info form-group" ng-if="blade.baseThemes.length > 1">
                     <label class="form-label">{{ 'content.blades.theme-detail.labels.default-theme-to-copy' | translate }}</label>
                     <div class="form-input">
                         <ui-select ng-model="blade.currentEntity.defaultTheme">
                             <ui-select-match allow-clear="true" placeholder="{{'content.blades.theme-detail.placeholders.select' | translate}}">{{$select.selected}}</ui-select-match>
-                            <ui-select-choices repeat="x in defaultThemes | filter: $select.search">
+                            <ui-select-choices repeat="x in blade.baseThemes | filter: $select.search">
                                 <span ng-bind-html="x | highlight: $select.search"></span>
                             </ui-select-choices>
                         </ui-select>

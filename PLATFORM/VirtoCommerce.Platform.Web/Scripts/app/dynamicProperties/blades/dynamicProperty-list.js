@@ -5,8 +5,12 @@
     blade.title = blade.objectType;
     blade.subtitle = 'platform.blades.dynamicProperty-list.subtitle';
 
-    blade.refresh = function () {
+    blade.refresh = function (parentRefresh) {
         dynamicPropertiesApi.query({ id: blade.objectType }, function (results) {
+            if (parentRefresh && blade.parentRefresh) {
+                blade.parentRefresh(results);
+            }
+
             blade.currentEntities = results;
             blade.isLoading = false;
         }, function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });

@@ -6,30 +6,36 @@
 
     blade.initialize = function () {
         if (blade.isNew) {
-            fillDynamicProperties({});
+            fillMetadata({});
         } else {
             contentApi.getWithMetadata({
                 contentType: blade.contentType,
                 storeId: blade.storeId,
                 relativeUrl: getBlogBlobName()
             },
-            fillDynamicProperties,
+            fillMetadata,
             function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
         }
     };
 
-    function fillDynamicProperties(data) {
-        dynamicPropertiesApi.query({ id: 'VirtoCommerce.Content.Web.FrontMatterHeaders' }, function (results) {
-            _.each(results, function (x) {
-                x.displayNames = undefined;
-                var metadataRecord = _.findWhere(data.metadata, { name: x.name });
-                x.values = metadataRecord ? metadataRecord.values : [];
-            });
+    function fillMetadata(data) {
+        dynamicPropertiesApi.query({ id: 'VirtoCommerce.Content.Web.FrontMatterHeaders' },
+            function (results) {
+                fillDynamicProperties(data.metadata, results);
+                blade.origEntity = angular.copy(blade.currentEntity);
+                blade.isLoading = false;
+            },
+            function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
+    }
 
-            blade.currentEntity.dynamicProperties = results;
-            blade.origEntity = angular.copy(blade.currentEntity);
-            blade.isLoading = false;
-        }, function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
+    function fillDynamicProperties(metadata, props) {
+        _.each(props, function (x) {
+            x.displayNames = undefined;
+            var metadataRecord = _.findWhere(metadata, { name: x.name });
+            x.values = metadataRecord ? metadataRecord.values : [];
+        });
+
+        blade.currentEntity.dynamicProperties = props;
     }
 
     $scope.saveChanges = function () {
@@ -69,7 +75,7 @@
     };
 
     if (!blade.isNew) {
-        $scope.blade.toolbarCommands = [
+        blade.toolbarCommands = [
             {
                 name: "platform.commands.save", icon: 'fa fa-save',
                 executeMethod: $scope.saveChanges,
@@ -106,6 +112,24 @@
         ];
     }
 
+    blade.toolbarCommands = blade.toolbarCommands || [];
+    blade.toolbarCommands.push(
+		{
+		    name: "content.commands.manage-metadata", icon: 'fa fa-edit',
+		    executeMethod: function () {
+		        var newBlade = {
+		            id: 'dynamicPropertyList',
+		            objectType: 'VirtoCommerce.Content.Web.FrontMatterHeaders',
+		            parentRefresh: function (props) { fillDynamicProperties(blade.currentEntity.dynamicProperties, props); },
+		            controller: 'platformWebApp.dynamicPropertyListController',
+		            template: '$(Platform)/Scripts/app/dynamicProperties/blades/dynamicProperty-list.tpl.html'
+		        };
+		        bladeNavigationService.showBlade(newBlade, blade);
+		    },
+		    canExecuteMethod: function () { return true; }
+		}
+    );
+
     function getBlogBlobName() {
         return blade.currentEntity.name + '/' + blade.currentEntity.name + '.md'
     }
@@ -124,7 +148,7 @@
     var formScope;
     $scope.setForm = function (form) { $scope.formScope = formScope = form; }
 
-    // $scope.blade.headIcon = 'fa-inbox';
+    blade.headIcon = 'fa-inbox';
 
     blade.initialize();
 }]);

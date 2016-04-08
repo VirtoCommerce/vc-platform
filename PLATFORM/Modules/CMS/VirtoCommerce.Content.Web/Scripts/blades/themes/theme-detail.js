@@ -1,14 +1,11 @@
 ﻿angular.module('virtoCommerce.contentModule')
-.controller('virtoCommerce.contentModule.themeDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.contentModule.contentApi', function ($scope, bladeNavigationService, contentApi) {
+.controller('virtoCommerce.contentModule.themeDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.contentModule.contentApi', 'virtoCommerce.contentModule.themes', function ($scope, bladeNavigationService, contentApi, themes) {
     var blade = $scope.blade;
 
     blade.refresh = function (parentRefresh) {
         if (blade.isNew) {
-            $scope.defaultThemes = ['default', 'default2', 'default3'];
             initializeBlade({});
         } else {
-            blade.isLoading = true;
-
             initializeBlade(blade.data);
             if (parentRefresh) {
                 blade.parentBlade.initialize();
@@ -41,13 +38,20 @@
         blade.isLoading = true;
 
         if (blade.isNew) {
-            contentApi.createFolder({ contentType: 'themes', storeId: blade.storeId }, blade.currentEntity, function (data) {
-                blade.parentBlade.initialize();
-                if (blade.parentBlade.parentBlade)
-                    blade.parentBlade.parentBlade.refresh(blade.storeId, 'themes');
-                angular.copy(blade.currentEntity, blade.origEntity);
-                bladeNavigationService.closeBlade(blade);
-            }, function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
+            if (blade.currentEntity.defaultTheme) { // create from default
+                themes.copyDefaultTheme({
+                    storeId: blade.storeId,
+                    srcPath: blade.currentEntity.defaultTheme,
+                    destPath: blade.currentEntity.name
+                }, refreshParentAndClose,
+                function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
+            } else { // create empty
+                contentApi.createFolder({
+                    contentType: 'themes',
+                    storeId: blade.storeId
+                }, blade.currentEntity, refreshParentAndClose,
+                function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
+            }
         } else {
             var newUrl = blade.origEntity.url.substring(0, blade.origEntity.url.length - blade.origEntity.name.length) + blade.currentEntity.name;
             contentApi.move({
@@ -64,6 +68,14 @@
             });
         }
     };
+
+    function refreshParentAndClose() {
+        blade.parentBlade.initialize();
+        if (blade.parentBlade.parentBlade)
+            blade.parentBlade.parentBlade.refresh(blade.storeId, 'themes');
+        angular.copy(blade.currentEntity, blade.origEntity);
+        $scope.bladeClose();
+    }
 
     $scope.setForm = function (form) { $scope.formScope = form; };
 

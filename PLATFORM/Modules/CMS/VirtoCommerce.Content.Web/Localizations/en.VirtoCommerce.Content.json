@@ -78,7 +78,7 @@
         "labels": {
           "theme-name": "Theme name",
           "default-theme-to-copy": "Default theme to copy",
-          "default-theme-info": "Select a default theme to create a copy of it. Empty the will be created otherwise."
+          "default-theme-info": "Select a default theme to create a copy of it. An empty theme will be created otherwise."
         },
         "placeholders": {
           "theme-name": "Enter theme name",
@@ -262,6 +262,7 @@
       "delete-list": "Delete list",
       "delete-theme": "Delete",
       "reset-list": "Reset list",
+      "manage-metadata": "Manage Metadata properties",
       "edit-as-markdown": "Edit as markdown",
       "edit-as-html": "Edit as html",
       "preview-theme": "Preview",

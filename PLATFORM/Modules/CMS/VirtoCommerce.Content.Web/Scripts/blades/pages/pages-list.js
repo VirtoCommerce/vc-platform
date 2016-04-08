@@ -16,6 +16,7 @@
             },
             function (data) {
                 $scope.pageSettings.totalItems = data.length;
+                _.each(data, function (x) { x.isOpenable = true; });
                 $scope.listEntries = data;
                 blade.isLoading = false;
 
@@ -51,6 +52,14 @@
             }
         };
     }
+
+    $scope.copyUrl = function (data) {
+        window.prompt("Copy to clipboard: Ctrl+C, Enter", data.url);
+    };
+
+    $scope.downloadUrl = function (data) {
+        window.open(data.url, '_blank');
+    };
 
     $scope.selectNode = function (listItem) {
         if (listItem.type === 'folder') {
@@ -252,9 +261,8 @@
         function (gridApi) {
             $scope.$watch('pageSettings.currentPage', gridApi.pagination.seek);
         });
-
-        bladeUtils.initializePagination($scope, true);
     };
+    bladeUtils.initializePagination($scope, true);
 
     //Breadcrumbs
     function setBreadcrumbs() {

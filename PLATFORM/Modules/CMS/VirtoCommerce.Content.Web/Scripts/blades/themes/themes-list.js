@@ -43,6 +43,7 @@
                 isNew: !node,
                 data: node,
                 storeId: blade.storeId,
+                baseThemes: blade.baseThemes,
                 controller: 'virtoCommerce.contentModule.themeDetailController',
                 template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/theme-detail.tpl.html'
             };
