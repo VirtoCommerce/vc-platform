@@ -5,7 +5,7 @@
                 <div class="tile-descr" style="line-height:30px">{{data.store.name}}</div>
                 <div class="tile-image"><img src="Modules/$(VirtoCommerce.Content)/Content/logo.png" /></div>
             </div>
-            <div class="tile quadro wide mini __informer" ng-if="!data.defaultThemeName" ng-click="blade.openThemes(data.store.id, data.store.name)">
+            <div class="tile quadro wide mini __informer" ng-if="!data.defaultThemeName" ng-click="blade.openThemes(data.store)">
                 <p>{{ 'content.blades.content-main.labels.no-active-theme' | translate }}</p>
             </div>
             <div class="tile quadro wide mini" ng-if="data.defaultThemeName">
@@ -31,7 +31,7 @@
                     </li>
                 </ul>
             </div>
-            <div class="tile" ng-click="blade.openThemes(data.store.id, data.store.name)">
+            <div class="tile" ng-click="blade.openThemes(data.store)">
                 <div class="tile-descr">{{ 'content.blades.content-main.labels.themes' | translate }}</div>
                 <div class="tile-count">{{data.themesCount}}</div>
                 <a class="btn" ng-click="blade.addNewTheme(data); $event.stopPropagation();">{{ 'platform.commands.add' | translate }}</a>

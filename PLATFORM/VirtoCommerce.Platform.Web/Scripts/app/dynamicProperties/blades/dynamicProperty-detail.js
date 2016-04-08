@@ -77,12 +77,12 @@
                             localDictionaryValues,
                             function () {
                                 $scope.bladeClose();
-                                blade.parentBlade.refresh();
+                                blade.parentBlade.refresh(true);
                             },
                             function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
                     } else {
                         $scope.bladeClose();
-                        blade.parentBlade.refresh();
+                        blade.parentBlade.refresh(true);
                     }
                 },
                 function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
@@ -90,7 +90,7 @@
             dynamicPropertiesApi.update({ id: blade.objectType, propertyId: blade.currentEntity.id }, blade.currentEntity,
                 function () {
                     blade.refresh();
-                    blade.parentBlade.refresh();
+                    blade.parentBlade.refresh(true);
                 },
                 function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
         }
@@ -106,7 +106,7 @@
                     dynamicPropertiesApi.delete({ id: blade.objectType, propertyId: blade.currentEntity.id },
                         function () {
                             $scope.bladeClose();
-                            blade.parentBlade.refresh();
+                            blade.parentBlade.refresh(true);
                         },
                         function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
                 }

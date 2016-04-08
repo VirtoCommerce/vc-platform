@@ -8,9 +8,7 @@
 	        blade.currentEntities = [];
 
 	        if ($stateParams.storeId) {
-	            stores.get({ id: $stateParams.storeId }, function (data) {
-	                blade.openThemes($stateParams.storeId, data.name);
-	            });
+	            stores.get({ id: $stateParams.storeId }, blade.openThemes);
 	        };
 
 	        stores.query({}, function (data) {
@@ -153,12 +151,13 @@
 	        }
 	    };
 
-	    blade.openThemes = function (storeId, storeName) {
+	    blade.openThemes = function (store) {
 	        var newBlade = {
 	            id: "themesListBlade",
-	            storeId: storeId,
+	            storeId: store.id,
+	            baseThemes: getBaseThemes(store),
 	            title: 'content.blades.themes-list.title',
-	            titleValues: { name: storeName },
+	            titleValues: { name: store.name },
 	            subtitle: 'content.blades.themes-list.subtitle',
 	            controller: 'virtoCommerce.contentModule.themesListController',
 	            template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/themes-list.tpl.html',
@@ -214,6 +213,7 @@
 	            id: 'addTheme',
 	            isNew: true,
 	            storeId: data.store.id,
+	            baseThemes: getBaseThemes(data.store),
 	            controller: 'virtoCommerce.contentModule.themeDetailController',
 	            template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/theme-detail.tpl.html',
 	        };
@@ -299,6 +299,14 @@
 	    $scope.openStoresModule = function () {
 	        $state.go('workspace.storeModule');
 	    };
+
+	    function getBaseThemes(store) {
+	        var setting;
+	        if (setting = _.findWhere(store.settings, { name: 'VirtoCommerce.Content.BaseThemes' })) {
+	            return setting.arrayValues;
+	        }
+	        return null;
+	    }
 
 	    blade.headIcon = 'fa-code';
 

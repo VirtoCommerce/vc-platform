@@ -6,7 +6,7 @@
     var uploader = $scope.uploader = new FileUploader({
         scope: $scope,
         headers: { Accept: 'application/json' },
-        url: 'api/platform/assets?folderUrl=tmp',
+        url: 'api/platform/assets/localstorage',
         queueLimit: 1,
         autoUpload: true,
         removeAfterUpload: false
