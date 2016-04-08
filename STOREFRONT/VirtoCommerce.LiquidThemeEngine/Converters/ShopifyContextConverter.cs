@@ -129,6 +129,8 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                 Properties = p.Properties
             }).ToList();
 
+            result.AnalyticsServicesKeys = workContext.AnalyticsServicesKeys;
+
             //Powered by link
             if (workContext.CurrentStore != null)
             {
