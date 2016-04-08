@@ -76,13 +76,13 @@ namespace VirtoCommerce.CatalogModule.Data.Services
             {
                 if (IsAllowedCatalog(link.CatalogId, allowedCatalogId))
                 {
-                    if (string.IsNullOrEmpty(link.CategoryId))
+                    if (!string.IsNullOrEmpty(link.CategoryId))
                     {
-                        AddFinalOutline(link.CatalogId, true, partialOutline, outlines, additionalItem);
+                        AddOutlinesForParentAndLinkedCategories(link.CategoryId, true, partialOutline, outlines, allowedCatalogId, additionalItem);
                     }
                     else
                     {
-                        AddOutlinesForParentAndLinkedCategories(link.CategoryId, true, partialOutline, outlines, allowedCatalogId, additionalItem);
+                        AddFinalOutline(link.CatalogId, true, partialOutline, outlines, additionalItem);
                     }
                 }
             }
