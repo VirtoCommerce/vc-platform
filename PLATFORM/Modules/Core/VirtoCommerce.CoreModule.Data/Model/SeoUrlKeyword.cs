@@ -12,9 +12,7 @@ namespace VirtoCommerce.CoreModule.Data.Model
 	public class SeoUrlKeyword : AuditableEntity
 	{
 		[StringLength(5)]
-		[Required]
 		public string Language { get; set; }
-
 
 		[StringLength(255)]
 		[Required]
