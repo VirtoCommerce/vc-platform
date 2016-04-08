@@ -23,18 +23,16 @@ namespace VirtoCommerce.SearchModule.Data.Services
         private readonly IPricingService _pricingService;
         private readonly IItemService _itemService;
         private readonly IChangeLogService _changeLogService;
-        private readonly CatalogOutlineBuilder _catalogOutlineBuilder;
 
         public CatalogItemIndexBuilder(ISearchProvider searchProvider, ICatalogSearchService catalogSearchService,
                                        IItemService itemService, IPricingService pricingService,
-                                       IChangeLogService changeLogService, CatalogOutlineBuilder catalogOutlineBuilder)
+                                       IChangeLogService changeLogService)
         {
             _searchProvider = searchProvider;
             _itemService = itemService;
             _catalogSearchService = catalogSearchService;
             _pricingService = pricingService;
             _changeLogService = changeLogService;
-            _catalogOutlineBuilder = catalogOutlineBuilder;
         }
 
         #region ISearchIndexBuilder Members
@@ -108,7 +106,7 @@ namespace VirtoCommerce.SearchModule.Data.Services
 
         protected virtual void IndexItem(ref ResultDocument doc, string productId)
         {
-            var item = _itemService.GetById(productId, ItemResponseGroup.ItemProperties | ItemResponseGroup.Links | ItemResponseGroup.Variations);
+            var item = _itemService.GetById(productId, ItemResponseGroup.ItemProperties | ItemResponseGroup.Variations | ItemResponseGroup.Outlines);
             if (item == null)
                 return;
 
@@ -124,36 +122,22 @@ namespace VirtoCommerce.SearchModule.Data.Services
             doc.Add(new DocumentField("createddate", item.CreatedDate, new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
             doc.Add(new DocumentField("lastmodifieddate", item.ModifiedDate ?? DateTime.MaxValue, new[] { IndexStore.Yes, IndexType.NotAnalyzed }));
 
-            var catalogs = new List<string> { item.CatalogId };
-            var outlines = new List<string> { item.CatalogId };
-
-            if (item.CategoryId != null)
-            {
-                outlines.AddRange(_catalogOutlineBuilder.GetOutlines(item.CategoryId));
-            }
-
-            // Index item direct categories links
-            if (item.Links != null)
-            {
-                foreach (var link in item.Links.Where(link => link.CategoryId != null))
-                {
-                    outlines.AddRange(_catalogOutlineBuilder.GetOutlines(link.CategoryId));
-                }
-
-                // Add all linked catalogs to search index
-                catalogs.AddRange(outlines.Select(x => x.Split('/').FirstOrDefault()).Where(x => x != null).Distinct());
-            }
-
             var indexStoreNotAnalyzedStringCollection = new[] { IndexStore.Yes, IndexType.NotAnalyzed, IndexDataType.StringCollection };
 
             // Add catalogs to search index
-            foreach (var catalogId in catalogs.Distinct(StringComparer.OrdinalIgnoreCase))
+            var catalogs = item.Outlines
+                .Select(o => o.Items.First().Id)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToArray();
+
+            foreach (var catalogId in catalogs)
             {
                 doc.Add(new DocumentField("catalog", catalogId.ToLower(), indexStoreNotAnalyzedStringCollection));
             }
 
             // Add outlines to search index
-            foreach (var outline in outlines.Distinct(StringComparer.OrdinalIgnoreCase))
+            var outlineStrings = GetOutlineStrings(item.Outlines);
+            foreach (var outline in outlineStrings)
             {
                 doc.Add(new DocumentField("__outline", outline.ToLower(), indexStoreNotAnalyzedStringCollection));
             }
@@ -188,6 +172,42 @@ namespace VirtoCommerce.SearchModule.Data.Services
             // add to content
             doc.Add(new DocumentField("__content", item.Name, new[] { IndexStore.Yes, IndexType.Analyzed, IndexDataType.StringCollection }));
             doc.Add(new DocumentField("__content", item.Code, new[] { IndexStore.Yes, IndexType.Analyzed, IndexDataType.StringCollection }));
+        }
+
+        protected virtual string[] GetOutlineStrings(IEnumerable<Outline> outlines)
+        {
+            return outlines
+                .SelectMany(ExpandOutline)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToArray();
+        }
+
+        protected virtual IEnumerable<string> ExpandOutline(Outline outline)
+        {
+            // Outline structure: catalog/category1/.../categoryN/product
+
+            var items = outline.Items
+                .Take(outline.Items.Count - 1) // Exclude last item, which is product ID
+                .Select(i => i.Id)
+                .ToList();
+
+            var catalogId = items.First();
+
+            var result = new List<string>
+            {
+                catalogId,
+                string.Join("/", items)
+            };
+
+            // For each child category create a separate outline: catalog/child_category
+            if (items.Count > 2)
+            {
+                result.AddRange(
+                    items.Skip(1)
+                    .Select(i => string.Join("/", catalogId, i)));
+            }
+
+            return result;
         }
 
         protected virtual void IndexItemCustomProperties(ref ResultDocument doc, CatalogProduct item)
