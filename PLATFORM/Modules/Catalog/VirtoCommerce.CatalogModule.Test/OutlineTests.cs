@@ -17,22 +17,13 @@ namespace VirtoCommerce.CatalogModule.Test
         [TestMethod]
         public void SearchCategories_When_PhysicalCatalog_Expect_SinglePhysicalOutline()
         {
-            var criteria = new SearchCriteria
-            {
-                CatalogId = "b61aa9d1d0024bc4be12d79bf5786e9f",
-                Code = "Summer-Dresses",
-                SearchInChildren = true,
-                ResponseGroup = SearchResponseGroup.WithCategories | SearchResponseGroup.WithOutlines,
-            };
-
-            var searchService = GetCatalogSearchService();
-            var result = searchService.Search(criteria);
+            var service = GetCategoryService();
+            var result = service.GetByIds(new[] { "fe4d82e57c20435c8a91b6ac75dc557f" }, CategoryResponseGroup.WithOutlines | CategoryResponseGroup.WithSeo, "b61aa9d1d0024bc4be12d79bf5786e9f");
 
             Assert.IsNotNull(result);
-            Assert.IsNotNull(result.Categories);
-            Assert.AreEqual(1, result.Categories.Count);
+            Assert.AreEqual(1, result.Length);
 
-            var category = result.Categories.First();
+            var category = result.First();
             Assert.IsNotNull(category);
             Assert.AreEqual("Summer-Dresses", category.Code);
             Assert.AreEqual("fe4d82e57c20435c8a91b6ac75dc557f", category.Id);
@@ -53,22 +44,13 @@ namespace VirtoCommerce.CatalogModule.Test
         [TestMethod]
         public void SearchCategories_When_VirtualCatalog_Expect_MultipleVirtualOutlines()
         {
-            var criteria = new SearchCriteria
-            {
-                CatalogId = "25f5ea1b52e54ec1aa903d44cc889324",
-                Code = "Summer-Dresses",
-                SearchInChildren = true,
-                ResponseGroup = SearchResponseGroup.WithCategories | SearchResponseGroup.WithOutlines,
-            };
-
-            var searchService = GetCatalogSearchService();
-            var result = searchService.Search(criteria);
+            var service = GetCategoryService();
+            var result = service.GetByIds(new[] { "fe4d82e57c20435c8a91b6ac75dc557f" }, CategoryResponseGroup.WithOutlines | CategoryResponseGroup.WithSeo, "25f5ea1b52e54ec1aa903d44cc889324");
 
             Assert.IsNotNull(result);
-            Assert.IsNotNull(result.Categories);
-            Assert.AreEqual(1, result.Categories.Count);
+            Assert.AreEqual(1, result.Length);
 
-            var category = result.Categories.First();
+            var category = result.First();
             Assert.IsNotNull(category);
             Assert.AreEqual("Summer-Dresses", category.Code);
             Assert.AreEqual("fe4d82e57c20435c8a91b6ac75dc557f", category.Id);
@@ -88,22 +70,13 @@ namespace VirtoCommerce.CatalogModule.Test
         [TestMethod]
         public void SearchProducts_When_PhysicalCatalog_Expect_SinglePhysicalOutline()
         {
-            var criteria = new SearchCriteria
-            {
-                CatalogId = "b61aa9d1d0024bc4be12d79bf5786e9f",
-                Code = "355789384",
-                SearchInChildren = true,
-                ResponseGroup = SearchResponseGroup.WithProducts | SearchResponseGroup.WithOutlines,
-            };
-
-            var searchService = GetCatalogSearchService();
-            var result = searchService.Search(criteria);
+            var service = GetItemService();
+            var result = service.GetByIds(new[] { "6b9797660c28496faef5fbfae871d735" }, ItemResponseGroup.Outlines | ItemResponseGroup.Seo, "b61aa9d1d0024bc4be12d79bf5786e9f");
 
             Assert.IsNotNull(result);
-            Assert.IsNotNull(result.Products);
-            Assert.AreEqual(1, result.Products.Count);
+            Assert.AreEqual(1, result.Length);
 
-            var product = result.Products.First();
+            var product = result.First();
             Assert.IsNotNull(product);
             Assert.AreEqual("355789384", product.Code);
             Assert.AreEqual("6b9797660c28496faef5fbfae871d735", product.Id);
@@ -124,22 +97,13 @@ namespace VirtoCommerce.CatalogModule.Test
         [TestMethod]
         public void SearchProducts_When_VirtualCatalog_Expect_MultipleVirtualOutlines()
         {
-            var criteria = new SearchCriteria
-            {
-                CatalogId = "25f5ea1b52e54ec1aa903d44cc889324",
-                Code = "355789384",
-                SearchInChildren = true,
-                ResponseGroup = SearchResponseGroup.WithProducts | SearchResponseGroup.WithOutlines,
-            };
-
-            var searchService = GetCatalogSearchService();
-            var result = searchService.Search(criteria);
+            var service = GetItemService();
+            var result = service.GetByIds(new[] { "6b9797660c28496faef5fbfae871d735" }, ItemResponseGroup.Outlines | ItemResponseGroup.Seo, "25f5ea1b52e54ec1aa903d44cc889324");
 
             Assert.IsNotNull(result);
-            Assert.IsNotNull(result.Products);
-            Assert.AreEqual(1, result.Products.Count);
+            Assert.AreEqual(1, result.Length);
 
-            var product = result.Products.First();
+            var product = result.First();
             Assert.IsNotNull(product);
             Assert.AreEqual("355789384", product.Code);
             Assert.AreEqual("6b9797660c28496faef5fbfae871d735", product.Id);
@@ -159,11 +123,6 @@ namespace VirtoCommerce.CatalogModule.Test
         }
 
 
-        private static ICatalogSearchService GetCatalogSearchService()
-        {
-            return new CatalogSearchServiceImpl(GetCatalogRepository, GetItemService(), GetCatalogService(), GetCategoryService());
-        }
-
         private static IOutlineService GetOutlineService()
         {
             return new OutlineService(GetCatalogRepository);
@@ -172,11 +131,6 @@ namespace VirtoCommerce.CatalogModule.Test
         private static ICategoryService GetCategoryService()
         {
             return new CategoryServiceImpl(GetCatalogRepository, GetCommerceService(), GetOutlineService());
-        }
-
-        private static ICatalogService GetCatalogService()
-        {
-            return new CatalogServiceImpl(GetCatalogRepository, GetCommerceService());
         }
 
         private static IItemService GetItemService()
