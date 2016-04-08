@@ -58,13 +58,13 @@ namespace VirtoCommerce.CatalogModule.Data.Services
             var category = GetCategory(categoryId);
             var newOutline = CreateOutline(categoryId, category.SeoObjectType, isLinkTarget, partialOutline);
 
-            if (string.IsNullOrEmpty(category.ParentId))
-            {
-                AddFinalOutline(category.CatalogId, false, newOutline, outlines, allowedCatalogId, additionalItem);
-            }
-            else
+            if (!string.IsNullOrEmpty(category.ParentId))
             {
                 AddOutlinesForParentAndLinkedCategories(category.ParentId, false, newOutline, outlines, allowedCatalogId, additionalItem);
+            }
+            else if (IsAllowedCatalog(category.CatalogId, allowedCatalogId))
+            {
+                AddFinalOutline(category.CatalogId, false, newOutline, outlines, additionalItem);
             }
 
             AddOutlinesForLinks(category.Links, newOutline, outlines, allowedCatalogId, additionalItem);
@@ -74,30 +74,35 @@ namespace VirtoCommerce.CatalogModule.Data.Services
         {
             foreach (var link in links)
             {
-                if (string.IsNullOrEmpty(link.CategoryId))
+                if (IsAllowedCatalog(link.CatalogId, allowedCatalogId))
                 {
-                    AddFinalOutline(link.CatalogId, true, partialOutline, outlines, allowedCatalogId, additionalItem);
-                }
-                else
-                {
-                    AddOutlinesForParentAndLinkedCategories(link.CategoryId, true, partialOutline, outlines, allowedCatalogId, additionalItem);
+                    if (string.IsNullOrEmpty(link.CategoryId))
+                    {
+                        AddFinalOutline(link.CatalogId, true, partialOutline, outlines, additionalItem);
+                    }
+                    else
+                    {
+                        AddOutlinesForParentAndLinkedCategories(link.CategoryId, true, partialOutline, outlines, allowedCatalogId, additionalItem);
+                    }
                 }
             }
         }
 
-        private static void AddFinalOutline(string actualCatalogId, bool isLinkTarget, Outline partialOutline, List<Outline> outlines, string allowedCatalogId, OutlineItem additionalItem)
+        private static bool IsAllowedCatalog(string actualCatalogId, string allowedCatalogId)
         {
-            if (allowedCatalogId == null || string.Equals(allowedCatalogId, actualCatalogId, StringComparison.OrdinalIgnoreCase))
+            return allowedCatalogId == null || string.Equals(allowedCatalogId, actualCatalogId, StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static void AddFinalOutline(string actualCatalogId, bool isLinkTarget, Outline partialOutline, List<Outline> outlines, OutlineItem additionalItem)
+        {
+            var finalOutline = CreateOutline(actualCatalogId, "Catalog", isLinkTarget, partialOutline);
+
+            if (additionalItem != null)
             {
-                var finalOutline = CreateOutline(actualCatalogId, "Catalog", isLinkTarget, partialOutline);
-
-                if (additionalItem != null)
-                {
-                    finalOutline.Items.Add(new OutlineItem { Id = additionalItem.Id, SeoObjectType = additionalItem.SeoObjectType, IsLinkTarget = additionalItem.IsLinkTarget });
-                }
-
-                outlines.Add(finalOutline);
+                finalOutline.Items.Add(new OutlineItem { Id = additionalItem.Id, SeoObjectType = additionalItem.SeoObjectType, IsLinkTarget = additionalItem.IsLinkTarget });
             }
+
+            outlines.Add(finalOutline);
         }
 
         private static Outline CreateOutline(string firstItemId, string firstItemType, bool isLinkTarget, Outline partialOutline)
