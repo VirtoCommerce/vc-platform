@@ -18,19 +18,21 @@ namespace VirtoCommerce.CatalogModule.Data.Services
             _catalogRepositoryFactory = catalogRepositoryFactory;
         }
 
-        public void FillOutlinesForCategories(IEnumerable<Category> categories, string catalogId)
+        public void FillOutlinesForObjects(IEnumerable<IHasOutlines> objects, string catalogId)
         {
-            foreach (var category in categories)
+            foreach (var obj in objects)
             {
-                category.Outlines = GetOutlines(category.Id, catalogId, null, null, null);
-            }
-        }
+                var category = obj as Category;
+                if (category != null)
+                {
+                    category.Outlines = GetOutlines(category.Id, catalogId, null, null, null);
+                }
 
-        public void FillOutlinesForProducts(IEnumerable<CatalogProduct> products, string catalogId)
-        {
-            foreach (var product in products)
-            {
-                product.Outlines = GetOutlines(product.CategoryId, catalogId, product.Links, product.Id, product.SeoObjectType);
+                var product = obj as CatalogProduct;
+                if (product != null)
+                {
+                    product.Outlines = GetOutlines(product.CategoryId, catalogId, product.Links, product.Id, product.SeoObjectType);
+                }
             }
         }
 

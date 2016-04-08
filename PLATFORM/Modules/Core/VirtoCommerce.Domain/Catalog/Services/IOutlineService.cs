@@ -5,7 +5,6 @@ namespace VirtoCommerce.Domain.Catalog.Services
 {
     public interface IOutlineService
     {
-        void FillOutlinesForCategories(IEnumerable<Category> categories, string catalogId);
-        void FillOutlinesForProducts(IEnumerable<CatalogProduct> products, string catalogId);
+        void FillOutlinesForObjects(IEnumerable<IHasOutlines> objects, string catalogId);
     }
 }

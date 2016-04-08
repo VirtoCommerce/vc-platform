@@ -40,7 +40,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
             // Fill outlines for products
             if ((responseGroup & coreModel.CategoryResponseGroup.WithOutlines) == coreModel.CategoryResponseGroup.WithOutlines)
             {
-                _outlineService.FillOutlinesForCategories(result, catalogId);
+                _outlineService.FillOutlinesForObjects(result, catalogId);
             }
 
             // Fill SEO info
