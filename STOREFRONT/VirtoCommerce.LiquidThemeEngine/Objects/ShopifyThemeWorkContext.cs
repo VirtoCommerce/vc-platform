@@ -118,7 +118,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
 
         public ICollection<LoginProvider> ExternalLoginProviders { get; set; }
 
-        public IDictionary<string, string> AnalyticsServicesKeys { get; set; }
+        public MetafieldsCollection ApplicationSettings { get; set; }
         #endregion
 
         #region ILiquidizable members

@@ -129,7 +129,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                 Properties = p.Properties
             }).ToList();
 
-            result.AnalyticsServicesKeys = workContext.AnalyticsServicesKeys;
+            result.ApplicationSettings = new MetafieldsCollection("application_settings", workContext.ApplicationSettings);
 
             //Powered by link
             if (workContext.CurrentStore != null)

@@ -176,7 +176,7 @@ namespace VirtoCommerce.Storefront.Owin
                         Properties = at.Properties
                     }).ToList();
 
-                    workContext.AnalyticsServicesKeys = GetAnalyticsServicesKeys();
+                    workContext.ApplicationSettings = GetApplicationSettings();
 
                     //Do not load shopping cart and other for resource requests
                     if (!IsAssetRequest(context.Request))
@@ -505,16 +505,16 @@ namespace VirtoCommerce.Storefront.Owin
             return country;
         }
 
-        private IDictionary<string, string> GetAnalyticsServicesKeys()
+        private IDictionary<string, object> GetApplicationSettings()
         {
-            var keys = new Dictionary<string, string>();
+            var appSettings = new Dictionary<string, object>();
 
-            keys.Add("GoogleSiteVerificationId", ConfigurationManager.AppSettings["GoogleSiteVerification.Id"]);
-            keys.Add("GoogleAnalyticsKey", ConfigurationManager.AppSettings["GoogleAnalytics.Key"]);
-            keys.Add("FacebookTrackerId", ConfigurationManager.AppSettings["FacebookTracker.Id"]);
-            keys.Add("MicrosoftAppInsightsKey", ConfigurationManager.AppSettings["MicrosoftAppInsights.Key"]);
+            foreach (var key in ConfigurationManager.AppSettings.AllKeys)
+            {
+                appSettings.Add(key, ConfigurationManager.AppSettings[key]);
+            }
 
-            return keys;
+            return appSettings;
         }
     }
 }

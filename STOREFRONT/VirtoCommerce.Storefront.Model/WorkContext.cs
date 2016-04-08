@@ -23,7 +23,7 @@ namespace VirtoCommerce.Storefront.Model
             CurrentPricelists = new List<Pricelist>();
             CurrentLinkLists = new List<MenuLinkList>();
             ExternalLoginProviders = new List<LoginProvider>();
-            AnalyticsServicesKeys = new Dictionary<string, string>();
+            ApplicationSettings = new Dictionary<string, object>();
         }
         /// <summary>
         /// Current request url example: http:/host/app/store/en-us/search?page=2
@@ -191,9 +191,9 @@ namespace VirtoCommerce.Storefront.Model
         public ICollection<LoginProvider> ExternalLoginProviders { get; set; }
 
         /// <summary>
-        /// Gets or sets the dictionary of analytics services keys/ids (i.e.: Google Analytics, Facebook Tracker, etc.)
+        /// Gets or sets the dictionary of application settings
         /// </summary>
-        public IDictionary<string, string> AnalyticsServicesKeys { get; set; }
+        public IDictionary<string, object> ApplicationSettings { get; set; }
 
         #region IDisposable Implementation
 
