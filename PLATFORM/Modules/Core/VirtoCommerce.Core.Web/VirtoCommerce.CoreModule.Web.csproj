@@ -193,6 +193,7 @@
     <Content Include="Scripts\SEO\blades\seo-detail.js" />
     <Content Include="Scripts\SEO\blades\seo-detail.tpl.html" />
     <Content Include="Scripts\SEO\blades\seo-list.tpl.html" />
+    <Content Include="Scripts\SEO\resources\seoResource.js" />
     <Content Include="Scripts\SEO\seo.js" />
     <Content Include="Scripts\SEO\widgets\seoWidget.js" />
     <Content Include="Scripts\SEO\widgets\seoWidget.tpl.html" />

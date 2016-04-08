@@ -11,6 +11,22 @@
         blade.isLoading = false;
     };
 
+    $scope.resolveDuplicates = function () {
+        var newBlade = {
+            id: 'seoDuplicates',
+            seoContainerObject: blade.seoContainerObject,
+            languages: blade.languages,
+            parentRefresh: blade.refresh,
+            controller: 'virtoCommerce.coreModule.seo.seoDuplicatesController',
+            template: 'Modules/$(VirtoCommerce.Core)/Scripts/SEO/blades/seo-duplicates.tpl.html'
+        };
+
+        //if (blade.fixedStoreId) {
+        newBlade.fixedStoreId = blade.fixedStoreId;
+        bladeNavigationService.showBlade(newBlade, blade);
+        //}
+    };
+
     blade.selectNode = openDetailsBlade;
 
     function openDetailsBlade(node, isNew) {

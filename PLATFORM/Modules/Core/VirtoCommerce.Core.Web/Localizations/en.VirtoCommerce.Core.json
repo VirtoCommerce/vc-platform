@@ -96,6 +96,7 @@
       "seo-list": {
         "subtitle": "Manage SEOs",
         "labels": {
+          "duplicates-found": "There were some conflicting Semantic URLs found! Click to resolve.",
           "language-code": "Language",
           "store": "Store",
           "semanticUrl": "Semantic URL"

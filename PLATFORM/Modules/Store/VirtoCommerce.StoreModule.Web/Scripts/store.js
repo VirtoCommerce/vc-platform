@@ -52,6 +52,7 @@ angular.module(moduleName, [
 	    widgetService.registerWidget({
 	        controller: 'virtoCommerce.coreModule.seo.seoWidgetController',
 	        template: 'Modules/$(VirtoCommerce.Core)/Scripts/SEO/widgets/seoWidget.tpl.html',
+	        objectType: 'Store',
 	        getFixedStoreId: function (blade) { return blade.currentEntity.id; },
 	        getLanguages: function (blade) { return blade.currentEntity.languages; }
 	    }, 'storeDetail');

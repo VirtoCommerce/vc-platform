@@ -1,6 +1,7 @@
 <div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
+            <p class="note error" ng-if="blade.duplicates.length" ng-click="resolveDuplicates()">{{'core.blades.seo-list.labels.duplicates-found' | translate}}</p>
             <div class="table-wrapper" ng-init="setGridOptions({
                     rowTemplate: 'list.row.html',
                     rowHeight: 60,
