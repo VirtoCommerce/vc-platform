@@ -102,6 +102,7 @@
     <None Include="Pages\TestStore\blogs\news\default.md" />
     <Compile Include="QuoteRequestTests.cs" />
     <Compile Include="PermalinkUrlTests.cs" />
+    <Compile Include="SeoTests.cs" />
     <Compile Include="SerializationTests.cs" />
     <Compile Include="ShoppingCartTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

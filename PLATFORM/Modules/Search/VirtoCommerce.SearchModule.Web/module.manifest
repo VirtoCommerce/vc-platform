@@ -32,7 +32,8 @@
         <group name="Search">
             <permission id="VirtoCommerce.Search:Debug" name="Debug search providers" description="Allows to use low level search API."/>
             <permission id="VirtoCommerce.Search:Index:Rebuild" name="Rebuild Index" description="Allows to delete search index and build it again."/>
-			<permission id="VirtoCommerce.Search:FilterProperties:update" name="Read store filter properties" />
+            <permission id="VirtoCommerce.Search:FilterProperties:Read" name="Read store filter properties" />
+            <permission id="VirtoCommerce.Search:FilterProperties:Update" name="Update store filter properties" />
         </group>
     </permissions>
 </module>

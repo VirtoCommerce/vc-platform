@@ -156,7 +156,7 @@ namespace PaymentMethods.Tests
 
         private IItemService GetItemService()
         {
-            return new ItemServiceImpl(() => { return GetRepository(); }, null);
+            return new ItemServiceImpl(GetRepository, null, null);
         }
 
         private ICatalogRepository GetRepository()

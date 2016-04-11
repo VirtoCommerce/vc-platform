@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Marketing;
-using VirtoCommerce.Storefront.Model.Marketing.Services;
 
 namespace VirtoCommerce.Storefront.Model.Catalog
 {
@@ -170,7 +169,7 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         /// List og variation properties
         /// </summary>
         public ICollection<CatalogProperty> VariationProperties { get; set; }
-      
+
         /// <summary>
         /// List of product assets
         /// </summary>
@@ -200,7 +199,7 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         /// Product prices foe other currencies
         /// </summary>
         public ICollection<ProductPrice> Prices { get; set; }
-      
+
         /// <summary>
         /// Inventory info
         /// </summary>
@@ -258,8 +257,10 @@ namespace VirtoCommerce.Storefront.Model.Catalog
                     Price.ActiveDiscount = discount;
                 }
             }
-        } 
+        }
         #endregion
+
+        public string Url { get; set; }
 
         public override string ToString()
         {

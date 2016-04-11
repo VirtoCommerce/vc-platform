@@ -3,11 +3,11 @@ namespace VirtoCommerce.Domain.Catalog.Services
 {
     public interface IItemService
     {
-		CatalogProduct GetById(string itemId, ItemResponseGroup respGroup);
-        CatalogProduct[] GetByIds(string[] itemIds, ItemResponseGroup respGroup);
-		CatalogProduct Create(CatalogProduct item);
+        CatalogProduct GetById(string itemId, ItemResponseGroup respGroup, string catalogId = null);
+        CatalogProduct[] GetByIds(string[] itemIds, ItemResponseGroup respGroup, string catalogId = null);
+        CatalogProduct Create(CatalogProduct item);
         void Create(CatalogProduct[] items);
         void Update(CatalogProduct[] items);
-		void Delete(string[] itemIds);
+        void Delete(string[] itemIds);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using VirtoCommerce.CatalogModule.Data.Repositories;
 using VirtoCommerce.CatalogModule.Data.Services;
 using VirtoCommerce.CoreModule.Data.Repositories;
+using VirtoCommerce.CoreModule.Data.Services;
 using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Domain.Commerce.Services;
 using VirtoCommerce.Domain.Pricing.Services;
@@ -18,8 +19,6 @@ namespace VirtoCommerce.SearchModule.Tests
 {
     public class SearchTest
     {
-
-
         [Fact]
         public void SearchCatalogBuilderTest()
         {
@@ -30,11 +29,8 @@ namespace VirtoCommerce.SearchModule.Tests
 
         private SearchIndexController GetSearchIndexController()
         {
-
-
             return null;
         }
-
 
         private ICommerceService GetCommerceService()
         {
@@ -44,6 +40,11 @@ namespace VirtoCommerce.SearchModule.Tests
         private ICatalogSearchService GetSearchService()
         {
             return new CatalogSearchServiceImpl(GetCatalogRepository, GetItemService(), GetCatalogService(), GetCategoryService());
+        }
+
+        private IOutlineService GetOutlineService()
+        {
+            return new OutlineService(GetCatalogRepository);
         }
 
         private IPricingService GetPricingService()
@@ -58,7 +59,7 @@ namespace VirtoCommerce.SearchModule.Tests
 
         private ICategoryService GetCategoryService()
         {
-            return new CategoryServiceImpl(GetCatalogRepository, GetCommerceService());
+            return new CategoryServiceImpl(GetCatalogRepository, GetCommerceService(), GetOutlineService());
         }
 
         private ICatalogService GetCatalogService()
@@ -68,14 +69,13 @@ namespace VirtoCommerce.SearchModule.Tests
 
         private IItemService GetItemService()
         {
-            return new ItemServiceImpl(GetCatalogRepository, GetCommerceService());
+            return new ItemServiceImpl(GetCatalogRepository, GetCommerceService(), GetOutlineService());
         }
 
         private IChangeLogService GetChangeLogService()
         {
             return new ChangeLogService(GetPlatformRepository);
         }
-
 
         private IPlatformRepository GetPlatformRepository()
         {

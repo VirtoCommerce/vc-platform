@@ -371,7 +371,7 @@
     <Compile Include="Common\IdentityExtensions.cs" />
     <Compile Include="Common\NameValueCollectionExtensions.cs" />
     <Compile Include="Common\ObjectExtensions.cs" />
-    <Compile Include="Common\SeoBestFinderMatches.cs" />
+    <Compile Include="Common\SeoExtensions.cs" />
     <Compile Include="Common\StorefrontHmacApiClient.cs" />
     <Compile Include="Controllers\Api\ApiQuoteRequestController.cs" />
     <Compile Include="Controllers\Api\ApiCommonController.cs" />

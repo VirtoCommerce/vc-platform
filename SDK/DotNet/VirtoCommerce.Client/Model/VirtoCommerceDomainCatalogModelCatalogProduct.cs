@@ -62,18 +62,20 @@ namespace VirtoCommerce.Client.Model
         /// <param name="Assets">Assets.</param>
         /// <param name="Links">Links.</param>
         /// <param name="Variations">Variations.</param>
+        /// <param name="SeoObjectType">SeoObjectType.</param>
         /// <param name="SeoInfos">SeoInfos.</param>
         /// <param name="Reviews">Reviews.</param>
         /// <param name="Associations">Associations.</param>
         /// <param name="Prices">Prices.</param>
         /// <param name="Inventories">Inventories.</param>
+        /// <param name="Outlines">Outlines.</param>
         /// <param name="CreatedDate">CreatedDate.</param>
         /// <param name="ModifiedDate">ModifiedDate.</param>
         /// <param name="CreatedBy">CreatedBy.</param>
         /// <param name="ModifiedBy">ModifiedBy.</param>
         /// <param name="Id">Id.</param>
 
-        public VirtoCommerceDomainCatalogModelCatalogProduct(string Code = null, string ManufacturerPartNumber = null, string Gtin = null, string Name = null, string CatalogId = null, VirtoCommerceDomainCatalogModelCatalog Catalog = null, string CategoryId = null, VirtoCommerceDomainCatalogModelCategory Category = null, string MainProductId = null, VirtoCommerceDomainCatalogModelCatalogProduct MainProduct = null, bool? IsBuyable = null, bool? IsActive = null, bool? TrackInventory = null, DateTime? IndexingDate = null, int? MaxQuantity = null, int? MinQuantity = null, string ProductType = null, string WeightUnit = null, double? Weight = null, string MeasureUnit = null, double? Height = null, double? Length = null, double? Width = null, bool? EnableReview = null, int? MaxNumberOfDownload = null, DateTime? DownloadExpiration = null, string DownloadType = null, bool? HasUserAgreement = null, string ShippingType = null, string TaxType = null, string Vendor = null, DateTime? StartDate = null, DateTime? EndDate = null, List<VirtoCommerceDomainCatalogModelProperty> Properties = null, List<VirtoCommerceDomainCatalogModelPropertyValue> PropertyValues = null, List<VirtoCommerceDomainCatalogModelImage> Images = null, List<VirtoCommerceDomainCatalogModelAsset> Assets = null, List<VirtoCommerceDomainCatalogModelCategoryLink> Links = null, List<VirtoCommerceDomainCatalogModelCatalogProduct> Variations = null, List<VirtoCommerceDomainCommerceModelSeoInfo> SeoInfos = null, List<VirtoCommerceDomainCatalogModelEditorialReview> Reviews = null, List<VirtoCommerceDomainCatalogModelProductAssociation> Associations = null, List<VirtoCommerceDomainPricingModelPrice> Prices = null, List<VirtoCommerceDomainInventoryModelInventoryInfo> Inventories = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
+        public VirtoCommerceDomainCatalogModelCatalogProduct(string Code = null, string ManufacturerPartNumber = null, string Gtin = null, string Name = null, string CatalogId = null, VirtoCommerceDomainCatalogModelCatalog Catalog = null, string CategoryId = null, VirtoCommerceDomainCatalogModelCategory Category = null, string MainProductId = null, VirtoCommerceDomainCatalogModelCatalogProduct MainProduct = null, bool? IsBuyable = null, bool? IsActive = null, bool? TrackInventory = null, DateTime? IndexingDate = null, int? MaxQuantity = null, int? MinQuantity = null, string ProductType = null, string WeightUnit = null, double? Weight = null, string MeasureUnit = null, double? Height = null, double? Length = null, double? Width = null, bool? EnableReview = null, int? MaxNumberOfDownload = null, DateTime? DownloadExpiration = null, string DownloadType = null, bool? HasUserAgreement = null, string ShippingType = null, string TaxType = null, string Vendor = null, DateTime? StartDate = null, DateTime? EndDate = null, List<VirtoCommerceDomainCatalogModelProperty> Properties = null, List<VirtoCommerceDomainCatalogModelPropertyValue> PropertyValues = null, List<VirtoCommerceDomainCatalogModelImage> Images = null, List<VirtoCommerceDomainCatalogModelAsset> Assets = null, List<VirtoCommerceDomainCatalogModelCategoryLink> Links = null, List<VirtoCommerceDomainCatalogModelCatalogProduct> Variations = null, string SeoObjectType = null, List<VirtoCommerceDomainCommerceModelSeoInfo> SeoInfos = null, List<VirtoCommerceDomainCatalogModelEditorialReview> Reviews = null, List<VirtoCommerceDomainCatalogModelProductAssociation> Associations = null, List<VirtoCommerceDomainPricingModelPrice> Prices = null, List<VirtoCommerceDomainInventoryModelInventoryInfo> Inventories = null, List<VirtoCommerceDomainCatalogModelOutline> Outlines = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
         {
             this.Code = Code;
             this.ManufacturerPartNumber = ManufacturerPartNumber;
@@ -114,11 +116,13 @@ namespace VirtoCommerce.Client.Model
             this.Assets = Assets;
             this.Links = Links;
             this.Variations = Variations;
+            this.SeoObjectType = SeoObjectType;
             this.SeoInfos = SeoInfos;
             this.Reviews = Reviews;
             this.Associations = Associations;
             this.Prices = Prices;
             this.Inventories = Inventories;
+            this.Outlines = Outlines;
             this.CreatedDate = CreatedDate;
             this.ModifiedDate = ModifiedDate;
             this.CreatedBy = CreatedBy;
@@ -362,6 +366,12 @@ namespace VirtoCommerce.Client.Model
         public List<VirtoCommerceDomainCatalogModelCatalogProduct> Variations { get; set; }
 
         /// <summary>
+        /// Gets or Sets SeoObjectType
+        /// </summary>
+        [DataMember(Name="seoObjectType", EmitDefaultValue=false)]
+        public string SeoObjectType { get; private set; }
+
+        /// <summary>
         /// Gets or Sets SeoInfos
         /// </summary>
         [DataMember(Name="seoInfos", EmitDefaultValue=false)]
@@ -390,6 +400,12 @@ namespace VirtoCommerce.Client.Model
         /// </summary>
         [DataMember(Name="inventories", EmitDefaultValue=false)]
         public List<VirtoCommerceDomainInventoryModelInventoryInfo> Inventories { get; set; }
+
+        /// <summary>
+        /// Gets or Sets Outlines
+        /// </summary>
+        [DataMember(Name="outlines", EmitDefaultValue=false)]
+        public List<VirtoCommerceDomainCatalogModelOutline> Outlines { get; set; }
 
         /// <summary>
         /// Gets or Sets CreatedDate
@@ -469,11 +485,13 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Assets: ").Append(Assets).Append("\n");
             sb.Append("  Links: ").Append(Links).Append("\n");
             sb.Append("  Variations: ").Append(Variations).Append("\n");
+            sb.Append("  SeoObjectType: ").Append(SeoObjectType).Append("\n");
             sb.Append("  SeoInfos: ").Append(SeoInfos).Append("\n");
             sb.Append("  Reviews: ").Append(Reviews).Append("\n");
             sb.Append("  Associations: ").Append(Associations).Append("\n");
             sb.Append("  Prices: ").Append(Prices).Append("\n");
             sb.Append("  Inventories: ").Append(Inventories).Append("\n");
+            sb.Append("  Outlines: ").Append(Outlines).Append("\n");
             sb.Append("  CreatedDate: ").Append(CreatedDate).Append("\n");
             sb.Append("  ModifiedDate: ").Append(ModifiedDate).Append("\n");
             sb.Append("  CreatedBy: ").Append(CreatedBy).Append("\n");
@@ -712,6 +730,11 @@ namespace VirtoCommerce.Client.Model
                     this.Variations.SequenceEqual(other.Variations)
                 ) && 
                 (
+                    this.SeoObjectType == other.SeoObjectType ||
+                    this.SeoObjectType != null &&
+                    this.SeoObjectType.Equals(other.SeoObjectType)
+                ) && 
+                (
                     this.SeoInfos == other.SeoInfos ||
                     this.SeoInfos != null &&
                     this.SeoInfos.SequenceEqual(other.SeoInfos)
@@ -735,6 +758,11 @@ namespace VirtoCommerce.Client.Model
                     this.Inventories == other.Inventories ||
                     this.Inventories != null &&
                     this.Inventories.SequenceEqual(other.Inventories)
+                ) && 
+                (
+                    this.Outlines == other.Outlines ||
+                    this.Outlines != null &&
+                    this.Outlines.SequenceEqual(other.Outlines)
                 ) && 
                 (
                     this.CreatedDate == other.CreatedDate ||
@@ -892,6 +920,9 @@ namespace VirtoCommerce.Client.Model
                 if (this.Variations != null)
                     hash = hash * 59 + this.Variations.GetHashCode();
                 
+                if (this.SeoObjectType != null)
+                    hash = hash * 59 + this.SeoObjectType.GetHashCode();
+                
                 if (this.SeoInfos != null)
                     hash = hash * 59 + this.SeoInfos.GetHashCode();
                 
@@ -906,6 +937,9 @@ namespace VirtoCommerce.Client.Model
                 
                 if (this.Inventories != null)
                     hash = hash * 59 + this.Inventories.GetHashCode();
+                
+                if (this.Outlines != null)
+                    hash = hash * 59 + this.Outlines.GetHashCode();
                 
                 if (this.CreatedDate != null)
                     hash = hash * 59 + this.CreatedDate.GetHashCode();

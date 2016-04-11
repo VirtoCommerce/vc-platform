@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using VirtoCommerce.CatalogModule.Data.Repositories;
 using VirtoCommerce.Domain.Catalog.Model;
-using dataModel = VirtoCommerce.CatalogModule.Data.Model;
 using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Platform.Core.Common;
 
@@ -18,8 +17,8 @@ namespace VirtoCommerce.CatalogModule.Data.Services
         private readonly ICatalogService _catalogService;
         private readonly ICategoryService _categoryService;
 
-        private Dictionary<string, string> _productSortingAliases = new Dictionary<string, string>();
-        private Dictionary<string, string> _categorySortingAliases = new Dictionary<string, string>();
+        private readonly Dictionary<string, string> _productSortingAliases = new Dictionary<string, string>();
+        private readonly Dictionary<string, string> _categorySortingAliases = new Dictionary<string, string>();
 
         public CatalogSearchServiceImpl(Func<ICatalogRepository> catalogRepositoryFactory, IItemService itemService, ICatalogService catalogService, ICategoryService categoryService)
         {
@@ -62,7 +61,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
         {
             using (var repository = _catalogRepositoryFactory())
             {
-                var query = repository.Categories.Where(x => criteria.WithHidden ? true : x.IsActive);
+                var query = repository.Categories.Where(x => criteria.WithHidden || x.IsActive);
 
                 //Get list of search in categories
                 var searchCategoryIds = criteria.CategoryIds;
@@ -131,16 +130,21 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 
                 var categoryIds = query.Select(x => x.Id).ToArray();
                 var categoryResponseGroup = CategoryResponseGroup.Info | CategoryResponseGroup.WithImages | CategoryResponseGroup.WithSeo | CategoryResponseGroup.WithLinks | CategoryResponseGroup.WithParents;
+
                 if ((criteria.ResponseGroup & SearchResponseGroup.WithProperties) == SearchResponseGroup.WithProperties)
                 {
                     categoryResponseGroup |= CategoryResponseGroup.WithProperties;
                 }
 
-                result.Categories = _categoryService.GetByIds(categoryIds, categoryResponseGroup)
+                if ((criteria.ResponseGroup & SearchResponseGroup.WithOutlines) == SearchResponseGroup.WithOutlines)
+                {
+                    categoryResponseGroup |= CategoryResponseGroup.WithOutlines;
+                }
+
+                result.Categories = _categoryService.GetByIds(categoryIds, categoryResponseGroup, criteria.CatalogId)
                                                     .AsQueryable()
                                                     .OrderBySortInfos(sortInfos)
                                                     .ToList();
-
             }
         }
 
@@ -194,7 +198,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                     }
                 }
 
-                var query = repository.Items.Where(x => criteria.WithHidden ? true : x.IsActive);
+                var query = repository.Items.Where(x => criteria.WithHidden || x.IsActive);
 
                 if (!criteria.SearchInVariations)
                 {
@@ -271,7 +275,12 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                     productResponseGroup |= ItemResponseGroup.Variations;
                 }
 
-                var products = _itemService.GetByIds(itemIds, productResponseGroup);
+                if ((criteria.ResponseGroup & SearchResponseGroup.WithOutlines) == SearchResponseGroup.WithOutlines)
+                {
+                    productResponseGroup |= ItemResponseGroup.Outlines;
+                }
+
+                var products = _itemService.GetByIds(itemIds, productResponseGroup, criteria.CatalogId);
                 result.Products = products.AsQueryable().OrderBySortInfos(sortInfos).ToList();
             }
 

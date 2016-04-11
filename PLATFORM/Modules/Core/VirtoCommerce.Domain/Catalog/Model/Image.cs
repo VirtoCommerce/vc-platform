@@ -6,14 +6,14 @@ using System.Linq;
 
 namespace VirtoCommerce.Domain.Catalog.Model
 {
-	public class Image : AuditableEntity, ISeoSupport, ILanguageSupport, ICloneable, IInheritable
+    public class Image : AuditableEntity, ISeoSupport, ILanguageSupport, ICloneable, IInheritable
     {
-		public string Name { get; set; }
-		public string Url { get; set; }
-	    public string Group { get; set; }
-		public int SortOrder { get; set; }
+        public string Name { get; set; }
+        public string Url { get; set; }
+        public string Group { get; set; }
+        public int SortOrder { get; set; }
 
-		public byte[] BinaryData { get; set; }
+        public byte[] BinaryData { get; set; }
 
         #region IInheritable Members
         public bool IsInherited { get; set; }
@@ -21,11 +21,12 @@ namespace VirtoCommerce.Domain.Catalog.Model
 
 
         #region ISeoSupport Members
+        public string SeoObjectType { get { return GetType().Name; } }
         public ICollection<SeoInfo> SeoInfos { get; set; }
-		#endregion
+        #endregion
 
-		#region ILanguageSupport Members
-		public string LanguageCode { get; set; }
+        #region ILanguageSupport Members
+        public string LanguageCode { get; set; }
         #endregion
 
         #region ICloneable members
@@ -44,7 +45,7 @@ namespace VirtoCommerce.Domain.Catalog.Model
             retVal.SortOrder = SortOrder;
             retVal.LanguageCode = LanguageCode;
             retVal.IsInherited = IsInherited;
-              if (SeoInfos != null)
+            if (SeoInfos != null)
             {
                 retVal.SeoInfos = SeoInfos.Select(x => x.Clone()).OfType<SeoInfo>().ToList();
             }

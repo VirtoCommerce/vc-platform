@@ -167,6 +167,7 @@
     <Compile Include="Services\CategoryServiceImpl.cs" />
     <Compile Include="Services\ItemServiceImpl.cs" />
     <Compile Include="Services\CatalogServiceImpl.cs" />
+    <Compile Include="Services\OutlineService.cs" />
     <Compile Include="Services\PropertyServiceImpl.cs" />
   </ItemGroup>
   <ItemGroup>

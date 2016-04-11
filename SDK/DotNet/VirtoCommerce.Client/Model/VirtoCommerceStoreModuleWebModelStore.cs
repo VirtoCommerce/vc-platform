@@ -47,6 +47,7 @@ namespace VirtoCommerce.Client.Model
         /// <param name="ShippingMethods">ShippingMethods.</param>
         /// <param name="TaxProviders">TaxProviders.</param>
         /// <param name="SecurityScopes">SecurityScopes.</param>
+        /// <param name="SeoObjectType">SeoObjectType.</param>
         /// <param name="SeoInfos">SeoInfos.</param>
         /// <param name="ObjectType">ObjectType.</param>
         /// <param name="DynamicProperties">DynamicProperties.</param>
@@ -57,7 +58,7 @@ namespace VirtoCommerce.Client.Model
         /// <param name="ModifiedBy">ModifiedBy.</param>
         /// <param name="Id">Id.</param>
 
-        public VirtoCommerceStoreModuleWebModelStore(string Name = null, string Description = null, string Url = null, string StoreState = null, string TimeZone = null, string Country = null, string Region = null, string DefaultLanguage = null, string DefaultCurrency = null, string Catalog = null, bool? CreditCardSavePolicy = null, string SecureUrl = null, string Email = null, string AdminEmail = null, bool? DisplayOutOfStock = null, VirtoCommerceStoreModuleWebModelFulfillmentCenter FulfillmentCenter = null, VirtoCommerceStoreModuleWebModelFulfillmentCenter ReturnsFulfillmentCenter = null, List<string> Languages = null, List<string> Currencies = null, List<string> TrustedGroups = null, List<VirtoCommerceStoreModuleWebModelPaymentMethod> PaymentMethods = null, List<VirtoCommerceStoreModuleWebModelShippingMethod> ShippingMethods = null, List<VirtoCommerceStoreModuleWebModelTaxProvider> TaxProviders = null, List<string> SecurityScopes = null, List<VirtoCommerceDomainCommerceModelSeoInfo> SeoInfos = null, string ObjectType = null, List<VirtoCommercePlatformCoreDynamicPropertiesDynamicObjectProperty> DynamicProperties = null, List<VirtoCommerceStoreModuleWebModelSetting> Settings = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
+        public VirtoCommerceStoreModuleWebModelStore(string Name = null, string Description = null, string Url = null, string StoreState = null, string TimeZone = null, string Country = null, string Region = null, string DefaultLanguage = null, string DefaultCurrency = null, string Catalog = null, bool? CreditCardSavePolicy = null, string SecureUrl = null, string Email = null, string AdminEmail = null, bool? DisplayOutOfStock = null, VirtoCommerceStoreModuleWebModelFulfillmentCenter FulfillmentCenter = null, VirtoCommerceStoreModuleWebModelFulfillmentCenter ReturnsFulfillmentCenter = null, List<string> Languages = null, List<string> Currencies = null, List<string> TrustedGroups = null, List<VirtoCommerceStoreModuleWebModelPaymentMethod> PaymentMethods = null, List<VirtoCommerceStoreModuleWebModelShippingMethod> ShippingMethods = null, List<VirtoCommerceStoreModuleWebModelTaxProvider> TaxProviders = null, List<string> SecurityScopes = null, string SeoObjectType = null, List<VirtoCommerceDomainCommerceModelSeoInfo> SeoInfos = null, string ObjectType = null, List<VirtoCommercePlatformCoreDynamicPropertiesDynamicObjectProperty> DynamicProperties = null, List<VirtoCommerceStoreModuleWebModelSetting> Settings = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
         {
             this.Name = Name;
             this.Description = Description;
@@ -83,6 +84,7 @@ namespace VirtoCommerce.Client.Model
             this.ShippingMethods = ShippingMethods;
             this.TaxProviders = TaxProviders;
             this.SecurityScopes = SecurityScopes;
+            this.SeoObjectType = SeoObjectType;
             this.SeoInfos = SeoInfos;
             this.ObjectType = ObjectType;
             this.DynamicProperties = DynamicProperties;
@@ -252,6 +254,12 @@ namespace VirtoCommerce.Client.Model
         public List<string> SecurityScopes { get; set; }
 
         /// <summary>
+        /// Gets or Sets SeoObjectType
+        /// </summary>
+        [DataMember(Name="seoObjectType", EmitDefaultValue=false)]
+        public string SeoObjectType { get; private set; }
+
+        /// <summary>
         /// Gets or Sets SeoInfos
         /// </summary>
         [DataMember(Name="seoInfos", EmitDefaultValue=false)]
@@ -338,6 +346,7 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  ShippingMethods: ").Append(ShippingMethods).Append("\n");
             sb.Append("  TaxProviders: ").Append(TaxProviders).Append("\n");
             sb.Append("  SecurityScopes: ").Append(SecurityScopes).Append("\n");
+            sb.Append("  SeoObjectType: ").Append(SeoObjectType).Append("\n");
             sb.Append("  SeoInfos: ").Append(SeoInfos).Append("\n");
             sb.Append("  ObjectType: ").Append(ObjectType).Append("\n");
             sb.Append("  DynamicProperties: ").Append(DynamicProperties).Append("\n");
@@ -505,6 +514,11 @@ namespace VirtoCommerce.Client.Model
                     this.SecurityScopes.SequenceEqual(other.SecurityScopes)
                 ) && 
                 (
+                    this.SeoObjectType == other.SeoObjectType ||
+                    this.SeoObjectType != null &&
+                    this.SeoObjectType.Equals(other.SeoObjectType)
+                ) && 
+                (
                     this.SeoInfos == other.SeoInfos ||
                     this.SeoInfos != null &&
                     this.SeoInfos.SequenceEqual(other.SeoInfos)
@@ -634,6 +648,9 @@ namespace VirtoCommerce.Client.Model
                 
                 if (this.SecurityScopes != null)
                     hash = hash * 59 + this.SecurityScopes.GetHashCode();
+                
+                if (this.SeoObjectType != null)
+                    hash = hash * 59 + this.SeoObjectType.GetHashCode();
                 
                 if (this.SeoInfos != null)
                     hash = hash * 59 + this.SeoInfos.GetHashCode();

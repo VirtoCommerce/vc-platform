@@ -9,64 +9,64 @@ using coreModel = VirtoCommerce.Domain.Store.Model;
 
 namespace VirtoCommerce.StoreModule.Web.Model
 {
-	public class Store : AuditableEntity, IHasDynamicProperties, ISeoSupport
+    public class Store : AuditableEntity, IHasDynamicProperties, ISeoSupport
     {
         public string Name { get; set; }
 
         public string Description { get; set; }
 
-		/// <summary>
-		/// Url of store storefront, required
-		/// </summary>
+        /// <summary>
+        /// Url of store storefront, required
+        /// </summary>
         public string Url { get; set; }
 
-		/// <summary>
-		/// State of store
-		/// </summary>
+        /// <summary>
+        /// State of store
+        /// </summary>
         [JsonConverter(typeof(StringEnumConverter))]
         public coreModel.StoreState StoreState { get; set; }
 
         public string TimeZone { get; set; }
 
-		public string Country { get; set; }
+        public string Country { get; set; }
 
         public string Region { get; set; }
 
-		/// <summary>
-		/// Default locale of store
-		/// </summary>
+        /// <summary>
+        /// Default locale of store
+        /// </summary>
         public string DefaultLanguage { get; set; }
 
-		/// <summary>
-		/// Default currency of store. Use ISO 4217 currency codes
-		/// </summary>
+        /// <summary>
+        /// Default currency of store. Use ISO 4217 currency codes
+        /// </summary>
         public string DefaultCurrency { get; set; }
 
-		/// <summary>
-		/// Product catalog id of store
-		/// </summary>
+        /// <summary>
+        /// Product catalog id of store
+        /// </summary>
         public string Catalog { get; set; }
 
         public bool CreditCardSavePolicy { get; set; }
 
-		/// <summary>
-		/// Secure url of store, must use https protocol, required
-		/// </summary>
+        /// <summary>
+        /// Secure url of store, must use https protocol, required
+        /// </summary>
         public string SecureUrl { get; set; }
 
-		/// <summary>
-		/// Contact email of store
-		/// </summary>
+        /// <summary>
+        /// Contact email of store
+        /// </summary>
         public string Email { get; set; }
 
-		/// <summary>
-		/// Administrator contact email of store
-		/// </summary>
+        /// <summary>
+        /// Administrator contact email of store
+        /// </summary>
         public string AdminEmail { get; set; }
 
-		/// <summary>
-		/// If true - store shows product with status out of stock
-		/// </summary>
+        /// <summary>
+        /// If true - store shows product with status out of stock
+        /// </summary>
         public bool DisplayOutOfStock { get; set; }
 
         public FulfillmentCenter FulfillmentCenter { get; set; }
@@ -97,6 +97,7 @@ namespace VirtoCommerce.StoreModule.Web.Model
         public string[] SecurityScopes { get; set; }
 
         #region ISeoSupport Members
+        public string SeoObjectType { get { return GetType().Name; } }
         public ICollection<SeoInfo> SeoInfos { get; set; }
         #endregion
 
