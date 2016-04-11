@@ -1,12 +1,12 @@
 ﻿angular.module('virtoCommerce.contentModule')
-.controller('virtoCommerce.contentModule.themeUploadController', ['$scope', 'platformWebApp.dialogService', 'virtoCommerce.contentModule.themes', 'FileUploader', 'platformWebApp.bladeNavigationService', function ($scope, dialogService, themes, FileUploader, bladeNavigationService) {
+.controller('virtoCommerce.contentModule.themeUploadController', ['$scope', 'platformWebApp.dialogService', 'virtoCommerce.contentModule.contentApi', 'FileUploader', 'platformWebApp.bladeNavigationService', function ($scope, dialogService, contentApi, FileUploader, bladeNavigationService) {
     var blade = $scope.blade;
 
     // create the uploader
     var uploader = $scope.uploader = new FileUploader({
         scope: $scope,
         headers: { Accept: 'application/json' },
-        url: 'api/platform/assets/localstorage',
+        url: 'api/content/themes/' + blade.storeId + '?folderUrl=',
         queueLimit: 1,
         autoUpload: true,
         removeAfterUpload: false
@@ -22,15 +22,17 @@
     });
 
     uploader.onAfterAddingFile = function (item) {
-        blade.themeName = item.file.name.substring(0, item.file.name.lastIndexOf('.'));
+        $scope.themeName = item.file.name.substring(0, item.file.name.lastIndexOf('.'));
         blade.isLoading = true;
     };
 
     uploader.onSuccessItem = function (fileItem, files) {
-        blade.themeFileUrl = files[0].url;
-        blade.themeLoaded = true;
-
-        themes.createTheme({ storeId: blade.storeId, themeName: blade.themeName, themeFileUrl: blade.themeFileUrl }, function (data) {
+        contentApi.unpack({
+            contentType: 'themes',
+            storeId: blade.storeId,
+            archivepath: files[0].name,
+            destPath: $scope.themeName
+        }, function (data) {
             blade.parentBlade.initialize();
             if (blade.parentBlade.parentBlade)
                 blade.parentBlade.parentBlade.refresh(blade.storeId, 'themes');

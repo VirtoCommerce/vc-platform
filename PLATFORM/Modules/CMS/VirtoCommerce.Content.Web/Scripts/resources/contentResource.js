@@ -17,9 +17,7 @@
     });
 }])
 .factory('virtoCommerce.contentModule.themes', ['$resource', function ($resource) {
-    return $resource(null, null, {
-        createTheme: { url: 'api/content/themes/:storeId/createTheme', method: 'POST' },
-        copyDefaultTheme: { url: 'api/content/copy' },
+    return $resource(null, null, {        
         cloneTheme: { url: 'api/content/themes/:storeId/cloneTheme', method: 'POST' }
     });
 }])
@@ -96,8 +94,10 @@
             },
             isArray: true
         },
-        createFolder: { url: 'api/content/themes/:storeId/folder', method: 'POST' },
-        move: { url: 'api/content/themes/:storeId/move' }
+        unpack: { url: 'api/content/:contentType/:storeId/unpack' },
+        createFolder: { url: 'api/content/:contentType/:storeId/folder', method: 'POST' },
+        copy: { url: 'api/content/copy' },
+        move: { url: 'api/content/:contentType/:storeId/move' }
     });
 }])
 .factory('virtoCommerce.contentModule.stores', ['$resource', function ($resource) {

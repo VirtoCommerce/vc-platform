@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.contentModule')
-.controller('virtoCommerce.contentModule.themeDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.contentModule.contentApi', 'virtoCommerce.contentModule.themes', function ($scope, bladeNavigationService, contentApi, themes) {
+.controller('virtoCommerce.contentModule.themeDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.contentModule.contentApi', function ($scope, bladeNavigationService, contentApi) {
     var blade = $scope.blade;
 
     blade.refresh = function (parentRefresh) {
@@ -39,7 +39,7 @@
 
         if (blade.isNew) {
             if (blade.currentEntity.defaultTheme) { // create from default
-                themes.copyDefaultTheme({
+                contentApi.copy({
                 	srcPath: 'Themes/' + blade.currentEntity.defaultTheme,
                 	destPath: 'Themes/' + blade.storeId + '/' + blade.currentEntity.name
                 }, refreshParentAndClose,
