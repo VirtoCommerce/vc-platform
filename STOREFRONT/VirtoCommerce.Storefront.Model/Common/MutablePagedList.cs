@@ -18,6 +18,8 @@ namespace VirtoCommerce.Storefront.Model.Common
         public MutablePagedList(IEnumerable<T> superSet)
             : this((newPageNumber, newPageSize) => new PagedList<T>(superSet, newPageNumber, newPageSize), 1, superSet.Count())
         {
+            TotalItemCount = superSet.Count();
+            PageCount = 1;
         }
 
         public MutablePagedList(Func<int, int, IPagedList<T>> getter, int pageNumber = 1, int pageSize = 20)
