@@ -231,12 +231,12 @@ namespace VirtoCommerce.Storefront
             // Shopify model binders convert Shopify form fields with bad names to VirtoCommerce model properties.
             container.RegisterType<IModelBinderProvider, ShopifyModelBinderProvider>("shopify");
 
-            //Static content service
             var markdownOptions = new MarkdownOptions
             {
                 LinkEmails = false // Render mailto: links as is without markup transformations
             };
-            var staticContentService = new StaticContentServiceImpl(ResolveLocalPath(staticContentPath), new Markdown(markdownOptions), shopifyLiquidEngine, localCacheManager, workContextFactory, () => container.Resolve<IStorefrontUrlBuilder>(), StaticContentItemFactory.GetContentItemFromPath, staticContentBlobProvider);
+            //Static content service
+            var staticContentService = new StaticContentServiceImpl(new Markdown(markdownOptions), shopifyLiquidEngine, localCacheManager, workContextFactory, () => container.Resolve<IStorefrontUrlBuilder>(), StaticContentItemFactory.GetContentItemFromPath, staticContentBlobProvider);
             container.RegisterInstance<IStaticContentService>(staticContentService);
 
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters, workContextFactory);
