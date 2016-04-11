@@ -40,9 +40,8 @@
         if (blade.isNew) {
             if (blade.currentEntity.defaultTheme) { // create from default
                 themes.copyDefaultTheme({
-                    storeId: blade.storeId,
-                    srcPath: blade.currentEntity.defaultTheme,
-                    destPath: blade.currentEntity.name
+                	srcPath: 'Themes/' + blade.currentEntity.defaultTheme,
+                	destPath: 'Themes/' + blade.storeId + '/' + blade.currentEntity.name
                 }, refreshParentAndClose,
                 function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
             } else { // create empty

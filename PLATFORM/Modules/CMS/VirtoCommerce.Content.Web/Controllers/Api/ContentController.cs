@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -118,21 +119,54 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
         /// <summary>
         /// Copy contents
         /// </summary>
-        /// <param name="contentType">possible values Themes or Pages</param>
-        /// <param name="storeId">Store id</param>
         /// <param name="srcPath">source content  relative path</param>
         /// <param name="destPath">destination content relative path</param>
         /// <returns></returns>
         [HttpGet]
         [ResponseType(typeof(void))]
-        [Route("copy")]
+        [Route("~/api/content/copy")]
         [CheckPermission(Permission = ContentPredefinedPermissions.Update)]
-        public IHttpActionResult CopyContent(string contentType, string storeId, string srcPath, string destPath)
+        public IHttpActionResult CopyContent(string srcPath, string destPath)
         {
             //This method used only for default themes copying that we use string.Empty instead storeId because default themes placed only in root content folder
-            var storageProvider = _contentStorageProviderFactory(contentType, string.Empty);
+            var storageProvider = _contentStorageProviderFactory(string.Empty, string.Empty);
 
-            storageProvider.CopyContent(srcPath, storeId + "/" + destPath);
+            storageProvider.CopyContent(srcPath, destPath);
+            return StatusCode(HttpStatusCode.NoContent);
+        }
+
+        /// <summary>
+        /// Unpack contents
+        /// </summary>
+        /// <param name="contentType">possible values Themes or Pages</param>
+        /// <param name="storeId">Store id</param>
+        /// <param name="archivePath">archive file relative path</param>
+        /// <param name="destPath">destination content relative path</param>
+        /// <returns></returns>
+        [HttpGet]
+        [ResponseType(typeof(void))]
+        [Route("unpack")]
+        [CheckPermission(Permission = ContentPredefinedPermissions.Update)]
+        public IHttpActionResult Unpack(string contentType, string storeId, string archivePath, string destPath)
+        {
+            var storageProvider = _contentStorageProviderFactory(contentType, storeId);
+
+            using (var stream = storageProvider.OpenRead(archivePath))
+            using (ZipArchive archive = new ZipArchive(stream))
+            {
+                foreach (ZipArchiveEntry entry in archive.Entries)
+                {
+                    if (!entry.FullName.EndsWith("/"))
+                    {
+                        var fileName = String.Join("/", entry.FullName.Split('/').Skip(1));
+                        using (var entryStream = entry.Open())
+                        using (var targetStream = storageProvider.OpenWrite(destPath + "/" + fileName))
+                        {
+                            entryStream.CopyTo(targetStream);
+                        }
+                    }
+                }
+            }
             return StatusCode(HttpStatusCode.NoContent);
         }
 

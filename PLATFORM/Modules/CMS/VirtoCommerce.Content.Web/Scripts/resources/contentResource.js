@@ -19,7 +19,7 @@
 .factory('virtoCommerce.contentModule.themes', ['$resource', function ($resource) {
     return $resource(null, null, {
         createTheme: { url: 'api/content/themes/:storeId/createTheme', method: 'POST' },
-        copyDefaultTheme: { url: 'api/content/themes/:storeId/copy' },
+        copyDefaultTheme: { url: 'api/content/copy' },
         cloneTheme: { url: 'api/content/themes/:storeId/cloneTheme', method: 'POST' }
     });
 }])
