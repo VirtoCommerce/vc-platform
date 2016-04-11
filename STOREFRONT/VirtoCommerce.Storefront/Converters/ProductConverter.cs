@@ -78,10 +78,7 @@ namespace VirtoCommerce.Storefront.Converters
             if (product.Reviews != null)
             {
                 retVal.Descriptions = product.Reviews.Select(r => new LocalizedString(new Language(r.LanguageCode), r.Content)).ToList();
-                retVal.Description = retVal.Descriptions
-                    .Where(x => x.Language.Equals(currentLanguage))
-                    .Select(x => x.Value)
-                    .FirstOrDefault();
+                retVal.Description = retVal.Descriptions.FindWithLanguage(currentLanguage, x => x.Value, null);
             }
 
             return retVal;

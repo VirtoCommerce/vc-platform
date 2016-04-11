@@ -1,18 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using VirtoCommerce.Storefront.Model.Common;
+﻿using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Model
 {
     /// <summary>
     /// Represent SEO information and contains common SEO fields  
     /// </summary>
-    public class SeoInfo : ValueObject<SeoInfo>
+    public class SeoInfo : ValueObject<SeoInfo>, IHasLanguage
     {
-        public Language Language { get; set; }
-
         public string MetaDescription { get; set; }
 
         public string Slug { get; set; }
@@ -21,5 +15,8 @@ namespace VirtoCommerce.Storefront.Model
 
         public string Title { get; set; }
 
+        #region IHasLanguage Members
+        public Language Language { get; set; }
+        #endregion
     }
 }

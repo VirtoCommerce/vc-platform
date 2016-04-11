@@ -11,7 +11,7 @@ using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Model.StaticContent
 {
-    public abstract class ContentItem
+    public abstract class ContentItem : IHasLanguage
     {
         private static readonly Regex _timestampAndTitleFromPathRegex = new Regex(string.Format(@"{0}(?:(?<timestamp>\d+-\d+-\d+)-)?(?<title>[^{0}]*)\.[^\.]+$", Regex.Escape("/")), RegexOptions.Compiled);
         private static readonly Regex _timestampAndTitleAndLanguageFromPathRegex = new Regex(string.Format(@"{0}(?:(?<timestamp>\d+-\d+-\d+)-)?(?<title>[^{0}]*)\.(?<language>[A-z]{{2}}-[A-z]{{2}})\.[^\.]+$", Regex.Escape("/")), RegexOptions.Compiled);
@@ -58,8 +58,6 @@ namespace VirtoCommerce.Storefront.Model.StaticContent
 
         public ContentPublicationStatus PublicationStatus { get; set; }
 
-        public Language Language { get; set; }
-
         /// <summary>
         /// Content file name without extension
         /// </summary>
@@ -79,7 +77,11 @@ namespace VirtoCommerce.Storefront.Model.StaticContent
 
         public string FileName { get; set; }
 
-     
+
+        #region IHasLanguage Members
+        public Language Language { get; set; }
+        #endregion
+
         public virtual void LoadContent(string content, IDictionary<string, IEnumerable<string>> metaInfoMap, IDictionary themeSettings)
         {
             if (metaInfoMap != null)

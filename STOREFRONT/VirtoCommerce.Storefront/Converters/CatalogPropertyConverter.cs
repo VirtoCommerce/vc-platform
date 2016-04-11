@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using VirtoCommerce.Storefront.Common;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Client.Model;
 using Omu.ValueInjecter;
@@ -19,9 +20,7 @@ namespace VirtoCommerce.Storefront.Converters
             if (property.DisplayNames != null)
             {
                 retVal.DisplayNames = property.DisplayNames.Select(x => new LocalizedString(new Language(x.LanguageCode), x.Name)).ToList();
-                retVal.DisplayName = retVal.DisplayNames.Where(x => x.Language.Equals(currentLanguage))
-                                                        .Select(x => x.Value)
-                                                        .FirstOrDefault();
+                retVal.DisplayName = retVal.DisplayNames.FindWithLanguage(currentLanguage, (x)=> x.Value, null);
             }
             //if display name for requested language not set get system property name
             if (String.IsNullOrEmpty(retVal.DisplayName))
@@ -43,7 +42,7 @@ namespace VirtoCommerce.Storefront.Converters
                 var propValue = property.Values.Where(x => x.Value != null).FirstOrDefault();
                 if (propValue != null)
                 {
-                    //Use only one prop value (reserve multivalues to other scenarious)
+                    //Use only one prop value (reserve multi values to other scenarios)
                     retVal.Value = propValue.Value.ToString();
                     retVal.ValueId = propValue.ValueId;
                 }
@@ -51,14 +50,10 @@ namespace VirtoCommerce.Storefront.Converters
             //Try to set value for requested language
             if (retVal.LocalizedValues.Any())
             {
-                retVal.Value = retVal.LocalizedValues.Where(x => x.Language.Equals(currentLanguage))
-                                                    .Select(x => x.Value ?? retVal.Value)
-                                                    .FirstOrDefault() ?? retVal.Value;
-            }
-
+                retVal.Value = retVal.LocalizedValues.FindWithLanguage(currentLanguage, x => x.Value, retVal.Value);
+             }
             return retVal;
         }
-
      
     }
 }

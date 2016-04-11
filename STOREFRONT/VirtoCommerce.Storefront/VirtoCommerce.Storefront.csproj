@@ -394,6 +394,7 @@
     <Compile Include="Common\BlobConnectionString.cs" />
     <Compile Include="Common\HandleJsonErrorAttribute.cs" />
     <Compile Include="Common\IdentityExtensions.cs" />
+    <Compile Include="Common\LocalizationExtension.cs" />
     <Compile Include="Common\NameValueCollectionExtensions.cs" />
     <Compile Include="Common\ObjectExtensions.cs" />
     <Compile Include="Common\SeoExtensions.cs" />
