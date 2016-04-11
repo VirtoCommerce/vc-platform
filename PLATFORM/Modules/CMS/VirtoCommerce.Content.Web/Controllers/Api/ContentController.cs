@@ -13,9 +13,11 @@ using VirtoCommerce.Content.Data.Services;
 using VirtoCommerce.Content.Web.Converters;
 using VirtoCommerce.Content.Web.Models;
 using VirtoCommerce.Content.Web.Security;
+using VirtoCommerce.Domain.Store.Services;
 using VirtoCommerce.Platform.Core.Asset;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Asset;
+using VirtoCommerce.Platform.Core.DynamicProperties;
 
 namespace VirtoCommerce.Content.Web.Controllers.Api
 {
@@ -24,9 +26,11 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
     {
         private readonly Func<string, string, IContentBlobStorageProvider> _contentStorageProviderFactory;
         private readonly IBlobUrlResolver _urlResolver;
-        public ContentController(Func<string, string, IContentBlobStorageProvider> contentStorageProviderFactory, IBlobUrlResolver urlResolver, ISecurityService securityService, IPermissionScopeService permissionScopeService)
+        private readonly IStoreService _storeService;
+        public ContentController(Func<string, string, IContentBlobStorageProvider> contentStorageProviderFactory, IBlobUrlResolver urlResolver, ISecurityService securityService, IPermissionScopeService permissionScopeService, IStoreService storeService)
             : base(securityService, permissionScopeService)
         {
+            _storeService = storeService;
             _contentStorageProviderFactory = contentStorageProviderFactory;
             _urlResolver = urlResolver;
         }
@@ -44,8 +48,10 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
         {
             var themesProvider = _contentStorageProviderFactory("themes", storeId);
             var pageProvider = _contentStorageProviderFactory("pages", storeId);
+            var store = _storeService.GetById(storeId);
             var retVal = new ContentStatistic
             {
+                ActiveThemeName = store.GetDynamicPropertyValue("DefaultThemeName", "not set"),
                 ThemesCount = themesProvider.Search("/", null).Folders.Count(),
                 BlogsCount = pageProvider.Search("/blogs", null).Folders.Count(),
                 PagesCount = pageProvider.Search("/", null).Items.Count()
