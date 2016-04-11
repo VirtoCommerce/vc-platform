@@ -1,0 +1,42 @@
+﻿<div class="blade-static">
+    <div class="form-group">
+        <div class="form-input __search">
+            <input placeholder="{{'platform.placeholders.search-keyword' | translate}}" ng-model="blade.searchText" ng-keyup="gridApi.grid.queueGridRefresh()">
+            <button class="btn __other" style="position: relative;right: 45px;">
+                <i class="btn-ico fa fa-remove" title="Clear" ng-click="blade.searchText='';gridApi.grid.queueGridRefresh()"></i>
+            </button>
+        </div>
+        <p class="form-count">{{'platform.list.count' | translate}}: <span class="count">{{filteredEntitiesCount}}</span></p>
+    </div>
+</div>
+<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <div class="table-wrapper" ng-init="setGridOptions({
+                    rowTemplate: 'account-list.row.html',
+                    columnDefs: [
+                        {
+                            displayName: 'platform.blades.account-list.labels.name', name: 'userName',
+                            sort: { direction: uiGridConstants.ASC }, width: '*'
+                        },
+                        { displayName: 'platform.blades.account-list.labels.account-type', name: 'userType', width: 100 },
+                        { displayName: 'platform.blades.account-list.labels.state', name: 'userState', width: 85 }
+                    ]})">
+                <div ui-grid="gridOptions" ui-grid-auto-resize ui-grid-save-state ui-grid-resize-columns ui-grid-move-columns ui-grid-height></div>
+                <ul class="menu __context" role="menu" id="acc_menu">
+                    <!--<li class="menu-item" ng-click='delete(contextMenuEntity)' va-permission="platform:security:delete">
+                        <i class="menu-ico fa fa-trash-o"></i> {{'platform.commands.delete' | translate}}
+                    </li>-->
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/ng-template" id="account-list.row.html">
+    <div ng-click='grid.appScope.blade.selectNode(row.entity)' ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + '-' + col.uid + '-cell'" class="ui-grid-cell" ng-class="{'ui-grid-row-header-cell': col.isRowHeader, '__hovered': grid.appScope.contextMenuEntity === row.entity, '__selected': row.entity.userName===grid.appScope.selectedNodeId }" role="{{col.isRowHeader ? 'rowheader' : 'gridcell' }}" ui-grid-cell context-menu="grid.appScope.contextMenuEntity = row.entity" data-target="acc_menu"></div>
+</script>
+<script type="text/ng-template" id="list-actions.cell.html">
+    <div class="ui-grid-actions" left-click-menu="grid.appScope.contextMenuEntity = row.entity" data-target="acc_menu">
+        <i class="fa fa-ellipsis-v"></i>
+    </div>
+</script>
