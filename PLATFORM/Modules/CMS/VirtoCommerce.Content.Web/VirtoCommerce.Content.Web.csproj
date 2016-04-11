@@ -194,6 +194,7 @@
     <Compile Include="Models\ContentFile.cs" />
     <Compile Include="Models\ContentFolder.cs" />
     <Compile Include="Models\ContentItem.cs" />
+    <Compile Include="Models\ContentStatistic.cs" />
     <Compile Include="Security\ContentPredefinedPermissions.cs" />
     <Compile Include="Converters\MenuLinkConverter.cs" />
     <Compile Include="Converters\MenuLinkListConverter.cs" />

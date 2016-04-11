@@ -14,6 +14,5 @@ namespace VirtoCommerce.Content.Data.Services
     {
         void MoveContent(string srcUrl, string destUrl);
         void CopyContent(string srcUrl, string destUrl);
-
     }
 }

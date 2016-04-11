@@ -31,7 +31,29 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
             _urlResolver = urlResolver;
         }
 
-   
+        /// <summary>
+        /// Return summary content statistic 
+        /// </summary>
+        /// <param name="storeId"></param>
+        /// <returns>Object contains counters with main content types</returns>
+        [HttpGet]
+        [Route("~/api/content/{storeId}/stats")]
+        [ResponseType(typeof(ContentStatistic))]
+        [CheckPermission(Permission = ContentPredefinedPermissions.Read)]
+        public IHttpActionResult GetStoreContentStats(string storeId)
+        {
+            var themesProvider = _contentStorageProviderFactory("themes", storeId);
+            var pageProvider = _contentStorageProviderFactory("pages", storeId);
+            var retVal = new ContentStatistic
+            {
+                ThemesCount = themesProvider.Search("/", null).Folders.Count(),
+                BlogsCount = pageProvider.Search("/blogs", null).Folders.Count(),
+                PagesCount = pageProvider.Search("/", null).Items.Count()
+            };
+            return Ok(retVal);
+        }
+
+
         /// <summary>
         /// Delete content from server
         /// </summary>
