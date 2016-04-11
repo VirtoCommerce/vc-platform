@@ -37,14 +37,14 @@ namespace VirtoCommerce.Storefront.Converters
                 retVal.ThemeName = retVal.DynamicProperties.GetDynamicPropertyValue("DefaultThemeName");
             }
 
-            if(!storeDto.Settings.IsNullOrEmpty())
+            if (!storeDto.Settings.IsNullOrEmpty())
             {
                 retVal.Settings = storeDto.Settings.Select(x => x.ToWebModel()).ToList();
             }
 
             retVal.TrustedGroups = storeDto.TrustedGroups;
             retVal.StoreState = EnumUtility.SafeParse(storeDto.StoreState, StoreStatus.Open);
-            retVal.SeoLinksType = SeoLinksType.Long; // TODO: Get from store settings
+            retVal.SeoLinksType = EnumUtility.SafeParse(retVal.Settings.GetSettingValue("Stores.SeoLinksType", ""), SeoLinksType.Long);
 
             return retVal;
         }
