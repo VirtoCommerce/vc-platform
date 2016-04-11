@@ -16,6 +16,14 @@ storefrontApp.service('dialogService', ['$uibModal', function ($uibModal) {
     }
 }]);
 
+storefrontApp.service('feedbackService', ['$http', function ($http) {
+    return {
+        postFeedback: function (data) {
+            return $http.post('storefrontapi/feedback', { model: data });
+        }
+    }
+}]);
+
 storefrontApp.service('customerService', ['$http', function ($http) {
     return {
         getCurrentCustomer: function () {

@@ -23,6 +23,7 @@ namespace VirtoCommerce.Storefront.Model
             CurrentPricelists = new List<Pricelist>();
             CurrentLinkLists = new List<MenuLinkList>();
             ExternalLoginProviders = new List<LoginProvider>();
+            ApplicationSettings = new Dictionary<string, object>();
         }
         /// <summary>
         /// Current request url example: http:/host/app/store/en-us/search?page=2
@@ -188,6 +189,11 @@ namespace VirtoCommerce.Storefront.Model
         /// Gets or sets the collection of external login providers
         /// </summary>
         public ICollection<LoginProvider> ExternalLoginProviders { get; set; }
+
+        /// <summary>
+        /// Gets or sets the dictionary of application settings
+        /// </summary>
+        public IDictionary<string, object> ApplicationSettings { get; set; }
 
         #region IDisposable Implementation
 

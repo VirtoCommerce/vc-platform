@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using CacheManager.Core;
-using MarkdownDeep;
+using MarkdownSharp;
 using VirtoCommerce.LiquidThemeEngine;
 using VirtoCommerce.LiquidThemeEngine.Converters;
 using VirtoCommerce.Storefront.Model;

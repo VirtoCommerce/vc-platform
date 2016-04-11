@@ -12,8 +12,12 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
         public static Product ToShopifyModel(this StorefrontModel.Catalog.Product product)
         {
             var result = new Product();
-            result.InjectFrom<NullableAndEnumValueInjecter>(product);
-            result.Variants.Add(product.ToVariant());
+            result.InjectFrom<StorefrontModel.Common.NullableAndEnumValueInjecter>(product);
+
+            if (product.IsBuyable)
+            {
+                result.Variants.Add(product.ToVariant());
+            }
 
             if (product.Variations != null)
             {
@@ -41,6 +45,11 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
 
             result.Content = product.Description;
             result.Description = result.Content;
+            result.Descriptions = new Descriptions(product.Descriptions.Select(d => new Description
+            {
+                Content = d.Value,
+                Type = d.ReviewType
+            }));
             result.FeaturedImage = product.PrimaryImage != null ? product.PrimaryImage.ToShopifyModel() : null;
             if (result.FeaturedImage != null)
             {

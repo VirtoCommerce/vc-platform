@@ -126,7 +126,7 @@ namespace VirtoCommerce.Storefront.Owin
                                 var searchResult = catalogSearchService.SearchProducts(criteria);
                                 //Because catalog search products returns also aggregations we can use it to populate workContext using C# closure
                                 //now workContext.Aggregation will be contains preloaded aggregations for current category
-                                workContext.Aggregations = new MutablePagedList<Aggregation>(searchResult.Aggregations, 1, int.MaxValue);
+                                workContext.Aggregations = new MutablePagedList<Aggregation>(searchResult.Aggregations);
                                 return searchResult.Products;
                             });
                         }
@@ -143,7 +143,7 @@ namespace VirtoCommerce.Storefront.Owin
                         //Prevent double api request for get aggregations
                         //Because catalog search products returns also aggregations we can use it to populate workContext using C# closure
                         //now workContext.Aggregation will be contains preloaded aggregations for current search criteria
-                        workContext.Aggregations = new MutablePagedList<Aggregation>(result.Aggregations, 1, int.MaxValue);
+                        workContext.Aggregations = new MutablePagedList<Aggregation>(result.Aggregations);
                         return result.Products;
                     });
                     //This line make delay aggregation loading initialization (aggregation can be evaluated on view rendering time)
@@ -175,6 +175,8 @@ namespace VirtoCommerce.Storefront.Owin
                         Caption = at.Caption,
                         Properties = at.Properties
                     }).ToList();
+
+                    workContext.ApplicationSettings = GetApplicationSettings();
 
                     //Do not load shopping cart and other for resource requests
                     if (!IsAssetRequest(context.Request))
@@ -375,19 +377,21 @@ namespace VirtoCommerce.Storefront.Owin
         private string GetStoreIdFromUrl(IOwinContext context, ICollection<Store> stores)
         {
             //Try first find by store url (if it defined)
-            var retVal = stores.Where(x => x.IsStoreUrl(context.Request.Uri)).Select(x => x.Id).FirstOrDefault();
+            string retVal = null;
+            foreach (var store in stores)
+            {
+                var pathString = new PathString("/" + store.Id);
+                PathString remainingPath;
+                if (context.Request.Path.StartsWithSegments(pathString, out remainingPath))
+                {
+                    retVal = store.Id;
+                    break;
+                }
+            }
+
             if (retVal == null)
             {
-                foreach (var store in stores)
-                {
-                    var pathString = new PathString("/" + store.Id);
-                    PathString remainingPath;
-                    if (context.Request.Path.StartsWithSegments(pathString, out remainingPath))
-                    {
-                        retVal = store.Id;
-                        break;
-                    }
-                }
+                retVal = stores.Where(x => x.IsStoreUrl(context.Request.Uri)).Select(x => x.Id).FirstOrDefault();
             }
             return retVal;
         }
@@ -501,7 +505,16 @@ namespace VirtoCommerce.Storefront.Owin
             return country;
         }
 
+        private IDictionary<string, object> GetApplicationSettings()
+        {
+            var appSettings = new Dictionary<string, object>();
 
+            foreach (var key in ConfigurationManager.AppSettings.AllKeys)
+            {
+                appSettings.Add(key, ConfigurationManager.AppSettings[key]);
+            }
 
+            return appSettings;
+        }
     }
 }

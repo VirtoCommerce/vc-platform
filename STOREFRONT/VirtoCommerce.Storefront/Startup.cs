@@ -10,7 +10,8 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using CacheManager.Core;
 using CacheManager.Web;
-using MarkdownDeep;
+//using MarkdownDeep;
+using MarkdownSharp;
 using Microsoft.Owin;
 using Microsoft.Owin.Extensions;
 using Microsoft.Owin.Security;
@@ -231,7 +232,11 @@ namespace VirtoCommerce.Storefront
             container.RegisterType<IModelBinderProvider, ShopifyModelBinderProvider>("shopify");
 
             //Static content service
-            var staticContentService = new StaticContentServiceImpl(new Markdown(), shopifyLiquidEngine, localCacheManager, workContextFactory, () => container.Resolve<IStorefrontUrlBuilder>(), StaticContentItemFactory.GetContentItemFromPath, staticContentBlobProvider);
+            var markdownOptions = new MarkdownOptions
+            {
+                LinkEmails = false // Render mailto: links as is without markup transformations
+            };
+            var staticContentService = new StaticContentServiceImpl(ResolveLocalPath(staticContentPath), new Markdown(markdownOptions), shopifyLiquidEngine, localCacheManager, workContextFactory, () => container.Resolve<IStorefrontUrlBuilder>(), StaticContentItemFactory.GetContentItemFromPath, staticContentBlobProvider);
             container.RegisterInstance<IStaticContentService>(staticContentService);
 
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters, workContextFactory);

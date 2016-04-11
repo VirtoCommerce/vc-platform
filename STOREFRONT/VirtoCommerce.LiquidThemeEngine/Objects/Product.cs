@@ -81,6 +81,11 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         public string Description { get; set; }
 
         /// <summary>
+        /// Gets or sets the collection of product descriptions: FullReview, QuickReview, etc.
+        /// </summary>
+        public Descriptions Descriptions { get; set; }
+
+        /// <summary>
         /// The main product image 
         /// </summary>
         [DataMember]

@@ -29,6 +29,8 @@ namespace VirtoCommerce.Storefront.Routing
 
         public override RouteData GetRouteData(HttpContextBase httpContext)
         {
+            var requestUrl = httpContext.Request.Url.ToString();
+
             var data = base.GetRouteData(httpContext);
 
             if (data != null)
