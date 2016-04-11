@@ -159,7 +159,7 @@
 
 
                 //load input template and display
-                $http.get(templateName, { cache: $templateCache }).success(function (tplContent) {
+                $http.get(templateName, { cache: $templateCache }).then(function (results) {
                     //Need to add ngForm to isolate form validation into sub form
                     //var innerContainer = "<div id='innerContainer' />";
 
@@ -169,7 +169,7 @@
                         el.scope().$destroy();
                     }
                     var container = element.find('#valuePlaceHolder');
-                    var result = container.html(tplContent.trim());
+                    var result = container.html(results.data.trim());
 
                     //Create new scope, otherwise we would destroy our directive scope
                     var newScope = scope.$new();

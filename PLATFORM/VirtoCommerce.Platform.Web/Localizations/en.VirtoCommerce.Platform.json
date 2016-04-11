@@ -109,7 +109,7 @@
         }
       },
       "property-valueType": {
-        "title": "Dynamic property value type",
+        "title": "Dynamic Property value type",
         "subtitle": "Change value type"
       },
       "propertyValue-list": {
@@ -618,7 +618,7 @@
       },
       "dynamic-property-delete": {
         "title": "Delete confirmation",
-        "message": "Are you sure you want to delete this dynamic property?"
+        "message": "Are you sure you want to delete this Dynamic Property?"
       },
       "settings-value-delete": {
         "title": "Delete confirmation",

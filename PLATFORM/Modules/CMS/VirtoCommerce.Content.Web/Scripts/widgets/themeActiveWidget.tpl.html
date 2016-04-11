@@ -1,0 +1,30 @@
+﻿<div class="gridster-cnt __informer" ng-if="!data.defaultThemeName">
+    <div class="cnt-inner" ng-click="blade.openThemes(data.store)">
+        {{ 'content.blades.content-main.labels.no-active-theme' | translate }}
+    </div>
+</div>
+<div class="gridster-cnt" ng-if="data.defaultThemeName">
+    <div class="cnt-inner">
+        <div class="tile-t">{{ 'content.blades.content-main.labels.active-theme' | translate }} {{data.defaultThemeName}}</div>
+        <ul class="menu __inline __theme-links">
+            <li class="menu-item" ng-click="blade.openTheme(data); $event.stopPropagation();">
+                <a class="menu-link">
+                    <i class="menu-ico fa fa-edit"></i>
+                    {{ 'content.blades.content-main.labels.edit-css-html' | translate }}
+                </a>
+            </li>
+            <li class="menu-item" ng-click="blade.previewTheme(data); $event.stopPropagation();">
+                <a class="menu-link">
+                    <i class="menu-ico fa fa-eye"></i>
+                    {{ 'content.blades.content-main.labels.preview-theme' | translate }}
+                </a>
+            </li>
+            <li class="menu-item" ng-click="blade.customizeTheme(data); $event.stopPropagation();">
+                <a class="menu-link">
+                    <i class="menu-ico fa fa-wrench"></i>
+                    {{ 'content.blades.content-main.labels.customize-theme' | translate }}
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>

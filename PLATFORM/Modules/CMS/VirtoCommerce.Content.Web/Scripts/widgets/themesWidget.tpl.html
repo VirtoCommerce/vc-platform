@@ -1,6 +1,7 @@
 ﻿<div class="gridster-cnt">
-    <div class="cnt-inner" ng-click="openBlade()">
-        <div class="list-count">{{themesCount}}</div>
-        <div class="list-t">{{ 'content.widgets.themes.title' | translate }}</div>
+    <div class="cnt-inner" ng-click="blade.openThemes(data.store)">
+        <div class="tile-descr">{{ 'content.blades.content-main.labels.themes' | translate }}</div>
+        <div class="tile-count">{{data.themesCount}}</div>
+        <a class="btn" ng-click="blade.addNewTheme(data); $event.stopPropagation();">{{ 'platform.commands.add' | translate }}</a>
     </div>
 </div>

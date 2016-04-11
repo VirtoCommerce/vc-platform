@@ -1,20 +1,21 @@
 {
-    "name": "ASP.NET",
-    "private": true,
-    "dependencies": {
-        "uikit": "2.22.0",
-        "marked": "0.3.5"
+  "name": "ASP.NET",
+  "private": true,
+  "dependencies": {
+    "uikit": "2.22.0",
+    "marked": "0.3.5",
+    "yamljs": "0.1.5"
+  },
+  "overrides": {
+    "uikit": {
+      "main": [
+        "js/uikit.min.js",
+        "css/components/htmleditor.min.css",
+        "js/components/htmleditor.min.js"
+      ]
     },
-    "overrides": {
-        "uikit": {
-            "main": [
-                "js/uikit.min.js",
-                "css/components/htmleditor.min.css",
-                "js/components/htmleditor.min.js"
-            ]
-        },
-        "jquery": {
-            "main": [ ]
-        }
+    "jquery": {
+      "main": [ ]
     }
+  }
 }

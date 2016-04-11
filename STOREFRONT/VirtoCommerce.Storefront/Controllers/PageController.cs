@@ -24,14 +24,17 @@ namespace VirtoCommerce.Storefront.Controllers
         //Called from SEO route by page permalink
         public ActionResult GetContentPage(ContentItem page)
         {
-            if (page is BlogArticle)
+            var blogArticle = page as BlogArticle;
+            var contentPage = page as ContentPage;
+            if (blogArticle != null)
             {
-                base.WorkContext.CurrentBlogArticle = page as BlogArticle;
+                base.WorkContext.CurrentBlogArticle = blogArticle;
+                base.WorkContext.CurrentBlog = base.WorkContext.Blogs.Where(x => x.Name.Equals(blogArticle.BlogName, StringComparison.OrdinalIgnoreCase)).SingleOrDefault();
                 return View("article", page.Layout, base.WorkContext);
             }
             else
             {
-                base.WorkContext.CurrentPage = page as ContentPage;
+                base.WorkContext.CurrentPage = contentPage;
                 return View("page", page.Layout, base.WorkContext);
             }
         }

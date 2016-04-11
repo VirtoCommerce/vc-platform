@@ -94,10 +94,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\ContentRepositoryImpl.cs" />
     <Compile Include="Repositories\IMenuRepository.cs" />
+    <Compile Include="Services\AzureContentBlobStorageProvider.cs" />
     <Compile Include="Services\IMenuService.cs" />
-    <Compile Include="Services\IContentStorageProvider.cs" />
+    <Compile Include="Services\IContentBlobStorageProvider.cs" />
     <Compile Include="Services\MenuServiceImpl.cs" />
-    <Compile Include="Services\ContentStorageProviderImpl.cs" />
+    <Compile Include="Services\FileSystemContentBlobStorageProvider.cs" />
     <Compile Include="Utility\ContentTypeUtility.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -203,18 +203,35 @@ namespace VirtoCommerce.Storefront
             container.RegisterType<IAsyncObserver<UserLoginEvent>, CartBuilder>("Merge anonymous cart with loggined user cart");
             container.RegisterType<IAsyncObserver<UserLoginEvent>, QuoteRequestBuilder>("Merge anonymous quote request with loggined user quote");
 
-            var themesPath = ConfigurationManager.AppSettings["vc-public-themes"] ?? "~/App_data/Themes";
-            var shopifyLiquidEngine = new ShopifyLiquidThemeEngine(localCacheManager, workContextFactory, () => container.Resolve<IStorefrontUrlBuilder>(), ResolveLocalPath(themesPath), "~/themes/assets", "~/themes/global/assets");
+            
+            var cmsContentConnectionString = BlobConnectionString.Parse(ConfigurationManager.ConnectionStrings["CmsContentConnectionString"].ConnectionString);
+            var themesBasePath = cmsContentConnectionString.RootPath.TrimEnd('/') + "/" + "Themes";
+            var staticContentBasePath = cmsContentConnectionString.RootPath.TrimEnd('/') + "/" + "Pages";
+            //Use always file system provider for global theme
+            var globalThemesBlobProvider = new FileSystemContentBlobProvider(ResolveLocalPath("~/App_Data/Themes/default"));
+            IContentBlobProvider themesBlobProvider;
+            IContentBlobProvider staticContentBlobProvider;
+            if ("AzureBlobStorage".Equals(cmsContentConnectionString.Provider, StringComparison.OrdinalIgnoreCase))
+            {
+                themesBlobProvider = new AzureBlobContentProvider(cmsContentConnectionString.ConnectionString, themesBasePath, localCache);
+                staticContentBlobProvider = new AzureBlobContentProvider(cmsContentConnectionString.ConnectionString, staticContentBasePath, localCache);
+            }
+            else
+            {
+                themesBlobProvider = new FileSystemContentBlobProvider(ResolveLocalPath(themesBasePath));
+                staticContentBlobProvider = new FileSystemContentBlobProvider(ResolveLocalPath(staticContentBasePath));
+            }
+            var shopifyLiquidEngine = new ShopifyLiquidThemeEngine(localCacheManager, workContextFactory, () => container.Resolve<IStorefrontUrlBuilder>(), themesBlobProvider , globalThemesBlobProvider, "~/themes/assets", "~/themes/global/assets");
             container.RegisterInstance<ILiquidThemeEngine>(shopifyLiquidEngine);
+
             //Register liquid engine
             ViewEngines.Engines.Add(new DotLiquidThemedViewEngine(shopifyLiquidEngine));
 
             // Shopify model binders convert Shopify form fields with bad names to VirtoCommerce model properties.
             container.RegisterType<IModelBinderProvider, ShopifyModelBinderProvider>("shopify");
 
-            var staticContentPath = ConfigurationManager.AppSettings["vc-public-pages"] ?? "~/App_data/Pages";
             //Static content service
-            var staticContentService = new StaticContentServiceImpl(ResolveLocalPath(staticContentPath), new Markdown(), shopifyLiquidEngine, localCacheManager, workContextFactory, () => container.Resolve<IStorefrontUrlBuilder>(), StaticContentItemFactory.GetContentItemFromPath);
+            var staticContentService = new StaticContentServiceImpl(new Markdown(), shopifyLiquidEngine, localCacheManager, workContextFactory, () => container.Resolve<IStorefrontUrlBuilder>(), StaticContentItemFactory.GetContentItemFromPath, staticContentBlobProvider);
             container.RegisterInstance<IStaticContentService>(staticContentService);
 
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters, workContextFactory);

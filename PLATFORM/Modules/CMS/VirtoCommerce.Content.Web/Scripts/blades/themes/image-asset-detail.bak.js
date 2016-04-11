@@ -1,0 +1,178 @@
+﻿angular.module('virtoCommerce.contentModule')
+.controller('virtoCommerce.contentModule.imageAssetDetailController', ['$scope', 'platformWebApp.validators', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'virtoCommerce.contentModule.contentApi', 'FileUploader', function ($scope, validators, dialogService, bladeNavigationService, contentApi, FileUploader) {
+    var blade = $scope.blade;
+    blade.updatePermission = 'content:update';
+
+    $scope.validators = validators;
+    var formScope;
+    $scope.setForm = function (form) { formScope = form; }
+
+    blade.initializeBlade = function () {
+        if (!blade.isNew) {
+            contentApi.get({ contentType: blade.contentType, storeId: blade.storeId,  relativeUrl: blade.currentEntity.relativeUrl }, function (data) {
+                    blade.isLoading = false;
+
+                    data.content = "data:" + data.contentType + ";base64," + data.byteContent;
+
+                    blade.currentEntity = angular.copy(data);
+                    blade.origEntity = data;
+                },
+                function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+
+            $scope.blade.toolbarCommands = [
+			{
+			    name: "platform.commands.save", icon: 'fa fa-save',
+			    executeMethod: function () {
+			        blade.saveChanges();
+			    },
+			    canExecuteMethod: function () {
+			        return isDirty() && formScope.$valid;
+			    },
+			    permission: blade.updatePermission
+			},
+			{
+			    name: "platform.commands.reset", icon: 'fa fa-undo',
+			    executeMethod: function () {
+			        angular.copy(blade.origEntity, blade.currentEntity);
+			    },
+			    canExecuteMethod: isDirty,
+			    permission: blade.updatePermission
+			},
+			{
+			    name: "platform.commands.delete", icon: 'fa fa-trash-o',
+			    executeMethod: deleteEntry,
+			    canExecuteMethod: function () { return true; },
+			    permission: 'content:delete'
+			}];
+        }
+        else {
+            var data = angular.copy(blade.currentEntity);
+            blade.origEntity = data;
+
+            $scope.blade.toolbarCommands = [
+			{
+			    name: "platform.commands.save", icon: 'fa fa-save',
+			    executeMethod: function () {
+			        blade.saveChanges();
+			    },
+			    canExecuteMethod: function () {
+			        return isDirty() && isCanSave();
+			    },
+			    permission: 'content:create'
+			}];
+
+            blade.isLoading = false;
+        }
+    }
+
+    blade.check = function () {
+        if (blade.currentEntity) {
+            if (blade.currentEntity.contentType === 'image/png' || blade.currentEntity.contentType === 'image/jpeg' || blade.currentEntity.contentType === 'image/bmp' || blade.currentEntity.contentType === 'image/gif') {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    blade.getImage = function () {
+        return blade.currentEntity.content;
+    }
+
+    blade.isImage = function () {
+        if (blade.currentEntity) {
+            if (blade.currentEntity.contentType === 'image/png' ||
+				blade.currentEntity.contentType === 'image/bmp' ||
+				blade.currentEntity.contentType === 'image/gif' ||
+				blade.currentEntity.contentType === 'image/jpeg') {
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    blade.saveChanges = function () {
+        blade.isLoading = true;
+        blade.currentEntity.id = blade.folderUrl + '/' + blade.currentEntity.name;
+
+        contentApi.save({ contentType: 'themes', storeId: blade.storeId, themeId: blade.themeId }, blade.currentEntity, function () {
+            blade.parentBlade.initialize();
+            blade.assetId = blade.currentEntity.id;
+            blade.title = blade.currentEntity.id;
+            blade.subtitle = 'Edit asset';
+            blade.isNew = false;
+            blade.initializeBlade();
+        },
+        function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+    };
+
+    function isDirty() {
+        return !angular.equals(blade.currentEntity, blade.origEntity) && blade.hasUpdatePermission();
+    };
+
+    function deleteEntry() {
+        var dialog = {
+            id: "confirmDelete",
+            title: "content.dialogs.asset-delete.title",
+            message: "content.dialogs.asset-delete.message",
+            callback: function (remove) {
+                if (remove) {
+                    $scope.blade.isLoading = true;
+
+                    contentApi.delete({ contentType: 'themes', storeId: blade.storeId, themeId: blade.themeId, assetIds: blade.currentEntity.url }, function () {
+                        $scope.bladeClose();
+                        $scope.blade.parentBlade.initialize(true);
+                    },
+                    function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+                }
+            }
+        }
+        dialogService.showConfirmationDialog(dialog);
+    }
+
+    function isCanSave() {
+        if (blade.currentEntity) {
+            if (blade.currentEntity.id && blade.currentEntity.assetUrl && formScope.$valid) {
+                return true;
+            }
+            return false;
+        }
+        else {
+            return false;
+        }
+    }
+
+    if (!$scope.uploader && blade.hasUpdatePermission()) {
+        // create the uploader
+        var uploader = $scope.uploader = new FileUploader({
+            scope: $scope,
+            headers: { Accept: 'application/json' },
+            url: "api/platform/assets?folderUrl=themefile",
+            autoUpload: true,
+            removeAfterUpload: true
+        });
+
+        uploader.onSuccessItem = function (fileItem, image, status, headers) {
+            //blade.currentEntity.content = image.content;
+            blade.currentEntity.assetUrl = image[0].url;
+            blade.currentEntity.contentType = image[0].mimeType;
+
+            if (blade.isNew) {
+                blade.currentEntity.name = image[0].name;
+                blade.currentEntity.id = blade.folderUrl + '/' + image[0].name;
+            }
+        };
+
+        uploader.onAfterAddingAll = function (addedItems) {
+            bladeNavigationService.setError(null, blade);
+        };
+
+        uploader.onErrorItem = function (item, response, status, headers) {
+            bladeNavigationService.setError(item._file.name + ' failed: ' + (response.message ? response.message : status), blade);
+        };
+    }
+
+    blade.initializeBlade();
+
+}]);

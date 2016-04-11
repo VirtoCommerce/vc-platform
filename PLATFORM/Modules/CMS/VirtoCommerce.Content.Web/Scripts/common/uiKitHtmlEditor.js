@@ -75,8 +75,7 @@
 
             scope.$on('resetContent', function (event, arg) {
                 var editor = $('.CodeMirror')[0].CodeMirror;
-
-                editor.setValue(arg.body);
+                editor.setValue(arg.body || '');
             });
 
             scope.$on('changeEditType', function (event, arg) {

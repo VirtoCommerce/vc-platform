@@ -72,7 +72,7 @@
         }
     };
 
-    blade.headIcon = 'fa-file-text-o';
+    blade.headIcon = 'fa-file-o';
 
     initialize();
     blade.isLoading = false;

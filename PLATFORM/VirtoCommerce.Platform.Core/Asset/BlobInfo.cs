@@ -16,6 +16,7 @@ namespace VirtoCommerce.Platform.Core.Asset
         /// Absolute url
         /// </summary>
         public string Url { get; set; }
+        public string RelativeUrl { get; set; }
 		public string FileName { get; set; }
 		public long Size { get; set; }
 		public string ContentType { get; set; }

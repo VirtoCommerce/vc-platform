@@ -158,6 +158,7 @@ $RECYCLE.BIN/
 /PLATFORM/Modules/Catalog/VirtoCommerce.CatalogModule.Test/products.csv
 /PLATFORM/Modules/Marketing/VirtoCommerce.MarketingModule.Data/app.config
 /STOREFRONT/packages
+/STOREFRONT/VirtoCommerce.Storefront/App_Data/blogs/*
 /STOREFRONT/VirtoCommerce.Storefront/App_Data/Themes/*
 /STOREFRONT/VirtoCommerce.Storefront/App_Data/Pages/*
 !/STOREFRONT/VirtoCommerce.Storefront/App_Data/Themes/default/*

@@ -97,11 +97,13 @@
     <Compile Include="Common\IMutablePagedList.cs" />
     <Compile Include="Common\LocalCacheManager.cs" />
     <Compile Include="Common\MutablePagedList.cs" />
+    <Compile Include="Common\StreamExtensions.cs" />
     <Compile Include="Common\SettingsExtension.cs" />
     <Compile Include="IHasSettings.cs" />
     <Compile Include="SeoLinksType.cs" />
     <Compile Include="SettingEntry.cs" />
     <Compile Include="LoginProvider.cs" />
+    <Compile Include="StaticContent\Services\IContentBlobProvider.cs" />
     <Compile Include="Tax\ITaxable.cs" />
     <Compile Include="LinkList\CategoryMenuLink.cs" />
     <Compile Include="Common\Events\EventPublisher.cs" />

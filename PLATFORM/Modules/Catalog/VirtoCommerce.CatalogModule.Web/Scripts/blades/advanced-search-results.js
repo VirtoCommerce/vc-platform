@@ -38,16 +38,7 @@
           canExecuteMethod: function () {
               return true;
           }
-      },
-        {
-            name: "platform.commands.manage", icon: 'fa fa-edit',
-            executeMethod: function () {
-                $scope.edit($scope.selectedItem);
-            },
-            canExecuteMethod: function () {
-                return $scope.selectedItem;
-            }
-        }
+      }
     ];
 
     //No need to call this because page 'pageSettings.currentPage' is watched!!! It would trigger subsequent duplicated req...
