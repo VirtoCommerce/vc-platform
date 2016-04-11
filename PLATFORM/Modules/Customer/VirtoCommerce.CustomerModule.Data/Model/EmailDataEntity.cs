@@ -13,9 +13,9 @@ using VirtoCommerce.Platform.Data.Infrastructure;
 namespace VirtoCommerce.CustomerModule.Data.Model
 {
 		
-	public class Email : Entity
+	public class EmailDataEntity : Entity
 	{
-		[CustomValidation(typeof(Email), "ValidateEmailContent", ErrorMessage = "Email has error")]
+		[CustomValidation(typeof(EmailDataEntity), "ValidateEmailContent", ErrorMessage = "Email has error")]
 		public string Address { get; set; }
 
 		public bool IsValidated { get; set; }
@@ -28,7 +28,7 @@ namespace VirtoCommerce.CustomerModule.Data.Model
 
 		public string MemberId { get; set; }
        
-        public virtual Member Member { get; set; }
+        public virtual MemberDataEntity Member { get; set; }
 
 
 		#endregion

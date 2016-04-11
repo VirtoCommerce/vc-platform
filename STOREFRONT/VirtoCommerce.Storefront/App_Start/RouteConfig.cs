@@ -3,9 +3,10 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.Storefront.Model;
-using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Services;
 using VirtoCommerce.Storefront.Routing;
+using VirtoCommerce.Storefront.Controllers.Api;
+using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront
 {

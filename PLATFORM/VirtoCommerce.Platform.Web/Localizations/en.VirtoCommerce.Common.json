@@ -61,6 +61,12 @@
     "placeholders": {
       "search-keyword": "Search keyword..."
     },
+    "dialogs": {
+      "delete": {
+        "title": "Delete confirmation",
+        "message": "Are you sure you want to delete selected entries?"
+      }
+    },
     "properties": {
       "short-text": {
         "title": "Short Text",
@@ -115,5 +121,4 @@
       }
     }
   }
-
 }

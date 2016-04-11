@@ -2,15 +2,10 @@
     <div class="blade-inner">
         <div class="inner-block">
             <ul class="list __items">
-                <li class="list-item" ng-mouseup="addOrganization()">
-                    <i class="list-ico fa fa-university"></i>
-                    <span class="list-t">{{ 'customer.blades.member-add.menu.organization.title' | translate }}</span>
-                    <span class="list-descr">{{ 'customer.blades.member-add.menu.organization.description' | translate }}</span>
-                </li>
-                <li class="list-item" ng-mouseup="addCustomer()">
-                    <i class="list-ico fa fa-user"></i>
-                    <span class="list-t">{{ 'customer.blades.member-add.menu.customer.title' | translate }}</span>
-                    <span class="list-descr">{{ 'customer.blades.member-add.menu.customer.description' | translate }}</span>
+                <li class="list-item" ng-mouseup="addMember(data)" ng-repeat="data in memberTypes">
+                    <i class="list-ico fa {{data.icon}}"></i>
+                    <span class="list-t">{{data.titleAdd | translate}}</span>
+                    <span class="list-descr">{{data.descriptionAdd | translate}}</span>
                 </li>
             </ul>
         </div>

@@ -53,7 +53,7 @@ namespace VirtoCommerce.Storefront.Common
                     .Select(s =>
                     {
                         var score = 0;
-                        score += store.Id.Equals(s.StoreId, StringComparison.OrdinalIgnoreCase) ? 3 : 0;
+                        score += store.Id.Equals(s.StoreId, StringComparison.OrdinalIgnoreCase) ? 4 : 0;
                         score += language.Equals(s.LanguageCode) ? 2 : 0;
                         score += store.DefaultLanguage.Equals(s.LanguageCode) ? 1 : 0;
                         return new { SeoRecord = s, Score = score };

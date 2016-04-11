@@ -14,7 +14,7 @@ namespace VirtoCommerce.CustomerModule.Data.Model
     /// <summary>
     /// Stores relations between contacts and organizations.
     /// </summary>
-    public class MemberRelation : Entity
+    public class MemberRelationDataEntity : Entity
     {
         /// <summary>
         /// Gets or sets the ancestor sequence. A number to indicate whether the ancestor is the parent, 
@@ -40,7 +40,7 @@ namespace VirtoCommerce.CustomerModule.Data.Model
 		[StringLength(128)]
 		public string AncestorId { get; set; }
 
-        public virtual Member Ancestor { get; set; }
+        public virtual MemberDataEntity Ancestor { get; set; }
 
         [StringLength(64)]
         public string RelationType { get; set; }
@@ -54,7 +54,7 @@ namespace VirtoCommerce.CustomerModule.Data.Model
  		[StringLength(128, ErrorMessage = "Only 128 characters allowed.")]
 		public string DescendantId { get; set; }
 
-        public virtual Member Descendant { get; set; }
+        public virtual MemberDataEntity Descendant { get; set; }
         #endregion
     }
 }

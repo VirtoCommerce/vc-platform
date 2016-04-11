@@ -1,30 +1,31 @@
 ﻿angular.module('virtoCommerce.coreModule.seo')
-.controller('virtoCommerce.coreModule.seo.seoWidgetController', ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
+.controller('virtoCommerce.coreModule.seo.seoWidgetController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.coreModule.seoApi', function ($scope, bladeNavigationService, seoApi) {
     var blade = $scope.blade;
 
-    $scope.openSeoBlade = function () {
-        if ($scope.widget.skipStoreList) {
-            blade.seoLanguages = $scope.widget.getLanguages(blade);
+    var promise = seoApi.query({ objectId: $scope.data.id, objectType: $scope.widget.objectType }).$promise;
 
+    function searchForDulicates() {
+        promise.then(function (promiseData) {
+            $scope.duplicates = promiseData;
+        });
+    }
+
+    $scope.openSeoBlade = function () {
+        promise.then(function (promiseData) {
             var newBlade = {
-                id: 'seoDetails',
-                store: blade.currentEntity,
-                updatePermission: blade.updatePermission,
-                controller: 'virtoCommerce.coreModule.seo.seoDetailController',
-                template: 'Modules/$(VirtoCommerce.Core)/Scripts/SEO/blades/seo-detail.tpl.html'
-            };
-            bladeNavigationService.showBlade(newBlade, blade);
-        } else {
-            var newBlade = {
-                id: "seoStoreList",
+                id: "seoList",
                 title: blade.title,
-                seoLanguages: $scope.widget.getLanguages(blade),
+                duplicates: promiseData,
+                seoContainerObject: $scope.data,
+                fixedStoreId: $scope.widget.getFixedStoreId ? $scope.widget.getFixedStoreId(blade) : undefined,
+                languages: $scope.widget.getLanguages(blade),
                 updatePermission: blade.updatePermission,
-                controller: 'virtoCommerce.coreModule.seo.storeListController',
-                template: 'Modules/$(VirtoCommerce.Core)/Scripts/SEO/blades/store-list.tpl.html'
+                controller: 'virtoCommerce.coreModule.seo.seoListController',
+                template: 'Modules/$(VirtoCommerce.Core)/Scripts/SEO/blades/seo-list.tpl.html'
             };
             bladeNavigationService.showBlade(newBlade, blade);
-        }
+        });
     };
 
+    searchForDulicates();
 }]);

@@ -150,7 +150,7 @@ namespace VirtoCommerce.Content.Web
                 CreatedBy = "Auto"
             };
 
-            dynamicPropertyService.SaveProperties(new[] { defaultThemeNameProperty, layoutHeader, publishedHeader, categoryHeader, categoriesHeader, tagsHeader });
+            dynamicPropertyService.SaveProperties(new[] { defaultThemeNameProperty, permalinkHeader, layoutHeader, publishedHeader, categoryHeader, categoriesHeader, tagsHeader });
 
             //Register bounded security scope types
             var securityScopeService = _container.Resolve<IPermissionScopeService>();

@@ -1,18 +1,16 @@
 ﻿angular.module('virtoCommerce.customerModule')
-.controller('virtoCommerce.customerModule.memberAddController', ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
+.controller('virtoCommerce.customerModule.memberAddController', ['$scope', 'virtoCommerce.customerModule.memberTypesResolverService', function ($scope, memberTypesResolverService) {
     var blade = $scope.blade;
 
-    $scope.addOrganization = function () {
-        bladeNavigationService.closeBlade(blade, function () {
-            blade.parentBlade.showDetailBlade({ memberType: 'Organization' }, 'customer.blades.new-organization.title');
+    $scope.addMember = function (node) {
+        $scope.bladeClose(function () {
+            blade.parentBlade.showDetailBlade({ memberType: node.memberType }, node.newInstanceBladeTitle);
         });
     };
 
-    $scope.addCustomer = function () {
-        bladeNavigationService.closeBlade(blade, function () {
-            blade.parentBlade.showDetailBlade({}, 'customer.blades.new-customer.title');
-        });
-    };
+    $scope.memberTypes = _.filter(memberTypesResolverService.objects, function (x) {
+        return !x.topLevelElementOnly || !blade.parentBlade.currentEntity.id;
+    });
 
     blade.headIcon = blade.parentBlade.headIcon;
     blade.isLoading = false;

@@ -46,7 +46,8 @@ namespace VirtoCommerce.LiquidThemeEngine
         private readonly string _globalThemeAssetsRelativeUrl;
         private readonly Func<WorkContext> _workContextFactory;
         private readonly Func<IStorefrontUrlBuilder> _storeFrontUrlBuilderFactory;
-        private readonly ICacheManager<object> _cacheManager;
+        private readonly ILocalCacheManager _cacheManager;
+        private readonly FileSystemWatcher _fileSystemWatcher;
         private readonly SassCompilerProxy _saasCompiler = new SassCompilerProxy();
         private readonly IContentBlobProvider _themeBlobProvider;
         private readonly IContentBlobProvider _globalThemeBlobProvider;
@@ -150,7 +151,7 @@ namespace VirtoCommerce.LiquidThemeEngine
                 return Path.Combine(WorkContext.CurrentStore.Id, CurrentThemeName);
             }
         }
-    
+
         #region IFileSystem members
         public string ReadTemplateFile(Context context, string templateName)
         {
@@ -177,14 +178,14 @@ namespace VirtoCommerce.LiquidThemeEngine
                 if (_themeBlobProvider.PathExists(CurrentThemePath + "\\assets"))
                 {
                     currentThemePath = _themeBlobProvider.Search(CurrentThemePath + "\\assets", fileName, true).FirstOrDefault();
-                }              
+            }
             }
 
             //We find requested asset need return resulting stream
             if (currentThemePath != null)
             {
                 retVal = _themeBlobProvider.OpenRead(currentThemePath);
-            }
+                }
             else if(globalThemePath != null)
             {
                 retVal = _globalThemeBlobProvider.OpenRead(globalThemePath);
@@ -321,17 +322,17 @@ namespace VirtoCommerce.LiquidThemeEngine
                 var resultSettings = InnerGetSettings(_globalThemeBlobProvider, "");
                 //Then load from current theme
                 var currentThemeSettings = InnerGetSettings(_themeBlobProvider, CurrentThemePath);
-                if (currentThemeSettings != null)
-                {
-                    if (resultSettings == null) // if there is no default settings, use just current theme
+                    if (currentThemeSettings != null)
                     {
-                        resultSettings = currentThemeSettings;
+                        if (resultSettings == null) // if there is no default settings, use just current theme
+                        {
+                            resultSettings = currentThemeSettings;
+                        }
+                        else
+                        {
+                            resultSettings.Merge(currentThemeSettings, new JsonMergeSettings { MergeArrayHandling = MergeArrayHandling.Merge });
+                        }
                     }
-                    else
-                    {
-                        resultSettings.Merge(currentThemeSettings, new JsonMergeSettings { MergeArrayHandling = MergeArrayHandling.Merge });
-                    }
-                }
 
 
                 if (resultSettings != null)
@@ -356,12 +357,12 @@ namespace VirtoCommerce.LiquidThemeEngine
                 //Load first localization from global theme
                 var retVal = InnerReadLocalization(_globalThemeBlobProvider, "", WorkContext.CurrentLanguage);
 
-                //Next need merge current theme localization with default
+                    //Next need merge current theme localization with default
                 var currentThemeLocalization = InnerReadLocalization(_themeBlobProvider, CurrentThemePath, WorkContext.CurrentLanguage);
-                if (currentThemeLocalization != null)
-                {
-                    retVal.Merge(currentThemeLocalization, new JsonMergeSettings { MergeArrayHandling = MergeArrayHandling.Merge });
-                }
+                    if (currentThemeLocalization != null)
+                    {
+                        retVal.Merge(currentThemeLocalization, new JsonMergeSettings { MergeArrayHandling = MergeArrayHandling.Merge });
+                    }
 
                 return retVal;
             });
@@ -406,7 +407,7 @@ namespace VirtoCommerce.LiquidThemeEngine
                     using (var stream = themeBlobProvider.OpenRead(currentLocalePath))
                     {
                         localeJson = JsonConvert.DeserializeObject<dynamic>(stream.ReadToString());
-                    }
+                }
                 }
 
                 if (localeDefaultPath != null && themeBlobProvider.PathExists(localeDefaultPath))
@@ -414,7 +415,7 @@ namespace VirtoCommerce.LiquidThemeEngine
                     using (var stream = themeBlobProvider.OpenRead(localeDefaultPath))
                     {
                         defaultJson = JsonConvert.DeserializeObject<dynamic>(stream.ReadToString());
-                    }
+                }
                 }
 
                 //Need merge default and requested localization json to resulting object
@@ -437,14 +438,14 @@ namespace VirtoCommerce.LiquidThemeEngine
                 using (var stream = themeBlobProvider.OpenRead(settingsPath))
                 {
                     var settings = JsonConvert.DeserializeObject<JObject>(stream.ReadToString());
-                    // now get settings for current theme and add it as a settings parameter
-                    retVal = settings["current"] as JObject;
-                    if (retVal == null)
-                    {
-                        //is setting preset name need return it as active
-                        retVal = settings["presets"][settings["current"].ToString()] as JObject;
-                    }
+                // now get settings for current theme and add it as a settings parameter
+                retVal = settings["current"] as JObject;
+                if (retVal == null)
+                {
+                    //is setting preset name need return it as active
+                    retVal = settings["presets"][settings["current"].ToString()] as JObject;
                 }
+            }
             }
             return retVal;
         }
@@ -463,7 +464,7 @@ namespace VirtoCommerce.LiquidThemeEngine
                         blobProvider = _globalThemeBlobProvider;
                     }
                     using (var stream = blobProvider.OpenRead(templatePath))
-                    {
+                {
                         return stream.ReadToString();
                     }
 
@@ -483,7 +484,7 @@ namespace VirtoCommerce.LiquidThemeEngine
             return String.Join(":", retVal).GetHashCode().ToString();
         }
 
-    
+
 
 
     }

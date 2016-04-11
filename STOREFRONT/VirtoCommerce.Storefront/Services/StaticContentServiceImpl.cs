@@ -30,7 +30,7 @@ namespace VirtoCommerce.Storefront.Services
         private readonly Func<IStorefrontUrlBuilder> _urlBuilderFactory;
         private readonly Func<string, ContentItem> _contentItemFactory;
         private readonly IContentBlobProvider _contentBlobProvider;
-     
+
         [CLSCompliant(false)]
         public StaticContentServiceImpl(Markdown markdownRender, ILiquidThemeEngine liquidEngine,
                                         ILocalCacheManager cacheManager, Func<WorkContext> workContextFactory,
@@ -106,8 +106,8 @@ namespace VirtoCommerce.Storefront.Services
         {
             string content = null;
             using (var stream = _contentBlobProvider.OpenRead(contentPath))
-            {
-                //Load raw content with metadata
+        {
+            //Load raw content with metadata
                 content = stream.ReadToString();
             }
             IDictionary<string, IEnumerable<string>> metaHeaders = null;
@@ -211,7 +211,7 @@ namespace VirtoCommerce.Storefront.Services
             return retVal;
         }
 
-      
+
         //each content file  has a name pattern {name}.{language?}.{ext}
         private class LocalizedBlobInfo
         {

@@ -102,6 +102,7 @@
     <Compile Include="Common\IFactory.cs" />
     <Compile Include="Common\ObservableChangeTracker.cs" />
     <Compile Include="Common\PlatformVersion.cs" />
+    <Compile Include="Common\PredicateBuilder.cs" />
     <Compile Include="Common\PrimaryKeyResolvingMap.cs" />
     <Compile Include="Common\SemanticVersion.cs" />
     <Compile Include="Common\SerializationExtension.cs" />
@@ -146,7 +147,6 @@
     <Compile Include="Common\MimeTypeResolver.cs" />
     <Compile Include="Common\NullCollection.cs" />
     <Compile Include="Common\ObjectExtension.cs" />
-    <Compile Include="Common\PredicateBuilder.cs" />
     <Compile Include="Common\ReflectionUtility.cs" />
     <Compile Include="Common\StringExtensions.cs" />
     <Compile Include="Common\TrackingEntry.cs" />
@@ -237,6 +237,7 @@
     <Compile Include="Security\AuthentificationOptions.cs" />
     <Compile Include="Security\CheckPermissionAttribute.cs" />
     <Compile Include="Security\ICurrentUser.cs" />
+    <Compile Include="Security\IHasSecurityAccounts.cs" />
     <Compile Include="Security\IUserNameResolver.cs" />
     <Compile Include="Security\VirtoCommerceClaimTypes.cs" />
     <Compile Include="Security\IPermissionScopeService.cs" />

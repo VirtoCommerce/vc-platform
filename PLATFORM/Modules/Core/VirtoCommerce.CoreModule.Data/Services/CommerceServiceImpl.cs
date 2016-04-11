@@ -20,8 +20,8 @@ namespace VirtoCommerce.CoreModule.Data.Services
         {
             _repositoryFactory = repositoryFactory;
         }
-
-        #region ICommerceService Members
+  
+        #region ICommerceService Members     
 
         public IEnumerable<coreModel.FulfillmentCenter> GetAllFulfillmentCenters()
         {
@@ -166,6 +166,21 @@ namespace VirtoCommerce.CoreModule.Data.Services
             }
         }
 
+        public IEnumerable<coreModel.SeoInfo> GetAllSeoDuplicates()
+        {
+            var retVal = new List<coreModel.SeoInfo>();
+            using (var repository = _repositoryFactory())
+            {
+                var dublicateSeoRecords = repository.SeoUrlKeywords.GroupBy(x => x.Keyword + ":" + x.StoreId)
+                                                    .Where(x => x.Count() > 1)
+                                                    .SelectMany(x => x)
+                                                    .ToArray();
+                retVal.AddRange(dublicateSeoRecords.Select(x => x.ToCoreModel()));
+            }
+            return retVal;
+        }
+
+
         public IEnumerable<coreModel.SeoInfo> GetSeoByKeyword(string keyword)
         {
             using (var repository = _repositoryFactory())
@@ -180,6 +195,8 @@ namespace VirtoCommerce.CoreModule.Data.Services
                 return result;
             }
         }
+
+     
 
         public IEnumerable<coreModel.Currency> GetAllCurrencies()
         {

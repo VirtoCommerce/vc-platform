@@ -49,10 +49,10 @@ namespace VirtoCommerce.CoreModule.Web
 
             //#endregion
 
-            #region Fulfillment
+            #region Commerce
 
             _container.RegisterType<IСommerceRepository>(new InjectionFactory(c => new CommerceRepositoryImpl(_connectionStringName, new EntityPrimaryKeyGeneratorInterceptor(), _container.Resolve<AuditableInterceptor>())));
-            _container.RegisterType<ICommerceService, CommerceServiceImpl>();
+            _container.RegisterType<ICommerceService, CommerceServiceImpl>();         
 
             #endregion
 

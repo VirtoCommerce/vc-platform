@@ -102,6 +102,10 @@
     </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.3\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
@@ -126,8 +130,10 @@
   <ItemGroup>
     <Content Include="Scripts\blades\customer-accounts-list.js" />
     <Content Include="Scripts\blades\customer-accounts-list.tpl.html" />
+    <Content Include="Scripts\blades\employee-detail.tpl.html" />
     <Content Include="Scripts\blades\member-add.js" />
     <Content Include="Scripts\blades\member-add.tpl.html" />
+    <Content Include="Scripts\blades\vendor-detail.tpl.html" />
     <Content Include="Scripts\blades\organization-detail.tpl.html" />
     <Content Include="Scripts\blades\member-list.js" />
     <Content Include="Scripts\blades\member-list.tpl.html" />
@@ -141,6 +147,7 @@
     <Content Include="Scripts\blades\pick-store-list.tpl.html" />
     <Content Include="Scripts\resources\members.js" />
     <Content Include="Scripts\customer.js" />
+    <Content Include="Scripts\services\memberTypesResolver.js" />
     <Content Include="Scripts\widgets\customerAccountsWidget.js" />
     <Content Include="Scripts\widgets\customerAccountsWidget.tpl.html" />
     <Content Include="Scripts\widgets\memberPhonesWidget.js" />
@@ -153,6 +160,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\Api\CustomerModuleController.cs" />
+    <Compile Include="JsonConverters\PolymorphicMemberJsonConverter.cs" />
     <Compile Include="Security\CustomerPredefinedPermissions.cs" />
     <Compile Include="ExportImport\CustomerExportImport.cs" />
     <Compile Include="Module.cs" />

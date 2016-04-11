@@ -124,8 +124,6 @@ namespace VirtoCommerce.Platform.Web
                 FileSystem = new Microsoft.Owin.FileSystems.PhysicalFileSystem(scriptsRelativePath)
             });
 
-
-
             // Register URL rewriter before modules initialization
             if (Directory.Exists(modulesPhysicalPath))
             {
@@ -444,7 +442,7 @@ namespace VirtoCommerce.Platform.Web
 
             if (string.Equals(blobConnectionString.Provider, FileSystemBlobProvider.ProviderName, StringComparison.OrdinalIgnoreCase))
             {
-                var fileSystemBlobProvider = new FileSystemBlobProvider(blobConnectionString.RootPath, blobConnectionString.PublicUrl);
+                var fileSystemBlobProvider = new FileSystemBlobProvider(NormalizePath(blobConnectionString.RootPath), blobConnectionString.PublicUrl);
 
                 container.RegisterInstance<IBlobStorageProvider>(fileSystemBlobProvider);
                 container.RegisterInstance<IBlobUrlResolver>(fileSystemBlobProvider);
@@ -505,6 +503,24 @@ namespace VirtoCommerce.Platform.Web
             #endregion
         }
 
+        private static string NormalizePath(string path)
+        {
+            var retVal = path;
+            if (path.StartsWith("~"))
+            {
+                retVal = HostingEnvironment.MapPath(path);
+            }
+            else if (Path.IsPathRooted(path))
+            {
+                retVal = path;
+            }
+            else
+            {
+                retVal = HostingEnvironment.MapPath("~/");
+                retVal += path;
+            }
+            return Path.GetFullPath(retVal);
+        }
         private static string MakeRelativePath(string rootPath, string fullPath)
         {
             var rootUri = new Uri(rootPath);

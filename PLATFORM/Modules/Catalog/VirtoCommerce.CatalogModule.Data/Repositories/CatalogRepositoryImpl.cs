@@ -254,21 +254,19 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
             var result = Categories.Include(x => x.Catalog.CatalogLanguages)
                                    .Where(x => categoriesIds.Contains(x.Id)).ToArray();
 
-            if ((respGroup & coreModel.CategoryResponseGroup.WithLinks) == coreModel.CategoryResponseGroup.WithLinks)
+            if (respGroup.HasFlag(coreModel.CategoryResponseGroup.WithLinks))
             {
                 var incommingLinks = CategoryLinks.Where(x => categoriesIds.Contains(x.TargetCategoryId)).ToArray();
                 var outgoingLinks = CategoryLinks.Where(x => categoriesIds.Contains(x.SourceCategoryId)).ToArray();
             }
 
-            if ((respGroup & coreModel.CategoryResponseGroup.WithImages) == coreModel.CategoryResponseGroup.WithImages)
+            if (respGroup.HasFlag(coreModel.CategoryResponseGroup.WithImages))
             {
                 var images = Images.Where(x => categoriesIds.Contains(x.CategoryId)).ToArray();
             }
 
-            if (((respGroup & coreModel.CategoryResponseGroup.WithParents) == coreModel.CategoryResponseGroup.WithParents)
-                || ((respGroup & coreModel.CategoryResponseGroup.WithProperties) == coreModel.CategoryResponseGroup.WithProperties))
+            if (respGroup.HasFlag(coreModel.CategoryResponseGroup.WithParents) || respGroup.HasFlag(coreModel.CategoryResponseGroup.WithProperties))
             {
-
                 var parentsMap = GetAllCategoriesParents(categoriesIds);
                 foreach (var categoryId in categoriesIds)
                 {
@@ -284,7 +282,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
             var propertyValues = PropertyValues.Where(x => categoriesIds.Contains(x.CategoryId)).ToArray();
 
             //Load all properties meta information and information for inheritance
-            if ((respGroup & coreModel.CategoryResponseGroup.WithProperties) == coreModel.CategoryResponseGroup.WithProperties)
+            if (respGroup.HasFlag(coreModel.CategoryResponseGroup.WithProperties))
             {
                 //Need load inherited from parents categories and catalogs
                 var allParents = result.SelectMany(x => x.AllParents).ToArray();
@@ -327,12 +325,12 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
             var categoryIds = retVal.Select(x => x.CategoryId).Where(x => !string.IsNullOrEmpty(x)).Distinct().ToArray();
             var categoriesReponseGroup = coreModel.CategoryResponseGroup.WithParents;
 
-            if ((respGroup & coreModel.ItemResponseGroup.Outlines) == coreModel.ItemResponseGroup.Outlines)
+            if (respGroup.HasFlag(coreModel.ItemResponseGroup.Outlines))
             {
                 categoriesReponseGroup |= coreModel.CategoryResponseGroup.WithLinks;
             }
 
-            if ((respGroup & coreModel.ItemResponseGroup.ItemProperties) == coreModel.ItemResponseGroup.ItemProperties)
+            if (respGroup.HasFlag(coreModel.ItemResponseGroup.ItemProperties))
             {
                 // Load categories with all properties for property inheritance
                 categoriesReponseGroup |= coreModel.CategoryResponseGroup.WithProperties;
@@ -340,13 +338,13 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 
             var categories = GetCategoriesByIds(categoryIds, categoriesReponseGroup);
 
-            if ((respGroup & coreModel.ItemResponseGroup.Links) == coreModel.ItemResponseGroup.Links)
+            if (respGroup.HasFlag(coreModel.ItemResponseGroup.Links))
             {
                 var relations = CategoryItemRelations.Where(x => itemIds.Contains(x.ItemId)).ToArray();
             }
 
             // Load all properties meta information and data for inheritance from parent categories and catalog
-            if ((respGroup & coreModel.ItemResponseGroup.ItemProperties) == coreModel.ItemResponseGroup.ItemProperties)
+            if (respGroup.HasFlag(coreModel.ItemResponseGroup.ItemProperties))
             {
                 // Load catalogs with properties for products not belongs to any category (EF auto populated all Catalog nav properties for all objects)
                 foreach (var catalogId in retVal.Where(x => x.CategoryId == null).Select(x => x.CatalogId))
@@ -355,17 +353,17 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
                 }
             }
 
-            if ((respGroup & coreModel.ItemResponseGroup.ItemAssets) == coreModel.ItemResponseGroup.ItemAssets)
+            if (respGroup.HasFlag(coreModel.ItemResponseGroup.ItemAssets))
             {
                 var assets = Assets.Where(x => itemIds.Contains(x.ItemId)).ToArray();
             }
 
-            if ((respGroup & coreModel.ItemResponseGroup.ItemEditorialReviews) == coreModel.ItemResponseGroup.ItemEditorialReviews)
+            if (respGroup.HasFlag(coreModel.ItemResponseGroup.ItemEditorialReviews))
             {
                 var editorialReviews = EditorialReviews.Where(x => itemIds.Contains(x.ItemId)).ToArray();
             }
 
-            if ((respGroup & coreModel.ItemResponseGroup.Variations) == coreModel.ItemResponseGroup.Variations)
+            if (respGroup.HasFlag(coreModel.ItemResponseGroup.Variations))
             {
                 var variationIds = Items.Where(x => itemIds.Contains(x.ParentId)).Select(x => x.Id).ToArray();
                 // For variations load only info and images
@@ -374,7 +372,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
                 var variationPropertyValues = PropertyValues.Where(x => variationIds.Contains(x.ItemId)).ToArray();
             }
 
-            if ((respGroup & coreModel.ItemResponseGroup.ItemAssociations) == coreModel.ItemResponseGroup.ItemAssociations)
+            if (respGroup.HasFlag(coreModel.ItemResponseGroup.ItemAssociations))
             {
                 var assosiationGroups = AssociationGroups.Include(x => x.Associations).ToArray();
                 var assosiatedItemIds = assosiationGroups.SelectMany(x => x.Associations).Select(x => x.ItemId).Distinct().ToArray();
