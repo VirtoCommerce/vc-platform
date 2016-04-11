@@ -1,6 +1,6 @@
 ﻿angular.module('virtoCommerce.contentModule')
-.controller('virtoCommerce.contentModule.contentMainController', ['$scope', '$state', '$stateParams', 'virtoCommerce.contentModule.menus', 'virtoCommerce.contentModule.pages', 'virtoCommerce.contentModule.contentApi', 'virtoCommerce.contentModule.stores', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.widgetService',
-	function ($scope, $state, $stateParams, menus, pages, contentApi, stores, bladeNavigationService, dialogService, widgetService) {
+.controller('virtoCommerce.contentModule.contentMainController', ['$scope', '$state', '$stateParams', 'virtoCommerce.contentModule.menus', 'virtoCommerce.contentModule.contentApi', 'virtoCommerce.storeModule.stores', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.widgetService',
+	function ($scope, $state, $stateParams, menus, contentApi, stores, bladeNavigationService, dialogService, widgetService) {
 	    var blade = $scope.blade;
 
 	    blade.initialize = function () {
@@ -11,145 +11,62 @@
 	            stores.get({ id: $stateParams.storeId }, blade.openThemes);
 	        };
 
-	        stores.query({}, function (data) {
-	            var loadCounter = data.length;
+	        stores.query(null, function (storesResult) {
+	            var loadCounter = storesResult.length * 2;
 
 	            var finnalyFunction = function () {
 	                blade.isLoading = --loadCounter;
 	            };
 
-	            blade.isLoading = _.any(data);
+	            blade.isLoading = _.any(storesResult);
 
-	            for (var i = 0; i < data.length; i++) {
-	                stores.get({ id: data[i].id }, function (data) {
-	                    var entity = {};
-	                    entity.store = data;
-	                    entity.listLinksCount = '...';
-	                    entity.pagesCount = '...';
-	                    entity.themesCount = '...';
-	                    entity.blogsCount = '...';
-	                    entity.defaultThemeName = undefined;
-	                    entity.defaultTheme = undefined;
-	                    entity.themes = [];
+	            _.each(storesResult, function (x) {
+	                blade.currentEntities.push({
+	                    storeId: x.id,
+	                    store: x,
+	                    pagesCount: '...',
+	                    themesCount: '...',
+	                    blogsCount: '...',
+	                    listLinksCount: '...'
+	                });
 
-	                    menus.get({ storeId: entity.store.id }, function (data) {
-	                        entity.listLinksCount = data.length;
-	                    });
-
-	                    //pages.get({ storeId: entity.store.id }, function (data) {
-	                    //    entity.pagesCount = _.reject(data, function (x) { return x.id.startsWith("blogs/"); }).length;
-	                    //    pages.getFolders({ storeId: entity.store.id }, function (data) {
-	                    //        var blogs = _.find(data.folders, function (x) { return x.folderName === "blogs" });
-	                    //        if (blogs && blogs.folders) {
-	                    //            entity.blogsCount = blogs.folders.length;
-	                    //        }
-	                    //        else {
-	                    //            entity.blogsCount = 0;
-	                    //        }
-	                    //    });
-	                    //});
-
-	                    contentApi.query({
-	                        contentType: 'themes',
-	                        storeId: entity.store.id
-	                    }, function (data) {
-	                        entity.themesCount = data.length;
-	                        entity.themes = data;
-
-	                        var defaultThemeNameProperty = _.find(entity.store.dynamicProperties, function (property) { return property.name === 'DefaultThemeName'; });
-	                        if (defaultThemeNameProperty !== undefined && defaultThemeNameProperty.values !== undefined && defaultThemeNameProperty.values.length > 0) {
-	                            entity.defaultThemeName = defaultThemeNameProperty.values[0].value;
-	                            if (_.find(entity.themes, function (theme) { return theme.name === entity.defaultThemeName; }) !== undefined) {
-	                                entity.defaultTheme = _.find(entity.themes, function (theme) { return theme.name === entity.defaultThemeName; });
-	                            }
-	                            else {
-	                                entity.defaultThemeName = undefined;
-	                            }
-	                        }
-	                        blade.currentEntities.push(entity);
-	                    });
-
-	                }).$promise.finally(finnalyFunction);
-	            }
+	                blade.refresh(x.id, 'stats').finally(finnalyFunction);
+	                blade.refresh(x.id, 'menus').finally(finnalyFunction);
+	            });
 	        });
 
 	        $scope.thereIsWidgetToShow = _.any(widgetService.widgetsMap['contentMainListItem'], function (w) { return !angular.isFunction(w.isVisible) || w.isVisible(blade); });
 	    };
 
 
-	    blade.refresh = function (storeId, requestType) {
-	        var entity = _.find(blade.currentEntities, function (entity) { return entity.store.id === storeId });
+	    blade.refresh = function (storeId, requestType, data) {
+	        var entity = _.findWhere(blade.currentEntities, { storeId: storeId });
 
 	        switch (requestType) {
 	            case 'menus':
-	                menus.get({ storeId: storeId }, function (data) {
+	                return menus.get({ storeId: storeId }, function (data) {
 	                    entity.listLinksCount = data.length;
-	                }, function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
+	                }, function (error) { bladeNavigationService.setError('Error ' + error.status, blade); }).$promise;
 	                break;
-
-	                //case 'pages':
-	                //    pages.get({ storeId: storeId }, function (data) {
-	                //        entity.pagesCount = _.reject(data, function (page) { return page.id.startsWith("blogs/"); }).length;
-	                //    }, function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
-	                //    break;
-
-	            case 'themes':
-	                contentApi.query({
-	                    contentType: 'themes',
-	                    storeId: storeId
-	                }, function (data) {
-	                    entity.themesCount = data.length;
-	                    entity.themes = data;
-	                }, function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
+	            case 'stats':
+	                return contentApi.getStatistics({ storeId: storeId }, function (data) {
+	                    angular.extend(entity, data);
+	                }, function (error) { bladeNavigationService.setError('Error ' + error.status, blade); }).$promise;
 	                break;
-
-	                //case 'blogs':
-	                //    pages.getFolders({ storeId: storeId }, function (data) {
-	                //        var blogsFolder = _.find(data.folders, function (folder) { return folder.folderName === "blogs" });
-	                //        if (blogsFolder)
-	                //            entity.blogsCount = blogsFolder.folders.length;
-	                //    }, function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
-	                //    break;
-
 	            case 'defaultTheme':
-	                stores.get({ id: storeId }, function (data) {
-	                    contentApi.query({
-	                        contentType: 'themes',
-	                        storeId: storeId
-	                    }, function (themesList) {
-	                        entity.themesCount = themesList.length;
-	                        entity.themes = themesList;
-
-	                        var defaultThemeNameProperty = _.find(data.dynamicProperties, function (property) { return property.name === 'DefaultThemeName'; });
-	                        if (defaultThemeNameProperty !== undefined && defaultThemeNameProperty.values !== undefined && defaultThemeNameProperty.values.length > 0) {
-	                            entity.defaultThemeName = defaultThemeNameProperty.values[0].value;
-	                            var defaultTheme = _.find(entity.themes, function (theme) { return theme.name === entity.defaultThemeName; });
-	                            if (defaultTheme !== undefined) {
-	                                entity.defaultTheme = defaultTheme;
-	                            }
-	                            else {
-	                                entity.defaultThemeName = undefined;
-	                                if (_.where(data.dynamicProperties, { name: "DefaultThemeName" }).length > 0) {
-	                                    angular.forEach(data.dynamicProperties, function (value, key) {
-	                                        if (value.name === "DefaultThemeName") {
-	                                            value.values[0] = { value: '' };
-	                                        }
-	                                    });
-	                                }
-
-	                                stores.update({ storeId: storeId }, data, function (data) {
-	                                    entity.defaultThemeName = undefined;
-	                                },
-									function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
-	                            }
-	                        }
-	                    }, function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
-	                });
-
+	                entity.activeThemeName = data;
 	            default:
 	                break;
 	        }
 	    };
+
+	    $scope.$on("cms-menus-changed", function (event, storeId) {
+	        blade.refresh(storeId, 'menus');
+	    });
+
+	    $scope.$on("cms-statistics-changed", function (event, storeId) {
+	        blade.refresh(storeId, 'stats');
+	    });
 
 	    blade.openThemes = function (store) {
 	        var newBlade = {
@@ -169,7 +86,7 @@
 	        var newBlade = {
 	            id: "pagesList",
 	            contentType: 'pages',
-	            storeId: data.store.id,
+	            storeId: data.storeId,
 	            languages: data.store.languages,
 	            currentEntity: data,
 	            title: data.store.name,
@@ -183,7 +100,7 @@
 	    blade.openLinkLists = function (data) {
 	        var newBlade = {
 	            id: "linkListBlade",
-	            storeId: data.store.id,
+	            storeId: data.storeId,
 	            title: 'content.blades.link-lists.title',
 	            titleValues: { name: data.store.name },
 	            subtitle: 'content.blades.link-lists.subtitle',
@@ -197,7 +114,7 @@
 	        var newBlade = {
 	            id: "blogsListBlade",
 	            contentType: 'blogs',
-	            storeId: data.store.id,
+	            storeId: data.storeId,
 	            languages: data.store.languages,
 	            currentEntity: data,
 	            title: data.store.name,
@@ -212,7 +129,7 @@
 	        var newBlade = {
 	            id: 'addTheme',
 	            isNew: true,
-	            storeId: data.store.id,
+	            storeId: data.storeId,
 	            baseThemes: getBaseThemes(data.store),
 	            controller: 'virtoCommerce.contentModule.themeDetailController',
 	            template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/theme-detail.tpl.html',
@@ -224,7 +141,7 @@
 	        var newBlade = {
 	            id: 'addPage',
 	            contentType: 'pages',
-	            storeId: data.store.id,
+	            storeId: data.storeId,
 	            languages: data.store.languages,
 	            currentEntity: {},
 	            isNew: true,
@@ -239,7 +156,7 @@
 	    blade.addNewLinkList = function (data) {
 	        var newBlade = {
 	            id: 'addMenuLinkListBlade',
-	            chosenStoreId: data.store.id,
+	            chosenStoreId: data.storeId,
 	            newList: true,
 	            title: 'content.blades.menu-link-list.title-new',
 	            subtitle: 'content.blades.menu-link-list.subtitle-new',
@@ -253,7 +170,7 @@
 	        var newBlade = {
 	            id: 'newBlog',
 	            contentType: 'blogs',
-	            storeId: data.store.id,
+	            storeId: data.storeId,
 	            currentEntity: {},
 	            isNew: true,
 	            title: 'content.blades.edit-blog.title-new',
@@ -268,10 +185,8 @@
 	        var newBlade = {
 	            id: 'themeAssetListBlade',
 	            contentType: 'themes',
-	            storeId: data.store.id,
-	            currentEntity: data.defaultTheme,
-	            //title: 'content.blades.theme-asset-list.subtitle',
-	            //titleValues: { path: data.defaultTheme.path },
+	            storeId: data.storeId,
+	            currentEntity: { name: data.activeThemeName, url: data.activeThemeURL },
 	            subtitle: 'content.blades.asset-list.subtitle',
 	            controller: 'virtoCommerce.contentModule.assetListController',
 	            template: '$(Platform)/Scripts/app/assets/blades/asset-list.tpl.html'
@@ -281,16 +196,13 @@
 
 	    blade.previewTheme = function (data) {
 	        if (data.store.url) {
-	            window.open(data.store.url + '?previewtheme=' + data.defaultTheme.name, '_blank');
+	            window.open(data.store.url + '?previewtheme=' + data.activeThemeName, '_blank');
 	        }
 	        else {
 	            var dialog = {
 	                id: "noUrlInStore",
 	                title: "content.dialogs.set-store-url.title",
-	                message: "content.dialogs.set-store-url.message",
-	                callback: function (remove) {
-
-	                }
+	                message: "content.dialogs.set-store-url.message"
 	            }
 	            dialogService.showNotificationDialog(dialog);
 	        }

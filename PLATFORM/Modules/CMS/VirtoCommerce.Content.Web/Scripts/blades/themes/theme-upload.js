@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.contentModule')
-.controller('virtoCommerce.contentModule.themeUploadController', ['$scope', 'platformWebApp.dialogService', 'virtoCommerce.contentModule.contentApi', 'FileUploader', 'platformWebApp.bladeNavigationService', function ($scope, dialogService, contentApi, FileUploader, bladeNavigationService) {
+.controller('virtoCommerce.contentModule.themeUploadController', ['$rootScope', '$scope', 'platformWebApp.dialogService', 'virtoCommerce.contentModule.contentApi', 'FileUploader', 'platformWebApp.bladeNavigationService', function ($rootScope, $scope, dialogService, contentApi, FileUploader, bladeNavigationService) {
     var blade = $scope.blade;
 
     // create the uploader
@@ -33,10 +33,9 @@
             archivepath: files[0].name,
             destPath: $scope.themeName
         }, function (data) {
+            $scope.bladeClose();
             blade.parentBlade.initialize();
-            if (blade.parentBlade.parentBlade)
-                blade.parentBlade.parentBlade.refresh(blade.storeId, 'themes');
-            bladeNavigationService.closeBlade(blade);
+            $rootScope.$broadcast("cms-statistics-changed", blade.storeId);
         },
         function (error) {
             uploader.clearQueue();

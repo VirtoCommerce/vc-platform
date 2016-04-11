@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.contentModule')
-.controller('virtoCommerce.contentModule.pagesListController', ['$scope', 'virtoCommerce.contentModule.contentApi', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.uiGridHelper', 'platformWebApp.bladeUtils', function ($scope, contentApi, bladeNavigationService, dialogService, uiGridHelper, bladeUtils) {
+.controller('virtoCommerce.contentModule.pagesListController', ['$rootScope', '$scope', 'virtoCommerce.contentModule.contentApi', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.uiGridHelper', 'platformWebApp.bladeUtils', function ($rootScope, $scope, contentApi, bladeNavigationService, dialogService, uiGridHelper, bladeUtils) {
     var blade = $scope.blade;
     blade.updatePermission = 'content:update';
 
@@ -166,7 +166,10 @@
                             storeId: blade.storeId,
                             urls: listEntryIds
                         },
-                            blade.refresh,
+                        function () {
+                            blade.refresh();
+                            $rootScope.$broadcast("cms-statistics-changed", blade.storeId);
+                        },
                         function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
                     }
                 }

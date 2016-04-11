@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.contentModule')
-.controller('virtoCommerce.contentModule.pageDetailController', ['$scope', 'platformWebApp.validators', 'platformWebApp.dialogService', 'virtoCommerce.contentModule.contentApi', '$timeout', 'platformWebApp.bladeNavigationService', 'platformWebApp.dynamicProperties.api', 'platformWebApp.settings', function ($scope, validators, dialogService, contentApi, $timeout, bladeNavigationService, dynamicPropertiesApi, settings) {
+.controller('virtoCommerce.contentModule.pageDetailController', ['$rootScope', '$scope', 'platformWebApp.validators', 'platformWebApp.dialogService', 'virtoCommerce.contentModule.contentApi', '$timeout', 'platformWebApp.bladeNavigationService', 'platformWebApp.dynamicProperties.api', 'platformWebApp.settings', function ($rootScope, $scope, validators, dialogService, contentApi, $timeout, bladeNavigationService, dynamicPropertiesApi, settings) {
     var blade = $scope.blade;
     $scope.validators = validators;
 
@@ -67,6 +67,7 @@
             blade.origEntity = angular.copy(blade.currentEntity);
             if (blade.isNew) {
                 $scope.bladeClose();
+                $rootScope.$broadcast("cms-statistics-changed", blade.storeId);
             }
 
             blade.parentBlade.refresh();

@@ -1,6 +1,6 @@
 ﻿angular.module('virtoCommerce.contentModule')
-.controller('virtoCommerce.contentModule.themesListController', ['$scope', 'virtoCommerce.contentModule.themes', 'virtoCommerce.contentModule.contentApi', 'virtoCommerce.contentModule.stores', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.uiGridHelper',
-    function ($scope, themes, contentApi, stores, bladeNavigationService, dialogService, uiGridHelper) {
+.controller('virtoCommerce.contentModule.themesListController', ['$rootScope', '$scope', 'virtoCommerce.contentModule.themes', 'virtoCommerce.contentModule.contentApi', 'virtoCommerce.storeModule.stores', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.uiGridHelper',
+    function ($rootScope, $scope, themes, contentApi, stores, bladeNavigationService, dialogService, uiGridHelper) {
         $scope.uiGridConstants = uiGridHelper.uiGridConstants;
         var blade = $scope.blade;
         blade.updatePermission = 'content:update';
@@ -10,24 +10,19 @@
         blade.initialize = function () {
             blade.isLoading = true;
             $scope.selectedNodeId = undefined;
-            blade.chosenTheme = undefined;
             contentApi.query({ contentType: blade.contentType, storeId: blade.storeId }, function (data) {
                 blade.currentEntities = data;
 
                 stores.get({ id: blade.storeId }, function (data) {
                     blade.store = data;
-                    if (_.find(blade.store.dynamicProperties, function (property) { return property.name === 'DefaultThemeName'; }) !== undefined) {
-                        var defaultThemeNameProperty = _.find(blade.store.dynamicProperties, function (property) { return property.name === 'DefaultThemeName'; });
+                    var prop = _.findWhere(blade.store.dynamicProperties, { name: 'DefaultThemeName' });
+                    blade.defaultThemeName = prop && _.any(prop.values) && prop.values[0].value;
 
-                        if (defaultThemeNameProperty !== undefined && defaultThemeNameProperty.values !== undefined && defaultThemeNameProperty.values.length > 0) {
-                            blade.defaultThemeName = defaultThemeNameProperty.values[0].value;
-                        }
-                    }
                     blade.isLoading = false;
                 },
-                function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+                function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
             },
-            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+            function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
         }
 
         $scope.openBladeNew = function () {
@@ -36,7 +31,6 @@
 
         $scope.openDetailsBlade = function (node) {
             $scope.selectedNodeId = node && node.name;
-            blade.chosenTheme = node;
 
             var newBlade = {
                 id: 'themeDetail',
@@ -47,7 +41,7 @@
                 controller: 'virtoCommerce.contentModule.themeDetailController',
                 template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/theme-detail.tpl.html'
             };
-            bladeNavigationService.showBlade(newBlade, $scope.blade);
+            bladeNavigationService.showBlade(newBlade, blade);
         };
 
         $scope.clone = function (data) {
@@ -88,20 +82,15 @@
         $scope.setActive = function (data) {
             $scope.selectedNodeId = data.name;
             blade.isLoading = true;
-            if (_.where(blade.store.dynamicProperties, { name: "DefaultThemeName" }).length > 0) {
-                angular.forEach(blade.store.dynamicProperties, function (value, key) {
-                    if (value.name === "DefaultThemeName") {
-                        value.values[0] = { value: data.name };
-                    }
-                });
-            }
 
-            stores.update({ storeId: blade.storeId }, blade.store, function (data) {
+            var prop = _.findWhere(blade.store.dynamicProperties, { name: 'DefaultThemeName' });
+            prop.values = [{ value: data.name }];
+
+            stores.update({ storeId: blade.storeId }, blade.store, function () {
                 blade.initialize();
-                blade.parentBlade.refresh(blade.storeId, 'defaultTheme');
-
+                blade.parentBlade.refresh(blade.storeId, 'defaultTheme', data.name);
             },
-            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+            function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
         };
 
         $scope.delete = function (data) {
@@ -120,9 +109,21 @@
                                 storeId: blade.storeId,
                                 urls: [data.url]
                             },
-                            function (data) {
-                                blade.initialize();
-                                blade.parentBlade.refresh(blade.storeId, 'defaultTheme');
+                            function () {
+                                if (data.name === blade.defaultThemeName) {
+                                    var prop = _.findWhere(blade.store.dynamicProperties, { name: 'DefaultThemeName' });
+                                    prop.values = [{ value: '' }];
+
+                                    stores.update({ storeId: blade.storeId }, blade.store,
+                                        function () {
+                                            blade.initialize();
+                                            $rootScope.$broadcast("cms-statistics-changed", blade.storeId);
+                                        },
+                                        function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
+                                } else {
+                                    blade.initialize();
+                                    $rootScope.$broadcast("cms-statistics-changed", blade.storeId);
+                                }
                             },
                             function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
                         }
@@ -206,7 +207,6 @@
 
         blade.selectNode = function (data) {
             $scope.selectedNodeId = data.name;
-            blade.chosenTheme = data;
 
             var newBlade = {
                 id: 'themeAssetListBlade',
@@ -214,7 +214,6 @@
                 storeId: blade.storeId,
                 currentEntity: data,
                 themeId: data.name,
-                // titleValues: { name: blade.chosenTheme.path },
                 subtitle: 'content.blades.asset-list.subtitle',
                 controller: 'virtoCommerce.contentModule.assetListController',
                 template: '$(Platform)/Scripts/app/assets/blades/asset-list.tpl.html'

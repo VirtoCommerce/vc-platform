@@ -138,7 +138,6 @@
     <Content Include="Scripts\blades\content-main.tpl.html" />
     <Content Include="Scripts\blades\pages\edit-blog.js" />
     <Content Include="Scripts\blades\pages\edit-blog.tpl.html" />
-    <Content Include="Scripts\blades\pages\edit-page.bak.js" />
     <Content Include="Scripts\blades\themes\asset-list.js" />
     <Content Include="Scripts\blades\themes\asset-detail.js" />
     <Content Include="Scripts\blades\themes\asset-detail.tpl.html" />
@@ -147,10 +146,6 @@
     <Content Include="Scripts\blades\themes\theme-upload.js" />
     <Content Include="Scripts\blades\themes\theme-upload.tpl.html" />
     <Content Include="Scripts\blades\themes\theme-detail.tpl.html" />
-    <Content Include="Scripts\blades\themes\edit-asset.js" />
-    <Content Include="Scripts\blades\themes\edit-asset.tpl.html" />
-    <Content Include="Scripts\blades\themes\image-asset-detail.bak.js" />
-    <Content Include="Scripts\blades\themes\image-asset-detail.tpl.html" />
     <Content Include="Scripts\blades\pages\page-detail.js" />
     <Content Include="Scripts\blades\pages\page-detail.tpl.html" />
     <Content Include="Scripts\blades\menu\link-lists.js" />
@@ -158,9 +153,6 @@
     <Content Include="Scripts\blades\menu\menu-link-list.js" />
     <Content Include="Scripts\blades\menu\menu-link-list.tpl.html" />
     <Content Include="Scripts\blades\pages\pages-list.js" />
-    <Content Include="Scripts\blades\pages\pages-list.tpl.bak.html" />
-    <Content Include="Scripts\blades\themes\theme-asset-list.js" />
-    <Content Include="Scripts\blades\themes\theme-asset-list.tpl.html" />
     <Content Include="Scripts\blades\themes\themes-list.js" />
     <Content Include="Scripts\blades\themes\themes-list.tpl.html" />
     <Content Include="Scripts\common\uiKitHtmlEditor.js" />
