@@ -80,17 +80,9 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
 
             progressInfo.Description = String.Format("{0} categories importing...", backupObject.Categories.Count());
             progressCallback(progressInfo);
-            //Categories should be sorted right way 
-            //first need to create virtual categories
-            var orderedCategories = backupObject.Categories.Where(x => x.Catalog.IsVirtual)
-                                                             .OrderBy(x => x.Level)
-                                                             .ToList();
-            //second need to create physical categories
-            orderedCategories.AddRange(backupObject.Categories.Where(x => !x.Catalog.IsVirtual)
-                                                             .OrderBy(x => x.Level));
-
+          
             backupObject.Products = backupObject.Products.OrderBy(x => x.MainProductId).ToList();
-            UpdateCategories(originalObject.Categories, orderedCategories);
+            UpdateCategories(originalObject.Categories, backupObject.Categories);
             UpdateProperties(originalObject.Properties, backupObject.Properties);
 
             //Binary data
@@ -160,7 +152,7 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
         private void UpdateCategories(ICollection<Category> original, ICollection<Category> backup)
         {
             var toUpdate = new List<Category>();
-
+            var toCreate = new List<Category>();
             backup.CompareTo(original, EqualityComparer<Category>.Default, (state, x, y) =>
             {
                 switch (state)
@@ -169,10 +161,11 @@ namespace VirtoCommerce.CatalogModule.Web.ExportImport
                         toUpdate.Add(x);
                         break;
                     case EntryState.Added:
-                        _categoryService.Create(x);
+                        toCreate.Add(x);
                         break;
                 }
             });
+            _categoryService.Create(toCreate.ToArray());
             _categoryService.Update(toUpdate.ToArray());
         }
 

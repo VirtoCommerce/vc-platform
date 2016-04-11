@@ -5,7 +5,8 @@ namespace VirtoCommerce.Domain.Catalog.Services
     {
         Category[] GetByIds(string[] categoryIds, CategoryResponseGroup responseGroup);
         Category GetById(string categoryId, CategoryResponseGroup responseGroup);
-		Category Create(Category category);
+        void Create(Category[] categories);
+        Category Create(Category category);
 		void Update(Category[] categories);
 		void Delete(string[] categoryIds);
     }

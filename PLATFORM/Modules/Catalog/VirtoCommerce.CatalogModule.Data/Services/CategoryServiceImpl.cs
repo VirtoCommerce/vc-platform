@@ -48,23 +48,35 @@ namespace VirtoCommerce.CatalogModule.Data.Services
             return GetByIds(new[] { categoryId }, responseGroup).FirstOrDefault();
         }
 
+        public void Create(coreModel.Category[] categories)
+        {
+            if (categories == null)
+                throw new ArgumentNullException("categories");
+
+            var pkMap = new PrimaryKeyResolvingMap();
+            var dbCategories = categories.Select(x => x.ToDataModel(pkMap));
+
+            using (var repository = _catalogRepositoryFactory())
+            {
+                foreach (var dbCategory in dbCategories)
+                {
+                    repository.Add(dbCategory);
+                }
+                CommitChanges(repository);
+                pkMap.ResolvePrimaryKeys();
+            }
+            //Need add seo separately
+            _commerceService.UpsertSeoForObjects(categories);         
+        }
+
+
         public coreModel.Category Create(coreModel.Category category)
         {
             if (category == null)
                 throw new ArgumentNullException("category");
 
-            var pkMap = new PrimaryKeyResolvingMap();
-            var dbCategory = category.ToDataModel(pkMap);
-            
-            using (var repository = _catalogRepositoryFactory())
-            {	
-                repository.Add(dbCategory);
-                CommitChanges(repository);
-                pkMap.ResolvePrimaryKeys();
-            }
-            //Need add seo separately
-            _commerceService.UpsertSeoForObjects(new[] { category });
-            return GetById(dbCategory.Id, Domain.Catalog.Model.CategoryResponseGroup.Info);
+            Create(new[] { category });
+            return GetById(category.Id, Domain.Catalog.Model.CategoryResponseGroup.Info);
         }
 
         public void Update(coreModel.Category[] categories)
