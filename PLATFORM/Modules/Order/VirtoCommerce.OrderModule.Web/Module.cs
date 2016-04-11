@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.Practices.Unity;
 using VirtoCommerce.CoreModule.Data.Services;
 using VirtoCommerce.Domain.Common;
@@ -65,9 +66,14 @@ namespace VirtoCommerce.OrderModule.Web
 
         public override void PostInitialize()
         {
+            base.PostInitialize();
+
+            //Add order numbers formats settings  to store module allows to use individual number formats in each store
+            var settingManager = _container.Resolve<ISettingsManager>();
+            var numberFormatSettings = settingManager.GetModuleSettings("VirtoCommerce.Orders").Where(x=> x.Name.EndsWith("NewNumberTemplate")).ToArray();
+            settingManager.RegisterModuleSettings("VirtoCommerce.Store", numberFormatSettings);
 
             var notificationManager = _container.Resolve<INotificationManager>();
-
             notificationManager.RegisterNotificationType(() => new OrderCreateEmailNotification(_container.Resolve<IEmailNotificationSendingGateway>())
             {
                 DisplayName = "Create order notification",
