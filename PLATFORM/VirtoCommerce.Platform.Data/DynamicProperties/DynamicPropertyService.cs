@@ -176,21 +176,18 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
 
         public void LoadDynamicPropertyValues(IHasDynamicProperties owner)
         {
-            var objectsWithDynamicProperties = owner.GetFlatObjectsListWithInterface<IHasDynamicProperties>();
-
-            foreach (var objectWithDynamicProperties in objectsWithDynamicProperties)
+            var propOwners = owner.GetFlatObjectsListWithInterface<IHasDynamicProperties>();
+            using (var repository = _repositoryFactory())
             {
-                if (objectWithDynamicProperties.Id != null)
-                {
-                    using (var repository = _repositoryFactory())
-                    {
-                        var objectType = GetObjectTypeName(objectWithDynamicProperties);
-                        var properties = repository.GetObjectDynamicProperties(objectType, objectWithDynamicProperties.Id);
+                var objectTypeNames = propOwners.Select(x => GetObjectTypeName(x)).Distinct().ToArray();
+                var objectIds = propOwners.Select(x => x.Id).Distinct().ToArray();
 
-                        objectWithDynamicProperties.DynamicProperties = properties.Select(p => p.ToDynamicObjectProperty(objectWithDynamicProperties.Id)).ToList();
-                        //Set object type name
-                        objectWithDynamicProperties.ObjectType = objectType;
-                    }
+                var dbDynamicPorps = repository.GetObjectDynamicProperties(objectTypeNames, objectIds);
+                foreach (var propOwner in propOwners)
+                {
+                    var objectType = GetObjectTypeName(propOwner);
+                    propOwner.DynamicProperties = dbDynamicPorps.Where(x => x.ObjectType == objectType).Select(p => p.ToDynamicObjectProperty(propOwner.Id)).ToList();
+                    propOwner.ObjectType = GetObjectTypeName(propOwner);
                 }
             }
         }
@@ -216,7 +213,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
                             var objectType = GetObjectTypeName(objectWithDynamicProperties);
 
                             var sourceCollection = objectWithDynamicProperties.DynamicProperties.Select(x => x.ToEntity(objectWithDynamicProperties.Id, objectType));
-                            var targetCollection = repository.GetObjectDynamicProperties(objectType, objectWithDynamicProperties.Id);
+                            var targetCollection = repository.GetObjectDynamicProperties(new[] { objectType }, new[] { objectWithDynamicProperties.Id });
 
                             var target = new { Properties = new ObservableCollection<DynamicPropertyEntity>(targetCollection) };
                             var source = new { Properties = new ObservableCollection<DynamicPropertyEntity>(sourceCollection) };
@@ -241,17 +238,17 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
                                 }
                             }
                             changeTracker.Attach(target);
-                            foreach(var sourceProperty in source.Properties)
+                            foreach (var sourceProperty in source.Properties)
                             {
                                 var targetProperty = target.Properties.FirstOrDefault(x => x.Id == sourceProperty.Id);
-                                if(targetProperty != null)
+                                if (targetProperty != null)
                                 {
                                     if (!sourceProperty.ObjectValues.IsNullCollection())
                                     {
                                         sourceProperty.ObjectValues.Patch(targetProperty.ObjectValues, new DynamicPropertyObjectValueComparer(), (sourceValue, targetValue) => sourceValue.Patch(targetValue));
                                     }
                                 }
-                            }                            
+                            }
                         }
                     }
 
@@ -292,6 +289,6 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
             return GetObjectTypeName(obj.GetType());
         }
 
-    
+
     }
 }
