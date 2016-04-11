@@ -38,7 +38,7 @@ namespace VirtoCommerce.CustomerModule.Test
 
 
             };
-            var result = controller.CreateOrganization(org) as OkNegotiatedContentResult<Organization>;
+            var result = controller.CreateMember(org) as OkNegotiatedContentResult<Organization>;
             Assert.IsNotNull(result.Content);
         }
 
@@ -141,7 +141,7 @@ namespace VirtoCommerce.CustomerModule.Test
 
         private static CustomerModuleController GetContactController()
         {
-       
+
             return new CustomerModuleController(null, null, null);
         }
     }
