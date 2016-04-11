@@ -98,6 +98,7 @@
     <Compile Include="Common\LocalCacheManager.cs" />
     <Compile Include="Common\MutablePagedList.cs" />
     <Compile Include="Common\SettingsExtension.cs" />
+    <Compile Include="IHasLanguage.cs" />
     <Compile Include="IHasSettings.cs" />
     <Compile Include="SettingEntry.cs" />
     <Compile Include="LoginProvider.cs" />

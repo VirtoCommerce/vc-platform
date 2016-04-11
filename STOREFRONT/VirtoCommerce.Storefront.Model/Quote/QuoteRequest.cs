@@ -7,7 +7,7 @@ using VirtoCommerce.Storefront.Model.Marketing;
 
 namespace VirtoCommerce.Storefront.Model.Quote
 {
-    public class QuoteRequest : Entity
+    public class QuoteRequest : Entity, IHasLanguage
     {
         public QuoteRequest()
         {
@@ -84,8 +84,6 @@ namespace VirtoCommerce.Storefront.Model.Quote
 
         public ICollection<Attachment> Attachments { get; set; }
 
-        public Language Language { get; set; }
-
         public ICollection<TaxDetail> TaxDetails { get; set; }
 
         public bool IsCancelled { get; set; }
@@ -161,5 +159,9 @@ namespace VirtoCommerce.Storefront.Model.Quote
                 return email;
             }
         }
+
+        #region IHasLanguage Members
+        public Language Language { get; set; }
+        #endregion
     }
 }

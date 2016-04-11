@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace VirtoCommerce.Storefront.Model
 {
-    public class LocalizedString
+    public class LocalizedString : IHasLanguage
     {
         public LocalizedString()
         {
@@ -19,7 +19,11 @@ namespace VirtoCommerce.Storefront.Model
             Value = value;
 
         }
-        public Language Language { get; set; }
+
         public string Value { get; set; }
+
+        #region IHasLanguage Members
+        public Language Language { get; set; }
+        #endregion
     }
 }

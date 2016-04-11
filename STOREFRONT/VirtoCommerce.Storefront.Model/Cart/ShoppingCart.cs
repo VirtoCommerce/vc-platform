@@ -8,7 +8,7 @@ using VirtoCommerce.Storefront.Model.Marketing;
 
 namespace VirtoCommerce.Storefront.Model.Cart
 {
-    public class ShoppingCart : Entity, IDiscountable, IValidatable
+    public class ShoppingCart : Entity, IDiscountable, IValidatable, IHasLanguage
     {
         public ShoppingCart(Currency currency, Language language)
         {
@@ -78,8 +78,6 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// Coupon object
         /// </value>
         public Coupon Coupon { get; set; }
-
-        public Language Language { get; set; }
      
         /// <summary>
         /// Gets or sets the flag of shopping cart has tax
@@ -471,6 +469,10 @@ namespace VirtoCommerce.Storefront.Model.Cart
                 shipment.ApplyTaxRates(taxRates);
             }
         }
+        #endregion
+
+        #region IHasLanguage Members
+        public Language Language { get; set; }
         #endregion
 
         public override string ToString()
