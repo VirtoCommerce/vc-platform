@@ -17,6 +17,7 @@ namespace VirtoCommerce.Storefront.Test
             {
                 new Language("en-US"),
             }),
+            SeoLinksType = SeoLinksType.Long,
         };
 
         [Fact]
@@ -24,7 +25,7 @@ namespace VirtoCommerce.Storefront.Test
         {
             var category = new VirtoCommerceCatalogModuleWebModelCategory();
 
-            var result = category.GetSeoPath(_store, new Language("en-US"), null);
+            var result = category.Outlines.GetSeoPath(_store, new Language("en-US"), null);
             Assert.Null(result);
         }
 
@@ -57,7 +58,7 @@ namespace VirtoCommerce.Storefront.Test
                 },
             };
 
-            var result = category.GetSeoPath(_store, new Language("ru-RU"), null);
+            var result = category.Outlines.GetSeoPath(_store, new Language("ru-RU"), null);
             Assert.Equal("category2", result);
         }
 
@@ -108,7 +109,7 @@ namespace VirtoCommerce.Storefront.Test
                 },
             };
 
-            var result = category.GetSeoPath(_store, new Language("ru-RU"), null);
+            var result = category.Outlines.GetSeoPath(_store, new Language("ru-RU"), null);
             Assert.Equal("grandparent2/parent2/category2", result);
         }
 
@@ -155,7 +156,7 @@ namespace VirtoCommerce.Storefront.Test
                 },
             };
 
-            var result = category.GetSeoPath(_store, new Language("ru-RU"), null);
+            var result = category.Outlines.GetSeoPath(_store, new Language("ru-RU"), null);
             Assert.Null(result);
         }
     }
@@ -171,6 +172,7 @@ namespace VirtoCommerce.Storefront.Test
             {
                 new Language("en-US"),
             }),
+            SeoLinksType = SeoLinksType.Long,
         };
 
         [Fact]
@@ -181,7 +183,7 @@ namespace VirtoCommerce.Storefront.Test
                 Category = new VirtoCommerceCatalogModuleWebModelCategory(),
             };
 
-            var result = product.GetSeoPath(_store, new Language("en-US"), null);
+            var result = product.Outlines.GetSeoPath(_store, new Language("en-US"), null);
             Assert.Null(result);
         }
 
@@ -218,7 +220,7 @@ namespace VirtoCommerce.Storefront.Test
                 },
             };
 
-            var result = product.GetSeoPath(_store, new Language("ru-RU"), null);
+            var result = product.Outlines.GetSeoPath(_store, new Language("ru-RU"), null);
             Assert.Null(result);
         }
 
@@ -260,7 +262,7 @@ namespace VirtoCommerce.Storefront.Test
                 },
             };
 
-            var result = product.GetSeoPath(_store, new Language("ru-RU"), null);
+            var result = product.Outlines.GetSeoPath(_store, new Language("ru-RU"), null);
             Assert.Equal("category2/product2", result);
         }
 
@@ -320,7 +322,7 @@ namespace VirtoCommerce.Storefront.Test
                 },
             };
 
-            var result = product.GetSeoPath(_store, new Language("ru-RU"), null);
+            var result = product.Outlines.GetSeoPath(_store, new Language("ru-RU"), null);
             Assert.Equal("grandparent2/parent2/category2/product2", result);
         }
 
@@ -376,7 +378,7 @@ namespace VirtoCommerce.Storefront.Test
                 },
             };
 
-            var result = product.GetSeoPath(_store, new Language("ru-RU"), null);
+            var result = product.Outlines.GetSeoPath(_store, new Language("ru-RU"), null);
             Assert.Null(result);
         }
     }
