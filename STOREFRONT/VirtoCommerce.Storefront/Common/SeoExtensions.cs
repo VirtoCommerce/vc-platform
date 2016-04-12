@@ -12,36 +12,52 @@ namespace VirtoCommerce.Storefront.Common
     public static class SeoExtensions
     {
         /// <summary>
-        /// Returns SEO path only if given category and all its parent categories have SEO keywords, otherwise returns default value.
+        /// Returns SEO path if all outline items of the first outline have SEO keywords, otherwise returns default value.
+        /// Path: GrandParentCategory/ParentCategory/ProductCategory/Product
         /// </summary>
-        /// <param name="category"></param>
+        /// <param name="outlines"></param>
         /// <param name="store"></param>
         /// <param name="language"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
-        public static string GetSeoPath(this VirtoCommerceCatalogModuleWebModelCategory category, Store store, Language language, string defaultValue)
+        public static string GetSeoPath(this IEnumerable<VirtoCommerceDomainCatalogModelOutline> outlines, Store store, Language language, string defaultValue)
         {
-            // Path: GrandParentCategory/ParentCategory/Category
-            var outline = category.Outlines != null ? category.Outlines.FirstOrDefault() : null;
-            var result = GetSeoPath(outline, store, language, defaultValue);
+            var result = defaultValue;
+
+            if (outlines != null && store.SeoLinksType != SeoLinksType.None)
+            {
+                var outline = outlines.FirstOrDefault();
+
+                if (outline != null)
+                {
+                    var pathSegments = new List<string>();
+
+                    if (store.SeoLinksType == SeoLinksType.Long)
+                    {
+                        pathSegments.AddRange(outline.Items
+                            .Where(i => i.SeoObjectType != "Catalog")
+                            .Select(i => GetBestMatchedSeoKeyword(i.SeoInfos, store, language)));
+                    }
+                    else
+                    {
+                        var lastItem = outline.Items.LastOrDefault();
+                        if (lastItem != null)
+                        {
+                            pathSegments.Add(GetBestMatchedSeoKeyword(lastItem.SeoInfos, store, language));
+                        }
+                    }
+
+
+                    if (pathSegments.All(s => s != null))
+                    {
+                        result = string.Join("/", pathSegments);
+                    }
+                }
+            }
+
             return result;
         }
 
-        /// <summary>
-        /// Returns SEO path only if given product, its category and all parent categories have SEO keywords, otherwise returns default value.
-        /// </summary>
-        /// <param name="product"></param>
-        /// <param name="store"></param>
-        /// <param name="language"></param>
-        /// <param name="defaultValue"></param>
-        /// <returns></returns>
-        public static string GetSeoPath(this VirtoCommerceCatalogModuleWebModelProduct product, Store store, Language language, string defaultValue)
-        {
-            // Path: GrandParentCategory/ParentCategory/ProductCategory/Product
-            var outline = product.Outlines != null ? product.Outlines.FirstOrDefault() : null;
-            var result = GetSeoPath(outline, store, language, defaultValue);
-            return result;
-        }
 
         public static VirtoCommerceDomainCommerceModelSeoInfo GetBestMatchedSeoInfo(this IEnumerable<VirtoCommerceDomainCommerceModelSeoInfo> seoRecords, Store store, Language language)
         {
@@ -66,26 +82,6 @@ namespace VirtoCommerce.Storefront.Common
             return result;
         }
 
-
-        private static string GetSeoPath(VirtoCommerceDomainCatalogModelOutline outline, Store store, Language language, string defaultValue)
-        {
-            var result = defaultValue;
-
-            if (outline != null)
-            {
-                var pathSegments = outline.Items
-                    .Where(i => i.SeoObjectType != "Catalog")
-                    .Select(i => GetBestMatchedSeoKeyword(i.SeoInfos, store, language))
-                    .ToList();
-
-                if (pathSegments.All(s => s != null))
-                {
-                    result = string.Join("/", pathSegments);
-                }
-            }
-
-            return result;
-        }
 
         private static string GetBestMatchedSeoKeyword(IEnumerable<VirtoCommerceDomainCommerceModelSeoInfo> seoRecords, Store store, Language language)
         {

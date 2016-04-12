@@ -16,26 +16,8 @@ namespace VirtoCommerce.Storefront.Converters
             var retVal = new Category();
             retVal.InjectFrom<NullableAndEnumValueInjecter>(category);
 
-            retVal.Url = "~/category/" + category.Id;
-
-            if (category.SeoInfos != null)
-            {
-                //Select best matched SEO by StoreId and Language
-                var bestMatchedSeo = category.SeoInfos.GetBestMatchedSeoInfo(store, currentLanguage);
-                if (bestMatchedSeo != null)
-                {
-                    retVal.SeoInfo = bestMatchedSeo.ToWebModel();
-
-                    if (store.SeoLinksType != SeoLinksType.None)
-                    {
-                        var seoPath = store.SeoLinksType == SeoLinksType.Short ? retVal.SeoInfo.Slug : category.GetSeoPath(store, currentLanguage, null);
-                        if (seoPath != null)
-                        {
-                            retVal.Url = "~/" + seoPath;
-                        }
-                    }
-                }
-            }
+            retVal.SeoInfo = category.SeoInfos.GetBestMatchedSeoInfo(store, currentLanguage).ToWebModel();
+            retVal.Url = "~/" + category.Outlines.GetSeoPath(store, currentLanguage, "category/" + category.Id);
 
             if (category.Images != null)
             {

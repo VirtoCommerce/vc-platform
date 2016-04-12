@@ -54,26 +54,8 @@ namespace VirtoCommerce.Storefront.Converters
                 retVal.Variations = product.Variations.Select(v => v.ToWebModel(currentLanguage, currentCurrency, store)).ToList();
             }
 
-            retVal.Url = "~/product/" + product.Id;
-
-            if (product.SeoInfos != null)
-            {
-                //Select best matched SEO by StoreId and Language
-                var bestMatchedSeo = product.SeoInfos.GetBestMatchedSeoInfo(store, currentLanguage);
-                if (bestMatchedSeo != null)
-                {
-                    retVal.SeoInfo = bestMatchedSeo.ToWebModel();
-
-                    if (store.SeoLinksType != SeoLinksType.None)
-                    {
-                        var seoPath = store.SeoLinksType == SeoLinksType.Short ? retVal.SeoInfo.Slug : product.GetSeoPath(store, currentLanguage, null);
-                        if (seoPath != null)
-                        {
-                            retVal.Url = "~/" + seoPath;
-                        }
-                    }
-                }
-            }
+            retVal.SeoInfo = product.SeoInfos.GetBestMatchedSeoInfo(store, currentLanguage).ToWebModel();
+            retVal.Url = "~/" + product.Outlines.GetSeoPath(store, currentLanguage, "product/" + product.Id);
 
             if (product.Reviews != null)
             {
