@@ -173,7 +173,7 @@ namespace VirtoCommerce.CustomerModule.Data.Services
            
             foreach (var memberMapping in _memberMappings)
             {            
-                criteria.MemberTypes = memberTypes.IsNullOrEmpty() ? memberMapping.AllSupportedMemberTypeNames.ToArray() : memberMapping.AllSupportedMemberTypeNames.Intersect(criteria.MemberTypes, StringComparer.OrdinalIgnoreCase).ToArray();
+                criteria.MemberTypes = memberTypes.IsNullOrEmpty() ? memberMapping.AllSupportedMemberTypeNames.ToArray() : memberMapping.AllSupportedMemberTypeNames.Intersect(memberTypes, StringComparer.OrdinalIgnoreCase).ToArray();
                 if (!criteria.MemberTypes.IsNullOrEmpty() && criteria.Take >= 0)
                 {
                     var result = memberMapping.MemberSearchService.SearchMembers(criteria);
