@@ -29,8 +29,6 @@ namespace VirtoCommerce.Content.Web
     {
         private const string _connectionStringName = "VirtoCommerce";
         private readonly IUnityContainer _container;
-        private static string[] _possibleContentTypes = new [] { "pages", "themes" };
-
 
         public Module(IUnityContainer container)
         {
@@ -51,18 +49,18 @@ namespace VirtoCommerce.Content.Web
             var settingsManager = _container.Resolve<ISettingsManager>();
             var blobConnectionString = BlobConnectionString.Parse(ConfigurationManager.ConnectionStrings["CmsContentConnectionString"].ConnectionString);
 
-             Func<string, string, IContentBlobStorageProvider> contentProviderFactory = (contentType, storeId) =>
+             Func<string, IContentBlobStorageProvider> contentProviderFactory = (chrootPath) =>
             {
                 if (string.Equals(blobConnectionString.Provider, FileSystemBlobProvider.ProviderName, StringComparison.OrdinalIgnoreCase))
                 {
-                    var storagePath = Path.Combine(NormalizePath(blobConnectionString.RootPath), contentType, storeId);
-                    var publicUrl = blobConnectionString.PublicUrl + "/" + contentType + "/" + storeId;
+                    var storagePath = Path.Combine(NormalizePath(blobConnectionString.RootPath), chrootPath.Replace("/", "\\"));
+                    var publicUrl = blobConnectionString.PublicUrl + "/" + chrootPath;
                     //Do not export default theme (Themes/default) its will distributed with code
                     return new FileSystemContentBlobStorageProvider(storagePath, publicUrl, "/Themes/default");
                 }
                 else if (string.Equals(blobConnectionString.Provider, AzureBlobProvider.ProviderName, StringComparison.OrdinalIgnoreCase))
                 {
-                    return new AzureContentBlobStorageProvider(blobConnectionString.ConnectionString, Path.Combine(blobConnectionString.RootPath, contentType.FirstCharToUpper(), storeId));
+                    return new AzureContentBlobStorageProvider(blobConnectionString.ConnectionString, Path.Combine(blobConnectionString.RootPath, chrootPath));
                 }
                 throw new NotImplementedException();
             };

@@ -44,10 +44,10 @@ namespace VirtoCommerce.Content.Web.ExportImport
         private readonly IMenuService _menuService;
         private readonly IContentBlobStorageProvider _contentStorageProvider;
 
-        public ContentExportImport(IMenuService menuService, Func<string, string, IContentBlobStorageProvider> themesStorageProviderFactory)
+        public ContentExportImport(IMenuService menuService, Func<string, IContentBlobStorageProvider> themesStorageProviderFactory)
         {
             _menuService = menuService;
-            _contentStorageProvider = themesStorageProviderFactory(string.Empty, string.Empty);
+            _contentStorageProvider = themesStorageProviderFactory(string.Empty);
         }
 
         public void DoExport(Stream backupStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
