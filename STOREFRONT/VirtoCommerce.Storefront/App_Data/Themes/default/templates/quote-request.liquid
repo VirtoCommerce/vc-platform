@@ -75,7 +75,7 @@
                     <div class="grid">
                         <div class="grid-item one-third large--one-quarter">
                             <span class="cart-image">
-                                <img alt="quoteItem.name" ng-src="{( quoteItem.imageUrl )}" title="quoteItem.name" ng-if="quoteItem.imageUrl" />
+                                <img alt="quoteItem.name" ng-src="{% raw %}{{ quoteItem.imageUrl }}{% endraw %}" title="quoteItem.name" ng-if="quoteItem.imageUrl" />
                                 <div class="no-product-image" ng-if="!quoteItem.imageUrl">
                                     <img src="{{ 'no-image.svg' | asset_url }}" />
                                 </div>
@@ -83,7 +83,7 @@
                         </div>
                         <div class="grid-item one-third" ng-bind="quoteItem.name"></div>
                         <div class="grid-item one-third">
-                            <textarea class="quote_item_comment" id="{( 'Item_' + quoteItem.id + '_Comment' )}" name="{( 'Item_' + quoteItem.id + '_Comment' )}" ng-if="displayForStatuses(['New'])" ng-model="quoteItem.comment"></textarea>
+                            <textarea class="quote_item_comment" id="{% raw %}{{ 'Item_' + quoteItem.id + '_Comment' }}{% endraw %}" name="{% raw %}{{ 'Item_' + quoteItem.id + '_Comment' }}{% endraw %}" ng-if="displayForStatuses(['New'])" ng-model="quoteItem.comment"></textarea>
                             <span ng-bind="quoteItem.comment" ng-if="displayForStatuses(['Processing', 'Proposal sent', 'Ordered', 'Rejected', 'Canceled'])"></span>
                         </div>
                     </div>
@@ -93,7 +93,7 @@
                         <div class="grid-item one-half medium-down--one-third text-right" ng-if="displayForStatuses(['New'])">
                             <div class="js-qty" ng-repeat="tierPrice in quoteItem.proposalPrices">
                                 <div class="js-qty--inner">
-                                    <input class="js--num" id="{( 'QuoteItem_' + quoteItemId + '_' + tierPrice.id )}" min="1" name="{( 'QuoteItem_' + quoteItemId + '_' + tierPrice.id )}" required="required" type="number" ng-class="{ 'error': (formQuoteRequest.$submitted || formQuoteRequest['QuoteItem_' + quoteItemId + '_' + tierPrice.id].$dirty) && formQuoteRequest['QuoteItem_' + quoteItemId + '_' + tierPrice.id].$invalid }" ng-model="tierPrice.quantity" />
+                                    <input class="js--num" id="{% raw %}{{ 'QuoteItem_' + quoteItemId + '_' + tierPrice.id }}{% endraw %}" min="1" name="{% raw %}{{ 'QuoteItem_' + quoteItemId + '_' + tierPrice.id }}{% endraw %}" required="required" type="number" ng-class="{ 'error': (formQuoteRequest.$submitted || formQuoteRequest['QuoteItem_' + quoteItemId + '_' + tierPrice.id].$dirty) && formQuoteRequest['QuoteItem_' + quoteItemId + '_' + tierPrice.id].$invalid }" ng-model="tierPrice.quantity" />
                                     <span class="js--qty-adjuster js--add" ng-click="changeTierPriceQuantity(tierPrice, tierPrice.quantity + 1)">+</span>
                                     <span class="js--qty-adjuster js--minus" ng-click="changeTierPriceQuantity(tierPrice, tierPrice.quantity - 1)">-</span>
                                 </div>
@@ -117,8 +117,8 @@
                                 <small ng-bind="tierPrice.price.formatedAmount"></small>
                             </span>
                             <span class="h2 tier-price" ng-repeat="tierPrice in quoteItem.proposalPrices" ng-if="displayForStatuses(['Proposal sent', 'Ordered'])">
-                                <input id="{('QuoteItem_' + quoteItem.id + '_' + tierPrice.id )}" name="{('QuoteItem_' + quoteItem.id + '_SelectedTierPrice' )}" style="display: inline-block;" type="radio" ng-model="quoteItem.selectedTierPrice" ng-value="tierPrice" ng-change="selectTierPrice()" ng-disabled="quoteRequest.status === 'Ordered'" />
-                                <label for="{('QuoteItem_' + quoteItem.id + '_' + tierPrice.id )}" style="display: inline-block;" ng-bind="tierPrice.price.formatedAmount"></label>
+                                <input id="{% raw %}{{ 'QuoteItem_' + quoteItem.id + '_' + tierPrice.id }}{% endraw %}" name="{% raw %}{{ 'QuoteItem_' + quoteItem.id + '_SelectedTierPrice' }}{% endraw %}" style="display: inline-block;" type="radio" ng-model="quoteItem.selectedTierPrice" ng-value="tierPrice" ng-change="selectTierPrice()" ng-disabled="quoteRequest.status === 'Ordered'" />
+                                <label for="{% raw %}{{ 'QuoteItem_' + quoteItem.id + '_' + tierPrice.id }}{% endraw %}" style="display: inline-block;" ng-bind="tierPrice.price.formatedAmount"></label>
                             </span>
                         </div>
                         <div class="grid-item one-sixth medium-down--one-third text-right" ng-if="displayForStatuses(['New'])">

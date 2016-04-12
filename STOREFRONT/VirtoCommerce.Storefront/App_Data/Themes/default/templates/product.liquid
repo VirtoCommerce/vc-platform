@@ -154,7 +154,7 @@
         <div class="grid">
             <div class="grid-item large--eleven-twelfths text-center">
                 <div class="product-photo-container" id="productPhoto">
-                    <img id="productPhotoImg" ng-src="{( selectedVariation.primaryImage.url )}" alt="{( selectedVariation.primaryImage.alt )}" ng-if="selectedVariation.primaryImage">
+                    <img id="productPhotoImg" ng-src="{% raw %}{{ selectedVariation.primaryImage.url }}{% endraw %}" alt="{% raw %}{{ selectedVariation.primaryImage.alt }}{% endraw %}" ng-if="selectedVariation.primaryImage">
                     <div class="no-product-image" ng-if="!selectedVariation.primaryImage">
                         <img src="{{ 'no-image.svg' | asset_url }}" />
                     </div>
@@ -162,7 +162,7 @@
                 <ul ng-if="selectedVariation.images.length > 0" class="product-photo-thumbs grid-uniform" id="productThumbs">
                     <li class="grid-item medium--down-one-quarter large--one-quarter" ng-repeat="image in selectedVariation.images">
                         <a href="" ng-click="selectedVariation.primaryImage = image" class="product-photo-thumb">
-                            <img ng-src="{(image.url)}"  alt="{(image.alt)}">
+                            <img ng-src="{% raw %}{{ image.url }}{% endraw %}"  alt="{% raw %}{{ image.alt }}{% endraw %}">
                         </a>
                     </li>
                 </ul>

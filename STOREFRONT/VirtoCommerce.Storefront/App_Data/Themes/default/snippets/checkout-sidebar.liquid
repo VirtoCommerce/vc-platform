@@ -23,7 +23,7 @@
                             <div class="product__image__inner">
                                 <span class="product__quantity" ng-bind="lineItem.quantity"></span>
                                 <div class="product__image__wrapper">
-                                    <img alt="{( lineItem.name )}" ng-src="{( lineItem.imageUrl )}" ng-if="lineItem.imageUrl" />
+                                    <img alt="{% raw %}{{ lineItem.name }}{% endraw %}" ng-src="{% raw %}{{ lineItem.imageUrl }}{% endraw %}" ng-if="lineItem.imageUrl" />
                                     <div class="no-product-image" ng-if="!lineItem.imageUrl">
                                         <img src="{{ 'no-image.svg' | asset_url }}" />
                                     </div>

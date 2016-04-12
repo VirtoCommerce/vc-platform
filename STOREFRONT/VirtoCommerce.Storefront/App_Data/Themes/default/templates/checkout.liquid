@@ -109,7 +109,7 @@
                             <div class="field field--three-eights field--required field--show-floating-label" ng-if="checkout.countryRegions.length && checkout.shipment.deliveryAddress.countryName.length" ng-class="{ 'field--error': formShippingAddress.$submitted && formShippingAddress.RegionName.$invalid }">
                                 <div class="field__input-wrapper field__input-wrapper--select">
                                     <label class="field__label" for="RegionName" ng-bind="checkout.selectedCountry.regionType"></label>
-                                    <select class="field__input field__input--select" id="RegionName" name="RegionName" placeholder="{(checkout.selectedCountry.regionType)}" required="required" size="1" ng-model="checkout.shipment.deliveryAddress.regionName" ng-change="setCountryRegion('Shipping', checkout.shipment.deliveryAddress.regionName)" ng-disabled="checkout.shippingAddressProcessing">
+                                    <select class="field__input field__input--select" id="RegionName" name="RegionName" placeholder="{% raw %}{{ checkout.selectedCountry.regionType }}{% raw %}" required="required" size="1" ng-model="checkout.shipment.deliveryAddress.regionName" ng-change="setCountryRegion('Shipping', checkout.shipment.deliveryAddress.regionName)" ng-disabled="checkout.shippingAddressProcessing">
                                         <option disabled="disabled" value="" ng-bind="'Select ' + checkout.selectedCountry.regionType"></option>
                                         <option ng-repeat="countryRegion in checkout.countryRegions" ng-value="countryRegion.name" ng-bind="countryRegion.name" ng-selected="countryRegion.name == checkout.shipment.deliveryAddress.regionName"></option>
                                     </select>
@@ -185,9 +185,9 @@
                             <div class="content-box__row">
                                 <div class="radio-wrapper">
                                     <div class="radio__input">
-                                        <input class="input-radio" id="{( availableShippingMethod.shipmentMethodCode )}" name="ShipmentMethodCode" type="radio" ng-model="checkout.shipment.shipmentMethodCode" ng-required="true" ng-change="setShippingMethod()" ng-value="availableShippingMethod.shipmentMethodCode" ng-disabled="checkout.shippingMethodProcessing" />
+                                        <input class="input-radio" id="{% raw %}{{ availableShippingMethod.shipmentMethodCode }}{% endraw %}" name="ShipmentMethodCode" type="radio" ng-model="checkout.shipment.shipmentMethodCode" ng-required="true" ng-change="setShippingMethod()" ng-value="availableShippingMethod.shipmentMethodCode" ng-disabled="checkout.shippingMethodProcessing" />
                                     </div>
-                                    <label class="radio__label" for="{( availableShippingMethod.shipmentMethodCode )}" ng-bind="availableShippingMethod.name"></label>
+                                    <label class="radio__label" for="{% raw %}{{ availableShippingMethod.shipmentMethodCode }}{% endraw %}" ng-bind="availableShippingMethod.name"></label>
                                     <span class="radio__accessory content-box__emphasis" ng-bind="availableShippingMethod.price.formatedAmount"></span>
                                 </div>
                             </div>
@@ -252,9 +252,9 @@
                         <div class="content-box" ng-repeat="availablePaymentMethod in checkout.availablePaymentMethods">
                             <div class="radio-wrapper content-box__row">
                                 <div class="radio__input">
-                                    <input class="input-radio" id="{( availablePaymentMethod.gatewayCode )}" name="PaymentMethodCode" type="radio" ng-model="checkout.payment.paymentGatewayCode" ng-required="true" ng-value="availablePaymentMethod.gatewayCode" ng-disabled="checkout.orderProcessing" />
+                                    <input class="input-radio" id="{% raw %}{{ availablePaymentMethod.gatewayCode }}{% endraw %}" name="PaymentMethodCode" type="radio" ng-model="checkout.payment.paymentGatewayCode" ng-required="true" ng-value="availablePaymentMethod.gatewayCode" ng-disabled="checkout.orderProcessing" />
                                 </div>
-                                <label class="radio__label" for="{( availablePaymentMethod.gatewayCode )}" ng-bind="availablePaymentMethod.name"></label>
+                                <label class="radio__label" for="{% raw %}{{ availablePaymentMethod.gatewayCode }}{% endraw %}" ng-bind="availablePaymentMethod.name"></label>
                             </div>
                             <div class="radio-wrapper content-box__row content-box__row--secondary" ng-if="availablePaymentMethod.type == 'Standard' && checkout.payment.paymentGatewayCode == availablePaymentMethod.gatewayCode">
                                 <div class="fieldset">
@@ -424,7 +424,7 @@
                                     <div class="field field--three-eights field--required field--show-floating-label" ng-if="checkout.countryRegions.length && checkout.payment.billingAddress.countryName.length" ng-class="{ 'field--error': formPaymentMethod.$submitted && formPaymentMethod.RegionName.$invalid }">
                                         <div class="field__input-wrapper field__input-wrapper--select">
                                             <label class="field__label" for="RegionName" ng-bind="checkout.selectedCountry.regionType"></label>
-                                            <select class="field__input field__input--select" id="RegionName" name="RegionName" placeholder="{( checkout.selectedCountry.regionType )}" required="required" size="1" ng-model="checkout.payment.billingAddress.regionName" ng-change="setCountryRegion('Billing', checkout.payment.billingAddress.regionName)" ng-disabled="checkout.orderProcessing">
+                                            <select class="field__input field__input--select" id="RegionName" name="RegionName" placeholder="{% raw %}{{ checkout.selectedCountry.regionType }}{% endraw %}" required="required" size="1" ng-model="checkout.payment.billingAddress.regionName" ng-change="setCountryRegion('Billing', checkout.payment.billingAddress.regionName)" ng-disabled="checkout.orderProcessing">
                                                 <option disabled="disabled" value="" ng-bind="'Select ' + checkout.selectedCountry.regionType"></option>
                                                 <option ng-repeat="countryRegion in checkout.countryRegions" ng-value="countryRegion.name" ng-bind="countryRegion.name" ng-selected="countryRegion.name == checkout.payment.billingAddress.regionName"></option>
                                             </select>

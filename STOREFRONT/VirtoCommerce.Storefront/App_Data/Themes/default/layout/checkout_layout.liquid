@@ -53,7 +53,7 @@
                     </svg>
                 </div>
                 <div class="order-summary-toggle__total-recap total-recap">
-                    <span class="total-recap__final-price">{( cart.Total.Amount | currency: cart.Total.CurrencySymbol )}</span>
+                    <span class="total-recap__final-price">{% raw %}{{ cart.Total.Amount | currency: cart.Total.CurrencySymbol }}{% endraw %}</span>
                 </div>
             </div>
         </div>
