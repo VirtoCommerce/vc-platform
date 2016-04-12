@@ -24,8 +24,8 @@
 	                blade.currentEntities.push({
 	                    storeId: x.id,
 	                    store: x,
-	                    pagesCount: '...',
 	                    themesCount: '...',
+	                    pagesCount: '...',
 	                    blogsCount: '...',
 	                    listLinksCount: '...'
 	                });
@@ -129,6 +129,8 @@
 	        var newBlade = {
 	            id: 'addTheme',
 	            isNew: true,
+	            isActivateAfterSave: !data.themesCount,
+	            store: data.store,
 	            storeId: data.storeId,
 	            baseThemes: getBaseThemes(data.store),
 	            controller: 'virtoCommerce.contentModule.themeDetailController',

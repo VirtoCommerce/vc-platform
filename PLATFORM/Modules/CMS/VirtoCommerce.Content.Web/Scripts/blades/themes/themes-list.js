@@ -7,7 +7,7 @@
         blade.contentType = 'themes';
         blade.defaultThemeName = undefined;
 
-        blade.initialize = function () {
+        blade.refresh = function () {
             blade.isLoading = true;
             $scope.selectedNodeId = undefined;
             contentApi.query({ contentType: blade.contentType, storeId: blade.storeId }, function (data) {
@@ -35,6 +35,8 @@
             var newBlade = {
                 id: 'themeDetail',
                 isNew: !node,
+                isActivateAfterSave: !_.any(blade.currentEntities),
+                store: blade.store,
                 data: node,
                 storeId: blade.storeId,
                 baseThemes: blade.baseThemes,
@@ -53,10 +55,9 @@
                 callback: function (userFonfirmed) {
                     if (userFonfirmed) {
                         blade.isLoading = true;
-                        themes.cloneTheme({ storeId: blade.storeId, themeName: data.name }, function (data) {
-                            blade.initialize();
-                        },
-                        function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
+                        themes.cloneTheme({ storeId: blade.storeId, themeName: data.name },
+                            blade.refresh,
+                            function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
                     }
                 }
             };
@@ -86,8 +87,8 @@
             var prop = _.findWhere(blade.store.dynamicProperties, { name: 'DefaultThemeName' });
             prop.values = [{ value: data.name }];
 
-            stores.update({ storeId: blade.storeId }, blade.store, function () {
-                blade.initialize();
+            blade.store.$update(function () {
+                blade.refresh();
                 blade.parentBlade.refresh(blade.storeId, 'defaultTheme', data.name);
             },
             function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
@@ -114,14 +115,13 @@
                                     var prop = _.findWhere(blade.store.dynamicProperties, { name: 'DefaultThemeName' });
                                     prop.values = [{ value: '' }];
 
-                                    stores.update({ storeId: blade.storeId }, blade.store,
-                                        function () {
-                                            blade.initialize();
-                                            $rootScope.$broadcast("cms-statistics-changed", blade.storeId);
-                                        },
-                                        function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
+                                    blade.store.$update(function () {
+                                        blade.refresh();
+                                        $rootScope.$broadcast("cms-statistics-changed", blade.storeId);
+                                    },
+                                    function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
                                 } else {
-                                    blade.initialize();
+                                    blade.refresh();
                                     $rootScope.$broadcast("cms-statistics-changed", blade.storeId);
                                 }
                             },
@@ -147,6 +147,8 @@
                 executeMethod: function () {
                     var newBlade = {
                         id: "themeUpload",
+                        isActivateAfterSave: !_.any(blade.currentEntities),
+                        store: blade.store,
                         storeId: blade.storeId,
                         controller: 'virtoCommerce.contentModule.themeUploadController',
                         template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/theme-upload.tpl.html'
@@ -226,6 +228,6 @@
             uiGridHelper.initialize($scope, gridOptions);
         };
 
-        blade.initialize();
+        blade.refresh();
     }
 ]);

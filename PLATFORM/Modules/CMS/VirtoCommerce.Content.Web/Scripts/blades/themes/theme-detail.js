@@ -8,7 +8,7 @@
         } else {
             initializeBlade(blade.data);
             if (parentRefresh) {
-                blade.parentBlade.initialize();
+                blade.parentBlade.refresh();
             }
         }
     };
@@ -42,13 +42,13 @@
                 contentApi.copy({
                     srcPath: 'Themes/' + blade.currentEntity.defaultTheme,
                     destPath: 'Themes/' + blade.storeId + '/' + blade.currentEntity.name
-                }, refreshParentAndClose,
+                }, onAfterThemeCreated,
                 function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
             } else { // create empty
                 contentApi.createFolder({
                     contentType: 'themes',
                     storeId: blade.storeId
-                }, blade.currentEntity, refreshParentAndClose,
+                }, blade.currentEntity, onAfterThemeCreated,
                 function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
             }
         } else {
@@ -68,10 +68,21 @@
         }
     };
 
+    function onAfterThemeCreated() {
+        if (blade.isActivateAfterSave) {
+            var prop = _.findWhere(blade.store.dynamicProperties, { name: 'DefaultThemeName' });
+            prop.values = [{ value: blade.currentEntity.name }];
+
+            blade.store.$update(refreshParentAndClose, function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
+        } else {
+            refreshParentAndClose();
+        }
+    }
+
     function refreshParentAndClose() {
         angular.copy(blade.currentEntity, blade.origEntity);
         $scope.bladeClose();
-        blade.parentBlade.initialize();
+        blade.parentBlade.refresh();
         $rootScope.$broadcast("cms-statistics-changed", blade.storeId);
     }
 
