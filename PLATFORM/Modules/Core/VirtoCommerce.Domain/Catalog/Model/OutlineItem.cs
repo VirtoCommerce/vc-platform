@@ -9,5 +9,10 @@ namespace VirtoCommerce.Domain.Catalog.Model
         public bool IsLinkTarget { get; set; }
         public string SeoObjectType { get; set; }
         public ICollection<SeoInfo> SeoInfos { get; set; }
+
+        public override string ToString()
+        {
+            return (IsLinkTarget ? "*" : "") + Id;
+        }
     }
 }

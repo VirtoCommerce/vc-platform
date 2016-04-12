@@ -22,79 +22,85 @@ namespace VirtoCommerce.CatalogModule.Test
     {
         #region Mocks
 
+        private static readonly List<Catalog> _catalogs = new List<Catalog>
+        {
+            new Catalog { Id = "c" },
+            new Catalog { Id = "v", Virtual = true },
+        };
+
         private static readonly List<Category> _categories = new List<Category>
         {
-            new Category
-            {
-                CatalogId = "v",
-                Id = "v1",
-                Catalog = new Catalog { Id = "v", Virtual = true },
-            },
+            new Category { CatalogId = "c", Id = "c0", },
+            new Category { CatalogId = "c", Id = "c1", },
+            new Category { CatalogId = "c", Id = "c2", ParentCategoryId = "c1", },
+            new Category { CatalogId = "c", Id = "c3", ParentCategoryId = "c2", },
 
-            new Category
-            {
-                CatalogId = "c",
-                Id = "c1",
-                Catalog = new Catalog { Id = "c" },
-                OutgoingLinks = new ObservableCollection<CategoryRelation>
-                {
-                    new CategoryRelation { TargetCatalogId  = "v", TargetCategoryId = "v1" },
-                },
-            },
-            new Category
-            {
-                CatalogId = "c",
-                Id = "c2",
-                ParentCategoryId = "c1",
-                Catalog = new Catalog { Id = "c" },
-                OutgoingLinks = new ObservableCollection<CategoryRelation>
-                {
-                    new CategoryRelation { TargetCatalogId  = "v", TargetCategoryId = "v1" },
-                },
-            },
-            new Category
-            {
-                CatalogId = "c",
-                Id = "c3",
-                ParentCategoryId = "c2",
-                Catalog = new Catalog { Id = "c" },
-                OutgoingLinks = new ObservableCollection<CategoryRelation>
-                {
-                    new CategoryRelation { TargetCatalogId  = "v" },
-                    new CategoryRelation { TargetCatalogId  = "v", TargetCategoryId = "v1" },
-                },
-            },
+            new Category { CatalogId = "v", Id = "v1", },
+            new Category { CatalogId = "v", Id = "v2", ParentCategoryId = "v1", },
         };
 
         private static readonly List<Item> _items = new List<Item>
         {
-            new Item
-            {
-                CatalogId = "c",
-                CategoryId = "c3",
-                Id = "p1",
-                Catalog = new Catalog { Id = "c" },
-                CategoryLinks = new ObservableCollection<CategoryItemRelation>
-                {
-                    new CategoryItemRelation { CatalogId  = "v" },
-                    new CategoryItemRelation { CatalogId  = "v", CategoryId = "v1" },
-                },
-            },
+            new Item { CatalogId = "c", Id = "p0", },
+            new Item { CatalogId = "c", Id = "p1", CategoryId = "c3", },
+        };
+
+        private static readonly List<CategoryRelation> _categoryRelations = new List<CategoryRelation>
+        {
+            new CategoryRelation { SourceCategoryId = "c1", TargetCatalogId  = "v", TargetCategoryId = "v2" },
+            new CategoryRelation { SourceCategoryId = "c2", TargetCatalogId  = "v", TargetCategoryId = "v2" },
+            new CategoryRelation { SourceCategoryId = "c3", TargetCatalogId  = "v" },
+            new CategoryRelation { SourceCategoryId = "c3", TargetCatalogId  = "v", TargetCategoryId = "v2" },
+        };
+
+        private static readonly List<CategoryItemRelation> _categoryItemRelations = new List<CategoryItemRelation>
+        {
+            new CategoryItemRelation { ItemId = "p1", CatalogId  = "v" },
+            new CategoryItemRelation { ItemId = "p1", CatalogId  = "v", CategoryId = "v2" },
         };
 
         private static readonly List<SeoUrlKeyword> _seo = new List<SeoUrlKeyword>
         {
             new SeoUrlKeyword { ObjectType = "Category", ObjectId = "v1" },
+            new SeoUrlKeyword { ObjectType = "Category", ObjectId = "v2" },
+            new SeoUrlKeyword { ObjectType = "Category", ObjectId = "c0" },
             new SeoUrlKeyword { ObjectType = "Category", ObjectId = "c1" },
             new SeoUrlKeyword { ObjectType = "Category", ObjectId = "c2" },
             new SeoUrlKeyword { ObjectType = "Category", ObjectId = "c3" },
+            new SeoUrlKeyword { ObjectType = "CatalogProduct", ObjectId = "p0" },
             new SeoUrlKeyword { ObjectType = "CatalogProduct", ObjectId = "p1" },
         };
 
         #endregion
 
         [TestMethod]
-        public void SearchCategories_When_PhysicalCatalog_Expect_SinglePhysicalOutline()
+        public void GetCategories_When_NoParentsAndNoLinks_Expect_SinglePhysicalOutline()
+        {
+            var service = GetCategoryService();
+            var result = service.GetByIds(new[] { "c0" }, CategoryResponseGroup.WithOutlines | CategoryResponseGroup.WithSeo);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(1, result.Length);
+
+            var category = result.First();
+            Assert.IsNotNull(category);
+            Assert.AreEqual("c0", category.Id);
+            Assert.IsNotNull(category.Outlines);
+            Assert.AreEqual(1, category.Outlines.Count);
+
+            var outline = category.Outlines.First();
+            Assert.IsNotNull(outline.Items);
+            Assert.AreEqual(2, outline.Items.Count);
+
+            var outlineString = outline.ToString();
+            Assert.AreEqual("c/c0", outlineString);
+
+            var allOutlineItems = category.Outlines.SelectMany(o => o.Items.Where(i => i.SeoObjectType != "Catalog")).ToList();
+            Assert.IsTrue(allOutlineItems.All(i => i.SeoInfos != null && i.SeoInfos.Any()));
+        }
+
+        [TestMethod]
+        public void GetCategories_When_PhysicalCatalog_Expect_SinglePhysicalOutline()
         {
             var service = GetCategoryService();
             var result = service.GetByIds(new[] { "c3" }, CategoryResponseGroup.WithOutlines | CategoryResponseGroup.WithSeo, "c");
@@ -112,7 +118,7 @@ namespace VirtoCommerce.CatalogModule.Test
             Assert.IsNotNull(outline.Items);
             Assert.AreEqual(4, outline.Items.Count);
 
-            var outlineString = string.Join("/", outline.Items.Select(c => c.Id));
+            var outlineString = outline.ToString();
             Assert.AreEqual("c/c1/c2/c3", outlineString);
 
             var allOutlineItems = category.Outlines.SelectMany(o => o.Items.Where(i => i.SeoObjectType != "Catalog")).ToList();
@@ -120,7 +126,7 @@ namespace VirtoCommerce.CatalogModule.Test
         }
 
         [TestMethod]
-        public void SearchCategories_When_VirtualCatalog_Expect_MultipleVirtualOutlines()
+        public void GetCategories_When_VirtualCatalog_Expect_MultipleVirtualOutlines()
         {
             var service = GetCategoryService();
             var result = service.GetByIds(new[] { "c3" }, CategoryResponseGroup.WithOutlines | CategoryResponseGroup.WithSeo, "v");
@@ -134,18 +140,70 @@ namespace VirtoCommerce.CatalogModule.Test
             Assert.IsNotNull(category.Outlines);
             Assert.AreEqual(4, category.Outlines.Count);
 
-            var outlineStrings = category.Outlines.Select(o => string.Join("/", o.Items.Select(c => c.Id))).ToList();
-            Assert.IsTrue(outlineStrings.Contains("v/v1/c1/c2/c3"));
-            Assert.IsTrue(outlineStrings.Contains("v/v1/c2/c3"));
-            Assert.IsTrue(outlineStrings.Contains("v/v1/c3"));
-            Assert.IsTrue(outlineStrings.Contains("v/c3"));
+            var outlineStrings = category.Outlines.Select(o => o.ToString()).ToList();
+            Assert.IsTrue(outlineStrings.Contains("v/v1/v2/*c1/c2/c3"));
+            Assert.IsTrue(outlineStrings.Contains("v/v1/v2/*c2/c3"));
+            Assert.IsTrue(outlineStrings.Contains("v/v1/v2/*c3"));
+            Assert.IsTrue(outlineStrings.Contains("v/*c3"));
 
             var allOutlineItems = category.Outlines.SelectMany(o => o.Items.Where(i => i.SeoObjectType != "Catalog")).ToList();
             Assert.IsTrue(allOutlineItems.All(i => i.SeoInfos != null && i.SeoInfos.Any()));
         }
 
         [TestMethod]
-        public void SearchProducts_When_PhysicalCatalog_Expect_SinglePhysicalOutline()
+        public void GetCategories_When_NoCatalog_Expect_PhysicalAndVirtualOutlines()
+        {
+            var service = GetCategoryService();
+            var result = service.GetByIds(new[] { "c3" }, CategoryResponseGroup.WithOutlines | CategoryResponseGroup.WithSeo);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(1, result.Length);
+
+            var category = result.First();
+            Assert.IsNotNull(category);
+            Assert.AreEqual("c3", category.Id);
+            Assert.IsNotNull(category.Outlines);
+            Assert.AreEqual(5, category.Outlines.Count);
+
+            var outlineStrings = category.Outlines.Select(o => o.ToString()).ToList();
+            Assert.IsTrue(outlineStrings.Contains("c/c1/c2/c3"));
+            Assert.IsTrue(outlineStrings.Contains("v/v1/v2/*c1/c2/c3"));
+            Assert.IsTrue(outlineStrings.Contains("v/v1/v2/*c2/c3"));
+            Assert.IsTrue(outlineStrings.Contains("v/v1/v2/*c3"));
+            Assert.IsTrue(outlineStrings.Contains("v/*c3"));
+
+            var allOutlineItems = category.Outlines.SelectMany(o => o.Items.Where(i => i.SeoObjectType != "Catalog")).ToList();
+            Assert.IsTrue(allOutlineItems.All(i => i.SeoInfos != null && i.SeoInfos.Any()));
+        }
+
+        [TestMethod]
+        public void GetProducts_When_NoCategoriesAndNoLinks_Expect_SinglePhysicalOutline()
+        {
+            var service = GetItemService();
+            var result = service.GetByIds(new[] { "p0" }, ItemResponseGroup.Outlines | ItemResponseGroup.Seo);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(1, result.Length);
+
+            var product = result.First();
+            Assert.IsNotNull(product);
+            Assert.AreEqual("p0", product.Id);
+            Assert.IsNotNull(product.Outlines);
+            Assert.AreEqual(1, product.Outlines.Count);
+
+            var outline = product.Outlines.First();
+            Assert.IsNotNull(outline.Items);
+            Assert.AreEqual(2, outline.Items.Count);
+
+            var outlineString = outline.ToString();
+            Assert.AreEqual("c/p0", outlineString);
+
+            var allOutlineItems = product.Outlines.SelectMany(o => o.Items.Where(i => i.SeoObjectType != "Catalog")).ToList();
+            Assert.IsTrue(allOutlineItems.All(i => i.SeoInfos != null && i.SeoInfos.Any()));
+        }
+
+        [TestMethod]
+        public void GetProducts_When_PhysicalCatalog_Expect_SinglePhysicalOutline()
         {
             var service = GetItemService();
             var result = service.GetByIds(new[] { "p1" }, ItemResponseGroup.Outlines | ItemResponseGroup.Seo, "c");
@@ -163,7 +221,7 @@ namespace VirtoCommerce.CatalogModule.Test
             Assert.IsNotNull(outline.Items);
             Assert.AreEqual(5, outline.Items.Count);
 
-            var outlineString = string.Join("/", outline.Items.Select(c => c.Id));
+            var outlineString = outline.ToString();
             Assert.AreEqual("c/c1/c2/c3/p1", outlineString);
 
             var allOutlineItems = product.Outlines.SelectMany(o => o.Items.Where(i => i.SeoObjectType != "Catalog")).ToList();
@@ -171,7 +229,7 @@ namespace VirtoCommerce.CatalogModule.Test
         }
 
         [TestMethod]
-        public void SearchProducts_When_VirtualCatalog_Expect_MultipleVirtualOutlines()
+        public void GetProducts_When_VirtualCatalog_Expect_MultipleVirtualOutlines()
         {
             var service = GetItemService();
             var result = service.GetByIds(new[] { "p1" }, ItemResponseGroup.Outlines | ItemResponseGroup.Seo, "v");
@@ -185,13 +243,41 @@ namespace VirtoCommerce.CatalogModule.Test
             Assert.IsNotNull(product.Outlines);
             Assert.AreEqual(6, product.Outlines.Count);
 
-            var outlineStrings = product.Outlines.Select(o => string.Join("/", o.Items.Select(c => c.Id))).ToList();
-            Assert.IsTrue(outlineStrings.Contains("v/v1/c1/c2/c3/p1"));
-            Assert.IsTrue(outlineStrings.Contains("v/v1/c2/c3/p1"));
-            Assert.IsTrue(outlineStrings.Contains("v/v1/c3/p1"));
-            Assert.IsTrue(outlineStrings.Contains("v/c3/p1"));
-            Assert.IsTrue(outlineStrings.Contains("v/v1/p1"));
-            Assert.IsTrue(outlineStrings.Contains("v/p1"));
+            var outlineStrings = product.Outlines.Select(o => o.ToString()).ToList();
+            Assert.IsTrue(outlineStrings.Contains("v/v1/v2/*c1/c2/c3/p1"));
+            Assert.IsTrue(outlineStrings.Contains("v/v1/v2/*c2/c3/p1"));
+            Assert.IsTrue(outlineStrings.Contains("v/v1/v2/*c3/p1"));
+            Assert.IsTrue(outlineStrings.Contains("v/*c3/p1"));
+            Assert.IsTrue(outlineStrings.Contains("v/v1/v2/*p1"));
+            Assert.IsTrue(outlineStrings.Contains("v/*p1"));
+
+            var allOutlineItems = product.Outlines.SelectMany(o => o.Items.Where(i => i.SeoObjectType != "Catalog")).ToList();
+            Assert.IsTrue(allOutlineItems.All(i => i.SeoInfos != null && i.SeoInfos.Any()));
+        }
+
+        [TestMethod]
+        public void GetProducts_When_NoCatalog_Expect_PhysicalAndVirtualOutlines()
+        {
+            var service = GetItemService();
+            var result = service.GetByIds(new[] { "p1" }, ItemResponseGroup.Outlines | ItemResponseGroup.Seo);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(1, result.Length);
+
+            var product = result.First();
+            Assert.IsNotNull(product);
+            Assert.AreEqual("p1", product.Id);
+            Assert.IsNotNull(product.Outlines);
+            Assert.AreEqual(7, product.Outlines.Count);
+
+            var outlineStrings = product.Outlines.Select(o => o.ToString()).ToList();
+            Assert.IsTrue(outlineStrings.Contains("c/c1/c2/c3/p1"));
+            Assert.IsTrue(outlineStrings.Contains("v/v1/v2/*c1/c2/c3/p1"));
+            Assert.IsTrue(outlineStrings.Contains("v/v1/v2/*c2/c3/p1"));
+            Assert.IsTrue(outlineStrings.Contains("v/v1/v2/*c3/p1"));
+            Assert.IsTrue(outlineStrings.Contains("v/*c3/p1"));
+            Assert.IsTrue(outlineStrings.Contains("v/v1/v2/*p1"));
+            Assert.IsTrue(outlineStrings.Contains("v/*p1"));
 
             var allOutlineItems = product.Outlines.SelectMany(o => o.Items.Where(i => i.SeoObjectType != "Catalog")).ToList();
             Assert.IsTrue(allOutlineItems.All(i => i.SeoInfos != null && i.SeoInfos.Any()));
@@ -244,12 +330,67 @@ namespace VirtoCommerce.CatalogModule.Test
 
         private static Category[] GetCategoriesByIds(string[] categoryIds, CategoryResponseGroup responseGroup)
         {
-            return _categories.Where(c => categoryIds.Contains(c.Id)).ToArray();
+            var result = _categories
+                .Where(c => categoryIds.Contains(c.Id))
+                .Select(CloneCategory)
+                .ToArray();
+
+            var withLinks = (responseGroup & CategoryResponseGroup.WithLinks) == CategoryResponseGroup.WithLinks;
+            var withParents = (responseGroup & CategoryResponseGroup.WithParents) == CategoryResponseGroup.WithParents;
+
+            foreach (var category in result)
+            {
+                if (withLinks)
+                {
+                    category.OutgoingLinks = new ObservableCollection<CategoryRelation>(_categoryRelations.Where(r => r.SourceCategoryId == category.Id));
+                }
+
+                if (withParents)
+                {
+                    var parents = new List<Category>();
+
+                    var currentCategory = category;
+                    while (currentCategory != null && currentCategory.ParentCategoryId != null)
+                    {
+                        currentCategory = CloneCategory(_categories.FirstOrDefault(c => c.Id == currentCategory.ParentCategoryId));
+                        parents.Insert(0, currentCategory);
+                    }
+
+                    category.AllParents = parents.ToArray();
+                }
+            }
+
+            return result;
+        }
+
+        private static Category CloneCategory(Category category)
+        {
+            return new Category
+            {
+                Id = category.Id,
+                ParentCategoryId = category.ParentCategoryId,
+                CatalogId = category.CatalogId,
+                Catalog = _catalogs.FirstOrDefault(c => c.Id == category.CatalogId),
+            };
         }
 
         private static Item[] GetItemsByIds(string[] itemIds, ItemResponseGroup responseGroup)
         {
-            return _items.Where(c => itemIds.Contains(c.Id)).ToArray();
+            var result = _items.Where(c => itemIds.Contains(c.Id)).ToArray();
+
+            var withLinks = (responseGroup & ItemResponseGroup.Links) == ItemResponseGroup.Links;
+
+            foreach (var item in result)
+            {
+                item.Catalog = _catalogs.FirstOrDefault(c => c.Id == item.CatalogId);
+
+                if (withLinks)
+                {
+                    item.CategoryLinks = new ObservableCollection<CategoryItemRelation>(_categoryItemRelations.Where(r => r.ItemId == item.Id));
+                }
+            }
+
+            return result;
         }
     }
 }
