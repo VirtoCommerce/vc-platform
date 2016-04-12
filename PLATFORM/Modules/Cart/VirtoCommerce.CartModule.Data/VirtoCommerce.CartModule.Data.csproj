@@ -124,6 +124,10 @@
     <Compile Include="Migrations\201603140730182_ValidationType.Designer.cs">
       <DependentUpon>201603140730182_ValidationType.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201604120843475_LineItemCategoryOptional.cs" />
+    <Compile Include="Migrations\201604120843475_LineItemCategoryOptional.Designer.cs">
+      <DependentUpon>201604120843475_LineItemCategoryOptional.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\AddressEntity.cs" />
     <Compile Include="Model\DiscountEntity.cs" />
@@ -194,6 +198,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201603140730182_ValidationType.resx">
       <DependentUpon>201603140730182_ValidationType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201604120843475_LineItemCategoryOptional.resx">
+      <DependentUpon>201604120843475_LineItemCategoryOptional.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

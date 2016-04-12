@@ -30,7 +30,7 @@ namespace VirtoCommerce.CartModule.Data.Model
         [Required]
 		[StringLength(64)]
 		public string CatalogId { get; set; }
-		[Required]
+
 		[StringLength(64)]
 		public string CategoryId { get; set; }
 

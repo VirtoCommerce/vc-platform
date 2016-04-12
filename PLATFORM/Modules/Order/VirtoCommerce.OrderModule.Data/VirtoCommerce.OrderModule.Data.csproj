@@ -150,7 +150,6 @@
     <Compile Include="Services\CustomerOrderSearchServiceImpl.cs" />
     <Compile Include="Services\CustomerOrderServiceImpl.cs" />
     <Compile Include="Observers\AdjustInventoryObserver.cs" />
-    <Compile Include="Observers\CalculateTotalsObserver.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
