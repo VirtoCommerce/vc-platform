@@ -47,8 +47,6 @@ namespace VirtoCommerce.OrderModule.Web
         public override void Initialize()
         {
             _container.RegisterType<IEventPublisher<OrderChangeEvent>, EventPublisher<OrderChangeEvent>>();
-            //Subscribe to order changes. Calculate totals   
-            _container.RegisterType<IObserver<OrderChangeEvent>, CalculateTotalsObserver>("CalculateTotalsObserver");
             //Adjust inventory activity
             _container.RegisterType<IObserver<OrderChangeEvent>, AdjustInventoryObserver>("AdjustInventoryObserver");
             //Create order observer. Send notification
