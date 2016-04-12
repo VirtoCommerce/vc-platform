@@ -193,10 +193,13 @@ namespace VirtoCommerce.Platform.Data.Settings
                     }
                 }
                 //Try add runtime defined settings for requested module
-                List<SettingEntry> runtimeSettings;
-                if(_runtimeModuleSettingsMap.TryGetValue(moduleId, out runtimeSettings))
+                if (!string.IsNullOrEmpty(moduleId))
                 {
-                    result.AddRange(runtimeSettings);
+                    List<SettingEntry> runtimeSettings;
+                    if (_runtimeModuleSettingsMap.TryGetValue(moduleId, out runtimeSettings))
+                    {
+                        result.AddRange(runtimeSettings);
+                    }
                 }
             }
             return result.OrderBy(x => x.Name).ToArray();
