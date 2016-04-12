@@ -81,8 +81,9 @@
         $scope.bladeClose();
     };
 
-    $scope.blade.headIcon = 'fa-wrench';
-    $scope.blade.toolbarCommands = [
+    blade.headIcon = 'fa-wrench';
+    blade.isSavingToParentObject = true;
+    blade.toolbarCommands = [
         {
             name: "platform.commands.reset", icon: 'fa fa-undo',
             executeMethod: function () {
