@@ -60,6 +60,7 @@ angular.module(moduleName, [])
 
 	    // themes widget in STORE details
 	    widgetService.registerWidget({
+	        size: [2, 1],
 	        controller: 'virtoCommerce.contentModule.storeCMSWidgetController',
 	        template: 'Modules/$(VirtoCommerce.Content)/Scripts/widgets/storeCMSWidget.tpl.html',
 	        permission: 'content:read'

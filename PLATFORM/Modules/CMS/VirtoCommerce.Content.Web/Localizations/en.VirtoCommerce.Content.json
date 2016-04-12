@@ -188,8 +188,12 @@
         "title": "Pages",
         "blade-subtitle": "Pages List"
       },
-      "themes": {
-        "title": "Themes"
+      "store-cms": {
+        "themes": "Themes",
+        "pages": "Pages",
+        "blogs": "Blogs",
+        "links": "Link Lists",
+        "active-theme": "Active theme"
       }
     },
     "dialogs": {
