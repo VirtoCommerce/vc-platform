@@ -140,7 +140,6 @@
     <Compile Include="Extensions\UriExtensions.cs" />
     <Compile Include="Filters\DateFilters.cs" />
     <Compile Include="Filters\HtmlFilters.cs" />
-    <Compile Include="Filters\MathFilters.cs" />
     <Compile Include="Filters\MoneyFilters.cs" />
     <Compile Include="Filters\StringFilters.cs" />
     <Compile Include="Filters\UrlFilters.cs" />
