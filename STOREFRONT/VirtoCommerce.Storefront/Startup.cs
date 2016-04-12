@@ -10,7 +10,6 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using CacheManager.Core;
 using CacheManager.Web;
-//using MarkdownDeep;
 using MarkdownSharp;
 using Microsoft.Owin;
 using Microsoft.Owin.Extensions;
@@ -205,7 +204,7 @@ namespace VirtoCommerce.Storefront
             container.RegisterType<IAsyncObserver<UserLoginEvent>, QuoteRequestBuilder>("Merge anonymous quote request with loggined user quote");
 
             
-            var cmsContentConnectionString = BlobConnectionString.Parse(ConfigurationManager.ConnectionStrings["CmsContentConnectionString"].ConnectionString);
+            var cmsContentConnectionString = BlobConnectionString.Parse(ConfigurationManager.ConnectionStrings["ContentConnectionString"].ConnectionString);
             var themesBasePath = cmsContentConnectionString.RootPath.TrimEnd('/') + "/" + "Themes";
             var staticContentBasePath = cmsContentConnectionString.RootPath.TrimEnd('/') + "/" + "Pages";
             //Use always file system provider for global theme

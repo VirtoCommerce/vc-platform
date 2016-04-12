@@ -76,11 +76,11 @@ namespace VirtoCommerce.CatalogModule.Data.Services
             var productsSeo = allDublicatedSeos.Where(x => string.Equals(x.ObjectType, typeof(CatalogProduct).Name, StringComparison.OrdinalIgnoreCase));
             var categoriesSeo = allDublicatedSeos.Where(x => string.Equals(x.ObjectType, typeof(Category).Name, StringComparison.OrdinalIgnoreCase));
 
-            var products = _productService.GetByIds(productsSeo.Select(x => x.ObjectId).Distinct().ToArray(),  ItemResponseGroup.Outlines);
-            var categories = _categoryService.GetByIds(categoriesSeo.Select(x => x.ObjectId).Distinct().ToArray(), CategoryResponseGroup.WithOutlines);
+            var products = _productService.GetByIds(productsSeo.Select(x => x.ObjectId).Distinct().ToArray(),  ItemResponseGroup.Outlines, catalogId);
+            var categories = _categoryService.GetByIds(categoriesSeo.Select(x => x.ObjectId).Distinct().ToArray(), CategoryResponseGroup.WithOutlines, catalogId);
 
             var retVal = new List<SeoInfo>();
-            //Here we try to find between SEO duplicates records for products with directly or indirectly related to requested catalog
+            //Here we try to find between SEO duplicates records for products with directly or indirectly (virtual) related to requested catalog
             foreach (var product in products)
             {              
                 if (product.CatalogId == catalogId || product.Outlines.SelectMany(x=>x.Items).Any(x=>x.Id == catalogId))
