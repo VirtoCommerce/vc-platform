@@ -132,40 +132,8 @@
                     controller: 'virtoCommerce.contentModule.assetDetailController',
                     template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/asset-detail.tpl.html'
                 };
-
-                //var newBlade = {
-                //    currentEntity: { id: undefined, content: undefined, contentType: contentType, assetUrl: undefined, name: name },
-                //    titleValues: { name: folder.oneItemName },
-                //    subtitle: { name: folder.oneItemName },
-                //    title: 'content.blades.edit-asset.title-new',
-                //    subtitle: 'content.blades.edit-asset.subtitle-new'
-                //};
-
                 bladeNavigationService.showBlade(newBlade, blade);
             }
-            //else {
-            //    var newBlade = {
-            //        id: 'imageAssetDetail',
-            //        contentType: blade.contentType,
-            //        storeId: blade.storeId,
-            //        themeId: blade.themeId,
-            //        folderUrl: blade.currentEntity.url,
-            //        currentEntity: listItem,
-            //        isNew: isNew,
-            //        title: listItem.name,
-            //        subtitle: 'content.blades.edit-image-asset.subtitle',
-            //        subtitleValues: { name: listItem.name },
-            //        controller: 'virtoCommerce.contentModule.imageAssetDetailController',
-            //        template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/image-asset-detail.tpl.html'
-            //    };
-
-            //    //var newBlade = {
-            //    //    subtitle: { name: folder.oneItemName },
-            //    //    subtitle: 'content.blades.edit-image-asset.subtitle-new'
-            //    //};
-
-            //    bladeNavigationService.showBlade(newBlade, blade);
-            //}
         }
 
         blade.toolbarCommands = [

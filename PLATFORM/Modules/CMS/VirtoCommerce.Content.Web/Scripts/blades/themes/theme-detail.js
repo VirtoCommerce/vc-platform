@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.contentModule')
-.controller('virtoCommerce.contentModule.themeDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.contentModule.contentApi', function ($scope, bladeNavigationService, contentApi) {
+.controller('virtoCommerce.contentModule.themeDetailController', ['$rootScope', '$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.contentModule.contentApi', function ($rootScope, $scope, bladeNavigationService, contentApi) {
     var blade = $scope.blade;
 
     blade.refresh = function (parentRefresh) {
@@ -40,8 +40,8 @@
         if (blade.isNew) {
             if (blade.currentEntity.defaultTheme) { // create from default
                 contentApi.copy({
-                	srcPath: 'Themes/' + blade.currentEntity.defaultTheme,
-                	destPath: 'Themes/' + blade.storeId + '/' + blade.currentEntity.name
+                    srcPath: 'Themes/' + blade.currentEntity.defaultTheme,
+                    destPath: 'Themes/' + blade.storeId + '/' + blade.currentEntity.name
                 }, refreshParentAndClose,
                 function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
             } else { // create empty
@@ -69,11 +69,10 @@
     };
 
     function refreshParentAndClose() {
-        blade.parentBlade.initialize();
-        if (blade.parentBlade.parentBlade)
-            blade.parentBlade.parentBlade.refresh(blade.storeId, 'themes');
         angular.copy(blade.currentEntity, blade.origEntity);
         $scope.bladeClose();
+        blade.parentBlade.initialize();
+        $rootScope.$broadcast("cms-statistics-changed", blade.storeId);
     }
 
     $scope.setForm = function (form) { $scope.formScope = form; };

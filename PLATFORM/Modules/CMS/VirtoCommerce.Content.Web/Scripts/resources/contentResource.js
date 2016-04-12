@@ -8,21 +8,14 @@
         delete: { url: 'api/cms/:storeId/menu/', method: 'DELETE' }
     });
 }])
-.factory('virtoCommerce.contentModule.pages', ['$resource', function ($resource) {
-    return $resource('api/cms/:storeId/pages/', {}, {
-        //checkName: { url: 'api/cms/:storeId/pages/checkname', method: 'GET' },
-
-        //createBlog: { url: 'api/cms/:storeId/pages/blog/:blogName', method: 'POST' },
-        //updateBlog: { url: 'api/cms/:storeId/pages/blog/:blogName/:oldBlogName', method: 'POST' },
-    });
-}])
 .factory('virtoCommerce.contentModule.themes', ['$resource', function ($resource) {
-    return $resource(null, null, {        
+    return $resource(null, null, {
         cloneTheme: { url: 'api/content/themes/:storeId/cloneTheme', method: 'POST' }
     });
 }])
 .factory('virtoCommerce.contentModule.contentApi', ['$resource', function ($resource) {
     return $resource('api/content/:contentType/:storeId', null, {
+        getStatistics: { url: 'api/content/:storeId/stats' },
         get: {
             // using transformResponse to:
             // 1. avoid automatic response result string converting to array;
@@ -98,11 +91,5 @@
         createFolder: { url: 'api/content/:contentType/:storeId/folder', method: 'POST' },
         copy: { url: 'api/content/copy' },
         move: { url: 'api/content/:contentType/:storeId/move' }
-    });
-}])
-.factory('virtoCommerce.contentModule.stores', ['$resource', function ($resource) {
-    return $resource('api/stores', {}, {
-        get: { url: 'api/stores/:id' },
-        update: { method: 'PUT' }
     });
 }]);

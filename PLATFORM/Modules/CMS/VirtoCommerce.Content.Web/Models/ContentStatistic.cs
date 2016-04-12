@@ -10,6 +10,7 @@ namespace VirtoCommerce.Content.Web.Models
     /// </summary>
     public class ContentStatistic
     {
+        public string ActiveThemeName { get; set; }
         public int ThemesCount { get; set; }
         public int PagesCount { get; set; }
         public int BlogsCount { get; set; }
