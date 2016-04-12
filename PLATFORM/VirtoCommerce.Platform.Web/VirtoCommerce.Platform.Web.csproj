@@ -469,7 +469,6 @@
     <Content Include="Scripts\app\security\directives\permission.js" />
     <Content Include="Scripts\app\security\services\auth.js" />
     <Content Include="Scripts\app\settings\blades\entitySetting-list.js" />
-    <Content Include="Scripts\app\settings\blades\entitySetting-list.tpl.html" />
     <Content Include="Scripts\app\security\blades\account-api-list.js" />
     <Content Include="Scripts\app\security\blades\account-api-list.tpl.html" />
     <Content Include="Scripts\app\security\blades\account-resetPassword.tpl.html" />
