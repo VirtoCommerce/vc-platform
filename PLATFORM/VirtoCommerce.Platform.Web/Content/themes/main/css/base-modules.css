@@ -5667,7 +5667,6 @@ input.ui-grid-filter-input[type="text"]
     .gridster .list-item
     {
         background: #fbfdfe;
-        cursor: move;
         padding: 2px;
         position: absolute;
         text-align: center;
@@ -5784,6 +5783,7 @@ input.ui-grid-filter-input[type="text"]
 
     .gridster [ng-model="widget"]
     {
+        cursor: move;
         height: 100%;
         width: 100%;
     }
