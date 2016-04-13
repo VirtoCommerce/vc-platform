@@ -16,9 +16,9 @@ using VirtoCommerce.Content.Web.Security;
 using VirtoCommerce.Domain.Store.Services;
 using VirtoCommerce.Platform.Core.Asset;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Asset;
-using VirtoCommerce.Platform.Core.DynamicProperties;
 
 namespace VirtoCommerce.Content.Web.Controllers.Api
 {
@@ -68,8 +68,8 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
         /// <param name="urls">relative content urls to delete</param>
         /// <returns></returns>
         [HttpDelete]
-        [ResponseType(typeof(void))]
         [Route("")]
+        [ResponseType(typeof(void))]
         [CheckPermission(Permission = ContentPredefinedPermissions.Delete)]
         public IHttpActionResult DeleteContent(string contentType, string storeId, [FromUri] string[] urls)
         {
@@ -88,6 +88,7 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
         /// <returns>stream</returns>
         [HttpGet]
         [Route("")]
+        [ResponseType(typeof(byte[]))]
         [CheckPermission(Permission = ContentPredefinedPermissions.Read)]
         public HttpResponseMessage GetContentItemDataStream(string contentType, string storeId, string relativeUrl)
         {
@@ -109,8 +110,8 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
         /// <param name="keyword">search keyword</param>
         /// <returns>content items</returns>
         [HttpGet]
+        [Route("search")]
         [ResponseType(typeof(ContentItem[]))]
-        [Route("")]
         [CheckPermission(Permission = ContentPredefinedPermissions.Read)]
         public IHttpActionResult SearchContent(string contentType, string storeId, string folderUrl = null, string keyword = null)
         {
@@ -133,8 +134,8 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
         /// <param name="newUrl">new content item relative or absolute url</param>
         /// <returns></returns>
         [HttpGet]
-        [ResponseType(typeof(void))]
         [Route("move")]
+        [ResponseType(typeof(void))]
         [CheckPermission(Permission = ContentPredefinedPermissions.Update)]
         public IHttpActionResult MoveContent(string contentType, string storeId, string oldUrl, string newUrl)
         {
@@ -151,8 +152,8 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
         /// <param name="destPath">destination content relative path</param>
         /// <returns></returns>
         [HttpGet]
-        [ResponseType(typeof(void))]
         [Route("~/api/content/copy")]
+        [ResponseType(typeof(void))]
         [CheckPermission(Permission = ContentPredefinedPermissions.Update)]
         public IHttpActionResult CopyContent(string srcPath, string destPath)
         {
@@ -172,8 +173,8 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
         /// <param name="destPath">destination content relative path</param>
         /// <returns></returns>
         [HttpGet]
-        [ResponseType(typeof(void))]
         [Route("unpack")]
+        [ResponseType(typeof(void))]
         [CheckPermission(Permission = ContentPredefinedPermissions.Update)]
         public IHttpActionResult Unpack(string contentType, string storeId, string archivePath, string destPath)
         {
@@ -206,8 +207,8 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
         /// <param name="folder">content folder</param>
         /// <returns></returns>
         [HttpPost]
-        [ResponseType(typeof(void))]
         [Route("folder")]
+        [ResponseType(typeof(void))]
         [CheckPermission(Permission = ContentPredefinedPermissions.Create)]
         public IHttpActionResult CreateContentFolder(string contentType, string storeId, ContentFolder folder)
         {

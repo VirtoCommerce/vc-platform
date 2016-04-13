@@ -1125,7 +1125,7 @@ fieldset + fieldset
         font-size: 12px;
     }
 
-    .form-group .form-error
+    .form-error
     {
         color: #e51400;
         font-size: 12px;
@@ -1133,7 +1133,7 @@ fieldset + fieldset
         padding: 5px 0;
     }
 
-        .form-group .form-error *
+        .form-error *
         {
             display: block;
         }

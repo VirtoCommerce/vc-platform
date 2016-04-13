@@ -22,68 +22,63 @@ namespace VirtoCommerce.CatalogModule.Data.Services
         {
             foreach (var obj in objects)
             {
-                var category = obj as Category;
-                if (category != null)
-                {
-                    category.Outlines = GetOutlines(category.Id, catalogId, null, null, null);
-                }
+                var item = ConvertToGenericItem(obj);
 
-                var product = obj as CatalogProduct;
-                if (product != null)
-                {
-                    product.Outlines = GetOutlines(product.CategoryId, catalogId, product.Links, product.Id, product.SeoObjectType);
-                }
+                obj.Outlines = new List<Outline>();
+                AddOutlines(item, catalogId, obj.Outlines);
             }
         }
 
 
-        private List<Outline> GetOutlines(string categoryId, string allowedCatalogId, IEnumerable<CategoryLink> additionalLinks, string additionalItemId, string additionalItemType)
+        private void AddOutlines(GenericItem item, string allowedCatalogId, ICollection<Outline> outlines)
         {
-            var outlines = new List<Outline>();
-
-            var additionalItem = additionalItemId != null ? new OutlineItem { Id = additionalItemId, SeoObjectType = additionalItemType } : null;
-            AddOutlinesForParentAndLinkedCategories(categoryId, false, null, outlines, allowedCatalogId, additionalItem);
-
-            if (additionalLinks != null)
+            // Add physical outline
+            if (IsAllowedCatalog(item.CatalogId, allowedCatalogId))
             {
-                additionalItem = additionalItemId != null ? new OutlineItem { Id = additionalItemId, SeoObjectType = additionalItemType, IsLinkTarget = true } : null;
-                AddOutlinesForLinks(additionalLinks, null, outlines, allowedCatalogId, additionalItem);
+                var outline = CreateOutline(item.CatalogId);
+                outline.Items.AddRange(item.Parents.Select(ConvertToOutlineItem));
+                outline.Items.Add(ConvertToOutlineItem(item));
+                outlines.Add(outline);
             }
 
-            return outlines;
+            // Add virtual outlines for parent links
+            var lastItem = ConvertToOutlineItem(item);
+            var parents = new List<OutlineItem>();
+
+            foreach (var parent in item.Parents.Reverse())
+            {
+                parents = parents.Select(Clone).ToList();
+                parents.Insert(0, ConvertToOutlineItem(parent, true));
+                AddOutlinesForLinks(parent.Links, parents, lastItem, allowedCatalogId, outlines);
+            }
+
+            // Add virtual outlines for item links
+            lastItem = ConvertToOutlineItem(item, true);
+            AddOutlinesForLinks(item.Links, null, lastItem, allowedCatalogId, outlines);
         }
 
-        private void AddOutlinesForParentAndLinkedCategories(string categoryId, bool isLinkTarget, Outline partialOutline, List<Outline> outlines, string allowedCatalogId, OutlineItem additionalItem)
-        {
-            var category = GetCategory(categoryId);
-            var newOutline = CreateOutline(categoryId, category.SeoObjectType, isLinkTarget, partialOutline);
-
-            if (!string.IsNullOrEmpty(category.ParentId))
-            {
-                AddOutlinesForParentAndLinkedCategories(category.ParentId, false, newOutline, outlines, allowedCatalogId, additionalItem);
-            }
-            else if (IsAllowedCatalog(category.CatalogId, allowedCatalogId))
-            {
-                AddFinalOutline(category.CatalogId, false, newOutline, outlines, additionalItem);
-            }
-
-            AddOutlinesForLinks(category.Links, newOutline, outlines, allowedCatalogId, additionalItem);
-        }
-
-        private void AddOutlinesForLinks(IEnumerable<CategoryLink> links, Outline partialOutline, List<Outline> outlines, string allowedCatalogId, OutlineItem additionalItem)
+        private void AddOutlinesForLinks(IEnumerable<CategoryLink> links, List<OutlineItem> parents, OutlineItem lastItem, string allowedCatalogId, ICollection<Outline> outlines)
         {
             foreach (var link in links)
             {
                 if (IsAllowedCatalog(link.CatalogId, allowedCatalogId))
                 {
-                    if (!string.IsNullOrEmpty(link.CategoryId))
+                    var outline = CreateOutline(link.CatalogId);
+
+                    if (link.CategoryId != null)
                     {
-                        AddOutlinesForParentAndLinkedCategories(link.CategoryId, true, partialOutline, outlines, allowedCatalogId, additionalItem);
+                        var category = GetCategoryItem(link.CategoryId, true);
+                        outline.Items.AddRange(category.Parents.Select(ConvertToOutlineItem));
+                        outline.Items.Add(ConvertToOutlineItem(category));
                     }
-                    else
+
+                    if (parents != null)
                     {
-                        AddFinalOutline(link.CatalogId, true, partialOutline, outlines, additionalItem);
+                        outline.Items.AddRange(parents);
                     }
+
+                    outline.Items.Add(lastItem);
+                    outlines.Add(outline);
                 }
             }
         }
@@ -93,37 +88,91 @@ namespace VirtoCommerce.CatalogModule.Data.Services
             return allowedCatalogId == null || string.Equals(allowedCatalogId, actualCatalogId, StringComparison.OrdinalIgnoreCase);
         }
 
-        private static void AddFinalOutline(string actualCatalogId, bool isLinkTarget, Outline partialOutline, List<Outline> outlines, OutlineItem additionalItem)
+        private static Outline CreateOutline(string catalogId)
         {
-            var finalOutline = CreateOutline(actualCatalogId, "Catalog", isLinkTarget, partialOutline);
-
-            if (additionalItem != null)
-            {
-                finalOutline.Items.Add(new OutlineItem { Id = additionalItem.Id, SeoObjectType = additionalItem.SeoObjectType, IsLinkTarget = additionalItem.IsLinkTarget });
-            }
-
-            outlines.Add(finalOutline);
-        }
-
-        private static Outline CreateOutline(string firstItemId, string firstItemType, bool isLinkTarget, Outline partialOutline)
-        {
-            var result = new Outline
+            return new Outline
             {
                 Items = new List<OutlineItem>
                 {
-                    new OutlineItem { Id = firstItemId, SeoObjectType = firstItemType }
+                    new OutlineItem { Id = catalogId, SeoObjectType = "Catalog" }
                 }
             };
+        }
 
-            if (partialOutline != null && partialOutline.Items != null && partialOutline.Items.Any())
+        private static OutlineItem Clone(OutlineItem item)
+        {
+            return item == null ? null : new OutlineItem
             {
-                var partialOutlneItems = partialOutline.Items
-                    .Select(i => new OutlineItem { Id = i.Id, SeoObjectType = i.SeoObjectType, IsLinkTarget = i.IsLinkTarget })
+                Id = item.Id,
+                SeoObjectType = item.SeoObjectType,
+            };
+        }
+
+        private static OutlineItem ConvertToOutlineItem(GenericItem item)
+        {
+            return ConvertToOutlineItem(item, false);
+        }
+
+        private static OutlineItem ConvertToOutlineItem(GenericItem item, bool isLinkTarget)
+        {
+            return new OutlineItem
+            {
+                Id = item.Id,
+                SeoObjectType = item.SeoObjectType,
+                IsLinkTarget = isLinkTarget,
+            };
+        }
+
+        private GenericItem ConvertToGenericItem(IHasOutlines obj, bool convertParents = true)
+        {
+            GenericItem result = null;
+
+            var category = obj as Category;
+            if (category != null)
+            {
+                result = GetCategoryItem(category.Id, convertParents);
+            }
+
+            var product = obj as CatalogProduct;
+            if (product != null)
+            {
+                result = new GenericItem
+                {
+                    Id = product.Id,
+                    SeoObjectType = product.SeoObjectType,
+                    CatalogId = product.CatalogId,
+                    Parents = new List<GenericItem>(),
+                    Links = new List<CategoryLink>(product.Links),
+                };
+
+                if (product.CategoryId != null)
+                {
+                    var productCategory = GetCategoryItem(product.CategoryId, convertParents);
+                    result.Parents.AddRange(productCategory.Parents);
+                    result.Parents.Add(productCategory);
+                }
+            }
+
+            return result;
+        }
+
+        private GenericItem GetCategoryItem(string categoryId, bool convertParents)
+        {
+            var category = GetCategory(categoryId);
+
+            var result = new GenericItem
+            {
+                Id = category.Id,
+                SeoObjectType = category.SeoObjectType,
+                CatalogId = category.CatalogId,
+                Links = category.Links,
+            };
+
+            if (convertParents)
+            {
+                result.Parents = category.Parents
+                    .Select(c => ConvertToGenericItem(c, false))
                     .ToList();
-
-                partialOutlneItems[0].IsLinkTarget = isLinkTarget;
-
-                result.Items.AddRange(partialOutlneItems);
             }
 
             return result;
@@ -138,6 +187,15 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                     .FirstOrDefault();
                 return result;
             }
+        }
+
+        private class GenericItem
+        {
+            public string Id { get; set; }
+            public string SeoObjectType { get; set; }
+            public string CatalogId { get; set; }
+            public ICollection<GenericItem> Parents { get; set; }
+            public ICollection<CategoryLink> Links { get; set; }
         }
     }
 }

@@ -23,6 +23,7 @@ namespace VirtoCommerce.Client.Model
         /// Initializes a new instance of the <see cref="VirtoCommerceDomainCommerceModelSeoInfo" /> class.
         /// Initializes a new instance of the <see cref="VirtoCommerceDomainCommerceModelSeoInfo" />class.
         /// </summary>
+        /// <param name="Name">Name.</param>
         /// <param name="SemanticUrl">SemanticUrl.</param>
         /// <param name="PageTitle">PageTitle.</param>
         /// <param name="MetaDescription">MetaDescription.</param>
@@ -39,8 +40,9 @@ namespace VirtoCommerce.Client.Model
         /// <param name="ModifiedBy">ModifiedBy.</param>
         /// <param name="Id">Id.</param>
 
-        public VirtoCommerceDomainCommerceModelSeoInfo(string SemanticUrl = null, string PageTitle = null, string MetaDescription = null, string ImageAltDescription = null, string MetaKeywords = null, string StoreId = null, string ObjectId = null, string ObjectType = null, bool? IsActive = null, string LanguageCode = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
+        public VirtoCommerceDomainCommerceModelSeoInfo(string Name = null, string SemanticUrl = null, string PageTitle = null, string MetaDescription = null, string ImageAltDescription = null, string MetaKeywords = null, string StoreId = null, string ObjectId = null, string ObjectType = null, bool? IsActive = null, string LanguageCode = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
         {
+            this.Name = Name;
             this.SemanticUrl = SemanticUrl;
             this.PageTitle = PageTitle;
             this.MetaDescription = MetaDescription;
@@ -58,6 +60,12 @@ namespace VirtoCommerce.Client.Model
             this.Id = Id;
             
         }
+
+        /// <summary>
+        /// Gets or Sets Name
+        /// </summary>
+        [DataMember(Name="name", EmitDefaultValue=false)]
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets or Sets SemanticUrl
@@ -158,6 +166,7 @@ namespace VirtoCommerce.Client.Model
         {
             var sb = new StringBuilder();
             sb.Append("class VirtoCommerceDomainCommerceModelSeoInfo {\n");
+            sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  SemanticUrl: ").Append(SemanticUrl).Append("\n");
             sb.Append("  PageTitle: ").Append(PageTitle).Append("\n");
             sb.Append("  MetaDescription: ").Append(MetaDescription).Append("\n");
@@ -210,6 +219,11 @@ namespace VirtoCommerce.Client.Model
                 return false;
 
             return 
+                (
+                    this.Name == other.Name ||
+                    this.Name != null &&
+                    this.Name.Equals(other.Name)
+                ) && 
                 (
                     this.SemanticUrl == other.SemanticUrl ||
                     this.SemanticUrl != null &&
@@ -298,6 +312,9 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
+                
+                if (this.Name != null)
+                    hash = hash * 59 + this.Name.GetHashCode();
                 
                 if (this.SemanticUrl != null)
                     hash = hash * 59 + this.SemanticUrl.GetHashCode();

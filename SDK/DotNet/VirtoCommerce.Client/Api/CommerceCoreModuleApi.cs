@@ -149,6 +149,30 @@ namespace VirtoCommerce.Client.Api
         ApiResponse<List<VirtoCommerceCoreModuleWebModelFulfillmentCenter>> CommerceGetFulfillmentCentersWithHttpInfo ();
         
         /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="objectId"></param>
+        /// <param name="objectType"></param>
+        /// <returns>List&lt;VirtoCommerceDomainCommerceModelSeoInfo&gt;</returns>
+        List<VirtoCommerceDomainCommerceModelSeoInfo> CommerceGetSeoDuplicates (string objectId, string objectType);
+  
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="objectId"></param>
+        /// <param name="objectType"></param>
+        /// <returns>ApiResponse of List&lt;VirtoCommerceDomainCommerceModelSeoInfo&gt;</returns>
+        ApiResponse<List<VirtoCommerceDomainCommerceModelSeoInfo>> CommerceGetSeoDuplicatesWithHttpInfo (string objectId, string objectType);
+        
+        /// <summary>
         /// Find all SEO records for object by slug
         /// </summary>
         /// <remarks>
@@ -537,6 +561,30 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <returns>Task of ApiResponse (List&lt;VirtoCommerceCoreModuleWebModelFulfillmentCenter&gt;)</returns>
         System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceCoreModuleWebModelFulfillmentCenter>>> CommerceGetFulfillmentCentersAsyncWithHttpInfo ();
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="objectId"></param>
+        /// <param name="objectType"></param>
+        /// <returns>Task of List&lt;VirtoCommerceDomainCommerceModelSeoInfo&gt;</returns>
+        System.Threading.Tasks.Task<List<VirtoCommerceDomainCommerceModelSeoInfo>> CommerceGetSeoDuplicatesAsync (string objectId, string objectType);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="objectId"></param>
+        /// <param name="objectType"></param>
+        /// <returns>Task of ApiResponse (List&lt;VirtoCommerceDomainCommerceModelSeoInfo&gt;)</returns>
+        System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceDomainCommerceModelSeoInfo>>> CommerceGetSeoDuplicatesAsyncWithHttpInfo (string objectId, string objectType);
         
         /// <summary>
         /// Find all SEO records for object by slug
@@ -1824,6 +1872,176 @@ namespace VirtoCommerce.Client.Api
             return new ApiResponse<List<VirtoCommerceCoreModuleWebModelFulfillmentCenter>>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 (List<VirtoCommerceCoreModuleWebModelFulfillmentCenter>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<VirtoCommerceCoreModuleWebModelFulfillmentCenter>)));
+            
+        }
+        
+        /// <summary>
+        ///  
+        /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="objectId"></param> 
+        /// <param name="objectType"></param> 
+        /// <returns>List&lt;VirtoCommerceDomainCommerceModelSeoInfo&gt;</returns>
+        public List<VirtoCommerceDomainCommerceModelSeoInfo> CommerceGetSeoDuplicates (string objectId, string objectType)
+        {
+             ApiResponse<List<VirtoCommerceDomainCommerceModelSeoInfo>> localVarResponse = CommerceGetSeoDuplicatesWithHttpInfo(objectId, objectType);
+             return localVarResponse.Data;
+        }
+
+        /// <summary>
+        ///  
+        /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="objectId"></param> 
+        /// <param name="objectType"></param> 
+        /// <returns>ApiResponse of List&lt;VirtoCommerceDomainCommerceModelSeoInfo&gt;</returns>
+        public ApiResponse< List<VirtoCommerceDomainCommerceModelSeoInfo> > CommerceGetSeoDuplicatesWithHttpInfo (string objectId, string objectType)
+        {
+            
+            // verify the required parameter 'objectId' is set
+            if (objectId == null)
+                throw new ApiException(400, "Missing required parameter 'objectId' when calling CommerceCoreModuleApi->CommerceGetSeoDuplicates");
+            
+            // verify the required parameter 'objectType' is set
+            if (objectType == null)
+                throw new ApiException(400, "Missing required parameter 'objectType' when calling CommerceCoreModuleApi->CommerceGetSeoDuplicates");
+            
+    
+            var localVarPath = "/api/seoinfos/duplicates";
+    
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+                
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json", "text/json"
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            localVarPathParams.Add("format", "json");
+            
+            if (objectId != null) localVarQueryParams.Add("objectId", Configuration.ApiClient.ParameterToString(objectId)); // query parameter
+            if (objectType != null) localVarQueryParams.Add("objectType", Configuration.ApiClient.ParameterToString(objectType)); // query parameter
+            
+            
+            
+            
+
+            
+    
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath, 
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+    
+            if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
+                throw new ApiException (localVarStatusCode, "Error calling CommerceGetSeoDuplicates: " + localVarResponse.Content, localVarResponse.Content);
+            else if (localVarStatusCode == 0)
+                throw new ApiException (localVarStatusCode, "Error calling CommerceGetSeoDuplicates: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+    
+            return new ApiResponse<List<VirtoCommerceDomainCommerceModelSeoInfo>>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (List<VirtoCommerceDomainCommerceModelSeoInfo>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<VirtoCommerceDomainCommerceModelSeoInfo>)));
+            
+        }
+
+        
+        /// <summary>
+        ///  
+        /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="objectId"></param>
+        /// <param name="objectType"></param>
+        /// <returns>Task of List&lt;VirtoCommerceDomainCommerceModelSeoInfo&gt;</returns>
+        public async System.Threading.Tasks.Task<List<VirtoCommerceDomainCommerceModelSeoInfo>> CommerceGetSeoDuplicatesAsync (string objectId, string objectType)
+        {
+             ApiResponse<List<VirtoCommerceDomainCommerceModelSeoInfo>> localVarResponse = await CommerceGetSeoDuplicatesAsyncWithHttpInfo(objectId, objectType);
+             return localVarResponse.Data;
+
+        }
+
+        /// <summary>
+        ///  
+        /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="objectId"></param>
+        /// <param name="objectType"></param>
+        /// <returns>Task of ApiResponse (List&lt;VirtoCommerceDomainCommerceModelSeoInfo&gt;)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceDomainCommerceModelSeoInfo>>> CommerceGetSeoDuplicatesAsyncWithHttpInfo (string objectId, string objectType)
+        {
+            // verify the required parameter 'objectId' is set
+            if (objectId == null) throw new ApiException(400, "Missing required parameter 'objectId' when calling CommerceGetSeoDuplicates");
+            // verify the required parameter 'objectType' is set
+            if (objectType == null) throw new ApiException(400, "Missing required parameter 'objectType' when calling CommerceGetSeoDuplicates");
+            
+    
+            var localVarPath = "/api/seoinfos/duplicates";
+    
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+                
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json", "text/json"
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            localVarPathParams.Add("format", "json");
+            
+            if (objectId != null) localVarQueryParams.Add("objectId", Configuration.ApiClient.ParameterToString(objectId)); // query parameter
+            if (objectType != null) localVarQueryParams.Add("objectType", Configuration.ApiClient.ParameterToString(objectType)); // query parameter
+            
+            
+            
+            
+
+            
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath, 
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams, 
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+ 
+            if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
+                throw new ApiException (localVarStatusCode, "Error calling CommerceGetSeoDuplicates: " + localVarResponse.Content, localVarResponse.Content);
+            else if (localVarStatusCode == 0)
+                throw new ApiException (localVarStatusCode, "Error calling CommerceGetSeoDuplicates: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+
+            return new ApiResponse<List<VirtoCommerceDomainCommerceModelSeoInfo>>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (List<VirtoCommerceDomainCommerceModelSeoInfo>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<VirtoCommerceDomainCommerceModelSeoInfo>)));
             
         }
         

@@ -66,7 +66,7 @@
                     <value>Long</value>
                 </allowedValues>
                 <title>SEO Links</title>
-                <description>Determines how to generate links for products and categories</description>
+                <description>Determines how to generate links for products and categories. Long: /grandparent-category/parent-category/my-cool-category/my-cool-product, Short: /my-cool-product, None: /product/123</description>
             </setting>
         </group>
     </settings>

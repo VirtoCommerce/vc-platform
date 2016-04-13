@@ -41,24 +41,24 @@ namespace VirtoCommerce.Client.Api
         ApiResponse<VirtoCommerceDomainCustomerModelContact> CustomerModuleCreateContactWithHttpInfo (VirtoCommerceDomainCustomerModelContact contact);
         
         /// <summary>
-        /// Create member
+        /// Create new member (can be any object inherited from Member type)
         /// </summary>
         /// <remarks>
         /// 
         /// </remarks>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="member"></param>
+        /// <param name="member">concrete instance of abstract member type will be created by using PolymorphicMemberJsonConverter</param>
         /// <returns>VirtoCommerceDomainCustomerModelMember</returns>
         VirtoCommerceDomainCustomerModelMember CustomerModuleCreateMember (VirtoCommerceDomainCustomerModelMember member);
   
         /// <summary>
-        /// Create member
+        /// Create new member (can be any object inherited from Member type)
         /// </summary>
         /// <remarks>
         /// 
         /// </remarks>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="member"></param>
+        /// <param name="member">concrete instance of abstract member type will be created by using PolymorphicMemberJsonConverter</param>
         /// <returns>ApiResponse of VirtoCommerceDomainCustomerModelMember</returns>
         ApiResponse<VirtoCommerceDomainCustomerModelMember> CustomerModuleCreateMemberWithHttpInfo (VirtoCommerceDomainCustomerModelMember member);
         
@@ -243,9 +243,9 @@ namespace VirtoCommerce.Client.Api
         /// Get array of members satisfied search criteria.
         /// </remarks>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="criteria">Search criteria</param>
-        /// <returns>VirtoCommerceDomainCustomerModelSearchResult</returns>
-        VirtoCommerceDomainCustomerModelSearchResult CustomerModuleSearch (VirtoCommerceDomainCustomerModelSearchCriteria criteria);
+        /// <param name="criteria">concrete instance of SearchCriteria type type will be created by using PolymorphicMemberSearchCriteriaJsonConverter</param>
+        /// <returns>VirtoCommerceDomainCustomerModelMembersSearchResult</returns>
+        VirtoCommerceDomainCustomerModelMembersSearchResult CustomerModuleSearch (VirtoCommerceDomainCustomerModelMembersSearchCriteria criteria);
   
         /// <summary>
         /// Get members
@@ -254,9 +254,9 @@ namespace VirtoCommerce.Client.Api
         /// Get array of members satisfied search criteria.
         /// </remarks>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="criteria">Search criteria</param>
-        /// <returns>ApiResponse of VirtoCommerceDomainCustomerModelSearchResult</returns>
-        ApiResponse<VirtoCommerceDomainCustomerModelSearchResult> CustomerModuleSearchWithHttpInfo (VirtoCommerceDomainCustomerModelSearchCriteria criteria);
+        /// <param name="criteria">concrete instance of SearchCriteria type type will be created by using PolymorphicMemberSearchCriteriaJsonConverter</param>
+        /// <returns>ApiResponse of VirtoCommerceDomainCustomerModelMembersSearchResult</returns>
+        ApiResponse<VirtoCommerceDomainCustomerModelMembersSearchResult> CustomerModuleSearchWithHttpInfo (VirtoCommerceDomainCustomerModelMembersSearchCriteria criteria);
         
         /// <summary>
         /// Update contact
@@ -287,7 +287,7 @@ namespace VirtoCommerce.Client.Api
         /// 
         /// </remarks>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="member"></param>
+        /// <param name="member">concrete instance of abstract member type will be created by using PolymorphicMemberJsonConverter</param>
         /// <returns></returns>
         void CustomerModuleUpdateMember (VirtoCommerceDomainCustomerModelMember member);
   
@@ -298,7 +298,7 @@ namespace VirtoCommerce.Client.Api
         /// 
         /// </remarks>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="member"></param>
+        /// <param name="member">concrete instance of abstract member type will be created by using PolymorphicMemberJsonConverter</param>
         /// <returns>ApiResponse of Object(void)</returns>
         ApiResponse<Object> CustomerModuleUpdateMemberWithHttpInfo (VirtoCommerceDomainCustomerModelMember member);
         
@@ -351,24 +351,24 @@ namespace VirtoCommerce.Client.Api
         System.Threading.Tasks.Task<ApiResponse<VirtoCommerceDomainCustomerModelContact>> CustomerModuleCreateContactAsyncWithHttpInfo (VirtoCommerceDomainCustomerModelContact contact);
         
         /// <summary>
-        /// Create member
+        /// Create new member (can be any object inherited from Member type)
         /// </summary>
         /// <remarks>
         /// 
         /// </remarks>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="member"></param>
+        /// <param name="member">concrete instance of abstract member type will be created by using PolymorphicMemberJsonConverter</param>
         /// <returns>Task of VirtoCommerceDomainCustomerModelMember</returns>
         System.Threading.Tasks.Task<VirtoCommerceDomainCustomerModelMember> CustomerModuleCreateMemberAsync (VirtoCommerceDomainCustomerModelMember member);
 
         /// <summary>
-        /// Create member
+        /// Create new member (can be any object inherited from Member type)
         /// </summary>
         /// <remarks>
         /// 
         /// </remarks>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="member"></param>
+        /// <param name="member">concrete instance of abstract member type will be created by using PolymorphicMemberJsonConverter</param>
         /// <returns>Task of ApiResponse (VirtoCommerceDomainCustomerModelMember)</returns>
         System.Threading.Tasks.Task<ApiResponse<VirtoCommerceDomainCustomerModelMember>> CustomerModuleCreateMemberAsyncWithHttpInfo (VirtoCommerceDomainCustomerModelMember member);
         
@@ -553,9 +553,9 @@ namespace VirtoCommerce.Client.Api
         /// Get array of members satisfied search criteria.
         /// </remarks>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="criteria">Search criteria</param>
-        /// <returns>Task of VirtoCommerceDomainCustomerModelSearchResult</returns>
-        System.Threading.Tasks.Task<VirtoCommerceDomainCustomerModelSearchResult> CustomerModuleSearchAsync (VirtoCommerceDomainCustomerModelSearchCriteria criteria);
+        /// <param name="criteria">concrete instance of SearchCriteria type type will be created by using PolymorphicMemberSearchCriteriaJsonConverter</param>
+        /// <returns>Task of VirtoCommerceDomainCustomerModelMembersSearchResult</returns>
+        System.Threading.Tasks.Task<VirtoCommerceDomainCustomerModelMembersSearchResult> CustomerModuleSearchAsync (VirtoCommerceDomainCustomerModelMembersSearchCriteria criteria);
 
         /// <summary>
         /// Get members
@@ -564,9 +564,9 @@ namespace VirtoCommerce.Client.Api
         /// Get array of members satisfied search criteria.
         /// </remarks>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="criteria">Search criteria</param>
-        /// <returns>Task of ApiResponse (VirtoCommerceDomainCustomerModelSearchResult)</returns>
-        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceDomainCustomerModelSearchResult>> CustomerModuleSearchAsyncWithHttpInfo (VirtoCommerceDomainCustomerModelSearchCriteria criteria);
+        /// <param name="criteria">concrete instance of SearchCriteria type type will be created by using PolymorphicMemberSearchCriteriaJsonConverter</param>
+        /// <returns>Task of ApiResponse (VirtoCommerceDomainCustomerModelMembersSearchResult)</returns>
+        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceDomainCustomerModelMembersSearchResult>> CustomerModuleSearchAsyncWithHttpInfo (VirtoCommerceDomainCustomerModelMembersSearchCriteria criteria);
         
         /// <summary>
         /// Update contact
@@ -597,7 +597,7 @@ namespace VirtoCommerce.Client.Api
         /// 
         /// </remarks>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="member"></param>
+        /// <param name="member">concrete instance of abstract member type will be created by using PolymorphicMemberJsonConverter</param>
         /// <returns>Task of void</returns>
         System.Threading.Tasks.Task CustomerModuleUpdateMemberAsync (VirtoCommerceDomainCustomerModelMember member);
 
@@ -608,7 +608,7 @@ namespace VirtoCommerce.Client.Api
         /// 
         /// </remarks>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="member"></param>
+        /// <param name="member">concrete instance of abstract member type will be created by using PolymorphicMemberJsonConverter</param>
         /// <returns>Task of ApiResponse</returns>
         System.Threading.Tasks.Task<ApiResponse<Object>> CustomerModuleUpdateMemberAsyncWithHttpInfo (VirtoCommerceDomainCustomerModelMember member);
         
@@ -882,10 +882,10 @@ namespace VirtoCommerce.Client.Api
         }
         
         /// <summary>
-        /// Create member 
+        /// Create new member (can be any object inherited from Member type) 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="member"></param> 
+        /// <param name="member">concrete instance of abstract member type will be created by using PolymorphicMemberJsonConverter</param> 
         /// <returns>VirtoCommerceDomainCustomerModelMember</returns>
         public VirtoCommerceDomainCustomerModelMember CustomerModuleCreateMember (VirtoCommerceDomainCustomerModelMember member)
         {
@@ -894,10 +894,10 @@ namespace VirtoCommerce.Client.Api
         }
 
         /// <summary>
-        /// Create member 
+        /// Create new member (can be any object inherited from Member type) 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="member"></param> 
+        /// <param name="member">concrete instance of abstract member type will be created by using PolymorphicMemberJsonConverter</param> 
         /// <returns>ApiResponse of VirtoCommerceDomainCustomerModelMember</returns>
         public ApiResponse< VirtoCommerceDomainCustomerModelMember > CustomerModuleCreateMemberWithHttpInfo (VirtoCommerceDomainCustomerModelMember member)
         {
@@ -968,10 +968,10 @@ namespace VirtoCommerce.Client.Api
 
         
         /// <summary>
-        /// Create member 
+        /// Create new member (can be any object inherited from Member type) 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="member"></param>
+        /// <param name="member">concrete instance of abstract member type will be created by using PolymorphicMemberJsonConverter</param>
         /// <returns>Task of VirtoCommerceDomainCustomerModelMember</returns>
         public async System.Threading.Tasks.Task<VirtoCommerceDomainCustomerModelMember> CustomerModuleCreateMemberAsync (VirtoCommerceDomainCustomerModelMember member)
         {
@@ -981,10 +981,10 @@ namespace VirtoCommerce.Client.Api
         }
 
         /// <summary>
-        /// Create member 
+        /// Create new member (can be any object inherited from Member type) 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="member"></param>
+        /// <param name="member">concrete instance of abstract member type will be created by using PolymorphicMemberJsonConverter</param>
         /// <returns>Task of ApiResponse (VirtoCommerceDomainCustomerModelMember)</returns>
         public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceDomainCustomerModelMember>> CustomerModuleCreateMemberAsyncWithHttpInfo (VirtoCommerceDomainCustomerModelMember member)
         {
@@ -2183,7 +2183,7 @@ namespace VirtoCommerce.Client.Api
         {
             
     
-            var localVarPath = "/api/organizations";
+            var localVarPath = "/api/members/organizations";
     
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
@@ -2257,7 +2257,7 @@ namespace VirtoCommerce.Client.Api
         {
             
     
-            var localVarPath = "/api/organizations";
+            var localVarPath = "/api/members/organizations";
     
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
@@ -2313,11 +2313,11 @@ namespace VirtoCommerce.Client.Api
         /// Get members Get array of members satisfied search criteria.
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="criteria">Search criteria</param> 
-        /// <returns>VirtoCommerceDomainCustomerModelSearchResult</returns>
-        public VirtoCommerceDomainCustomerModelSearchResult CustomerModuleSearch (VirtoCommerceDomainCustomerModelSearchCriteria criteria)
+        /// <param name="criteria">concrete instance of SearchCriteria type type will be created by using PolymorphicMemberSearchCriteriaJsonConverter</param> 
+        /// <returns>VirtoCommerceDomainCustomerModelMembersSearchResult</returns>
+        public VirtoCommerceDomainCustomerModelMembersSearchResult CustomerModuleSearch (VirtoCommerceDomainCustomerModelMembersSearchCriteria criteria)
         {
-             ApiResponse<VirtoCommerceDomainCustomerModelSearchResult> localVarResponse = CustomerModuleSearchWithHttpInfo(criteria);
+             ApiResponse<VirtoCommerceDomainCustomerModelMembersSearchResult> localVarResponse = CustomerModuleSearchWithHttpInfo(criteria);
              return localVarResponse.Data;
         }
 
@@ -2325,9 +2325,9 @@ namespace VirtoCommerce.Client.Api
         /// Get members Get array of members satisfied search criteria.
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="criteria">Search criteria</param> 
-        /// <returns>ApiResponse of VirtoCommerceDomainCustomerModelSearchResult</returns>
-        public ApiResponse< VirtoCommerceDomainCustomerModelSearchResult > CustomerModuleSearchWithHttpInfo (VirtoCommerceDomainCustomerModelSearchCriteria criteria)
+        /// <param name="criteria">concrete instance of SearchCriteria type type will be created by using PolymorphicMemberSearchCriteriaJsonConverter</param> 
+        /// <returns>ApiResponse of VirtoCommerceDomainCustomerModelMembersSearchResult</returns>
+        public ApiResponse< VirtoCommerceDomainCustomerModelMembersSearchResult > CustomerModuleSearchWithHttpInfo (VirtoCommerceDomainCustomerModelMembersSearchCriteria criteria)
         {
             
             // verify the required parameter 'criteria' is set
@@ -2388,9 +2388,9 @@ namespace VirtoCommerce.Client.Api
             else if (localVarStatusCode == 0)
                 throw new ApiException (localVarStatusCode, "Error calling CustomerModuleSearch: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
     
-            return new ApiResponse<VirtoCommerceDomainCustomerModelSearchResult>(localVarStatusCode,
+            return new ApiResponse<VirtoCommerceDomainCustomerModelMembersSearchResult>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommerceDomainCustomerModelSearchResult) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceDomainCustomerModelSearchResult)));
+                (VirtoCommerceDomainCustomerModelMembersSearchResult) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceDomainCustomerModelMembersSearchResult)));
             
         }
 
@@ -2399,11 +2399,11 @@ namespace VirtoCommerce.Client.Api
         /// Get members Get array of members satisfied search criteria.
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="criteria">Search criteria</param>
-        /// <returns>Task of VirtoCommerceDomainCustomerModelSearchResult</returns>
-        public async System.Threading.Tasks.Task<VirtoCommerceDomainCustomerModelSearchResult> CustomerModuleSearchAsync (VirtoCommerceDomainCustomerModelSearchCriteria criteria)
+        /// <param name="criteria">concrete instance of SearchCriteria type type will be created by using PolymorphicMemberSearchCriteriaJsonConverter</param>
+        /// <returns>Task of VirtoCommerceDomainCustomerModelMembersSearchResult</returns>
+        public async System.Threading.Tasks.Task<VirtoCommerceDomainCustomerModelMembersSearchResult> CustomerModuleSearchAsync (VirtoCommerceDomainCustomerModelMembersSearchCriteria criteria)
         {
-             ApiResponse<VirtoCommerceDomainCustomerModelSearchResult> localVarResponse = await CustomerModuleSearchAsyncWithHttpInfo(criteria);
+             ApiResponse<VirtoCommerceDomainCustomerModelMembersSearchResult> localVarResponse = await CustomerModuleSearchAsyncWithHttpInfo(criteria);
              return localVarResponse.Data;
 
         }
@@ -2412,9 +2412,9 @@ namespace VirtoCommerce.Client.Api
         /// Get members Get array of members satisfied search criteria.
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="criteria">Search criteria</param>
-        /// <returns>Task of ApiResponse (VirtoCommerceDomainCustomerModelSearchResult)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceDomainCustomerModelSearchResult>> CustomerModuleSearchAsyncWithHttpInfo (VirtoCommerceDomainCustomerModelSearchCriteria criteria)
+        /// <param name="criteria">concrete instance of SearchCriteria type type will be created by using PolymorphicMemberSearchCriteriaJsonConverter</param>
+        /// <returns>Task of ApiResponse (VirtoCommerceDomainCustomerModelMembersSearchResult)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceDomainCustomerModelMembersSearchResult>> CustomerModuleSearchAsyncWithHttpInfo (VirtoCommerceDomainCustomerModelMembersSearchCriteria criteria)
         {
             // verify the required parameter 'criteria' is set
             if (criteria == null) throw new ApiException(400, "Missing required parameter 'criteria' when calling CustomerModuleSearch");
@@ -2473,9 +2473,9 @@ namespace VirtoCommerce.Client.Api
             else if (localVarStatusCode == 0)
                 throw new ApiException (localVarStatusCode, "Error calling CustomerModuleSearch: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
-            return new ApiResponse<VirtoCommerceDomainCustomerModelSearchResult>(localVarStatusCode,
+            return new ApiResponse<VirtoCommerceDomainCustomerModelMembersSearchResult>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommerceDomainCustomerModelSearchResult) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceDomainCustomerModelSearchResult)));
+                (VirtoCommerceDomainCustomerModelMembersSearchResult) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceDomainCustomerModelMembersSearchResult)));
             
         }
         
@@ -2651,7 +2651,7 @@ namespace VirtoCommerce.Client.Api
         /// Update member 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="member"></param> 
+        /// <param name="member">concrete instance of abstract member type will be created by using PolymorphicMemberJsonConverter</param> 
         /// <returns></returns>
         public void CustomerModuleUpdateMember (VirtoCommerceDomainCustomerModelMember member)
         {
@@ -2662,7 +2662,7 @@ namespace VirtoCommerce.Client.Api
         /// Update member 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="member"></param> 
+        /// <param name="member">concrete instance of abstract member type will be created by using PolymorphicMemberJsonConverter</param> 
         /// <returns>ApiResponse of Object(void)</returns>
         public ApiResponse<Object> CustomerModuleUpdateMemberWithHttpInfo (VirtoCommerceDomainCustomerModelMember member)
         {
@@ -2736,7 +2736,7 @@ namespace VirtoCommerce.Client.Api
         /// Update member 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="member"></param>
+        /// <param name="member">concrete instance of abstract member type will be created by using PolymorphicMemberJsonConverter</param>
         /// <returns>Task of void</returns>
         public async System.Threading.Tasks.Task CustomerModuleUpdateMemberAsync (VirtoCommerceDomainCustomerModelMember member)
         {
@@ -2748,7 +2748,7 @@ namespace VirtoCommerce.Client.Api
         /// Update member 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="member"></param>
+        /// <param name="member">concrete instance of abstract member type will be created by using PolymorphicMemberJsonConverter</param>
         /// <returns>Task of ApiResponse</returns>
         public async System.Threading.Tasks.Task<ApiResponse<Object>> CustomerModuleUpdateMemberAsyncWithHttpInfo (VirtoCommerceDomainCustomerModelMember member)
         {
