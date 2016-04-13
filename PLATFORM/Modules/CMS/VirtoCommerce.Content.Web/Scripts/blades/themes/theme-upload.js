@@ -33,15 +33,26 @@
             archivepath: files[0].name,
             destPath: $scope.themeName
         }, function (data) {
-            $scope.bladeClose();
-            blade.parentBlade.initialize();
-            $rootScope.$broadcast("cms-statistics-changed", blade.storeId);
+            if (blade.isActivateAfterSave) {
+                var prop = _.findWhere(blade.store.dynamicProperties, { name: 'DefaultThemeName' });
+                prop.values = [{ value: $scope.themeName }];
+
+                blade.store.$update(refreshParentAndClose, function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
+            } else {
+                refreshParentAndClose();
+            }
         },
         function (error) {
             uploader.clearQueue();
             bladeNavigationService.setError('Error ' + error.status, $scope.blade);
         });
     };
+
+    function refreshParentAndClose() {
+        $scope.bladeClose();
+        blade.parentBlade.refresh();
+        $rootScope.$broadcast("cms-statistics-changed", blade.storeId);
+    }
 
     uploader.onErrorItem = function (item, response, status, headers) {
         bladeNavigationService.setError(item._file.name + ' failed: ' + (response.message ? response.message : status), blade);
