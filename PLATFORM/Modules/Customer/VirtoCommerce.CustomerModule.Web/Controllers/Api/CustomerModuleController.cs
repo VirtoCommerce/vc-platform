@@ -156,7 +156,6 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
         /// <summary>
         /// Create organization
         /// </summary>
-        [Obsolete("Use CreateMember instead")]
         [HttpPost]
         [Route("organizations")]
         [ResponseType(typeof(coreModel.Organization))]
