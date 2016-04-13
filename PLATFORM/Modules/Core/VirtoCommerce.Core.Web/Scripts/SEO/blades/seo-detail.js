@@ -74,7 +74,7 @@
     }
 
     function canSave() {
-        return isDirty() && isValid(blade.currentEntity); // isValid formScope && formScope.$valid;
+        return (blade.isNew || isDirty()) && isValid(blade.currentEntity); // isValid formScope && formScope.$valid;
     }
 
     $scope.isValid = canSave;

@@ -46,7 +46,7 @@
                     <div class="form-input">
                         <input ng-model="blade.currentEntity.semanticUrl" name="semanticUrl" required ui-validate="{invalidUrl:'semanticUrlValidator($value)'}" placeholder="{{'core.blades.seo-detail.placeholders.url-keyword' | translate}}" />
                     </div>
-                    <div class="form-error" data-ng-show="formScope.semanticUrl.$dirty">
+                    <div class="form-error" ng-show="formScope.semanticUrl.$dirty">
                         <span ng-show="formScope.semanticUrl.$error.required">{{'core.blades.seo-detail.validations.url-keyword-required' | translate}}</span>
                         <span ng-show="formScope.semanticUrl.$error.invalidUrl">{{'core.blades.seo-detail.validations.url-keyword-invalid' | translate}}</span>
                         <!--<span ng-show="formScope.semanticUrl.$error.duplicate">{{'core.blades.seo-detail.validations.url-keyword-duplicate' | translate}}</span>-->

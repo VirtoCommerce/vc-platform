@@ -28,9 +28,9 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         private readonly ICategoryService _categoryService;
         private readonly ISkuGenerator _skuGenerator;
 
-        public CatalogModuleProductsController(IItemService itemsService, IBlobUrlResolver blobUrlResolver,  ICatalogService catalogService, ICategoryService categoryService,
+        public CatalogModuleProductsController(IItemService itemsService, IBlobUrlResolver blobUrlResolver, ICatalogService catalogService, ICategoryService categoryService,
                                                ISkuGenerator skuGenerator, ISecurityService securityService, IPermissionScopeService permissionScopeService)
-            :base(securityService, permissionScopeService)
+            : base(securityService, permissionScopeService)
         {
             _itemsService = itemsService;
             _categoryService = categoryService;
@@ -83,8 +83,8 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 
             base.CheckCurrentUserHasPermissionForObjects(CatalogPredefinedPermissions.Read, items);
 
-            var retVal = items.Select(x=>x.ToWebModel(_blobUrlResolver)).ToArray();
-            foreach(var product in retVal)
+            var retVal = items.Select(x => x.ToWebModel(_blobUrlResolver)).ToArray();
+            foreach (var product in retVal)
             {
                 product.SecurityScopes = base.GetObjectPermissionScopeStrings(product);
             }
@@ -97,38 +97,38 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         /// <remarks>Use when need to create item belonging to catalog directly.</remarks>
         /// <param name="catalogId">The catalog id.</param>
         [HttpGet]
-		[ResponseType(typeof(webModel.Product))]
-		[Route("~/api/catalog/{catalogId}/products/getnew")]
-		public IHttpActionResult GetNewProductByCatalog(string catalogId)
-		{
+        [ResponseType(typeof(webModel.Product))]
+        [Route("~/api/catalog/{catalogId}/products/getnew")]
+        public IHttpActionResult GetNewProductByCatalog(string catalogId)
+        {
             base.CheckCurrentUserHasPermissionForObjects(CatalogPredefinedPermissions.Create, new coreModel.Catalog { Id = catalogId });
 
             return GetNewProductByCatalogAndCategory(catalogId, null);
-		}
+        }
 
 
-		/// <summary>
-		/// Gets the template for a new product (inside category).
-		/// </summary>
-		/// <remarks>Use when need to create item belonging to catalog category.</remarks>
-		/// <param name="catalogId">The catalog id.</param>
-		/// <param name="categoryId">The category id.</param>
-		[HttpGet]
-		[ResponseType(typeof(webModel.Product))]
-		[Route("~/api/catalog/{catalogId}/categories/{categoryId}/products/getnew")]
-		public IHttpActionResult GetNewProductByCatalogAndCategory(string catalogId, string categoryId)
-		{
-			var retVal = new webModel.Product
-			{
-				CategoryId = categoryId,
-				CatalogId = catalogId,
-				IsActive = true,
-
-			};
+        /// <summary>
+        /// Gets the template for a new product (inside category).
+        /// </summary>
+        /// <remarks>Use when need to create item belonging to catalog category.</remarks>
+        /// <param name="catalogId">The catalog id.</param>
+        /// <param name="categoryId">The category id.</param>
+        [HttpGet]
+        [ResponseType(typeof(webModel.Product))]
+        [Route("~/api/catalog/{catalogId}/categories/{categoryId}/products/getnew")]
+        public IHttpActionResult GetNewProductByCatalogAndCategory(string catalogId, string categoryId)
+        {
+            var retVal = new webModel.Product
+            {
+                CategoryId = categoryId,
+                CatalogId = catalogId,
+                IsActive = true,
+                SeoInfos = new SeoInfo[0]
+            };
 
             base.CheckCurrentUserHasPermissionForObjects(CatalogPredefinedPermissions.Create, retVal.ToModuleModel(_blobUrlResolver));
 
-            if(catalogId != null)
+            if (catalogId != null)
             {
                 var catalog = _catalogService.GetById(catalogId);
                 retVal.Properties = catalog.Properties.Select(x => x.ToWebModel()).ToList();
@@ -151,8 +151,8 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 
             retVal.Code = _skuGenerator.GenerateSku(retVal.ToModuleModel(null));
 
-			return Ok(retVal);
-		}
+            return Ok(retVal);
+        }
 
 
         /// <summary>
@@ -185,7 +185,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 
             foreach (var property in newVariation.Properties)
             {
-               // Mark variation property as required
+                // Mark variation property as required
                 if (property.Type == coreModel.PropertyType.Variation)
                 {
                     property.Required = true;
@@ -214,7 +214,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             }
             //Need reset all Id instead properties because its gets by inheritance
             var allEntities = product.GetFlatObjectsListWithInterface<IEntity>();
-            foreach(var entity in allEntities)
+            foreach (var entity in allEntities)
             {
                 var property = entity as coreModel.Property;
                 if (property == null)
@@ -224,7 +224,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             }
             product.Code = _skuGenerator.GenerateSku(product);
             product.SeoInfos.Clear();
-            foreach(var variation in product.Variations)
+            foreach (var variation in product.Variations)
             {
                 variation.Code = _skuGenerator.GenerateSku(variation);
                 variation.SeoInfos.Clear();
@@ -250,7 +250,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        
+
         /// <summary>
         /// Deletes the specified items by id.
         /// </summary>
@@ -267,7 +267,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             return StatusCode(HttpStatusCode.NoContent);
         }
 
- 
+
         private coreModel.CatalogProduct UpdateProduct(webModel.Product product)
         {
             var moduleProduct = product.ToModuleModel(_blobUrlResolver);
@@ -295,7 +295,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             else
             {
                 base.CheckCurrentUserHasPermissionForObjects(CatalogPredefinedPermissions.Update, moduleProduct);
-               _itemsService.Update(new[] { moduleProduct });
+                _itemsService.Update(new[] { moduleProduct });
             }
 
             return null;
