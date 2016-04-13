@@ -18,6 +18,7 @@ namespace VirtoCommerce.Storefront.Model.Catalog
             Images = new List<Image>();
             Descriptions = new List<EditorialReview>();
             Discounts = new List<Discount>();
+            Associations = new List<ProductAssociation>();
         }
 
         /// <summary>
@@ -179,6 +180,11 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         /// List of product variations
         /// </summary>
         public ICollection<Product> Variations { get; set; }
+
+        /// <summary>
+        /// Related or associated products
+        /// </summary>
+        public ICollection<ProductAssociation> Associations { get; set; }
 
         /// <summary>
         /// Product description in current language
