@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,114 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceCatalogModuleWebModelProduct :  IEquatable<VirtoCommerceCatalogModuleWebModelProduct>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelProduct" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelProduct" />class.
-        /// </summary>
-        /// <param name="ManufacturerPartNumber">Gets or sets the manufacturer part number for this product..</param>
-        /// <param name="Gtin">Gets or sets the Global Trade Item Number..</param>
-        /// <param name="Code">Code.</param>
-        /// <param name="Name">Gets or sets the name..</param>
-        /// <param name="CatalogId">Gets or sets the catalog id that this product belongs to..</param>
-        /// <param name="Catalog">Gets or sets the catalog that this product belongs to..</param>
-        /// <param name="CategoryId">Gets or sets the category id that this product belongs to..</param>
-        /// <param name="Category">Gets or sets the category that this product belongs to..</param>
-        /// <param name="Outline">Gets or sets the all parent categories ids concatenated. E.g. (1;21;344).</param>
-        /// <param name="Parents">All parents categories.</param>
-        /// <param name="IndexingDate">Gets or sets the date and time that this product was last indexed at..</param>
-        /// <param name="TitularItemId">Gets or sets the titular item id for a variation..</param>
-        /// <param name="IsBuyable">Gets or sets a value indicating whether this {VirtoCommerce.CatalogModule.Web.Model.Product} is buyable..</param>
-        /// <param name="IsActive">Gets or sets a value indicating whether this {VirtoCommerce.CatalogModule.Web.Model.Product} is active..</param>
-        /// <param name="TrackInventory">Gets or sets a value indicating whether this {VirtoCommerce.CatalogModule.Web.Model.Product} inventory is tracked..</param>
-        /// <param name="MaxQuantity">Gets or sets the maximum quantity of the product that a customer can buy..</param>
-        /// <param name="MinQuantity">Gets or sets the minimum quantity of the product that a customer can buy..</param>
-        /// <param name="ProductType">Gets or sets the type of the product. (can be Physical, Digital or Subscription).</param>
-        /// <param name="WeightUnit">Gets or sets the weight unit. (for physical product only).</param>
-        /// <param name="Weight">Gets or sets the weight. (for physical product only).</param>
-        /// <param name="MeasureUnit">Gets or sets the dimensions measure unit. (for physical product only).</param>
-        /// <param name="Height">Gets or sets the height. (for physical product only).</param>
-        /// <param name="Length">Gets or sets the length. (for physical product only).</param>
-        /// <param name="Width">Gets or sets the width. (for physical product only).</param>
-        /// <param name="EnableReview">Gets or sets a value indicating whether this {VirtoCommerce.CatalogModule.Web.Model.Product} can be reviewed in storefront..</param>
-        /// <param name="MaxNumberOfDownload">Gets or sets the maximum number of download. (for digital product only).</param>
-        /// <param name="DownloadExpiration">Gets or sets the download expiration. (for digital product only).</param>
-        /// <param name="DownloadType">Gets or sets the type of the download. (for digital product only).</param>
-        /// <param name="HasUserAgreement">Gets or sets a value indicating whether this {VirtoCommerce.CatalogModule.Web.Model.Product} has user agreement. (for digital product only).</param>
-        /// <param name="ShippingType">Gets or sets the type of the shipping..</param>
-        /// <param name="TaxType">Gets or sets the type of the tax..</param>
-        /// <param name="Vendor">Gets or sets the product vendor..</param>
-        /// <param name="ImgSrc">Gets the default image for the product..</param>
-        /// <param name="Properties">Gets or sets the properties..</param>
-        /// <param name="Images">Gets or sets the images..</param>
-        /// <param name="Assets">Gets or sets the assets..</param>
-        /// <param name="Variations">Gets or sets the variations..</param>
-        /// <param name="Links">Gets or sets the links..</param>
-        /// <param name="Reviews">Gets or sets the reviews..</param>
-        /// <param name="Associations">Gets or sets the associations..</param>
-        /// <param name="SecurityScopes">SecurityScopes.</param>
-        /// <param name="SeoObjectType">SeoObjectType.</param>
-        /// <param name="SeoInfos">Gets or sets the list of SEO information records..</param>
-        /// <param name="Outlines">Outlines.</param>
-        /// <param name="CreatedDate">CreatedDate.</param>
-        /// <param name="ModifiedDate">ModifiedDate.</param>
-        /// <param name="CreatedBy">CreatedBy.</param>
-        /// <param name="ModifiedBy">ModifiedBy.</param>
-        /// <param name="Id">Id.</param>
-
-        public VirtoCommerceCatalogModuleWebModelProduct(string ManufacturerPartNumber = null, string Gtin = null, string Code = null, string Name = null, string CatalogId = null, VirtoCommerceCatalogModuleWebModelCatalog Catalog = null, string CategoryId = null, VirtoCommerceCatalogModuleWebModelCategory Category = null, string Outline = null, List<VirtoCommerceCatalogModuleWebModelCategory> Parents = null, DateTime? IndexingDate = null, string TitularItemId = null, bool? IsBuyable = null, bool? IsActive = null, bool? TrackInventory = null, int? MaxQuantity = null, int? MinQuantity = null, string ProductType = null, string WeightUnit = null, double? Weight = null, string MeasureUnit = null, double? Height = null, double? Length = null, double? Width = null, bool? EnableReview = null, int? MaxNumberOfDownload = null, DateTime? DownloadExpiration = null, string DownloadType = null, bool? HasUserAgreement = null, string ShippingType = null, string TaxType = null, string Vendor = null, string ImgSrc = null, List<VirtoCommerceCatalogModuleWebModelProperty> Properties = null, List<VirtoCommerceCatalogModuleWebModelImage> Images = null, List<VirtoCommerceCatalogModuleWebModelAsset> Assets = null, List<VirtoCommerceCatalogModuleWebModelProduct> Variations = null, List<VirtoCommerceCatalogModuleWebModelCategoryLink> Links = null, List<VirtoCommerceCatalogModuleWebModelEditorialReview> Reviews = null, List<VirtoCommerceCatalogModuleWebModelProductAssociation> Associations = null, List<string> SecurityScopes = null, string SeoObjectType = null, List<VirtoCommerceDomainCommerceModelSeoInfo> SeoInfos = null, List<VirtoCommerceDomainCatalogModelOutline> Outlines = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
-        {
-            this.ManufacturerPartNumber = ManufacturerPartNumber;
-            this.Gtin = Gtin;
-            this.Code = Code;
-            this.Name = Name;
-            this.CatalogId = CatalogId;
-            this.Catalog = Catalog;
-            this.CategoryId = CategoryId;
-            this.Category = Category;
-            this.Outline = Outline;
-            this.Parents = Parents;
-            this.IndexingDate = IndexingDate;
-            this.TitularItemId = TitularItemId;
-            this.IsBuyable = IsBuyable;
-            this.IsActive = IsActive;
-            this.TrackInventory = TrackInventory;
-            this.MaxQuantity = MaxQuantity;
-            this.MinQuantity = MinQuantity;
-            this.ProductType = ProductType;
-            this.WeightUnit = WeightUnit;
-            this.Weight = Weight;
-            this.MeasureUnit = MeasureUnit;
-            this.Height = Height;
-            this.Length = Length;
-            this.Width = Width;
-            this.EnableReview = EnableReview;
-            this.MaxNumberOfDownload = MaxNumberOfDownload;
-            this.DownloadExpiration = DownloadExpiration;
-            this.DownloadType = DownloadType;
-            this.HasUserAgreement = HasUserAgreement;
-            this.ShippingType = ShippingType;
-            this.TaxType = TaxType;
-            this.Vendor = Vendor;
-            this.ImgSrc = ImgSrc;
-            this.Properties = Properties;
-            this.Images = Images;
-            this.Assets = Assets;
-            this.Variations = Variations;
-            this.Links = Links;
-            this.Reviews = Reviews;
-            this.Associations = Associations;
-            this.SecurityScopes = SecurityScopes;
-            this.SeoObjectType = SeoObjectType;
-            this.SeoInfos = SeoInfos;
-            this.Outlines = Outlines;
-            this.CreatedDate = CreatedDate;
-            this.ModifiedDate = ModifiedDate;
-            this.CreatedBy = CreatedBy;
-            this.ModifiedBy = ModifiedBy;
-            this.Id = Id;
-            
-        }
-
         /// <summary>
         /// Gets or sets the manufacturer part number for this product.
         /// </summary>
@@ -461,7 +351,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -519,7 +408,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  CreatedBy: ").Append(CreatedBy).Append("\n");
             sb.Append("  ModifiedBy: ").Append(ModifiedBy).Append("\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -814,159 +702,157 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.ManufacturerPartNumber != null)
                     hash = hash * 59 + this.ManufacturerPartNumber.GetHashCode();
-                
+
                 if (this.Gtin != null)
                     hash = hash * 59 + this.Gtin.GetHashCode();
-                
+
                 if (this.Code != null)
                     hash = hash * 59 + this.Code.GetHashCode();
-                
+
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
-                
+
                 if (this.CatalogId != null)
                     hash = hash * 59 + this.CatalogId.GetHashCode();
-                
+
                 if (this.Catalog != null)
                     hash = hash * 59 + this.Catalog.GetHashCode();
-                
+
                 if (this.CategoryId != null)
                     hash = hash * 59 + this.CategoryId.GetHashCode();
-                
+
                 if (this.Category != null)
                     hash = hash * 59 + this.Category.GetHashCode();
-                
+
                 if (this.Outline != null)
                     hash = hash * 59 + this.Outline.GetHashCode();
-                
+
                 if (this.Parents != null)
                     hash = hash * 59 + this.Parents.GetHashCode();
-                
+
                 if (this.IndexingDate != null)
                     hash = hash * 59 + this.IndexingDate.GetHashCode();
-                
+
                 if (this.TitularItemId != null)
                     hash = hash * 59 + this.TitularItemId.GetHashCode();
-                
+
                 if (this.IsBuyable != null)
                     hash = hash * 59 + this.IsBuyable.GetHashCode();
-                
+
                 if (this.IsActive != null)
                     hash = hash * 59 + this.IsActive.GetHashCode();
-                
+
                 if (this.TrackInventory != null)
                     hash = hash * 59 + this.TrackInventory.GetHashCode();
-                
+
                 if (this.MaxQuantity != null)
                     hash = hash * 59 + this.MaxQuantity.GetHashCode();
-                
+
                 if (this.MinQuantity != null)
                     hash = hash * 59 + this.MinQuantity.GetHashCode();
-                
+
                 if (this.ProductType != null)
                     hash = hash * 59 + this.ProductType.GetHashCode();
-                
+
                 if (this.WeightUnit != null)
                     hash = hash * 59 + this.WeightUnit.GetHashCode();
-                
+
                 if (this.Weight != null)
                     hash = hash * 59 + this.Weight.GetHashCode();
-                
+
                 if (this.MeasureUnit != null)
                     hash = hash * 59 + this.MeasureUnit.GetHashCode();
-                
+
                 if (this.Height != null)
                     hash = hash * 59 + this.Height.GetHashCode();
-                
+
                 if (this.Length != null)
                     hash = hash * 59 + this.Length.GetHashCode();
-                
+
                 if (this.Width != null)
                     hash = hash * 59 + this.Width.GetHashCode();
-                
+
                 if (this.EnableReview != null)
                     hash = hash * 59 + this.EnableReview.GetHashCode();
-                
+
                 if (this.MaxNumberOfDownload != null)
                     hash = hash * 59 + this.MaxNumberOfDownload.GetHashCode();
-                
+
                 if (this.DownloadExpiration != null)
                     hash = hash * 59 + this.DownloadExpiration.GetHashCode();
-                
+
                 if (this.DownloadType != null)
                     hash = hash * 59 + this.DownloadType.GetHashCode();
-                
+
                 if (this.HasUserAgreement != null)
                     hash = hash * 59 + this.HasUserAgreement.GetHashCode();
-                
+
                 if (this.ShippingType != null)
                     hash = hash * 59 + this.ShippingType.GetHashCode();
-                
+
                 if (this.TaxType != null)
                     hash = hash * 59 + this.TaxType.GetHashCode();
-                
+
                 if (this.Vendor != null)
                     hash = hash * 59 + this.Vendor.GetHashCode();
-                
+
                 if (this.ImgSrc != null)
                     hash = hash * 59 + this.ImgSrc.GetHashCode();
-                
+
                 if (this.Properties != null)
                     hash = hash * 59 + this.Properties.GetHashCode();
-                
+
                 if (this.Images != null)
                     hash = hash * 59 + this.Images.GetHashCode();
-                
+
                 if (this.Assets != null)
                     hash = hash * 59 + this.Assets.GetHashCode();
-                
+
                 if (this.Variations != null)
                     hash = hash * 59 + this.Variations.GetHashCode();
-                
+
                 if (this.Links != null)
                     hash = hash * 59 + this.Links.GetHashCode();
-                
+
                 if (this.Reviews != null)
                     hash = hash * 59 + this.Reviews.GetHashCode();
-                
+
                 if (this.Associations != null)
                     hash = hash * 59 + this.Associations.GetHashCode();
-                
+
                 if (this.SecurityScopes != null)
                     hash = hash * 59 + this.SecurityScopes.GetHashCode();
-                
+
                 if (this.SeoObjectType != null)
                     hash = hash * 59 + this.SeoObjectType.GetHashCode();
-                
+
                 if (this.SeoInfos != null)
                     hash = hash * 59 + this.SeoInfos.GetHashCode();
-                
+
                 if (this.Outlines != null)
                     hash = hash * 59 + this.Outlines.GetHashCode();
-                
+
                 if (this.CreatedDate != null)
                     hash = hash * 59 + this.CreatedDate.GetHashCode();
-                
+
                 if (this.ModifiedDate != null)
                     hash = hash * 59 + this.ModifiedDate.GetHashCode();
-                
+
                 if (this.CreatedBy != null)
                     hash = hash * 59 + this.CreatedBy.GetHashCode();
-                
+
                 if (this.ModifiedBy != null)
                     hash = hash * 59 + this.ModifiedBy.GetHashCode();
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

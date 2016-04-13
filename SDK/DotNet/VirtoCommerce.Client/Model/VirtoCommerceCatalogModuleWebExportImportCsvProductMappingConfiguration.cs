@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,26 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceCatalogModuleWebExportImportCsvProductMappingConfiguration :  IEquatable<VirtoCommerceCatalogModuleWebExportImportCsvProductMappingConfiguration>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebExportImportCsvProductMappingConfiguration" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebExportImportCsvProductMappingConfiguration" />class.
-        /// </summary>
-        /// <param name="ETag">ETag.</param>
-        /// <param name="Delimiter">Delimiter.</param>
-        /// <param name="CsvColumns">CsvColumns.</param>
-        /// <param name="PropertyMaps">PropertyMaps.</param>
-        /// <param name="PropertyCsvColumns">PropertyCsvColumns.</param>
-
-        public VirtoCommerceCatalogModuleWebExportImportCsvProductMappingConfiguration(string ETag = null, string Delimiter = null, List<string> CsvColumns = null, List<VirtoCommerceCatalogModuleWebExportImportCsvProductPropertyMap> PropertyMaps = null, List<string> PropertyCsvColumns = null)
-        {
-            this.ETag = ETag;
-            this.Delimiter = Delimiter;
-            this.CsvColumns = CsvColumns;
-            this.PropertyMaps = PropertyMaps;
-            this.PropertyCsvColumns = PropertyCsvColumns;
-            
-        }
-
         /// <summary>
         /// Gets or Sets ETag
         /// </summary>
@@ -69,7 +47,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="propertyCsvColumns", EmitDefaultValue=false)]
         public List<string> PropertyCsvColumns { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -83,7 +60,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  CsvColumns: ").Append(CsvColumns).Append("\n");
             sb.Append("  PropertyMaps: ").Append(PropertyMaps).Append("\n");
             sb.Append("  PropertyCsvColumns: ").Append(PropertyCsvColumns).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -158,27 +134,25 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.ETag != null)
                     hash = hash * 59 + this.ETag.GetHashCode();
-                
+
                 if (this.Delimiter != null)
                     hash = hash * 59 + this.Delimiter.GetHashCode();
-                
+
                 if (this.CsvColumns != null)
                     hash = hash * 59 + this.CsvColumns.GetHashCode();
-                
+
                 if (this.PropertyMaps != null)
                     hash = hash * 59 + this.PropertyMaps.GetHashCode();
-                
+
                 if (this.PropertyCsvColumns != null)
                     hash = hash * 59 + this.PropertyCsvColumns.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

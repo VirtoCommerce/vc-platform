@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,20 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceOrderModuleWebModelCoupon :  IEquatable<VirtoCommerceOrderModuleWebModelCoupon>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceOrderModuleWebModelCoupon" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceOrderModuleWebModelCoupon" />class.
-        /// </summary>
-        /// <param name="Code">Code.</param>
-        /// <param name="InvalidDescription">InvalidDescription.</param>
-
-        public VirtoCommerceOrderModuleWebModelCoupon(string Code = null, string InvalidDescription = null)
-        {
-            this.Code = Code;
-            this.InvalidDescription = InvalidDescription;
-            
-        }
-
         /// <summary>
         /// Gets or Sets Code
         /// </summary>
@@ -45,7 +29,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="invalidDescription", EmitDefaultValue=false)]
         public string InvalidDescription { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -56,7 +39,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("class VirtoCommerceOrderModuleWebModelCoupon {\n");
             sb.Append("  Code: ").Append(Code).Append("\n");
             sb.Append("  InvalidDescription: ").Append(InvalidDescription).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -116,18 +98,16 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Code != null)
                     hash = hash * 59 + this.Code.GetHashCode();
-                
+
                 if (this.InvalidDescription != null)
                     hash = hash * 59 + this.InvalidDescription.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

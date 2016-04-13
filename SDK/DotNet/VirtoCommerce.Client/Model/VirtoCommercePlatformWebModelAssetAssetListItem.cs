@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,32 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommercePlatformWebModelAssetAssetListItem :  IEquatable<VirtoCommercePlatformWebModelAssetAssetListItem>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelAssetAssetListItem" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelAssetAssetListItem" />class.
-        /// </summary>
-        /// <param name="Type">Type.</param>
-        /// <param name="Name">Name.</param>
-        /// <param name="ContentType">ContentType.</param>
-        /// <param name="Url">Url.</param>
-        /// <param name="Size">Size.</param>
-        /// <param name="ParentUrl">ParentUrl.</param>
-        /// <param name="ModifiedDate">ModifiedDate.</param>
-        /// <param name="CreatedDate">CreatedDate.</param>
-
-        public VirtoCommercePlatformWebModelAssetAssetListItem(string Type = null, string Name = null, string ContentType = null, string Url = null, string Size = null, string ParentUrl = null, DateTime? ModifiedDate = null, DateTime? CreatedDate = null)
-        {
-            this.Type = Type;
-            this.Name = Name;
-            this.ContentType = ContentType;
-            this.Url = Url;
-            this.Size = Size;
-            this.ParentUrl = ParentUrl;
-            this.ModifiedDate = ModifiedDate;
-            this.CreatedDate = CreatedDate;
-            
-        }
-
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
@@ -93,7 +65,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="createdDate", EmitDefaultValue=false)]
         public DateTime? CreatedDate { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -110,7 +81,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  ParentUrl: ").Append(ParentUrl).Append("\n");
             sb.Append("  ModifiedDate: ").Append(ModifiedDate).Append("\n");
             sb.Append("  CreatedDate: ").Append(CreatedDate).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -200,36 +170,34 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Type != null)
                     hash = hash * 59 + this.Type.GetHashCode();
-                
+
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
-                
+
                 if (this.ContentType != null)
                     hash = hash * 59 + this.ContentType.GetHashCode();
-                
+
                 if (this.Url != null)
                     hash = hash * 59 + this.Url.GetHashCode();
-                
+
                 if (this.Size != null)
                     hash = hash * 59 + this.Size.GetHashCode();
-                
+
                 if (this.ParentUrl != null)
                     hash = hash * 59 + this.ParentUrl.GetHashCode();
-                
+
                 if (this.ModifiedDate != null)
                     hash = hash * 59 + this.ModifiedDate.GetHashCode();
-                
+
                 if (this.CreatedDate != null)
                     hash = hash * 59 + this.CreatedDate.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

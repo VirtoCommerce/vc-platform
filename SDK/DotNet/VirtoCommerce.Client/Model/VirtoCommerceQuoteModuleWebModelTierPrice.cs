@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,20 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceQuoteModuleWebModelTierPrice :  IEquatable<VirtoCommerceQuoteModuleWebModelTierPrice>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceQuoteModuleWebModelTierPrice" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceQuoteModuleWebModelTierPrice" />class.
-        /// </summary>
-        /// <param name="Price">Price.</param>
-        /// <param name="Quantity">Quantity.</param>
-
-        public VirtoCommerceQuoteModuleWebModelTierPrice(double? Price = null, long? Quantity = null)
-        {
-            this.Price = Price;
-            this.Quantity = Quantity;
-            
-        }
-
         /// <summary>
         /// Gets or Sets Price
         /// </summary>
@@ -45,7 +29,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="quantity", EmitDefaultValue=false)]
         public long? Quantity { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -56,7 +39,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("class VirtoCommerceQuoteModuleWebModelTierPrice {\n");
             sb.Append("  Price: ").Append(Price).Append("\n");
             sb.Append("  Quantity: ").Append(Quantity).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -116,18 +98,16 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Price != null)
                     hash = hash * 59 + this.Price.GetHashCode();
-                
+
                 if (this.Quantity != null)
                     hash = hash * 59 + this.Quantity.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

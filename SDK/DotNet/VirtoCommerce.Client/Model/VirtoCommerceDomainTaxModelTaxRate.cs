@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,24 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceDomainTaxModelTaxRate :  IEquatable<VirtoCommerceDomainTaxModelTaxRate>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainTaxModelTaxRate" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainTaxModelTaxRate" />class.
-        /// </summary>
-        /// <param name="Rate">Rate.</param>
-        /// <param name="Currency">Currency.</param>
-        /// <param name="Line">Line.</param>
-        /// <param name="TaxProvider">TaxProvider.</param>
-
-        public VirtoCommerceDomainTaxModelTaxRate(double? Rate = null, string Currency = null, VirtoCommerceDomainTaxModelTaxLine Line = null, VirtoCommerceDomainTaxModelTaxProvider TaxProvider = null)
-        {
-            this.Rate = Rate;
-            this.Currency = Currency;
-            this.Line = Line;
-            this.TaxProvider = TaxProvider;
-            
-        }
-
         /// <summary>
         /// Gets or Sets Rate
         /// </summary>
@@ -61,7 +41,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="taxProvider", EmitDefaultValue=false)]
         public VirtoCommerceDomainTaxModelTaxProvider TaxProvider { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -74,7 +53,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Currency: ").Append(Currency).Append("\n");
             sb.Append("  Line: ").Append(Line).Append("\n");
             sb.Append("  TaxProvider: ").Append(TaxProvider).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -144,24 +122,22 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Rate != null)
                     hash = hash * 59 + this.Rate.GetHashCode();
-                
+
                 if (this.Currency != null)
                     hash = hash * 59 + this.Currency.GetHashCode();
-                
+
                 if (this.Line != null)
                     hash = hash * 59 + this.Line.GetHashCode();
-                
+
                 if (this.TaxProvider != null)
                     hash = hash * 59 + this.TaxProvider.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

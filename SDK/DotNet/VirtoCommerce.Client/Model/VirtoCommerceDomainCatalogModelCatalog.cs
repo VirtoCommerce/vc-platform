@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,30 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceDomainCatalogModelCatalog :  IEquatable<VirtoCommerceDomainCatalogModelCatalog>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCatalogModelCatalog" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCatalogModelCatalog" />class.
-        /// </summary>
-        /// <param name="Name">Name.</param>
-        /// <param name="IsVirtual">IsVirtual.</param>
-        /// <param name="DefaultLanguage">DefaultLanguage.</param>
-        /// <param name="Languages">Languages.</param>
-        /// <param name="Properties">Properties.</param>
-        /// <param name="PropertyValues">PropertyValues.</param>
-        /// <param name="Id">Id.</param>
-
-        public VirtoCommerceDomainCatalogModelCatalog(string Name = null, bool? IsVirtual = null, VirtoCommerceDomainCatalogModelCatalogLanguage DefaultLanguage = null, List<VirtoCommerceDomainCatalogModelCatalogLanguage> Languages = null, List<VirtoCommerceDomainCatalogModelProperty> Properties = null, List<VirtoCommerceDomainCatalogModelPropertyValue> PropertyValues = null, string Id = null)
-        {
-            this.Name = Name;
-            this.IsVirtual = IsVirtual;
-            this.DefaultLanguage = DefaultLanguage;
-            this.Languages = Languages;
-            this.Properties = Properties;
-            this.PropertyValues = PropertyValues;
-            this.Id = Id;
-            
-        }
-
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
@@ -85,7 +59,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -101,7 +74,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Properties: ").Append(Properties).Append("\n");
             sb.Append("  PropertyValues: ").Append(PropertyValues).Append("\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -186,33 +158,31 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
-                
+
                 if (this.IsVirtual != null)
                     hash = hash * 59 + this.IsVirtual.GetHashCode();
-                
+
                 if (this.DefaultLanguage != null)
                     hash = hash * 59 + this.DefaultLanguage.GetHashCode();
-                
+
                 if (this.Languages != null)
                     hash = hash * 59 + this.Languages.GetHashCode();
-                
+
                 if (this.Properties != null)
                     hash = hash * 59 + this.Properties.GetHashCode();
-                
+
                 if (this.PropertyValues != null)
                     hash = hash * 59 + this.PropertyValues.GetHashCode();
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

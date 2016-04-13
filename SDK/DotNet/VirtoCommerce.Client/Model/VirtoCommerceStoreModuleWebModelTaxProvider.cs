@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,30 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceStoreModuleWebModelTaxProvider :  IEquatable<VirtoCommerceStoreModuleWebModelTaxProvider>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceStoreModuleWebModelTaxProvider" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceStoreModuleWebModelTaxProvider" />class.
-        /// </summary>
-        /// <param name="Code">Inner unique method code.</param>
-        /// <param name="Name">Display name of shipping method.</param>
-        /// <param name="Description">Description.</param>
-        /// <param name="LogoUrl">Absolute logo url of shipping method, can be used in UI.</param>
-        /// <param name="IsActive">If true - method can be available on storefront.</param>
-        /// <param name="Priority">Priority.</param>
-        /// <param name="Settings">Settings.</param>
-
-        public VirtoCommerceStoreModuleWebModelTaxProvider(string Code = null, string Name = null, string Description = null, string LogoUrl = null, bool? IsActive = null, int? Priority = null, List<VirtoCommerceStoreModuleWebModelSetting> Settings = null)
-        {
-            this.Code = Code;
-            this.Name = Name;
-            this.Description = Description;
-            this.LogoUrl = LogoUrl;
-            this.IsActive = IsActive;
-            this.Priority = Priority;
-            this.Settings = Settings;
-            
-        }
-
         /// <summary>
         /// Inner unique method code
         /// </summary>
@@ -89,7 +63,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="settings", EmitDefaultValue=false)]
         public List<VirtoCommerceStoreModuleWebModelSetting> Settings { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -105,7 +78,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  IsActive: ").Append(IsActive).Append("\n");
             sb.Append("  Priority: ").Append(Priority).Append("\n");
             sb.Append("  Settings: ").Append(Settings).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -190,33 +162,31 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Code != null)
                     hash = hash * 59 + this.Code.GetHashCode();
-                
+
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
-                
+
                 if (this.Description != null)
                     hash = hash * 59 + this.Description.GetHashCode();
-                
+
                 if (this.LogoUrl != null)
                     hash = hash * 59 + this.LogoUrl.GetHashCode();
-                
+
                 if (this.IsActive != null)
                     hash = hash * 59 + this.IsActive.GetHashCode();
-                
+
                 if (this.Priority != null)
                     hash = hash * 59 + this.Priority.GetHashCode();
-                
+
                 if (this.Settings != null)
                     hash = hash * 59 + this.Settings.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,32 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceDomainTaxModelTaxEvaluationContext :  IEquatable<VirtoCommerceDomainTaxModelTaxEvaluationContext>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainTaxModelTaxEvaluationContext" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainTaxModelTaxEvaluationContext" />class.
-        /// </summary>
-        /// <param name="Code">Code.</param>
-        /// <param name="Type">Type.</param>
-        /// <param name="Customer">Customer.</param>
-        /// <param name="Organization">Organization.</param>
-        /// <param name="Address">Address.</param>
-        /// <param name="Currency">Currency.</param>
-        /// <param name="Lines">Lines.</param>
-        /// <param name="Id">Id.</param>
-
-        public VirtoCommerceDomainTaxModelTaxEvaluationContext(string Code = null, string Type = null, VirtoCommerceDomainCustomerModelContact Customer = null, VirtoCommerceDomainCustomerModelOrganization Organization = null, VirtoCommerceDomainCommerceModelAddress Address = null, string Currency = null, List<VirtoCommerceDomainTaxModelTaxLine> Lines = null, string Id = null)
-        {
-            this.Code = Code;
-            this.Type = Type;
-            this.Customer = Customer;
-            this.Organization = Organization;
-            this.Address = Address;
-            this.Currency = Currency;
-            this.Lines = Lines;
-            this.Id = Id;
-            
-        }
-
         /// <summary>
         /// Gets or Sets Code
         /// </summary>
@@ -93,7 +65,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -110,7 +81,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Currency: ").Append(Currency).Append("\n");
             sb.Append("  Lines: ").Append(Lines).Append("\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -200,36 +170,34 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Code != null)
                     hash = hash * 59 + this.Code.GetHashCode();
-                
+
                 if (this.Type != null)
                     hash = hash * 59 + this.Type.GetHashCode();
-                
+
                 if (this.Customer != null)
                     hash = hash * 59 + this.Customer.GetHashCode();
-                
+
                 if (this.Organization != null)
                     hash = hash * 59 + this.Organization.GetHashCode();
-                
+
                 if (this.Address != null)
                     hash = hash * 59 + this.Address.GetHashCode();
-                
+
                 if (this.Currency != null)
                     hash = hash * 59 + this.Currency.GetHashCode();
-                
+
                 if (this.Lines != null)
                     hash = hash * 59 + this.Lines.GetHashCode();
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

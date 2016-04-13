@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,20 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceCoreModuleWebModelKeyValuePair :  IEquatable<VirtoCommerceCoreModuleWebModelKeyValuePair>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceCoreModuleWebModelKeyValuePair" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceCoreModuleWebModelKeyValuePair" />class.
-        /// </summary>
-        /// <param name="Key">Key.</param>
-        /// <param name="Value">Value.</param>
-
-        public VirtoCommerceCoreModuleWebModelKeyValuePair(string Key = null, string Value = null)
-        {
-            this.Key = Key;
-            this.Value = Value;
-            
-        }
-
         /// <summary>
         /// Gets or Sets Key
         /// </summary>
@@ -45,7 +29,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="value", EmitDefaultValue=false)]
         public string Value { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -56,7 +39,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("class VirtoCommerceCoreModuleWebModelKeyValuePair {\n");
             sb.Append("  Key: ").Append(Key).Append("\n");
             sb.Append("  Value: ").Append(Value).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -116,18 +98,16 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Key != null)
                     hash = hash * 59 + this.Key.GetHashCode();
-                
+
                 if (this.Value != null)
                     hash = hash * 59 + this.Value.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

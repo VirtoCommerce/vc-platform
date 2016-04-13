@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,20 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommercePlatformWebModelPackagingModuleIdentity :  IEquatable<VirtoCommercePlatformWebModelPackagingModuleIdentity>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelPackagingModuleIdentity" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelPackagingModuleIdentity" />class.
-        /// </summary>
-        /// <param name="Id">Id.</param>
-        /// <param name="Version">Version.</param>
-
-        public VirtoCommercePlatformWebModelPackagingModuleIdentity(string Id = null, string Version = null)
-        {
-            this.Id = Id;
-            this.Version = Version;
-            
-        }
-
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
@@ -45,7 +29,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="version", EmitDefaultValue=false)]
         public string Version { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -56,7 +39,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("class VirtoCommercePlatformWebModelPackagingModuleIdentity {\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
             sb.Append("  Version: ").Append(Version).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -116,18 +98,16 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 if (this.Version != null)
                     hash = hash * 59 + this.Version.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

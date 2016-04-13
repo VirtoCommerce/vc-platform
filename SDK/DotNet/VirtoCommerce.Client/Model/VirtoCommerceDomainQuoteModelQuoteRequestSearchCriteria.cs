@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,36 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria :  IEquatable<VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria" />class.
-        /// </summary>
-        /// <param name="Number">Number.</param>
-        /// <param name="Keyword">Keyword.</param>
-        /// <param name="CustomerId">CustomerId.</param>
-        /// <param name="StoreId">StoreId.</param>
-        /// <param name="StartDate">StartDate.</param>
-        /// <param name="EndDate">EndDate.</param>
-        /// <param name="Status">Status.</param>
-        /// <param name="Tag">Tag.</param>
-        /// <param name="Start">Start.</param>
-        /// <param name="Count">Count.</param>
-
-        public VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria(string Number = null, string Keyword = null, string CustomerId = null, string StoreId = null, DateTime? StartDate = null, DateTime? EndDate = null, string Status = null, string Tag = null, int? Start = null, int? Count = null)
-        {
-            this.Number = Number;
-            this.Keyword = Keyword;
-            this.CustomerId = CustomerId;
-            this.StoreId = StoreId;
-            this.StartDate = StartDate;
-            this.EndDate = EndDate;
-            this.Status = Status;
-            this.Tag = Tag;
-            this.Start = Start;
-            this.Count = Count;
-            
-        }
-
         /// <summary>
         /// Gets or Sets Number
         /// </summary>
@@ -109,7 +77,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="count", EmitDefaultValue=false)]
         public int? Count { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -128,7 +95,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Tag: ").Append(Tag).Append("\n");
             sb.Append("  Start: ").Append(Start).Append("\n");
             sb.Append("  Count: ").Append(Count).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -228,42 +194,40 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Number != null)
                     hash = hash * 59 + this.Number.GetHashCode();
-                
+
                 if (this.Keyword != null)
                     hash = hash * 59 + this.Keyword.GetHashCode();
-                
+
                 if (this.CustomerId != null)
                     hash = hash * 59 + this.CustomerId.GetHashCode();
-                
+
                 if (this.StoreId != null)
                     hash = hash * 59 + this.StoreId.GetHashCode();
-                
+
                 if (this.StartDate != null)
                     hash = hash * 59 + this.StartDate.GetHashCode();
-                
+
                 if (this.EndDate != null)
                     hash = hash * 59 + this.EndDate.GetHashCode();
-                
+
                 if (this.Status != null)
                     hash = hash * 59 + this.Status.GetHashCode();
-                
+
                 if (this.Tag != null)
                     hash = hash * 59 + this.Tag.GetHashCode();
-                
+
                 if (this.Start != null)
                     hash = hash * 59 + this.Start.GetHashCode();
-                
+
                 if (this.Count != null)
                     hash = hash * 59 + this.Count.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

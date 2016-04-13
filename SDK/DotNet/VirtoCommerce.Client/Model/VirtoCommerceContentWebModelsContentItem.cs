@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,30 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceContentWebModelsContentItem :  IEquatable<VirtoCommerceContentWebModelsContentItem>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceContentWebModelsContentItem" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceContentWebModelsContentItem" />class.
-        /// </summary>
-        /// <param name="Name">Name.</param>
-        /// <param name="Type">content item type (ContentFile, ContentFolder etc).</param>
-        /// <param name="Url">Absolute url (which may be used to acccess or download content item directly).</param>
-        /// <param name="RelativeUrl">Relative content item url for access only through provider.</param>
-        /// <param name="ParentUrl">Parent folder url.</param>
-        /// <param name="ModifiedDate">ModifiedDate.</param>
-        /// <param name="CreatedDate">CreatedDate.</param>
-
-        public VirtoCommerceContentWebModelsContentItem(string Name = null, string Type = null, string Url = null, string RelativeUrl = null, string ParentUrl = null, DateTime? ModifiedDate = null, DateTime? CreatedDate = null)
-        {
-            this.Name = Name;
-            this.Type = Type;
-            this.Url = Url;
-            this.RelativeUrl = RelativeUrl;
-            this.ParentUrl = ParentUrl;
-            this.ModifiedDate = ModifiedDate;
-            this.CreatedDate = CreatedDate;
-            
-        }
-
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
@@ -89,7 +63,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="createdDate", EmitDefaultValue=false)]
         public DateTime? CreatedDate { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -105,7 +78,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  ParentUrl: ").Append(ParentUrl).Append("\n");
             sb.Append("  ModifiedDate: ").Append(ModifiedDate).Append("\n");
             sb.Append("  CreatedDate: ").Append(CreatedDate).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -190,33 +162,31 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
-                
+
                 if (this.Type != null)
                     hash = hash * 59 + this.Type.GetHashCode();
-                
+
                 if (this.Url != null)
                     hash = hash * 59 + this.Url.GetHashCode();
-                
+
                 if (this.RelativeUrl != null)
                     hash = hash * 59 + this.RelativeUrl.GetHashCode();
-                
+
                 if (this.ParentUrl != null)
                     hash = hash * 59 + this.ParentUrl.GetHashCode();
-                
+
                 if (this.ModifiedDate != null)
                     hash = hash * 59 + this.ModifiedDate.GetHashCode();
-                
+
                 if (this.CreatedDate != null)
                     hash = hash * 59 + this.CreatedDate.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

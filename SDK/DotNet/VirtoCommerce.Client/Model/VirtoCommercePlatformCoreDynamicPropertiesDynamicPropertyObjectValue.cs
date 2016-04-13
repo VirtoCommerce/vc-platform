@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,20 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommercePlatformCoreDynamicPropertiesDynamicPropertyObjectValue :  IEquatable<VirtoCommercePlatformCoreDynamicPropertiesDynamicPropertyObjectValue>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreDynamicPropertiesDynamicPropertyObjectValue" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreDynamicPropertiesDynamicPropertyObjectValue" />class.
-        /// </summary>
-        /// <param name="Locale">Locale.</param>
-        /// <param name="Value">Value.</param>
-
-        public VirtoCommercePlatformCoreDynamicPropertiesDynamicPropertyObjectValue(string Locale = null, Object Value = null)
-        {
-            this.Locale = Locale;
-            this.Value = Value;
-            
-        }
-
         /// <summary>
         /// Gets or Sets Locale
         /// </summary>
@@ -45,7 +29,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="value", EmitDefaultValue=false)]
         public Object Value { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -56,7 +39,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("class VirtoCommercePlatformCoreDynamicPropertiesDynamicPropertyObjectValue {\n");
             sb.Append("  Locale: ").Append(Locale).Append("\n");
             sb.Append("  Value: ").Append(Value).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -116,18 +98,16 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Locale != null)
                     hash = hash * 59 + this.Locale.GetHashCode();
-                
+
                 if (this.Value != null)
                     hash = hash * 59 + this.Value.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

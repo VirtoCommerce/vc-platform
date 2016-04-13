@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,26 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceDomainCatalogModelCatalogLanguage :  IEquatable<VirtoCommerceDomainCatalogModelCatalogLanguage>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCatalogModelCatalogLanguage" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCatalogModelCatalogLanguage" />class.
-        /// </summary>
-        /// <param name="CatalogId">CatalogId.</param>
-        /// <param name="Catalog">Catalog.</param>
-        /// <param name="IsDefault">IsDefault.</param>
-        /// <param name="LanguageCode">LanguageCode.</param>
-        /// <param name="Id">Id.</param>
-
-        public VirtoCommerceDomainCatalogModelCatalogLanguage(string CatalogId = null, VirtoCommerceDomainCatalogModelCatalog Catalog = null, bool? IsDefault = null, string LanguageCode = null, string Id = null)
-        {
-            this.CatalogId = CatalogId;
-            this.Catalog = Catalog;
-            this.IsDefault = IsDefault;
-            this.LanguageCode = LanguageCode;
-            this.Id = Id;
-            
-        }
-
         /// <summary>
         /// Gets or Sets CatalogId
         /// </summary>
@@ -69,7 +47,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -83,7 +60,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  IsDefault: ").Append(IsDefault).Append("\n");
             sb.Append("  LanguageCode: ").Append(LanguageCode).Append("\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -158,27 +134,25 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.CatalogId != null)
                     hash = hash * 59 + this.CatalogId.GetHashCode();
-                
+
                 if (this.Catalog != null)
                     hash = hash * 59 + this.Catalog.GetHashCode();
-                
+
                 if (this.IsDefault != null)
                     hash = hash * 59 + this.IsDefault.GetHashCode();
-                
+
                 if (this.LanguageCode != null)
                     hash = hash * 59 + this.LanguageCode.GetHashCode();
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

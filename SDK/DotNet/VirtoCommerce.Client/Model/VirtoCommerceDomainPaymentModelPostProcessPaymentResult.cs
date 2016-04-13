@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,28 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceDomainPaymentModelPostProcessPaymentResult :  IEquatable<VirtoCommerceDomainPaymentModelPostProcessPaymentResult>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainPaymentModelPostProcessPaymentResult" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainPaymentModelPostProcessPaymentResult" />class.
-        /// </summary>
-        /// <param name="NewPaymentStatus">NewPaymentStatus.</param>
-        /// <param name="IsSuccess">IsSuccess.</param>
-        /// <param name="ErrorMessage">ErrorMessage.</param>
-        /// <param name="ReturnUrl">ReturnUrl.</param>
-        /// <param name="OrderId">OrderId.</param>
-        /// <param name="OuterId">OuterId.</param>
-
-        public VirtoCommerceDomainPaymentModelPostProcessPaymentResult(string NewPaymentStatus = null, bool? IsSuccess = null, string ErrorMessage = null, string ReturnUrl = null, string OrderId = null, string OuterId = null)
-        {
-            this.NewPaymentStatus = NewPaymentStatus;
-            this.IsSuccess = IsSuccess;
-            this.ErrorMessage = ErrorMessage;
-            this.ReturnUrl = ReturnUrl;
-            this.OrderId = OrderId;
-            this.OuterId = OuterId;
-            
-        }
-
         /// <summary>
         /// Gets or Sets NewPaymentStatus
         /// </summary>
@@ -77,7 +53,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="outerId", EmitDefaultValue=false)]
         public string OuterId { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -92,7 +67,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  ReturnUrl: ").Append(ReturnUrl).Append("\n");
             sb.Append("  OrderId: ").Append(OrderId).Append("\n");
             sb.Append("  OuterId: ").Append(OuterId).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -172,30 +146,28 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.NewPaymentStatus != null)
                     hash = hash * 59 + this.NewPaymentStatus.GetHashCode();
-                
+
                 if (this.IsSuccess != null)
                     hash = hash * 59 + this.IsSuccess.GetHashCode();
-                
+
                 if (this.ErrorMessage != null)
                     hash = hash * 59 + this.ErrorMessage.GetHashCode();
-                
+
                 if (this.ReturnUrl != null)
                     hash = hash * 59 + this.ReturnUrl.GetHashCode();
-                
+
                 if (this.OrderId != null)
                     hash = hash * 59 + this.OrderId.GetHashCode();
-                
+
                 if (this.OuterId != null)
                     hash = hash * 59 + this.OuterId.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

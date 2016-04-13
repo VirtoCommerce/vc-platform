@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,82 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceDomainMarketingModelPromotionEvaluationContext :  IEquatable<VirtoCommerceDomainMarketingModelPromotionEvaluationContext>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainMarketingModelPromotionEvaluationContext" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainMarketingModelPromotionEvaluationContext" />class.
-        /// </summary>
-        /// <param name="RefusedGiftIds">RefusedGiftIds.</param>
-        /// <param name="StoreId">StoreId.</param>
-        /// <param name="Currency">Currency.</param>
-        /// <param name="CustomerId">CustomerId.</param>
-        /// <param name="IsRegisteredUser">IsRegisteredUser.</param>
-        /// <param name="IsFirstTimeBuyer">IsFirstTimeBuyer.</param>
-        /// <param name="IsEveryone">IsEveryone.</param>
-        /// <param name="CartTotal">CartTotal.</param>
-        /// <param name="ShipmentMethodCode">ShipmentMethodCode.</param>
-        /// <param name="ShipmentMethodPrice">ShipmentMethodPrice.</param>
-        /// <param name="AvailableShipmentMethodCodes">AvailableShipmentMethodCodes.</param>
-        /// <param name="Coupon">Coupon.</param>
-        /// <param name="CartPromoEntries">CartPromoEntries.</param>
-        /// <param name="PromoEntries">PromoEntries.</param>
-        /// <param name="PromoEntry">PromoEntry.</param>
-        /// <param name="ContextObject">ContextObject.</param>
-        /// <param name="GeoCity">GeoCity.</param>
-        /// <param name="GeoState">GeoState.</param>
-        /// <param name="GeoCountry">GeoCountry.</param>
-        /// <param name="GeoContinent">GeoContinent.</param>
-        /// <param name="GeoZipCode">GeoZipCode.</param>
-        /// <param name="GeoConnectionType">GeoConnectionType.</param>
-        /// <param name="GeoTimeZone">GeoTimeZone.</param>
-        /// <param name="GeoIpRoutingType">GeoIpRoutingType.</param>
-        /// <param name="GeoIspSecondLevel">GeoIspSecondLevel.</param>
-        /// <param name="GeoIspTopLevel">GeoIspTopLevel.</param>
-        /// <param name="ShopperAge">ShopperAge.</param>
-        /// <param name="ShopperGender">ShopperGender.</param>
-        /// <param name="Language">Language.</param>
-        /// <param name="ShopperSearchedPhraseInStore">ShopperSearchedPhraseInStore.</param>
-        /// <param name="ShopperSearchedPhraseOnInternet">ShopperSearchedPhraseOnInternet.</param>
-        /// <param name="CurrentUrl">CurrentUrl.</param>
-        /// <param name="ReferredUrl">ReferredUrl.</param>
-
-        public VirtoCommerceDomainMarketingModelPromotionEvaluationContext(List<string> RefusedGiftIds = null, string StoreId = null, string Currency = null, string CustomerId = null, bool? IsRegisteredUser = null, bool? IsFirstTimeBuyer = null, bool? IsEveryone = null, double? CartTotal = null, string ShipmentMethodCode = null, double? ShipmentMethodPrice = null, List<string> AvailableShipmentMethodCodes = null, string Coupon = null, List<VirtoCommerceDomainMarketingModelProductPromoEntry> CartPromoEntries = null, List<VirtoCommerceDomainMarketingModelProductPromoEntry> PromoEntries = null, VirtoCommerceDomainMarketingModelProductPromoEntry PromoEntry = null, Object ContextObject = null, string GeoCity = null, string GeoState = null, string GeoCountry = null, string GeoContinent = null, string GeoZipCode = null, string GeoConnectionType = null, string GeoTimeZone = null, string GeoIpRoutingType = null, string GeoIspSecondLevel = null, string GeoIspTopLevel = null, int? ShopperAge = null, string ShopperGender = null, string Language = null, string ShopperSearchedPhraseInStore = null, string ShopperSearchedPhraseOnInternet = null, string CurrentUrl = null, string ReferredUrl = null)
-        {
-            this.RefusedGiftIds = RefusedGiftIds;
-            this.StoreId = StoreId;
-            this.Currency = Currency;
-            this.CustomerId = CustomerId;
-            this.IsRegisteredUser = IsRegisteredUser;
-            this.IsFirstTimeBuyer = IsFirstTimeBuyer;
-            this.IsEveryone = IsEveryone;
-            this.CartTotal = CartTotal;
-            this.ShipmentMethodCode = ShipmentMethodCode;
-            this.ShipmentMethodPrice = ShipmentMethodPrice;
-            this.AvailableShipmentMethodCodes = AvailableShipmentMethodCodes;
-            this.Coupon = Coupon;
-            this.CartPromoEntries = CartPromoEntries;
-            this.PromoEntries = PromoEntries;
-            this.PromoEntry = PromoEntry;
-            this.ContextObject = ContextObject;
-            this.GeoCity = GeoCity;
-            this.GeoState = GeoState;
-            this.GeoCountry = GeoCountry;
-            this.GeoContinent = GeoContinent;
-            this.GeoZipCode = GeoZipCode;
-            this.GeoConnectionType = GeoConnectionType;
-            this.GeoTimeZone = GeoTimeZone;
-            this.GeoIpRoutingType = GeoIpRoutingType;
-            this.GeoIspSecondLevel = GeoIspSecondLevel;
-            this.GeoIspTopLevel = GeoIspTopLevel;
-            this.ShopperAge = ShopperAge;
-            this.ShopperGender = ShopperGender;
-            this.Language = Language;
-            this.ShopperSearchedPhraseInStore = ShopperSearchedPhraseInStore;
-            this.ShopperSearchedPhraseOnInternet = ShopperSearchedPhraseOnInternet;
-            this.CurrentUrl = CurrentUrl;
-            this.ReferredUrl = ReferredUrl;
-            
-        }
-
         /// <summary>
         /// Gets or Sets RefusedGiftIds
         /// </summary>
@@ -293,7 +215,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="referredUrl", EmitDefaultValue=false)]
         public string ReferredUrl { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -335,7 +256,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  ShopperSearchedPhraseOnInternet: ").Append(ShopperSearchedPhraseOnInternet).Append("\n");
             sb.Append("  CurrentUrl: ").Append(CurrentUrl).Append("\n");
             sb.Append("  ReferredUrl: ").Append(ReferredUrl).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -550,111 +470,109 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.RefusedGiftIds != null)
                     hash = hash * 59 + this.RefusedGiftIds.GetHashCode();
-                
+
                 if (this.StoreId != null)
                     hash = hash * 59 + this.StoreId.GetHashCode();
-                
+
                 if (this.Currency != null)
                     hash = hash * 59 + this.Currency.GetHashCode();
-                
+
                 if (this.CustomerId != null)
                     hash = hash * 59 + this.CustomerId.GetHashCode();
-                
+
                 if (this.IsRegisteredUser != null)
                     hash = hash * 59 + this.IsRegisteredUser.GetHashCode();
-                
+
                 if (this.IsFirstTimeBuyer != null)
                     hash = hash * 59 + this.IsFirstTimeBuyer.GetHashCode();
-                
+
                 if (this.IsEveryone != null)
                     hash = hash * 59 + this.IsEveryone.GetHashCode();
-                
+
                 if (this.CartTotal != null)
                     hash = hash * 59 + this.CartTotal.GetHashCode();
-                
+
                 if (this.ShipmentMethodCode != null)
                     hash = hash * 59 + this.ShipmentMethodCode.GetHashCode();
-                
+
                 if (this.ShipmentMethodPrice != null)
                     hash = hash * 59 + this.ShipmentMethodPrice.GetHashCode();
-                
+
                 if (this.AvailableShipmentMethodCodes != null)
                     hash = hash * 59 + this.AvailableShipmentMethodCodes.GetHashCode();
-                
+
                 if (this.Coupon != null)
                     hash = hash * 59 + this.Coupon.GetHashCode();
-                
+
                 if (this.CartPromoEntries != null)
                     hash = hash * 59 + this.CartPromoEntries.GetHashCode();
-                
+
                 if (this.PromoEntries != null)
                     hash = hash * 59 + this.PromoEntries.GetHashCode();
-                
+
                 if (this.PromoEntry != null)
                     hash = hash * 59 + this.PromoEntry.GetHashCode();
-                
+
                 if (this.ContextObject != null)
                     hash = hash * 59 + this.ContextObject.GetHashCode();
-                
+
                 if (this.GeoCity != null)
                     hash = hash * 59 + this.GeoCity.GetHashCode();
-                
+
                 if (this.GeoState != null)
                     hash = hash * 59 + this.GeoState.GetHashCode();
-                
+
                 if (this.GeoCountry != null)
                     hash = hash * 59 + this.GeoCountry.GetHashCode();
-                
+
                 if (this.GeoContinent != null)
                     hash = hash * 59 + this.GeoContinent.GetHashCode();
-                
+
                 if (this.GeoZipCode != null)
                     hash = hash * 59 + this.GeoZipCode.GetHashCode();
-                
+
                 if (this.GeoConnectionType != null)
                     hash = hash * 59 + this.GeoConnectionType.GetHashCode();
-                
+
                 if (this.GeoTimeZone != null)
                     hash = hash * 59 + this.GeoTimeZone.GetHashCode();
-                
+
                 if (this.GeoIpRoutingType != null)
                     hash = hash * 59 + this.GeoIpRoutingType.GetHashCode();
-                
+
                 if (this.GeoIspSecondLevel != null)
                     hash = hash * 59 + this.GeoIspSecondLevel.GetHashCode();
-                
+
                 if (this.GeoIspTopLevel != null)
                     hash = hash * 59 + this.GeoIspTopLevel.GetHashCode();
-                
+
                 if (this.ShopperAge != null)
                     hash = hash * 59 + this.ShopperAge.GetHashCode();
-                
+
                 if (this.ShopperGender != null)
                     hash = hash * 59 + this.ShopperGender.GetHashCode();
-                
+
                 if (this.Language != null)
                     hash = hash * 59 + this.Language.GetHashCode();
-                
+
                 if (this.ShopperSearchedPhraseInStore != null)
                     hash = hash * 59 + this.ShopperSearchedPhraseInStore.GetHashCode();
-                
+
                 if (this.ShopperSearchedPhraseOnInternet != null)
                     hash = hash * 59 + this.ShopperSearchedPhraseOnInternet.GetHashCode();
-                
+
                 if (this.CurrentUrl != null)
                     hash = hash * 59 + this.CurrentUrl.GetHashCode();
-                
+
                 if (this.ReferredUrl != null)
                     hash = hash * 59 + this.ReferredUrl.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,20 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceSearchModuleWebModelFilterProperty :  IEquatable<VirtoCommerceSearchModuleWebModelFilterProperty>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceSearchModuleWebModelFilterProperty" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceSearchModuleWebModelFilterProperty" />class.
-        /// </summary>
-        /// <param name="Name">Name.</param>
-        /// <param name="IsSelected">IsSelected.</param>
-
-        public VirtoCommerceSearchModuleWebModelFilterProperty(string Name = null, bool? IsSelected = null)
-        {
-            this.Name = Name;
-            this.IsSelected = IsSelected;
-            
-        }
-
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
@@ -45,7 +29,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="isSelected", EmitDefaultValue=false)]
         public bool? IsSelected { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -56,7 +39,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("class VirtoCommerceSearchModuleWebModelFilterProperty {\n");
             sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  IsSelected: ").Append(IsSelected).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -116,18 +98,16 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
-                
+
                 if (this.IsSelected != null)
                     hash = hash * 59 + this.IsSelected.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

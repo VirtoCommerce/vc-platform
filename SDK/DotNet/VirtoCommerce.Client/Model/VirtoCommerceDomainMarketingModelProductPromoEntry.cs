@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,38 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceDomainMarketingModelProductPromoEntry :  IEquatable<VirtoCommerceDomainMarketingModelProductPromoEntry>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainMarketingModelProductPromoEntry" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainMarketingModelProductPromoEntry" />class.
-        /// </summary>
-        /// <param name="Code">Code.</param>
-        /// <param name="Quantity">Quantity.</param>
-        /// <param name="Price">Price.</param>
-        /// <param name="Discount">Discount.</param>
-        /// <param name="CatalogId">CatalogId.</param>
-        /// <param name="CategoryId">CategoryId.</param>
-        /// <param name="ProductId">ProductId.</param>
-        /// <param name="Owner">Owner.</param>
-        /// <param name="Outline">Outline.</param>
-        /// <param name="Variations">Variations.</param>
-        /// <param name="Attributes">Attributes.</param>
-
-        public VirtoCommerceDomainMarketingModelProductPromoEntry(string Code = null, int? Quantity = null, double? Price = null, double? Discount = null, string CatalogId = null, string CategoryId = null, string ProductId = null, Object Owner = null, string Outline = null, List<VirtoCommerceDomainMarketingModelProductPromoEntry> Variations = null, Dictionary<string, string> Attributes = null)
-        {
-            this.Code = Code;
-            this.Quantity = Quantity;
-            this.Price = Price;
-            this.Discount = Discount;
-            this.CatalogId = CatalogId;
-            this.CategoryId = CategoryId;
-            this.ProductId = ProductId;
-            this.Owner = Owner;
-            this.Outline = Outline;
-            this.Variations = Variations;
-            this.Attributes = Attributes;
-            
-        }
-
         /// <summary>
         /// Gets or Sets Code
         /// </summary>
@@ -117,7 +83,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="attributes", EmitDefaultValue=false)]
         public Dictionary<string, string> Attributes { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -137,7 +102,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Outline: ").Append(Outline).Append("\n");
             sb.Append("  Variations: ").Append(Variations).Append("\n");
             sb.Append("  Attributes: ").Append(Attributes).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -242,45 +206,43 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Code != null)
                     hash = hash * 59 + this.Code.GetHashCode();
-                
+
                 if (this.Quantity != null)
                     hash = hash * 59 + this.Quantity.GetHashCode();
-                
+
                 if (this.Price != null)
                     hash = hash * 59 + this.Price.GetHashCode();
-                
+
                 if (this.Discount != null)
                     hash = hash * 59 + this.Discount.GetHashCode();
-                
+
                 if (this.CatalogId != null)
                     hash = hash * 59 + this.CatalogId.GetHashCode();
-                
+
                 if (this.CategoryId != null)
                     hash = hash * 59 + this.CategoryId.GetHashCode();
-                
+
                 if (this.ProductId != null)
                     hash = hash * 59 + this.ProductId.GetHashCode();
-                
+
                 if (this.Owner != null)
                     hash = hash * 59 + this.Owner.GetHashCode();
-                
+
                 if (this.Outline != null)
                     hash = hash * 59 + this.Outline.GetHashCode();
-                
+
                 if (this.Variations != null)
                     hash = hash * 59 + this.Variations.GetHashCode();
-                
+
                 if (this.Attributes != null)
                     hash = hash * 59 + this.Attributes.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

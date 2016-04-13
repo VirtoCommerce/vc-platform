@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,26 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceCatalogModuleWebModelPropertyDictionaryValue :  IEquatable<VirtoCommerceCatalogModuleWebModelPropertyDictionaryValue>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelPropertyDictionaryValue" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelPropertyDictionaryValue" />class.
-        /// </summary>
-        /// <param name="Id">Id.</param>
-        /// <param name="PropertyId">Gets or sets the property id that this dictionary value belongs to..</param>
-        /// <param name="Alias">Gets or sets the value of this dictionary value in default language..</param>
-        /// <param name="LanguageCode">Gets or sets the language code..</param>
-        /// <param name="Value">Gets or sets the value..</param>
-
-        public VirtoCommerceCatalogModuleWebModelPropertyDictionaryValue(string Id = null, string PropertyId = null, string Alias = null, string LanguageCode = null, string Value = null)
-        {
-            this.Id = Id;
-            this.PropertyId = PropertyId;
-            this.Alias = Alias;
-            this.LanguageCode = LanguageCode;
-            this.Value = Value;
-            
-        }
-
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
@@ -73,7 +51,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="value", EmitDefaultValue=false)]
         public string Value { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -87,7 +64,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Alias: ").Append(Alias).Append("\n");
             sb.Append("  LanguageCode: ").Append(LanguageCode).Append("\n");
             sb.Append("  Value: ").Append(Value).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -162,27 +138,25 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 if (this.PropertyId != null)
                     hash = hash * 59 + this.PropertyId.GetHashCode();
-                
+
                 if (this.Alias != null)
                     hash = hash * 59 + this.Alias.GetHashCode();
-                
+
                 if (this.LanguageCode != null)
                     hash = hash * 59 + this.LanguageCode.GetHashCode();
-                
+
                 if (this.Value != null)
                     hash = hash * 59 + this.Value.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

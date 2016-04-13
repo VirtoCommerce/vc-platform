@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,30 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceOrderModuleWebModelProcessPaymentResult :  IEquatable<VirtoCommerceOrderModuleWebModelProcessPaymentResult>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceOrderModuleWebModelProcessPaymentResult" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceOrderModuleWebModelProcessPaymentResult" />class.
-        /// </summary>
-        /// <param name="NewPaymentStatus">NewPaymentStatus.</param>
-        /// <param name="PaymentMethodType">PaymentMethodType.</param>
-        /// <param name="RedirectUrl">Redirect url used for OutSite payment processing.</param>
-        /// <param name="IsSuccess">IsSuccess.</param>
-        /// <param name="Error">Error.</param>
-        /// <param name="HtmlForm">Generated Html form used for InSite payment processing.</param>
-        /// <param name="OuterId">OuterId.</param>
-
-        public VirtoCommerceOrderModuleWebModelProcessPaymentResult(string NewPaymentStatus = null, string PaymentMethodType = null, string RedirectUrl = null, bool? IsSuccess = null, string Error = null, string HtmlForm = null, string OuterId = null)
-        {
-            this.NewPaymentStatus = NewPaymentStatus;
-            this.PaymentMethodType = PaymentMethodType;
-            this.RedirectUrl = RedirectUrl;
-            this.IsSuccess = IsSuccess;
-            this.Error = Error;
-            this.HtmlForm = HtmlForm;
-            this.OuterId = OuterId;
-            
-        }
-
         /// <summary>
         /// Gets or Sets NewPaymentStatus
         /// </summary>
@@ -87,7 +61,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="outerId", EmitDefaultValue=false)]
         public string OuterId { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -103,7 +76,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Error: ").Append(Error).Append("\n");
             sb.Append("  HtmlForm: ").Append(HtmlForm).Append("\n");
             sb.Append("  OuterId: ").Append(OuterId).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -188,33 +160,31 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.NewPaymentStatus != null)
                     hash = hash * 59 + this.NewPaymentStatus.GetHashCode();
-                
+
                 if (this.PaymentMethodType != null)
                     hash = hash * 59 + this.PaymentMethodType.GetHashCode();
-                
+
                 if (this.RedirectUrl != null)
                     hash = hash * 59 + this.RedirectUrl.GetHashCode();
-                
+
                 if (this.IsSuccess != null)
                     hash = hash * 59 + this.IsSuccess.GetHashCode();
-                
+
                 if (this.Error != null)
                     hash = hash * 59 + this.Error.GetHashCode();
-                
+
                 if (this.HtmlForm != null)
                     hash = hash * 59 + this.HtmlForm.GetHashCode();
-                
+
                 if (this.OuterId != null)
                     hash = hash * 59 + this.OuterId.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

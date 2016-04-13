@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,30 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceCatalogModuleWebExportImportCsvExportInfo :  IEquatable<VirtoCommerceCatalogModuleWebExportImportCsvExportInfo>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebExportImportCsvExportInfo" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebExportImportCsvExportInfo" />class.
-        /// </summary>
-        /// <param name="CatalogId">CatalogId.</param>
-        /// <param name="ProductIds">ProductIds.</param>
-        /// <param name="CategoryIds">CategoryIds.</param>
-        /// <param name="PriceListId">PriceListId.</param>
-        /// <param name="FulfilmentCenterId">FulfilmentCenterId.</param>
-        /// <param name="Currency">Currency.</param>
-        /// <param name="Configuration">Configuration.</param>
-
-        public VirtoCommerceCatalogModuleWebExportImportCsvExportInfo(string CatalogId = null, List<string> ProductIds = null, List<string> CategoryIds = null, string PriceListId = null, string FulfilmentCenterId = null, string Currency = null, VirtoCommerceCatalogModuleWebExportImportCsvProductMappingConfiguration Configuration = null)
-        {
-            this.CatalogId = CatalogId;
-            this.ProductIds = ProductIds;
-            this.CategoryIds = CategoryIds;
-            this.PriceListId = PriceListId;
-            this.FulfilmentCenterId = FulfilmentCenterId;
-            this.Currency = Currency;
-            this.Configuration = Configuration;
-            
-        }
-
         /// <summary>
         /// Gets or Sets CatalogId
         /// </summary>
@@ -85,7 +59,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="configuration", EmitDefaultValue=false)]
         public VirtoCommerceCatalogModuleWebExportImportCsvProductMappingConfiguration Configuration { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -101,7 +74,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  FulfilmentCenterId: ").Append(FulfilmentCenterId).Append("\n");
             sb.Append("  Currency: ").Append(Currency).Append("\n");
             sb.Append("  Configuration: ").Append(Configuration).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -186,33 +158,31 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.CatalogId != null)
                     hash = hash * 59 + this.CatalogId.GetHashCode();
-                
+
                 if (this.ProductIds != null)
                     hash = hash * 59 + this.ProductIds.GetHashCode();
-                
+
                 if (this.CategoryIds != null)
                     hash = hash * 59 + this.CategoryIds.GetHashCode();
-                
+
                 if (this.PriceListId != null)
                     hash = hash * 59 + this.PriceListId.GetHashCode();
-                
+
                 if (this.FulfilmentCenterId != null)
                     hash = hash * 59 + this.FulfilmentCenterId.GetHashCode();
-                
+
                 if (this.Currency != null)
                     hash = hash * 59 + this.Currency.GetHashCode();
-                
+
                 if (this.Configuration != null)
                     hash = hash * 59 + this.Configuration.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

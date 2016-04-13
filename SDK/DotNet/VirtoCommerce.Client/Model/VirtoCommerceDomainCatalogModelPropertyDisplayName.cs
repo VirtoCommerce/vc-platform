@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,20 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceDomainCatalogModelPropertyDisplayName :  IEquatable<VirtoCommerceDomainCatalogModelPropertyDisplayName>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCatalogModelPropertyDisplayName" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCatalogModelPropertyDisplayName" />class.
-        /// </summary>
-        /// <param name="Name">Name.</param>
-        /// <param name="LanguageCode">LanguageCode.</param>
-
-        public VirtoCommerceDomainCatalogModelPropertyDisplayName(string Name = null, string LanguageCode = null)
-        {
-            this.Name = Name;
-            this.LanguageCode = LanguageCode;
-            
-        }
-
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
@@ -45,7 +29,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="languageCode", EmitDefaultValue=false)]
         public string LanguageCode { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -56,7 +39,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("class VirtoCommerceDomainCatalogModelPropertyDisplayName {\n");
             sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  LanguageCode: ").Append(LanguageCode).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -116,18 +98,16 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
-                
+
                 if (this.LanguageCode != null)
                     hash = hash * 59 + this.LanguageCode.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

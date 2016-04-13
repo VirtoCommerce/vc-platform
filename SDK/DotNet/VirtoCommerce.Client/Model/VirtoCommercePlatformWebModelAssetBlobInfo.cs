@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,28 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommercePlatformWebModelAssetBlobInfo :  IEquatable<VirtoCommercePlatformWebModelAssetBlobInfo>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelAssetBlobInfo" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelAssetBlobInfo" />class.
-        /// </summary>
-        /// <param name="RelativeUrl">RelativeUrl.</param>
-        /// <param name="Url">Url.</param>
-        /// <param name="Name">Name.</param>
-        /// <param name="Size">Size.</param>
-        /// <param name="MimeType">MimeType.</param>
-        /// <param name="ModifiedDate">ModifiedDate.</param>
-
-        public VirtoCommercePlatformWebModelAssetBlobInfo(string RelativeUrl = null, string Url = null, string Name = null, string Size = null, string MimeType = null, DateTime? ModifiedDate = null)
-        {
-            this.RelativeUrl = RelativeUrl;
-            this.Url = Url;
-            this.Name = Name;
-            this.Size = Size;
-            this.MimeType = MimeType;
-            this.ModifiedDate = ModifiedDate;
-            
-        }
-
         /// <summary>
         /// Gets or Sets RelativeUrl
         /// </summary>
@@ -77,7 +53,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="modifiedDate", EmitDefaultValue=false)]
         public DateTime? ModifiedDate { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -92,7 +67,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Size: ").Append(Size).Append("\n");
             sb.Append("  MimeType: ").Append(MimeType).Append("\n");
             sb.Append("  ModifiedDate: ").Append(ModifiedDate).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -172,30 +146,28 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.RelativeUrl != null)
                     hash = hash * 59 + this.RelativeUrl.GetHashCode();
-                
+
                 if (this.Url != null)
                     hash = hash * 59 + this.Url.GetHashCode();
-                
+
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
-                
+
                 if (this.Size != null)
                     hash = hash * 59 + this.Size.GetHashCode();
-                
+
                 if (this.MimeType != null)
                     hash = hash * 59 + this.MimeType.GetHashCode();
-                
+
                 if (this.ModifiedDate != null)
                     hash = hash * 59 + this.ModifiedDate.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

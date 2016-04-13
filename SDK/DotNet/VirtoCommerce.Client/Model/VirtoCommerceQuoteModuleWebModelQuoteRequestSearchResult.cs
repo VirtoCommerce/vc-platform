@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,20 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult :  IEquatable<VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult" />class.
-        /// </summary>
-        /// <param name="TotalCount">TotalCount.</param>
-        /// <param name="QuoteRequests">QuoteRequests.</param>
-
-        public VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult(int? TotalCount = null, List<VirtoCommerceQuoteModuleWebModelQuoteRequest> QuoteRequests = null)
-        {
-            this.TotalCount = TotalCount;
-            this.QuoteRequests = QuoteRequests;
-            
-        }
-
         /// <summary>
         /// Gets or Sets TotalCount
         /// </summary>
@@ -45,7 +29,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="quoteRequests", EmitDefaultValue=false)]
         public List<VirtoCommerceQuoteModuleWebModelQuoteRequest> QuoteRequests { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -56,7 +39,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("class VirtoCommerceQuoteModuleWebModelQuoteRequestSearchResult {\n");
             sb.Append("  TotalCount: ").Append(TotalCount).Append("\n");
             sb.Append("  QuoteRequests: ").Append(QuoteRequests).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -116,18 +98,16 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.TotalCount != null)
                     hash = hash * 59 + this.TotalCount.GetHashCode();
-                
+
                 if (this.QuoteRequests != null)
                     hash = hash * 59 + this.QuoteRequests.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

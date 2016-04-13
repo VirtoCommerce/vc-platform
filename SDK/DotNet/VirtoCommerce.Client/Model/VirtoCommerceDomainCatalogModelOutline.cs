@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -20,23 +18,10 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommerceDomainCatalogModelOutline :  IEquatable<VirtoCommerceDomainCatalogModelOutline>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCatalogModelOutline" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCatalogModelOutline" />class.
-        /// </summary>
-        /// <param name="Items">Items.</param>
-
-        public VirtoCommerceDomainCatalogModelOutline(List<VirtoCommerceDomainCatalogModelOutlineItem> Items = null)
-        {
-            this.Items = Items;
-            
-        }
-
-        /// <summary>
         /// Gets or Sets Items
         /// </summary>
         [DataMember(Name="items", EmitDefaultValue=false)]
         public List<VirtoCommerceDomainCatalogModelOutlineItem> Items { get; set; }
-
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -47,7 +32,6 @@ namespace VirtoCommerce.Client.Model
             var sb = new StringBuilder();
             sb.Append("class VirtoCommerceDomainCatalogModelOutline {\n");
             sb.Append("  Items: ").Append(Items).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -102,15 +86,13 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Items != null)
                     hash = hash * 59 + this.Items.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

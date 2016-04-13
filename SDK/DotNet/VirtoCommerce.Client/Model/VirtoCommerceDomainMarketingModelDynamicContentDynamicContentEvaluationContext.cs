@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,60 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceDomainMarketingModelDynamicContentDynamicContentEvaluationContext :  IEquatable<VirtoCommerceDomainMarketingModelDynamicContentDynamicContentEvaluationContext>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainMarketingModelDynamicContentDynamicContentEvaluationContext" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainMarketingModelDynamicContentDynamicContentEvaluationContext" />class.
-        /// </summary>
-        /// <param name="StoreId">StoreId.</param>
-        /// <param name="PlaceName">PlaceName.</param>
-        /// <param name="Tags">Tags.</param>
-        /// <param name="ToDate">ToDate.</param>
-        /// <param name="ContextObject">ContextObject.</param>
-        /// <param name="GeoCity">GeoCity.</param>
-        /// <param name="GeoState">GeoState.</param>
-        /// <param name="GeoCountry">GeoCountry.</param>
-        /// <param name="GeoContinent">GeoContinent.</param>
-        /// <param name="GeoZipCode">GeoZipCode.</param>
-        /// <param name="GeoConnectionType">GeoConnectionType.</param>
-        /// <param name="GeoTimeZone">GeoTimeZone.</param>
-        /// <param name="GeoIpRoutingType">GeoIpRoutingType.</param>
-        /// <param name="GeoIspSecondLevel">GeoIspSecondLevel.</param>
-        /// <param name="GeoIspTopLevel">GeoIspTopLevel.</param>
-        /// <param name="ShopperAge">ShopperAge.</param>
-        /// <param name="ShopperGender">ShopperGender.</param>
-        /// <param name="Language">Language.</param>
-        /// <param name="ShopperSearchedPhraseInStore">ShopperSearchedPhraseInStore.</param>
-        /// <param name="ShopperSearchedPhraseOnInternet">ShopperSearchedPhraseOnInternet.</param>
-        /// <param name="CurrentUrl">CurrentUrl.</param>
-        /// <param name="ReferredUrl">ReferredUrl.</param>
-
-        public VirtoCommerceDomainMarketingModelDynamicContentDynamicContentEvaluationContext(string StoreId = null, string PlaceName = null, List<string> Tags = null, DateTime? ToDate = null, Object ContextObject = null, string GeoCity = null, string GeoState = null, string GeoCountry = null, string GeoContinent = null, string GeoZipCode = null, string GeoConnectionType = null, string GeoTimeZone = null, string GeoIpRoutingType = null, string GeoIspSecondLevel = null, string GeoIspTopLevel = null, int? ShopperAge = null, string ShopperGender = null, string Language = null, string ShopperSearchedPhraseInStore = null, string ShopperSearchedPhraseOnInternet = null, string CurrentUrl = null, string ReferredUrl = null)
-        {
-            this.StoreId = StoreId;
-            this.PlaceName = PlaceName;
-            this.Tags = Tags;
-            this.ToDate = ToDate;
-            this.ContextObject = ContextObject;
-            this.GeoCity = GeoCity;
-            this.GeoState = GeoState;
-            this.GeoCountry = GeoCountry;
-            this.GeoContinent = GeoContinent;
-            this.GeoZipCode = GeoZipCode;
-            this.GeoConnectionType = GeoConnectionType;
-            this.GeoTimeZone = GeoTimeZone;
-            this.GeoIpRoutingType = GeoIpRoutingType;
-            this.GeoIspSecondLevel = GeoIspSecondLevel;
-            this.GeoIspTopLevel = GeoIspTopLevel;
-            this.ShopperAge = ShopperAge;
-            this.ShopperGender = ShopperGender;
-            this.Language = Language;
-            this.ShopperSearchedPhraseInStore = ShopperSearchedPhraseInStore;
-            this.ShopperSearchedPhraseOnInternet = ShopperSearchedPhraseOnInternet;
-            this.CurrentUrl = CurrentUrl;
-            this.ReferredUrl = ReferredUrl;
-            
-        }
-
         /// <summary>
         /// Gets or Sets StoreId
         /// </summary>
@@ -205,7 +149,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="referredUrl", EmitDefaultValue=false)]
         public string ReferredUrl { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -236,7 +179,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  ShopperSearchedPhraseOnInternet: ").Append(ShopperSearchedPhraseOnInternet).Append("\n");
             sb.Append("  CurrentUrl: ").Append(CurrentUrl).Append("\n");
             sb.Append("  ReferredUrl: ").Append(ReferredUrl).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -396,78 +338,76 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.StoreId != null)
                     hash = hash * 59 + this.StoreId.GetHashCode();
-                
+
                 if (this.PlaceName != null)
                     hash = hash * 59 + this.PlaceName.GetHashCode();
-                
+
                 if (this.Tags != null)
                     hash = hash * 59 + this.Tags.GetHashCode();
-                
+
                 if (this.ToDate != null)
                     hash = hash * 59 + this.ToDate.GetHashCode();
-                
+
                 if (this.ContextObject != null)
                     hash = hash * 59 + this.ContextObject.GetHashCode();
-                
+
                 if (this.GeoCity != null)
                     hash = hash * 59 + this.GeoCity.GetHashCode();
-                
+
                 if (this.GeoState != null)
                     hash = hash * 59 + this.GeoState.GetHashCode();
-                
+
                 if (this.GeoCountry != null)
                     hash = hash * 59 + this.GeoCountry.GetHashCode();
-                
+
                 if (this.GeoContinent != null)
                     hash = hash * 59 + this.GeoContinent.GetHashCode();
-                
+
                 if (this.GeoZipCode != null)
                     hash = hash * 59 + this.GeoZipCode.GetHashCode();
-                
+
                 if (this.GeoConnectionType != null)
                     hash = hash * 59 + this.GeoConnectionType.GetHashCode();
-                
+
                 if (this.GeoTimeZone != null)
                     hash = hash * 59 + this.GeoTimeZone.GetHashCode();
-                
+
                 if (this.GeoIpRoutingType != null)
                     hash = hash * 59 + this.GeoIpRoutingType.GetHashCode();
-                
+
                 if (this.GeoIspSecondLevel != null)
                     hash = hash * 59 + this.GeoIspSecondLevel.GetHashCode();
-                
+
                 if (this.GeoIspTopLevel != null)
                     hash = hash * 59 + this.GeoIspTopLevel.GetHashCode();
-                
+
                 if (this.ShopperAge != null)
                     hash = hash * 59 + this.ShopperAge.GetHashCode();
-                
+
                 if (this.ShopperGender != null)
                     hash = hash * 59 + this.ShopperGender.GetHashCode();
-                
+
                 if (this.Language != null)
                     hash = hash * 59 + this.Language.GetHashCode();
-                
+
                 if (this.ShopperSearchedPhraseInStore != null)
                     hash = hash * 59 + this.ShopperSearchedPhraseInStore.GetHashCode();
-                
+
                 if (this.ShopperSearchedPhraseOnInternet != null)
                     hash = hash * 59 + this.ShopperSearchedPhraseOnInternet.GetHashCode();
-                
+
                 if (this.CurrentUrl != null)
                     hash = hash * 59 + this.CurrentUrl.GetHashCode();
-                
+
                 if (this.ReferredUrl != null)
                     hash = hash * 59 + this.ReferredUrl.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,30 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommercePlatformCorePushNotificationsPushNotificationSearchCriteria :  IEquatable<VirtoCommercePlatformCorePushNotificationsPushNotificationSearchCriteria>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCorePushNotificationsPushNotificationSearchCriteria" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCorePushNotificationsPushNotificationSearchCriteria" />class.
-        /// </summary>
-        /// <param name="Ids">Ids.</param>
-        /// <param name="OnlyNew">OnlyNew.</param>
-        /// <param name="StartDate">StartDate.</param>
-        /// <param name="EndDate">EndDate.</param>
-        /// <param name="Start">Start.</param>
-        /// <param name="Count">Count.</param>
-        /// <param name="OrderBy">OrderBy.</param>
-
-        public VirtoCommercePlatformCorePushNotificationsPushNotificationSearchCriteria(List<string> Ids = null, bool? OnlyNew = null, DateTime? StartDate = null, DateTime? EndDate = null, int? Start = null, int? Count = null, string OrderBy = null)
-        {
-            this.Ids = Ids;
-            this.OnlyNew = OnlyNew;
-            this.StartDate = StartDate;
-            this.EndDate = EndDate;
-            this.Start = Start;
-            this.Count = Count;
-            this.OrderBy = OrderBy;
-            
-        }
-
         /// <summary>
         /// Gets or Sets Ids
         /// </summary>
@@ -85,7 +59,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="orderBy", EmitDefaultValue=false)]
         public string OrderBy { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -101,7 +74,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Start: ").Append(Start).Append("\n");
             sb.Append("  Count: ").Append(Count).Append("\n");
             sb.Append("  OrderBy: ").Append(OrderBy).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -186,33 +158,31 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Ids != null)
                     hash = hash * 59 + this.Ids.GetHashCode();
-                
+
                 if (this.OnlyNew != null)
                     hash = hash * 59 + this.OnlyNew.GetHashCode();
-                
+
                 if (this.StartDate != null)
                     hash = hash * 59 + this.StartDate.GetHashCode();
-                
+
                 if (this.EndDate != null)
                     hash = hash * 59 + this.EndDate.GetHashCode();
-                
+
                 if (this.Start != null)
                     hash = hash * 59 + this.Start.GetHashCode();
-                
+
                 if (this.Count != null)
                     hash = hash * 59 + this.Count.GetHashCode();
-                
+
                 if (this.OrderBy != null)
                     hash = hash * 59 + this.OrderBy.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

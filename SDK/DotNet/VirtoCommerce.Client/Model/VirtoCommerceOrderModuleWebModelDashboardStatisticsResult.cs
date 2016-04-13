@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,38 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceOrderModuleWebModelDashboardStatisticsResult :  IEquatable<VirtoCommerceOrderModuleWebModelDashboardStatisticsResult>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceOrderModuleWebModelDashboardStatisticsResult" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceOrderModuleWebModelDashboardStatisticsResult" />class.
-        /// </summary>
-        /// <param name="StartDate">StartDate.</param>
-        /// <param name="EndDate">EndDate.</param>
-        /// <param name="Revenue">Revenue.</param>
-        /// <param name="RevenuePeriodDetails">RevenuePeriodDetails.</param>
-        /// <param name="OrderCount">OrderCount.</param>
-        /// <param name="CustomersCount">CustomersCount.</param>
-        /// <param name="RevenuePerCustomer">RevenuePerCustomer.</param>
-        /// <param name="AvgOrderValue">AvgOrderValue.</param>
-        /// <param name="AvgOrderValuePeriodDetails">AvgOrderValuePeriodDetails.</param>
-        /// <param name="ItemsPurchased">ItemsPurchased.</param>
-        /// <param name="LineitemsPerOrder">LineitemsPerOrder.</param>
-
-        public VirtoCommerceOrderModuleWebModelDashboardStatisticsResult(DateTime? StartDate = null, DateTime? EndDate = null, List<VirtoCommerceOrderModuleWebModelMoney> Revenue = null, List<VirtoCommerceOrderModuleWebModelQuarterPeriodMoney> RevenuePeriodDetails = null, int? OrderCount = null, int? CustomersCount = null, List<VirtoCommerceOrderModuleWebModelMoney> RevenuePerCustomer = null, List<VirtoCommerceOrderModuleWebModelMoney> AvgOrderValue = null, List<VirtoCommerceOrderModuleWebModelQuarterPeriodMoney> AvgOrderValuePeriodDetails = null, int? ItemsPurchased = null, double? LineitemsPerOrder = null)
-        {
-            this.StartDate = StartDate;
-            this.EndDate = EndDate;
-            this.Revenue = Revenue;
-            this.RevenuePeriodDetails = RevenuePeriodDetails;
-            this.OrderCount = OrderCount;
-            this.CustomersCount = CustomersCount;
-            this.RevenuePerCustomer = RevenuePerCustomer;
-            this.AvgOrderValue = AvgOrderValue;
-            this.AvgOrderValuePeriodDetails = AvgOrderValuePeriodDetails;
-            this.ItemsPurchased = ItemsPurchased;
-            this.LineitemsPerOrder = LineitemsPerOrder;
-            
-        }
-
         /// <summary>
         /// Gets or Sets StartDate
         /// </summary>
@@ -117,7 +83,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="lineitemsPerOrder", EmitDefaultValue=false)]
         public double? LineitemsPerOrder { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -137,7 +102,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  AvgOrderValuePeriodDetails: ").Append(AvgOrderValuePeriodDetails).Append("\n");
             sb.Append("  ItemsPurchased: ").Append(ItemsPurchased).Append("\n");
             sb.Append("  LineitemsPerOrder: ").Append(LineitemsPerOrder).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -242,45 +206,43 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.StartDate != null)
                     hash = hash * 59 + this.StartDate.GetHashCode();
-                
+
                 if (this.EndDate != null)
                     hash = hash * 59 + this.EndDate.GetHashCode();
-                
+
                 if (this.Revenue != null)
                     hash = hash * 59 + this.Revenue.GetHashCode();
-                
+
                 if (this.RevenuePeriodDetails != null)
                     hash = hash * 59 + this.RevenuePeriodDetails.GetHashCode();
-                
+
                 if (this.OrderCount != null)
                     hash = hash * 59 + this.OrderCount.GetHashCode();
-                
+
                 if (this.CustomersCount != null)
                     hash = hash * 59 + this.CustomersCount.GetHashCode();
-                
+
                 if (this.RevenuePerCustomer != null)
                     hash = hash * 59 + this.RevenuePerCustomer.GetHashCode();
-                
+
                 if (this.AvgOrderValue != null)
                     hash = hash * 59 + this.AvgOrderValue.GetHashCode();
-                
+
                 if (this.AvgOrderValuePeriodDetails != null)
                     hash = hash * 59 + this.AvgOrderValuePeriodDetails.GetHashCode();
-                
+
                 if (this.ItemsPurchased != null)
                     hash = hash * 59 + this.ItemsPurchased.GetHashCode();
-                
+
                 if (this.LineitemsPerOrder != null)
                     hash = hash * 59 + this.LineitemsPerOrder.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

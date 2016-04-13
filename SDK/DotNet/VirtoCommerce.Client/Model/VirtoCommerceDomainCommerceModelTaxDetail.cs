@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,22 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceDomainCommerceModelTaxDetail :  IEquatable<VirtoCommerceDomainCommerceModelTaxDetail>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCommerceModelTaxDetail" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCommerceModelTaxDetail" />class.
-        /// </summary>
-        /// <param name="Rate">Rate.</param>
-        /// <param name="Amount">Amount.</param>
-        /// <param name="Name">Name.</param>
-
-        public VirtoCommerceDomainCommerceModelTaxDetail(double? Rate = null, double? Amount = null, string Name = null)
-        {
-            this.Rate = Rate;
-            this.Amount = Amount;
-            this.Name = Name;
-            
-        }
-
         /// <summary>
         /// Gets or Sets Rate
         /// </summary>
@@ -53,7 +35,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -65,7 +46,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Rate: ").Append(Rate).Append("\n");
             sb.Append("  Amount: ").Append(Amount).Append("\n");
             sb.Append("  Name: ").Append(Name).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -130,21 +110,19 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Rate != null)
                     hash = hash * 59 + this.Rate.GetHashCode();
-                
+
                 if (this.Amount != null)
                     hash = hash * 59 + this.Amount.GetHashCode();
-                
+
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

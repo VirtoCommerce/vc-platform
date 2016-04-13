@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,30 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceCatalogModuleWebExportImportCsvProductPropertyMap :  IEquatable<VirtoCommerceCatalogModuleWebExportImportCsvProductPropertyMap>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebExportImportCsvProductPropertyMap" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebExportImportCsvProductPropertyMap" />class.
-        /// </summary>
-        /// <param name="EntityColumnName">EntityColumnName.</param>
-        /// <param name="CsvColumnName">CsvColumnName.</param>
-        /// <param name="IsSystemProperty">IsSystemProperty.</param>
-        /// <param name="IsRequired">IsRequired.</param>
-        /// <param name="CustomValue">CustomValue.</param>
-        /// <param name="StringFormat">StringFormat.</param>
-        /// <param name="Locale">Locale.</param>
-
-        public VirtoCommerceCatalogModuleWebExportImportCsvProductPropertyMap(string EntityColumnName = null, string CsvColumnName = null, bool? IsSystemProperty = null, bool? IsRequired = null, string CustomValue = null, string StringFormat = null, string Locale = null)
-        {
-            this.EntityColumnName = EntityColumnName;
-            this.CsvColumnName = CsvColumnName;
-            this.IsSystemProperty = IsSystemProperty;
-            this.IsRequired = IsRequired;
-            this.CustomValue = CustomValue;
-            this.StringFormat = StringFormat;
-            this.Locale = Locale;
-            
-        }
-
         /// <summary>
         /// Gets or Sets EntityColumnName
         /// </summary>
@@ -85,7 +59,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="locale", EmitDefaultValue=false)]
         public string Locale { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -101,7 +74,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  CustomValue: ").Append(CustomValue).Append("\n");
             sb.Append("  StringFormat: ").Append(StringFormat).Append("\n");
             sb.Append("  Locale: ").Append(Locale).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -186,33 +158,31 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.EntityColumnName != null)
                     hash = hash * 59 + this.EntityColumnName.GetHashCode();
-                
+
                 if (this.CsvColumnName != null)
                     hash = hash * 59 + this.CsvColumnName.GetHashCode();
-                
+
                 if (this.IsSystemProperty != null)
                     hash = hash * 59 + this.IsSystemProperty.GetHashCode();
-                
+
                 if (this.IsRequired != null)
                     hash = hash * 59 + this.IsRequired.GetHashCode();
-                
+
                 if (this.CustomValue != null)
                     hash = hash * 59 + this.CustomValue.GetHashCode();
-                
+
                 if (this.StringFormat != null)
                     hash = hash * 59 + this.StringFormat.GetHashCode();
-                
+
                 if (this.Locale != null)
                     hash = hash * 59 + this.Locale.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,20 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceCatalogModuleWebModelAggregationLabel :  IEquatable<VirtoCommerceCatalogModuleWebModelAggregationLabel>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelAggregationLabel" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelAggregationLabel" />class.
-        /// </summary>
-        /// <param name="Language">Language.</param>
-        /// <param name="Label">Label.</param>
-
-        public VirtoCommerceCatalogModuleWebModelAggregationLabel(string Language = null, string Label = null)
-        {
-            this.Language = Language;
-            this.Label = Label;
-            
-        }
-
         /// <summary>
         /// Gets or Sets Language
         /// </summary>
@@ -45,7 +29,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="label", EmitDefaultValue=false)]
         public string Label { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -56,7 +39,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("class VirtoCommerceCatalogModuleWebModelAggregationLabel {\n");
             sb.Append("  Language: ").Append(Language).Append("\n");
             sb.Append("  Label: ").Append(Label).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -116,18 +98,16 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Language != null)
                     hash = hash * 59 + this.Language.GetHashCode();
-                
+
                 if (this.Label != null)
                     hash = hash * 59 + this.Label.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

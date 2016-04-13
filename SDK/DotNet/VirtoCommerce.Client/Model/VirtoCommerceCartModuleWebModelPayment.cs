@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,28 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceCartModuleWebModelPayment :  IEquatable<VirtoCommerceCartModuleWebModelPayment>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceCartModuleWebModelPayment" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceCartModuleWebModelPayment" />class.
-        /// </summary>
-        /// <param name="OuterId">Gets or sets the value of payment outer id.</param>
-        /// <param name="PaymentGatewayCode">Gets or sets the value of payment gateway code.</param>
-        /// <param name="Currency">Gets or sets the value of payment currency.</param>
-        /// <param name="Amount">Gets or sets the value of payment amount.</param>
-        /// <param name="BillingAddress">Gets or sets the billing address.</param>
-        /// <param name="Id">Id.</param>
-
-        public VirtoCommerceCartModuleWebModelPayment(string OuterId = null, string PaymentGatewayCode = null, string Currency = null, double? Amount = null, VirtoCommerceCartModuleWebModelAddress BillingAddress = null, string Id = null)
-        {
-            this.OuterId = OuterId;
-            this.PaymentGatewayCode = PaymentGatewayCode;
-            this.Currency = Currency;
-            this.Amount = Amount;
-            this.BillingAddress = BillingAddress;
-            this.Id = Id;
-            
-        }
-
         /// <summary>
         /// Gets or sets the value of payment outer id
         /// </summary>
@@ -82,7 +58,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -97,7 +72,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Amount: ").Append(Amount).Append("\n");
             sb.Append("  BillingAddress: ").Append(BillingAddress).Append("\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -177,30 +151,28 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.OuterId != null)
                     hash = hash * 59 + this.OuterId.GetHashCode();
-                
+
                 if (this.PaymentGatewayCode != null)
                     hash = hash * 59 + this.PaymentGatewayCode.GetHashCode();
-                
+
                 if (this.Currency != null)
                     hash = hash * 59 + this.Currency.GetHashCode();
-                
+
                 if (this.Amount != null)
                     hash = hash * 59 + this.Amount.GetHashCode();
-                
+
                 if (this.BillingAddress != null)
                     hash = hash * 59 + this.BillingAddress.GetHashCode();
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

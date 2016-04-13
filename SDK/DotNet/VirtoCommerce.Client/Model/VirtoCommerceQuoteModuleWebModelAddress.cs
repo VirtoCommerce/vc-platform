@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,48 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceQuoteModuleWebModelAddress :  IEquatable<VirtoCommerceQuoteModuleWebModelAddress>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceQuoteModuleWebModelAddress" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceQuoteModuleWebModelAddress" />class.
-        /// </summary>
-        /// <param name="AddressType">AddressType.</param>
-        /// <param name="Organization">Organization.</param>
-        /// <param name="CountryCode">CountryCode.</param>
-        /// <param name="CountryName">CountryName.</param>
-        /// <param name="City">City.</param>
-        /// <param name="PostalCode">PostalCode.</param>
-        /// <param name="Zip">Zip.</param>
-        /// <param name="Line1">Line1.</param>
-        /// <param name="Line2">Line2.</param>
-        /// <param name="RegionId">RegionId.</param>
-        /// <param name="RegionName">RegionName.</param>
-        /// <param name="FirstName">FirstName.</param>
-        /// <param name="MiddleName">MiddleName.</param>
-        /// <param name="LastName">LastName.</param>
-        /// <param name="Phone">Phone.</param>
-        /// <param name="Email">Email.</param>
-
-        public VirtoCommerceQuoteModuleWebModelAddress(string AddressType = null, string Organization = null, string CountryCode = null, string CountryName = null, string City = null, string PostalCode = null, string Zip = null, string Line1 = null, string Line2 = null, string RegionId = null, string RegionName = null, string FirstName = null, string MiddleName = null, string LastName = null, string Phone = null, string Email = null)
-        {
-            this.AddressType = AddressType;
-            this.Organization = Organization;
-            this.CountryCode = CountryCode;
-            this.CountryName = CountryName;
-            this.City = City;
-            this.PostalCode = PostalCode;
-            this.Zip = Zip;
-            this.Line1 = Line1;
-            this.Line2 = Line2;
-            this.RegionId = RegionId;
-            this.RegionName = RegionName;
-            this.FirstName = FirstName;
-            this.MiddleName = MiddleName;
-            this.LastName = LastName;
-            this.Phone = Phone;
-            this.Email = Email;
-            
-        }
-
         /// <summary>
         /// Gets or Sets AddressType
         /// </summary>
@@ -157,7 +113,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="email", EmitDefaultValue=false)]
         public string Email { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -182,7 +137,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  LastName: ").Append(LastName).Append("\n");
             sb.Append("  Phone: ").Append(Phone).Append("\n");
             sb.Append("  Email: ").Append(Email).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -312,60 +266,58 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.AddressType != null)
                     hash = hash * 59 + this.AddressType.GetHashCode();
-                
+
                 if (this.Organization != null)
                     hash = hash * 59 + this.Organization.GetHashCode();
-                
+
                 if (this.CountryCode != null)
                     hash = hash * 59 + this.CountryCode.GetHashCode();
-                
+
                 if (this.CountryName != null)
                     hash = hash * 59 + this.CountryName.GetHashCode();
-                
+
                 if (this.City != null)
                     hash = hash * 59 + this.City.GetHashCode();
-                
+
                 if (this.PostalCode != null)
                     hash = hash * 59 + this.PostalCode.GetHashCode();
-                
+
                 if (this.Zip != null)
                     hash = hash * 59 + this.Zip.GetHashCode();
-                
+
                 if (this.Line1 != null)
                     hash = hash * 59 + this.Line1.GetHashCode();
-                
+
                 if (this.Line2 != null)
                     hash = hash * 59 + this.Line2.GetHashCode();
-                
+
                 if (this.RegionId != null)
                     hash = hash * 59 + this.RegionId.GetHashCode();
-                
+
                 if (this.RegionName != null)
                     hash = hash * 59 + this.RegionName.GetHashCode();
-                
+
                 if (this.FirstName != null)
                     hash = hash * 59 + this.FirstName.GetHashCode();
-                
+
                 if (this.MiddleName != null)
                     hash = hash * 59 + this.MiddleName.GetHashCode();
-                
+
                 if (this.LastName != null)
                     hash = hash * 59 + this.LastName.GetHashCode();
-                
+
                 if (this.Phone != null)
                     hash = hash * 59 + this.Phone.GetHashCode();
-                
+
                 if (this.Email != null)
                     hash = hash * 59 + this.Email.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

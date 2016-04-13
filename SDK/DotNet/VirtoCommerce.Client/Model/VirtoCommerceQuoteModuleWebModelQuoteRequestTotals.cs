@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,32 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceQuoteModuleWebModelQuoteRequestTotals :  IEquatable<VirtoCommerceQuoteModuleWebModelQuoteRequestTotals>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceQuoteModuleWebModelQuoteRequestTotals" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceQuoteModuleWebModelQuoteRequestTotals" />class.
-        /// </summary>
-        /// <param name="OriginalSubTotalExlTax">Original subtotal tier quantity * sale price.</param>
-        /// <param name="SubTotalExlTax">Items proposal tier quantity * proposal price.</param>
-        /// <param name="ShippingTotal">ShippingTotal.</param>
-        /// <param name="DiscountTotal">DiscountTotal.</param>
-        /// <param name="TaxTotal">TaxTotal.</param>
-        /// <param name="AdjustmentQuoteExlTax">Adjustment SubTotalOriginalExlTax -  SubTotalExlTax.</param>
-        /// <param name="GrandTotalExlTax">Grand total SubTotalExlTax + shipping - discount.</param>
-        /// <param name="GrandTotalInclTax">Grand total subtotal + shipping - discount + tax.</param>
-
-        public VirtoCommerceQuoteModuleWebModelQuoteRequestTotals(double? OriginalSubTotalExlTax = null, double? SubTotalExlTax = null, double? ShippingTotal = null, double? DiscountTotal = null, double? TaxTotal = null, double? AdjustmentQuoteExlTax = null, double? GrandTotalExlTax = null, double? GrandTotalInclTax = null)
-        {
-            this.OriginalSubTotalExlTax = OriginalSubTotalExlTax;
-            this.SubTotalExlTax = SubTotalExlTax;
-            this.ShippingTotal = ShippingTotal;
-            this.DiscountTotal = DiscountTotal;
-            this.TaxTotal = TaxTotal;
-            this.AdjustmentQuoteExlTax = AdjustmentQuoteExlTax;
-            this.GrandTotalExlTax = GrandTotalExlTax;
-            this.GrandTotalInclTax = GrandTotalInclTax;
-            
-        }
-
         /// <summary>
         /// Original subtotal tier quantity * sale price
         /// </summary>
@@ -98,7 +70,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="grandTotalInclTax", EmitDefaultValue=false)]
         public double? GrandTotalInclTax { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -115,7 +86,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  AdjustmentQuoteExlTax: ").Append(AdjustmentQuoteExlTax).Append("\n");
             sb.Append("  GrandTotalExlTax: ").Append(GrandTotalExlTax).Append("\n");
             sb.Append("  GrandTotalInclTax: ").Append(GrandTotalInclTax).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -205,36 +175,34 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.OriginalSubTotalExlTax != null)
                     hash = hash * 59 + this.OriginalSubTotalExlTax.GetHashCode();
-                
+
                 if (this.SubTotalExlTax != null)
                     hash = hash * 59 + this.SubTotalExlTax.GetHashCode();
-                
+
                 if (this.ShippingTotal != null)
                     hash = hash * 59 + this.ShippingTotal.GetHashCode();
-                
+
                 if (this.DiscountTotal != null)
                     hash = hash * 59 + this.DiscountTotal.GetHashCode();
-                
+
                 if (this.TaxTotal != null)
                     hash = hash * 59 + this.TaxTotal.GetHashCode();
-                
+
                 if (this.AdjustmentQuoteExlTax != null)
                     hash = hash * 59 + this.AdjustmentQuoteExlTax.GetHashCode();
-                
+
                 if (this.GrandTotalExlTax != null)
                     hash = hash * 59 + this.GrandTotalExlTax.GetHashCode();
-                
+
                 if (this.GrandTotalInclTax != null)
                     hash = hash * 59 + this.GrandTotalInclTax.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

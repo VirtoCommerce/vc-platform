@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,24 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceContentWebModelsContentStatistic :  IEquatable<VirtoCommerceContentWebModelsContentStatistic>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceContentWebModelsContentStatistic" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceContentWebModelsContentStatistic" />class.
-        /// </summary>
-        /// <param name="ActiveThemeName">ActiveThemeName.</param>
-        /// <param name="ThemesCount">ThemesCount.</param>
-        /// <param name="PagesCount">PagesCount.</param>
-        /// <param name="BlogsCount">BlogsCount.</param>
-
-        public VirtoCommerceContentWebModelsContentStatistic(string ActiveThemeName = null, int? ThemesCount = null, int? PagesCount = null, int? BlogsCount = null)
-        {
-            this.ActiveThemeName = ActiveThemeName;
-            this.ThemesCount = ThemesCount;
-            this.PagesCount = PagesCount;
-            this.BlogsCount = BlogsCount;
-            
-        }
-
         /// <summary>
         /// Gets or Sets ActiveThemeName
         /// </summary>
@@ -61,7 +41,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="blogsCount", EmitDefaultValue=false)]
         public int? BlogsCount { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -74,7 +53,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  ThemesCount: ").Append(ThemesCount).Append("\n");
             sb.Append("  PagesCount: ").Append(PagesCount).Append("\n");
             sb.Append("  BlogsCount: ").Append(BlogsCount).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -144,24 +122,22 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.ActiveThemeName != null)
                     hash = hash * 59 + this.ActiveThemeName.GetHashCode();
-                
+
                 if (this.ThemesCount != null)
                     hash = hash * 59 + this.ThemesCount.GetHashCode();
-                
+
                 if (this.PagesCount != null)
                     hash = hash * 59 + this.PagesCount.GetHashCode();
-                
+
                 if (this.BlogsCount != null)
                     hash = hash * 59 + this.BlogsCount.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

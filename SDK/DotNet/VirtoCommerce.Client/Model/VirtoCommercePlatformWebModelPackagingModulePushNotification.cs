@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,38 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommercePlatformWebModelPackagingModulePushNotification :  IEquatable<VirtoCommercePlatformWebModelPackagingModulePushNotification>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelPackagingModulePushNotification" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelPackagingModulePushNotification" />class.
-        /// </summary>
-        /// <param name="ProgressLog">ProgressLog.</param>
-        /// <param name="Started">Started.</param>
-        /// <param name="Finished">Finished.</param>
-        /// <param name="Id">Id.</param>
-        /// <param name="Creator">Creator.</param>
-        /// <param name="Created">Created.</param>
-        /// <param name="IsNew">IsNew.</param>
-        /// <param name="NotifyType">NotifyType.</param>
-        /// <param name="Description">Description.</param>
-        /// <param name="Title">Title.</param>
-        /// <param name="RepeatCount">RepeatCount.</param>
-
-        public VirtoCommercePlatformWebModelPackagingModulePushNotification(List<VirtoCommercePlatformWebModelPackagingProgressMessage> ProgressLog = null, DateTime? Started = null, DateTime? Finished = null, string Id = null, string Creator = null, DateTime? Created = null, bool? IsNew = null, string NotifyType = null, string Description = null, string Title = null, int? RepeatCount = null)
-        {
-            this.ProgressLog = ProgressLog;
-            this.Started = Started;
-            this.Finished = Finished;
-            this.Id = Id;
-            this.Creator = Creator;
-            this.Created = Created;
-            this.IsNew = IsNew;
-            this.NotifyType = NotifyType;
-            this.Description = Description;
-            this.Title = Title;
-            this.RepeatCount = RepeatCount;
-            
-        }
-
         /// <summary>
         /// Gets or Sets ProgressLog
         /// </summary>
@@ -117,7 +83,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="repeatCount", EmitDefaultValue=false)]
         public int? RepeatCount { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -137,7 +102,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Description: ").Append(Description).Append("\n");
             sb.Append("  Title: ").Append(Title).Append("\n");
             sb.Append("  RepeatCount: ").Append(RepeatCount).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -242,45 +206,43 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.ProgressLog != null)
                     hash = hash * 59 + this.ProgressLog.GetHashCode();
-                
+
                 if (this.Started != null)
                     hash = hash * 59 + this.Started.GetHashCode();
-                
+
                 if (this.Finished != null)
                     hash = hash * 59 + this.Finished.GetHashCode();
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 if (this.Creator != null)
                     hash = hash * 59 + this.Creator.GetHashCode();
-                
+
                 if (this.Created != null)
                     hash = hash * 59 + this.Created.GetHashCode();
-                
+
                 if (this.IsNew != null)
                     hash = hash * 59 + this.IsNew.GetHashCode();
-                
+
                 if (this.NotifyType != null)
                     hash = hash * 59 + this.NotifyType.GetHashCode();
-                
+
                 if (this.Description != null)
                     hash = hash * 59 + this.Description.GetHashCode();
-                
+
                 if (this.Title != null)
                     hash = hash * 59 + this.Title.GetHashCode();
-                
+
                 if (this.RepeatCount != null)
                     hash = hash * 59 + this.RepeatCount.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

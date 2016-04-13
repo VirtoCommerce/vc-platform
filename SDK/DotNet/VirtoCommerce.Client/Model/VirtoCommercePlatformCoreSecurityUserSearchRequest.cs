@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,26 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommercePlatformCoreSecurityUserSearchRequest :  IEquatable<VirtoCommercePlatformCoreSecurityUserSearchRequest>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreSecurityUserSearchRequest" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreSecurityUserSearchRequest" />class.
-        /// </summary>
-        /// <param name="AccountTypes">AccountTypes.</param>
-        /// <param name="Keyword">Keyword.</param>
-        /// <param name="MemberId">MemberId.</param>
-        /// <param name="SkipCount">SkipCount.</param>
-        /// <param name="TakeCount">TakeCount.</param>
-
-        public VirtoCommercePlatformCoreSecurityUserSearchRequest(List<string> AccountTypes = null, string Keyword = null, string MemberId = null, int? SkipCount = null, int? TakeCount = null)
-        {
-            this.AccountTypes = AccountTypes;
-            this.Keyword = Keyword;
-            this.MemberId = MemberId;
-            this.SkipCount = SkipCount;
-            this.TakeCount = TakeCount;
-            
-        }
-
         /// <summary>
         /// Gets or Sets AccountTypes
         /// </summary>
@@ -69,7 +47,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="takeCount", EmitDefaultValue=false)]
         public int? TakeCount { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -83,7 +60,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  MemberId: ").Append(MemberId).Append("\n");
             sb.Append("  SkipCount: ").Append(SkipCount).Append("\n");
             sb.Append("  TakeCount: ").Append(TakeCount).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -158,27 +134,25 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.AccountTypes != null)
                     hash = hash * 59 + this.AccountTypes.GetHashCode();
-                
+
                 if (this.Keyword != null)
                     hash = hash * 59 + this.Keyword.GetHashCode();
-                
+
                 if (this.MemberId != null)
                     hash = hash * 59 + this.MemberId.GetHashCode();
-                
+
                 if (this.SkipCount != null)
                     hash = hash * 59 + this.SkipCount.GetHashCode();
-                
+
                 if (this.TakeCount != null)
                     hash = hash * 59 + this.TakeCount.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

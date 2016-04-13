@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,56 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceDomainCatalogModelProperty :  IEquatable<VirtoCommerceDomainCatalogModelProperty>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCatalogModelProperty" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCatalogModelProperty" />class.
-        /// </summary>
-        /// <param name="CatalogId">CatalogId.</param>
-        /// <param name="Catalog">Catalog.</param>
-        /// <param name="CategoryId">CategoryId.</param>
-        /// <param name="Category">Category.</param>
-        /// <param name="Name">Name.</param>
-        /// <param name="Required">Required.</param>
-        /// <param name="Dictionary">Dictionary.</param>
-        /// <param name="Multivalue">Multivalue.</param>
-        /// <param name="Multilanguage">Multilanguage.</param>
-        /// <param name="ValueType">ValueType.</param>
-        /// <param name="Type">Type.</param>
-        /// <param name="Attributes">Attributes.</param>
-        /// <param name="DictionaryValues">DictionaryValues.</param>
-        /// <param name="DisplayNames">DisplayNames.</param>
-        /// <param name="IsInherited">IsInherited.</param>
-        /// <param name="CreatedDate">CreatedDate.</param>
-        /// <param name="ModifiedDate">ModifiedDate.</param>
-        /// <param name="CreatedBy">CreatedBy.</param>
-        /// <param name="ModifiedBy">ModifiedBy.</param>
-        /// <param name="Id">Id.</param>
-
-        public VirtoCommerceDomainCatalogModelProperty(string CatalogId = null, VirtoCommerceDomainCatalogModelCatalog Catalog = null, string CategoryId = null, VirtoCommerceDomainCatalogModelCategory Category = null, string Name = null, bool? Required = null, bool? Dictionary = null, bool? Multivalue = null, bool? Multilanguage = null, string ValueType = null, string Type = null, List<VirtoCommerceDomainCatalogModelPropertyAttribute> Attributes = null, List<VirtoCommerceDomainCatalogModelPropertyDictionaryValue> DictionaryValues = null, List<VirtoCommerceDomainCatalogModelPropertyDisplayName> DisplayNames = null, bool? IsInherited = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
-        {
-            this.CatalogId = CatalogId;
-            this.Catalog = Catalog;
-            this.CategoryId = CategoryId;
-            this.Category = Category;
-            this.Name = Name;
-            this.Required = Required;
-            this.Dictionary = Dictionary;
-            this.Multivalue = Multivalue;
-            this.Multilanguage = Multilanguage;
-            this.ValueType = ValueType;
-            this.Type = Type;
-            this.Attributes = Attributes;
-            this.DictionaryValues = DictionaryValues;
-            this.DisplayNames = DisplayNames;
-            this.IsInherited = IsInherited;
-            this.CreatedDate = CreatedDate;
-            this.ModifiedDate = ModifiedDate;
-            this.CreatedBy = CreatedBy;
-            this.ModifiedBy = ModifiedBy;
-            this.Id = Id;
-            
-        }
-
         /// <summary>
         /// Gets or Sets CatalogId
         /// </summary>
@@ -189,7 +137,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -218,7 +165,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  CreatedBy: ").Append(CreatedBy).Append("\n");
             sb.Append("  ModifiedBy: ").Append(ModifiedBy).Append("\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -368,72 +314,70 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.CatalogId != null)
                     hash = hash * 59 + this.CatalogId.GetHashCode();
-                
+
                 if (this.Catalog != null)
                     hash = hash * 59 + this.Catalog.GetHashCode();
-                
+
                 if (this.CategoryId != null)
                     hash = hash * 59 + this.CategoryId.GetHashCode();
-                
+
                 if (this.Category != null)
                     hash = hash * 59 + this.Category.GetHashCode();
-                
+
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
-                
+
                 if (this.Required != null)
                     hash = hash * 59 + this.Required.GetHashCode();
-                
+
                 if (this.Dictionary != null)
                     hash = hash * 59 + this.Dictionary.GetHashCode();
-                
+
                 if (this.Multivalue != null)
                     hash = hash * 59 + this.Multivalue.GetHashCode();
-                
+
                 if (this.Multilanguage != null)
                     hash = hash * 59 + this.Multilanguage.GetHashCode();
-                
+
                 if (this.ValueType != null)
                     hash = hash * 59 + this.ValueType.GetHashCode();
-                
+
                 if (this.Type != null)
                     hash = hash * 59 + this.Type.GetHashCode();
-                
+
                 if (this.Attributes != null)
                     hash = hash * 59 + this.Attributes.GetHashCode();
-                
+
                 if (this.DictionaryValues != null)
                     hash = hash * 59 + this.DictionaryValues.GetHashCode();
-                
+
                 if (this.DisplayNames != null)
                     hash = hash * 59 + this.DisplayNames.GetHashCode();
-                
+
                 if (this.IsInherited != null)
                     hash = hash * 59 + this.IsInherited.GetHashCode();
-                
+
                 if (this.CreatedDate != null)
                     hash = hash * 59 + this.CreatedDate.GetHashCode();
-                
+
                 if (this.ModifiedDate != null)
                     hash = hash * 59 + this.ModifiedDate.GetHashCode();
-                
+
                 if (this.CreatedBy != null)
                     hash = hash * 59 + this.CreatedBy.GetHashCode();
-                
+
                 if (this.ModifiedBy != null)
                     hash = hash * 59 + this.ModifiedBy.GetHashCode();
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

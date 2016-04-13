@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,72 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceCartModuleWebModelShipment :  IEquatable<VirtoCommerceCartModuleWebModelShipment>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceCartModuleWebModelShipment" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceCartModuleWebModelShipment" />class.
-        /// </summary>
-        /// <param name="ShipmentMethodCode">Gets or sets the value of shipping method code.</param>
-        /// <param name="ShipmentMethodOption">Gets or sets the value of shipping method option.</param>
-        /// <param name="FulfilmentCenterId">Gets or sets the value of fulfillment center id.</param>
-        /// <param name="DeliveryAddress">Gets or sets the delivery address.</param>
-        /// <param name="Currency">Gets or sets the value of shipping currency.</param>
-        /// <param name="VolumetricWeight">Gets or sets the value of volumetric weight.</param>
-        /// <param name="WeightUnit">Gets or sets the value of weight unit.</param>
-        /// <param name="Weight">Gets or sets the value of weight.</param>
-        /// <param name="MeasureUnit">Gets or sets the value of measurement units.</param>
-        /// <param name="Height">Gets or sets the value of height.</param>
-        /// <param name="Length">Gets or sets the value of length.</param>
-        /// <param name="Width">Gets or sets the value of width.</param>
-        /// <param name="TaxIncluded">Gets or sets the flag of shipping has tax.</param>
-        /// <param name="ShippingPrice">Gets or sets the value of shipping price.</param>
-        /// <param name="Total">Gets or sets the value of total shipping price.</param>
-        /// <param name="DiscountTotal">Gets or sets the value of total shipping discount amount.</param>
-        /// <param name="TaxTotal">Gets or sets the value of total shipping tax amount.</param>
-        /// <param name="ItemSubtotal">Gets or sets the value of shipping items subtotal.</param>
-        /// <param name="Subtotal">Gets or sets the value of shipping subtotal.</param>
-        /// <param name="Discounts">Gets or sets the collection of shipping discounts.</param>
-        /// <param name="Items">Gets or sets the collection of shipping items.</param>
-        /// <param name="TaxType">Gets or sets the value of shipping tax type.</param>
-        /// <param name="TaxDetails">Gets or sets the collection of line item tax detalization lines.</param>
-        /// <param name="CreatedDate">CreatedDate.</param>
-        /// <param name="ModifiedDate">ModifiedDate.</param>
-        /// <param name="CreatedBy">CreatedBy.</param>
-        /// <param name="ModifiedBy">ModifiedBy.</param>
-        /// <param name="Id">Id.</param>
-
-        public VirtoCommerceCartModuleWebModelShipment(string ShipmentMethodCode = null, string ShipmentMethodOption = null, string FulfilmentCenterId = null, VirtoCommerceCartModuleWebModelAddress DeliveryAddress = null, string Currency = null, double? VolumetricWeight = null, string WeightUnit = null, double? Weight = null, string MeasureUnit = null, double? Height = null, double? Length = null, double? Width = null, bool? TaxIncluded = null, double? ShippingPrice = null, double? Total = null, double? DiscountTotal = null, double? TaxTotal = null, double? ItemSubtotal = null, double? Subtotal = null, List<VirtoCommerceCartModuleWebModelDiscount> Discounts = null, List<VirtoCommerceCartModuleWebModelShipmentItem> Items = null, string TaxType = null, List<VirtoCommerceDomainCommerceModelTaxDetail> TaxDetails = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
-        {
-            this.ShipmentMethodCode = ShipmentMethodCode;
-            this.ShipmentMethodOption = ShipmentMethodOption;
-            this.FulfilmentCenterId = FulfilmentCenterId;
-            this.DeliveryAddress = DeliveryAddress;
-            this.Currency = Currency;
-            this.VolumetricWeight = VolumetricWeight;
-            this.WeightUnit = WeightUnit;
-            this.Weight = Weight;
-            this.MeasureUnit = MeasureUnit;
-            this.Height = Height;
-            this.Length = Length;
-            this.Width = Width;
-            this.TaxIncluded = TaxIncluded;
-            this.ShippingPrice = ShippingPrice;
-            this.Total = Total;
-            this.DiscountTotal = DiscountTotal;
-            this.TaxTotal = TaxTotal;
-            this.ItemSubtotal = ItemSubtotal;
-            this.Subtotal = Subtotal;
-            this.Discounts = Discounts;
-            this.Items = Items;
-            this.TaxType = TaxType;
-            this.TaxDetails = TaxDetails;
-            this.CreatedDate = CreatedDate;
-            this.ModifiedDate = ModifiedDate;
-            this.CreatedBy = CreatedBy;
-            this.ModifiedBy = ModifiedBy;
-            this.Id = Id;
-            
-        }
-
         /// <summary>
         /// Gets or sets the value of shipping method code
         /// </summary>
@@ -276,7 +208,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -313,7 +244,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  CreatedBy: ").Append(CreatedBy).Append("\n");
             sb.Append("  ModifiedBy: ").Append(ModifiedBy).Append("\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -503,96 +433,94 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.ShipmentMethodCode != null)
                     hash = hash * 59 + this.ShipmentMethodCode.GetHashCode();
-                
+
                 if (this.ShipmentMethodOption != null)
                     hash = hash * 59 + this.ShipmentMethodOption.GetHashCode();
-                
+
                 if (this.FulfilmentCenterId != null)
                     hash = hash * 59 + this.FulfilmentCenterId.GetHashCode();
-                
+
                 if (this.DeliveryAddress != null)
                     hash = hash * 59 + this.DeliveryAddress.GetHashCode();
-                
+
                 if (this.Currency != null)
                     hash = hash * 59 + this.Currency.GetHashCode();
-                
+
                 if (this.VolumetricWeight != null)
                     hash = hash * 59 + this.VolumetricWeight.GetHashCode();
-                
+
                 if (this.WeightUnit != null)
                     hash = hash * 59 + this.WeightUnit.GetHashCode();
-                
+
                 if (this.Weight != null)
                     hash = hash * 59 + this.Weight.GetHashCode();
-                
+
                 if (this.MeasureUnit != null)
                     hash = hash * 59 + this.MeasureUnit.GetHashCode();
-                
+
                 if (this.Height != null)
                     hash = hash * 59 + this.Height.GetHashCode();
-                
+
                 if (this.Length != null)
                     hash = hash * 59 + this.Length.GetHashCode();
-                
+
                 if (this.Width != null)
                     hash = hash * 59 + this.Width.GetHashCode();
-                
+
                 if (this.TaxIncluded != null)
                     hash = hash * 59 + this.TaxIncluded.GetHashCode();
-                
+
                 if (this.ShippingPrice != null)
                     hash = hash * 59 + this.ShippingPrice.GetHashCode();
-                
+
                 if (this.Total != null)
                     hash = hash * 59 + this.Total.GetHashCode();
-                
+
                 if (this.DiscountTotal != null)
                     hash = hash * 59 + this.DiscountTotal.GetHashCode();
-                
+
                 if (this.TaxTotal != null)
                     hash = hash * 59 + this.TaxTotal.GetHashCode();
-                
+
                 if (this.ItemSubtotal != null)
                     hash = hash * 59 + this.ItemSubtotal.GetHashCode();
-                
+
                 if (this.Subtotal != null)
                     hash = hash * 59 + this.Subtotal.GetHashCode();
-                
+
                 if (this.Discounts != null)
                     hash = hash * 59 + this.Discounts.GetHashCode();
-                
+
                 if (this.Items != null)
                     hash = hash * 59 + this.Items.GetHashCode();
-                
+
                 if (this.TaxType != null)
                     hash = hash * 59 + this.TaxType.GetHashCode();
-                
+
                 if (this.TaxDetails != null)
                     hash = hash * 59 + this.TaxDetails.GetHashCode();
-                
+
                 if (this.CreatedDate != null)
                     hash = hash * 59 + this.CreatedDate.GetHashCode();
-                
+
                 if (this.ModifiedDate != null)
                     hash = hash * 59 + this.ModifiedDate.GetHashCode();
-                
+
                 if (this.CreatedBy != null)
                     hash = hash * 59 + this.CreatedBy.GetHashCode();
-                
+
                 if (this.ModifiedBy != null)
                     hash = hash * 59 + this.ModifiedBy.GetHashCode();
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

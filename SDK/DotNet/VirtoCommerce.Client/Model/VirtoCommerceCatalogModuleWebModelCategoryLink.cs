@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,24 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceCatalogModuleWebModelCategoryLink :  IEquatable<VirtoCommerceCatalogModuleWebModelCategoryLink>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelCategoryLink" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelCategoryLink" />class.
-        /// </summary>
-        /// <param name="SourceItemId">Gets or sets the source item id..</param>
-        /// <param name="SourceCategoryId">Gets or sets the source category identifier..</param>
-        /// <param name="CatalogId">Gets or sets the target catalog identifier..</param>
-        /// <param name="CategoryId">Gets or sets the target category identifier..</param>
-
-        public VirtoCommerceCatalogModuleWebModelCategoryLink(string SourceItemId = null, string SourceCategoryId = null, string CatalogId = null, string CategoryId = null)
-        {
-            this.SourceItemId = SourceItemId;
-            this.SourceCategoryId = SourceCategoryId;
-            this.CatalogId = CatalogId;
-            this.CategoryId = CategoryId;
-            
-        }
-
         /// <summary>
         /// Gets or sets the source item id.
         /// </summary>
@@ -65,7 +45,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="categoryId", EmitDefaultValue=false)]
         public string CategoryId { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -78,7 +57,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  SourceCategoryId: ").Append(SourceCategoryId).Append("\n");
             sb.Append("  CatalogId: ").Append(CatalogId).Append("\n");
             sb.Append("  CategoryId: ").Append(CategoryId).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -148,24 +126,22 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.SourceItemId != null)
                     hash = hash * 59 + this.SourceItemId.GetHashCode();
-                
+
                 if (this.SourceCategoryId != null)
                     hash = hash * 59 + this.SourceCategoryId.GetHashCode();
-                
+
                 if (this.CatalogId != null)
                     hash = hash * 59 + this.CatalogId.GetHashCode();
-                
+
                 if (this.CategoryId != null)
                     hash = hash * 59 + this.CategoryId.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

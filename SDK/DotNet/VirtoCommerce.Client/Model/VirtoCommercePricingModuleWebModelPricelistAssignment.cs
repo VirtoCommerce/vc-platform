@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,44 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommercePricingModuleWebModelPricelistAssignment :  IEquatable<VirtoCommercePricingModuleWebModelPricelistAssignment>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommercePricingModuleWebModelPricelistAssignment" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommercePricingModuleWebModelPricelistAssignment" />class.
-        /// </summary>
-        /// <param name="CatalogName">CatalogName.</param>
-        /// <param name="CatalogId">CatalogId.</param>
-        /// <param name="PricelistId">PricelistId.</param>
-        /// <param name="Name">Name.</param>
-        /// <param name="Description">Description.</param>
-        /// <param name="Priority">If two PricelistAssignments satisfies the conditions and rules, will use one with the greater priority.</param>
-        /// <param name="StartDate">Start of period when Prices Assignment is valid. Null value means no limit.</param>
-        /// <param name="EndDate">End of period when Prices Assignment is valid. Null value means no limit.</param>
-        /// <param name="DynamicExpression">List of conditions and rules to define Prices Assignment is valid.</param>
-        /// <param name="CreatedDate">CreatedDate.</param>
-        /// <param name="ModifiedDate">ModifiedDate.</param>
-        /// <param name="CreatedBy">CreatedBy.</param>
-        /// <param name="ModifiedBy">ModifiedBy.</param>
-        /// <param name="Id">Id.</param>
-
-        public VirtoCommercePricingModuleWebModelPricelistAssignment(string CatalogName = null, string CatalogId = null, string PricelistId = null, string Name = null, string Description = null, int? Priority = null, DateTime? StartDate = null, DateTime? EndDate = null, VirtoCommerceDomainCommonConditionExpressionTree DynamicExpression = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
-        {
-            this.CatalogName = CatalogName;
-            this.CatalogId = CatalogId;
-            this.PricelistId = PricelistId;
-            this.Name = Name;
-            this.Description = Description;
-            this.Priority = Priority;
-            this.StartDate = StartDate;
-            this.EndDate = EndDate;
-            this.DynamicExpression = DynamicExpression;
-            this.CreatedDate = CreatedDate;
-            this.ModifiedDate = ModifiedDate;
-            this.CreatedBy = CreatedBy;
-            this.ModifiedBy = ModifiedBy;
-            this.Id = Id;
-            
-        }
-
         /// <summary>
         /// Gets or Sets CatalogName
         /// </summary>
@@ -145,7 +105,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -168,7 +127,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  CreatedBy: ").Append(CreatedBy).Append("\n");
             sb.Append("  ModifiedBy: ").Append(ModifiedBy).Append("\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -288,54 +246,52 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.CatalogName != null)
                     hash = hash * 59 + this.CatalogName.GetHashCode();
-                
+
                 if (this.CatalogId != null)
                     hash = hash * 59 + this.CatalogId.GetHashCode();
-                
+
                 if (this.PricelistId != null)
                     hash = hash * 59 + this.PricelistId.GetHashCode();
-                
+
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
-                
+
                 if (this.Description != null)
                     hash = hash * 59 + this.Description.GetHashCode();
-                
+
                 if (this.Priority != null)
                     hash = hash * 59 + this.Priority.GetHashCode();
-                
+
                 if (this.StartDate != null)
                     hash = hash * 59 + this.StartDate.GetHashCode();
-                
+
                 if (this.EndDate != null)
                     hash = hash * 59 + this.EndDate.GetHashCode();
-                
+
                 if (this.DynamicExpression != null)
                     hash = hash * 59 + this.DynamicExpression.GetHashCode();
-                
+
                 if (this.CreatedDate != null)
                     hash = hash * 59 + this.CreatedDate.GetHashCode();
-                
+
                 if (this.ModifiedDate != null)
                     hash = hash * 59 + this.ModifiedDate.GetHashCode();
-                
+
                 if (this.CreatedBy != null)
                     hash = hash * 59 + this.CreatedBy.GetHashCode();
-                
+
                 if (this.ModifiedBy != null)
                     hash = hash * 59 + this.ModifiedBy.GetHashCode();
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

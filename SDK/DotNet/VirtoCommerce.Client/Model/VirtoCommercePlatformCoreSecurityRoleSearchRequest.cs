@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,22 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommercePlatformCoreSecurityRoleSearchRequest :  IEquatable<VirtoCommercePlatformCoreSecurityRoleSearchRequest>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreSecurityRoleSearchRequest" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreSecurityRoleSearchRequest" />class.
-        /// </summary>
-        /// <param name="Keyword">Keyword.</param>
-        /// <param name="SkipCount">SkipCount.</param>
-        /// <param name="TakeCount">TakeCount.</param>
-
-        public VirtoCommercePlatformCoreSecurityRoleSearchRequest(string Keyword = null, int? SkipCount = null, int? TakeCount = null)
-        {
-            this.Keyword = Keyword;
-            this.SkipCount = SkipCount;
-            this.TakeCount = TakeCount;
-            
-        }
-
         /// <summary>
         /// Gets or Sets Keyword
         /// </summary>
@@ -53,7 +35,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="takeCount", EmitDefaultValue=false)]
         public int? TakeCount { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -65,7 +46,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Keyword: ").Append(Keyword).Append("\n");
             sb.Append("  SkipCount: ").Append(SkipCount).Append("\n");
             sb.Append("  TakeCount: ").Append(TakeCount).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -130,21 +110,19 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Keyword != null)
                     hash = hash * 59 + this.Keyword.GetHashCode();
-                
+
                 if (this.SkipCount != null)
                     hash = hash * 59 + this.SkipCount.GetHashCode();
-                
+
                 if (this.TakeCount != null)
                     hash = hash * 59 + this.TakeCount.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

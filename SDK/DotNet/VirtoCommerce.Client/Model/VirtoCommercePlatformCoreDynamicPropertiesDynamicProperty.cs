@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,42 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommercePlatformCoreDynamicPropertiesDynamicProperty :  IEquatable<VirtoCommercePlatformCoreDynamicPropertiesDynamicProperty>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreDynamicPropertiesDynamicProperty" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreDynamicPropertiesDynamicProperty" />class.
-        /// </summary>
-        /// <param name="Name">Name.</param>
-        /// <param name="ObjectType">ObjectType.</param>
-        /// <param name="IsArray">IsArray.</param>
-        /// <param name="IsDictionary">IsDictionary.</param>
-        /// <param name="IsMultilingual">IsMultilingual.</param>
-        /// <param name="IsRequired">IsRequired.</param>
-        /// <param name="ValueType">ValueType.</param>
-        /// <param name="DisplayNames">DisplayNames.</param>
-        /// <param name="CreatedDate">CreatedDate.</param>
-        /// <param name="ModifiedDate">ModifiedDate.</param>
-        /// <param name="CreatedBy">CreatedBy.</param>
-        /// <param name="ModifiedBy">ModifiedBy.</param>
-        /// <param name="Id">Id.</param>
-
-        public VirtoCommercePlatformCoreDynamicPropertiesDynamicProperty(string Name = null, string ObjectType = null, bool? IsArray = null, bool? IsDictionary = null, bool? IsMultilingual = null, bool? IsRequired = null, string ValueType = null, List<VirtoCommercePlatformCoreDynamicPropertiesDynamicPropertyName> DisplayNames = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
-        {
-            this.Name = Name;
-            this.ObjectType = ObjectType;
-            this.IsArray = IsArray;
-            this.IsDictionary = IsDictionary;
-            this.IsMultilingual = IsMultilingual;
-            this.IsRequired = IsRequired;
-            this.ValueType = ValueType;
-            this.DisplayNames = DisplayNames;
-            this.CreatedDate = CreatedDate;
-            this.ModifiedDate = ModifiedDate;
-            this.CreatedBy = CreatedBy;
-            this.ModifiedBy = ModifiedBy;
-            this.Id = Id;
-            
-        }
-
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
@@ -133,7 +95,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -155,7 +116,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  CreatedBy: ").Append(CreatedBy).Append("\n");
             sb.Append("  ModifiedBy: ").Append(ModifiedBy).Append("\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -270,51 +230,49 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
-                
+
                 if (this.ObjectType != null)
                     hash = hash * 59 + this.ObjectType.GetHashCode();
-                
+
                 if (this.IsArray != null)
                     hash = hash * 59 + this.IsArray.GetHashCode();
-                
+
                 if (this.IsDictionary != null)
                     hash = hash * 59 + this.IsDictionary.GetHashCode();
-                
+
                 if (this.IsMultilingual != null)
                     hash = hash * 59 + this.IsMultilingual.GetHashCode();
-                
+
                 if (this.IsRequired != null)
                     hash = hash * 59 + this.IsRequired.GetHashCode();
-                
+
                 if (this.ValueType != null)
                     hash = hash * 59 + this.ValueType.GetHashCode();
-                
+
                 if (this.DisplayNames != null)
                     hash = hash * 59 + this.DisplayNames.GetHashCode();
-                
+
                 if (this.CreatedDate != null)
                     hash = hash * 59 + this.CreatedDate.GetHashCode();
-                
+
                 if (this.ModifiedDate != null)
                     hash = hash * 59 + this.ModifiedDate.GetHashCode();
-                
+
                 if (this.CreatedBy != null)
                     hash = hash * 59 + this.CreatedBy.GetHashCode();
-                
+
                 if (this.ModifiedBy != null)
                     hash = hash * 59 + this.ModifiedBy.GetHashCode();
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

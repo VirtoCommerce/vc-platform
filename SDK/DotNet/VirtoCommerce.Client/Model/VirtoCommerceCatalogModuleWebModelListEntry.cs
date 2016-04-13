@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,34 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceCatalogModuleWebModelListEntry :  IEquatable<VirtoCommerceCatalogModuleWebModelListEntry>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelListEntry" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelListEntry" />class.
-        /// </summary>
-        /// <param name="Id">Id.</param>
-        /// <param name="Type">Gets or sets the type. E.g. \&quot;product\&quot;, \&quot;category\&quot;.</param>
-        /// <param name="IsActive">Gets or sets a value indicating whether this entry is active..</param>
-        /// <param name="ImageUrl">Gets or sets the image URL..</param>
-        /// <param name="Code">Gets or sets the entry code..</param>
-        /// <param name="Name">Gets or sets the name..</param>
-        /// <param name="Links">Gets or sets the links..</param>
-        /// <param name="Outline">All entry parents ids.</param>
-        /// <param name="Path">All entry parents names.</param>
-
-        public VirtoCommerceCatalogModuleWebModelListEntry(string Id = null, string Type = null, bool? IsActive = null, string ImageUrl = null, string Code = null, string Name = null, List<VirtoCommerceCatalogModuleWebModelListEntryLink> Links = null, List<string> Outline = null, List<string> Path = null)
-        {
-            this.Id = Id;
-            this.Type = Type;
-            this.IsActive = IsActive;
-            this.ImageUrl = ImageUrl;
-            this.Code = Code;
-            this.Name = Name;
-            this.Links = Links;
-            this.Outline = Outline;
-            this.Path = Path;
-            
-        }
-
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
@@ -109,7 +79,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="path", EmitDefaultValue=false)]
         public List<string> Path { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -127,7 +96,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Links: ").Append(Links).Append("\n");
             sb.Append("  Outline: ").Append(Outline).Append("\n");
             sb.Append("  Path: ").Append(Path).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -222,39 +190,37 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 if (this.Type != null)
                     hash = hash * 59 + this.Type.GetHashCode();
-                
+
                 if (this.IsActive != null)
                     hash = hash * 59 + this.IsActive.GetHashCode();
-                
+
                 if (this.ImageUrl != null)
                     hash = hash * 59 + this.ImageUrl.GetHashCode();
-                
+
                 if (this.Code != null)
                     hash = hash * 59 + this.Code.GetHashCode();
-                
+
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
-                
+
                 if (this.Links != null)
                     hash = hash * 59 + this.Links.GetHashCode();
-                
+
                 if (this.Outline != null)
                     hash = hash * 59 + this.Outline.GetHashCode();
-                
+
                 if (this.Path != null)
                     hash = hash * 59 + this.Path.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }
