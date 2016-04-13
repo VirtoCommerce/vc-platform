@@ -63,7 +63,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			var retVal = new Shipment();
 			retVal.InjectFrom(shipment);
 			retVal.Currency = shipment.Currency;
-			retVal.Sum = shipment.ShippingPrice;
+			retVal.Sum = shipment.Total;
 			retVal.Tax = shipment.TaxTotal;
             retVal.Status = "New";
             if (shipment.DeliveryAddress != null)
@@ -113,7 +113,11 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 				retVal.TaxDetails = new ObservableCollection<TaxDetailEntity>();
 				retVal.TaxDetails.AddRange(shipment.TaxDetails.Select(x => x.ToDataModel()));
 			}
-			return retVal;
+            if (shipment.Discount != null)
+            {
+                retVal.Discounts = new ObservableCollection<DiscountEntity>(new DiscountEntity[] { shipment.Discount.ToDataModel() });
+            }
+            return retVal;
 		}
 
 		/// <summary>
