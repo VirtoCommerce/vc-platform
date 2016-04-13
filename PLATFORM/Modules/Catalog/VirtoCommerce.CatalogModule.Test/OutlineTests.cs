@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using VirtoCommerce.CatalogModule.Data.Model;
 using VirtoCommerce.CatalogModule.Data.Repositories;
@@ -12,12 +11,13 @@ using VirtoCommerce.CoreModule.Data.Services;
 using VirtoCommerce.Domain.Catalog.Model;
 using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Domain.Commerce.Services;
+using Xunit;
 using Catalog = VirtoCommerce.CatalogModule.Data.Model.Catalog;
 using Category = VirtoCommerce.CatalogModule.Data.Model.Category;
 
 namespace VirtoCommerce.CatalogModule.Test
 {
-    [TestClass]
+    [Trait("Category", "CI")]
     public class OutlineTests
     {
         #region Mocks
@@ -73,214 +73,214 @@ namespace VirtoCommerce.CatalogModule.Test
 
         #endregion
 
-        [TestMethod]
+        [Fact]
         public void GetCategories_When_NoParentsAndNoLinks_Expect_SinglePhysicalOutline()
         {
             var service = GetCategoryService();
             var result = service.GetByIds(new[] { "c0" }, CategoryResponseGroup.WithOutlines | CategoryResponseGroup.WithSeo);
 
-            Assert.IsNotNull(result);
-            Assert.AreEqual(1, result.Length);
+            Assert.NotNull(result);
+            Assert.Equal(1, result.Length);
 
             var category = result.First();
-            Assert.IsNotNull(category);
-            Assert.AreEqual("c0", category.Id);
-            Assert.IsNotNull(category.Outlines);
-            Assert.AreEqual(1, category.Outlines.Count);
+            Assert.NotNull(category);
+            Assert.Equal("c0", category.Id);
+            Assert.NotNull(category.Outlines);
+            Assert.Equal(1, category.Outlines.Count);
 
             var outline = category.Outlines.First();
-            Assert.IsNotNull(outline.Items);
-            Assert.AreEqual(2, outline.Items.Count);
+            Assert.NotNull(outline.Items);
+            Assert.Equal(2, outline.Items.Count);
 
             var outlineString = outline.ToString();
-            Assert.AreEqual("c/c0", outlineString);
+            Assert.Equal("c/c0", outlineString);
 
             var allOutlineItems = category.Outlines.SelectMany(o => o.Items.Where(i => i.SeoObjectType != "Catalog")).ToList();
-            Assert.IsTrue(allOutlineItems.All(i => i.SeoInfos != null && i.SeoInfos.Any()));
+            Assert.True(allOutlineItems.All(i => i.SeoInfos != null && i.SeoInfos.Any()));
         }
 
-        [TestMethod]
+        [Fact]
         public void GetCategories_When_PhysicalCatalog_Expect_SinglePhysicalOutline()
         {
             var service = GetCategoryService();
             var result = service.GetByIds(new[] { "c3" }, CategoryResponseGroup.WithOutlines | CategoryResponseGroup.WithSeo, "c");
 
-            Assert.IsNotNull(result);
-            Assert.AreEqual(1, result.Length);
+            Assert.NotNull(result);
+            Assert.Equal(1, result.Length);
 
             var category = result.First();
-            Assert.IsNotNull(category);
-            Assert.AreEqual("c3", category.Id);
-            Assert.IsNotNull(category.Outlines);
-            Assert.AreEqual(1, category.Outlines.Count);
+            Assert.NotNull(category);
+            Assert.Equal("c3", category.Id);
+            Assert.NotNull(category.Outlines);
+            Assert.Equal(1, category.Outlines.Count);
 
             var outline = category.Outlines.First();
-            Assert.IsNotNull(outline.Items);
-            Assert.AreEqual(4, outline.Items.Count);
+            Assert.NotNull(outline.Items);
+            Assert.Equal(4, outline.Items.Count);
 
             var outlineString = outline.ToString();
-            Assert.AreEqual("c/c1/c2/c3", outlineString);
+            Assert.Equal("c/c1/c2/c3", outlineString);
 
             var allOutlineItems = category.Outlines.SelectMany(o => o.Items.Where(i => i.SeoObjectType != "Catalog")).ToList();
-            Assert.IsTrue(allOutlineItems.All(i => i.SeoInfos != null && i.SeoInfos.Any()));
+            Assert.True(allOutlineItems.All(i => i.SeoInfos != null && i.SeoInfos.Any()));
         }
 
-        [TestMethod]
+        [Fact]
         public void GetCategories_When_VirtualCatalog_Expect_MultipleVirtualOutlines()
         {
             var service = GetCategoryService();
             var result = service.GetByIds(new[] { "c3" }, CategoryResponseGroup.WithOutlines | CategoryResponseGroup.WithSeo, "v");
 
-            Assert.IsNotNull(result);
-            Assert.AreEqual(1, result.Length);
+            Assert.NotNull(result);
+            Assert.Equal(1, result.Length);
 
             var category = result.First();
-            Assert.IsNotNull(category);
-            Assert.AreEqual("c3", category.Id);
-            Assert.IsNotNull(category.Outlines);
-            Assert.AreEqual(4, category.Outlines.Count);
+            Assert.NotNull(category);
+            Assert.Equal("c3", category.Id);
+            Assert.NotNull(category.Outlines);
+            Assert.Equal(4, category.Outlines.Count);
 
             var outlineStrings = category.Outlines.Select(o => o.ToString()).ToList();
-            Assert.IsTrue(outlineStrings.Contains("v/v1/v2/*c1/c2/c3"));
-            Assert.IsTrue(outlineStrings.Contains("v/v1/v2/*c2/c3"));
-            Assert.IsTrue(outlineStrings.Contains("v/v1/v2/*c3"));
-            Assert.IsTrue(outlineStrings.Contains("v/*c3"));
+            Assert.True(outlineStrings.Contains("v/v1/v2/*c1/c2/c3"));
+            Assert.True(outlineStrings.Contains("v/v1/v2/*c2/c3"));
+            Assert.True(outlineStrings.Contains("v/v1/v2/*c3"));
+            Assert.True(outlineStrings.Contains("v/*c3"));
 
             var allOutlineItems = category.Outlines.SelectMany(o => o.Items.Where(i => i.SeoObjectType != "Catalog")).ToList();
-            Assert.IsTrue(allOutlineItems.All(i => i.SeoInfos != null && i.SeoInfos.Any()));
+            Assert.True(allOutlineItems.All(i => i.SeoInfos != null && i.SeoInfos.Any()));
         }
 
-        [TestMethod]
+        [Fact]
         public void GetCategories_When_NoCatalog_Expect_PhysicalAndVirtualOutlines()
         {
             var service = GetCategoryService();
             var result = service.GetByIds(new[] { "c3" }, CategoryResponseGroup.WithOutlines | CategoryResponseGroup.WithSeo);
 
-            Assert.IsNotNull(result);
-            Assert.AreEqual(1, result.Length);
+            Assert.NotNull(result);
+            Assert.Equal(1, result.Length);
 
             var category = result.First();
-            Assert.IsNotNull(category);
-            Assert.AreEqual("c3", category.Id);
-            Assert.IsNotNull(category.Outlines);
-            Assert.AreEqual(5, category.Outlines.Count);
+            Assert.NotNull(category);
+            Assert.Equal("c3", category.Id);
+            Assert.NotNull(category.Outlines);
+            Assert.Equal(5, category.Outlines.Count);
 
             var outlineStrings = category.Outlines.Select(o => o.ToString()).ToList();
-            Assert.IsTrue(outlineStrings.Contains("c/c1/c2/c3"));
-            Assert.IsTrue(outlineStrings.Contains("v/v1/v2/*c1/c2/c3"));
-            Assert.IsTrue(outlineStrings.Contains("v/v1/v2/*c2/c3"));
-            Assert.IsTrue(outlineStrings.Contains("v/v1/v2/*c3"));
-            Assert.IsTrue(outlineStrings.Contains("v/*c3"));
+            Assert.True(outlineStrings.Contains("c/c1/c2/c3"));
+            Assert.True(outlineStrings.Contains("v/v1/v2/*c1/c2/c3"));
+            Assert.True(outlineStrings.Contains("v/v1/v2/*c2/c3"));
+            Assert.True(outlineStrings.Contains("v/v1/v2/*c3"));
+            Assert.True(outlineStrings.Contains("v/*c3"));
 
             var allOutlineItems = category.Outlines.SelectMany(o => o.Items.Where(i => i.SeoObjectType != "Catalog")).ToList();
-            Assert.IsTrue(allOutlineItems.All(i => i.SeoInfos != null && i.SeoInfos.Any()));
+            Assert.True(allOutlineItems.All(i => i.SeoInfos != null && i.SeoInfos.Any()));
         }
 
-        [TestMethod]
+        [Fact]
         public void GetProducts_When_NoCategoriesAndNoLinks_Expect_SinglePhysicalOutline()
         {
             var service = GetItemService();
             var result = service.GetByIds(new[] { "p0" }, ItemResponseGroup.Outlines | ItemResponseGroup.Seo);
 
-            Assert.IsNotNull(result);
-            Assert.AreEqual(1, result.Length);
+            Assert.NotNull(result);
+            Assert.Equal(1, result.Length);
 
             var product = result.First();
-            Assert.IsNotNull(product);
-            Assert.AreEqual("p0", product.Id);
-            Assert.IsNotNull(product.Outlines);
-            Assert.AreEqual(1, product.Outlines.Count);
+            Assert.NotNull(product);
+            Assert.Equal("p0", product.Id);
+            Assert.NotNull(product.Outlines);
+            Assert.Equal(1, product.Outlines.Count);
 
             var outline = product.Outlines.First();
-            Assert.IsNotNull(outline.Items);
-            Assert.AreEqual(2, outline.Items.Count);
+            Assert.NotNull(outline.Items);
+            Assert.Equal(2, outline.Items.Count);
 
             var outlineString = outline.ToString();
-            Assert.AreEqual("c/p0", outlineString);
+            Assert.Equal("c/p0", outlineString);
 
             var allOutlineItems = product.Outlines.SelectMany(o => o.Items.Where(i => i.SeoObjectType != "Catalog")).ToList();
-            Assert.IsTrue(allOutlineItems.All(i => i.SeoInfos != null && i.SeoInfos.Any()));
+            Assert.True(allOutlineItems.All(i => i.SeoInfos != null && i.SeoInfos.Any()));
         }
 
-        [TestMethod]
+        [Fact]
         public void GetProducts_When_PhysicalCatalog_Expect_SinglePhysicalOutline()
         {
             var service = GetItemService();
             var result = service.GetByIds(new[] { "p1" }, ItemResponseGroup.Outlines | ItemResponseGroup.Seo, "c");
 
-            Assert.IsNotNull(result);
-            Assert.AreEqual(1, result.Length);
+            Assert.NotNull(result);
+            Assert.Equal(1, result.Length);
 
             var product = result.First();
-            Assert.IsNotNull(product);
-            Assert.AreEqual("p1", product.Id);
-            Assert.IsNotNull(product.Outlines);
-            Assert.AreEqual(1, product.Outlines.Count);
+            Assert.NotNull(product);
+            Assert.Equal("p1", product.Id);
+            Assert.NotNull(product.Outlines);
+            Assert.Equal(1, product.Outlines.Count);
 
             var outline = product.Outlines.First();
-            Assert.IsNotNull(outline.Items);
-            Assert.AreEqual(5, outline.Items.Count);
+            Assert.NotNull(outline.Items);
+            Assert.Equal(5, outline.Items.Count);
 
             var outlineString = outline.ToString();
-            Assert.AreEqual("c/c1/c2/c3/p1", outlineString);
+            Assert.Equal("c/c1/c2/c3/p1", outlineString);
 
             var allOutlineItems = product.Outlines.SelectMany(o => o.Items.Where(i => i.SeoObjectType != "Catalog")).ToList();
-            Assert.IsTrue(allOutlineItems.All(i => i.SeoInfos != null && i.SeoInfos.Any()));
+            Assert.True(allOutlineItems.All(i => i.SeoInfos != null && i.SeoInfos.Any()));
         }
 
-        [TestMethod]
+        [Fact]
         public void GetProducts_When_VirtualCatalog_Expect_MultipleVirtualOutlines()
         {
             var service = GetItemService();
             var result = service.GetByIds(new[] { "p1" }, ItemResponseGroup.Outlines | ItemResponseGroup.Seo, "v");
 
-            Assert.IsNotNull(result);
-            Assert.AreEqual(1, result.Length);
+            Assert.NotNull(result);
+            Assert.Equal(1, result.Length);
 
             var product = result.First();
-            Assert.IsNotNull(product);
-            Assert.AreEqual("p1", product.Id);
-            Assert.IsNotNull(product.Outlines);
-            Assert.AreEqual(6, product.Outlines.Count);
+            Assert.NotNull(product);
+            Assert.Equal("p1", product.Id);
+            Assert.NotNull(product.Outlines);
+            Assert.Equal(6, product.Outlines.Count);
 
             var outlineStrings = product.Outlines.Select(o => o.ToString()).ToList();
-            Assert.IsTrue(outlineStrings.Contains("v/v1/v2/*c1/c2/c3/p1"));
-            Assert.IsTrue(outlineStrings.Contains("v/v1/v2/*c2/c3/p1"));
-            Assert.IsTrue(outlineStrings.Contains("v/v1/v2/*c3/p1"));
-            Assert.IsTrue(outlineStrings.Contains("v/*c3/p1"));
-            Assert.IsTrue(outlineStrings.Contains("v/v1/v2/*p1"));
-            Assert.IsTrue(outlineStrings.Contains("v/*p1"));
+            Assert.True(outlineStrings.Contains("v/v1/v2/*c1/c2/c3/p1"));
+            Assert.True(outlineStrings.Contains("v/v1/v2/*c2/c3/p1"));
+            Assert.True(outlineStrings.Contains("v/v1/v2/*c3/p1"));
+            Assert.True(outlineStrings.Contains("v/*c3/p1"));
+            Assert.True(outlineStrings.Contains("v/v1/v2/*p1"));
+            Assert.True(outlineStrings.Contains("v/*p1"));
 
             var allOutlineItems = product.Outlines.SelectMany(o => o.Items.Where(i => i.SeoObjectType != "Catalog")).ToList();
-            Assert.IsTrue(allOutlineItems.All(i => i.SeoInfos != null && i.SeoInfos.Any()));
+            Assert.True(allOutlineItems.All(i => i.SeoInfos != null && i.SeoInfos.Any()));
         }
 
-        [TestMethod]
+        [Fact]
         public void GetProducts_When_NoCatalog_Expect_PhysicalAndVirtualOutlines()
         {
             var service = GetItemService();
             var result = service.GetByIds(new[] { "p1" }, ItemResponseGroup.Outlines | ItemResponseGroup.Seo);
 
-            Assert.IsNotNull(result);
-            Assert.AreEqual(1, result.Length);
+            Assert.NotNull(result);
+            Assert.Equal(1, result.Length);
 
             var product = result.First();
-            Assert.IsNotNull(product);
-            Assert.AreEqual("p1", product.Id);
-            Assert.IsNotNull(product.Outlines);
-            Assert.AreEqual(7, product.Outlines.Count);
+            Assert.NotNull(product);
+            Assert.Equal("p1", product.Id);
+            Assert.NotNull(product.Outlines);
+            Assert.Equal(7, product.Outlines.Count);
 
             var outlineStrings = product.Outlines.Select(o => o.ToString()).ToList();
-            Assert.IsTrue(outlineStrings.Contains("c/c1/c2/c3/p1"));
-            Assert.IsTrue(outlineStrings.Contains("v/v1/v2/*c1/c2/c3/p1"));
-            Assert.IsTrue(outlineStrings.Contains("v/v1/v2/*c2/c3/p1"));
-            Assert.IsTrue(outlineStrings.Contains("v/v1/v2/*c3/p1"));
-            Assert.IsTrue(outlineStrings.Contains("v/*c3/p1"));
-            Assert.IsTrue(outlineStrings.Contains("v/v1/v2/*p1"));
-            Assert.IsTrue(outlineStrings.Contains("v/*p1"));
+            Assert.True(outlineStrings.Contains("c/c1/c2/c3/p1"));
+            Assert.True(outlineStrings.Contains("v/v1/v2/*c1/c2/c3/p1"));
+            Assert.True(outlineStrings.Contains("v/v1/v2/*c2/c3/p1"));
+            Assert.True(outlineStrings.Contains("v/v1/v2/*c3/p1"));
+            Assert.True(outlineStrings.Contains("v/*c3/p1"));
+            Assert.True(outlineStrings.Contains("v/v1/v2/*p1"));
+            Assert.True(outlineStrings.Contains("v/*p1"));
 
             var allOutlineItems = product.Outlines.SelectMany(o => o.Items.Where(i => i.SeoObjectType != "Catalog")).ToList();
-            Assert.IsTrue(allOutlineItems.All(i => i.SeoInfos != null && i.SeoInfos.Any()));
+            Assert.True(allOutlineItems.All(i => i.SeoInfos != null && i.SeoInfos.Any()));
         }
 
 
