@@ -98,6 +98,21 @@ namespace VirtoCommerce.CoreModule.Data.Services
             }
         }
 
+        public void UpsertSeoInfos(coreModel.SeoInfo[] seoinfos)
+        {
+            using (var repository = _repositoryFactory())
+            using (var changeTracker = GetChangeTracker(repository))
+            {
+                var alreadyExistSeoInfos = repository.GetSeoByIds(seoinfos.Select(x => x.Id).ToArray());
+                var target = new { SeoInfos = new ObservableCollection<dataModel.SeoUrlKeyword>(alreadyExistSeoInfos) };
+                var source = new { SeoInfos = new ObservableCollection<dataModel.SeoUrlKeyword>(seoinfos.Select(x => x.ToDataModel())) };
+
+                changeTracker.Attach(target);
+
+                source.SeoInfos.Patch(target.SeoInfos, (sourceSeoUrlKeyword, targetSeoUrlKeyword) => sourceSeoUrlKeyword.Patch(targetSeoUrlKeyword));
+            }
+        }
+
         public void UpsertSeoForObjects(coreModel.ISeoSupport[] seoSupportObjects)
         {
             if (seoSupportObjects == null)
