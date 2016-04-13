@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Linq;
 using System.Net;
 using System.Web.Http;
@@ -31,8 +30,8 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
         /// </summary>
         /// <remarks>Get array of all organizations.</remarks>
         [HttpGet]
-        [ResponseType(typeof(coreModel.Organization[]))]
         [Route("members/organizations")]
+        [ResponseType(typeof(coreModel.Organization[]))]
         public IHttpActionResult ListOrganizations()
         {
             var searchCriteria = new coreModel.MembersSearchCriteria
@@ -52,8 +51,8 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
         /// <remarks>Get array of members satisfied search criteria.</remarks>
         /// <param name="criteria">concrete instance of SearchCriteria type type will be created by using PolymorphicMemberSearchCriteriaJsonConverter</param>
         [HttpPost]
-        [ResponseType(typeof(coreModel.MembersSearchResult))]
         [Route("members/search")]
+        [ResponseType(typeof(coreModel.MembersSearchResult))]
         public IHttpActionResult Search(coreModel.MembersSearchCriteria criteria)
         {
             var result = _memberSearchService.SearchMembers(criteria);
@@ -66,8 +65,8 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
         /// </summary>
         /// <param name="id">member id</param>
         [HttpGet]
-        [ResponseType(typeof(coreModel.Member))]
         [Route("members/{id}")]
+        [ResponseType(typeof(coreModel.Member))]
         public IHttpActionResult GetMemberById(string id)
         {
             var retVal = _memberService.GetByIds(new[] { id }).FirstOrDefault();
@@ -85,8 +84,8 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
         /// <param name="member">concrete instance of abstract member type will be created by using PolymorphicMemberJsonConverter</param>
         /// <returns></returns>
         [HttpPost]
-        [ResponseType(typeof(coreModel.Member))]
         [Route("members")]
+        [ResponseType(typeof(coreModel.Member))]
         [CheckPermission(Permission = CustomerPredefinedPermissions.Create)]
         public IHttpActionResult CreateMember([FromBody]coreModel.Member member)
         {
@@ -101,8 +100,8 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
         /// <param name="member">concrete instance of abstract member type will be created by using PolymorphicMemberJsonConverter</param>
         /// <response code="204">Operation completed.</response>
         [HttpPut]
-        [ResponseType(typeof(void))]
         [Route("members")]
+        [ResponseType(typeof(void))]
         [CheckPermission(Permission = CustomerPredefinedPermissions.Update)]
         public IHttpActionResult UpdateMember(coreModel.Member member)
         {
@@ -117,10 +116,10 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
         /// <param name="ids">An array of members ids</param>
         /// <response code="204">Operation completed.</response>
         [HttpDelete]
-        [ResponseType(typeof(void))]
         [Route("members")]
+        [ResponseType(typeof(void))]
         [CheckPermission(Permission = CustomerPredefinedPermissions.Delete)]
-       
+
         public IHttpActionResult DeleteMembers([FromUri] string[] ids)
         {
             _memberService.Delete(ids);
@@ -128,12 +127,13 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
         }
 
         #region Special members for storefront C# API client  (because it not support polymorph types)
+
         /// <summary>
         /// Create contact
         /// </summary>
         [HttpPost]
-        [ResponseType(typeof(coreModel.Contact))]
         [Route("contacts")]
+        [ResponseType(typeof(coreModel.Contact))]
         [CheckPermission(Permission = CustomerPredefinedPermissions.Create)]
         public IHttpActionResult CreateContact(coreModel.Contact contact)
         {
@@ -145,8 +145,8 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
         /// </summary>
         /// <response code="204">Operation completed.</response>
         [HttpPut]
-        [ResponseType(typeof(void))]
         [Route("contacts")]
+        [ResponseType(typeof(void))]
         [CheckPermission(Permission = CustomerPredefinedPermissions.Update)]
         public IHttpActionResult UpdateContact(coreModel.Contact contact)
         {
@@ -159,6 +159,7 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
         [Obsolete("Use CreateMember instead")]
         [HttpPost]
         [Route("organizations")]
+        [ResponseType(typeof(coreModel.Organization))]
         [CheckPermission(Permission = CustomerPredefinedPermissions.Create)]
         public IHttpActionResult CreateOrganization(coreModel.Organization organization)
         {
@@ -170,8 +171,8 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
         /// </summary>
         /// <response code="204">Operation completed.</response>
         [HttpPut]
-        [ResponseType(typeof(void))]
         [Route("organizations")]
+        [ResponseType(typeof(void))]
         [CheckPermission(Permission = CustomerPredefinedPermissions.Update)]
         public IHttpActionResult UpdateOrganization(coreModel.Organization organization)
         {
@@ -185,8 +186,8 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
         /// <param name="ids">An array of organizations ids</param>
         /// <response code="204">Operation completed.</response>
         [HttpDelete]
-        [ResponseType(typeof(void))]
         [Route("organizations")]
+        [ResponseType(typeof(void))]
         [CheckPermission(Permission = CustomerPredefinedPermissions.Delete)]
         public IHttpActionResult DeleteOrganizations([FromUri] string[] ids)
         {
@@ -200,8 +201,8 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
         /// <param name="ids">An array of contacts ids</param>
         /// <response code="204">Operation completed.</response>
         [HttpDelete]
-        [ResponseType(typeof(void))]
         [Route("contacts")]
+        [ResponseType(typeof(void))]
         [CheckPermission(Permission = CustomerPredefinedPermissions.Delete)]
         public IHttpActionResult DeleteContacts([FromUri] string[] ids)
         {
@@ -217,8 +218,8 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
         /// <response code="200"></response>
         /// <response code="404">Organization not found.</response>
         [HttpGet]
-        [ResponseType(typeof(coreModel.Organization))]
         [Route("organizations/{id}")]
+        [ResponseType(typeof(coreModel.Organization))]
         public IHttpActionResult GetOrganizationById(string id)
         {
             return GetMemberById(id);
@@ -229,12 +230,13 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
         /// </summary>
         /// <param name="id">Contact ID</param>
         [HttpGet]
-        [ResponseType(typeof(coreModel.Contact))]
         [Route("contacts/{id}")]
+        [ResponseType(typeof(coreModel.Contact))]
         public IHttpActionResult GetContactById(string id)
         {
             return GetMemberById(id);
         }
+
         #endregion
     }
 }
