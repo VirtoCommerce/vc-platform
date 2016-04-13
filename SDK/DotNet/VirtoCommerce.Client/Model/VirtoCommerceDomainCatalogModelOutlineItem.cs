@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,24 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceDomainCatalogModelOutlineItem :  IEquatable<VirtoCommerceDomainCatalogModelOutlineItem>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCatalogModelOutlineItem" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCatalogModelOutlineItem" />class.
-        /// </summary>
-        /// <param name="Id">Id.</param>
-        /// <param name="IsLinkTarget">IsLinkTarget.</param>
-        /// <param name="SeoObjectType">SeoObjectType.</param>
-        /// <param name="SeoInfos">SeoInfos.</param>
-
-        public VirtoCommerceDomainCatalogModelOutlineItem(string Id = null, bool? IsLinkTarget = null, string SeoObjectType = null, List<VirtoCommerceDomainCommerceModelSeoInfo> SeoInfos = null)
-        {
-            this.Id = Id;
-            this.IsLinkTarget = IsLinkTarget;
-            this.SeoObjectType = SeoObjectType;
-            this.SeoInfos = SeoInfos;
-            
-        }
-
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
@@ -61,7 +41,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="seoInfos", EmitDefaultValue=false)]
         public List<VirtoCommerceDomainCommerceModelSeoInfo> SeoInfos { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -74,7 +53,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  IsLinkTarget: ").Append(IsLinkTarget).Append("\n");
             sb.Append("  SeoObjectType: ").Append(SeoObjectType).Append("\n");
             sb.Append("  SeoInfos: ").Append(SeoInfos).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -144,24 +122,22 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 if (this.IsLinkTarget != null)
                     hash = hash * 59 + this.IsLinkTarget.GetHashCode();
-                
+
                 if (this.SeoObjectType != null)
                     hash = hash * 59 + this.SeoObjectType.GetHashCode();
-                
+
                 if (this.SeoInfos != null)
                     hash = hash * 59 + this.SeoInfos.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

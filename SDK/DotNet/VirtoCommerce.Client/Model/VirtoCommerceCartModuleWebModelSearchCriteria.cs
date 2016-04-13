@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,26 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceCartModuleWebModelSearchCriteria :  IEquatable<VirtoCommerceCartModuleWebModelSearchCriteria>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceCartModuleWebModelSearchCriteria" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceCartModuleWebModelSearchCriteria" />class.
-        /// </summary>
-        /// <param name="Keyword">Gets or sets the value of search criteria keyword.</param>
-        /// <param name="CustomerId">Gets or sets the value of search criteria customer id.</param>
-        /// <param name="StoreId">Gets or sets the value of search criteria store id.</param>
-        /// <param name="Start">Gets or sets the value of search criteria skip records count.</param>
-        /// <param name="Count">Gets or sets the value of search criteria page size.</param>
-
-        public VirtoCommerceCartModuleWebModelSearchCriteria(string Keyword = null, string CustomerId = null, string StoreId = null, int? Start = null, int? Count = null)
-        {
-            this.Keyword = Keyword;
-            this.CustomerId = CustomerId;
-            this.StoreId = StoreId;
-            this.Start = Start;
-            this.Count = Count;
-            
-        }
-
         /// <summary>
         /// Gets or sets the value of search criteria keyword
         /// </summary>
@@ -74,7 +52,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="count", EmitDefaultValue=false)]
         public int? Count { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -88,7 +65,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  StoreId: ").Append(StoreId).Append("\n");
             sb.Append("  Start: ").Append(Start).Append("\n");
             sb.Append("  Count: ").Append(Count).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -163,27 +139,25 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Keyword != null)
                     hash = hash * 59 + this.Keyword.GetHashCode();
-                
+
                 if (this.CustomerId != null)
                     hash = hash * 59 + this.CustomerId.GetHashCode();
-                
+
                 if (this.StoreId != null)
                     hash = hash * 59 + this.StoreId.GetHashCode();
-                
+
                 if (this.Start != null)
                     hash = hash * 59 + this.Start.GetHashCode();
-                
+
                 if (this.Count != null)
                     hash = hash * 59 + this.Count.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

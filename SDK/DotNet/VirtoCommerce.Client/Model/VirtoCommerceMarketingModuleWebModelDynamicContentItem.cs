@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,42 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceMarketingModuleWebModelDynamicContentItem :  IEquatable<VirtoCommerceMarketingModuleWebModelDynamicContentItem>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceMarketingModuleWebModelDynamicContentItem" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceMarketingModuleWebModelDynamicContentItem" />class.
-        /// </summary>
-        /// <param name="Name">Name.</param>
-        /// <param name="Description">Description.</param>
-        /// <param name="ContentType">ContentType.</param>
-        /// <param name="FolderId">FolderId.</param>
-        /// <param name="Outline">all parent folders ids concatenated (1;21;344).</param>
-        /// <param name="Path">all parent folders names concatenated (Root\Child\Child2).</param>
-        /// <param name="ObjectType">ObjectType.</param>
-        /// <param name="DynamicProperties">DynamicProperties.</param>
-        /// <param name="CreatedDate">CreatedDate.</param>
-        /// <param name="ModifiedDate">ModifiedDate.</param>
-        /// <param name="CreatedBy">CreatedBy.</param>
-        /// <param name="ModifiedBy">ModifiedBy.</param>
-        /// <param name="Id">Id.</param>
-
-        public VirtoCommerceMarketingModuleWebModelDynamicContentItem(string Name = null, string Description = null, string ContentType = null, string FolderId = null, string Outline = null, string Path = null, string ObjectType = null, List<VirtoCommercePlatformCoreDynamicPropertiesDynamicObjectProperty> DynamicProperties = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
-        {
-            this.Name = Name;
-            this.Description = Description;
-            this.ContentType = ContentType;
-            this.FolderId = FolderId;
-            this.Outline = Outline;
-            this.Path = Path;
-            this.ObjectType = ObjectType;
-            this.DynamicProperties = DynamicProperties;
-            this.CreatedDate = CreatedDate;
-            this.ModifiedDate = ModifiedDate;
-            this.CreatedBy = CreatedBy;
-            this.ModifiedBy = ModifiedBy;
-            this.Id = Id;
-            
-        }
-
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
@@ -87,9 +49,9 @@ namespace VirtoCommerce.Client.Model
         public string Outline { get; set; }
 
         /// <summary>
-        /// all parent folders names concatenated (Root\Child\Child2)
+        /// all parent folders names concatenated (Root\\Child\\Child2)
         /// </summary>
-        /// <value>all parent folders names concatenated (Root\Child\Child2)</value>
+        /// <value>all parent folders names concatenated (Root\\Child\\Child2)</value>
         [DataMember(Name="path", EmitDefaultValue=false)]
         public string Path { get; set; }
 
@@ -135,7 +97,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -157,7 +118,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  CreatedBy: ").Append(CreatedBy).Append("\n");
             sb.Append("  ModifiedBy: ").Append(ModifiedBy).Append("\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -272,51 +232,49 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
-                
+
                 if (this.Description != null)
                     hash = hash * 59 + this.Description.GetHashCode();
-                
+
                 if (this.ContentType != null)
                     hash = hash * 59 + this.ContentType.GetHashCode();
-                
+
                 if (this.FolderId != null)
                     hash = hash * 59 + this.FolderId.GetHashCode();
-                
+
                 if (this.Outline != null)
                     hash = hash * 59 + this.Outline.GetHashCode();
-                
+
                 if (this.Path != null)
                     hash = hash * 59 + this.Path.GetHashCode();
-                
+
                 if (this.ObjectType != null)
                     hash = hash * 59 + this.ObjectType.GetHashCode();
-                
+
                 if (this.DynamicProperties != null)
                     hash = hash * 59 + this.DynamicProperties.GetHashCode();
-                
+
                 if (this.CreatedDate != null)
                     hash = hash * 59 + this.CreatedDate.GetHashCode();
-                
+
                 if (this.ModifiedDate != null)
                     hash = hash * 59 + this.ModifiedDate.GetHashCode();
-                
+
                 if (this.CreatedBy != null)
                     hash = hash * 59 + this.CreatedBy.GetHashCode();
-                
+
                 if (this.ModifiedBy != null)
                     hash = hash * 59 + this.ModifiedBy.GetHashCode();
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

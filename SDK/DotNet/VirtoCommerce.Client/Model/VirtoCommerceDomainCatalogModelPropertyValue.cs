@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,44 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceDomainCatalogModelPropertyValue :  IEquatable<VirtoCommerceDomainCatalogModelPropertyValue>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCatalogModelPropertyValue" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCatalogModelPropertyValue" />class.
-        /// </summary>
-        /// <param name="PropertyId">PropertyId.</param>
-        /// <param name="PropertyName">PropertyName.</param>
-        /// <param name="Property">Property.</param>
-        /// <param name="Alias">Alias.</param>
-        /// <param name="ValueId">ValueId.</param>
-        /// <param name="Value">Value.</param>
-        /// <param name="ValueType">ValueType.</param>
-        /// <param name="LanguageCode">LanguageCode.</param>
-        /// <param name="IsInherited">IsInherited.</param>
-        /// <param name="CreatedDate">CreatedDate.</param>
-        /// <param name="ModifiedDate">ModifiedDate.</param>
-        /// <param name="CreatedBy">CreatedBy.</param>
-        /// <param name="ModifiedBy">ModifiedBy.</param>
-        /// <param name="Id">Id.</param>
-
-        public VirtoCommerceDomainCatalogModelPropertyValue(string PropertyId = null, string PropertyName = null, VirtoCommerceDomainCatalogModelProperty Property = null, string Alias = null, string ValueId = null, Object Value = null, string ValueType = null, string LanguageCode = null, bool? IsInherited = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
-        {
-            this.PropertyId = PropertyId;
-            this.PropertyName = PropertyName;
-            this.Property = Property;
-            this.Alias = Alias;
-            this.ValueId = ValueId;
-            this.Value = Value;
-            this.ValueType = ValueType;
-            this.LanguageCode = LanguageCode;
-            this.IsInherited = IsInherited;
-            this.CreatedDate = CreatedDate;
-            this.ModifiedDate = ModifiedDate;
-            this.CreatedBy = CreatedBy;
-            this.ModifiedBy = ModifiedBy;
-            this.Id = Id;
-            
-        }
-
         /// <summary>
         /// Gets or Sets PropertyId
         /// </summary>
@@ -141,7 +101,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -164,7 +123,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  CreatedBy: ").Append(CreatedBy).Append("\n");
             sb.Append("  ModifiedBy: ").Append(ModifiedBy).Append("\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -284,54 +242,52 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.PropertyId != null)
                     hash = hash * 59 + this.PropertyId.GetHashCode();
-                
+
                 if (this.PropertyName != null)
                     hash = hash * 59 + this.PropertyName.GetHashCode();
-                
+
                 if (this.Property != null)
                     hash = hash * 59 + this.Property.GetHashCode();
-                
+
                 if (this.Alias != null)
                     hash = hash * 59 + this.Alias.GetHashCode();
-                
+
                 if (this.ValueId != null)
                     hash = hash * 59 + this.ValueId.GetHashCode();
-                
+
                 if (this.Value != null)
                     hash = hash * 59 + this.Value.GetHashCode();
-                
+
                 if (this.ValueType != null)
                     hash = hash * 59 + this.ValueType.GetHashCode();
-                
+
                 if (this.LanguageCode != null)
                     hash = hash * 59 + this.LanguageCode.GetHashCode();
-                
+
                 if (this.IsInherited != null)
                     hash = hash * 59 + this.IsInherited.GetHashCode();
-                
+
                 if (this.CreatedDate != null)
                     hash = hash * 59 + this.CreatedDate.GetHashCode();
-                
+
                 if (this.ModifiedDate != null)
                     hash = hash * 59 + this.ModifiedDate.GetHashCode();
-                
+
                 if (this.CreatedBy != null)
                     hash = hash * 59 + this.CreatedBy.GetHashCode();
-                
+
                 if (this.ModifiedBy != null)
                     hash = hash * 59 + this.ModifiedBy.GetHashCode();
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

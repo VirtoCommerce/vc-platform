@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,52 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceMarketingModuleWebModelPromotion :  IEquatable<VirtoCommerceMarketingModuleWebModelPromotion>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceMarketingModuleWebModelPromotion" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceMarketingModuleWebModelPromotion" />class.
-        /// </summary>
-        /// <param name="Type">It contains the name of realizing this type promotion.\r\n            DynamicPromotion is build in implementation allow to construct promotion with dynamic conditions and rewards.\r\n            For complex custom scenarios user may define personal &#39;hard-coded&#39; promotion types.</param>
-        /// <param name="Name">Name.</param>
-        /// <param name="Store">Store id that is covered by this promotion.</param>
-        /// <param name="Catalog">Catalog id that is covered by this promotion.</param>
-        /// <param name="Description">Description.</param>
-        /// <param name="IsActive">IsActive.</param>
-        /// <param name="MaxUsageCount">Maximum promotion usage count.</param>
-        /// <param name="MaxPersonalUsageCount">MaxPersonalUsageCount.</param>
-        /// <param name="Coupons">List of coupons codes which may be used for activate that promotion.</param>
-        /// <param name="Priority">Used for choosing in combination.</param>
-        /// <param name="StartDate">StartDate.</param>
-        /// <param name="EndDate">EndDate.</param>
-        /// <param name="DynamicExpression">Dynamic conditions tree determine the applicability of this promotion and reward definition.</param>
-        /// <param name="CreatedDate">CreatedDate.</param>
-        /// <param name="ModifiedDate">ModifiedDate.</param>
-        /// <param name="CreatedBy">CreatedBy.</param>
-        /// <param name="ModifiedBy">ModifiedBy.</param>
-        /// <param name="Id">Id.</param>
-
-        public VirtoCommerceMarketingModuleWebModelPromotion(string Type = null, string Name = null, string Store = null, string Catalog = null, string Description = null, bool? IsActive = null, int? MaxUsageCount = null, int? MaxPersonalUsageCount = null, List<string> Coupons = null, int? Priority = null, DateTime? StartDate = null, DateTime? EndDate = null, VirtoCommerceDomainMarketingModelPromoDynamicExpressionTree DynamicExpression = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
-        {
-            this.Type = Type;
-            this.Name = Name;
-            this.Store = Store;
-            this.Catalog = Catalog;
-            this.Description = Description;
-            this.IsActive = IsActive;
-            this.MaxUsageCount = MaxUsageCount;
-            this.MaxPersonalUsageCount = MaxPersonalUsageCount;
-            this.Coupons = Coupons;
-            this.Priority = Priority;
-            this.StartDate = StartDate;
-            this.EndDate = EndDate;
-            this.DynamicExpression = DynamicExpression;
-            this.CreatedDate = CreatedDate;
-            this.ModifiedDate = ModifiedDate;
-            this.CreatedBy = CreatedBy;
-            this.ModifiedBy = ModifiedBy;
-            this.Id = Id;
-            
-        }
-
         /// <summary>
         /// It contains the name of realizing this type promotion.\r\n            DynamicPromotion is build in implementation allow to construct promotion with dynamic conditions and rewards.\r\n            For complex custom scenarios user may define personal &#39;hard-coded&#39; promotion types
         /// </summary>
@@ -180,7 +132,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -207,7 +158,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  CreatedBy: ").Append(CreatedBy).Append("\n");
             sb.Append("  ModifiedBy: ").Append(ModifiedBy).Append("\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -347,66 +297,64 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Type != null)
                     hash = hash * 59 + this.Type.GetHashCode();
-                
+
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
-                
+
                 if (this.Store != null)
                     hash = hash * 59 + this.Store.GetHashCode();
-                
+
                 if (this.Catalog != null)
                     hash = hash * 59 + this.Catalog.GetHashCode();
-                
+
                 if (this.Description != null)
                     hash = hash * 59 + this.Description.GetHashCode();
-                
+
                 if (this.IsActive != null)
                     hash = hash * 59 + this.IsActive.GetHashCode();
-                
+
                 if (this.MaxUsageCount != null)
                     hash = hash * 59 + this.MaxUsageCount.GetHashCode();
-                
+
                 if (this.MaxPersonalUsageCount != null)
                     hash = hash * 59 + this.MaxPersonalUsageCount.GetHashCode();
-                
+
                 if (this.Coupons != null)
                     hash = hash * 59 + this.Coupons.GetHashCode();
-                
+
                 if (this.Priority != null)
                     hash = hash * 59 + this.Priority.GetHashCode();
-                
+
                 if (this.StartDate != null)
                     hash = hash * 59 + this.StartDate.GetHashCode();
-                
+
                 if (this.EndDate != null)
                     hash = hash * 59 + this.EndDate.GetHashCode();
-                
+
                 if (this.DynamicExpression != null)
                     hash = hash * 59 + this.DynamicExpression.GetHashCode();
-                
+
                 if (this.CreatedDate != null)
                     hash = hash * 59 + this.CreatedDate.GetHashCode();
-                
+
                 if (this.ModifiedDate != null)
                     hash = hash * 59 + this.ModifiedDate.GetHashCode();
-                
+
                 if (this.CreatedBy != null)
                     hash = hash * 59 + this.CreatedBy.GetHashCode();
-                
+
                 if (this.ModifiedBy != null)
                     hash = hash * 59 + this.ModifiedBy.GetHashCode();
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

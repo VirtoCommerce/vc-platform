@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,32 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommercePlatformCoreDynamicPropertiesDynamicPropertyDictionaryItem :  IEquatable<VirtoCommercePlatformCoreDynamicPropertiesDynamicPropertyDictionaryItem>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreDynamicPropertiesDynamicPropertyDictionaryItem" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreDynamicPropertiesDynamicPropertyDictionaryItem" />class.
-        /// </summary>
-        /// <param name="PropertyId">PropertyId.</param>
-        /// <param name="Name">Name.</param>
-        /// <param name="DisplayNames">DisplayNames.</param>
-        /// <param name="CreatedDate">CreatedDate.</param>
-        /// <param name="ModifiedDate">ModifiedDate.</param>
-        /// <param name="CreatedBy">CreatedBy.</param>
-        /// <param name="ModifiedBy">ModifiedBy.</param>
-        /// <param name="Id">Id.</param>
-
-        public VirtoCommercePlatformCoreDynamicPropertiesDynamicPropertyDictionaryItem(string PropertyId = null, string Name = null, List<VirtoCommercePlatformCoreDynamicPropertiesDynamicPropertyDictionaryItemName> DisplayNames = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
-        {
-            this.PropertyId = PropertyId;
-            this.Name = Name;
-            this.DisplayNames = DisplayNames;
-            this.CreatedDate = CreatedDate;
-            this.ModifiedDate = ModifiedDate;
-            this.CreatedBy = CreatedBy;
-            this.ModifiedBy = ModifiedBy;
-            this.Id = Id;
-            
-        }
-
         /// <summary>
         /// Gets or Sets PropertyId
         /// </summary>
@@ -93,7 +65,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -110,7 +81,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  CreatedBy: ").Append(CreatedBy).Append("\n");
             sb.Append("  ModifiedBy: ").Append(ModifiedBy).Append("\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -200,36 +170,34 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.PropertyId != null)
                     hash = hash * 59 + this.PropertyId.GetHashCode();
-                
+
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
-                
+
                 if (this.DisplayNames != null)
                     hash = hash * 59 + this.DisplayNames.GetHashCode();
-                
+
                 if (this.CreatedDate != null)
                     hash = hash * 59 + this.CreatedDate.GetHashCode();
-                
+
                 if (this.ModifiedDate != null)
                     hash = hash * 59 + this.ModifiedDate.GetHashCode();
-                
+
                 if (this.CreatedBy != null)
                     hash = hash * 59 + this.CreatedBy.GetHashCode();
-                
+
                 if (this.ModifiedBy != null)
                     hash = hash * 59 + this.ModifiedBy.GetHashCode();
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

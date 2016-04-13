@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,68 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceDomainCustomerModelContact :  IEquatable<VirtoCommerceDomainCustomerModelContact>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCustomerModelContact" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCustomerModelContact" />class.
-        /// </summary>
-        /// <param name="FirstName">FirstName.</param>
-        /// <param name="MiddleName">MiddleName.</param>
-        /// <param name="LastName">LastName.</param>
-        /// <param name="FullName">FullName.</param>
-        /// <param name="TimeZone">TimeZone.</param>
-        /// <param name="DefaultLanguage">DefaultLanguage.</param>
-        /// <param name="BirthDate">BirthDate.</param>
-        /// <param name="TaxpayerId">TaxpayerId.</param>
-        /// <param name="PreferredDelivery">PreferredDelivery.</param>
-        /// <param name="PreferredCommunication">PreferredCommunication.</param>
-        /// <param name="Salutation">Salutation.</param>
-        /// <param name="Organizations">Organizations.</param>
-        /// <param name="SecurityAccounts">SecurityAccounts.</param>
-        /// <param name="Name">Name.</param>
-        /// <param name="MemberType">MemberType.</param>
-        /// <param name="Addresses">Addresses.</param>
-        /// <param name="Phones">Phones.</param>
-        /// <param name="Emails">Emails.</param>
-        /// <param name="Notes">Notes.</param>
-        /// <param name="ObjectType">ObjectType.</param>
-        /// <param name="DynamicProperties">DynamicProperties.</param>
-        /// <param name="CreatedDate">CreatedDate.</param>
-        /// <param name="ModifiedDate">ModifiedDate.</param>
-        /// <param name="CreatedBy">CreatedBy.</param>
-        /// <param name="ModifiedBy">ModifiedBy.</param>
-        /// <param name="Id">Id.</param>
-
-        public VirtoCommerceDomainCustomerModelContact(string FirstName = null, string MiddleName = null, string LastName = null, string FullName = null, string TimeZone = null, string DefaultLanguage = null, DateTime? BirthDate = null, string TaxpayerId = null, string PreferredDelivery = null, string PreferredCommunication = null, string Salutation = null, List<string> Organizations = null, List<VirtoCommercePlatformCoreSecurityApplicationUserExtended> SecurityAccounts = null, string Name = null, string MemberType = null, List<VirtoCommerceDomainCommerceModelAddress> Addresses = null, List<string> Phones = null, List<string> Emails = null, List<VirtoCommerceDomainCustomerModelNote> Notes = null, string ObjectType = null, List<VirtoCommercePlatformCoreDynamicPropertiesDynamicObjectProperty> DynamicProperties = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
-        {
-            this.FirstName = FirstName;
-            this.MiddleName = MiddleName;
-            this.LastName = LastName;
-            this.FullName = FullName;
-            this.TimeZone = TimeZone;
-            this.DefaultLanguage = DefaultLanguage;
-            this.BirthDate = BirthDate;
-            this.TaxpayerId = TaxpayerId;
-            this.PreferredDelivery = PreferredDelivery;
-            this.PreferredCommunication = PreferredCommunication;
-            this.Salutation = Salutation;
-            this.Organizations = Organizations;
-            this.SecurityAccounts = SecurityAccounts;
-            this.Name = Name;
-            this.MemberType = MemberType;
-            this.Addresses = Addresses;
-            this.Phones = Phones;
-            this.Emails = Emails;
-            this.Notes = Notes;
-            this.ObjectType = ObjectType;
-            this.DynamicProperties = DynamicProperties;
-            this.CreatedDate = CreatedDate;
-            this.ModifiedDate = ModifiedDate;
-            this.CreatedBy = CreatedBy;
-            this.ModifiedBy = ModifiedBy;
-            this.Id = Id;
-            
-        }
-
         /// <summary>
         /// Gets or Sets FirstName
         /// </summary>
@@ -237,7 +173,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -272,7 +207,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  CreatedBy: ").Append(CreatedBy).Append("\n");
             sb.Append("  ModifiedBy: ").Append(ModifiedBy).Append("\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -452,90 +386,88 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.FirstName != null)
                     hash = hash * 59 + this.FirstName.GetHashCode();
-                
+
                 if (this.MiddleName != null)
                     hash = hash * 59 + this.MiddleName.GetHashCode();
-                
+
                 if (this.LastName != null)
                     hash = hash * 59 + this.LastName.GetHashCode();
-                
+
                 if (this.FullName != null)
                     hash = hash * 59 + this.FullName.GetHashCode();
-                
+
                 if (this.TimeZone != null)
                     hash = hash * 59 + this.TimeZone.GetHashCode();
-                
+
                 if (this.DefaultLanguage != null)
                     hash = hash * 59 + this.DefaultLanguage.GetHashCode();
-                
+
                 if (this.BirthDate != null)
                     hash = hash * 59 + this.BirthDate.GetHashCode();
-                
+
                 if (this.TaxpayerId != null)
                     hash = hash * 59 + this.TaxpayerId.GetHashCode();
-                
+
                 if (this.PreferredDelivery != null)
                     hash = hash * 59 + this.PreferredDelivery.GetHashCode();
-                
+
                 if (this.PreferredCommunication != null)
                     hash = hash * 59 + this.PreferredCommunication.GetHashCode();
-                
+
                 if (this.Salutation != null)
                     hash = hash * 59 + this.Salutation.GetHashCode();
-                
+
                 if (this.Organizations != null)
                     hash = hash * 59 + this.Organizations.GetHashCode();
-                
+
                 if (this.SecurityAccounts != null)
                     hash = hash * 59 + this.SecurityAccounts.GetHashCode();
-                
+
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
-                
+
                 if (this.MemberType != null)
                     hash = hash * 59 + this.MemberType.GetHashCode();
-                
+
                 if (this.Addresses != null)
                     hash = hash * 59 + this.Addresses.GetHashCode();
-                
+
                 if (this.Phones != null)
                     hash = hash * 59 + this.Phones.GetHashCode();
-                
+
                 if (this.Emails != null)
                     hash = hash * 59 + this.Emails.GetHashCode();
-                
+
                 if (this.Notes != null)
                     hash = hash * 59 + this.Notes.GetHashCode();
-                
+
                 if (this.ObjectType != null)
                     hash = hash * 59 + this.ObjectType.GetHashCode();
-                
+
                 if (this.DynamicProperties != null)
                     hash = hash * 59 + this.DynamicProperties.GetHashCode();
-                
+
                 if (this.CreatedDate != null)
                     hash = hash * 59 + this.CreatedDate.GetHashCode();
-                
+
                 if (this.ModifiedDate != null)
                     hash = hash * 59 + this.ModifiedDate.GetHashCode();
-                
+
                 if (this.CreatedBy != null)
                     hash = hash * 59 + this.CreatedBy.GetHashCode();
-                
+
                 if (this.ModifiedBy != null)
                     hash = hash * 59 + this.ModifiedBy.GetHashCode();
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

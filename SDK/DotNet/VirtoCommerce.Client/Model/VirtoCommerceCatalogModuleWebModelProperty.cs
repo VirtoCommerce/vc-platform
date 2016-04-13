@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,56 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceCatalogModuleWebModelProperty :  IEquatable<VirtoCommerceCatalogModuleWebModelProperty>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelProperty" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelProperty" />class.
-        /// </summary>
-        /// <param name="IsReadOnly">Gets or sets a value indicating whether user can change property value..</param>
-        /// <param name="IsManageable">Gets or sets a value indicating whether user can change property metadata or remove this property..</param>
-        /// <param name="IsNew">Gets or sets a value indicating whether this instance is new. A new property should be created on server site instead of trying to update it..</param>
-        /// <param name="Id">Id.</param>
-        /// <param name="CatalogId">Gets or sets the catalog id that this product belongs to..</param>
-        /// <param name="Catalog">Gets or sets the catalog that this product belongs to..</param>
-        /// <param name="CategoryId">Gets or sets the category id that this product belongs to..</param>
-        /// <param name="Category">Gets or sets the category that this product belongs to..</param>
-        /// <param name="Name">Gets or sets the name..</param>
-        /// <param name="Required">Gets or sets a value indicating whether this {VirtoCommerce.CatalogModule.Web.Model.Property} is required..</param>
-        /// <param name="Dictionary">Gets or sets a value indicating whether this {VirtoCommerce.CatalogModule.Web.Model.Property} is dictionary..</param>
-        /// <param name="Multivalue">Gets or sets a value indicating whether this {VirtoCommerce.CatalogModule.Web.Model.Property} supports multiple values..</param>
-        /// <param name="Multilanguage">Gets or sets a value indicating whether this {VirtoCommerce.CatalogModule.Web.Model.Property} is multilingual..</param>
-        /// <param name="ValueType">Gets or sets the type of the value..</param>
-        /// <param name="Type">Gets or sets the type of object this property is applied to..</param>
-        /// <param name="Values">Gets or sets the current property value. Collection is used as a general placeholder to store both single and multi-value values..</param>
-        /// <param name="DictionaryValues">Gets or sets the dictionary values..</param>
-        /// <param name="Attributes">Gets or sets the attributes..</param>
-        /// <param name="DisplayNames">Gets or sets the display names..</param>
-        /// <param name="IsInherited">System flag used to mark that object was inherited from other.</param>
-
-        public VirtoCommerceCatalogModuleWebModelProperty(bool? IsReadOnly = null, bool? IsManageable = null, bool? IsNew = null, string Id = null, string CatalogId = null, VirtoCommerceCatalogModuleWebModelCatalog Catalog = null, string CategoryId = null, VirtoCommerceCatalogModuleWebModelCategory Category = null, string Name = null, bool? Required = null, bool? Dictionary = null, bool? Multivalue = null, bool? Multilanguage = null, string ValueType = null, string Type = null, List<VirtoCommerceCatalogModuleWebModelPropertyValue> Values = null, List<VirtoCommerceCatalogModuleWebModelPropertyDictionaryValue> DictionaryValues = null, List<VirtoCommerceCatalogModuleWebModelPropertyAttribute> Attributes = null, List<VirtoCommerceDomainCatalogModelPropertyDisplayName> DisplayNames = null, bool? IsInherited = null)
-        {
-            this.IsReadOnly = IsReadOnly;
-            this.IsManageable = IsManageable;
-            this.IsNew = IsNew;
-            this.Id = Id;
-            this.CatalogId = CatalogId;
-            this.Catalog = Catalog;
-            this.CategoryId = CategoryId;
-            this.Category = Category;
-            this.Name = Name;
-            this.Required = Required;
-            this.Dictionary = Dictionary;
-            this.Multivalue = Multivalue;
-            this.Multilanguage = Multilanguage;
-            this.ValueType = ValueType;
-            this.Type = Type;
-            this.Values = Values;
-            this.DictionaryValues = DictionaryValues;
-            this.Attributes = Attributes;
-            this.DisplayNames = DisplayNames;
-            this.IsInherited = IsInherited;
-            
-        }
-
         /// <summary>
         /// Gets or sets a value indicating whether user can change property value.
         /// </summary>
@@ -208,7 +156,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="isInherited", EmitDefaultValue=false)]
         public bool? IsInherited { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -237,7 +184,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Attributes: ").Append(Attributes).Append("\n");
             sb.Append("  DisplayNames: ").Append(DisplayNames).Append("\n");
             sb.Append("  IsInherited: ").Append(IsInherited).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -387,72 +333,70 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.IsReadOnly != null)
                     hash = hash * 59 + this.IsReadOnly.GetHashCode();
-                
+
                 if (this.IsManageable != null)
                     hash = hash * 59 + this.IsManageable.GetHashCode();
-                
+
                 if (this.IsNew != null)
                     hash = hash * 59 + this.IsNew.GetHashCode();
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 if (this.CatalogId != null)
                     hash = hash * 59 + this.CatalogId.GetHashCode();
-                
+
                 if (this.Catalog != null)
                     hash = hash * 59 + this.Catalog.GetHashCode();
-                
+
                 if (this.CategoryId != null)
                     hash = hash * 59 + this.CategoryId.GetHashCode();
-                
+
                 if (this.Category != null)
                     hash = hash * 59 + this.Category.GetHashCode();
-                
+
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
-                
+
                 if (this.Required != null)
                     hash = hash * 59 + this.Required.GetHashCode();
-                
+
                 if (this.Dictionary != null)
                     hash = hash * 59 + this.Dictionary.GetHashCode();
-                
+
                 if (this.Multivalue != null)
                     hash = hash * 59 + this.Multivalue.GetHashCode();
-                
+
                 if (this.Multilanguage != null)
                     hash = hash * 59 + this.Multilanguage.GetHashCode();
-                
+
                 if (this.ValueType != null)
                     hash = hash * 59 + this.ValueType.GetHashCode();
-                
+
                 if (this.Type != null)
                     hash = hash * 59 + this.Type.GetHashCode();
-                
+
                 if (this.Values != null)
                     hash = hash * 59 + this.Values.GetHashCode();
-                
+
                 if (this.DictionaryValues != null)
                     hash = hash * 59 + this.DictionaryValues.GetHashCode();
-                
+
                 if (this.Attributes != null)
                     hash = hash * 59 + this.Attributes.GetHashCode();
-                
+
                 if (this.DisplayNames != null)
                     hash = hash * 59 + this.DisplayNames.GetHashCode();
-                
+
                 if (this.IsInherited != null)
                     hash = hash * 59 + this.IsInherited.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

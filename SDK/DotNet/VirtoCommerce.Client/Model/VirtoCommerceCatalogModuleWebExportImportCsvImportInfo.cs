@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,22 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceCatalogModuleWebExportImportCsvImportInfo :  IEquatable<VirtoCommerceCatalogModuleWebExportImportCsvImportInfo>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebExportImportCsvImportInfo" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebExportImportCsvImportInfo" />class.
-        /// </summary>
-        /// <param name="CatalogId">CatalogId.</param>
-        /// <param name="FileUrl">FileUrl.</param>
-        /// <param name="Configuration">Configuration.</param>
-
-        public VirtoCommerceCatalogModuleWebExportImportCsvImportInfo(string CatalogId = null, string FileUrl = null, VirtoCommerceCatalogModuleWebExportImportCsvProductMappingConfiguration Configuration = null)
-        {
-            this.CatalogId = CatalogId;
-            this.FileUrl = FileUrl;
-            this.Configuration = Configuration;
-            
-        }
-
         /// <summary>
         /// Gets or Sets CatalogId
         /// </summary>
@@ -53,7 +35,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="configuration", EmitDefaultValue=false)]
         public VirtoCommerceCatalogModuleWebExportImportCsvProductMappingConfiguration Configuration { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -65,7 +46,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  CatalogId: ").Append(CatalogId).Append("\n");
             sb.Append("  FileUrl: ").Append(FileUrl).Append("\n");
             sb.Append("  Configuration: ").Append(Configuration).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -130,21 +110,19 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.CatalogId != null)
                     hash = hash * 59 + this.CatalogId.GetHashCode();
-                
+
                 if (this.FileUrl != null)
                     hash = hash * 59 + this.FileUrl.GetHashCode();
-                
+
                 if (this.Configuration != null)
                     hash = hash * 59 + this.Configuration.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

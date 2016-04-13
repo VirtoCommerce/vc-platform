@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,24 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceCatalogModuleWebModelListEntryLink :  IEquatable<VirtoCommerceCatalogModuleWebModelListEntryLink>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelListEntryLink" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelListEntryLink" />class.
-        /// </summary>
-        /// <param name="ListEntryId">Gets or sets the list entry identifier..</param>
-        /// <param name="ListEntryType">Gets or sets the type of the list entry. E.g. \&quot;product\&quot;, \&quot;category\&quot;.</param>
-        /// <param name="CatalogId">Gets or sets the target catalog identifier..</param>
-        /// <param name="CategoryId">Gets or sets the target category identifier..</param>
-
-        public VirtoCommerceCatalogModuleWebModelListEntryLink(string ListEntryId = null, string ListEntryType = null, string CatalogId = null, string CategoryId = null)
-        {
-            this.ListEntryId = ListEntryId;
-            this.ListEntryType = ListEntryType;
-            this.CatalogId = CatalogId;
-            this.CategoryId = CategoryId;
-            
-        }
-
         /// <summary>
         /// Gets or sets the list entry identifier.
         /// </summary>
@@ -65,7 +45,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="categoryId", EmitDefaultValue=false)]
         public string CategoryId { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -78,7 +57,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  ListEntryType: ").Append(ListEntryType).Append("\n");
             sb.Append("  CatalogId: ").Append(CatalogId).Append("\n");
             sb.Append("  CategoryId: ").Append(CategoryId).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -148,24 +126,22 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.ListEntryId != null)
                     hash = hash * 59 + this.ListEntryId.GetHashCode();
-                
+
                 if (this.ListEntryType != null)
                     hash = hash * 59 + this.ListEntryType.GetHashCode();
-                
+
                 if (this.CatalogId != null)
                     hash = hash * 59 + this.CatalogId.GetHashCode();
-                
+
                 if (this.CategoryId != null)
                     hash = hash * 59 + this.CategoryId.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

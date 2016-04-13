@@ -7,17 +7,14 @@ using RestSharp;
 using VirtoCommerce.Client.Client;
 using VirtoCommerce.Client.Model;
 
-
 namespace VirtoCommerce.Client.Api
 {
-    
     /// <summary>
     /// Represents a collection of functions to interact with the API endpoints
     /// </summary>
     public interface IInventoryModuleApi
     {
         #region Synchronous Operations
-        
         /// <summary>
         /// Get inventories of product
         /// </summary>
@@ -28,7 +25,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="productId">Product id</param>
         /// <returns>List&lt;VirtoCommerceInventoryModuleWebModelInventoryInfo&gt;</returns>
         List<VirtoCommerceInventoryModuleWebModelInventoryInfo> InventoryModuleGetProductInventories (string productId);
-  
+
         /// <summary>
         /// Get inventories of product
         /// </summary>
@@ -39,7 +36,6 @@ namespace VirtoCommerce.Client.Api
         /// <param name="productId">Product id</param>
         /// <returns>ApiResponse of List&lt;VirtoCommerceInventoryModuleWebModelInventoryInfo&gt;</returns>
         ApiResponse<List<VirtoCommerceInventoryModuleWebModelInventoryInfo>> InventoryModuleGetProductInventoriesWithHttpInfo (string productId);
-        
         /// <summary>
         /// Get inventories of products
         /// </summary>
@@ -50,7 +46,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="ids">Products ids</param>
         /// <returns>List&lt;VirtoCommerceInventoryModuleWebModelInventoryInfo&gt;</returns>
         List<VirtoCommerceInventoryModuleWebModelInventoryInfo> InventoryModuleGetProductsInventories (List<string> ids);
-  
+
         /// <summary>
         /// Get inventories of products
         /// </summary>
@@ -61,7 +57,6 @@ namespace VirtoCommerce.Client.Api
         /// <param name="ids">Products ids</param>
         /// <returns>ApiResponse of List&lt;VirtoCommerceInventoryModuleWebModelInventoryInfo&gt;</returns>
         ApiResponse<List<VirtoCommerceInventoryModuleWebModelInventoryInfo>> InventoryModuleGetProductsInventoriesWithHttpInfo (List<string> ids);
-        
         /// <summary>
         /// Upsert inventory
         /// </summary>
@@ -73,7 +68,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="productId"></param>
         /// <returns>VirtoCommerceInventoryModuleWebModelInventoryInfo</returns>
         VirtoCommerceInventoryModuleWebModelInventoryInfo InventoryModuleUpsertProductInventory (VirtoCommerceInventoryModuleWebModelInventoryInfo inventory, string productId);
-  
+
         /// <summary>
         /// Upsert inventory
         /// </summary>
@@ -85,11 +80,8 @@ namespace VirtoCommerce.Client.Api
         /// <param name="productId"></param>
         /// <returns>ApiResponse of VirtoCommerceInventoryModuleWebModelInventoryInfo</returns>
         ApiResponse<VirtoCommerceInventoryModuleWebModelInventoryInfo> InventoryModuleUpsertProductInventoryWithHttpInfo (VirtoCommerceInventoryModuleWebModelInventoryInfo inventory, string productId);
-        
         #endregion Synchronous Operations
-        
         #region Asynchronous Operations
-        
         /// <summary>
         /// Get inventories of product
         /// </summary>
@@ -111,7 +103,6 @@ namespace VirtoCommerce.Client.Api
         /// <param name="productId">Product id</param>
         /// <returns>Task of ApiResponse (List&lt;VirtoCommerceInventoryModuleWebModelInventoryInfo&gt;)</returns>
         System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceInventoryModuleWebModelInventoryInfo>>> InventoryModuleGetProductInventoriesAsyncWithHttpInfo (string productId);
-        
         /// <summary>
         /// Get inventories of products
         /// </summary>
@@ -133,7 +124,6 @@ namespace VirtoCommerce.Client.Api
         /// <param name="ids">Products ids</param>
         /// <returns>Task of ApiResponse (List&lt;VirtoCommerceInventoryModuleWebModelInventoryInfo&gt;)</returns>
         System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceInventoryModuleWebModelInventoryInfo>>> InventoryModuleGetProductsInventoriesAsyncWithHttpInfo (List<string> ids);
-        
         /// <summary>
         /// Upsert inventory
         /// </summary>
@@ -157,11 +147,9 @@ namespace VirtoCommerce.Client.Api
         /// <param name="productId"></param>
         /// <returns>Task of ApiResponse (VirtoCommerceInventoryModuleWebModelInventoryInfo)</returns>
         System.Threading.Tasks.Task<ApiResponse<VirtoCommerceInventoryModuleWebModelInventoryInfo>> InventoryModuleUpsertProductInventoryAsyncWithHttpInfo (VirtoCommerceInventoryModuleWebModelInventoryInfo inventory, string productId);
-        
         #endregion Asynchronous Operations
-        
     }
-  
+
     /// <summary>
     /// Represents a collection of functions to interact with the API endpoints
     /// </summary>
@@ -176,7 +164,7 @@ namespace VirtoCommerce.Client.Api
         public InventoryModuleApi(Configuration configuration)
         {
             if (configuration == null) // use the default one in Configuration
-                this.Configuration = Configuration.Default; 
+                this.Configuration = Configuration.Default;
             else
                 this.Configuration = configuration;
 
@@ -205,7 +193,7 @@ namespace VirtoCommerce.Client.Api
         {
             // do nothing
         }
-    
+
         /// <summary>
         /// Gets or sets the configuration object
         /// </summary>
@@ -233,13 +221,12 @@ namespace VirtoCommerce.Client.Api
         {
             this.Configuration.AddDefaultHeader(key, value);
         }
-   
-        
+
         /// <summary>
         /// Get inventories of product Get inventories of product for each fulfillment center.
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="productId">Product id</param> 
+        /// <param name="productId">Product id</param>
         /// <returns>List&lt;VirtoCommerceInventoryModuleWebModelInventoryInfo&gt;</returns>
         public List<VirtoCommerceInventoryModuleWebModelInventoryInfo> InventoryModuleGetProductInventories (string productId)
         {
@@ -251,18 +238,15 @@ namespace VirtoCommerce.Client.Api
         /// Get inventories of product Get inventories of product for each fulfillment center.
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="productId">Product id</param> 
+        /// <param name="productId">Product id</param>
         /// <returns>ApiResponse of List&lt;VirtoCommerceInventoryModuleWebModelInventoryInfo&gt;</returns>
         public ApiResponse< List<VirtoCommerceInventoryModuleWebModelInventoryInfo> > InventoryModuleGetProductInventoriesWithHttpInfo (string productId)
         {
-            
             // verify the required parameter 'productId' is set
             if (productId == null)
                 throw new ApiException(400, "Missing required parameter 'productId' when calling InventoryModuleApi->InventoryModuleGetProductInventories");
-            
-    
+
             var localVarPath = "/api/inventory/products/{productId}";
-    
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -272,13 +256,13 @@ namespace VirtoCommerce.Client.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
-                "application/json", "text/json"
+                "application/json", 
+                "text/json"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -288,33 +272,26 @@ namespace VirtoCommerce.Client.Api
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
             if (productId != null) localVarPathParams.Add("productId", Configuration.ApiClient.ParameterToString(productId)); // path parameter
-            
-            
-            
-            
-            
 
-            
-    
+
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath, 
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
                 Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
-    
+
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (localVarStatusCode, "Error calling InventoryModuleGetProductInventories: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
                 throw new ApiException (localVarStatusCode, "Error calling InventoryModuleGetProductInventories: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
-    
+
             return new ApiResponse<List<VirtoCommerceInventoryModuleWebModelInventoryInfo>>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 (List<VirtoCommerceInventoryModuleWebModelInventoryInfo>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<VirtoCommerceInventoryModuleWebModelInventoryInfo>)));
             
         }
 
-        
         /// <summary>
         /// Get inventories of product Get inventories of product for each fulfillment center.
         /// </summary>
@@ -337,11 +314,10 @@ namespace VirtoCommerce.Client.Api
         public async System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceInventoryModuleWebModelInventoryInfo>>> InventoryModuleGetProductInventoriesAsyncWithHttpInfo (string productId)
         {
             // verify the required parameter 'productId' is set
-            if (productId == null) throw new ApiException(400, "Missing required parameter 'productId' when calling InventoryModuleGetProductInventories");
-            
-    
+            if (productId == null)
+                throw new ApiException(400, "Missing required parameter 'productId' when calling InventoryModuleApi->InventoryModuleGetProductInventories");
+
             var localVarPath = "/api/inventory/products/{productId}";
-    
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -351,13 +327,13 @@ namespace VirtoCommerce.Client.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
-                "application/json", "text/json"
+                "application/json", 
+                "text/json"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -367,21 +343,15 @@ namespace VirtoCommerce.Client.Api
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
             if (productId != null) localVarPathParams.Add("productId", Configuration.ApiClient.ParameterToString(productId)); // path parameter
-            
-            
-            
-            
-            
 
-            
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath, 
-                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams, 
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
- 
+
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (localVarStatusCode, "Error calling InventoryModuleGetProductInventories: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
@@ -392,12 +362,12 @@ namespace VirtoCommerce.Client.Api
                 (List<VirtoCommerceInventoryModuleWebModelInventoryInfo>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<VirtoCommerceInventoryModuleWebModelInventoryInfo>)));
             
         }
-        
+
         /// <summary>
         /// Get inventories of products Get inventory of products for each fulfillment center.
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="ids">Products ids</param> 
+        /// <param name="ids">Products ids</param>
         /// <returns>List&lt;VirtoCommerceInventoryModuleWebModelInventoryInfo&gt;</returns>
         public List<VirtoCommerceInventoryModuleWebModelInventoryInfo> InventoryModuleGetProductsInventories (List<string> ids)
         {
@@ -409,18 +379,15 @@ namespace VirtoCommerce.Client.Api
         /// Get inventories of products Get inventory of products for each fulfillment center.
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="ids">Products ids</param> 
+        /// <param name="ids">Products ids</param>
         /// <returns>ApiResponse of List&lt;VirtoCommerceInventoryModuleWebModelInventoryInfo&gt;</returns>
         public ApiResponse< List<VirtoCommerceInventoryModuleWebModelInventoryInfo> > InventoryModuleGetProductsInventoriesWithHttpInfo (List<string> ids)
         {
-            
             // verify the required parameter 'ids' is set
             if (ids == null)
                 throw new ApiException(400, "Missing required parameter 'ids' when calling InventoryModuleApi->InventoryModuleGetProductsInventories");
-            
-    
+
             var localVarPath = "/api/inventory/products";
-    
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -430,13 +397,13 @@ namespace VirtoCommerce.Client.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
-                "application/json", "text/json"
+                "application/json", 
+                "text/json"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -445,34 +412,27 @@ namespace VirtoCommerce.Client.Api
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
-            
             if (ids != null) localVarQueryParams.Add("ids", Configuration.ApiClient.ParameterToString(ids)); // query parameter
-            
-            
-            
-            
 
-            
-    
+
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath, 
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
                 Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
-    
+
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (localVarStatusCode, "Error calling InventoryModuleGetProductsInventories: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
                 throw new ApiException (localVarStatusCode, "Error calling InventoryModuleGetProductsInventories: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
-    
+
             return new ApiResponse<List<VirtoCommerceInventoryModuleWebModelInventoryInfo>>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 (List<VirtoCommerceInventoryModuleWebModelInventoryInfo>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<VirtoCommerceInventoryModuleWebModelInventoryInfo>)));
             
         }
 
-        
         /// <summary>
         /// Get inventories of products Get inventory of products for each fulfillment center.
         /// </summary>
@@ -495,11 +455,10 @@ namespace VirtoCommerce.Client.Api
         public async System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceInventoryModuleWebModelInventoryInfo>>> InventoryModuleGetProductsInventoriesAsyncWithHttpInfo (List<string> ids)
         {
             // verify the required parameter 'ids' is set
-            if (ids == null) throw new ApiException(400, "Missing required parameter 'ids' when calling InventoryModuleGetProductsInventories");
-            
-    
+            if (ids == null)
+                throw new ApiException(400, "Missing required parameter 'ids' when calling InventoryModuleApi->InventoryModuleGetProductsInventories");
+
             var localVarPath = "/api/inventory/products";
-    
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -509,13 +468,13 @@ namespace VirtoCommerce.Client.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
-                "application/json", "text/json"
+                "application/json", 
+                "text/json"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -524,22 +483,16 @@ namespace VirtoCommerce.Client.Api
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
-            
             if (ids != null) localVarQueryParams.Add("ids", Configuration.ApiClient.ParameterToString(ids)); // query parameter
-            
-            
-            
-            
 
-            
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath, 
-                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams, 
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
- 
+
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (localVarStatusCode, "Error calling InventoryModuleGetProductsInventories: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
@@ -550,13 +503,13 @@ namespace VirtoCommerce.Client.Api
                 (List<VirtoCommerceInventoryModuleWebModelInventoryInfo>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<VirtoCommerceInventoryModuleWebModelInventoryInfo>)));
             
         }
-        
+
         /// <summary>
         /// Upsert inventory Upsert (add or update) given inventory of product.
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="inventory">Inventory to upsert</param> 
-        /// <param name="productId"></param> 
+        /// <param name="inventory">Inventory to upsert</param>
+        /// <param name="productId"></param>
         /// <returns>VirtoCommerceInventoryModuleWebModelInventoryInfo</returns>
         public VirtoCommerceInventoryModuleWebModelInventoryInfo InventoryModuleUpsertProductInventory (VirtoCommerceInventoryModuleWebModelInventoryInfo inventory, string productId)
         {
@@ -568,23 +521,19 @@ namespace VirtoCommerce.Client.Api
         /// Upsert inventory Upsert (add or update) given inventory of product.
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="inventory">Inventory to upsert</param> 
-        /// <param name="productId"></param> 
+        /// <param name="inventory">Inventory to upsert</param>
+        /// <param name="productId"></param>
         /// <returns>ApiResponse of VirtoCommerceInventoryModuleWebModelInventoryInfo</returns>
         public ApiResponse< VirtoCommerceInventoryModuleWebModelInventoryInfo > InventoryModuleUpsertProductInventoryWithHttpInfo (VirtoCommerceInventoryModuleWebModelInventoryInfo inventory, string productId)
         {
-            
             // verify the required parameter 'inventory' is set
             if (inventory == null)
                 throw new ApiException(400, "Missing required parameter 'inventory' when calling InventoryModuleApi->InventoryModuleUpsertProductInventory");
-            
             // verify the required parameter 'productId' is set
             if (productId == null)
                 throw new ApiException(400, "Missing required parameter 'productId' when calling InventoryModuleApi->InventoryModuleUpsertProductInventory");
-            
-    
+
             var localVarPath = "/api/inventory/products/{productId}";
-    
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -594,13 +543,16 @@ namespace VirtoCommerce.Client.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                "application/json", "text/json", "application/x-www-form-urlencoded"
+                "application/json", 
+                "text/json", 
+                "application/x-www-form-urlencoded"
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
-                "application/json", "text/json"
+                "application/json", 
+                "text/json"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -610,10 +562,6 @@ namespace VirtoCommerce.Client.Api
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
             if (productId != null) localVarPathParams.Add("productId", Configuration.ApiClient.ParameterToString(productId)); // path parameter
-            
-            
-            
-            
             if (inventory.GetType() != typeof(byte[]))
             {
                 localVarPostBody = Configuration.ApiClient.Serialize(inventory); // http body (model) parameter
@@ -623,27 +571,25 @@ namespace VirtoCommerce.Client.Api
                 localVarPostBody = inventory; // byte array
             }
 
-            
-    
+
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath, 
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
                 Method.PUT, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
-    
+
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (localVarStatusCode, "Error calling InventoryModuleUpsertProductInventory: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
                 throw new ApiException (localVarStatusCode, "Error calling InventoryModuleUpsertProductInventory: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
-    
+
             return new ApiResponse<VirtoCommerceInventoryModuleWebModelInventoryInfo>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 (VirtoCommerceInventoryModuleWebModelInventoryInfo) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceInventoryModuleWebModelInventoryInfo)));
             
         }
 
-        
         /// <summary>
         /// Upsert inventory Upsert (add or update) given inventory of product.
         /// </summary>
@@ -668,13 +614,13 @@ namespace VirtoCommerce.Client.Api
         public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceInventoryModuleWebModelInventoryInfo>> InventoryModuleUpsertProductInventoryAsyncWithHttpInfo (VirtoCommerceInventoryModuleWebModelInventoryInfo inventory, string productId)
         {
             // verify the required parameter 'inventory' is set
-            if (inventory == null) throw new ApiException(400, "Missing required parameter 'inventory' when calling InventoryModuleUpsertProductInventory");
+            if (inventory == null)
+                throw new ApiException(400, "Missing required parameter 'inventory' when calling InventoryModuleApi->InventoryModuleUpsertProductInventory");
             // verify the required parameter 'productId' is set
-            if (productId == null) throw new ApiException(400, "Missing required parameter 'productId' when calling InventoryModuleUpsertProductInventory");
-            
-    
+            if (productId == null)
+                throw new ApiException(400, "Missing required parameter 'productId' when calling InventoryModuleApi->InventoryModuleUpsertProductInventory");
+
             var localVarPath = "/api/inventory/products/{productId}";
-    
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -684,13 +630,16 @@ namespace VirtoCommerce.Client.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                "application/json", "text/json", "application/x-www-form-urlencoded"
+                "application/json", 
+                "text/json", 
+                "application/x-www-form-urlencoded"
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
-                "application/json", "text/json"
+                "application/json", 
+                "text/json"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -700,10 +649,6 @@ namespace VirtoCommerce.Client.Api
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
             if (productId != null) localVarPathParams.Add("productId", Configuration.ApiClient.ParameterToString(productId)); // path parameter
-            
-            
-            
-            
             if (inventory.GetType() != typeof(byte[]))
             {
                 localVarPostBody = Configuration.ApiClient.Serialize(inventory); // http body (model) parameter
@@ -713,15 +658,14 @@ namespace VirtoCommerce.Client.Api
                 localVarPostBody = inventory; // byte array
             }
 
-            
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath, 
-                Method.PUT, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams, 
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.PUT, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
- 
+
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (localVarStatusCode, "Error calling InventoryModuleUpsertProductInventory: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
@@ -732,7 +676,6 @@ namespace VirtoCommerce.Client.Api
                 (VirtoCommerceInventoryModuleWebModelInventoryInfo) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceInventoryModuleWebModelInventoryInfo)));
             
         }
-        
+
     }
-    
 }

@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,22 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommercePlatformCoreSecurityPermissionScope :  IEquatable<VirtoCommercePlatformCoreSecurityPermissionScope>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreSecurityPermissionScope" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreSecurityPermissionScope" />class.
-        /// </summary>
-        /// <param name="Type">Type.</param>
-        /// <param name="Label">Label.</param>
-        /// <param name="Scope">Scope.</param>
-
-        public VirtoCommercePlatformCoreSecurityPermissionScope(string Type = null, string Label = null, string Scope = null)
-        {
-            this.Type = Type;
-            this.Label = Label;
-            this.Scope = Scope;
-            
-        }
-
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
@@ -53,7 +35,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="scope", EmitDefaultValue=false)]
         public string Scope { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -65,7 +46,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Type: ").Append(Type).Append("\n");
             sb.Append("  Label: ").Append(Label).Append("\n");
             sb.Append("  Scope: ").Append(Scope).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -130,21 +110,19 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Type != null)
                     hash = hash * 59 + this.Type.GetHashCode();
-                
+
                 if (this.Label != null)
                     hash = hash * 59 + this.Label.GetHashCode();
-                
+
                 if (this.Scope != null)
                     hash = hash * 59 + this.Scope.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

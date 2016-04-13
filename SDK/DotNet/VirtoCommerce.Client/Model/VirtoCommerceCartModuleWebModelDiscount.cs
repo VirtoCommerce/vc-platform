@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,24 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceCartModuleWebModelDiscount :  IEquatable<VirtoCommerceCartModuleWebModelDiscount>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceCartModuleWebModelDiscount" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceCartModuleWebModelDiscount" />class.
-        /// </summary>
-        /// <param name="PromotionId">Gets or sets the value of promotion id.</param>
-        /// <param name="Currency">Gets or sets the value of currency.</param>
-        /// <param name="DiscountAmount">Gets or sets the value of discount amount.</param>
-        /// <param name="Description">Gets or sets the value of discount description.</param>
-
-        public VirtoCommerceCartModuleWebModelDiscount(string PromotionId = null, string Currency = null, double? DiscountAmount = null, string Description = null)
-        {
-            this.PromotionId = PromotionId;
-            this.Currency = Currency;
-            this.DiscountAmount = DiscountAmount;
-            this.Description = Description;
-            
-        }
-
         /// <summary>
         /// Gets or sets the value of promotion id
         /// </summary>
@@ -65,7 +45,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="description", EmitDefaultValue=false)]
         public string Description { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -78,7 +57,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Currency: ").Append(Currency).Append("\n");
             sb.Append("  DiscountAmount: ").Append(DiscountAmount).Append("\n");
             sb.Append("  Description: ").Append(Description).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -148,24 +126,22 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.PromotionId != null)
                     hash = hash * 59 + this.PromotionId.GetHashCode();
-                
+
                 if (this.Currency != null)
                     hash = hash * 59 + this.Currency.GetHashCode();
-                
+
                 if (this.DiscountAmount != null)
                     hash = hash * 59 + this.DiscountAmount.GetHashCode();
-                
+
                 if (this.Description != null)
                     hash = hash * 59 + this.Description.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

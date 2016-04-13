@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,34 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceCatalogModuleWebModelPropertyValue :  IEquatable<VirtoCommerceCatalogModuleWebModelPropertyValue>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelPropertyValue" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelPropertyValue" />class.
-        /// </summary>
-        /// <param name="Id">Id.</param>
-        /// <param name="PropertyName">Gets or sets the name of the property that this value belongs to..</param>
-        /// <param name="PropertyId">Gets or sets the id of the property that this value belongs to..</param>
-        /// <param name="LanguageCode">Gets or sets the language of this property value..</param>
-        /// <param name="Alias">Gets or sets the value of this dictionary value in default language..</param>
-        /// <param name="ValueType">Gets or sets the type of the value..</param>
-        /// <param name="ValueId">Gets or sets the value id in case this value is for property which supports dictionary values..</param>
-        /// <param name="Value">Gets or sets the actual value..</param>
-        /// <param name="IsInherited">System flag used to mark that object was inherited from other.</param>
-
-        public VirtoCommerceCatalogModuleWebModelPropertyValue(string Id = null, string PropertyName = null, string PropertyId = null, string LanguageCode = null, string Alias = null, string ValueType = null, string ValueId = null, string Value = null, bool? IsInherited = null)
-        {
-            this.Id = Id;
-            this.PropertyName = PropertyName;
-            this.PropertyId = PropertyId;
-            this.LanguageCode = LanguageCode;
-            this.Alias = Alias;
-            this.ValueType = ValueType;
-            this.ValueId = ValueId;
-            this.Value = Value;
-            this.IsInherited = IsInherited;
-            
-        }
-
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
@@ -109,7 +79,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="isInherited", EmitDefaultValue=false)]
         public bool? IsInherited { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -127,7 +96,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  ValueId: ").Append(ValueId).Append("\n");
             sb.Append("  Value: ").Append(Value).Append("\n");
             sb.Append("  IsInherited: ").Append(IsInherited).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -222,39 +190,37 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 if (this.PropertyName != null)
                     hash = hash * 59 + this.PropertyName.GetHashCode();
-                
+
                 if (this.PropertyId != null)
                     hash = hash * 59 + this.PropertyId.GetHashCode();
-                
+
                 if (this.LanguageCode != null)
                     hash = hash * 59 + this.LanguageCode.GetHashCode();
-                
+
                 if (this.Alias != null)
                     hash = hash * 59 + this.Alias.GetHashCode();
-                
+
                 if (this.ValueType != null)
                     hash = hash * 59 + this.ValueType.GetHashCode();
-                
+
                 if (this.ValueId != null)
                     hash = hash * 59 + this.ValueId.GetHashCode();
-                
+
                 if (this.Value != null)
                     hash = hash * 59 + this.Value.GetHashCode();
-                
+
                 if (this.IsInherited != null)
                     hash = hash * 59 + this.IsInherited.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

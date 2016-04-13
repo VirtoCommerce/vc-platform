@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,60 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommercePlatformWebModelNotificationsNotification :  IEquatable<VirtoCommercePlatformWebModelNotificationsNotification>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelNotificationsNotification" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelNotificationsNotification" />class.
-        /// </summary>
-        /// <param name="Id">Id.</param>
-        /// <param name="DisplayName">DisplayName.</param>
-        /// <param name="Description">Description.</param>
-        /// <param name="IsEmail">IsEmail.</param>
-        /// <param name="IsSms">IsSms.</param>
-        /// <param name="Type">Type.</param>
-        /// <param name="IsActive">IsActive.</param>
-        /// <param name="IsSuccessSend">IsSuccessSend.</param>
-        /// <param name="ObjectId">ObjectId.</param>
-        /// <param name="ObjectTypeId">ObjectTypeId.</param>
-        /// <param name="Language">Language.</param>
-        /// <param name="SendingGateway">Type of notificaiton sending gateway.</param>
-        /// <param name="Subject">Subject.</param>
-        /// <param name="Body">Body.</param>
-        /// <param name="Sender">Sender.</param>
-        /// <param name="Recipient">Recipient.</param>
-        /// <param name="AttemptCount">Sending attempts count.</param>
-        /// <param name="MaxAttemptCount">Max sending attempt count, if MaxAttemptCount less or equal AttemptCount IsActive = false and IsSent = false, notification stop sending.</param>
-        /// <param name="LastFailAttemptMessage">Last fail sending attempt error message.</param>
-        /// <param name="LastFailAttemptDate">Last fail sending attempt date.</param>
-        /// <param name="StartSendingDate">Start sending date, if not null notification will be sending after that date.</param>
-        /// <param name="SentDate">SentDate.</param>
-
-        public VirtoCommercePlatformWebModelNotificationsNotification(string Id = null, string DisplayName = null, string Description = null, bool? IsEmail = null, bool? IsSms = null, string Type = null, bool? IsActive = null, bool? IsSuccessSend = null, string ObjectId = null, string ObjectTypeId = null, string Language = null, string SendingGateway = null, string Subject = null, string Body = null, string Sender = null, string Recipient = null, int? AttemptCount = null, int? MaxAttemptCount = null, string LastFailAttemptMessage = null, DateTime? LastFailAttemptDate = null, DateTime? StartSendingDate = null, DateTime? SentDate = null)
-        {
-            this.Id = Id;
-            this.DisplayName = DisplayName;
-            this.Description = Description;
-            this.IsEmail = IsEmail;
-            this.IsSms = IsSms;
-            this.Type = Type;
-            this.IsActive = IsActive;
-            this.IsSuccessSend = IsSuccessSend;
-            this.ObjectId = ObjectId;
-            this.ObjectTypeId = ObjectTypeId;
-            this.Language = Language;
-            this.SendingGateway = SendingGateway;
-            this.Subject = Subject;
-            this.Body = Body;
-            this.Sender = Sender;
-            this.Recipient = Recipient;
-            this.AttemptCount = AttemptCount;
-            this.MaxAttemptCount = MaxAttemptCount;
-            this.LastFailAttemptMessage = LastFailAttemptMessage;
-            this.LastFailAttemptDate = LastFailAttemptDate;
-            this.StartSendingDate = StartSendingDate;
-            this.SentDate = SentDate;
-            
-        }
-
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
@@ -178,9 +122,9 @@ namespace VirtoCommerce.Client.Model
         public int? AttemptCount { get; set; }
 
         /// <summary>
-        /// Max sending attempt count, if MaxAttemptCount less or equal AttemptCount IsActive = false and IsSent = false, notification stop sending
+        /// Max sending attempt count, if MaxAttemptCount less or equal AttemptCount IsActive &#x3D; false and IsSent &#x3D; false, notification stop sending
         /// </summary>
-        /// <value>Max sending attempt count, if MaxAttemptCount less or equal AttemptCount IsActive = false and IsSent = false, notification stop sending</value>
+        /// <value>Max sending attempt count, if MaxAttemptCount less or equal AttemptCount IsActive &#x3D; false and IsSent &#x3D; false, notification stop sending</value>
         [DataMember(Name="maxAttemptCount", EmitDefaultValue=false)]
         public int? MaxAttemptCount { get; set; }
 
@@ -210,7 +154,6 @@ namespace VirtoCommerce.Client.Model
         /// </summary>
         [DataMember(Name="sentDate", EmitDefaultValue=false)]
         public DateTime? SentDate { get; set; }
-
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -242,7 +185,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  LastFailAttemptDate: ").Append(LastFailAttemptDate).Append("\n");
             sb.Append("  StartSendingDate: ").Append(StartSendingDate).Append("\n");
             sb.Append("  SentDate: ").Append(SentDate).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -402,78 +344,76 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 if (this.DisplayName != null)
                     hash = hash * 59 + this.DisplayName.GetHashCode();
-                
+
                 if (this.Description != null)
                     hash = hash * 59 + this.Description.GetHashCode();
-                
+
                 if (this.IsEmail != null)
                     hash = hash * 59 + this.IsEmail.GetHashCode();
-                
+
                 if (this.IsSms != null)
                     hash = hash * 59 + this.IsSms.GetHashCode();
-                
+
                 if (this.Type != null)
                     hash = hash * 59 + this.Type.GetHashCode();
-                
+
                 if (this.IsActive != null)
                     hash = hash * 59 + this.IsActive.GetHashCode();
-                
+
                 if (this.IsSuccessSend != null)
                     hash = hash * 59 + this.IsSuccessSend.GetHashCode();
-                
+
                 if (this.ObjectId != null)
                     hash = hash * 59 + this.ObjectId.GetHashCode();
-                
+
                 if (this.ObjectTypeId != null)
                     hash = hash * 59 + this.ObjectTypeId.GetHashCode();
-                
+
                 if (this.Language != null)
                     hash = hash * 59 + this.Language.GetHashCode();
-                
+
                 if (this.SendingGateway != null)
                     hash = hash * 59 + this.SendingGateway.GetHashCode();
-                
+
                 if (this.Subject != null)
                     hash = hash * 59 + this.Subject.GetHashCode();
-                
+
                 if (this.Body != null)
                     hash = hash * 59 + this.Body.GetHashCode();
-                
+
                 if (this.Sender != null)
                     hash = hash * 59 + this.Sender.GetHashCode();
-                
+
                 if (this.Recipient != null)
                     hash = hash * 59 + this.Recipient.GetHashCode();
-                
+
                 if (this.AttemptCount != null)
                     hash = hash * 59 + this.AttemptCount.GetHashCode();
-                
+
                 if (this.MaxAttemptCount != null)
                     hash = hash * 59 + this.MaxAttemptCount.GetHashCode();
-                
+
                 if (this.LastFailAttemptMessage != null)
                     hash = hash * 59 + this.LastFailAttemptMessage.GetHashCode();
-                
+
                 if (this.LastFailAttemptDate != null)
                     hash = hash * 59 + this.LastFailAttemptDate.GetHashCode();
-                
+
                 if (this.StartSendingDate != null)
                     hash = hash * 59 + this.StartSendingDate.GetHashCode();
-                
+
                 if (this.SentDate != null)
                     hash = hash * 59 + this.SentDate.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

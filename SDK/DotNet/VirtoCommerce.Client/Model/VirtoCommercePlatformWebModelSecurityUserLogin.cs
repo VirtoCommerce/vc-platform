@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,22 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommercePlatformWebModelSecurityUserLogin :  IEquatable<VirtoCommercePlatformWebModelSecurityUserLogin>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelSecurityUserLogin" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelSecurityUserLogin" />class.
-        /// </summary>
-        /// <param name="UserName">UserName.</param>
-        /// <param name="Password">Password.</param>
-        /// <param name="RememberMe">RememberMe.</param>
-
-        public VirtoCommercePlatformWebModelSecurityUserLogin(string UserName = null, string Password = null, bool? RememberMe = null)
-        {
-            this.UserName = UserName;
-            this.Password = Password;
-            this.RememberMe = RememberMe;
-            
-        }
-
         /// <summary>
         /// Gets or Sets UserName
         /// </summary>
@@ -53,7 +35,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="rememberMe", EmitDefaultValue=false)]
         public bool? RememberMe { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -65,7 +46,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  UserName: ").Append(UserName).Append("\n");
             sb.Append("  Password: ").Append(Password).Append("\n");
             sb.Append("  RememberMe: ").Append(RememberMe).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -130,21 +110,19 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.UserName != null)
                     hash = hash * 59 + this.UserName.GetHashCode();
-                
+
                 if (this.Password != null)
                     hash = hash * 59 + this.Password.GetHashCode();
-                
+
                 if (this.RememberMe != null)
                     hash = hash * 59 + this.RememberMe.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

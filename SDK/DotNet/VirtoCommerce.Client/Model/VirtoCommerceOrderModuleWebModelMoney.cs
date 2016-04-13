@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,20 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceOrderModuleWebModelMoney :  IEquatable<VirtoCommerceOrderModuleWebModelMoney>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceOrderModuleWebModelMoney" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceOrderModuleWebModelMoney" />class.
-        /// </summary>
-        /// <param name="Currency">Currency.</param>
-        /// <param name="Amount">Amount.</param>
-
-        public VirtoCommerceOrderModuleWebModelMoney(string Currency = null, double? Amount = null)
-        {
-            this.Currency = Currency;
-            this.Amount = Amount;
-            
-        }
-
         /// <summary>
         /// Gets or Sets Currency
         /// </summary>
@@ -45,7 +29,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="amount", EmitDefaultValue=false)]
         public double? Amount { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -56,7 +39,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("class VirtoCommerceOrderModuleWebModelMoney {\n");
             sb.Append("  Currency: ").Append(Currency).Append("\n");
             sb.Append("  Amount: ").Append(Amount).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -116,18 +98,16 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Currency != null)
                     hash = hash * 59 + this.Currency.GetHashCode();
-                
+
                 if (this.Amount != null)
                     hash = hash * 59 + this.Amount.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

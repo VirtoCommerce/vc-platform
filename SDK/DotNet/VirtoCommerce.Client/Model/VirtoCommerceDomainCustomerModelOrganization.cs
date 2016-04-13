@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,50 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceDomainCustomerModelOrganization :  IEquatable<VirtoCommerceDomainCustomerModelOrganization>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCustomerModelOrganization" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCustomerModelOrganization" />class.
-        /// </summary>
-        /// <param name="Description">Description.</param>
-        /// <param name="BusinessCategory">BusinessCategory.</param>
-        /// <param name="OwnerId">OwnerId.</param>
-        /// <param name="ParentId">ParentId.</param>
-        /// <param name="Name">Name.</param>
-        /// <param name="MemberType">MemberType.</param>
-        /// <param name="Addresses">Addresses.</param>
-        /// <param name="Phones">Phones.</param>
-        /// <param name="Emails">Emails.</param>
-        /// <param name="Notes">Notes.</param>
-        /// <param name="ObjectType">ObjectType.</param>
-        /// <param name="DynamicProperties">DynamicProperties.</param>
-        /// <param name="CreatedDate">CreatedDate.</param>
-        /// <param name="ModifiedDate">ModifiedDate.</param>
-        /// <param name="CreatedBy">CreatedBy.</param>
-        /// <param name="ModifiedBy">ModifiedBy.</param>
-        /// <param name="Id">Id.</param>
-
-        public VirtoCommerceDomainCustomerModelOrganization(string Description = null, string BusinessCategory = null, string OwnerId = null, string ParentId = null, string Name = null, string MemberType = null, List<VirtoCommerceDomainCommerceModelAddress> Addresses = null, List<string> Phones = null, List<string> Emails = null, List<VirtoCommerceDomainCustomerModelNote> Notes = null, string ObjectType = null, List<VirtoCommercePlatformCoreDynamicPropertiesDynamicObjectProperty> DynamicProperties = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
-        {
-            this.Description = Description;
-            this.BusinessCategory = BusinessCategory;
-            this.OwnerId = OwnerId;
-            this.ParentId = ParentId;
-            this.Name = Name;
-            this.MemberType = MemberType;
-            this.Addresses = Addresses;
-            this.Phones = Phones;
-            this.Emails = Emails;
-            this.Notes = Notes;
-            this.ObjectType = ObjectType;
-            this.DynamicProperties = DynamicProperties;
-            this.CreatedDate = CreatedDate;
-            this.ModifiedDate = ModifiedDate;
-            this.CreatedBy = CreatedBy;
-            this.ModifiedBy = ModifiedBy;
-            this.Id = Id;
-            
-        }
-
         /// <summary>
         /// Gets or Sets Description
         /// </summary>
@@ -165,7 +119,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -191,7 +144,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  CreatedBy: ").Append(CreatedBy).Append("\n");
             sb.Append("  ModifiedBy: ").Append(ModifiedBy).Append("\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -326,63 +278,61 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Description != null)
                     hash = hash * 59 + this.Description.GetHashCode();
-                
+
                 if (this.BusinessCategory != null)
                     hash = hash * 59 + this.BusinessCategory.GetHashCode();
-                
+
                 if (this.OwnerId != null)
                     hash = hash * 59 + this.OwnerId.GetHashCode();
-                
+
                 if (this.ParentId != null)
                     hash = hash * 59 + this.ParentId.GetHashCode();
-                
+
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
-                
+
                 if (this.MemberType != null)
                     hash = hash * 59 + this.MemberType.GetHashCode();
-                
+
                 if (this.Addresses != null)
                     hash = hash * 59 + this.Addresses.GetHashCode();
-                
+
                 if (this.Phones != null)
                     hash = hash * 59 + this.Phones.GetHashCode();
-                
+
                 if (this.Emails != null)
                     hash = hash * 59 + this.Emails.GetHashCode();
-                
+
                 if (this.Notes != null)
                     hash = hash * 59 + this.Notes.GetHashCode();
-                
+
                 if (this.ObjectType != null)
                     hash = hash * 59 + this.ObjectType.GetHashCode();
-                
+
                 if (this.DynamicProperties != null)
                     hash = hash * 59 + this.DynamicProperties.GetHashCode();
-                
+
                 if (this.CreatedDate != null)
                     hash = hash * 59 + this.CreatedDate.GetHashCode();
-                
+
                 if (this.ModifiedDate != null)
                     hash = hash * 59 + this.ModifiedDate.GetHashCode();
-                
+
                 if (this.CreatedBy != null)
                     hash = hash * 59 + this.CreatedBy.GetHashCode();
-                
+
                 if (this.ModifiedBy != null)
                     hash = hash * 59 + this.ModifiedBy.GetHashCode();
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

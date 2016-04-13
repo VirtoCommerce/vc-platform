@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,34 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceStoreModuleWebModelPaymentMethod :  IEquatable<VirtoCommerceStoreModuleWebModelPaymentMethod>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceStoreModuleWebModelPaymentMethod" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceStoreModuleWebModelPaymentMethod" />class.
-        /// </summary>
-        /// <param name="Code">Inner unique method code.</param>
-        /// <param name="Name">Display name of payment method.</param>
-        /// <param name="Description">Description.</param>
-        /// <param name="LogoUrl">Absolute logo url of shipping method, can be used in UI.</param>
-        /// <param name="IsActive">If true - method can be available on storefront.</param>
-        /// <param name="Priority">Priority.</param>
-        /// <param name="IsAvailableForPartial">IsAvailableForPartial.</param>
-        /// <param name="Settings">Settings.</param>
-        /// <param name="Id">Id.</param>
-
-        public VirtoCommerceStoreModuleWebModelPaymentMethod(string Code = null, string Name = null, string Description = null, string LogoUrl = null, bool? IsActive = null, int? Priority = null, bool? IsAvailableForPartial = null, List<VirtoCommerceStoreModuleWebModelSetting> Settings = null, string Id = null)
-        {
-            this.Code = Code;
-            this.Name = Name;
-            this.Description = Description;
-            this.LogoUrl = LogoUrl;
-            this.IsActive = IsActive;
-            this.Priority = Priority;
-            this.IsAvailableForPartial = IsAvailableForPartial;
-            this.Settings = Settings;
-            this.Id = Id;
-            
-        }
-
         /// <summary>
         /// Inner unique method code
         /// </summary>
@@ -105,7 +75,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -123,7 +92,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  IsAvailableForPartial: ").Append(IsAvailableForPartial).Append("\n");
             sb.Append("  Settings: ").Append(Settings).Append("\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -218,39 +186,37 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Code != null)
                     hash = hash * 59 + this.Code.GetHashCode();
-                
+
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
-                
+
                 if (this.Description != null)
                     hash = hash * 59 + this.Description.GetHashCode();
-                
+
                 if (this.LogoUrl != null)
                     hash = hash * 59 + this.LogoUrl.GetHashCode();
-                
+
                 if (this.IsActive != null)
                     hash = hash * 59 + this.IsActive.GetHashCode();
-                
+
                 if (this.Priority != null)
                     hash = hash * 59 + this.Priority.GetHashCode();
-                
+
                 if (this.IsAvailableForPartial != null)
                     hash = hash * 59 + this.IsAvailableForPartial.GetHashCode();
-                
+
                 if (this.Settings != null)
                     hash = hash * 59 + this.Settings.GetHashCode();
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

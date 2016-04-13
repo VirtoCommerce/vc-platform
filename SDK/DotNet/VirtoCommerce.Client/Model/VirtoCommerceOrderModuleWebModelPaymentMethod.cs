@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,32 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceOrderModuleWebModelPaymentMethod :  IEquatable<VirtoCommerceOrderModuleWebModelPaymentMethod>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceOrderModuleWebModelPaymentMethod" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceOrderModuleWebModelPaymentMethod" />class.
-        /// </summary>
-        /// <param name="Code">Gets or sets the value of payment gateway code.</param>
-        /// <param name="Name">Gets or sets the value of payment method name.</param>
-        /// <param name="IconUrl">Gets or sets the value of payment method logo absolute URL.</param>
-        /// <param name="Description">Gets or sets the value of payment method description.</param>
-        /// <param name="PaymentMethodType">Gets or sets the value of payment method type.</param>
-        /// <param name="PaymentMethodGroupType">Gets or sets the value of payment method group type.</param>
-        /// <param name="Priority">Gets or sets the value of payment method priority.</param>
-        /// <param name="IsAvailableForPartial">Is payment method available for partial payments.</param>
-
-        public VirtoCommerceOrderModuleWebModelPaymentMethod(string Code = null, string Name = null, string IconUrl = null, string Description = null, string PaymentMethodType = null, string PaymentMethodGroupType = null, int? Priority = null, bool? IsAvailableForPartial = null)
-        {
-            this.Code = Code;
-            this.Name = Name;
-            this.IconUrl = IconUrl;
-            this.Description = Description;
-            this.PaymentMethodType = PaymentMethodType;
-            this.PaymentMethodGroupType = PaymentMethodGroupType;
-            this.Priority = Priority;
-            this.IsAvailableForPartial = IsAvailableForPartial;
-            
-        }
-
         /// <summary>
         /// Gets or sets the value of payment gateway code
         /// </summary>
@@ -101,7 +73,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="isAvailableForPartial", EmitDefaultValue=false)]
         public bool? IsAvailableForPartial { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -118,7 +89,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  PaymentMethodGroupType: ").Append(PaymentMethodGroupType).Append("\n");
             sb.Append("  Priority: ").Append(Priority).Append("\n");
             sb.Append("  IsAvailableForPartial: ").Append(IsAvailableForPartial).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -208,36 +178,34 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Code != null)
                     hash = hash * 59 + this.Code.GetHashCode();
-                
+
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
-                
+
                 if (this.IconUrl != null)
                     hash = hash * 59 + this.IconUrl.GetHashCode();
-                
+
                 if (this.Description != null)
                     hash = hash * 59 + this.Description.GetHashCode();
-                
+
                 if (this.PaymentMethodType != null)
                     hash = hash * 59 + this.PaymentMethodType.GetHashCode();
-                
+
                 if (this.PaymentMethodGroupType != null)
                     hash = hash * 59 + this.PaymentMethodGroupType.GetHashCode();
-                
+
                 if (this.Priority != null)
                     hash = hash * 59 + this.Priority.GetHashCode();
-                
+
                 if (this.IsAvailableForPartial != null)
                     hash = hash * 59 + this.IsAvailableForPartial.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

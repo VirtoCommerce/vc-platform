@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,74 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceOrderModuleWebModelPaymentIn :  IEquatable<VirtoCommerceOrderModuleWebModelPaymentIn>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceOrderModuleWebModelPaymentIn" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceOrderModuleWebModelPaymentIn" />class.
-        /// </summary>
-        /// <param name="OrganizationName">Customer organization.</param>
-        /// <param name="OrganizationId">OrganizationId.</param>
-        /// <param name="CustomerName">CustomerName.</param>
-        /// <param name="CustomerId">CustomerId.</param>
-        /// <param name="Purpose">Payment purpose text.</param>
-        /// <param name="PaymentMethod">Payment method for current order payment.</param>
-        /// <param name="IncomingDate">Expected date of receipt of payment.</param>
-        /// <param name="OuterId">Outer id used for link with payment in external systems.</param>
-        /// <param name="OperationType">Operation type string representation (CustomerOrder, Shipment etc).</param>
-        /// <param name="Number">Unique user friendly document number (generate automatically based on special algorithm realization).</param>
-        /// <param name="IsApproved">Flag can be used to refer to a specific order status in a variety of user scenarios with combination of Status\r\n            (Order completion, Shipment send etc).</param>
-        /// <param name="Status">Current operation status may have any values defined by concrete business process.</param>
-        /// <param name="Comment">Comment.</param>
-        /// <param name="Currency">Currency code.</param>
-        /// <param name="TaxIncluded">TaxIncluded.</param>
-        /// <param name="Sum">Money amount without tax.</param>
-        /// <param name="Tax">Tax total.</param>
-        /// <param name="IsCancelled">IsCancelled.</param>
-        /// <param name="CancelledDate">CancelledDate.</param>
-        /// <param name="CancelReason">CancelReason.</param>
-        /// <param name="ParentOperationId">Used for construct hierarchy of operation and represent parent operation id.</param>
-        /// <param name="ChildrenOperations">ChildrenOperations.</param>
-        /// <param name="ObjectType">Used for dynamic properties management, contains object type string.</param>
-        /// <param name="DynamicProperties">Dynamic properties collections.</param>
-        /// <param name="CreatedDate">CreatedDate.</param>
-        /// <param name="ModifiedDate">ModifiedDate.</param>
-        /// <param name="CreatedBy">CreatedBy.</param>
-        /// <param name="ModifiedBy">ModifiedBy.</param>
-        /// <param name="Id">Id.</param>
-
-        public VirtoCommerceOrderModuleWebModelPaymentIn(string OrganizationName = null, string OrganizationId = null, string CustomerName = null, string CustomerId = null, string Purpose = null, VirtoCommerceOrderModuleWebModelPaymentMethod PaymentMethod = null, DateTime? IncomingDate = null, string OuterId = null, string OperationType = null, string Number = null, bool? IsApproved = null, string Status = null, string Comment = null, string Currency = null, bool? TaxIncluded = null, double? Sum = null, double? Tax = null, bool? IsCancelled = null, DateTime? CancelledDate = null, string CancelReason = null, string ParentOperationId = null, List<VirtoCommerceOrderModuleWebModelOperation> ChildrenOperations = null, string ObjectType = null, List<VirtoCommercePlatformCoreDynamicPropertiesDynamicObjectProperty> DynamicProperties = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
-        {
-            this.OrganizationName = OrganizationName;
-            this.OrganizationId = OrganizationId;
-            this.CustomerName = CustomerName;
-            this.CustomerId = CustomerId;
-            this.Purpose = Purpose;
-            this.PaymentMethod = PaymentMethod;
-            this.IncomingDate = IncomingDate;
-            this.OuterId = OuterId;
-            this.OperationType = OperationType;
-            this.Number = Number;
-            this.IsApproved = IsApproved;
-            this.Status = Status;
-            this.Comment = Comment;
-            this.Currency = Currency;
-            this.TaxIncluded = TaxIncluded;
-            this.Sum = Sum;
-            this.Tax = Tax;
-            this.IsCancelled = IsCancelled;
-            this.CancelledDate = CancelledDate;
-            this.CancelReason = CancelReason;
-            this.ParentOperationId = ParentOperationId;
-            this.ChildrenOperations = ChildrenOperations;
-            this.ObjectType = ObjectType;
-            this.DynamicProperties = DynamicProperties;
-            this.CreatedDate = CreatedDate;
-            this.ModifiedDate = ModifiedDate;
-            this.CreatedBy = CreatedBy;
-            this.ModifiedBy = ModifiedBy;
-            this.Id = Id;
-            
-        }
-
         /// <summary>
         /// Customer organization
         /// </summary>
@@ -276,7 +206,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -314,7 +243,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  CreatedBy: ").Append(CreatedBy).Append("\n");
             sb.Append("  ModifiedBy: ").Append(ModifiedBy).Append("\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -509,99 +437,97 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.OrganizationName != null)
                     hash = hash * 59 + this.OrganizationName.GetHashCode();
-                
+
                 if (this.OrganizationId != null)
                     hash = hash * 59 + this.OrganizationId.GetHashCode();
-                
+
                 if (this.CustomerName != null)
                     hash = hash * 59 + this.CustomerName.GetHashCode();
-                
+
                 if (this.CustomerId != null)
                     hash = hash * 59 + this.CustomerId.GetHashCode();
-                
+
                 if (this.Purpose != null)
                     hash = hash * 59 + this.Purpose.GetHashCode();
-                
+
                 if (this.PaymentMethod != null)
                     hash = hash * 59 + this.PaymentMethod.GetHashCode();
-                
+
                 if (this.IncomingDate != null)
                     hash = hash * 59 + this.IncomingDate.GetHashCode();
-                
+
                 if (this.OuterId != null)
                     hash = hash * 59 + this.OuterId.GetHashCode();
-                
+
                 if (this.OperationType != null)
                     hash = hash * 59 + this.OperationType.GetHashCode();
-                
+
                 if (this.Number != null)
                     hash = hash * 59 + this.Number.GetHashCode();
-                
+
                 if (this.IsApproved != null)
                     hash = hash * 59 + this.IsApproved.GetHashCode();
-                
+
                 if (this.Status != null)
                     hash = hash * 59 + this.Status.GetHashCode();
-                
+
                 if (this.Comment != null)
                     hash = hash * 59 + this.Comment.GetHashCode();
-                
+
                 if (this.Currency != null)
                     hash = hash * 59 + this.Currency.GetHashCode();
-                
+
                 if (this.TaxIncluded != null)
                     hash = hash * 59 + this.TaxIncluded.GetHashCode();
-                
+
                 if (this.Sum != null)
                     hash = hash * 59 + this.Sum.GetHashCode();
-                
+
                 if (this.Tax != null)
                     hash = hash * 59 + this.Tax.GetHashCode();
-                
+
                 if (this.IsCancelled != null)
                     hash = hash * 59 + this.IsCancelled.GetHashCode();
-                
+
                 if (this.CancelledDate != null)
                     hash = hash * 59 + this.CancelledDate.GetHashCode();
-                
+
                 if (this.CancelReason != null)
                     hash = hash * 59 + this.CancelReason.GetHashCode();
-                
+
                 if (this.ParentOperationId != null)
                     hash = hash * 59 + this.ParentOperationId.GetHashCode();
-                
+
                 if (this.ChildrenOperations != null)
                     hash = hash * 59 + this.ChildrenOperations.GetHashCode();
-                
+
                 if (this.ObjectType != null)
                     hash = hash * 59 + this.ObjectType.GetHashCode();
-                
+
                 if (this.DynamicProperties != null)
                     hash = hash * 59 + this.DynamicProperties.GetHashCode();
-                
+
                 if (this.CreatedDate != null)
                     hash = hash * 59 + this.CreatedDate.GetHashCode();
-                
+
                 if (this.ModifiedDate != null)
                     hash = hash * 59 + this.ModifiedDate.GetHashCode();
-                
+
                 if (this.CreatedBy != null)
                     hash = hash * 59 + this.CreatedBy.GetHashCode();
-                
+
                 if (this.ModifiedBy != null)
                     hash = hash * 59 + this.ModifiedBy.GetHashCode();
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

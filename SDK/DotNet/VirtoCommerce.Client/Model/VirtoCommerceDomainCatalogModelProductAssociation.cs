@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,28 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceDomainCatalogModelProductAssociation :  IEquatable<VirtoCommerceDomainCatalogModelProductAssociation>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCatalogModelProductAssociation" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCatalogModelProductAssociation" />class.
-        /// </summary>
-        /// <param name="Name">Name.</param>
-        /// <param name="Description">Description.</param>
-        /// <param name="Priority">Priority.</param>
-        /// <param name="Type">Type.</param>
-        /// <param name="AssociatedProductId">AssociatedProductId.</param>
-        /// <param name="AssociatedProduct">AssociatedProduct.</param>
-
-        public VirtoCommerceDomainCatalogModelProductAssociation(string Name = null, string Description = null, int? Priority = null, string Type = null, string AssociatedProductId = null, VirtoCommerceDomainCatalogModelCatalogProduct AssociatedProduct = null)
-        {
-            this.Name = Name;
-            this.Description = Description;
-            this.Priority = Priority;
-            this.Type = Type;
-            this.AssociatedProductId = AssociatedProductId;
-            this.AssociatedProduct = AssociatedProduct;
-            
-        }
-
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
@@ -77,7 +53,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="associatedProduct", EmitDefaultValue=false)]
         public VirtoCommerceDomainCatalogModelCatalogProduct AssociatedProduct { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -92,7 +67,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Type: ").Append(Type).Append("\n");
             sb.Append("  AssociatedProductId: ").Append(AssociatedProductId).Append("\n");
             sb.Append("  AssociatedProduct: ").Append(AssociatedProduct).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -172,30 +146,28 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
-                
+
                 if (this.Description != null)
                     hash = hash * 59 + this.Description.GetHashCode();
-                
+
                 if (this.Priority != null)
                     hash = hash * 59 + this.Priority.GetHashCode();
-                
+
                 if (this.Type != null)
                     hash = hash * 59 + this.Type.GetHashCode();
-                
+
                 if (this.AssociatedProductId != null)
                     hash = hash * 59 + this.AssociatedProductId.GetHashCode();
-                
+
                 if (this.AssociatedProduct != null)
                     hash = hash * 59 + this.AssociatedProduct.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

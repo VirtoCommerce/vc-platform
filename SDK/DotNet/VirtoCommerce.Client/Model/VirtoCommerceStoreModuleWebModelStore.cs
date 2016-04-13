@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,84 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceStoreModuleWebModelStore :  IEquatable<VirtoCommerceStoreModuleWebModelStore>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceStoreModuleWebModelStore" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceStoreModuleWebModelStore" />class.
-        /// </summary>
-        /// <param name="Name">Name.</param>
-        /// <param name="Description">Description.</param>
-        /// <param name="Url">Url of store storefront, required.</param>
-        /// <param name="StoreState">State of store.</param>
-        /// <param name="TimeZone">TimeZone.</param>
-        /// <param name="Country">Country.</param>
-        /// <param name="Region">Region.</param>
-        /// <param name="DefaultLanguage">Default locale of store.</param>
-        /// <param name="DefaultCurrency">Default currency of store. Use ISO 4217 currency codes.</param>
-        /// <param name="Catalog">Product catalog id of store.</param>
-        /// <param name="CreditCardSavePolicy">CreditCardSavePolicy.</param>
-        /// <param name="SecureUrl">Secure url of store, must use https protocol, required.</param>
-        /// <param name="Email">Contact email of store.</param>
-        /// <param name="AdminEmail">Administrator contact email of store.</param>
-        /// <param name="DisplayOutOfStock">If true - store shows product with status out of stock.</param>
-        /// <param name="FulfillmentCenter">FulfillmentCenter.</param>
-        /// <param name="ReturnsFulfillmentCenter">ReturnsFulfillmentCenter.</param>
-        /// <param name="Languages">All store supported languages.</param>
-        /// <param name="Currencies">All store supported currencies.</param>
-        /// <param name="TrustedGroups">All linked stores (their accounts can be reused here).</param>
-        /// <param name="PaymentMethods">PaymentMethods.</param>
-        /// <param name="ShippingMethods">ShippingMethods.</param>
-        /// <param name="TaxProviders">TaxProviders.</param>
-        /// <param name="SecurityScopes">SecurityScopes.</param>
-        /// <param name="SeoObjectType">SeoObjectType.</param>
-        /// <param name="SeoInfos">SeoInfos.</param>
-        /// <param name="ObjectType">ObjectType.</param>
-        /// <param name="DynamicProperties">DynamicProperties.</param>
-        /// <param name="Settings">Settings.</param>
-        /// <param name="CreatedDate">CreatedDate.</param>
-        /// <param name="ModifiedDate">ModifiedDate.</param>
-        /// <param name="CreatedBy">CreatedBy.</param>
-        /// <param name="ModifiedBy">ModifiedBy.</param>
-        /// <param name="Id">Id.</param>
-
-        public VirtoCommerceStoreModuleWebModelStore(string Name = null, string Description = null, string Url = null, string StoreState = null, string TimeZone = null, string Country = null, string Region = null, string DefaultLanguage = null, string DefaultCurrency = null, string Catalog = null, bool? CreditCardSavePolicy = null, string SecureUrl = null, string Email = null, string AdminEmail = null, bool? DisplayOutOfStock = null, VirtoCommerceStoreModuleWebModelFulfillmentCenter FulfillmentCenter = null, VirtoCommerceStoreModuleWebModelFulfillmentCenter ReturnsFulfillmentCenter = null, List<string> Languages = null, List<string> Currencies = null, List<string> TrustedGroups = null, List<VirtoCommerceStoreModuleWebModelPaymentMethod> PaymentMethods = null, List<VirtoCommerceStoreModuleWebModelShippingMethod> ShippingMethods = null, List<VirtoCommerceStoreModuleWebModelTaxProvider> TaxProviders = null, List<string> SecurityScopes = null, string SeoObjectType = null, List<VirtoCommerceDomainCommerceModelSeoInfo> SeoInfos = null, string ObjectType = null, List<VirtoCommercePlatformCoreDynamicPropertiesDynamicObjectProperty> DynamicProperties = null, List<VirtoCommerceStoreModuleWebModelSetting> Settings = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
-        {
-            this.Name = Name;
-            this.Description = Description;
-            this.Url = Url;
-            this.StoreState = StoreState;
-            this.TimeZone = TimeZone;
-            this.Country = Country;
-            this.Region = Region;
-            this.DefaultLanguage = DefaultLanguage;
-            this.DefaultCurrency = DefaultCurrency;
-            this.Catalog = Catalog;
-            this.CreditCardSavePolicy = CreditCardSavePolicy;
-            this.SecureUrl = SecureUrl;
-            this.Email = Email;
-            this.AdminEmail = AdminEmail;
-            this.DisplayOutOfStock = DisplayOutOfStock;
-            this.FulfillmentCenter = FulfillmentCenter;
-            this.ReturnsFulfillmentCenter = ReturnsFulfillmentCenter;
-            this.Languages = Languages;
-            this.Currencies = Currencies;
-            this.TrustedGroups = TrustedGroups;
-            this.PaymentMethods = PaymentMethods;
-            this.ShippingMethods = ShippingMethods;
-            this.TaxProviders = TaxProviders;
-            this.SecurityScopes = SecurityScopes;
-            this.SeoObjectType = SeoObjectType;
-            this.SeoInfos = SeoInfos;
-            this.ObjectType = ObjectType;
-            this.DynamicProperties = DynamicProperties;
-            this.Settings = Settings;
-            this.CreatedDate = CreatedDate;
-            this.ModifiedDate = ModifiedDate;
-            this.CreatedBy = CreatedBy;
-            this.ModifiedBy = ModifiedBy;
-            this.Id = Id;
-            
-        }
-
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
@@ -313,7 +233,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -356,7 +275,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  CreatedBy: ").Append(CreatedBy).Append("\n");
             sb.Append("  ModifiedBy: ").Append(ModifiedBy).Append("\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -576,114 +494,112 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
-                
+
                 if (this.Description != null)
                     hash = hash * 59 + this.Description.GetHashCode();
-                
+
                 if (this.Url != null)
                     hash = hash * 59 + this.Url.GetHashCode();
-                
+
                 if (this.StoreState != null)
                     hash = hash * 59 + this.StoreState.GetHashCode();
-                
+
                 if (this.TimeZone != null)
                     hash = hash * 59 + this.TimeZone.GetHashCode();
-                
+
                 if (this.Country != null)
                     hash = hash * 59 + this.Country.GetHashCode();
-                
+
                 if (this.Region != null)
                     hash = hash * 59 + this.Region.GetHashCode();
-                
+
                 if (this.DefaultLanguage != null)
                     hash = hash * 59 + this.DefaultLanguage.GetHashCode();
-                
+
                 if (this.DefaultCurrency != null)
                     hash = hash * 59 + this.DefaultCurrency.GetHashCode();
-                
+
                 if (this.Catalog != null)
                     hash = hash * 59 + this.Catalog.GetHashCode();
-                
+
                 if (this.CreditCardSavePolicy != null)
                     hash = hash * 59 + this.CreditCardSavePolicy.GetHashCode();
-                
+
                 if (this.SecureUrl != null)
                     hash = hash * 59 + this.SecureUrl.GetHashCode();
-                
+
                 if (this.Email != null)
                     hash = hash * 59 + this.Email.GetHashCode();
-                
+
                 if (this.AdminEmail != null)
                     hash = hash * 59 + this.AdminEmail.GetHashCode();
-                
+
                 if (this.DisplayOutOfStock != null)
                     hash = hash * 59 + this.DisplayOutOfStock.GetHashCode();
-                
+
                 if (this.FulfillmentCenter != null)
                     hash = hash * 59 + this.FulfillmentCenter.GetHashCode();
-                
+
                 if (this.ReturnsFulfillmentCenter != null)
                     hash = hash * 59 + this.ReturnsFulfillmentCenter.GetHashCode();
-                
+
                 if (this.Languages != null)
                     hash = hash * 59 + this.Languages.GetHashCode();
-                
+
                 if (this.Currencies != null)
                     hash = hash * 59 + this.Currencies.GetHashCode();
-                
+
                 if (this.TrustedGroups != null)
                     hash = hash * 59 + this.TrustedGroups.GetHashCode();
-                
+
                 if (this.PaymentMethods != null)
                     hash = hash * 59 + this.PaymentMethods.GetHashCode();
-                
+
                 if (this.ShippingMethods != null)
                     hash = hash * 59 + this.ShippingMethods.GetHashCode();
-                
+
                 if (this.TaxProviders != null)
                     hash = hash * 59 + this.TaxProviders.GetHashCode();
-                
+
                 if (this.SecurityScopes != null)
                     hash = hash * 59 + this.SecurityScopes.GetHashCode();
-                
+
                 if (this.SeoObjectType != null)
                     hash = hash * 59 + this.SeoObjectType.GetHashCode();
-                
+
                 if (this.SeoInfos != null)
                     hash = hash * 59 + this.SeoInfos.GetHashCode();
-                
+
                 if (this.ObjectType != null)
                     hash = hash * 59 + this.ObjectType.GetHashCode();
-                
+
                 if (this.DynamicProperties != null)
                     hash = hash * 59 + this.DynamicProperties.GetHashCode();
-                
+
                 if (this.Settings != null)
                     hash = hash * 59 + this.Settings.GetHashCode();
-                
+
                 if (this.CreatedDate != null)
                     hash = hash * 59 + this.CreatedDate.GetHashCode();
-                
+
                 if (this.ModifiedDate != null)
                     hash = hash * 59 + this.ModifiedDate.GetHashCode();
-                
+
                 if (this.CreatedBy != null)
                     hash = hash * 59 + this.CreatedBy.GetHashCode();
-                
+
                 if (this.ModifiedBy != null)
                     hash = hash * 59 + this.ModifiedBy.GetHashCode();
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

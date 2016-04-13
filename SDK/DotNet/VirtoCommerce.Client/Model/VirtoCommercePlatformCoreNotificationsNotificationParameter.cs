@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,30 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommercePlatformCoreNotificationsNotificationParameter :  IEquatable<VirtoCommercePlatformCoreNotificationsNotificationParameter>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreNotificationsNotificationParameter" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreNotificationsNotificationParameter" />class.
-        /// </summary>
-        /// <param name="ParameterName">ParameterName.</param>
-        /// <param name="ParameterDescription">ParameterDescription.</param>
-        /// <param name="ParameterCodeInView">ParameterCodeInView.</param>
-        /// <param name="IsDictionary">IsDictionary.</param>
-        /// <param name="IsArray">IsArray.</param>
-        /// <param name="Type">Type.</param>
-        /// <param name="Value">Value.</param>
-
-        public VirtoCommercePlatformCoreNotificationsNotificationParameter(string ParameterName = null, string ParameterDescription = null, string ParameterCodeInView = null, bool? IsDictionary = null, bool? IsArray = null, string Type = null, Object Value = null)
-        {
-            this.ParameterName = ParameterName;
-            this.ParameterDescription = ParameterDescription;
-            this.ParameterCodeInView = ParameterCodeInView;
-            this.IsDictionary = IsDictionary;
-            this.IsArray = IsArray;
-            this.Type = Type;
-            this.Value = Value;
-            
-        }
-
         /// <summary>
         /// Gets or Sets ParameterName
         /// </summary>
@@ -85,7 +59,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="value", EmitDefaultValue=false)]
         public Object Value { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -101,7 +74,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  IsArray: ").Append(IsArray).Append("\n");
             sb.Append("  Type: ").Append(Type).Append("\n");
             sb.Append("  Value: ").Append(Value).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -186,33 +158,31 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.ParameterName != null)
                     hash = hash * 59 + this.ParameterName.GetHashCode();
-                
+
                 if (this.ParameterDescription != null)
                     hash = hash * 59 + this.ParameterDescription.GetHashCode();
-                
+
                 if (this.ParameterCodeInView != null)
                     hash = hash * 59 + this.ParameterCodeInView.GetHashCode();
-                
+
                 if (this.IsDictionary != null)
                     hash = hash * 59 + this.IsDictionary.GetHashCode();
-                
+
                 if (this.IsArray != null)
                     hash = hash * 59 + this.IsArray.GetHashCode();
-                
+
                 if (this.Type != null)
                     hash = hash * 59 + this.Type.GetHashCode();
-                
+
                 if (this.Value != null)
                     hash = hash * 59 + this.Value.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

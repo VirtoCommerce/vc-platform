@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,52 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceInventoryModuleWebModelInventoryInfo :  IEquatable<VirtoCommerceInventoryModuleWebModelInventoryInfo>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceInventoryModuleWebModelInventoryInfo" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceInventoryModuleWebModelInventoryInfo" />class.
-        /// </summary>
-        /// <param name="CreatedDate">CreatedDate.</param>
-        /// <param name="CreatedBy">CreatedBy.</param>
-        /// <param name="ModifiedDate">ModifiedDate.</param>
-        /// <param name="ModifiedBy">ModifiedBy.</param>
-        /// <param name="FulfillmentCenter">FulfillmentCenter.</param>
-        /// <param name="FulfillmentCenterId">FulfillmentCenterId.</param>
-        /// <param name="ProductId">ProductId.</param>
-        /// <param name="InStockQuantity">InStockQuantity.</param>
-        /// <param name="ReservedQuantity">ReservedQuantity.</param>
-        /// <param name="ReorderMinQuantity">ReorderMinQuantity.</param>
-        /// <param name="PreorderQuantity">PreorderQuantity.</param>
-        /// <param name="BackorderQuantity">BackorderQuantity.</param>
-        /// <param name="AllowBackorder">AllowBackorder.</param>
-        /// <param name="AllowPreorder">AllowPreorder.</param>
-        /// <param name="InTransit">InTransit.</param>
-        /// <param name="PreorderAvailabilityDate">PreorderAvailabilityDate.</param>
-        /// <param name="BackorderAvailabilityDate">BackorderAvailabilityDate.</param>
-        /// <param name="Status">Status.</param>
-
-        public VirtoCommerceInventoryModuleWebModelInventoryInfo(DateTime? CreatedDate = null, string CreatedBy = null, DateTime? ModifiedDate = null, string ModifiedBy = null, VirtoCommerceInventoryModuleWebModelFulfillmentCenter FulfillmentCenter = null, string FulfillmentCenterId = null, string ProductId = null, long? InStockQuantity = null, long? ReservedQuantity = null, long? ReorderMinQuantity = null, long? PreorderQuantity = null, long? BackorderQuantity = null, bool? AllowBackorder = null, bool? AllowPreorder = null, long? InTransit = null, DateTime? PreorderAvailabilityDate = null, DateTime? BackorderAvailabilityDate = null, string Status = null)
-        {
-            this.CreatedDate = CreatedDate;
-            this.CreatedBy = CreatedBy;
-            this.ModifiedDate = ModifiedDate;
-            this.ModifiedBy = ModifiedBy;
-            this.FulfillmentCenter = FulfillmentCenter;
-            this.FulfillmentCenterId = FulfillmentCenterId;
-            this.ProductId = ProductId;
-            this.InStockQuantity = InStockQuantity;
-            this.ReservedQuantity = ReservedQuantity;
-            this.ReorderMinQuantity = ReorderMinQuantity;
-            this.PreorderQuantity = PreorderQuantity;
-            this.BackorderQuantity = BackorderQuantity;
-            this.AllowBackorder = AllowBackorder;
-            this.AllowPreorder = AllowPreorder;
-            this.InTransit = InTransit;
-            this.PreorderAvailabilityDate = PreorderAvailabilityDate;
-            this.BackorderAvailabilityDate = BackorderAvailabilityDate;
-            this.Status = Status;
-            
-        }
-
         /// <summary>
         /// Gets or Sets CreatedDate
         /// </summary>
@@ -173,7 +125,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="status", EmitDefaultValue=false)]
         public string Status { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -200,7 +151,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  PreorderAvailabilityDate: ").Append(PreorderAvailabilityDate).Append("\n");
             sb.Append("  BackorderAvailabilityDate: ").Append(BackorderAvailabilityDate).Append("\n");
             sb.Append("  Status: ").Append(Status).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -340,66 +290,64 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.CreatedDate != null)
                     hash = hash * 59 + this.CreatedDate.GetHashCode();
-                
+
                 if (this.CreatedBy != null)
                     hash = hash * 59 + this.CreatedBy.GetHashCode();
-                
+
                 if (this.ModifiedDate != null)
                     hash = hash * 59 + this.ModifiedDate.GetHashCode();
-                
+
                 if (this.ModifiedBy != null)
                     hash = hash * 59 + this.ModifiedBy.GetHashCode();
-                
+
                 if (this.FulfillmentCenter != null)
                     hash = hash * 59 + this.FulfillmentCenter.GetHashCode();
-                
+
                 if (this.FulfillmentCenterId != null)
                     hash = hash * 59 + this.FulfillmentCenterId.GetHashCode();
-                
+
                 if (this.ProductId != null)
                     hash = hash * 59 + this.ProductId.GetHashCode();
-                
+
                 if (this.InStockQuantity != null)
                     hash = hash * 59 + this.InStockQuantity.GetHashCode();
-                
+
                 if (this.ReservedQuantity != null)
                     hash = hash * 59 + this.ReservedQuantity.GetHashCode();
-                
+
                 if (this.ReorderMinQuantity != null)
                     hash = hash * 59 + this.ReorderMinQuantity.GetHashCode();
-                
+
                 if (this.PreorderQuantity != null)
                     hash = hash * 59 + this.PreorderQuantity.GetHashCode();
-                
+
                 if (this.BackorderQuantity != null)
                     hash = hash * 59 + this.BackorderQuantity.GetHashCode();
-                
+
                 if (this.AllowBackorder != null)
                     hash = hash * 59 + this.AllowBackorder.GetHashCode();
-                
+
                 if (this.AllowPreorder != null)
                     hash = hash * 59 + this.AllowPreorder.GetHashCode();
-                
+
                 if (this.InTransit != null)
                     hash = hash * 59 + this.InTransit.GetHashCode();
-                
+
                 if (this.PreorderAvailabilityDate != null)
                     hash = hash * 59 + this.PreorderAvailabilityDate.GetHashCode();
-                
+
                 if (this.BackorderAvailabilityDate != null)
                     hash = hash * 59 + this.BackorderAvailabilityDate.GetHashCode();
-                
+
                 if (this.Status != null)
                     hash = hash * 59 + this.Status.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,50 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommercePlatformCoreSecurityApplicationUserExtended :  IEquatable<VirtoCommercePlatformCoreSecurityApplicationUserExtended>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreSecurityApplicationUserExtended" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreSecurityApplicationUserExtended" />class.
-        /// </summary>
-        /// <param name="Id">Id.</param>
-        /// <param name="UserName">UserName.</param>
-        /// <param name="Email">Email.</param>
-        /// <param name="PhoneNumber">PhoneNumber.</param>
-        /// <param name="StoreId">StoreId.</param>
-        /// <param name="MemberId">MemberId.</param>
-        /// <param name="Icon">Icon.</param>
-        /// <param name="IsAdministrator">IsAdministrator.</param>
-        /// <param name="UserType">UserType.</param>
-        /// <param name="UserState">UserState.</param>
-        /// <param name="Password">Password.</param>
-        /// <param name="PasswordHash">PasswordHash.</param>
-        /// <param name="SecurityStamp">SecurityStamp.</param>
-        /// <param name="Logins">Logins.</param>
-        /// <param name="Roles">Roles.</param>
-        /// <param name="Permissions">Permissions.</param>
-        /// <param name="ApiAccounts">ApiAccounts.</param>
-
-        public VirtoCommercePlatformCoreSecurityApplicationUserExtended(string Id = null, string UserName = null, string Email = null, string PhoneNumber = null, string StoreId = null, string MemberId = null, string Icon = null, bool? IsAdministrator = null, string UserType = null, string UserState = null, string Password = null, string PasswordHash = null, string SecurityStamp = null, List<VirtoCommercePlatformCoreSecurityApplicationUserLogin> Logins = null, List<VirtoCommercePlatformCoreSecurityRole> Roles = null, List<string> Permissions = null, List<VirtoCommercePlatformCoreSecurityApiAccount> ApiAccounts = null)
-        {
-            this.Id = Id;
-            this.UserName = UserName;
-            this.Email = Email;
-            this.PhoneNumber = PhoneNumber;
-            this.StoreId = StoreId;
-            this.MemberId = MemberId;
-            this.Icon = Icon;
-            this.IsAdministrator = IsAdministrator;
-            this.UserType = UserType;
-            this.UserState = UserState;
-            this.Password = Password;
-            this.PasswordHash = PasswordHash;
-            this.SecurityStamp = SecurityStamp;
-            this.Logins = Logins;
-            this.Roles = Roles;
-            this.Permissions = Permissions;
-            this.ApiAccounts = ApiAccounts;
-            
-        }
-
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
@@ -165,7 +119,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="apiAccounts", EmitDefaultValue=false)]
         public List<VirtoCommercePlatformCoreSecurityApiAccount> ApiAccounts { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -191,7 +144,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Roles: ").Append(Roles).Append("\n");
             sb.Append("  Permissions: ").Append(Permissions).Append("\n");
             sb.Append("  ApiAccounts: ").Append(ApiAccounts).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -326,63 +278,61 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 if (this.UserName != null)
                     hash = hash * 59 + this.UserName.GetHashCode();
-                
+
                 if (this.Email != null)
                     hash = hash * 59 + this.Email.GetHashCode();
-                
+
                 if (this.PhoneNumber != null)
                     hash = hash * 59 + this.PhoneNumber.GetHashCode();
-                
+
                 if (this.StoreId != null)
                     hash = hash * 59 + this.StoreId.GetHashCode();
-                
+
                 if (this.MemberId != null)
                     hash = hash * 59 + this.MemberId.GetHashCode();
-                
+
                 if (this.Icon != null)
                     hash = hash * 59 + this.Icon.GetHashCode();
-                
+
                 if (this.IsAdministrator != null)
                     hash = hash * 59 + this.IsAdministrator.GetHashCode();
-                
+
                 if (this.UserType != null)
                     hash = hash * 59 + this.UserType.GetHashCode();
-                
+
                 if (this.UserState != null)
                     hash = hash * 59 + this.UserState.GetHashCode();
-                
+
                 if (this.Password != null)
                     hash = hash * 59 + this.Password.GetHashCode();
-                
+
                 if (this.PasswordHash != null)
                     hash = hash * 59 + this.PasswordHash.GetHashCode();
-                
+
                 if (this.SecurityStamp != null)
                     hash = hash * 59 + this.SecurityStamp.GetHashCode();
-                
+
                 if (this.Logins != null)
                     hash = hash * 59 + this.Logins.GetHashCode();
-                
+
                 if (this.Roles != null)
                     hash = hash * 59 + this.Roles.GetHashCode();
-                
+
                 if (this.Permissions != null)
                     hash = hash * 59 + this.Permissions.GetHashCode();
-                
+
                 if (this.ApiAccounts != null)
                     hash = hash * 59 + this.ApiAccounts.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

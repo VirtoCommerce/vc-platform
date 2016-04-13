@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,24 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceCatalogModuleWebModelPropertyAttribute :  IEquatable<VirtoCommerceCatalogModuleWebModelPropertyAttribute>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelPropertyAttribute" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelPropertyAttribute" />class.
-        /// </summary>
-        /// <param name="Id">Id.</param>
-        /// <param name="Property">Property.</param>
-        /// <param name="Value">Value.</param>
-        /// <param name="Name">Name.</param>
-
-        public VirtoCommerceCatalogModuleWebModelPropertyAttribute(string Id = null, VirtoCommerceCatalogModuleWebModelProperty Property = null, string Value = null, string Name = null)
-        {
-            this.Id = Id;
-            this.Property = Property;
-            this.Value = Value;
-            this.Name = Name;
-            
-        }
-
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
@@ -61,7 +41,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -74,7 +53,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Property: ").Append(Property).Append("\n");
             sb.Append("  Value: ").Append(Value).Append("\n");
             sb.Append("  Name: ").Append(Name).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -144,24 +122,22 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 if (this.Property != null)
                     hash = hash * 59 + this.Property.GetHashCode();
-                
+
                 if (this.Value != null)
                     hash = hash * 59 + this.Value.GetHashCode();
-                
+
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

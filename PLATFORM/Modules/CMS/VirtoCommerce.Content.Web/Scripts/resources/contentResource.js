@@ -16,6 +16,7 @@
 .factory('virtoCommerce.contentModule.contentApi', ['$resource', function ($resource) {
     return $resource('api/content/:contentType/:storeId', null, {
         getStatistics: { url: 'api/content/:storeId/stats' },
+        query: { url: 'api/content/:contentType/:storeId/search', isArray: true },
         get: {
             // using transformResponse to:
             // 1. avoid automatic response result string converting to array;

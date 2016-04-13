@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,42 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceCoreModuleWebModelFulfillmentCenter :  IEquatable<VirtoCommerceCoreModuleWebModelFulfillmentCenter>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceCoreModuleWebModelFulfillmentCenter" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceCoreModuleWebModelFulfillmentCenter" />class.
-        /// </summary>
-        /// <param name="Name">Name.</param>
-        /// <param name="Description">Description.</param>
-        /// <param name="MaxReleasesPerPickBatch">MaxReleasesPerPickBatch.</param>
-        /// <param name="PickDelay">PickDelay.</param>
-        /// <param name="DaytimePhoneNumber">DaytimePhoneNumber.</param>
-        /// <param name="Line1">Line1.</param>
-        /// <param name="Line2">Line2.</param>
-        /// <param name="City">City.</param>
-        /// <param name="StateProvince">StateProvince.</param>
-        /// <param name="CountryCode">CountryCode.</param>
-        /// <param name="CountryName">CountryName.</param>
-        /// <param name="PostalCode">PostalCode.</param>
-        /// <param name="Id">Id.</param>
-
-        public VirtoCommerceCoreModuleWebModelFulfillmentCenter(string Name = null, string Description = null, int? MaxReleasesPerPickBatch = null, int? PickDelay = null, string DaytimePhoneNumber = null, string Line1 = null, string Line2 = null, string City = null, string StateProvince = null, string CountryCode = null, string CountryName = null, string PostalCode = null, string Id = null)
-        {
-            this.Name = Name;
-            this.Description = Description;
-            this.MaxReleasesPerPickBatch = MaxReleasesPerPickBatch;
-            this.PickDelay = PickDelay;
-            this.DaytimePhoneNumber = DaytimePhoneNumber;
-            this.Line1 = Line1;
-            this.Line2 = Line2;
-            this.City = City;
-            this.StateProvince = StateProvince;
-            this.CountryCode = CountryCode;
-            this.CountryName = CountryName;
-            this.PostalCode = PostalCode;
-            this.Id = Id;
-            
-        }
-
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
@@ -133,7 +95,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -155,7 +116,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  CountryName: ").Append(CountryName).Append("\n");
             sb.Append("  PostalCode: ").Append(PostalCode).Append("\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -270,51 +230,49 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
-                
+
                 if (this.Description != null)
                     hash = hash * 59 + this.Description.GetHashCode();
-                
+
                 if (this.MaxReleasesPerPickBatch != null)
                     hash = hash * 59 + this.MaxReleasesPerPickBatch.GetHashCode();
-                
+
                 if (this.PickDelay != null)
                     hash = hash * 59 + this.PickDelay.GetHashCode();
-                
+
                 if (this.DaytimePhoneNumber != null)
                     hash = hash * 59 + this.DaytimePhoneNumber.GetHashCode();
-                
+
                 if (this.Line1 != null)
                     hash = hash * 59 + this.Line1.GetHashCode();
-                
+
                 if (this.Line2 != null)
                     hash = hash * 59 + this.Line2.GetHashCode();
-                
+
                 if (this.City != null)
                     hash = hash * 59 + this.City.GetHashCode();
-                
+
                 if (this.StateProvince != null)
                     hash = hash * 59 + this.StateProvince.GetHashCode();
-                
+
                 if (this.CountryCode != null)
                     hash = hash * 59 + this.CountryCode.GetHashCode();
-                
+
                 if (this.CountryName != null)
                     hash = hash * 59 + this.CountryName.GetHashCode();
-                
+
                 if (this.PostalCode != null)
                     hash = hash * 59 + this.PostalCode.GetHashCode();
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

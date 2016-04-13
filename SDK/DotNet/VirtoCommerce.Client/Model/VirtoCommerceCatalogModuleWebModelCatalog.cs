@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,30 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceCatalogModuleWebModelCatalog :  IEquatable<VirtoCommerceCatalogModuleWebModelCatalog>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelCatalog" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelCatalog" />class.
-        /// </summary>
-        /// <param name="Id">Id.</param>
-        /// <param name="Name">Gets or sets the name..</param>
-        /// <param name="IsVirtual">Gets or sets a value indicating whether this {VirtoCommerce.CatalogModule.Web.Model.Catalog} is virtual or common..</param>
-        /// <param name="DefaultLanguage">Gets the language from languages list marked as default..</param>
-        /// <param name="Languages">Gets or sets the catalog languages..</param>
-        /// <param name="Properties">Gets or sets the catalog properties..</param>
-        /// <param name="SecurityScopes">SecurityScopes.</param>
-
-        public VirtoCommerceCatalogModuleWebModelCatalog(string Id = null, string Name = null, bool? IsVirtual = null, VirtoCommerceCatalogModuleWebModelCatalogLanguage DefaultLanguage = null, List<VirtoCommerceCatalogModuleWebModelCatalogLanguage> Languages = null, List<VirtoCommerceCatalogModuleWebModelProperty> Properties = null, List<string> SecurityScopes = null)
-        {
-            this.Id = Id;
-            this.Name = Name;
-            this.IsVirtual = IsVirtual;
-            this.DefaultLanguage = DefaultLanguage;
-            this.Languages = Languages;
-            this.Properties = Properties;
-            this.SecurityScopes = SecurityScopes;
-            
-        }
-
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
@@ -90,7 +64,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="securityScopes", EmitDefaultValue=false)]
         public List<string> SecurityScopes { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -106,7 +79,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Languages: ").Append(Languages).Append("\n");
             sb.Append("  Properties: ").Append(Properties).Append("\n");
             sb.Append("  SecurityScopes: ").Append(SecurityScopes).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -191,33 +163,31 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
-                
+
                 if (this.IsVirtual != null)
                     hash = hash * 59 + this.IsVirtual.GetHashCode();
-                
+
                 if (this.DefaultLanguage != null)
                     hash = hash * 59 + this.DefaultLanguage.GetHashCode();
-                
+
                 if (this.Languages != null)
                     hash = hash * 59 + this.Languages.GetHashCode();
-                
+
                 if (this.Properties != null)
                     hash = hash * 59 + this.Properties.GetHashCode();
-                
+
                 if (this.SecurityScopes != null)
                     hash = hash * 59 + this.SecurityScopes.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

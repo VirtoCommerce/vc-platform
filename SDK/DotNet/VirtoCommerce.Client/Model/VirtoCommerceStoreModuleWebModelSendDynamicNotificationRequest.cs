@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,24 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceStoreModuleWebModelSendDynamicNotificationRequest :  IEquatable<VirtoCommerceStoreModuleWebModelSendDynamicNotificationRequest>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceStoreModuleWebModelSendDynamicNotificationRequest" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceStoreModuleWebModelSendDynamicNotificationRequest" />class.
-        /// </summary>
-        /// <param name="StoreId">StoreId.</param>
-        /// <param name="Type">Type.</param>
-        /// <param name="Fields">Fields.</param>
-        /// <param name="Language">Language.</param>
-
-        public VirtoCommerceStoreModuleWebModelSendDynamicNotificationRequest(string StoreId = null, string Type = null, Dictionary<string, string> Fields = null, string Language = null)
-        {
-            this.StoreId = StoreId;
-            this.Type = Type;
-            this.Fields = Fields;
-            this.Language = Language;
-            
-        }
-
         /// <summary>
         /// Gets or Sets StoreId
         /// </summary>
@@ -61,7 +41,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="language", EmitDefaultValue=false)]
         public string Language { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -74,7 +53,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Type: ").Append(Type).Append("\n");
             sb.Append("  Fields: ").Append(Fields).Append("\n");
             sb.Append("  Language: ").Append(Language).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -144,24 +122,22 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.StoreId != null)
                     hash = hash * 59 + this.StoreId.GetHashCode();
-                
+
                 if (this.Type != null)
                     hash = hash * 59 + this.Type.GetHashCode();
-                
+
                 if (this.Fields != null)
                     hash = hash * 59 + this.Fields.GetHashCode();
-                
+
                 if (this.Language != null)
                     hash = hash * 59 + this.Language.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

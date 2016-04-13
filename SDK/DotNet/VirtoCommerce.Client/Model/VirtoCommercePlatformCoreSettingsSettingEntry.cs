@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,42 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommercePlatformCoreSettingsSettingEntry :  IEquatable<VirtoCommercePlatformCoreSettingsSettingEntry>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreSettingsSettingEntry" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreSettingsSettingEntry" />class.
-        /// </summary>
-        /// <param name="ModuleId">ModuleId.</param>
-        /// <param name="ObjectId">ObjectId.</param>
-        /// <param name="ObjectType">ObjectType.</param>
-        /// <param name="GroupName">GroupName.</param>
-        /// <param name="Name">Name.</param>
-        /// <param name="Value">Value.</param>
-        /// <param name="ValueType">ValueType.</param>
-        /// <param name="AllowedValues">AllowedValues.</param>
-        /// <param name="DefaultValue">DefaultValue.</param>
-        /// <param name="IsArray">IsArray.</param>
-        /// <param name="ArrayValues">ArrayValues.</param>
-        /// <param name="Title">Title.</param>
-        /// <param name="Description">Description.</param>
-
-        public VirtoCommercePlatformCoreSettingsSettingEntry(string ModuleId = null, string ObjectId = null, string ObjectType = null, string GroupName = null, string Name = null, string Value = null, string ValueType = null, List<string> AllowedValues = null, string DefaultValue = null, bool? IsArray = null, List<string> ArrayValues = null, string Title = null, string Description = null)
-        {
-            this.ModuleId = ModuleId;
-            this.ObjectId = ObjectId;
-            this.ObjectType = ObjectType;
-            this.GroupName = GroupName;
-            this.Name = Name;
-            this.Value = Value;
-            this.ValueType = ValueType;
-            this.AllowedValues = AllowedValues;
-            this.DefaultValue = DefaultValue;
-            this.IsArray = IsArray;
-            this.ArrayValues = ArrayValues;
-            this.Title = Title;
-            this.Description = Description;
-            
-        }
-
         /// <summary>
         /// Gets or Sets ModuleId
         /// </summary>
@@ -133,7 +95,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="description", EmitDefaultValue=false)]
         public string Description { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -155,7 +116,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  ArrayValues: ").Append(ArrayValues).Append("\n");
             sb.Append("  Title: ").Append(Title).Append("\n");
             sb.Append("  Description: ").Append(Description).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -270,51 +230,49 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.ModuleId != null)
                     hash = hash * 59 + this.ModuleId.GetHashCode();
-                
+
                 if (this.ObjectId != null)
                     hash = hash * 59 + this.ObjectId.GetHashCode();
-                
+
                 if (this.ObjectType != null)
                     hash = hash * 59 + this.ObjectType.GetHashCode();
-                
+
                 if (this.GroupName != null)
                     hash = hash * 59 + this.GroupName.GetHashCode();
-                
+
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
-                
+
                 if (this.Value != null)
                     hash = hash * 59 + this.Value.GetHashCode();
-                
+
                 if (this.ValueType != null)
                     hash = hash * 59 + this.ValueType.GetHashCode();
-                
+
                 if (this.AllowedValues != null)
                     hash = hash * 59 + this.AllowedValues.GetHashCode();
-                
+
                 if (this.DefaultValue != null)
                     hash = hash * 59 + this.DefaultValue.GetHashCode();
-                
+
                 if (this.IsArray != null)
                     hash = hash * 59 + this.IsArray.GetHashCode();
-                
+
                 if (this.ArrayValues != null)
                     hash = hash * 59 + this.ArrayValues.GetHashCode();
-                
+
                 if (this.Title != null)
                     hash = hash * 59 + this.Title.GetHashCode();
-                
+
                 if (this.Description != null)
                     hash = hash * 59 + this.Description.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

@@ -7,17 +7,14 @@ using RestSharp;
 using VirtoCommerce.Client.Client;
 using VirtoCommerce.Client.Model;
 
-
 namespace VirtoCommerce.Client.Api
 {
-    
     /// <summary>
     /// Represents a collection of functions to interact with the API endpoints
     /// </summary>
     public interface ICMSContentModuleApi
     {
         #region Synchronous Operations
-        
         /// <summary>
         /// Copy contents
         /// </summary>
@@ -29,7 +26,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="destPath">destination content relative path</param>
         /// <returns></returns>
         void ContentCopyContent (string srcPath, string destPath);
-  
+
         /// <summary>
         /// Copy contents
         /// </summary>
@@ -41,7 +38,6 @@ namespace VirtoCommerce.Client.Api
         /// <param name="destPath">destination content relative path</param>
         /// <returns>ApiResponse of Object(void)</returns>
         ApiResponse<Object> ContentCopyContentWithHttpInfo (string srcPath, string destPath);
-        
         /// <summary>
         /// Create content folder
         /// </summary>
@@ -54,7 +50,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="folder">content folder</param>
         /// <returns></returns>
         void ContentCreateContentFolder (string contentType, string storeId, VirtoCommerceContentWebModelsContentFolder folder);
-  
+
         /// <summary>
         /// Create content folder
         /// </summary>
@@ -67,7 +63,6 @@ namespace VirtoCommerce.Client.Api
         /// <param name="folder">content folder</param>
         /// <returns>ApiResponse of Object(void)</returns>
         ApiResponse<Object> ContentCreateContentFolderWithHttpInfo (string contentType, string storeId, VirtoCommerceContentWebModelsContentFolder folder);
-        
         /// <summary>
         /// Delete content from server
         /// </summary>
@@ -80,7 +75,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="urls">relative content urls to delete</param>
         /// <returns></returns>
         void ContentDeleteContent (string contentType, string storeId, List<string> urls);
-  
+
         /// <summary>
         /// Delete content from server
         /// </summary>
@@ -93,7 +88,6 @@ namespace VirtoCommerce.Client.Api
         /// <param name="urls">relative content urls to delete</param>
         /// <returns>ApiResponse of Object(void)</returns>
         ApiResponse<Object> ContentDeleteContentWithHttpInfo (string contentType, string storeId, List<string> urls);
-        
         /// <summary>
         /// Return streamed data for requested by relativeUrl content (Used to prevent Cross domain requests in manager)
         /// </summary>
@@ -106,7 +100,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="relativeUrl">content relative url</param>
         /// <returns>byte[]</returns>
         byte[] ContentGetContentItemDataStream (string contentType, string storeId, string relativeUrl);
-  
+
         /// <summary>
         /// Return streamed data for requested by relativeUrl content (Used to prevent Cross domain requests in manager)
         /// </summary>
@@ -119,7 +113,6 @@ namespace VirtoCommerce.Client.Api
         /// <param name="relativeUrl">content relative url</param>
         /// <returns>ApiResponse of byte[]</returns>
         ApiResponse<byte[]> ContentGetContentItemDataStreamWithHttpInfo (string contentType, string storeId, string relativeUrl);
-        
         /// <summary>
         /// Return summary content statistic
         /// </summary>
@@ -130,7 +123,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="storeId"></param>
         /// <returns>VirtoCommerceContentWebModelsContentStatistic</returns>
         VirtoCommerceContentWebModelsContentStatistic ContentGetStoreContentStats (string storeId);
-  
+
         /// <summary>
         /// Return summary content statistic
         /// </summary>
@@ -141,7 +134,6 @@ namespace VirtoCommerce.Client.Api
         /// <param name="storeId"></param>
         /// <returns>ApiResponse of VirtoCommerceContentWebModelsContentStatistic</returns>
         ApiResponse<VirtoCommerceContentWebModelsContentStatistic> ContentGetStoreContentStatsWithHttpInfo (string storeId);
-        
         /// <summary>
         /// Rename or move content item
         /// </summary>
@@ -155,7 +147,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="newUrl">new content item relative or absolute url</param>
         /// <returns></returns>
         void ContentMoveContent (string contentType, string storeId, string oldUrl, string newUrl);
-  
+
         /// <summary>
         /// Rename or move content item
         /// </summary>
@@ -169,7 +161,6 @@ namespace VirtoCommerce.Client.Api
         /// <param name="newUrl">new content item relative or absolute url</param>
         /// <returns>ApiResponse of Object(void)</returns>
         ApiResponse<Object> ContentMoveContentWithHttpInfo (string contentType, string storeId, string oldUrl, string newUrl);
-        
         /// <summary>
         /// Search content items in specified folder and using search keyword
         /// </summary>
@@ -183,7 +174,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="keyword">search keyword (optional)</param>
         /// <returns>List&lt;VirtoCommerceContentWebModelsContentItem&gt;</returns>
         List<VirtoCommerceContentWebModelsContentItem> ContentSearchContent (string contentType, string storeId, string folderUrl = null, string keyword = null);
-  
+
         /// <summary>
         /// Search content items in specified folder and using search keyword
         /// </summary>
@@ -197,7 +188,6 @@ namespace VirtoCommerce.Client.Api
         /// <param name="keyword">search keyword (optional)</param>
         /// <returns>ApiResponse of List&lt;VirtoCommerceContentWebModelsContentItem&gt;</returns>
         ApiResponse<List<VirtoCommerceContentWebModelsContentItem>> ContentSearchContentWithHttpInfo (string contentType, string storeId, string folderUrl = null, string keyword = null);
-        
         /// <summary>
         /// Unpack contents
         /// </summary>
@@ -211,7 +201,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="destPath">destination content relative path</param>
         /// <returns></returns>
         void ContentUnpack (string contentType, string storeId, string archivePath, string destPath);
-  
+
         /// <summary>
         /// Unpack contents
         /// </summary>
@@ -225,7 +215,6 @@ namespace VirtoCommerce.Client.Api
         /// <param name="destPath">destination content relative path</param>
         /// <returns>ApiResponse of Object(void)</returns>
         ApiResponse<Object> ContentUnpackWithHttpInfo (string contentType, string storeId, string archivePath, string destPath);
-        
         /// <summary>
         /// Upload content item
         /// </summary>
@@ -239,7 +228,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="url">external url which will be used to download content item data (optional)</param>
         /// <returns>List&lt;VirtoCommerceContentWebModelsContentItem&gt;</returns>
         List<VirtoCommerceContentWebModelsContentItem> ContentUploadContent (string contentType, string storeId, string folderUrl, string url = null);
-  
+
         /// <summary>
         /// Upload content item
         /// </summary>
@@ -253,7 +242,6 @@ namespace VirtoCommerce.Client.Api
         /// <param name="url">external url which will be used to download content item data (optional)</param>
         /// <returns>ApiResponse of List&lt;VirtoCommerceContentWebModelsContentItem&gt;</returns>
         ApiResponse<List<VirtoCommerceContentWebModelsContentItem>> ContentUploadContentWithHttpInfo (string contentType, string storeId, string folderUrl, string url = null);
-        
         /// <summary>
         /// Checking name of menu link list
         /// </summary>
@@ -267,7 +255,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="id">Menu link list id (optional)</param>
         /// <returns>bool?</returns>
         bool? MenuCheckName (string storeId, string name, string language, string id = null);
-  
+
         /// <summary>
         /// Checking name of menu link list
         /// </summary>
@@ -281,7 +269,6 @@ namespace VirtoCommerce.Client.Api
         /// <param name="id">Menu link list id (optional)</param>
         /// <returns>ApiResponse of bool?</returns>
         ApiResponse<bool?> MenuCheckNameWithHttpInfo (string storeId, string name, string language, string id = null);
-        
         /// <summary>
         /// Delete menu link list
         /// </summary>
@@ -293,7 +280,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="storeId"></param>
         /// <returns></returns>
         void MenuDelete (string listId, string storeId);
-  
+
         /// <summary>
         /// Delete menu link list
         /// </summary>
@@ -305,7 +292,6 @@ namespace VirtoCommerce.Client.Api
         /// <param name="storeId"></param>
         /// <returns>ApiResponse of Object(void)</returns>
         ApiResponse<Object> MenuDeleteWithHttpInfo (string listId, string storeId);
-        
         /// <summary>
         /// Get menu link list by id
         /// </summary>
@@ -317,7 +303,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="listId">List id</param>
         /// <returns>VirtoCommerceContentWebModelsMenuLinkList</returns>
         VirtoCommerceContentWebModelsMenuLinkList MenuGetList (string storeId, string listId);
-  
+
         /// <summary>
         /// Get menu link list by id
         /// </summary>
@@ -329,7 +315,6 @@ namespace VirtoCommerce.Client.Api
         /// <param name="listId">List id</param>
         /// <returns>ApiResponse of VirtoCommerceContentWebModelsMenuLinkList</returns>
         ApiResponse<VirtoCommerceContentWebModelsMenuLinkList> MenuGetListWithHttpInfo (string storeId, string listId);
-        
         /// <summary>
         /// Get menu link lists
         /// </summary>
@@ -340,7 +325,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="storeId">Store id</param>
         /// <returns>List&lt;VirtoCommerceContentWebModelsMenuLinkList&gt;</returns>
         List<VirtoCommerceContentWebModelsMenuLinkList> MenuGetLists (string storeId);
-  
+
         /// <summary>
         /// Get menu link lists
         /// </summary>
@@ -351,7 +336,6 @@ namespace VirtoCommerce.Client.Api
         /// <param name="storeId">Store id</param>
         /// <returns>ApiResponse of List&lt;VirtoCommerceContentWebModelsMenuLinkList&gt;</returns>
         ApiResponse<List<VirtoCommerceContentWebModelsMenuLinkList>> MenuGetListsWithHttpInfo (string storeId);
-        
         /// <summary>
         /// Update menu link list
         /// </summary>
@@ -363,7 +347,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="storeId"></param>
         /// <returns></returns>
         void MenuUpdate (VirtoCommerceContentWebModelsMenuLinkList list, string storeId);
-  
+
         /// <summary>
         /// Update menu link list
         /// </summary>
@@ -375,11 +359,8 @@ namespace VirtoCommerce.Client.Api
         /// <param name="storeId"></param>
         /// <returns>ApiResponse of Object(void)</returns>
         ApiResponse<Object> MenuUpdateWithHttpInfo (VirtoCommerceContentWebModelsMenuLinkList list, string storeId);
-        
         #endregion Synchronous Operations
-        
         #region Asynchronous Operations
-        
         /// <summary>
         /// Copy contents
         /// </summary>
@@ -403,7 +384,6 @@ namespace VirtoCommerce.Client.Api
         /// <param name="destPath">destination content relative path</param>
         /// <returns>Task of ApiResponse</returns>
         System.Threading.Tasks.Task<ApiResponse<Object>> ContentCopyContentAsyncWithHttpInfo (string srcPath, string destPath);
-        
         /// <summary>
         /// Create content folder
         /// </summary>
@@ -429,7 +409,6 @@ namespace VirtoCommerce.Client.Api
         /// <param name="folder">content folder</param>
         /// <returns>Task of ApiResponse</returns>
         System.Threading.Tasks.Task<ApiResponse<Object>> ContentCreateContentFolderAsyncWithHttpInfo (string contentType, string storeId, VirtoCommerceContentWebModelsContentFolder folder);
-        
         /// <summary>
         /// Delete content from server
         /// </summary>
@@ -455,7 +434,6 @@ namespace VirtoCommerce.Client.Api
         /// <param name="urls">relative content urls to delete</param>
         /// <returns>Task of ApiResponse</returns>
         System.Threading.Tasks.Task<ApiResponse<Object>> ContentDeleteContentAsyncWithHttpInfo (string contentType, string storeId, List<string> urls);
-        
         /// <summary>
         /// Return streamed data for requested by relativeUrl content (Used to prevent Cross domain requests in manager)
         /// </summary>
@@ -481,7 +459,6 @@ namespace VirtoCommerce.Client.Api
         /// <param name="relativeUrl">content relative url</param>
         /// <returns>Task of ApiResponse (byte[])</returns>
         System.Threading.Tasks.Task<ApiResponse<byte[]>> ContentGetContentItemDataStreamAsyncWithHttpInfo (string contentType, string storeId, string relativeUrl);
-        
         /// <summary>
         /// Return summary content statistic
         /// </summary>
@@ -503,7 +480,6 @@ namespace VirtoCommerce.Client.Api
         /// <param name="storeId"></param>
         /// <returns>Task of ApiResponse (VirtoCommerceContentWebModelsContentStatistic)</returns>
         System.Threading.Tasks.Task<ApiResponse<VirtoCommerceContentWebModelsContentStatistic>> ContentGetStoreContentStatsAsyncWithHttpInfo (string storeId);
-        
         /// <summary>
         /// Rename or move content item
         /// </summary>
@@ -531,7 +507,6 @@ namespace VirtoCommerce.Client.Api
         /// <param name="newUrl">new content item relative or absolute url</param>
         /// <returns>Task of ApiResponse</returns>
         System.Threading.Tasks.Task<ApiResponse<Object>> ContentMoveContentAsyncWithHttpInfo (string contentType, string storeId, string oldUrl, string newUrl);
-        
         /// <summary>
         /// Search content items in specified folder and using search keyword
         /// </summary>
@@ -559,7 +534,6 @@ namespace VirtoCommerce.Client.Api
         /// <param name="keyword">search keyword (optional)</param>
         /// <returns>Task of ApiResponse (List&lt;VirtoCommerceContentWebModelsContentItem&gt;)</returns>
         System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceContentWebModelsContentItem>>> ContentSearchContentAsyncWithHttpInfo (string contentType, string storeId, string folderUrl = null, string keyword = null);
-        
         /// <summary>
         /// Unpack contents
         /// </summary>
@@ -587,7 +561,6 @@ namespace VirtoCommerce.Client.Api
         /// <param name="destPath">destination content relative path</param>
         /// <returns>Task of ApiResponse</returns>
         System.Threading.Tasks.Task<ApiResponse<Object>> ContentUnpackAsyncWithHttpInfo (string contentType, string storeId, string archivePath, string destPath);
-        
         /// <summary>
         /// Upload content item
         /// </summary>
@@ -615,7 +588,6 @@ namespace VirtoCommerce.Client.Api
         /// <param name="url">external url which will be used to download content item data (optional)</param>
         /// <returns>Task of ApiResponse (List&lt;VirtoCommerceContentWebModelsContentItem&gt;)</returns>
         System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceContentWebModelsContentItem>>> ContentUploadContentAsyncWithHttpInfo (string contentType, string storeId, string folderUrl, string url = null);
-        
         /// <summary>
         /// Checking name of menu link list
         /// </summary>
@@ -643,7 +615,6 @@ namespace VirtoCommerce.Client.Api
         /// <param name="id">Menu link list id (optional)</param>
         /// <returns>Task of ApiResponse (bool?)</returns>
         System.Threading.Tasks.Task<ApiResponse<bool?>> MenuCheckNameAsyncWithHttpInfo (string storeId, string name, string language, string id = null);
-        
         /// <summary>
         /// Delete menu link list
         /// </summary>
@@ -667,7 +638,6 @@ namespace VirtoCommerce.Client.Api
         /// <param name="storeId"></param>
         /// <returns>Task of ApiResponse</returns>
         System.Threading.Tasks.Task<ApiResponse<Object>> MenuDeleteAsyncWithHttpInfo (string listId, string storeId);
-        
         /// <summary>
         /// Get menu link list by id
         /// </summary>
@@ -691,7 +661,6 @@ namespace VirtoCommerce.Client.Api
         /// <param name="listId">List id</param>
         /// <returns>Task of ApiResponse (VirtoCommerceContentWebModelsMenuLinkList)</returns>
         System.Threading.Tasks.Task<ApiResponse<VirtoCommerceContentWebModelsMenuLinkList>> MenuGetListAsyncWithHttpInfo (string storeId, string listId);
-        
         /// <summary>
         /// Get menu link lists
         /// </summary>
@@ -713,7 +682,6 @@ namespace VirtoCommerce.Client.Api
         /// <param name="storeId">Store id</param>
         /// <returns>Task of ApiResponse (List&lt;VirtoCommerceContentWebModelsMenuLinkList&gt;)</returns>
         System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceContentWebModelsMenuLinkList>>> MenuGetListsAsyncWithHttpInfo (string storeId);
-        
         /// <summary>
         /// Update menu link list
         /// </summary>
@@ -737,11 +705,9 @@ namespace VirtoCommerce.Client.Api
         /// <param name="storeId"></param>
         /// <returns>Task of ApiResponse</returns>
         System.Threading.Tasks.Task<ApiResponse<Object>> MenuUpdateAsyncWithHttpInfo (VirtoCommerceContentWebModelsMenuLinkList list, string storeId);
-        
         #endregion Asynchronous Operations
-        
     }
-  
+
     /// <summary>
     /// Represents a collection of functions to interact with the API endpoints
     /// </summary>
@@ -756,7 +722,7 @@ namespace VirtoCommerce.Client.Api
         public CMSContentModuleApi(Configuration configuration)
         {
             if (configuration == null) // use the default one in Configuration
-                this.Configuration = Configuration.Default; 
+                this.Configuration = Configuration.Default;
             else
                 this.Configuration = configuration;
 
@@ -785,7 +751,7 @@ namespace VirtoCommerce.Client.Api
         {
             // do nothing
         }
-    
+
         /// <summary>
         /// Gets or sets the configuration object
         /// </summary>
@@ -813,14 +779,13 @@ namespace VirtoCommerce.Client.Api
         {
             this.Configuration.AddDefaultHeader(key, value);
         }
-   
-        
+
         /// <summary>
         /// Copy contents 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="srcPath">source content  relative path</param> 
-        /// <param name="destPath">destination content relative path</param> 
+        /// <param name="srcPath">source content  relative path</param>
+        /// <param name="destPath">destination content relative path</param>
         /// <returns></returns>
         public void ContentCopyContent (string srcPath, string destPath)
         {
@@ -831,23 +796,19 @@ namespace VirtoCommerce.Client.Api
         /// Copy contents 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="srcPath">source content  relative path</param> 
-        /// <param name="destPath">destination content relative path</param> 
+        /// <param name="srcPath">source content  relative path</param>
+        /// <param name="destPath">destination content relative path</param>
         /// <returns>ApiResponse of Object(void)</returns>
         public ApiResponse<Object> ContentCopyContentWithHttpInfo (string srcPath, string destPath)
         {
-            
             // verify the required parameter 'srcPath' is set
             if (srcPath == null)
                 throw new ApiException(400, "Missing required parameter 'srcPath' when calling CMSContentModuleApi->ContentCopyContent");
-            
             // verify the required parameter 'destPath' is set
             if (destPath == null)
                 throw new ApiException(400, "Missing required parameter 'destPath' when calling CMSContentModuleApi->ContentCopyContent");
-            
-    
+
             var localVarPath = "/api/content/copy";
-    
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -857,13 +818,11 @@ namespace VirtoCommerce.Client.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
-                
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -872,35 +831,28 @@ namespace VirtoCommerce.Client.Api
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
-            
             if (srcPath != null) localVarQueryParams.Add("srcPath", Configuration.ApiClient.ParameterToString(srcPath)); // query parameter
             if (destPath != null) localVarQueryParams.Add("destPath", Configuration.ApiClient.ParameterToString(destPath)); // query parameter
-            
-            
-            
-            
 
-            
-    
+
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath, 
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
                 Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
-    
+
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (localVarStatusCode, "Error calling ContentCopyContent: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
                 throw new ApiException (localVarStatusCode, "Error calling ContentCopyContent: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
-    
+
             
             return new ApiResponse<Object>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 null);
         }
 
-        
         /// <summary>
         /// Copy contents 
         /// </summary>
@@ -924,13 +876,13 @@ namespace VirtoCommerce.Client.Api
         public async System.Threading.Tasks.Task<ApiResponse<Object>> ContentCopyContentAsyncWithHttpInfo (string srcPath, string destPath)
         {
             // verify the required parameter 'srcPath' is set
-            if (srcPath == null) throw new ApiException(400, "Missing required parameter 'srcPath' when calling ContentCopyContent");
+            if (srcPath == null)
+                throw new ApiException(400, "Missing required parameter 'srcPath' when calling CMSContentModuleApi->ContentCopyContent");
             // verify the required parameter 'destPath' is set
-            if (destPath == null) throw new ApiException(400, "Missing required parameter 'destPath' when calling ContentCopyContent");
-            
-    
+            if (destPath == null)
+                throw new ApiException(400, "Missing required parameter 'destPath' when calling CMSContentModuleApi->ContentCopyContent");
+
             var localVarPath = "/api/content/copy";
-    
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -940,13 +892,11 @@ namespace VirtoCommerce.Client.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
-                
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -955,23 +905,17 @@ namespace VirtoCommerce.Client.Api
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
-            
             if (srcPath != null) localVarQueryParams.Add("srcPath", Configuration.ApiClient.ParameterToString(srcPath)); // query parameter
             if (destPath != null) localVarQueryParams.Add("destPath", Configuration.ApiClient.ParameterToString(destPath)); // query parameter
-            
-            
-            
-            
 
-            
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath, 
-                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams, 
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
- 
+
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (localVarStatusCode, "Error calling ContentCopyContent: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
@@ -982,14 +926,14 @@ namespace VirtoCommerce.Client.Api
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 null);
         }
-        
+
         /// <summary>
         /// Create content folder 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="contentType">possible values Themes or Pages</param> 
-        /// <param name="storeId">Store id</param> 
-        /// <param name="folder">content folder</param> 
+        /// <param name="contentType">possible values Themes or Pages</param>
+        /// <param name="storeId">Store id</param>
+        /// <param name="folder">content folder</param>
         /// <returns></returns>
         public void ContentCreateContentFolder (string contentType, string storeId, VirtoCommerceContentWebModelsContentFolder folder)
         {
@@ -1000,28 +944,23 @@ namespace VirtoCommerce.Client.Api
         /// Create content folder 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="contentType">possible values Themes or Pages</param> 
-        /// <param name="storeId">Store id</param> 
-        /// <param name="folder">content folder</param> 
+        /// <param name="contentType">possible values Themes or Pages</param>
+        /// <param name="storeId">Store id</param>
+        /// <param name="folder">content folder</param>
         /// <returns>ApiResponse of Object(void)</returns>
         public ApiResponse<Object> ContentCreateContentFolderWithHttpInfo (string contentType, string storeId, VirtoCommerceContentWebModelsContentFolder folder)
         {
-            
             // verify the required parameter 'contentType' is set
             if (contentType == null)
                 throw new ApiException(400, "Missing required parameter 'contentType' when calling CMSContentModuleApi->ContentCreateContentFolder");
-            
             // verify the required parameter 'storeId' is set
             if (storeId == null)
                 throw new ApiException(400, "Missing required parameter 'storeId' when calling CMSContentModuleApi->ContentCreateContentFolder");
-            
             // verify the required parameter 'folder' is set
             if (folder == null)
                 throw new ApiException(400, "Missing required parameter 'folder' when calling CMSContentModuleApi->ContentCreateContentFolder");
-            
-    
+
             var localVarPath = "/api/content/{contentType}/{storeId}/folder";
-    
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -1031,13 +970,14 @@ namespace VirtoCommerce.Client.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                "application/json", "text/json", "application/x-www-form-urlencoded"
+                "application/json", 
+                "text/json", 
+                "application/x-www-form-urlencoded"
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
-                
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -1048,10 +988,6 @@ namespace VirtoCommerce.Client.Api
             localVarPathParams.Add("format", "json");
             if (contentType != null) localVarPathParams.Add("contentType", Configuration.ApiClient.ParameterToString(contentType)); // path parameter
             if (storeId != null) localVarPathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
-            
-            
-            
-            
             if (folder.GetType() != typeof(byte[]))
             {
                 localVarPostBody = Configuration.ApiClient.Serialize(folder); // http body (model) parameter
@@ -1061,27 +997,25 @@ namespace VirtoCommerce.Client.Api
                 localVarPostBody = folder; // byte array
             }
 
-            
-    
+
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath, 
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
                 Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
-    
+
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (localVarStatusCode, "Error calling ContentCreateContentFolder: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
                 throw new ApiException (localVarStatusCode, "Error calling ContentCreateContentFolder: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
-    
+
             
             return new ApiResponse<Object>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 null);
         }
 
-        
         /// <summary>
         /// Create content folder 
         /// </summary>
@@ -1107,15 +1041,16 @@ namespace VirtoCommerce.Client.Api
         public async System.Threading.Tasks.Task<ApiResponse<Object>> ContentCreateContentFolderAsyncWithHttpInfo (string contentType, string storeId, VirtoCommerceContentWebModelsContentFolder folder)
         {
             // verify the required parameter 'contentType' is set
-            if (contentType == null) throw new ApiException(400, "Missing required parameter 'contentType' when calling ContentCreateContentFolder");
+            if (contentType == null)
+                throw new ApiException(400, "Missing required parameter 'contentType' when calling CMSContentModuleApi->ContentCreateContentFolder");
             // verify the required parameter 'storeId' is set
-            if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling ContentCreateContentFolder");
+            if (storeId == null)
+                throw new ApiException(400, "Missing required parameter 'storeId' when calling CMSContentModuleApi->ContentCreateContentFolder");
             // verify the required parameter 'folder' is set
-            if (folder == null) throw new ApiException(400, "Missing required parameter 'folder' when calling ContentCreateContentFolder");
-            
-    
+            if (folder == null)
+                throw new ApiException(400, "Missing required parameter 'folder' when calling CMSContentModuleApi->ContentCreateContentFolder");
+
             var localVarPath = "/api/content/{contentType}/{storeId}/folder";
-    
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -1125,13 +1060,14 @@ namespace VirtoCommerce.Client.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                "application/json", "text/json", "application/x-www-form-urlencoded"
+                "application/json", 
+                "text/json", 
+                "application/x-www-form-urlencoded"
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
-                
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -1142,10 +1078,6 @@ namespace VirtoCommerce.Client.Api
             localVarPathParams.Add("format", "json");
             if (contentType != null) localVarPathParams.Add("contentType", Configuration.ApiClient.ParameterToString(contentType)); // path parameter
             if (storeId != null) localVarPathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
-            
-            
-            
-            
             if (folder.GetType() != typeof(byte[]))
             {
                 localVarPostBody = Configuration.ApiClient.Serialize(folder); // http body (model) parameter
@@ -1155,15 +1087,14 @@ namespace VirtoCommerce.Client.Api
                 localVarPostBody = folder; // byte array
             }
 
-            
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath, 
-                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams, 
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
- 
+
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (localVarStatusCode, "Error calling ContentCreateContentFolder: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
@@ -1174,14 +1105,14 @@ namespace VirtoCommerce.Client.Api
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 null);
         }
-        
+
         /// <summary>
         /// Delete content from server 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="contentType">possible values Themes or Pages</param> 
-        /// <param name="storeId">Store id</param> 
-        /// <param name="urls">relative content urls to delete</param> 
+        /// <param name="contentType">possible values Themes or Pages</param>
+        /// <param name="storeId">Store id</param>
+        /// <param name="urls">relative content urls to delete</param>
         /// <returns></returns>
         public void ContentDeleteContent (string contentType, string storeId, List<string> urls)
         {
@@ -1192,28 +1123,23 @@ namespace VirtoCommerce.Client.Api
         /// Delete content from server 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="contentType">possible values Themes or Pages</param> 
-        /// <param name="storeId">Store id</param> 
-        /// <param name="urls">relative content urls to delete</param> 
+        /// <param name="contentType">possible values Themes or Pages</param>
+        /// <param name="storeId">Store id</param>
+        /// <param name="urls">relative content urls to delete</param>
         /// <returns>ApiResponse of Object(void)</returns>
         public ApiResponse<Object> ContentDeleteContentWithHttpInfo (string contentType, string storeId, List<string> urls)
         {
-            
             // verify the required parameter 'contentType' is set
             if (contentType == null)
                 throw new ApiException(400, "Missing required parameter 'contentType' when calling CMSContentModuleApi->ContentDeleteContent");
-            
             // verify the required parameter 'storeId' is set
             if (storeId == null)
                 throw new ApiException(400, "Missing required parameter 'storeId' when calling CMSContentModuleApi->ContentDeleteContent");
-            
             // verify the required parameter 'urls' is set
             if (urls == null)
                 throw new ApiException(400, "Missing required parameter 'urls' when calling CMSContentModuleApi->ContentDeleteContent");
-            
-    
+
             var localVarPath = "/api/content/{contentType}/{storeId}";
-    
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -1223,13 +1149,11 @@ namespace VirtoCommerce.Client.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
-                
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -1240,34 +1164,27 @@ namespace VirtoCommerce.Client.Api
             localVarPathParams.Add("format", "json");
             if (contentType != null) localVarPathParams.Add("contentType", Configuration.ApiClient.ParameterToString(contentType)); // path parameter
             if (storeId != null) localVarPathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
-            
             if (urls != null) localVarQueryParams.Add("urls", Configuration.ApiClient.ParameterToString(urls)); // query parameter
-            
-            
-            
-            
 
-            
-    
+
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath, 
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
                 Method.DELETE, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
-    
+
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (localVarStatusCode, "Error calling ContentDeleteContent: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
                 throw new ApiException (localVarStatusCode, "Error calling ContentDeleteContent: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
-    
+
             
             return new ApiResponse<Object>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 null);
         }
 
-        
         /// <summary>
         /// Delete content from server 
         /// </summary>
@@ -1293,15 +1210,16 @@ namespace VirtoCommerce.Client.Api
         public async System.Threading.Tasks.Task<ApiResponse<Object>> ContentDeleteContentAsyncWithHttpInfo (string contentType, string storeId, List<string> urls)
         {
             // verify the required parameter 'contentType' is set
-            if (contentType == null) throw new ApiException(400, "Missing required parameter 'contentType' when calling ContentDeleteContent");
+            if (contentType == null)
+                throw new ApiException(400, "Missing required parameter 'contentType' when calling CMSContentModuleApi->ContentDeleteContent");
             // verify the required parameter 'storeId' is set
-            if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling ContentDeleteContent");
+            if (storeId == null)
+                throw new ApiException(400, "Missing required parameter 'storeId' when calling CMSContentModuleApi->ContentDeleteContent");
             // verify the required parameter 'urls' is set
-            if (urls == null) throw new ApiException(400, "Missing required parameter 'urls' when calling ContentDeleteContent");
-            
-    
+            if (urls == null)
+                throw new ApiException(400, "Missing required parameter 'urls' when calling CMSContentModuleApi->ContentDeleteContent");
+
             var localVarPath = "/api/content/{contentType}/{storeId}";
-    
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -1311,13 +1229,11 @@ namespace VirtoCommerce.Client.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
-                
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -1328,22 +1244,16 @@ namespace VirtoCommerce.Client.Api
             localVarPathParams.Add("format", "json");
             if (contentType != null) localVarPathParams.Add("contentType", Configuration.ApiClient.ParameterToString(contentType)); // path parameter
             if (storeId != null) localVarPathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
-            
             if (urls != null) localVarQueryParams.Add("urls", Configuration.ApiClient.ParameterToString(urls)); // query parameter
-            
-            
-            
-            
 
-            
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath, 
-                Method.DELETE, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams, 
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.DELETE, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
- 
+
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (localVarStatusCode, "Error calling ContentDeleteContent: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
@@ -1354,14 +1264,14 @@ namespace VirtoCommerce.Client.Api
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 null);
         }
-        
+
         /// <summary>
         /// Return streamed data for requested by relativeUrl content (Used to prevent Cross domain requests in manager) 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="contentType">possible values Themes or Pages</param> 
-        /// <param name="storeId">Store id</param> 
-        /// <param name="relativeUrl">content relative url</param> 
+        /// <param name="contentType">possible values Themes or Pages</param>
+        /// <param name="storeId">Store id</param>
+        /// <param name="relativeUrl">content relative url</param>
         /// <returns>byte[]</returns>
         public byte[] ContentGetContentItemDataStream (string contentType, string storeId, string relativeUrl)
         {
@@ -1373,28 +1283,23 @@ namespace VirtoCommerce.Client.Api
         /// Return streamed data for requested by relativeUrl content (Used to prevent Cross domain requests in manager) 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="contentType">possible values Themes or Pages</param> 
-        /// <param name="storeId">Store id</param> 
-        /// <param name="relativeUrl">content relative url</param> 
+        /// <param name="contentType">possible values Themes or Pages</param>
+        /// <param name="storeId">Store id</param>
+        /// <param name="relativeUrl">content relative url</param>
         /// <returns>ApiResponse of byte[]</returns>
         public ApiResponse< byte[] > ContentGetContentItemDataStreamWithHttpInfo (string contentType, string storeId, string relativeUrl)
         {
-            
             // verify the required parameter 'contentType' is set
             if (contentType == null)
                 throw new ApiException(400, "Missing required parameter 'contentType' when calling CMSContentModuleApi->ContentGetContentItemDataStream");
-            
             // verify the required parameter 'storeId' is set
             if (storeId == null)
                 throw new ApiException(400, "Missing required parameter 'storeId' when calling CMSContentModuleApi->ContentGetContentItemDataStream");
-            
             // verify the required parameter 'relativeUrl' is set
             if (relativeUrl == null)
                 throw new ApiException(400, "Missing required parameter 'relativeUrl' when calling CMSContentModuleApi->ContentGetContentItemDataStream");
-            
-    
+
             var localVarPath = "/api/content/{contentType}/{storeId}";
-    
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -1404,13 +1309,13 @@ namespace VirtoCommerce.Client.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
-                "application/json", "text/json"
+                "application/json", 
+                "text/json"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -1421,34 +1326,27 @@ namespace VirtoCommerce.Client.Api
             localVarPathParams.Add("format", "json");
             if (contentType != null) localVarPathParams.Add("contentType", Configuration.ApiClient.ParameterToString(contentType)); // path parameter
             if (storeId != null) localVarPathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
-            
             if (relativeUrl != null) localVarQueryParams.Add("relativeUrl", Configuration.ApiClient.ParameterToString(relativeUrl)); // query parameter
-            
-            
-            
-            
 
-            
-    
+
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath, 
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
                 Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
-    
+
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (localVarStatusCode, "Error calling ContentGetContentItemDataStream: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
                 throw new ApiException (localVarStatusCode, "Error calling ContentGetContentItemDataStream: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
-    
+
             return new ApiResponse<byte[]>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 (byte[]) Configuration.ApiClient.Deserialize(localVarResponse, typeof(byte[])));
             
         }
 
-        
         /// <summary>
         /// Return streamed data for requested by relativeUrl content (Used to prevent Cross domain requests in manager) 
         /// </summary>
@@ -1475,15 +1373,16 @@ namespace VirtoCommerce.Client.Api
         public async System.Threading.Tasks.Task<ApiResponse<byte[]>> ContentGetContentItemDataStreamAsyncWithHttpInfo (string contentType, string storeId, string relativeUrl)
         {
             // verify the required parameter 'contentType' is set
-            if (contentType == null) throw new ApiException(400, "Missing required parameter 'contentType' when calling ContentGetContentItemDataStream");
+            if (contentType == null)
+                throw new ApiException(400, "Missing required parameter 'contentType' when calling CMSContentModuleApi->ContentGetContentItemDataStream");
             // verify the required parameter 'storeId' is set
-            if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling ContentGetContentItemDataStream");
+            if (storeId == null)
+                throw new ApiException(400, "Missing required parameter 'storeId' when calling CMSContentModuleApi->ContentGetContentItemDataStream");
             // verify the required parameter 'relativeUrl' is set
-            if (relativeUrl == null) throw new ApiException(400, "Missing required parameter 'relativeUrl' when calling ContentGetContentItemDataStream");
-            
-    
+            if (relativeUrl == null)
+                throw new ApiException(400, "Missing required parameter 'relativeUrl' when calling CMSContentModuleApi->ContentGetContentItemDataStream");
+
             var localVarPath = "/api/content/{contentType}/{storeId}";
-    
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -1493,13 +1392,13 @@ namespace VirtoCommerce.Client.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
-                "application/json", "text/json"
+                "application/json", 
+                "text/json"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -1510,22 +1409,16 @@ namespace VirtoCommerce.Client.Api
             localVarPathParams.Add("format", "json");
             if (contentType != null) localVarPathParams.Add("contentType", Configuration.ApiClient.ParameterToString(contentType)); // path parameter
             if (storeId != null) localVarPathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
-            
             if (relativeUrl != null) localVarQueryParams.Add("relativeUrl", Configuration.ApiClient.ParameterToString(relativeUrl)); // query parameter
-            
-            
-            
-            
 
-            
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath, 
-                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams, 
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
- 
+
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (localVarStatusCode, "Error calling ContentGetContentItemDataStream: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
@@ -1536,12 +1429,12 @@ namespace VirtoCommerce.Client.Api
                 (byte[]) Configuration.ApiClient.Deserialize(localVarResponse, typeof(byte[])));
             
         }
-        
+
         /// <summary>
         /// Return summary content statistic 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="storeId"></param> 
+        /// <param name="storeId"></param>
         /// <returns>VirtoCommerceContentWebModelsContentStatistic</returns>
         public VirtoCommerceContentWebModelsContentStatistic ContentGetStoreContentStats (string storeId)
         {
@@ -1553,18 +1446,15 @@ namespace VirtoCommerce.Client.Api
         /// Return summary content statistic 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="storeId"></param> 
+        /// <param name="storeId"></param>
         /// <returns>ApiResponse of VirtoCommerceContentWebModelsContentStatistic</returns>
         public ApiResponse< VirtoCommerceContentWebModelsContentStatistic > ContentGetStoreContentStatsWithHttpInfo (string storeId)
         {
-            
             // verify the required parameter 'storeId' is set
             if (storeId == null)
                 throw new ApiException(400, "Missing required parameter 'storeId' when calling CMSContentModuleApi->ContentGetStoreContentStats");
-            
-    
+
             var localVarPath = "/api/content/{storeId}/stats";
-    
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -1574,13 +1464,13 @@ namespace VirtoCommerce.Client.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
-                "application/json", "text/json"
+                "application/json", 
+                "text/json"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -1590,33 +1480,26 @@ namespace VirtoCommerce.Client.Api
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
             if (storeId != null) localVarPathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
-            
-            
-            
-            
-            
 
-            
-    
+
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath, 
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
                 Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
-    
+
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (localVarStatusCode, "Error calling ContentGetStoreContentStats: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
                 throw new ApiException (localVarStatusCode, "Error calling ContentGetStoreContentStats: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
-    
+
             return new ApiResponse<VirtoCommerceContentWebModelsContentStatistic>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 (VirtoCommerceContentWebModelsContentStatistic) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceContentWebModelsContentStatistic)));
             
         }
 
-        
         /// <summary>
         /// Return summary content statistic 
         /// </summary>
@@ -1639,11 +1522,10 @@ namespace VirtoCommerce.Client.Api
         public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceContentWebModelsContentStatistic>> ContentGetStoreContentStatsAsyncWithHttpInfo (string storeId)
         {
             // verify the required parameter 'storeId' is set
-            if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling ContentGetStoreContentStats");
-            
-    
+            if (storeId == null)
+                throw new ApiException(400, "Missing required parameter 'storeId' when calling CMSContentModuleApi->ContentGetStoreContentStats");
+
             var localVarPath = "/api/content/{storeId}/stats";
-    
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -1653,13 +1535,13 @@ namespace VirtoCommerce.Client.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
-                "application/json", "text/json"
+                "application/json", 
+                "text/json"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -1669,21 +1551,15 @@ namespace VirtoCommerce.Client.Api
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
             if (storeId != null) localVarPathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
-            
-            
-            
-            
-            
 
-            
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath, 
-                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams, 
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
- 
+
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (localVarStatusCode, "Error calling ContentGetStoreContentStats: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
@@ -1694,15 +1570,15 @@ namespace VirtoCommerce.Client.Api
                 (VirtoCommerceContentWebModelsContentStatistic) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceContentWebModelsContentStatistic)));
             
         }
-        
+
         /// <summary>
         /// Rename or move content item 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="contentType">possible values Themes or Pages</param> 
-        /// <param name="storeId">Store id</param> 
-        /// <param name="oldUrl">old content item relative or absolute url</param> 
-        /// <param name="newUrl">new content item relative or absolute url</param> 
+        /// <param name="contentType">possible values Themes or Pages</param>
+        /// <param name="storeId">Store id</param>
+        /// <param name="oldUrl">old content item relative or absolute url</param>
+        /// <param name="newUrl">new content item relative or absolute url</param>
         /// <returns></returns>
         public void ContentMoveContent (string contentType, string storeId, string oldUrl, string newUrl)
         {
@@ -1713,33 +1589,27 @@ namespace VirtoCommerce.Client.Api
         /// Rename or move content item 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="contentType">possible values Themes or Pages</param> 
-        /// <param name="storeId">Store id</param> 
-        /// <param name="oldUrl">old content item relative or absolute url</param> 
-        /// <param name="newUrl">new content item relative or absolute url</param> 
+        /// <param name="contentType">possible values Themes or Pages</param>
+        /// <param name="storeId">Store id</param>
+        /// <param name="oldUrl">old content item relative or absolute url</param>
+        /// <param name="newUrl">new content item relative or absolute url</param>
         /// <returns>ApiResponse of Object(void)</returns>
         public ApiResponse<Object> ContentMoveContentWithHttpInfo (string contentType, string storeId, string oldUrl, string newUrl)
         {
-            
             // verify the required parameter 'contentType' is set
             if (contentType == null)
                 throw new ApiException(400, "Missing required parameter 'contentType' when calling CMSContentModuleApi->ContentMoveContent");
-            
             // verify the required parameter 'storeId' is set
             if (storeId == null)
                 throw new ApiException(400, "Missing required parameter 'storeId' when calling CMSContentModuleApi->ContentMoveContent");
-            
             // verify the required parameter 'oldUrl' is set
             if (oldUrl == null)
                 throw new ApiException(400, "Missing required parameter 'oldUrl' when calling CMSContentModuleApi->ContentMoveContent");
-            
             // verify the required parameter 'newUrl' is set
             if (newUrl == null)
                 throw new ApiException(400, "Missing required parameter 'newUrl' when calling CMSContentModuleApi->ContentMoveContent");
-            
-    
+
             var localVarPath = "/api/content/{contentType}/{storeId}/move";
-    
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -1749,13 +1619,11 @@ namespace VirtoCommerce.Client.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
-                
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -1766,35 +1634,28 @@ namespace VirtoCommerce.Client.Api
             localVarPathParams.Add("format", "json");
             if (contentType != null) localVarPathParams.Add("contentType", Configuration.ApiClient.ParameterToString(contentType)); // path parameter
             if (storeId != null) localVarPathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
-            
             if (oldUrl != null) localVarQueryParams.Add("oldUrl", Configuration.ApiClient.ParameterToString(oldUrl)); // query parameter
             if (newUrl != null) localVarQueryParams.Add("newUrl", Configuration.ApiClient.ParameterToString(newUrl)); // query parameter
-            
-            
-            
-            
 
-            
-    
+
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath, 
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
                 Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
-    
+
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (localVarStatusCode, "Error calling ContentMoveContent: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
                 throw new ApiException (localVarStatusCode, "Error calling ContentMoveContent: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
-    
+
             
             return new ApiResponse<Object>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 null);
         }
 
-        
         /// <summary>
         /// Rename or move content item 
         /// </summary>
@@ -1822,17 +1683,19 @@ namespace VirtoCommerce.Client.Api
         public async System.Threading.Tasks.Task<ApiResponse<Object>> ContentMoveContentAsyncWithHttpInfo (string contentType, string storeId, string oldUrl, string newUrl)
         {
             // verify the required parameter 'contentType' is set
-            if (contentType == null) throw new ApiException(400, "Missing required parameter 'contentType' when calling ContentMoveContent");
+            if (contentType == null)
+                throw new ApiException(400, "Missing required parameter 'contentType' when calling CMSContentModuleApi->ContentMoveContent");
             // verify the required parameter 'storeId' is set
-            if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling ContentMoveContent");
+            if (storeId == null)
+                throw new ApiException(400, "Missing required parameter 'storeId' when calling CMSContentModuleApi->ContentMoveContent");
             // verify the required parameter 'oldUrl' is set
-            if (oldUrl == null) throw new ApiException(400, "Missing required parameter 'oldUrl' when calling ContentMoveContent");
+            if (oldUrl == null)
+                throw new ApiException(400, "Missing required parameter 'oldUrl' when calling CMSContentModuleApi->ContentMoveContent");
             // verify the required parameter 'newUrl' is set
-            if (newUrl == null) throw new ApiException(400, "Missing required parameter 'newUrl' when calling ContentMoveContent");
-            
-    
+            if (newUrl == null)
+                throw new ApiException(400, "Missing required parameter 'newUrl' when calling CMSContentModuleApi->ContentMoveContent");
+
             var localVarPath = "/api/content/{contentType}/{storeId}/move";
-    
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -1842,13 +1705,11 @@ namespace VirtoCommerce.Client.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
-                
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -1859,23 +1720,17 @@ namespace VirtoCommerce.Client.Api
             localVarPathParams.Add("format", "json");
             if (contentType != null) localVarPathParams.Add("contentType", Configuration.ApiClient.ParameterToString(contentType)); // path parameter
             if (storeId != null) localVarPathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
-            
             if (oldUrl != null) localVarQueryParams.Add("oldUrl", Configuration.ApiClient.ParameterToString(oldUrl)); // query parameter
             if (newUrl != null) localVarQueryParams.Add("newUrl", Configuration.ApiClient.ParameterToString(newUrl)); // query parameter
-            
-            
-            
-            
 
-            
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath, 
-                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams, 
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
- 
+
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (localVarStatusCode, "Error calling ContentMoveContent: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
@@ -1886,15 +1741,15 @@ namespace VirtoCommerce.Client.Api
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 null);
         }
-        
+
         /// <summary>
         /// Search content items in specified folder and using search keyword 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="contentType">possible values Themes or Pages</param> 
-        /// <param name="storeId">Store id</param> 
-        /// <param name="folderUrl">relative path for folder where content items will be searched (optional)</param> 
-        /// <param name="keyword">search keyword (optional)</param> 
+        /// <param name="contentType">possible values Themes or Pages</param>
+        /// <param name="storeId">Store id</param>
+        /// <param name="folderUrl">relative path for folder where content items will be searched (optional)</param>
+        /// <param name="keyword">search keyword (optional)</param>
         /// <returns>List&lt;VirtoCommerceContentWebModelsContentItem&gt;</returns>
         public List<VirtoCommerceContentWebModelsContentItem> ContentSearchContent (string contentType, string storeId, string folderUrl = null, string keyword = null)
         {
@@ -1906,25 +1761,21 @@ namespace VirtoCommerce.Client.Api
         /// Search content items in specified folder and using search keyword 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="contentType">possible values Themes or Pages</param> 
-        /// <param name="storeId">Store id</param> 
-        /// <param name="folderUrl">relative path for folder where content items will be searched (optional)</param> 
-        /// <param name="keyword">search keyword (optional)</param> 
+        /// <param name="contentType">possible values Themes or Pages</param>
+        /// <param name="storeId">Store id</param>
+        /// <param name="folderUrl">relative path for folder where content items will be searched (optional)</param>
+        /// <param name="keyword">search keyword (optional)</param>
         /// <returns>ApiResponse of List&lt;VirtoCommerceContentWebModelsContentItem&gt;</returns>
         public ApiResponse< List<VirtoCommerceContentWebModelsContentItem> > ContentSearchContentWithHttpInfo (string contentType, string storeId, string folderUrl = null, string keyword = null)
         {
-            
             // verify the required parameter 'contentType' is set
             if (contentType == null)
                 throw new ApiException(400, "Missing required parameter 'contentType' when calling CMSContentModuleApi->ContentSearchContent");
-            
             // verify the required parameter 'storeId' is set
             if (storeId == null)
                 throw new ApiException(400, "Missing required parameter 'storeId' when calling CMSContentModuleApi->ContentSearchContent");
-            
-    
+
             var localVarPath = "/api/content/{contentType}/{storeId}/search";
-    
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -1934,13 +1785,13 @@ namespace VirtoCommerce.Client.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
-                "application/json", "text/json"
+                "application/json", 
+                "text/json"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -1951,35 +1802,28 @@ namespace VirtoCommerce.Client.Api
             localVarPathParams.Add("format", "json");
             if (contentType != null) localVarPathParams.Add("contentType", Configuration.ApiClient.ParameterToString(contentType)); // path parameter
             if (storeId != null) localVarPathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
-            
             if (folderUrl != null) localVarQueryParams.Add("folderUrl", Configuration.ApiClient.ParameterToString(folderUrl)); // query parameter
             if (keyword != null) localVarQueryParams.Add("keyword", Configuration.ApiClient.ParameterToString(keyword)); // query parameter
-            
-            
-            
-            
 
-            
-    
+
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath, 
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
                 Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
-    
+
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (localVarStatusCode, "Error calling ContentSearchContent: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
                 throw new ApiException (localVarStatusCode, "Error calling ContentSearchContent: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
-    
+
             return new ApiResponse<List<VirtoCommerceContentWebModelsContentItem>>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 (List<VirtoCommerceContentWebModelsContentItem>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<VirtoCommerceContentWebModelsContentItem>)));
             
         }
 
-        
         /// <summary>
         /// Search content items in specified folder and using search keyword 
         /// </summary>
@@ -2008,13 +1852,13 @@ namespace VirtoCommerce.Client.Api
         public async System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceContentWebModelsContentItem>>> ContentSearchContentAsyncWithHttpInfo (string contentType, string storeId, string folderUrl = null, string keyword = null)
         {
             // verify the required parameter 'contentType' is set
-            if (contentType == null) throw new ApiException(400, "Missing required parameter 'contentType' when calling ContentSearchContent");
+            if (contentType == null)
+                throw new ApiException(400, "Missing required parameter 'contentType' when calling CMSContentModuleApi->ContentSearchContent");
             // verify the required parameter 'storeId' is set
-            if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling ContentSearchContent");
-            
-    
+            if (storeId == null)
+                throw new ApiException(400, "Missing required parameter 'storeId' when calling CMSContentModuleApi->ContentSearchContent");
+
             var localVarPath = "/api/content/{contentType}/{storeId}/search";
-    
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -2024,13 +1868,13 @@ namespace VirtoCommerce.Client.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
-                "application/json", "text/json"
+                "application/json", 
+                "text/json"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -2041,23 +1885,17 @@ namespace VirtoCommerce.Client.Api
             localVarPathParams.Add("format", "json");
             if (contentType != null) localVarPathParams.Add("contentType", Configuration.ApiClient.ParameterToString(contentType)); // path parameter
             if (storeId != null) localVarPathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
-            
             if (folderUrl != null) localVarQueryParams.Add("folderUrl", Configuration.ApiClient.ParameterToString(folderUrl)); // query parameter
             if (keyword != null) localVarQueryParams.Add("keyword", Configuration.ApiClient.ParameterToString(keyword)); // query parameter
-            
-            
-            
-            
 
-            
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath, 
-                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams, 
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
- 
+
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (localVarStatusCode, "Error calling ContentSearchContent: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
@@ -2068,15 +1906,15 @@ namespace VirtoCommerce.Client.Api
                 (List<VirtoCommerceContentWebModelsContentItem>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<VirtoCommerceContentWebModelsContentItem>)));
             
         }
-        
+
         /// <summary>
         /// Unpack contents 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="contentType">possible values Themes or Pages</param> 
-        /// <param name="storeId">Store id</param> 
-        /// <param name="archivePath">archive file relative path</param> 
-        /// <param name="destPath">destination content relative path</param> 
+        /// <param name="contentType">possible values Themes or Pages</param>
+        /// <param name="storeId">Store id</param>
+        /// <param name="archivePath">archive file relative path</param>
+        /// <param name="destPath">destination content relative path</param>
         /// <returns></returns>
         public void ContentUnpack (string contentType, string storeId, string archivePath, string destPath)
         {
@@ -2087,33 +1925,27 @@ namespace VirtoCommerce.Client.Api
         /// Unpack contents 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="contentType">possible values Themes or Pages</param> 
-        /// <param name="storeId">Store id</param> 
-        /// <param name="archivePath">archive file relative path</param> 
-        /// <param name="destPath">destination content relative path</param> 
+        /// <param name="contentType">possible values Themes or Pages</param>
+        /// <param name="storeId">Store id</param>
+        /// <param name="archivePath">archive file relative path</param>
+        /// <param name="destPath">destination content relative path</param>
         /// <returns>ApiResponse of Object(void)</returns>
         public ApiResponse<Object> ContentUnpackWithHttpInfo (string contentType, string storeId, string archivePath, string destPath)
         {
-            
             // verify the required parameter 'contentType' is set
             if (contentType == null)
                 throw new ApiException(400, "Missing required parameter 'contentType' when calling CMSContentModuleApi->ContentUnpack");
-            
             // verify the required parameter 'storeId' is set
             if (storeId == null)
                 throw new ApiException(400, "Missing required parameter 'storeId' when calling CMSContentModuleApi->ContentUnpack");
-            
             // verify the required parameter 'archivePath' is set
             if (archivePath == null)
                 throw new ApiException(400, "Missing required parameter 'archivePath' when calling CMSContentModuleApi->ContentUnpack");
-            
             // verify the required parameter 'destPath' is set
             if (destPath == null)
                 throw new ApiException(400, "Missing required parameter 'destPath' when calling CMSContentModuleApi->ContentUnpack");
-            
-    
+
             var localVarPath = "/api/content/{contentType}/{storeId}/unpack";
-    
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -2123,13 +1955,11 @@ namespace VirtoCommerce.Client.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
-                
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -2140,35 +1970,28 @@ namespace VirtoCommerce.Client.Api
             localVarPathParams.Add("format", "json");
             if (contentType != null) localVarPathParams.Add("contentType", Configuration.ApiClient.ParameterToString(contentType)); // path parameter
             if (storeId != null) localVarPathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
-            
             if (archivePath != null) localVarQueryParams.Add("archivePath", Configuration.ApiClient.ParameterToString(archivePath)); // query parameter
             if (destPath != null) localVarQueryParams.Add("destPath", Configuration.ApiClient.ParameterToString(destPath)); // query parameter
-            
-            
-            
-            
 
-            
-    
+
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath, 
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
                 Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
-    
+
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (localVarStatusCode, "Error calling ContentUnpack: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
                 throw new ApiException (localVarStatusCode, "Error calling ContentUnpack: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
-    
+
             
             return new ApiResponse<Object>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 null);
         }
 
-        
         /// <summary>
         /// Unpack contents 
         /// </summary>
@@ -2196,17 +2019,19 @@ namespace VirtoCommerce.Client.Api
         public async System.Threading.Tasks.Task<ApiResponse<Object>> ContentUnpackAsyncWithHttpInfo (string contentType, string storeId, string archivePath, string destPath)
         {
             // verify the required parameter 'contentType' is set
-            if (contentType == null) throw new ApiException(400, "Missing required parameter 'contentType' when calling ContentUnpack");
+            if (contentType == null)
+                throw new ApiException(400, "Missing required parameter 'contentType' when calling CMSContentModuleApi->ContentUnpack");
             // verify the required parameter 'storeId' is set
-            if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling ContentUnpack");
+            if (storeId == null)
+                throw new ApiException(400, "Missing required parameter 'storeId' when calling CMSContentModuleApi->ContentUnpack");
             // verify the required parameter 'archivePath' is set
-            if (archivePath == null) throw new ApiException(400, "Missing required parameter 'archivePath' when calling ContentUnpack");
+            if (archivePath == null)
+                throw new ApiException(400, "Missing required parameter 'archivePath' when calling CMSContentModuleApi->ContentUnpack");
             // verify the required parameter 'destPath' is set
-            if (destPath == null) throw new ApiException(400, "Missing required parameter 'destPath' when calling ContentUnpack");
-            
-    
+            if (destPath == null)
+                throw new ApiException(400, "Missing required parameter 'destPath' when calling CMSContentModuleApi->ContentUnpack");
+
             var localVarPath = "/api/content/{contentType}/{storeId}/unpack";
-    
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -2216,13 +2041,11 @@ namespace VirtoCommerce.Client.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
-                
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -2233,23 +2056,17 @@ namespace VirtoCommerce.Client.Api
             localVarPathParams.Add("format", "json");
             if (contentType != null) localVarPathParams.Add("contentType", Configuration.ApiClient.ParameterToString(contentType)); // path parameter
             if (storeId != null) localVarPathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
-            
             if (archivePath != null) localVarQueryParams.Add("archivePath", Configuration.ApiClient.ParameterToString(archivePath)); // query parameter
             if (destPath != null) localVarQueryParams.Add("destPath", Configuration.ApiClient.ParameterToString(destPath)); // query parameter
-            
-            
-            
-            
 
-            
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath, 
-                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams, 
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
- 
+
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (localVarStatusCode, "Error calling ContentUnpack: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
@@ -2260,15 +2077,15 @@ namespace VirtoCommerce.Client.Api
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 null);
         }
-        
+
         /// <summary>
         /// Upload content item 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="contentType">possible values Themes or Pages</param> 
-        /// <param name="storeId">Store id</param> 
-        /// <param name="folderUrl">folder relative url where content will be uploaded</param> 
-        /// <param name="url">external url which will be used to download content item data (optional)</param> 
+        /// <param name="contentType">possible values Themes or Pages</param>
+        /// <param name="storeId">Store id</param>
+        /// <param name="folderUrl">folder relative url where content will be uploaded</param>
+        /// <param name="url">external url which will be used to download content item data (optional)</param>
         /// <returns>List&lt;VirtoCommerceContentWebModelsContentItem&gt;</returns>
         public List<VirtoCommerceContentWebModelsContentItem> ContentUploadContent (string contentType, string storeId, string folderUrl, string url = null)
         {
@@ -2280,29 +2097,24 @@ namespace VirtoCommerce.Client.Api
         /// Upload content item 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="contentType">possible values Themes or Pages</param> 
-        /// <param name="storeId">Store id</param> 
-        /// <param name="folderUrl">folder relative url where content will be uploaded</param> 
-        /// <param name="url">external url which will be used to download content item data (optional)</param> 
+        /// <param name="contentType">possible values Themes or Pages</param>
+        /// <param name="storeId">Store id</param>
+        /// <param name="folderUrl">folder relative url where content will be uploaded</param>
+        /// <param name="url">external url which will be used to download content item data (optional)</param>
         /// <returns>ApiResponse of List&lt;VirtoCommerceContentWebModelsContentItem&gt;</returns>
         public ApiResponse< List<VirtoCommerceContentWebModelsContentItem> > ContentUploadContentWithHttpInfo (string contentType, string storeId, string folderUrl, string url = null)
         {
-            
             // verify the required parameter 'contentType' is set
             if (contentType == null)
                 throw new ApiException(400, "Missing required parameter 'contentType' when calling CMSContentModuleApi->ContentUploadContent");
-            
             // verify the required parameter 'storeId' is set
             if (storeId == null)
                 throw new ApiException(400, "Missing required parameter 'storeId' when calling CMSContentModuleApi->ContentUploadContent");
-            
             // verify the required parameter 'folderUrl' is set
             if (folderUrl == null)
                 throw new ApiException(400, "Missing required parameter 'folderUrl' when calling CMSContentModuleApi->ContentUploadContent");
-            
-    
+
             var localVarPath = "/api/content/{contentType}/{storeId}";
-    
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -2312,13 +2124,13 @@ namespace VirtoCommerce.Client.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
-                "application/json", "text/json"
+                "application/json", 
+                "text/json"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -2329,35 +2141,28 @@ namespace VirtoCommerce.Client.Api
             localVarPathParams.Add("format", "json");
             if (contentType != null) localVarPathParams.Add("contentType", Configuration.ApiClient.ParameterToString(contentType)); // path parameter
             if (storeId != null) localVarPathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
-            
             if (folderUrl != null) localVarQueryParams.Add("folderUrl", Configuration.ApiClient.ParameterToString(folderUrl)); // query parameter
             if (url != null) localVarQueryParams.Add("url", Configuration.ApiClient.ParameterToString(url)); // query parameter
-            
-            
-            
-            
 
-            
-    
+
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath, 
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
                 Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
-    
+
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (localVarStatusCode, "Error calling ContentUploadContent: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
                 throw new ApiException (localVarStatusCode, "Error calling ContentUploadContent: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
-    
+
             return new ApiResponse<List<VirtoCommerceContentWebModelsContentItem>>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 (List<VirtoCommerceContentWebModelsContentItem>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<VirtoCommerceContentWebModelsContentItem>)));
             
         }
 
-        
         /// <summary>
         /// Upload content item 
         /// </summary>
@@ -2386,15 +2191,16 @@ namespace VirtoCommerce.Client.Api
         public async System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceContentWebModelsContentItem>>> ContentUploadContentAsyncWithHttpInfo (string contentType, string storeId, string folderUrl, string url = null)
         {
             // verify the required parameter 'contentType' is set
-            if (contentType == null) throw new ApiException(400, "Missing required parameter 'contentType' when calling ContentUploadContent");
+            if (contentType == null)
+                throw new ApiException(400, "Missing required parameter 'contentType' when calling CMSContentModuleApi->ContentUploadContent");
             // verify the required parameter 'storeId' is set
-            if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling ContentUploadContent");
+            if (storeId == null)
+                throw new ApiException(400, "Missing required parameter 'storeId' when calling CMSContentModuleApi->ContentUploadContent");
             // verify the required parameter 'folderUrl' is set
-            if (folderUrl == null) throw new ApiException(400, "Missing required parameter 'folderUrl' when calling ContentUploadContent");
-            
-    
+            if (folderUrl == null)
+                throw new ApiException(400, "Missing required parameter 'folderUrl' when calling CMSContentModuleApi->ContentUploadContent");
+
             var localVarPath = "/api/content/{contentType}/{storeId}";
-    
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -2404,13 +2210,13 @@ namespace VirtoCommerce.Client.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
-                "application/json", "text/json"
+                "application/json", 
+                "text/json"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -2421,23 +2227,17 @@ namespace VirtoCommerce.Client.Api
             localVarPathParams.Add("format", "json");
             if (contentType != null) localVarPathParams.Add("contentType", Configuration.ApiClient.ParameterToString(contentType)); // path parameter
             if (storeId != null) localVarPathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
-            
             if (folderUrl != null) localVarQueryParams.Add("folderUrl", Configuration.ApiClient.ParameterToString(folderUrl)); // query parameter
             if (url != null) localVarQueryParams.Add("url", Configuration.ApiClient.ParameterToString(url)); // query parameter
-            
-            
-            
-            
 
-            
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath, 
-                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams, 
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
- 
+
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (localVarStatusCode, "Error calling ContentUploadContent: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
@@ -2448,15 +2248,15 @@ namespace VirtoCommerce.Client.Api
                 (List<VirtoCommerceContentWebModelsContentItem>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<VirtoCommerceContentWebModelsContentItem>)));
             
         }
-        
+
         /// <summary>
         /// Checking name of menu link list Checking pair of name+language of menu link list for unique, if checking result - false saving unavailable
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="storeId">Store id</param> 
-        /// <param name="name">Name of menu link list</param> 
-        /// <param name="language">Language of menu link list</param> 
-        /// <param name="id">Menu link list id (optional)</param> 
+        /// <param name="storeId">Store id</param>
+        /// <param name="name">Name of menu link list</param>
+        /// <param name="language">Language of menu link list</param>
+        /// <param name="id">Menu link list id (optional)</param>
         /// <returns>bool?</returns>
         public bool? MenuCheckName (string storeId, string name, string language, string id = null)
         {
@@ -2468,29 +2268,24 @@ namespace VirtoCommerce.Client.Api
         /// Checking name of menu link list Checking pair of name+language of menu link list for unique, if checking result - false saving unavailable
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="storeId">Store id</param> 
-        /// <param name="name">Name of menu link list</param> 
-        /// <param name="language">Language of menu link list</param> 
-        /// <param name="id">Menu link list id (optional)</param> 
+        /// <param name="storeId">Store id</param>
+        /// <param name="name">Name of menu link list</param>
+        /// <param name="language">Language of menu link list</param>
+        /// <param name="id">Menu link list id (optional)</param>
         /// <returns>ApiResponse of bool?</returns>
         public ApiResponse< bool? > MenuCheckNameWithHttpInfo (string storeId, string name, string language, string id = null)
         {
-            
             // verify the required parameter 'storeId' is set
             if (storeId == null)
                 throw new ApiException(400, "Missing required parameter 'storeId' when calling CMSContentModuleApi->MenuCheckName");
-            
             // verify the required parameter 'name' is set
             if (name == null)
                 throw new ApiException(400, "Missing required parameter 'name' when calling CMSContentModuleApi->MenuCheckName");
-            
             // verify the required parameter 'language' is set
             if (language == null)
                 throw new ApiException(400, "Missing required parameter 'language' when calling CMSContentModuleApi->MenuCheckName");
-            
-    
+
             var localVarPath = "/api/cms/{storeId}/menu/checkname";
-    
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -2500,13 +2295,13 @@ namespace VirtoCommerce.Client.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
-                "application/json", "text/json"
+                "application/json", 
+                "text/json"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -2516,36 +2311,29 @@ namespace VirtoCommerce.Client.Api
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
             if (storeId != null) localVarPathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
-            
             if (name != null) localVarQueryParams.Add("name", Configuration.ApiClient.ParameterToString(name)); // query parameter
             if (language != null) localVarQueryParams.Add("language", Configuration.ApiClient.ParameterToString(language)); // query parameter
             if (id != null) localVarQueryParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // query parameter
-            
-            
-            
-            
 
-            
-    
+
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath, 
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
                 Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
-    
+
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (localVarStatusCode, "Error calling MenuCheckName: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
                 throw new ApiException (localVarStatusCode, "Error calling MenuCheckName: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
-    
+
             return new ApiResponse<bool?>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 (bool?) Configuration.ApiClient.Deserialize(localVarResponse, typeof(bool?)));
             
         }
 
-        
         /// <summary>
         /// Checking name of menu link list Checking pair of name+language of menu link list for unique, if checking result - false saving unavailable
         /// </summary>
@@ -2574,15 +2362,16 @@ namespace VirtoCommerce.Client.Api
         public async System.Threading.Tasks.Task<ApiResponse<bool?>> MenuCheckNameAsyncWithHttpInfo (string storeId, string name, string language, string id = null)
         {
             // verify the required parameter 'storeId' is set
-            if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling MenuCheckName");
+            if (storeId == null)
+                throw new ApiException(400, "Missing required parameter 'storeId' when calling CMSContentModuleApi->MenuCheckName");
             // verify the required parameter 'name' is set
-            if (name == null) throw new ApiException(400, "Missing required parameter 'name' when calling MenuCheckName");
+            if (name == null)
+                throw new ApiException(400, "Missing required parameter 'name' when calling CMSContentModuleApi->MenuCheckName");
             // verify the required parameter 'language' is set
-            if (language == null) throw new ApiException(400, "Missing required parameter 'language' when calling MenuCheckName");
-            
-    
+            if (language == null)
+                throw new ApiException(400, "Missing required parameter 'language' when calling CMSContentModuleApi->MenuCheckName");
+
             var localVarPath = "/api/cms/{storeId}/menu/checkname";
-    
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -2592,13 +2381,13 @@ namespace VirtoCommerce.Client.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
-                "application/json", "text/json"
+                "application/json", 
+                "text/json"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -2608,24 +2397,18 @@ namespace VirtoCommerce.Client.Api
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
             if (storeId != null) localVarPathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
-            
             if (name != null) localVarQueryParams.Add("name", Configuration.ApiClient.ParameterToString(name)); // query parameter
             if (language != null) localVarQueryParams.Add("language", Configuration.ApiClient.ParameterToString(language)); // query parameter
             if (id != null) localVarQueryParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // query parameter
-            
-            
-            
-            
 
-            
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath, 
-                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams, 
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
- 
+
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (localVarStatusCode, "Error calling MenuCheckName: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
@@ -2636,13 +2419,13 @@ namespace VirtoCommerce.Client.Api
                 (bool?) Configuration.ApiClient.Deserialize(localVarResponse, typeof(bool?)));
             
         }
-        
+
         /// <summary>
         /// Delete menu link list 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="listId">Menu link list id</param> 
-        /// <param name="storeId"></param> 
+        /// <param name="listId">Menu link list id</param>
+        /// <param name="storeId"></param>
         /// <returns></returns>
         public void MenuDelete (string listId, string storeId)
         {
@@ -2653,23 +2436,19 @@ namespace VirtoCommerce.Client.Api
         /// Delete menu link list 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="listId">Menu link list id</param> 
-        /// <param name="storeId"></param> 
+        /// <param name="listId">Menu link list id</param>
+        /// <param name="storeId"></param>
         /// <returns>ApiResponse of Object(void)</returns>
         public ApiResponse<Object> MenuDeleteWithHttpInfo (string listId, string storeId)
         {
-            
             // verify the required parameter 'listId' is set
             if (listId == null)
                 throw new ApiException(400, "Missing required parameter 'listId' when calling CMSContentModuleApi->MenuDelete");
-            
             // verify the required parameter 'storeId' is set
             if (storeId == null)
                 throw new ApiException(400, "Missing required parameter 'storeId' when calling CMSContentModuleApi->MenuDelete");
-            
-    
+
             var localVarPath = "/api/cms/{storeId}/menu";
-    
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -2679,13 +2458,11 @@ namespace VirtoCommerce.Client.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
-                
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -2695,34 +2472,27 @@ namespace VirtoCommerce.Client.Api
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
             if (storeId != null) localVarPathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
-            
             if (listId != null) localVarQueryParams.Add("listId", Configuration.ApiClient.ParameterToString(listId)); // query parameter
-            
-            
-            
-            
 
-            
-    
+
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath, 
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
                 Method.DELETE, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
-    
+
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (localVarStatusCode, "Error calling MenuDelete: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
                 throw new ApiException (localVarStatusCode, "Error calling MenuDelete: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
-    
+
             
             return new ApiResponse<Object>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 null);
         }
 
-        
         /// <summary>
         /// Delete menu link list 
         /// </summary>
@@ -2746,13 +2516,13 @@ namespace VirtoCommerce.Client.Api
         public async System.Threading.Tasks.Task<ApiResponse<Object>> MenuDeleteAsyncWithHttpInfo (string listId, string storeId)
         {
             // verify the required parameter 'listId' is set
-            if (listId == null) throw new ApiException(400, "Missing required parameter 'listId' when calling MenuDelete");
+            if (listId == null)
+                throw new ApiException(400, "Missing required parameter 'listId' when calling CMSContentModuleApi->MenuDelete");
             // verify the required parameter 'storeId' is set
-            if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling MenuDelete");
-            
-    
+            if (storeId == null)
+                throw new ApiException(400, "Missing required parameter 'storeId' when calling CMSContentModuleApi->MenuDelete");
+
             var localVarPath = "/api/cms/{storeId}/menu";
-    
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -2762,13 +2532,11 @@ namespace VirtoCommerce.Client.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
-                
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -2778,22 +2546,16 @@ namespace VirtoCommerce.Client.Api
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
             if (storeId != null) localVarPathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
-            
             if (listId != null) localVarQueryParams.Add("listId", Configuration.ApiClient.ParameterToString(listId)); // query parameter
-            
-            
-            
-            
 
-            
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath, 
-                Method.DELETE, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams, 
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.DELETE, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
- 
+
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (localVarStatusCode, "Error calling MenuDelete: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
@@ -2804,13 +2566,13 @@ namespace VirtoCommerce.Client.Api
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 null);
         }
-        
+
         /// <summary>
         /// Get menu link list by id 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="storeId">Store id</param> 
-        /// <param name="listId">List id</param> 
+        /// <param name="storeId">Store id</param>
+        /// <param name="listId">List id</param>
         /// <returns>VirtoCommerceContentWebModelsMenuLinkList</returns>
         public VirtoCommerceContentWebModelsMenuLinkList MenuGetList (string storeId, string listId)
         {
@@ -2822,23 +2584,19 @@ namespace VirtoCommerce.Client.Api
         /// Get menu link list by id 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="storeId">Store id</param> 
-        /// <param name="listId">List id</param> 
+        /// <param name="storeId">Store id</param>
+        /// <param name="listId">List id</param>
         /// <returns>ApiResponse of VirtoCommerceContentWebModelsMenuLinkList</returns>
         public ApiResponse< VirtoCommerceContentWebModelsMenuLinkList > MenuGetListWithHttpInfo (string storeId, string listId)
         {
-            
             // verify the required parameter 'storeId' is set
             if (storeId == null)
                 throw new ApiException(400, "Missing required parameter 'storeId' when calling CMSContentModuleApi->MenuGetList");
-            
             // verify the required parameter 'listId' is set
             if (listId == null)
                 throw new ApiException(400, "Missing required parameter 'listId' when calling CMSContentModuleApi->MenuGetList");
-            
-    
+
             var localVarPath = "/api/cms/{storeId}/menu/{listId}";
-    
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -2848,13 +2606,13 @@ namespace VirtoCommerce.Client.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
-                "application/json", "text/json"
+                "application/json", 
+                "text/json"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -2865,33 +2623,26 @@ namespace VirtoCommerce.Client.Api
             localVarPathParams.Add("format", "json");
             if (storeId != null) localVarPathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
             if (listId != null) localVarPathParams.Add("listId", Configuration.ApiClient.ParameterToString(listId)); // path parameter
-            
-            
-            
-            
-            
 
-            
-    
+
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath, 
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
                 Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
-    
+
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (localVarStatusCode, "Error calling MenuGetList: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
                 throw new ApiException (localVarStatusCode, "Error calling MenuGetList: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
-    
+
             return new ApiResponse<VirtoCommerceContentWebModelsMenuLinkList>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 (VirtoCommerceContentWebModelsMenuLinkList) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceContentWebModelsMenuLinkList)));
             
         }
 
-        
         /// <summary>
         /// Get menu link list by id 
         /// </summary>
@@ -2916,13 +2667,13 @@ namespace VirtoCommerce.Client.Api
         public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceContentWebModelsMenuLinkList>> MenuGetListAsyncWithHttpInfo (string storeId, string listId)
         {
             // verify the required parameter 'storeId' is set
-            if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling MenuGetList");
+            if (storeId == null)
+                throw new ApiException(400, "Missing required parameter 'storeId' when calling CMSContentModuleApi->MenuGetList");
             // verify the required parameter 'listId' is set
-            if (listId == null) throw new ApiException(400, "Missing required parameter 'listId' when calling MenuGetList");
-            
-    
+            if (listId == null)
+                throw new ApiException(400, "Missing required parameter 'listId' when calling CMSContentModuleApi->MenuGetList");
+
             var localVarPath = "/api/cms/{storeId}/menu/{listId}";
-    
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -2932,13 +2683,13 @@ namespace VirtoCommerce.Client.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
-                "application/json", "text/json"
+                "application/json", 
+                "text/json"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -2949,21 +2700,15 @@ namespace VirtoCommerce.Client.Api
             localVarPathParams.Add("format", "json");
             if (storeId != null) localVarPathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
             if (listId != null) localVarPathParams.Add("listId", Configuration.ApiClient.ParameterToString(listId)); // path parameter
-            
-            
-            
-            
-            
 
-            
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath, 
-                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams, 
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
- 
+
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (localVarStatusCode, "Error calling MenuGetList: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
@@ -2974,12 +2719,12 @@ namespace VirtoCommerce.Client.Api
                 (VirtoCommerceContentWebModelsMenuLinkList) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceContentWebModelsMenuLinkList)));
             
         }
-        
+
         /// <summary>
         /// Get menu link lists 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="storeId">Store id</param> 
+        /// <param name="storeId">Store id</param>
         /// <returns>List&lt;VirtoCommerceContentWebModelsMenuLinkList&gt;</returns>
         public List<VirtoCommerceContentWebModelsMenuLinkList> MenuGetLists (string storeId)
         {
@@ -2991,18 +2736,15 @@ namespace VirtoCommerce.Client.Api
         /// Get menu link lists 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="storeId">Store id</param> 
+        /// <param name="storeId">Store id</param>
         /// <returns>ApiResponse of List&lt;VirtoCommerceContentWebModelsMenuLinkList&gt;</returns>
         public ApiResponse< List<VirtoCommerceContentWebModelsMenuLinkList> > MenuGetListsWithHttpInfo (string storeId)
         {
-            
             // verify the required parameter 'storeId' is set
             if (storeId == null)
                 throw new ApiException(400, "Missing required parameter 'storeId' when calling CMSContentModuleApi->MenuGetLists");
-            
-    
+
             var localVarPath = "/api/cms/{storeId}/menu";
-    
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -3012,13 +2754,13 @@ namespace VirtoCommerce.Client.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
-                "application/json", "text/json"
+                "application/json", 
+                "text/json"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -3028,33 +2770,26 @@ namespace VirtoCommerce.Client.Api
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
             if (storeId != null) localVarPathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
-            
-            
-            
-            
-            
 
-            
-    
+
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath, 
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
                 Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
-    
+
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (localVarStatusCode, "Error calling MenuGetLists: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
                 throw new ApiException (localVarStatusCode, "Error calling MenuGetLists: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
-    
+
             return new ApiResponse<List<VirtoCommerceContentWebModelsMenuLinkList>>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 (List<VirtoCommerceContentWebModelsMenuLinkList>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<VirtoCommerceContentWebModelsMenuLinkList>)));
             
         }
 
-        
         /// <summary>
         /// Get menu link lists 
         /// </summary>
@@ -3077,11 +2812,10 @@ namespace VirtoCommerce.Client.Api
         public async System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceContentWebModelsMenuLinkList>>> MenuGetListsAsyncWithHttpInfo (string storeId)
         {
             // verify the required parameter 'storeId' is set
-            if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling MenuGetLists");
-            
-    
+            if (storeId == null)
+                throw new ApiException(400, "Missing required parameter 'storeId' when calling CMSContentModuleApi->MenuGetLists");
+
             var localVarPath = "/api/cms/{storeId}/menu";
-    
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -3091,13 +2825,13 @@ namespace VirtoCommerce.Client.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
-                "application/json", "text/json"
+                "application/json", 
+                "text/json"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -3107,21 +2841,15 @@ namespace VirtoCommerce.Client.Api
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
             if (storeId != null) localVarPathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
-            
-            
-            
-            
-            
 
-            
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath, 
-                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams, 
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
- 
+
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (localVarStatusCode, "Error calling MenuGetLists: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
@@ -3132,13 +2860,13 @@ namespace VirtoCommerce.Client.Api
                 (List<VirtoCommerceContentWebModelsMenuLinkList>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<VirtoCommerceContentWebModelsMenuLinkList>)));
             
         }
-        
+
         /// <summary>
         /// Update menu link list 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="list">Menu link list</param> 
-        /// <param name="storeId"></param> 
+        /// <param name="list">Menu link list</param>
+        /// <param name="storeId"></param>
         /// <returns></returns>
         public void MenuUpdate (VirtoCommerceContentWebModelsMenuLinkList list, string storeId)
         {
@@ -3149,23 +2877,19 @@ namespace VirtoCommerce.Client.Api
         /// Update menu link list 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="list">Menu link list</param> 
-        /// <param name="storeId"></param> 
+        /// <param name="list">Menu link list</param>
+        /// <param name="storeId"></param>
         /// <returns>ApiResponse of Object(void)</returns>
         public ApiResponse<Object> MenuUpdateWithHttpInfo (VirtoCommerceContentWebModelsMenuLinkList list, string storeId)
         {
-            
             // verify the required parameter 'list' is set
             if (list == null)
                 throw new ApiException(400, "Missing required parameter 'list' when calling CMSContentModuleApi->MenuUpdate");
-            
             // verify the required parameter 'storeId' is set
             if (storeId == null)
                 throw new ApiException(400, "Missing required parameter 'storeId' when calling CMSContentModuleApi->MenuUpdate");
-            
-    
+
             var localVarPath = "/api/cms/{storeId}/menu";
-    
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -3175,13 +2899,14 @@ namespace VirtoCommerce.Client.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                "application/json", "text/json", "application/x-www-form-urlencoded"
+                "application/json", 
+                "text/json", 
+                "application/x-www-form-urlencoded"
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
-                
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -3191,10 +2916,6 @@ namespace VirtoCommerce.Client.Api
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
             if (storeId != null) localVarPathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
-            
-            
-            
-            
             if (list.GetType() != typeof(byte[]))
             {
                 localVarPostBody = Configuration.ApiClient.Serialize(list); // http body (model) parameter
@@ -3204,27 +2925,25 @@ namespace VirtoCommerce.Client.Api
                 localVarPostBody = list; // byte array
             }
 
-            
-    
+
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath, 
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
                 Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
-    
+
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (localVarStatusCode, "Error calling MenuUpdate: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
                 throw new ApiException (localVarStatusCode, "Error calling MenuUpdate: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
-    
+
             
             return new ApiResponse<Object>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 null);
         }
 
-        
         /// <summary>
         /// Update menu link list 
         /// </summary>
@@ -3248,13 +2967,13 @@ namespace VirtoCommerce.Client.Api
         public async System.Threading.Tasks.Task<ApiResponse<Object>> MenuUpdateAsyncWithHttpInfo (VirtoCommerceContentWebModelsMenuLinkList list, string storeId)
         {
             // verify the required parameter 'list' is set
-            if (list == null) throw new ApiException(400, "Missing required parameter 'list' when calling MenuUpdate");
+            if (list == null)
+                throw new ApiException(400, "Missing required parameter 'list' when calling CMSContentModuleApi->MenuUpdate");
             // verify the required parameter 'storeId' is set
-            if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling MenuUpdate");
-            
-    
+            if (storeId == null)
+                throw new ApiException(400, "Missing required parameter 'storeId' when calling CMSContentModuleApi->MenuUpdate");
+
             var localVarPath = "/api/cms/{storeId}/menu";
-    
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -3264,13 +2983,14 @@ namespace VirtoCommerce.Client.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                "application/json", "text/json", "application/x-www-form-urlencoded"
+                "application/json", 
+                "text/json", 
+                "application/x-www-form-urlencoded"
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
-                
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -3280,10 +3000,6 @@ namespace VirtoCommerce.Client.Api
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
             if (storeId != null) localVarPathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
-            
-            
-            
-            
             if (list.GetType() != typeof(byte[]))
             {
                 localVarPostBody = Configuration.ApiClient.Serialize(list); // http body (model) parameter
@@ -3293,15 +3009,14 @@ namespace VirtoCommerce.Client.Api
                 localVarPostBody = list; // byte array
             }
 
-            
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath, 
-                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams, 
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
- 
+
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (localVarStatusCode, "Error calling MenuUpdate: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
@@ -3312,7 +3027,6 @@ namespace VirtoCommerce.Client.Api
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 null);
         }
-        
+
     }
-    
 }

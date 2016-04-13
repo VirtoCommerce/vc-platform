@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,118 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceDomainCatalogModelCatalogProduct :  IEquatable<VirtoCommerceDomainCatalogModelCatalogProduct>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCatalogModelCatalogProduct" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCatalogModelCatalogProduct" />class.
-        /// </summary>
-        /// <param name="Code">Code.</param>
-        /// <param name="ManufacturerPartNumber">ManufacturerPartNumber.</param>
-        /// <param name="Gtin">Gtin.</param>
-        /// <param name="Name">Name.</param>
-        /// <param name="CatalogId">CatalogId.</param>
-        /// <param name="Catalog">Catalog.</param>
-        /// <param name="CategoryId">CategoryId.</param>
-        /// <param name="Category">Category.</param>
-        /// <param name="MainProductId">MainProductId.</param>
-        /// <param name="MainProduct">MainProduct.</param>
-        /// <param name="IsBuyable">IsBuyable.</param>
-        /// <param name="IsActive">IsActive.</param>
-        /// <param name="TrackInventory">TrackInventory.</param>
-        /// <param name="IndexingDate">IndexingDate.</param>
-        /// <param name="MaxQuantity">MaxQuantity.</param>
-        /// <param name="MinQuantity">MinQuantity.</param>
-        /// <param name="ProductType">ProductType.</param>
-        /// <param name="WeightUnit">WeightUnit.</param>
-        /// <param name="Weight">Weight.</param>
-        /// <param name="MeasureUnit">MeasureUnit.</param>
-        /// <param name="Height">Height.</param>
-        /// <param name="Length">Length.</param>
-        /// <param name="Width">Width.</param>
-        /// <param name="EnableReview">EnableReview.</param>
-        /// <param name="MaxNumberOfDownload">MaxNumberOfDownload.</param>
-        /// <param name="DownloadExpiration">DownloadExpiration.</param>
-        /// <param name="DownloadType">DownloadType.</param>
-        /// <param name="HasUserAgreement">HasUserAgreement.</param>
-        /// <param name="ShippingType">ShippingType.</param>
-        /// <param name="TaxType">TaxType.</param>
-        /// <param name="Vendor">Vendor.</param>
-        /// <param name="StartDate">StartDate.</param>
-        /// <param name="EndDate">EndDate.</param>
-        /// <param name="Properties">Properties.</param>
-        /// <param name="PropertyValues">PropertyValues.</param>
-        /// <param name="Images">Images.</param>
-        /// <param name="Assets">Assets.</param>
-        /// <param name="Links">Links.</param>
-        /// <param name="Variations">Variations.</param>
-        /// <param name="SeoObjectType">SeoObjectType.</param>
-        /// <param name="SeoInfos">SeoInfos.</param>
-        /// <param name="Reviews">Reviews.</param>
-        /// <param name="Associations">Associations.</param>
-        /// <param name="Prices">Prices.</param>
-        /// <param name="Inventories">Inventories.</param>
-        /// <param name="Outlines">Outlines.</param>
-        /// <param name="CreatedDate">CreatedDate.</param>
-        /// <param name="ModifiedDate">ModifiedDate.</param>
-        /// <param name="CreatedBy">CreatedBy.</param>
-        /// <param name="ModifiedBy">ModifiedBy.</param>
-        /// <param name="Id">Id.</param>
-
-        public VirtoCommerceDomainCatalogModelCatalogProduct(string Code = null, string ManufacturerPartNumber = null, string Gtin = null, string Name = null, string CatalogId = null, VirtoCommerceDomainCatalogModelCatalog Catalog = null, string CategoryId = null, VirtoCommerceDomainCatalogModelCategory Category = null, string MainProductId = null, VirtoCommerceDomainCatalogModelCatalogProduct MainProduct = null, bool? IsBuyable = null, bool? IsActive = null, bool? TrackInventory = null, DateTime? IndexingDate = null, int? MaxQuantity = null, int? MinQuantity = null, string ProductType = null, string WeightUnit = null, double? Weight = null, string MeasureUnit = null, double? Height = null, double? Length = null, double? Width = null, bool? EnableReview = null, int? MaxNumberOfDownload = null, DateTime? DownloadExpiration = null, string DownloadType = null, bool? HasUserAgreement = null, string ShippingType = null, string TaxType = null, string Vendor = null, DateTime? StartDate = null, DateTime? EndDate = null, List<VirtoCommerceDomainCatalogModelProperty> Properties = null, List<VirtoCommerceDomainCatalogModelPropertyValue> PropertyValues = null, List<VirtoCommerceDomainCatalogModelImage> Images = null, List<VirtoCommerceDomainCatalogModelAsset> Assets = null, List<VirtoCommerceDomainCatalogModelCategoryLink> Links = null, List<VirtoCommerceDomainCatalogModelCatalogProduct> Variations = null, string SeoObjectType = null, List<VirtoCommerceDomainCommerceModelSeoInfo> SeoInfos = null, List<VirtoCommerceDomainCatalogModelEditorialReview> Reviews = null, List<VirtoCommerceDomainCatalogModelProductAssociation> Associations = null, List<VirtoCommerceDomainPricingModelPrice> Prices = null, List<VirtoCommerceDomainInventoryModelInventoryInfo> Inventories = null, List<VirtoCommerceDomainCatalogModelOutline> Outlines = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
-        {
-            this.Code = Code;
-            this.ManufacturerPartNumber = ManufacturerPartNumber;
-            this.Gtin = Gtin;
-            this.Name = Name;
-            this.CatalogId = CatalogId;
-            this.Catalog = Catalog;
-            this.CategoryId = CategoryId;
-            this.Category = Category;
-            this.MainProductId = MainProductId;
-            this.MainProduct = MainProduct;
-            this.IsBuyable = IsBuyable;
-            this.IsActive = IsActive;
-            this.TrackInventory = TrackInventory;
-            this.IndexingDate = IndexingDate;
-            this.MaxQuantity = MaxQuantity;
-            this.MinQuantity = MinQuantity;
-            this.ProductType = ProductType;
-            this.WeightUnit = WeightUnit;
-            this.Weight = Weight;
-            this.MeasureUnit = MeasureUnit;
-            this.Height = Height;
-            this.Length = Length;
-            this.Width = Width;
-            this.EnableReview = EnableReview;
-            this.MaxNumberOfDownload = MaxNumberOfDownload;
-            this.DownloadExpiration = DownloadExpiration;
-            this.DownloadType = DownloadType;
-            this.HasUserAgreement = HasUserAgreement;
-            this.ShippingType = ShippingType;
-            this.TaxType = TaxType;
-            this.Vendor = Vendor;
-            this.StartDate = StartDate;
-            this.EndDate = EndDate;
-            this.Properties = Properties;
-            this.PropertyValues = PropertyValues;
-            this.Images = Images;
-            this.Assets = Assets;
-            this.Links = Links;
-            this.Variations = Variations;
-            this.SeoObjectType = SeoObjectType;
-            this.SeoInfos = SeoInfos;
-            this.Reviews = Reviews;
-            this.Associations = Associations;
-            this.Prices = Prices;
-            this.Inventories = Inventories;
-            this.Outlines = Outlines;
-            this.CreatedDate = CreatedDate;
-            this.ModifiedDate = ModifiedDate;
-            this.CreatedBy = CreatedBy;
-            this.ModifiedBy = ModifiedBy;
-            this.Id = Id;
-            
-        }
-
         /// <summary>
         /// Gets or Sets Code
         /// </summary>
@@ -437,7 +323,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -497,7 +382,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  CreatedBy: ").Append(CreatedBy).Append("\n");
             sb.Append("  ModifiedBy: ").Append(ModifiedBy).Append("\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -802,165 +686,163 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Code != null)
                     hash = hash * 59 + this.Code.GetHashCode();
-                
+
                 if (this.ManufacturerPartNumber != null)
                     hash = hash * 59 + this.ManufacturerPartNumber.GetHashCode();
-                
+
                 if (this.Gtin != null)
                     hash = hash * 59 + this.Gtin.GetHashCode();
-                
+
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
-                
+
                 if (this.CatalogId != null)
                     hash = hash * 59 + this.CatalogId.GetHashCode();
-                
+
                 if (this.Catalog != null)
                     hash = hash * 59 + this.Catalog.GetHashCode();
-                
+
                 if (this.CategoryId != null)
                     hash = hash * 59 + this.CategoryId.GetHashCode();
-                
+
                 if (this.Category != null)
                     hash = hash * 59 + this.Category.GetHashCode();
-                
+
                 if (this.MainProductId != null)
                     hash = hash * 59 + this.MainProductId.GetHashCode();
-                
+
                 if (this.MainProduct != null)
                     hash = hash * 59 + this.MainProduct.GetHashCode();
-                
+
                 if (this.IsBuyable != null)
                     hash = hash * 59 + this.IsBuyable.GetHashCode();
-                
+
                 if (this.IsActive != null)
                     hash = hash * 59 + this.IsActive.GetHashCode();
-                
+
                 if (this.TrackInventory != null)
                     hash = hash * 59 + this.TrackInventory.GetHashCode();
-                
+
                 if (this.IndexingDate != null)
                     hash = hash * 59 + this.IndexingDate.GetHashCode();
-                
+
                 if (this.MaxQuantity != null)
                     hash = hash * 59 + this.MaxQuantity.GetHashCode();
-                
+
                 if (this.MinQuantity != null)
                     hash = hash * 59 + this.MinQuantity.GetHashCode();
-                
+
                 if (this.ProductType != null)
                     hash = hash * 59 + this.ProductType.GetHashCode();
-                
+
                 if (this.WeightUnit != null)
                     hash = hash * 59 + this.WeightUnit.GetHashCode();
-                
+
                 if (this.Weight != null)
                     hash = hash * 59 + this.Weight.GetHashCode();
-                
+
                 if (this.MeasureUnit != null)
                     hash = hash * 59 + this.MeasureUnit.GetHashCode();
-                
+
                 if (this.Height != null)
                     hash = hash * 59 + this.Height.GetHashCode();
-                
+
                 if (this.Length != null)
                     hash = hash * 59 + this.Length.GetHashCode();
-                
+
                 if (this.Width != null)
                     hash = hash * 59 + this.Width.GetHashCode();
-                
+
                 if (this.EnableReview != null)
                     hash = hash * 59 + this.EnableReview.GetHashCode();
-                
+
                 if (this.MaxNumberOfDownload != null)
                     hash = hash * 59 + this.MaxNumberOfDownload.GetHashCode();
-                
+
                 if (this.DownloadExpiration != null)
                     hash = hash * 59 + this.DownloadExpiration.GetHashCode();
-                
+
                 if (this.DownloadType != null)
                     hash = hash * 59 + this.DownloadType.GetHashCode();
-                
+
                 if (this.HasUserAgreement != null)
                     hash = hash * 59 + this.HasUserAgreement.GetHashCode();
-                
+
                 if (this.ShippingType != null)
                     hash = hash * 59 + this.ShippingType.GetHashCode();
-                
+
                 if (this.TaxType != null)
                     hash = hash * 59 + this.TaxType.GetHashCode();
-                
+
                 if (this.Vendor != null)
                     hash = hash * 59 + this.Vendor.GetHashCode();
-                
+
                 if (this.StartDate != null)
                     hash = hash * 59 + this.StartDate.GetHashCode();
-                
+
                 if (this.EndDate != null)
                     hash = hash * 59 + this.EndDate.GetHashCode();
-                
+
                 if (this.Properties != null)
                     hash = hash * 59 + this.Properties.GetHashCode();
-                
+
                 if (this.PropertyValues != null)
                     hash = hash * 59 + this.PropertyValues.GetHashCode();
-                
+
                 if (this.Images != null)
                     hash = hash * 59 + this.Images.GetHashCode();
-                
+
                 if (this.Assets != null)
                     hash = hash * 59 + this.Assets.GetHashCode();
-                
+
                 if (this.Links != null)
                     hash = hash * 59 + this.Links.GetHashCode();
-                
+
                 if (this.Variations != null)
                     hash = hash * 59 + this.Variations.GetHashCode();
-                
+
                 if (this.SeoObjectType != null)
                     hash = hash * 59 + this.SeoObjectType.GetHashCode();
-                
+
                 if (this.SeoInfos != null)
                     hash = hash * 59 + this.SeoInfos.GetHashCode();
-                
+
                 if (this.Reviews != null)
                     hash = hash * 59 + this.Reviews.GetHashCode();
-                
+
                 if (this.Associations != null)
                     hash = hash * 59 + this.Associations.GetHashCode();
-                
+
                 if (this.Prices != null)
                     hash = hash * 59 + this.Prices.GetHashCode();
-                
+
                 if (this.Inventories != null)
                     hash = hash * 59 + this.Inventories.GetHashCode();
-                
+
                 if (this.Outlines != null)
                     hash = hash * 59 + this.Outlines.GetHashCode();
-                
+
                 if (this.CreatedDate != null)
                     hash = hash * 59 + this.CreatedDate.GetHashCode();
-                
+
                 if (this.ModifiedDate != null)
                     hash = hash * 59 + this.ModifiedDate.GetHashCode();
-                
+
                 if (this.CreatedBy != null)
                     hash = hash * 59 + this.CreatedBy.GetHashCode();
-                
+
                 if (this.ModifiedBy != null)
                     hash = hash * 59 + this.ModifiedBy.GetHashCode();
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,20 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceDomainCustomerModelMembersSearchResult :  IEquatable<VirtoCommerceDomainCustomerModelMembersSearchResult>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCustomerModelMembersSearchResult" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCustomerModelMembersSearchResult" />class.
-        /// </summary>
-        /// <param name="TotalCount">TotalCount.</param>
-        /// <param name="Members">Members.</param>
-
-        public VirtoCommerceDomainCustomerModelMembersSearchResult(int? TotalCount = null, List<VirtoCommerceDomainCustomerModelMember> Members = null)
-        {
-            this.TotalCount = TotalCount;
-            this.Members = Members;
-            
-        }
-
         /// <summary>
         /// Gets or Sets TotalCount
         /// </summary>
@@ -45,7 +29,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="members", EmitDefaultValue=false)]
         public List<VirtoCommerceDomainCustomerModelMember> Members { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -56,7 +39,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("class VirtoCommerceDomainCustomerModelMembersSearchResult {\n");
             sb.Append("  TotalCount: ").Append(TotalCount).Append("\n");
             sb.Append("  Members: ").Append(Members).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -116,18 +98,16 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.TotalCount != null)
                     hash = hash * 59 + this.TotalCount.GetHashCode();
-                
+
                 if (this.Members != null)
                     hash = hash * 59 + this.Members.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,20 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommercePlatformWebModelNotificationsRenderNotificationContentResult :  IEquatable<VirtoCommercePlatformWebModelNotificationsRenderNotificationContentResult>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelNotificationsRenderNotificationContentResult" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelNotificationsRenderNotificationContentResult" />class.
-        /// </summary>
-        /// <param name="Subject">Subject.</param>
-        /// <param name="Body">Body.</param>
-
-        public VirtoCommercePlatformWebModelNotificationsRenderNotificationContentResult(string Subject = null, string Body = null)
-        {
-            this.Subject = Subject;
-            this.Body = Body;
-            
-        }
-
         /// <summary>
         /// Subject
         /// </summary>
@@ -46,7 +30,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="body", EmitDefaultValue=false)]
         public string Body { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -57,7 +40,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("class VirtoCommercePlatformWebModelNotificationsRenderNotificationContentResult {\n");
             sb.Append("  Subject: ").Append(Subject).Append("\n");
             sb.Append("  Body: ").Append(Body).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -117,18 +99,16 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Subject != null)
                     hash = hash * 59 + this.Subject.GetHashCode();
-                
+
                 if (this.Body != null)
                     hash = hash * 59 + this.Body.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }
