@@ -17,16 +17,16 @@ namespace VirtoCommerce.Client.Model
     /// 
     /// </summary>
     [DataContract]
-    public partial class VirtoCommerceDomainCustomerModelSearchResult :  IEquatable<VirtoCommerceDomainCustomerModelSearchResult>
+    public partial class VirtoCommerceDomainCustomerModelMembersSearchResult :  IEquatable<VirtoCommerceDomainCustomerModelMembersSearchResult>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCustomerModelSearchResult" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCustomerModelSearchResult" />class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCustomerModelMembersSearchResult" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCustomerModelMembersSearchResult" />class.
         /// </summary>
         /// <param name="TotalCount">TotalCount.</param>
         /// <param name="Members">Members.</param>
 
-        public VirtoCommerceDomainCustomerModelSearchResult(int? TotalCount = null, List<VirtoCommerceDomainCustomerModelMember> Members = null)
+        public VirtoCommerceDomainCustomerModelMembersSearchResult(int? TotalCount = null, List<VirtoCommerceDomainCustomerModelMember> Members = null)
         {
             this.TotalCount = TotalCount;
             this.Members = Members;
@@ -53,7 +53,7 @@ namespace VirtoCommerce.Client.Model
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class VirtoCommerceDomainCustomerModelSearchResult {\n");
+            sb.Append("class VirtoCommerceDomainCustomerModelMembersSearchResult {\n");
             sb.Append("  TotalCount: ").Append(TotalCount).Append("\n");
             sb.Append("  Members: ").Append(Members).Append("\n");
             
@@ -78,15 +78,15 @@ namespace VirtoCommerce.Client.Model
         public override bool Equals(object obj)
         {
             // credit: http://stackoverflow.com/a/10454552/677735
-            return this.Equals(obj as VirtoCommerceDomainCustomerModelSearchResult);
+            return this.Equals(obj as VirtoCommerceDomainCustomerModelMembersSearchResult);
         }
 
         /// <summary>
-        /// Returns true if VirtoCommerceDomainCustomerModelSearchResult instances are equal
+        /// Returns true if VirtoCommerceDomainCustomerModelMembersSearchResult instances are equal
         /// </summary>
-        /// <param name="other">Instance of VirtoCommerceDomainCustomerModelSearchResult to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceDomainCustomerModelMembersSearchResult to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(VirtoCommerceDomainCustomerModelSearchResult other)
+        public bool Equals(VirtoCommerceDomainCustomerModelMembersSearchResult other)
         {
             // credit: http://stackoverflow.com/a/10454552/677735
             if (other == null)

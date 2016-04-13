@@ -14,26 +14,32 @@ using Newtonsoft.Json.Converters;
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
-    /// 
+    /// Base class for content items
     /// </summary>
     [DataContract]
-    public partial class VirtoCommercePlatformCoreAssetBlobFolder :  IEquatable<VirtoCommercePlatformCoreAssetBlobFolder>
+    public partial class VirtoCommerceContentWebModelsContentItem :  IEquatable<VirtoCommerceContentWebModelsContentItem>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreAssetBlobFolder" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreAssetBlobFolder" />class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceContentWebModelsContentItem" /> class.
+        /// Initializes a new instance of the <see cref="VirtoCommerceContentWebModelsContentItem" />class.
         /// </summary>
         /// <param name="Name">Name.</param>
-        /// <param name="Url">Url.</param>
-        /// <param name="RelativeUrl">RelativeUrl.</param>
-        /// <param name="ParentUrl">ParentUrl.</param>
+        /// <param name="Type">content item type (ContentFile, ContentFolder etc).</param>
+        /// <param name="Url">Absolute url (which may be used to acccess or download content item directly).</param>
+        /// <param name="RelativeUrl">Relative content item url for access only through provider.</param>
+        /// <param name="ParentUrl">Parent folder url.</param>
+        /// <param name="ModifiedDate">ModifiedDate.</param>
+        /// <param name="CreatedDate">CreatedDate.</param>
 
-        public VirtoCommercePlatformCoreAssetBlobFolder(string Name = null, string Url = null, string RelativeUrl = null, string ParentUrl = null)
+        public VirtoCommerceContentWebModelsContentItem(string Name = null, string Type = null, string Url = null, string RelativeUrl = null, string ParentUrl = null, DateTime? ModifiedDate = null, DateTime? CreatedDate = null)
         {
             this.Name = Name;
+            this.Type = Type;
             this.Url = Url;
             this.RelativeUrl = RelativeUrl;
             this.ParentUrl = ParentUrl;
+            this.ModifiedDate = ModifiedDate;
+            this.CreatedDate = CreatedDate;
             
         }
 
@@ -44,22 +50,44 @@ namespace VirtoCommerce.Client.Model
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or Sets Url
+        /// content item type (ContentFile, ContentFolder etc)
         /// </summary>
+        /// <value>content item type (ContentFile, ContentFolder etc)</value>
+        [DataMember(Name="type", EmitDefaultValue=false)]
+        public string Type { get; set; }
+
+        /// <summary>
+        /// Absolute url (which may be used to acccess or download content item directly)
+        /// </summary>
+        /// <value>Absolute url (which may be used to acccess or download content item directly)</value>
         [DataMember(Name="url", EmitDefaultValue=false)]
         public string Url { get; set; }
 
         /// <summary>
-        /// Gets or Sets RelativeUrl
+        /// Relative content item url for access only through provider
         /// </summary>
+        /// <value>Relative content item url for access only through provider</value>
         [DataMember(Name="relativeUrl", EmitDefaultValue=false)]
         public string RelativeUrl { get; set; }
 
         /// <summary>
-        /// Gets or Sets ParentUrl
+        /// Parent folder url
         /// </summary>
+        /// <value>Parent folder url</value>
         [DataMember(Name="parentUrl", EmitDefaultValue=false)]
         public string ParentUrl { get; set; }
+
+        /// <summary>
+        /// Gets or Sets ModifiedDate
+        /// </summary>
+        [DataMember(Name="modifiedDate", EmitDefaultValue=false)]
+        public DateTime? ModifiedDate { get; set; }
+
+        /// <summary>
+        /// Gets or Sets CreatedDate
+        /// </summary>
+        [DataMember(Name="createdDate", EmitDefaultValue=false)]
+        public DateTime? CreatedDate { get; set; }
 
 
         /// <summary>
@@ -69,11 +97,14 @@ namespace VirtoCommerce.Client.Model
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class VirtoCommercePlatformCoreAssetBlobFolder {\n");
+            sb.Append("class VirtoCommerceContentWebModelsContentItem {\n");
             sb.Append("  Name: ").Append(Name).Append("\n");
+            sb.Append("  Type: ").Append(Type).Append("\n");
             sb.Append("  Url: ").Append(Url).Append("\n");
             sb.Append("  RelativeUrl: ").Append(RelativeUrl).Append("\n");
             sb.Append("  ParentUrl: ").Append(ParentUrl).Append("\n");
+            sb.Append("  ModifiedDate: ").Append(ModifiedDate).Append("\n");
+            sb.Append("  CreatedDate: ").Append(CreatedDate).Append("\n");
             
             sb.Append("}\n");
             return sb.ToString();
@@ -96,15 +127,15 @@ namespace VirtoCommerce.Client.Model
         public override bool Equals(object obj)
         {
             // credit: http://stackoverflow.com/a/10454552/677735
-            return this.Equals(obj as VirtoCommercePlatformCoreAssetBlobFolder);
+            return this.Equals(obj as VirtoCommerceContentWebModelsContentItem);
         }
 
         /// <summary>
-        /// Returns true if VirtoCommercePlatformCoreAssetBlobFolder instances are equal
+        /// Returns true if VirtoCommerceContentWebModelsContentItem instances are equal
         /// </summary>
-        /// <param name="other">Instance of VirtoCommercePlatformCoreAssetBlobFolder to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceContentWebModelsContentItem to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(VirtoCommercePlatformCoreAssetBlobFolder other)
+        public bool Equals(VirtoCommerceContentWebModelsContentItem other)
         {
             // credit: http://stackoverflow.com/a/10454552/677735
             if (other == null)
@@ -115,6 +146,11 @@ namespace VirtoCommerce.Client.Model
                     this.Name == other.Name ||
                     this.Name != null &&
                     this.Name.Equals(other.Name)
+                ) && 
+                (
+                    this.Type == other.Type ||
+                    this.Type != null &&
+                    this.Type.Equals(other.Type)
                 ) && 
                 (
                     this.Url == other.Url ||
@@ -130,6 +166,16 @@ namespace VirtoCommerce.Client.Model
                     this.ParentUrl == other.ParentUrl ||
                     this.ParentUrl != null &&
                     this.ParentUrl.Equals(other.ParentUrl)
+                ) && 
+                (
+                    this.ModifiedDate == other.ModifiedDate ||
+                    this.ModifiedDate != null &&
+                    this.ModifiedDate.Equals(other.ModifiedDate)
+                ) && 
+                (
+                    this.CreatedDate == other.CreatedDate ||
+                    this.CreatedDate != null &&
+                    this.CreatedDate.Equals(other.CreatedDate)
                 );
         }
 
@@ -148,6 +194,9 @@ namespace VirtoCommerce.Client.Model
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
                 
+                if (this.Type != null)
+                    hash = hash * 59 + this.Type.GetHashCode();
+                
                 if (this.Url != null)
                     hash = hash * 59 + this.Url.GetHashCode();
                 
@@ -156,6 +205,12 @@ namespace VirtoCommerce.Client.Model
                 
                 if (this.ParentUrl != null)
                     hash = hash * 59 + this.ParentUrl.GetHashCode();
+                
+                if (this.ModifiedDate != null)
+                    hash = hash * 59 + this.ModifiedDate.GetHashCode();
+                
+                if (this.CreatedDate != null)
+                    hash = hash * 59 + this.CreatedDate.GetHashCode();
                 
                 return hash;
             }
