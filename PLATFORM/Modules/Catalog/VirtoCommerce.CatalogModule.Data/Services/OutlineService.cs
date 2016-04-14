@@ -9,6 +9,7 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.CatalogModule.Data.Services
 {
+ 
     public class OutlineService : IOutlineService
     {
         private readonly Func<ICatalogRepository> _catalogRepositoryFactory;
@@ -18,6 +19,12 @@ namespace VirtoCommerce.CatalogModule.Data.Services
             _catalogRepositoryFactory = catalogRepositoryFactory;
         }
 
+        #region IOutlineService Members
+        /// <summary>
+        /// Constructed outline paths for concrete object physical and  alternative virtual's outline paths
+        /// </summary>
+        /// <param name="objects">objects with will be used as outline path start point</param>
+        /// <param name="catalogId">catalog which will be used as outline end point,  catalogId can be null then methods fill all exist outlines paths</param>
         public void FillOutlinesForObjects(IEnumerable<IHasOutlines> objects, string catalogId)
         {
             foreach (var obj in objects)
@@ -27,8 +34,8 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                 obj.Outlines = new List<Outline>();
                 AddOutlines(item, catalogId, obj.Outlines);
             }
-        }
-
+        } 
+        #endregion
 
         private void AddOutlines(GenericItem item, string allowedCatalogId, ICollection<Outline> outlines)
         {
