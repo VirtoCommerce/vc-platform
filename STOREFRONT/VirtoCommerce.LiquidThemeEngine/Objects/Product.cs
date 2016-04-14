@@ -225,7 +225,15 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         [DataMember]
         public string Vendor { get; set; }
 
+        /// <summary>
+        /// Gets or sets the sign of product can be added to quote request
+        /// </summary>
         [DataMember]
         public bool IsQuotable { get; set; }
+
+        /// <summary>
+        /// Gets or sets the collection of related products
+        /// </summary>
+        public ICollection<Product> RelatedProducts { get; set; }
     }
 }

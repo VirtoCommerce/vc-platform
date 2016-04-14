@@ -77,6 +77,13 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             result.Type = product.ProductType;
             result.Url = product.Url;
 
+            if (product.Associations.Any())
+            {
+                result.RelatedProducts = product.Associations.Where(a => a.Product != null)
+                    .OrderBy(a => a.Priority)
+                    .Select(a => a.Product.ToShopifyModel()).ToList();
+            }
+
             return result;
         }
 
