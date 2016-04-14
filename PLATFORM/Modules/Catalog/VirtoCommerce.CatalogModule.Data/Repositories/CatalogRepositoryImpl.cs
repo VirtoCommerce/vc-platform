@@ -338,7 +338,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 
             var categories = GetCategoriesByIds(categoryIds, categoriesReponseGroup);
 
-            if (respGroup.HasFlag(coreModel.ItemResponseGroup.Links))
+            if (respGroup.HasFlag(coreModel.ItemResponseGroup.Links) || respGroup.HasFlag(coreModel.ItemResponseGroup.Outlines))
             {
                 var relations = CategoryItemRelations.Where(x => itemIds.Contains(x.ItemId)).ToArray();
             }

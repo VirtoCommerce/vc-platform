@@ -192,24 +192,27 @@ namespace VirtoCommerce.LiquidThemeEngine
                 var settings = GetSettings("''");
                 //Try to parse liquid asset resource
                 var themeAssetPath = ResolveTemplatePath(fileName, searchInGlobalThemeOnly);
-                var templateContent = ReadTemplateByPath(themeAssetPath);
-                var content = RenderTemplate(templateContent, new Dictionary<string, object>() { { "settings", settings } });
+                if (themeAssetPath != null)
+                {
+                    var templateContent = ReadTemplateByPath(themeAssetPath);
+                    var content = RenderTemplate(templateContent, new Dictionary<string, object>() { { "settings", settings } });
 
-                if (fileName.EndsWith(".scss"))
-                {
-                    try
+                    if (fileName.EndsWith(".scss"))
                     {
-                        //handle scss resources
-                        content = _saasCompiler.Compile(content);
+                        try
+                        {
+                            //handle scss resources
+                            content = _saasCompiler.Compile(content);
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new SaasCompileException(fileName, content, ex);
+                        }
                     }
-                    catch (Exception ex)
+                    if (content != null)
                     {
-                        throw new SaasCompileException(fileName, content, ex);
+                        retVal = new MemoryStream(Encoding.UTF8.GetBytes(content));
                     }
-                }
-                if (content != null)
-                {
-                    retVal = new MemoryStream(Encoding.UTF8.GetBytes(content));
                 }
             }
 

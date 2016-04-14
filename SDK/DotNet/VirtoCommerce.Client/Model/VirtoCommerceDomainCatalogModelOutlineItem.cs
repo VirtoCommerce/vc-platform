@@ -24,12 +24,6 @@ namespace VirtoCommerce.Client.Model
         public string Id { get; set; }
 
         /// <summary>
-        /// Gets or Sets IsLinkTarget
-        /// </summary>
-        [DataMember(Name="isLinkTarget", EmitDefaultValue=false)]
-        public bool? IsLinkTarget { get; set; }
-
-        /// <summary>
         /// Gets or Sets SeoObjectType
         /// </summary>
         [DataMember(Name="seoObjectType", EmitDefaultValue=false)]
@@ -42,6 +36,12 @@ namespace VirtoCommerce.Client.Model
         public List<VirtoCommerceDomainCommerceModelSeoInfo> SeoInfos { get; set; }
 
         /// <summary>
+        /// Gets or Sets HasVirtualParent
+        /// </summary>
+        [DataMember(Name="hasVirtualParent", EmitDefaultValue=false)]
+        public bool? HasVirtualParent { get; set; }
+
+        /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
@@ -50,9 +50,9 @@ namespace VirtoCommerce.Client.Model
             var sb = new StringBuilder();
             sb.Append("class VirtoCommerceDomainCatalogModelOutlineItem {\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
-            sb.Append("  IsLinkTarget: ").Append(IsLinkTarget).Append("\n");
             sb.Append("  SeoObjectType: ").Append(SeoObjectType).Append("\n");
             sb.Append("  SeoInfos: ").Append(SeoInfos).Append("\n");
+            sb.Append("  HasVirtualParent: ").Append(HasVirtualParent).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -95,11 +95,6 @@ namespace VirtoCommerce.Client.Model
                     this.Id.Equals(other.Id)
                 ) && 
                 (
-                    this.IsLinkTarget == other.IsLinkTarget ||
-                    this.IsLinkTarget != null &&
-                    this.IsLinkTarget.Equals(other.IsLinkTarget)
-                ) && 
-                (
                     this.SeoObjectType == other.SeoObjectType ||
                     this.SeoObjectType != null &&
                     this.SeoObjectType.Equals(other.SeoObjectType)
@@ -108,6 +103,11 @@ namespace VirtoCommerce.Client.Model
                     this.SeoInfos == other.SeoInfos ||
                     this.SeoInfos != null &&
                     this.SeoInfos.SequenceEqual(other.SeoInfos)
+                ) && 
+                (
+                    this.HasVirtualParent == other.HasVirtualParent ||
+                    this.HasVirtualParent != null &&
+                    this.HasVirtualParent.Equals(other.HasVirtualParent)
                 );
         }
 
@@ -126,14 +126,14 @@ namespace VirtoCommerce.Client.Model
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
 
-                if (this.IsLinkTarget != null)
-                    hash = hash * 59 + this.IsLinkTarget.GetHashCode();
-
                 if (this.SeoObjectType != null)
                     hash = hash * 59 + this.SeoObjectType.GetHashCode();
 
                 if (this.SeoInfos != null)
                     hash = hash * 59 + this.SeoInfos.GetHashCode();
+
+                if (this.HasVirtualParent != null)
+                    hash = hash * 59 + this.HasVirtualParent.GetHashCode();
 
                 return hash;
             }

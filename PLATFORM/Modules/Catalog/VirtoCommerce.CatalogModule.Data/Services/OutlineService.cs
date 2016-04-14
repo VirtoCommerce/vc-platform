@@ -18,6 +18,15 @@ namespace VirtoCommerce.CatalogModule.Data.Services
             _catalogRepositoryFactory = catalogRepositoryFactory;
         }
 
+        #region IOutlineService Members
+
+        /// <summary>
+        /// Constructs single physical and/or multiple virtual outlines for given objects.
+        /// Outline is the path from the catalog to one of the child objects (product or category):
+        /// catalog/parent-category1/.../parent-categoryN/object
+        /// </summary>
+        /// <param name="objects">Objects for which outlines should be constructed.</param>
+        /// <param name="catalogId">If catalogId is not null then only outlines starting with this catalog will be constructed. If catalogId is null then all possible outlines will be constructed.</param>
         public void FillOutlinesForObjects(IEnumerable<IHasOutlines> objects, string catalogId)
         {
             foreach (var obj in objects)
@@ -29,6 +38,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
             }
         }
 
+        #endregion
 
         private void AddOutlines(GenericItem item, string allowedCatalogId, ICollection<Outline> outlines)
         {
@@ -113,13 +123,13 @@ namespace VirtoCommerce.CatalogModule.Data.Services
             return ConvertToOutlineItem(item, false);
         }
 
-        private static OutlineItem ConvertToOutlineItem(GenericItem item, bool isLinkTarget)
+        private static OutlineItem ConvertToOutlineItem(GenericItem item, bool hasVirtualParent)
         {
             return new OutlineItem
             {
                 Id = item.Id,
                 SeoObjectType = item.SeoObjectType,
-                IsLinkTarget = isLinkTarget,
+                HasVirtualParent = hasVirtualParent,
             };
         }
 
