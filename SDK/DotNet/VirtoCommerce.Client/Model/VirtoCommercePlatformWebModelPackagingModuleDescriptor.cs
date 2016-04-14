@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,52 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommercePlatformWebModelPackagingModuleDescriptor :  IEquatable<VirtoCommercePlatformWebModelPackagingModuleDescriptor>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelPackagingModuleDescriptor" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelPackagingModuleDescriptor" />class.
-        /// </summary>
-        /// <param name="Id">Id.</param>
-        /// <param name="Version">Version.</param>
-        /// <param name="PlatformVersion">PlatformVersion.</param>
-        /// <param name="Title">Title.</param>
-        /// <param name="Description">Description.</param>
-        /// <param name="Authors">Authors.</param>
-        /// <param name="Owners">Owners.</param>
-        /// <param name="LicenseUrl">LicenseUrl.</param>
-        /// <param name="ProjectUrl">ProjectUrl.</param>
-        /// <param name="IconUrl">IconUrl.</param>
-        /// <param name="RequireLicenseAcceptance">RequireLicenseAcceptance.</param>
-        /// <param name="ReleaseNotes">ReleaseNotes.</param>
-        /// <param name="Copyright">Copyright.</param>
-        /// <param name="Tags">Tags.</param>
-        /// <param name="Dependencies">Dependencies.</param>
-        /// <param name="ValidationErrors">ValidationErrors.</param>
-        /// <param name="IsRemovable">IsRemovable.</param>
-        /// <param name="FileName">Module package file name.</param>
-
-        public VirtoCommercePlatformWebModelPackagingModuleDescriptor(string Id = null, string Version = null, string PlatformVersion = null, string Title = null, string Description = null, List<string> Authors = null, List<string> Owners = null, string LicenseUrl = null, string ProjectUrl = null, string IconUrl = null, bool? RequireLicenseAcceptance = null, string ReleaseNotes = null, string Copyright = null, string Tags = null, List<VirtoCommercePlatformWebModelPackagingModuleIdentity> Dependencies = null, List<string> ValidationErrors = null, bool? IsRemovable = null, string FileName = null)
-        {
-            this.Id = Id;
-            this.Version = Version;
-            this.PlatformVersion = PlatformVersion;
-            this.Title = Title;
-            this.Description = Description;
-            this.Authors = Authors;
-            this.Owners = Owners;
-            this.LicenseUrl = LicenseUrl;
-            this.ProjectUrl = ProjectUrl;
-            this.IconUrl = IconUrl;
-            this.RequireLicenseAcceptance = RequireLicenseAcceptance;
-            this.ReleaseNotes = ReleaseNotes;
-            this.Copyright = Copyright;
-            this.Tags = Tags;
-            this.Dependencies = Dependencies;
-            this.ValidationErrors = ValidationErrors;
-            this.IsRemovable = IsRemovable;
-            this.FileName = FileName;
-            
-        }
-
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
@@ -174,7 +126,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="fileName", EmitDefaultValue=false)]
         public string FileName { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -201,7 +152,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  ValidationErrors: ").Append(ValidationErrors).Append("\n");
             sb.Append("  IsRemovable: ").Append(IsRemovable).Append("\n");
             sb.Append("  FileName: ").Append(FileName).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -341,66 +291,64 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 if (this.Version != null)
                     hash = hash * 59 + this.Version.GetHashCode();
-                
+
                 if (this.PlatformVersion != null)
                     hash = hash * 59 + this.PlatformVersion.GetHashCode();
-                
+
                 if (this.Title != null)
                     hash = hash * 59 + this.Title.GetHashCode();
-                
+
                 if (this.Description != null)
                     hash = hash * 59 + this.Description.GetHashCode();
-                
+
                 if (this.Authors != null)
                     hash = hash * 59 + this.Authors.GetHashCode();
-                
+
                 if (this.Owners != null)
                     hash = hash * 59 + this.Owners.GetHashCode();
-                
+
                 if (this.LicenseUrl != null)
                     hash = hash * 59 + this.LicenseUrl.GetHashCode();
-                
+
                 if (this.ProjectUrl != null)
                     hash = hash * 59 + this.ProjectUrl.GetHashCode();
-                
+
                 if (this.IconUrl != null)
                     hash = hash * 59 + this.IconUrl.GetHashCode();
-                
+
                 if (this.RequireLicenseAcceptance != null)
                     hash = hash * 59 + this.RequireLicenseAcceptance.GetHashCode();
-                
+
                 if (this.ReleaseNotes != null)
                     hash = hash * 59 + this.ReleaseNotes.GetHashCode();
-                
+
                 if (this.Copyright != null)
                     hash = hash * 59 + this.Copyright.GetHashCode();
-                
+
                 if (this.Tags != null)
                     hash = hash * 59 + this.Tags.GetHashCode();
-                
+
                 if (this.Dependencies != null)
                     hash = hash * 59 + this.Dependencies.GetHashCode();
-                
+
                 if (this.ValidationErrors != null)
                     hash = hash * 59 + this.ValidationErrors.GetHashCode();
-                
+
                 if (this.IsRemovable != null)
                     hash = hash * 59 + this.IsRemovable.GetHashCode();
-                
+
                 if (this.FileName != null)
                     hash = hash * 59 + this.FileName.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

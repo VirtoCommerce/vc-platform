@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,36 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceCartModuleWebModelShippingMethod :  IEquatable<VirtoCommerceCartModuleWebModelShippingMethod>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceCartModuleWebModelShippingMethod" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceCartModuleWebModelShippingMethod" />class.
-        /// </summary>
-        /// <param name="ShipmentMethodCode">Gets or sets the value of shipping method code.</param>
-        /// <param name="Name">Gets or sets the value of shipping method name.</param>
-        /// <param name="OptionName">Gets or sets the value of shipping method option name.</param>
-        /// <param name="OptionDescription">Gets or sets the value of shipping method option description.</param>
-        /// <param name="LogoUrl">Gets or sets the value of shipping method logo absolute URL.</param>
-        /// <param name="TaxType">Gets or sets the value of shipping method tax type.</param>
-        /// <param name="Currency">Gets or sets the value of shipping method currency.</param>
-        /// <param name="Price">Gets or sets the value of shipping method price.</param>
-        /// <param name="Discounts">Gets or sets the collection of shipping method discounts.</param>
-        /// <param name="Settings">Settings.</param>
-
-        public VirtoCommerceCartModuleWebModelShippingMethod(string ShipmentMethodCode = null, string Name = null, string OptionName = null, string OptionDescription = null, string LogoUrl = null, string TaxType = null, string Currency = null, double? Price = null, List<VirtoCommerceCartModuleWebModelDiscount> Discounts = null, List<VirtoCommercePlatformCoreSettingsSettingEntry> Settings = null)
-        {
-            this.ShipmentMethodCode = ShipmentMethodCode;
-            this.Name = Name;
-            this.OptionName = OptionName;
-            this.OptionDescription = OptionDescription;
-            this.LogoUrl = LogoUrl;
-            this.TaxType = TaxType;
-            this.Currency = Currency;
-            this.Price = Price;
-            this.Discounts = Discounts;
-            this.Settings = Settings;
-            
-        }
-
         /// <summary>
         /// Gets or sets the value of shipping method code
         /// </summary>
@@ -118,7 +86,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="settings", EmitDefaultValue=false)]
         public List<VirtoCommercePlatformCoreSettingsSettingEntry> Settings { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -137,7 +104,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Price: ").Append(Price).Append("\n");
             sb.Append("  Discounts: ").Append(Discounts).Append("\n");
             sb.Append("  Settings: ").Append(Settings).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -237,42 +203,40 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.ShipmentMethodCode != null)
                     hash = hash * 59 + this.ShipmentMethodCode.GetHashCode();
-                
+
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
-                
+
                 if (this.OptionName != null)
                     hash = hash * 59 + this.OptionName.GetHashCode();
-                
+
                 if (this.OptionDescription != null)
                     hash = hash * 59 + this.OptionDescription.GetHashCode();
-                
+
                 if (this.LogoUrl != null)
                     hash = hash * 59 + this.LogoUrl.GetHashCode();
-                
+
                 if (this.TaxType != null)
                     hash = hash * 59 + this.TaxType.GetHashCode();
-                
+
                 if (this.Currency != null)
                     hash = hash * 59 + this.Currency.GetHashCode();
-                
+
                 if (this.Price != null)
                     hash = hash * 59 + this.Price.GetHashCode();
-                
+
                 if (this.Discounts != null)
                     hash = hash * 59 + this.Discounts.GetHashCode();
-                
+
                 if (this.Settings != null)
                     hash = hash * 59 + this.Settings.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

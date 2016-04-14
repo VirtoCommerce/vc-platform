@@ -143,7 +143,7 @@ namespace VirtoCommerce.Storefront.Owin
                         //Prevent double api request for get aggregations
                         //Because catalog search products returns also aggregations we can use it to populate workContext using C# closure
                         //now workContext.Aggregation will be contains preloaded aggregations for current search criteria
-                        workContext.Aggregations = new MutablePagedList<Aggregation>(result.Aggregations);
+                        workContext.Aggregations = new MutablePagedList<Aggregation>(result.Aggregations);                        
                         return result.Products;
                     });
                     //This line make delay aggregation loading initialization (aggregation can be evaluated on view rendering time)

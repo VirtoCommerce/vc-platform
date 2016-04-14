@@ -9,47 +9,25 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
     /// 
     /// </summary>
     [DataContract]
-    public partial class VirtoCommerceDomainCustomerModelSearchCriteria :  IEquatable<VirtoCommerceDomainCustomerModelSearchCriteria>
+    public partial class VirtoCommerceDomainCustomerModelMembersSearchCriteria :  IEquatable<VirtoCommerceDomainCustomerModelMembersSearchCriteria>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCustomerModelSearchCriteria" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCustomerModelSearchCriteria" />class.
-        /// </summary>
-        /// <param name="MemberType">MemberType.</param>
-        /// <param name="Keyword">Keyword.</param>
-        /// <param name="MemberId">MemberId.</param>
-        /// <param name="DeepSearch">DeepSearch.</param>
-        /// <param name="Sort">Sort.</param>
-        /// <param name="SortInfos">SortInfos.</param>
-        /// <param name="Skip">Skip.</param>
-        /// <param name="Take">Take.</param>
-
-        public VirtoCommerceDomainCustomerModelSearchCriteria(string MemberType = null, string Keyword = null, string MemberId = null, bool? DeepSearch = null, string Sort = null, List<VirtoCommercePlatformCoreCommonSortInfo> SortInfos = null, int? Skip = null, int? Take = null)
-        {
-            this.MemberType = MemberType;
-            this.Keyword = Keyword;
-            this.MemberId = MemberId;
-            this.DeepSearch = DeepSearch;
-            this.Sort = Sort;
-            this.SortInfos = SortInfos;
-            this.Skip = Skip;
-            this.Take = Take;
-            
-        }
-
         /// <summary>
         /// Gets or Sets MemberType
         /// </summary>
         [DataMember(Name="memberType", EmitDefaultValue=false)]
         public string MemberType { get; set; }
+
+        /// <summary>
+        /// Gets or Sets MemberTypes
+        /// </summary>
+        [DataMember(Name="memberTypes", EmitDefaultValue=false)]
+        public List<string> MemberTypes { get; set; }
 
         /// <summary>
         /// Gets or Sets Keyword
@@ -93,7 +71,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="take", EmitDefaultValue=false)]
         public int? Take { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -101,8 +78,9 @@ namespace VirtoCommerce.Client.Model
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class VirtoCommerceDomainCustomerModelSearchCriteria {\n");
+            sb.Append("class VirtoCommerceDomainCustomerModelMembersSearchCriteria {\n");
             sb.Append("  MemberType: ").Append(MemberType).Append("\n");
+            sb.Append("  MemberTypes: ").Append(MemberTypes).Append("\n");
             sb.Append("  Keyword: ").Append(Keyword).Append("\n");
             sb.Append("  MemberId: ").Append(MemberId).Append("\n");
             sb.Append("  DeepSearch: ").Append(DeepSearch).Append("\n");
@@ -110,7 +88,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  SortInfos: ").Append(SortInfos).Append("\n");
             sb.Append("  Skip: ").Append(Skip).Append("\n");
             sb.Append("  Take: ").Append(Take).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -132,15 +109,15 @@ namespace VirtoCommerce.Client.Model
         public override bool Equals(object obj)
         {
             // credit: http://stackoverflow.com/a/10454552/677735
-            return this.Equals(obj as VirtoCommerceDomainCustomerModelSearchCriteria);
+            return this.Equals(obj as VirtoCommerceDomainCustomerModelMembersSearchCriteria);
         }
 
         /// <summary>
-        /// Returns true if VirtoCommerceDomainCustomerModelSearchCriteria instances are equal
+        /// Returns true if VirtoCommerceDomainCustomerModelMembersSearchCriteria instances are equal
         /// </summary>
-        /// <param name="other">Instance of VirtoCommerceDomainCustomerModelSearchCriteria to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceDomainCustomerModelMembersSearchCriteria to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(VirtoCommerceDomainCustomerModelSearchCriteria other)
+        public bool Equals(VirtoCommerceDomainCustomerModelMembersSearchCriteria other)
         {
             // credit: http://stackoverflow.com/a/10454552/677735
             if (other == null)
@@ -151,6 +128,11 @@ namespace VirtoCommerce.Client.Model
                     this.MemberType == other.MemberType ||
                     this.MemberType != null &&
                     this.MemberType.Equals(other.MemberType)
+                ) && 
+                (
+                    this.MemberTypes == other.MemberTypes ||
+                    this.MemberTypes != null &&
+                    this.MemberTypes.SequenceEqual(other.MemberTypes)
                 ) && 
                 (
                     this.Keyword == other.Keyword ||
@@ -200,36 +182,37 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.MemberType != null)
                     hash = hash * 59 + this.MemberType.GetHashCode();
-                
+
+                if (this.MemberTypes != null)
+                    hash = hash * 59 + this.MemberTypes.GetHashCode();
+
                 if (this.Keyword != null)
                     hash = hash * 59 + this.Keyword.GetHashCode();
-                
+
                 if (this.MemberId != null)
                     hash = hash * 59 + this.MemberId.GetHashCode();
-                
+
                 if (this.DeepSearch != null)
                     hash = hash * 59 + this.DeepSearch.GetHashCode();
-                
+
                 if (this.Sort != null)
                     hash = hash * 59 + this.Sort.GetHashCode();
-                
+
                 if (this.SortInfos != null)
                     hash = hash * 59 + this.SortInfos.GetHashCode();
-                
+
                 if (this.Skip != null)
                     hash = hash * 59 + this.Skip.GetHashCode();
-                
+
                 if (this.Take != null)
                     hash = hash * 59 + this.Take.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

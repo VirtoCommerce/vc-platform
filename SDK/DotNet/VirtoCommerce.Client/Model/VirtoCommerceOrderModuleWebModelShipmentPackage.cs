@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,44 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceOrderModuleWebModelShipmentPackage :  IEquatable<VirtoCommerceOrderModuleWebModelShipmentPackage>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceOrderModuleWebModelShipmentPackage" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceOrderModuleWebModelShipmentPackage" />class.
-        /// </summary>
-        /// <param name="BarCode">BarCode.</param>
-        /// <param name="PackageType">PackageType.</param>
-        /// <param name="Items">Items.</param>
-        /// <param name="WeightUnit">WeightUnit.</param>
-        /// <param name="Weight">Weight.</param>
-        /// <param name="MeasureUnit">MeasureUnit.</param>
-        /// <param name="Height">Height.</param>
-        /// <param name="Length">Length.</param>
-        /// <param name="Width">Width.</param>
-        /// <param name="CreatedDate">CreatedDate.</param>
-        /// <param name="ModifiedDate">ModifiedDate.</param>
-        /// <param name="CreatedBy">CreatedBy.</param>
-        /// <param name="ModifiedBy">ModifiedBy.</param>
-        /// <param name="Id">Id.</param>
-
-        public VirtoCommerceOrderModuleWebModelShipmentPackage(string BarCode = null, string PackageType = null, List<VirtoCommerceOrderModuleWebModelShipmentItem> Items = null, string WeightUnit = null, double? Weight = null, string MeasureUnit = null, double? Height = null, double? Length = null, double? Width = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
-        {
-            this.BarCode = BarCode;
-            this.PackageType = PackageType;
-            this.Items = Items;
-            this.WeightUnit = WeightUnit;
-            this.Weight = Weight;
-            this.MeasureUnit = MeasureUnit;
-            this.Height = Height;
-            this.Length = Length;
-            this.Width = Width;
-            this.CreatedDate = CreatedDate;
-            this.ModifiedDate = ModifiedDate;
-            this.CreatedBy = CreatedBy;
-            this.ModifiedBy = ModifiedBy;
-            this.Id = Id;
-            
-        }
-
         /// <summary>
         /// Gets or Sets BarCode
         /// </summary>
@@ -141,7 +101,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -164,7 +123,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  CreatedBy: ").Append(CreatedBy).Append("\n");
             sb.Append("  ModifiedBy: ").Append(ModifiedBy).Append("\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -284,54 +242,52 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.BarCode != null)
                     hash = hash * 59 + this.BarCode.GetHashCode();
-                
+
                 if (this.PackageType != null)
                     hash = hash * 59 + this.PackageType.GetHashCode();
-                
+
                 if (this.Items != null)
                     hash = hash * 59 + this.Items.GetHashCode();
-                
+
                 if (this.WeightUnit != null)
                     hash = hash * 59 + this.WeightUnit.GetHashCode();
-                
+
                 if (this.Weight != null)
                     hash = hash * 59 + this.Weight.GetHashCode();
-                
+
                 if (this.MeasureUnit != null)
                     hash = hash * 59 + this.MeasureUnit.GetHashCode();
-                
+
                 if (this.Height != null)
                     hash = hash * 59 + this.Height.GetHashCode();
-                
+
                 if (this.Length != null)
                     hash = hash * 59 + this.Length.GetHashCode();
-                
+
                 if (this.Width != null)
                     hash = hash * 59 + this.Width.GetHashCode();
-                
+
                 if (this.CreatedDate != null)
                     hash = hash * 59 + this.CreatedDate.GetHashCode();
-                
+
                 if (this.ModifiedDate != null)
                     hash = hash * 59 + this.ModifiedDate.GetHashCode();
-                
+
                 if (this.CreatedBy != null)
                     hash = hash * 59 + this.CreatedBy.GetHashCode();
-                
+
                 if (this.ModifiedBy != null)
                     hash = hash * 59 + this.ModifiedBy.GetHashCode();
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

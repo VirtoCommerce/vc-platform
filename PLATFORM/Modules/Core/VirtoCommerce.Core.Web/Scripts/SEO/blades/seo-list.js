@@ -14,17 +14,25 @@
     $scope.resolveDuplicates = function () {
         var newBlade = {
             id: 'seoDuplicates',
+            duplicates: blade.duplicates,
+            objectType: blade.objectType,
             seoContainerObject: blade.seoContainerObject,
+            defaultContainerId: blade.defaultContainerId,
             languages: blade.languages,
             parentRefresh: blade.refresh,
             controller: 'virtoCommerce.coreModule.seo.seoDuplicatesController',
             template: 'Modules/$(VirtoCommerce.Core)/Scripts/SEO/blades/seo-duplicates.tpl.html'
         };
 
-        //if (blade.fixedStoreId) {
-        newBlade.fixedStoreId = blade.fixedStoreId;
-        bladeNavigationService.showBlade(newBlade, blade);
-        //}
+        if (blade.fixedStoreId) {
+            newBlade.stores = [blade.seoContainerObject];
+            bladeNavigationService.showBlade(newBlade, blade);
+        } else {
+            storesPromise.then(function (promiseData) {
+                newBlade.stores = promiseData;
+                bladeNavigationService.showBlade(newBlade, blade);
+            });
+        }
     };
 
     blade.selectNode = openDetailsBlade;

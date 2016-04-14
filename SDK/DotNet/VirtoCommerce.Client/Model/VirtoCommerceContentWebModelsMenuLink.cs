@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,36 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceContentWebModelsMenuLink :  IEquatable<VirtoCommerceContentWebModelsMenuLink>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceContentWebModelsMenuLink" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceContentWebModelsMenuLink" />class.
-        /// </summary>
-        /// <param name="Id">Id.</param>
-        /// <param name="Title">Title of menu link element, displayed as link text or link title.</param>
-        /// <param name="Url">Url of menu link element, inserts in href attribute of link.</param>
-        /// <param name="Priority">Priority of menu link element, the higher the value, the higher in the list.</param>
-        /// <param name="IsActive">If true - will displayed in the list, if false - not.</param>
-        /// <param name="MenuLinkListId">MenuLinkListId.</param>
-        /// <param name="AssociatedObjectId">Each link element can have an associated object like Product, Category, Promotion, etc.\r\n            Is a primary key of associated object.</param>
-        /// <param name="AssociatedObjectName">Display name for associated object.</param>
-        /// <param name="AssociatedObjectType">Associated object type.</param>
-        /// <param name="SecurityScopes">SecurityScopes.</param>
-
-        public VirtoCommerceContentWebModelsMenuLink(string Id = null, string Title = null, string Url = null, int? Priority = null, bool? IsActive = null, string MenuLinkListId = null, string AssociatedObjectId = null, string AssociatedObjectName = null, string AssociatedObjectType = null, List<string> SecurityScopes = null)
-        {
-            this.Id = Id;
-            this.Title = Title;
-            this.Url = Url;
-            this.Priority = Priority;
-            this.IsActive = IsActive;
-            this.MenuLinkListId = MenuLinkListId;
-            this.AssociatedObjectId = AssociatedObjectId;
-            this.AssociatedObjectName = AssociatedObjectName;
-            this.AssociatedObjectType = AssociatedObjectType;
-            this.SecurityScopes = SecurityScopes;
-            
-        }
-
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
@@ -116,7 +84,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="securityScopes", EmitDefaultValue=false)]
         public List<string> SecurityScopes { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -135,7 +102,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  AssociatedObjectName: ").Append(AssociatedObjectName).Append("\n");
             sb.Append("  AssociatedObjectType: ").Append(AssociatedObjectType).Append("\n");
             sb.Append("  SecurityScopes: ").Append(SecurityScopes).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -235,42 +201,40 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 if (this.Title != null)
                     hash = hash * 59 + this.Title.GetHashCode();
-                
+
                 if (this.Url != null)
                     hash = hash * 59 + this.Url.GetHashCode();
-                
+
                 if (this.Priority != null)
                     hash = hash * 59 + this.Priority.GetHashCode();
-                
+
                 if (this.IsActive != null)
                     hash = hash * 59 + this.IsActive.GetHashCode();
-                
+
                 if (this.MenuLinkListId != null)
                     hash = hash * 59 + this.MenuLinkListId.GetHashCode();
-                
+
                 if (this.AssociatedObjectId != null)
                     hash = hash * 59 + this.AssociatedObjectId.GetHashCode();
-                
+
                 if (this.AssociatedObjectName != null)
                     hash = hash * 59 + this.AssociatedObjectName.GetHashCode();
-                
+
                 if (this.AssociatedObjectType != null)
                     hash = hash * 59 + this.AssociatedObjectType.GetHashCode();
-                
+
                 if (this.SecurityScopes != null)
                     hash = hash * 59 + this.SecurityScopes.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

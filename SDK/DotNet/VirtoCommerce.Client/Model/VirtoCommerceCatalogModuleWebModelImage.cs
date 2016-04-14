@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,32 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceCatalogModuleWebModelImage :  IEquatable<VirtoCommerceCatalogModuleWebModelImage>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelImage" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelImage" />class.
-        /// </summary>
-        /// <param name="Id">Id.</param>
-        /// <param name="RelativeUrl">RelativeUrl.</param>
-        /// <param name="Url">Url.</param>
-        /// <param name="TypeId">Gets or sets the asset type identifier..</param>
-        /// <param name="Group">Gets or sets the asset group name..</param>
-        /// <param name="Name">Gets or sets the asset name..</param>
-        /// <param name="LanguageCode">Gets or sets the asset language..</param>
-        /// <param name="IsInherited">System flag used to mark that object was inherited from other.</param>
-
-        public VirtoCommerceCatalogModuleWebModelImage(string Id = null, string RelativeUrl = null, string Url = null, string TypeId = null, string Group = null, string Name = null, string LanguageCode = null, bool? IsInherited = null)
-        {
-            this.Id = Id;
-            this.RelativeUrl = RelativeUrl;
-            this.Url = Url;
-            this.TypeId = TypeId;
-            this.Group = Group;
-            this.Name = Name;
-            this.LanguageCode = LanguageCode;
-            this.IsInherited = IsInherited;
-            
-        }
-
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
@@ -98,7 +70,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="isInherited", EmitDefaultValue=false)]
         public bool? IsInherited { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -115,7 +86,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  LanguageCode: ").Append(LanguageCode).Append("\n");
             sb.Append("  IsInherited: ").Append(IsInherited).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -205,36 +175,34 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 if (this.RelativeUrl != null)
                     hash = hash * 59 + this.RelativeUrl.GetHashCode();
-                
+
                 if (this.Url != null)
                     hash = hash * 59 + this.Url.GetHashCode();
-                
+
                 if (this.TypeId != null)
                     hash = hash * 59 + this.TypeId.GetHashCode();
-                
+
                 if (this.Group != null)
                     hash = hash * 59 + this.Group.GetHashCode();
-                
+
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
-                
+
                 if (this.LanguageCode != null)
                     hash = hash * 59 + this.LanguageCode.GetHashCode();
-                
+
                 if (this.IsInherited != null)
                     hash = hash * 59 + this.IsInherited.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

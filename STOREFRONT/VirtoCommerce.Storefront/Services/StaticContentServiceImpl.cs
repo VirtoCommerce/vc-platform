@@ -223,7 +223,14 @@ namespace VirtoCommerce.Storefront.Services
                 Name = parts.FirstOrDefault();
                 if (parts.Count() == 3)
                 {
-                    Language = new Language(parts[1]);
+                    try
+                    {
+                        Language = new Language(parts[1]);
+                    }
+                    catch(Exception)
+                    {
+                        Language = Language.InvariantLanguage;
+                    }
                 }
             }
             public string Name { get; private set; }

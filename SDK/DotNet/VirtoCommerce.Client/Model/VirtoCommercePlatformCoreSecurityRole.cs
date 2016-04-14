@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,24 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommercePlatformCoreSecurityRole :  IEquatable<VirtoCommercePlatformCoreSecurityRole>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreSecurityRole" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreSecurityRole" />class.
-        /// </summary>
-        /// <param name="Name">Name.</param>
-        /// <param name="Description">Description.</param>
-        /// <param name="Permissions">Permissions.</param>
-        /// <param name="Id">Id.</param>
-
-        public VirtoCommercePlatformCoreSecurityRole(string Name = null, string Description = null, List<VirtoCommercePlatformCoreSecurityPermission> Permissions = null, string Id = null)
-        {
-            this.Name = Name;
-            this.Description = Description;
-            this.Permissions = Permissions;
-            this.Id = Id;
-            
-        }
-
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
@@ -61,7 +41,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -74,7 +53,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Description: ").Append(Description).Append("\n");
             sb.Append("  Permissions: ").Append(Permissions).Append("\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -144,24 +122,22 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
-                
+
                 if (this.Description != null)
                     hash = hash * 59 + this.Description.GetHashCode();
-                
+
                 if (this.Permissions != null)
                     hash = hash * 59 + this.Permissions.GetHashCode();
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

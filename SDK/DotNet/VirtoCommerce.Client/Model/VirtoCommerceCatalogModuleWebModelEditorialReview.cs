@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,26 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceCatalogModuleWebModelEditorialReview :  IEquatable<VirtoCommerceCatalogModuleWebModelEditorialReview>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelEditorialReview" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelEditorialReview" />class.
-        /// </summary>
-        /// <param name="Id">Id.</param>
-        /// <param name="Content">Gets or sets the review content..</param>
-        /// <param name="ReviewType">Gets or sets the type of the review..</param>
-        /// <param name="LanguageCode">Gets or sets the review language..</param>
-        /// <param name="IsInherited">System flag used to mark that object was inherited from other.</param>
-
-        public VirtoCommerceCatalogModuleWebModelEditorialReview(string Id = null, string Content = null, string ReviewType = null, string LanguageCode = null, bool? IsInherited = null)
-        {
-            this.Id = Id;
-            this.Content = Content;
-            this.ReviewType = ReviewType;
-            this.LanguageCode = LanguageCode;
-            this.IsInherited = IsInherited;
-            
-        }
-
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
@@ -73,7 +51,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="isInherited", EmitDefaultValue=false)]
         public bool? IsInherited { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -87,7 +64,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  ReviewType: ").Append(ReviewType).Append("\n");
             sb.Append("  LanguageCode: ").Append(LanguageCode).Append("\n");
             sb.Append("  IsInherited: ").Append(IsInherited).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -162,27 +138,25 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 if (this.Content != null)
                     hash = hash * 59 + this.Content.GetHashCode();
-                
+
                 if (this.ReviewType != null)
                     hash = hash * 59 + this.ReviewType.GetHashCode();
-                
+
                 if (this.LanguageCode != null)
                     hash = hash * 59 + this.LanguageCode.GetHashCode();
-                
+
                 if (this.IsInherited != null)
                     hash = hash * 59 + this.IsInherited.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,34 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceDomainOrderModelSearchCriteria :  IEquatable<VirtoCommerceDomainOrderModelSearchCriteria>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainOrderModelSearchCriteria" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainOrderModelSearchCriteria" />class.
-        /// </summary>
-        /// <param name="ResponseGroup">ResponseGroup.</param>
-        /// <param name="Keyword">Keyword.</param>
-        /// <param name="CustomerId">CustomerId.</param>
-        /// <param name="EmployeeId">EmployeeId.</param>
-        /// <param name="StoreIds">StoreIds.</param>
-        /// <param name="StartDate">StartDate.</param>
-        /// <param name="EndDate">EndDate.</param>
-        /// <param name="Start">Start.</param>
-        /// <param name="Count">Count.</param>
-
-        public VirtoCommerceDomainOrderModelSearchCriteria(string ResponseGroup = null, string Keyword = null, string CustomerId = null, string EmployeeId = null, List<string> StoreIds = null, DateTime? StartDate = null, DateTime? EndDate = null, int? Start = null, int? Count = null)
-        {
-            this.ResponseGroup = ResponseGroup;
-            this.Keyword = Keyword;
-            this.CustomerId = CustomerId;
-            this.EmployeeId = EmployeeId;
-            this.StoreIds = StoreIds;
-            this.StartDate = StartDate;
-            this.EndDate = EndDate;
-            this.Start = Start;
-            this.Count = Count;
-            
-        }
-
         /// <summary>
         /// Gets or Sets ResponseGroup
         /// </summary>
@@ -101,7 +71,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="count", EmitDefaultValue=false)]
         public int? Count { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -119,7 +88,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  EndDate: ").Append(EndDate).Append("\n");
             sb.Append("  Start: ").Append(Start).Append("\n");
             sb.Append("  Count: ").Append(Count).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -214,39 +182,37 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.ResponseGroup != null)
                     hash = hash * 59 + this.ResponseGroup.GetHashCode();
-                
+
                 if (this.Keyword != null)
                     hash = hash * 59 + this.Keyword.GetHashCode();
-                
+
                 if (this.CustomerId != null)
                     hash = hash * 59 + this.CustomerId.GetHashCode();
-                
+
                 if (this.EmployeeId != null)
                     hash = hash * 59 + this.EmployeeId.GetHashCode();
-                
+
                 if (this.StoreIds != null)
                     hash = hash * 59 + this.StoreIds.GetHashCode();
-                
+
                 if (this.StartDate != null)
                     hash = hash * 59 + this.StartDate.GetHashCode();
-                
+
                 if (this.EndDate != null)
                     hash = hash * 59 + this.EndDate.GetHashCode();
-                
+
                 if (this.Start != null)
                     hash = hash * 59 + this.Start.GetHashCode();
-                
+
                 if (this.Count != null)
                     hash = hash * 59 + this.Count.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

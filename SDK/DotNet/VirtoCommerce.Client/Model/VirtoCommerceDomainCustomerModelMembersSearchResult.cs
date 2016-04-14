@@ -9,35 +9,25 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
     /// 
     /// </summary>
     [DataContract]
-    public partial class VirtoCommerceContentWebModelsCheckNameResult :  IEquatable<VirtoCommerceContentWebModelsCheckNameResult>
+    public partial class VirtoCommerceDomainCustomerModelMembersSearchResult :  IEquatable<VirtoCommerceDomainCustomerModelMembersSearchResult>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceContentWebModelsCheckNameResult" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceContentWebModelsCheckNameResult" />class.
+        /// Gets or Sets TotalCount
         /// </summary>
-        /// <param name="Result">Result of checking (if true - enable to save object, if false - unable to save object).</param>
-
-        public VirtoCommerceContentWebModelsCheckNameResult(bool? Result = null)
-        {
-            this.Result = Result;
-            
-        }
+        [DataMember(Name="totalCount", EmitDefaultValue=false)]
+        public int? TotalCount { get; set; }
 
         /// <summary>
-        /// Result of checking (if true - enable to save object, if false - unable to save object)
+        /// Gets or Sets Members
         /// </summary>
-        /// <value>Result of checking (if true - enable to save object, if false - unable to save object)</value>
-        [DataMember(Name="result", EmitDefaultValue=false)]
-        public bool? Result { get; set; }
-
+        [DataMember(Name="members", EmitDefaultValue=false)]
+        public List<VirtoCommerceDomainCustomerModelMember> Members { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -46,9 +36,9 @@ namespace VirtoCommerce.Client.Model
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class VirtoCommerceContentWebModelsCheckNameResult {\n");
-            sb.Append("  Result: ").Append(Result).Append("\n");
-            
+            sb.Append("class VirtoCommerceDomainCustomerModelMembersSearchResult {\n");
+            sb.Append("  TotalCount: ").Append(TotalCount).Append("\n");
+            sb.Append("  Members: ").Append(Members).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -70,15 +60,15 @@ namespace VirtoCommerce.Client.Model
         public override bool Equals(object obj)
         {
             // credit: http://stackoverflow.com/a/10454552/677735
-            return this.Equals(obj as VirtoCommerceContentWebModelsCheckNameResult);
+            return this.Equals(obj as VirtoCommerceDomainCustomerModelMembersSearchResult);
         }
 
         /// <summary>
-        /// Returns true if VirtoCommerceContentWebModelsCheckNameResult instances are equal
+        /// Returns true if VirtoCommerceDomainCustomerModelMembersSearchResult instances are equal
         /// </summary>
-        /// <param name="other">Instance of VirtoCommerceContentWebModelsCheckNameResult to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceDomainCustomerModelMembersSearchResult to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(VirtoCommerceContentWebModelsCheckNameResult other)
+        public bool Equals(VirtoCommerceDomainCustomerModelMembersSearchResult other)
         {
             // credit: http://stackoverflow.com/a/10454552/677735
             if (other == null)
@@ -86,9 +76,14 @@ namespace VirtoCommerce.Client.Model
 
             return 
                 (
-                    this.Result == other.Result ||
-                    this.Result != null &&
-                    this.Result.Equals(other.Result)
+                    this.TotalCount == other.TotalCount ||
+                    this.TotalCount != null &&
+                    this.TotalCount.Equals(other.TotalCount)
+                ) && 
+                (
+                    this.Members == other.Members ||
+                    this.Members != null &&
+                    this.Members.SequenceEqual(other.Members)
                 );
         }
 
@@ -103,15 +98,16 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
-                if (this.Result != null)
-                    hash = hash * 59 + this.Result.GetHashCode();
-                
+
+                if (this.TotalCount != null)
+                    hash = hash * 59 + this.TotalCount.GetHashCode();
+
+                if (this.Members != null)
+                    hash = hash * 59 + this.Members.GetHashCode();
+
                 return hash;
             }
         }
 
     }
-
-
 }

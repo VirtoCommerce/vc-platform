@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,22 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommercePlatformWebModelJobsJob :  IEquatable<VirtoCommercePlatformWebModelJobsJob>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelJobsJob" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelJobsJob" />class.
-        /// </summary>
-        /// <param name="Id">Id.</param>
-        /// <param name="State">State.</param>
-        /// <param name="Completed">Completed.</param>
-
-        public VirtoCommercePlatformWebModelJobsJob(string Id = null, string State = null, bool? Completed = null)
-        {
-            this.Id = Id;
-            this.State = State;
-            this.Completed = Completed;
-            
-        }
-
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
@@ -53,7 +35,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="completed", EmitDefaultValue=false)]
         public bool? Completed { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -65,7 +46,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Id: ").Append(Id).Append("\n");
             sb.Append("  State: ").Append(State).Append("\n");
             sb.Append("  Completed: ").Append(Completed).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -130,21 +110,19 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 if (this.State != null)
                     hash = hash * 59 + this.State.GetHashCode();
-                
+
                 if (this.Completed != null)
                     hash = hash * 59 + this.Completed.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

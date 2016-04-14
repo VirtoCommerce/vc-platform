@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,30 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceCatalogModuleWebModelProductAssociation :  IEquatable<VirtoCommerceCatalogModuleWebModelProductAssociation>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelProductAssociation" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelProductAssociation" />class.
-        /// </summary>
-        /// <param name="Name">Gets or sets the ProductAssociation name..</param>
-        /// <param name="Description">Description.</param>
-        /// <param name="Priority">Gets or sets the order in which the associated product is displayed..</param>
-        /// <param name="ProductId">Gets or sets the identifier of the associated product..</param>
-        /// <param name="ProductName">Gets or sets the name of the associated product..</param>
-        /// <param name="ProductCode">Gets or sets the associated product code..</param>
-        /// <param name="ProductImg">Gets or sets the associated product image..</param>
-
-        public VirtoCommerceCatalogModuleWebModelProductAssociation(string Name = null, string Description = null, int? Priority = null, string ProductId = null, string ProductName = null, string ProductCode = null, string ProductImg = null)
-        {
-            this.Name = Name;
-            this.Description = Description;
-            this.Priority = Priority;
-            this.ProductId = ProductId;
-            this.ProductName = ProductName;
-            this.ProductCode = ProductCode;
-            this.ProductImg = ProductImg;
-            
-        }
-
         /// <summary>
         /// Gets or sets the ProductAssociation name.
         /// </summary>
@@ -91,7 +65,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="productImg", EmitDefaultValue=false)]
         public string ProductImg { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -107,7 +80,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  ProductName: ").Append(ProductName).Append("\n");
             sb.Append("  ProductCode: ").Append(ProductCode).Append("\n");
             sb.Append("  ProductImg: ").Append(ProductImg).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -192,33 +164,31 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
-                
+
                 if (this.Description != null)
                     hash = hash * 59 + this.Description.GetHashCode();
-                
+
                 if (this.Priority != null)
                     hash = hash * 59 + this.Priority.GetHashCode();
-                
+
                 if (this.ProductId != null)
                     hash = hash * 59 + this.ProductId.GetHashCode();
-                
+
                 if (this.ProductName != null)
                     hash = hash * 59 + this.ProductName.GetHashCode();
-                
+
                 if (this.ProductCode != null)
                     hash = hash * 59 + this.ProductCode.GetHashCode();
-                
+
                 if (this.ProductImg != null)
                     hash = hash * 59 + this.ProductImg.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

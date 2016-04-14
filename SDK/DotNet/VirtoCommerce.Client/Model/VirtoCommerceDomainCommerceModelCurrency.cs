@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,28 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceDomainCommerceModelCurrency :  IEquatable<VirtoCommerceDomainCommerceModelCurrency>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCommerceModelCurrency" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCommerceModelCurrency" />class.
-        /// </summary>
-        /// <param name="Code">Code.</param>
-        /// <param name="Name">Name.</param>
-        /// <param name="IsPrimary">IsPrimary.</param>
-        /// <param name="ExchangeRate">ExchangeRate.</param>
-        /// <param name="Symbol">Symbol.</param>
-        /// <param name="CustomFormatting">CustomFormatting.</param>
-
-        public VirtoCommerceDomainCommerceModelCurrency(string Code = null, string Name = null, bool? IsPrimary = null, double? ExchangeRate = null, string Symbol = null, string CustomFormatting = null)
-        {
-            this.Code = Code;
-            this.Name = Name;
-            this.IsPrimary = IsPrimary;
-            this.ExchangeRate = ExchangeRate;
-            this.Symbol = Symbol;
-            this.CustomFormatting = CustomFormatting;
-            
-        }
-
         /// <summary>
         /// Gets or Sets Code
         /// </summary>
@@ -77,7 +53,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="customFormatting", EmitDefaultValue=false)]
         public string CustomFormatting { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -92,7 +67,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  ExchangeRate: ").Append(ExchangeRate).Append("\n");
             sb.Append("  Symbol: ").Append(Symbol).Append("\n");
             sb.Append("  CustomFormatting: ").Append(CustomFormatting).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -172,30 +146,28 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Code != null)
                     hash = hash * 59 + this.Code.GetHashCode();
-                
+
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
-                
+
                 if (this.IsPrimary != null)
                     hash = hash * 59 + this.IsPrimary.GetHashCode();
-                
+
                 if (this.ExchangeRate != null)
                     hash = hash * 59 + this.ExchangeRate.GetHashCode();
-                
+
                 if (this.Symbol != null)
                     hash = hash * 59 + this.Symbol.GetHashCode();
-                
+
                 if (this.CustomFormatting != null)
                     hash = hash * 59 + this.CustomFormatting.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

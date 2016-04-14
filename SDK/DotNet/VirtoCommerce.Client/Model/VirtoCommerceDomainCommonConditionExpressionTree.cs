@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,22 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceDomainCommonConditionExpressionTree :  IEquatable<VirtoCommerceDomainCommonConditionExpressionTree>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCommonConditionExpressionTree" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCommonConditionExpressionTree" />class.
-        /// </summary>
-        /// <param name="Id">Id.</param>
-        /// <param name="AvailableChildren">AvailableChildren.</param>
-        /// <param name="Children">Children.</param>
-
-        public VirtoCommerceDomainCommonConditionExpressionTree(string Id = null, List<VirtoCommerceDomainCommonDynamicExpression> AvailableChildren = null, List<VirtoCommerceDomainCommonDynamicExpression> Children = null)
-        {
-            this.Id = Id;
-            this.AvailableChildren = AvailableChildren;
-            this.Children = Children;
-            
-        }
-
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
@@ -53,7 +35,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="children", EmitDefaultValue=false)]
         public List<VirtoCommerceDomainCommonDynamicExpression> Children { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -65,7 +46,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Id: ").Append(Id).Append("\n");
             sb.Append("  AvailableChildren: ").Append(AvailableChildren).Append("\n");
             sb.Append("  Children: ").Append(Children).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -130,21 +110,19 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 if (this.AvailableChildren != null)
                     hash = hash * 59 + this.AvailableChildren.GetHashCode();
-                
+
                 if (this.Children != null)
                     hash = hash * 59 + this.Children.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

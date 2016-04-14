@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,20 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommercePlatformWebModelSecurityChangePasswordInfo :  IEquatable<VirtoCommercePlatformWebModelSecurityChangePasswordInfo>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelSecurityChangePasswordInfo" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelSecurityChangePasswordInfo" />class.
-        /// </summary>
-        /// <param name="OldPassword">OldPassword.</param>
-        /// <param name="NewPassword">NewPassword.</param>
-
-        public VirtoCommercePlatformWebModelSecurityChangePasswordInfo(string OldPassword = null, string NewPassword = null)
-        {
-            this.OldPassword = OldPassword;
-            this.NewPassword = NewPassword;
-            
-        }
-
         /// <summary>
         /// Gets or Sets OldPassword
         /// </summary>
@@ -45,7 +29,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="newPassword", EmitDefaultValue=false)]
         public string NewPassword { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -56,7 +39,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("class VirtoCommercePlatformWebModelSecurityChangePasswordInfo {\n");
             sb.Append("  OldPassword: ").Append(OldPassword).Append("\n");
             sb.Append("  NewPassword: ").Append(NewPassword).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -116,18 +98,16 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.OldPassword != null)
                     hash = hash * 59 + this.OldPassword.GetHashCode();
-                
+
                 if (this.NewPassword != null)
                     hash = hash * 59 + this.NewPassword.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

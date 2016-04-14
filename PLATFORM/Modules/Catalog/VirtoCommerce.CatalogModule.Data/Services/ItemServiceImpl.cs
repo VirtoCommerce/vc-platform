@@ -38,7 +38,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 
         public coreModel.CatalogProduct[] GetByIds(string[] itemIds, coreModel.ItemResponseGroup respGroup, string catalogId = null)
         {
-            if ((respGroup & coreModel.ItemResponseGroup.Outlines) == coreModel.ItemResponseGroup.Outlines)
+            if (respGroup.HasFlag(coreModel.ItemResponseGroup.Outlines))
             {
                 respGroup |= coreModel.ItemResponseGroup.Links;
             }
@@ -53,7 +53,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
             }
 
             // Fill outlines for products
-            if ((respGroup & coreModel.ItemResponseGroup.Outlines) == coreModel.ItemResponseGroup.Outlines)
+            if (respGroup.HasFlag(coreModel.ItemResponseGroup.Outlines))
             {
                 _outlineService.FillOutlinesForObjects(result, catalogId);
             }
@@ -63,14 +63,12 @@ namespace VirtoCommerce.CatalogModule.Data.Services
             {
                 var objectsWithSeo = new List<ISeoSupport>(result);
 
-                var variations = result
-                    .Where(p => p.Variations != null)
-                    .SelectMany(p => p.Variations);
+                var variations = result.Where(p => p.Variations != null)
+                                       .SelectMany(p => p.Variations);
                 objectsWithSeo.AddRange(variations);
 
-                var outlineItems = result
-                    .Where(p => p.Outlines != null)
-                    .SelectMany(p => p.Outlines.SelectMany(o => o.Items));
+                var outlineItems = result.Where(p => p.Outlines != null)
+                                         .SelectMany(p => p.Outlines.SelectMany(o => o.Items));
                 objectsWithSeo.AddRange(outlineItems);
 
                 _commerceService.LoadSeoForObjects(objectsWithSeo.ToArray());

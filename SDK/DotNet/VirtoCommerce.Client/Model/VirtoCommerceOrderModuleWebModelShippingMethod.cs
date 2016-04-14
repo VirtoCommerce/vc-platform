@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,28 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceOrderModuleWebModelShippingMethod :  IEquatable<VirtoCommerceOrderModuleWebModelShippingMethod>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceOrderModuleWebModelShippingMethod" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceOrderModuleWebModelShippingMethod" />class.
-        /// </summary>
-        /// <param name="Code">Code used for link shipment with external carrier service implementation (FedEx, USPS etc).</param>
-        /// <param name="Name">Method name (system name).</param>
-        /// <param name="Description">Gets or sets the value of shipping method name.</param>
-        /// <param name="OptionName">Describe some shipment options (Vip, Air, Moment etc).</param>
-        /// <param name="OptionDescription">Gets or sets the value of shipping method option description.</param>
-        /// <param name="LogoUrl">Gets or sets the value of shipping method logo absolute URL.</param>
-
-        public VirtoCommerceOrderModuleWebModelShippingMethod(string Code = null, string Name = null, string Description = null, string OptionName = null, string OptionDescription = null, string LogoUrl = null)
-        {
-            this.Code = Code;
-            this.Name = Name;
-            this.Description = Description;
-            this.OptionName = OptionName;
-            this.OptionDescription = OptionDescription;
-            this.LogoUrl = LogoUrl;
-            
-        }
-
         /// <summary>
         /// Code used for link shipment with external carrier service implementation (FedEx, USPS etc)
         /// </summary>
@@ -83,7 +59,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="logoUrl", EmitDefaultValue=false)]
         public string LogoUrl { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -98,7 +73,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  OptionName: ").Append(OptionName).Append("\n");
             sb.Append("  OptionDescription: ").Append(OptionDescription).Append("\n");
             sb.Append("  LogoUrl: ").Append(LogoUrl).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -178,30 +152,28 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Code != null)
                     hash = hash * 59 + this.Code.GetHashCode();
-                
+
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
-                
+
                 if (this.Description != null)
                     hash = hash * 59 + this.Description.GetHashCode();
-                
+
                 if (this.OptionName != null)
                     hash = hash * 59 + this.OptionName.GetHashCode();
-                
+
                 if (this.OptionDescription != null)
                     hash = hash * 59 + this.OptionDescription.GetHashCode();
-                
+
                 if (this.LogoUrl != null)
                     hash = hash * 59 + this.LogoUrl.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

@@ -15,21 +15,18 @@
                 <div class="form-group" ng-if="!blade.fixedStoreId">
                     <label class="form-label">{{'core.blades.seo-detail.labels.store' | translate}}</label>
                     <div class="form-input">
-                        <ui-select ng-model="blade.currentEntity.storeId" name="store" ui-validate="{duplicate:'storeDuplicateValidator($value)'}" ui-validate-watch="'blade.currentEntity.language'">
+                        <ui-select ng-model="blade.currentEntity.storeId">
                             <ui-select-match allow-clear placeholder="{{'core.blades.seo-detail.placeholders.store' | translate}}">{{$select.selected.name}}</ui-select-match>
                             <ui-select-choices repeat="store.id as store in blade.stores | filter: { name: $select.search }">
                                 <span ng-bind-html="store.name | highlight: $select.search"></span>
                             </ui-select-choices>
                         </ui-select>
                     </div>
-                    <div class="form-error" ng-show="formScope.store.$error.duplicate">
-                        <span>{{'core.blades.seo-detail.validations.store-duplicate' | translate}}</span>
-                    </div>
                 </div>
                 <div class="form-group">
                     <label class="form-label">{{'core.blades.seo-detail.labels.language' | translate}}</label>
                     <div class="form-input">
-                        <ui-select ng-model="blade.currentEntity.languageCode" name="language" ui-validate="{duplicate:'languageDuplicateValidator($value)'}" ui-validate-watch="'blade.currentEntity.storeId'">
+                        <ui-select ng-model="blade.currentEntity.languageCode">
                             <ui-select-match allow-clear placeholder="{{'core.blades.seo-detail.placeholders.language' | translate}}">{{$select.selected}}</ui-select-match>
                             <ui-select-choices repeat="x in blade.languages">
                                 <span class="flag flag-{{x.substr(3).toLowerCase()}}"></span>
@@ -37,19 +34,16 @@
                             </ui-select-choices>
                         </ui-select>
                     </div>
-                    <div class="form-error" ng-show="formScope.language.$error.duplicate">
-                        <span>{{'core.blades.seo-detail.validations.language-duplicate' | translate}}</span>
-                    </div>
                 </div>
                 <div class="form-group">
                     <label class="form-label">{{'core.blades.seo-detail.labels.url-keyword' | translate}}</label>
                     <div class="form-input">
-                        <input ng-model="blade.currentEntity.semanticUrl" name="semanticUrl" required ui-validate="{invalidUrl:'semanticUrlValidator($value)'}" placeholder="{{'core.blades.seo-detail.placeholders.url-keyword' | translate}}" />
+                        <input ng-model="blade.currentEntity.semanticUrl" name="semanticUrl" required ui-validate="{invalidUrl:'semanticUrlValidator($value)', duplicate:'duplicateValidator($value)'}" ui-validate-watch="'blade.currentEntity.storeId'" placeholder="{{'core.blades.seo-detail.placeholders.url-keyword' | translate}}" autocomplete="off" />
                     </div>
-                    <div class="form-error" data-ng-show="formScope.semanticUrl.$dirty">
+                    <div class="form-error" ng-show="formScope.semanticUrl.$dirty">
                         <span ng-show="formScope.semanticUrl.$error.required">{{'core.blades.seo-detail.validations.url-keyword-required' | translate}}</span>
                         <span ng-show="formScope.semanticUrl.$error.invalidUrl">{{'core.blades.seo-detail.validations.url-keyword-invalid' | translate}}</span>
-                        <!--<span ng-show="formScope.semanticUrl.$error.duplicate">{{'core.blades.seo-detail.validations.url-keyword-duplicate' | translate}}</span>-->
+                        <span ng-show="formScope.semanticUrl.$error.duplicate">{{'core.blades.seo-detail.validations.url-keyword-duplicate' | translate}}</span>
                     </div>
                 </div>
                 <div class="form-group">

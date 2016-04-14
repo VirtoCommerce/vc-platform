@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,20 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceStoreModuleWebModelSearchResult :  IEquatable<VirtoCommerceStoreModuleWebModelSearchResult>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceStoreModuleWebModelSearchResult" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceStoreModuleWebModelSearchResult" />class.
-        /// </summary>
-        /// <param name="TotalCount">TotalCount.</param>
-        /// <param name="Stores">Stores.</param>
-
-        public VirtoCommerceStoreModuleWebModelSearchResult(int? TotalCount = null, List<VirtoCommerceStoreModuleWebModelStore> Stores = null)
-        {
-            this.TotalCount = TotalCount;
-            this.Stores = Stores;
-            
-        }
-
         /// <summary>
         /// Gets or Sets TotalCount
         /// </summary>
@@ -45,7 +29,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="stores", EmitDefaultValue=false)]
         public List<VirtoCommerceStoreModuleWebModelStore> Stores { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -56,7 +39,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("class VirtoCommerceStoreModuleWebModelSearchResult {\n");
             sb.Append("  TotalCount: ").Append(TotalCount).Append("\n");
             sb.Append("  Stores: ").Append(Stores).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -116,18 +98,16 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.TotalCount != null)
                     hash = hash * 59 + this.TotalCount.GetHashCode();
-                
+
                 if (this.Stores != null)
                     hash = hash * 59 + this.Stores.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,80 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceDomainCatalogModelSearchCriteria :  IEquatable<VirtoCommerceDomainCatalogModelSearchCriteria>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCatalogModelSearchCriteria" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCatalogModelSearchCriteria" />class.
-        /// </summary>
-        /// <param name="StoreId">StoreId.</param>
-        /// <param name="ResponseGroup">ResponseGroup.</param>
-        /// <param name="Keyword">Keyword.</param>
-        /// <param name="SearchInChildren">SearchInChildren.</param>
-        /// <param name="SearchInVariations">SearchInVariations.</param>
-        /// <param name="CategoryId">CategoryId.</param>
-        /// <param name="CategoryIds">CategoryIds.</param>
-        /// <param name="CatalogId">CatalogId.</param>
-        /// <param name="CatalogIds">CatalogIds.</param>
-        /// <param name="LanguageCode">LanguageCode.</param>
-        /// <param name="Code">Code.</param>
-        /// <param name="Sort">Sort.</param>
-        /// <param name="SortInfos">SortInfos.</param>
-        /// <param name="HideDirectLinkedCategories">HideDirectLinkedCategories.</param>
-        /// <param name="PropertyValues">PropertyValues.</param>
-        /// <param name="Currency">Currency.</param>
-        /// <param name="StartPrice">StartPrice.</param>
-        /// <param name="EndPrice">EndPrice.</param>
-        /// <param name="Skip">Skip.</param>
-        /// <param name="Take">Take.</param>
-        /// <param name="IndexDate">IndexDate.</param>
-        /// <param name="PricelistId">PricelistId.</param>
-        /// <param name="PricelistIds">PricelistIds.</param>
-        /// <param name="Terms">Terms.</param>
-        /// <param name="Facets">Facets.</param>
-        /// <param name="Outline">Outline.</param>
-        /// <param name="WithHidden">WithHidden.</param>
-        /// <param name="OnlyBuyable">OnlyBuyable.</param>
-        /// <param name="OnlyWithTrackingInventory">OnlyWithTrackingInventory.</param>
-        /// <param name="ProductType">ProductType.</param>
-        /// <param name="ProductTypes">ProductTypes.</param>
-        /// <param name="StartDateFrom">StartDateFrom.</param>
-
-        public VirtoCommerceDomainCatalogModelSearchCriteria(string StoreId = null, string ResponseGroup = null, string Keyword = null, bool? SearchInChildren = null, bool? SearchInVariations = null, string CategoryId = null, List<string> CategoryIds = null, string CatalogId = null, List<string> CatalogIds = null, string LanguageCode = null, string Code = null, string Sort = null, List<VirtoCommercePlatformCoreCommonSortInfo> SortInfos = null, bool? HideDirectLinkedCategories = null, List<VirtoCommerceDomainCatalogModelPropertyValue> PropertyValues = null, string Currency = null, double? StartPrice = null, double? EndPrice = null, int? Skip = null, int? Take = null, DateTime? IndexDate = null, string PricelistId = null, List<string> PricelistIds = null, List<string> Terms = null, List<string> Facets = null, string Outline = null, bool? WithHidden = null, bool? OnlyBuyable = null, bool? OnlyWithTrackingInventory = null, string ProductType = null, List<string> ProductTypes = null, DateTime? StartDateFrom = null)
-        {
-            this.StoreId = StoreId;
-            this.ResponseGroup = ResponseGroup;
-            this.Keyword = Keyword;
-            this.SearchInChildren = SearchInChildren;
-            this.SearchInVariations = SearchInVariations;
-            this.CategoryId = CategoryId;
-            this.CategoryIds = CategoryIds;
-            this.CatalogId = CatalogId;
-            this.CatalogIds = CatalogIds;
-            this.LanguageCode = LanguageCode;
-            this.Code = Code;
-            this.Sort = Sort;
-            this.SortInfos = SortInfos;
-            this.HideDirectLinkedCategories = HideDirectLinkedCategories;
-            this.PropertyValues = PropertyValues;
-            this.Currency = Currency;
-            this.StartPrice = StartPrice;
-            this.EndPrice = EndPrice;
-            this.Skip = Skip;
-            this.Take = Take;
-            this.IndexDate = IndexDate;
-            this.PricelistId = PricelistId;
-            this.PricelistIds = PricelistIds;
-            this.Terms = Terms;
-            this.Facets = Facets;
-            this.Outline = Outline;
-            this.WithHidden = WithHidden;
-            this.OnlyBuyable = OnlyBuyable;
-            this.OnlyWithTrackingInventory = OnlyWithTrackingInventory;
-            this.ProductType = ProductType;
-            this.ProductTypes = ProductTypes;
-            this.StartDateFrom = StartDateFrom;
-            
-        }
-
         /// <summary>
         /// Gets or Sets StoreId
         /// </summary>
@@ -285,7 +209,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="startDateFrom", EmitDefaultValue=false)]
         public DateTime? StartDateFrom { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -326,7 +249,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  ProductType: ").Append(ProductType).Append("\n");
             sb.Append("  ProductTypes: ").Append(ProductTypes).Append("\n");
             sb.Append("  StartDateFrom: ").Append(StartDateFrom).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -536,108 +458,106 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.StoreId != null)
                     hash = hash * 59 + this.StoreId.GetHashCode();
-                
+
                 if (this.ResponseGroup != null)
                     hash = hash * 59 + this.ResponseGroup.GetHashCode();
-                
+
                 if (this.Keyword != null)
                     hash = hash * 59 + this.Keyword.GetHashCode();
-                
+
                 if (this.SearchInChildren != null)
                     hash = hash * 59 + this.SearchInChildren.GetHashCode();
-                
+
                 if (this.SearchInVariations != null)
                     hash = hash * 59 + this.SearchInVariations.GetHashCode();
-                
+
                 if (this.CategoryId != null)
                     hash = hash * 59 + this.CategoryId.GetHashCode();
-                
+
                 if (this.CategoryIds != null)
                     hash = hash * 59 + this.CategoryIds.GetHashCode();
-                
+
                 if (this.CatalogId != null)
                     hash = hash * 59 + this.CatalogId.GetHashCode();
-                
+
                 if (this.CatalogIds != null)
                     hash = hash * 59 + this.CatalogIds.GetHashCode();
-                
+
                 if (this.LanguageCode != null)
                     hash = hash * 59 + this.LanguageCode.GetHashCode();
-                
+
                 if (this.Code != null)
                     hash = hash * 59 + this.Code.GetHashCode();
-                
+
                 if (this.Sort != null)
                     hash = hash * 59 + this.Sort.GetHashCode();
-                
+
                 if (this.SortInfos != null)
                     hash = hash * 59 + this.SortInfos.GetHashCode();
-                
+
                 if (this.HideDirectLinkedCategories != null)
                     hash = hash * 59 + this.HideDirectLinkedCategories.GetHashCode();
-                
+
                 if (this.PropertyValues != null)
                     hash = hash * 59 + this.PropertyValues.GetHashCode();
-                
+
                 if (this.Currency != null)
                     hash = hash * 59 + this.Currency.GetHashCode();
-                
+
                 if (this.StartPrice != null)
                     hash = hash * 59 + this.StartPrice.GetHashCode();
-                
+
                 if (this.EndPrice != null)
                     hash = hash * 59 + this.EndPrice.GetHashCode();
-                
+
                 if (this.Skip != null)
                     hash = hash * 59 + this.Skip.GetHashCode();
-                
+
                 if (this.Take != null)
                     hash = hash * 59 + this.Take.GetHashCode();
-                
+
                 if (this.IndexDate != null)
                     hash = hash * 59 + this.IndexDate.GetHashCode();
-                
+
                 if (this.PricelistId != null)
                     hash = hash * 59 + this.PricelistId.GetHashCode();
-                
+
                 if (this.PricelistIds != null)
                     hash = hash * 59 + this.PricelistIds.GetHashCode();
-                
+
                 if (this.Terms != null)
                     hash = hash * 59 + this.Terms.GetHashCode();
-                
+
                 if (this.Facets != null)
                     hash = hash * 59 + this.Facets.GetHashCode();
-                
+
                 if (this.Outline != null)
                     hash = hash * 59 + this.Outline.GetHashCode();
-                
+
                 if (this.WithHidden != null)
                     hash = hash * 59 + this.WithHidden.GetHashCode();
-                
+
                 if (this.OnlyBuyable != null)
                     hash = hash * 59 + this.OnlyBuyable.GetHashCode();
-                
+
                 if (this.OnlyWithTrackingInventory != null)
                     hash = hash * 59 + this.OnlyWithTrackingInventory.GetHashCode();
-                
+
                 if (this.ProductType != null)
                     hash = hash * 59 + this.ProductType.GetHashCode();
-                
+
                 if (this.ProductTypes != null)
                     hash = hash * 59 + this.ProductTypes.GetHashCode();
-                
+
                 if (this.StartDateFrom != null)
                     hash = hash * 59 + this.StartDateFrom.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

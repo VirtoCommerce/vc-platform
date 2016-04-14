@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,98 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceQuoteModuleWebModelQuoteRequest :  IEquatable<VirtoCommerceQuoteModuleWebModelQuoteRequest>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceQuoteModuleWebModelQuoteRequest" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceQuoteModuleWebModelQuoteRequest" />class.
-        /// </summary>
-        /// <param name="Number">Unique user friendly document number (generate automatically based on special algorithm realization).</param>
-        /// <param name="StoreId">StoreId.</param>
-        /// <param name="ChannelId">ChannelId.</param>
-        /// <param name="IsAnonymous">IsAnonymous.</param>
-        /// <param name="CustomerId">CustomerId.</param>
-        /// <param name="CustomerName">CustomerName.</param>
-        /// <param name="OrganizationName">OrganizationName.</param>
-        /// <param name="OrganizationId">OrganizationId.</param>
-        /// <param name="EmployeeId">Id employee who responsible for processing RFQ.</param>
-        /// <param name="EmployeeName">Employee who responsible for processing RFQ.</param>
-        /// <param name="ExpirationDate">Date when RFQ will be expired.</param>
-        /// <param name="ReminderDate">Date used for notification.</param>
-        /// <param name="EnableNotification">Flag of managing the need to send notifications.</param>
-        /// <param name="IsLocked">If is set it restrict any changes on RFQ.</param>
-        /// <param name="Status">Status.</param>
-        /// <param name="Tag">Tag for auxiliary information.</param>
-        /// <param name="Comment">Public comment visible for customer.</param>
-        /// <param name="InnerComment">Private comment not visible to customer.</param>
-        /// <param name="Currency">Currency.</param>
-        /// <param name="Totals">Resulting totals for selected proposals.</param>
-        /// <param name="Coupon">Coupon.</param>
-        /// <param name="ManualShippingTotal">Manual shipping total for quote request.</param>
-        /// <param name="ManualSubTotal">Manual sub total for quote request.</param>
-        /// <param name="ManualRelDiscountAmount">Relative manual discount amount for quote request in percent.</param>
-        /// <param name="ShipmentMethod">Predefined shipment method used for delivery order created from current RFQ.</param>
-        /// <param name="Addresses">Addresses.</param>
-        /// <param name="Items">RFQ items.</param>
-        /// <param name="Attachments">Attachments.</param>
-        /// <param name="LanguageCode">LanguageCode.</param>
-        /// <param name="TaxDetails">TaxDetails.</param>
-        /// <param name="IsCancelled">IsCancelled.</param>
-        /// <param name="CancelledDate">CancelledDate.</param>
-        /// <param name="CancelReason">CancelReason.</param>
-        /// <param name="ObjectType">System property.</param>
-        /// <param name="DynamicProperties">DynamicProperties.</param>
-        /// <param name="OperationsLog">OperationsLog.</param>
-        /// <param name="CreatedDate">CreatedDate.</param>
-        /// <param name="ModifiedDate">ModifiedDate.</param>
-        /// <param name="CreatedBy">CreatedBy.</param>
-        /// <param name="ModifiedBy">ModifiedBy.</param>
-        /// <param name="Id">Id.</param>
-
-        public VirtoCommerceQuoteModuleWebModelQuoteRequest(string Number = null, string StoreId = null, string ChannelId = null, bool? IsAnonymous = null, string CustomerId = null, string CustomerName = null, string OrganizationName = null, string OrganizationId = null, string EmployeeId = null, string EmployeeName = null, DateTime? ExpirationDate = null, DateTime? ReminderDate = null, bool? EnableNotification = null, bool? IsLocked = null, string Status = null, string Tag = null, string Comment = null, string InnerComment = null, string Currency = null, VirtoCommerceQuoteModuleWebModelQuoteRequestTotals Totals = null, string Coupon = null, double? ManualShippingTotal = null, double? ManualSubTotal = null, double? ManualRelDiscountAmount = null, VirtoCommerceQuoteModuleWebModelShipmentMethod ShipmentMethod = null, List<VirtoCommerceQuoteModuleWebModelAddress> Addresses = null, List<VirtoCommerceQuoteModuleWebModelQuoteItem> Items = null, List<VirtoCommerceQuoteModuleWebModelQuoteAttachment> Attachments = null, string LanguageCode = null, List<VirtoCommerceDomainCommerceModelTaxDetail> TaxDetails = null, bool? IsCancelled = null, DateTime? CancelledDate = null, string CancelReason = null, string ObjectType = null, List<VirtoCommercePlatformCoreDynamicPropertiesDynamicObjectProperty> DynamicProperties = null, List<VirtoCommercePlatformCoreChangeLogOperationLog> OperationsLog = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
-        {
-            this.Number = Number;
-            this.StoreId = StoreId;
-            this.ChannelId = ChannelId;
-            this.IsAnonymous = IsAnonymous;
-            this.CustomerId = CustomerId;
-            this.CustomerName = CustomerName;
-            this.OrganizationName = OrganizationName;
-            this.OrganizationId = OrganizationId;
-            this.EmployeeId = EmployeeId;
-            this.EmployeeName = EmployeeName;
-            this.ExpirationDate = ExpirationDate;
-            this.ReminderDate = ReminderDate;
-            this.EnableNotification = EnableNotification;
-            this.IsLocked = IsLocked;
-            this.Status = Status;
-            this.Tag = Tag;
-            this.Comment = Comment;
-            this.InnerComment = InnerComment;
-            this.Currency = Currency;
-            this.Totals = Totals;
-            this.Coupon = Coupon;
-            this.ManualShippingTotal = ManualShippingTotal;
-            this.ManualSubTotal = ManualSubTotal;
-            this.ManualRelDiscountAmount = ManualRelDiscountAmount;
-            this.ShipmentMethod = ShipmentMethod;
-            this.Addresses = Addresses;
-            this.Items = Items;
-            this.Attachments = Attachments;
-            this.LanguageCode = LanguageCode;
-            this.TaxDetails = TaxDetails;
-            this.IsCancelled = IsCancelled;
-            this.CancelledDate = CancelledDate;
-            this.CancelReason = CancelReason;
-            this.ObjectType = ObjectType;
-            this.DynamicProperties = DynamicProperties;
-            this.OperationsLog = OperationsLog;
-            this.CreatedDate = CreatedDate;
-            this.ModifiedDate = ModifiedDate;
-            this.CreatedBy = CreatedBy;
-            this.ModifiedBy = ModifiedBy;
-            this.Id = Id;
-            
-        }
-
         /// <summary>
         /// Unique user friendly document number (generate automatically based on special algorithm realization)
         /// </summary>
@@ -374,7 +280,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -424,7 +329,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  CreatedBy: ").Append(CreatedBy).Append("\n");
             sb.Append("  ModifiedBy: ").Append(ModifiedBy).Append("\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -679,135 +583,133 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Number != null)
                     hash = hash * 59 + this.Number.GetHashCode();
-                
+
                 if (this.StoreId != null)
                     hash = hash * 59 + this.StoreId.GetHashCode();
-                
+
                 if (this.ChannelId != null)
                     hash = hash * 59 + this.ChannelId.GetHashCode();
-                
+
                 if (this.IsAnonymous != null)
                     hash = hash * 59 + this.IsAnonymous.GetHashCode();
-                
+
                 if (this.CustomerId != null)
                     hash = hash * 59 + this.CustomerId.GetHashCode();
-                
+
                 if (this.CustomerName != null)
                     hash = hash * 59 + this.CustomerName.GetHashCode();
-                
+
                 if (this.OrganizationName != null)
                     hash = hash * 59 + this.OrganizationName.GetHashCode();
-                
+
                 if (this.OrganizationId != null)
                     hash = hash * 59 + this.OrganizationId.GetHashCode();
-                
+
                 if (this.EmployeeId != null)
                     hash = hash * 59 + this.EmployeeId.GetHashCode();
-                
+
                 if (this.EmployeeName != null)
                     hash = hash * 59 + this.EmployeeName.GetHashCode();
-                
+
                 if (this.ExpirationDate != null)
                     hash = hash * 59 + this.ExpirationDate.GetHashCode();
-                
+
                 if (this.ReminderDate != null)
                     hash = hash * 59 + this.ReminderDate.GetHashCode();
-                
+
                 if (this.EnableNotification != null)
                     hash = hash * 59 + this.EnableNotification.GetHashCode();
-                
+
                 if (this.IsLocked != null)
                     hash = hash * 59 + this.IsLocked.GetHashCode();
-                
+
                 if (this.Status != null)
                     hash = hash * 59 + this.Status.GetHashCode();
-                
+
                 if (this.Tag != null)
                     hash = hash * 59 + this.Tag.GetHashCode();
-                
+
                 if (this.Comment != null)
                     hash = hash * 59 + this.Comment.GetHashCode();
-                
+
                 if (this.InnerComment != null)
                     hash = hash * 59 + this.InnerComment.GetHashCode();
-                
+
                 if (this.Currency != null)
                     hash = hash * 59 + this.Currency.GetHashCode();
-                
+
                 if (this.Totals != null)
                     hash = hash * 59 + this.Totals.GetHashCode();
-                
+
                 if (this.Coupon != null)
                     hash = hash * 59 + this.Coupon.GetHashCode();
-                
+
                 if (this.ManualShippingTotal != null)
                     hash = hash * 59 + this.ManualShippingTotal.GetHashCode();
-                
+
                 if (this.ManualSubTotal != null)
                     hash = hash * 59 + this.ManualSubTotal.GetHashCode();
-                
+
                 if (this.ManualRelDiscountAmount != null)
                     hash = hash * 59 + this.ManualRelDiscountAmount.GetHashCode();
-                
+
                 if (this.ShipmentMethod != null)
                     hash = hash * 59 + this.ShipmentMethod.GetHashCode();
-                
+
                 if (this.Addresses != null)
                     hash = hash * 59 + this.Addresses.GetHashCode();
-                
+
                 if (this.Items != null)
                     hash = hash * 59 + this.Items.GetHashCode();
-                
+
                 if (this.Attachments != null)
                     hash = hash * 59 + this.Attachments.GetHashCode();
-                
+
                 if (this.LanguageCode != null)
                     hash = hash * 59 + this.LanguageCode.GetHashCode();
-                
+
                 if (this.TaxDetails != null)
                     hash = hash * 59 + this.TaxDetails.GetHashCode();
-                
+
                 if (this.IsCancelled != null)
                     hash = hash * 59 + this.IsCancelled.GetHashCode();
-                
+
                 if (this.CancelledDate != null)
                     hash = hash * 59 + this.CancelledDate.GetHashCode();
-                
+
                 if (this.CancelReason != null)
                     hash = hash * 59 + this.CancelReason.GetHashCode();
-                
+
                 if (this.ObjectType != null)
                     hash = hash * 59 + this.ObjectType.GetHashCode();
-                
+
                 if (this.DynamicProperties != null)
                     hash = hash * 59 + this.DynamicProperties.GetHashCode();
-                
+
                 if (this.OperationsLog != null)
                     hash = hash * 59 + this.OperationsLog.GetHashCode();
-                
+
                 if (this.CreatedDate != null)
                     hash = hash * 59 + this.CreatedDate.GetHashCode();
-                
+
                 if (this.ModifiedDate != null)
                     hash = hash * 59 + this.ModifiedDate.GetHashCode();
-                
+
                 if (this.CreatedBy != null)
                     hash = hash * 59 + this.CreatedBy.GetHashCode();
-                
+
                 if (this.ModifiedBy != null)
                     hash = hash * 59 + this.ModifiedBy.GetHashCode();
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

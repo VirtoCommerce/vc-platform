@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,38 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommercePricingModuleWebModelPrice :  IEquatable<VirtoCommercePricingModuleWebModelPrice>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommercePricingModuleWebModelPrice" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommercePricingModuleWebModelPrice" />class.
-        /// </summary>
-        /// <param name="PricelistId">PricelistId.</param>
-        /// <param name="Currency">Currency.</param>
-        /// <param name="ProductId">ProductId.</param>
-        /// <param name="Sale">Sale price of a product. It can be null, then Sale price will be equal List price.</param>
-        /// <param name="List">Price of a product. It can be catalog price or purchase price.</param>
-        /// <param name="MinQuantity">It defines the minimum quantity of Products. Use it for creating tier prices..</param>
-        /// <param name="CreatedDate">CreatedDate.</param>
-        /// <param name="ModifiedDate">ModifiedDate.</param>
-        /// <param name="CreatedBy">CreatedBy.</param>
-        /// <param name="ModifiedBy">ModifiedBy.</param>
-        /// <param name="Id">Id.</param>
-
-        public VirtoCommercePricingModuleWebModelPrice(string PricelistId = null, string Currency = null, string ProductId = null, double? Sale = null, double? List = null, int? MinQuantity = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
-        {
-            this.PricelistId = PricelistId;
-            this.Currency = Currency;
-            this.ProductId = ProductId;
-            this.Sale = Sale;
-            this.List = List;
-            this.MinQuantity = MinQuantity;
-            this.CreatedDate = CreatedDate;
-            this.ModifiedDate = ModifiedDate;
-            this.CreatedBy = CreatedBy;
-            this.ModifiedBy = ModifiedBy;
-            this.Id = Id;
-            
-        }
-
         /// <summary>
         /// Gets or Sets PricelistId
         /// </summary>
@@ -120,7 +86,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -140,7 +105,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  CreatedBy: ").Append(CreatedBy).Append("\n");
             sb.Append("  ModifiedBy: ").Append(ModifiedBy).Append("\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -245,45 +209,43 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.PricelistId != null)
                     hash = hash * 59 + this.PricelistId.GetHashCode();
-                
+
                 if (this.Currency != null)
                     hash = hash * 59 + this.Currency.GetHashCode();
-                
+
                 if (this.ProductId != null)
                     hash = hash * 59 + this.ProductId.GetHashCode();
-                
+
                 if (this.Sale != null)
                     hash = hash * 59 + this.Sale.GetHashCode();
-                
+
                 if (this.List != null)
                     hash = hash * 59 + this.List.GetHashCode();
-                
+
                 if (this.MinQuantity != null)
                     hash = hash * 59 + this.MinQuantity.GetHashCode();
-                
+
                 if (this.CreatedDate != null)
                     hash = hash * 59 + this.CreatedDate.GetHashCode();
-                
+
                 if (this.ModifiedDate != null)
                     hash = hash * 59 + this.ModifiedDate.GetHashCode();
-                
+
                 if (this.CreatedBy != null)
                     hash = hash * 59 + this.CreatedBy.GetHashCode();
-                
+
                 if (this.ModifiedBy != null)
                     hash = hash * 59 + this.ModifiedBy.GetHashCode();
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

@@ -19,9 +19,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     [RoutePrefix("api/platform/assets")]
     public class AssetsController : ApiController
     {
+        private readonly string _uploadsUrl = Startup.VirtualRoot + "/App_Data/Uploads/";
         private readonly IBlobStorageProvider _blobProvider;
         private readonly IBlobUrlResolver _urlResolver;
-        private readonly string _tmpUrl = "/App_Data/Uploads/";
+
         public AssetsController(IBlobStorageProvider blobProvider, IBlobUrlResolver urlResolver)
         {
             _blobProvider = blobProvider;
@@ -44,9 +45,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.NotAcceptable, "This request is not properly formatted"));
             }
-            var baseUrl = Startup.VirtualRoot + _tmpUrl;
-            var path = HostingEnvironment.MapPath(baseUrl);
-            var streamProvider = new CustomMultipartFormDataStreamProvider(path);
+
+            var uploadsPath = HostingEnvironment.MapPath(_uploadsUrl);
+            var streamProvider = new CustomMultipartFormDataStreamProvider(uploadsPath);
+
             await Request.Content.ReadAsMultipartAsync(streamProvider).ContinueWith(t =>
             {
                 if (t.IsFaulted || t.IsCanceled)
@@ -56,11 +58,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             foreach (var fileData in streamProvider.FileData)
             {
                 var fileName = fileData.Headers.ContentDisposition.FileName.Replace("\"", string.Empty);
-        
+
                 var blobInfo = new webModel.BlobInfo
                 {
                     Name = fileName,
-                    Url = VirtualPathUtility.ToAbsolute(baseUrl + "/" + fileName),
+                    Url = VirtualPathUtility.ToAbsolute(_uploadsUrl + fileName),
                     MimeType = MimeTypeResolver.ResolveContentType(fileName)
                 };
                 retVal.Add(blobInfo);
@@ -91,7 +93,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             if (url != null)
             {
-                var fileName = HttpUtility.UrlDecode(System.IO.Path.GetFileName(url));
+                var fileName = HttpUtility.UrlDecode(Path.GetFileName(url));
                 var fileUrl = folderUrl + "/" + fileName;
                 using (var client = new WebClient())
                 using (var blobStream = _blobProvider.OpenWrite(fileUrl))

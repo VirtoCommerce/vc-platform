@@ -132,7 +132,7 @@
           "name": "Name",
           "language": "Language",
           "list-note": "Set the order how the links appear sorted in web store. Drag and drop to change the order.",
-          "is-active": "IsActive",
+          "is-active": "Is active",
           "link-title": "Link Title",
           "link-url": "URL",
           "links-to": "Links to",
@@ -207,7 +207,7 @@
       },
       "links-delete": {
         "title": "Delete confirmation",
-        "message": "Are you sure you want to delete this links?"
+        "message": "Are you sure you want to delete selected links?"
       },
       "blog-delete": {
         "title": "Delete confirmation",

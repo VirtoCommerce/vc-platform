@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,44 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceCatalogModuleWebModelPushNotificationsExportNotification :  IEquatable<VirtoCommerceCatalogModuleWebModelPushNotificationsExportNotification>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelPushNotificationsExportNotification" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelPushNotificationsExportNotification" />class.
-        /// </summary>
-        /// <param name="DownloadUrl">Gets or sets the URL for downloading exported data..</param>
-        /// <param name="Finished">Gets or sets the job finish date and time..</param>
-        /// <param name="TotalCount">Gets or sets the total count of objects to process..</param>
-        /// <param name="ProcessedCount">Gets or sets the count of processed objects..</param>
-        /// <param name="ErrorCount">Gets or sets the count of errors during processing..</param>
-        /// <param name="Errors">Gets or sets the errors that has occurred during processing..</param>
-        /// <param name="Id">Id.</param>
-        /// <param name="Creator">Creator.</param>
-        /// <param name="Created">Created.</param>
-        /// <param name="IsNew">IsNew.</param>
-        /// <param name="NotifyType">NotifyType.</param>
-        /// <param name="Description">Description.</param>
-        /// <param name="Title">Title.</param>
-        /// <param name="RepeatCount">RepeatCount.</param>
-
-        public VirtoCommerceCatalogModuleWebModelPushNotificationsExportNotification(string DownloadUrl = null, DateTime? Finished = null, long? TotalCount = null, long? ProcessedCount = null, long? ErrorCount = null, List<string> Errors = null, string Id = null, string Creator = null, DateTime? Created = null, bool? IsNew = null, string NotifyType = null, string Description = null, string Title = null, int? RepeatCount = null)
-        {
-            this.DownloadUrl = DownloadUrl;
-            this.Finished = Finished;
-            this.TotalCount = TotalCount;
-            this.ProcessedCount = ProcessedCount;
-            this.ErrorCount = ErrorCount;
-            this.Errors = Errors;
-            this.Id = Id;
-            this.Creator = Creator;
-            this.Created = Created;
-            this.IsNew = IsNew;
-            this.NotifyType = NotifyType;
-            this.Description = Description;
-            this.Title = Title;
-            this.RepeatCount = RepeatCount;
-            
-        }
-
         /// <summary>
         /// Gets or sets the URL for downloading exported data.
         /// </summary>
@@ -147,7 +107,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="repeatCount", EmitDefaultValue=false)]
         public int? RepeatCount { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -170,7 +129,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Description: ").Append(Description).Append("\n");
             sb.Append("  Title: ").Append(Title).Append("\n");
             sb.Append("  RepeatCount: ").Append(RepeatCount).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -290,54 +248,52 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.DownloadUrl != null)
                     hash = hash * 59 + this.DownloadUrl.GetHashCode();
-                
+
                 if (this.Finished != null)
                     hash = hash * 59 + this.Finished.GetHashCode();
-                
+
                 if (this.TotalCount != null)
                     hash = hash * 59 + this.TotalCount.GetHashCode();
-                
+
                 if (this.ProcessedCount != null)
                     hash = hash * 59 + this.ProcessedCount.GetHashCode();
-                
+
                 if (this.ErrorCount != null)
                     hash = hash * 59 + this.ErrorCount.GetHashCode();
-                
+
                 if (this.Errors != null)
                     hash = hash * 59 + this.Errors.GetHashCode();
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 if (this.Creator != null)
                     hash = hash * 59 + this.Creator.GetHashCode();
-                
+
                 if (this.Created != null)
                     hash = hash * 59 + this.Created.GetHashCode();
-                
+
                 if (this.IsNew != null)
                     hash = hash * 59 + this.IsNew.GetHashCode();
-                
+
                 if (this.NotifyType != null)
                     hash = hash * 59 + this.NotifyType.GetHashCode();
-                
+
                 if (this.Description != null)
                     hash = hash * 59 + this.Description.GetHashCode();
-                
+
                 if (this.Title != null)
                     hash = hash * 59 + this.Title.GetHashCode();
-                
+
                 if (this.RepeatCount != null)
                     hash = hash * 59 + this.RepeatCount.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

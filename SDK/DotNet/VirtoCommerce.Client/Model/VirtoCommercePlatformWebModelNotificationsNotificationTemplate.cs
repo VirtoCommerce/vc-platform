@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,32 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommercePlatformWebModelNotificationsNotificationTemplate :  IEquatable<VirtoCommercePlatformWebModelNotificationsNotificationTemplate>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelNotificationsNotificationTemplate" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelNotificationsNotificationTemplate" />class.
-        /// </summary>
-        /// <param name="Id">Id.</param>
-        /// <param name="Body">Body.</param>
-        /// <param name="Subject">Subject.</param>
-        /// <param name="NotificationTypeId">NotificationTypeId.</param>
-        /// <param name="ObjectId">Id of object, that used this template for sending notification.</param>
-        /// <param name="ObjectTypeId">Type id of object, that used this template for sending notification.</param>
-        /// <param name="Language">Locale of template.</param>
-        /// <param name="IsDefault">Flag, that shows if this template is default dor notification type.</param>
-
-        public VirtoCommercePlatformWebModelNotificationsNotificationTemplate(string Id = null, string Body = null, string Subject = null, string NotificationTypeId = null, string ObjectId = null, string ObjectTypeId = null, string Language = null, bool? IsDefault = null)
-        {
-            this.Id = Id;
-            this.Body = Body;
-            this.Subject = Subject;
-            this.NotificationTypeId = NotificationTypeId;
-            this.ObjectId = ObjectId;
-            this.ObjectTypeId = ObjectTypeId;
-            this.Language = Language;
-            this.IsDefault = IsDefault;
-            
-        }
-
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
@@ -97,7 +69,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="isDefault", EmitDefaultValue=false)]
         public bool? IsDefault { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -114,7 +85,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  ObjectTypeId: ").Append(ObjectTypeId).Append("\n");
             sb.Append("  Language: ").Append(Language).Append("\n");
             sb.Append("  IsDefault: ").Append(IsDefault).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -204,36 +174,34 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 if (this.Body != null)
                     hash = hash * 59 + this.Body.GetHashCode();
-                
+
                 if (this.Subject != null)
                     hash = hash * 59 + this.Subject.GetHashCode();
-                
+
                 if (this.NotificationTypeId != null)
                     hash = hash * 59 + this.NotificationTypeId.GetHashCode();
-                
+
                 if (this.ObjectId != null)
                     hash = hash * 59 + this.ObjectId.GetHashCode();
-                
+
                 if (this.ObjectTypeId != null)
                     hash = hash * 59 + this.ObjectTypeId.GetHashCode();
-                
+
                 if (this.Language != null)
                     hash = hash * 59 + this.Language.GetHashCode();
-                
+
                 if (this.IsDefault != null)
                     hash = hash * 59 + this.IsDefault.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

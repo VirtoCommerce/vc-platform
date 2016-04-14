@@ -7,17 +7,14 @@ using RestSharp;
 using VirtoCommerce.Client.Client;
 using VirtoCommerce.Client.Model;
 
-
 namespace VirtoCommerce.Client.Api
 {
-    
     /// <summary>
     /// Represents a collection of functions to interact with the API endpoints
     /// </summary>
     public interface IShoppingCartModuleApi
     {
         #region Synchronous Operations
-        
         /// <summary>
         /// Create shopping cart
         /// </summary>
@@ -28,7 +25,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="cart">Shopping cart model</param>
         /// <returns>VirtoCommerceCartModuleWebModelShoppingCart</returns>
         VirtoCommerceCartModuleWebModelShoppingCart CartModuleCreate (VirtoCommerceCartModuleWebModelShoppingCart cart);
-  
+
         /// <summary>
         /// Create shopping cart
         /// </summary>
@@ -39,7 +36,6 @@ namespace VirtoCommerce.Client.Api
         /// <param name="cart">Shopping cart model</param>
         /// <returns>ApiResponse of VirtoCommerceCartModuleWebModelShoppingCart</returns>
         ApiResponse<VirtoCommerceCartModuleWebModelShoppingCart> CartModuleCreateWithHttpInfo (VirtoCommerceCartModuleWebModelShoppingCart cart);
-        
         /// <summary>
         /// Delete shopping carts by ids
         /// </summary>
@@ -50,7 +46,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="ids">Array of shopping cart ids</param>
         /// <returns></returns>
         void CartModuleDeleteCarts (List<string> ids);
-  
+
         /// <summary>
         /// Delete shopping carts by ids
         /// </summary>
@@ -61,7 +57,6 @@ namespace VirtoCommerce.Client.Api
         /// <param name="ids">Array of shopping cart ids</param>
         /// <returns>ApiResponse of Object(void)</returns>
         ApiResponse<Object> CartModuleDeleteCartsWithHttpInfo (List<string> ids);
-        
         /// <summary>
         /// Get shopping cart by id
         /// </summary>
@@ -72,7 +67,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="id">Shopping cart id</param>
         /// <returns>VirtoCommerceCartModuleWebModelShoppingCart</returns>
         VirtoCommerceCartModuleWebModelShoppingCart CartModuleGetCartById (string id);
-  
+
         /// <summary>
         /// Get shopping cart by id
         /// </summary>
@@ -83,7 +78,6 @@ namespace VirtoCommerce.Client.Api
         /// <param name="id">Shopping cart id</param>
         /// <returns>ApiResponse of VirtoCommerceCartModuleWebModelShoppingCart</returns>
         ApiResponse<VirtoCommerceCartModuleWebModelShoppingCart> CartModuleGetCartByIdWithHttpInfo (string id);
-        
         /// <summary>
         /// Get shopping cart by store id and customer id
         /// </summary>
@@ -95,7 +89,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="customerId">Customer id</param>
         /// <returns>VirtoCommerceCartModuleWebModelShoppingCart</returns>
         VirtoCommerceCartModuleWebModelShoppingCart CartModuleGetCurrentCart (string storeId, string customerId);
-  
+
         /// <summary>
         /// Get shopping cart by store id and customer id
         /// </summary>
@@ -107,7 +101,6 @@ namespace VirtoCommerce.Client.Api
         /// <param name="customerId">Customer id</param>
         /// <returns>ApiResponse of VirtoCommerceCartModuleWebModelShoppingCart</returns>
         ApiResponse<VirtoCommerceCartModuleWebModelShoppingCart> CartModuleGetCurrentCartWithHttpInfo (string storeId, string customerId);
-        
         /// <summary>
         /// Get payment methods for shopping cart
         /// </summary>
@@ -118,7 +111,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="cartId">Shopping cart id</param>
         /// <returns>List&lt;VirtoCommerceCartModuleWebModelPaymentMethod&gt;</returns>
         List<VirtoCommerceCartModuleWebModelPaymentMethod> CartModuleGetPaymentMethods (string cartId);
-  
+
         /// <summary>
         /// Get payment methods for shopping cart
         /// </summary>
@@ -129,7 +122,6 @@ namespace VirtoCommerce.Client.Api
         /// <param name="cartId">Shopping cart id</param>
         /// <returns>ApiResponse of List&lt;VirtoCommerceCartModuleWebModelPaymentMethod&gt;</returns>
         ApiResponse<List<VirtoCommerceCartModuleWebModelPaymentMethod>> CartModuleGetPaymentMethodsWithHttpInfo (string cartId);
-        
         /// <summary>
         /// Get payment methods for store
         /// </summary>
@@ -140,7 +132,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="storeId">Store id</param>
         /// <returns>List&lt;VirtoCommerceCartModuleWebModelPaymentMethod&gt;</returns>
         List<VirtoCommerceCartModuleWebModelPaymentMethod> CartModuleGetPaymentMethodsForStore (string storeId);
-  
+
         /// <summary>
         /// Get payment methods for store
         /// </summary>
@@ -151,7 +143,6 @@ namespace VirtoCommerce.Client.Api
         /// <param name="storeId">Store id</param>
         /// <returns>ApiResponse of List&lt;VirtoCommerceCartModuleWebModelPaymentMethod&gt;</returns>
         ApiResponse<List<VirtoCommerceCartModuleWebModelPaymentMethod>> CartModuleGetPaymentMethodsForStoreWithHttpInfo (string storeId);
-        
         /// <summary>
         /// Get shipping methods for shopping cart
         /// </summary>
@@ -162,7 +153,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="cartId">Shopping cart id</param>
         /// <returns>List&lt;VirtoCommerceCartModuleWebModelShippingMethod&gt;</returns>
         List<VirtoCommerceCartModuleWebModelShippingMethod> CartModuleGetShipmentMethods (string cartId);
-  
+
         /// <summary>
         /// Get shipping methods for shopping cart
         /// </summary>
@@ -173,7 +164,6 @@ namespace VirtoCommerce.Client.Api
         /// <param name="cartId">Shopping cart id</param>
         /// <returns>ApiResponse of List&lt;VirtoCommerceCartModuleWebModelShippingMethod&gt;</returns>
         ApiResponse<List<VirtoCommerceCartModuleWebModelShippingMethod>> CartModuleGetShipmentMethodsWithHttpInfo (string cartId);
-        
         /// <summary>
         /// Search for shopping carts by criteria
         /// </summary>
@@ -184,7 +174,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="criteria">Search criteria</param>
         /// <returns>VirtoCommerceCartModuleWebModelSearchResult</returns>
         VirtoCommerceCartModuleWebModelSearchResult CartModuleSearch (VirtoCommerceCartModuleWebModelSearchCriteria criteria);
-  
+
         /// <summary>
         /// Search for shopping carts by criteria
         /// </summary>
@@ -195,7 +185,6 @@ namespace VirtoCommerce.Client.Api
         /// <param name="criteria">Search criteria</param>
         /// <returns>ApiResponse of VirtoCommerceCartModuleWebModelSearchResult</returns>
         ApiResponse<VirtoCommerceCartModuleWebModelSearchResult> CartModuleSearchWithHttpInfo (VirtoCommerceCartModuleWebModelSearchCriteria criteria);
-        
         /// <summary>
         /// Update shopping cart
         /// </summary>
@@ -206,7 +195,7 @@ namespace VirtoCommerce.Client.Api
         /// <param name="cart">Shopping cart model</param>
         /// <returns>VirtoCommerceCartModuleWebModelShoppingCart</returns>
         VirtoCommerceCartModuleWebModelShoppingCart CartModuleUpdate (VirtoCommerceCartModuleWebModelShoppingCart cart);
-  
+
         /// <summary>
         /// Update shopping cart
         /// </summary>
@@ -217,11 +206,8 @@ namespace VirtoCommerce.Client.Api
         /// <param name="cart">Shopping cart model</param>
         /// <returns>ApiResponse of VirtoCommerceCartModuleWebModelShoppingCart</returns>
         ApiResponse<VirtoCommerceCartModuleWebModelShoppingCart> CartModuleUpdateWithHttpInfo (VirtoCommerceCartModuleWebModelShoppingCart cart);
-        
         #endregion Synchronous Operations
-        
         #region Asynchronous Operations
-        
         /// <summary>
         /// Create shopping cart
         /// </summary>
@@ -243,7 +229,6 @@ namespace VirtoCommerce.Client.Api
         /// <param name="cart">Shopping cart model</param>
         /// <returns>Task of ApiResponse (VirtoCommerceCartModuleWebModelShoppingCart)</returns>
         System.Threading.Tasks.Task<ApiResponse<VirtoCommerceCartModuleWebModelShoppingCart>> CartModuleCreateAsyncWithHttpInfo (VirtoCommerceCartModuleWebModelShoppingCart cart);
-        
         /// <summary>
         /// Delete shopping carts by ids
         /// </summary>
@@ -265,7 +250,6 @@ namespace VirtoCommerce.Client.Api
         /// <param name="ids">Array of shopping cart ids</param>
         /// <returns>Task of ApiResponse</returns>
         System.Threading.Tasks.Task<ApiResponse<Object>> CartModuleDeleteCartsAsyncWithHttpInfo (List<string> ids);
-        
         /// <summary>
         /// Get shopping cart by id
         /// </summary>
@@ -287,7 +271,6 @@ namespace VirtoCommerce.Client.Api
         /// <param name="id">Shopping cart id</param>
         /// <returns>Task of ApiResponse (VirtoCommerceCartModuleWebModelShoppingCart)</returns>
         System.Threading.Tasks.Task<ApiResponse<VirtoCommerceCartModuleWebModelShoppingCart>> CartModuleGetCartByIdAsyncWithHttpInfo (string id);
-        
         /// <summary>
         /// Get shopping cart by store id and customer id
         /// </summary>
@@ -311,7 +294,6 @@ namespace VirtoCommerce.Client.Api
         /// <param name="customerId">Customer id</param>
         /// <returns>Task of ApiResponse (VirtoCommerceCartModuleWebModelShoppingCart)</returns>
         System.Threading.Tasks.Task<ApiResponse<VirtoCommerceCartModuleWebModelShoppingCart>> CartModuleGetCurrentCartAsyncWithHttpInfo (string storeId, string customerId);
-        
         /// <summary>
         /// Get payment methods for shopping cart
         /// </summary>
@@ -333,7 +315,6 @@ namespace VirtoCommerce.Client.Api
         /// <param name="cartId">Shopping cart id</param>
         /// <returns>Task of ApiResponse (List&lt;VirtoCommerceCartModuleWebModelPaymentMethod&gt;)</returns>
         System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceCartModuleWebModelPaymentMethod>>> CartModuleGetPaymentMethodsAsyncWithHttpInfo (string cartId);
-        
         /// <summary>
         /// Get payment methods for store
         /// </summary>
@@ -355,7 +336,6 @@ namespace VirtoCommerce.Client.Api
         /// <param name="storeId">Store id</param>
         /// <returns>Task of ApiResponse (List&lt;VirtoCommerceCartModuleWebModelPaymentMethod&gt;)</returns>
         System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceCartModuleWebModelPaymentMethod>>> CartModuleGetPaymentMethodsForStoreAsyncWithHttpInfo (string storeId);
-        
         /// <summary>
         /// Get shipping methods for shopping cart
         /// </summary>
@@ -377,7 +357,6 @@ namespace VirtoCommerce.Client.Api
         /// <param name="cartId">Shopping cart id</param>
         /// <returns>Task of ApiResponse (List&lt;VirtoCommerceCartModuleWebModelShippingMethod&gt;)</returns>
         System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceCartModuleWebModelShippingMethod>>> CartModuleGetShipmentMethodsAsyncWithHttpInfo (string cartId);
-        
         /// <summary>
         /// Search for shopping carts by criteria
         /// </summary>
@@ -399,7 +378,6 @@ namespace VirtoCommerce.Client.Api
         /// <param name="criteria">Search criteria</param>
         /// <returns>Task of ApiResponse (VirtoCommerceCartModuleWebModelSearchResult)</returns>
         System.Threading.Tasks.Task<ApiResponse<VirtoCommerceCartModuleWebModelSearchResult>> CartModuleSearchAsyncWithHttpInfo (VirtoCommerceCartModuleWebModelSearchCriteria criteria);
-        
         /// <summary>
         /// Update shopping cart
         /// </summary>
@@ -421,11 +399,9 @@ namespace VirtoCommerce.Client.Api
         /// <param name="cart">Shopping cart model</param>
         /// <returns>Task of ApiResponse (VirtoCommerceCartModuleWebModelShoppingCart)</returns>
         System.Threading.Tasks.Task<ApiResponse<VirtoCommerceCartModuleWebModelShoppingCart>> CartModuleUpdateAsyncWithHttpInfo (VirtoCommerceCartModuleWebModelShoppingCart cart);
-        
         #endregion Asynchronous Operations
-        
     }
-  
+
     /// <summary>
     /// Represents a collection of functions to interact with the API endpoints
     /// </summary>
@@ -440,7 +416,7 @@ namespace VirtoCommerce.Client.Api
         public ShoppingCartModuleApi(Configuration configuration)
         {
             if (configuration == null) // use the default one in Configuration
-                this.Configuration = Configuration.Default; 
+                this.Configuration = Configuration.Default;
             else
                 this.Configuration = configuration;
 
@@ -469,7 +445,7 @@ namespace VirtoCommerce.Client.Api
         {
             // do nothing
         }
-    
+
         /// <summary>
         /// Gets or sets the configuration object
         /// </summary>
@@ -497,13 +473,12 @@ namespace VirtoCommerce.Client.Api
         {
             this.Configuration.AddDefaultHeader(key, value);
         }
-   
-        
+
         /// <summary>
         /// Create shopping cart 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="cart">Shopping cart model</param> 
+        /// <param name="cart">Shopping cart model</param>
         /// <returns>VirtoCommerceCartModuleWebModelShoppingCart</returns>
         public VirtoCommerceCartModuleWebModelShoppingCart CartModuleCreate (VirtoCommerceCartModuleWebModelShoppingCart cart)
         {
@@ -515,18 +490,15 @@ namespace VirtoCommerce.Client.Api
         /// Create shopping cart 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="cart">Shopping cart model</param> 
+        /// <param name="cart">Shopping cart model</param>
         /// <returns>ApiResponse of VirtoCommerceCartModuleWebModelShoppingCart</returns>
         public ApiResponse< VirtoCommerceCartModuleWebModelShoppingCart > CartModuleCreateWithHttpInfo (VirtoCommerceCartModuleWebModelShoppingCart cart)
         {
-            
             // verify the required parameter 'cart' is set
             if (cart == null)
                 throw new ApiException(400, "Missing required parameter 'cart' when calling ShoppingCartModuleApi->CartModuleCreate");
-            
-    
+
             var localVarPath = "/api/cart/carts";
-    
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -536,13 +508,16 @@ namespace VirtoCommerce.Client.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                "application/json", "text/json", "application/x-www-form-urlencoded"
+                "application/json", 
+                "text/json", 
+                "application/x-www-form-urlencoded"
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
-                "application/json", "text/json"
+                "application/json", 
+                "text/json"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -551,10 +526,6 @@ namespace VirtoCommerce.Client.Api
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
-            
-            
-            
-            
             if (cart.GetType() != typeof(byte[]))
             {
                 localVarPostBody = Configuration.ApiClient.Serialize(cart); // http body (model) parameter
@@ -564,27 +535,25 @@ namespace VirtoCommerce.Client.Api
                 localVarPostBody = cart; // byte array
             }
 
-            
-    
+
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath, 
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
                 Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
-    
+
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (localVarStatusCode, "Error calling CartModuleCreate: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
                 throw new ApiException (localVarStatusCode, "Error calling CartModuleCreate: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
-    
+
             return new ApiResponse<VirtoCommerceCartModuleWebModelShoppingCart>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 (VirtoCommerceCartModuleWebModelShoppingCart) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceCartModuleWebModelShoppingCart)));
             
         }
 
-        
         /// <summary>
         /// Create shopping cart 
         /// </summary>
@@ -607,11 +576,10 @@ namespace VirtoCommerce.Client.Api
         public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceCartModuleWebModelShoppingCart>> CartModuleCreateAsyncWithHttpInfo (VirtoCommerceCartModuleWebModelShoppingCart cart)
         {
             // verify the required parameter 'cart' is set
-            if (cart == null) throw new ApiException(400, "Missing required parameter 'cart' when calling CartModuleCreate");
-            
-    
+            if (cart == null)
+                throw new ApiException(400, "Missing required parameter 'cart' when calling ShoppingCartModuleApi->CartModuleCreate");
+
             var localVarPath = "/api/cart/carts";
-    
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -621,13 +589,16 @@ namespace VirtoCommerce.Client.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                "application/json", "text/json", "application/x-www-form-urlencoded"
+                "application/json", 
+                "text/json", 
+                "application/x-www-form-urlencoded"
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
-                "application/json", "text/json"
+                "application/json", 
+                "text/json"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -636,10 +607,6 @@ namespace VirtoCommerce.Client.Api
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
-            
-            
-            
-            
             if (cart.GetType() != typeof(byte[]))
             {
                 localVarPostBody = Configuration.ApiClient.Serialize(cart); // http body (model) parameter
@@ -649,15 +616,14 @@ namespace VirtoCommerce.Client.Api
                 localVarPostBody = cart; // byte array
             }
 
-            
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath, 
-                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams, 
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
- 
+
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (localVarStatusCode, "Error calling CartModuleCreate: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
@@ -668,12 +634,12 @@ namespace VirtoCommerce.Client.Api
                 (VirtoCommerceCartModuleWebModelShoppingCart) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceCartModuleWebModelShoppingCart)));
             
         }
-        
+
         /// <summary>
         /// Delete shopping carts by ids 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="ids">Array of shopping cart ids</param> 
+        /// <param name="ids">Array of shopping cart ids</param>
         /// <returns></returns>
         public void CartModuleDeleteCarts (List<string> ids)
         {
@@ -684,18 +650,15 @@ namespace VirtoCommerce.Client.Api
         /// Delete shopping carts by ids 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="ids">Array of shopping cart ids</param> 
+        /// <param name="ids">Array of shopping cart ids</param>
         /// <returns>ApiResponse of Object(void)</returns>
         public ApiResponse<Object> CartModuleDeleteCartsWithHttpInfo (List<string> ids)
         {
-            
             // verify the required parameter 'ids' is set
             if (ids == null)
                 throw new ApiException(400, "Missing required parameter 'ids' when calling ShoppingCartModuleApi->CartModuleDeleteCarts");
-            
-    
+
             var localVarPath = "/api/cart/carts";
-    
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -705,13 +668,11 @@ namespace VirtoCommerce.Client.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
-                
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -720,34 +681,27 @@ namespace VirtoCommerce.Client.Api
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
-            
             if (ids != null) localVarQueryParams.Add("ids", Configuration.ApiClient.ParameterToString(ids)); // query parameter
-            
-            
-            
-            
 
-            
-    
+
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath, 
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
                 Method.DELETE, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
-    
+
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (localVarStatusCode, "Error calling CartModuleDeleteCarts: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
                 throw new ApiException (localVarStatusCode, "Error calling CartModuleDeleteCarts: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
-    
+
             
             return new ApiResponse<Object>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 null);
         }
 
-        
         /// <summary>
         /// Delete shopping carts by ids 
         /// </summary>
@@ -769,11 +723,10 @@ namespace VirtoCommerce.Client.Api
         public async System.Threading.Tasks.Task<ApiResponse<Object>> CartModuleDeleteCartsAsyncWithHttpInfo (List<string> ids)
         {
             // verify the required parameter 'ids' is set
-            if (ids == null) throw new ApiException(400, "Missing required parameter 'ids' when calling CartModuleDeleteCarts");
-            
-    
+            if (ids == null)
+                throw new ApiException(400, "Missing required parameter 'ids' when calling ShoppingCartModuleApi->CartModuleDeleteCarts");
+
             var localVarPath = "/api/cart/carts";
-    
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -783,13 +736,11 @@ namespace VirtoCommerce.Client.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
-                
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -798,22 +749,16 @@ namespace VirtoCommerce.Client.Api
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
-            
             if (ids != null) localVarQueryParams.Add("ids", Configuration.ApiClient.ParameterToString(ids)); // query parameter
-            
-            
-            
-            
 
-            
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath, 
-                Method.DELETE, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams, 
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.DELETE, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
- 
+
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (localVarStatusCode, "Error calling CartModuleDeleteCarts: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
@@ -824,12 +769,12 @@ namespace VirtoCommerce.Client.Api
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 null);
         }
-        
+
         /// <summary>
         /// Get shopping cart by id 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">Shopping cart id</param> 
+        /// <param name="id">Shopping cart id</param>
         /// <returns>VirtoCommerceCartModuleWebModelShoppingCart</returns>
         public VirtoCommerceCartModuleWebModelShoppingCart CartModuleGetCartById (string id)
         {
@@ -841,18 +786,15 @@ namespace VirtoCommerce.Client.Api
         /// Get shopping cart by id 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">Shopping cart id</param> 
+        /// <param name="id">Shopping cart id</param>
         /// <returns>ApiResponse of VirtoCommerceCartModuleWebModelShoppingCart</returns>
         public ApiResponse< VirtoCommerceCartModuleWebModelShoppingCart > CartModuleGetCartByIdWithHttpInfo (string id)
         {
-            
             // verify the required parameter 'id' is set
             if (id == null)
                 throw new ApiException(400, "Missing required parameter 'id' when calling ShoppingCartModuleApi->CartModuleGetCartById");
-            
-    
+
             var localVarPath = "/api/cart/carts/{id}";
-    
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -862,13 +804,13 @@ namespace VirtoCommerce.Client.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
-                "application/json", "text/json"
+                "application/json", 
+                "text/json"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -878,33 +820,26 @@ namespace VirtoCommerce.Client.Api
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
             if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
-            
-            
-            
-            
-            
 
-            
-    
+
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath, 
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
                 Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
-    
+
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (localVarStatusCode, "Error calling CartModuleGetCartById: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
                 throw new ApiException (localVarStatusCode, "Error calling CartModuleGetCartById: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
-    
+
             return new ApiResponse<VirtoCommerceCartModuleWebModelShoppingCart>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 (VirtoCommerceCartModuleWebModelShoppingCart) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceCartModuleWebModelShoppingCart)));
             
         }
 
-        
         /// <summary>
         /// Get shopping cart by id 
         /// </summary>
@@ -927,11 +862,10 @@ namespace VirtoCommerce.Client.Api
         public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceCartModuleWebModelShoppingCart>> CartModuleGetCartByIdAsyncWithHttpInfo (string id)
         {
             // verify the required parameter 'id' is set
-            if (id == null) throw new ApiException(400, "Missing required parameter 'id' when calling CartModuleGetCartById");
-            
-    
+            if (id == null)
+                throw new ApiException(400, "Missing required parameter 'id' when calling ShoppingCartModuleApi->CartModuleGetCartById");
+
             var localVarPath = "/api/cart/carts/{id}";
-    
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -941,13 +875,13 @@ namespace VirtoCommerce.Client.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
-                "application/json", "text/json"
+                "application/json", 
+                "text/json"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -957,21 +891,15 @@ namespace VirtoCommerce.Client.Api
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
             if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
-            
-            
-            
-            
-            
 
-            
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath, 
-                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams, 
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
- 
+
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (localVarStatusCode, "Error calling CartModuleGetCartById: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
@@ -982,13 +910,13 @@ namespace VirtoCommerce.Client.Api
                 (VirtoCommerceCartModuleWebModelShoppingCart) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceCartModuleWebModelShoppingCart)));
             
         }
-        
+
         /// <summary>
         /// Get shopping cart by store id and customer id Returns shopping cart or null if it is not found
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="storeId">Store id</param> 
-        /// <param name="customerId">Customer id</param> 
+        /// <param name="storeId">Store id</param>
+        /// <param name="customerId">Customer id</param>
         /// <returns>VirtoCommerceCartModuleWebModelShoppingCart</returns>
         public VirtoCommerceCartModuleWebModelShoppingCart CartModuleGetCurrentCart (string storeId, string customerId)
         {
@@ -1000,23 +928,19 @@ namespace VirtoCommerce.Client.Api
         /// Get shopping cart by store id and customer id Returns shopping cart or null if it is not found
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="storeId">Store id</param> 
-        /// <param name="customerId">Customer id</param> 
+        /// <param name="storeId">Store id</param>
+        /// <param name="customerId">Customer id</param>
         /// <returns>ApiResponse of VirtoCommerceCartModuleWebModelShoppingCart</returns>
         public ApiResponse< VirtoCommerceCartModuleWebModelShoppingCart > CartModuleGetCurrentCartWithHttpInfo (string storeId, string customerId)
         {
-            
             // verify the required parameter 'storeId' is set
             if (storeId == null)
                 throw new ApiException(400, "Missing required parameter 'storeId' when calling ShoppingCartModuleApi->CartModuleGetCurrentCart");
-            
             // verify the required parameter 'customerId' is set
             if (customerId == null)
                 throw new ApiException(400, "Missing required parameter 'customerId' when calling ShoppingCartModuleApi->CartModuleGetCurrentCart");
-            
-    
+
             var localVarPath = "/api/cart/{storeId}/{customerId}/carts/current";
-    
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -1026,13 +950,13 @@ namespace VirtoCommerce.Client.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
-                "application/json", "text/json"
+                "application/json", 
+                "text/json"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -1043,33 +967,26 @@ namespace VirtoCommerce.Client.Api
             localVarPathParams.Add("format", "json");
             if (storeId != null) localVarPathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
             if (customerId != null) localVarPathParams.Add("customerId", Configuration.ApiClient.ParameterToString(customerId)); // path parameter
-            
-            
-            
-            
-            
 
-            
-    
+
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath, 
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
                 Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
-    
+
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (localVarStatusCode, "Error calling CartModuleGetCurrentCart: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
                 throw new ApiException (localVarStatusCode, "Error calling CartModuleGetCurrentCart: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
-    
+
             return new ApiResponse<VirtoCommerceCartModuleWebModelShoppingCart>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 (VirtoCommerceCartModuleWebModelShoppingCart) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceCartModuleWebModelShoppingCart)));
             
         }
 
-        
         /// <summary>
         /// Get shopping cart by store id and customer id Returns shopping cart or null if it is not found
         /// </summary>
@@ -1094,13 +1011,13 @@ namespace VirtoCommerce.Client.Api
         public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceCartModuleWebModelShoppingCart>> CartModuleGetCurrentCartAsyncWithHttpInfo (string storeId, string customerId)
         {
             // verify the required parameter 'storeId' is set
-            if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling CartModuleGetCurrentCart");
+            if (storeId == null)
+                throw new ApiException(400, "Missing required parameter 'storeId' when calling ShoppingCartModuleApi->CartModuleGetCurrentCart");
             // verify the required parameter 'customerId' is set
-            if (customerId == null) throw new ApiException(400, "Missing required parameter 'customerId' when calling CartModuleGetCurrentCart");
-            
-    
+            if (customerId == null)
+                throw new ApiException(400, "Missing required parameter 'customerId' when calling ShoppingCartModuleApi->CartModuleGetCurrentCart");
+
             var localVarPath = "/api/cart/{storeId}/{customerId}/carts/current";
-    
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -1110,13 +1027,13 @@ namespace VirtoCommerce.Client.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
-                "application/json", "text/json"
+                "application/json", 
+                "text/json"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -1127,21 +1044,15 @@ namespace VirtoCommerce.Client.Api
             localVarPathParams.Add("format", "json");
             if (storeId != null) localVarPathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
             if (customerId != null) localVarPathParams.Add("customerId", Configuration.ApiClient.ParameterToString(customerId)); // path parameter
-            
-            
-            
-            
-            
 
-            
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath, 
-                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams, 
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
- 
+
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (localVarStatusCode, "Error calling CartModuleGetCurrentCart: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
@@ -1152,12 +1063,12 @@ namespace VirtoCommerce.Client.Api
                 (VirtoCommerceCartModuleWebModelShoppingCart) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceCartModuleWebModelShoppingCart)));
             
         }
-        
+
         /// <summary>
         /// Get payment methods for shopping cart 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="cartId">Shopping cart id</param> 
+        /// <param name="cartId">Shopping cart id</param>
         /// <returns>List&lt;VirtoCommerceCartModuleWebModelPaymentMethod&gt;</returns>
         public List<VirtoCommerceCartModuleWebModelPaymentMethod> CartModuleGetPaymentMethods (string cartId)
         {
@@ -1169,18 +1080,15 @@ namespace VirtoCommerce.Client.Api
         /// Get payment methods for shopping cart 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="cartId">Shopping cart id</param> 
+        /// <param name="cartId">Shopping cart id</param>
         /// <returns>ApiResponse of List&lt;VirtoCommerceCartModuleWebModelPaymentMethod&gt;</returns>
         public ApiResponse< List<VirtoCommerceCartModuleWebModelPaymentMethod> > CartModuleGetPaymentMethodsWithHttpInfo (string cartId)
         {
-            
             // verify the required parameter 'cartId' is set
             if (cartId == null)
                 throw new ApiException(400, "Missing required parameter 'cartId' when calling ShoppingCartModuleApi->CartModuleGetPaymentMethods");
-            
-    
+
             var localVarPath = "/api/cart/carts/{cartId}/paymentMethods";
-    
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -1190,13 +1098,13 @@ namespace VirtoCommerce.Client.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
-                "application/json", "text/json"
+                "application/json", 
+                "text/json"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -1206,33 +1114,26 @@ namespace VirtoCommerce.Client.Api
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
             if (cartId != null) localVarPathParams.Add("cartId", Configuration.ApiClient.ParameterToString(cartId)); // path parameter
-            
-            
-            
-            
-            
 
-            
-    
+
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath, 
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
                 Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
-    
+
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (localVarStatusCode, "Error calling CartModuleGetPaymentMethods: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
                 throw new ApiException (localVarStatusCode, "Error calling CartModuleGetPaymentMethods: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
-    
+
             return new ApiResponse<List<VirtoCommerceCartModuleWebModelPaymentMethod>>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 (List<VirtoCommerceCartModuleWebModelPaymentMethod>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<VirtoCommerceCartModuleWebModelPaymentMethod>)));
             
         }
 
-        
         /// <summary>
         /// Get payment methods for shopping cart 
         /// </summary>
@@ -1255,11 +1156,10 @@ namespace VirtoCommerce.Client.Api
         public async System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceCartModuleWebModelPaymentMethod>>> CartModuleGetPaymentMethodsAsyncWithHttpInfo (string cartId)
         {
             // verify the required parameter 'cartId' is set
-            if (cartId == null) throw new ApiException(400, "Missing required parameter 'cartId' when calling CartModuleGetPaymentMethods");
-            
-    
+            if (cartId == null)
+                throw new ApiException(400, "Missing required parameter 'cartId' when calling ShoppingCartModuleApi->CartModuleGetPaymentMethods");
+
             var localVarPath = "/api/cart/carts/{cartId}/paymentMethods";
-    
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -1269,13 +1169,13 @@ namespace VirtoCommerce.Client.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
-                "application/json", "text/json"
+                "application/json", 
+                "text/json"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -1285,21 +1185,15 @@ namespace VirtoCommerce.Client.Api
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
             if (cartId != null) localVarPathParams.Add("cartId", Configuration.ApiClient.ParameterToString(cartId)); // path parameter
-            
-            
-            
-            
-            
 
-            
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath, 
-                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams, 
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
- 
+
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (localVarStatusCode, "Error calling CartModuleGetPaymentMethods: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
@@ -1310,12 +1204,12 @@ namespace VirtoCommerce.Client.Api
                 (List<VirtoCommerceCartModuleWebModelPaymentMethod>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<VirtoCommerceCartModuleWebModelPaymentMethod>)));
             
         }
-        
+
         /// <summary>
         /// Get payment methods for store 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="storeId">Store id</param> 
+        /// <param name="storeId">Store id</param>
         /// <returns>List&lt;VirtoCommerceCartModuleWebModelPaymentMethod&gt;</returns>
         public List<VirtoCommerceCartModuleWebModelPaymentMethod> CartModuleGetPaymentMethodsForStore (string storeId)
         {
@@ -1327,18 +1221,15 @@ namespace VirtoCommerce.Client.Api
         /// Get payment methods for store 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="storeId">Store id</param> 
+        /// <param name="storeId">Store id</param>
         /// <returns>ApiResponse of List&lt;VirtoCommerceCartModuleWebModelPaymentMethod&gt;</returns>
         public ApiResponse< List<VirtoCommerceCartModuleWebModelPaymentMethod> > CartModuleGetPaymentMethodsForStoreWithHttpInfo (string storeId)
         {
-            
             // verify the required parameter 'storeId' is set
             if (storeId == null)
                 throw new ApiException(400, "Missing required parameter 'storeId' when calling ShoppingCartModuleApi->CartModuleGetPaymentMethodsForStore");
-            
-    
+
             var localVarPath = "/api/cart/stores/{storeId}/paymentMethods";
-    
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -1348,13 +1239,13 @@ namespace VirtoCommerce.Client.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
-                "application/json", "text/json"
+                "application/json", 
+                "text/json"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -1364,33 +1255,26 @@ namespace VirtoCommerce.Client.Api
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
             if (storeId != null) localVarPathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
-            
-            
-            
-            
-            
 
-            
-    
+
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath, 
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
                 Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
-    
+
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (localVarStatusCode, "Error calling CartModuleGetPaymentMethodsForStore: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
                 throw new ApiException (localVarStatusCode, "Error calling CartModuleGetPaymentMethodsForStore: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
-    
+
             return new ApiResponse<List<VirtoCommerceCartModuleWebModelPaymentMethod>>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 (List<VirtoCommerceCartModuleWebModelPaymentMethod>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<VirtoCommerceCartModuleWebModelPaymentMethod>)));
             
         }
 
-        
         /// <summary>
         /// Get payment methods for store 
         /// </summary>
@@ -1413,11 +1297,10 @@ namespace VirtoCommerce.Client.Api
         public async System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceCartModuleWebModelPaymentMethod>>> CartModuleGetPaymentMethodsForStoreAsyncWithHttpInfo (string storeId)
         {
             // verify the required parameter 'storeId' is set
-            if (storeId == null) throw new ApiException(400, "Missing required parameter 'storeId' when calling CartModuleGetPaymentMethodsForStore");
-            
-    
+            if (storeId == null)
+                throw new ApiException(400, "Missing required parameter 'storeId' when calling ShoppingCartModuleApi->CartModuleGetPaymentMethodsForStore");
+
             var localVarPath = "/api/cart/stores/{storeId}/paymentMethods";
-    
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -1427,13 +1310,13 @@ namespace VirtoCommerce.Client.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
-                "application/json", "text/json"
+                "application/json", 
+                "text/json"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -1443,21 +1326,15 @@ namespace VirtoCommerce.Client.Api
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
             if (storeId != null) localVarPathParams.Add("storeId", Configuration.ApiClient.ParameterToString(storeId)); // path parameter
-            
-            
-            
-            
-            
 
-            
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath, 
-                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams, 
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
- 
+
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (localVarStatusCode, "Error calling CartModuleGetPaymentMethodsForStore: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
@@ -1468,12 +1345,12 @@ namespace VirtoCommerce.Client.Api
                 (List<VirtoCommerceCartModuleWebModelPaymentMethod>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<VirtoCommerceCartModuleWebModelPaymentMethod>)));
             
         }
-        
+
         /// <summary>
         /// Get shipping methods for shopping cart 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="cartId">Shopping cart id</param> 
+        /// <param name="cartId">Shopping cart id</param>
         /// <returns>List&lt;VirtoCommerceCartModuleWebModelShippingMethod&gt;</returns>
         public List<VirtoCommerceCartModuleWebModelShippingMethod> CartModuleGetShipmentMethods (string cartId)
         {
@@ -1485,18 +1362,15 @@ namespace VirtoCommerce.Client.Api
         /// Get shipping methods for shopping cart 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="cartId">Shopping cart id</param> 
+        /// <param name="cartId">Shopping cart id</param>
         /// <returns>ApiResponse of List&lt;VirtoCommerceCartModuleWebModelShippingMethod&gt;</returns>
         public ApiResponse< List<VirtoCommerceCartModuleWebModelShippingMethod> > CartModuleGetShipmentMethodsWithHttpInfo (string cartId)
         {
-            
             // verify the required parameter 'cartId' is set
             if (cartId == null)
                 throw new ApiException(400, "Missing required parameter 'cartId' when calling ShoppingCartModuleApi->CartModuleGetShipmentMethods");
-            
-    
+
             var localVarPath = "/api/cart/carts/{cartId}/shipmentMethods";
-    
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -1506,13 +1380,13 @@ namespace VirtoCommerce.Client.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
-                "application/json", "text/json"
+                "application/json", 
+                "text/json"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -1522,33 +1396,26 @@ namespace VirtoCommerce.Client.Api
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
             if (cartId != null) localVarPathParams.Add("cartId", Configuration.ApiClient.ParameterToString(cartId)); // path parameter
-            
-            
-            
-            
-            
 
-            
-    
+
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath, 
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
                 Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
-    
+
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (localVarStatusCode, "Error calling CartModuleGetShipmentMethods: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
                 throw new ApiException (localVarStatusCode, "Error calling CartModuleGetShipmentMethods: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
-    
+
             return new ApiResponse<List<VirtoCommerceCartModuleWebModelShippingMethod>>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 (List<VirtoCommerceCartModuleWebModelShippingMethod>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<VirtoCommerceCartModuleWebModelShippingMethod>)));
             
         }
 
-        
         /// <summary>
         /// Get shipping methods for shopping cart 
         /// </summary>
@@ -1571,11 +1438,10 @@ namespace VirtoCommerce.Client.Api
         public async System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceCartModuleWebModelShippingMethod>>> CartModuleGetShipmentMethodsAsyncWithHttpInfo (string cartId)
         {
             // verify the required parameter 'cartId' is set
-            if (cartId == null) throw new ApiException(400, "Missing required parameter 'cartId' when calling CartModuleGetShipmentMethods");
-            
-    
+            if (cartId == null)
+                throw new ApiException(400, "Missing required parameter 'cartId' when calling ShoppingCartModuleApi->CartModuleGetShipmentMethods");
+
             var localVarPath = "/api/cart/carts/{cartId}/shipmentMethods";
-    
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -1585,13 +1451,13 @@ namespace VirtoCommerce.Client.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
-                "application/json", "text/json"
+                "application/json", 
+                "text/json"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -1601,21 +1467,15 @@ namespace VirtoCommerce.Client.Api
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
             if (cartId != null) localVarPathParams.Add("cartId", Configuration.ApiClient.ParameterToString(cartId)); // path parameter
-            
-            
-            
-            
-            
 
-            
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath, 
-                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams, 
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
- 
+
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (localVarStatusCode, "Error calling CartModuleGetShipmentMethods: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
@@ -1626,12 +1486,12 @@ namespace VirtoCommerce.Client.Api
                 (List<VirtoCommerceCartModuleWebModelShippingMethod>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<VirtoCommerceCartModuleWebModelShippingMethod>)));
             
         }
-        
+
         /// <summary>
         /// Search for shopping carts by criteria 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="criteria">Search criteria</param> 
+        /// <param name="criteria">Search criteria</param>
         /// <returns>VirtoCommerceCartModuleWebModelSearchResult</returns>
         public VirtoCommerceCartModuleWebModelSearchResult CartModuleSearch (VirtoCommerceCartModuleWebModelSearchCriteria criteria)
         {
@@ -1643,18 +1503,15 @@ namespace VirtoCommerce.Client.Api
         /// Search for shopping carts by criteria 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="criteria">Search criteria</param> 
+        /// <param name="criteria">Search criteria</param>
         /// <returns>ApiResponse of VirtoCommerceCartModuleWebModelSearchResult</returns>
         public ApiResponse< VirtoCommerceCartModuleWebModelSearchResult > CartModuleSearchWithHttpInfo (VirtoCommerceCartModuleWebModelSearchCriteria criteria)
         {
-            
             // verify the required parameter 'criteria' is set
             if (criteria == null)
                 throw new ApiException(400, "Missing required parameter 'criteria' when calling ShoppingCartModuleApi->CartModuleSearch");
-            
-    
+
             var localVarPath = "/api/cart/search";
-    
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -1664,13 +1521,16 @@ namespace VirtoCommerce.Client.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                "application/json", "text/json", "application/x-www-form-urlencoded"
+                "application/json", 
+                "text/json", 
+                "application/x-www-form-urlencoded"
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
-                "application/json", "text/json"
+                "application/json", 
+                "text/json"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -1679,10 +1539,6 @@ namespace VirtoCommerce.Client.Api
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
-            
-            
-            
-            
             if (criteria.GetType() != typeof(byte[]))
             {
                 localVarPostBody = Configuration.ApiClient.Serialize(criteria); // http body (model) parameter
@@ -1692,27 +1548,25 @@ namespace VirtoCommerce.Client.Api
                 localVarPostBody = criteria; // byte array
             }
 
-            
-    
+
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath, 
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
                 Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
-    
+
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (localVarStatusCode, "Error calling CartModuleSearch: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
                 throw new ApiException (localVarStatusCode, "Error calling CartModuleSearch: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
-    
+
             return new ApiResponse<VirtoCommerceCartModuleWebModelSearchResult>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 (VirtoCommerceCartModuleWebModelSearchResult) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceCartModuleWebModelSearchResult)));
             
         }
 
-        
         /// <summary>
         /// Search for shopping carts by criteria 
         /// </summary>
@@ -1735,11 +1589,10 @@ namespace VirtoCommerce.Client.Api
         public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceCartModuleWebModelSearchResult>> CartModuleSearchAsyncWithHttpInfo (VirtoCommerceCartModuleWebModelSearchCriteria criteria)
         {
             // verify the required parameter 'criteria' is set
-            if (criteria == null) throw new ApiException(400, "Missing required parameter 'criteria' when calling CartModuleSearch");
-            
-    
+            if (criteria == null)
+                throw new ApiException(400, "Missing required parameter 'criteria' when calling ShoppingCartModuleApi->CartModuleSearch");
+
             var localVarPath = "/api/cart/search";
-    
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -1749,13 +1602,16 @@ namespace VirtoCommerce.Client.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                "application/json", "text/json", "application/x-www-form-urlencoded"
+                "application/json", 
+                "text/json", 
+                "application/x-www-form-urlencoded"
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
-                "application/json", "text/json"
+                "application/json", 
+                "text/json"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -1764,10 +1620,6 @@ namespace VirtoCommerce.Client.Api
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
-            
-            
-            
-            
             if (criteria.GetType() != typeof(byte[]))
             {
                 localVarPostBody = Configuration.ApiClient.Serialize(criteria); // http body (model) parameter
@@ -1777,15 +1629,14 @@ namespace VirtoCommerce.Client.Api
                 localVarPostBody = criteria; // byte array
             }
 
-            
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath, 
-                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams, 
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
- 
+
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (localVarStatusCode, "Error calling CartModuleSearch: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
@@ -1796,12 +1647,12 @@ namespace VirtoCommerce.Client.Api
                 (VirtoCommerceCartModuleWebModelSearchResult) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceCartModuleWebModelSearchResult)));
             
         }
-        
+
         /// <summary>
         /// Update shopping cart 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="cart">Shopping cart model</param> 
+        /// <param name="cart">Shopping cart model</param>
         /// <returns>VirtoCommerceCartModuleWebModelShoppingCart</returns>
         public VirtoCommerceCartModuleWebModelShoppingCart CartModuleUpdate (VirtoCommerceCartModuleWebModelShoppingCart cart)
         {
@@ -1813,18 +1664,15 @@ namespace VirtoCommerce.Client.Api
         /// Update shopping cart 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="cart">Shopping cart model</param> 
+        /// <param name="cart">Shopping cart model</param>
         /// <returns>ApiResponse of VirtoCommerceCartModuleWebModelShoppingCart</returns>
         public ApiResponse< VirtoCommerceCartModuleWebModelShoppingCart > CartModuleUpdateWithHttpInfo (VirtoCommerceCartModuleWebModelShoppingCart cart)
         {
-            
             // verify the required parameter 'cart' is set
             if (cart == null)
                 throw new ApiException(400, "Missing required parameter 'cart' when calling ShoppingCartModuleApi->CartModuleUpdate");
-            
-    
+
             var localVarPath = "/api/cart/carts";
-    
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -1834,13 +1682,16 @@ namespace VirtoCommerce.Client.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                "application/json", "text/json", "application/x-www-form-urlencoded"
+                "application/json", 
+                "text/json", 
+                "application/x-www-form-urlencoded"
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
-                "application/json", "text/json"
+                "application/json", 
+                "text/json"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -1849,10 +1700,6 @@ namespace VirtoCommerce.Client.Api
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
-            
-            
-            
-            
             if (cart.GetType() != typeof(byte[]))
             {
                 localVarPostBody = Configuration.ApiClient.Serialize(cart); // http body (model) parameter
@@ -1862,27 +1709,25 @@ namespace VirtoCommerce.Client.Api
                 localVarPostBody = cart; // byte array
             }
 
-            
-    
+
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath, 
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
                 Method.PUT, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
-    
+
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (localVarStatusCode, "Error calling CartModuleUpdate: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
                 throw new ApiException (localVarStatusCode, "Error calling CartModuleUpdate: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
-    
+
             return new ApiResponse<VirtoCommerceCartModuleWebModelShoppingCart>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 (VirtoCommerceCartModuleWebModelShoppingCart) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceCartModuleWebModelShoppingCart)));
             
         }
 
-        
         /// <summary>
         /// Update shopping cart 
         /// </summary>
@@ -1905,11 +1750,10 @@ namespace VirtoCommerce.Client.Api
         public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceCartModuleWebModelShoppingCart>> CartModuleUpdateAsyncWithHttpInfo (VirtoCommerceCartModuleWebModelShoppingCart cart)
         {
             // verify the required parameter 'cart' is set
-            if (cart == null) throw new ApiException(400, "Missing required parameter 'cart' when calling CartModuleUpdate");
-            
-    
+            if (cart == null)
+                throw new ApiException(400, "Missing required parameter 'cart' when calling ShoppingCartModuleApi->CartModuleUpdate");
+
             var localVarPath = "/api/cart/carts";
-    
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new Dictionary<String, String>();
             var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
@@ -1919,13 +1763,16 @@ namespace VirtoCommerce.Client.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                "application/json", "text/json", "application/x-www-form-urlencoded"
+                "application/json", 
+                "text/json", 
+                "application/x-www-form-urlencoded"
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
-                "application/json", "text/json"
+                "application/json", 
+                "text/json"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -1934,10 +1781,6 @@ namespace VirtoCommerce.Client.Api
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
-            
-            
-            
-            
             if (cart.GetType() != typeof(byte[]))
             {
                 localVarPostBody = Configuration.ApiClient.Serialize(cart); // http body (model) parameter
@@ -1947,15 +1790,14 @@ namespace VirtoCommerce.Client.Api
                 localVarPostBody = cart; // byte array
             }
 
-            
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath, 
-                Method.PUT, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams, 
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.PUT, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
- 
+
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
                 throw new ApiException (localVarStatusCode, "Error calling CartModuleUpdate: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
@@ -1966,7 +1808,6 @@ namespace VirtoCommerce.Client.Api
                 (VirtoCommerceCartModuleWebModelShoppingCart) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceCartModuleWebModelShoppingCart)));
             
         }
-        
+
     }
-    
 }

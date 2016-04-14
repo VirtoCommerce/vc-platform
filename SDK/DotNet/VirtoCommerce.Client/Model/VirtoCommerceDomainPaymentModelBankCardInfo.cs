@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,26 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceDomainPaymentModelBankCardInfo :  IEquatable<VirtoCommerceDomainPaymentModelBankCardInfo>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainPaymentModelBankCardInfo" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainPaymentModelBankCardInfo" />class.
-        /// </summary>
-        /// <param name="BankCardNumber">BankCardNumber.</param>
-        /// <param name="BankCardType">BankCardType.</param>
-        /// <param name="BankCardMonth">BankCardMonth.</param>
-        /// <param name="BankCardYear">BankCardYear.</param>
-        /// <param name="BankCardCVV2">BankCardCVV2.</param>
-
-        public VirtoCommerceDomainPaymentModelBankCardInfo()
-        {
-            this.BankCardNumber = BankCardNumber;
-            this.BankCardType = BankCardType;
-            this.BankCardMonth = BankCardMonth;
-            this.BankCardYear = BankCardYear;
-            this.BankCardCVV2 = BankCardCVV2;
-            
-        }
-
         /// <summary>
         /// Gets or Sets BankCardNumber
         /// </summary>
@@ -69,7 +47,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="bankCardCVV2", EmitDefaultValue=false)]
         public string BankCardCVV2 { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -83,7 +60,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  BankCardMonth: ").Append(BankCardMonth).Append("\n");
             sb.Append("  BankCardYear: ").Append(BankCardYear).Append("\n");
             sb.Append("  BankCardCVV2: ").Append(BankCardCVV2).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -158,27 +134,25 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.BankCardNumber != null)
                     hash = hash * 59 + this.BankCardNumber.GetHashCode();
-                
+
                 if (this.BankCardType != null)
                     hash = hash * 59 + this.BankCardType.GetHashCode();
-                
+
                 if (this.BankCardMonth != null)
                     hash = hash * 59 + this.BankCardMonth.GetHashCode();
-                
+
                 if (this.BankCardYear != null)
                     hash = hash * 59 + this.BankCardYear.GetHashCode();
-                
+
                 if (this.BankCardCVV2 != null)
                     hash = hash * 59 + this.BankCardCVV2.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

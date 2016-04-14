@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,26 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceDomainMarketingModelMarketingSearchCriteria :  IEquatable<VirtoCommerceDomainMarketingModelMarketingSearchCriteria>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainMarketingModelMarketingSearchCriteria" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainMarketingModelMarketingSearchCriteria" />class.
-        /// </summary>
-        /// <param name="FolderId">FolderId.</param>
-        /// <param name="ResponseGroup">ResponseGroup.</param>
-        /// <param name="Keyword">Keyword.</param>
-        /// <param name="Start">Start.</param>
-        /// <param name="Count">Count.</param>
-
-        public VirtoCommerceDomainMarketingModelMarketingSearchCriteria(string FolderId = null, string ResponseGroup = null, string Keyword = null, int? Start = null, int? Count = null)
-        {
-            this.FolderId = FolderId;
-            this.ResponseGroup = ResponseGroup;
-            this.Keyword = Keyword;
-            this.Start = Start;
-            this.Count = Count;
-            
-        }
-
         /// <summary>
         /// Gets or Sets FolderId
         /// </summary>
@@ -69,7 +47,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="count", EmitDefaultValue=false)]
         public int? Count { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -83,7 +60,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Keyword: ").Append(Keyword).Append("\n");
             sb.Append("  Start: ").Append(Start).Append("\n");
             sb.Append("  Count: ").Append(Count).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -158,27 +134,25 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.FolderId != null)
                     hash = hash * 59 + this.FolderId.GetHashCode();
-                
+
                 if (this.ResponseGroup != null)
                     hash = hash * 59 + this.ResponseGroup.GetHashCode();
-                
+
                 if (this.Keyword != null)
                     hash = hash * 59 + this.Keyword.GetHashCode();
-                
+
                 if (this.Start != null)
                     hash = hash * 59 + this.Start.GetHashCode();
-                
+
                 if (this.Count != null)
                     hash = hash * 59 + this.Count.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

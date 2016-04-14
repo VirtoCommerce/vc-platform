@@ -38,7 +38,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
             }
 
             // Fill outlines for products
-            if ((responseGroup & coreModel.CategoryResponseGroup.WithOutlines) == coreModel.CategoryResponseGroup.WithOutlines)
+            if (responseGroup.HasFlag(coreModel.CategoryResponseGroup.WithOutlines))
             {
                 _outlineService.FillOutlinesForObjects(result, catalogId);
             }

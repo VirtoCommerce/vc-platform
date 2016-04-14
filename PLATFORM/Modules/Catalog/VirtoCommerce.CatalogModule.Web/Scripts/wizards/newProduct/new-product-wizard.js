@@ -54,16 +54,12 @@
                 };
                 break;
             case 'seo':
-                initializeSEO(blade.item, function () {
-                    if (!_.any(blade.item.seoInfos)) {
-                        blade.item.seoInfos.push({ isActive: true });
-                    }
-
+                initializeSEO(blade.item, function (seoInfo) {
                     storesPromise.then(function (promiseData) {
                         newBlade = {
                             id: 'seoDetails',
-                            data: blade.item.seoInfos[0],
-                            isNew: false,
+                            data: seoInfo,
+                            isNew: !_.any(blade.item.seoInfos),
                             seoContainerObject: blade.item,
                             stores: promiseData,
                             languages: _.pluck(getCatalog().languages, 'languageCode'),
@@ -129,11 +125,10 @@
     }
 
     function initializeSEO(item, callback) {
-        if (!item.seoInfos)
-            item.seoInfos = [];
-        var data = item.seoInfos;
-        var seoLanguages = _.pluck(getCatalog().languages, 'languageCode');
-        if (data.length < seoLanguages.length) {
+        if (_.any(item.seoInfos)) {
+            callback(item.seoInfos[0]);
+        } else {
+            var retVal = { isActive: true };
             var stringForSlug = item.name;
             _.each(item.properties, function (prop) {
                 _.each(prop.values, function (val) {
@@ -142,25 +137,14 @@
             });
 
             if (stringForSlug) {
-                _.each(seoLanguages, function (lang) {
-                    if (_.every(data, function (seoInfo) { return seoInfo.languageCode.toLowerCase().indexOf(lang.toLowerCase()) < 0; })) {
-                        data.push({ isActive: true, languageCode: lang });
-                    }
-                });
-
                 $http.get('api/catalog/getslug?text=' + stringForSlug)
                     .then(function (results) {
-                        _.each(data, function (seo) {
-                            if (angular.isUndefined(seo.semanticUrl)) {
-                                seo.semanticUrl = results.data;
-                            }
-                        });
-                        callback();
+                        retVal.semanticUrl = results.data;
+                        callback(retVal);
                     });
             } else
-                callback();
-        } else
-            callback();
+                callback(retVal);
+        }
     }
 
     $scope.$watch('blade.item.properties', function (currentEntities) {

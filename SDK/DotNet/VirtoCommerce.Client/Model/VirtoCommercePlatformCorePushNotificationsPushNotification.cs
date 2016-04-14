@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,32 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommercePlatformCorePushNotificationsPushNotification :  IEquatable<VirtoCommercePlatformCorePushNotificationsPushNotification>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCorePushNotificationsPushNotification" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCorePushNotificationsPushNotification" />class.
-        /// </summary>
-        /// <param name="Id">Id.</param>
-        /// <param name="Creator">Creator.</param>
-        /// <param name="Created">Created.</param>
-        /// <param name="IsNew">IsNew.</param>
-        /// <param name="NotifyType">NotifyType.</param>
-        /// <param name="Description">Description.</param>
-        /// <param name="Title">Title.</param>
-        /// <param name="RepeatCount">RepeatCount.</param>
-
-        public VirtoCommercePlatformCorePushNotificationsPushNotification(string Id = null, string Creator = null, DateTime? Created = null, bool? IsNew = null, string NotifyType = null, string Description = null, string Title = null, int? RepeatCount = null)
-        {
-            this.Id = Id;
-            this.Creator = Creator;
-            this.Created = Created;
-            this.IsNew = IsNew;
-            this.NotifyType = NotifyType;
-            this.Description = Description;
-            this.Title = Title;
-            this.RepeatCount = RepeatCount;
-            
-        }
-
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
@@ -93,7 +65,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="repeatCount", EmitDefaultValue=false)]
         public int? RepeatCount { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -110,7 +81,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Description: ").Append(Description).Append("\n");
             sb.Append("  Title: ").Append(Title).Append("\n");
             sb.Append("  RepeatCount: ").Append(RepeatCount).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -200,36 +170,34 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 if (this.Creator != null)
                     hash = hash * 59 + this.Creator.GetHashCode();
-                
+
                 if (this.Created != null)
                     hash = hash * 59 + this.Created.GetHashCode();
-                
+
                 if (this.IsNew != null)
                     hash = hash * 59 + this.IsNew.GetHashCode();
-                
+
                 if (this.NotifyType != null)
                     hash = hash * 59 + this.NotifyType.GetHashCode();
-                
+
                 if (this.Description != null)
                     hash = hash * 59 + this.Description.GetHashCode();
-                
+
                 if (this.Title != null)
                     hash = hash * 59 + this.Title.GetHashCode();
-                
+
                 if (this.RepeatCount != null)
                     hash = hash * 59 + this.RepeatCount.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

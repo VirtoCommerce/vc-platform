@@ -115,6 +115,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			retVal.TaxDetails = cart.TaxDetails;
             retVal.Tax = cart.TaxTotal;
             retVal.TaxIncluded = cart.TaxIncluded ?? false;
+            retVal.Sum = cart.Total;
 			return retVal;
 		}
 

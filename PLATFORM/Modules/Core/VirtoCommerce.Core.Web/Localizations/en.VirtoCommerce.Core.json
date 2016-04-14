@@ -96,9 +96,10 @@
       "seo-list": {
         "subtitle": "Manage SEOs",
         "labels": {
-          "duplicates-found": "There were some conflicting Semantic URLs found! Click to resolve.",
+          "duplicates-found": "There are {{count}} conflicting Semantic URLs!",
+          "resolve-duplicates": "Resolve conflicts",
           "language-code": "Language",
-          "store": "Store",
+          "container": "Container",
           "semanticUrl": "Semantic URL"
         }
       },
@@ -107,7 +108,7 @@
         "subtitle": "SEO details",
         "labels": {
           "is-active": "Is active",
-          "store": "Store",
+          "store": "Store (Container)",
           "language": "Language",
           "url-keyword": "URL keyword",
           "page-title": "Page title",
@@ -123,11 +124,16 @@
           "alternative-text": "Enter text"
         },
         "validations": {
-          "store-duplicate": "SEO with same store found",
-          "language-duplicate": "SEO with same language found",
           "url-keyword-required": "Required",
           "url-keyword-invalid": "Invalid characters in URL found",
           "url-keyword-duplicate": "Duplicate URL found"
+        }
+      },
+      "seo-duplicates": {
+        "subtitle": "SEO conflicts",
+        "labels": {
+          "semanticUrl": "Semantic URL",
+          "container": "Container"
         }
       }
     },

@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,28 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceContentWebModelsMenuLinkList :  IEquatable<VirtoCommerceContentWebModelsMenuLinkList>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceContentWebModelsMenuLinkList" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceContentWebModelsMenuLinkList" />class.
-        /// </summary>
-        /// <param name="Id">Id.</param>
-        /// <param name="Name">Name of menu link list, can be used as title of list in frontend.</param>
-        /// <param name="StoreId">Store identifier, for which the list belongs.</param>
-        /// <param name="Language">Locale of this menu link list.</param>
-        /// <param name="MenuLinks">MenuLinks.</param>
-        /// <param name="SecurityScopes">SecurityScopes.</param>
-
-        public VirtoCommerceContentWebModelsMenuLinkList(string Id = null, string Name = null, string StoreId = null, string Language = null, List<VirtoCommerceContentWebModelsMenuLink> MenuLinks = null, List<string> SecurityScopes = null)
-        {
-            this.Id = Id;
-            this.Name = Name;
-            this.StoreId = StoreId;
-            this.Language = Language;
-            this.MenuLinks = MenuLinks;
-            this.SecurityScopes = SecurityScopes;
-            
-        }
-
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
@@ -80,7 +56,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="securityScopes", EmitDefaultValue=false)]
         public List<string> SecurityScopes { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -95,7 +70,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Language: ").Append(Language).Append("\n");
             sb.Append("  MenuLinks: ").Append(MenuLinks).Append("\n");
             sb.Append("  SecurityScopes: ").Append(SecurityScopes).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -175,30 +149,28 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
-                
+
                 if (this.StoreId != null)
                     hash = hash * 59 + this.StoreId.GetHashCode();
-                
+
                 if (this.Language != null)
                     hash = hash * 59 + this.Language.GetHashCode();
-                
+
                 if (this.MenuLinks != null)
                     hash = hash * 59 + this.MenuLinks.GetHashCode();
-                
+
                 if (this.SecurityScopes != null)
                     hash = hash * 59 + this.SecurityScopes.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

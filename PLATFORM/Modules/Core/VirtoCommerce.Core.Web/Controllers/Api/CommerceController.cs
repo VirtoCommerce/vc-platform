@@ -161,6 +161,19 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
             return Ok(new PostProcessPaymentResult { ErrorMessage = "cancel payment" });
         }
 
+        /// <summary>
+        /// Batch create or update seo infos
+        /// </summary>
+        /// <param name="seoInfos"></param>
+        /// <returns></returns>
+        [HttpPut]
+        [ResponseType(typeof(void))]
+        [Route("seoinfos/batchupdate")]
+        public IHttpActionResult BatchUpdateSeoInfos(coreModel.SeoInfo[] seoInfos)
+        {
+            _commerceService.UpsertSeoInfos(seoInfos);
+            return Ok();
+        }
 
         [HttpGet]
         [ResponseType(typeof(coreModel.SeoInfo[]))]

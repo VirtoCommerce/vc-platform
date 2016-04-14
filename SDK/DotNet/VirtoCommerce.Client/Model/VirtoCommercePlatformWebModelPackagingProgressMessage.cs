@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,20 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommercePlatformWebModelPackagingProgressMessage :  IEquatable<VirtoCommercePlatformWebModelPackagingProgressMessage>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelPackagingProgressMessage" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelPackagingProgressMessage" />class.
-        /// </summary>
-        /// <param name="Message">Message.</param>
-        /// <param name="Level">Level.</param>
-
-        public VirtoCommercePlatformWebModelPackagingProgressMessage(string Message = null, string Level = null)
-        {
-            this.Message = Message;
-            this.Level = Level;
-            
-        }
-
         /// <summary>
         /// Gets or Sets Message
         /// </summary>
@@ -45,7 +29,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="level", EmitDefaultValue=false)]
         public string Level { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -56,7 +39,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("class VirtoCommercePlatformWebModelPackagingProgressMessage {\n");
             sb.Append("  Message: ").Append(Message).Append("\n");
             sb.Append("  Level: ").Append(Level).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -116,18 +98,16 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Message != null)
                     hash = hash * 59 + this.Message.GetHashCode();
-                
+
                 if (this.Level != null)
                     hash = hash * 59 + this.Level.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

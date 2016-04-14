@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,102 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceCartModuleWebModelLineItem :  IEquatable<VirtoCommerceCartModuleWebModelLineItem>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceCartModuleWebModelLineItem" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceCartModuleWebModelLineItem" />class.
-        /// </summary>
-        /// <param name="ProductId">Gets or sets the value of product id.</param>
-        /// <param name="CatalogId">Gets or sets the value of catalog id.</param>
-        /// <param name="CategoryId">Gets or sets the value of category id.</param>
-        /// <param name="Sku">Gets or sets the value of product SKU.</param>
-        /// <param name="ProductType">Gets or sets the value of product type (Digital, physical etc).</param>
-        /// <param name="Name">Gets or sets the value of line item name.</param>
-        /// <param name="Quantity">Gets or sets the value of line item quantity.</param>
-        /// <param name="Currency">Gets or sets the value of line item currency.</param>
-        /// <param name="WarehouseLocation">Gets or sets the value of line item warehouse location.</param>
-        /// <param name="ShipmentMethodCode">Gets or sets the value of line item shipping method code.</param>
-        /// <param name="RequiredShipping">Gets or sets the requirement for line item shipping.</param>
-        /// <param name="ThumbnailImageUrl">Gets or sets the value of line item thumbnail image absolute URL.</param>
-        /// <param name="ImageUrl">Gets or sets the value of line item image absolute URL.</param>
-        /// <param name="IsGift">Gets or sets the flag of line item is a gift.</param>
-        /// <param name="Discounts">Gets or sets the collection of line item discounts.</param>
-        /// <param name="LanguageCode">Gets or sets the value of language code.</param>
-        /// <param name="Comment">Gets or sets the value of line item comment.</param>
-        /// <param name="IsReccuring">Gets or sets the flag of line item is recurring.</param>
-        /// <param name="TaxIncluded">Gets or sets flag of line item has tax.</param>
-        /// <param name="VolumetricWeight">Gets or sets the value of line item volumetric weight.</param>
-        /// <param name="WeightUnit">Gets or sets the value of line item weight unit.</param>
-        /// <param name="Weight">Gets or sets the value of line item weight.</param>
-        /// <param name="MeasureUnit">Gets or sets the value of line item measurement unit.</param>
-        /// <param name="Height">Gets or sets the value of line item height.</param>
-        /// <param name="Length">Gets or sets the value of line item length.</param>
-        /// <param name="Width">Gets or sets the value of line item width.</param>
-        /// <param name="ValidationType">Represent any line item validation type (noPriceValidate, noQuantityValidate etc) this value can be used in storefront \r\n            to select appropriate validation strategy.</param>
-        /// <param name="PriceId">Price id which that was used in the formation of this line item.</param>
-        /// <param name="ListPrice">Gets or sets the value of line item original price.</param>
-        /// <param name="SalePrice">Gets or sets the value of line item sale price (include static discount).</param>
-        /// <param name="PlacedPrice">Gets or sets the value of line item actual price (include all types of discounts).</param>
-        /// <param name="ExtendedPrice">Gets or sets the value of line item subtotal price (actual price * line item quantity).</param>
-        /// <param name="DiscountTotal">Gets or sets the value of line item total discount amount.</param>
-        /// <param name="TaxTotal">Gets or sets the value of line item total tax amount.</param>
-        /// <param name="TaxType">Gets or sets the value of line item tax type.</param>
-        /// <param name="TaxDetails">Gets or sets the collection of line item tax detalization lines.</param>
-        /// <param name="ObjectType">Used for dynamic properties management, contains object type string.</param>
-        /// <param name="DynamicProperties">Dynamic properties collections.</param>
-        /// <param name="CreatedDate">CreatedDate.</param>
-        /// <param name="ModifiedDate">ModifiedDate.</param>
-        /// <param name="CreatedBy">CreatedBy.</param>
-        /// <param name="ModifiedBy">ModifiedBy.</param>
-        /// <param name="Id">Id.</param>
-
-        public VirtoCommerceCartModuleWebModelLineItem(string ProductId = null, string CatalogId = null, string CategoryId = null, string Sku = null, string ProductType = null, string Name = null, int? Quantity = null, string Currency = null, string WarehouseLocation = null, string ShipmentMethodCode = null, bool? RequiredShipping = null, string ThumbnailImageUrl = null, string ImageUrl = null, bool? IsGift = null, List<VirtoCommerceCartModuleWebModelDiscount> Discounts = null, string LanguageCode = null, string Comment = null, bool? IsReccuring = null, bool? TaxIncluded = null, double? VolumetricWeight = null, string WeightUnit = null, double? Weight = null, string MeasureUnit = null, double? Height = null, double? Length = null, double? Width = null, string ValidationType = null, string PriceId = null, double? ListPrice = null, double? SalePrice = null, double? PlacedPrice = null, double? ExtendedPrice = null, double? DiscountTotal = null, double? TaxTotal = null, string TaxType = null, List<VirtoCommerceDomainCommerceModelTaxDetail> TaxDetails = null, string ObjectType = null, List<VirtoCommercePlatformCoreDynamicPropertiesDynamicObjectProperty> DynamicProperties = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
-        {
-            this.ProductId = ProductId;
-            this.CatalogId = CatalogId;
-            this.CategoryId = CategoryId;
-            this.Sku = Sku;
-            this.ProductType = ProductType;
-            this.Name = Name;
-            this.Quantity = Quantity;
-            this.Currency = Currency;
-            this.WarehouseLocation = WarehouseLocation;
-            this.ShipmentMethodCode = ShipmentMethodCode;
-            this.RequiredShipping = RequiredShipping;
-            this.ThumbnailImageUrl = ThumbnailImageUrl;
-            this.ImageUrl = ImageUrl;
-            this.IsGift = IsGift;
-            this.Discounts = Discounts;
-            this.LanguageCode = LanguageCode;
-            this.Comment = Comment;
-            this.IsReccuring = IsReccuring;
-            this.TaxIncluded = TaxIncluded;
-            this.VolumetricWeight = VolumetricWeight;
-            this.WeightUnit = WeightUnit;
-            this.Weight = Weight;
-            this.MeasureUnit = MeasureUnit;
-            this.Height = Height;
-            this.Length = Length;
-            this.Width = Width;
-            this.ValidationType = ValidationType;
-            this.PriceId = PriceId;
-            this.ListPrice = ListPrice;
-            this.SalePrice = SalePrice;
-            this.PlacedPrice = PlacedPrice;
-            this.ExtendedPrice = ExtendedPrice;
-            this.DiscountTotal = DiscountTotal;
-            this.TaxTotal = TaxTotal;
-            this.TaxType = TaxType;
-            this.TaxDetails = TaxDetails;
-            this.ObjectType = ObjectType;
-            this.DynamicProperties = DynamicProperties;
-            this.CreatedDate = CreatedDate;
-            this.ModifiedDate = ModifiedDate;
-            this.CreatedBy = CreatedBy;
-            this.ModifiedBy = ModifiedBy;
-            this.Id = Id;
-            
-        }
-
         /// <summary>
         /// Gets or sets the value of product id
         /// </summary>
@@ -411,7 +313,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -463,7 +364,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  CreatedBy: ").Append(CreatedBy).Append("\n");
             sb.Append("  ModifiedBy: ").Append(ModifiedBy).Append("\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -728,141 +628,139 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.ProductId != null)
                     hash = hash * 59 + this.ProductId.GetHashCode();
-                
+
                 if (this.CatalogId != null)
                     hash = hash * 59 + this.CatalogId.GetHashCode();
-                
+
                 if (this.CategoryId != null)
                     hash = hash * 59 + this.CategoryId.GetHashCode();
-                
+
                 if (this.Sku != null)
                     hash = hash * 59 + this.Sku.GetHashCode();
-                
+
                 if (this.ProductType != null)
                     hash = hash * 59 + this.ProductType.GetHashCode();
-                
+
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
-                
+
                 if (this.Quantity != null)
                     hash = hash * 59 + this.Quantity.GetHashCode();
-                
+
                 if (this.Currency != null)
                     hash = hash * 59 + this.Currency.GetHashCode();
-                
+
                 if (this.WarehouseLocation != null)
                     hash = hash * 59 + this.WarehouseLocation.GetHashCode();
-                
+
                 if (this.ShipmentMethodCode != null)
                     hash = hash * 59 + this.ShipmentMethodCode.GetHashCode();
-                
+
                 if (this.RequiredShipping != null)
                     hash = hash * 59 + this.RequiredShipping.GetHashCode();
-                
+
                 if (this.ThumbnailImageUrl != null)
                     hash = hash * 59 + this.ThumbnailImageUrl.GetHashCode();
-                
+
                 if (this.ImageUrl != null)
                     hash = hash * 59 + this.ImageUrl.GetHashCode();
-                
+
                 if (this.IsGift != null)
                     hash = hash * 59 + this.IsGift.GetHashCode();
-                
+
                 if (this.Discounts != null)
                     hash = hash * 59 + this.Discounts.GetHashCode();
-                
+
                 if (this.LanguageCode != null)
                     hash = hash * 59 + this.LanguageCode.GetHashCode();
-                
+
                 if (this.Comment != null)
                     hash = hash * 59 + this.Comment.GetHashCode();
-                
+
                 if (this.IsReccuring != null)
                     hash = hash * 59 + this.IsReccuring.GetHashCode();
-                
+
                 if (this.TaxIncluded != null)
                     hash = hash * 59 + this.TaxIncluded.GetHashCode();
-                
+
                 if (this.VolumetricWeight != null)
                     hash = hash * 59 + this.VolumetricWeight.GetHashCode();
-                
+
                 if (this.WeightUnit != null)
                     hash = hash * 59 + this.WeightUnit.GetHashCode();
-                
+
                 if (this.Weight != null)
                     hash = hash * 59 + this.Weight.GetHashCode();
-                
+
                 if (this.MeasureUnit != null)
                     hash = hash * 59 + this.MeasureUnit.GetHashCode();
-                
+
                 if (this.Height != null)
                     hash = hash * 59 + this.Height.GetHashCode();
-                
+
                 if (this.Length != null)
                     hash = hash * 59 + this.Length.GetHashCode();
-                
+
                 if (this.Width != null)
                     hash = hash * 59 + this.Width.GetHashCode();
-                
+
                 if (this.ValidationType != null)
                     hash = hash * 59 + this.ValidationType.GetHashCode();
-                
+
                 if (this.PriceId != null)
                     hash = hash * 59 + this.PriceId.GetHashCode();
-                
+
                 if (this.ListPrice != null)
                     hash = hash * 59 + this.ListPrice.GetHashCode();
-                
+
                 if (this.SalePrice != null)
                     hash = hash * 59 + this.SalePrice.GetHashCode();
-                
+
                 if (this.PlacedPrice != null)
                     hash = hash * 59 + this.PlacedPrice.GetHashCode();
-                
+
                 if (this.ExtendedPrice != null)
                     hash = hash * 59 + this.ExtendedPrice.GetHashCode();
-                
+
                 if (this.DiscountTotal != null)
                     hash = hash * 59 + this.DiscountTotal.GetHashCode();
-                
+
                 if (this.TaxTotal != null)
                     hash = hash * 59 + this.TaxTotal.GetHashCode();
-                
+
                 if (this.TaxType != null)
                     hash = hash * 59 + this.TaxType.GetHashCode();
-                
+
                 if (this.TaxDetails != null)
                     hash = hash * 59 + this.TaxDetails.GetHashCode();
-                
+
                 if (this.ObjectType != null)
                     hash = hash * 59 + this.ObjectType.GetHashCode();
-                
+
                 if (this.DynamicProperties != null)
                     hash = hash * 59 + this.DynamicProperties.GetHashCode();
-                
+
                 if (this.CreatedDate != null)
                     hash = hash * 59 + this.CreatedDate.GetHashCode();
-                
+
                 if (this.ModifiedDate != null)
                     hash = hash * 59 + this.ModifiedDate.GetHashCode();
-                
+
                 if (this.CreatedBy != null)
                     hash = hash * 59 + this.CreatedBy.GetHashCode();
-                
+
                 if (this.ModifiedBy != null)
                     hash = hash * 59 + this.ModifiedBy.GetHashCode();
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

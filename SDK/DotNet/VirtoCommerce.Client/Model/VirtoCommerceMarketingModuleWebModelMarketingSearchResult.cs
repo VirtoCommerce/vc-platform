@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,28 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceMarketingModuleWebModelMarketingSearchResult :  IEquatable<VirtoCommerceMarketingModuleWebModelMarketingSearchResult>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceMarketingModuleWebModelMarketingSearchResult" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceMarketingModuleWebModelMarketingSearchResult" />class.
-        /// </summary>
-        /// <param name="TotalCount">TotalCount.</param>
-        /// <param name="Promotions">Promotions.</param>
-        /// <param name="ContentPlaces">ContentPlaces.</param>
-        /// <param name="ContentItems">ContentItems.</param>
-        /// <param name="ContentPublications">ContentPublications.</param>
-        /// <param name="ContentFolders">ContentFolders.</param>
-
-        public VirtoCommerceMarketingModuleWebModelMarketingSearchResult(int? TotalCount = null, List<VirtoCommerceMarketingModuleWebModelPromotion> Promotions = null, List<VirtoCommerceMarketingModuleWebModelDynamicContentPlace> ContentPlaces = null, List<VirtoCommerceMarketingModuleWebModelDynamicContentItem> ContentItems = null, List<VirtoCommerceMarketingModuleWebModelDynamicContentPublication> ContentPublications = null, List<VirtoCommerceMarketingModuleWebModelDynamicContentFolder> ContentFolders = null)
-        {
-            this.TotalCount = TotalCount;
-            this.Promotions = Promotions;
-            this.ContentPlaces = ContentPlaces;
-            this.ContentItems = ContentItems;
-            this.ContentPublications = ContentPublications;
-            this.ContentFolders = ContentFolders;
-            
-        }
-
         /// <summary>
         /// Gets or Sets TotalCount
         /// </summary>
@@ -77,7 +53,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="contentFolders", EmitDefaultValue=false)]
         public List<VirtoCommerceMarketingModuleWebModelDynamicContentFolder> ContentFolders { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -92,7 +67,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  ContentItems: ").Append(ContentItems).Append("\n");
             sb.Append("  ContentPublications: ").Append(ContentPublications).Append("\n");
             sb.Append("  ContentFolders: ").Append(ContentFolders).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -172,30 +146,28 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.TotalCount != null)
                     hash = hash * 59 + this.TotalCount.GetHashCode();
-                
+
                 if (this.Promotions != null)
                     hash = hash * 59 + this.Promotions.GetHashCode();
-                
+
                 if (this.ContentPlaces != null)
                     hash = hash * 59 + this.ContentPlaces.GetHashCode();
-                
+
                 if (this.ContentItems != null)
                     hash = hash * 59 + this.ContentItems.GetHashCode();
-                
+
                 if (this.ContentPublications != null)
                     hash = hash * 59 + this.ContentPublications.GetHashCode();
-                
+
                 if (this.ContentFolders != null)
                     hash = hash * 59 + this.ContentFolders.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

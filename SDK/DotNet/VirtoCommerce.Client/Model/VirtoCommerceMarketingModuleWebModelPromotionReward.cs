@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,50 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceMarketingModuleWebModelPromotionReward :  IEquatable<VirtoCommerceMarketingModuleWebModelPromotionReward>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceMarketingModuleWebModelPromotionReward" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceMarketingModuleWebModelPromotionReward" />class.
-        /// </summary>
-        /// <param name="IsValid">Gets or sets the flag of promotion reward is valid. Also used as a flag for applicability (applied or potential).</param>
-        /// <param name="Description">Gets or sets the value of promotion reward description.</param>
-        /// <param name="CouponAmount">Gets or sets the value of coupon amount.</param>
-        /// <param name="Coupon">Gets or sets the value of coupon code.</param>
-        /// <param name="CouponMinOrderAmount">Gets or sets the value of minimum order total cost for applying coupon.</param>
-        /// <param name="PromotionId">Gets or sets the value of promotion id.</param>
-        /// <param name="Promotion">Gets or sets the promotion.</param>
-        /// <param name="RewardType">Gets or sets the value of promotion reward type.</param>
-        /// <param name="AmountType">Gets or sets the value of promotion reward amount type.</param>
-        /// <param name="Amount">Gets or sets the value of promotion reward amount.</param>
-        /// <param name="Quantity">Gets or sets the value of line item quantity for applying promotion reward.</param>
-        /// <param name="LineItemId">Gets or sets the value of line item id.</param>
-        /// <param name="ProductId">Gets or sets the value of product id.</param>
-        /// <param name="CategoryId">Gets or sets the value of category id.</param>
-        /// <param name="MeasureUnit">Gets or sets the value of measurement unit.</param>
-        /// <param name="ImageUrl">Gets or sets the value of promotion reward logo absolute URL.</param>
-        /// <param name="ShippingMethod">Gets or sets the value of reward shipping method code.</param>
-
-        public VirtoCommerceMarketingModuleWebModelPromotionReward(bool? IsValid = null, string Description = null, double? CouponAmount = null, string Coupon = null, double? CouponMinOrderAmount = null, string PromotionId = null, VirtoCommerceMarketingModuleWebModelPromotion Promotion = null, string RewardType = null, string AmountType = null, double? Amount = null, int? Quantity = null, string LineItemId = null, string ProductId = null, string CategoryId = null, string MeasureUnit = null, string ImageUrl = null, string ShippingMethod = null)
-        {
-            this.IsValid = IsValid;
-            this.Description = Description;
-            this.CouponAmount = CouponAmount;
-            this.Coupon = Coupon;
-            this.CouponMinOrderAmount = CouponMinOrderAmount;
-            this.PromotionId = PromotionId;
-            this.Promotion = Promotion;
-            this.RewardType = RewardType;
-            this.AmountType = AmountType;
-            this.Amount = Amount;
-            this.Quantity = Quantity;
-            this.LineItemId = LineItemId;
-            this.ProductId = ProductId;
-            this.CategoryId = CategoryId;
-            this.MeasureUnit = MeasureUnit;
-            this.ImageUrl = ImageUrl;
-            this.ShippingMethod = ShippingMethod;
-            
-        }
-
         /// <summary>
         /// Gets or sets the flag of promotion reward is valid. Also used as a flag for applicability (applied or potential)
         /// </summary>
@@ -182,7 +136,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="shippingMethod", EmitDefaultValue=false)]
         public string ShippingMethod { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -208,7 +161,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  MeasureUnit: ").Append(MeasureUnit).Append("\n");
             sb.Append("  ImageUrl: ").Append(ImageUrl).Append("\n");
             sb.Append("  ShippingMethod: ").Append(ShippingMethod).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -343,63 +295,61 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.IsValid != null)
                     hash = hash * 59 + this.IsValid.GetHashCode();
-                
+
                 if (this.Description != null)
                     hash = hash * 59 + this.Description.GetHashCode();
-                
+
                 if (this.CouponAmount != null)
                     hash = hash * 59 + this.CouponAmount.GetHashCode();
-                
+
                 if (this.Coupon != null)
                     hash = hash * 59 + this.Coupon.GetHashCode();
-                
+
                 if (this.CouponMinOrderAmount != null)
                     hash = hash * 59 + this.CouponMinOrderAmount.GetHashCode();
-                
+
                 if (this.PromotionId != null)
                     hash = hash * 59 + this.PromotionId.GetHashCode();
-                
+
                 if (this.Promotion != null)
                     hash = hash * 59 + this.Promotion.GetHashCode();
-                
+
                 if (this.RewardType != null)
                     hash = hash * 59 + this.RewardType.GetHashCode();
-                
+
                 if (this.AmountType != null)
                     hash = hash * 59 + this.AmountType.GetHashCode();
-                
+
                 if (this.Amount != null)
                     hash = hash * 59 + this.Amount.GetHashCode();
-                
+
                 if (this.Quantity != null)
                     hash = hash * 59 + this.Quantity.GetHashCode();
-                
+
                 if (this.LineItemId != null)
                     hash = hash * 59 + this.LineItemId.GetHashCode();
-                
+
                 if (this.ProductId != null)
                     hash = hash * 59 + this.ProductId.GetHashCode();
-                
+
                 if (this.CategoryId != null)
                     hash = hash * 59 + this.CategoryId.GetHashCode();
-                
+
                 if (this.MeasureUnit != null)
                     hash = hash * 59 + this.MeasureUnit.GetHashCode();
-                
+
                 if (this.ImageUrl != null)
                     hash = hash * 59 + this.ImageUrl.GetHashCode();
-                
+
                 if (this.ShippingMethod != null)
                     hash = hash * 59 + this.ShippingMethod.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

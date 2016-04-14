@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -19,46 +17,6 @@ namespace VirtoCommerce.Client.Model
     [DataContract]
     public partial class VirtoCommerceMarketingModuleWebModelDynamicContentPublication :  IEquatable<VirtoCommerceMarketingModuleWebModelDynamicContentPublication>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceMarketingModuleWebModelDynamicContentPublication" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceMarketingModuleWebModelDynamicContentPublication" />class.
-        /// </summary>
-        /// <param name="Name">Name.</param>
-        /// <param name="Description">Description.</param>
-        /// <param name="Priority">Priority used for chose publication in combination.</param>
-        /// <param name="IsActive">IsActive.</param>
-        /// <param name="StoreId">Store where the publication is active.</param>
-        /// <param name="StartDate">StartDate.</param>
-        /// <param name="EndDate">EndDate.</param>
-        /// <param name="ContentItems">ContentItems.</param>
-        /// <param name="ContentPlaces">ContentPlaces.</param>
-        /// <param name="DynamicExpression">Dynamic conditions tree determine the applicability of this publication.</param>
-        /// <param name="CreatedDate">CreatedDate.</param>
-        /// <param name="ModifiedDate">ModifiedDate.</param>
-        /// <param name="CreatedBy">CreatedBy.</param>
-        /// <param name="ModifiedBy">ModifiedBy.</param>
-        /// <param name="Id">Id.</param>
-
-        public VirtoCommerceMarketingModuleWebModelDynamicContentPublication(string Name = null, string Description = null, int? Priority = null, bool? IsActive = null, string StoreId = null, DateTime? StartDate = null, DateTime? EndDate = null, List<VirtoCommerceMarketingModuleWebModelDynamicContentItem> ContentItems = null, List<VirtoCommerceMarketingModuleWebModelDynamicContentPlace> ContentPlaces = null, VirtoCommerceDomainCommonConditionExpressionTree DynamicExpression = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
-        {
-            this.Name = Name;
-            this.Description = Description;
-            this.Priority = Priority;
-            this.IsActive = IsActive;
-            this.StoreId = StoreId;
-            this.StartDate = StartDate;
-            this.EndDate = EndDate;
-            this.ContentItems = ContentItems;
-            this.ContentPlaces = ContentPlaces;
-            this.DynamicExpression = DynamicExpression;
-            this.CreatedDate = CreatedDate;
-            this.ModifiedDate = ModifiedDate;
-            this.CreatedBy = CreatedBy;
-            this.ModifiedBy = ModifiedBy;
-            this.Id = Id;
-            
-        }
-
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
@@ -152,7 +110,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -176,7 +133,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  CreatedBy: ").Append(CreatedBy).Append("\n");
             sb.Append("  ModifiedBy: ").Append(ModifiedBy).Append("\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -301,57 +257,55 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
-                
+
                 if (this.Description != null)
                     hash = hash * 59 + this.Description.GetHashCode();
-                
+
                 if (this.Priority != null)
                     hash = hash * 59 + this.Priority.GetHashCode();
-                
+
                 if (this.IsActive != null)
                     hash = hash * 59 + this.IsActive.GetHashCode();
-                
+
                 if (this.StoreId != null)
                     hash = hash * 59 + this.StoreId.GetHashCode();
-                
+
                 if (this.StartDate != null)
                     hash = hash * 59 + this.StartDate.GetHashCode();
-                
+
                 if (this.EndDate != null)
                     hash = hash * 59 + this.EndDate.GetHashCode();
-                
+
                 if (this.ContentItems != null)
                     hash = hash * 59 + this.ContentItems.GetHashCode();
-                
+
                 if (this.ContentPlaces != null)
                     hash = hash * 59 + this.ContentPlaces.GetHashCode();
-                
+
                 if (this.DynamicExpression != null)
                     hash = hash * 59 + this.DynamicExpression.GetHashCode();
-                
+
                 if (this.CreatedDate != null)
                     hash = hash * 59 + this.CreatedDate.GetHashCode();
-                
+
                 if (this.ModifiedDate != null)
                     hash = hash * 59 + this.ModifiedDate.GetHashCode();
-                
+
                 if (this.CreatedBy != null)
                     hash = hash * 59 + this.CreatedBy.GetHashCode();
-                
+
                 if (this.ModifiedBy != null)
                     hash = hash * 59 + this.ModifiedBy.GetHashCode();
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

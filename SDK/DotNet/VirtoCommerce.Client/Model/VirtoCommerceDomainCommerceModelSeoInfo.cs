@@ -9,8 +9,6 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-
-
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
@@ -20,44 +18,10 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommerceDomainCommerceModelSeoInfo :  IEquatable<VirtoCommerceDomainCommerceModelSeoInfo>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCommerceModelSeoInfo" /> class.
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCommerceModelSeoInfo" />class.
+        /// Gets or Sets Name
         /// </summary>
-        /// <param name="SemanticUrl">SemanticUrl.</param>
-        /// <param name="PageTitle">PageTitle.</param>
-        /// <param name="MetaDescription">MetaDescription.</param>
-        /// <param name="ImageAltDescription">ImageAltDescription.</param>
-        /// <param name="MetaKeywords">MetaKeywords.</param>
-        /// <param name="StoreId">StoreId.</param>
-        /// <param name="ObjectId">ObjectId.</param>
-        /// <param name="ObjectType">ObjectType.</param>
-        /// <param name="IsActive">IsActive.</param>
-        /// <param name="LanguageCode">LanguageCode.</param>
-        /// <param name="CreatedDate">CreatedDate.</param>
-        /// <param name="ModifiedDate">ModifiedDate.</param>
-        /// <param name="CreatedBy">CreatedBy.</param>
-        /// <param name="ModifiedBy">ModifiedBy.</param>
-        /// <param name="Id">Id.</param>
-
-        public VirtoCommerceDomainCommerceModelSeoInfo(string SemanticUrl = null, string PageTitle = null, string MetaDescription = null, string ImageAltDescription = null, string MetaKeywords = null, string StoreId = null, string ObjectId = null, string ObjectType = null, bool? IsActive = null, string LanguageCode = null, DateTime? CreatedDate = null, DateTime? ModifiedDate = null, string CreatedBy = null, string ModifiedBy = null, string Id = null)
-        {
-            this.SemanticUrl = SemanticUrl;
-            this.PageTitle = PageTitle;
-            this.MetaDescription = MetaDescription;
-            this.ImageAltDescription = ImageAltDescription;
-            this.MetaKeywords = MetaKeywords;
-            this.StoreId = StoreId;
-            this.ObjectId = ObjectId;
-            this.ObjectType = ObjectType;
-            this.IsActive = IsActive;
-            this.LanguageCode = LanguageCode;
-            this.CreatedDate = CreatedDate;
-            this.ModifiedDate = ModifiedDate;
-            this.CreatedBy = CreatedBy;
-            this.ModifiedBy = ModifiedBy;
-            this.Id = Id;
-            
-        }
+        [DataMember(Name="name", EmitDefaultValue=false)]
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets or Sets SemanticUrl
@@ -149,7 +113,6 @@ namespace VirtoCommerce.Client.Model
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
 
-
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -158,6 +121,7 @@ namespace VirtoCommerce.Client.Model
         {
             var sb = new StringBuilder();
             sb.Append("class VirtoCommerceDomainCommerceModelSeoInfo {\n");
+            sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  SemanticUrl: ").Append(SemanticUrl).Append("\n");
             sb.Append("  PageTitle: ").Append(PageTitle).Append("\n");
             sb.Append("  MetaDescription: ").Append(MetaDescription).Append("\n");
@@ -173,7 +137,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  CreatedBy: ").Append(CreatedBy).Append("\n");
             sb.Append("  ModifiedBy: ").Append(ModifiedBy).Append("\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -210,6 +173,11 @@ namespace VirtoCommerce.Client.Model
                 return false;
 
             return 
+                (
+                    this.Name == other.Name ||
+                    this.Name != null &&
+                    this.Name.Equals(other.Name)
+                ) && 
                 (
                     this.SemanticUrl == other.SemanticUrl ||
                     this.SemanticUrl != null &&
@@ -298,57 +266,58 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
+                if (this.Name != null)
+                    hash = hash * 59 + this.Name.GetHashCode();
+
                 if (this.SemanticUrl != null)
                     hash = hash * 59 + this.SemanticUrl.GetHashCode();
-                
+
                 if (this.PageTitle != null)
                     hash = hash * 59 + this.PageTitle.GetHashCode();
-                
+
                 if (this.MetaDescription != null)
                     hash = hash * 59 + this.MetaDescription.GetHashCode();
-                
+
                 if (this.ImageAltDescription != null)
                     hash = hash * 59 + this.ImageAltDescription.GetHashCode();
-                
+
                 if (this.MetaKeywords != null)
                     hash = hash * 59 + this.MetaKeywords.GetHashCode();
-                
+
                 if (this.StoreId != null)
                     hash = hash * 59 + this.StoreId.GetHashCode();
-                
+
                 if (this.ObjectId != null)
                     hash = hash * 59 + this.ObjectId.GetHashCode();
-                
+
                 if (this.ObjectType != null)
                     hash = hash * 59 + this.ObjectType.GetHashCode();
-                
+
                 if (this.IsActive != null)
                     hash = hash * 59 + this.IsActive.GetHashCode();
-                
+
                 if (this.LanguageCode != null)
                     hash = hash * 59 + this.LanguageCode.GetHashCode();
-                
+
                 if (this.CreatedDate != null)
                     hash = hash * 59 + this.CreatedDate.GetHashCode();
-                
+
                 if (this.ModifiedDate != null)
                     hash = hash * 59 + this.ModifiedDate.GetHashCode();
-                
+
                 if (this.CreatedBy != null)
                     hash = hash * 59 + this.CreatedBy.GetHashCode();
-                
+
                 if (this.ModifiedBy != null)
                     hash = hash * 59 + this.ModifiedBy.GetHashCode();
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }
