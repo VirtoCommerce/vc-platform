@@ -3567,6 +3567,7 @@ button.btn
     .form-input.__calendar .dropdown-menu .btn
     {
         background: #fbfdfe;
+        color: #4c4c4c;
         font-size: 14px;
         font-weight: 400;
         position: static;
@@ -3589,6 +3590,7 @@ button.btn
         }
 
         .form-input.__calendar .dropdown-menu .btn-group .btn,
+        .form-input.__calendar .dropdown-menu .btn-group ~ .btn,
         .form-input.__calendar .dropdown-menu .btn-success
         {
             background: #43b0e6;
