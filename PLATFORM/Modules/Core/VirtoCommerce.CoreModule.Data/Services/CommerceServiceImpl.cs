@@ -110,6 +110,7 @@ namespace VirtoCommerce.CoreModule.Data.Services
                 changeTracker.Attach(target);
 
                 source.SeoInfos.Patch(target.SeoInfos, (sourceSeoUrlKeyword, targetSeoUrlKeyword) => sourceSeoUrlKeyword.Patch(targetSeoUrlKeyword));
+                repository.UnitOfWork.Commit();
             }
         }
 
