@@ -13,6 +13,10 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         /// </summary>
         public string ProductId { get; set; }
         /// <summary>
+        /// Associated product
+        /// </summary>
+        public Product Product { get; set; }
+        /// <summary>
         /// Related product sku
         /// </summary>
         public string ProductSku { get; set; }

@@ -39,8 +39,8 @@ namespace VirtoCommerce.Storefront.Controllers
                 Model.Catalog.ItemResponseGroup.ItemSmall |
                 Model.Catalog.ItemResponseGroup.ItemWithPrices | 
                 Model.Catalog.ItemResponseGroup.ItemAssociations)).FirstOrDefault();
-            WorkContext.CurrentProduct = product;
-          
+            WorkContext.CurrentProduct = product;          
+         
             if(product.CategoryId != null)
             {
                 var category = (await _catalogSearchService.GetCategoriesAsync(new[] { product.CategoryId }, Model.Catalog.CategoryResponseGroup.Full)).FirstOrDefault();
@@ -53,7 +53,6 @@ namespace VirtoCommerce.Storefront.Controllers
                     criteria.PageSize = pageSize;
                     return _catalogSearchService.SearchProducts(criteria).Products;
                 });
-
             }
      
             return View("product", WorkContext);

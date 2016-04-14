@@ -106,7 +106,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                 {
                     foreach (var categorySeo in category.SeoInfos)
                     {
-                        categorySeo.Name = string.Format("{0}", category);
+                        categorySeo.Name = string.Format("{0}", category.Name);
                     }
                     retVal.Add(category);
                 }
