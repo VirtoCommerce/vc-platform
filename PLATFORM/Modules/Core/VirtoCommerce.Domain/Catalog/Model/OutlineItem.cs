@@ -4,30 +4,37 @@ using VirtoCommerce.Domain.Commerce.Model;
 namespace VirtoCommerce.Domain.Catalog.Model
 {
     /// <summary>
-    /// Represent outline one part
+    /// Represents one outline element: catalog, category or product.
     /// </summary>
     public class OutlineItem : ISeoSupport
     {
+        #region ISeoSupport Members
+
         /// <summary>
-        /// outline item object id
+        /// Object id
         /// </summary>
         public string Id { get; set; }
+
         /// <summary>
-        /// Mean that outline item have virtual parent
-        /// </summary>
-        public bool IsLinkTarget { get; set; }
-        /// <summary>
-        /// outline item object type
+        /// Object type
         /// </summary>
         public string SeoObjectType { get; set; }
+
         /// <summary>
-        /// All seo infos for  object
+        /// All SEO records for the object
         /// </summary>
         public ICollection<SeoInfo> SeoInfos { get; set; }
 
+        #endregion
+
+        /// <summary>
+        /// True when this object is linked to the virtual parent.
+        /// </summary>
+        public bool HasVirtualParent { get; set; }
+
         public override string ToString()
         {
-            return (IsLinkTarget ? "*" : "") + Id;
+            return (HasVirtualParent ? "*" : "") + Id;
         }
     }
 }

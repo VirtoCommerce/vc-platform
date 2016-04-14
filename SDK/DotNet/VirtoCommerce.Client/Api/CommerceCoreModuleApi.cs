@@ -16,6 +16,27 @@ namespace VirtoCommerce.Client.Api
     {
         #region Synchronous Operations
         /// <summary>
+        /// Batch create or update seo infos
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="seoInfos"></param>
+        /// <returns></returns>
+        void CommerceBatchUpdateSeoInfos (List<VirtoCommerceDomainCommerceModelSeoInfo> seoInfos);
+
+        /// <summary>
+        /// Batch create or update seo infos
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="seoInfos"></param>
+        /// <returns>ApiResponse of Object(void)</returns>
+        ApiResponse<Object> CommerceBatchUpdateSeoInfosWithHttpInfo (List<VirtoCommerceDomainCommerceModelSeoInfo> seoInfos);
+        /// <summary>
         /// Create new currency
         /// </summary>
         /// <remarks>
@@ -409,6 +430,27 @@ namespace VirtoCommerce.Client.Api
         ApiResponse<VirtoCommercePlatformCoreSecuritySecurityResult> StorefrontSecurityResetPasswordWithHttpInfo (string userId, string token, string newPassword);
         #endregion Synchronous Operations
         #region Asynchronous Operations
+        /// <summary>
+        /// Batch create or update seo infos
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="seoInfos"></param>
+        /// <returns>Task of void</returns>
+        System.Threading.Tasks.Task CommerceBatchUpdateSeoInfosAsync (List<VirtoCommerceDomainCommerceModelSeoInfo> seoInfos);
+
+        /// <summary>
+        /// Batch create or update seo infos
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="seoInfos"></param>
+        /// <returns>Task of ApiResponse</returns>
+        System.Threading.Tasks.Task<ApiResponse<Object>> CommerceBatchUpdateSeoInfosAsyncWithHttpInfo (List<VirtoCommerceDomainCommerceModelSeoInfo> seoInfos);
         /// <summary>
         /// Create new currency
         /// </summary>
@@ -874,6 +916,161 @@ namespace VirtoCommerce.Client.Api
         public void AddDefaultHeader(string key, string value)
         {
             this.Configuration.AddDefaultHeader(key, value);
+        }
+
+        /// <summary>
+        /// Batch create or update seo infos 
+        /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="seoInfos"></param>
+        /// <returns></returns>
+        public void CommerceBatchUpdateSeoInfos (List<VirtoCommerceDomainCommerceModelSeoInfo> seoInfos)
+        {
+             CommerceBatchUpdateSeoInfosWithHttpInfo(seoInfos);
+        }
+
+        /// <summary>
+        /// Batch create or update seo infos 
+        /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="seoInfos"></param>
+        /// <returns>ApiResponse of Object(void)</returns>
+        public ApiResponse<Object> CommerceBatchUpdateSeoInfosWithHttpInfo (List<VirtoCommerceDomainCommerceModelSeoInfo> seoInfos)
+        {
+            // verify the required parameter 'seoInfos' is set
+            if (seoInfos == null)
+                throw new ApiException(400, "Missing required parameter 'seoInfos' when calling CommerceCoreModuleApi->CommerceBatchUpdateSeoInfos");
+
+            var localVarPath = "/api/seoinfos/batchupdate";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+                "application/json", 
+                "text/json", 
+                "application/x-www-form-urlencoded"
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            localVarPathParams.Add("format", "json");
+            if (seoInfos.GetType() != typeof(byte[]))
+            {
+                localVarPostBody = Configuration.ApiClient.Serialize(seoInfos); // http body (model) parameter
+            }
+            else
+            {
+                localVarPostBody = seoInfos; // byte array
+            }
+
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
+                Method.PUT, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
+                throw new ApiException (localVarStatusCode, "Error calling CommerceBatchUpdateSeoInfos: " + localVarResponse.Content, localVarResponse.Content);
+            else if (localVarStatusCode == 0)
+                throw new ApiException (localVarStatusCode, "Error calling CommerceBatchUpdateSeoInfos: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+
+            
+            return new ApiResponse<Object>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                null);
+        }
+
+        /// <summary>
+        /// Batch create or update seo infos 
+        /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="seoInfos"></param>
+        /// <returns>Task of void</returns>
+        public async System.Threading.Tasks.Task CommerceBatchUpdateSeoInfosAsync (List<VirtoCommerceDomainCommerceModelSeoInfo> seoInfos)
+        {
+             await CommerceBatchUpdateSeoInfosAsyncWithHttpInfo(seoInfos);
+
+        }
+
+        /// <summary>
+        /// Batch create or update seo infos 
+        /// </summary>
+        /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="seoInfos"></param>
+        /// <returns>Task of ApiResponse</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<Object>> CommerceBatchUpdateSeoInfosAsyncWithHttpInfo (List<VirtoCommerceDomainCommerceModelSeoInfo> seoInfos)
+        {
+            // verify the required parameter 'seoInfos' is set
+            if (seoInfos == null)
+                throw new ApiException(400, "Missing required parameter 'seoInfos' when calling CommerceCoreModuleApi->CommerceBatchUpdateSeoInfos");
+
+            var localVarPath = "/api/seoinfos/batchupdate";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new Dictionary<String, String>();
+            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+                "application/json", 
+                "text/json", 
+                "application/x-www-form-urlencoded"
+            };
+            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+            };
+            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            localVarPathParams.Add("format", "json");
+            if (seoInfos.GetType() != typeof(byte[]))
+            {
+                localVarPostBody = Configuration.ApiClient.Serialize(seoInfos); // http body (model) parameter
+            }
+            else
+            {
+                localVarPostBody = seoInfos; // byte array
+            }
+
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.PUT, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
+                throw new ApiException (localVarStatusCode, "Error calling CommerceBatchUpdateSeoInfos: " + localVarResponse.Content, localVarResponse.Content);
+            else if (localVarStatusCode == 0)
+                throw new ApiException (localVarStatusCode, "Error calling CommerceBatchUpdateSeoInfos: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+
+            
+            return new ApiResponse<Object>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                null);
         }
 
         /// <summary>

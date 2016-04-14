@@ -3,7 +3,8 @@
 namespace VirtoCommerce.Domain.Catalog.Model
 {
     /// <summary>
-    /// Represent full outline path from children to parent
+    /// Represents the path from the catalog to one of the child objects (product or category):
+    /// catalog/parent-category1/.../parent-categoryN/object
     /// </summary>
     public class Outline
     {
