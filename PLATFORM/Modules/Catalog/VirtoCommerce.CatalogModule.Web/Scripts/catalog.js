@@ -201,7 +201,7 @@ angular.module(catalogsModuleName, [
 	    var categorySeoWidget = {
 	        controller: 'virtoCommerce.coreModule.seo.seoWidgetController',
 	        template: 'Modules/$(VirtoCommerce.Core)/Scripts/SEO/widgets/seoWidget.tpl.html',
-	        objectType: 'CatalogCategory',
+	        objectType: 'Category',
 	        getDefaultContainerId: function (blade) { return blade.currentEntity.catalog.id; },
 	        getLanguages: function (blade) { return _.pluck(blade.currentEntity.catalog.languages, 'languageCode'); }
 	    };

@@ -108,7 +108,7 @@
         "subtitle": "SEO details",
         "labels": {
           "is-active": "Is active",
-          "store": "Store",
+          "store": "Store (Container)",
           "language": "Language",
           "url-keyword": "URL keyword",
           "page-title": "Page title",
@@ -124,8 +124,6 @@
           "alternative-text": "Enter text"
         },
         "validations": {
-          "store-duplicate": "SEO with same store found",
-          "language-duplicate": "SEO with same language found",
           "url-keyword-required": "Required",
           "url-keyword-invalid": "Invalid characters in URL found",
           "url-keyword-duplicate": "Duplicate URL found"
@@ -134,10 +132,8 @@
       "seo-duplicates": {
         "subtitle": "SEO conflicts",
         "labels": {
-          "is-active": "Is active",
           "semanticUrl": "Semantic URL",
-          "container": "Container",
-          "entity-name": "Entity"
+          "container": "Container"
         }
       }
     },

@@ -25,32 +25,11 @@
             blade.parentRefresh();
     }
 
-    $scope.storeDuplicateValidator = function (value) {
-        var data = blade.currentEntity;
-        return _.all(blade.seoContainerObject.seoInfos, function (x) {
-            return x === blade.origEntity ||
-                   !x.isActive ||
-                   x.storeId !== value ||
-                   x.languageCode !== data.languageCode; // && x.semanticUrl !== data.semanticUrl
-        });
-    };
-
-    $scope.languageDuplicateValidator = function (value) {
-        var data = blade.currentEntity;
-        return _.all(blade.seoContainerObject.seoInfos, function (x) {
-            return x === blade.origEntity ||
-                   !x.isActive ||
-                   x.storeId !== data.storeId ||
-                   x.languageCode !== value; // && x.semanticUrl !== data.semanticUrl
-        });
-    };
-
     function isValid(data) {
         // check required and valid Url requirements
         return data.semanticUrl &&
                $scope.semanticUrlValidator(data.semanticUrl) &&
-               (!data.isActive ||
-                 $scope.duplicateValidator(data.semanticUrl));
+               $scope.duplicateValidator(data.semanticUrl);
     }
 
     $scope.semanticUrlValidator = function (value) {
@@ -60,12 +39,10 @@
     };
 
     $scope.duplicateValidator = function (value) {
-        var data = blade.currentEntity;
         return _.all(blade.seoContainerObject.seoInfos, function (x) {
             return x === blade.origEntity ||
-                   !x.isActive ||
-                   x.storeId !== data.storeId ||
-                   x.languageCode !== data.languageCode; // && x.semanticUrl !== data.semanticUrl
+                   x.storeId !== blade.currentEntity.storeId ||
+                   x.semanticUrl !== value;
         });
     };
 
