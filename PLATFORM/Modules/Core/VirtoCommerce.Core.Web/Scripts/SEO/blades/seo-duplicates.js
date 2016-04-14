@@ -1,17 +1,12 @@
 ﻿angular.module('virtoCommerce.coreModule.seo')
 .controller('virtoCommerce.coreModule.seo.seoDuplicatesController', ['$rootScope', '$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.coreModule.seoApi', function ($rootScope, $scope, bladeNavigationService, seoApi) {
     var blade = $scope.blade;
-    var isDuplicatesFree;
+    var anyValidSeoFound;
 
     function initializeBlade() {
         blade.origEntity = blade.duplicates;
         blade.currentEntities = angular.copy(blade.origEntity);
         blade.isLoading = false;
-
-        $scope.$watch('blade.currentEntities', function (newEntities) {
-            blade.conflicts = {};
-            isDuplicatesFree = _.all(newEntities, isValid);
-        }, true);
     };
 
     function isValid(data) {
@@ -30,12 +25,11 @@
     };
 
     $scope.duplicateValidator = function (value, seoInfo) {
-        return !seoInfo.isActive ||
-            _.all(blade.currentEntities, function (x) {
-                return x === seoInfo ||
-                    !x.isActive ||
-                    x.semanticUrl !== value;
-            });
+        return _.all(blade.currentEntities, function (x) {
+            return x === seoInfo ||
+                x.storeId !== seoInfo.storeId ||
+                x.semanticUrl !== value;
+        });
     };
 
     $scope.saveChanges = function () {
@@ -88,9 +82,9 @@
     }
 
     function canSave() {
-        return isDirty() && isDuplicatesFree;
+        return isDirty() && anyValidSeoFound;
     }
-    
+
     blade.onClose = function (closeCallback) {
         bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, $scope.saveChanges, closeCallback, "core.dialogs.seo-save.title", "core.dialogs.seo-save.message");
     };
@@ -116,4 +110,9 @@
     blade.subtitle = 'core.blades.seo-duplicates.subtitle';
 
     initializeBlade();
+
+    $scope.$watch('blade.currentEntities', function (newEntities) {
+        blade.conflicts = {};
+        anyValidSeoFound = _.any(newEntities, isValid);
+    }, true);
 }]);
