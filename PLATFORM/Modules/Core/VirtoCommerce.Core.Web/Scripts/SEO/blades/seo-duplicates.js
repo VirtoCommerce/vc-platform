@@ -9,13 +9,14 @@
         blade.isLoading = false;
     };
 
-    function isValid(data) {
+    function validate(data) {
         // check all restrictions
         var isUrlValid = data.semanticUrl && $scope.semanticUrlValidator(data.semanticUrl);
         var retVal = isUrlValid && $scope.duplicateValidator(data.semanticUrl, data);
         if (isUrlValid && !retVal) {
-            blade.conflicts[data] = true;
+            blade.conflicts[data.id] = true;
         }
+        anyValidSeoFound = anyValidSeoFound || retVal;
         return retVal;
     }
 
@@ -33,11 +34,13 @@
     };
 
     $scope.saveChanges = function () {
+        blade.isLoading = true;
+
         // generate data to save
         var dataToSave = [];
         _.each(blade.currentEntities, function (x) {
-            var orig = _.findWhere(blade.origEntity, { id: x.id });
-            if (!angular.equals(x, orig)) {
+            if (validate(x) &&
+                !angular.equals(x, _.findWhere(blade.origEntity, { id: x.id }))) {
                 x = angular.copy(x);
                 if (!x.storeId) {
                     x.id = undefined;
@@ -55,7 +58,9 @@
                     blade.duplicates = results;
                     initializeBlade();
                 } else {
-                    $scope.bladeClose();
+                    if (!blade.noClose) {
+                        $scope.bladeClose();
+                    }
                     $rootScope.$broadcast("refresh-entity-by-id", blade.seoContainerObject.id);
                 }
             });
@@ -64,18 +69,10 @@
         }, function (error) { bladeNavigationService.setError('Error: ' + error.status, blade); });
     };
 
-    $scope.openItemDetail = function (item) {
-        if (item.objectType === "CatalogProduct") {
-            var newBlade = {
-                id: "listItemDetail" + item.objectId,
-                itemId: item.objectId,
-                title: item.name,
-                controller: 'virtoCommerce.catalogModule.itemDetailController',
-                template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/item-detail.tpl.html'
-            };
-            bladeNavigationService.showBlade(newBlade, blade);
-        }
-    };
+    function saveChanges_noClose() {
+        blade.noClose = true;
+        $scope.saveChanges();
+    }
 
     function isDirty() {
         return !angular.equals(blade.currentEntities, blade.origEntity) && blade.hasUpdatePermission();
@@ -86,7 +83,7 @@
     }
 
     blade.onClose = function (closeCallback) {
-        bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, $scope.saveChanges, closeCallback, "core.dialogs.seo-save.title", "core.dialogs.seo-save.message");
+        bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, saveChanges_noClose, closeCallback, "core.dialogs.seo-save.title", "core.dialogs.seo-save.message");
     };
 
     blade.toolbarCommands = [
@@ -111,8 +108,10 @@
 
     initializeBlade();
 
-    $scope.$watch('blade.currentEntities', function (newEntities) {
+    $scope.$watch('blade.currentEntities', function () {
         blade.conflicts = {};
-        anyValidSeoFound = _.any(newEntities, isValid);
+        anyValidSeoFound = false;
+        // must check ALL SEOs
+        _.each(blade.currentEntities, validate);
     }, true);
 }]);

@@ -2,8 +2,6 @@
 .controller('virtoCommerce.catalogModule.itemDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings', 'virtoCommerce.catalogModule.items', function ($scope, bladeNavigationService, settings, items) {
     var blade = $scope.blade;
     blade.updatePermission = 'catalog:update';
-    blade.origItem = {};
-    blade.item = {};
     blade.currentEntityId = blade.itemId;
 
     blade.refresh = function (parentRefresh) {
@@ -128,7 +126,7 @@
         };
         bladeNavigationService.showBlade(newBlade, blade);
     };
-
+    
     $scope.$on("refresh-entity-by-id", function (event, id) {
         if (blade.currentEntityId === id) {
             blade.refresh();

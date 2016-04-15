@@ -1,10 +1,11 @@
 ﻿angular.module('virtoCommerce.catalogModule')
 .controller('virtoCommerce.catalogModule.itemPropertyWidgetController', ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
     var blade = $scope.blade;
-    $scope.propertiesCount = 'calculating';
+    $scope.propertiesCount = '...';
 
     $scope.$watch('blade.item', function (product) {
-        $scope.propertiesCount = _.filter(product.properties, function (x) { return x.type == 'Product' || x.type == 'Variation'; }).length;
+        if (product)
+            $scope.propertiesCount = _.filter(product.properties, function (x) { return x.type == 'Product' || x.type == 'Variation'; }).length;
     });
 
     $scope.openItemPropertyBlade = function () {
