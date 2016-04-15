@@ -195,6 +195,8 @@ namespace VirtoCommerce.Content.Web.Controllers.Api
                         }
                     }
                 }
+                //remove archive after unpack
+                storageProvider.Remove(new[] { archivePath });
             }
             return StatusCode(HttpStatusCode.NoContent);
         }

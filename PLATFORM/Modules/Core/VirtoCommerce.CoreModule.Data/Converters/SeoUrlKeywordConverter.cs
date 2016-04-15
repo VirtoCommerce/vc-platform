@@ -49,6 +49,7 @@ namespace VirtoCommerce.CoreModule.Data.Converters
 			var patchInjection = new PatchInjection<dataModel.SeoUrlKeyword>(x => x.ImageAltDescription, x => x.IsActive,
 																			   x => x.Keyword,  x => x.Language, x=> x.StoreId,
 																			   x => x.MetaDescription, x => x.MetaKeywords, x => x.Title);
+            target.StoreId = source.StoreId;
 			target.InjectFrom(patchInjection, source);
 		}
 

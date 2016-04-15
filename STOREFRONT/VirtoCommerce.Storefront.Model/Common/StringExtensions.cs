@@ -32,6 +32,18 @@ namespace VirtoCommerce.Storefront.Model.Common
             return sb.ToString().ToLowerInvariant();
         }
 
+        /// <summary>
+        /// Equals invariant
+        /// </summary>
+        /// <param name="str1">The STR1.</param>
+        /// <param name="str2">The STR2.</param>
+        /// <returns></returns>
+        public static bool EqualsInvariant(this string str1, string str2)
+        {
+            return string.Equals(str1, str2, StringComparison.OrdinalIgnoreCase);
+        }
+
+
         public static bool FitsMask(this string fileName, string fileMask)
         {
             Regex mask = new Regex(fileMask.Replace(".", "[.]").Replace("*", ".*").Replace("?", "."));
