@@ -174,10 +174,6 @@
                             {
                                 "name": "VirtoCommerce_DeployApplications",
                                 "value": "[variables(parameters('deployApplications')).configValue]"
-                            },
-                            {
-                                "name": "VirtoCommerce:Storefront.AppData.Path",
-                                "value": "..\\store\\App_Data"
                             }
                         ],
                         "virtualApplications": [
