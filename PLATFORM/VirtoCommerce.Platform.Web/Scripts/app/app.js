@@ -25,8 +25,14 @@
 ];
 
 angular.module('platformWebApp', AppDependencies).
-  controller('platformWebApp.appCtrl', ['$scope', '$window', 'platformWebApp.pushNotificationService', function ($scope, $window, pushNotificationService) {
-	pushNotificationService.run();
+  controller('platformWebApp.appCtrl', ['$scope', '$window', 'platformWebApp.pushNotificationService', '$translate', '$timeout', function ($scope, $window, pushNotificationService, $translate, $timeout) {
+      pushNotificationService.run();
+
+      $timeout(function () {
+          var currentLanguage = $translate.use();
+          var rtlLanguages = ['ar', 'arc', 'bcc', 'bqi', 'ckb', 'dv', 'fa', 'glk', 'he', 'lrc', 'mzn', 'pnb', 'ps', 'sd', 'ug', 'ur', 'yi'];
+          $scope.isRTL = rtlLanguages.indexOf(currentLanguage) >= 0;
+      }, 100);
   }])
 // Specify SignalR server URL (application URL)
 .factory('platformWebApp.signalRServerName', ['$location', function ($location) {
@@ -78,7 +84,6 @@ angular.module('platformWebApp', AppDependencies).
 
       //Localization
       // https://angular-translate.github.io/docs/#/guide
-      // var defaultLanguage = settings.getValues({ id: 'VirtoCommerce.Platform.General.ManagerDefaultLanguage' });
       $translateProvider.useUrlLoader('api/platform/localization')
         .useLoaderCache(true)
         .useSanitizeValueStrategy('escapeParameters')

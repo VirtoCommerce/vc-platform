@@ -18,7 +18,7 @@
     <base href="~/" />
 	@Html.Partial("_FacebookTrackerPartial")
 </head>
-<body ng-class="{'has-demo-warning' : demoResetTime}" ng-controller="platformWebApp.appCtrl" ng-init="platformVersion ='@(Model.PlatformVersion)'; demoCredentials = @(Model.DemoCredentials); demoResetTime = @(Model.DemoResetTime);">
+<body ng-class="{'has-demo-warning' : demoResetTime, 'lang-rtl': isRTL}" ng-controller="platformWebApp.appCtrl" ng-init="platformVersion ='@(Model.PlatformVersion)'; demoCredentials = @(Model.DemoCredentials); demoResetTime = @(Model.DemoResetTime);">
   
     @Html.Partial("_GoogleAnalyticsPartial")
     @RenderBody()
