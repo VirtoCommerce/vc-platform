@@ -1,6 +1,6 @@
 ﻿var storefrontApp = angular.module('storefrontApp');
 
-storefrontApp.controller('categoryController', ['$scope', '$window', 'pricingService', function ($scope, $window, pricingService) {
+storefrontApp.controller('productListController', ['$scope', '$window', 'pricingService', function ($scope, $window, pricingService) {
     $scope.productPricesLoaded = false;
     $scope.productPrices = [];
 

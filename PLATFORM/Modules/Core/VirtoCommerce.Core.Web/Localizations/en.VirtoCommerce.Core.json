@@ -99,7 +99,7 @@
           "duplicates-found": "There are {{count}} conflicting Semantic URLs!",
           "resolve-duplicates": "Resolve conflicts",
           "language-code": "Language",
-          "container": "Container",
+          "container": "Store",
           "semanticUrl": "Semantic URL"
         }
       },
@@ -108,7 +108,7 @@
         "subtitle": "SEO details",
         "labels": {
           "is-active": "Is active",
-          "store": "Store (Container)",
+          "store": "Store",
           "language": "Language",
           "url-keyword": "URL keyword",
           "page-title": "Page title",
@@ -133,7 +133,7 @@
         "subtitle": "SEO conflicts",
         "labels": {
           "semanticUrl": "Semantic URL",
-          "container": "Container"
+          "container": "Store"
         }
       }
     },

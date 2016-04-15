@@ -19,10 +19,17 @@
         }
 
         angular.copy(blade.currentEntity, blade.origEntity);
-        $scope.bladeClose();
+        if (!blade.noClose) {
+            $scope.bladeClose();
+        }
 
         if (blade.parentRefresh)
             blade.parentRefresh();
+    }
+
+    function saveChanges_noClose() {
+        blade.noClose = true;
+        $scope.saveChanges();
     }
 
     function isValid(data) {
@@ -57,7 +64,7 @@
     $scope.isValid = canSave;
 
     blade.onClose = function (closeCallback) {
-        bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, $scope.saveChanges, closeCallback, "core.dialogs.seo-save.title", "core.dialogs.seo-save.message");
+        bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, saveChanges_noClose, closeCallback, "core.dialogs.seo-save.title", "core.dialogs.seo-save.message");
     };
 
     blade.toolbarCommands = [

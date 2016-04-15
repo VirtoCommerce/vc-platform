@@ -353,7 +353,7 @@
     <Content Include="App_Data\Themes\default\assets\storefront.css" />
     <Content Include="App_Data\Themes\default\snippets\checkout-footer.liquid" />
     <Content Include="App_Data\Themes\default\assets\js\app.js" />
-    <Content Include="App_Data\Themes\default\assets\js\category.js" />
+    <Content Include="App_Data\Themes\default\assets\js\product-list.js" />
     <Content Include="App_Data\Themes\default\assets\js\checkout.js" />
     <Content Include="App_Data\Themes\default\assets\js\directives.js" />
     <Content Include="App_Data\Themes\default\assets\js\main.js" />

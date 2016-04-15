@@ -6,6 +6,7 @@
         blade.subtitle = 'stores.blades.store-detail.subtitle';
 
         blade.refresh = function (parentRefresh) {
+            blade.isLoading = true;
             stores.get({ id: blade.currentEntityId }, function (data) {
                 initializeBlade(data);
                 if (parentRefresh) {
@@ -152,7 +153,13 @@
             bladeNavigationService.showBlade(newBlade, blade);
         };
 
-        blade.refresh(false);
+        $scope.$on("refresh-entity-by-id", function (event, id) {
+            if (blade.currentEntityId === id) {
+                bladeNavigationService.closeChildrenBlades(blade, blade.refresh);
+            }
+        });
+
+        blade.refresh();
         $scope.catalogs = catalogs.getCatalogs();
         $scope.storeStates = settings.getValues({ id: 'Stores.States' });
         $scope.languages = settings.getValues({ id: 'VirtoCommerce.Core.General.Languages' });
