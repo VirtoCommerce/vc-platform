@@ -32,7 +32,8 @@
             "type": "string",
             "allowedValues": [
                 "Manager and Storefront",
-                "Manager Only"
+                "Manager Only",
+                "Storefront Only"
             ],
             "defaultValue": "Manager and Storefront"
         },
@@ -57,12 +58,16 @@
         }
     },
     "variables": {
-        "Manager Only": {
-            "configValue": "Web Admin Only",
-            "rootDir": "admin"
-        },
         "Manager and Storefront": {
             "configValue": "Manager and Storefront",
+            "rootDir": "store"
+        },
+        "Manager Only": {
+            "configValue": "Manager Only",
+            "rootDir": "admin"
+        },
+        "Storefront Only": {
+            "configValue": "Storefront Only",
             "rootDir": "store"
         }
     },
@@ -158,16 +163,17 @@
                                 "Name": "AssetsConnectionString",
                                 "ConnectionString": "[concat('provider=LocalStorage;rootPath=~/App_Data/Assets;publicUrl=http://', parameters('siteName'), '.azurewebsites.net/assets')]",
                                 "Type": 3
+                            },
+                            {
+                                "Name": "CmsContentConnectionString",
+                                "ConnectionString": "[concat('provider=LocalStorage;rootPath=..\\store\\App_Data;publicUrl=http://', parameters('siteName'), '.azurewebsites.net/cms')]",
+                                "Type": 3
                             }
                         ],
                         "appSettings": [
                             {
                                 "name": "VirtoCommerce_DeployApplications",
                                 "value": "[variables(parameters('deployApplications')).configValue]"
-                            },
-                            {
-                                "name": "VirtoCommerce:Storefront.AppData.Path",
-                                "value": "..\\store\\App_Data"
                             }
                         ],
                         "virtualApplications": [
@@ -178,6 +184,10 @@
                                     {
                                         "virtualPath": "/assets",
                                         "physicalPath": "site\\wwwroot\\admin\\App_Data\\Assets"
+                                    },
+                                    {
+                                        "virtualPath": "/cms",
+                                        "physicalPath": "site\\wwwroot\\store\\App_Data"
                                     }
                                 ]
                             },
