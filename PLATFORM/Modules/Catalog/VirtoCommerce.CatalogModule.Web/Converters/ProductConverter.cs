@@ -107,6 +107,10 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
                     var property = retVal.Properties.FirstOrDefault(x => x.Id == propValue.PropertyId);
                     if (property == null)
                     {
+                        property = retVal.Properties.FirstOrDefault(x => x.Name.EqualsInvariant(propValue.PropertyName));
+                    }
+                    if (property == null)
+                    {
                         //Need add dummy property for each value without property
                         property = new webModel.Property(propValue, product.CatalogId, product.CategoryId, moduleModel.PropertyType.Product);
                         retVal.Properties.Add(property);
