@@ -31,13 +31,8 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                 result.Products = new MutablePagedList<Product>((pageNumber, pageSize) =>
                 {
                     category.Products.Slice(pageNumber, pageSize);
-                    result.ProductsCount = category.Products.TotalItemCount;
-                    result.AllProductsCount = category.Products.TotalItemCount;
                     return new StaticPagedList<Product>(category.Products.Select(x => x.ToShopifyModel()), category.Products);
                 }, category.Products.PageNumber, category.Products.PageSize);
-
-                result.ProductsCount = category.Products.TotalItemCount;
-                result.AllProductsCount = category.Products.TotalItemCount;
             }
 
             if (workContext.Aggregations != null)
