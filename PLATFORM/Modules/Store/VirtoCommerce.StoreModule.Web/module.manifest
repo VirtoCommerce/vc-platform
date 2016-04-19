@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <module>
     <id>VirtoCommerce.Store</id>
-    <version>2.9.0</version>
-    <platformVersion>2.9.0</platformVersion>
+    <version>2.10.0</version>
+    <platformVersion>2.10.0</platformVersion>
     <dependencies>
-        <dependency id="VirtoCommerce.Core" version="2.9.0" />
+        <dependency id="VirtoCommerce.Core" version="2.10.0" />
         <!--using catalog api -->
-        <dependency id="VirtoCommerce.Catalog" version="2.9.0" />
+        <dependency id="VirtoCommerce.Catalog" version="2.10.0" />
     </dependencies>
 
     <title>Store module</title>

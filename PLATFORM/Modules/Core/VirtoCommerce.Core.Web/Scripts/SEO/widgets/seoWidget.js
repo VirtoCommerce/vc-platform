@@ -31,7 +31,7 @@
         if (data && $scope.widget.getDefaultContainerId(blade)) {
             promise = seoApi.query({ objectId: data.id, objectType: $scope.widget.objectType }).$promise;
             promise.then(function (promiseData) {
-                $scope.duplicates = promiseData;
+                $scope.widget.UIclass = _.any(promiseData) ? 'error' : '';
             });
         }
     });

@@ -61,10 +61,10 @@ namespace VirtoCommerce.Platform.Data.Common
         public static async Task<T> GetAsync<T>(this ICacheManager<object> cacheManager, string cacheKey, string region, Func<Task<T>> getValueFunction)
         {
             //http://sanjeev.dwivedi.net/?p=292
-            var asyncLockObject = new AsyncLock();
             var result = cacheManager.Get<T>(cacheKey, region);
             if (result == null)
             {
+                var asyncLockObject = AsyncLock.GetLockByKey(cacheKey);
                 using (var releaser = await asyncLockObject.LockAsync())
                 {
                     result = cacheManager.Get<T>(cacheKey, region);
@@ -88,7 +88,7 @@ namespace VirtoCommerce.Platform.Data.Common
             if (result == null)
             {
                 //http://sanjeev.dwivedi.net/?p=292
-                var asyncLockObject = new AsyncLock();
+                var asyncLockObject = AsyncLock.GetLockByKey(cacheKey);
                 using (var releaser = await asyncLockObject.LockAsync())
                 {
                     result = cacheManager.Get<T>(cacheKey, region);

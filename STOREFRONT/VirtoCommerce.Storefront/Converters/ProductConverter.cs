@@ -69,7 +69,7 @@ namespace VirtoCommerce.Storefront.Converters
                     Language = new Language(r.LanguageCode),
                     ReviewType = r.ReviewType,
                     Value = r.Content
-                }).ToList();
+                }).Where(x=>x.Language.Equals(currentLanguage)).ToList();
                 retVal.Description = retVal.Descriptions.FindWithLanguage(currentLanguage, x => x.Value, null);
             }
 

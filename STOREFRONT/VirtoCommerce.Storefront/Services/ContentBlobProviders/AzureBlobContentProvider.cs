@@ -33,7 +33,7 @@ namespace VirtoCommerce.Storefront.Services
                 throw new InvalidOperationException("Failed to get valid connection string");
             }
             _cloudBlobClient = _cloudStorageAccount.CreateCloudBlobClient();
-            _container =  _cloudBlobClient.GetContainerReference(_containerName);
+            _container = _cloudBlobClient.GetContainerReference(_containerName);
             if (_baseDirectoryPath != null)
             {
                 _directory = _container.GetDirectoryReference(_baseDirectoryPath);
@@ -60,8 +60,8 @@ namespace VirtoCommerce.Storefront.Services
             {
                 return _directory.GetBlockBlobReference(path).OpenRead();
             }
-          
-            return _container.GetBlobReference(path).OpenRead();           
+
+            return _container.GetBlobReference(path).OpenRead();
         }
 
         /// <summary>
@@ -72,9 +72,10 @@ namespace VirtoCommerce.Storefront.Services
         public virtual bool PathExists(string path)
         {
             path = NormalizePath(path);
-            return _cacheManager.Get("AzureBlobContentProvider.PathExists:" + path.GetHashCode(), "ContentRegion", () =>
+
+            var result = _cacheManager.Get("AzureBlobContentProvider.PathExists:" + path.GetHashCode(), "ContentRegion", () =>
             {
-                //If requested path is a directory we should return always true because Azure blob storage not support checking directories exist
+                // If requested path is a directory we should always return true because Azure blob storage does not support checking if directories exist
                 var retVal = string.IsNullOrEmpty(Path.GetExtension(path));
                 if (!retVal)
                 {
@@ -89,8 +90,10 @@ namespace VirtoCommerce.Storefront.Services
                     }
                 }
 
-                return retVal;
+                return (object)retVal;
             });
+
+            return (bool)result;
         }
 
         /// <summary>
@@ -105,7 +108,7 @@ namespace VirtoCommerce.Storefront.Services
             var retVal = new List<string>();
             path = NormalizePath(path);
             IEnumerable<IListBlobItem> blobItems;
-            if(_directory != null)
+            if (_directory != null)
             {
                 var directoryBlob = _directory;
                 if (!string.IsNullOrEmpty(path))
@@ -136,7 +139,7 @@ namespace VirtoCommerce.Storefront.Services
         }
 
         #endregion
-    
+
         protected virtual string NormalizePath(string path)
         {
             return path.Replace('\\', '/').TrimStart('/');
@@ -151,7 +154,7 @@ namespace VirtoCommerce.Storefront.Services
         protected virtual string GetAbsoluteUrl(string path)
         {
             path = NormalizePath(path);
-            return string.Join("/", _cloudBlobClient.BaseUri.ToString().TrimEnd('/'), _containerName , _baseDirectoryPath, path);
+            return string.Join("/", _cloudBlobClient.BaseUri.ToString().TrimEnd('/'), _containerName, _baseDirectoryPath, path);
         }
 
 
