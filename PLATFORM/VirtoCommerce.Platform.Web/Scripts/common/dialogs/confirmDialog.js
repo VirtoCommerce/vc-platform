@@ -76,6 +76,10 @@
         dialogService.showDialog(dialog, '$(Platform)/Scripts/common/dialogs/galleryDialog.tpl.html', 'platformWebApp.galleryDialogController', '__gallery');
     };
 
+    dialogService.showUploadDialog = function (dialog) {
+        dialogService.showDialog(dialog, '$(Platform)/Scripts/common/dialogs/uploadDialog.tpl.html', 'platformWebApp.uploadDialogController');
+    };
+
     return dialogService;
 
 }])
