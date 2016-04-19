@@ -34,7 +34,10 @@ namespace VirtoCommerce.Content.Data.Services
 
         public override void CreateFolder(BlobFolder folder)
         {
-            folder.Url = NormalizeUrl(folder.Url);
+            if (folder.ParentUrl.IsNullOrEmpty())
+            {
+                folder.Name = NormalizeUrl(folder.Name);
+            }
             base.CreateFolder(folder);
         }
 
