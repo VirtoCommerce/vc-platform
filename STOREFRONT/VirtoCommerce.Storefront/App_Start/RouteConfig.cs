@@ -3,10 +3,9 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.Storefront.Model;
+using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Services;
 using VirtoCommerce.Storefront.Routing;
-using VirtoCommerce.Storefront.Controllers.Api;
-using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront
 {
@@ -129,8 +128,8 @@ namespace VirtoCommerce.Storefront
             routes.MapLocalizedStorefrontRoute("Product.GetProductJson", "product/{productId}/json", defaults: new { controller = "Product", action = "ProductDetailsJson" });
 
             // Assets
-            routes.MapLocalizedStorefrontRoute("Assets", "themes/assets/{asset}", defaults: new { controller = "Asset", action = "GetAssets" });
-            routes.MapLocalizedStorefrontRoute("GlobalAssets", "themes/global/assets/{asset}", defaults: new { controller = "Asset", action = "GetGlobalAssets" });
+            routes.MapLocalizedStorefrontRoute("Assets", "themes/assets/{*asset}", defaults: new { controller = "Asset", action = "GetAssets" });
+            routes.MapLocalizedStorefrontRoute("GlobalAssets", "themes/global/assets/{*asset}", defaults: new { controller = "Asset", action = "GetGlobalAssets" });
 
             // Static content (no cms)
             routes.MapLocalizedStorefrontRoute("Pages.GetPage", "pages/{page}", defaults: new { controller = "Page", action = "GetContentPageByName" });
