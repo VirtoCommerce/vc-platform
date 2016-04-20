@@ -1,7 +1,6 @@
 ﻿using DotLiquid;
 using System.Runtime.Serialization;
 using VirtoCommerce.Storefront.Model.Common;
-using PagedList;
 
 namespace VirtoCommerce.LiquidThemeEngine.Objects
 {
@@ -15,10 +14,10 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
     public class Collection : Drop
     {
         /// <summary>
-        /// Returns a list of all product types in a collection.
+        /// Returns collection total products count
         /// </summary>
         [DataMember]
-        public int AllProductsCount { get; set; }
+        public int AllProductsCount { get { return Products.GetTotalCount(); } }
 
         /// <summary>
         /// Returns all tags of all products in a collection.
@@ -112,7 +111,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         /// Returns collection total products count
         /// </summary>
         [DataMember]
-        public int ProductsCount { get; set; }
+        public int ProductsCount { get { return Products.GetTotalCount(); } }
 
         /// <summary>
         /// Returns all tags of all products in a collection.
