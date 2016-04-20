@@ -96,6 +96,7 @@
     <Compile Include="Common\IDistributedCacheManager.cs" />
     <Compile Include="Common\ILocalCacheManager.cs" />
     <Compile Include="Common\IMutablePagedList.cs" />
+    <Compile Include="Common\MutablePagedListExtensions.cs" />
     <Compile Include="Common\LocalCacheManager.cs" />
     <Compile Include="Common\MutablePagedList.cs" />
     <Compile Include="EditorialReview.cs" />
