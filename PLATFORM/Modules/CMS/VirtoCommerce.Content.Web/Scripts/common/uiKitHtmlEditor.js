@@ -38,11 +38,12 @@
                 scope.fileUploader.addToQueue(event.originalEvent.dataTransfer.files);
             });
             codeMirrorElement.on('paste', function (event) {
-                var blob = event.originalEvent.clipboardData.items[0].getAsFile();
-                if (blob) {
+                var imageClipboardItem = _.find(event.originalEvent.clipboardData.items, function (i) { return i.type.indexOf('image') !== -1 && i.kind === 'file' });
+                if (imageClipboardItem) {
+                    var blob = imageClipboardItem.getAsFile();
                     var filename = (new Date().getTime()).toString() + '.png';
                     var file = new File([blob], filename, { type: blob.type });
-                    scope.fileUploader.addToQueue([ file ]);
+                    scope.fileUploader.addToQueue([file]);
                 }
             });
 
