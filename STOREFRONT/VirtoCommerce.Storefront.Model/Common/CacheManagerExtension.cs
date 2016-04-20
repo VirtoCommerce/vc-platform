@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,15 +10,15 @@ namespace VirtoCommerce.Storefront.Model.Common
 {
     public static class CacheManagerExtension
     {
-        private static object _lockObject = new object();
-
+        private static readonly ConcurrentDictionary<string, object> _locks = new ConcurrentDictionary<string, object>();
 
         public static T Get<T>(this ICacheManager<object> cacheManager, string cacheKey, string region, Func<T> getValueFunction)
         {
             var result = cacheManager.Get<T>(cacheKey, region);
             if (result == null)
             {
-                lock (_lockObject)
+                //http://stackoverflow.com/questions/12804879/is-it-ok-to-use-a-string-as-a-lock-object
+                lock (_locks.GetOrAdd(cacheKey, x => new object()))
                 {
                     result = cacheManager.Get<T>(cacheKey, region);
                     if (result == null)
