@@ -37,6 +37,14 @@
                 event.stopPropagation();
                 scope.fileUploader.addToQueue(event.originalEvent.dataTransfer.files);
             });
+            codeMirrorElement.on('paste', function (event) {
+                var blob = event.originalEvent.clipboardData.items[0].getAsFile();
+                if (blob) {
+                    var filename = (new Date().getTime()).toString() + '.png';
+                    var file = new File([blob], filename, { type: blob.type });
+                    scope.fileUploader.addToQueue([ file ]);
+                }
+            });
 
             scope.$on('filesUploaded', function (event, arg) {
                 var currentEditorLine = currentEditorLine || codeMirror.getCursor().line;
