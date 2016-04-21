@@ -59,7 +59,7 @@ namespace VirtoCommerce.Storefront.Routing
                     // { objectType: 'Product', objectId: '1',  SemanticUrl: 'A', Language: 'en-us', active : false }
                     // { objectType: 'Product', objectId: '1',  SemanticUrl: 'AA', Language: 'en-us', active : true }
                     var seoRecords = GetSeoRecords(slug);
-                    if (seoRecords != null)
+                    if (!seoRecords.IsNullOrEmpty())
                     {
                         var seoRecord = seoRecords
                             .Where(x => string.Equals(slug, x.SemanticUrl, StringComparison.OrdinalIgnoreCase))
