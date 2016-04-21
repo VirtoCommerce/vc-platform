@@ -55,86 +55,34 @@ namespace VirtoCommerce.Storefront.Routing
                     var slug = tokens.LastOrDefault();
 
                     // Get all seo records for requested slug and also all other seo records with different slug and languages but related to same object
-                    // GetSeoRecords('A') returns 
-                    // { objectType: 'Product', objectId: '1',  SemanticUrl: 'A', Language: 'en-us', active : false }
-                    // { objectType: 'Product', objectId: '1',  SemanticUrl: 'AA', Language: 'en-us', active : true }
                     var seoRecords = GetSeoRecords(slug);
-                    if (seoRecords != null)
+                    var seoRecord = seoRecords.Where(x => x.IsActive == true).GetBestMatchedSeoInfo(workContext.CurrentStore, workContext.CurrentLanguage, slug);
+                    if(seoRecord != null)
                     {
-                        var seoRecord = seoRecords
-                            .Where(x => string.Equals(slug, x.SemanticUrl, StringComparison.OrdinalIgnoreCase))
-                            .GetBestMatchedSeoInfo(workContext.CurrentStore, workContext.CurrentLanguage);
-
-                        if (seoRecord != null)
+                        if(seoRecord.SemanticUrl.EqualsInvariant(slug))
                         {
-                            // Ensure the slug is active
-                            if (seoRecord.IsActive != true)
+                            // Process the URL
+                            switch (seoRecord.ObjectType)
                             {
-                                // Slug is not active. Try to find the active one for the same entity and language.
-                                seoRecord = seoRecords
-                                    .Where(
-                                        x =>
-                                            x.ObjectType == seoRecord.ObjectType && x.ObjectId == seoRecord.ObjectId &&
-                                            x.IsActive == true)
-                                    .GetBestMatchedSeoInfo(workContext.CurrentStore, workContext.CurrentLanguage);
-
-                                if (seoRecord == null)
-                                {
-                                    // No active slug found
-                                    data.Values["controller"] = "Error";
-                                    data.Values["action"] = "Http404";
-                                }
-                                else
-                                {
-                                    // The active slug is found
-                                    var response = httpContext.Response;
-                                    response.Status = "301 Moved Permanently";
-                                    response.RedirectLocation = string.Format("{0}{1}", workContext.CurrentStore.Url,
-                                        seoRecord.SemanticUrl);
-                                    response.End();
-                                    data = null;
-                                }
+                                case "CatalogProduct":
+                                    data.Values["controller"] = "Product";
+                                    data.Values["action"] = "ProductDetails";
+                                    data.Values["productId"] = seoRecord.ObjectId;
+                                    break;
+                                case "Category":
+                                    data.Values["controller"] = "CatalogSearch";
+                                    data.Values["action"] = "CategoryBrowsing";
+                                    data.Values["categoryId"] = seoRecord.ObjectId;
+                                    break;
                             }
-                            else
-                            {
-                                // Redirect to the slug for the current language if it differs from the requested slug
-                                var actualActiveSeoRecord = seoRecords
-                                    .Where(
-                                        x =>
-                                            x.ObjectType == seoRecord.ObjectType && x.ObjectId == seoRecord.ObjectId &&
-                                            x.IsActive == true)
-                                    .GetBestMatchedSeoInfo(workContext.CurrentStore, workContext.CurrentLanguage);
-
-                                //If actual seo different that requested need redirect 302
-                                if (
-                                    !string.Equals(actualActiveSeoRecord.SemanticUrl, seoRecord.SemanticUrl,
-                                        StringComparison.OrdinalIgnoreCase))
-                                {
-                                    var response = httpContext.Response;
-                                    response.Status = "302 Moved Temporarily";
-                                    response.RedirectLocation = string.Concat(workContext.CurrentStore.Url,
-                                        actualActiveSeoRecord.SemanticUrl);
-                                    response.End();
-                                    data = null;
-                                }
-                                else
-                                {
-                                    // Process the URL
-                                    switch (seoRecord.ObjectType)
-                                    {
-                                        case "CatalogProduct":
-                                            data.Values["controller"] = "Product";
-                                            data.Values["action"] = "ProductDetails";
-                                            data.Values["productId"] = seoRecord.ObjectId;
-                                            break;
-                                        case "Category":
-                                            data.Values["controller"] = "CatalogSearch";
-                                            data.Values["action"] = "CategoryBrowsing";
-                                            data.Values["categoryId"] = seoRecord.ObjectId;
-                                            break;
-                                    }
-                                }
-                            }
+                        }
+                        else
+                        {
+                            var response = httpContext.Response;
+                            response.Status = "302 Moved Temporarily";
+                            response.RedirectLocation = string.Concat(workContext.CurrentStore.Url, seoRecord.SemanticUrl);
+                            response.End();
+                            data = null;
                         }
                     }
                     else if (!string.IsNullOrEmpty(path))
@@ -151,7 +99,7 @@ namespace VirtoCommerce.Storefront.Routing
                             data.Values["controller"] = "Error";
                             data.Values["action"] = "Http404";
                         }
-                    }
+                    }                    
                 }
             }
 
