@@ -1,15 +1,12 @@
-﻿using CyberSource.Clients;
-using CyberSource.Clients.SoapServiceReference;
-using System;
+﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Linq;
-using System.Web;
-using VirtoCommerce.Domain.Payment.Model;
-using VirtoCommerce.Domain.Commerce.Model;
-using System.Text;
 using System.Globalization;
+using System.Linq;
+using System.Text;
+using CyberSource.Clients;
+using VirtoCommerce.Domain.Commerce.Model;
+using VirtoCommerce.Domain.Payment.Model;
 
 namespace Cyber.Source.Managers
 {
@@ -202,7 +199,7 @@ namespace Cyber.Source.Managers
             if (reply != null && reply.ContainsKey("decision") && reply.ContainsKey("reasonCode"))
             {
                 var decision = (string)reply["decision"];
-                var reasonCode = int.Parse((string)reply["reasonCode"]); ;
+                var reasonCode = int.Parse((string)reply["reasonCode"]);
                 var isAccept = decision.Equals("ACCEPT", StringComparison.InvariantCultureIgnoreCase);
                 var isSuccessReasonCode = reasonCode == 100;
                 if (isAccept && isSuccessReasonCode)
@@ -226,6 +223,9 @@ namespace Cyber.Source.Managers
 
         private Hashtable PrepareProcessPaymentRequest(ProcessPaymentEvaluationContext context)
         {
+            if (context.BankCardInfo == null)
+                throw new NullReferenceException("BankCardInfo should not be null.");
+
             Hashtable request = new Hashtable();
             request.Add("merchantID", MerchantId);
             request.Add("merchantReferenceCode", context.Payment.Number);
@@ -240,18 +240,18 @@ namespace Cyber.Source.Managers
                 request.Add("ccCaptureService_run", "true");
             }
 
-            if(IsTest())
+            if (IsTest())
                 request.Add("sendToProduction", "false");
             else
                 request.Add("sendToProduction", "true");
 
             // Set billing address of payment as address for request
             var address = context.Payment.BillingAddress;
-            
+
             // Set first billing address in order
             if (address == null && context.Order.Addresses != null)
                 address = context.Order.Addresses.FirstOrDefault(a => a.AddressType == AddressType.Billing || a.AddressType == AddressType.BillingAndShipping);
-            
+
             // Set any first address in order
             if (address == null)
                 address = context.Order.Addresses.FirstOrDefault();
@@ -295,7 +295,7 @@ namespace Cyber.Source.Managers
             return request;
         }
 
-        private void SetBillingAddress(VirtoCommerce.Domain.Commerce.Model.Address address, Hashtable request)
+        private void SetBillingAddress(Address address, Hashtable request)
         {
             request.Add("billTo_firstName", address.FirstName);
             request.Add("billTo_lastName", address.LastName);
@@ -325,22 +325,12 @@ namespace Cyber.Source.Managers
 
         private bool IsSeparatePaymentAction()
         {
-            var retVal = false;
-            if(PaymentMethod.Equals("Authorization/Capture"))
-            {
-                retVal = false;
-            }
-            return retVal;
+            return PaymentMethod.Equals("Authorization/Capture");
         }
 
         private bool IsTest()
         {
-            var retVal = true;
-            if (WorkMode.ToLower().Equals("live"))
-            {
-                retVal = false;
-            }
-            return retVal;
+            return !WorkMode.ToLower().Equals("live");
         }
 
         private static string EnumerateValues(Hashtable reply, string fieldName)

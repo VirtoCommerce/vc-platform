@@ -17,12 +17,12 @@ namespace Paypal.DirectPayments.Managers
         private const string _paypalApiPasswordStoreSetting = "Paypal.DirectPayments.APIPassword";
         private const string _paypalApiSignatureStoreSetting = "Paypal.DirectPayments.APISignature";
         private const string _paypalPaymentRedirectRelativePathStoreSetting = "Paypal.DirectPayments.PaymentRedirectRelativePath";
-		private const string _paypalPaymentActionTypeStoreSetting = "Paypal.ExpressCheckout.PaypalPaymentActionType";
+        private const string _paypalPaymentActionTypeStoreSetting = "Paypal.ExpressCheckout.PaypalPaymentActionType";
 
-		private const string _paypalModeConfigSettingName = "mode";
-		private const string _paypalUsernameConfigSettingName = "account1.apiUsername";
-		private const string _paypalPasswordConfigSettingName = "account1.apiPassword";
-		private const string _paypalSignatureConfigSettingName = "account1.apiSignature";
+        private const string _paypalModeConfigSettingName = "mode";
+        private const string _paypalUsernameConfigSettingName = "account1.apiUsername";
+        private const string _paypalPasswordConfigSettingName = "account1.apiPassword";
+        private const string _paypalSignatureConfigSettingName = "account1.apiSignature";
 
         public PaypalDirectPaymentsPaymentMethod()
             : base("Paypal.DirectPayments")
@@ -86,10 +86,13 @@ namespace Paypal.DirectPayments.Managers
 
         public override ProcessPaymentResult ProcessPayment(ProcessPaymentEvaluationContext context)
         {
-            var retVal = new ProcessPaymentResult();
+            if (context.Store == null)
+                throw new NullReferenceException("Store should not be null.");
 
-            if (!(context.Store != null))
-                throw new NullReferenceException("no store with this id");
+            if (context.BankCardInfo == null)
+                throw new NullReferenceException("BankCardInfo should not be null.");
+
+            var retVal = new ProcessPaymentResult();
 
             var doDirectPaymentRequest = GetDoDirectPaymentRequest(context);
 
@@ -119,20 +122,20 @@ namespace Paypal.DirectPayments.Managers
             throw new NotImplementedException();
         }
 
-		public override VoidProcessPaymentResult VoidProcessPayment(VoidProcessPaymentEvaluationContext context)
-		{
-			throw new NotImplementedException();
-		}
+        public override VoidProcessPaymentResult VoidProcessPayment(VoidProcessPaymentEvaluationContext context)
+        {
+            throw new NotImplementedException();
+        }
 
-		public override CaptureProcessPaymentResult CaptureProcessPayment(CaptureProcessPaymentEvaluationContext context)
-		{
-			throw new NotImplementedException();
-		}
+        public override CaptureProcessPaymentResult CaptureProcessPayment(CaptureProcessPaymentEvaluationContext context)
+        {
+            throw new NotImplementedException();
+        }
 
-		public override RefundProcessPaymentResult RefundProcessPayment(RefundProcessPaymentEvaluationContext context)
-		{
-			throw new NotImplementedException();
-		}
+        public override RefundProcessPaymentResult RefundProcessPayment(RefundProcessPaymentEvaluationContext context)
+        {
+            throw new NotImplementedException();
+        }
 
         public override ValidatePostProcessRequestResult ValidatePostProcessRequest(NameValueCollection queryString)
         {
@@ -189,10 +192,10 @@ namespace Paypal.DirectPayments.Managers
             var retVal = new CreditCardDetailsType();
 
             retVal.CreditCardNumber = context.BankCardInfo.BankCardNumber;
-			retVal.CreditCardType = GetPaypalCreditCardType(context.BankCardInfo.BankCardType);
-			retVal.ExpMonth = context.BankCardInfo.BankCardMonth;
-			retVal.ExpYear = context.BankCardInfo.BankCardYear;
-			retVal.CVV2 = context.BankCardInfo.BankCardCVV2;
+            retVal.CreditCardType = GetPaypalCreditCardType(context.BankCardInfo.BankCardType);
+            retVal.ExpMonth = context.BankCardInfo.BankCardMonth;
+            retVal.ExpYear = context.BankCardInfo.BankCardYear;
+            retVal.CVV2 = context.BankCardInfo.BankCardCVV2;
             retVal.CardOwner = new PayerInfoType();
 
             if (context.Order.Addresses.Any(x => x.AddressType == VirtoCommerce.Domain.Commerce.Model.AddressType.Billing))
@@ -213,28 +216,28 @@ namespace Paypal.DirectPayments.Managers
                 retVal.CardOwner.PayerName.FirstName = billingAddress.FirstName;
                 retVal.CardOwner.PayerName.LastName = billingAddress.LastName;
             }
-			else if (context.Order.Addresses.Any())
+            else if (context.Order.Addresses.Any())
             {
-				var billingAddress = context.Order.Addresses.FirstOrDefault();
-				retVal.CardOwner.PayerCountry = GetPaypalCountryCodeType(billingAddress.CountryCode);
+                var billingAddress = context.Order.Addresses.FirstOrDefault();
+                retVal.CardOwner.PayerCountry = GetPaypalCountryCodeType(billingAddress.CountryCode);
 
-				retVal.CardOwner.Address = new PayPal.PayPalAPIInterfaceService.Model.AddressType();
-				retVal.CardOwner.Address.Street1 = billingAddress.Line1;
-				retVal.CardOwner.Address.Street2 = billingAddress.Line2;
-				retVal.CardOwner.Address.CityName = billingAddress.City;
-				retVal.CardOwner.Address.StateOrProvince = billingAddress.RegionName;
+                retVal.CardOwner.Address = new PayPal.PayPalAPIInterfaceService.Model.AddressType();
+                retVal.CardOwner.Address.Street1 = billingAddress.Line1;
+                retVal.CardOwner.Address.Street2 = billingAddress.Line2;
+                retVal.CardOwner.Address.CityName = billingAddress.City;
+                retVal.CardOwner.Address.StateOrProvince = billingAddress.RegionName;
 
-				retVal.CardOwner.Address.Country = GetPaypalCountryCodeType(billingAddress.CountryCode);
-				retVal.CardOwner.Address.PostalCode = billingAddress.Zip;
-				retVal.CardOwner.Payer = billingAddress.Email;
-				retVal.CardOwner.PayerName = new PersonNameType();
-				retVal.CardOwner.PayerName.FirstName = billingAddress.FirstName;
-				retVal.CardOwner.PayerName.LastName = billingAddress.LastName;
+                retVal.CardOwner.Address.Country = GetPaypalCountryCodeType(billingAddress.CountryCode);
+                retVal.CardOwner.Address.PostalCode = billingAddress.Zip;
+                retVal.CardOwner.Payer = billingAddress.Email;
+                retVal.CardOwner.PayerName = new PersonNameType();
+                retVal.CardOwner.PayerName.FirstName = billingAddress.FirstName;
+                retVal.CardOwner.PayerName.LastName = billingAddress.LastName;
             }
-			else
-			{
-				throw new NullReferenceException("no billing address");
-			}
+            else
+            {
+                throw new NullReferenceException("no billing address");
+            }
 
             return retVal;
         }
@@ -255,20 +258,20 @@ namespace Paypal.DirectPayments.Managers
                 {
                 }
             }
-			else
-			{
-				region = regions.FirstOrDefault(x => x.TwoLetterISORegionName.Equals(threeLetterCountryCode));
-				if(region != null)
-				{
-					try
-					{
-						payerCountry = (CountryCodeType)Enum.Parse(typeof(CountryCodeType), region.TwoLetterISORegionName.ToUpperInvariant());
-					}
-					catch
-					{
-					}
-				}
-			}
+            else
+            {
+                region = regions.FirstOrDefault(x => x.TwoLetterISORegionName.Equals(threeLetterCountryCode));
+                if (region != null)
+                {
+                    try
+                    {
+                        payerCountry = (CountryCodeType)Enum.Parse(typeof(CountryCodeType), region.TwoLetterISORegionName.ToUpperInvariant());
+                    }
+                    catch
+                    {
+                    }
+                }
+            }
             return payerCountry;
         }
 
@@ -337,5 +340,5 @@ namespace Paypal.DirectPayments.Managers
         }
 
         #endregion
-	}
+    }
 }
