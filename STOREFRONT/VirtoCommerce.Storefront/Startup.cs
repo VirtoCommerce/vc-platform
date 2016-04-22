@@ -243,6 +243,7 @@ namespace VirtoCommerce.Storefront
             AuthConfig.ConfigureAuth(app, () => container.Resolve<IStorefrontUrlBuilder>());
 
             app.Use<WorkContextOwinMiddleware>(container);
+            app.Use<StorefrontUrlRewriterOwinMiddleware>(container);
             app.UseStageMarker(PipelineStage.ResolveCache);
         }
 

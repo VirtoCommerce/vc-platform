@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Web;
 using System.Web.Routing;
@@ -40,13 +41,6 @@ namespace VirtoCommerce.Storefront.Routing
 
                 var path = data.Values["path"] as string;
                 var store = data.Values["store"] as string;
-
-                //Special workaround for case when URL contains only slug without store (one store case)
-                if (string.IsNullOrEmpty(path) && !string.IsNullOrEmpty(store) && workContext.AllStores != null)
-                {
-                    //use {store} as {path} if not exist any store with name {store} 
-                    path = workContext.AllStores.Any(x => string.Equals(store, x.Id, StringComparison.InvariantCultureIgnoreCase)) ? null : store;
-                }
 
                 if (path != null)
                 {
