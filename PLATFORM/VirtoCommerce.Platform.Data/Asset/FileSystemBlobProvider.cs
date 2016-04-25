@@ -230,7 +230,7 @@ namespace VirtoCommerce.Platform.Data.Asset
                     url = url.Replace(_basePublicUrl, String.Empty);
                 }
                 retVal += url;
-                retVal = retVal.Replace("/", "\\");
+                retVal = retVal.Replace("/", "\\").Replace("\\\\", "\\");
             }
             return Uri.UnescapeDataString(retVal);
         }

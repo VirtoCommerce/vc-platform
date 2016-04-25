@@ -5,7 +5,6 @@ using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
 using CacheManager.Core;
-using Hangfire;
 using Omu.ValueInjecter;
 using VirtoCommerce.Domain.Common;
 using VirtoCommerce.Domain.Order.Services;
@@ -36,7 +35,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         private readonly ISecurityService _securityService;
         private readonly IPermissionScopeService _permissionScopeService;
         private readonly ISettingsManager _settingManager;
-        private static object _lockObject = new object();
+        private static readonly object _lockObject = new object();
 
         public OrderModuleController(ICustomerOrderService customerOrderService, ICustomerOrderSearchService searchService, IStoreService storeService, IUniqueNumberGenerator numberGenerator,
                                      ICacheManager<object> cacheManager, Func<IOrderRepository> repositoryFactory, IPermissionScopeService permissionScopeService, ISecurityService securityService, ISettingsManager settingManager)
@@ -144,16 +143,16 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         }
 
         /// <summary>
-        /// Registration customer order payment in external payment system
+        /// Register customer order payment in external payment system
         /// </summary>
-        /// <remarks>Used in front-end checkout or manual order payment registration</remarks>
-        /// <param name="bankCardInfo">banking card information</param>
+        /// <remarks>Used in storefront checkout or manual order payment registration</remarks>
         /// <param name="orderId">customer order id</param>
         /// <param name="paymentId">payment id</param>
+        /// <param name="bankCardInfo">banking card information</param>
         [HttpPost]
         [ResponseType(typeof(webModel.ProcessPaymentResult))]
         [Route("{orderId}/processPayment/{paymentId}")]
-        public IHttpActionResult ProcessOrderPayments([FromBody]BankCardInfo bankCardInfo, string orderId, string paymentId)
+        public IHttpActionResult ProcessOrderPayments(string orderId, string paymentId, BankCardInfo bankCardInfo = null)
         {
             //search first by order number
             var order = _customerOrderService.GetByOrderNumber(orderId, coreModel.CustomerOrderResponseGroup.Full);
@@ -173,7 +172,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
             }
             var store = _storeService.GetById(order.StoreId);
             var paymentMethod = store.PaymentMethods.FirstOrDefault(x => x.Code == payment.GatewayCode);
-            if (payment == null)
+            if (paymentMethod == null)
             {
                 throw new NullReferenceException("appropriate paymentMethod not found");
             }
@@ -188,7 +187,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
 
             var result = paymentMethod.ProcessPayment(context);
 
-            _customerOrderService.Update(new coreModel.CustomerOrder[] { order });
+            _customerOrderService.Update(new[] { order });
 
             var retVal = new webModel.ProcessPaymentResult();
             retVal.InjectFrom(result);
@@ -229,7 +228,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
                 throw new HttpResponseException(HttpStatusCode.Unauthorized);
             }
 
-            _customerOrderService.Update(new coreModel.CustomerOrder[] { coreOrder });
+            _customerOrderService.Update(new[] { coreOrder });
             return StatusCode(HttpStatusCode.NoContent);
         }
 
@@ -243,11 +242,10 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         [Route("{id}/shipments/new")]
         public IHttpActionResult GetNewShipment(string id)
         {
-            coreModel.Shipment retVal = null;
             var order = _customerOrderService.GetById(id, coreModel.CustomerOrderResponseGroup.Full);
             if (order != null)
             {
-                retVal = new coreModel.Shipment
+                var retVal = new coreModel.Shipment
                 {
                     Id = Guid.NewGuid().ToString(),
                     Currency = order.Currency
@@ -278,11 +276,10 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         [Route("{id}/payments/new")]
         public IHttpActionResult GetNewPayment(string id)
         {
-            coreModel.PaymentIn retVal = null;
             var order = _customerOrderService.GetById(id, coreModel.CustomerOrderResponseGroup.Full);
             if (order != null)
             {
-                retVal = new coreModel.PaymentIn
+                var retVal = new coreModel.PaymentIn
                 {
                     Id = Guid.NewGuid().ToString(),
                     Currency = order.Currency,
@@ -342,7 +339,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
                         }
                     }
                 }
-                _customerOrderService.Update(new coreModel.CustomerOrder[] { order });
+                _customerOrderService.Update(new[] { order });
             }
 
             return StatusCode(HttpStatusCode.NoContent);
@@ -359,7 +356,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         [OverrideAuthorization]
         public IHttpActionResult GetDashboardStatistics([FromUri]DateTime? start = null, [FromUri]DateTime? end = null)
         {
-            webModel.DashboardStatisticsResult retVal = null;
+            webModel.DashboardStatisticsResult retVal;
             start = start ?? DateTime.UtcNow.AddYears(-1);
             end = end ?? DateTime.UtcNow;
 
@@ -387,7 +384,8 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
                 //Get defined user 'read' permission scopes
                 var readPermissionScopes = _securityService.GetUserPermissions(userName)
                                                       .Where(x => x.Id.StartsWith(OrderPredefinedPermissions.Read))
-                                                      .SelectMany(x => x.AssignedScopes);
+                                                      .SelectMany(x => x.AssignedScopes)
+                                                      .ToList();
 
                 //Check user has a scopes
                 //Stores
@@ -405,6 +403,5 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
             }
             return criteria;
         }
-
     }
 }

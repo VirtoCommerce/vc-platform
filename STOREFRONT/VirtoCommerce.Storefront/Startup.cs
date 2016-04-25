@@ -244,6 +244,8 @@ namespace VirtoCommerce.Storefront
 
             app.Use<WorkContextOwinMiddleware>(container);
             app.UseStageMarker(PipelineStage.ResolveCache);
+            app.Use<StorefrontUrlRewriterOwinMiddleware>(container);
+            app.UseStageMarker(PipelineStage.ResolveCache);
         }
 
 

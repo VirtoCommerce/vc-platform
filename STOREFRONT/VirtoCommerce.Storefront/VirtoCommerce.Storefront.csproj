@@ -419,6 +419,7 @@
     <Compile Include="Converters\QuoteRequestTotalsConverter.cs" />
     <Compile Include="Converters\ShippingMethodConverter.cs" />
     <Compile Include="Converters\TierPriceConverter.cs" />
+    <Compile Include="Owin\StorefrontUrlRewriterOwinMiddleware.cs" />
     <Compile Include="Services\CartValidator.cs" />
     <Compile Include="Services\ContentBlobProviders\AzureBlobContentProvider.cs" />
     <Compile Include="Services\ContentBlobProviders\FileSystemContentBlobProvider.cs" />
@@ -481,7 +482,7 @@
     <Compile Include="Owin\WorkContextOwinMiddleware.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Routing\SeoRoute.cs" />
-    <Compile Include="Routing\SeoRouteExtensions.cs" />
+    <Compile Include="Routing\StorefrontRouteExtensions.cs" />
     <Compile Include="Services\CatalogSearchServiceImpl.cs" />
     <Compile Include="Services\MarketingServiceImpl.cs" />
     <Compile Include="Services\StaticContentItemFactory.cs" />

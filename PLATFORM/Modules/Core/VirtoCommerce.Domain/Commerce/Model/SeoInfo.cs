@@ -6,6 +6,10 @@ namespace VirtoCommerce.Domain.Commerce.Model
 {
     public class SeoInfo : AuditableEntity, ILanguageSupport, ICloneable
     {
+        public SeoInfo()
+        {
+            IsActive = true;
+        }
         public string Name { get; set; }
         /// <summary>
         /// Slug
