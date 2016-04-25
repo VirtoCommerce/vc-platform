@@ -45,7 +45,7 @@
                     var parsedMetadata = [];
                     var parsedYAML = YAML.parse(parts[1].trim());
                     retVal.metadata = _.map(parsedYAML, function (val, key) {
-                        return { name: key, values: _.map(val.split(','), function (v) { return { value: v }; }) };
+                        return { name: key, values: _.map(val.toString().split(','), function (v) { return { value: v }; }) };
                     });
                 }
                 else {
