@@ -39,7 +39,7 @@
                 var imageClipboardItem = _.find(event.originalEvent.clipboardData.items, function (i) { return i.type.indexOf('image') !== -1 && i.kind === 'file' });
                 if (imageClipboardItem) {
                     var blob = imageClipboardItem.getAsFile();
-                    var filename = (new Date().getTime()).toString() + '.png';
+                    var filename = buildFileName() + '.png';
                     var file = new File([blob], filename, { type: blob.type });
                     scope.fileUploader.addToQueue([file]);
                 }
@@ -111,6 +111,11 @@
                     addAction(htmlEditor, 'headerFirst', '<h1>$1</h1>');
                     addAction(htmlEditor, 'headerSecond', '<h2>$1</h2>');
                 }
+            }
+
+            function buildFileName() {
+                var date = new Date();
+                return 'image_' + date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDay() + '_' + date.getHours() + '-' + date.getMinutes() + '-' + date.getSeconds();
             }
         }
     }

@@ -3,8 +3,7 @@
     var blade = $scope.blade;
     $scope.validators = validators;
     $scope.fileUploader = new FileUploader({
-        url: 'api/platform/assets?folderUrl=test', // TODO: Set an actual directory
-        // url: 'api/platform/assets?folderUrl=cms-content/Pages/' + storeId + '/assets',
+        url: 'api/platform/assets?folderUrl=cms-content/Pages/' + blade.storeId + '/assets',
         headers: { Accept: 'application/json' },
         autoUpload: true,
         removeAfterUpload: true,
