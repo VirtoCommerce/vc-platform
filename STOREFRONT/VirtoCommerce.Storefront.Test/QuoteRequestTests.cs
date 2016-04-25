@@ -60,7 +60,7 @@ namespace VirtoCommerce.Storefront.Test
 
             var quoteItem = quoteRequestBuilder.QuoteRequest.Items.First();
             var productPrice = quoteItem.SalePrice;
-            quoteItem.ProposalPrices.Add(new TierPrice { Price = productPrice, Quantity = 10 });
+            quoteItem.ProposalPrices.Add(new TierPrice { ListPrice = productPrice, Quantity = 10 });
             quoteRequestBuilder.SaveAsync().Wait();
             quoteRequest = quoteRequestBuilder.GetOrCreateNewTransientQuoteRequestAsync(workContext.CurrentStore, customer, workContext.CurrentLanguage, workContext.CurrentCurrency).Result.QuoteRequest;
             quoteItem = quoteRequestBuilder.QuoteRequest.Items.First();
@@ -98,7 +98,7 @@ namespace VirtoCommerce.Storefront.Test
 
             var quoteItem = quoteRequestBuilder.QuoteRequest.Items.First();
             var productPrice = quoteItem.SalePrice;
-            quoteItem.ProposalPrices.Add(new TierPrice { Price = productPrice, Quantity = 10 });
+            quoteItem.ProposalPrices.Add(new TierPrice { ListPrice = productPrice, Quantity = 10 });
             quoteRequestBuilder.SaveAsync().Wait();
             quoteRequest = quoteRequestBuilder.GetOrCreateNewTransientQuoteRequestAsync(workContext.CurrentStore, customer, workContext.CurrentLanguage, workContext.CurrentCurrency).Result.QuoteRequest;
             quoteItem = quoteRequestBuilder.QuoteRequest.Items.First();
@@ -136,7 +136,7 @@ namespace VirtoCommerce.Storefront.Test
 
             var quoteItem = quoteRequestBuilder.QuoteRequest.Items.First();
             var productPrice = quoteItem.SalePrice;
-            quoteItem.ProposalPrices.Add(new TierPrice { Price = productPrice, Quantity = 10 });
+            quoteItem.ProposalPrices.Add(new TierPrice { ListPrice = productPrice, Quantity = 10 });
             quoteRequestBuilder.SaveAsync().Wait();
             quoteRequest = quoteRequestBuilder.GetOrCreateNewTransientQuoteRequestAsync(workContext.CurrentStore, customer, workContext.CurrentLanguage, workContext.CurrentCurrency).Result.QuoteRequest;
             quoteItem = quoteRequestBuilder.QuoteRequest.Items.First();

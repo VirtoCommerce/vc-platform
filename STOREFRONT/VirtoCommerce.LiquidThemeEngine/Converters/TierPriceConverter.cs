@@ -8,7 +8,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
         {
             var shopifyModel = new TierPrice();
 
-            shopifyModel.Price = storefrontModel.Price.Amount * 100;
+            shopifyModel.Price = storefrontModel.ListPrice.Amount * 100;
             shopifyModel.Quantity = storefrontModel.Quantity;
 
             return shopifyModel;

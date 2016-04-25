@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using CacheManager.Core;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.Storefront.Converters;
 using VirtoCommerce.Storefront.Model;
@@ -11,6 +10,8 @@ using VirtoCommerce.Storefront.Model.Cart.ValidationErrors;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Services;
+using VirtoCommerce.Storefront.Model.Marketing.Services;
+using System.Collections.Generic;
 
 namespace VirtoCommerce.Storefront.Services
 {
@@ -21,13 +22,15 @@ namespace VirtoCommerce.Storefront.Services
         private readonly IShoppingCartModuleApi _cartApi;
         private readonly ICatalogSearchService _catalogService;
         private readonly ILocalCacheManager _cacheManager;
+        private readonly IPromotionEvaluator _promotionEvaluator;
 
-        public CartValidator(Func<WorkContext> workContextFaxtory, IShoppingCartModuleApi cartApi, ICatalogSearchService catalogService, ILocalCacheManager cacheManager)
+        public CartValidator(Func<WorkContext> workContextFaxtory, IShoppingCartModuleApi cartApi, ICatalogSearchService catalogService, ILocalCacheManager cacheManager, IPromotionEvaluator promotionEvaluator)
         {
             _workContextFactory = workContextFaxtory;
             _cartApi = cartApi;
             _catalogService = catalogService;
             _cacheManager = cacheManager;
+            _promotionEvaluator = promotionEvaluator;
         }
 
         public async Task ValidateAsync(ShoppingCart cart)
@@ -46,11 +49,20 @@ namespace VirtoCommerce.Storefront.Services
             var productIds = cart.Items.Select(i => i.ProductId).ToArray();
             var cacheKey = "CartValidator.ValidateItemsAsync-" + workContext.CurrentCurrency.Code + ":" + workContext.CurrentLanguage + ":" + string.Join(":", productIds);
             var products = await _cacheManager.GetAsync(cacheKey, "ApiRegion", async () => { return await _catalogService.GetProductsAsync(productIds, ItemResponseGroup.ItemLarge); });
+            var productsToReevaluate = GetProductsToReevaluate(cart, products);
+
+            // Reevaluate products promotions for getting new product prices to compare with
+            if (productsToReevaluate.Any())
+            {
+                var promotionContext = workContext.ToPromotionEvaluationContext(productsToReevaluate);
+                await _promotionEvaluator.EvaluateDiscountsAsync(promotionContext, productsToReevaluate);
+            }
+
             foreach (var lineItem in cart.Items.ToList())
             {
-                var product = products.FirstOrDefault(x => x.Id == lineItem.ProductId);
-
                 lineItem.ValidationErrors.Clear();
+
+                var product = products.FirstOrDefault(p => p.Id == lineItem.ProductId);
                 if (product == null || (product != null && (!product.IsActive || !product.IsBuyable)))
                 {
                     lineItem.ValidationErrors.Add(new ProductUnavailableError());
@@ -82,6 +94,35 @@ namespace VirtoCommerce.Storefront.Services
                     }
                 }
             }
+
+            // Reevaluate shopping cart for applying promotions for changed product prices
+            if (productsToReevaluate.Any())
+            {
+                var promotionContext = workContext.ToPromotionEvaluationContext();
+                await _promotionEvaluator.EvaluateDiscountsAsync(promotionContext, new[] { cart });
+            }
+        }
+
+        private ICollection<Product> GetProductsToReevaluate(ShoppingCart cart, ICollection<Product> products)
+        {
+            var productsToReevaluate = new List<Product>();
+
+            foreach (var lineItem in cart.Items)
+            {
+                var product = products.FirstOrDefault(p => p.Id == lineItem.ProductId);
+                if (product != null)
+                {
+                    var matchedTierPrice = product.Price.TierPrices.Last(tp => tp.Quantity <= lineItem.Quantity);
+                    if (matchedTierPrice.SalePrice != product.Price.SalePrice)
+                    {
+                        product.Price.ListPrice = matchedTierPrice.ListPrice;
+                        product.Price.SalePrice = matchedTierPrice.SalePrice;
+                        productsToReevaluate.Add(product);
+                    }
+                }
+            }
+
+            return productsToReevaluate;
         }
 
         private async Task ValidateShipmentsAsync(ShoppingCart cart)
