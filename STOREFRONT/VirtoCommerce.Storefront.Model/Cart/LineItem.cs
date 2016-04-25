@@ -211,7 +211,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
         {
             get
             {
-                return SingleItemDiscountTotal* Quantity;
+                return SingleItemDiscountTotal * Quantity;
             }
         }
 
