@@ -154,6 +154,19 @@ namespace VirtoCommerce.Storefront.Model.Cart
         }
 
         /// <summary>
+        /// Gets the value of shopping cart items total extended price (product price includes all kinds of discounts)
+        /// </summary>
+        public Money ExtendedPriceTotal
+        {
+            get
+            {
+                var extendedPriceTotal = Items.Sum(i => i.ExtendedPrice.Amount);
+
+                return new Money(extendedPriceTotal, Currency);
+            }
+        }
+
+        /// <summary>
         /// Gets the value of shipping total cost
         /// </summary>
         public Money ShippingTotal
