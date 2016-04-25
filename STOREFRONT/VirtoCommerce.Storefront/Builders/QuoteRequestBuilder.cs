@@ -194,7 +194,7 @@ namespace VirtoCommerce.Storefront.Builders
                         existingItem.Comment = item.Comment;
                         existingItem.SelectedTierPrice = new TierPrice
                         {
-                            Price = new Money(item.SelectedTierPrice.Price, _quoteRequest.Currency),
+                            ListPrice = new Money(item.SelectedTierPrice.Price, _quoteRequest.Currency),
                             Quantity = item.SelectedTierPrice.Quantity
                         };
                         existingItem.ProposalPrices.Clear();
@@ -202,7 +202,7 @@ namespace VirtoCommerce.Storefront.Builders
                         {
                             existingItem.ProposalPrices.Add(new TierPrice
                             {
-                                Price = new Money(proposalPrice.Price, _quoteRequest.Currency),
+                                ListPrice = new Money(proposalPrice.Price, _quoteRequest.Currency),
                                 Quantity = proposalPrice.Quantity
                             });
                         }
