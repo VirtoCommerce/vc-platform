@@ -20,7 +20,7 @@
                             <th class="table-col __proudct-img">{{ 'orders.blades.customerOrder-items.labels.item' | translate }}</th>
                             <th class="table-col">{{ 'orders.blades.customerOrder-items.labels.quantity' | translate }}</th>
                             <th class="table-col">{{ 'orders.blades.customerOrder-items.labels.aviable' | translate }}</th>
-                            <th class="table-col">{{ 'orders.blades.customerOrder-items.labels.await' | translate }}</th>
+                            <th class="table-col">{{ 'orders.blades.customerOrder-items.labels.basePrice' | translate }}</th>
                             <th class="table-col">{{ 'orders.blades.customerOrder-items.labels.price' | translate }}</th>
                             <th class="table-col">{{ 'orders.blades.customerOrder-items.labels.discount' | translate }}</th>
                             <th class="table-col">{{ 'orders.blades.customerOrder-items.labels.tax' | translate }}</th>
@@ -44,33 +44,25 @@
 
                             </td>
                             <td class="table-col">
-                                <div class="form-input __mini __number">
-                                    <input smart-float num-type="integer" required ng-model="data.quantity">
-                                </div>
+                                <div class="__mini __number">{{data.quantity}}</div>
                             </td>
                             <td class="table-col">
                                 <span ng-class="{'error': data.avail <= 0}">{{data.avail || 0}}</span>
                             </td>
                             <td class="table-col">
-                                <span ng-class="{'error': data.await <= 0 }">{{data.await || 0}}</span>
+                                <span class="list-price">{{data.basePrice | number:2}}</span>
                             </td>
                             <td class="table-col">
-                                <div class="form-input __mini">
-                                    <input name="price" money required ng-model="data.price" type="text">
-                                </div>
+                                <span class="list-price">{{data.price | number:2}}</span>
                             </td>
                             <td class="table-col">
-                                <div class="form-input __mini">
-                                    <input required money ng-model="data.discountAmount" type="text">
-                                </div>
-                            </td>
+                                <span class="list-price">{{data.discountAmount | number:2}}</span>
+                              </td>
                             <td class="table-col">
-                                <div class="form-input __mini">
-                                    <input required money ng-model="data.tax" type="text">
-                                </div>
+                                <span class="list-price">{{data.tax | number:2}}</span>
                             </td>
                             <td class="table-col __total">
-                                <span>{{data._total | number:2 }}</span>
+                                <span class="list-price">{{data._total | number:2 }}</span>
                             </td>
                         </tr>
                         <tr ng-repeat-end class="table-item" ng-class="{'__selected': data.id === selectedNodeId}" ng-click='selectItem(data)'>

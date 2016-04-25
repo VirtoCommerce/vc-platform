@@ -19,15 +19,15 @@ namespace VirtoCommerce.Domain.Order.Model
 
         public string Currency { get; set; }
         /// <summary>
-        /// Price where tax and discount are not applied
+        /// List item price without any discount and taxes
         /// </summary>
         public decimal BasePrice { get; set; }
         /// <summary>
-        /// Price where tax is not applied and discount is applied
+        /// Placed price with static and dynamic discounts applied but without tax
         /// </summary>
         public decimal Price { get; set; }
         /// <summary>
-        /// Static discount amount
+        /// Total discount amount ( defined manually via price list and dynamic discounts)
         /// </summary>
         public decimal DiscountAmount { get; set; }
         /// <summary>

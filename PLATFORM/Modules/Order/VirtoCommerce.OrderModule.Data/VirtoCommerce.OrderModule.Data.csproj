@@ -126,6 +126,10 @@
     <Compile Include="Migrations\201512301352120_AddPriceId.Designer.cs">
       <DependentUpon>201512301352120_AddPriceId.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201604251543185_ShipmentDiscountAmount.cs" />
+    <Compile Include="Migrations\201604251543185_ShipmentDiscountAmount.Designer.cs">
+      <DependentUpon>201604251543185_ShipmentDiscountAmount.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\AddressEntity.cs" />
     <Compile Include="Model\CustomerOrderEntity.cs" />
@@ -205,6 +209,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201512301352120_AddPriceId.resx">
       <DependentUpon>201512301352120_AddPriceId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201604251543185_ShipmentDiscountAmount.resx">
+      <DependentUpon>201604251543185_ShipmentDiscountAmount.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

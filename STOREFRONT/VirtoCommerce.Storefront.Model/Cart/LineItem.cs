@@ -169,7 +169,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// </summary>
         public Money SalePrice { get; set; }
 
-     
+
         /// <summary>
         /// Gets the value of line item actual price (include all types of discounts)
         /// </summary>
@@ -199,7 +199,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
         {
             get
             {
-                return ListPrice -  SalePrice;
+                return ListPrice - SalePrice;
             }
         }
 
@@ -287,7 +287,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
 
         public void ApplyRewards(IEnumerable<PromotionReward> rewards)
         {
-            var lineItemRewards = rewards.Where(r => r.RewardType == PromotionRewardType.CatalogItemAmountReward && r.ProductId == ProductId);
+            var lineItemRewards = rewards.Where(r => r.RewardType == PromotionRewardType.CatalogItemAmountReward && (r.ProductId.IsNullOrEmpty() || r.ProductId.EqualsInvariant(ProductId)));
             if (lineItemRewards == null)
             {
                 return;
