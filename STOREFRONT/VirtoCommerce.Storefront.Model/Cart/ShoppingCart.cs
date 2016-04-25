@@ -147,7 +147,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
         {
             get
             {
-                var subtotal = Items.Sum(i => i.SalePrice.Amount * i.Quantity);
+                var subtotal = Items.Sum(i => i.ListPrice.Amount * i.Quantity);
 
                 return new Money(subtotal, Currency);
             }
@@ -181,8 +181,9 @@ namespace VirtoCommerce.Storefront.Model.Cart
                 var discountTotal = Discounts.Sum(d => d.Amount.Amount);
                 var itemDiscountTotal = Items.Sum(i => i.DiscountTotal.Amount);
                 var shipmentDiscountTotal = Shipments.Sum(s => s.DiscountTotal.Amount);
+                var staticDiscountsTotal = Items.Sum(i => (i.ListPrice.Amount - i.SalePrice.Amount) * i.Quantity);
 
-                return new Money(discountTotal + itemDiscountTotal + shipmentDiscountTotal, Currency);
+                return new Money(discountTotal + itemDiscountTotal + shipmentDiscountTotal + staticDiscountsTotal, Currency);
             }
         }
 
