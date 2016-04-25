@@ -16,7 +16,6 @@
             htmlEditor.options.toolbar.unshift('headerFirst', 'headerSecond');
             htmlEditor._buildtoolbar();
             htmlEditor.off('action.image').on('action.image', function () {
-                //dialogService.showUploadDialog({ uploader: scope.fileUploader });
                 $('#fileUploader').trigger('click');
             });
             var codeMirrorElement = $('.CodeMirror');
