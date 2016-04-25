@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Web;
@@ -110,7 +111,7 @@ namespace VirtoCommerce.Storefront
                 }
             };
 
-            var distributedCache = CacheFactory.Build("distributedCache", settings =>
+                  var distributedCache = CacheFactory.Build("distributedCache", settings =>
             {
                 var jsonSerializerSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All };
                 var redisCacheEnabled = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Storefront:RedisCache:Enabled", false);
@@ -243,9 +244,9 @@ namespace VirtoCommerce.Storefront
             AuthConfig.ConfigureAuth(app, () => container.Resolve<IStorefrontUrlBuilder>());
 
             app.Use<WorkContextOwinMiddleware>(container);
-            app.UseStageMarker(PipelineStage.ResolveCache);
+            app.UseStageMarker(PipelineStage.PostAuthorize);
             app.Use<StorefrontUrlRewriterOwinMiddleware>(container);
-            app.UseStageMarker(PipelineStage.ResolveCache);
+            app.UseStageMarker(PipelineStage.PostAuthorize);
         }
 
 

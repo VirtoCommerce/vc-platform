@@ -31,7 +31,7 @@ namespace VirtoCommerce.Storefront.Model.StaticContent
                 content.Replace(_excerpToken, String.Empty);
             }
             base.LoadContent(content, metaInfoMap, themeSettings);
-            //TODO: load image from meta info
+            //TODO: load image from meta info            
         }
     }
 }

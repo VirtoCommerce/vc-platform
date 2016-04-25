@@ -96,8 +96,9 @@ namespace VirtoCommerce.Platform.Data.Asset
         {
             foreach (var url in urls)
             {
-                var blobContainer = GetBlobContainer(GetContainerNameFromUrl(url));
-                var directoryPath = GetDirectoryPathFromUrl(url);
+                var absoluteUri = url.IsAbsoluteUrl() ? new Uri(url) : new Uri(_cloudBlobClient.BaseUri, url.TrimStart('/'));
+                var blobContainer = GetBlobContainer(GetContainerNameFromUrl(absoluteUri.ToString()));
+                var directoryPath = GetDirectoryPathFromUrl(absoluteUri.ToString());
                 if (String.IsNullOrEmpty(directoryPath))
                 {
                     blobContainer.DeleteIfExists();
@@ -111,7 +112,7 @@ namespace VirtoCommerce.Platform.Data.Asset
                         directoryBlob.DeleteIfExists();
                     }
                     //Remove blockBlobs if url not directory
-                    var blobBlock = blobContainer.GetBlockBlobReference(url);
+                    var blobBlock = blobContainer.GetBlockBlobReference(absoluteUri.ToString());
                     blobBlock.DeleteIfExists();
                 }
             }

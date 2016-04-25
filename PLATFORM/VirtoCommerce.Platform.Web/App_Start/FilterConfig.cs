@@ -27,9 +27,14 @@ namespace VirtoCommerce.Platform.Web
 
         public override void OnActionExecuted(HttpActionExecutedContext actionExecutedContext)
         {
-            _timer.Stop();
-
-            actionExecutedContext.Response.Headers.Add("X-Response-Time", _timer.ElapsedMilliseconds.ToString());
+            if (_timer != null)
+            {
+                _timer.Stop();
+                if (actionExecutedContext != null && actionExecutedContext.Response != null && actionExecutedContext.Response.Headers != null)
+                {
+                    actionExecutedContext.Response.Headers.Add("X-Response-Time", _timer.ElapsedMilliseconds.ToString());
+                }
+            }
         }
     }
 }
