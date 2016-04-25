@@ -108,6 +108,7 @@
     <Compile Include="Common\SerializationExtension.cs" />
     <Compile Include="Common\SortInfo.cs" />
     <Compile Include="Common\StreamExtensions.cs" />
+    <Compile Include="Common\SwaggerOptionalAttribute.cs" />
     <Compile Include="DynamicProperties\DynamicPropertiesExtensions.cs" />
     <Compile Include="DynamicProperties\DynamicProperty.cs" />
     <Compile Include="DynamicProperties\DynamicPropertyDictionaryItem.cs" />

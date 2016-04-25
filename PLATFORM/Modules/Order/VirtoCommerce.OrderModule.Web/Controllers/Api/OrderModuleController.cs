@@ -152,7 +152,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
         [HttpPost]
         [ResponseType(typeof(webModel.ProcessPaymentResult))]
         [Route("{orderId}/processPayment/{paymentId}")]
-        public IHttpActionResult ProcessOrderPayments(string orderId, string paymentId, BankCardInfo bankCardInfo = null)
+        public IHttpActionResult ProcessOrderPayments(string orderId, string paymentId, [SwaggerOptional] BankCardInfo bankCardInfo)
         {
             //search first by order number
             var order = _customerOrderService.GetByOrderNumber(orderId, coreModel.CustomerOrderResponseGroup.Full);
