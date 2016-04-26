@@ -2,8 +2,9 @@
 .controller('virtoCommerce.contentModule.pageDetailController', ['$rootScope', '$scope', 'platformWebApp.validators', 'platformWebApp.dialogService', 'virtoCommerce.contentModule.contentApi', '$timeout', 'platformWebApp.bladeNavigationService', 'platformWebApp.dynamicProperties.api', 'platformWebApp.settings', 'FileUploader', function ($rootScope, $scope, validators, dialogService, contentApi, $timeout, bladeNavigationService, dynamicPropertiesApi, settings, FileUploader) {
     var blade = $scope.blade;
     $scope.validators = validators;
+    var contentType = blade.contentType.substr(0, 1).toUpperCase() + blade.contentType.substr(1, blade.contentType.length - 1);
     $scope.fileUploader = new FileUploader({
-        url: 'api/platform/assets?folderUrl=cms-content/Pages/' + blade.storeId + '/assets',
+        url: 'api/platform/assets?folderUrl=cms-content/' + contentType + '/' + blade.storeId + '/assets',
         headers: { Accept: 'application/json' },
         autoUpload: true,
         removeAfterUpload: true,

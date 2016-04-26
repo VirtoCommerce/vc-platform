@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Security.Principal;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Hosting;
@@ -418,8 +419,13 @@ namespace VirtoCommerce.Storefront.Owin
         private string GetLanguageFromUrl(IOwinContext context, string[] languages)
         {
             var requestPath = context.Request.Path.ToString();
-            var retVal = languages.FirstOrDefault(x => requestPath.Contains(string.Format("/{0}/", x)));
-            return retVal;
+            var regexpPattern = string.Format(@"\/({0})\/?", string.Join("|", languages));
+            var match = Regex.Match(requestPath, regexpPattern, RegexOptions.IgnoreCase);
+            if (match.Success && match.Groups.Count > 1)
+            {
+                return match.Groups[1].Value;
+            }
+            return null;
         }
 
         private static Currency GetCurrency(IOwinContext context, Store store)
