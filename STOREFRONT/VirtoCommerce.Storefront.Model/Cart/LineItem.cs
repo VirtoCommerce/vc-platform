@@ -299,7 +299,12 @@ namespace VirtoCommerce.Storefront.Model.Cart
             foreach (var reward in lineItemRewards)
             {
                 var discount = reward.ToDiscountModel(SalePrice);
-
+                if(reward.Quantity > 0)
+                {
+                    var money = discount.Amount * Math.Min(reward.Quantity, Quantity);
+                    //TODO: need allocate more rightly between each quantities
+                    discount.Amount = money.Allocate(Quantity).FirstOrDefault();
+                }
                 if (reward.IsValid)
                 {
                     Discounts.Add(discount);

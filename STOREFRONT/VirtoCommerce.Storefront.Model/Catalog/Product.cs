@@ -202,7 +202,7 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         public ProductPrice Price { get; set; }
 
         /// <summary>
-        /// Product prices foe other currencies
+        /// Product prices for other currencies
         /// </summary>
         public ICollection<ProductPrice> Prices { get; set; }
 
@@ -234,6 +234,48 @@ namespace VirtoCommerce.Storefront.Model.Catalog
             }
         }
 
+        /// <summary>
+        /// Apply prices to product
+        /// </summary>
+        /// <param name="prices"></param>
+        /// <param name="currentCurrency"></param>
+        public void ApplyPrices(IEnumerable<ProductPrice> prices, Currency currentCurrency, IEnumerable<Currency> allCurrencies)
+        {
+            Prices.Clear();
+            Price = null;
+
+            Currency = currentCurrency;
+            //group prices by currency
+            var groupByCurrencyPrices = prices.GroupBy(x => x.Currency).Where(x => x.Any());
+            foreach (var currencyGroup in groupByCurrencyPrices)
+            {
+                //For each currency need get nominal price (with min qty)
+                var orderedPrices = currencyGroup.OrderBy(x => x.MinQuantity ?? 0).ThenBy(x => x.ListPrice);
+                var nominalPrice = orderedPrices.FirstOrDefault();
+                //and add to nominal price other prices as tier prices
+                nominalPrice.TierPrices.AddRange(orderedPrices.Select(x => new TierPrice(x.SalePrice, x.MinQuantity ?? 0)));
+                //Add nominal price to product prices list 
+                Prices.Add(nominalPrice);
+            }
+            //Need add product price for all currencies (even if not returned from API need make it by currency exchange conversation)
+            foreach (var currency in allCurrencies)
+            {
+                var price = Prices.FirstOrDefault(x => x.Currency == currency);
+                if (price == null)
+                {
+                    price = new ProductPrice(currency);
+                    //Convert exist price to new currency
+                    if (Prices.Any())
+                    {
+                        price = Prices.First().ConvertTo(currency);
+                    }
+                    Prices.Add(price);
+                }
+            }
+            //Set current product price for current currency
+            Price = Prices.FirstOrDefault(x => x.Currency == currentCurrency);
+        }
+
         #region IHasProperties Members
         public ICollection<CatalogProperty> Properties { get; set; }
         #endregion
@@ -245,7 +287,7 @@ namespace VirtoCommerce.Storefront.Model.Catalog
 
         public void ApplyRewards(IEnumerable<PromotionReward> rewards)
         {
-            var productRewards = rewards.Where(r => r.RewardType == PromotionRewardType.CatalogItemAmountReward && r.ProductId == Id);
+            var productRewards = rewards.Where(r => r.RewardType == PromotionRewardType.CatalogItemAmountReward && (r.ProductId.IsNullOrEmpty() || r.ProductId.EqualsInvariant(Id)));
             if (productRewards == null)
             {
                 return;
@@ -255,14 +297,20 @@ namespace VirtoCommerce.Storefront.Model.Catalog
 
             foreach (var reward in productRewards)
             {
+                //Apply discount to main price
                 var discount = reward.ToDiscountModel(Price.SalePrice);
-
                 if (reward.IsValid)
                 {
                     Discounts.Add(discount);
                     Price.ActiveDiscount = discount;
-                }
-            }
+                    //apply discount to tier prices
+                    foreach (var tierPrice in Price.TierPrices)
+                    {
+                        discount = reward.ToDiscountModel(tierPrice.Price);
+                        tierPrice.ActiveDiscount = discount;
+                    }
+                }            
+            }          
         }
         #endregion
 

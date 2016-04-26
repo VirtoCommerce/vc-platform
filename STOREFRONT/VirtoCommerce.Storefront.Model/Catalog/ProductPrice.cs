@@ -104,6 +104,18 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         /// </summary>
         public ICollection<TierPrice> TierPrices { get; set; }
 
+        
+        /// <summary>
+        /// Return tire price for passed quantity
+        /// </summary>
+        /// <param name="quantity"></param>
+        /// <returns></returns>
+        public TierPrice GetTierPrice(int quantity)
+        {
+            var retVal = TierPrices.OrderBy(x => x.Quantity).Last(x => x.Quantity <= quantity);
+            return retVal;
+        }
+
         #region IConvertible<ProductPrice> Members
         /// <summary>
         /// Convert current product price to other currency using currency exchange rate

@@ -106,8 +106,6 @@ namespace VirtoCommerce.Storefront.Builders
         public virtual async Task<ICartBuilder> AddItemAsync(Product product, int quantity)
         {
             AddLineItem(product.ToLineItem(_cart.Language, quantity));
-
-
             await EvaluatePromotionsAndTaxes();
 
             return this;
@@ -118,16 +116,7 @@ namespace VirtoCommerce.Storefront.Builders
             var lineItem = _cart.Items.FirstOrDefault(i => i.Id == id);
             if (lineItem != null)
             {
-
-                if (quantity > 0)
-                {
-                    lineItem.Quantity = quantity;
-                }
-                else
-                {
-                    _cart.Items.Remove(lineItem);
-                }
-
+                await InnerChangeItemQuantityAsync(lineItem, quantity);            
                 await EvaluatePromotionsAndTaxes();
             }
 
@@ -139,18 +128,9 @@ namespace VirtoCommerce.Storefront.Builders
             var lineItem = _cart.Items.ElementAt(lineItemIndex);
             if (lineItem != null)
             {
-                if (quantity > 0)
-                {
-                    lineItem.Quantity = quantity;
-                }
-                else
-                {
-                    _cart.Items.Remove(lineItem);
-                }
+                await InnerChangeItemQuantityAsync(lineItem, quantity);
+                await EvaluatePromotionsAndTaxes();
             }
-
-            await EvaluatePromotionsAndTaxes();
-
             return this;
         }
 
@@ -161,12 +141,10 @@ namespace VirtoCommerce.Storefront.Builders
                 var lineItem = _cart.Items.ElementAt(i);
                 if (lineItem != null && quantities[i] > 0)
                 {
-                    lineItem.Quantity = quantities[i];
+                    await InnerChangeItemQuantityAsync(lineItem, quantities[i]);
                 }
             }
-
             await EvaluatePromotionsAndTaxes();
-
             return this;
         }
 
@@ -393,8 +371,8 @@ namespace VirtoCommerce.Storefront.Builders
                 if (quoteItem != null)
                 {
                     var lineItem = product.ToLineItem(_cart.Language, (int)quoteItem.SelectedTierPrice.Quantity);
-                    lineItem.ListPrice = quoteItem.SelectedTierPrice.ListPrice;
-                    lineItem.SalePrice = quoteItem.SelectedTierPrice.ListPrice;
+                    lineItem.ListPrice = quoteItem.ListPrice;
+                    lineItem.SalePrice = quoteItem.SelectedTierPrice.Price;
                     lineItem.ValidationType = ValidationType.None;
 
                     AddLineItem(lineItem);
@@ -561,6 +539,26 @@ namespace VirtoCommerce.Storefront.Builders
         }
 
         #endregion
+
+        private async Task InnerChangeItemQuantityAsync(LineItem lineItem, int quantity)
+        {
+            if (lineItem != null)
+            {
+                var product = (await _catalogSearchService.GetProductsAsync(new[] { lineItem.ProductId }, ItemResponseGroup.ItemWithPrices)).FirstOrDefault();
+                if(product != null)
+                {
+                    lineItem.SalePrice = product.Price.GetTierPrice(quantity).Price;
+                }
+                if (quantity > 0)
+                {
+                    lineItem.Quantity = quantity;
+                }
+                else
+                {
+                    _cart.Items.Remove(lineItem);
+                }
+            }
+        }
 
         private void AddLineItem(LineItem lineItem)
         {

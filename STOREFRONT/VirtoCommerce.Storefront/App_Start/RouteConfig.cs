@@ -125,8 +125,7 @@ namespace VirtoCommerce.Storefront
 
             // Product routes
             routes.AddStorefrontRoute("Product.GetProduct", "product/{productId}", defaults: new { controller = "Product", action = "ProductDetails" });
-            routes.AddStorefrontRoute("Product.GetProductJson", "product/{productId}/json", defaults: new { controller = "Product", action = "ProductDetailsJson" });
-
+           
             // Assets
             routes.AddStorefrontRoute("Assets", "themes/assets/{*asset}", defaults: new { controller = "Asset", action = "GetAssets" });
             routes.AddStorefrontRoute("GlobalAssets", "themes/global/assets/{*asset}", defaults: new { controller = "Asset", action = "GetGlobalAssets" });
