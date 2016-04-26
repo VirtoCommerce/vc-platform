@@ -45,75 +45,18 @@ namespace VirtoCommerce.Storefront.Services
         }
 
         #endregion
+
         private void ApplyProductPricesInternal(IEnumerable<Product> products, IEnumerable<VirtoCommercePricingModuleWebModelPrice> prices)
         {
             var workContext = _workContextFactory();
+
             foreach (var product in products)
             {
-                var tierPrices = new List<TierPrice>();
-                var productPricesGroupedByCurrency = prices.Where(p => p.ProductId == product.Id).GroupBy(p => p.Currency);
-                foreach (var productPricesCurrencyGroup in productPricesGroupedByCurrency)
-                {
-                    var productPrice = productPricesCurrencyGroup.FirstOrDefault(p => !p.MinQuantity.HasValue);
-                    if (productPrice == null)
-                    {
-                        productPrice = productPricesCurrencyGroup.OrderBy(p => p.MinQuantity.Value).FirstOrDefault();
-                    }
-                    if (productPrice != null)
-                    {
-                        product.Prices.Add(productPrice.ToWebModel(workContext.AllCurrencies, workContext.CurrentLanguage));
-                    }
-
-                    var productPricesForCurrentCurrency = productPricesCurrencyGroup.Where(p => p.Currency == workContext.CurrentCurrency.Code).OrderBy(p => p.MinQuantity);
-                    tierPrices.AddRange(productPricesForCurrentCurrency.Select(p => p.ToTierPrice(workContext.CurrentCurrency)));
-                }
-
-                foreach (var storeCurrency in workContext.CurrentStore.Currencies)
-                {
-                    var price = product.Prices.FirstOrDefault(x => x.Currency == storeCurrency);
-                    if (price == null)
-                    {
-                        price = new ProductPrice(storeCurrency);
-                        if (product.Prices.Any())
-                        {
-                            price = product.Prices.First().ConvertTo(storeCurrency);
-                        }
-                        product.Prices.Add(price);
-                    }
-                }
-
-                product.Currency = workContext.CurrentCurrency;
-
-                product.Price = product.Prices.FirstOrDefault(p => p.Currency == workContext.CurrentCurrency);
-                product.Price.TierPrices = tierPrices;
+                var productPrices = prices.Where(x => x.ProductId == product.Id)
+                                          .Select(x => x.ToWebModel(workContext.AllCurrencies, workContext.CurrentLanguage));
+                product.ApplyPrices(productPrices, workContext.CurrentCurrency, workContext.CurrentStore.Currencies);
             }
 
-            //var alreadyDefinedProductsPriceGroups = prices.Select(x => x.ToWebModel(workContext.AllCurrencies, workContext.CurrentLanguage)).GroupBy(x => x.ProductId);
-            //foreach (var product in products)
-            //{
-            //    var productPricesGroup = alreadyDefinedProductsPriceGroups.FirstOrDefault(x => x.Key == product.Id);
-            //    if (productPricesGroup != null)
-            //    {
-            //        //Get first price for each currency
-            //        product.Prices = productPricesGroup.GroupBy(x => x.Currency).Select(x => x.FirstOrDefault()).Where(x => x != null).ToList();
-            //    }
-            //    //Need add product price for all store currencies (even if not returned from api need make it by currency exchange convertation)
-            //    foreach (var storeCurrency in workContext.CurrentStore.Currencies)
-            //    {
-            //        var price = product.Prices.FirstOrDefault(x => x.Currency == storeCurrency);
-            //        if (price == null)
-            //        {
-            //            price = new ProductPrice(storeCurrency);
-            //            if (product.Prices.Any())
-            //            {
-            //                price = product.Prices.First().ConvertTo(storeCurrency);
-            //            }
-            //            product.Prices.Add(price);
-            //        }
-            //    }
-            //    product.Currency = workContext.CurrentCurrency;
-            //    product.Price = product.Prices.FirstOrDefault(x => x.Currency.Equals(workContext.CurrentCurrency));
-            //}
         }
     }
 }

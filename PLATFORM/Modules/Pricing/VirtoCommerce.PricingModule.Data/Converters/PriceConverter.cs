@@ -58,7 +58,7 @@ namespace VirtoCommerce.PricingModule.Data.Converters
         {
             if (target == null)
                 throw new ArgumentNullException("target");
-            var patchInjection = new PatchInjection<dataModel.Price>(x => x.ProductId, x => x.List,
+            var patchInjection = new PatchInjection<dataModel.Price>(true, x => x.ProductId, x => x.List,
                                                                            x => x.MinQuantity, x => x.Sale);
             target.InjectFrom(patchInjection, source);
         }

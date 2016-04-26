@@ -88,11 +88,7 @@ namespace VirtoCommerce.Storefront.Converters
             quoteItem.ListPrice = product.Price.ListPrice;
             quoteItem.ProductId = product.Id;
             quoteItem.SalePrice = product.Price.SalePrice;
-            quoteItem.ProposalPrices.Add(new TierPrice
-            {
-                ListPrice = product.Price.SalePrice,
-                Quantity = quantity
-            });
+            quoteItem.ProposalPrices.Add(new TierPrice(product.Price.SalePrice, quantity));          
             quoteItem.SelectedTierPrice = quoteItem.ProposalPrices.First();
 
             return quoteItem;

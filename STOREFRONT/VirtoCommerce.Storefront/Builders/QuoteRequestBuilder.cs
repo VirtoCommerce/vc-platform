@@ -192,19 +192,11 @@ namespace VirtoCommerce.Storefront.Builders
                     if (existingItem != null)
                     {
                         existingItem.Comment = item.Comment;
-                        existingItem.SelectedTierPrice = new TierPrice
-                        {
-                            ListPrice = new Money(item.SelectedTierPrice.Price, _quoteRequest.Currency),
-                            Quantity = item.SelectedTierPrice.Quantity
-                        };
+                        existingItem.SelectedTierPrice = new TierPrice(new Money(item.SelectedTierPrice.Price, _quoteRequest.Currency), item.SelectedTierPrice.Quantity);
                         existingItem.ProposalPrices.Clear();
                         foreach (var proposalPrice in item.ProposalPrices)
                         {
-                            existingItem.ProposalPrices.Add(new TierPrice
-                            {
-                                ListPrice = new Money(proposalPrice.Price, _quoteRequest.Currency),
-                                Quantity = proposalPrice.Quantity
-                            });
+                            existingItem.ProposalPrices.Add(new TierPrice(new Money(proposalPrice.Price, _quoteRequest.Currency), proposalPrice.Quantity));
                         }
                     }
                 }
