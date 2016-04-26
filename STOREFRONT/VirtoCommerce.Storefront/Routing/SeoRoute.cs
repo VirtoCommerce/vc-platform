@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Web;
 using System.Web.Routing;
-using CacheManager.Core;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.Client.Model;
 using VirtoCommerce.Storefront.Common;
@@ -30,30 +28,25 @@ namespace VirtoCommerce.Storefront.Routing
 
         public override RouteData GetRouteData(HttpContextBase httpContext)
         {
-            var requestUrl = httpContext.Request.Url.ToString();
-
             var data = base.GetRouteData(httpContext);
-
             if (data != null)
             {
-                // Get work context
-                var workContext = _workContextFactory();
-
                 var path = data.Values["path"] as string;
-                var store = data.Values["store"] as string;
-
                 if (path != null)
                 {
+                    var workContext = _workContextFactory();
+
                     var tokens = path.Split('/');
                     // TODO: Store path tokens as breadcrumbs to the work context
                     var slug = tokens.LastOrDefault();
 
                     // Get all seo records for requested slug and also all other seo records with different slug and languages but related to same object
                     var seoRecords = GetSeoRecords(slug);
+
                     var seoRecord = seoRecords.Where(x => x.IsActive == true).GetBestMatchedSeoInfo(workContext.CurrentStore, workContext.CurrentLanguage, slug);
-                    if(seoRecord != null)
+                    if (seoRecord != null)
                     {
-                        if(seoRecord.SemanticUrl.EqualsInvariant(slug))
+                        if (seoRecord.SemanticUrl.EqualsInvariant(slug))
                         {
                             // Process the URL
                             switch (seoRecord.ObjectType)
@@ -93,7 +86,7 @@ namespace VirtoCommerce.Storefront.Routing
                             data.Values["controller"] = "Error";
                             data.Values["action"] = "Http404";
                         }
-                    }                    
+                    }
                 }
             }
 

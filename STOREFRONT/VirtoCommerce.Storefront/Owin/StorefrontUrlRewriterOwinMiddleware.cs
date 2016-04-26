@@ -23,28 +23,32 @@ namespace VirtoCommerce.Storefront.Owin
         public override async Task Invoke(IOwinContext context)
         {
             var workContext = _container.Resolve<WorkContext>();
-            var currentStoreId = workContext.CurrentStore != null ? workContext.CurrentStore.Id : "-";
-            var currentCultureName = workContext.CurrentStore != null ? workContext.CurrentLanguage.CultureName : "en-US";
 
-            var normalizedPath = new PathString();
-            //add store to path
-            normalizedPath = normalizedPath.Add(new PathString("/" + currentStoreId));
-            //add language to path
-            normalizedPath = normalizedPath.Add(new PathString("/" + currentCultureName));
-
-            //add remaining path part without store and language
-            var requestPath = context.Request.Path.Value;
-            requestPath = Regex.Replace(requestPath, "/" + currentStoreId + "/", "/", RegexOptions.IgnoreCase);
-            requestPath = Regex.Replace(requestPath, "/" + currentCultureName + "/", "/", RegexOptions.IgnoreCase);
-            normalizedPath = normalizedPath.Add(new PathString(requestPath));
-
-            context.Request.Path = normalizedPath;
-
-            //http://stackoverflow.com/questions/28252230/url-rewrite-in-owin-middleware
-            var httpContext = context.Environment["System.Web.HttpContextBase"] as System.Web.HttpContextWrapper;
-            if (httpContext != null)
+            if (workContext.RequestUrl != null)
             {
-                httpContext.RewritePath("~" + normalizedPath.Value);
+                var currentStoreId = workContext.CurrentStore != null ? workContext.CurrentStore.Id : "-";
+                var currentCultureName = workContext.CurrentStore != null ? workContext.CurrentLanguage.CultureName : "en-US";
+
+                var normalizedPath = new PathString();
+                //add store to path
+                normalizedPath = normalizedPath.Add(new PathString("/" + currentStoreId));
+                //add language to path
+                normalizedPath = normalizedPath.Add(new PathString("/" + currentCultureName));
+
+                //add remaining path part without store and language
+                var requestPath = context.Request.Path.Value;
+                requestPath = Regex.Replace(requestPath, "/" + currentStoreId + "/", "/", RegexOptions.IgnoreCase);
+                requestPath = Regex.Replace(requestPath, "/" + currentCultureName + "/", "/", RegexOptions.IgnoreCase);
+                normalizedPath = normalizedPath.Add(new PathString(requestPath));
+
+                context.Request.Path = normalizedPath;
+
+                //http://stackoverflow.com/questions/28252230/url-rewrite-in-owin-middleware
+                var httpContext = context.Environment["System.Web.HttpContextBase"] as System.Web.HttpContextWrapper;
+                if (httpContext != null)
+                {
+                    httpContext.RewritePath("~" + normalizedPath.Value);
+                }
             }
 
             await Next.Invoke(context);
