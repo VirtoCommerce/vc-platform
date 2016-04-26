@@ -27,6 +27,7 @@ using VirtoCommerce.Storefront;
 using VirtoCommerce.Storefront.App_Start;
 using VirtoCommerce.Storefront.Builders;
 using VirtoCommerce.Storefront.Common;
+using VirtoCommerce.Storefront.Controllers;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Cart.Services;
 using VirtoCommerce.Storefront.Model.Common;
@@ -93,10 +94,7 @@ namespace VirtoCommerce.Storefront
                 {
                     CacheManagerOutputCacheProvider.Cache.ClearRegion(region.Region);
                 }
-                catch (Exception)
-                {
-
-                }
+                catch { }
             };
             localCacheManager.OnClear += (sender, args) =>
             {
@@ -104,38 +102,35 @@ namespace VirtoCommerce.Storefront
                 {
                     CacheManagerOutputCacheProvider.Cache.Clear();
                 }
-                catch (Exception)
-                {
-
-                }
+                catch { }
             };
 
-                  var distributedCache = CacheFactory.Build("distributedCache", settings =>
-            {
-                var jsonSerializerSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All };
-                var redisCacheEnabled = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Storefront:RedisCache:Enabled", false);
+            var distributedCache = CacheFactory.Build("distributedCache", settings =>
+      {
+          var jsonSerializerSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All };
+          var redisCacheEnabled = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Storefront:RedisCache:Enabled", false);
 
-                var memoryHandlePart = settings
-                    .WithJsonSerializer(jsonSerializerSettings, jsonSerializerSettings)
-                    .WithUpdateMode(CacheUpdateMode.Up)
-                    .WithSystemRuntimeCacheHandle("memory")
-                    .WithExpiration(ExpirationMode.Absolute, TimeSpan.FromHours(1));
+          var memoryHandlePart = settings
+              .WithJsonSerializer(jsonSerializerSettings, jsonSerializerSettings)
+              .WithUpdateMode(CacheUpdateMode.Up)
+              .WithSystemRuntimeCacheHandle("memory")
+              .WithExpiration(ExpirationMode.Absolute, TimeSpan.FromHours(1));
 
-                if (redisCacheEnabled)
-                {
-                    var redisCacheConnectionStringName = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Storefront:RedisCache:ConnectionStringName", "RedisCache");
-                    var redisConnectionString = ConfigurationManager.ConnectionStrings[redisCacheConnectionStringName].ConnectionString;
+          if (redisCacheEnabled)
+          {
+              var redisCacheConnectionStringName = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Storefront:RedisCache:ConnectionStringName", "RedisCache");
+              var redisConnectionString = ConfigurationManager.ConnectionStrings[redisCacheConnectionStringName].ConnectionString;
 
-                    memoryHandlePart
-                        .And
-                        .WithRedisConfiguration("redis", redisConnectionString)
-                        .WithRetryTimeout(100)
-                        .WithMaxRetries(1000)
-                        .WithRedisBackplane("redis")
-                        .WithRedisCacheHandle("redis", true)
-                        .WithExpiration(ExpirationMode.Absolute, TimeSpan.FromHours(1));
-                }
-            });
+              memoryHandlePart
+                  .And
+                  .WithRedisConfiguration("redis", redisConnectionString)
+                  .WithRetryTimeout(100)
+                  .WithMaxRetries(1000)
+                  .WithRedisBackplane("redis")
+                  .WithRedisCacheHandle("redis", true)
+                  .WithExpiration(ExpirationMode.Absolute, TimeSpan.FromHours(1));
+          }
+      });
             var distributedCacheManager = new DistributedCacheManager(distributedCache);
             container.RegisterInstance<IDistributedCacheManager>(distributedCacheManager);
 
@@ -203,7 +198,7 @@ namespace VirtoCommerce.Storefront
             container.RegisterType<IAsyncObserver<UserLoginEvent>, CartBuilder>("Merge anonymous cart with loggined user cart");
             container.RegisterType<IAsyncObserver<UserLoginEvent>, QuoteRequestBuilder>("Merge anonymous quote request with loggined user quote");
 
-            
+
             var cmsContentConnectionString = BlobConnectionString.Parse(ConfigurationManager.ConnectionStrings["ContentConnectionString"].ConnectionString);
             var themesBasePath = cmsContentConnectionString.RootPath.TrimEnd('/') + "/" + "Themes";
             var staticContentBasePath = cmsContentConnectionString.RootPath.TrimEnd('/') + "/" + "Pages";
@@ -221,7 +216,7 @@ namespace VirtoCommerce.Storefront
                 themesBlobProvider = new FileSystemContentBlobProvider(ResolveLocalPath(themesBasePath));
                 staticContentBlobProvider = new FileSystemContentBlobProvider(ResolveLocalPath(staticContentBasePath));
             }
-            var shopifyLiquidEngine = new ShopifyLiquidThemeEngine(localCacheManager, workContextFactory, () => container.Resolve<IStorefrontUrlBuilder>(), themesBlobProvider , globalThemesBlobProvider, "~/themes/assets", "~/themes/global/assets");
+            var shopifyLiquidEngine = new ShopifyLiquidThemeEngine(localCacheManager, workContextFactory, () => container.Resolve<IStorefrontUrlBuilder>(), themesBlobProvider, globalThemesBlobProvider, "~/themes/assets", "~/themes/global/assets");
             container.RegisterInstance<ILiquidThemeEngine>(shopifyLiquidEngine);
 
             //Register liquid engine
@@ -238,7 +233,7 @@ namespace VirtoCommerce.Storefront
             var staticContentService = new StaticContentServiceImpl(new Markdown(markdownOptions), shopifyLiquidEngine, localCacheManager, workContextFactory, () => container.Resolve<IStorefrontUrlBuilder>(), StaticContentItemFactory.GetContentItemFromPath, staticContentBlobProvider);
             container.RegisterInstance<IStaticContentService>(staticContentService);
 
-            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters, workContextFactory);
+            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters, workContextFactory, () => container.Resolve<CommonController>());
             RouteConfig.RegisterRoutes(RouteTable.Routes, workContextFactory, container.Resolve<ICommerceCoreModuleApi>(), container.Resolve<IStaticContentService>(), localCacheManager);
             AuthConfig.ConfigureAuth(app, () => container.Resolve<IStorefrontUrlBuilder>());
 
