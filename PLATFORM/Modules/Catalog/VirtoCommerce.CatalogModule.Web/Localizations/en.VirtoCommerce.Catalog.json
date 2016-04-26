@@ -437,7 +437,7 @@
         "title": "Delete confirmation",
         "warning": "WARNING: this change is permanent and can't be undone afterwards. It can lead to data loss.",
         "message": "Are you sure you want to delete catalog",
-        "instruction": "Enter the first 5 characters of catalog name to delete"
+        "instruction": "Enter 'yes' to delete"
       },
       "catalog-items-delete": {
         "title": "Delete confirmation",
