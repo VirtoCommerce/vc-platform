@@ -64,6 +64,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                 image.ProductId = product.Id;
                 image.AttachedToVariant = false;
             }
+
             if (product.VariationProperties != null)
             {
                 result.Options = product.VariationProperties.Where(x => !string.IsNullOrEmpty(x.Value)).Select(x => x.Name).ToArray();
@@ -71,6 +72,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             if (product.Properties != null)
             {
                 result.Properties = product.Properties.Select(x => x.ToShopifyModel()).ToList();
+                result.Metafields = new MetaFieldNamespacesCollection(new[] { new MetafieldsCollection("properties", product.Properties) });
             }
             result.SelectedVariant = result.Variants.First();
             result.Title = product.Name;
@@ -84,6 +86,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                     .Select(a => a.Product.ToShopifyModel()).ToList();
             }
 
+        
             return result;
         }
 
