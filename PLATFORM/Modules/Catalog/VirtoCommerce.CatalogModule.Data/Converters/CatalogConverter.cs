@@ -48,7 +48,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
             {
                 retVal.PropertyValues = dbCatalog.CatalogPropertyValues.Select(x => x.ToCoreModel()).ToList();
                 //Self properties
-                retVal.Properties = dbCatalog.Properties.Where(x => x.CategoryId == null).Select(x => x.ToCoreModel()).ToList();
+                retVal.Properties = dbCatalog.Properties.Where(x => x.CategoryId == null).OrderBy(x => x.Name).Select(x => x.ToCoreModel()).ToList();
 
                 //Next need set Property in PropertyValues objects
                 foreach (var propValue in retVal.PropertyValues.ToArray())
