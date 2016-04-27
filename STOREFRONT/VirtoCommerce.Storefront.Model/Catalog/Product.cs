@@ -253,7 +253,7 @@ namespace VirtoCommerce.Storefront.Model.Catalog
                 var orderedPrices = currencyGroup.OrderBy(x => x.MinQuantity ?? 0).ThenBy(x => x.ListPrice);
                 var nominalPrice = orderedPrices.FirstOrDefault();
                 //and add to nominal price other prices as tier prices
-                nominalPrice.TierPrices.AddRange(orderedPrices.Select(x => new TierPrice(x.SalePrice, x.MinQuantity ?? 0)));
+                nominalPrice.TierPrices.AddRange(orderedPrices.Select(x => new TierPrice(x.SalePrice, x.MinQuantity ?? 1)));
                 //Add nominal price to product prices list 
                 Prices.Add(nominalPrice);
             }
@@ -268,6 +268,7 @@ namespace VirtoCommerce.Storefront.Model.Catalog
                     if (Prices.Any())
                     {
                         price = Prices.First().ConvertTo(currency);
+                        price.TierPrices.Add(new TierPrice(price.SalePrice, 1));
                     }
                     Prices.Add(price);
                 }

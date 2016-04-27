@@ -112,7 +112,11 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         /// <returns></returns>
         public TierPrice GetTierPrice(int quantity)
         {
-            var retVal = TierPrices.OrderBy(x => x.Quantity).Last(x => x.Quantity <= quantity);
+            var retVal = TierPrices.OrderBy(x => x.Quantity).LastOrDefault(x => x.Quantity <= quantity);
+            if(retVal == null)
+            {
+                retVal = new TierPrice(SalePrice, 1);
+            }
             return retVal;
         }
 
