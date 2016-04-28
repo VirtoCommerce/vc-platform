@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <module>
     <id>VirtoCommerce.Search</id>
-    <version>2.9.0</version>
-    <platformVersion>2.9.0</platformVersion>
+    <version>2.10.0</version>
+    <platformVersion>2.10.0</platformVersion>
     <dependencies>
-        <dependency id="VirtoCommerce.Core" version="2.9.0" />
-        <dependency id="VirtoCommerce.Catalog" version="2.9.0" />
+        <dependency id="VirtoCommerce.Core" version="2.10.0" />
+        <dependency id="VirtoCommerce.Catalog" version="2.10.0" />
     </dependencies>
 
     <title>Search module</title>
@@ -32,7 +32,8 @@
         <group name="Search">
             <permission id="VirtoCommerce.Search:Debug" name="Debug search providers" description="Allows to use low level search API."/>
             <permission id="VirtoCommerce.Search:Index:Rebuild" name="Rebuild Index" description="Allows to delete search index and build it again."/>
-			<permission id="VirtoCommerce.Search:FilterProperties:update" name="Read store filter properties" />
+            <permission id="VirtoCommerce.Search:FilterProperties:Read" name="Read store filter properties" />
+            <permission id="VirtoCommerce.Search:FilterProperties:Update" name="Update store filter properties" />
         </group>
     </permissions>
 </module>

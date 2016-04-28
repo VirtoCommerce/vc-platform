@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -20,55 +18,40 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommerceCartModuleWebModelSearchCriteria :  IEquatable<VirtoCommerceCartModuleWebModelSearchCriteria>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceCartModuleWebModelSearchCriteria" /> class.
-        /// </summary>
-        public VirtoCommerceCartModuleWebModelSearchCriteria()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Gets or sets the value of search criteria keyword
         /// </summary>
         /// <value>Gets or sets the value of search criteria keyword</value>
         [DataMember(Name="keyword", EmitDefaultValue=false)]
         public string Keyword { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of search criteria customer id
         /// </summary>
         /// <value>Gets or sets the value of search criteria customer id</value>
         [DataMember(Name="customerId", EmitDefaultValue=false)]
         public string CustomerId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of search criteria store id
         /// </summary>
         /// <value>Gets or sets the value of search criteria store id</value>
         [DataMember(Name="storeId", EmitDefaultValue=false)]
         public string StoreId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of search criteria skip records count
         /// </summary>
         /// <value>Gets or sets the value of search criteria skip records count</value>
         [DataMember(Name="start", EmitDefaultValue=false)]
         public int? Start { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of search criteria page size
         /// </summary>
         /// <value>Gets or sets the value of search criteria page size</value>
         [DataMember(Name="count", EmitDefaultValue=false)]
         public int? Count { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -82,7 +65,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  StoreId: ").Append(StoreId).Append("\n");
             sb.Append("  Start: ").Append(Start).Append("\n");
             sb.Append("  Count: ").Append(Count).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -157,27 +139,25 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Keyword != null)
                     hash = hash * 59 + this.Keyword.GetHashCode();
-                
+
                 if (this.CustomerId != null)
                     hash = hash * 59 + this.CustomerId.GetHashCode();
-                
+
                 if (this.StoreId != null)
                     hash = hash * 59 + this.StoreId.GetHashCode();
-                
+
                 if (this.Start != null)
                     hash = hash * 59 + this.Start.GetHashCode();
-                
+
                 if (this.Count != null)
                     hash = hash * 59 + this.Count.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

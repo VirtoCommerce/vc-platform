@@ -53,7 +53,6 @@ storefrontApp.controller('productController', ['$rootScope', '$scope', '$window'
                 $scope.checkProperty(propertyMap[x][0])
             });
             $scope.selectedVariation = product;
-          
         });
     };
 

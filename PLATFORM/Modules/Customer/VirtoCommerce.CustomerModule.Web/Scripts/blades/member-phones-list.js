@@ -47,7 +47,7 @@
         $scope.bladeClose();
     };
 
-    blade.headIcon = 'fa-user';
+    blade.headIcon = blade.parentBlade.headIcon;
 
     blade.toolbarCommands = [
         {

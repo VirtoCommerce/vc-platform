@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -20,57 +18,41 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommerceDomainCatalogModelProductAssociation :  IEquatable<VirtoCommerceDomainCatalogModelProductAssociation>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCatalogModelProductAssociation" /> class.
-        /// </summary>
-        public VirtoCommerceDomainCatalogModelProductAssociation()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Gets or Sets Name
         /// </summary>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Description
         /// </summary>
         [DataMember(Name="description", EmitDefaultValue=false)]
         public string Description { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Priority
         /// </summary>
         [DataMember(Name="priority", EmitDefaultValue=false)]
         public int? Priority { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name="type", EmitDefaultValue=false)]
         public string Type { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets AssociatedProductId
         /// </summary>
         [DataMember(Name="associatedProductId", EmitDefaultValue=false)]
         public string AssociatedProductId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets AssociatedProduct
         /// </summary>
         [DataMember(Name="associatedProduct", EmitDefaultValue=false)]
         public VirtoCommerceDomainCatalogModelCatalogProduct AssociatedProduct { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -85,7 +67,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Type: ").Append(Type).Append("\n");
             sb.Append("  AssociatedProductId: ").Append(AssociatedProductId).Append("\n");
             sb.Append("  AssociatedProduct: ").Append(AssociatedProduct).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -165,30 +146,28 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
-                
+
                 if (this.Description != null)
                     hash = hash * 59 + this.Description.GetHashCode();
-                
+
                 if (this.Priority != null)
                     hash = hash * 59 + this.Priority.GetHashCode();
-                
+
                 if (this.Type != null)
                     hash = hash * 59 + this.Type.GetHashCode();
-                
+
                 if (this.AssociatedProductId != null)
                     hash = hash * 59 + this.AssociatedProductId.GetHashCode();
-                
+
                 if (this.AssociatedProduct != null)
                     hash = hash * 59 + this.AssociatedProduct.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

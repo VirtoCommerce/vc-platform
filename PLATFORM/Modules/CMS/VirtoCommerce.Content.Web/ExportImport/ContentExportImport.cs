@@ -42,12 +42,12 @@ namespace VirtoCommerce.Content.Web.ExportImport
     {
         private static string[] _exportedFolders = { "Pages", "Themes" };
         private readonly IMenuService _menuService;
-        private readonly IContentStorageProvider _contentStorageProvider;
+        private readonly IContentBlobStorageProvider _contentStorageProvider;
 
-        public ContentExportImport(IMenuService menuService, Func<IContentStorageProvider> themesStorageProviderFactory)
+        public ContentExportImport(IMenuService menuService, Func<string, IContentBlobStorageProvider> themesStorageProviderFactory)
         {
             _menuService = menuService;
-            _contentStorageProvider = themesStorageProviderFactory();
+            _contentStorageProvider = themesStorageProviderFactory(string.Empty);
         }
 
         public void DoExport(Stream backupStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
@@ -85,8 +85,6 @@ namespace VirtoCommerce.Content.Web.ExportImport
             }
         }
 
-
-
         private BackupObject GetBackupObject(Action<ExportImportProgressInfo> progressCallback, bool handleBynaryData)
         {
             var retVal = new BackupObject();
@@ -99,12 +97,12 @@ namespace VirtoCommerce.Content.Web.ExportImport
 
             if (handleBynaryData)
             {
-                var result = _contentStorageProvider.Search("/", null);
+                var result = _contentStorageProvider.Search("", null);
                 foreach (var blobFolder in result.Folders.Where(x => _exportedFolders.Contains(x.Name)))
                 {
                     var contentFolder = new ContentFolder
                     {
-                        Url = blobFolder.Url
+                        Url = blobFolder.RelativeUrl
                     };
                     ReadContentFoldersRecurive(contentFolder, progressCallback);
                     retVal.ContentFolders.Add(contentFolder);
@@ -138,17 +136,13 @@ namespace VirtoCommerce.Content.Web.ExportImport
             var result = _contentStorageProvider.Search(folder.Url, null);
             foreach (var blobFolder in result.Folders)
             {
-                //Do not export default theme its will distributed with code
-                if (blobFolder.Url != "/Themes/default")
+                var contentFolder = new ContentFolder()
                 {
-                    var contentFolder = new ContentFolder()
-                    {
-                        Url = blobFolder.Url
-                    };
-                
-                    ReadContentFoldersRecurive(contentFolder, progressCallback);
-                    folder.Folders.Add(contentFolder);
-                }
+                    Url = blobFolder.RelativeUrl
+                };
+
+                ReadContentFoldersRecurive(contentFolder, progressCallback);
+                folder.Folders.Add(contentFolder);
             }
 
             foreach (var blobItem in result.Items)
@@ -159,7 +153,7 @@ namespace VirtoCommerce.Content.Web.ExportImport
 
                 var contentFile = new ContentFile
                 {
-                    Url = blobItem.Url
+                    Url = blobItem.RelativeUrl
                 };
                 using (var stream = _contentStorageProvider.OpenRead(blobItem.Url))
                 {
@@ -168,8 +162,6 @@ namespace VirtoCommerce.Content.Web.ExportImport
                 folder.Files.Add(contentFile);
             }
         }
-
-
     }
 
 }

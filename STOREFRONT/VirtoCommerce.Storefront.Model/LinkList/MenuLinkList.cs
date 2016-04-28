@@ -6,7 +6,7 @@ namespace VirtoCommerce.Storefront.Model
     /// <summary>
     /// Represents site navigation menu link list object
     /// </summary>
-    public class MenuLinkList : Entity
+    public class MenuLinkList : Entity, IHasLanguage
     {
         public MenuLinkList()
         {
@@ -24,14 +24,15 @@ namespace VirtoCommerce.Storefront.Model
         public string StoreId { get; set; }
 
         /// <summary>
-        /// Gets or sets the locale of site navigation menu link list
-        /// </summary>
-        public Language Language { get; set; }
-
-        /// <summary>
         /// Gets or sets the collection of site navigation menu link for link list
         /// </summary>
         public ICollection<MenuLink> MenuLinks { get; set; }
 
+        #region IHasLanguage Members
+        /// <summary>
+        /// Gets or sets the locale of site navigation menu link list
+        /// </summary>
+        public Language Language { get; set; }
+        #endregion
     }
 }

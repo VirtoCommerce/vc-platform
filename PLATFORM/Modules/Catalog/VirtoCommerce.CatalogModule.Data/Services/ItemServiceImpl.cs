@@ -19,40 +19,62 @@ namespace VirtoCommerce.CatalogModule.Data.Services
     {
         private readonly Func<ICatalogRepository> _catalogRepositoryFactory;
         private readonly ICommerceService _commerceService;
+        private readonly IOutlineService _outlineService;
 
-        public ItemServiceImpl(Func<ICatalogRepository> catalogRepositoryFactory, ICommerceService commerceService)
+        public ItemServiceImpl(Func<ICatalogRepository> catalogRepositoryFactory, ICommerceService commerceService, IOutlineService outlineService)
         {
             _catalogRepositoryFactory = catalogRepositoryFactory;
             _commerceService = commerceService;
+            _outlineService = outlineService;
         }
 
         #region IItemService Members
 
-        public coreModel.CatalogProduct GetById(string itemId, coreModel.ItemResponseGroup respGroup)
+        public coreModel.CatalogProduct GetById(string itemId, coreModel.ItemResponseGroup respGroup, string catalogId = null)
         {
-            var results = this.GetByIds(new[] { itemId }, respGroup);
+            var results = this.GetByIds(new[] { itemId }, respGroup, catalogId);
             return results.Any() ? results.First() : null;
         }
 
-        public coreModel.CatalogProduct[] GetByIds(string[] itemIds, coreModel.ItemResponseGroup respGroup)
+        public coreModel.CatalogProduct[] GetByIds(string[] itemIds, coreModel.ItemResponseGroup respGroup, string catalogId = null)
         {
-            var retVal = new List<coreModel.CatalogProduct>();
+            if (respGroup.HasFlag(coreModel.ItemResponseGroup.Outlines))
+            {
+                respGroup |= coreModel.ItemResponseGroup.Links;
+            }
+
+            coreModel.CatalogProduct[] result;
+
             using (var repository = _catalogRepositoryFactory())
             {
-                var dbItems = repository.GetItemByIds(itemIds, respGroup);
-
-                retVal.AddRange(dbItems.Select(x => x.ToCoreModel()));
-                //Populate product seo
-                if ((respGroup & coreModel.ItemResponseGroup.Seo) == coreModel.ItemResponseGroup.Seo)
-                {
-                    var expandedProducts = retVal.Concat(retVal.Where(x => x.Variations != null).SelectMany(x => x.Variations)).ToArray();
-                    var allCategories = expandedProducts.Select(x => x.Category).ToArray();
-                    var allSeoObjects = expandedProducts.OfType<ISeoSupport>().Concat(allCategories.OfType<ISeoSupport>()).ToArray();
-                    _commerceService.LoadSeoForObjects(allSeoObjects);
-
-                }
+                result = repository.GetItemByIds(itemIds, respGroup)
+                    .Select(x => x.ToCoreModel())
+                    .ToArray();
             }
-            return retVal.ToArray();
+
+            // Fill outlines for products
+            if (respGroup.HasFlag(coreModel.ItemResponseGroup.Outlines))
+            {
+                _outlineService.FillOutlinesForObjects(result, catalogId);
+            }
+
+            // Fill SEO info for products, variations and outline items
+            if ((respGroup & coreModel.ItemResponseGroup.Seo) == coreModel.ItemResponseGroup.Seo)
+            {
+                var objectsWithSeo = new List<ISeoSupport>(result);
+
+                var variations = result.Where(p => p.Variations != null)
+                                       .SelectMany(p => p.Variations);
+                objectsWithSeo.AddRange(variations);
+
+                var outlineItems = result.Where(p => p.Outlines != null)
+                                         .SelectMany(p => p.Outlines.SelectMany(o => o.Items));
+                objectsWithSeo.AddRange(outlineItems);
+
+                _commerceService.LoadSeoForObjects(objectsWithSeo.ToArray());
+            }
+
+            return result;
         }
 
         public void Create(coreModel.CatalogProduct[] items)
@@ -78,7 +100,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                 CommitChanges(repository);
                 pkMap.ResolvePrimaryKeys();
             }
-       
+
             //Update SEO 
             var itemsWithVariations = items.Concat(items.Where(x => x.Variations != null).SelectMany(x => x.Variations)).ToArray();
             _commerceService.UpsertSeoForObjects(itemsWithVariations);

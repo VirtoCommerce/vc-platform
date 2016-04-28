@@ -3,31 +3,13 @@
     <div class="blade-inner">
         <div class="inner-block">
             <form class="form" name="detailForm">
-                <div class="form columns clearfix" ng-init="setForm(detailForm)">
-                    <div class="form-group">
-                        <label class="form-label">{{ 'stores.blades.store-advanced.labels.description' | translate }}</label>
-                        <div class="form-input">
-                            <textarea class="form-control" cols="30" rows="2" ng-model="blade.currentEntity.description" placeholder="{{ 'stores.blades.store-advanced.placeholders.description' | translate }}"></textarea>
-                        </div>
-                    </div>
-                    <div class="column">
-                        <div class="form-group">
-                            <label class="form-label">{{ 'stores.blades.store-advanced.labels.store-url' | translate }}</label>
-                            <div class="form-input">
-                                <input ng-model="blade.currentEntity.url" type="url" placeholder="{{ 'stores.blades.store-advanced.placeholders.store-url' | translate }}">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="column">
-                        <div class="form-group">
-                            <label class="form-label">{{ 'stores.blades.store-advanced.labels.secure-url' | translate }}</label>
-                            <div class="form-input">
-                                <input ng-model="blade.currentEntity.secureUrl" type="url" placeholder="{{ 'stores.blades.store-advanced.placeholders.secure-url' | translate }}">
-                            </div>
-                        </div>
+                <div ng-init="setForm(detailForm)">
+                    <label class="form-label">{{ 'stores.blades.store-advanced.labels.description' | translate }}</label>
+                    <div class="form-input">
+                        <textarea class="form-control" cols="30" rows="2" ng-model="blade.currentEntity.description" placeholder="{{ 'stores.blades.store-advanced.placeholders.description' | translate }}"></textarea>
                     </div>
                 </div>
-                <div class="form columns clearfix">
+                <div class="columns">
                     <div class="column">
                         <div class="form-group">
                             <label class="form-label">{{ 'stores.blades.store-advanced.labels.store-country' | translate }}</label>
@@ -55,7 +37,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="form columns clearfix">
+                <div class="columns">
                     <div class="column">
                         <div class="form-group">
                             <label class="form-label">{{ 'stores.blades.store-advanced.labels.store-email' | translate }}</label>
@@ -73,7 +55,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="form columns clearfix">
+                <div class="columns clearfix">
                     <div class="column">
                         <div class="form-group">
                             <label class="form-label">{{ 'stores.blades.store-advanced.labels.fulfillment-center' | translate }} <a href="" ng-click="openFulfillmentCentersList()" class="form-edit"><i class="form-ico fa fa-pencil"></i></a></label>
@@ -101,7 +83,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="form columns clearfix">
+                <div class="columns">
                     <div class="form-group">
                         <label class="form-label">{{ 'stores.blades.store-advanced.labels.operational-timezone' | translate }}</label>
                         <div class="form-input">

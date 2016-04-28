@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -20,47 +18,33 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommerceCatalogModuleWebModelAggregationItem :  IEquatable<VirtoCommerceCatalogModuleWebModelAggregationItem>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelAggregationItem" /> class.
-        /// </summary>
-        public VirtoCommerceCatalogModuleWebModelAggregationItem()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Gets or sets the aggregation item value
         /// </summary>
         /// <value>Gets or sets the aggregation item value</value>
         [DataMember(Name="value", EmitDefaultValue=false)]
         public Object Value { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the aggregation item count
         /// </summary>
         /// <value>Gets or sets the aggregation item count</value>
         [DataMember(Name="count", EmitDefaultValue=false)]
         public int? Count { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the flag for aggregation item is applied
         /// </summary>
         /// <value>Gets or sets the flag for aggregation item is applied</value>
         [DataMember(Name="isApplied", EmitDefaultValue=false)]
         public bool? IsApplied { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the collection of aggregation item labels
         /// </summary>
         /// <value>Gets or sets the collection of aggregation item labels</value>
         [DataMember(Name="labels", EmitDefaultValue=false)]
         public List<VirtoCommerceCatalogModuleWebModelAggregationLabel> Labels { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -73,7 +57,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Count: ").Append(Count).Append("\n");
             sb.Append("  IsApplied: ").Append(IsApplied).Append("\n");
             sb.Append("  Labels: ").Append(Labels).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -143,24 +126,22 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Value != null)
                     hash = hash * 59 + this.Value.GetHashCode();
-                
+
                 if (this.Count != null)
                     hash = hash * 59 + this.Count.GetHashCode();
-                
+
                 if (this.IsApplied != null)
                     hash = hash * 59 + this.IsApplied.GetHashCode();
-                
+
                 if (this.Labels != null)
                     hash = hash * 59 + this.Labels.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

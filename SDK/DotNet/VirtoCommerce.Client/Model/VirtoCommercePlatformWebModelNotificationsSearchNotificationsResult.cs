@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -20,29 +18,17 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommercePlatformWebModelNotificationsSearchNotificationsResult :  IEquatable<VirtoCommercePlatformWebModelNotificationsSearchNotificationsResult>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelNotificationsSearchNotificationsResult" /> class.
-        /// </summary>
-        public VirtoCommercePlatformWebModelNotificationsSearchNotificationsResult()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Gets or Sets Notifications
         /// </summary>
         [DataMember(Name="notifications", EmitDefaultValue=false)]
         public List<VirtoCommercePlatformWebModelNotificationsNotification> Notifications { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets TotalCount
         /// </summary>
         [DataMember(Name="totalCount", EmitDefaultValue=false)]
         public int? TotalCount { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -53,7 +39,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("class VirtoCommercePlatformWebModelNotificationsSearchNotificationsResult {\n");
             sb.Append("  Notifications: ").Append(Notifications).Append("\n");
             sb.Append("  TotalCount: ").Append(TotalCount).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -113,18 +98,16 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Notifications != null)
                     hash = hash * 59 + this.Notifications.GetHashCode();
-                
+
                 if (this.TotalCount != null)
                     hash = hash * 59 + this.TotalCount.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

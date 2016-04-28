@@ -16,15 +16,8 @@ namespace VirtoCommerce.Storefront.Converters
             var retVal = new Category();
             retVal.InjectFrom<NullableAndEnumValueInjecter>(category);
 
-            if (category.SeoInfos != null)
-            {
-                //Select best matched SEO by StoreId and Language
-                var bestMatchSeo = category.SeoInfos.FindBestSeoMatch(currentLanguage, store);
-                if(bestMatchSeo != null)
-                {
-                    retVal.SeoInfo = bestMatchSeo.ToWebModel();
-                }
-            }
+            retVal.SeoInfo = category.SeoInfos.GetBestMatchedSeoInfo(store, currentLanguage).ToWebModel();
+            retVal.Url = "~/" + category.Outlines.GetSeoPath(store, currentLanguage, "category/" + category.Id);
 
             if (category.Images != null)
             {
@@ -34,10 +27,12 @@ namespace VirtoCommerce.Storefront.Converters
 
             if (category.Properties != null)
             {
-                retVal.Properties = category.Properties.Where(x => string.Equals(x.Type, "Category", StringComparison.InvariantCultureIgnoreCase))
-                                                      .Select(p => p.ToWebModel(currentLanguage))
-                                                      .ToList();
+                retVal.Properties = category.Properties
+                    .Where(x => string.Equals(x.Type, "Category", StringComparison.OrdinalIgnoreCase))
+                    .Select(p => p.ToWebModel(currentLanguage))
+                    .ToList();
             }
+
             return retVal;
         }
     }

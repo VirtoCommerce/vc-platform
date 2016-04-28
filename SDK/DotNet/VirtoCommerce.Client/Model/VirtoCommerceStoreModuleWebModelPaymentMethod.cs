@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -20,82 +18,63 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommerceStoreModuleWebModelPaymentMethod :  IEquatable<VirtoCommerceStoreModuleWebModelPaymentMethod>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceStoreModuleWebModelPaymentMethod" /> class.
-        /// </summary>
-        public VirtoCommerceStoreModuleWebModelPaymentMethod()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Inner unique method code
         /// </summary>
         /// <value>Inner unique method code</value>
         [DataMember(Name="code", EmitDefaultValue=false)]
         public string Code { get; set; }
-  
-        
+
         /// <summary>
         /// Display name of payment method
         /// </summary>
         /// <value>Display name of payment method</value>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Description
         /// </summary>
         [DataMember(Name="description", EmitDefaultValue=false)]
         public string Description { get; set; }
-  
-        
+
         /// <summary>
         /// Absolute logo url of shipping method, can be used in UI
         /// </summary>
         /// <value>Absolute logo url of shipping method, can be used in UI</value>
         [DataMember(Name="logoUrl", EmitDefaultValue=false)]
         public string LogoUrl { get; set; }
-  
-        
+
         /// <summary>
         /// If true - method can be available on storefront
         /// </summary>
         /// <value>If true - method can be available on storefront</value>
         [DataMember(Name="isActive", EmitDefaultValue=false)]
         public bool? IsActive { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Priority
         /// </summary>
         [DataMember(Name="priority", EmitDefaultValue=false)]
         public int? Priority { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets IsAvailableForPartial
         /// </summary>
         [DataMember(Name="isAvailableForPartial", EmitDefaultValue=false)]
         public bool? IsAvailableForPartial { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Settings
         /// </summary>
         [DataMember(Name="settings", EmitDefaultValue=false)]
         public List<VirtoCommerceStoreModuleWebModelSetting> Settings { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -113,7 +92,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  IsAvailableForPartial: ").Append(IsAvailableForPartial).Append("\n");
             sb.Append("  Settings: ").Append(Settings).Append("\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -208,39 +186,37 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Code != null)
                     hash = hash * 59 + this.Code.GetHashCode();
-                
+
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
-                
+
                 if (this.Description != null)
                     hash = hash * 59 + this.Description.GetHashCode();
-                
+
                 if (this.LogoUrl != null)
                     hash = hash * 59 + this.LogoUrl.GetHashCode();
-                
+
                 if (this.IsActive != null)
                     hash = hash * 59 + this.IsActive.GetHashCode();
-                
+
                 if (this.Priority != null)
                     hash = hash * 59 + this.Priority.GetHashCode();
-                
+
                 if (this.IsAvailableForPartial != null)
                     hash = hash * 59 + this.IsAvailableForPartial.GetHashCode();
-                
+
                 if (this.Settings != null)
                     hash = hash * 59 + this.Settings.GetHashCode();
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

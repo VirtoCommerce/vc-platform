@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// Notification for catalog data import job.
     /// </summary>
@@ -20,111 +18,88 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommerceCatalogModuleWebModelPushNotificationsImportNotification :  IEquatable<VirtoCommerceCatalogModuleWebModelPushNotificationsImportNotification>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelPushNotificationsImportNotification" /> class.
-        /// </summary>
-        public VirtoCommerceCatalogModuleWebModelPushNotificationsImportNotification()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Gets or sets the job finish date and time.
         /// </summary>
         /// <value>Gets or sets the job finish date and time.</value>
         [DataMember(Name="finished", EmitDefaultValue=false)]
         public DateTime? Finished { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the total count of objects to process.
         /// </summary>
         /// <value>Gets or sets the total count of objects to process.</value>
         [DataMember(Name="totalCount", EmitDefaultValue=false)]
         public long? TotalCount { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the count of processed objects.
         /// </summary>
         /// <value>Gets or sets the count of processed objects.</value>
         [DataMember(Name="processedCount", EmitDefaultValue=false)]
         public long? ProcessedCount { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the count of errors during processing.
         /// </summary>
         /// <value>Gets or sets the count of errors during processing.</value>
         [DataMember(Name="errorCount", EmitDefaultValue=false)]
         public long? ErrorCount { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the errors that has occurred during processing.
         /// </summary>
         /// <value>Gets or sets the errors that has occurred during processing.</value>
         [DataMember(Name="errors", EmitDefaultValue=false)]
         public List<string> Errors { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Creator
         /// </summary>
         [DataMember(Name="creator", EmitDefaultValue=false)]
         public string Creator { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Created
         /// </summary>
         [DataMember(Name="created", EmitDefaultValue=false)]
         public DateTime? Created { get; set; }
-  
-        
+
         /// <summary>
-        /// Gets or Sets New
+        /// Gets or Sets IsNew
         /// </summary>
-        [DataMember(Name="new", EmitDefaultValue=false)]
-        public bool? New { get; set; }
-  
-        
+        [DataMember(Name="isNew", EmitDefaultValue=false)]
+        public bool? IsNew { get; set; }
+
         /// <summary>
         /// Gets or Sets NotifyType
         /// </summary>
         [DataMember(Name="notifyType", EmitDefaultValue=false)]
         public string NotifyType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Description
         /// </summary>
         [DataMember(Name="description", EmitDefaultValue=false)]
         public string Description { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Title
         /// </summary>
         [DataMember(Name="title", EmitDefaultValue=false)]
         public string Title { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets RepeatCount
         /// </summary>
         [DataMember(Name="repeatCount", EmitDefaultValue=false)]
         public int? RepeatCount { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -141,12 +116,11 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Id: ").Append(Id).Append("\n");
             sb.Append("  Creator: ").Append(Creator).Append("\n");
             sb.Append("  Created: ").Append(Created).Append("\n");
-            sb.Append("  New: ").Append(New).Append("\n");
+            sb.Append("  IsNew: ").Append(IsNew).Append("\n");
             sb.Append("  NotifyType: ").Append(NotifyType).Append("\n");
             sb.Append("  Description: ").Append(Description).Append("\n");
             sb.Append("  Title: ").Append(Title).Append("\n");
             sb.Append("  RepeatCount: ").Append(RepeatCount).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -224,9 +198,9 @@ namespace VirtoCommerce.Client.Model
                     this.Created.Equals(other.Created)
                 ) && 
                 (
-                    this.New == other.New ||
-                    this.New != null &&
-                    this.New.Equals(other.New)
+                    this.IsNew == other.IsNew ||
+                    this.IsNew != null &&
+                    this.IsNew.Equals(other.IsNew)
                 ) && 
                 (
                     this.NotifyType == other.NotifyType ||
@@ -261,51 +235,49 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Finished != null)
                     hash = hash * 59 + this.Finished.GetHashCode();
-                
+
                 if (this.TotalCount != null)
                     hash = hash * 59 + this.TotalCount.GetHashCode();
-                
+
                 if (this.ProcessedCount != null)
                     hash = hash * 59 + this.ProcessedCount.GetHashCode();
-                
+
                 if (this.ErrorCount != null)
                     hash = hash * 59 + this.ErrorCount.GetHashCode();
-                
+
                 if (this.Errors != null)
                     hash = hash * 59 + this.Errors.GetHashCode();
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 if (this.Creator != null)
                     hash = hash * 59 + this.Creator.GetHashCode();
-                
+
                 if (this.Created != null)
                     hash = hash * 59 + this.Created.GetHashCode();
-                
-                if (this.New != null)
-                    hash = hash * 59 + this.New.GetHashCode();
-                
+
+                if (this.IsNew != null)
+                    hash = hash * 59 + this.IsNew.GetHashCode();
+
                 if (this.NotifyType != null)
                     hash = hash * 59 + this.NotifyType.GetHashCode();
-                
+
                 if (this.Description != null)
                     hash = hash * 59 + this.Description.GetHashCode();
-                
+
                 if (this.Title != null)
                     hash = hash * 59 + this.Title.GetHashCode();
-                
+
                 if (this.RepeatCount != null)
                     hash = hash * 59 + this.RepeatCount.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

@@ -31,8 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CacheManager.Core, Version=0.7.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CacheManager.Core.0.7.1\lib\net45\CacheManager.Core.dll</HintPath>
+    <Reference Include="CacheManager.Core, Version=0.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CacheManager.Core.0.8.0\lib\net45\CacheManager.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Omu.ValueInjecter, Version=2.3.3.0, Culture=neutral, PublicKeyToken=c7694541b0ac80e4, processorArchitecture=MSIL">
@@ -85,16 +85,29 @@
     <Compile Include="Catalog\InventoryStatus.cs" />
     <Compile Include="Catalog\ItemResponseGroup.cs" />
     <Compile Include="Catalog\CatalogSearchCriteria.cs" />
+    <Compile Include="Catalog\ProductAssociation.cs" />
     <Compile Include="Catalog\Term.cs" />
     <Compile Include="Catalog\TermExtensions.cs" />
     <Compile Include="Common\AnonymousComparer.cs" />
+    <Compile Include="Common\CacheManagerBase.cs" />
+    <Compile Include="Common\DistributedCacheManager.cs" />
     <Compile Include="Common\EntryState.cs" />
     <Compile Include="Common\EnumerableExtension.cs" />
+    <Compile Include="Common\IDistributedCacheManager.cs" />
+    <Compile Include="Common\ILocalCacheManager.cs" />
     <Compile Include="Common\IMutablePagedList.cs" />
+    <Compile Include="Common\MutablePagedListExtensions.cs" />
+    <Compile Include="Common\LocalCacheManager.cs" />
     <Compile Include="Common\MutablePagedList.cs" />
+    <Compile Include="EditorialReview.cs" />
+    <Compile Include="Common\StreamExtensions.cs" />
+    <Compile Include="Common\SettingsExtension.cs" />
+    <Compile Include="IHasLanguage.cs" />
     <Compile Include="IHasSettings.cs" />
+    <Compile Include="SeoLinksType.cs" />
     <Compile Include="SettingEntry.cs" />
     <Compile Include="LoginProvider.cs" />
+    <Compile Include="StaticContent\Services\IContentBlobProvider.cs" />
     <Compile Include="Tax\ITaxable.cs" />
     <Compile Include="LinkList\CategoryMenuLink.cs" />
     <Compile Include="Common\Events\EventPublisher.cs" />
@@ -201,6 +214,7 @@
     <Compile Include="Store\Store.cs" />
     <Compile Include="Tax\TaxDetail.cs" />
     <Compile Include="ValidationType.cs" />
+    <Compile Include="Vendor.cs" />
     <Compile Include="WorkContext.cs" />
   </ItemGroup>
   <ItemGroup>

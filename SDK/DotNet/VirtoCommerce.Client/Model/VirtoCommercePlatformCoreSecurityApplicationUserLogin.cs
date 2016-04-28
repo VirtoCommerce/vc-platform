@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -20,29 +18,17 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommercePlatformCoreSecurityApplicationUserLogin :  IEquatable<VirtoCommercePlatformCoreSecurityApplicationUserLogin>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreSecurityApplicationUserLogin" /> class.
-        /// </summary>
-        public VirtoCommercePlatformCoreSecurityApplicationUserLogin()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Gets or Sets LoginProvider
         /// </summary>
         [DataMember(Name="loginProvider", EmitDefaultValue=false)]
         public string LoginProvider { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ProviderKey
         /// </summary>
         [DataMember(Name="providerKey", EmitDefaultValue=false)]
         public string ProviderKey { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -53,7 +39,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("class VirtoCommercePlatformCoreSecurityApplicationUserLogin {\n");
             sb.Append("  LoginProvider: ").Append(LoginProvider).Append("\n");
             sb.Append("  ProviderKey: ").Append(ProviderKey).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -113,18 +98,16 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.LoginProvider != null)
                     hash = hash * 59 + this.LoginProvider.GetHashCode();
-                
+
                 if (this.ProviderKey != null)
                     hash = hash * 59 + this.ProviderKey.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// Information to define linking information from item or category to category.
     /// </summary>
@@ -20,47 +18,33 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommerceCatalogModuleWebModelListEntryLink :  IEquatable<VirtoCommerceCatalogModuleWebModelListEntryLink>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelListEntryLink" /> class.
-        /// </summary>
-        public VirtoCommerceCatalogModuleWebModelListEntryLink()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Gets or sets the list entry identifier.
         /// </summary>
         /// <value>Gets or sets the list entry identifier.</value>
         [DataMember(Name="listEntryId", EmitDefaultValue=false)]
         public string ListEntryId { get; set; }
-  
-        
+
         /// <summary>
-        /// Gets or sets the type of the list entry. E.g. \"product\", \"category\"
+        /// Gets or sets the type of the list entry. E.g. \&quot;product\&quot;, \&quot;category\&quot;
         /// </summary>
-        /// <value>Gets or sets the type of the list entry. E.g. \"product\", \"category\"</value>
+        /// <value>Gets or sets the type of the list entry. E.g. \&quot;product\&quot;, \&quot;category\&quot;</value>
         [DataMember(Name="listEntryType", EmitDefaultValue=false)]
         public string ListEntryType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the target catalog identifier.
         /// </summary>
         /// <value>Gets or sets the target catalog identifier.</value>
         [DataMember(Name="catalogId", EmitDefaultValue=false)]
         public string CatalogId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the target category identifier.
         /// </summary>
         /// <value>Gets or sets the target category identifier.</value>
         [DataMember(Name="categoryId", EmitDefaultValue=false)]
         public string CategoryId { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -73,7 +57,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  ListEntryType: ").Append(ListEntryType).Append("\n");
             sb.Append("  CatalogId: ").Append(CatalogId).Append("\n");
             sb.Append("  CategoryId: ").Append(CategoryId).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -143,24 +126,22 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.ListEntryId != null)
                     hash = hash * 59 + this.ListEntryId.GetHashCode();
-                
+
                 if (this.ListEntryType != null)
                     hash = hash * 59 + this.ListEntryType.GetHashCode();
-                
+
                 if (this.CatalogId != null)
                     hash = hash * 59 + this.CatalogId.GetHashCode();
-                
+
                 if (this.CategoryId != null)
                     hash = hash * 59 + this.CategoryId.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

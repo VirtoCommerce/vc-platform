@@ -1,0 +1,49 @@
+﻿<div class="blade-static __bottom" ng-include="'$(Platform)/Scripts/common/templates/create.tpl.html'" ng-if="blade.isNew"></div>
+<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block clearfix">
+            <form class="form" name="detailForm">
+                <fieldset>
+                    <div ng-init="setForm(detailForm)">
+                        <label class="form-label">{{'customer.blades.vendor-detail.labels.name' | translate}}</label>
+                        <div class="form-input">
+                            <input ng-model="blade.currentEntity.name" focus-on="" required placeholder="{{'customer.blades.vendor-detail.placeholders.name' | translate}}" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <va-widget-container group="vendorDetail1" blade="blade" gridster-opts="{columns: 3}"></va-widget-container>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <div class="form-group">
+                        <label class="form-label">{{ 'customer.blades.vendor-detail.labels.site-url' | translate }}</label>
+                        <div class="form-input">
+                            <input ng-model="blade.currentEntity.siteUrl" type="url" placeholder="{{ 'customer.blades.vendor-detail.placeholders.site-url' | translate }}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">{{ 'customer.blades.vendor-detail.labels.logo-url' | translate }}</label>
+                        <div class="form-input">
+                            <input ng-model="blade.currentEntity.logoUrl" type="url" placeholder="{{ 'customer.blades.vendor-detail.placeholders.logo-url' | translate }}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">{{'customer.blades.vendor-detail.labels.group-name' | translate}}</label>
+                        <div class="form-input">
+                            <input ng-model="blade.currentEntity.groupName" placeholder="{{'customer.blades.vendor-detail.placeholders.group-name' | translate}}" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">{{'customer.blades.vendor-detail.labels.description' | translate}}</label>
+                        <div class="form-input">
+                            <textarea class="form-control" ng-model="blade.currentEntity.description" placeholder="{{'customer.blades.vendor-detail.placeholders.name' | translate}}"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <va-widget-container group="vendorDetail2" blade="blade" gridster-opts="{columns: 3}"></va-widget-container>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>

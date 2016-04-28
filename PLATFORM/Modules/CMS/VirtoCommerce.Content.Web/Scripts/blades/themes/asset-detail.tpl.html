@@ -1,0 +1,32 @@
+﻿<div class="blade-static __expanded" ng-if="blade.isNew">
+    <form name="formScope">
+        <div class="form-group" ng-init="setForm(formScope)">
+            <label class="form-label">{{ 'content.blades.edit-asset.labels.asset-name' | translate }}</label>
+            <div class="form-input">
+                <input focus-on="" required class="form-control" ng-model="blade.currentEntity.name" placeholder="{{ 'content.blades.edit-asset.placeholders.asset-name' | translate }}" name="name" ui-validate=" 'validators.webSafeFileNameValidator($value)' " />
+            </div>
+            <div class="form-error" ng-show="formScope.name.$dirty">
+                <span ng-show="formScope.name.$error.validator">{{ 'content.blades.edit-asset.validations.name-invalid' | translate }}</span>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="blade-static __collapsed" ng-if="!blade.isNew">
+    <div class="form-group">
+        <label>{{blade.currentEntity.name}}</label> | <a href="http://docs.virtocommerce.com/display/vc2devguide/Liquid+Reference" target="_blank">{{ 'content.blades.edit-asset.labels.liquid-documentation' | translate }}</a>
+    </div>
+</div>
+<div class="blade-static __bottom" ng-include="'$(Platform)/Scripts/common/templates/create.tpl.html'" ng-if="blade.isNew"></div>
+<div class="blade-content __code-editor" style="{{blade.getBladeStyle()}}">
+    <div class="blade-inner" style="padding: 0">
+        <div class="inner-block">
+            <form class="form" style="padding: 0" name="formScope">
+                <div class="form-group">
+                    <div class="form-input __expanded">
+                        <ui-codemirror required ng-model="blade.currentEntity.content" ui-codemirror-opts="editorOptions"></ui-codemirror>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

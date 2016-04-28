@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -20,86 +18,67 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommerceCartModuleWebModelPaymentMethod :  IEquatable<VirtoCommerceCartModuleWebModelPaymentMethod>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceCartModuleWebModelPaymentMethod" /> class.
-        /// </summary>
-        public VirtoCommerceCartModuleWebModelPaymentMethod()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Gets or sets the value of payment gateway code
         /// </summary>
         /// <value>Gets or sets the value of payment gateway code</value>
         [DataMember(Name="gatewayCode", EmitDefaultValue=false)]
         public string GatewayCode { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of payment method name
         /// </summary>
         /// <value>Gets or sets the value of payment method name</value>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of payment method logo absolute URL
         /// </summary>
         /// <value>Gets or sets the value of payment method logo absolute URL</value>
         [DataMember(Name="iconUrl", EmitDefaultValue=false)]
         public string IconUrl { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of payment method description
         /// </summary>
         /// <value>Gets or sets the value of payment method description</value>
         [DataMember(Name="description", EmitDefaultValue=false)]
         public string Description { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of payment method type
         /// </summary>
         /// <value>Gets or sets the value of payment method type</value>
         [DataMember(Name="type", EmitDefaultValue=false)]
         public string Type { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of payment method group type
         /// </summary>
         /// <value>Gets or sets the value of payment method group type</value>
         [DataMember(Name="group", EmitDefaultValue=false)]
         public string Group { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of payment method priority
         /// </summary>
         /// <value>Gets or sets the value of payment method priority</value>
         [DataMember(Name="priority", EmitDefaultValue=false)]
         public int? Priority { get; set; }
-  
-        
+
         /// <summary>
         /// Is payment method available for partial payments
         /// </summary>
         /// <value>Is payment method available for partial payments</value>
         [DataMember(Name="isAvailableForPartial", EmitDefaultValue=false)]
         public bool? IsAvailableForPartial { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Settings
         /// </summary>
         [DataMember(Name="settings", EmitDefaultValue=false)]
         public List<VirtoCommercePlatformCoreSettingsSettingEntry> Settings { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -117,7 +96,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Priority: ").Append(Priority).Append("\n");
             sb.Append("  IsAvailableForPartial: ").Append(IsAvailableForPartial).Append("\n");
             sb.Append("  Settings: ").Append(Settings).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -212,39 +190,37 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.GatewayCode != null)
                     hash = hash * 59 + this.GatewayCode.GetHashCode();
-                
+
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
-                
+
                 if (this.IconUrl != null)
                     hash = hash * 59 + this.IconUrl.GetHashCode();
-                
+
                 if (this.Description != null)
                     hash = hash * 59 + this.Description.GetHashCode();
-                
+
                 if (this.Type != null)
                     hash = hash * 59 + this.Type.GetHashCode();
-                
+
                 if (this.Group != null)
                     hash = hash * 59 + this.Group.GetHashCode();
-                
+
                 if (this.Priority != null)
                     hash = hash * 59 + this.Priority.GetHashCode();
-                
+
                 if (this.IsAvailableForPartial != null)
                     hash = hash * 59 + this.IsAvailableForPartial.GetHashCode();
-                
+
                 if (this.Settings != null)
                     hash = hash * 59 + this.Settings.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

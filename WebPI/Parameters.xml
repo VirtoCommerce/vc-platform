@@ -24,6 +24,12 @@
         <parameterEntry type="ProviderPath" scope="setAcl" match="wwwroot/Areas/Admin/Assets" />
     </parameter>
 
+    <parameter name="CmsAcl"
+               defaultValue="{AppPath}/Areas/Admin/CMS"
+               tags="Hidden">
+        <parameterEntry type="ProviderPath" scope="setAcl" match="wwwroot/Areas/Admin/CMS" />
+    </parameter>
+
     <parameter name="ModulesAcl"
                defaultValue="{AppPath}/Areas/Admin/Modules"
                tags="Hidden">
@@ -74,9 +80,14 @@
         <parameterEntry type="XmlFile" scope="Web\.config$" match="/configuration/connectionStrings/add[@name='VirtoCommerceBaseUrl']/@connectionString" />
     </parameter>
     <parameter name="AssetsConnectionString"
-               defaultValue="provider=LocalStorage;rootPath=~/Areas/Admin/Assets;publicUrl={Application URL}/Areas/Admin/Assets"
+               defaultValue="provider=LocalStorage;rootPath=~/Areas/Admin/Assets;publicUrl={Application URL}/areas/admin/assets"
                tags="Hidden">
         <parameterEntry type="XmlFile" scope="Web\.config$" match="/configuration/connectionStrings/add[@name='AssetsConnectionString']/@connectionString" />
+    </parameter>
+    <parameter name="CmsContentConnectionString"
+               defaultValue="provider=LocalStorage;rootPath=~/Areas/Admin/CMS;publicUrl={Application URL}/areas/admin/cms"
+               tags="Hidden">
+        <parameterEntry type="XmlFile" scope="Web\.config$" match="/configuration/connectionStrings/add[@name='CmsContentConnectionString']/@connectionString" />
     </parameter>
 
     <parameter name="VirtoCommerceConnectionString"

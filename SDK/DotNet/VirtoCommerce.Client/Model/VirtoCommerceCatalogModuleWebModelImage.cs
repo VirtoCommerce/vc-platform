@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// Image asset
     /// </summary>
@@ -20,76 +18,58 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommerceCatalogModuleWebModelImage :  IEquatable<VirtoCommerceCatalogModuleWebModelImage>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelImage" /> class.
-        /// </summary>
-        public VirtoCommerceCatalogModuleWebModelImage()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets RelativeUrl
         /// </summary>
         [DataMember(Name="relativeUrl", EmitDefaultValue=false)]
         public string RelativeUrl { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Url
         /// </summary>
         [DataMember(Name="url", EmitDefaultValue=false)]
         public string Url { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the asset type identifier.
         /// </summary>
         /// <value>Gets or sets the asset type identifier.</value>
         [DataMember(Name="typeId", EmitDefaultValue=false)]
         public string TypeId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the asset group name.
         /// </summary>
         /// <value>Gets or sets the asset group name.</value>
         [DataMember(Name="group", EmitDefaultValue=false)]
         public string Group { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the asset name.
         /// </summary>
         /// <value>Gets or sets the asset name.</value>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the asset language.
         /// </summary>
         /// <value>Gets or sets the asset language.</value>
         [DataMember(Name="languageCode", EmitDefaultValue=false)]
         public string LanguageCode { get; set; }
-  
-        
+
         /// <summary>
         /// System flag used to mark that object was inherited from other
         /// </summary>
         /// <value>System flag used to mark that object was inherited from other</value>
         [DataMember(Name="isInherited", EmitDefaultValue=false)]
         public bool? IsInherited { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -106,7 +86,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  LanguageCode: ").Append(LanguageCode).Append("\n");
             sb.Append("  IsInherited: ").Append(IsInherited).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -196,36 +175,34 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 if (this.RelativeUrl != null)
                     hash = hash * 59 + this.RelativeUrl.GetHashCode();
-                
+
                 if (this.Url != null)
                     hash = hash * 59 + this.Url.GetHashCode();
-                
+
                 if (this.TypeId != null)
                     hash = hash * 59 + this.TypeId.GetHashCode();
-                
+
                 if (this.Group != null)
                     hash = hash * 59 + this.Group.GetHashCode();
-                
+
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
-                
+
                 if (this.LanguageCode != null)
                     hash = hash * 59 + this.LanguageCode.GetHashCode();
-                
+
                 if (this.IsInherited != null)
                     hash = hash * 59 + this.IsInherited.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

@@ -33,8 +33,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CacheManager.Core, Version=0.7.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\CacheManager.Core.0.7.1\lib\net45\CacheManager.Core.dll</HintPath>
+    <Reference Include="CacheManager.Core, Version=0.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\CacheManager.Core.0.8.0\lib\net45\CacheManager.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Common.Logging, Version=3.1.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
@@ -126,6 +126,10 @@
     <Compile Include="Migrations\201512301352120_AddPriceId.Designer.cs">
       <DependentUpon>201512301352120_AddPriceId.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201604251543185_ShipmentDiscountAmount.cs" />
+    <Compile Include="Migrations\201604251543185_ShipmentDiscountAmount.Designer.cs">
+      <DependentUpon>201604251543185_ShipmentDiscountAmount.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\AddressEntity.cs" />
     <Compile Include="Model\CustomerOrderEntity.cs" />
@@ -150,7 +154,6 @@
     <Compile Include="Services\CustomerOrderSearchServiceImpl.cs" />
     <Compile Include="Services\CustomerOrderServiceImpl.cs" />
     <Compile Include="Observers\AdjustInventoryObserver.cs" />
-    <Compile Include="Observers\CalculateTotalsObserver.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -206,6 +209,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201512301352120_AddPriceId.resx">
       <DependentUpon>201512301352120_AddPriceId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201604251543185_ShipmentDiscountAmount.resx">
+      <DependentUpon>201604251543185_ShipmentDiscountAmount.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

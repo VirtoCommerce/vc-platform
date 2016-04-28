@@ -53,7 +53,7 @@ function ($scope, catalogs, bladeNavigationService, dialogService, authService, 
     };
 
     $scope.editCatalog = function (catalog) {
-        if (catalog.virtual) {
+        if (catalog.isVirtual) {
             showVirtualCatalogBlade(catalog.id, null, catalog.name);
         }
         else {

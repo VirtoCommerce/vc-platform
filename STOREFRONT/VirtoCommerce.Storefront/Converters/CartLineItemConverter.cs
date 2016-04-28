@@ -21,7 +21,7 @@ namespace VirtoCommerce.Storefront.Converters
 
             lineItemWebModel.ImageUrl = product.PrimaryImage != null ? product.PrimaryImage.Url : null;
             lineItemWebModel.ListPrice = product.Price.ListPrice;
-            lineItemWebModel.SalePrice = product.Price.SalePrice;
+            lineItemWebModel.SalePrice = product.Price.GetTierPrice(quantity).Price;
             lineItemWebModel.ProductId = product.Id;
             lineItemWebModel.Quantity = quantity;
 

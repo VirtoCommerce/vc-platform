@@ -18,7 +18,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
             retVal.ObjectId = objectId;
             retVal.ValueType = EnumUtility.SafeParse(entity.ValueType, DynamicPropertyValueType.Undefined);
             retVal.DisplayNames = entity.DisplayNames.Select(x => x.ToModel()).ToArray();
-            retVal.Values = entity.ObjectValues.Select(x => x.ToModel()).ToArray();
+            retVal.Values = entity.ObjectValues.Where(x => x.ObjectId == objectId).Select(x => x.ToModel()).ToArray();
             return retVal;
         }
 

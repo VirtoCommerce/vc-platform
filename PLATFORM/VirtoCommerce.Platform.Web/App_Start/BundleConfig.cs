@@ -32,6 +32,7 @@ namespace VirtoCommerce.Platform.Web
                     "~/Content/themes/main/css/reset.css",
                     "~/Content/themes/main/css/font-awesome.css",
                     "~/Content/themes/main/css/base-modules.css",
+                    "~/Content/themes/main/css/lang-rtl.css",
                     "~/Content/themes/main/css/project-modules.css",
                     "~/Content/themes/main/css/cosmetic.css"
                     ));

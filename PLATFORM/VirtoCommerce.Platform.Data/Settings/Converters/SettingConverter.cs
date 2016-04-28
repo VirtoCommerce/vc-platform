@@ -37,7 +37,6 @@ namespace VirtoCommerce.Platform.Data.Settings.Converters
 
         public static SettingEntry ToModel(this ModuleSetting moduleSetting, SettingEntity entity, string groupName)
         {
-
             var result = new SettingEntry();
             result.InjectFrom(moduleSetting);
 

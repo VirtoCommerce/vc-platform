@@ -103,19 +103,15 @@ namespace VirtoCommerce.Storefront.Model
         {
             get
             {
-                bool isEnabled = false;
-
-                var dynamicPropertyValue = DynamicProperties.GetDynamicPropertyValue("EnableQuotes");
-                bool.TryParse(dynamicPropertyValue, out isEnabled);
-
-                return isEnabled;
+                return Settings.GetSettingValue("Quotes.EnableQuotes", false);
             }
         }
 
         #region IhasSettings Member
         public ICollection<SettingEntry> Settings { get; set; }
-        
         #endregion
+
+        public SeoLinksType SeoLinksType { get; set; }
 
         //Need sync store currencies with system avail currencies for specific language
         public void SyncCurrencies(IEnumerable<Currency> availableCurrencies, Language language)

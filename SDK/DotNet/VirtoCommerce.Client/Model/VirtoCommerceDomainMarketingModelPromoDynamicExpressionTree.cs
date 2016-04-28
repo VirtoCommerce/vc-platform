@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -20,36 +18,23 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommerceDomainMarketingModelPromoDynamicExpressionTree :  IEquatable<VirtoCommerceDomainMarketingModelPromoDynamicExpressionTree>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainMarketingModelPromoDynamicExpressionTree" /> class.
-        /// </summary>
-        public VirtoCommerceDomainMarketingModelPromoDynamicExpressionTree()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets AvailableChildren
         /// </summary>
         [DataMember(Name="availableChildren", EmitDefaultValue=false)]
         public List<VirtoCommerceDomainCommonDynamicExpression> AvailableChildren { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Children
         /// </summary>
         [DataMember(Name="children", EmitDefaultValue=false)]
         public List<VirtoCommerceDomainCommonDynamicExpression> Children { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -61,7 +46,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Id: ").Append(Id).Append("\n");
             sb.Append("  AvailableChildren: ").Append(AvailableChildren).Append("\n");
             sb.Append("  Children: ").Append(Children).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -126,21 +110,19 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 if (this.AvailableChildren != null)
                     hash = hash * 59 + this.AvailableChildren.GetHashCode();
-                
+
                 if (this.Children != null)
                     hash = hash * 59 + this.Children.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

@@ -164,9 +164,11 @@
     <Compile Include="Repositories\CatalogRepositoryImpl.cs" />
     <Compile Include="Repositories\ICatalogRepository.cs" />
     <Compile Include="Services\CatalogSearchServiceImpl.cs" />
+    <Compile Include="Services\CatalogSeoDublicatesDetector.cs" />
     <Compile Include="Services\CategoryServiceImpl.cs" />
     <Compile Include="Services\ItemServiceImpl.cs" />
     <Compile Include="Services\CatalogServiceImpl.cs" />
+    <Compile Include="Services\OutlineService.cs" />
     <Compile Include="Services\PropertyServiceImpl.cs" />
   </ItemGroup>
   <ItemGroup>

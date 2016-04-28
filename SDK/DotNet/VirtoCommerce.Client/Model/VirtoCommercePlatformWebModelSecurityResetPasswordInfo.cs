@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -20,22 +18,11 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommercePlatformWebModelSecurityResetPasswordInfo :  IEquatable<VirtoCommercePlatformWebModelSecurityResetPasswordInfo>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelSecurityResetPasswordInfo" /> class.
-        /// </summary>
-        public VirtoCommercePlatformWebModelSecurityResetPasswordInfo()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Gets or Sets NewPassword
         /// </summary>
         [DataMember(Name="newPassword", EmitDefaultValue=false)]
         public string NewPassword { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -45,7 +32,6 @@ namespace VirtoCommerce.Client.Model
             var sb = new StringBuilder();
             sb.Append("class VirtoCommercePlatformWebModelSecurityResetPasswordInfo {\n");
             sb.Append("  NewPassword: ").Append(NewPassword).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -100,15 +86,13 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.NewPassword != null)
                     hash = hash * 59 + this.NewPassword.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

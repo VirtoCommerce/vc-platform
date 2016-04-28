@@ -30,7 +30,7 @@ namespace VirtoCommerce.Storefront.Test
             Assert.Equal(page.Language, language);
             Assert.NotEmpty(page.Content);
             Assert.Equal(page.Url, "folder1/about_us");
-            Assert.Equal(Path.GetFileName(page.LocalPath), "about_us.en-US.md");
+            Assert.Equal(Path.GetFileName(page.StoragePath), "about_us.en-US.md");
         }
 
         [Fact]
@@ -44,7 +44,7 @@ namespace VirtoCommerce.Storefront.Test
             Assert.IsType<ContentPage>(page);
             Assert.NotEmpty(page.Content);
             Assert.Equal(page.Url, "about_us");
-            Assert.Equal(Path.GetFileName(page.LocalPath), "about_us.md");
+            Assert.Equal(Path.GetFileName(page.StoragePath), "about_us.md");
         }
 
         [Fact]
@@ -61,7 +61,7 @@ namespace VirtoCommerce.Storefront.Test
             Assert.IsType<ContentPage>(page);
             Assert.NotEmpty(page.Content);
             Assert.Equal(page.Url, "blogs/news/about_us_permalink");
-            Assert.Equal(Path.GetFileName(page.LocalPath), "about_us_permalink.md");
+            Assert.Equal(Path.GetFileName(page.StoragePath), "about_us_permalink.md");
         }
 
         [Fact]
@@ -86,13 +86,14 @@ namespace VirtoCommerce.Storefront.Test
 
         private IStaticContentService GetStaticContentService()
         {
-            var cacheManager = new Moq.Mock<ICacheManager<object>>();
+            var cacheManager = new Moq.Mock<ILocalCacheManager>();
             cacheManager.Setup(cache => cache.Get<ContentItem[]>(It.IsAny<string>(), It.IsAny<string>())).Returns<ContentItem[]>(null);
             var urlBuilder = new Moq.Mock<IStorefrontUrlBuilder>();
             var liquidEngine = new Moq.Mock<ILiquidThemeEngine>();
-            var markdown = new Moq.Mock<MarkdownDeep.Markdown>();
+            var markdown = new Moq.Mock<MarkdownSharp.Markdown>();
             var path = Path.Combine(Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory).Parent.FullName, "Pages");
-            var retVal = new StaticContentServiceImpl(path, markdown.Object, liquidEngine.Object, cacheManager.Object, ()=> null, ()=> urlBuilder.Object, StaticContentItemFactory.GetContentItemFromPath);
+            var blobProvider = new FileSystemContentBlobProvider(path);
+            var retVal = new StaticContentServiceImpl(markdown.Object, liquidEngine.Object, cacheManager.Object, ()=> null, ()=> urlBuilder.Object, StaticContentItemFactory.GetContentItemFromPath, blobProvider);
             return retVal;
         }
     }

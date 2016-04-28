@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -20,64 +18,47 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommerceCatalogModuleWebExportImportCsvProductPropertyMap :  IEquatable<VirtoCommerceCatalogModuleWebExportImportCsvProductPropertyMap>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebExportImportCsvProductPropertyMap" /> class.
-        /// </summary>
-        public VirtoCommerceCatalogModuleWebExportImportCsvProductPropertyMap()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Gets or Sets EntityColumnName
         /// </summary>
         [DataMember(Name="entityColumnName", EmitDefaultValue=false)]
         public string EntityColumnName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CsvColumnName
         /// </summary>
         [DataMember(Name="csvColumnName", EmitDefaultValue=false)]
         public string CsvColumnName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets IsSystemProperty
         /// </summary>
         [DataMember(Name="isSystemProperty", EmitDefaultValue=false)]
         public bool? IsSystemProperty { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets IsRequired
         /// </summary>
         [DataMember(Name="isRequired", EmitDefaultValue=false)]
         public bool? IsRequired { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CustomValue
         /// </summary>
         [DataMember(Name="customValue", EmitDefaultValue=false)]
         public string CustomValue { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets StringFormat
         /// </summary>
         [DataMember(Name="stringFormat", EmitDefaultValue=false)]
         public string StringFormat { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Locale
         /// </summary>
         [DataMember(Name="locale", EmitDefaultValue=false)]
         public string Locale { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -93,7 +74,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  CustomValue: ").Append(CustomValue).Append("\n");
             sb.Append("  StringFormat: ").Append(StringFormat).Append("\n");
             sb.Append("  Locale: ").Append(Locale).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -178,33 +158,31 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.EntityColumnName != null)
                     hash = hash * 59 + this.EntityColumnName.GetHashCode();
-                
+
                 if (this.CsvColumnName != null)
                     hash = hash * 59 + this.CsvColumnName.GetHashCode();
-                
+
                 if (this.IsSystemProperty != null)
                     hash = hash * 59 + this.IsSystemProperty.GetHashCode();
-                
+
                 if (this.IsRequired != null)
                     hash = hash * 59 + this.IsRequired.GetHashCode();
-                
+
                 if (this.CustomValue != null)
                     hash = hash * 59 + this.CustomValue.GetHashCode();
-                
+
                 if (this.StringFormat != null)
                     hash = hash * 59 + this.StringFormat.GetHashCode();
-                
+
                 if (this.Locale != null)
                     hash = hash * 59 + this.Locale.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

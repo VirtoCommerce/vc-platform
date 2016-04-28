@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -20,57 +18,41 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommerceQuoteModuleWebModelShipmentMethod :  IEquatable<VirtoCommerceQuoteModuleWebModelShipmentMethod>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceQuoteModuleWebModelShipmentMethod" /> class.
-        /// </summary>
-        public VirtoCommerceQuoteModuleWebModelShipmentMethod()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Gets or Sets ShipmentMethodCode
         /// </summary>
         [DataMember(Name="shipmentMethodCode", EmitDefaultValue=false)]
         public string ShipmentMethodCode { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets OptionName
         /// </summary>
         [DataMember(Name="optionName", EmitDefaultValue=false)]
         public string OptionName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets LogoUrl
         /// </summary>
         [DataMember(Name="logoUrl", EmitDefaultValue=false)]
         public string LogoUrl { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Currency
         /// </summary>
         [DataMember(Name="currency", EmitDefaultValue=false)]
         public string Currency { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Price
         /// </summary>
         [DataMember(Name="price", EmitDefaultValue=false)]
         public double? Price { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -85,7 +67,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  LogoUrl: ").Append(LogoUrl).Append("\n");
             sb.Append("  Currency: ").Append(Currency).Append("\n");
             sb.Append("  Price: ").Append(Price).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -165,30 +146,28 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.ShipmentMethodCode != null)
                     hash = hash * 59 + this.ShipmentMethodCode.GetHashCode();
-                
+
                 if (this.OptionName != null)
                     hash = hash * 59 + this.OptionName.GetHashCode();
-                
+
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
-                
+
                 if (this.LogoUrl != null)
                     hash = hash * 59 + this.LogoUrl.GetHashCode();
-                
+
                 if (this.Currency != null)
                     hash = hash * 59 + this.Currency.GetHashCode();
-                
+
                 if (this.Price != null)
                     hash = hash * 59 + this.Price.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

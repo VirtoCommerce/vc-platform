@@ -2,8 +2,6 @@
 .controller('virtoCommerce.catalogModule.itemDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings', 'virtoCommerce.catalogModule.items', function ($scope, bladeNavigationService, settings, items) {
     var blade = $scope.blade;
     blade.updatePermission = 'catalog:update';
-    blade.origItem = {};
-    blade.item = {};
     blade.currentEntityId = blade.itemId;
 
     blade.refresh = function (parentRefresh) {
@@ -23,7 +21,7 @@
             blade.item = angular.copy(data);
             blade.origItem = data;
             blade.isLoading = false;
-            if (parentRefresh) {
+            if (parentRefresh && blade.parentBlade.refresh) {
                 blade.parentBlade.refresh();
             }
         },
@@ -86,7 +84,7 @@
             permission: blade.updatePermission
         },
         {
-            name: "Clone", icon: 'fa fa-files-o',
+            name: "platform.commands.clone", icon: 'fa fa-files-o',
             executeMethod: function () {
                 blade.isLoading = true;
                 items.cloneItem({ itemId: blade.itemId }, function (data) {
@@ -128,6 +126,12 @@
         };
         bladeNavigationService.showBlade(newBlade, blade);
     };
+    
+    $scope.$on("refresh-entity-by-id", function (event, id) {
+        if (blade.currentEntityId === id) {
+            blade.refresh();
+        }
+    });
 
     $scope.taxTypes = settings.getValues({ id: 'VirtoCommerce.Core.General.TaxTypes' });
     blade.refresh(false);

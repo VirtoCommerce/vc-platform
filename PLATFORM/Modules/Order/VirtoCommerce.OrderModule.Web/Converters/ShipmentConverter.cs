@@ -32,8 +32,7 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 			if (shipment.Discount != null)
 			{
 				retVal.Discount = shipment.Discount.ToWebModel();
-				retVal.DiscountAmount = shipment.Discount.DiscountAmount;
-			}
+		    }
 
             //Populate shipment method for shipment
             retVal.ShippingMethod = new webModel.ShippingMethod();

@@ -37,7 +37,7 @@ namespace VirtoCommerce.Platform.Data.Asset
         /// </summary>
         /// <param name="blobUrl"></param>
         /// <returns></returns>
-        public BlobInfo GetBlobInfo(string url)
+        public virtual BlobInfo GetBlobInfo(string url)
         {
             if (string.IsNullOrEmpty(url))
                 throw new ArgumentNullException("url");
@@ -55,6 +55,8 @@ namespace VirtoCommerce.Platform.Data.Asset
                     FileName = fileInfo.Name,
                     ModifiedDate = fileInfo.LastWriteTimeUtc
                 };
+                retVal.RelativeUrl = GetRelativeUrl(retVal.Url);
+
             }
             return retVal; 
         }
@@ -64,7 +66,7 @@ namespace VirtoCommerce.Platform.Data.Asset
         /// </summary>
         /// <param name="url"></param>
         /// <returns>blob stream</returns>
-        public Stream OpenRead(string url)
+        public virtual Stream OpenRead(string url)
         {
             var filePath = GetStoragePathFromUrl(url);
             return File.Open(filePath, FileMode.Open);
@@ -75,7 +77,7 @@ namespace VirtoCommerce.Platform.Data.Asset
         /// </summary>
         /// <param name="url"></param>
         /// <returns>blob stream</returns>
-        public Stream OpenWrite(string url)
+        public virtual Stream OpenWrite(string url)
         {
             var filePath = GetStoragePathFromUrl(url);
             var folderPath = Path.GetDirectoryName(filePath);
@@ -93,7 +95,7 @@ namespace VirtoCommerce.Platform.Data.Asset
         /// </summary>
         /// <param name="folderUrl">absolute or relative path</param>
         /// <returns></returns>
-        public BlobSearchResult Search(string folderUrl, string keyword)
+        public virtual BlobSearchResult Search(string folderUrl, string keyword)
         {
             var retVal = new BlobSearchResult();
             var storagePath = _storagePath;
@@ -108,26 +110,30 @@ namespace VirtoCommerce.Platform.Data.Asset
             foreach (var directory in directories)
             {
                 var directoryInfo = new DirectoryInfo(directory);
-                retVal.Folders.Add(new BlobFolder
+                var folder = new BlobFolder
                 {
                     Name = Path.GetFileName(directory),
                     Url = GetAbsoluteUrlFromPath(directory),
                     ParentUrl = GetAbsoluteUrlFromPath(directoryInfo.Parent.FullName)
-                });
+                };
+                folder.RelativeUrl = GetRelativeUrl(folder.Url);
+                retVal.Folders.Add(folder);
             }
 
             var files = String.IsNullOrEmpty(keyword) ? Directory.GetFiles(storageFolderPath) : Directory.GetFiles(storageFolderPath, "*" + keyword + "*.*", SearchOption.AllDirectories);
             foreach (var file in files)
             {
                 var fileInfo = new FileInfo(file);
-                retVal.Items.Add(new BlobInfo
+                var blobInfo = new BlobInfo
                 {
                     Url = GetAbsoluteUrlFromPath(file),
                     ContentType = MimeTypeResolver.ResolveContentType(fileInfo.Name),
                     Size = fileInfo.Length,
                     FileName = fileInfo.Name,
                     ModifiedDate = fileInfo.LastWriteTimeUtc
-                });
+                };
+                blobInfo.RelativeUrl = GetRelativeUrl(blobInfo.Url);
+                retVal.Items.Add(blobInfo);
             }
             return retVal;
         }
@@ -136,7 +142,7 @@ namespace VirtoCommerce.Platform.Data.Asset
         /// Create folder in file system within to base directory
         /// </summary>
         /// <param name="folder"></param>
-        public void CreateFolder(BlobFolder folder)
+        public virtual void CreateFolder(BlobFolder folder)
         {
             if (folder == null)
             {
@@ -160,7 +166,7 @@ namespace VirtoCommerce.Platform.Data.Asset
         /// Remove folders and blobs by absolute or relative urls
         /// </summary>
         /// <param name="urls"></param>
-        public void Remove(string[] urls)
+        public virtual void Remove(string[] urls)
         {
             if (urls == null)
             {
@@ -188,7 +194,7 @@ namespace VirtoCommerce.Platform.Data.Asset
 
         #region IBlobUrlResolver Members
 
-        public string GetAbsoluteUrl(string relativeUrl)
+        public virtual string GetAbsoluteUrl(string relativeUrl)
         {
             if (relativeUrl == null)
             {
@@ -203,14 +209,17 @@ namespace VirtoCommerce.Platform.Data.Asset
         }
 
         #endregion
-
-        private string GetAbsoluteUrlFromPath(string path)
+        protected string GetRelativeUrl(string url)
+        {
+            return url.Replace(_basePublicUrl, string.Empty);
+        }
+        protected string GetAbsoluteUrlFromPath(string path)
         {
             var retVal = _basePublicUrl + "/" + path.Replace(_storagePath, String.Empty).TrimStart('\\').Replace('\\', '/');
             return Uri.EscapeUriString(retVal);
         }
 
-        private string GetStoragePathFromUrl(string url)
+        protected string GetStoragePathFromUrl(string url)
         {
             var retVal = _storagePath;
             if (url != null)
@@ -221,7 +230,7 @@ namespace VirtoCommerce.Platform.Data.Asset
                     url = url.Replace(_basePublicUrl, String.Empty);
                 }
                 retVal += url;
-                retVal = retVal.Replace("/", "\\");
+                retVal = retVal.Replace("/", "\\").Replace("\\\\", "\\");
             }
             return Uri.UnescapeDataString(retVal);
         }

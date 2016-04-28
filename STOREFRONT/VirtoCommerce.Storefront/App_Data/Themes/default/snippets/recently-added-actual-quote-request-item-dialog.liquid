@@ -9,7 +9,7 @@
                         <div class="grid">
                             <div class="grid-item one-third large--one-quarter">
                                 <span class="cart-image">
-                                    <img ng-src="{( dialogData.imageUrl )}" ng-if="dialogData.imageUrl" />
+                                    <img ng-src="{% raw %}{{ dialogData.imageUrl }}{% endraw %}" ng-if="dialogData.imageUrl" />
                                     <div class="no-product-image" ng-if="!dialogData.imageUrl">
                                         <img src="{{ 'no-image.svg' | asset_url }}" />
                                     </div>

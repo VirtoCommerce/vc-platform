@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using VirtoCommerce.Storefront.Common;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Services;
@@ -24,14 +25,17 @@ namespace VirtoCommerce.Storefront.Controllers
         //Called from SEO route by page permalink
         public ActionResult GetContentPage(ContentItem page)
         {
-            if (page is BlogArticle)
+            var blogArticle = page as BlogArticle;
+            var contentPage = page as ContentPage;
+            if (blogArticle != null)
             {
-                base.WorkContext.CurrentBlogArticle = page as BlogArticle;
+                base.WorkContext.CurrentBlogArticle = blogArticle;
+                base.WorkContext.CurrentBlog = base.WorkContext.Blogs.Where(x => x.Name.Equals(blogArticle.BlogName, StringComparison.OrdinalIgnoreCase)).SingleOrDefault();
                 return View("article", page.Layout, base.WorkContext);
             }
             else
             {
-                base.WorkContext.CurrentPage = page as ContentPage;
+                base.WorkContext.CurrentPage = contentPage;
                 return View("page", page.Layout, base.WorkContext);
             }
         }
@@ -41,12 +45,7 @@ namespace VirtoCommerce.Storefront.Controllers
         {
 
             var contentPages = base.WorkContext.Pages.Where(x => string.Equals(x.Url, page, StringComparison.OrdinalIgnoreCase));
-            var contentPage = contentPages.FirstOrDefault(x => x.Language == base.WorkContext.CurrentLanguage);
-            if(contentPage == null)
-            {
-                contentPage = contentPages.FirstOrDefault(x => x.Language.IsInvariant);
-            }
-
+            var contentPage = contentPages.FindWithLanguage(base.WorkContext.CurrentLanguage);        
             if (contentPage != null)
             {
                 base.WorkContext.CurrentPage = contentPage as ContentPage;

@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -20,29 +18,17 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommercePlatformCoreSecurityRoleSearchResponse :  IEquatable<VirtoCommercePlatformCoreSecurityRoleSearchResponse>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreSecurityRoleSearchResponse" /> class.
-        /// </summary>
-        public VirtoCommercePlatformCoreSecurityRoleSearchResponse()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Gets or Sets Roles
         /// </summary>
         [DataMember(Name="roles", EmitDefaultValue=false)]
         public List<VirtoCommercePlatformCoreSecurityRole> Roles { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets TotalCount
         /// </summary>
         [DataMember(Name="totalCount", EmitDefaultValue=false)]
         public int? TotalCount { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -53,7 +39,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("class VirtoCommercePlatformCoreSecurityRoleSearchResponse {\n");
             sb.Append("  Roles: ").Append(Roles).Append("\n");
             sb.Append("  TotalCount: ").Append(TotalCount).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -113,18 +98,16 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Roles != null)
                     hash = hash * 59 + this.Roles.GetHashCode();
-                
+
                 if (this.TotalCount != null)
                     hash = hash * 59 + this.TotalCount.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -20,134 +18,107 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommercePlatformCoreSecurityApplicationUserExtended :  IEquatable<VirtoCommercePlatformCoreSecurityApplicationUserExtended>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreSecurityApplicationUserExtended" /> class.
-        /// </summary>
-        public VirtoCommercePlatformCoreSecurityApplicationUserExtended()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets UserName
         /// </summary>
         [DataMember(Name="userName", EmitDefaultValue=false)]
         public string UserName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Email
         /// </summary>
         [DataMember(Name="email", EmitDefaultValue=false)]
         public string Email { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets PhoneNumber
         /// </summary>
         [DataMember(Name="phoneNumber", EmitDefaultValue=false)]
         public string PhoneNumber { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets StoreId
         /// </summary>
         [DataMember(Name="storeId", EmitDefaultValue=false)]
         public string StoreId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets MemberId
         /// </summary>
         [DataMember(Name="memberId", EmitDefaultValue=false)]
         public string MemberId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Icon
         /// </summary>
         [DataMember(Name="icon", EmitDefaultValue=false)]
         public string Icon { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets IsAdministrator
         /// </summary>
         [DataMember(Name="isAdministrator", EmitDefaultValue=false)]
         public bool? IsAdministrator { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets UserType
         /// </summary>
         [DataMember(Name="userType", EmitDefaultValue=false)]
         public string UserType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets UserState
         /// </summary>
         [DataMember(Name="userState", EmitDefaultValue=false)]
         public string UserState { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Password
         /// </summary>
         [DataMember(Name="password", EmitDefaultValue=false)]
         public string Password { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets PasswordHash
         /// </summary>
         [DataMember(Name="passwordHash", EmitDefaultValue=false)]
         public string PasswordHash { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets SecurityStamp
         /// </summary>
         [DataMember(Name="securityStamp", EmitDefaultValue=false)]
         public string SecurityStamp { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Logins
         /// </summary>
         [DataMember(Name="logins", EmitDefaultValue=false)]
         public List<VirtoCommercePlatformCoreSecurityApplicationUserLogin> Logins { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Roles
         /// </summary>
         [DataMember(Name="roles", EmitDefaultValue=false)]
         public List<VirtoCommercePlatformCoreSecurityRole> Roles { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Permissions
         /// </summary>
         [DataMember(Name="permissions", EmitDefaultValue=false)]
         public List<string> Permissions { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ApiAccounts
         /// </summary>
         [DataMember(Name="apiAccounts", EmitDefaultValue=false)]
         public List<VirtoCommercePlatformCoreSecurityApiAccount> ApiAccounts { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -173,7 +144,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Roles: ").Append(Roles).Append("\n");
             sb.Append("  Permissions: ").Append(Permissions).Append("\n");
             sb.Append("  ApiAccounts: ").Append(ApiAccounts).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -308,63 +278,61 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 if (this.UserName != null)
                     hash = hash * 59 + this.UserName.GetHashCode();
-                
+
                 if (this.Email != null)
                     hash = hash * 59 + this.Email.GetHashCode();
-                
+
                 if (this.PhoneNumber != null)
                     hash = hash * 59 + this.PhoneNumber.GetHashCode();
-                
+
                 if (this.StoreId != null)
                     hash = hash * 59 + this.StoreId.GetHashCode();
-                
+
                 if (this.MemberId != null)
                     hash = hash * 59 + this.MemberId.GetHashCode();
-                
+
                 if (this.Icon != null)
                     hash = hash * 59 + this.Icon.GetHashCode();
-                
+
                 if (this.IsAdministrator != null)
                     hash = hash * 59 + this.IsAdministrator.GetHashCode();
-                
+
                 if (this.UserType != null)
                     hash = hash * 59 + this.UserType.GetHashCode();
-                
+
                 if (this.UserState != null)
                     hash = hash * 59 + this.UserState.GetHashCode();
-                
+
                 if (this.Password != null)
                     hash = hash * 59 + this.Password.GetHashCode();
-                
+
                 if (this.PasswordHash != null)
                     hash = hash * 59 + this.PasswordHash.GetHashCode();
-                
+
                 if (this.SecurityStamp != null)
                     hash = hash * 59 + this.SecurityStamp.GetHashCode();
-                
+
                 if (this.Logins != null)
                     hash = hash * 59 + this.Logins.GetHashCode();
-                
+
                 if (this.Roles != null)
                     hash = hash * 59 + this.Roles.GetHashCode();
-                
+
                 if (this.Permissions != null)
                     hash = hash * 59 + this.Permissions.GetHashCode();
-                
+
                 if (this.ApiAccounts != null)
                     hash = hash * 59 + this.ApiAccounts.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

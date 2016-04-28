@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -20,50 +18,35 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommercePlatformWebModelNotificationsTestNotificationRequest :  IEquatable<VirtoCommercePlatformWebModelNotificationsTestNotificationRequest>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelNotificationsTestNotificationRequest" /> class.
-        /// </summary>
-        public VirtoCommercePlatformWebModelNotificationsTestNotificationRequest()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name="type", EmitDefaultValue=false)]
         public string Type { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ObjectId
         /// </summary>
         [DataMember(Name="objectId", EmitDefaultValue=false)]
         public string ObjectId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ObjectTypeId
         /// </summary>
         [DataMember(Name="objectTypeId", EmitDefaultValue=false)]
         public string ObjectTypeId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Language
         /// </summary>
         [DataMember(Name="language", EmitDefaultValue=false)]
         public string Language { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets NotificationParameters
         /// </summary>
         [DataMember(Name="notificationParameters", EmitDefaultValue=false)]
         public List<VirtoCommercePlatformWebModelNotificationsNotificationParameter> NotificationParameters { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -77,7 +60,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  ObjectTypeId: ").Append(ObjectTypeId).Append("\n");
             sb.Append("  Language: ").Append(Language).Append("\n");
             sb.Append("  NotificationParameters: ").Append(NotificationParameters).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -152,27 +134,25 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Type != null)
                     hash = hash * 59 + this.Type.GetHashCode();
-                
+
                 if (this.ObjectId != null)
                     hash = hash * 59 + this.ObjectId.GetHashCode();
-                
+
                 if (this.ObjectTypeId != null)
                     hash = hash * 59 + this.ObjectTypeId.GetHashCode();
-                
+
                 if (this.Language != null)
                     hash = hash * 59 + this.Language.GetHashCode();
-                
+
                 if (this.NotificationParameters != null)
                     hash = hash * 59 + this.NotificationParameters.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

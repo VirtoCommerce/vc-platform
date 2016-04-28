@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using PagedList;
 using VirtoCommerce.Storefront.Common;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Catalog;
@@ -36,8 +37,10 @@ namespace VirtoCommerce.Storefront.Controllers
                 Model.Catalog.ItemResponseGroup.Variations |
                 Model.Catalog.ItemResponseGroup.ItemProperties |
                 Model.Catalog.ItemResponseGroup.ItemSmall |
-                Model.Catalog.ItemResponseGroup.ItemWithPrices)).FirstOrDefault();
-            WorkContext.CurrentProduct = product;
+                Model.Catalog.ItemResponseGroup.ItemWithPrices | 
+                Model.Catalog.ItemResponseGroup.ItemAssociations)).FirstOrDefault();
+            WorkContext.CurrentProduct = product;          
+         
             if(product.CategoryId != null)
             {
                 var category = (await _catalogSearchService.GetCategoriesAsync(new[] { product.CategoryId }, Model.Catalog.CategoryResponseGroup.Full)).FirstOrDefault();
@@ -50,7 +53,6 @@ namespace VirtoCommerce.Storefront.Controllers
                     criteria.PageSize = pageSize;
                     return _catalogSearchService.SearchProducts(criteria).Products;
                 });
-
             }
      
             return View("product", WorkContext);

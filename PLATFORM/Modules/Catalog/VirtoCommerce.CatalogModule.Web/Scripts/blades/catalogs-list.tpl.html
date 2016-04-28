@@ -51,9 +51,9 @@
 <script type="text/ng-template" id="list-name.cell.html">
     <div class="ui-grid-cell-contents">
         <div class="inner-contents">
-            <i class="table-ico fa" ng-class="row.entity.virtual ? 'fa-cloud' : 'fa-folder'"></i>
-            <span class="table-t" ng-show="row.entity.virtual">{{ 'catalog.blades.catalogs-list.labels.virtual' | translate: { name: COL_FIELD } }}</span>
-            <span class="table-t" ng-hide="row.entity.virtual">{{COL_FIELD}}</span>
+            <i class="table-ico fa" ng-class="row.entity.isVirtual ? 'fa-cloud' : 'fa-folder'"></i>
+            <span class="table-t" ng-show="row.entity.isVirtual">{{ 'catalog.blades.catalogs-list.labels.virtual' | translate: { name: COL_FIELD } }}</span>
+            <span class="table-t" ng-hide="row.entity.isVirtual">{{COL_FIELD}}</span>
         </div>
     </div>
 </script>

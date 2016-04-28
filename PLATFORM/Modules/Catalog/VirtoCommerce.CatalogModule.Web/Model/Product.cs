@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using VirtoCommerce.Domain.Catalog.Model;
 using VirtoCommerce.Domain.Commerce.Model;
 using VirtoCommerce.Platform.Core.Common;
 
@@ -9,7 +10,7 @@ namespace VirtoCommerce.CatalogModule.Web.Model
     /// <summary>
     /// Merchandising item.
     /// </summary>
-    public class Product : AuditableEntity, ISeoSupport
+    public class Product : AuditableEntity, ISeoSupport, IHasOutlines
     {
         /// <summary>
         /// Gets or sets the manufacturer part number for this product.
@@ -218,27 +219,27 @@ namespace VirtoCommerce.CatalogModule.Web.Model
         /// </value>
 		public string Vendor { get; set; }
 
-		private string _imgSrc;
+        private string _imgSrc;
         /// <summary>
         /// Gets the default image for the product.
         /// </summary>
         /// <value>
         /// The image source URL.
         /// </value>
-        public string ImgSrc 
-		{ 
-			get
-			{
-				if (_imgSrc == null)
-				{
-					if (Images != null && Images.Any())
-					{
-						_imgSrc = Images.First().Url;
-					}
-				}
-				return _imgSrc;
-			}
-		}
+        public string ImgSrc
+        {
+            get
+            {
+                if (_imgSrc == null)
+                {
+                    if (Images != null && Images.Any())
+                    {
+                        _imgSrc = Images.First().Url;
+                    }
+                }
+                return _imgSrc;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the properties.
@@ -275,7 +276,7 @@ namespace VirtoCommerce.CatalogModule.Web.Model
         /// The links.
         /// </value>
 		public ICollection<CategoryLink> Links { get; set; }
-      
+
         /// <summary>
         /// Gets or sets the reviews.
         /// </summary>
@@ -294,6 +295,7 @@ namespace VirtoCommerce.CatalogModule.Web.Model
         public string[] SecurityScopes { get; set; }
 
         #region ISeoSupport Members 
+        public string SeoObjectType { get { return GetType().Name; } }
         /// <summary>
         /// Gets or sets the list of SEO information records.
         /// </summary>
@@ -301,6 +303,12 @@ namespace VirtoCommerce.CatalogModule.Web.Model
         /// The seo infos.
         /// </value>
         public ICollection<SeoInfo> SeoInfos { get; set; }
+        #endregion
+
+        #region Implementation of IHasOutlines
+
+        public ICollection<Outline> Outlines { get; set; }
+
         #endregion
     }
 }

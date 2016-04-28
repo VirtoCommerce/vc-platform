@@ -7,6 +7,7 @@ using VirtoCommerce.CatalogModule.Data.Services;
 using VirtoCommerce.CatalogModule.Web.ExportImport;
 using VirtoCommerce.CatalogModule.Web.Security;
 using VirtoCommerce.Domain.Catalog.Services;
+using VirtoCommerce.Domain.Commerce.Services;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
@@ -27,7 +28,7 @@ namespace VirtoCommerce.CatalogModule.Web
             _container = container;
         }
 
-        #region IDatabaseModule Members
+        #region IModule Members
 
         public override void SetupDatabase()
         {
@@ -59,6 +60,8 @@ namespace VirtoCommerce.CatalogModule.Web
             _container.RegisterType<IPropertyService, PropertyServiceImpl>();
             _container.RegisterType<ICatalogSearchService, CatalogSearchServiceImpl>();
             _container.RegisterType<ISkuGenerator, DefaultSkuGenerator>();
+            _container.RegisterType<ISeoDuplicatesDetector, CatalogSeoDublicatesDetector>(new ContainerControlledLifetimeManager());
+            _container.RegisterType<IOutlineService, OutlineService>();
 
             #endregion
         }
@@ -67,8 +70,9 @@ namespace VirtoCommerce.CatalogModule.Web
         {
             var securityScopeService = _container.Resolve<IPermissionScopeService>();
             securityScopeService.RegisterSope(() => new CatalogSelectedScope());
-            securityScopeService.RegisterSope(() => new CatalogSelectedCategoryScope(_container.Resolve<ICategoryService>()));
+            securityScopeService.RegisterSope(() => new CatalogSelectedCategoryScope(_container.Resolve<ICategoryService>()));         
         }
+
         #endregion
 
         #region ISupportExportImportModule Members

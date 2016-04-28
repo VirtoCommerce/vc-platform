@@ -21,7 +21,7 @@ namespace VirtoCommerce.CustomerModule.Test
         public void SearchContactsTest()
         {
             var controller = GetContactController();
-            var result = controller.Search(new SearchCriteria()) as OkNegotiatedContentResult<SearchResult>;
+            var result = controller.Search(new MembersSearchCriteria()) as OkNegotiatedContentResult<MembersSearchResult>;
             Assert.IsNotNull(result.Content);
         }
 
@@ -38,7 +38,7 @@ namespace VirtoCommerce.CustomerModule.Test
 
 
             };
-            var result = controller.CreateOrganization(org) as OkNegotiatedContentResult<Organization>;
+            var result = controller.CreateMember(org) as OkNegotiatedContentResult<Organization>;
             Assert.IsNotNull(result.Content);
         }
 
@@ -46,7 +46,7 @@ namespace VirtoCommerce.CustomerModule.Test
         public void SearchTest()
         {
             var controller = GetContactController();
-            var result = controller.Search(new SearchCriteria { MemberId = "org1" }) as OkNegotiatedContentResult<SearchResult>;
+            var result = controller.Search(new MembersSearchCriteria { MemberId = "org1" }) as OkNegotiatedContentResult<MembersSearchResult>;
         }
 
         [TestMethod]
@@ -141,13 +141,8 @@ namespace VirtoCommerce.CustomerModule.Test
 
         private static CustomerModuleController GetContactController()
         {
-            Func<IPlatformRepository> platformRepositoryFactory = () => new PlatformRepository("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor(null));
-            Func<ICustomerRepository> customerRepositoryFactory = () => new CustomerRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor(null));
 
-            var dynamicPropertyService = new DynamicPropertyService(platformRepositoryFactory);
-            var memberService = new MemberServiceImpl(customerRepositoryFactory, dynamicPropertyService, null);
-      
-            return new CustomerModuleController(memberService, null);
+            return new CustomerModuleController(null, null, null);
         }
     }
 }

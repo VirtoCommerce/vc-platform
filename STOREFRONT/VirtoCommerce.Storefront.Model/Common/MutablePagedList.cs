@@ -15,9 +15,11 @@ namespace VirtoCommerce.Storefront.Model.Common
         private IPagedList<T> _pagedList;
         private readonly object _lockObject = new object();
 
-        public MutablePagedList(IEnumerable<T> superSet, int pageNumber = 1, int pageSize = 20)
-            : this((newPageNumber, newPageSize) => new PagedList<T>(superSet, newPageNumber, newPageSize), pageNumber, pageSize)
+        public MutablePagedList(IEnumerable<T> superSet)
+            : this((newPageNumber, newPageSize) => new PagedList<T>(superSet, newPageNumber, newPageSize), 1, Math.Max(superSet.Count(), 1))
         {
+            TotalItemCount = superSet.Count();
+            PageCount = 1;
         }
 
         public MutablePagedList(Func<int, int, IPagedList<T>> getter, int pageNumber = 1, int pageSize = 20)

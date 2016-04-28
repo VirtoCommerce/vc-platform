@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// Represent information about quantity and line item belongs to shipment
     /// </summary>
@@ -20,78 +18,59 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommerceOrderModuleWebModelShipmentItem :  IEquatable<VirtoCommerceOrderModuleWebModelShipmentItem>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceOrderModuleWebModelShipmentItem" /> class.
-        /// </summary>
-        public VirtoCommerceOrderModuleWebModelShipmentItem()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Gets or Sets LineItemId
         /// </summary>
         [DataMember(Name="lineItemId", EmitDefaultValue=false)]
         public string LineItemId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets LineItem
         /// </summary>
         [DataMember(Name="lineItem", EmitDefaultValue=false)]
         public VirtoCommerceOrderModuleWebModelLineItem LineItem { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets BarCode
         /// </summary>
         [DataMember(Name="barCode", EmitDefaultValue=false)]
         public string BarCode { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Quantity
         /// </summary>
         [DataMember(Name="quantity", EmitDefaultValue=false)]
         public int? Quantity { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedDate
         /// </summary>
         [DataMember(Name="createdDate", EmitDefaultValue=false)]
         public DateTime? CreatedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedDate
         /// </summary>
         [DataMember(Name="modifiedDate", EmitDefaultValue=false)]
         public DateTime? ModifiedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedBy
         /// </summary>
         [DataMember(Name="createdBy", EmitDefaultValue=false)]
         public string CreatedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedBy
         /// </summary>
         [DataMember(Name="modifiedBy", EmitDefaultValue=false)]
         public string ModifiedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -109,7 +88,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  CreatedBy: ").Append(CreatedBy).Append("\n");
             sb.Append("  ModifiedBy: ").Append(ModifiedBy).Append("\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -204,39 +182,37 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.LineItemId != null)
                     hash = hash * 59 + this.LineItemId.GetHashCode();
-                
+
                 if (this.LineItem != null)
                     hash = hash * 59 + this.LineItem.GetHashCode();
-                
+
                 if (this.BarCode != null)
                     hash = hash * 59 + this.BarCode.GetHashCode();
-                
+
                 if (this.Quantity != null)
                     hash = hash * 59 + this.Quantity.GetHashCode();
-                
+
                 if (this.CreatedDate != null)
                     hash = hash * 59 + this.CreatedDate.GetHashCode();
-                
+
                 if (this.ModifiedDate != null)
                     hash = hash * 59 + this.ModifiedDate.GetHashCode();
-                
+
                 if (this.CreatedBy != null)
                     hash = hash * 59 + this.CreatedBy.GetHashCode();
-                
+
                 if (this.ModifiedBy != null)
                     hash = hash * 59 + this.ModifiedBy.GetHashCode();
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

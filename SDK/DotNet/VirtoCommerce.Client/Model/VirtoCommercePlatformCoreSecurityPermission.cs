@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -20,64 +18,47 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommercePlatformCoreSecurityPermission :  IEquatable<VirtoCommercePlatformCoreSecurityPermission>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreSecurityPermission" /> class.
-        /// </summary>
-        public VirtoCommercePlatformCoreSecurityPermission()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Gets or Sets Name
         /// </summary>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Description
         /// </summary>
         [DataMember(Name="description", EmitDefaultValue=false)]
         public string Description { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModuleId
         /// </summary>
         [DataMember(Name="moduleId", EmitDefaultValue=false)]
         public string ModuleId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets GroupName
         /// </summary>
         [DataMember(Name="groupName", EmitDefaultValue=false)]
         public string GroupName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets AssignedScopes
         /// </summary>
         [DataMember(Name="assignedScopes", EmitDefaultValue=false)]
         public List<VirtoCommercePlatformCoreSecurityPermissionScope> AssignedScopes { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets AvailableScopes
         /// </summary>
         [DataMember(Name="availableScopes", EmitDefaultValue=false)]
         public List<VirtoCommercePlatformCoreSecurityPermissionScope> AvailableScopes { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -93,7 +74,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  AssignedScopes: ").Append(AssignedScopes).Append("\n");
             sb.Append("  AvailableScopes: ").Append(AvailableScopes).Append("\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -178,33 +158,31 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
-                
+
                 if (this.Description != null)
                     hash = hash * 59 + this.Description.GetHashCode();
-                
+
                 if (this.ModuleId != null)
                     hash = hash * 59 + this.ModuleId.GetHashCode();
-                
+
                 if (this.GroupName != null)
                     hash = hash * 59 + this.GroupName.GetHashCode();
-                
+
                 if (this.AssignedScopes != null)
                     hash = hash * 59 + this.AssignedScopes.GetHashCode();
-                
+
                 if (this.AvailableScopes != null)
                     hash = hash * 59 + this.AvailableScopes.GetHashCode();
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

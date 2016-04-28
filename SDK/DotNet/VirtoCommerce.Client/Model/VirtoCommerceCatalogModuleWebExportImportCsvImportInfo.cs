@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -20,36 +18,23 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommerceCatalogModuleWebExportImportCsvImportInfo :  IEquatable<VirtoCommerceCatalogModuleWebExportImportCsvImportInfo>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebExportImportCsvImportInfo" /> class.
-        /// </summary>
-        public VirtoCommerceCatalogModuleWebExportImportCsvImportInfo()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Gets or Sets CatalogId
         /// </summary>
         [DataMember(Name="catalogId", EmitDefaultValue=false)]
         public string CatalogId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets FileUrl
         /// </summary>
         [DataMember(Name="fileUrl", EmitDefaultValue=false)]
         public string FileUrl { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Configuration
         /// </summary>
         [DataMember(Name="configuration", EmitDefaultValue=false)]
         public VirtoCommerceCatalogModuleWebExportImportCsvProductMappingConfiguration Configuration { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -61,7 +46,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  CatalogId: ").Append(CatalogId).Append("\n");
             sb.Append("  FileUrl: ").Append(FileUrl).Append("\n");
             sb.Append("  Configuration: ").Append(Configuration).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -126,21 +110,19 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.CatalogId != null)
                     hash = hash * 59 + this.CatalogId.GetHashCode();
-                
+
                 if (this.FileUrl != null)
                     hash = hash * 59 + this.FileUrl.GetHashCode();
-                
+
                 if (this.Configuration != null)
                     hash = hash * 59 + this.Configuration.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

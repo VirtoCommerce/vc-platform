@@ -16,7 +16,8 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
             var retVal = new webModel.Product();
             retVal.InjectFrom(product);
 
-			retVal.SeoInfos = product.SeoInfos;
+            retVal.SeoInfos = product.SeoInfos;
+            retVal.Outlines = product.Outlines;
 
             if (product.Catalog != null)
             {
@@ -27,7 +28,7 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 
             if (product.Category != null)
             {
-				retVal.Category = product.Category.ToWebModel(blobUrlResolver);
+                retVal.Category = product.Category.ToWebModel(blobUrlResolver);
                 //Reset  category catalog, properties  for response size economy
                 retVal.Category.Catalog = null;
                 retVal.Category.Properties = null;
@@ -35,13 +36,13 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 
             if (product.Images != null)
             {
-				retVal.Images = product.Images.Select(x => x.ToWebModel(blobUrlResolver)).ToList();
+                retVal.Images = product.Images.Select(x => x.ToWebModel(blobUrlResolver)).ToList();
             }
 
-			if(product.Assets != null)
-			{
-				retVal.Assets = product.Assets.Select(x => x.ToWebModel(blobUrlResolver)).ToList();
-			}
+            if (product.Assets != null)
+            {
+                retVal.Assets = product.Assets.Select(x => x.ToWebModel(blobUrlResolver)).ToList();
+            }
 
             if (product.Variations != null)
             {
@@ -63,15 +64,15 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
                 retVal.Associations = product.Associations.Select(x => x.ToWebModel(blobUrlResolver)).ToList();
             }
             //Init parents
-            if(product.Category != null)
+            if (product.Category != null)
             {
                 retVal.Parents = new List<webModel.Category>();
-                if(product.Category.Parents != null)
+                if (product.Category.Parents != null)
                 {
                     retVal.Parents.AddRange(product.Category.Parents.Select(x => x.ToWebModel()));
                 }
                 retVal.Parents.Add(product.Category.ToWebModel());
-                foreach(var parent in retVal.Parents)
+                foreach (var parent in retVal.Parents)
                 {
                     //Reset some props to decrease size of resulting json
                     parent.Catalog = null;
@@ -101,13 +102,17 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
             //Populate property values
             if (product.PropertyValues != null)
             {
-                foreach (var propValue in product.PropertyValues.Select(x=>x.ToWebModel()))
+                foreach (var propValue in product.PropertyValues.Select(x => x.ToWebModel()))
                 {
-					var property = retVal.Properties.FirstOrDefault(x => x.Id == propValue.PropertyId);
+                    var property = retVal.Properties.FirstOrDefault(x => x.Id == propValue.PropertyId);
                     if (property == null)
-					{  
-						//Need add dummy property for each value without property
-						property = new webModel.Property(propValue, product.CatalogId, product.CategoryId, moduleModel.PropertyType.Product);
+                    {
+                        property = retVal.Properties.FirstOrDefault(x => x.Name.EqualsInvariant(propValue.PropertyName));
+                    }
+                    if (property == null)
+                    {
+                        //Need add dummy property for each value without property
+                        property = new webModel.Property(propValue, product.CatalogId, product.CategoryId, moduleModel.PropertyType.Product);
                         retVal.Properties.Add(property);
                     }
                     property.Values.Add(propValue);
@@ -121,22 +126,22 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
         {
             var retVal = new moduleModel.CatalogProduct();
             retVal.InjectFrom(product);
-			retVal.SeoInfos = product.SeoInfos;
+            retVal.SeoInfos = product.SeoInfos;
 
             if (product.Images != null)
             {
-				retVal.Images = product.Images.Select(x => x.ToCoreModel()).ToList();
-				var index = 0;
-				foreach(var image in retVal.Images)
-				{
-					image.SortOrder = index++;
-				}
+                retVal.Images = product.Images.Select(x => x.ToCoreModel()).ToList();
+                var index = 0;
+                foreach (var image in retVal.Images)
+                {
+                    image.SortOrder = index++;
+                }
             }
 
-			if (product.Assets != null)
-			{
-				retVal.Assets = product.Assets.Select(x => x.ToCoreModel()).ToList();
-			}
+            if (product.Assets != null)
+            {
+                retVal.Assets = product.Assets.Select(x => x.ToCoreModel()).ToList();
+            }
 
             if (product.Properties != null)
             {

@@ -14,21 +14,51 @@ namespace VirtoCommerce.LiquidThemeEngine.Extensions
         #region Public Methods and Operators
         public static string RenderWithTracing(this Template template, RenderParameters parameters)
         {
-            var content = template.Render(parameters);
-            if (template.Errors.Any())
+            if (template == null)
             {
-                template.Errors.ForEach(e => Trace.TraceError(FlattenException(e)));
+                throw new ArgumentNullException("template");
             }
 
+            string content = null;
+            try
+            {
+                content = template.Render(parameters);
+            }
+            catch(Exception ex)
+            {
+                Trace.TraceError(FlattenException(ex));
+            }
+            finally
+            {
+                if (template.Errors.Any())
+                {
+                    template.Errors.ForEach(e => Trace.TraceError(FlattenException(e)));
+                }
+            }
             return content;
         }
 
         public static void RenderWithTracing(this Template template, TextWriter result, RenderParameters parameters)
         {
-            template.Render(result, parameters);
-            if (template.Errors.Any())
+            if (template == null)
             {
-                template.Errors.ForEach(e => Trace.TraceError(FlattenException(e)));
+                throw new ArgumentNullException("template");
+            }
+
+            try
+            {
+                template.Render(result, parameters);
+            }
+            catch (Exception ex)
+            {
+                Trace.TraceError(FlattenException(ex));
+            }
+            finally
+            {
+                if (template.Errors.Any())
+                {
+                    template.Errors.ForEach(e => Trace.TraceError(FlattenException(e)));
+                }
             }
         }
         #endregion

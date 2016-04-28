@@ -7,6 +7,7 @@ using VirtoCommerce.Domain.Common;
 using VirtoCommerce.Domain.Quote.Events;
 using VirtoCommerce.Domain.Quote.Model;
 using VirtoCommerce.Domain.Quote.Services;
+using VirtoCommerce.Domain.Store.Services;
 using VirtoCommerce.Platform.Core.ChangeLog;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
@@ -26,16 +27,16 @@ namespace VirtoCommerce.QuoteModule.Data.Services
 		private readonly IDynamicPropertyService _dynamicPropertyService;
 		private readonly IEventPublisher<QuoteRequestChangeEvent> _eventPublisher;
         private readonly IChangeLogService _changeLogService;
-        private readonly ISettingsManager _settingManager;
+        private readonly IStoreService _storeService;
 
-        public QuoteRequestServiceImpl(Func<IQuoteRepository> quoteRepositoryFactory, IUniqueNumberGenerator uniqueNumberGenerator, IDynamicPropertyService dynamicPropertyService, IEventPublisher<QuoteRequestChangeEvent> eventPublisher, IChangeLogService changeLogService, ISettingsManager settingManager)
+        public QuoteRequestServiceImpl(Func<IQuoteRepository> quoteRepositoryFactory, IUniqueNumberGenerator uniqueNumberGenerator, IDynamicPropertyService dynamicPropertyService, IEventPublisher<QuoteRequestChangeEvent> eventPublisher, IChangeLogService changeLogService, IStoreService storeService)
 		{
 			_repositoryFactory = quoteRepositoryFactory;
 			_uniqueNumberGenerator = uniqueNumberGenerator;
 			_dynamicPropertyService = dynamicPropertyService;
 			_eventPublisher = eventPublisher;
             _changeLogService = changeLogService;
-            _settingManager = settingManager;
+            _storeService = storeService;
         }
 
 		#region IQuoteRequestService Members
@@ -175,14 +176,20 @@ namespace VirtoCommerce.QuoteModule.Data.Services
    
 		private void EnsureThatQuoteHasNumber(QuoteRequest[] quoteRequests)
 		{
+            var stores = _storeService.GetByIds(quoteRequests.Select(x => x.StoreId).Distinct().ToArray());
 			foreach (var quoteRequest in quoteRequests)
 			{
 				if (string.IsNullOrEmpty(quoteRequest.Number))
 				{
-                    var numberTemplate = _settingManager.GetValue("Quotes.QuoteRequestNewNumberTemplate", "RFQ{0:yyMMdd}-{1:D5}");
+                    var store = stores.FirstOrDefault(x => x.Id == quoteRequest.StoreId);
+                    var numberTemplate = "RFQ{0:yyMMdd}-{1:D5}";
+                    if (store != null)
+                    {
+                        numberTemplate = store.Settings.GetSettingValue("Quotes.QuoteRequestNewNumberTemplate", numberTemplate);
+                    }
                     quoteRequest.Number = _uniqueNumberGenerator.GenerateNumber(numberTemplate);
-				}
-			}
+                }
+            }
 		}
 
 	}

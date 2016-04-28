@@ -31,7 +31,6 @@ namespace VirtoCommerce.CoreModule.Data.Converters
 			retVal.Keyword = seo.SemanticUrl;
 			retVal.Language = seo.LanguageCode;
 			retVal.Title = seo.PageTitle;
-			retVal.IsActive = true;
 
 			return retVal;
 		}
@@ -46,9 +45,9 @@ namespace VirtoCommerce.CoreModule.Data.Converters
 		{
 			if (target == null)
 				throw new ArgumentNullException("target");
-			var patchInjection = new PatchInjection<dataModel.SeoUrlKeyword>(x => x.ImageAltDescription, x => x.IsActive,
-																			   x => x.Keyword,  x => x.Language, x=> x.StoreId,
-																			   x => x.MetaDescription, x => x.MetaKeywords, x => x.Title);
+			var patchInjection = new PatchInjection<dataModel.SeoUrlKeyword>(true, x => x.ImageAltDescription, x => x.IsActive,
+																			 x => x.Keyword,  x => x.Language, x=> x.StoreId,
+																			 x => x.MetaDescription, x => x.MetaKeywords, x => x.Title);
 			target.InjectFrom(patchInjection, source);
 		}
 

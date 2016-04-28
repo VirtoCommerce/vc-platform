@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -20,43 +18,29 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommerceStoreModuleWebModelSendDynamicNotificationRequest :  IEquatable<VirtoCommerceStoreModuleWebModelSendDynamicNotificationRequest>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceStoreModuleWebModelSendDynamicNotificationRequest" /> class.
-        /// </summary>
-        public VirtoCommerceStoreModuleWebModelSendDynamicNotificationRequest()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Gets or Sets StoreId
         /// </summary>
         [DataMember(Name="storeId", EmitDefaultValue=false)]
         public string StoreId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name="type", EmitDefaultValue=false)]
         public string Type { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Fields
         /// </summary>
         [DataMember(Name="fields", EmitDefaultValue=false)]
         public Dictionary<string, string> Fields { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Language
         /// </summary>
         [DataMember(Name="language", EmitDefaultValue=false)]
         public string Language { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -69,7 +53,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Type: ").Append(Type).Append("\n");
             sb.Append("  Fields: ").Append(Fields).Append("\n");
             sb.Append("  Language: ").Append(Language).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -139,24 +122,22 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.StoreId != null)
                     hash = hash * 59 + this.StoreId.GetHashCode();
-                
+
                 if (this.Type != null)
                     hash = hash * 59 + this.Type.GetHashCode();
-                
+
                 if (this.Fields != null)
                     hash = hash * 59 + this.Fields.GetHashCode();
-                
+
                 if (this.Language != null)
                     hash = hash * 59 + this.Language.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

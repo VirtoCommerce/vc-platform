@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -20,29 +18,17 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommercePlatformCoreCommonSortInfo :  IEquatable<VirtoCommercePlatformCoreCommonSortInfo>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreCommonSortInfo" /> class.
-        /// </summary>
-        public VirtoCommercePlatformCoreCommonSortInfo()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Gets or Sets SortColumn
         /// </summary>
         [DataMember(Name="sortColumn", EmitDefaultValue=false)]
         public string SortColumn { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets SortDirection
         /// </summary>
         [DataMember(Name="sortDirection", EmitDefaultValue=false)]
         public string SortDirection { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -53,7 +39,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("class VirtoCommercePlatformCoreCommonSortInfo {\n");
             sb.Append("  SortColumn: ").Append(SortColumn).Append("\n");
             sb.Append("  SortDirection: ").Append(SortDirection).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -113,18 +98,16 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.SortColumn != null)
                     hash = hash * 59 + this.SortColumn.GetHashCode();
-                
+
                 if (this.SortDirection != null)
                     hash = hash * 59 + this.SortDirection.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

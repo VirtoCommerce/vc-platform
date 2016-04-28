@@ -41,7 +41,7 @@
     $scope.saveChanges = function () {
         if (!blade.hasUpdatePermission()) return;
 
-        var selectedValues = blade.data.virtual ? [] : _.map(blade.currentEntity.selectedValues, function (x) { return { languageCode: x }; });
+        var selectedValues = blade.data.isVirtual ? [] : _.map(blade.currentEntity.selectedValues, function (x) { return { languageCode: x }; });
         var defaultValue = _.find(selectedValues, function (x) { return x.languageCode.toLowerCase() === blade.currentEntity.defaultValue.toLowerCase(); });
         if (defaultValue) {
             defaultValue.isDefault = true;

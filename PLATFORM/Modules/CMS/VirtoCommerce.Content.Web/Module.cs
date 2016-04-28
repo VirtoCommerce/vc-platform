@@ -19,6 +19,9 @@ using VirtoCommerce.Content.Web.Security;
 using VirtoCommerce.Domain.Store.Services;
 using System.Configuration;
 using VirtoCommerce.Platform.Core.Common;
+using System.Linq;
+using VirtoCommerce.Platform.Data.Asset;
+using VirtoCommerce.Platform.Core.Asset;
 
 namespace VirtoCommerce.Content.Web
 {
@@ -26,7 +29,6 @@ namespace VirtoCommerce.Content.Web
     {
         private const string _connectionStringName = "VirtoCommerce";
         private readonly IUnityContainer _container;
-
 
         public Module(IUnityContainer container)
         {
@@ -45,18 +47,108 @@ namespace VirtoCommerce.Content.Web
             _container.RegisterType<IMenuService, MenuServiceImpl>();
 
             var settingsManager = _container.Resolve<ISettingsManager>();
-            var contentStoragePath = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Storefront.AppData.Path", settingsManager.GetValue("VirtoCommerce.Content.StoragePath", string.Empty));
+            var blobConnectionString = BlobConnectionString.Parse(ConfigurationManager.ConnectionStrings["CmsContentConnectionString"].ConnectionString);
 
-            Func<IContentStorageProvider> contentProviderFactory = () => new ContentStorageProviderImpl(NormalizePath(contentStoragePath));
+             Func<string, IContentBlobStorageProvider> contentProviderFactory = (chrootPath) =>
+            {
+                if (string.Equals(blobConnectionString.Provider, FileSystemBlobProvider.ProviderName, StringComparison.OrdinalIgnoreCase))
+                {
+                    var storagePath = Path.Combine(NormalizePath(blobConnectionString.RootPath), chrootPath.Replace("/", "\\"));
+                    var publicUrl = blobConnectionString.PublicUrl + "/" + chrootPath;
+                    //Do not export default theme (Themes/default) its will distributed with code
+                    return new FileSystemContentBlobStorageProvider(storagePath, publicUrl, "/Themes/default");
+                }
+                else if (string.Equals(blobConnectionString.Provider, AzureBlobProvider.ProviderName, StringComparison.OrdinalIgnoreCase))
+                {
+                    return new AzureContentBlobStorageProvider(blobConnectionString.ConnectionString, Path.Combine(blobConnectionString.RootPath, chrootPath));
+                }
+                throw new NotImplementedException();
+            };
             _container.RegisterInstance(contentProviderFactory);
         }
 
         public override void PostInitialize()
         {
             base.PostInitialize();
-            //Create EnableQuote dynamic property for  Store 
+            //Register BaseThemes setting in store module, allows to individual configuration base themes names for each store
+            var settingManager = _container.Resolve<ISettingsManager>();
+            var baseThemesSetting = settingManager.GetModuleSettings("VirtoCommerce.Content").FirstOrDefault(x => x.Name == "VirtoCommerce.Content.BaseThemes");
+            settingManager.RegisterModuleSettings("VirtoCommerce.Store", baseThemesSetting);
+
             var dynamicPropertyService = _container.Resolve<IDynamicPropertyService>();
 
+            //https://jekyllrb.com/docs/frontmatter/
+            //Register special ContentItem.FrontMatterHeaders type which will be used to define YAML headers for pages, blogs and posts
+            var frontMatterHeaderType = "VirtoCommerce.Content.Web.FrontMatterHeaders";
+            dynamicPropertyService.RegisterType(frontMatterHeaderType);
+            //Title
+            var titleHeader = new DynamicProperty
+            {
+                Id = "Title_FrontMatterHeader",
+                Name = "title",
+                ObjectType = frontMatterHeaderType,
+                ValueType = DynamicPropertyValueType.ShortText,
+                CreatedBy = "Auto"
+            };
+
+            //If set, this specifies the layout file to use. Use the layout file name without the file extension. 
+            var layoutHeader = new DynamicProperty
+            {
+                Id = "Layout_FrontMatterHeader",
+                Name = "layout",                 
+                ObjectType = frontMatterHeaderType,
+                ValueType = DynamicPropertyValueType.ShortText,
+                CreatedBy = "Auto"
+            };
+            //If you need your processed blog post URLs to be something other than the site-wide style (default /year/month/day/title.html), then you can set this variable and it will be used as the final URL.
+            var permalinkHeader = new DynamicProperty
+            {
+                Id = "Permalink_FrontMatterHeader",
+                Name = "permalink",
+                ObjectType = frontMatterHeaderType,
+                ValueType = DynamicPropertyValueType.ShortText,
+                CreatedBy = "Auto"
+            };
+            //Set to false if you don’t want a specific post to show up when the site is generated.
+            var publishedHeader = new DynamicProperty
+            {
+                Id = "Published_FrontMatterHeader",
+                Name = "published",
+                ObjectType = frontMatterHeaderType,
+                ValueType = DynamicPropertyValueType.ShortText,
+                CreatedBy = "Auto"
+            };
+            //Instead of placing posts inside of folders, you can specify one or more categories that the post belongs to. When the site is generated the post will act as though it had been set with these categories normally. Categories (plural key) can be specified as a YAML list or a comma-separated string.
+            var categoryHeader = new DynamicProperty
+            {
+                Id = "Category_FrontMatterHeader",
+                Name = "category",
+                ObjectType = frontMatterHeaderType,
+                ValueType = DynamicPropertyValueType.ShortText,
+                CreatedBy = "Auto"
+            };
+            var categoriesHeader = new DynamicProperty
+            {
+                Id = "Categories_FrontMatterHeader",
+                Name = "categories",
+                IsArray = true,
+                ObjectType = frontMatterHeaderType,
+                ValueType = DynamicPropertyValueType.ShortText,
+                CreatedBy = "Auto"
+            };
+            //Similar to categories, one or multiple tags can be added to a post. Also like categories, tags can be specified as a YAML list or a comma-separated string.
+            var tagsHeader = new DynamicProperty
+            {
+                Id = "Tags_FrontMatterHeader",
+                Name = "tags",
+                IsArray = true,
+                ObjectType = frontMatterHeaderType,
+                ValueType = DynamicPropertyValueType.ShortText,
+                CreatedBy = "Auto"
+            };
+
+
+            //Create DefaultTheme dynamic property for  Store 
             var defaultThemeNameProperty = new DynamicProperty
             {
                 Id = "Default_Theme_Name_Property",
@@ -66,7 +158,7 @@ namespace VirtoCommerce.Content.Web
                 CreatedBy = "Auto"
             };
 
-            dynamicPropertyService.SaveProperties(new[] { defaultThemeNameProperty });
+            dynamicPropertyService.SaveProperties(new[] { titleHeader, defaultThemeNameProperty, permalinkHeader, layoutHeader, publishedHeader, categoryHeader, categoriesHeader, tagsHeader });
 
             //Register bounded security scope types
             var securityScopeService = _container.Resolve<IPermissionScopeService>();
@@ -111,6 +203,7 @@ namespace VirtoCommerce.Content.Web
 
         #endregion
 
+   
         private string NormalizePath(string path)
         {
             var retVal = path;
@@ -127,7 +220,7 @@ namespace VirtoCommerce.Content.Web
                 retVal = HostingEnvironment.MapPath("~/");
                 retVal += path;
             }
-            return retVal;
+            return Path.GetFullPath(retVal);
         }
     }
 }

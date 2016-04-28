@@ -61,6 +61,10 @@ namespace VirtoCommerce.CoreModule.Data.Repositories
             get { return GetAsQueryable<Currency>(); }
         }
 
+        public SeoUrlKeyword[] GetSeoByIds(string[] ids)
+        {
+            return SeoUrlKeywords.Where(x => ids.Contains(x.Id)).OrderBy(x => x.Keyword).ToArray();
+        }
         public SeoUrlKeyword[] GetObjectSeoUrlKeywords(string objectType, string objectId)
         {
             return SeoUrlKeywords.Where(x => x.ObjectId == objectId && x.ObjectType == objectType).OrderBy(x => x.Language).ToArray();

@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// Base class for all entries used in catalog categories browsing.
     /// </summary>
@@ -20,86 +18,67 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommerceCatalogModuleWebModelListEntry :  IEquatable<VirtoCommerceCatalogModuleWebModelListEntry>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelListEntry" /> class.
-        /// </summary>
-        public VirtoCommerceCatalogModuleWebModelListEntry()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
+
         /// <summary>
-        /// Gets or sets the type. E.g. \"product\", \"category\"
+        /// Gets or sets the type. E.g. \&quot;product\&quot;, \&quot;category\&quot;
         /// </summary>
-        /// <value>Gets or sets the type. E.g. \"product\", \"category\"</value>
+        /// <value>Gets or sets the type. E.g. \&quot;product\&quot;, \&quot;category\&quot;</value>
         [DataMember(Name="type", EmitDefaultValue=false)]
         public string Type { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets a value indicating whether this entry is active.
         /// </summary>
         /// <value>Gets or sets a value indicating whether this entry is active.</value>
         [DataMember(Name="isActive", EmitDefaultValue=false)]
         public bool? IsActive { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the image URL.
         /// </summary>
         /// <value>Gets or sets the image URL.</value>
         [DataMember(Name="imageUrl", EmitDefaultValue=false)]
         public string ImageUrl { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the entry code.
         /// </summary>
         /// <value>Gets or sets the entry code.</value>
         [DataMember(Name="code", EmitDefaultValue=false)]
         public string Code { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the name.
         /// </summary>
         /// <value>Gets or sets the name.</value>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the links.
         /// </summary>
         /// <value>Gets or sets the links.</value>
         [DataMember(Name="links", EmitDefaultValue=false)]
         public List<VirtoCommerceCatalogModuleWebModelListEntryLink> Links { get; set; }
-  
-        
+
         /// <summary>
         /// All entry parents ids
         /// </summary>
         /// <value>All entry parents ids</value>
         [DataMember(Name="outline", EmitDefaultValue=false)]
         public List<string> Outline { get; set; }
-  
-        
+
         /// <summary>
         /// All entry parents names
         /// </summary>
         /// <value>All entry parents names</value>
         [DataMember(Name="path", EmitDefaultValue=false)]
         public List<string> Path { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -117,7 +96,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Links: ").Append(Links).Append("\n");
             sb.Append("  Outline: ").Append(Outline).Append("\n");
             sb.Append("  Path: ").Append(Path).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -212,39 +190,37 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 if (this.Type != null)
                     hash = hash * 59 + this.Type.GetHashCode();
-                
+
                 if (this.IsActive != null)
                     hash = hash * 59 + this.IsActive.GetHashCode();
-                
+
                 if (this.ImageUrl != null)
                     hash = hash * 59 + this.ImageUrl.GetHashCode();
-                
+
                 if (this.Code != null)
                     hash = hash * 59 + this.Code.GetHashCode();
-                
+
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
-                
+
                 if (this.Links != null)
                     hash = hash * 59 + this.Links.GetHashCode();
-                
+
                 if (this.Outline != null)
                     hash = hash * 59 + this.Outline.GetHashCode();
-                
+
                 if (this.Path != null)
                     hash = hash * 59 + this.Path.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

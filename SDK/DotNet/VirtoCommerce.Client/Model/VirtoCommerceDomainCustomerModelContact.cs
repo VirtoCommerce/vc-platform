@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -20,197 +18,161 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommerceDomainCustomerModelContact :  IEquatable<VirtoCommerceDomainCustomerModelContact>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCustomerModelContact" /> class.
-        /// </summary>
-        public VirtoCommerceDomainCustomerModelContact()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Gets or Sets FirstName
         /// </summary>
         [DataMember(Name="firstName", EmitDefaultValue=false)]
         public string FirstName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets MiddleName
         /// </summary>
         [DataMember(Name="middleName", EmitDefaultValue=false)]
         public string MiddleName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets LastName
         /// </summary>
         [DataMember(Name="lastName", EmitDefaultValue=false)]
         public string LastName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets FullName
         /// </summary>
         [DataMember(Name="fullName", EmitDefaultValue=false)]
         public string FullName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets TimeZone
         /// </summary>
         [DataMember(Name="timeZone", EmitDefaultValue=false)]
         public string TimeZone { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets DefaultLanguage
         /// </summary>
         [DataMember(Name="defaultLanguage", EmitDefaultValue=false)]
         public string DefaultLanguage { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets BirthDate
         /// </summary>
         [DataMember(Name="birthDate", EmitDefaultValue=false)]
         public DateTime? BirthDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets TaxpayerId
         /// </summary>
         [DataMember(Name="taxpayerId", EmitDefaultValue=false)]
         public string TaxpayerId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets PreferredDelivery
         /// </summary>
         [DataMember(Name="preferredDelivery", EmitDefaultValue=false)]
         public string PreferredDelivery { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets PreferredCommunication
         /// </summary>
         [DataMember(Name="preferredCommunication", EmitDefaultValue=false)]
         public string PreferredCommunication { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Salutation
         /// </summary>
         [DataMember(Name="salutation", EmitDefaultValue=false)]
         public string Salutation { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Organizations
         /// </summary>
         [DataMember(Name="organizations", EmitDefaultValue=false)]
         public List<string> Organizations { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets SecurityAccounts
         /// </summary>
         [DataMember(Name="securityAccounts", EmitDefaultValue=false)]
         public List<VirtoCommercePlatformCoreSecurityApplicationUserExtended> SecurityAccounts { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets MemberType
         /// </summary>
         [DataMember(Name="memberType", EmitDefaultValue=false)]
         public string MemberType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Addresses
         /// </summary>
         [DataMember(Name="addresses", EmitDefaultValue=false)]
         public List<VirtoCommerceDomainCommerceModelAddress> Addresses { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Phones
         /// </summary>
         [DataMember(Name="phones", EmitDefaultValue=false)]
         public List<string> Phones { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Emails
         /// </summary>
         [DataMember(Name="emails", EmitDefaultValue=false)]
         public List<string> Emails { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Notes
         /// </summary>
         [DataMember(Name="notes", EmitDefaultValue=false)]
         public List<VirtoCommerceDomainCustomerModelNote> Notes { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ObjectType
         /// </summary>
         [DataMember(Name="objectType", EmitDefaultValue=false)]
         public string ObjectType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets DynamicProperties
         /// </summary>
         [DataMember(Name="dynamicProperties", EmitDefaultValue=false)]
         public List<VirtoCommercePlatformCoreDynamicPropertiesDynamicObjectProperty> DynamicProperties { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedDate
         /// </summary>
         [DataMember(Name="createdDate", EmitDefaultValue=false)]
         public DateTime? CreatedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedDate
         /// </summary>
         [DataMember(Name="modifiedDate", EmitDefaultValue=false)]
         public DateTime? ModifiedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedBy
         /// </summary>
         [DataMember(Name="createdBy", EmitDefaultValue=false)]
         public string CreatedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedBy
         /// </summary>
         [DataMember(Name="modifiedBy", EmitDefaultValue=false)]
         public string ModifiedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -245,7 +207,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  CreatedBy: ").Append(CreatedBy).Append("\n");
             sb.Append("  ModifiedBy: ").Append(ModifiedBy).Append("\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -425,90 +386,88 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.FirstName != null)
                     hash = hash * 59 + this.FirstName.GetHashCode();
-                
+
                 if (this.MiddleName != null)
                     hash = hash * 59 + this.MiddleName.GetHashCode();
-                
+
                 if (this.LastName != null)
                     hash = hash * 59 + this.LastName.GetHashCode();
-                
+
                 if (this.FullName != null)
                     hash = hash * 59 + this.FullName.GetHashCode();
-                
+
                 if (this.TimeZone != null)
                     hash = hash * 59 + this.TimeZone.GetHashCode();
-                
+
                 if (this.DefaultLanguage != null)
                     hash = hash * 59 + this.DefaultLanguage.GetHashCode();
-                
+
                 if (this.BirthDate != null)
                     hash = hash * 59 + this.BirthDate.GetHashCode();
-                
+
                 if (this.TaxpayerId != null)
                     hash = hash * 59 + this.TaxpayerId.GetHashCode();
-                
+
                 if (this.PreferredDelivery != null)
                     hash = hash * 59 + this.PreferredDelivery.GetHashCode();
-                
+
                 if (this.PreferredCommunication != null)
                     hash = hash * 59 + this.PreferredCommunication.GetHashCode();
-                
+
                 if (this.Salutation != null)
                     hash = hash * 59 + this.Salutation.GetHashCode();
-                
+
                 if (this.Organizations != null)
                     hash = hash * 59 + this.Organizations.GetHashCode();
-                
+
                 if (this.SecurityAccounts != null)
                     hash = hash * 59 + this.SecurityAccounts.GetHashCode();
-                
+
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
-                
+
                 if (this.MemberType != null)
                     hash = hash * 59 + this.MemberType.GetHashCode();
-                
+
                 if (this.Addresses != null)
                     hash = hash * 59 + this.Addresses.GetHashCode();
-                
+
                 if (this.Phones != null)
                     hash = hash * 59 + this.Phones.GetHashCode();
-                
+
                 if (this.Emails != null)
                     hash = hash * 59 + this.Emails.GetHashCode();
-                
+
                 if (this.Notes != null)
                     hash = hash * 59 + this.Notes.GetHashCode();
-                
+
                 if (this.ObjectType != null)
                     hash = hash * 59 + this.ObjectType.GetHashCode();
-                
+
                 if (this.DynamicProperties != null)
                     hash = hash * 59 + this.DynamicProperties.GetHashCode();
-                
+
                 if (this.CreatedDate != null)
                     hash = hash * 59 + this.CreatedDate.GetHashCode();
-                
+
                 if (this.ModifiedDate != null)
                     hash = hash * 59 + this.ModifiedDate.GetHashCode();
-                
+
                 if (this.CreatedBy != null)
                     hash = hash * 59 + this.CreatedBy.GetHashCode();
-                
+
                 if (this.ModifiedBy != null)
                     hash = hash * 59 + this.ModifiedBy.GetHashCode();
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

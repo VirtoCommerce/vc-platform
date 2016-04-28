@@ -27,12 +27,14 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
         private readonly ICommerceService _commerceService;
         private readonly ICustomerOrderService _customerOrderService;
         private readonly IStoreService _storeService;
+        private readonly ISeoDuplicatesDetector _seoDuplicateDetector;
 
-        public CommerceController(ICommerceService commerceService, ICustomerOrderService customerOrderService, IStoreService storeService)
+        public CommerceController(ICommerceService commerceService, ICustomerOrderService customerOrderService, IStoreService storeService, ISeoDuplicatesDetector seoDuplicateDetector)
         {
             _commerceService = commerceService;
             _customerOrderService = customerOrderService;
             _storeService = storeService;
+            _seoDuplicateDetector = seoDuplicateDetector;
         }
 
 
@@ -158,7 +160,29 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
             }
             return Ok(new PostProcessPaymentResult { ErrorMessage = "cancel payment" });
         }
-       
+
+        /// <summary>
+        /// Batch create or update seo infos
+        /// </summary>
+        /// <param name="seoInfos"></param>
+        /// <returns></returns>
+        [HttpPut]
+        [ResponseType(typeof(void))]
+        [Route("seoinfos/batchupdate")]
+        public IHttpActionResult BatchUpdateSeoInfos(coreModel.SeoInfo[] seoInfos)
+        {
+            _commerceService.UpsertSeoInfos(seoInfos);
+            return Ok();
+        }
+
+        [HttpGet]
+        [ResponseType(typeof(coreModel.SeoInfo[]))]
+        [Route("seoinfos/duplicates")]
+        public IHttpActionResult GetSeoDuplicates(string objectId, string objectType)
+        {
+            var retVal = _seoDuplicateDetector.DetectSeoDuplicates(objectType, objectId, _commerceService.GetAllSeoDuplicates());
+            return Ok(retVal.ToArray());       
+        }
         /// <summary>
         /// Find all SEO records for object by slug 
         /// </summary>

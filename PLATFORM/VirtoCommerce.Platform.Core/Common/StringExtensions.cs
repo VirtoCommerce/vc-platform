@@ -11,13 +11,7 @@ namespace VirtoCommerce.Platform.Core.Common
 {
 	public static class StringExtensions
 	{
-		public static Dictionary<string, string> ToDictionary(this string sourceString, string pairSeparator, string valueSeparator)
-		{
-			return sourceString.Split(new[] { pairSeparator }, StringSplitOptions.RemoveEmptyEntries)
-				.Select(x => x.Split(new[] { valueSeparator }, 2, StringSplitOptions.RemoveEmptyEntries))
-				.ToDictionary(x => x[0], x => x.Length == 2 ? x[1] : string.Empty, StringComparer.OrdinalIgnoreCase);
-		}
-
+	
         public static bool IsAbsoluteUrl(this string url)
         {
             if(url == null)
@@ -106,7 +100,19 @@ namespace VirtoCommerce.Platform.Core.Common
 			return String.Compare(str1 ?? "", str2 ?? "", comparisonType) == 0;
 		}
 
-		public static string GetCurrencyName(this string isoCurrencySymbol)
+        /// <summary>
+        /// Equals invariant
+        /// </summary>
+        /// <param name="str1">The STR1.</param>
+        /// <param name="str2">The STR2.</param>
+        /// <returns></returns>
+        public static bool EqualsInvariant(this string str1, string str2)
+        {
+            return string.Equals(str1, str2, StringComparison.OrdinalIgnoreCase);
+        }
+
+
+        public static string GetCurrencyName(this string isoCurrencySymbol)
 		{
 			return CultureInfo
 				.GetCultures(CultureTypes.AllCultures)
@@ -288,5 +294,15 @@ namespace VirtoCommerce.Platform.Core.Common
 
             return left.Join(right.DefaultIfEmpty(String.Empty), x => true, y => true, (x, y) => String.Join(delimiter, new[] { x, y }.Where(z => !String.IsNullOrEmpty(z)))).ToArray();
         }
+
+        public static string FirstCharToUpper(this string input)
+        {
+            if (String.IsNullOrEmpty(input))
+            {
+                throw new ArgumentException("input");
+            }
+            return input.First().ToString().ToUpper() + input.Substring(1);
+        }
+
     }
 }

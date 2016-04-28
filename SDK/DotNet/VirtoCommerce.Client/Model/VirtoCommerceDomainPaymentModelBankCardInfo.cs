@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -20,50 +18,35 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommerceDomainPaymentModelBankCardInfo :  IEquatable<VirtoCommerceDomainPaymentModelBankCardInfo>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainPaymentModelBankCardInfo" /> class.
-        /// </summary>
-        public VirtoCommerceDomainPaymentModelBankCardInfo()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Gets or Sets BankCardNumber
         /// </summary>
         [DataMember(Name="bankCardNumber", EmitDefaultValue=false)]
         public string BankCardNumber { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets BankCardType
         /// </summary>
         [DataMember(Name="bankCardType", EmitDefaultValue=false)]
         public string BankCardType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets BankCardMonth
         /// </summary>
         [DataMember(Name="bankCardMonth", EmitDefaultValue=false)]
         public int? BankCardMonth { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets BankCardYear
         /// </summary>
         [DataMember(Name="bankCardYear", EmitDefaultValue=false)]
         public int? BankCardYear { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets BankCardCVV2
         /// </summary>
         [DataMember(Name="bankCardCVV2", EmitDefaultValue=false)]
         public string BankCardCVV2 { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -77,7 +60,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  BankCardMonth: ").Append(BankCardMonth).Append("\n");
             sb.Append("  BankCardYear: ").Append(BankCardYear).Append("\n");
             sb.Append("  BankCardCVV2: ").Append(BankCardCVV2).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -152,27 +134,25 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.BankCardNumber != null)
                     hash = hash * 59 + this.BankCardNumber.GetHashCode();
-                
+
                 if (this.BankCardType != null)
                     hash = hash * 59 + this.BankCardType.GetHashCode();
-                
+
                 if (this.BankCardMonth != null)
                     hash = hash * 59 + this.BankCardMonth.GetHashCode();
-                
+
                 if (this.BankCardYear != null)
                     hash = hash * 59 + this.BankCardYear.GetHashCode();
-                
+
                 if (this.BankCardCVV2 != null)
                     hash = hash * 59 + this.BankCardCVV2.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

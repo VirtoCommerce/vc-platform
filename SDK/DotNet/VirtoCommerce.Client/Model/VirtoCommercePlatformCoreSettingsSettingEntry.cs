@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -20,106 +18,83 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommercePlatformCoreSettingsSettingEntry :  IEquatable<VirtoCommercePlatformCoreSettingsSettingEntry>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreSettingsSettingEntry" /> class.
-        /// </summary>
-        public VirtoCommercePlatformCoreSettingsSettingEntry()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Gets or Sets ModuleId
         /// </summary>
         [DataMember(Name="moduleId", EmitDefaultValue=false)]
         public string ModuleId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ObjectId
         /// </summary>
         [DataMember(Name="objectId", EmitDefaultValue=false)]
         public string ObjectId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ObjectType
         /// </summary>
         [DataMember(Name="objectType", EmitDefaultValue=false)]
         public string ObjectType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets GroupName
         /// </summary>
         [DataMember(Name="groupName", EmitDefaultValue=false)]
         public string GroupName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Value
         /// </summary>
         [DataMember(Name="value", EmitDefaultValue=false)]
         public string Value { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ValueType
         /// </summary>
         [DataMember(Name="valueType", EmitDefaultValue=false)]
         public string ValueType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets AllowedValues
         /// </summary>
         [DataMember(Name="allowedValues", EmitDefaultValue=false)]
         public List<string> AllowedValues { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets DefaultValue
         /// </summary>
         [DataMember(Name="defaultValue", EmitDefaultValue=false)]
         public string DefaultValue { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets IsArray
         /// </summary>
         [DataMember(Name="isArray", EmitDefaultValue=false)]
         public bool? IsArray { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ArrayValues
         /// </summary>
         [DataMember(Name="arrayValues", EmitDefaultValue=false)]
         public List<string> ArrayValues { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Title
         /// </summary>
         [DataMember(Name="title", EmitDefaultValue=false)]
         public string Title { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Description
         /// </summary>
         [DataMember(Name="description", EmitDefaultValue=false)]
         public string Description { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -141,7 +116,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  ArrayValues: ").Append(ArrayValues).Append("\n");
             sb.Append("  Title: ").Append(Title).Append("\n");
             sb.Append("  Description: ").Append(Description).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -256,51 +230,49 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.ModuleId != null)
                     hash = hash * 59 + this.ModuleId.GetHashCode();
-                
+
                 if (this.ObjectId != null)
                     hash = hash * 59 + this.ObjectId.GetHashCode();
-                
+
                 if (this.ObjectType != null)
                     hash = hash * 59 + this.ObjectType.GetHashCode();
-                
+
                 if (this.GroupName != null)
                     hash = hash * 59 + this.GroupName.GetHashCode();
-                
+
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
-                
+
                 if (this.Value != null)
                     hash = hash * 59 + this.Value.GetHashCode();
-                
+
                 if (this.ValueType != null)
                     hash = hash * 59 + this.ValueType.GetHashCode();
-                
+
                 if (this.AllowedValues != null)
                     hash = hash * 59 + this.AllowedValues.GetHashCode();
-                
+
                 if (this.DefaultValue != null)
                     hash = hash * 59 + this.DefaultValue.GetHashCode();
-                
+
                 if (this.IsArray != null)
                     hash = hash * 59 + this.IsArray.GetHashCode();
-                
+
                 if (this.ArrayValues != null)
                     hash = hash * 59 + this.ArrayValues.GetHashCode();
-                
+
                 if (this.Title != null)
                     hash = hash * 59 + this.Title.GetHashCode();
-                
+
                 if (this.Description != null)
                     hash = hash * 59 + this.Description.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

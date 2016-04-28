@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -20,94 +18,74 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommerceCartModuleWebModelShippingMethod :  IEquatable<VirtoCommerceCartModuleWebModelShippingMethod>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceCartModuleWebModelShippingMethod" /> class.
-        /// </summary>
-        public VirtoCommerceCartModuleWebModelShippingMethod()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Gets or sets the value of shipping method code
         /// </summary>
         /// <value>Gets or sets the value of shipping method code</value>
         [DataMember(Name="shipmentMethodCode", EmitDefaultValue=false)]
         public string ShipmentMethodCode { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of shipping method name
         /// </summary>
         /// <value>Gets or sets the value of shipping method name</value>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of shipping method option name
         /// </summary>
         /// <value>Gets or sets the value of shipping method option name</value>
         [DataMember(Name="optionName", EmitDefaultValue=false)]
         public string OptionName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of shipping method option description
         /// </summary>
         /// <value>Gets or sets the value of shipping method option description</value>
         [DataMember(Name="optionDescription", EmitDefaultValue=false)]
         public string OptionDescription { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of shipping method logo absolute URL
         /// </summary>
         /// <value>Gets or sets the value of shipping method logo absolute URL</value>
         [DataMember(Name="logoUrl", EmitDefaultValue=false)]
         public string LogoUrl { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of shipping method tax type
         /// </summary>
         /// <value>Gets or sets the value of shipping method tax type</value>
         [DataMember(Name="taxType", EmitDefaultValue=false)]
         public string TaxType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of shipping method currency
         /// </summary>
         /// <value>Gets or sets the value of shipping method currency</value>
         [DataMember(Name="currency", EmitDefaultValue=false)]
         public string Currency { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of shipping method price
         /// </summary>
         /// <value>Gets or sets the value of shipping method price</value>
         [DataMember(Name="price", EmitDefaultValue=false)]
         public double? Price { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the collection of shipping method discounts
         /// </summary>
         /// <value>Gets or sets the collection of shipping method discounts</value>
         [DataMember(Name="discounts", EmitDefaultValue=false)]
         public List<VirtoCommerceCartModuleWebModelDiscount> Discounts { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Settings
         /// </summary>
         [DataMember(Name="settings", EmitDefaultValue=false)]
         public List<VirtoCommercePlatformCoreSettingsSettingEntry> Settings { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -126,7 +104,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Price: ").Append(Price).Append("\n");
             sb.Append("  Discounts: ").Append(Discounts).Append("\n");
             sb.Append("  Settings: ").Append(Settings).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -226,42 +203,40 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.ShipmentMethodCode != null)
                     hash = hash * 59 + this.ShipmentMethodCode.GetHashCode();
-                
+
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
-                
+
                 if (this.OptionName != null)
                     hash = hash * 59 + this.OptionName.GetHashCode();
-                
+
                 if (this.OptionDescription != null)
                     hash = hash * 59 + this.OptionDescription.GetHashCode();
-                
+
                 if (this.LogoUrl != null)
                     hash = hash * 59 + this.LogoUrl.GetHashCode();
-                
+
                 if (this.TaxType != null)
                     hash = hash * 59 + this.TaxType.GetHashCode();
-                
+
                 if (this.Currency != null)
                     hash = hash * 59 + this.Currency.GetHashCode();
-                
+
                 if (this.Price != null)
                     hash = hash * 59 + this.Price.GetHashCode();
-                
+
                 if (this.Discounts != null)
                     hash = hash * 59 + this.Discounts.GetHashCode();
-                
+
                 if (this.Settings != null)
                     hash = hash * 59 + this.Settings.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

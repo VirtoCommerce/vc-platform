@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// Represent result for checking of possibility login on behalf request
     /// </summary>
@@ -20,29 +18,17 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo :  IEquatable<VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo" /> class.
-        /// </summary>
-        public VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Gets or Sets UserName
         /// </summary>
         [DataMember(Name="userName", EmitDefaultValue=false)]
         public string UserName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CanLoginOnBehalf
         /// </summary>
         [DataMember(Name="canLoginOnBehalf", EmitDefaultValue=false)]
         public bool? CanLoginOnBehalf { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -53,7 +39,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("class VirtoCommerceStoreModuleWebModelLoginOnBehalfInfo {\n");
             sb.Append("  UserName: ").Append(UserName).Append("\n");
             sb.Append("  CanLoginOnBehalf: ").Append(CanLoginOnBehalf).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -113,18 +98,16 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.UserName != null)
                     hash = hash * 59 + this.UserName.GetHashCode();
-                
+
                 if (this.CanLoginOnBehalf != null)
                     hash = hash * 59 + this.CanLoginOnBehalf.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

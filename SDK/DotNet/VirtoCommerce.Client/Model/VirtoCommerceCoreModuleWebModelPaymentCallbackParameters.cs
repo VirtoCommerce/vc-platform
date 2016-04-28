@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -20,22 +18,11 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommerceCoreModuleWebModelPaymentCallbackParameters :  IEquatable<VirtoCommerceCoreModuleWebModelPaymentCallbackParameters>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceCoreModuleWebModelPaymentCallbackParameters" /> class.
-        /// </summary>
-        public VirtoCommerceCoreModuleWebModelPaymentCallbackParameters()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Gets or Sets Parameters
         /// </summary>
         [DataMember(Name="parameters", EmitDefaultValue=false)]
         public List<VirtoCommerceCoreModuleWebModelKeyValuePair> Parameters { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -45,7 +32,6 @@ namespace VirtoCommerce.Client.Model
             var sb = new StringBuilder();
             sb.Append("class VirtoCommerceCoreModuleWebModelPaymentCallbackParameters {\n");
             sb.Append("  Parameters: ").Append(Parameters).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -100,15 +86,13 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Parameters != null)
                     hash = hash * 59 + this.Parameters.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

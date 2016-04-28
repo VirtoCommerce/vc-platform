@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -59,11 +60,17 @@ namespace VirtoCommerce.Platform.Core.Common
     {
         private readonly AsyncSemaphore m_semaphore;
         private readonly Task<Releaser> m_releaser;
+        private static ConcurrentDictionary<string, AsyncLock> _lockMap = new ConcurrentDictionary<string, AsyncLock>();
 
         public AsyncLock()
         {
             m_semaphore = new AsyncSemaphore(1);
             m_releaser = Task.FromResult(new Releaser(this));
+        }
+
+        public static AsyncLock GetLockByKey(string key)
+        {
+            return _lockMap.GetOrAdd(key, (x) => new AsyncLock());
         }
 
         public Task<Releaser> LockAsync()

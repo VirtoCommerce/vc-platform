@@ -88,6 +88,7 @@
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Asset\BlobConnectionString.cs" />
     <Compile Include="Asset\BlobFolder.cs" />
     <Compile Include="Asset\BlobSearchResult.cs" />
     <Compile Include="Asset\BlobInfo.cs" />
@@ -101,11 +102,13 @@
     <Compile Include="Common\IFactory.cs" />
     <Compile Include="Common\ObservableChangeTracker.cs" />
     <Compile Include="Common\PlatformVersion.cs" />
+    <Compile Include="Common\PredicateBuilder.cs" />
     <Compile Include="Common\PrimaryKeyResolvingMap.cs" />
     <Compile Include="Common\SemanticVersion.cs" />
     <Compile Include="Common\SerializationExtension.cs" />
     <Compile Include="Common\SortInfo.cs" />
     <Compile Include="Common\StreamExtensions.cs" />
+    <Compile Include="Common\SwaggerOptionalAttribute.cs" />
     <Compile Include="DynamicProperties\DynamicPropertiesExtensions.cs" />
     <Compile Include="DynamicProperties\DynamicProperty.cs" />
     <Compile Include="DynamicProperties\DynamicPropertyDictionaryItem.cs" />
@@ -131,7 +134,6 @@
     <Compile Include="Common\AuditableEntity.cs" />
     <Compile Include="Common\ClientCacheAttribute.cs" />
     <Compile Include="Common\DateTimeExtensions.cs" />
-    <Compile Include="Common\DictionaryExtensions.cs" />
     <Compile Include="Common\Entity.cs" />
     <Compile Include="Common\EntryState.cs" />
     <Compile Include="Common\EnumUtility.cs" />
@@ -146,7 +148,6 @@
     <Compile Include="Common\MimeTypeResolver.cs" />
     <Compile Include="Common\NullCollection.cs" />
     <Compile Include="Common\ObjectExtension.cs" />
-    <Compile Include="Common\PredicateBuilder.cs" />
     <Compile Include="Common\ReflectionUtility.cs" />
     <Compile Include="Common\StringExtensions.cs" />
     <Compile Include="Common\TrackingEntry.cs" />
@@ -237,6 +238,7 @@
     <Compile Include="Security\AuthentificationOptions.cs" />
     <Compile Include="Security\CheckPermissionAttribute.cs" />
     <Compile Include="Security\ICurrentUser.cs" />
+    <Compile Include="Security\IHasSecurityAccounts.cs" />
     <Compile Include="Security\IUserNameResolver.cs" />
     <Compile Include="Security\VirtoCommerceClaimTypes.cs" />
     <Compile Include="Security\IPermissionScopeService.cs" />
@@ -260,6 +262,7 @@
     <Compile Include="Settings\ISettingsManager.cs" />
     <Compile Include="Settings\ModuleDescriptor.cs" />
     <Compile Include="Settings\SettingEntry.cs" />
+    <Compile Include="Settings\SettingsExtension.cs" />
     <Compile Include="Settings\SettingValueType.cs" />
     <Compile Include="UnityBootstrapper.cs" />
     <Compile Include="UnityBootstrapperExtension.cs" />

@@ -2,65 +2,67 @@
 using System.IO;
 using System.Linq;
 using CsvHelper;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VirtoCommerce.CatalogModule.Data.Repositories;
 using VirtoCommerce.CatalogModule.Data.Services;
 using VirtoCommerce.CatalogModule.Web.ExportImport;
 using VirtoCommerce.CoreModule.Data.Repositories;
+using VirtoCommerce.CoreModule.Data.Services;
 using VirtoCommerce.Domain.Catalog.Model;
 using VirtoCommerce.Domain.Catalog.Services;
 using VirtoCommerce.Domain.Commerce.Services;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
-using coreModel = VirtoCommerce.Domain.Catalog.Model;
+using Xunit;
+
 namespace VirtoCommerce.CatalogModule.Test
 {
-    [TestClass]
     public class ImportExportTest
     {
-        [TestMethod]
+        [Fact]
         public void ExportProductsTest()
         {
             var searchService = GetSearchService();
-            var categoryService = GetCategoryService();
             var itemService = GetItemService();
-            var result = searchService.Search(new SearchCriteria { CatalogId = "Sony", CategoryId = "66b58f4c-fd62-4c17-ab3b-2fb22e82704a", Skip = 0, Take = 10, ResponseGroup = coreModel.SearchResponseGroup.WithProducts });
-            var importConfiguration = GetMapConfiguration();
+            var searchResult = searchService.Search(new SearchCriteria { CatalogId = "Sony", CategoryId = "66b58f4c-fd62-4c17-ab3b-2fb22e82704a", Skip = 0, Take = 10, ResponseGroup = SearchResponseGroup.WithProducts });
+
+            var csvProducts = searchResult.Products
+                .Select(p => itemService.GetById(p.Id, ItemResponseGroup.ItemLarge))
+                .Select(p => new CsvProduct(p, null, null, null))
+                .ToList();
+
+            var importConfiguration = GetMappingConfiguration();
+            importConfiguration.PropertyCsvColumns = csvProducts
+                .SelectMany(x => x.PropertyValues)
+                .Select(x => x.PropertyName)
+                .Distinct()
+                .ToArray();
 
             using (var csvWriter = new CsvWriter(new StreamWriter(@"c:\Projects\VCF\vc-community\PLATFORM\Modules\Catalog\VirtoCommerce.CatalogModule.Test\products.csv")))
             {
-                var csvProducts = new List<CsvProduct>();
-                foreach (var product in result.Products)
-                {
-                    var fullLoadedProduct = itemService.GetById(product.Id, ItemResponseGroup.ItemLarge);
-                    csvProducts.Add(new CsvProduct(fullLoadedProduct, null, null, null));
-                }
-
-                importConfiguration.PropertyCsvColumns = csvProducts.SelectMany(x => x.PropertyValues).Select(x => x.PropertyName).Distinct().ToArray();
                 csvWriter.Configuration.Delimiter = ";";
                 csvWriter.Configuration.RegisterClassMap(new CsvProductMap(importConfiguration));
 
                 csvWriter.WriteHeader<CsvProduct>();
+
                 foreach (var product in csvProducts)
                 {
                     csvWriter.WriteRecord(product);
                 }
-
             }
         }
 
-
-        [TestMethod]
+        [Fact]
         public void ImportProductsTest()
         {
             //Auto detect mapping configuration
-            var importConfiguration = GetMapConfiguration();
-
+            var importConfiguration = GetMappingConfiguration();
 
             var csvProducts = new List<CsvProduct>();
+
             using (var reader = new CsvReader(new StreamReader(@"c:\Projects\VCF\vc-community\PLATFORM\Modules\Catalog\VirtoCommerce.CatalogModule.Test\products.csv")))
             {
                 reader.Configuration.Delimiter = ";";
                 var initialized = false;
+
                 while (reader.Read())
                 {
                     if (!initialized)
@@ -73,43 +75,45 @@ namespace VirtoCommerce.CatalogModule.Test
                     var csvProduct = reader.GetRecord<CsvProduct>();
                     csvProducts.Add(csvProduct);
                 }
-            };
-
-            var categories = new List<coreModel.Category>();
-
-
+            }
         }
 
-        private CsvProductMappingConfiguration GetMapConfiguration()
+        private static CsvProductMappingConfiguration GetMappingConfiguration()
         {
             return new CsvProductMappingConfiguration();
         }
 
-        private ICatalogSearchService GetSearchService()
+        private static ICatalogSearchService GetSearchService()
         {
-            return new CatalogSearchServiceImpl(GetRepository, GetItemService(), GetCatalogService(), GetCategoryService());
+            return new CatalogSearchServiceImpl(GetCatalogRepository, GetItemService(), GetCatalogService(), GetCategoryService());
         }
 
-        private ICategoryService GetCategoryService()
+        private static IOutlineService GetOutlineService()
         {
-            return new CategoryServiceImpl(() => { return GetRepository(); }, GetCommerceService());
+            return new OutlineService(GetCatalogRepository);
         }
 
-        private ICatalogService GetCatalogService()
+        private static ICategoryService GetCategoryService()
         {
-            return new CatalogServiceImpl(() => { return GetRepository(); }, GetCommerceService());
+            return new CategoryServiceImpl(GetCatalogRepository, GetCommerceService(), GetOutlineService());
         }
 
-        private IItemService GetItemService()
+        private static ICatalogService GetCatalogService()
         {
-            return new ItemServiceImpl(() => { return GetRepository(); }, GetCommerceService());
+            return new CatalogServiceImpl(GetCatalogRepository, GetCommerceService());
         }
 
-        private ICommerceService GetCommerceService()
+        private static IItemService GetItemService()
+        {
+            return new ItemServiceImpl(GetCatalogRepository, GetCommerceService(), GetOutlineService());
+        }
+
+        private static ICommerceService GetCommerceService()
         {
             return new CommerceServiceImpl(() => new CommerceRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor(null)));
         }
-        private ICatalogRepository GetRepository()
+
+        private static ICatalogRepository GetCatalogRepository()
         {
             var retVal = new CatalogRepositoryImpl("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor(null));
             return retVal;

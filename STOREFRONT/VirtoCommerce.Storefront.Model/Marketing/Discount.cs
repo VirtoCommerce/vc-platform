@@ -11,7 +11,7 @@ namespace VirtoCommerce.Storefront.Model.Marketing
         public string PromotionId { get; set; }
 
         /// <summary>
-        /// Gets or sets the value of absolute discount amount
+        /// Gets or sets the value of absolute discount amount per one item
         /// </summary>
         public Money Amount { get; set; }
 

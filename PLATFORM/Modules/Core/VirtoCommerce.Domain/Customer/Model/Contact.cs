@@ -7,12 +7,11 @@ using VirtoCommerce.Platform.Core.Security;
 
 namespace VirtoCommerce.Domain.Customer.Model
 {
-    public class Contact : Member, IHasDynamicProperties
+    public class Contact : Member, IHasSecurityAccounts
     {
         public Contact()
-            :base("Contact")
         {
-
+            SecurityAccounts = new List<ApplicationUserExtended>();
         }
         public string FirstName { get; set; }
         public string MiddleName { get; set; }
@@ -27,9 +26,12 @@ namespace VirtoCommerce.Domain.Customer.Model
         public string PreferredCommunication { get; set; }
         public string Salutation { get; set; }
         public ICollection<string> Organizations { get; set; }
+
+        #region IHasSecurityAccounts Members
         /// <summary>
         /// All security accounts associated with this contact
         /// </summary>
-        public ICollection<ApplicationUserExtended> SecurityAccounts { get; set; }
+        public ICollection<ApplicationUserExtended> SecurityAccounts { get; private set; } 
+        #endregion
     }
 }

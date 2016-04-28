@@ -5,6 +5,7 @@
       "assign": "Assign",
       "cancel": "Cancel",
       "clear-all": "Clear all",
+      "clone": "Clone",
       "close": "Close",
       "confirm": "Confirm",
       "copy-link": "Copy link",
@@ -60,6 +61,12 @@
     "placeholders": {
       "search-keyword": "Search keyword..."
     },
+    "dialogs": {
+      "delete": {
+        "title": "Delete confirmation",
+        "message": "Are you sure you want to delete selected entries?"
+      }
+    },
     "properties": {
       "short-text": {
         "title": "Short Text",
@@ -108,12 +115,10 @@
         "short-text-dictionary-multivalue": "Select value",
         "short-text-multilang": "Enter value",
         "long-text-multilang": "Enter value",
-        "html-multilang": "Enter HTML",
         "short-text-multivalue-multilang": "Add value",
         "short-text-dictionary-multilang": "Select value",
         "short-text-dictionary-multivalue-multilang": "Select value"
       }
     }
   }
-
 }

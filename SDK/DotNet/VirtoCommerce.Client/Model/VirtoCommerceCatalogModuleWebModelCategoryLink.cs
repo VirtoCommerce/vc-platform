@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// Information to define linking information from item or category to category.
     /// </summary>
@@ -20,47 +18,33 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommerceCatalogModuleWebModelCategoryLink :  IEquatable<VirtoCommerceCatalogModuleWebModelCategoryLink>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelCategoryLink" /> class.
-        /// </summary>
-        public VirtoCommerceCatalogModuleWebModelCategoryLink()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Gets or sets the source item id.
         /// </summary>
         /// <value>Gets or sets the source item id.</value>
         [DataMember(Name="sourceItemId", EmitDefaultValue=false)]
         public string SourceItemId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the source category identifier.
         /// </summary>
         /// <value>Gets or sets the source category identifier.</value>
         [DataMember(Name="sourceCategoryId", EmitDefaultValue=false)]
         public string SourceCategoryId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the target catalog identifier.
         /// </summary>
         /// <value>Gets or sets the target catalog identifier.</value>
         [DataMember(Name="catalogId", EmitDefaultValue=false)]
         public string CatalogId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the target category identifier.
         /// </summary>
         /// <value>Gets or sets the target category identifier.</value>
         [DataMember(Name="categoryId", EmitDefaultValue=false)]
         public string CategoryId { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -73,7 +57,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  SourceCategoryId: ").Append(SourceCategoryId).Append("\n");
             sb.Append("  CatalogId: ").Append(CatalogId).Append("\n");
             sb.Append("  CategoryId: ").Append(CategoryId).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -143,24 +126,22 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.SourceItemId != null)
                     hash = hash * 59 + this.SourceItemId.GetHashCode();
-                
+
                 if (this.SourceCategoryId != null)
                     hash = hash * 59 + this.SourceCategoryId.GetHashCode();
-                
+
                 if (this.CatalogId != null)
                     hash = hash * 59 + this.CatalogId.GetHashCode();
-                
+
                 if (this.CategoryId != null)
                     hash = hash * 59 + this.CategoryId.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

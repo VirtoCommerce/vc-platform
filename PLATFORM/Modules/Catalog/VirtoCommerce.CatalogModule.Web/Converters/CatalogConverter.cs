@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Omu.ValueInjecter;
+using VirtoCommerce.Platform.Core.Common;
 using moduleModel = VirtoCommerce.Domain.Catalog.Model;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
 
@@ -44,6 +45,10 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
                     foreach (var propValue in catalog.PropertyValues.Select(x => x.ToWebModel()))
                     {
                         var property = retVal.Properties.FirstOrDefault(x => x.Id == propValue.PropertyId);
+                        if (property == null)
+                        {
+                            property = retVal.Properties.FirstOrDefault(x => x.Name.EqualsInvariant(propValue.PropertyName));
+                        }
                         if (property == null)
                         {
                             //Need add dummy property for each value without property

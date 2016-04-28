@@ -7,8 +7,12 @@ using VirtoCommerce.Storefront.Model.Marketing;
 
 namespace VirtoCommerce.Storefront.Model.Quote
 {
-    public class QuoteRequest : Entity
+    public class QuoteRequest : Entity, IHasLanguage
     {
+        public QuoteRequest()
+        {
+        }
+
         public QuoteRequest(Currency currency, Language language)
         {
             Addresses = new List<Address>();
@@ -79,8 +83,6 @@ namespace VirtoCommerce.Storefront.Model.Quote
         public ICollection<QuoteItem> Items { get; set; }
 
         public ICollection<Attachment> Attachments { get; set; }
-
-        public Language Language { get; set; }
 
         public ICollection<TaxDetail> TaxDetails { get; set; }
 
@@ -157,5 +159,9 @@ namespace VirtoCommerce.Storefront.Model.Quote
                 return email;
             }
         }
+
+        #region IHasLanguage Members
+        public Language Language { get; set; }
+        #endregion
     }
 }

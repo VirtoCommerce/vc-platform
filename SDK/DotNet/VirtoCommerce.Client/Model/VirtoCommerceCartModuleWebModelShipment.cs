@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -20,234 +18,196 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommerceCartModuleWebModelShipment :  IEquatable<VirtoCommerceCartModuleWebModelShipment>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceCartModuleWebModelShipment" /> class.
-        /// </summary>
-        public VirtoCommerceCartModuleWebModelShipment()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Gets or sets the value of shipping method code
         /// </summary>
         /// <value>Gets or sets the value of shipping method code</value>
         [DataMember(Name="shipmentMethodCode", EmitDefaultValue=false)]
         public string ShipmentMethodCode { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of shipping method option
         /// </summary>
         /// <value>Gets or sets the value of shipping method option</value>
         [DataMember(Name="shipmentMethodOption", EmitDefaultValue=false)]
         public string ShipmentMethodOption { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of fulfillment center id
         /// </summary>
         /// <value>Gets or sets the value of fulfillment center id</value>
         [DataMember(Name="fulfilmentCenterId", EmitDefaultValue=false)]
         public string FulfilmentCenterId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the delivery address
         /// </summary>
         /// <value>Gets or sets the delivery address</value>
         [DataMember(Name="deliveryAddress", EmitDefaultValue=false)]
         public VirtoCommerceCartModuleWebModelAddress DeliveryAddress { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of shipping currency
         /// </summary>
         /// <value>Gets or sets the value of shipping currency</value>
         [DataMember(Name="currency", EmitDefaultValue=false)]
         public string Currency { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of volumetric weight
         /// </summary>
         /// <value>Gets or sets the value of volumetric weight</value>
         [DataMember(Name="volumetricWeight", EmitDefaultValue=false)]
         public double? VolumetricWeight { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of weight unit
         /// </summary>
         /// <value>Gets or sets the value of weight unit</value>
         [DataMember(Name="weightUnit", EmitDefaultValue=false)]
         public string WeightUnit { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of weight
         /// </summary>
         /// <value>Gets or sets the value of weight</value>
         [DataMember(Name="weight", EmitDefaultValue=false)]
         public double? Weight { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of measurement units
         /// </summary>
         /// <value>Gets or sets the value of measurement units</value>
         [DataMember(Name="measureUnit", EmitDefaultValue=false)]
         public string MeasureUnit { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of height
         /// </summary>
         /// <value>Gets or sets the value of height</value>
         [DataMember(Name="height", EmitDefaultValue=false)]
         public double? Height { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of length
         /// </summary>
         /// <value>Gets or sets the value of length</value>
         [DataMember(Name="length", EmitDefaultValue=false)]
         public double? Length { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of width
         /// </summary>
         /// <value>Gets or sets the value of width</value>
         [DataMember(Name="width", EmitDefaultValue=false)]
         public double? Width { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the flag of shipping has tax
         /// </summary>
         /// <value>Gets or sets the flag of shipping has tax</value>
         [DataMember(Name="taxIncluded", EmitDefaultValue=false)]
         public bool? TaxIncluded { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of shipping price
         /// </summary>
         /// <value>Gets or sets the value of shipping price</value>
         [DataMember(Name="shippingPrice", EmitDefaultValue=false)]
         public double? ShippingPrice { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of total shipping price
         /// </summary>
         /// <value>Gets or sets the value of total shipping price</value>
         [DataMember(Name="total", EmitDefaultValue=false)]
         public double? Total { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of total shipping discount amount
         /// </summary>
         /// <value>Gets or sets the value of total shipping discount amount</value>
         [DataMember(Name="discountTotal", EmitDefaultValue=false)]
         public double? DiscountTotal { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of total shipping tax amount
         /// </summary>
         /// <value>Gets or sets the value of total shipping tax amount</value>
         [DataMember(Name="taxTotal", EmitDefaultValue=false)]
         public double? TaxTotal { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of shipping items subtotal
         /// </summary>
         /// <value>Gets or sets the value of shipping items subtotal</value>
         [DataMember(Name="itemSubtotal", EmitDefaultValue=false)]
         public double? ItemSubtotal { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of shipping subtotal
         /// </summary>
         /// <value>Gets or sets the value of shipping subtotal</value>
         [DataMember(Name="subtotal", EmitDefaultValue=false)]
         public double? Subtotal { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the collection of shipping discounts
         /// </summary>
         /// <value>Gets or sets the collection of shipping discounts</value>
         [DataMember(Name="discounts", EmitDefaultValue=false)]
         public List<VirtoCommerceCartModuleWebModelDiscount> Discounts { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the collection of shipping items
         /// </summary>
         /// <value>Gets or sets the collection of shipping items</value>
         [DataMember(Name="items", EmitDefaultValue=false)]
         public List<VirtoCommerceCartModuleWebModelShipmentItem> Items { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of shipping tax type
         /// </summary>
         /// <value>Gets or sets the value of shipping tax type</value>
         [DataMember(Name="taxType", EmitDefaultValue=false)]
         public string TaxType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the collection of line item tax detalization lines
         /// </summary>
         /// <value>Gets or sets the collection of line item tax detalization lines</value>
         [DataMember(Name="taxDetails", EmitDefaultValue=false)]
         public List<VirtoCommerceDomainCommerceModelTaxDetail> TaxDetails { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedDate
         /// </summary>
         [DataMember(Name="createdDate", EmitDefaultValue=false)]
         public DateTime? CreatedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedDate
         /// </summary>
         [DataMember(Name="modifiedDate", EmitDefaultValue=false)]
         public DateTime? ModifiedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedBy
         /// </summary>
         [DataMember(Name="createdBy", EmitDefaultValue=false)]
         public string CreatedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedBy
         /// </summary>
         [DataMember(Name="modifiedBy", EmitDefaultValue=false)]
         public string ModifiedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -284,7 +244,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  CreatedBy: ").Append(CreatedBy).Append("\n");
             sb.Append("  ModifiedBy: ").Append(ModifiedBy).Append("\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -474,96 +433,94 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.ShipmentMethodCode != null)
                     hash = hash * 59 + this.ShipmentMethodCode.GetHashCode();
-                
+
                 if (this.ShipmentMethodOption != null)
                     hash = hash * 59 + this.ShipmentMethodOption.GetHashCode();
-                
+
                 if (this.FulfilmentCenterId != null)
                     hash = hash * 59 + this.FulfilmentCenterId.GetHashCode();
-                
+
                 if (this.DeliveryAddress != null)
                     hash = hash * 59 + this.DeliveryAddress.GetHashCode();
-                
+
                 if (this.Currency != null)
                     hash = hash * 59 + this.Currency.GetHashCode();
-                
+
                 if (this.VolumetricWeight != null)
                     hash = hash * 59 + this.VolumetricWeight.GetHashCode();
-                
+
                 if (this.WeightUnit != null)
                     hash = hash * 59 + this.WeightUnit.GetHashCode();
-                
+
                 if (this.Weight != null)
                     hash = hash * 59 + this.Weight.GetHashCode();
-                
+
                 if (this.MeasureUnit != null)
                     hash = hash * 59 + this.MeasureUnit.GetHashCode();
-                
+
                 if (this.Height != null)
                     hash = hash * 59 + this.Height.GetHashCode();
-                
+
                 if (this.Length != null)
                     hash = hash * 59 + this.Length.GetHashCode();
-                
+
                 if (this.Width != null)
                     hash = hash * 59 + this.Width.GetHashCode();
-                
+
                 if (this.TaxIncluded != null)
                     hash = hash * 59 + this.TaxIncluded.GetHashCode();
-                
+
                 if (this.ShippingPrice != null)
                     hash = hash * 59 + this.ShippingPrice.GetHashCode();
-                
+
                 if (this.Total != null)
                     hash = hash * 59 + this.Total.GetHashCode();
-                
+
                 if (this.DiscountTotal != null)
                     hash = hash * 59 + this.DiscountTotal.GetHashCode();
-                
+
                 if (this.TaxTotal != null)
                     hash = hash * 59 + this.TaxTotal.GetHashCode();
-                
+
                 if (this.ItemSubtotal != null)
                     hash = hash * 59 + this.ItemSubtotal.GetHashCode();
-                
+
                 if (this.Subtotal != null)
                     hash = hash * 59 + this.Subtotal.GetHashCode();
-                
+
                 if (this.Discounts != null)
                     hash = hash * 59 + this.Discounts.GetHashCode();
-                
+
                 if (this.Items != null)
                     hash = hash * 59 + this.Items.GetHashCode();
-                
+
                 if (this.TaxType != null)
                     hash = hash * 59 + this.TaxType.GetHashCode();
-                
+
                 if (this.TaxDetails != null)
                     hash = hash * 59 + this.TaxDetails.GetHashCode();
-                
+
                 if (this.CreatedDate != null)
                     hash = hash * 59 + this.CreatedDate.GetHashCode();
-                
+
                 if (this.ModifiedDate != null)
                     hash = hash * 59 + this.ModifiedDate.GetHashCode();
-                
+
                 if (this.CreatedBy != null)
                     hash = hash * 59 + this.CreatedBy.GetHashCode();
-                
+
                 if (this.ModifiedBy != null)
                     hash = hash * 59 + this.ModifiedBy.GetHashCode();
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

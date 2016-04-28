@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -20,151 +18,124 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommerceMarketingModuleWebModelPromotionReward :  IEquatable<VirtoCommerceMarketingModuleWebModelPromotionReward>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceMarketingModuleWebModelPromotionReward" /> class.
-        /// </summary>
-        public VirtoCommerceMarketingModuleWebModelPromotionReward()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Gets or sets the flag of promotion reward is valid. Also used as a flag for applicability (applied or potential)
         /// </summary>
         /// <value>Gets or sets the flag of promotion reward is valid. Also used as a flag for applicability (applied or potential)</value>
         [DataMember(Name="isValid", EmitDefaultValue=false)]
         public bool? IsValid { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of promotion reward description
         /// </summary>
         /// <value>Gets or sets the value of promotion reward description</value>
         [DataMember(Name="description", EmitDefaultValue=false)]
         public string Description { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of coupon amount
         /// </summary>
         /// <value>Gets or sets the value of coupon amount</value>
         [DataMember(Name="couponAmount", EmitDefaultValue=false)]
         public double? CouponAmount { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of coupon code
         /// </summary>
         /// <value>Gets or sets the value of coupon code</value>
         [DataMember(Name="coupon", EmitDefaultValue=false)]
         public string Coupon { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of minimum order total cost for applying coupon
         /// </summary>
         /// <value>Gets or sets the value of minimum order total cost for applying coupon</value>
         [DataMember(Name="couponMinOrderAmount", EmitDefaultValue=false)]
         public double? CouponMinOrderAmount { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of promotion id
         /// </summary>
         /// <value>Gets or sets the value of promotion id</value>
         [DataMember(Name="promotionId", EmitDefaultValue=false)]
         public string PromotionId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the promotion
         /// </summary>
         /// <value>Gets or sets the promotion</value>
         [DataMember(Name="promotion", EmitDefaultValue=false)]
         public VirtoCommerceMarketingModuleWebModelPromotion Promotion { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of promotion reward type
         /// </summary>
         /// <value>Gets or sets the value of promotion reward type</value>
         [DataMember(Name="rewardType", EmitDefaultValue=false)]
         public string RewardType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of promotion reward amount type
         /// </summary>
         /// <value>Gets or sets the value of promotion reward amount type</value>
         [DataMember(Name="amountType", EmitDefaultValue=false)]
         public string AmountType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of promotion reward amount
         /// </summary>
         /// <value>Gets or sets the value of promotion reward amount</value>
         [DataMember(Name="amount", EmitDefaultValue=false)]
         public double? Amount { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of line item quantity for applying promotion reward
         /// </summary>
         /// <value>Gets or sets the value of line item quantity for applying promotion reward</value>
         [DataMember(Name="quantity", EmitDefaultValue=false)]
         public int? Quantity { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of line item id
         /// </summary>
         /// <value>Gets or sets the value of line item id</value>
         [DataMember(Name="lineItemId", EmitDefaultValue=false)]
         public string LineItemId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of product id
         /// </summary>
         /// <value>Gets or sets the value of product id</value>
         [DataMember(Name="productId", EmitDefaultValue=false)]
         public string ProductId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of category id
         /// </summary>
         /// <value>Gets or sets the value of category id</value>
         [DataMember(Name="categoryId", EmitDefaultValue=false)]
         public string CategoryId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of measurement unit
         /// </summary>
         /// <value>Gets or sets the value of measurement unit</value>
         [DataMember(Name="measureUnit", EmitDefaultValue=false)]
         public string MeasureUnit { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of promotion reward logo absolute URL
         /// </summary>
         /// <value>Gets or sets the value of promotion reward logo absolute URL</value>
         [DataMember(Name="imageUrl", EmitDefaultValue=false)]
         public string ImageUrl { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the value of reward shipping method code
         /// </summary>
         /// <value>Gets or sets the value of reward shipping method code</value>
         [DataMember(Name="shippingMethod", EmitDefaultValue=false)]
         public string ShippingMethod { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -190,7 +161,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  MeasureUnit: ").Append(MeasureUnit).Append("\n");
             sb.Append("  ImageUrl: ").Append(ImageUrl).Append("\n");
             sb.Append("  ShippingMethod: ").Append(ShippingMethod).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -325,63 +295,61 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.IsValid != null)
                     hash = hash * 59 + this.IsValid.GetHashCode();
-                
+
                 if (this.Description != null)
                     hash = hash * 59 + this.Description.GetHashCode();
-                
+
                 if (this.CouponAmount != null)
                     hash = hash * 59 + this.CouponAmount.GetHashCode();
-                
+
                 if (this.Coupon != null)
                     hash = hash * 59 + this.Coupon.GetHashCode();
-                
+
                 if (this.CouponMinOrderAmount != null)
                     hash = hash * 59 + this.CouponMinOrderAmount.GetHashCode();
-                
+
                 if (this.PromotionId != null)
                     hash = hash * 59 + this.PromotionId.GetHashCode();
-                
+
                 if (this.Promotion != null)
                     hash = hash * 59 + this.Promotion.GetHashCode();
-                
+
                 if (this.RewardType != null)
                     hash = hash * 59 + this.RewardType.GetHashCode();
-                
+
                 if (this.AmountType != null)
                     hash = hash * 59 + this.AmountType.GetHashCode();
-                
+
                 if (this.Amount != null)
                     hash = hash * 59 + this.Amount.GetHashCode();
-                
+
                 if (this.Quantity != null)
                     hash = hash * 59 + this.Quantity.GetHashCode();
-                
+
                 if (this.LineItemId != null)
                     hash = hash * 59 + this.LineItemId.GetHashCode();
-                
+
                 if (this.ProductId != null)
                     hash = hash * 59 + this.ProductId.GetHashCode();
-                
+
                 if (this.CategoryId != null)
                     hash = hash * 59 + this.CategoryId.GetHashCode();
-                
+
                 if (this.MeasureUnit != null)
                     hash = hash * 59 + this.MeasureUnit.GetHashCode();
-                
+
                 if (this.ImageUrl != null)
                     hash = hash * 59 + this.ImageUrl.GetHashCode();
-                
+
                 if (this.ShippingMethod != null)
                     hash = hash * 59 + this.ShippingMethod.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -20,92 +18,71 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommerceOrderModuleWebModelDashboardStatisticsResult :  IEquatable<VirtoCommerceOrderModuleWebModelDashboardStatisticsResult>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceOrderModuleWebModelDashboardStatisticsResult" /> class.
-        /// </summary>
-        public VirtoCommerceOrderModuleWebModelDashboardStatisticsResult()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Gets or Sets StartDate
         /// </summary>
         [DataMember(Name="startDate", EmitDefaultValue=false)]
         public DateTime? StartDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets EndDate
         /// </summary>
         [DataMember(Name="endDate", EmitDefaultValue=false)]
         public DateTime? EndDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Revenue
         /// </summary>
         [DataMember(Name="revenue", EmitDefaultValue=false)]
         public List<VirtoCommerceOrderModuleWebModelMoney> Revenue { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets RevenuePeriodDetails
         /// </summary>
         [DataMember(Name="revenuePeriodDetails", EmitDefaultValue=false)]
         public List<VirtoCommerceOrderModuleWebModelQuarterPeriodMoney> RevenuePeriodDetails { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets OrderCount
         /// </summary>
         [DataMember(Name="orderCount", EmitDefaultValue=false)]
         public int? OrderCount { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CustomersCount
         /// </summary>
         [DataMember(Name="customersCount", EmitDefaultValue=false)]
         public int? CustomersCount { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets RevenuePerCustomer
         /// </summary>
         [DataMember(Name="revenuePerCustomer", EmitDefaultValue=false)]
         public List<VirtoCommerceOrderModuleWebModelMoney> RevenuePerCustomer { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets AvgOrderValue
         /// </summary>
         [DataMember(Name="avgOrderValue", EmitDefaultValue=false)]
         public List<VirtoCommerceOrderModuleWebModelMoney> AvgOrderValue { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets AvgOrderValuePeriodDetails
         /// </summary>
         [DataMember(Name="avgOrderValuePeriodDetails", EmitDefaultValue=false)]
         public List<VirtoCommerceOrderModuleWebModelQuarterPeriodMoney> AvgOrderValuePeriodDetails { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ItemsPurchased
         /// </summary>
         [DataMember(Name="itemsPurchased", EmitDefaultValue=false)]
         public int? ItemsPurchased { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets LineitemsPerOrder
         /// </summary>
         [DataMember(Name="lineitemsPerOrder", EmitDefaultValue=false)]
         public double? LineitemsPerOrder { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -125,7 +102,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  AvgOrderValuePeriodDetails: ").Append(AvgOrderValuePeriodDetails).Append("\n");
             sb.Append("  ItemsPurchased: ").Append(ItemsPurchased).Append("\n");
             sb.Append("  LineitemsPerOrder: ").Append(LineitemsPerOrder).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -230,45 +206,43 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.StartDate != null)
                     hash = hash * 59 + this.StartDate.GetHashCode();
-                
+
                 if (this.EndDate != null)
                     hash = hash * 59 + this.EndDate.GetHashCode();
-                
+
                 if (this.Revenue != null)
                     hash = hash * 59 + this.Revenue.GetHashCode();
-                
+
                 if (this.RevenuePeriodDetails != null)
                     hash = hash * 59 + this.RevenuePeriodDetails.GetHashCode();
-                
+
                 if (this.OrderCount != null)
                     hash = hash * 59 + this.OrderCount.GetHashCode();
-                
+
                 if (this.CustomersCount != null)
                     hash = hash * 59 + this.CustomersCount.GetHashCode();
-                
+
                 if (this.RevenuePerCustomer != null)
                     hash = hash * 59 + this.RevenuePerCustomer.GetHashCode();
-                
+
                 if (this.AvgOrderValue != null)
                     hash = hash * 59 + this.AvgOrderValue.GetHashCode();
-                
+
                 if (this.AvgOrderValuePeriodDetails != null)
                     hash = hash * 59 + this.AvgOrderValuePeriodDetails.GetHashCode();
-                
+
                 if (this.ItemsPurchased != null)
                     hash = hash * 59 + this.ItemsPurchased.GetHashCode();
-                
+
                 if (this.LineitemsPerOrder != null)
                     hash = hash * 59 + this.LineitemsPerOrder.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

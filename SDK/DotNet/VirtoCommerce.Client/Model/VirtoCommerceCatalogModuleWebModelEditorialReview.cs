@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// Editorial review for an item.
     /// </summary>
@@ -20,54 +18,39 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommerceCatalogModuleWebModelEditorialReview :  IEquatable<VirtoCommerceCatalogModuleWebModelEditorialReview>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelEditorialReview" /> class.
-        /// </summary>
-        public VirtoCommerceCatalogModuleWebModelEditorialReview()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the review content.
         /// </summary>
         /// <value>Gets or sets the review content.</value>
         [DataMember(Name="content", EmitDefaultValue=false)]
         public string Content { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the type of the review.
         /// </summary>
         /// <value>Gets or sets the type of the review.</value>
         [DataMember(Name="reviewType", EmitDefaultValue=false)]
         public string ReviewType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the review language.
         /// </summary>
         /// <value>Gets or sets the review language.</value>
         [DataMember(Name="languageCode", EmitDefaultValue=false)]
         public string LanguageCode { get; set; }
-  
-        
+
         /// <summary>
         /// System flag used to mark that object was inherited from other
         /// </summary>
         /// <value>System flag used to mark that object was inherited from other</value>
         [DataMember(Name="isInherited", EmitDefaultValue=false)]
         public bool? IsInherited { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -81,7 +64,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  ReviewType: ").Append(ReviewType).Append("\n");
             sb.Append("  LanguageCode: ").Append(LanguageCode).Append("\n");
             sb.Append("  IsInherited: ").Append(IsInherited).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -156,27 +138,25 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 if (this.Content != null)
                     hash = hash * 59 + this.Content.GetHashCode();
-                
+
                 if (this.ReviewType != null)
                     hash = hash * 59 + this.ReviewType.GetHashCode();
-                
+
                 if (this.LanguageCode != null)
                     hash = hash * 59 + this.LanguageCode.GetHashCode();
-                
+
                 if (this.IsInherited != null)
                     hash = hash * 59 + this.IsInherited.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

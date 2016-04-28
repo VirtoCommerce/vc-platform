@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// Represent move operation detail
     /// </summary>
@@ -20,36 +18,23 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommerceCatalogModuleWebModelMoveInfo :  IEquatable<VirtoCommerceCatalogModuleWebModelMoveInfo>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelMoveInfo" /> class.
-        /// </summary>
-        public VirtoCommerceCatalogModuleWebModelMoveInfo()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Gets or Sets Catalog
         /// </summary>
         [DataMember(Name="catalog", EmitDefaultValue=false)]
         public string Catalog { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Category
         /// </summary>
         [DataMember(Name="category", EmitDefaultValue=false)]
         public string Category { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ListEntries
         /// </summary>
         [DataMember(Name="listEntries", EmitDefaultValue=false)]
         public List<VirtoCommerceCatalogModuleWebModelListEntry> ListEntries { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -61,7 +46,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Catalog: ").Append(Catalog).Append("\n");
             sb.Append("  Category: ").Append(Category).Append("\n");
             sb.Append("  ListEntries: ").Append(ListEntries).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -126,21 +110,19 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Catalog != null)
                     hash = hash * 59 + this.Catalog.GetHashCode();
-                
+
                 if (this.Category != null)
                     hash = hash * 59 + this.Category.GetHashCode();
-                
+
                 if (this.ListEntries != null)
                     hash = hash * 59 + this.ListEntries.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

@@ -110,6 +110,8 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
             {
                 property.IsInherited = true;
             }
+            //Sort properties by name
+            retVal.Properties = retVal.Properties.OrderBy(x => x.Name).ToList();
 
             //Self item property values
             retVal.PropertyValues = dbItem.ItemPropertyValues.OrderBy(x => x.Name).Select(x => x.ToCoreModel()).ToList();

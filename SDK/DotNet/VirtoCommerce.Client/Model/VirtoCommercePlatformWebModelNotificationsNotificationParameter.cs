@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -20,67 +18,50 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommercePlatformWebModelNotificationsNotificationParameter :  IEquatable<VirtoCommercePlatformWebModelNotificationsNotificationParameter>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformWebModelNotificationsNotificationParameter" /> class.
-        /// </summary>
-        public VirtoCommercePlatformWebModelNotificationsNotificationParameter()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Gets or Sets ParameterName
         /// </summary>
         [DataMember(Name="parameterName", EmitDefaultValue=false)]
         public string ParameterName { get; set; }
-  
-        
+
         /// <summary>
         /// Parameter description, can be used for display detailed information about parameter
         /// </summary>
         /// <value>Parameter description, can be used for display detailed information about parameter</value>
         [DataMember(Name="parameterDescription", EmitDefaultValue=false)]
         public string ParameterDescription { get; set; }
-  
-        
+
         /// <summary>
         /// Code template for notification parameter for template resolver
         /// </summary>
         /// <value>Code template for notification parameter for template resolver</value>
         [DataMember(Name="parameterCodeInView", EmitDefaultValue=false)]
         public string ParameterCodeInView { get; set; }
-  
-        
+
         /// <summary>
         /// 
         /// </summary>
         /// <value></value>
         [DataMember(Name="isDictionary", EmitDefaultValue=false)]
         public bool? IsDictionary { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets IsArray
         /// </summary>
         [DataMember(Name="isArray", EmitDefaultValue=false)]
         public bool? IsArray { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name="type", EmitDefaultValue=false)]
         public string Type { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Value
         /// </summary>
         [DataMember(Name="value", EmitDefaultValue=false)]
         public Object Value { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -96,7 +77,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  IsArray: ").Append(IsArray).Append("\n");
             sb.Append("  Type: ").Append(Type).Append("\n");
             sb.Append("  Value: ").Append(Value).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -181,33 +161,31 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.ParameterName != null)
                     hash = hash * 59 + this.ParameterName.GetHashCode();
-                
+
                 if (this.ParameterDescription != null)
                     hash = hash * 59 + this.ParameterDescription.GetHashCode();
-                
+
                 if (this.ParameterCodeInView != null)
                     hash = hash * 59 + this.ParameterCodeInView.GetHashCode();
-                
+
                 if (this.IsDictionary != null)
                     hash = hash * 59 + this.IsDictionary.GetHashCode();
-                
+
                 if (this.IsArray != null)
                     hash = hash * 59 + this.IsArray.GetHashCode();
-                
+
                 if (this.Type != null)
                     hash = hash * 59 + this.Type.GetHashCode();
-                
+
                 if (this.Value != null)
                     hash = hash * 59 + this.Value.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

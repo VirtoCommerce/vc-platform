@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// Catalog Language information.
     /// </summary>
@@ -20,47 +18,33 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommerceCatalogModuleWebModelCatalogLanguage :  IEquatable<VirtoCommerceCatalogModuleWebModelCatalogLanguage>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelCatalogLanguage" /> class.
-        /// </summary>
-        public VirtoCommerceCatalogModuleWebModelCatalogLanguage()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Gets or sets the catalog identifier.
         /// </summary>
         /// <value>Gets or sets the catalog identifier.</value>
         [DataMember(Name="catalogId", EmitDefaultValue=false)]
         public string CatalogId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets a value indicating whether this catalog language is default.
         /// </summary>
         /// <value>Gets or sets a value indicating whether this catalog language is default.</value>
         [DataMember(Name="isDefault", EmitDefaultValue=false)]
         public bool? IsDefault { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the language code.
         /// </summary>
         /// <value>Gets or sets the language code.</value>
         [DataMember(Name="languageCode", EmitDefaultValue=false)]
         public string LanguageCode { get; set; }
-  
-        
+
         /// <summary>
         /// Gets the human-readable language name.
         /// </summary>
         /// <value>Gets the human-readable language name.</value>
         [DataMember(Name="displayName", EmitDefaultValue=false)]
-        public string DisplayName { get; set; }
-  
-        
-  
+        public string DisplayName { get; private set; }
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -73,7 +57,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  IsDefault: ").Append(IsDefault).Append("\n");
             sb.Append("  LanguageCode: ").Append(LanguageCode).Append("\n");
             sb.Append("  DisplayName: ").Append(DisplayName).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -143,24 +126,22 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.CatalogId != null)
                     hash = hash * 59 + this.CatalogId.GetHashCode();
-                
+
                 if (this.IsDefault != null)
                     hash = hash * 59 + this.IsDefault.GetHashCode();
-                
+
                 if (this.LanguageCode != null)
                     hash = hash * 59 + this.LanguageCode.GetHashCode();
-                
+
                 if (this.DisplayName != null)
                     hash = hash * 59 + this.DisplayName.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

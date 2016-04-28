@@ -1,21 +1,24 @@
-﻿<div class="blade-static __bottom" ng-if="blade.isNew">
-    <button class="btn" ng-click="blade.saveChanges()" ng-disabled="formScope.$invalid">
-        <span>{{ 'platform.commands.create' | translate }}</span>
-    </button>
-</div>
-
+﻿<div class="blade-static __bottom" ng-include="'$(Platform)/Scripts/common/templates/create.tpl.html'" ng-if="blade.isNew"></div>
 <div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
             <form class="form" name="formScope">
                 <div class="form-group" ng-init="setForm(formScope)">
-                    <label class="form-label">{{ 'content.blades.edit-blog.labels.blog-name' | translate }}</label>
+                    <label class="form-label">{{'content.blades.edit-blog.labels.blog-name' | translate }}</label>
                     <div class="form-input">
-                        <input focus-on="" required class="form-control" ng-model="blade.entity.name" placeholder="{{ 'content.blades.edit-blog.placeholders.blog-name' | translate }}" name="name" ui-validate=" 'validators.webSafeFileNameValidator($value)' " />
+                        <input focus-on="" required class="form-control" ng-model="blade.currentEntity.name" placeholder="{{ 'content.blades.edit-blog.placeholders.blog-name' | translate }}" name="name" ui-validate=" 'validators.webSafeFileNameValidator($value)' " />
                     </div>
                     <div class="form-error" ng-show="formScope.name.$dirty">
                         <span ng-show="formScope.name.$error.validator">{{ 'content.blades.edit-blog.validations.name-invalid' | translate }}</span>
                     </div>
+                </div>
+                <div class="sub-t">{{'content.blades.edit-blog.labels.metadata' | translate }}</div>
+                <div class="form-group" ng-repeat="property in blade.currentEntity.dynamicProperties | orderBy: 'name'">
+                    <label class="form-label" for="">
+                        {{property.name}}
+                        <a href="" ng-click="editDictionary(property)" ng-show="property.isDictionary" class="form-edit"><i class="form-ico fa fa-pencil"></i></a>
+                    </label>
+                    <va-generic-value-input ng-model="property"></va-generic-value-input>
                 </div>
             </form>
         </div>

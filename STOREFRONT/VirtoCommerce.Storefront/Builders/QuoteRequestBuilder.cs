@@ -23,13 +23,13 @@ namespace VirtoCommerce.Storefront.Builders
     public class QuoteRequestBuilder : IQuoteRequestBuilder, IAsyncObserver<UserLoginEvent>
     {
         private readonly IQuoteModuleApi _quoteApi;
-        private readonly ICacheManager<object> _cacheManager;
+        private readonly ILocalCacheManager _cacheManager;
         private readonly IEventPublisher<QuoteRequestUpdatedEvent> _quoteRequestUpdatedEventPublisher;
 
         private QuoteRequest _quoteRequest;
         private const string _quoteRequestCacheRegion = "QuoteRequestRegion";
 
-        public QuoteRequestBuilder(IQuoteModuleApi quoteApi, ICacheManager<object> cacheManager,
+        public QuoteRequestBuilder(IQuoteModuleApi quoteApi, ILocalCacheManager cacheManager,
             IEventPublisher<QuoteRequestUpdatedEvent> quoteRequestUpdatedEventPublisher)
         {
             _quoteApi = quoteApi;
@@ -192,19 +192,11 @@ namespace VirtoCommerce.Storefront.Builders
                     if (existingItem != null)
                     {
                         existingItem.Comment = item.Comment;
-                        existingItem.SelectedTierPrice = new TierPrice
-                        {
-                            Price = new Money(item.SelectedTierPrice.Price, _quoteRequest.Currency),
-                            Quantity = item.SelectedTierPrice.Quantity
-                        };
+                        existingItem.SelectedTierPrice = new TierPrice(new Money(item.SelectedTierPrice.Price, _quoteRequest.Currency), item.SelectedTierPrice.Quantity);
                         existingItem.ProposalPrices.Clear();
                         foreach (var proposalPrice in item.ProposalPrices)
                         {
-                            existingItem.ProposalPrices.Add(new TierPrice
-                            {
-                                Price = new Money(proposalPrice.Price, _quoteRequest.Currency),
-                                Quantity = proposalPrice.Quantity
-                            });
+                            existingItem.ProposalPrices.Add(new TierPrice(new Money(proposalPrice.Price, _quoteRequest.Currency), proposalPrice.Quantity));
                         }
                     }
                 }

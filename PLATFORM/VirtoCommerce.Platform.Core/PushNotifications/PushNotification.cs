@@ -9,10 +9,10 @@ namespace VirtoCommerce.Platform.Core.PushNotifications
         public PushNotification(string creator)
         {
             Created = DateTime.UtcNow;
-            New = true;
+            IsNew = true;
             Id = Guid.NewGuid().ToString();
             Creator = creator;
-			NotifyType = this.GetType().Name;
+            NotifyType = this.GetType().Name;
         }
         [JsonProperty("id")]
         public string Id { get; set; }
@@ -20,8 +20,8 @@ namespace VirtoCommerce.Platform.Core.PushNotifications
         public string Creator { get; set; }
         [JsonProperty("created")]
         public DateTime Created { get; set; }
-        [JsonProperty("new")]
-        public bool New { get; set; }
+        [JsonProperty("isNew")]
+        public bool IsNew { get; set; }
         [JsonProperty("notifyType")]
         public string NotifyType { get; set; }
         [JsonProperty("description")]

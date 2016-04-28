@@ -1,15 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Linq;
-using dataModel = VirtoCommerce.CatalogModule.Data.Model;
-using coreModel = VirtoCommerce.Domain.Catalog.Model;
+using System.Text;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
-using System.Data.Entity.ModelConfiguration.Conventions;
-using System;
-using System.Text;
-using System.Diagnostics;
-using VirtoCommerce.Platform.Core.Common;
+using coreModel = VirtoCommerce.Domain.Catalog.Model;
+using dataModel = VirtoCommerce.CatalogModule.Data.Model;
 
 namespace VirtoCommerce.CatalogModule.Data.Repositories
 {
@@ -234,7 +233,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
                   SELECT a.Id FROM Category a JOIN cte c ON a.ParentCategoryId = c.Id)
                   SELECT Id FROM cte WHERE Id NOT IN ({0})";
 
-                var query = String.Format(queryPattern, String.Join(", ", categoryIds.Select(x => String.Format("'{0}'", x))));
+                var query = string.Format(queryPattern, string.Join(", ", categoryIds.Select(x => string.Format("'{0}'", x))));
                 retVal = ObjectContext.ExecuteStoreQuery<string>(query).ToList();
             }
             return retVal.ToArray();
@@ -255,21 +254,19 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
             var result = Categories.Include(x => x.Catalog.CatalogLanguages)
                                    .Where(x => categoriesIds.Contains(x.Id)).ToArray();
 
-            if ((respGroup & coreModel.CategoryResponseGroup.WithLinks) == coreModel.CategoryResponseGroup.WithLinks)
+            if (respGroup.HasFlag(coreModel.CategoryResponseGroup.WithLinks))
             {
                 var incommingLinks = CategoryLinks.Where(x => categoriesIds.Contains(x.TargetCategoryId)).ToArray();
                 var outgoingLinks = CategoryLinks.Where(x => categoriesIds.Contains(x.SourceCategoryId)).ToArray();
             }
 
-            if ((respGroup & coreModel.CategoryResponseGroup.WithImages) == coreModel.CategoryResponseGroup.WithImages)
+            if (respGroup.HasFlag(coreModel.CategoryResponseGroup.WithImages))
             {
                 var images = Images.Where(x => categoriesIds.Contains(x.CategoryId)).ToArray();
             }
 
-            if (((respGroup & coreModel.CategoryResponseGroup.WithParents) == coreModel.CategoryResponseGroup.WithParents)
-                || ((respGroup & coreModel.CategoryResponseGroup.WithProperties) == coreModel.CategoryResponseGroup.WithProperties))
+            if (respGroup.HasFlag(coreModel.CategoryResponseGroup.WithParents) || respGroup.HasFlag(coreModel.CategoryResponseGroup.WithProperties))
             {
-
                 var parentsMap = GetAllCategoriesParents(categoriesIds);
                 foreach (var categoryId in categoriesIds)
                 {
@@ -283,8 +280,9 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 
             //Load category property values by separate query
             var propertyValues = PropertyValues.Where(x => categoriesIds.Contains(x.CategoryId)).ToArray();
+
             //Load all properties meta information and information for inheritance
-            if ((respGroup & coreModel.CategoryResponseGroup.WithProperties) == coreModel.CategoryResponseGroup.WithProperties)
+            if (respGroup.HasFlag(coreModel.CategoryResponseGroup.WithProperties))
             {
                 //Need load inherited from parents categories and catalogs
                 var allParents = result.SelectMany(x => x.AllParents).ToArray();
@@ -299,6 +297,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
                                            .Include(x => x.DictionaryValues)
                                            .Where(x => x.CategoryId == null && allCatalogsIds.Contains(x.CatalogId)).ToArray();
             }
+
             return result;
         }
 
@@ -306,63 +305,81 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
         {
             if (itemIds == null)
             {
-                throw new ArgumentNullException("categoriesIds");
+                throw new ArgumentNullException("itemIds");
             }
 
             if (!itemIds.Any())
             {
                 return new dataModel.Item[] { };
             }
-            //Used breaking query EF performance concept https://msdn.microsoft.com/en-us/data/hh949853.aspx#8
+
+            // Use breaking query EF performance concept https://msdn.microsoft.com/en-us/data/hh949853.aspx#8
             var retVal = Items.Include(x => x.Images).Where(x => itemIds.Contains(x.Id)).ToArray();
             var propertyValues = PropertyValues.Where(x => itemIds.Contains(x.ItemId)).ToArray();
 
-            //Load product catalogs separately
+            // Load product catalogs separately
             var catalogIds = retVal.Select(x => x.CatalogId).Distinct().ToArray();
             var catalogs = Catalogs.Include(x => x.CatalogLanguages).Where(x => catalogIds.Contains(x.Id)).ToArray();
 
-            //Load product categories separately
-            var categoryIds = retVal.Select(x => x.CategoryId).Where(x => !String.IsNullOrEmpty(x)).Distinct().ToArray();
-            var categories = GetCategoriesByIds(categoryIds, coreModel.CategoryResponseGroup.WithParents);
+            // Load product categories separately
+            var categoryIds = retVal.Select(x => x.CategoryId).Where(x => !string.IsNullOrEmpty(x)).Distinct().ToArray();
+            var categoriesReponseGroup = coreModel.CategoryResponseGroup.WithParents;
 
-            if ((respGroup & coreModel.ItemResponseGroup.Links) == coreModel.ItemResponseGroup.Links)
+            if (respGroup.HasFlag(coreModel.ItemResponseGroup.Outlines))
+            {
+                categoriesReponseGroup |= coreModel.CategoryResponseGroup.WithLinks;
+            }
+
+            if (respGroup.HasFlag(coreModel.ItemResponseGroup.ItemProperties))
+            {
+                // Load categories with all properties for property inheritance
+                categoriesReponseGroup |= coreModel.CategoryResponseGroup.WithProperties;
+            }
+
+            var categories = GetCategoriesByIds(categoryIds, categoriesReponseGroup);
+
+            if (respGroup.HasFlag(coreModel.ItemResponseGroup.Links) || respGroup.HasFlag(coreModel.ItemResponseGroup.Outlines))
             {
                 var relations = CategoryItemRelations.Where(x => itemIds.Contains(x.ItemId)).ToArray();
             }
-            //Load all properties meta information and data for inheritance from parent categories and catalog
-            if ((respGroup & coreModel.ItemResponseGroup.ItemProperties) == coreModel.ItemResponseGroup.ItemProperties)
+
+            // Load all properties meta information and data for inheritance from parent categories and catalog
+            if (respGroup.HasFlag(coreModel.ItemResponseGroup.ItemProperties))
             {
-                //Load categories with all properties for property inheritance
-                categories = GetCategoriesByIds(categoryIds, coreModel.CategoryResponseGroup.WithProperties);
-                //load catalogs with properties for products not belongs to any category (EF auto populated all Catalog nav properties for all objects)
+                // Load catalogs with properties for products not belongs to any category (EF auto populated all Catalog nav properties for all objects)
                 foreach (var catalogId in retVal.Where(x => x.CategoryId == null).Select(x => x.CatalogId))
                 {
                     var catalog = GetCatalogById(catalogId);
                 }
             }
-            if ((respGroup & coreModel.ItemResponseGroup.ItemAssets) == coreModel.ItemResponseGroup.ItemAssets)
+
+            if (respGroup.HasFlag(coreModel.ItemResponseGroup.ItemAssets))
             {
                 var assets = Assets.Where(x => itemIds.Contains(x.ItemId)).ToArray();
             }
-            if ((respGroup & coreModel.ItemResponseGroup.ItemEditorialReviews) == coreModel.ItemResponseGroup.ItemEditorialReviews)
+
+            if (respGroup.HasFlag(coreModel.ItemResponseGroup.ItemEditorialReviews))
             {
                 var editorialReviews = EditorialReviews.Where(x => itemIds.Contains(x.ItemId)).ToArray();
             }
-            if ((respGroup & coreModel.ItemResponseGroup.Variations) == coreModel.ItemResponseGroup.Variations)
+
+            if (respGroup.HasFlag(coreModel.ItemResponseGroup.Variations))
             {
                 var variationIds = Items.Where(x => itemIds.Contains(x.ParentId)).Select(x => x.Id).ToArray();
-                //For variations loads only info and images
+                // For variations load only info and images
                 var variations = Items.Include(x => x.Images).Include(x => x.Assets).Where(x => variationIds.Contains(x.Id)).ToArray();
-                //load variations property values separately
+                // Load variations property values separately
                 var variationPropertyValues = PropertyValues.Where(x => variationIds.Contains(x.ItemId)).ToArray();
             }
-            if ((respGroup & coreModel.ItemResponseGroup.ItemAssociations) == coreModel.ItemResponseGroup.ItemAssociations)
+
+            if (respGroup.HasFlag(coreModel.ItemResponseGroup.ItemAssociations))
             {
                 var assosiationGroups = AssociationGroups.Include(x => x.Associations).ToArray();
                 var assosiatedItemIds = assosiationGroups.SelectMany(x => x.Associations).Select(x => x.ItemId).Distinct().ToArray();
                 var assosiationItems = GetItemByIds(assosiatedItemIds, coreModel.ItemResponseGroup.ItemInfo);
             }
-            //Load parents
+
+            // Load parents
             var parentIds = retVal.Where(x => x.Parent == null && x.ParentId != null).Select(x => x.ParentId).ToArray();
             var parents = GetItemByIds(parentIds, respGroup);
             return retVal;
@@ -457,7 +474,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 
             DELETE  FROM Item  WHERE Id IN ({0})";
 
-            var query = String.Format(queryPattern, String.Join(", ", itemIds.Select(x => String.Format("'{0}'", x))));
+            var query = string.Format(queryPattern, string.Join(", ", itemIds.Select(x => string.Format("'{0}'", x))));
 
             ObjectContext.ExecuteStoreCommand(query);
         }
@@ -480,10 +497,10 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 
             RemoveItems(itemsIds);
 
-            var query = String.Format(queryPattern, String.Join(", ", allCategoriesIds.Select(x => String.Format("'{0}'", x))));
+            var query = string.Format(queryPattern, string.Join(", ", allCategoriesIds.Select(x => string.Format("'{0}'", x))));
             var queryBuilder = new StringBuilder(query);
             //Need remove categories in prior hierarchy order from  child to parent
-            queryBuilder.AppendLine(String.Format("DELETE FROM Category WHERE Id IN ({0})", String.Join(", ", allCategoriesIds.Select(x => String.Format("'{0}'", x)))));
+            queryBuilder.AppendLine(string.Format("DELETE FROM Category WHERE Id IN ({0})", string.Join(", ", allCategoriesIds.Select(x => string.Format("'{0}'", x)))));
 
             ObjectContext.ExecuteStoreCommand(queryBuilder.ToString());
         }
@@ -504,7 +521,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
             DELETE CR FROM CategoryRelation CR INNER JOIN Catalog C ON C.Id = CR.TargetCatalogId WHERE C.Id IN ({0}) 
             DELETE P FROM Property P INNER JOIN Catalog C ON C.Id = P.CatalogId  WHERE C.Id IN ({0})
             DELETE FROM Catalog WHERE Id IN ({0})";
-            var query = String.Format(queryPattern, String.Join(", ", ids.Select(x => String.Format("'{0}'", x))));
+            var query = string.Format(queryPattern, string.Join(", ", ids.Select(x => string.Format("'{0}'", x))));
             ObjectContext.ExecuteStoreCommand(query);
         }
         #endregion
@@ -521,7 +538,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
                   INNER JOIN items itms ON itms.Id = i.ParentCategoryId)
                   SELECT * FROM items WHERE Id IN ({0}) ORDER BY Path";
 
-            var query = String.Format(queryPattern, String.Join(", ", categoryIds.Select(x => String.Format("'{0}'", x))));
+            var query = string.Format(queryPattern, string.Join(", ", categoryIds.Select(x => string.Format("'{0}'", x))));
 
             var outlines = ObjectContext.ExecuteStoreQuery<CategoryOutline>(query).ToArray();
             var parentCategoriesIds = outlines.SelectMany(x => x.Path.Split('|')).Distinct().ToArray();
@@ -546,11 +563,11 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
             }
             return retVal;
         }
-    }
 
-    internal class CategoryOutline
-    {
-        public string Id { get; set; }
-        public string Path { get; set; }
+        private class CategoryOutline
+        {
+            public string Id { get; set; }
+            public string Path { get; set; }
+        }
     }
 }

@@ -7,7 +7,7 @@
             id: 'entitySettingList',
             updatePermission: blade.updatePermission,
             controller: 'platformWebApp.entitySettingListController',
-            template: '$(Platform)/Scripts/app/settings/blades/entitySetting-list.tpl.html'
+            template: '$(Platform)/Scripts/app/settings/blades/settings-detail.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, blade);
     };

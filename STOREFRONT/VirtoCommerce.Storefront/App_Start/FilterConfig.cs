@@ -4,17 +4,18 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using VirtoCommerce.Storefront.Model;
 using Newtonsoft.Json.Serialization;
+using VirtoCommerce.Storefront.Controllers;
+using VirtoCommerce.Storefront.Model;
 
 namespace VirtoCommerce.Storefront
 {
     public class FilterConfig
     {
-        public static void RegisterGlobalFilters(GlobalFilterCollection filters, Func<WorkContext> workContextFactory)
+        public static void RegisterGlobalFilters(GlobalFilterCollection filters, Func<WorkContext> workContextFactory, Func<CommonController> commonControllerFactory)
         {
             filters.Add(new JsonNetActionFilter());
-            filters.Add(new StorefrontValidationActionFilter { WorkContextFactory = workContextFactory });
+            filters.Add(new StorefrontValidationActionFilter { WorkContextFactory = workContextFactory, CommonControllerFactory = commonControllerFactory });
         }
     }
     /// <summary>
@@ -23,6 +24,7 @@ namespace VirtoCommerce.Storefront
     public class StorefrontValidationActionFilter : ActionFilterAttribute
     {
         public Func<WorkContext> WorkContextFactory { get; set; }
+        public Func<CommonController> CommonControllerFactory { get; set; }
 
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
@@ -35,10 +37,22 @@ namespace VirtoCommerce.Storefront
                     && (workContext.AllStores == null || !workContext.AllStores.Any())
                     && filterContext.ActionDescriptor.ActionName != "NoStore")
                 {
-                    filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Common", action = "NoStore" }));
+                    if (CommonControllerFactory != null)
+                    {
+                        var commonController = CommonControllerFactory();
+                        var commonControllerContext = new ControllerContext(filterContext.RequestContext, commonController);
+                        commonControllerContext.RouteData.Values["controller"] = "Common";
+                        commonController.ControllerContext = commonControllerContext;
+
+                        filterContext.Result = commonController.NoStore();
+                    }
+                    else
+                    {
+                        filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Common", action = "NoStore" }));
+                    }
                 }
 
-                if (workContext.CurrentStore != null)
+                if (workContext != null && workContext.CurrentStore != null)
                 {
                     if (filterContext.ActionDescriptor.ActionName != "Maintenance" && workContext.CurrentStore.StoreState == StoreStatus.Closed)
                     {

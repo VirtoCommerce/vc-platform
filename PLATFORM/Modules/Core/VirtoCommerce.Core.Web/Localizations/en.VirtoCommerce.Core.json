@@ -93,27 +93,31 @@
         "title": "Fulfillment centers",
         "subtitle": "Manage Fulfillment centers"
       },
-      "store-list": {
-        "subtitle": "Manage SEO in stores",
+      "seo-list": {
+        "subtitle": "Manage SEOs",
         "labels": {
-          "new-store": "Add SEO for other store",
-          "name": "Store name",
-          "no-store": "No SEO defined"
-        },
-        "placeholders": {
-          "store": "Pick store"
+          "duplicates-found": "There are {{count}} conflicting Semantic URLs!",
+          "resolve-duplicates": "Resolve conflicts",
+          "language-code": "Language",
+          "container": "Store",
+          "semanticUrl": "Semantic URL"
         }
       },
       "seo-detail": {
-        "title": "SEO for {{store}}",
-        "subtitle": "Seo details",
+        "title-new": "New SEO",
+        "subtitle": "SEO details",
         "labels": {
+          "is-active": "Is active",
+          "store": "Store",
+          "language": "Language",
           "url-keyword": "URL keyword",
           "page-title": "Page title",
           "meta-description": "Meta description",
           "alternative-text": "Image alternative text"
         },
         "placeholders": {
+          "store": "Select Store",
+          "language": "Select Language",
           "url-keyword": "Enter keyword",
           "page-title": "Enter title",
           "meta-description": "Enter description",
@@ -121,7 +125,15 @@
         },
         "validations": {
           "url-keyword-required": "Required",
-          "url-keyword-invalid": "Invalid characters in URL found"
+          "url-keyword-invalid": "Invalid characters in URL found",
+          "url-keyword-duplicate": "Duplicate URL found"
+        }
+      },
+      "seo-duplicates": {
+        "subtitle": "SEO conflicts",
+        "labels": {
+          "semanticUrl": "Semantic URL",
+          "container": "Store"
         }
       }
     },

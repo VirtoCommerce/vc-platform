@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -20,57 +18,41 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommerceDomainStoreModelSearchCriteria :  IEquatable<VirtoCommerceDomainStoreModelSearchCriteria>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainStoreModelSearchCriteria" /> class.
-        /// </summary>
-        public VirtoCommerceDomainStoreModelSearchCriteria()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Gets or Sets StoreIds
         /// </summary>
         [DataMember(Name="storeIds", EmitDefaultValue=false)]
         public List<string> StoreIds { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Keyword
         /// </summary>
         [DataMember(Name="keyword", EmitDefaultValue=false)]
         public string Keyword { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Sort
         /// </summary>
         [DataMember(Name="sort", EmitDefaultValue=false)]
         public string Sort { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets SortInfos
         /// </summary>
         [DataMember(Name="sortInfos", EmitDefaultValue=false)]
         public List<VirtoCommercePlatformCoreCommonSortInfo> SortInfos { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Skip
         /// </summary>
         [DataMember(Name="skip", EmitDefaultValue=false)]
         public int? Skip { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Take
         /// </summary>
         [DataMember(Name="take", EmitDefaultValue=false)]
         public int? Take { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -85,7 +67,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  SortInfos: ").Append(SortInfos).Append("\n");
             sb.Append("  Skip: ").Append(Skip).Append("\n");
             sb.Append("  Take: ").Append(Take).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -165,30 +146,28 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.StoreIds != null)
                     hash = hash * 59 + this.StoreIds.GetHashCode();
-                
+
                 if (this.Keyword != null)
                     hash = hash * 59 + this.Keyword.GetHashCode();
-                
+
                 if (this.Sort != null)
                     hash = hash * 59 + this.Sort.GetHashCode();
-                
+
                 if (this.SortInfos != null)
                     hash = hash * 59 + this.SortInfos.GetHashCode();
-                
+
                 if (this.Skip != null)
                     hash = hash * 59 + this.Skip.GetHashCode();
-                
+
                 if (this.Take != null)
                     hash = hash * 59 + this.Take.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

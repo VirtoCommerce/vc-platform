@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -20,50 +18,35 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommerceCatalogModuleWebModelCatalogSearchResult :  IEquatable<VirtoCommerceCatalogModuleWebModelCatalogSearchResult>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelCatalogSearchResult" /> class.
-        /// </summary>
-        public VirtoCommerceCatalogModuleWebModelCatalogSearchResult()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Gets or Sets ProductsTotalCount
         /// </summary>
         [DataMember(Name="productsTotalCount", EmitDefaultValue=false)]
         public int? ProductsTotalCount { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Products
         /// </summary>
         [DataMember(Name="products", EmitDefaultValue=false)]
         public List<VirtoCommerceCatalogModuleWebModelProduct> Products { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Categories
         /// </summary>
         [DataMember(Name="categories", EmitDefaultValue=false)]
         public List<VirtoCommerceCatalogModuleWebModelCategory> Categories { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Catalogs
         /// </summary>
         [DataMember(Name="catalogs", EmitDefaultValue=false)]
         public List<VirtoCommerceCatalogModuleWebModelCatalog> Catalogs { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Aggregations
         /// </summary>
         [DataMember(Name="aggregations", EmitDefaultValue=false)]
         public List<VirtoCommerceCatalogModuleWebModelAggregation> Aggregations { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -77,7 +60,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Categories: ").Append(Categories).Append("\n");
             sb.Append("  Catalogs: ").Append(Catalogs).Append("\n");
             sb.Append("  Aggregations: ").Append(Aggregations).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -152,27 +134,25 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.ProductsTotalCount != null)
                     hash = hash * 59 + this.ProductsTotalCount.GetHashCode();
-                
+
                 if (this.Products != null)
                     hash = hash * 59 + this.Products.GetHashCode();
-                
+
                 if (this.Categories != null)
                     hash = hash * 59 + this.Categories.GetHashCode();
-                
+
                 if (this.Catalogs != null)
                     hash = hash * 59 + this.Catalogs.GetHashCode();
-                
+
                 if (this.Aggregations != null)
                     hash = hash * 59 + this.Aggregations.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

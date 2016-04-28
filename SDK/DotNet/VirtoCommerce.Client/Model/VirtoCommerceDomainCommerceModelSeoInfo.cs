@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -20,120 +18,101 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommerceDomainCommerceModelSeoInfo :  IEquatable<VirtoCommerceDomainCommerceModelSeoInfo>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCommerceModelSeoInfo" /> class.
+        /// Gets or Sets Name
         /// </summary>
-        public VirtoCommerceDomainCommerceModelSeoInfo()
-        {
-            
-        }
+        [DataMember(Name="name", EmitDefaultValue=false)]
+        public string Name { get; set; }
 
-        
         /// <summary>
         /// Gets or Sets SemanticUrl
         /// </summary>
         [DataMember(Name="semanticUrl", EmitDefaultValue=false)]
         public string SemanticUrl { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets PageTitle
         /// </summary>
         [DataMember(Name="pageTitle", EmitDefaultValue=false)]
         public string PageTitle { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets MetaDescription
         /// </summary>
         [DataMember(Name="metaDescription", EmitDefaultValue=false)]
         public string MetaDescription { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ImageAltDescription
         /// </summary>
         [DataMember(Name="imageAltDescription", EmitDefaultValue=false)]
         public string ImageAltDescription { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets MetaKeywords
         /// </summary>
         [DataMember(Name="metaKeywords", EmitDefaultValue=false)]
         public string MetaKeywords { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets StoreId
         /// </summary>
         [DataMember(Name="storeId", EmitDefaultValue=false)]
         public string StoreId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ObjectId
         /// </summary>
         [DataMember(Name="objectId", EmitDefaultValue=false)]
         public string ObjectId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ObjectType
         /// </summary>
         [DataMember(Name="objectType", EmitDefaultValue=false)]
         public string ObjectType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets IsActive
         /// </summary>
         [DataMember(Name="isActive", EmitDefaultValue=false)]
         public bool? IsActive { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets LanguageCode
         /// </summary>
         [DataMember(Name="languageCode", EmitDefaultValue=false)]
         public string LanguageCode { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedDate
         /// </summary>
         [DataMember(Name="createdDate", EmitDefaultValue=false)]
         public DateTime? CreatedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedDate
         /// </summary>
         [DataMember(Name="modifiedDate", EmitDefaultValue=false)]
         public DateTime? ModifiedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedBy
         /// </summary>
         [DataMember(Name="createdBy", EmitDefaultValue=false)]
         public string CreatedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedBy
         /// </summary>
         [DataMember(Name="modifiedBy", EmitDefaultValue=false)]
         public string ModifiedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -142,6 +121,7 @@ namespace VirtoCommerce.Client.Model
         {
             var sb = new StringBuilder();
             sb.Append("class VirtoCommerceDomainCommerceModelSeoInfo {\n");
+            sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  SemanticUrl: ").Append(SemanticUrl).Append("\n");
             sb.Append("  PageTitle: ").Append(PageTitle).Append("\n");
             sb.Append("  MetaDescription: ").Append(MetaDescription).Append("\n");
@@ -157,7 +137,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  CreatedBy: ").Append(CreatedBy).Append("\n");
             sb.Append("  ModifiedBy: ").Append(ModifiedBy).Append("\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -194,6 +173,11 @@ namespace VirtoCommerce.Client.Model
                 return false;
 
             return 
+                (
+                    this.Name == other.Name ||
+                    this.Name != null &&
+                    this.Name.Equals(other.Name)
+                ) && 
                 (
                     this.SemanticUrl == other.SemanticUrl ||
                     this.SemanticUrl != null &&
@@ -282,57 +266,58 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
+                if (this.Name != null)
+                    hash = hash * 59 + this.Name.GetHashCode();
+
                 if (this.SemanticUrl != null)
                     hash = hash * 59 + this.SemanticUrl.GetHashCode();
-                
+
                 if (this.PageTitle != null)
                     hash = hash * 59 + this.PageTitle.GetHashCode();
-                
+
                 if (this.MetaDescription != null)
                     hash = hash * 59 + this.MetaDescription.GetHashCode();
-                
+
                 if (this.ImageAltDescription != null)
                     hash = hash * 59 + this.ImageAltDescription.GetHashCode();
-                
+
                 if (this.MetaKeywords != null)
                     hash = hash * 59 + this.MetaKeywords.GetHashCode();
-                
+
                 if (this.StoreId != null)
                     hash = hash * 59 + this.StoreId.GetHashCode();
-                
+
                 if (this.ObjectId != null)
                     hash = hash * 59 + this.ObjectId.GetHashCode();
-                
+
                 if (this.ObjectType != null)
                     hash = hash * 59 + this.ObjectType.GetHashCode();
-                
+
                 if (this.IsActive != null)
                     hash = hash * 59 + this.IsActive.GetHashCode();
-                
+
                 if (this.LanguageCode != null)
                     hash = hash * 59 + this.LanguageCode.GetHashCode();
-                
+
                 if (this.CreatedDate != null)
                     hash = hash * 59 + this.CreatedDate.GetHashCode();
-                
+
                 if (this.ModifiedDate != null)
                     hash = hash * 59 + this.ModifiedDate.GetHashCode();
-                
+
                 if (this.CreatedBy != null)
                     hash = hash * 59 + this.CreatedBy.GetHashCode();
-                
+
                 if (this.ModifiedBy != null)
                     hash = hash * 59 + this.ModifiedBy.GetHashCode();
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

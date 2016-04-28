@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -20,29 +18,17 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommercePlatformCoreSecuritySecurityResult :  IEquatable<VirtoCommercePlatformCoreSecuritySecurityResult>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreSecuritySecurityResult" /> class.
-        /// </summary>
-        public VirtoCommercePlatformCoreSecuritySecurityResult()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Gets or Sets Succeeded
         /// </summary>
         [DataMember(Name="succeeded", EmitDefaultValue=false)]
         public bool? Succeeded { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Errors
         /// </summary>
         [DataMember(Name="errors", EmitDefaultValue=false)]
         public List<string> Errors { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -53,7 +39,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("class VirtoCommercePlatformCoreSecuritySecurityResult {\n");
             sb.Append("  Succeeded: ").Append(Succeeded).Append("\n");
             sb.Append("  Errors: ").Append(Errors).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -113,18 +98,16 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Succeeded != null)
                     hash = hash * 59 + this.Succeeded.GetHashCode();
-                
+
                 if (this.Errors != null)
                     hash = hash * 59 + this.Errors.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -20,50 +18,35 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommerceCatalogModuleWebExportImportCsvProductMappingConfiguration :  IEquatable<VirtoCommerceCatalogModuleWebExportImportCsvProductMappingConfiguration>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebExportImportCsvProductMappingConfiguration" /> class.
-        /// </summary>
-        public VirtoCommerceCatalogModuleWebExportImportCsvProductMappingConfiguration()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Gets or Sets ETag
         /// </summary>
         [DataMember(Name="eTag", EmitDefaultValue=false)]
         public string ETag { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Delimiter
         /// </summary>
         [DataMember(Name="delimiter", EmitDefaultValue=false)]
         public string Delimiter { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CsvColumns
         /// </summary>
         [DataMember(Name="csvColumns", EmitDefaultValue=false)]
         public List<string> CsvColumns { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets PropertyMaps
         /// </summary>
         [DataMember(Name="propertyMaps", EmitDefaultValue=false)]
         public List<VirtoCommerceCatalogModuleWebExportImportCsvProductPropertyMap> PropertyMaps { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets PropertyCsvColumns
         /// </summary>
         [DataMember(Name="propertyCsvColumns", EmitDefaultValue=false)]
         public List<string> PropertyCsvColumns { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -77,7 +60,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  CsvColumns: ").Append(CsvColumns).Append("\n");
             sb.Append("  PropertyMaps: ").Append(PropertyMaps).Append("\n");
             sb.Append("  PropertyCsvColumns: ").Append(PropertyCsvColumns).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -152,27 +134,25 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.ETag != null)
                     hash = hash * 59 + this.ETag.GetHashCode();
-                
+
                 if (this.Delimiter != null)
                     hash = hash * 59 + this.Delimiter.GetHashCode();
-                
+
                 if (this.CsvColumns != null)
                     hash = hash * 59 + this.CsvColumns.GetHashCode();
-                
+
                 if (this.PropertyMaps != null)
                     hash = hash * 59 + this.PropertyMaps.GetHashCode();
-                
+
                 if (this.PropertyCsvColumns != null)
                     hash = hash * 59 + this.PropertyCsvColumns.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

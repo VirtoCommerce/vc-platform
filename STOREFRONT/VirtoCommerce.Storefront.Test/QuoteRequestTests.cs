@@ -6,6 +6,7 @@ using VirtoCommerce.Client.Api;
 using VirtoCommerce.Storefront.Builders;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Catalog;
+using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Common.Events;
 using VirtoCommerce.Storefront.Model.Customer;
 using VirtoCommerce.Storefront.Model.Quote.Events;
@@ -59,7 +60,7 @@ namespace VirtoCommerce.Storefront.Test
 
             var quoteItem = quoteRequestBuilder.QuoteRequest.Items.First();
             var productPrice = quoteItem.SalePrice;
-            quoteItem.ProposalPrices.Add(new TierPrice { Price = productPrice, Quantity = 10 });
+            quoteItem.ProposalPrices.Add(new TierPrice(productPrice, 10 ));
             quoteRequestBuilder.SaveAsync().Wait();
             quoteRequest = quoteRequestBuilder.GetOrCreateNewTransientQuoteRequestAsync(workContext.CurrentStore, customer, workContext.CurrentLanguage, workContext.CurrentCurrency).Result.QuoteRequest;
             quoteItem = quoteRequestBuilder.QuoteRequest.Items.First();
@@ -97,7 +98,7 @@ namespace VirtoCommerce.Storefront.Test
 
             var quoteItem = quoteRequestBuilder.QuoteRequest.Items.First();
             var productPrice = quoteItem.SalePrice;
-            quoteItem.ProposalPrices.Add(new TierPrice { Price = productPrice, Quantity = 10 });
+            quoteItem.ProposalPrices.Add(new TierPrice(productPrice, 10));
             quoteRequestBuilder.SaveAsync().Wait();
             quoteRequest = quoteRequestBuilder.GetOrCreateNewTransientQuoteRequestAsync(workContext.CurrentStore, customer, workContext.CurrentLanguage, workContext.CurrentCurrency).Result.QuoteRequest;
             quoteItem = quoteRequestBuilder.QuoteRequest.Items.First();
@@ -135,7 +136,7 @@ namespace VirtoCommerce.Storefront.Test
 
             var quoteItem = quoteRequestBuilder.QuoteRequest.Items.First();
             var productPrice = quoteItem.SalePrice;
-            quoteItem.ProposalPrices.Add(new TierPrice { Price = productPrice, Quantity = 10 });
+            quoteItem.ProposalPrices.Add(new TierPrice(productPrice, 10 ));
             quoteRequestBuilder.SaveAsync().Wait();
             quoteRequest = quoteRequestBuilder.GetOrCreateNewTransientQuoteRequestAsync(workContext.CurrentStore, customer, workContext.CurrentLanguage, workContext.CurrentCurrency).Result.QuoteRequest;
             quoteItem = quoteRequestBuilder.QuoteRequest.Items.First();
@@ -161,7 +162,7 @@ namespace VirtoCommerce.Storefront.Test
         {
             var apiClientConfiguration = new Client.Client.Configuration(GetApiClient());
             var quoteApi = new QuoteModuleApi(apiClientConfiguration);
-            var cacheManager = new Mock<ICacheManager<object>>();
+            var cacheManager = new Mock<ILocalCacheManager>();
             var quoteRequestEventPublisher = new Mock<IEventPublisher<QuoteRequestUpdatedEvent>>();
 
             return new QuoteRequestBuilder(quoteApi, cacheManager.Object, quoteRequestEventPublisher.Object);

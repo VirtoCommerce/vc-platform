@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -20,127 +18,101 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommerceOrderModuleWebModelAddress :  IEquatable<VirtoCommerceOrderModuleWebModelAddress>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceOrderModuleWebModelAddress" /> class.
-        /// </summary>
-        public VirtoCommerceOrderModuleWebModelAddress()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Gets or Sets AddressType
         /// </summary>
         [DataMember(Name="addressType", EmitDefaultValue=false)]
         public string AddressType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Organization
         /// </summary>
         [DataMember(Name="organization", EmitDefaultValue=false)]
         public string Organization { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CountryCode
         /// </summary>
         [DataMember(Name="countryCode", EmitDefaultValue=false)]
         public string CountryCode { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CountryName
         /// </summary>
         [DataMember(Name="countryName", EmitDefaultValue=false)]
         public string CountryName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets City
         /// </summary>
         [DataMember(Name="city", EmitDefaultValue=false)]
         public string City { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets PostalCode
         /// </summary>
         [DataMember(Name="postalCode", EmitDefaultValue=false)]
         public string PostalCode { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Zip
         /// </summary>
         [DataMember(Name="zip", EmitDefaultValue=false)]
         public string Zip { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Line1
         /// </summary>
         [DataMember(Name="line1", EmitDefaultValue=false)]
         public string Line1 { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Line2
         /// </summary>
         [DataMember(Name="line2", EmitDefaultValue=false)]
         public string Line2 { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets RegionId
         /// </summary>
         [DataMember(Name="regionId", EmitDefaultValue=false)]
         public string RegionId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets RegionName
         /// </summary>
         [DataMember(Name="regionName", EmitDefaultValue=false)]
         public string RegionName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets FirstName
         /// </summary>
         [DataMember(Name="firstName", EmitDefaultValue=false)]
         public string FirstName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets MiddleName
         /// </summary>
         [DataMember(Name="middleName", EmitDefaultValue=false)]
         public string MiddleName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets LastName
         /// </summary>
         [DataMember(Name="lastName", EmitDefaultValue=false)]
         public string LastName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Phone
         /// </summary>
         [DataMember(Name="phone", EmitDefaultValue=false)]
         public string Phone { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Email
         /// </summary>
         [DataMember(Name="email", EmitDefaultValue=false)]
         public string Email { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -165,7 +137,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  LastName: ").Append(LastName).Append("\n");
             sb.Append("  Phone: ").Append(Phone).Append("\n");
             sb.Append("  Email: ").Append(Email).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -295,60 +266,58 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.AddressType != null)
                     hash = hash * 59 + this.AddressType.GetHashCode();
-                
+
                 if (this.Organization != null)
                     hash = hash * 59 + this.Organization.GetHashCode();
-                
+
                 if (this.CountryCode != null)
                     hash = hash * 59 + this.CountryCode.GetHashCode();
-                
+
                 if (this.CountryName != null)
                     hash = hash * 59 + this.CountryName.GetHashCode();
-                
+
                 if (this.City != null)
                     hash = hash * 59 + this.City.GetHashCode();
-                
+
                 if (this.PostalCode != null)
                     hash = hash * 59 + this.PostalCode.GetHashCode();
-                
+
                 if (this.Zip != null)
                     hash = hash * 59 + this.Zip.GetHashCode();
-                
+
                 if (this.Line1 != null)
                     hash = hash * 59 + this.Line1.GetHashCode();
-                
+
                 if (this.Line2 != null)
                     hash = hash * 59 + this.Line2.GetHashCode();
-                
+
                 if (this.RegionId != null)
                     hash = hash * 59 + this.RegionId.GetHashCode();
-                
+
                 if (this.RegionName != null)
                     hash = hash * 59 + this.RegionName.GetHashCode();
-                
+
                 if (this.FirstName != null)
                     hash = hash * 59 + this.FirstName.GetHashCode();
-                
+
                 if (this.MiddleName != null)
                     hash = hash * 59 + this.MiddleName.GetHashCode();
-                
+
                 if (this.LastName != null)
                     hash = hash * 59 + this.LastName.GetHashCode();
-                
+
                 if (this.Phone != null)
                     hash = hash * 59 + this.Phone.GetHashCode();
-                
+
                 if (this.Email != null)
                     hash = hash * 59 + this.Email.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

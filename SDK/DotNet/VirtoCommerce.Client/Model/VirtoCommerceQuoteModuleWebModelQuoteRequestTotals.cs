@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -20,76 +18,58 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommerceQuoteModuleWebModelQuoteRequestTotals :  IEquatable<VirtoCommerceQuoteModuleWebModelQuoteRequestTotals>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceQuoteModuleWebModelQuoteRequestTotals" /> class.
-        /// </summary>
-        public VirtoCommerceQuoteModuleWebModelQuoteRequestTotals()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Original subtotal tier quantity * sale price
         /// </summary>
         /// <value>Original subtotal tier quantity * sale price</value>
         [DataMember(Name="originalSubTotalExlTax", EmitDefaultValue=false)]
         public double? OriginalSubTotalExlTax { get; set; }
-  
-        
+
         /// <summary>
         /// Items proposal tier quantity * proposal price
         /// </summary>
         /// <value>Items proposal tier quantity * proposal price</value>
         [DataMember(Name="subTotalExlTax", EmitDefaultValue=false)]
         public double? SubTotalExlTax { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ShippingTotal
         /// </summary>
         [DataMember(Name="shippingTotal", EmitDefaultValue=false)]
         public double? ShippingTotal { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets DiscountTotal
         /// </summary>
         [DataMember(Name="discountTotal", EmitDefaultValue=false)]
         public double? DiscountTotal { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets TaxTotal
         /// </summary>
         [DataMember(Name="taxTotal", EmitDefaultValue=false)]
         public double? TaxTotal { get; set; }
-  
-        
+
         /// <summary>
         /// Adjustment SubTotalOriginalExlTax -  SubTotalExlTax
         /// </summary>
         /// <value>Adjustment SubTotalOriginalExlTax -  SubTotalExlTax</value>
         [DataMember(Name="adjustmentQuoteExlTax", EmitDefaultValue=false)]
         public double? AdjustmentQuoteExlTax { get; set; }
-  
-        
+
         /// <summary>
         /// Grand total SubTotalExlTax + shipping - discount
         /// </summary>
         /// <value>Grand total SubTotalExlTax + shipping - discount</value>
         [DataMember(Name="grandTotalExlTax", EmitDefaultValue=false)]
         public double? GrandTotalExlTax { get; set; }
-  
-        
+
         /// <summary>
         /// Grand total subtotal + shipping - discount + tax
         /// </summary>
         /// <value>Grand total subtotal + shipping - discount + tax</value>
         [DataMember(Name="grandTotalInclTax", EmitDefaultValue=false)]
         public double? GrandTotalInclTax { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -106,7 +86,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  AdjustmentQuoteExlTax: ").Append(AdjustmentQuoteExlTax).Append("\n");
             sb.Append("  GrandTotalExlTax: ").Append(GrandTotalExlTax).Append("\n");
             sb.Append("  GrandTotalInclTax: ").Append(GrandTotalInclTax).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -196,36 +175,34 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.OriginalSubTotalExlTax != null)
                     hash = hash * 59 + this.OriginalSubTotalExlTax.GetHashCode();
-                
+
                 if (this.SubTotalExlTax != null)
                     hash = hash * 59 + this.SubTotalExlTax.GetHashCode();
-                
+
                 if (this.ShippingTotal != null)
                     hash = hash * 59 + this.ShippingTotal.GetHashCode();
-                
+
                 if (this.DiscountTotal != null)
                     hash = hash * 59 + this.DiscountTotal.GetHashCode();
-                
+
                 if (this.TaxTotal != null)
                     hash = hash * 59 + this.TaxTotal.GetHashCode();
-                
+
                 if (this.AdjustmentQuoteExlTax != null)
                     hash = hash * 59 + this.AdjustmentQuoteExlTax.GetHashCode();
-                
+
                 if (this.GrandTotalExlTax != null)
                     hash = hash * 59 + this.GrandTotalExlTax.GetHashCode();
-                
+
                 if (this.GrandTotalInclTax != null)
                     hash = hash * 59 + this.GrandTotalInclTax.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

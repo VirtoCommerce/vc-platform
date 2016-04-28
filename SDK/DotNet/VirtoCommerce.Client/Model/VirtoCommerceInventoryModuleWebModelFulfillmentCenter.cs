@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -20,135 +18,108 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommerceInventoryModuleWebModelFulfillmentCenter :  IEquatable<VirtoCommerceInventoryModuleWebModelFulfillmentCenter>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceInventoryModuleWebModelFulfillmentCenter" /> class.
-        /// </summary>
-        public VirtoCommerceInventoryModuleWebModelFulfillmentCenter()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Gets or Sets Name
         /// </summary>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Description
         /// </summary>
         [DataMember(Name="description", EmitDefaultValue=false)]
         public string Description { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets MaxReleasesPerPickBatch
         /// </summary>
         [DataMember(Name="maxReleasesPerPickBatch", EmitDefaultValue=false)]
         public int? MaxReleasesPerPickBatch { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets PickDelay
         /// </summary>
         [DataMember(Name="pickDelay", EmitDefaultValue=false)]
         public int? PickDelay { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets DaytimePhoneNumber
         /// </summary>
         [DataMember(Name="daytimePhoneNumber", EmitDefaultValue=false)]
         public string DaytimePhoneNumber { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Line1
         /// </summary>
         [DataMember(Name="line1", EmitDefaultValue=false)]
         public string Line1 { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Line2
         /// </summary>
         [DataMember(Name="line2", EmitDefaultValue=false)]
         public string Line2 { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets City
         /// </summary>
         [DataMember(Name="city", EmitDefaultValue=false)]
         public string City { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets StateProvince
         /// </summary>
         [DataMember(Name="stateProvince", EmitDefaultValue=false)]
         public string StateProvince { get; set; }
-  
-        
+
         /// <summary>
         /// ISO 3166-1 alpha-3
         /// </summary>
         /// <value>ISO 3166-1 alpha-3</value>
         [DataMember(Name="countryCode", EmitDefaultValue=false)]
         public string CountryCode { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CountryName
         /// </summary>
         [DataMember(Name="countryName", EmitDefaultValue=false)]
         public string CountryName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets PostalCode
         /// </summary>
         [DataMember(Name="postalCode", EmitDefaultValue=false)]
         public string PostalCode { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedDate
         /// </summary>
         [DataMember(Name="createdDate", EmitDefaultValue=false)]
         public DateTime? CreatedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedDate
         /// </summary>
         [DataMember(Name="modifiedDate", EmitDefaultValue=false)]
         public DateTime? ModifiedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedBy
         /// </summary>
         [DataMember(Name="createdBy", EmitDefaultValue=false)]
         public string CreatedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedBy
         /// </summary>
         [DataMember(Name="modifiedBy", EmitDefaultValue=false)]
         public string ModifiedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -174,7 +145,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  CreatedBy: ").Append(CreatedBy).Append("\n");
             sb.Append("  ModifiedBy: ").Append(ModifiedBy).Append("\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -309,63 +279,61 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
-                
+
                 if (this.Description != null)
                     hash = hash * 59 + this.Description.GetHashCode();
-                
+
                 if (this.MaxReleasesPerPickBatch != null)
                     hash = hash * 59 + this.MaxReleasesPerPickBatch.GetHashCode();
-                
+
                 if (this.PickDelay != null)
                     hash = hash * 59 + this.PickDelay.GetHashCode();
-                
+
                 if (this.DaytimePhoneNumber != null)
                     hash = hash * 59 + this.DaytimePhoneNumber.GetHashCode();
-                
+
                 if (this.Line1 != null)
                     hash = hash * 59 + this.Line1.GetHashCode();
-                
+
                 if (this.Line2 != null)
                     hash = hash * 59 + this.Line2.GetHashCode();
-                
+
                 if (this.City != null)
                     hash = hash * 59 + this.City.GetHashCode();
-                
+
                 if (this.StateProvince != null)
                     hash = hash * 59 + this.StateProvince.GetHashCode();
-                
+
                 if (this.CountryCode != null)
                     hash = hash * 59 + this.CountryCode.GetHashCode();
-                
+
                 if (this.CountryName != null)
                     hash = hash * 59 + this.CountryName.GetHashCode();
-                
+
                 if (this.PostalCode != null)
                     hash = hash * 59 + this.PostalCode.GetHashCode();
-                
+
                 if (this.CreatedDate != null)
                     hash = hash * 59 + this.CreatedDate.GetHashCode();
-                
+
                 if (this.ModifiedDate != null)
                     hash = hash * 59 + this.ModifiedDate.GetHashCode();
-                
+
                 if (this.CreatedBy != null)
                     hash = hash * 59 + this.CreatedBy.GetHashCode();
-                
+
                 if (this.ModifiedBy != null)
                     hash = hash * 59 + this.ModifiedBy.GetHashCode();
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

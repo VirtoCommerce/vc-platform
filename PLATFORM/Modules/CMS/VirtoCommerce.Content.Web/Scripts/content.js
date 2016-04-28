@@ -19,10 +19,50 @@ angular.module(moduleName, [])
 	    };
 	    mainMenuService.addMenuItem(menuItem);
 
+	    //Register widgets
+	    //widgetService.registerWidget({
+	    //    controller: 'virtoCommerce.contentModule.mainContentItemWidgetController',
+	    //    size: [6, 2],
+	    //    template: 'Modules/$(VirtoCommerce.Content)/Scripts/widgets/mainContentItemWidget.tpl.html',
+	    //}, 'contentMainListItem');
 
+	    //widgetService.registerWidget({
+	    //    controller: 'virtoCommerce.contentModule.storeWidgetController',
+	    //    size: [2, 2],
+	    //    template: 'Modules/$(VirtoCommerce.Content)/Scripts/widgets/storeWidget.tpl.html',
+	    //}, 'contentMainListItem');
+
+	    //widgetService.registerWidget({
+	    //    controller: 'virtoCommerce.contentModule.themeActiveWidgetController',
+	    //    size: [4, 1],
+	    //    template: 'Modules/$(VirtoCommerce.Content)/Scripts/widgets/themeActiveWidget.tpl.html',
+	    //}, 'contentMainListItem');
+
+	    //widgetService.registerWidget({
+	    //    controller: 'virtoCommerce.contentModule.themesWidgetController',
+	    //    template: 'Modules/$(VirtoCommerce.Content)/Scripts/widgets/themesWidget.tpl.html',
+	    //}, 'contentMainListItem');
+
+	    //widgetService.registerWidget({
+	    //    controller: 'virtoCommerce.contentModule.pagesWidgetController',
+	    //    template: 'Modules/$(VirtoCommerce.Content)/Scripts/widgets/pagesWidget.tpl.html',
+	    //}, 'contentMainListItem');
+
+	    //widgetService.registerWidget({
+	    //    controller: 'virtoCommerce.contentModule.linkListsWidgetController',
+	    //    template: 'Modules/$(VirtoCommerce.Content)/Scripts/widgets/linkListsWidget.tpl.html',
+	    //}, 'contentMainListItem');
+
+	    //widgetService.registerWidget({
+	    //    controller: 'virtoCommerce.contentModule.blogsWidgetController',
+	    //    template: 'Modules/$(VirtoCommerce.Content)/Scripts/widgets/blogsWidget.tpl.html',
+	    //}, 'contentMainListItem');
+
+	    // themes widget in STORE details
 	    widgetService.registerWidget({
-	        controller: 'virtoCommerce.contentModule.themesWidgetController',
-	        template: 'Modules/$(VirtoCommerce.Content)/Scripts/widgets/themesWidget.tpl.html',
+	        size: [2, 1],
+	        controller: 'virtoCommerce.contentModule.storeCMSWidgetController',
+	        template: 'Modules/$(VirtoCommerce.Content)/Scripts/widgets/storeCMSWidget.tpl.html',
 	        permission: 'content:read'
 	    }, 'storeDetail');
 
@@ -158,7 +198,7 @@ angular.module(moduleName, [])
 				        title: 'content.blades.content-main.title',
 				        subtitle: 'content.blades.content-main.subtitle',
 				        controller: 'virtoCommerce.contentModule.contentMainController',
-				        template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/common/content-main.tpl.html',
+				        template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/content-main.tpl.html',
 				        isClosingDisabled: true
 				    };
 				    bladeNavigationService.showBlade(blade);

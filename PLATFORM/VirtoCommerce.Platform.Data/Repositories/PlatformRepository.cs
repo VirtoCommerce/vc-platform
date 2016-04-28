@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure.Annotations;
 using System.Data.Entity.ModelConfiguration.Conventions;
@@ -233,18 +234,18 @@ namespace VirtoCommerce.Platform.Data.Repositories
         }
 
 
-        public DynamicPropertyEntity[] GetObjectDynamicProperties(string objectType, string objectId)
+        public DynamicPropertyEntity[] GetObjectDynamicProperties(string[] objectTypeNames, string[] objectIds)
         {
-            var retVal = DynamicProperties.Include(x => x.DisplayNames)
-                                          .Where(x => x.ObjectType == objectType)
-                                          .OrderBy(x => x.Name)
-                                          .ToArray();
-            var propertyIds = retVal.Select(x => x.Id).ToArray();
+            var properties = DynamicProperties.Include(x => x.DisplayNames)
+                                              .OrderBy(x => x.Name)
+                                              .Where(x => objectTypeNames.Contains(x.ObjectType)).ToArray();
+
+            var propertyIds = properties.Select(x => x.Id).ToArray();
             var proprValues = DynamicPropertyObjectValues.Include(x => x.DictionaryItem.DisplayNames)
-                                                         .Where(x => propertyIds.Contains(x.PropertyId) && x.ObjectId == objectId)
+                                                         .Where(x => propertyIds.Contains(x.PropertyId) && objectIds.Contains(x.ObjectId))
                                                          .ToArray();
 
-            return retVal;
+            return properties;
         }
 
         public DynamicPropertyEntity[] GetDynamicPropertiesByIds(string[] ids)

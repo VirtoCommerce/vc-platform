@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -20,36 +18,23 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult :  IEquatable<VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult" /> class.
-        /// </summary>
-        public VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Gets or Sets TotalCount
         /// </summary>
         [DataMember(Name="totalCount", EmitDefaultValue=false)]
         public int? TotalCount { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets NewCount
         /// </summary>
         [DataMember(Name="newCount", EmitDefaultValue=false)]
         public int? NewCount { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets NotifyEvents
         /// </summary>
         [DataMember(Name="notifyEvents", EmitDefaultValue=false)]
         public List<VirtoCommercePlatformCorePushNotificationsPushNotification> NotifyEvents { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -61,7 +46,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  TotalCount: ").Append(TotalCount).Append("\n");
             sb.Append("  NewCount: ").Append(NewCount).Append("\n");
             sb.Append("  NotifyEvents: ").Append(NotifyEvents).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -126,21 +110,19 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.TotalCount != null)
                     hash = hash * 59 + this.TotalCount.GetHashCode();
-                
+
                 if (this.NewCount != null)
                     hash = hash * 59 + this.NewCount.GetHashCode();
-                
+
                 if (this.NotifyEvents != null)
                     hash = hash * 59 + this.NotifyEvents.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

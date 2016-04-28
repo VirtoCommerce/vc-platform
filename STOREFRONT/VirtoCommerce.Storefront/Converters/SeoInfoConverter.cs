@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Omu.ValueInjecter;
+﻿using Omu.ValueInjecter;
 using VirtoCommerce.Storefront.Model;
 
 namespace VirtoCommerce.Storefront.Converters
@@ -11,11 +7,18 @@ namespace VirtoCommerce.Storefront.Converters
     {
         public static SeoInfo ToWebModel(this VirtoCommerce.Client.Model.VirtoCommerceDomainCommerceModelSeoInfo seoDto)
         {
-            var retVal = new SeoInfo();
-            retVal.InjectFrom(seoDto);
-            retVal.Slug = seoDto.SemanticUrl;
-            retVal.Title = seoDto.PageTitle;
-            retVal.Language = String.IsNullOrEmpty(seoDto.LanguageCode) ? Language.InvariantLanguage : new Language(seoDto.LanguageCode);
+            SeoInfo retVal = null;
+
+            if (seoDto != null)
+            {
+                retVal = new SeoInfo();
+                retVal.InjectFrom(seoDto);
+
+                retVal.Slug = seoDto.SemanticUrl;
+                retVal.Title = seoDto.PageTitle;
+                retVal.Language = string.IsNullOrEmpty(seoDto.LanguageCode) ? Language.InvariantLanguage : new Language(seoDto.LanguageCode);
+            }
+
             return retVal;
         }
     }

@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -20,64 +18,47 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommerceCatalogModuleWebExportImportCsvExportInfo :  IEquatable<VirtoCommerceCatalogModuleWebExportImportCsvExportInfo>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebExportImportCsvExportInfo" /> class.
-        /// </summary>
-        public VirtoCommerceCatalogModuleWebExportImportCsvExportInfo()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Gets or Sets CatalogId
         /// </summary>
         [DataMember(Name="catalogId", EmitDefaultValue=false)]
         public string CatalogId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ProductIds
         /// </summary>
         [DataMember(Name="productIds", EmitDefaultValue=false)]
         public List<string> ProductIds { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CategoryIds
         /// </summary>
         [DataMember(Name="categoryIds", EmitDefaultValue=false)]
         public List<string> CategoryIds { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets PriceListId
         /// </summary>
         [DataMember(Name="priceListId", EmitDefaultValue=false)]
         public string PriceListId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets FulfilmentCenterId
         /// </summary>
         [DataMember(Name="fulfilmentCenterId", EmitDefaultValue=false)]
         public string FulfilmentCenterId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Currency
         /// </summary>
         [DataMember(Name="currency", EmitDefaultValue=false)]
         public string Currency { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Configuration
         /// </summary>
         [DataMember(Name="configuration", EmitDefaultValue=false)]
         public VirtoCommerceCatalogModuleWebExportImportCsvProductMappingConfiguration Configuration { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -93,7 +74,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  FulfilmentCenterId: ").Append(FulfilmentCenterId).Append("\n");
             sb.Append("  Currency: ").Append(Currency).Append("\n");
             sb.Append("  Configuration: ").Append(Configuration).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -178,33 +158,31 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.CatalogId != null)
                     hash = hash * 59 + this.CatalogId.GetHashCode();
-                
+
                 if (this.ProductIds != null)
                     hash = hash * 59 + this.ProductIds.GetHashCode();
-                
+
                 if (this.CategoryIds != null)
                     hash = hash * 59 + this.CategoryIds.GetHashCode();
-                
+
                 if (this.PriceListId != null)
                     hash = hash * 59 + this.PriceListId.GetHashCode();
-                
+
                 if (this.FulfilmentCenterId != null)
                     hash = hash * 59 + this.FulfilmentCenterId.GetHashCode();
-                
+
                 if (this.Currency != null)
                     hash = hash * 59 + this.Currency.GetHashCode();
-                
+
                 if (this.Configuration != null)
                     hash = hash * 59 + this.Configuration.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

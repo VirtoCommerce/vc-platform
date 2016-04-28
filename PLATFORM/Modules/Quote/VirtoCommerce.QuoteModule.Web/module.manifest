@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <module>
   <id>VirtoCommerce.Quote</id>
-  <version>2.9.0</version>
-  <platformVersion>2.9.0</platformVersion>
+  <version>2.10.0</version>
+  <platformVersion>2.10.0</platformVersion>
   <dependencies>
-    <dependency id="VirtoCommerce.Core" version="2.9.0" />
+    <dependency id="VirtoCommerce.Core" version="2.10.0" />
   </dependencies>
 
   <title>Quote module</title>
-  <description>Quoter enables business users to execute quote requests online. Once initiated, an online conversation takes place with internal users who interact with the business user’s request. The internal user can set prices for quantity breaks or discounts. The quote is then made available to the business user online. The business user can accept the quote and place the order, continue the conversation, or reject the quote. </description>
+  <description>Quoter enables business users to execute quote requests online. Once initiated, an online conversation takes place with internal users who interact with the business user's request. The internal user can set prices for quantity breaks or discounts. The quote is then made available to the business user online. The business user can accept the quote and place the order, continue the conversation, or reject the quote.</description>
   <authors>
     <author>Virto Commerce</author>
   </authors>
@@ -49,9 +49,15 @@
         <name>Quotes.QuoteRequestNewNumberTemplate</name>
         <valueType>string</valueType>
         <defaultValue>RFQ{0:yyMMdd}-{1:D5}</defaultValue>
-        <title>New Quote Request number template (e.g., "RFQ{0:yyMMdd}-{1:D5}")</title>
+        <title>RFQ number template</title>
         <description>The template (pattern) that will be used to generate the number for new Quote Request. Parameters: 0 - date (the UTC time of number generation); 1 - the sequence number.</description>
       </setting>
+		<setting>
+			<name>Quotes.EnableQuotes</name>
+			<valueType>boolean</valueType>
+			<title>Enable quotes</title>
+			<description>Flag activated quotes in store</description>			
+		</setting>
       <setting>
         <name>Quotes.ExportImport.Description</name>
         <valueType>string</valueType>

@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -20,31 +18,19 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommerceCartModuleWebModelSearchResult :  IEquatable<VirtoCommerceCartModuleWebModelSearchResult>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceCartModuleWebModelSearchResult" /> class.
-        /// </summary>
-        public VirtoCommerceCartModuleWebModelSearchResult()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Gets or sets the value of search result total shopping cart count
         /// </summary>
         /// <value>Gets or sets the value of search result total shopping cart count</value>
         [DataMember(Name="totalCount", EmitDefaultValue=false)]
         public int? TotalCount { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the collection of search result shopping carts
         /// </summary>
         /// <value>Gets or sets the collection of search result shopping carts</value>
         [DataMember(Name="shopingCarts", EmitDefaultValue=false)]
         public List<VirtoCommerceCartModuleWebModelShoppingCart> ShopingCarts { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -55,7 +41,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("class VirtoCommerceCartModuleWebModelSearchResult {\n");
             sb.Append("  TotalCount: ").Append(TotalCount).Append("\n");
             sb.Append("  ShopingCarts: ").Append(ShopingCarts).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -115,18 +100,16 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.TotalCount != null)
                     hash = hash * 59 + this.TotalCount.GetHashCode();
-                
+
                 if (this.ShopingCarts != null)
                     hash = hash * 59 + this.ShopingCarts.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

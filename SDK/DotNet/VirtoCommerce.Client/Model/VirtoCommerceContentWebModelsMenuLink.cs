@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -20,92 +18,72 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommerceContentWebModelsMenuLink :  IEquatable<VirtoCommerceContentWebModelsMenuLink>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceContentWebModelsMenuLink" /> class.
-        /// </summary>
-        public VirtoCommerceContentWebModelsMenuLink()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
+
         /// <summary>
         /// Title of menu link element, displayed as link text or link title
         /// </summary>
         /// <value>Title of menu link element, displayed as link text or link title</value>
         [DataMember(Name="title", EmitDefaultValue=false)]
         public string Title { get; set; }
-  
-        
+
         /// <summary>
         /// Url of menu link element, inserts in href attribute of link
         /// </summary>
         /// <value>Url of menu link element, inserts in href attribute of link</value>
         [DataMember(Name="url", EmitDefaultValue=false)]
         public string Url { get; set; }
-  
-        
+
         /// <summary>
         /// Priority of menu link element, the higher the value, the higher in the list
         /// </summary>
         /// <value>Priority of menu link element, the higher the value, the higher in the list</value>
         [DataMember(Name="priority", EmitDefaultValue=false)]
         public int? Priority { get; set; }
-  
-        
+
         /// <summary>
         /// If true - will displayed in the list, if false - not
         /// </summary>
         /// <value>If true - will displayed in the list, if false - not</value>
         [DataMember(Name="isActive", EmitDefaultValue=false)]
         public bool? IsActive { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets MenuLinkListId
         /// </summary>
         [DataMember(Name="menuLinkListId", EmitDefaultValue=false)]
         public string MenuLinkListId { get; set; }
-  
-        
+
         /// <summary>
         /// Each link element can have an associated object like Product, Category, Promotion, etc.\r\n            Is a primary key of associated object
         /// </summary>
         /// <value>Each link element can have an associated object like Product, Category, Promotion, etc.\r\n            Is a primary key of associated object</value>
         [DataMember(Name="associatedObjectId", EmitDefaultValue=false)]
         public string AssociatedObjectId { get; set; }
-  
-        
+
         /// <summary>
         /// Display name for associated object
         /// </summary>
         /// <value>Display name for associated object</value>
         [DataMember(Name="associatedObjectName", EmitDefaultValue=false)]
         public string AssociatedObjectName { get; set; }
-  
-        
+
         /// <summary>
         /// Associated object type
         /// </summary>
         /// <value>Associated object type</value>
         [DataMember(Name="associatedObjectType", EmitDefaultValue=false)]
         public string AssociatedObjectType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets SecurityScopes
         /// </summary>
         [DataMember(Name="securityScopes", EmitDefaultValue=false)]
         public List<string> SecurityScopes { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -124,7 +102,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  AssociatedObjectName: ").Append(AssociatedObjectName).Append("\n");
             sb.Append("  AssociatedObjectType: ").Append(AssociatedObjectType).Append("\n");
             sb.Append("  SecurityScopes: ").Append(SecurityScopes).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -224,42 +201,40 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 if (this.Title != null)
                     hash = hash * 59 + this.Title.GetHashCode();
-                
+
                 if (this.Url != null)
                     hash = hash * 59 + this.Url.GetHashCode();
-                
+
                 if (this.Priority != null)
                     hash = hash * 59 + this.Priority.GetHashCode();
-                
+
                 if (this.IsActive != null)
                     hash = hash * 59 + this.IsActive.GetHashCode();
-                
+
                 if (this.MenuLinkListId != null)
                     hash = hash * 59 + this.MenuLinkListId.GetHashCode();
-                
+
                 if (this.AssociatedObjectId != null)
                     hash = hash * 59 + this.AssociatedObjectId.GetHashCode();
-                
+
                 if (this.AssociatedObjectName != null)
                     hash = hash * 59 + this.AssociatedObjectName.GetHashCode();
-                
+
                 if (this.AssociatedObjectType != null)
                     hash = hash * 59 + this.AssociatedObjectType.GetHashCode();
-                
+
                 if (this.SecurityScopes != null)
                     hash = hash * 59 + this.SecurityScopes.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

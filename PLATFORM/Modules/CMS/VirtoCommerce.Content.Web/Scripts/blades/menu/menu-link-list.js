@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.contentModule')
-.controller('virtoCommerce.contentModule.menuLinkListController', ['$scope', 'virtoCommerce.contentModule.menus', 'virtoCommerce.contentModule.stores', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'virtoCommerce.contentModule.menuLinkList-associationTypesService', function ($scope, menus, menusStores, bladeNavigationService, dialogService, associationTypesService) {
+.controller('virtoCommerce.contentModule.menuLinkListController', ['$rootScope', '$scope', 'virtoCommerce.contentModule.menus', 'virtoCommerce.storeModule.stores', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'virtoCommerce.contentModule.menuLinkList-associationTypesService', function ($rootScope, $scope, menus, menusStores, bladeNavigationService, dialogService, associationTypesService) {
     var blade = $scope.blade;
     blade.updatePermission = 'content:update';
     blade.selectedItemIds = [];
@@ -113,6 +113,7 @@
                     blade.newList = false;
                     blade.isLoading = false;
                     blade.origEntity = angular.copy(blade.currentEntity);
+                    $rootScope.$broadcast("cms-menus-changed", blade.chosenStoreId);
                 },
                 function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
             }
@@ -156,6 +157,7 @@
                     menus.delete({ storeId: blade.chosenStoreId, listId: blade.chosenListId }, function () {
                         $scope.bladeClose();
                         blade.parentBlade.initialize();
+                        $rootScope.$broadcast("cms-menus-changed", blade.chosenStoreId);
                     },
                     function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
                 }
@@ -215,24 +217,16 @@
 
     blade.getFlag = function (lang) {
         switch (lang) {
-            case 'ru-RU':
-                return 'ru';
-
             case 'en-US':
                 return 'us';
-
             case 'fr-FR':
                 return 'fr';
-
             case 'zh-CN':
                 return 'ch';
-
             case 'ru-RU':
                 return 'ru';
-
             case 'ja-JP':
                 return 'jp';
-
             case 'de-DE':
                 return 'de';
         }

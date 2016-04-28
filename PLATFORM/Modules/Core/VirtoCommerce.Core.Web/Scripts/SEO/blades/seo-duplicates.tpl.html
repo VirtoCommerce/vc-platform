@@ -1,0 +1,51 @@
+﻿<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <div class="table-wrapper">
+                <form name="formScope" class="form">
+                    <table class="table" ng-init="setForm(formScope)">
+                        <thead>
+                            <tr>
+                                <th class="table-col">{{ 'core.blades.seo-duplicates.labels.semanticUrl' | translate }}</th>
+                                <!--<th class="table-col">{{ 'core.blades.seo-duplicates.labels.container' | translate }}</th>-->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-item" ng-repeat-start="data in blade.currentEntities" ng-class="{'__selected': blade.selectedNodeId===data.id}" ng-click="blade.selectedNodeId = data.id">
+                                <td class="table-head" colspan="1">
+                                    <span>{{data.objectType}}: {{data.name}}</span>
+                                </td>
+                            </tr>
+                            <tr class="table-item" ng-repeat-end ng-class="{'__selected': blade.selectedNodeId===data.id}" ng-click="blade.selectedNodeId = data.id">
+                                <td class="table-col">
+                                    <ng-form name="valuesForm">
+                                        <div class="form-input">
+                                            <input ng-model="data.semanticUrl" required ui-validate="{invalidUrl: 'semanticUrlValidator($value)'}" name="semanticUrl" placeholder="{{'core.blades.seo-detail.placeholders.url-keyword' | translate}}" autocomplete="off" />
+                                        </div>
+                                        <div class="form-error">
+                                            <span ng-show="valuesForm.semanticUrl.$error.required">{{'core.blades.seo-detail.validations.url-keyword-required' | translate}}</span>
+                                            <span ng-show="valuesForm.semanticUrl.$error.invalidUrl">{{'core.blades.seo-detail.validations.url-keyword-invalid' | translate}}</span>
+                                            <!--<span ng-show="valuesForm.semanticUrl.$error.duplicate">{{'core.blades.seo-detail.validations.url-keyword-duplicate' | translate}}</span>-->
+                                            <span ng-show="blade.conflicts[data.id]">{{'core.blades.seo-detail.validations.url-keyword-duplicate' | translate}}</span>
+                                        </div>
+
+                                    </ng-form>
+                                </td>
+                                <!--<td class="table-col">
+                                    <div class="form-input">
+                                        <ui-select ng-model="data.storeId" name="store">
+                                            <ui-select-match allow-clear placeholder="{{'core.blades.seo-detail.placeholders.store' | translate}}">{{$select.selected.name}}</ui-select-match>
+                                            <ui-select-choices repeat="store.id as store in blade.stores | filter: { name: $select.search }">
+                                                <span ng-bind-html="store.name | highlight: $select.search"></span>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
+                                </td>-->
+                            </tr>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

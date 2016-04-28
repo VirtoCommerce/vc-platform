@@ -2,49 +2,68 @@
 <div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
-            <form name="formScope" class="form" novalidate>
-                <fieldset>
-                    <legend>{{ 'core.blades.seo-detail.labels.url-keyword' | translate }}</legend>
-                    <div class="form-group" ng-repeat="data in blade.currentEntities | orderBy:'languageCode'">
-                        <ng-form name="form">
-                            <div class="form-input __langs">
-                                <span class="flag flag-{{data.languageCode.substr(3).toLowerCase()}}"></span>
-                                <input ng-model="data.semanticUrl" name="semanticUrl{{$index}}" required ui-validate=" 'semanticUrlValidator($value)' " placeholder="{{ 'core.blades.seo-detail.placeholders.url-keyword' | translate }}" />
-                            </div>
-                            <div class="form-error" data-ng-show="form.semanticUrl{{$index}}.$dirty">
-                                <span data-ng-show="form.semanticUrl{{$index}}.$error.required">{{ 'core.blades.seo-detail.validations.url-keyword-required' | translate }}</span>
-                                <span data-ng-show="form.semanticUrl{{$index}}.$error.validator">{{ 'core.blades.seo-detail.validations.url-keyword-invalid' | translate }}</span>
-                            </div>
-                        </ng-form>
+            <form name="formScope" class="form">
+                <div>
+                    <label class="form-label">{{'core.blades.seo-detail.labels.is-active' | translate}}</label>
+                    <div class="form-input">
+                        <label class="form-label __switch">
+                            <input type="checkbox" ng-model="blade.currentEntity.isActive" />
+                            <span class="switch"></span>
+                        </label>
                     </div>
-                </fieldset>
-                <fieldset>
-                    <legend>{{ 'core.blades.seo-detail.labels.page-title' | translate }}</legend>
-                    <div class="form-group" ng-repeat="data in blade.currentEntities | orderBy:'languageCode'">
-                        <div class="form-input __langs">
-                            <span class="flag flag-{{data.languageCode.substr(3).toLowerCase()}}"></span>
-                            <input ng-model="data.pageTitle" class="form-control" placeholder="{{ 'core.blades.seo-detail.placeholders.page-title' | translate }}" />
-                        </div>
+                </div>
+                <div class="form-group" ng-if="!blade.fixedStoreId">
+                    <label class="form-label">{{'core.blades.seo-detail.labels.store' | translate}}</label>
+                    <div class="form-input">
+                        <ui-select ng-model="blade.currentEntity.storeId">
+                            <ui-select-match allow-clear placeholder="{{'core.blades.seo-detail.placeholders.store' | translate}}">{{$select.selected.name}}</ui-select-match>
+                            <ui-select-choices repeat="store.id as store in blade.stores | filter: { name: $select.search }">
+                                <span ng-bind-html="store.name | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
                     </div>
-                </fieldset>
-                <fieldset>
-                    <legend>{{ 'core.blades.seo-detail.labels.meta-description' | translate }}</legend>
-                    <div class="form-group" ng-repeat="data in blade.currentEntities | orderBy:'languageCode'">
-                        <div class="form-input __langs">
-                            <span class="flag flag-{{data.languageCode.substr(3).toLowerCase()}}"></span>
-                            <textarea ng-model="data.metaDescription" class="form-control" cols="30" rows="3" placeholder="{{ 'core.blades.seo-detail.placeholders.meta-description' | translate }}"></textarea>
-                        </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">{{'core.blades.seo-detail.labels.language' | translate}}</label>
+                    <div class="form-input">
+                        <ui-select ng-model="blade.currentEntity.languageCode">
+                            <ui-select-match allow-clear placeholder="{{'core.blades.seo-detail.placeholders.language' | translate}}">{{$select.selected}}</ui-select-match>
+                            <ui-select-choices repeat="x in blade.languages">
+                                <span class="flag flag-{{x.substr(3).toLowerCase()}}"></span>
+                                <span ng-bind-html="x"></span>
+                            </ui-select-choices>
+                        </ui-select>
                     </div>
-                </fieldset>
-                <fieldset>
-                    <legend>{{ 'core.blades.seo-detail.labels.alternative-text' | translate }}</legend>
-                   <div class="form-group" ng-repeat="data in blade.currentEntities | orderBy:'languageCode'">
-                        <div class="form-input __langs">
-                            <span class="flag flag-{{data.languageCode.substr(3).toLowerCase()}}"></span>
-                            <input ng-model="data.imageAltDescription" class="form-control" placeholder="{{ 'core.blades.seo-detail.placeholders.alternative-text' | translate }}" />
-                        </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">{{'core.blades.seo-detail.labels.url-keyword' | translate}}</label>
+                    <div class="form-input">
+                        <input ng-model="blade.currentEntity.semanticUrl" name="semanticUrl" required ui-validate="{invalidUrl:'semanticUrlValidator($value)', duplicate:'duplicateValidator($value)'}" ui-validate-watch="'blade.currentEntity.storeId'" placeholder="{{'core.blades.seo-detail.placeholders.url-keyword' | translate}}" autocomplete="off" />
                     </div>
-                </fieldset>
+                    <div class="form-error" ng-show="formScope.semanticUrl.$dirty">
+                        <span ng-show="formScope.semanticUrl.$error.required">{{'core.blades.seo-detail.validations.url-keyword-required' | translate}}</span>
+                        <span ng-show="formScope.semanticUrl.$error.invalidUrl">{{'core.blades.seo-detail.validations.url-keyword-invalid' | translate}}</span>
+                        <span ng-show="formScope.semanticUrl.$error.duplicate">{{'core.blades.seo-detail.validations.url-keyword-duplicate' | translate}}</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">{{'core.blades.seo-detail.labels.page-title' | translate}}</label>
+                    <div class="form-input">
+                        <input ng-model="blade.currentEntity.pageTitle" class="form-control" placeholder="{{'core.blades.seo-detail.placeholders.page-title' | translate}}" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">{{'core.blades.seo-detail.labels.meta-description' | translate}}</label>
+                    <div class="form-input">
+                        <textarea ng-model="blade.currentEntity.metaDescription" class="form-control" cols="30" rows="3" placeholder="{{'core.blades.seo-detail.placeholders.meta-description' | translate}}"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">{{'core.blades.seo-detail.labels.alternative-text' | translate}}</label>
+                    <div class="form-input">
+                        <input ng-model="blade.currentEntity.imageAltDescription" class="form-control" placeholder="{{'core.blades.seo-detail.placeholders.alternative-text' | translate}}" />
+                    </div>
+                </div>
             </form>
         </div>
     </div>

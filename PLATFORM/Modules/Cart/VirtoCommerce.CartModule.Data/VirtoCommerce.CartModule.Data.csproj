@@ -33,8 +33,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CacheManager.Core, Version=0.7.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\CacheManager.Core.0.7.1\lib\net45\CacheManager.Core.dll</HintPath>
+    <Reference Include="CacheManager.Core, Version=0.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\CacheManager.Core.0.8.0\lib\net45\CacheManager.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Common.Logging, Version=3.1.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
@@ -124,6 +124,14 @@
     <Compile Include="Migrations\201603140730182_ValidationType.Designer.cs">
       <DependentUpon>201603140730182_ValidationType.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201604120843475_LineItemCategoryOptional.cs" />
+    <Compile Include="Migrations\201604120843475_LineItemCategoryOptional.Designer.cs">
+      <DependentUpon>201604120843475_LineItemCategoryOptional.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201604251544449_ShipmentTotalsFields.cs" />
+    <Compile Include="Migrations\201604251544449_ShipmentTotalsFields.Designer.cs">
+      <DependentUpon>201604251544449_ShipmentTotalsFields.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\AddressEntity.cs" />
     <Compile Include="Model\DiscountEntity.cs" />
@@ -136,7 +144,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\ICartRepository.cs" />
     <Compile Include="Repositories\CartRepositoryImpl.cs" />
-    <Compile Include="Services\DefaultCartTotalsCalculator.cs" />
     <Compile Include="Services\ShoppingCartSearchServiceImpl.cs" />
     <Compile Include="Services\ShoppingCartServiceImpl.cs" />
   </ItemGroup>
@@ -194,6 +201,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201603140730182_ValidationType.resx">
       <DependentUpon>201603140730182_ValidationType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201604120843475_LineItemCategoryOptional.resx">
+      <DependentUpon>201604120843475_LineItemCategoryOptional.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201604251544449_ShipmentTotalsFields.resx">
+      <DependentUpon>201604251544449_ShipmentTotalsFields.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

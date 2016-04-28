@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// Class representing the result of ListEntries search.
     /// </summary>
@@ -20,31 +18,19 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommerceCatalogModuleWebModelListEntrySearchResult :  IEquatable<VirtoCommerceCatalogModuleWebModelListEntrySearchResult>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceCatalogModuleWebModelListEntrySearchResult" /> class.
-        /// </summary>
-        public VirtoCommerceCatalogModuleWebModelListEntrySearchResult()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Gets or sets the total entries count matching the search criteria.
         /// </summary>
         /// <value>Gets or sets the total entries count matching the search criteria.</value>
         [DataMember(Name="totalCount", EmitDefaultValue=false)]
         public int? TotalCount { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or sets the list entries.
         /// </summary>
         /// <value>Gets or sets the list entries.</value>
         [DataMember(Name="listEntries", EmitDefaultValue=false)]
         public List<VirtoCommerceCatalogModuleWebModelListEntry> ListEntries { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -55,7 +41,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("class VirtoCommerceCatalogModuleWebModelListEntrySearchResult {\n");
             sb.Append("  TotalCount: ").Append(TotalCount).Append("\n");
             sb.Append("  ListEntries: ").Append(ListEntries).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -115,18 +100,16 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.TotalCount != null)
                     hash = hash * 59 + this.TotalCount.GetHashCode();
-                
+
                 if (this.ListEntries != null)
                     hash = hash * 59 + this.ListEntries.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

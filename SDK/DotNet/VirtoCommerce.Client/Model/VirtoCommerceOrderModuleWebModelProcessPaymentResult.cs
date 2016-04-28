@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// Represent process payment request result
     /// </summary>
@@ -20,66 +18,49 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommerceOrderModuleWebModelProcessPaymentResult :  IEquatable<VirtoCommerceOrderModuleWebModelProcessPaymentResult>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceOrderModuleWebModelProcessPaymentResult" /> class.
-        /// </summary>
-        public VirtoCommerceOrderModuleWebModelProcessPaymentResult()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Gets or Sets NewPaymentStatus
         /// </summary>
         [DataMember(Name="newPaymentStatus", EmitDefaultValue=false)]
         public string NewPaymentStatus { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets PaymentMethodType
         /// </summary>
         [DataMember(Name="paymentMethodType", EmitDefaultValue=false)]
         public string PaymentMethodType { get; set; }
-  
-        
+
         /// <summary>
         /// Redirect url used for OutSite payment processing
         /// </summary>
         /// <value>Redirect url used for OutSite payment processing</value>
         [DataMember(Name="redirectUrl", EmitDefaultValue=false)]
         public string RedirectUrl { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets IsSuccess
         /// </summary>
         [DataMember(Name="isSuccess", EmitDefaultValue=false)]
         public bool? IsSuccess { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Error
         /// </summary>
         [DataMember(Name="error", EmitDefaultValue=false)]
         public string Error { get; set; }
-  
-        
+
         /// <summary>
         /// Generated Html form used for InSite payment processing
         /// </summary>
         /// <value>Generated Html form used for InSite payment processing</value>
         [DataMember(Name="htmlForm", EmitDefaultValue=false)]
         public string HtmlForm { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets OuterId
         /// </summary>
         [DataMember(Name="outerId", EmitDefaultValue=false)]
         public string OuterId { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -95,7 +76,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Error: ").Append(Error).Append("\n");
             sb.Append("  HtmlForm: ").Append(HtmlForm).Append("\n");
             sb.Append("  OuterId: ").Append(OuterId).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -180,33 +160,31 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.NewPaymentStatus != null)
                     hash = hash * 59 + this.NewPaymentStatus.GetHashCode();
-                
+
                 if (this.PaymentMethodType != null)
                     hash = hash * 59 + this.PaymentMethodType.GetHashCode();
-                
+
                 if (this.RedirectUrl != null)
                     hash = hash * 59 + this.RedirectUrl.GetHashCode();
-                
+
                 if (this.IsSuccess != null)
                     hash = hash * 59 + this.IsSuccess.GetHashCode();
-                
+
                 if (this.Error != null)
                     hash = hash * 59 + this.Error.GetHashCode();
-                
+
                 if (this.HtmlForm != null)
                     hash = hash * 59 + this.HtmlForm.GetHashCode();
-                
+
                 if (this.OuterId != null)
                     hash = hash * 59 + this.OuterId.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

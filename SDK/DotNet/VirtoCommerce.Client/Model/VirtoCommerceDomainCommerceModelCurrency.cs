@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -20,57 +18,41 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommerceDomainCommerceModelCurrency :  IEquatable<VirtoCommerceDomainCommerceModelCurrency>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCommerceModelCurrency" /> class.
-        /// </summary>
-        public VirtoCommerceDomainCommerceModelCurrency()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Gets or Sets Code
         /// </summary>
         [DataMember(Name="code", EmitDefaultValue=false)]
         public string Code { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets IsPrimary
         /// </summary>
         [DataMember(Name="isPrimary", EmitDefaultValue=false)]
         public bool? IsPrimary { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ExchangeRate
         /// </summary>
         [DataMember(Name="exchangeRate", EmitDefaultValue=false)]
         public double? ExchangeRate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Symbol
         /// </summary>
         [DataMember(Name="symbol", EmitDefaultValue=false)]
         public string Symbol { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CustomFormatting
         /// </summary>
         [DataMember(Name="customFormatting", EmitDefaultValue=false)]
         public string CustomFormatting { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -85,7 +67,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  ExchangeRate: ").Append(ExchangeRate).Append("\n");
             sb.Append("  Symbol: ").Append(Symbol).Append("\n");
             sb.Append("  CustomFormatting: ").Append(CustomFormatting).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -165,30 +146,28 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Code != null)
                     hash = hash * 59 + this.Code.GetHashCode();
-                
+
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
-                
+
                 if (this.IsPrimary != null)
                     hash = hash * 59 + this.IsPrimary.GetHashCode();
-                
+
                 if (this.ExchangeRate != null)
                     hash = hash * 59 + this.ExchangeRate.GetHashCode();
-                
+
                 if (this.Symbol != null)
                     hash = hash * 59 + this.Symbol.GetHashCode();
-                
+
                 if (this.CustomFormatting != null)
                     hash = hash * 59 + this.CustomFormatting.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

@@ -27,7 +27,7 @@
 							{{property.name}}
 							<a href="" ng-click="editDictionary(property)" ng-show="property.isDictionary" class="form-edit"><i class="form-ico fa fa-pencil"></i></a>
 						</label>
-						<va-generic-value-input ng-model="property" languages="languages" get-dictionary-values="getDictionaryValues" />
+						<va-generic-value-input ng-model="property" languages="languages" get-dictionary-values="getDictionaryValues"></va-generic-value-input>
 					</div>
 
 					<div class="note" ng-if="blade.entity.dynamicProperties.length == 0">{{ 'marketing.blades.items.content-item-details.labels.none' | translate }}</div>

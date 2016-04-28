@@ -7,6 +7,9 @@ using VirtoCommerce.Domain.Tax.Model;
 
 namespace VirtoCommerce.Domain.Tax.Services
 {
+    /// <summary>
+    /// Tax provider factory
+    /// </summary>
     public interface ITaxService
     {
         TaxProvider[] GetAllTaxProviders();

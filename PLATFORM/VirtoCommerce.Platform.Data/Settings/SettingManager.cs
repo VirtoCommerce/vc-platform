@@ -20,6 +20,7 @@ namespace VirtoCommerce.Platform.Data.Settings
         private readonly Func<IPlatformRepository> _repositoryFactory;
         private readonly ICacheManager<object> _cacheManager;
         private readonly ModuleManifest[] _predefinedManifests;
+        private readonly IDictionary<string, List<SettingEntry>> _runtimeModuleSettingsMap = new Dictionary<string, List<SettingEntry>>();
 
         [CLSCompliant(false)]
         public SettingsManager(IModuleManifestProvider manifestProvider, Func<IPlatformRepository> repositoryFactory, ICacheManager<object> cacheManager, ModuleManifest[] predefinedManifests)
@@ -176,7 +177,7 @@ namespace VirtoCommerce.Platform.Data.Settings
             if (manifest != null && manifest.Settings != null && manifest.Settings.Any())
             {
                 var settingEntities = GetAllEntities();
-
+                //Load settings from requested module manifest with values from database
                 foreach (var group in manifest.Settings)
                 {
                     if (group.Settings != null)
@@ -186,14 +187,43 @@ namespace VirtoCommerce.Platform.Data.Settings
                             var dbSetting = settingEntities.FirstOrDefault(x => x.Name == setting.Name && x.ObjectId == null);
 
                             var settingEntry = setting.ToModel(dbSetting, group.Name);
-							settingEntry.ModuleId = moduleId;
-							result.Add(settingEntry);
+                            settingEntry.ModuleId = moduleId;
+                            result.Add(settingEntry);
                         }
                     }
                 }
+                //Try add runtime defined settings for requested module
+                if (!string.IsNullOrEmpty(moduleId))
+                {
+                    List<SettingEntry> runtimeSettings;
+                    if (_runtimeModuleSettingsMap.TryGetValue(moduleId, out runtimeSettings))
+                    {
+                        result.AddRange(runtimeSettings);
+                    }
+                }
             }
-
             return result.OrderBy(x => x.Name).ToArray();
+        }
+
+        /// <summary>
+        /// Register module settings runtime
+        /// </summary>
+        /// <param name="moduleId"></param>
+        /// <param name="settings"></param>
+        public void  RegisterModuleSettings(string moduleId, params SettingEntry[] settings)
+        {
+            //check module exist
+            if(!GetModules().Any(x=>x.Id == moduleId))
+            {
+                throw new ArgumentException(moduleId + " not exist");
+            }
+            List<SettingEntry> moduleSettings;
+            if(!_runtimeModuleSettingsMap.TryGetValue(moduleId, out moduleSettings))
+            {
+                moduleSettings = new List<SettingEntry>();
+                _runtimeModuleSettingsMap[moduleId] = moduleSettings;
+            }
+            moduleSettings.AddRange(settings);
         }
 
         public void SaveSettings(SettingEntry[] settings)

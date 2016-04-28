@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -20,358 +18,311 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommerceDomainCatalogModelCatalogProduct :  IEquatable<VirtoCommerceDomainCatalogModelCatalogProduct>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceDomainCatalogModelCatalogProduct" /> class.
-        /// </summary>
-        public VirtoCommerceDomainCatalogModelCatalogProduct()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Gets or Sets Code
         /// </summary>
         [DataMember(Name="code", EmitDefaultValue=false)]
         public string Code { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ManufacturerPartNumber
         /// </summary>
         [DataMember(Name="manufacturerPartNumber", EmitDefaultValue=false)]
         public string ManufacturerPartNumber { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Gtin
         /// </summary>
         [DataMember(Name="gtin", EmitDefaultValue=false)]
         public string Gtin { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CatalogId
         /// </summary>
         [DataMember(Name="catalogId", EmitDefaultValue=false)]
         public string CatalogId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Catalog
         /// </summary>
         [DataMember(Name="catalog", EmitDefaultValue=false)]
         public VirtoCommerceDomainCatalogModelCatalog Catalog { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CategoryId
         /// </summary>
         [DataMember(Name="categoryId", EmitDefaultValue=false)]
         public string CategoryId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Category
         /// </summary>
         [DataMember(Name="category", EmitDefaultValue=false)]
         public VirtoCommerceDomainCatalogModelCategory Category { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets MainProductId
         /// </summary>
         [DataMember(Name="mainProductId", EmitDefaultValue=false)]
         public string MainProductId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets MainProduct
         /// </summary>
         [DataMember(Name="mainProduct", EmitDefaultValue=false)]
         public VirtoCommerceDomainCatalogModelCatalogProduct MainProduct { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets IsBuyable
         /// </summary>
         [DataMember(Name="isBuyable", EmitDefaultValue=false)]
         public bool? IsBuyable { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets IsActive
         /// </summary>
         [DataMember(Name="isActive", EmitDefaultValue=false)]
         public bool? IsActive { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets TrackInventory
         /// </summary>
         [DataMember(Name="trackInventory", EmitDefaultValue=false)]
         public bool? TrackInventory { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets IndexingDate
         /// </summary>
         [DataMember(Name="indexingDate", EmitDefaultValue=false)]
         public DateTime? IndexingDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets MaxQuantity
         /// </summary>
         [DataMember(Name="maxQuantity", EmitDefaultValue=false)]
         public int? MaxQuantity { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets MinQuantity
         /// </summary>
         [DataMember(Name="minQuantity", EmitDefaultValue=false)]
         public int? MinQuantity { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ProductType
         /// </summary>
         [DataMember(Name="productType", EmitDefaultValue=false)]
         public string ProductType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets WeightUnit
         /// </summary>
         [DataMember(Name="weightUnit", EmitDefaultValue=false)]
         public string WeightUnit { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Weight
         /// </summary>
         [DataMember(Name="weight", EmitDefaultValue=false)]
         public double? Weight { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets MeasureUnit
         /// </summary>
         [DataMember(Name="measureUnit", EmitDefaultValue=false)]
         public string MeasureUnit { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Height
         /// </summary>
         [DataMember(Name="height", EmitDefaultValue=false)]
         public double? Height { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Length
         /// </summary>
         [DataMember(Name="length", EmitDefaultValue=false)]
         public double? Length { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Width
         /// </summary>
         [DataMember(Name="width", EmitDefaultValue=false)]
         public double? Width { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets EnableReview
         /// </summary>
         [DataMember(Name="enableReview", EmitDefaultValue=false)]
         public bool? EnableReview { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets MaxNumberOfDownload
         /// </summary>
         [DataMember(Name="maxNumberOfDownload", EmitDefaultValue=false)]
         public int? MaxNumberOfDownload { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets DownloadExpiration
         /// </summary>
         [DataMember(Name="downloadExpiration", EmitDefaultValue=false)]
         public DateTime? DownloadExpiration { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets DownloadType
         /// </summary>
         [DataMember(Name="downloadType", EmitDefaultValue=false)]
         public string DownloadType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets HasUserAgreement
         /// </summary>
         [DataMember(Name="hasUserAgreement", EmitDefaultValue=false)]
         public bool? HasUserAgreement { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ShippingType
         /// </summary>
         [DataMember(Name="shippingType", EmitDefaultValue=false)]
         public string ShippingType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets TaxType
         /// </summary>
         [DataMember(Name="taxType", EmitDefaultValue=false)]
         public string TaxType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Vendor
         /// </summary>
         [DataMember(Name="vendor", EmitDefaultValue=false)]
         public string Vendor { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets StartDate
         /// </summary>
         [DataMember(Name="startDate", EmitDefaultValue=false)]
         public DateTime? StartDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets EndDate
         /// </summary>
         [DataMember(Name="endDate", EmitDefaultValue=false)]
         public DateTime? EndDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Properties
         /// </summary>
         [DataMember(Name="properties", EmitDefaultValue=false)]
         public List<VirtoCommerceDomainCatalogModelProperty> Properties { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets PropertyValues
         /// </summary>
         [DataMember(Name="propertyValues", EmitDefaultValue=false)]
         public List<VirtoCommerceDomainCatalogModelPropertyValue> PropertyValues { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Images
         /// </summary>
         [DataMember(Name="images", EmitDefaultValue=false)]
         public List<VirtoCommerceDomainCatalogModelImage> Images { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Assets
         /// </summary>
         [DataMember(Name="assets", EmitDefaultValue=false)]
         public List<VirtoCommerceDomainCatalogModelAsset> Assets { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Links
         /// </summary>
         [DataMember(Name="links", EmitDefaultValue=false)]
         public List<VirtoCommerceDomainCatalogModelCategoryLink> Links { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Variations
         /// </summary>
         [DataMember(Name="variations", EmitDefaultValue=false)]
         public List<VirtoCommerceDomainCatalogModelCatalogProduct> Variations { get; set; }
-  
-        
+
+        /// <summary>
+        /// Gets or Sets SeoObjectType
+        /// </summary>
+        [DataMember(Name="seoObjectType", EmitDefaultValue=false)]
+        public string SeoObjectType { get; private set; }
+
         /// <summary>
         /// Gets or Sets SeoInfos
         /// </summary>
         [DataMember(Name="seoInfos", EmitDefaultValue=false)]
         public List<VirtoCommerceDomainCommerceModelSeoInfo> SeoInfos { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Reviews
         /// </summary>
         [DataMember(Name="reviews", EmitDefaultValue=false)]
         public List<VirtoCommerceDomainCatalogModelEditorialReview> Reviews { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Associations
         /// </summary>
         [DataMember(Name="associations", EmitDefaultValue=false)]
         public List<VirtoCommerceDomainCatalogModelProductAssociation> Associations { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Prices
         /// </summary>
         [DataMember(Name="prices", EmitDefaultValue=false)]
         public List<VirtoCommerceDomainPricingModelPrice> Prices { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Inventories
         /// </summary>
         [DataMember(Name="inventories", EmitDefaultValue=false)]
         public List<VirtoCommerceDomainInventoryModelInventoryInfo> Inventories { get; set; }
-  
-        
+
+        /// <summary>
+        /// Gets or Sets Outlines
+        /// </summary>
+        [DataMember(Name="outlines", EmitDefaultValue=false)]
+        public List<VirtoCommerceDomainCatalogModelOutline> Outlines { get; set; }
+
         /// <summary>
         /// Gets or Sets CreatedDate
         /// </summary>
         [DataMember(Name="createdDate", EmitDefaultValue=false)]
         public DateTime? CreatedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedDate
         /// </summary>
         [DataMember(Name="modifiedDate", EmitDefaultValue=false)]
         public DateTime? ModifiedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedBy
         /// </summary>
         [DataMember(Name="createdBy", EmitDefaultValue=false)]
         public string CreatedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedBy
         /// </summary>
         [DataMember(Name="modifiedBy", EmitDefaultValue=false)]
         public string ModifiedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -419,17 +370,18 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Assets: ").Append(Assets).Append("\n");
             sb.Append("  Links: ").Append(Links).Append("\n");
             sb.Append("  Variations: ").Append(Variations).Append("\n");
+            sb.Append("  SeoObjectType: ").Append(SeoObjectType).Append("\n");
             sb.Append("  SeoInfos: ").Append(SeoInfos).Append("\n");
             sb.Append("  Reviews: ").Append(Reviews).Append("\n");
             sb.Append("  Associations: ").Append(Associations).Append("\n");
             sb.Append("  Prices: ").Append(Prices).Append("\n");
             sb.Append("  Inventories: ").Append(Inventories).Append("\n");
+            sb.Append("  Outlines: ").Append(Outlines).Append("\n");
             sb.Append("  CreatedDate: ").Append(CreatedDate).Append("\n");
             sb.Append("  ModifiedDate: ").Append(ModifiedDate).Append("\n");
             sb.Append("  CreatedBy: ").Append(CreatedBy).Append("\n");
             sb.Append("  ModifiedBy: ").Append(ModifiedBy).Append("\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -662,6 +614,11 @@ namespace VirtoCommerce.Client.Model
                     this.Variations.SequenceEqual(other.Variations)
                 ) && 
                 (
+                    this.SeoObjectType == other.SeoObjectType ||
+                    this.SeoObjectType != null &&
+                    this.SeoObjectType.Equals(other.SeoObjectType)
+                ) && 
+                (
                     this.SeoInfos == other.SeoInfos ||
                     this.SeoInfos != null &&
                     this.SeoInfos.SequenceEqual(other.SeoInfos)
@@ -685,6 +642,11 @@ namespace VirtoCommerce.Client.Model
                     this.Inventories == other.Inventories ||
                     this.Inventories != null &&
                     this.Inventories.SequenceEqual(other.Inventories)
+                ) && 
+                (
+                    this.Outlines == other.Outlines ||
+                    this.Outlines != null &&
+                    this.Outlines.SequenceEqual(other.Outlines)
                 ) && 
                 (
                     this.CreatedDate == other.CreatedDate ||
@@ -724,159 +686,163 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Code != null)
                     hash = hash * 59 + this.Code.GetHashCode();
-                
+
                 if (this.ManufacturerPartNumber != null)
                     hash = hash * 59 + this.ManufacturerPartNumber.GetHashCode();
-                
+
                 if (this.Gtin != null)
                     hash = hash * 59 + this.Gtin.GetHashCode();
-                
+
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
-                
+
                 if (this.CatalogId != null)
                     hash = hash * 59 + this.CatalogId.GetHashCode();
-                
+
                 if (this.Catalog != null)
                     hash = hash * 59 + this.Catalog.GetHashCode();
-                
+
                 if (this.CategoryId != null)
                     hash = hash * 59 + this.CategoryId.GetHashCode();
-                
+
                 if (this.Category != null)
                     hash = hash * 59 + this.Category.GetHashCode();
-                
+
                 if (this.MainProductId != null)
                     hash = hash * 59 + this.MainProductId.GetHashCode();
-                
+
                 if (this.MainProduct != null)
                     hash = hash * 59 + this.MainProduct.GetHashCode();
-                
+
                 if (this.IsBuyable != null)
                     hash = hash * 59 + this.IsBuyable.GetHashCode();
-                
+
                 if (this.IsActive != null)
                     hash = hash * 59 + this.IsActive.GetHashCode();
-                
+
                 if (this.TrackInventory != null)
                     hash = hash * 59 + this.TrackInventory.GetHashCode();
-                
+
                 if (this.IndexingDate != null)
                     hash = hash * 59 + this.IndexingDate.GetHashCode();
-                
+
                 if (this.MaxQuantity != null)
                     hash = hash * 59 + this.MaxQuantity.GetHashCode();
-                
+
                 if (this.MinQuantity != null)
                     hash = hash * 59 + this.MinQuantity.GetHashCode();
-                
+
                 if (this.ProductType != null)
                     hash = hash * 59 + this.ProductType.GetHashCode();
-                
+
                 if (this.WeightUnit != null)
                     hash = hash * 59 + this.WeightUnit.GetHashCode();
-                
+
                 if (this.Weight != null)
                     hash = hash * 59 + this.Weight.GetHashCode();
-                
+
                 if (this.MeasureUnit != null)
                     hash = hash * 59 + this.MeasureUnit.GetHashCode();
-                
+
                 if (this.Height != null)
                     hash = hash * 59 + this.Height.GetHashCode();
-                
+
                 if (this.Length != null)
                     hash = hash * 59 + this.Length.GetHashCode();
-                
+
                 if (this.Width != null)
                     hash = hash * 59 + this.Width.GetHashCode();
-                
+
                 if (this.EnableReview != null)
                     hash = hash * 59 + this.EnableReview.GetHashCode();
-                
+
                 if (this.MaxNumberOfDownload != null)
                     hash = hash * 59 + this.MaxNumberOfDownload.GetHashCode();
-                
+
                 if (this.DownloadExpiration != null)
                     hash = hash * 59 + this.DownloadExpiration.GetHashCode();
-                
+
                 if (this.DownloadType != null)
                     hash = hash * 59 + this.DownloadType.GetHashCode();
-                
+
                 if (this.HasUserAgreement != null)
                     hash = hash * 59 + this.HasUserAgreement.GetHashCode();
-                
+
                 if (this.ShippingType != null)
                     hash = hash * 59 + this.ShippingType.GetHashCode();
-                
+
                 if (this.TaxType != null)
                     hash = hash * 59 + this.TaxType.GetHashCode();
-                
+
                 if (this.Vendor != null)
                     hash = hash * 59 + this.Vendor.GetHashCode();
-                
+
                 if (this.StartDate != null)
                     hash = hash * 59 + this.StartDate.GetHashCode();
-                
+
                 if (this.EndDate != null)
                     hash = hash * 59 + this.EndDate.GetHashCode();
-                
+
                 if (this.Properties != null)
                     hash = hash * 59 + this.Properties.GetHashCode();
-                
+
                 if (this.PropertyValues != null)
                     hash = hash * 59 + this.PropertyValues.GetHashCode();
-                
+
                 if (this.Images != null)
                     hash = hash * 59 + this.Images.GetHashCode();
-                
+
                 if (this.Assets != null)
                     hash = hash * 59 + this.Assets.GetHashCode();
-                
+
                 if (this.Links != null)
                     hash = hash * 59 + this.Links.GetHashCode();
-                
+
                 if (this.Variations != null)
                     hash = hash * 59 + this.Variations.GetHashCode();
-                
+
+                if (this.SeoObjectType != null)
+                    hash = hash * 59 + this.SeoObjectType.GetHashCode();
+
                 if (this.SeoInfos != null)
                     hash = hash * 59 + this.SeoInfos.GetHashCode();
-                
+
                 if (this.Reviews != null)
                     hash = hash * 59 + this.Reviews.GetHashCode();
-                
+
                 if (this.Associations != null)
                     hash = hash * 59 + this.Associations.GetHashCode();
-                
+
                 if (this.Prices != null)
                     hash = hash * 59 + this.Prices.GetHashCode();
-                
+
                 if (this.Inventories != null)
                     hash = hash * 59 + this.Inventories.GetHashCode();
-                
+
+                if (this.Outlines != null)
+                    hash = hash * 59 + this.Outlines.GetHashCode();
+
                 if (this.CreatedDate != null)
                     hash = hash * 59 + this.CreatedDate.GetHashCode();
-                
+
                 if (this.ModifiedDate != null)
                     hash = hash * 59 + this.ModifiedDate.GetHashCode();
-                
+
                 if (this.CreatedBy != null)
                     hash = hash * 59 + this.CreatedBy.GetHashCode();
-                
+
                 if (this.ModifiedBy != null)
                     hash = hash * 59 + this.ModifiedBy.GetHashCode();
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

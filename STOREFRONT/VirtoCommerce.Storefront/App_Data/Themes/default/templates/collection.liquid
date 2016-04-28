@@ -6,7 +6,7 @@
   {% assign has_sidebar = true %}
 {% endif %}
 
-<div class="grid grid-border" ng-controller="categoryController">
+<div class="grid grid-border" ng-controller="productListController">
 
   {% if has_sidebar %}
   <aside class="sidebar grid-item large--one-fifth collection-filters" id="collectionFilters">
@@ -53,7 +53,7 @@
         {% else %}
           {% assign grid_item_width = 'large--one-fifth medium--one-third small--one-half' %}
         {% endif %}
-        {% include 'product-grid-item' %}
+        {% include 'product-grid-item', product: product %}
 
       {% else %}
 
@@ -82,9 +82,9 @@
 
 {% endpaginate %}
 <script>
-    window.products = [];
+    window.productList = [];
     {% for product in collection.products %}
-        window.products.push({
+        window.productList.push({
             id: "{{ product.id }}",
             catalogId: "{{ product.catalog_id }}",
             categoryId: "{{ product.category_id }}"

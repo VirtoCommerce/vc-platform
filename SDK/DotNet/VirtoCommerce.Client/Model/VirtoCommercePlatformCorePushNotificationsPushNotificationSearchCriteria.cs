@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -20,64 +18,47 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommercePlatformCorePushNotificationsPushNotificationSearchCriteria :  IEquatable<VirtoCommercePlatformCorePushNotificationsPushNotificationSearchCriteria>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCorePushNotificationsPushNotificationSearchCriteria" /> class.
-        /// </summary>
-        public VirtoCommercePlatformCorePushNotificationsPushNotificationSearchCriteria()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Gets or Sets Ids
         /// </summary>
         [DataMember(Name="ids", EmitDefaultValue=false)]
         public List<string> Ids { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets OnlyNew
         /// </summary>
         [DataMember(Name="onlyNew", EmitDefaultValue=false)]
         public bool? OnlyNew { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets StartDate
         /// </summary>
         [DataMember(Name="startDate", EmitDefaultValue=false)]
         public DateTime? StartDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets EndDate
         /// </summary>
         [DataMember(Name="endDate", EmitDefaultValue=false)]
         public DateTime? EndDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Start
         /// </summary>
         [DataMember(Name="start", EmitDefaultValue=false)]
         public int? Start { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Count
         /// </summary>
         [DataMember(Name="count", EmitDefaultValue=false)]
         public int? Count { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets OrderBy
         /// </summary>
         [DataMember(Name="orderBy", EmitDefaultValue=false)]
         public string OrderBy { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -93,7 +74,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Start: ").Append(Start).Append("\n");
             sb.Append("  Count: ").Append(Count).Append("\n");
             sb.Append("  OrderBy: ").Append(OrderBy).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -178,33 +158,31 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Ids != null)
                     hash = hash * 59 + this.Ids.GetHashCode();
-                
+
                 if (this.OnlyNew != null)
                     hash = hash * 59 + this.OnlyNew.GetHashCode();
-                
+
                 if (this.StartDate != null)
                     hash = hash * 59 + this.StartDate.GetHashCode();
-                
+
                 if (this.EndDate != null)
                     hash = hash * 59 + this.EndDate.GetHashCode();
-                
+
                 if (this.Start != null)
                     hash = hash * 59 + this.Start.GetHashCode();
-                
+
                 if (this.Count != null)
                     hash = hash * 59 + this.Count.GetHashCode();
-                
+
                 if (this.OrderBy != null)
                     hash = hash * 59 + this.OrderBy.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

@@ -31,8 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CacheManager.Core, Version=0.7.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CacheManager.Core.0.7.1\lib\net45\CacheManager.Core.dll</HintPath>
+    <Reference Include="CacheManager.Core, Version=0.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CacheManager.Core.0.8.0\lib\net45\CacheManager.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="DotLiquid, Version=1.0.0.0, Culture=neutral, PublicKeyToken=82e46016ecf9f07c, processorArchitecture=MSIL">
@@ -131,6 +131,7 @@
     <Compile Include="Converters\TagConverter.cs" />
     <Compile Include="Converters\TaxLineConverter.cs" />
     <Compile Include="Converters\TierPriceConverter.cs" />
+    <Compile Include="Converters\VendorConverter.cs" />
     <Compile Include="DotLiquidThemedView.cs" />
     <Compile Include="DotLiquidThemedViewEngine.cs" />
     <Compile Include="Exceptions\SaasCompileException.cs" />
@@ -157,6 +158,8 @@
     <Compile Include="Objects\Comment.cs" />
     <Compile Include="Objects\Currency.cs" />
     <Compile Include="Objects\Customer.cs" />
+    <Compile Include="Objects\Description.cs" />
+    <Compile Include="Objects\Descriptions.cs" />
     <Compile Include="Objects\Discount.cs" />
     <Compile Include="Objects\Form.cs" />
     <Compile Include="Objects\FormErrors.cs" />
@@ -192,6 +195,7 @@
     <Compile Include="Objects\TaxLine.cs" />
     <Compile Include="Objects\TierPrice.cs" />
     <Compile Include="Objects\Variant.cs" />
+    <Compile Include="Objects\Vendor.cs" />
     <Compile Include="Tags\FormTag.cs" />
     <Compile Include="Operators\CommonOperators.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -204,6 +208,7 @@
     <Folder Include="Operators\Objects\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>

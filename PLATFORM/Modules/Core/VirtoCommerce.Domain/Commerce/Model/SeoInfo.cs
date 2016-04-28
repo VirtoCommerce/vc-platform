@@ -1,10 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Domain.Commerce.Model
 {
     public class SeoInfo : AuditableEntity, ILanguageSupport, ICloneable
     {
+        public SeoInfo()
+        {
+            IsActive = true;
+        }
+        public string Name { get; set; }
         /// <summary>
         /// Slug
         /// </summary>
@@ -38,7 +44,7 @@ namespace VirtoCommerce.Domain.Commerce.Model
         /// Active/Inactive
         /// </summary>
         public bool IsActive { get; set; }
-
+      
         #region ILanguageSupport Members
         public string LanguageCode { get; set; }
         #endregion

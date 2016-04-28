@@ -11,9 +11,9 @@ namespace VirtoCommerce.Domain.Customer.Model
 {
     public abstract class Member : AuditableEntity, IHasDynamicProperties
     {
-        public Member(string memberType)
+        public Member()
         {
-            MemberType = memberType;
+            MemberType = this.GetType().Name;
         }
         public string Name { get; set; }
         public string MemberType { get; set; }

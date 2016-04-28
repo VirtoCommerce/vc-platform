@@ -6,7 +6,7 @@
 		if (angular.isDefined(operation.operationType)) {
 			if (operation.operationType.toLowerCase() == 'customerorder') {
 
-				operation._subTotal = _.reduce(operation.items, function (memo, x) { return memo + x.price * x.quantity; }, 0);
+				operation._subTotal = _.reduce(operation.items, function (memo, x) { return memo + x.basePrice * x.quantity; }, 0);
 				operation._shippingTotal = _.reduce(operation.shipments, function (memo, x) { return memo + x.sum; }, 0);
 
 				operation._discountTotal = operation.discountAmount ? parseFloat(operation.discountAmount) : 0;
@@ -31,8 +31,7 @@
 				operation._shippingTotal = Math.round(operation._shippingTotal * 100) / 100;
 				operation._discountTotal = Math.round(operation._discountTotal * 100) / 100;
 				operation._taxTotal = Math.round(operation._taxTotal * 100) / 100;
-				operation._total = operation._subTotal + operation._shippingTotal + operation._taxTotal;
-				operation._total = Math.round(operation._total * 100) / 100;
+				operation._total = Math.round(operation.sum * 100) / 100;
 				
 			}
 			else if (operation.operationType.toLowerCase() == 'shipment') {

@@ -13,6 +13,7 @@ using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using VirtoCommerce.CoreModule.Data.Payment;
+using VirtoCommerce.CoreModule.Data.Services;
 using VirtoCommerce.Domain.Tax.Services;
 using VirtoCommerce.CoreModule.Data.Tax;
 using VirtoCommerce.Domain.Commerce.Model;
@@ -48,10 +49,10 @@ namespace VirtoCommerce.CoreModule.Web
 
             //#endregion
 
-            #region Fulfillment
+            #region Commerce
 
             _container.RegisterType<IСommerceRepository>(new InjectionFactory(c => new CommerceRepositoryImpl(_connectionStringName, new EntityPrimaryKeyGeneratorInterceptor(), _container.Resolve<AuditableInterceptor>())));
-            _container.RegisterType<ICommerceService, CommerceServiceImpl>();
+            _container.RegisterType<ICommerceService, CommerceServiceImpl>();         
 
             #endregion
 

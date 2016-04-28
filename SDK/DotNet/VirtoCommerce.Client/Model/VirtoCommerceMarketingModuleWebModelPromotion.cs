@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// Represent marketing promotion, define applicable rules and rewards amount in marketing system
     /// </summary>
@@ -20,148 +18,120 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommerceMarketingModuleWebModelPromotion :  IEquatable<VirtoCommerceMarketingModuleWebModelPromotion>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceMarketingModuleWebModelPromotion" /> class.
+        /// It contains the name of realizing this type promotion.\r\n            DynamicPromotion is build in implementation allow to construct promotion with dynamic conditions and rewards.\r\n            For complex custom scenarios user may define personal &#39;hard-coded&#39; promotion types
         /// </summary>
-        public VirtoCommerceMarketingModuleWebModelPromotion()
-        {
-            
-        }
-
-        
-        /// <summary>
-        /// It contains the name of realizing this type promotion.\r\n            DynamicPromotion is build in implementation allow to construct promotion with dynamic conditions and rewards.\r\n            For complex custom scenarios user may define personal 'hard-coded' promotion types
-        /// </summary>
-        /// <value>It contains the name of realizing this type promotion.\r\n            DynamicPromotion is build in implementation allow to construct promotion with dynamic conditions and rewards.\r\n            For complex custom scenarios user may define personal 'hard-coded' promotion types</value>
+        /// <value>It contains the name of realizing this type promotion.\r\n            DynamicPromotion is build in implementation allow to construct promotion with dynamic conditions and rewards.\r\n            For complex custom scenarios user may define personal &#39;hard-coded&#39; promotion types</value>
         [DataMember(Name="type", EmitDefaultValue=false)]
         public string Type { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
         /// Store id that is covered by this promotion
         /// </summary>
         /// <value>Store id that is covered by this promotion</value>
         [DataMember(Name="store", EmitDefaultValue=false)]
         public string Store { get; set; }
-  
-        
+
         /// <summary>
         /// Catalog id that is covered by this promotion
         /// </summary>
         /// <value>Catalog id that is covered by this promotion</value>
         [DataMember(Name="catalog", EmitDefaultValue=false)]
         public string Catalog { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Description
         /// </summary>
         [DataMember(Name="description", EmitDefaultValue=false)]
         public string Description { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets IsActive
         /// </summary>
         [DataMember(Name="isActive", EmitDefaultValue=false)]
         public bool? IsActive { get; set; }
-  
-        
+
         /// <summary>
         /// Maximum promotion usage count
         /// </summary>
         /// <value>Maximum promotion usage count</value>
         [DataMember(Name="maxUsageCount", EmitDefaultValue=false)]
         public int? MaxUsageCount { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets MaxPersonalUsageCount
         /// </summary>
         [DataMember(Name="maxPersonalUsageCount", EmitDefaultValue=false)]
         public int? MaxPersonalUsageCount { get; set; }
-  
-        
+
         /// <summary>
         /// List of coupons codes which may be used for activate that promotion
         /// </summary>
         /// <value>List of coupons codes which may be used for activate that promotion</value>
         [DataMember(Name="coupons", EmitDefaultValue=false)]
         public List<string> Coupons { get; set; }
-  
-        
+
         /// <summary>
         /// Used for choosing in combination
         /// </summary>
         /// <value>Used for choosing in combination</value>
         [DataMember(Name="priority", EmitDefaultValue=false)]
         public int? Priority { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets StartDate
         /// </summary>
         [DataMember(Name="startDate", EmitDefaultValue=false)]
         public DateTime? StartDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets EndDate
         /// </summary>
         [DataMember(Name="endDate", EmitDefaultValue=false)]
         public DateTime? EndDate { get; set; }
-  
-        
+
         /// <summary>
         /// Dynamic conditions tree determine the applicability of this promotion and reward definition
         /// </summary>
         /// <value>Dynamic conditions tree determine the applicability of this promotion and reward definition</value>
         [DataMember(Name="dynamicExpression", EmitDefaultValue=false)]
         public VirtoCommerceDomainMarketingModelPromoDynamicExpressionTree DynamicExpression { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedDate
         /// </summary>
         [DataMember(Name="createdDate", EmitDefaultValue=false)]
         public DateTime? CreatedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedDate
         /// </summary>
         [DataMember(Name="modifiedDate", EmitDefaultValue=false)]
         public DateTime? ModifiedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedBy
         /// </summary>
         [DataMember(Name="createdBy", EmitDefaultValue=false)]
         public string CreatedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedBy
         /// </summary>
         [DataMember(Name="modifiedBy", EmitDefaultValue=false)]
         public string ModifiedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -188,7 +158,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  CreatedBy: ").Append(CreatedBy).Append("\n");
             sb.Append("  ModifiedBy: ").Append(ModifiedBy).Append("\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -328,66 +297,64 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Type != null)
                     hash = hash * 59 + this.Type.GetHashCode();
-                
+
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
-                
+
                 if (this.Store != null)
                     hash = hash * 59 + this.Store.GetHashCode();
-                
+
                 if (this.Catalog != null)
                     hash = hash * 59 + this.Catalog.GetHashCode();
-                
+
                 if (this.Description != null)
                     hash = hash * 59 + this.Description.GetHashCode();
-                
+
                 if (this.IsActive != null)
                     hash = hash * 59 + this.IsActive.GetHashCode();
-                
+
                 if (this.MaxUsageCount != null)
                     hash = hash * 59 + this.MaxUsageCount.GetHashCode();
-                
+
                 if (this.MaxPersonalUsageCount != null)
                     hash = hash * 59 + this.MaxPersonalUsageCount.GetHashCode();
-                
+
                 if (this.Coupons != null)
                     hash = hash * 59 + this.Coupons.GetHashCode();
-                
+
                 if (this.Priority != null)
                     hash = hash * 59 + this.Priority.GetHashCode();
-                
+
                 if (this.StartDate != null)
                     hash = hash * 59 + this.StartDate.GetHashCode();
-                
+
                 if (this.EndDate != null)
                     hash = hash * 59 + this.EndDate.GetHashCode();
-                
+
                 if (this.DynamicExpression != null)
                     hash = hash * 59 + this.DynamicExpression.GetHashCode();
-                
+
                 if (this.CreatedDate != null)
                     hash = hash * 59 + this.CreatedDate.GetHashCode();
-                
+
                 if (this.ModifiedDate != null)
                     hash = hash * 59 + this.ModifiedDate.GetHashCode();
-                
+
                 if (this.CreatedBy != null)
                     hash = hash * 59 + this.CreatedBy.GetHashCode();
-                
+
                 if (this.ModifiedBy != null)
                     hash = hash * 59 + this.ModifiedBy.GetHashCode();
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

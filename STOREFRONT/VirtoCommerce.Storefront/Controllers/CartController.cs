@@ -4,36 +4,23 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.Client.Model;
-using VirtoCommerce.Storefront.Common;
 using VirtoCommerce.Storefront.Converters;
 using VirtoCommerce.Storefront.Model;
-using VirtoCommerce.Storefront.Model.Cart.Services;
 using VirtoCommerce.Storefront.Model.Common;
-using VirtoCommerce.Storefront.Model.Common.Events;
 using VirtoCommerce.Storefront.Model.Common.Exceptions;
-using VirtoCommerce.Storefront.Model.Order.Events;
-using VirtoCommerce.Storefront.Model.Services;
 
 namespace VirtoCommerce.Storefront.Controllers
 {
     public class CartController : StorefrontControllerBase
     {
-        private readonly ICartBuilder _cartBuilder;
         private readonly IOrderModuleApi _orderApi;
-        private readonly IMarketingModuleApi _marketingApi;
         private readonly ICommerceCoreModuleApi _commerceApi;
-        private readonly ICartValidator _cartValidator;
 
-        public CartController(WorkContext workContext, IOrderModuleApi orderApi, IStorefrontUrlBuilder urlBuilder,
-                              ICartBuilder cartBuilder, IMarketingModuleApi marketingApi, ICommerceCoreModuleApi commerceApi,
-                              ICartValidator cartValidator)
+        public CartController(WorkContext workContext, IOrderModuleApi orderApi, IStorefrontUrlBuilder urlBuilder, ICommerceCoreModuleApi commerceApi)
             : base(workContext, urlBuilder)
         {
-            _cartBuilder = cartBuilder;
             _orderApi = orderApi;
-            _marketingApi = marketingApi;
             _commerceApi = commerceApi;
-            _cartValidator = cartValidator;
         }
 
         // GET: /cart
@@ -42,8 +29,8 @@ namespace VirtoCommerce.Storefront.Controllers
         {
             return View("cart", WorkContext);
         }
-       
-      
+
+
         // GET: /cart/checkout
         [HttpGet]
         public ActionResult Checkout()
@@ -63,7 +50,7 @@ namespace VirtoCommerce.Storefront.Controllers
             {
                 throw new StorefrontException("Order not have any payment with PreparedForm type");
             }
-            var processingResult = await _orderApi.OrderModuleProcessOrderPaymentsAsync(null, order.Id, incomingPayment.Id);
+            var processingResult = await _orderApi.OrderModuleProcessOrderPaymentsAsync(order.Id, incomingPayment.Id);
 
             WorkContext.PaymentFormHtml = processingResult.HtmlForm;
 
@@ -114,7 +101,7 @@ namespace VirtoCommerce.Storefront.Controllers
         {
             var order = await _orderApi.OrderModuleGetByNumberAsync(orderNumber);
 
-            if (order == null || order != null && order.CustomerId != WorkContext.CurrentCustomer.Id)
+            if (order == null || order.CustomerId != WorkContext.CurrentCustomer.Id)
             {
                 return HttpNotFound();
             }
@@ -123,6 +110,5 @@ namespace VirtoCommerce.Storefront.Controllers
 
             return View("thanks", WorkContext);
         }
-       
     }
 }

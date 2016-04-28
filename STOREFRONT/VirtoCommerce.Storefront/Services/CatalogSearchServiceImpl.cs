@@ -49,12 +49,17 @@ namespace VirtoCommerce.Storefront.Services
             {
                 var taskList = new List<Task>();
 
-                if ((responseGroup | ItemResponseGroup.Inventory) == responseGroup)
+                if (responseGroup.HasFlag(ItemResponseGroup.ItemAssociations))
+                {
+                    taskList.Add(LoadProductsAssociationsAsync(allProducts));
+                }
+
+                if (responseGroup.HasFlag(ItemResponseGroup.Inventory))
                 {
                     taskList.Add(LoadProductsInventoriesAsync(allProducts));
                 }
 
-                if ((responseGroup | ItemResponseGroup.ItemWithPrices) == responseGroup)
+                if (responseGroup.HasFlag(ItemResponseGroup.ItemWithPrices))
                 {
                     await _pricingService.EvaluateProductPricesAsync(allProducts);
                     if ((responseGroup | ItemResponseGroup.ItemWithDiscounts) == responseGroup)
@@ -200,7 +205,15 @@ namespace VirtoCommerce.Storefront.Services
             await _promotionEvaluator.EvaluateDiscountsAsync(promotionContext, products);
         }
 
-
+        private async Task LoadProductsAssociationsAsync(IEnumerable<Product> products)
+        {
+            var allAssociations = products.SelectMany(x => x.Associations);
+            var associatedProducts = await GetProductsAsync(allAssociations.Select(x=>x.ProductId).Distinct().ToArray(), ItemResponseGroup.ItemInfo | ItemResponseGroup.ItemWithPrices | ItemResponseGroup.Seo);
+            foreach (var association in allAssociations)
+            {
+                association.Product = associatedProducts.FirstOrDefault(x => x.Id == association.ProductId);
+            }
+        }
         private async Task LoadProductsInventoriesAsync(IEnumerable<Product> products)
         {
             var inventories = await _inventoryModuleApi.InventoryModuleGetProductsInventoriesAsync(products.Select(x => x.Id).ToList());

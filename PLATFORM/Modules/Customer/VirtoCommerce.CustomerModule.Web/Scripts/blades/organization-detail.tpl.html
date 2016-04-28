@@ -1,33 +1,34 @@
-﻿<div class="blade-content">
+﻿<div class="blade-static __bottom" ng-include="'$(Platform)/Scripts/common/templates/create.tpl.html'" ng-if="blade.isNew"></div>
+<div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block clearfix">
             <form class="form" name="detailForm">
                 <fieldset>
-                    <div class="form-group" ng-init="setForm(detailForm)">
-                        <label class="form-label">{{ 'customer.blades.organization-detail.labels.name' | translate }}</label>
+                    <div ng-init="setForm(detailForm)">
+                        <label class="form-label">{{'customer.blades.organization-detail.labels.name' | translate}}</label>
                         <div class="form-input">
-                            <input ng-model="blade.currentEntity.name" focus-on="" required placeholder="{{ 'customer.blades.organization-detail.placeholders.name' | translate }}" />
+                            <input ng-model="blade.currentEntity.name" focus-on="" required placeholder="{{'customer.blades.organization-detail.placeholders.name' | translate}}" />
                         </div>
                     </div>
                     <div class="form-group">
-                        <va-widget-container group="organizationDetail1" blade="blade" gridster-opts="{width: 396}"></va-widget-container>
+                        <va-widget-container group="organizationDetail1" blade="blade" gridster-opts="{columns: 3}"></va-widget-container>
                     </div>
                 </fieldset>
                 <fieldset>
                     <div class="form-group">
-                        <label class="form-label">{{ 'customer.blades.organization-detail.labels.business-category' | translate }}</label>
+                        <label class="form-label">{{'customer.blades.organization-detail.labels.business-category' | translate}}</label>
                         <div class="form-input">
-                            <input ng-model="blade.currentEntity.businessCategory" placeholder="{{ 'customer.blades.organization-detail.placeholders.name' | translate }}" />
+                            <input ng-model="blade.currentEntity.businessCategory" placeholder="{{'customer.blades.organization-detail.placeholders.business-category' | translate}}" />
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">{{ 'customer.blades.organization-detail.labels.description' | translate }}</label>
+                        <label class="form-label">{{'customer.blades.organization-detail.labels.description' | translate}}</label>
                         <div class="form-input">
-                            <textarea class="form-control" cols="30" rows="3" ng-model="blade.currentEntity.description" placeholder="{{ 'customer.blades.organization-detail.placeholders.name' | translate }}"></textarea>
+                            <textarea class="form-control" cols="30" rows="3" ng-model="blade.currentEntity.description" placeholder="{{'customer.blades.organization-detail.placeholders.description' | translate}}"></textarea>
                         </div>
                     </div>
                     <div class="form-group">
-                        <va-widget-container group="organizationDetail2" blade="blade" gridster-opts="{width: 396}"></va-widget-container>
+                        <va-widget-container group="organizationDetail2" blade="blade" gridster-opts="{columns: 3}"></va-widget-container>
                     </div>
                 </fieldset>
             </form>

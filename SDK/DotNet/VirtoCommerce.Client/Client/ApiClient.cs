@@ -63,7 +63,7 @@ namespace VirtoCommerce.Client.Client
         /// <value>The default API client.</value>
         [Obsolete("ApiClient.Default is deprecated, please use 'Configuration.Default.ApiClient' instead.")]
         public static ApiClient Default;
-    
+
         /// <summary>
         /// Gets or sets the Configuration.
         /// </summary>
@@ -75,7 +75,7 @@ namespace VirtoCommerce.Client.Client
         /// </summary>
         /// <value>An instance of the RestClient</value>
         public RestClient RestClient { get; set; }
-    
+
         // Creates and sets up a RestRequest prior to a call.
         protected virtual RestRequest PrepareRequest(
             String path, RestSharp.Method method, Dictionary<String, String> queryParams, Object postBody,
@@ -84,10 +84,10 @@ namespace VirtoCommerce.Client.Client
             String contentType)
         {
             var request = new RestRequest(path, method);
-   
+
             // add path parameter, if any
             foreach(var param in pathParams)
-                request.AddParameter(param.Key, param.Value, ParameterType.UrlSegment); 
+                request.AddParameter(param.Key, param.Value, ParameterType.UrlSegment);
 
             // add header parameter, if any
             foreach(var param in headerParams)
@@ -103,7 +103,9 @@ namespace VirtoCommerce.Client.Client
 
             // add file parameter, if any
             foreach(var param in fileParams)
+            {
                 request.AddFile(param.Value.Name, param.Value.Writer, param.Value.FileName, param.Value.ContentType);
+            }
 
             if (postBody != null) // http body (model or byte[]) parameter
             {
@@ -116,7 +118,7 @@ namespace VirtoCommerce.Client.Client
                     request.AddParameter(contentType, postBody, ParameterType.RequestBody);
                 }
             }
-    
+
             return request;
         }
 
@@ -143,10 +145,14 @@ namespace VirtoCommerce.Client.Client
                 path, method, queryParams, postBody, headerParams, formParams, fileParams,
                 pathParams, contentType);
 
+            // set timeout
+            RestClient.Timeout = Configuration.Timeout;
+            // set user agent
+            RestClient.UserAgent = Configuration.UserAgent;
+
             var response = RestClient.Execute(request);
             return (Object) response;
         }
-
         /// <summary>
         /// Makes the asynchronous HTTP request.
         /// </summary>
@@ -172,7 +178,7 @@ namespace VirtoCommerce.Client.Client
             var response = await RestClient.ExecuteTaskAsync(request);
             return (Object)response;
         }
-    
+
         /// <summary>
         /// Escape string (url-encoded).
         /// </summary>
@@ -182,7 +188,7 @@ namespace VirtoCommerce.Client.Client
         {
             return UrlEncode(str);
         }
-    
+
         /// <summary>
         /// Create FileParameter based on Stream.
         /// </summary>
@@ -196,7 +202,7 @@ namespace VirtoCommerce.Client.Client
             else
                 return FileParameter.Create(name, ReadAsBytes(stream), "no_file_name_provided");
         }
-    
+
         /// <summary>
         /// If parameter is DateTime, output in a formatted string (default ISO 8601), customizable with Configuration.DateTime.
         /// If parameter is a list, join the list with ",".
@@ -217,7 +223,7 @@ namespace VirtoCommerce.Client.Client
                 // Defaults to an ISO 8601, using the known as a Round-trip date/time pattern ("o")
                 // https://msdn.microsoft.com/en-us/library/az4se3k1(v=vs.110).aspx#Anchor_8
                 // For example: 2009-06-15T13:45:30.0000000
-                return ((DateTimeOffset)obj).ToString (Configuration.DateTimeFormat);   
+                return ((DateTimeOffset)obj).ToString (Configuration.DateTimeFormat);
             else if (obj is IList)
             {
                 var flattenedString = new StringBuilder();
@@ -232,7 +238,7 @@ namespace VirtoCommerce.Client.Client
             else
                 return Convert.ToString (obj);
         }
-    
+
         /// <summary>
         /// Deserialize the JSON string into a proper object.
         /// </summary>
@@ -241,16 +247,10 @@ namespace VirtoCommerce.Client.Client
         /// <returns>Object representation of the JSON string.</returns>
         public object Deserialize(IRestResponse response, Type type)
         {
-            byte[] data = response.RawBytes;
-            string content = response.Content;
             IList<Parameter> headers = response.Headers;
-            if (type == typeof(Object)) // return an object
+            if (type == typeof(byte[])) // return byte array
             {
-                return content;
-            }
-            else if (type == typeof(byte[])) // return byte array
-            {
-                return data;
+                return response.RawBytes;
             }
 
             if (type == typeof(Stream))
@@ -267,36 +267,36 @@ namespace VirtoCommerce.Client.Client
                         if (match.Success)
                         {
                             string fileName = filePath + SanitizeFilename(match.Groups[1].Value.Replace("\"", "").Replace("'", ""));
-                            File.WriteAllBytes(fileName, data);
+                            File.WriteAllBytes(fileName, response.RawBytes);
                             return new FileStream(fileName, FileMode.Open);
                         }
                     }
                 }
-                var stream = new MemoryStream(data);
+                var stream = new MemoryStream(response.RawBytes);
                 return stream;
             }
 
             if (type.Name.StartsWith("System.Nullable`1[[System.DateTime")) // return a datetime object
             {
-                return DateTime.Parse(content,  null, System.Globalization.DateTimeStyles.RoundtripKind);
+                return DateTime.Parse(response.Content,  null, System.Globalization.DateTimeStyles.RoundtripKind);
             }
 
             if (type == typeof(String) || type.Name.StartsWith("System.Nullable")) // return primitive type
             {
-                return ConvertType(content, type); 
+                return ConvertType(response.Content, type);
             }
-    
+
             // at this point, it must be a model (json)
             try
             {
-                return JsonConvert.DeserializeObject(content, type);
+                return JsonConvert.DeserializeObject(response.Content, type);
             }
             catch (Exception e)
             {
                 throw new ApiException(500, e.Message);
             }
         }
-    
+
         /// <summary>
         /// Serialize an input (model) into JSON string
         /// </summary>
@@ -313,7 +313,7 @@ namespace VirtoCommerce.Client.Client
                 throw new ApiException(500, e.Message);
             }
         }
-    
+
         /// <summary>
         /// Select the Content-Type header's value from the given content-type array:
         /// if JSON exists in the given array, use it;
@@ -349,7 +349,7 @@ namespace VirtoCommerce.Client.Client
 
             return String.Join(",", accepts);
         }
- 
+
         /// <summary>
         /// Encode string in base64 format.
         /// </summary>
@@ -359,7 +359,7 @@ namespace VirtoCommerce.Client.Client
         {
             return System.Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(text));
         }
-    
+
         /// <summary>
         /// Dynamically cast the object into target type.
         /// Ref: http://stackoverflow.com/questions/4925718/c-dynamic-runtime-cast

@@ -1,19 +1,61 @@
 ﻿<div class="blade-content">
-	<div class="blade-inner">
-		<div class="inner-block">
-			<ul class="list __items" ng-if="blade.currentEntities.length">
-				<li class="list-item __not-icon " ng-click="blade.checkTheme(data)" ng-repeat="data in blade.currentEntities | orderBy:name" ng-class="blade.themeClass(data)">
-					<span class="list-name">
-						{{data.name}}
-					</span>
-				</li>
-			</ul>
-			<div class="note" ng-if="blade.currentEntities.length <= 0">
-				{{ 'content.blades.themes-list.labels.no-data' | translate }}
-				<br />
-				<br />
-				<button class="btn" ng-click="blade.createDefaultTheme()">{{ 'content.commands.add-default-theme' | translate }}</button>
-			</div>
-		</div>
-	</div>
+    <div class="blade-inner">
+        <div class="inner-block" ng-init="setGridOptions({
+                    rowTemplate: 'list.row.html',
+                    virtualizationThreshold: 1000,
+                    rowHeight: 60,
+                    columnDefs: [
+                                { name: 'actions', displayName: '', enableColumnResizing: false, enableSorting: false, width: 30, cellTemplate: 'list-actions.cell.html', pinnedLeft:true },
+                                {
+                                    displayName: 'content.blades.themes-list.labels.name', name: 'name',
+                                    sort: { direction: uiGridConstants.ASC }, cellTemplate: 'list-name.cell.html'
+                                }
+                    ]})">
+            <div class="table-wrapper" ng-if="blade.currentEntities.length">
+                <div ui-grid="gridOptions" ui-grid-auto-resize ui-grid-save-state ui-grid-resize-columns ui-grid-move-columns ui-grid-pinning ui-grid-height></div>
+                <ul class="menu __context" role="menu" id="thl_menu">
+                    <li class="menu-item" ng-click='openDetailsBlade(contextMenuEntity)' va-permission="content:read" security-scopes="contextMenuEntity.securityScopes">
+                        <i class="menu-ico fa fa-edit"></i> {{'platform.commands.manage' | translate}}
+                    </li>
+                    <!--<li class="menu-item" ng-click='clone(contextMenuEntity)' va-permission="content:create">
+                        <i class="menu-ico fa fa-files-o"></i> {{'platform.commands.clone' | translate}}
+                    </li>-->
+                    <li class="menu-item" ng-click='preview(contextMenuEntity)'>
+                        <i class="menu-ico fa fa-eye"></i> {{'content.commands.preview-theme' | translate}}
+                    </li>
+                    <li class="menu-item" ng-click='setActive(contextMenuEntity)' va-permission="content:update" ng-if="blade.defaultThemeName !== contextMenuEntity.name">
+                        <i class="menu-ico fa fa-check"></i> {{'content.commands.set-active' | translate}}
+                    </li>
+                    <li class="menu-item" ng-click='delete(contextMenuEntity)' va-permission="content:delete">
+                        <i class="menu-ico fa fa-trash-o"></i> {{'platform.commands.delete' | translate}}
+                    </li>
+                </ul>
+            </div>
+            <div class="note" ng-if="!blade.currentEntities.length">
+                {{ 'content.blades.themes-list.labels.no-data' | translate }}
+                <br />
+                <br />
+                <button class="btn" ng-click="openBladeNew()">{{ 'content.commands.add-theme' | translate }}</button>
+            </div>
+        </div>
+    </div>
 </div>
+
+<script type="text/ng-template" id="list.row.html">
+    <div ng-click='grid.appScope.blade.selectNode(row.entity)' ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + '-' + col.uid + '-cell'" class="ui-grid-cell" ng-class="{'ui-grid-row-header-cell': col.isRowHeader, '__hovered': grid.appScope.contextMenuEntity === row.entity, '__selected': row.entity.name===grid.appScope.selectedNodeId }" role="{{col.isRowHeader ? 'rowheader' : 'gridcell' }}" ui-grid-cell context-menu="grid.appScope.contextMenuEntity = row.entity" data-target="thl_menu"></div>
+</script>
+
+<script type="text/ng-template" id="list-actions.cell.html">
+    <div class="ui-grid-actions" left-click-menu="grid.appScope.contextMenuEntity = row.entity" data-target="thl_menu">
+        <i class="fa fa-ellipsis-v"></i>
+    </div>
+</script>
+<script type="text/ng-template" id="list-name.cell.html">
+    <div class="ui-grid-cell-contents">
+        <div class="inner-contents">
+            <i class="table-ico fa" ng-class="{'fa-check': grid.appScope.blade.defaultThemeName === row.entity.name}"></i>
+            <div class="table-t">{{COL_FIELD}}</div>
+            <span class="table-status __active" ng-if="grid.appScope.blade.defaultThemeName === row.entity.name">{{ 'content.blades.themes-list.labels.activated' | translate }}</span>
+        </div>
+    </div>
+</script>

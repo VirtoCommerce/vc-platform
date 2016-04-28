@@ -1,10 +1,11 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.newProductWizardController', ['$scope', 'platformWebApp.bladeNavigationService', '$http', function ($scope, bladeNavigationService, $http) {
+.controller('virtoCommerce.catalogModule.newProductWizardController', ['$scope', 'platformWebApp.bladeNavigationService', '$http', 'virtoCommerce.storeModule.stores', function ($scope, bladeNavigationService, $http, stores) {
     var blade = $scope.blade;
     blade.headIcon = blade.item.productType === 'Digital' ? 'fa fa-file-archive-o' : 'fa fa-truck';
 
     var initialName = blade.item.name ? blade.item.name : '';
     var lastGeneratedName = initialName;
+    var storesPromise = stores.query().$promise;
 
     $scope.createItem = function () {
         blade.isLoading = true;
@@ -53,18 +54,21 @@
                 };
                 break;
             case 'seo':
-                initializeSEO(blade.item, function () {
-                    blade.currentEntity = blade.item; // reference for child blade
-                    blade.seoLanguages = _.pluck(getCatalog().languages, 'languageCode');
-
-                    newBlade = {
-                        id: 'seoDetails',
-                        store: { name: 'default store' },
-                        updatePermission: 'catalog:create',
-                        controller: 'virtoCommerce.coreModule.seo.seoDetailController',
-                        template: 'Modules/$(VirtoCommerce.Core)/Scripts/SEO/blades/seo-detail.tpl.html'
-                    };
-                    bladeNavigationService.showBlade(newBlade, blade);
+                initializeSEO(blade.item, function (seoInfo) {
+                    storesPromise.then(function (promiseData) {
+                        newBlade = {
+                            id: 'seoDetails',
+                            data: seoInfo,
+                            isNew: !_.any(blade.item.seoInfos),
+                            seoContainerObject: blade.item,
+                            stores: promiseData,
+                            languages: _.pluck(getCatalog().languages, 'languageCode'),
+                            updatePermission: 'catalog:create',
+                            controller: 'virtoCommerce.coreModule.seo.seoDetailController',
+                            template: 'Modules/$(VirtoCommerce.Core)/Scripts/SEO/blades/seo-detail.tpl.html'
+                        };
+                        bladeNavigationService.showBlade(newBlade, blade);
+                    });
                 });
                 break;
             case 'review':
@@ -121,11 +125,10 @@
     }
 
     function initializeSEO(item, callback) {
-        if (!item.seoInfos)
-            item.seoInfos = [];
-        var data = item.seoInfos;
-        var seoLanguages = _.pluck(getCatalog().languages, 'languageCode');
-        if (data.length < seoLanguages.length) {
+        if (_.any(item.seoInfos)) {
+            callback(item.seoInfos[0]);
+        } else {
+            var retVal = { isActive: true };
             var stringForSlug = item.name;
             _.each(item.properties, function (prop) {
                 _.each(prop.values, function (val) {
@@ -134,25 +137,14 @@
             });
 
             if (stringForSlug) {
-                _.each(seoLanguages, function (lang) {
-                    if (_.every(data, function (seoInfo) { return seoInfo.languageCode.toLowerCase().indexOf(lang.toLowerCase()) < 0; })) {
-                        data.push({ languageCode: lang });
-                    }
-                });
-
                 $http.get('api/catalog/getslug?text=' + stringForSlug)
-                    .success(function (slug) {
-                        _.each(data, function (seo) {
-                            if (angular.isUndefined(seo.semanticUrl)) {
-                                seo.semanticUrl = slug;
-                            }
-                        });
-                        callback();
+                    .then(function (results) {
+                        retVal.semanticUrl = results.data;
+                        callback(retVal);
                     });
             } else
-                callback();
-        } else
-            callback();
+                callback(retVal);
+        }
     }
 
     $scope.$watch('blade.item.properties', function (currentEntities) {

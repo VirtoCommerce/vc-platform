@@ -39,9 +39,9 @@
         <div class="inner-block clearfix">
             <ul class="list __items">
                 <li class="list-item" ng-repeat="data in items track by data.id" ng-class="{'__selected': data.id === selectedNodeId}" ng-click='selectItem($event, data)'>
-                    <i class="list-ico fa" ng-class="data.virtual ? 'fa-cloud' : 'fa-folder'"></i>
-                    <span class="list-name" ng-show="data.virtual">{{ 'catalog.blades.catalog-items-select.labels.virtual' | translate:{ name: data.name } }}</span>
-                    <span class="list-name" ng-hide="data.virtual">{{data.name}}</span>
+                    <i class="list-ico fa" ng-class="data.isVirtual ? 'fa-cloud' : 'fa-folder'"></i>
+                    <span class="list-name" ng-show="data.isVirtual">{{ 'catalog.blades.catalog-items-select.labels.virtual' | translate:{ name: data.name } }}</span>
+                    <span class="list-name" ng-hide="data.isVirtual">{{data.name}}</span>
                 </li>
             </ul>
         </div>

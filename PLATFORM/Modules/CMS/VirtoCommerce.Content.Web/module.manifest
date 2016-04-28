@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <module>
 	<id>VirtoCommerce.Content</id>
-	<version>2.9.0</version>
-	<platformVersion>2.9.0</platformVersion>
+	<version>2.10.0</version>
+	<platformVersion>2.10.0</platformVersion>
 	<dependencies>
-		<dependency id="VirtoCommerce.Core" version="2.9.0" />
-		<dependency id="VirtoCommerce.Store" version="2.9.0" />
+		<dependency id="VirtoCommerce.Core" version="2.10.0" />
+		<dependency id="VirtoCommerce.Store" version="2.10.0" />
 	</dependencies>
 
 	<title>CMS Content module</title>
@@ -34,10 +34,13 @@
 	<settings>
 		<group name="CMS Content|General">
 			<setting>
-				<name>VirtoCommerce.Content.StoragePath</name>
+				<name>VirtoCommerce.Content.BaseThemes</name>
 				<valueType>string</valueType>
-				<defaultValue>..\..\STOREFRONT\VirtoCommerce.Storefront\App_Data\</defaultValue>
-				<title>CMS folder relative, app relative or absolute  path in file system</title>
+				<isArray>true</isArray>
+				<arrayValues>
+					<value>default</value>			
+				</arrayValues>
+				<title>Base names of themes that can be used to create derivative themes in stores (by copy operation)</title>
 			</setting>
 			<setting>
 				<name>VirtoCommerce.Content.ExportImport.Description</name>

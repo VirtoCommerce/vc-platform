@@ -1,0 +1,80 @@
+﻿<div class="blade-static" ng-if="blade.currentEntities.length">
+    <div class="form-group">
+        <div class="form-input __search">
+            <input placeholder="{{'platform.placeholders.search-keyword' | translate }}" ng-model="blade.searchText">
+            <button class="btn __other" style="position: relative;right: 45px;">
+                <i class="btn-ico fa fa-remove" title="Clear" ng-click="blade.searchText=''"></i>
+            </button>
+        </div>
+        <p class="form-count">{{ 'platform.list.count' | translate }}: <span class="count">{{filteredEntities.length}}</span></p>
+    </div>
+</div>
+<div class="blade-content __xlarge-wide">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <div class="form">
+                <div class="tile-group six" ng-repeat-start="data in (filteredEntities = (blade.currentEntities | filter: {store: {name: blade.searchText}})) | orderBy:'store.name'">
+                    <div class="tile double __brand">
+                        <div class="tile-descr" style="line-height:30px">{{data.store.name}}</div>                        
+                        <div class="tile-image">
+                            <img fallback-src="Modules/$(VirtoCommerce.Content)/Content/logo.png" ng-src="{{data.activeThemeName ? ('api/content/themes/' + data.storeId + '?relativeUrl=' + data.activeThemeName +'/logo.png') : 'Modules/$(VirtoCommerce.Content)/Content/logo.png'}}" /></div>
+                    </div>
+                    <div class="tile quadro wide mini __informer" ng-if="!data.activeThemeName" ng-click="blade.openThemes(data.store)">
+                        <p>{{ 'content.blades.content-main.labels.no-active-theme' | translate }}</p>
+                    </div>
+                    <div class="tile quadro wide mini" ng-if="data.activeThemeName">
+                        <div class="tile-t">{{ 'content.blades.content-main.labels.active-theme' | translate }} {{data.activeThemeName}}</div>
+                        <ul class="menu __inline __theme-links">
+                            <li class="menu-item" ng-click="blade.openTheme(data); $event.stopPropagation();">
+                                <a class="menu-link">
+                                    <i class="menu-ico fa fa-edit"></i>
+                                    {{ 'content.blades.content-main.labels.edit-css-html' | translate }}
+                                </a>
+                            </li>
+                            <li class="menu-item" ng-click="blade.previewTheme(data); $event.stopPropagation();">
+                                <a class="menu-link">
+                                    <i class="menu-ico fa fa-eye"></i>
+                                    {{ 'content.blades.content-main.labels.preview-theme' | translate }}
+                                </a>
+                            </li>
+                            <li class="menu-item" ng-click="blade.customizeTheme(data); $event.stopPropagation();">
+                                <a class="menu-link">
+                                    <i class="menu-ico fa fa-wrench"></i>
+                                    {{ 'content.blades.content-main.labels.customize-theme' | translate }}
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="tile" ng-click="blade.openThemes(data.store)">
+                        <div class="tile-descr">{{ 'content.blades.content-main.labels.themes' | translate }}</div>
+                        <div class="tile-count">{{data.themesCount}}</div>
+                        <a class="btn" ng-click="blade.addNewTheme(data); $event.stopPropagation();">{{ 'platform.commands.add' | translate }}</a>
+                    </div>
+                    <div class="tile" ng-click="blade.openPages(data)">
+                        <div class="tile-descr">{{ 'content.blades.content-main.labels.pages' | translate }}</div>
+                        <div class="tile-count">{{data.pagesCount}}</div>
+                        <a class="btn" ng-click="blade.addNewPage(data); $event.stopPropagation();">{{ 'platform.commands.add' | translate }}</a>
+                    </div>
+                    <div class="tile" ng-click="blade.openLinkLists(data)">
+                        <div class="tile-descr">{{ 'content.blades.content-main.labels.link-lists' | translate }}</div>
+                        <div class="tile-count">{{data.listLinksCount}}</div>
+                        <a class="btn" ng-click="blade.addNewLinkList(data); $event.stopPropagation();">{{ 'platform.commands.add' | translate }}</a>
+                    </div>
+                    <div class="tile" ng-click="blade.openBlogs(data)">
+                        <div class="tile-descr">{{ 'content.blades.content-main.labels.blogs' | translate }}</div>
+                        <div class="tile-count">{{data.blogsCount}}</div>
+                        <a class="btn" ng-click="blade.addBlog(data); $event.stopPropagation();">{{ 'platform.commands.add' | translate }}</a>
+                    </div>
+                </div>
+                <div ng-repeat-end class="form-group" ng-if="thereIsWidgetToShow">
+                    <va-widget-container group="contentMainListItem" gridster-opts="{columns: 6}" data="data" blade="blade"></va-widget-container>
+                </div>
+            </div>
+            <p class="text" ng-if="!blade.currentEntities.length">
+                {{ 'content.blades.content-main.labels.no-stores' | translate }}
+                <!--<span va-permission="!store:create">and you have insufficient permissions to create a Store.</span>-->
+                <div va-permission="store:access" ng-if="!blade.currentEntities.length"><a class="list-link" ng-click="openStoresModule()"><i class="form-ico fa fa-archive"></i> Stores</a></div>
+            </p>
+        </div>
+    </div>
+</div>

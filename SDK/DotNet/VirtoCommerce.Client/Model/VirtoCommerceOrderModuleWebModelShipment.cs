@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// Represent customer order shipment operation (document)\r\n            contains information as delivery address, items, dimensions etc.
     /// </summary>
@@ -20,325 +18,273 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommerceOrderModuleWebModelShipment :  IEquatable<VirtoCommerceOrderModuleWebModelShipment>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommerceOrderModuleWebModelShipment" /> class.
-        /// </summary>
-        public VirtoCommerceOrderModuleWebModelShipment()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Customer organization
         /// </summary>
         /// <value>Customer organization</value>
         [DataMember(Name="organizationName", EmitDefaultValue=false)]
         public string OrganizationName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets OrganizationId
         /// </summary>
         [DataMember(Name="organizationId", EmitDefaultValue=false)]
         public string OrganizationId { get; set; }
-  
-        
+
         /// <summary>
         /// Fulfillment center where shipment will be handled
         /// </summary>
         /// <value>Fulfillment center where shipment will be handled</value>
         [DataMember(Name="fulfillmentCenterName", EmitDefaultValue=false)]
         public string FulfillmentCenterName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets FulfillmentCenterId
         /// </summary>
         [DataMember(Name="fulfillmentCenterId", EmitDefaultValue=false)]
         public string FulfillmentCenterId { get; set; }
-  
-        
+
         /// <summary>
         /// Selected shipping method to deliver current shipment
         /// </summary>
         /// <value>Selected shipping method to deliver current shipment</value>
         [DataMember(Name="shippingMethod", EmitDefaultValue=false)]
         public VirtoCommerceOrderModuleWebModelShippingMethod ShippingMethod { get; set; }
-  
-        
+
         /// <summary>
         /// Employee who responsible for handling current shipment
         /// </summary>
         /// <value>Employee who responsible for handling current shipment</value>
         [DataMember(Name="employeeName", EmitDefaultValue=false)]
         public string EmployeeName { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets EmployeeId
         /// </summary>
         [DataMember(Name="employeeId", EmitDefaultValue=false)]
         public string EmployeeId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets DiscountAmount
         /// </summary>
         [DataMember(Name="discountAmount", EmitDefaultValue=false)]
         public double? DiscountAmount { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets WeightUnit
         /// </summary>
         [DataMember(Name="weightUnit", EmitDefaultValue=false)]
         public string WeightUnit { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Weight
         /// </summary>
         [DataMember(Name="weight", EmitDefaultValue=false)]
         public double? Weight { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets MeasureUnit
         /// </summary>
         [DataMember(Name="measureUnit", EmitDefaultValue=false)]
         public string MeasureUnit { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Height
         /// </summary>
         [DataMember(Name="height", EmitDefaultValue=false)]
         public double? Height { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Length
         /// </summary>
         [DataMember(Name="length", EmitDefaultValue=false)]
         public double? Length { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Width
         /// </summary>
         [DataMember(Name="width", EmitDefaultValue=false)]
         public double? Width { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets TaxType
         /// </summary>
         [DataMember(Name="taxType", EmitDefaultValue=false)]
         public string TaxType { get; set; }
-  
-        
+
         /// <summary>
         /// Information about quantity and order items belongs to current shipment
         /// </summary>
         /// <value>Information about quantity and order items belongs to current shipment</value>
         [DataMember(Name="items", EmitDefaultValue=false)]
         public List<VirtoCommerceOrderModuleWebModelShipmentItem> Items { get; set; }
-  
-        
+
         /// <summary>
         /// Information about packages belongs to current shipment
         /// </summary>
         /// <value>Information about packages belongs to current shipment</value>
         [DataMember(Name="packages", EmitDefaultValue=false)]
         public List<VirtoCommerceOrderModuleWebModelShipmentPackage> Packages { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets InPayments
         /// </summary>
         [DataMember(Name="inPayments", EmitDefaultValue=false)]
         public List<VirtoCommerceOrderModuleWebModelPaymentIn> InPayments { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets DeliveryAddress
         /// </summary>
         [DataMember(Name="deliveryAddress", EmitDefaultValue=false)]
         public VirtoCommerceOrderModuleWebModelAddress DeliveryAddress { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Discount
         /// </summary>
         [DataMember(Name="discount", EmitDefaultValue=false)]
         public VirtoCommerceOrderModuleWebModelDiscount Discount { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets TaxDetails
         /// </summary>
         [DataMember(Name="taxDetails", EmitDefaultValue=false)]
         public List<VirtoCommerceDomainCommerceModelTaxDetail> TaxDetails { get; set; }
-  
-        
+
         /// <summary>
         /// Operation type string representation (CustomerOrder, Shipment etc)
         /// </summary>
         /// <value>Operation type string representation (CustomerOrder, Shipment etc)</value>
         [DataMember(Name="operationType", EmitDefaultValue=false)]
         public string OperationType { get; set; }
-  
-        
+
         /// <summary>
         /// Unique user friendly document number (generate automatically based on special algorithm realization)
         /// </summary>
         /// <value>Unique user friendly document number (generate automatically based on special algorithm realization)</value>
         [DataMember(Name="number", EmitDefaultValue=false)]
         public string Number { get; set; }
-  
-        
+
         /// <summary>
         /// Flag can be used to refer to a specific order status in a variety of user scenarios with combination of Status\r\n            (Order completion, Shipment send etc)
         /// </summary>
         /// <value>Flag can be used to refer to a specific order status in a variety of user scenarios with combination of Status\r\n            (Order completion, Shipment send etc)</value>
         [DataMember(Name="isApproved", EmitDefaultValue=false)]
         public bool? IsApproved { get; set; }
-  
-        
+
         /// <summary>
         /// Current operation status may have any values defined by concrete business process
         /// </summary>
         /// <value>Current operation status may have any values defined by concrete business process</value>
         [DataMember(Name="status", EmitDefaultValue=false)]
         public string Status { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Comment
         /// </summary>
         [DataMember(Name="comment", EmitDefaultValue=false)]
         public string Comment { get; set; }
-  
-        
+
         /// <summary>
         /// Currency code
         /// </summary>
         /// <value>Currency code</value>
         [DataMember(Name="currency", EmitDefaultValue=false)]
         public string Currency { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets TaxIncluded
         /// </summary>
         [DataMember(Name="taxIncluded", EmitDefaultValue=false)]
         public bool? TaxIncluded { get; set; }
-  
-        
+
         /// <summary>
         /// Money amount without tax
         /// </summary>
         /// <value>Money amount without tax</value>
         [DataMember(Name="sum", EmitDefaultValue=false)]
         public double? Sum { get; set; }
-  
-        
+
         /// <summary>
         /// Tax total
         /// </summary>
         /// <value>Tax total</value>
         [DataMember(Name="tax", EmitDefaultValue=false)]
         public double? Tax { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets IsCancelled
         /// </summary>
         [DataMember(Name="isCancelled", EmitDefaultValue=false)]
         public bool? IsCancelled { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CancelledDate
         /// </summary>
         [DataMember(Name="cancelledDate", EmitDefaultValue=false)]
         public DateTime? CancelledDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CancelReason
         /// </summary>
         [DataMember(Name="cancelReason", EmitDefaultValue=false)]
         public string CancelReason { get; set; }
-  
-        
+
         /// <summary>
         /// Used for construct hierarchy of operation and represent parent operation id
         /// </summary>
         /// <value>Used for construct hierarchy of operation and represent parent operation id</value>
         [DataMember(Name="parentOperationId", EmitDefaultValue=false)]
         public string ParentOperationId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ChildrenOperations
         /// </summary>
         [DataMember(Name="childrenOperations", EmitDefaultValue=false)]
         public List<VirtoCommerceOrderModuleWebModelOperation> ChildrenOperations { get; set; }
-  
-        
+
         /// <summary>
         /// Used for dynamic properties management, contains object type string
         /// </summary>
         /// <value>Used for dynamic properties management, contains object type string</value>
         [DataMember(Name="objectType", EmitDefaultValue=false)]
         public string ObjectType { get; set; }
-  
-        
+
         /// <summary>
         /// Dynamic properties collections
         /// </summary>
         /// <value>Dynamic properties collections</value>
         [DataMember(Name="dynamicProperties", EmitDefaultValue=false)]
         public List<VirtoCommercePlatformCoreDynamicPropertiesDynamicObjectProperty> DynamicProperties { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedDate
         /// </summary>
         [DataMember(Name="createdDate", EmitDefaultValue=false)]
         public DateTime? CreatedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedDate
         /// </summary>
         [DataMember(Name="modifiedDate", EmitDefaultValue=false)]
         public DateTime? ModifiedDate { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets CreatedBy
         /// </summary>
         [DataMember(Name="createdBy", EmitDefaultValue=false)]
         public string CreatedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ModifiedBy
         /// </summary>
         [DataMember(Name="modifiedBy", EmitDefaultValue=false)]
         public string ModifiedBy { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -389,7 +335,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  CreatedBy: ").Append(CreatedBy).Append("\n");
             sb.Append("  ModifiedBy: ").Append(ModifiedBy).Append("\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -649,138 +594,136 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.OrganizationName != null)
                     hash = hash * 59 + this.OrganizationName.GetHashCode();
-                
+
                 if (this.OrganizationId != null)
                     hash = hash * 59 + this.OrganizationId.GetHashCode();
-                
+
                 if (this.FulfillmentCenterName != null)
                     hash = hash * 59 + this.FulfillmentCenterName.GetHashCode();
-                
+
                 if (this.FulfillmentCenterId != null)
                     hash = hash * 59 + this.FulfillmentCenterId.GetHashCode();
-                
+
                 if (this.ShippingMethod != null)
                     hash = hash * 59 + this.ShippingMethod.GetHashCode();
-                
+
                 if (this.EmployeeName != null)
                     hash = hash * 59 + this.EmployeeName.GetHashCode();
-                
+
                 if (this.EmployeeId != null)
                     hash = hash * 59 + this.EmployeeId.GetHashCode();
-                
+
                 if (this.DiscountAmount != null)
                     hash = hash * 59 + this.DiscountAmount.GetHashCode();
-                
+
                 if (this.WeightUnit != null)
                     hash = hash * 59 + this.WeightUnit.GetHashCode();
-                
+
                 if (this.Weight != null)
                     hash = hash * 59 + this.Weight.GetHashCode();
-                
+
                 if (this.MeasureUnit != null)
                     hash = hash * 59 + this.MeasureUnit.GetHashCode();
-                
+
                 if (this.Height != null)
                     hash = hash * 59 + this.Height.GetHashCode();
-                
+
                 if (this.Length != null)
                     hash = hash * 59 + this.Length.GetHashCode();
-                
+
                 if (this.Width != null)
                     hash = hash * 59 + this.Width.GetHashCode();
-                
+
                 if (this.TaxType != null)
                     hash = hash * 59 + this.TaxType.GetHashCode();
-                
+
                 if (this.Items != null)
                     hash = hash * 59 + this.Items.GetHashCode();
-                
+
                 if (this.Packages != null)
                     hash = hash * 59 + this.Packages.GetHashCode();
-                
+
                 if (this.InPayments != null)
                     hash = hash * 59 + this.InPayments.GetHashCode();
-                
+
                 if (this.DeliveryAddress != null)
                     hash = hash * 59 + this.DeliveryAddress.GetHashCode();
-                
+
                 if (this.Discount != null)
                     hash = hash * 59 + this.Discount.GetHashCode();
-                
+
                 if (this.TaxDetails != null)
                     hash = hash * 59 + this.TaxDetails.GetHashCode();
-                
+
                 if (this.OperationType != null)
                     hash = hash * 59 + this.OperationType.GetHashCode();
-                
+
                 if (this.Number != null)
                     hash = hash * 59 + this.Number.GetHashCode();
-                
+
                 if (this.IsApproved != null)
                     hash = hash * 59 + this.IsApproved.GetHashCode();
-                
+
                 if (this.Status != null)
                     hash = hash * 59 + this.Status.GetHashCode();
-                
+
                 if (this.Comment != null)
                     hash = hash * 59 + this.Comment.GetHashCode();
-                
+
                 if (this.Currency != null)
                     hash = hash * 59 + this.Currency.GetHashCode();
-                
+
                 if (this.TaxIncluded != null)
                     hash = hash * 59 + this.TaxIncluded.GetHashCode();
-                
+
                 if (this.Sum != null)
                     hash = hash * 59 + this.Sum.GetHashCode();
-                
+
                 if (this.Tax != null)
                     hash = hash * 59 + this.Tax.GetHashCode();
-                
+
                 if (this.IsCancelled != null)
                     hash = hash * 59 + this.IsCancelled.GetHashCode();
-                
+
                 if (this.CancelledDate != null)
                     hash = hash * 59 + this.CancelledDate.GetHashCode();
-                
+
                 if (this.CancelReason != null)
                     hash = hash * 59 + this.CancelReason.GetHashCode();
-                
+
                 if (this.ParentOperationId != null)
                     hash = hash * 59 + this.ParentOperationId.GetHashCode();
-                
+
                 if (this.ChildrenOperations != null)
                     hash = hash * 59 + this.ChildrenOperations.GetHashCode();
-                
+
                 if (this.ObjectType != null)
                     hash = hash * 59 + this.ObjectType.GetHashCode();
-                
+
                 if (this.DynamicProperties != null)
                     hash = hash * 59 + this.DynamicProperties.GetHashCode();
-                
+
                 if (this.CreatedDate != null)
                     hash = hash * 59 + this.CreatedDate.GetHashCode();
-                
+
                 if (this.ModifiedDate != null)
                     hash = hash * 59 + this.ModifiedDate.GetHashCode();
-                
+
                 if (this.CreatedBy != null)
                     hash = hash * 59 + this.CreatedBy.GetHashCode();
-                
+
                 if (this.ModifiedBy != null)
                     hash = hash * 59 + this.ModifiedBy.GetHashCode();
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

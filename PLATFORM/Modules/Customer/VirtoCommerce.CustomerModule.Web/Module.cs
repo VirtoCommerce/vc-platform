@@ -1,12 +1,18 @@
 ﻿using System;
-using System.Data.Entity;
+using System.Web.Http;
 using Microsoft.Practices.Unity;
 using VirtoCommerce.CustomerModule.Data.Repositories;
 using VirtoCommerce.CustomerModule.Data.Services;
 using VirtoCommerce.CustomerModule.Web.ExportImport;
+using VirtoCommerce.CustomerModule.Web.JsonConverters;
+using VirtoCommerce.Domain.Customer.Events;
+using VirtoCommerce.Domain.Customer.Model;
 using VirtoCommerce.Domain.Customer.Services;
+using VirtoCommerce.Platform.Core.DynamicProperties;
+using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Modularity;
+using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
@@ -37,11 +43,34 @@ namespace VirtoCommerce.CustomerModule.Web
 
         public override void Initialize()
         {
-            _container.RegisterType<ICustomerRepository>(new InjectionFactory(c => new CustomerRepositoryImpl(_connectionStringName, new EntityPrimaryKeyGeneratorInterceptor(), _container.Resolve<AuditableInterceptor>())));
+            //Member changing event publisher.
+            _container.RegisterType<IEventPublisher<MemberChangingEvent>, EventPublisher<MemberChangingEvent>>();
 
-            _container.RegisterType<IMemberService, MemberServiceImpl>();
+            var memberServiceDecorator = new MemberServiceDecorator();
+            _container.RegisterInstance(memberServiceDecorator);
+            _container.RegisterInstance<IMemberService>(memberServiceDecorator);
+            _container.RegisterInstance<IMemberFactory>(memberServiceDecorator);
+            _container.RegisterInstance<IMemberSearchService>(memberServiceDecorator);
         }
 
+        public override void PostInitialize()
+        {
+            var memberServiceDecorator = _container.Resolve<MemberServiceDecorator>();
+        
+            Func<CustomerRepositoryImpl> customerRepositoryFactory = () => new CustomerRepositoryImpl(_connectionStringName, new EntityPrimaryKeyGeneratorInterceptor(), _container.Resolve<AuditableInterceptor>());
+            var commerceMembersService = new CommerceMembersServiceImpl(customerRepositoryFactory, _container.Resolve<IDynamicPropertyService>(), _container.Resolve<ISecurityService>(), memberServiceDecorator, _container.Resolve<IEventPublisher<MemberChangingEvent>>());
+
+            memberServiceDecorator.RegisterMemberTypes(typeof(Organization), typeof(Contact), typeof(Vendor), typeof(Employee))
+                                  .WithService(commerceMembersService)
+                                  .WithSearchService(commerceMembersService);          
+
+
+            //Next lines allow to use polymorph types in API controller methods
+            var formatters = GlobalConfiguration.Configuration.Formatters;
+            formatters.JsonFormatter.SerializerSettings.Converters.Add(new PolymorphicMemberJsonConverter(memberServiceDecorator));
+
+            base.PostInitialize();
+        }
         #endregion
 
         #region ISupportExportImportModule Members
@@ -66,7 +95,6 @@ namespace VirtoCommerce.CustomerModule.Web
                 return settingManager.GetValue("Customer.ExportImport.Description", String.Empty);
             }
         }
-
         #endregion
     }
 

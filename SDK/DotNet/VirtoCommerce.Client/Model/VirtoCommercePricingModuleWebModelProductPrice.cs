@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -20,37 +18,24 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommercePricingModuleWebModelProductPrice :  IEquatable<VirtoCommercePricingModuleWebModelProductPrice>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommercePricingModuleWebModelProductPrice" /> class.
-        /// </summary>
-        public VirtoCommercePricingModuleWebModelProductPrice()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Gets or Sets ProductId
         /// </summary>
         [DataMember(Name="productId", EmitDefaultValue=false)]
         public string ProductId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ProductName
         /// </summary>
         [DataMember(Name="productName", EmitDefaultValue=false)]
         public string ProductName { get; set; }
-  
-        
+
         /// <summary>
         /// List prices for the products. It includes tiered prices also. (Depending on the quantity, for example)
         /// </summary>
         /// <value>List prices for the products. It includes tiered prices also. (Depending on the quantity, for example)</value>
         [DataMember(Name="prices", EmitDefaultValue=false)]
         public List<VirtoCommercePricingModuleWebModelPrice> Prices { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -62,7 +47,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  ProductId: ").Append(ProductId).Append("\n");
             sb.Append("  ProductName: ").Append(ProductName).Append("\n");
             sb.Append("  Prices: ").Append(Prices).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -127,21 +111,19 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.ProductId != null)
                     hash = hash * 59 + this.ProductId.GetHashCode();
-                
+
                 if (this.ProductName != null)
                     hash = hash * 59 + this.ProductName.GetHashCode();
-                
+
                 if (this.Prices != null)
                     hash = hash * 59 + this.Prices.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }

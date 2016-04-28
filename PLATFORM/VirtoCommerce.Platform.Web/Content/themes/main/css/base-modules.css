@@ -753,14 +753,52 @@ h3
     font-size: 11px;
 }
 
-.note
-{
-    background: rgba(0, 0, 0, .024);
-    border: 1px solid #eee;
-    color: #999;
+.note,
+.note.error,
+.note.success,
+.note.warning,
+.note.info
+{  
+    border-style: solid;
+    border-width: 1px;
     font-size: 14px;
     margin: 20px 0;
     padding: 10px;
+}
+
+.note
+{
+    background: #f9f9f9;
+    border-color: #eee;
+    color: #999;
+}
+
+.error
+{
+    background: #f2dede;
+    border-color: #ebccd1;
+    color: #a94442;
+}
+
+.success
+{
+    background: #dff0d8;
+    border-color: #d6e9c6;
+    color: #3c763d;
+}
+
+.warning
+{
+    background: #fcf8e3;
+    border-color: #faebcc;
+    color: #8a6d3b;
+}
+
+.info
+{
+    background: #d9edf7;
+    border-color: #bce8f1;
+    color: #31708f;
 }
 
 .t,
@@ -887,7 +925,6 @@ h3
             font-size: 12px;
             height: 20px;
             line-height: 18px;
-            max-width: 56px;
             padding: 0 5px;
             text-align: center;
             text-shadow: none;
@@ -1015,7 +1052,6 @@ input::-ms-clear
     display: none;
 }
 
-.error,
 .__error
 {
     color: #e51400;
@@ -1089,7 +1125,7 @@ fieldset + fieldset
         font-size: 12px;
     }
 
-    .form-group .form-error
+    .form-error
     {
         color: #e51400;
         font-size: 12px;
@@ -1097,7 +1133,7 @@ fieldset + fieldset
         padding: 5px 0;
     }
 
-        .form-group .form-error *
+        .form-error *
         {
             display: block;
         }
@@ -3531,6 +3567,7 @@ button.btn
     .form-input.__calendar .dropdown-menu .btn
     {
         background: #fbfdfe;
+        color: #4c4c4c;
         font-size: 14px;
         font-weight: 400;
         position: static;
@@ -3553,6 +3590,7 @@ button.btn
         }
 
         .form-input.__calendar .dropdown-menu .btn-group .btn,
+        .form-input.__calendar .dropdown-menu .btn-group ~ .btn,
         .form-input.__calendar .dropdown-menu .btn-success
         {
             background: #43b0e6;
@@ -5631,7 +5669,6 @@ input.ui-grid-filter-input[type="text"]
     .gridster .list-item
     {
         background: #fbfdfe;
-        cursor: move;
         padding: 2px;
         position: absolute;
         text-align: center;
@@ -5641,6 +5678,42 @@ input.ui-grid-filter-input[type="text"]
 
         -webkit-box-shadow: 0 0 0 2px #dee9f0 inset;
                 box-shadow: 0 0 0 2px #dee9f0 inset;
+    }
+
+    .gridster .list-item.error
+    {
+        background: #f2dede;
+        color: #e0a9a9;
+
+        -webkit-box-shadow: 0 0 0 2px #ebccd1 inset;
+                box-shadow: 0 0 0 2px #ebccd1 inset;
+    }
+
+    .gridster .list-item.success
+    {
+        background: #dff0d8;
+        color: #b2e0a9;
+
+        -webkit-box-shadow: 0 0 0 2px #d6e9c6 inset;
+                box-shadow: 0 0 0 2px #d6e9c6 inset;
+    }
+
+    .gridster .list-item.warning
+    {
+        background: #fcf8e3;
+        color: #e0d8a9;
+
+        -webkit-box-shadow: 0 0 0 2px #faebcc inset;
+                box-shadow: 0 0 0 2px #faebcc inset;
+    }
+
+    .gridster .list-item.info
+    {
+        background: #d9edf7;
+        color: #a9d1e0;
+
+        -webkit-box-shadow: 0 0 0 2px #bce8f1 inset;
+                box-shadow: 0 0 0 2px #bce8f1 inset;
     }
 
     .gridster .gridster-item-moving
@@ -5712,6 +5785,7 @@ input.ui-grid-filter-input[type="text"]
 
     .gridster [ng-model="widget"]
     {
+        cursor: move;
         height: 100%;
         width: 100%;
     }

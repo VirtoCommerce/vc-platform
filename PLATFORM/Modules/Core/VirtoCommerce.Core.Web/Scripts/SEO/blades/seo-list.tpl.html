@@ -1,0 +1,47 @@
+<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <div class="note error" ng-if="blade.duplicates.length">
+                {{'core.blades.seo-list.labels.duplicates-found' | translate : {count: blade.duplicates.length-1} }}
+                <br />
+                <br />
+                <button class="btn" ng-click="resolveDuplicates()">{{ 'core.blades.seo-list.labels.resolve-duplicates' | translate }}</button>
+            </div>
+            <div class="table-wrapper" ng-init="setGridOptions({
+                    rowTemplate: 'list.row.html',
+                    rowHeight: 60,
+                    columnDefs: [
+                                { name: 'actions', displayName: '', enableColumnResizing: false, enableSorting: false, width: 30, cellTemplate: 'list-actions.cell.html', pinnedLeft:true },
+                                { name: 'languageCode', displayName: 'core.blades.seo-list.labels.language-code', sort: { direction: uiGridConstants.ASC }, width: 75 },
+                                { name: 'semanticUrl', displayName: 'core.blades.seo-list.labels.semanticUrl', cellTemplate: 'list-semanticUrl.cell.html' },
+                                { name: 'storeId', displayName: 'core.blades.seo-list.labels.container' }
+                        ]})">
+                <div ui-grid="gridOptions" ui-grid-auto-resize ui-grid-save-state ui-grid-selection ui-grid-resize-columns ui-grid-move-columns ui-grid-pinning ui-grid-height></div>
+                <ul class="menu __context" role="menu" id="sel_menu">
+                    <li class="menu-item" ng-click='delete(contextMenuEntity)' va-permission="{{blade.updatePermission}}">
+                        <i class="menu-ico fa fa-trash-o"></i> {{'platform.commands.delete' | translate}}
+                    </li>
+                </ul>
+            </div>
+            <p class="note" ng-if="!blade.currentEntities.length">{{'platform.list.no-data' | translate}}</p>
+        </div>
+    </div>
+</div>
+
+<script type="text/ng-template" id="list.row.html">
+    <div ng-click="grid.appScope.blade.selectNode(row.entity)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + '-' + col.uid + '-cell'" class="ui-grid-cell" ng-class="{'ui-grid-row-header-cell': col.isRowHeader, '__hovered': grid.appScope.contextMenuEntity === row.entity, '__selected': row.entity.id===grid.appScope.selectedNodeId }" role="{{col.isRowHeader ? 'rowheader' : 'gridcell'}}" ui-grid-cell context-menu="grid.appScope.contextMenuEntity = row.entity" data-target="sel_menu"></div>
+</script>
+<script type="text/ng-template" id="list-actions.cell.html">
+    <div class="ui-grid-actions" left-click-menu="grid.appScope.contextMenuEntity = row.entity" data-target="sel_menu">
+        <i class="fa fa-ellipsis-v"></i>
+    </div>
+</script>
+
+<script type="text/ng-template" id="list-semanticUrl.cell.html">
+    <div class="ui-grid-cell-contents">
+        <div class="inner-contents">
+            <div class="table-t">{{COL_FIELD}}</div>
+            <span class="table-status" ng-if="!row.entity.isActive">Inactive</span>
+        </div>
+    </div>
+</script>

@@ -189,10 +189,13 @@
     <Content Include="Scripts\Fulfillment\blades\fulfillment-center-contact.tpl.html" />
     <Content Include="Scripts\Fulfillment\widgets\fulfillmentCenterContactWidget.js" />
     <Content Include="Scripts\Fulfillment\widgets\fulfillmentCenterContactWidget.tpl.html" />
-    <Content Include="Scripts\SEO\blades\store-list.js" />
-    <Content Include="Scripts\SEO\blades\store-list.tpl.html" />
+    <Content Include="Scripts\SEO\blades\seo-duplicates.js" />
+    <Content Include="Scripts\SEO\blades\seo-duplicates.tpl.html" />
+    <Content Include="Scripts\SEO\blades\seo-list.js" />
     <Content Include="Scripts\SEO\blades\seo-detail.js" />
     <Content Include="Scripts\SEO\blades\seo-detail.tpl.html" />
+    <Content Include="Scripts\SEO\blades\seo-list.tpl.html" />
+    <Content Include="Scripts\SEO\resources\seoResource.js" />
     <Content Include="Scripts\SEO\seo.js" />
     <Content Include="Scripts\SEO\widgets\seoWidget.js" />
     <Content Include="Scripts\SEO\widgets\seoWidget.tpl.html" />

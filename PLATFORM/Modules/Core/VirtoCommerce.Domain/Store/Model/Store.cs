@@ -14,7 +14,7 @@ namespace VirtoCommerce.Domain.Store.Model
     {
         public string Name { get; set; }
         public string Description { get; set; }
-    
+
         /// <summary>
         /// Store current state (Open, Closed, RestrictedAccess)
         /// </summary>
@@ -66,7 +66,8 @@ namespace VirtoCommerce.Domain.Store.Model
         public ICollection<ShippingMethod> ShippingMethods { get; set; }
 
         #region ISeoSupport Members
-        public ICollection<SeoInfo> SeoInfos { get; set; } 
+        public string SeoObjectType { get { return GetType().Name; } }
+        public ICollection<SeoInfo> SeoInfos { get; set; }
         #endregion
 
         #region IHasDynamicProperties Members

@@ -7,12 +7,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
-
+using Newtonsoft.Json.Converters;
 
 namespace VirtoCommerce.Client.Model
 {
-
     /// <summary>
     /// 
     /// </summary>
@@ -20,57 +18,41 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommercePlatformCoreSecurityApiAccount :  IEquatable<VirtoCommercePlatformCoreSecurityApiAccount>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VirtoCommercePlatformCoreSecurityApiAccount" /> class.
-        /// </summary>
-        public VirtoCommercePlatformCoreSecurityApiAccount()
-        {
-            
-        }
-
-        
-        /// <summary>
         /// Gets or Sets Id
         /// </summary>
         [DataMember(Name="id", EmitDefaultValue=false)]
         public string Id { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets ApiAccountType
         /// </summary>
         [DataMember(Name="apiAccountType", EmitDefaultValue=false)]
         public string ApiAccountType { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets IsActive
         /// </summary>
         [DataMember(Name="isActive", EmitDefaultValue=false)]
         public bool? IsActive { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets AppId
         /// </summary>
         [DataMember(Name="appId", EmitDefaultValue=false)]
         public string AppId { get; set; }
-  
-        
+
         /// <summary>
         /// Gets or Sets SecretKey
         /// </summary>
         [DataMember(Name="secretKey", EmitDefaultValue=false)]
         public string SecretKey { get; set; }
-  
-        
-  
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -85,7 +67,6 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  IsActive: ").Append(IsActive).Append("\n");
             sb.Append("  AppId: ").Append(AppId).Append("\n");
             sb.Append("  SecretKey: ").Append(SecretKey).Append("\n");
-            
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -165,30 +146,28 @@ namespace VirtoCommerce.Client.Model
             {
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
-                
+
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
-                
+
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
-                
+
                 if (this.ApiAccountType != null)
                     hash = hash * 59 + this.ApiAccountType.GetHashCode();
-                
+
                 if (this.IsActive != null)
                     hash = hash * 59 + this.IsActive.GetHashCode();
-                
+
                 if (this.AppId != null)
                     hash = hash * 59 + this.AppId.GetHashCode();
-                
+
                 if (this.SecretKey != null)
                     hash = hash * 59 + this.SecretKey.GetHashCode();
-                
+
                 return hash;
             }
         }
 
     }
-
-
 }
