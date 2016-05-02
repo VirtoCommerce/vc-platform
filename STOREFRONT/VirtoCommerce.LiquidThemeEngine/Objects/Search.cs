@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DotLiquid;
+﻿using DotLiquid;
 using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.LiquidThemeEngine.Objects
@@ -25,7 +20,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         /// <summary>
         /// Returns the number of results found.
         /// </summary>
-        public int ResultsCount { get; set; }
+        public int ResultsCount { get { return Results.GetTotalCount(); } }
 
         /// <summary>
         /// Returns the string that was entered in the search input box. Use the highlight filter to apply a different 

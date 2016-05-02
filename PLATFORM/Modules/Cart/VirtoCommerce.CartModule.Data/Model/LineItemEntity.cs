@@ -87,9 +87,9 @@ namespace VirtoCommerce.CartModule.Data.Model
 		[Column(TypeName = "Money")]
 		public decimal PlacedPrice { get; set; }
 		[Column(TypeName = "Money")]
-		public decimal ExtendedPrice { get; private set; }
+		public decimal ExtendedPrice { get; set; }
 		[Column(TypeName = "Money")]
-		public decimal DiscountTotal { get; private set; }
+		public decimal DiscountTotal { get; set; }
 		[Column(TypeName = "Money")]
 		public decimal TaxTotal { get; set; }
 		[StringLength(64)]

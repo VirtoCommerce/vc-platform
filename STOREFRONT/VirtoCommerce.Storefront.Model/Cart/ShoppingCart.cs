@@ -136,9 +136,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
         {
             get
             {
-                var cartDiscounts = Discounts.Sum(d => d.Amount.Amount);
-
-                return SubTotal + TaxTotal + ShippingTotal - new Money(cartDiscounts, Currency);
+                return SubTotal + TaxTotal + ShippingTotal - DiscountTotal;
             }
         }
 
@@ -149,9 +147,22 @@ namespace VirtoCommerce.Storefront.Model.Cart
         {
             get
             {
-                var subtotal = Items.Sum(i => i.ExtendedPrice.Amount);
+                var subtotal = Items.Sum(i => i.ListPrice.Amount * i.Quantity);
 
                 return new Money(subtotal, Currency);
+            }
+        }
+
+        /// <summary>
+        /// Gets the value of shopping cart items total extended price (product price includes all kinds of discounts)
+        /// </summary>
+        public Money ExtendedPriceTotal
+        {
+            get
+            {
+                var extendedPriceTotal = Items.Sum(i => i.ExtendedPrice.Amount);
+
+                return new Money(extendedPriceTotal, Currency);
             }
         }
 
@@ -183,12 +194,10 @@ namespace VirtoCommerce.Storefront.Model.Cart
                 var discountTotal = Discounts.Sum(d => d.Amount.Amount);
                 var itemDiscountTotal = Items.Sum(i => i.DiscountTotal.Amount);
                 var shipmentDiscountTotal = Shipments.Sum(s => s.DiscountTotal.Amount);
-
+  
                 return new Money(discountTotal + itemDiscountTotal + shipmentDiscountTotal, Currency);
             }
         }
-
-     
 
         /// <summary>
         /// Gets or sets the collection of shopping cart addresses

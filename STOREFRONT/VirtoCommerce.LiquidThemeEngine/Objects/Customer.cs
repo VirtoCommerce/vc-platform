@@ -99,7 +99,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         /// Returns the number of addresses associated with a customer.
         /// </summary>
         [DataMember]
-        public int AddressesCount { get; set; }
+        public int AddressesCount { get { return Addresses.GetTotalCount(); } }
 
         /// <summary>
         /// Returns the list of tags associated with the customer.
@@ -121,7 +121,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         /// Returns the total number of orders a customer has placed.
         /// </summary>
         [DataMember]
-        public int OrdersCount { get; set; }
+        public int OrdersCount { get { return Orders.GetTotalCount(); } }
 
         public IMutablePagedList<QuoteRequest> QuoteRequests { get; set; }
 

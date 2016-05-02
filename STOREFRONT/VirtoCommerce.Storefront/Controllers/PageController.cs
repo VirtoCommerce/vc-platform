@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using VirtoCommerce.Storefront.Common;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Services;
@@ -44,12 +45,7 @@ namespace VirtoCommerce.Storefront.Controllers
         {
 
             var contentPages = base.WorkContext.Pages.Where(x => string.Equals(x.Url, page, StringComparison.OrdinalIgnoreCase));
-            var contentPage = contentPages.FirstOrDefault(x => x.Language == base.WorkContext.CurrentLanguage);
-            if(contentPage == null)
-            {
-                contentPage = contentPages.FirstOrDefault(x => x.Language.IsInvariant);
-            }
-
+            var contentPage = contentPages.FindWithLanguage(base.WorkContext.CurrentLanguage);        
             if (contentPage != null)
             {
                 base.WorkContext.CurrentPage = contentPage as ContentPage;

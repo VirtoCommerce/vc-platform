@@ -1,18 +1,20 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Reflection;
+using System.Web.Hosting;
 using System.Web.Http;
+using System.Web.Http.Description;
+using CacheManager.Core;
 using Microsoft.Practices.Unity;
+using Swashbuckle.Application;
+using Swashbuckle.Swagger;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Modularity;
-using VirtoCommerce.Platform.Core.Settings;
-using Swashbuckle.Application;
-using System.Net.Http;
 using VirtoCommerce.Platform.Core.Packaging;
-using Swashbuckle.Swagger;
-using System.Web.Hosting;
-using System.IO;
-using System.Reflection;
-using CacheManager.Core;
+using VirtoCommerce.Platform.Core.Settings;
 
 namespace SwashbuckleModule.Web
 {
@@ -40,7 +42,7 @@ namespace SwashbuckleModule.Web
                  EnableSwagger(moduleInitializerOptions.RoutePrefix + "docs/{apiVersion}",
                  c =>
                  {
-                     c.CustomProvider(providerFactory);
+                     //c.CustomProvider(providerFactory);
                      foreach (var xmlRelativePath in xmlRelativePaths)
                      {
                          var xmlFilesPaths = GetXmlFilesPaths(xmlRelativePath);
@@ -56,6 +58,7 @@ namespace SwashbuckleModule.Web
                      c.SingleApiVersion("v1", "VirtoCommerce Platform RESTful API documentation");
                      c.DocumentFilter(tagsFilterFactory);
                      c.OperationFilter(tagsFilterFactory);
+                     c.OperationFilter(() => new OptionalParametersFilter());
                      c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
                      c.RootUrl(GetRootUrl);
                      c.PrettyPrint();
@@ -75,11 +78,6 @@ namespace SwashbuckleModule.Web
 
         }
 
-        public override void PostInitialize()
-        {
-            base.PostInitialize();
-        }
-
         #endregion
 
         private string GetRootUrl(HttpRequestMessage req)
@@ -87,29 +85,51 @@ namespace SwashbuckleModule.Web
             var retVal = new Uri(req.RequestUri, req.GetRequestContext().VirtualPathRoot).ToString();
             return retVal;
         }
+
         private string[] GetXmlFilesPaths(string xmlRelativePath)
         {
             var path = HostingEnvironment.MapPath(xmlRelativePath);
             var files = Directory.GetFiles(path, "*.Web.XML");
             return files;
         }
-        private string GroupAction(System.Web.Http.Description.ApiDescription apiDescriptor)
+
+        private class OptionalParametersFilter : IOperationFilter
         {
-            return apiDescriptor.ActionDescriptor.ControllerDescriptor.ControllerName;
+            #region Implementation of IOperationFilter
+
+            public void Apply(Operation operation, SchemaRegistry schemaRegistry, ApiDescription apiDescription)
+            {
+                var optionalParameters = apiDescription.ParameterDescriptions
+                    .Where(p => p.ParameterDescriptor != null && p.ParameterDescriptor.GetCustomAttributes<SwaggerOptionalAttribute>().Any())
+                    .ToList();
+
+                foreach (var apiParameter in optionalParameters)
+                {
+                    var parameter = operation.parameters.FirstOrDefault(p => p.name == apiParameter.Name);
+                    if (parameter != null)
+                    {
+                        parameter.required = false;
+                    }
+                }
+            }
+
+            #endregion
         }
 
         private class PopulateTagsFilter : IDocumentFilter, IOperationFilter
         {
             private readonly IPackageService _packageService;
             private readonly ISettingsManager _settingManager;
+
             public PopulateTagsFilter(IPackageService packageService, ISettingsManager settingManager)
             {
                 _packageService = packageService;
                 _settingManager = settingManager;
             }
+
             #region IDocumentFilter Members
 
-            public void Apply(SwaggerDocument swaggerDoc, SchemaRegistry schemaRegistry, System.Web.Http.Description.IApiExplorer apiExplorer)
+            public void Apply(SwaggerDocument swaggerDoc, SchemaRegistry schemaRegistry, IApiExplorer apiExplorer)
             {
                 var defaultApiKey = _settingManager.GetValue("Swashbuckle.DefaultApiKey", string.Empty);
 
@@ -137,29 +157,27 @@ namespace SwashbuckleModule.Web
                     description = "Platform functionality represent common resources and operations"
                 });
                 swaggerDoc.tags = tags;
-
             }
 
             #endregion
 
             #region IOperationFilter Members
 
-            public void Apply(Operation operation, SchemaRegistry schemaRegistry, System.Web.Http.Description.ApiDescription apiDescription)
+            public void Apply(Operation operation, SchemaRegistry schemaRegistry, ApiDescription apiDescription)
             {
                 var module = _packageService.GetModules().Where(x => x.ModuleInfo.ModuleInstance != null).FirstOrDefault(x => apiDescription.ActionDescriptor.ControllerDescriptor.ControllerType.Assembly == x.ModuleInfo.ModuleInstance.GetType().Assembly);
                 if (module != null)
                 {
-                    operation.tags = new string[] { module.Title };
+                    operation.tags = new[] { module.Title };
                 }
                 else if (apiDescription.ActionDescriptor.ControllerDescriptor.ControllerType.Assembly.GetName().Name == "VirtoCommerce.Platform.Web")
                 {
-                    operation.tags = new string[] { "VirtoCommerce platform" };
+                    operation.tags = new[] { "VirtoCommerce platform" };
                 }
             }
 
             #endregion
         }
-
 
         #region ISupportExportImportModule Members
 
@@ -186,6 +204,4 @@ namespace SwashbuckleModule.Web
 
         #endregion
     }
-
-
 }

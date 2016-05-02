@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.LiquidThemeEngine.Objects
 {
@@ -13,7 +14,12 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
 
         public override object BeforeMethod(string method)
         {
-            return this.SingleOrDefault(x => x.Handle.Equals(method, StringComparison.OrdinalIgnoreCase));
+            var retVal = base.BeforeMethod(method);
+            if (!method.IsNullOrEmpty())
+            {
+                retVal = this.SingleOrDefault(x => x.Handle.Equals(method, StringComparison.OrdinalIgnoreCase));
+            }
+            return retVal;
         }
 
         #region ItemCollection Members

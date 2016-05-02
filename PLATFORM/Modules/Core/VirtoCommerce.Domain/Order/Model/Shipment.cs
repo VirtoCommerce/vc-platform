@@ -53,13 +53,7 @@ namespace VirtoCommerce.Domain.Order.Model
 		public string TaxType { get; set; }
 
 		public Address DeliveryAddress { get; set; }
-		public decimal DiscountAmount
-		{
-			get
-			{
-				return Discount != null ? Discount.DiscountAmount : 0;
-			}
-		}
+		public decimal DiscountAmount { get; set; }
 		public Discount Discount { get; set; }
 	
 		#region ITaxDetailSupport Members

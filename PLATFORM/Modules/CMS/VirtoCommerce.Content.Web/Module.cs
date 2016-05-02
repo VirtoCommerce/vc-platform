@@ -81,6 +81,16 @@ namespace VirtoCommerce.Content.Web
             //Register special ContentItem.FrontMatterHeaders type which will be used to define YAML headers for pages, blogs and posts
             var frontMatterHeaderType = "VirtoCommerce.Content.Web.FrontMatterHeaders";
             dynamicPropertyService.RegisterType(frontMatterHeaderType);
+            //Title
+            var titleHeader = new DynamicProperty
+            {
+                Id = "Title_FrontMatterHeader",
+                Name = "title",
+                ObjectType = frontMatterHeaderType,
+                ValueType = DynamicPropertyValueType.ShortText,
+                CreatedBy = "Auto"
+            };
+
             //If set, this specifies the layout file to use. Use the layout file name without the file extension. 
             var layoutHeader = new DynamicProperty
             {
@@ -148,7 +158,7 @@ namespace VirtoCommerce.Content.Web
                 CreatedBy = "Auto"
             };
 
-            dynamicPropertyService.SaveProperties(new[] { defaultThemeNameProperty, permalinkHeader, layoutHeader, publishedHeader, categoryHeader, categoriesHeader, tagsHeader });
+            dynamicPropertyService.SaveProperties(new[] { titleHeader, defaultThemeNameProperty, permalinkHeader, layoutHeader, publishedHeader, categoryHeader, categoriesHeader, tagsHeader });
 
             //Register bounded security scope types
             var securityScopeService = _container.Resolve<IPermissionScopeService>();

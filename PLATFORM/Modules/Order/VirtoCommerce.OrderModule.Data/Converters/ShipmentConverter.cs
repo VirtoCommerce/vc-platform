@@ -65,6 +65,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			retVal.Currency = shipment.Currency;
 			retVal.Sum = shipment.Total;
 			retVal.Tax = shipment.TaxTotal;
+            retVal.DiscountAmount = shipment.DiscountTotal;
             retVal.Status = "New";
             if (shipment.DeliveryAddress != null)
 			{
@@ -132,9 +133,9 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 
 			source.Patch((OperationEntity)target);
 
-			var patchInjectionPolicy = new PatchInjection<ShipmentEntity>(x => x.FulfillmentCenterId, x => x.OrganizationId, x => x.EmployeeId, x => x.Height, x => x.Length,
-																		 x => x.Width, x => x.MeasureUnit, x => x.WeightUnit, x => x.Weight, x => x.TaxType);
-			target.InjectFrom(patchInjectionPolicy, source);
+            var patchInjectionPolicy = new PatchInjection<ShipmentEntity>(x => x.FulfillmentCenterId, x => x.OrganizationId, x => x.EmployeeId, x => x.Height, x => x.Length,
+                                                                         x => x.Width, x => x.MeasureUnit, x => x.WeightUnit, x => x.Weight, x => x.TaxType, x => x.DiscountAmount);
+            target.InjectFrom(patchInjectionPolicy, source);
 
 			if (!source.InPayments.IsNullCollection())
 			{

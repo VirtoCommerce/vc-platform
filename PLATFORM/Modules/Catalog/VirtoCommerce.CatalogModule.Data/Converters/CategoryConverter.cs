@@ -70,7 +70,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
                 //property override - need leave only property has a min distance to target category 
                 //Algorithm based on index property in resulting list (property with min index will more closed to category)
                 var propertyGroups = properties.Select((x, index) => new { PropertyName = x.Name.ToLowerInvariant(), Property = x, Index = index }).GroupBy(x => x.PropertyName);
-                retVal.Properties = propertyGroups.Select(x => x.OrderBy(y => y.Index).First().Property).ToList();
+                retVal.Properties = propertyGroups.Select(x => x.OrderBy(y => y.Index).First().Property).OrderBy(x => x.Name).ToList();
 
                 //Next need set Property in PropertyValues objects
                 foreach (var propValue in retVal.PropertyValues.ToArray())

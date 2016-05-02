@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using VirtoCommerce.Client.Model;
 using VirtoCommerce.Storefront.Model;
+using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Common
 {
@@ -58,8 +59,16 @@ namespace VirtoCommerce.Storefront.Common
             return result;
         }
 
-
-        public static VirtoCommerceDomainCommerceModelSeoInfo GetBestMatchedSeoInfo(this IEnumerable<VirtoCommerceDomainCommerceModelSeoInfo> seoRecords, Store store, Language language)
+        /// <summary>
+        /// Find best SEO record using score base rules
+        /// http://docs.virtocommerce.com/display/vc2devguide/SEO
+        /// </summary>
+        /// <param name="seoRecords"></param>
+        /// <param name="store"></param>
+        /// <param name="language"></param>
+        /// <param name="slug"></param>
+        /// <returns></returns>
+        public static VirtoCommerceDomainCommerceModelSeoInfo GetBestMatchedSeoInfo(this IEnumerable<VirtoCommerceDomainCommerceModelSeoInfo> seoRecords, Store store, Language language, string slug = null)
         {
             VirtoCommerceDomainCommerceModelSeoInfo result = null;
 
@@ -69,7 +78,11 @@ namespace VirtoCommerce.Storefront.Common
                     .Select(s =>
                     {
                         var score = 0;
-                        score += store.Id.Equals(s.StoreId, StringComparison.OrdinalIgnoreCase) ? 4 : 0;
+                        if(!string.IsNullOrEmpty(slug))
+                        {
+                            score += slug.EqualsInvariant(s.SemanticUrl) ? 8 : 0;
+                        }
+                        score += store.Id.EqualsInvariant(s.StoreId) ? 4 : 0;
                         score += language.Equals(s.LanguageCode) ? 2 : 0;
                         score += store.DefaultLanguage.Equals(s.LanguageCode) ? 1 : 0;
                         return new { SeoRecord = s, Score = score };

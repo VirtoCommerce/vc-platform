@@ -21,18 +21,19 @@
       },
       "customerOrder-items": {
         "labels": {
-          "item": "Item",
-          "quantity": "Qty",
-          "aviable": "Avail",
-          "await": "Await",
-          "price": "Price",
-          "discount": "Discount",
-          "tax": "Tax",
-          "total": "Total",
-          "dynamic-properties": "Dynamic properties",
-          "sub-total": "Sub Total",
-          "discount-total": "Discount Total",
-          "tax-total": "Tax Total"
+            "item": "Item",
+            "quantity": "Qty",
+            "aviable": "Avail",
+            "await": "Await",
+            "price": "Price",
+            "basePrice": "Base price",
+            "discount": "Discount",
+            "tax": "Tax",
+            "total": "Total",
+            "dynamic-properties": "Dynamic properties",
+            "sub-total": "Sub Total",
+            "discount-total": "Discount Total",
+            "tax-total": "Tax Total"
         }
       },
       "customerOrder-list": {

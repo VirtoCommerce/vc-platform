@@ -41,7 +41,8 @@
                 </div>
                 <div class="tab-cnt __opened">
                     <form class="form" name="formScope">
-                        <textarea ui-kit-html-editor ng-model="blade.currentEntity.content"></textarea>
+                        <input id="fileUploader" type="file" multiple style="display: none;" uploader="fileUploader" nv-file-select />
+                        <textarea ui-kit-html-editor ng-model="blade.currentEntity.content" file-uploader="fileUploader"></textarea>
                     </form>
                 </div>
                 <div class="tab-cnt">

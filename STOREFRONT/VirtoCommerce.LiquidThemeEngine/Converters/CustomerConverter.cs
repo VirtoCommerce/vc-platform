@@ -2,7 +2,6 @@
 using System.Linq;
 using Omu.ValueInjecter;
 using PagedList;
-using VirtoCommerce.LiquidThemeEngine.Extensions;
 using VirtoCommerce.LiquidThemeEngine.Objects;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Customer;
@@ -12,10 +11,10 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
 {
     public static class CustomerConverter
     {
-        public static Customer ToShopifyModel(this CustomerInfo customer, StorefrontModel.WorkContext workContext, StorefrontModel.Common.IStorefrontUrlBuilder urlBuilder)
+        public static Customer ToShopifyModel(this CustomerInfo customer, StorefrontModel.WorkContext workContext, IStorefrontUrlBuilder urlBuilder)
         {
             var result = new Customer();
-            result.InjectFrom<StorefrontModel.Common.NullableAndEnumValueInjecter>(customer);
+            result.InjectFrom<NullableAndEnumValueInjecter>(customer);
             result.Name = customer.FullName;
             result.DefaultAddress = customer.DefaultAddress.ToShopifyModel();
             result.DefaultBillingAddress = customer.DefaultBillingAddress.ToShopifyModel();
@@ -38,7 +37,6 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                     id++;
                 }
                 result.Addresses = new MutablePagedList<Address>(addresses);
-                result.AddressesCount = addresses.Count;
             }
 
             if (customer.Orders != null)

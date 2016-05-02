@@ -56,7 +56,10 @@ namespace VirtoCommerce.OrderModule.Data.Model
 		[StringLength(64)]
 		public string TaxType { get; set; }
 
-		public string CustomerOrderId { get; set; }
+        [Column(TypeName = "Money")]
+        public decimal DiscountAmount { get; set; }
+
+        public string CustomerOrderId { get; set; }
 		public virtual CustomerOrderEntity CustomerOrder { get; set; }
 
 		public virtual ObservableCollection<ShipmentItemEntity> Items { get; set; }
