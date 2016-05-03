@@ -1,5 +1,5 @@
 ﻿angular.module('virtoCommerce.catalogModule')
-.controller('virtoCommerce.catalogModule.itemDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings', 'virtoCommerce.catalogModule.items', function ($scope, bladeNavigationService, settings, items) {
+.controller('virtoCommerce.catalogModule.itemDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings', 'virtoCommerce.catalogModule.items', 'virtoCommerce.customerModule.members', function ($scope, bladeNavigationService, settings, items, members) {
     var blade = $scope.blade;
     blade.updatePermission = 'catalog:update';
     blade.currentEntityId = blade.itemId;
@@ -115,6 +115,26 @@
     };
     // $scope.dateOptions = { 'year-format': "'yyyy'" };
 
+    function initVendors() {
+        $scope.vendors = members.search({
+            memberType: 'Vendor',
+            sort: 'name:asc',
+            take: 1000
+        });
+    }
+
+    $scope.openVendorsManagement = function () {
+        var newBlade = {
+            memberType: 'Vendor',
+            parentRefresh: initVendors,
+            id: 'vendorList',
+            currentEntity: {},
+            controller: 'virtoCommerce.customerModule.memberListController',
+            template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/member-list.tpl.html'
+        };
+        bladeNavigationService.showBlade(newBlade, blade);
+    };
+
     $scope.openDictionarySettingManagement = function () {
         var newBlade = {
             id: 'settingDetailChild',
@@ -126,13 +146,14 @@
         };
         bladeNavigationService.showBlade(newBlade, blade);
     };
-    
+
     $scope.$on("refresh-entity-by-id", function (event, id) {
         if (blade.currentEntityId === id) {
             blade.refresh();
         }
     });
 
+    initVendors();
     $scope.taxTypes = settings.getValues({ id: 'VirtoCommerce.Core.General.TaxTypes' });
     blade.refresh(false);
 }]);

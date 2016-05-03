@@ -14,14 +14,14 @@ angular.module(moduleName, [])
               templateUrl: '$(Platform)/Scripts/common/templates/home.tpl.html',
               controller: [
                   '$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
-                      var blade = {
+                      var newBlade = {
                           id: 'memberList',
-                          currentEntity: { id: null },
+                          currentEntity: {},
                           controller: 'virtoCommerce.customerModule.memberListController',
                           template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/member-list.tpl.html',
                           isClosingDisabled: true
                       };
-                      bladeNavigationService.showBlade(blade);
+                      bladeNavigationService.showBlade(newBlade);
                   }
               ]
           });
