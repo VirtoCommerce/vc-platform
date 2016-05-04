@@ -16,7 +16,7 @@ angular.module(moduleName, [])
                   '$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
                       var newBlade = {
                           id: 'memberList',
-                          currentEntity: {},
+                          currentEntity: { id: null },
                           controller: 'virtoCommerce.customerModule.memberListController',
                           template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/member-list.tpl.html',
                           isClosingDisabled: true

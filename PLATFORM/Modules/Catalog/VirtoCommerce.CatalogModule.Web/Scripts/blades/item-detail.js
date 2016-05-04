@@ -128,7 +128,7 @@
             memberType: 'Vendor',
             parentRefresh: initVendors,
             id: 'vendorList',
-            currentEntity: {},
+            currentEntity: { id: null },
             controller: 'virtoCommerce.customerModule.memberListController',
             template: 'Modules/$(VirtoCommerce.Customer)/Scripts/blades/member-list.tpl.html'
         };
