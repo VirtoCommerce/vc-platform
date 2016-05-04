@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
@@ -16,12 +15,10 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
     {
         private readonly IMemberService _memberService;
         private readonly IMemberSearchService _memberSearchService;
-        private readonly ISecurityService _securityService;
 
-        public CustomerModuleController(IMemberService memberService, IMemberSearchService memberSearchService, ISecurityService securityService)
+        public CustomerModuleController(IMemberService memberService, IMemberSearchService memberSearchService)
         {
             _memberService = memberService;
-            _securityService = securityService;
             _memberSearchService = memberSearchService;
         }
 
@@ -42,7 +39,7 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
             };
             var result = _memberSearchService.SearchMembers(searchCriteria);
 
-            return Ok(result.Members);
+            return Ok(result.Members.OfType<coreModel.Organization>());
         }
 
         /// <summary>
@@ -72,7 +69,7 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
             var retVal = _memberService.GetByIds(new[] { id }).FirstOrDefault();
             if (retVal != null)
             {
-                return Ok(retVal);
+                return Ok((dynamic)retVal);
             }
             return StatusCode(HttpStatusCode.NoContent);
         }
@@ -91,7 +88,7 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
         {
             _memberService.CreateOrUpdate(new[] { member });
             var retVal = _memberService.GetByIds(new[] { member.Id }).FirstOrDefault();
-            return Ok(retVal);
+            return Ok((dynamic)retVal);
         }
 
         /// <summary>
