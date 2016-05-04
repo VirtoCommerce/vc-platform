@@ -1998,7 +1998,7 @@ namespace VirtoCommerce.Client.Api
             localVarPathParams.Add("format", "json");
             if (orderId != null) localVarPathParams.Add("orderId", Configuration.ApiClient.ParameterToString(orderId)); // path parameter
             if (paymentId != null) localVarPathParams.Add("paymentId", Configuration.ApiClient.ParameterToString(paymentId)); // path parameter
-            if (bankCardInfo.GetType() != typeof(byte[]))
+            if (bankCardInfo != null && bankCardInfo.GetType() != typeof(byte[]))
             {
                 localVarPostBody = Configuration.ApiClient.Serialize(bankCardInfo); // http body (model) parameter
             }
@@ -2092,7 +2092,7 @@ namespace VirtoCommerce.Client.Api
             localVarPathParams.Add("format", "json");
             if (orderId != null) localVarPathParams.Add("orderId", Configuration.ApiClient.ParameterToString(orderId)); // path parameter
             if (paymentId != null) localVarPathParams.Add("paymentId", Configuration.ApiClient.ParameterToString(paymentId)); // path parameter
-            if (bankCardInfo.GetType() != typeof(byte[]))
+            if (bankCardInfo != null && bankCardInfo.GetType() != typeof(byte[]))
             {
                 localVarPostBody = Configuration.ApiClient.Serialize(bankCardInfo); // http body (model) parameter
             }
