@@ -144,6 +144,7 @@
     <Compile Include="Notifications\CancelOrderEmailNotification.cs" />
     <Compile Include="Notifications\NewOrderStatusEmailNotification.cs" />
     <Compile Include="Notifications\OrderCreateEmailNotification.cs" />
+    <Compile Include="Notifications\OrderEmailNotificationBase.cs" />
     <Compile Include="Notifications\OrderPaidEmailNotification.cs" />
     <Compile Include="Notifications\OrderSentEmailNotification.cs" />
     <Compile Include="Observers\CancelPaymentObserver.cs" />

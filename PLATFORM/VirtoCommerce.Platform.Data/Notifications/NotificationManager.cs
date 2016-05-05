@@ -7,6 +7,7 @@ using VirtoCommerce.Platform.Core.Notifications;
 using VirtoCommerce.Platform.Data.Repositories;
 using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Data.Model;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Data.Notifications
 {
@@ -110,6 +111,11 @@ namespace VirtoCommerce.Platform.Data.Notifications
             var notifications = GetNotifications();
             var retVal = notifications.FirstOrDefault(x => x.GetType().Name == type);
             if (retVal == null)
+            {
+                //try to find in derived types
+                retVal = notifications.FirstOrDefault(x => x.GetType().GetTypeInheritanceChain().Select(y => y.Name).Contains(type));
+            }
+            if(retVal == null)
             {
                 throw new NullReferenceException("Notification  " + type + " not found. Please register this type by notificationManager.RegisterNotificationType before use");
             }
