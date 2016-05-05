@@ -69,6 +69,7 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
             var retVal = _memberService.GetByIds(new[] { id }).FirstOrDefault();
             if (retVal != null)
             {
+                // Casting to dynamic fixes a serialization error in XML formatter when the returned object type is derived from the Member class.
                 return Ok((dynamic)retVal);
             }
             return StatusCode(HttpStatusCode.NoContent);
@@ -88,6 +89,8 @@ namespace VirtoCommerce.CustomerModule.Web.Controllers.Api
         {
             _memberService.CreateOrUpdate(new[] { member });
             var retVal = _memberService.GetByIds(new[] { member.Id }).FirstOrDefault();
+
+            // Casting to dynamic fixes a serialization error in XML formatter when the returned object type is derived from the Member class.
             return Ok((dynamic)retVal);
         }
 
