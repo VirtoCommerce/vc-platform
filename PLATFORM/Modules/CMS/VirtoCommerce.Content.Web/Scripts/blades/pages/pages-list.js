@@ -102,22 +102,22 @@
             if (isNew) {
                 angular.extend(newBlade, {
                     title: 'content.blades.edit-page.title-new-post',
-                    subtitle: 'content.blades.edit-page.subtitle-new-post',
+                    subtitle: 'content.blades.edit-page.subtitle-new-post'
                 });
             } else {
                 angular.extend(newBlade, {
-                    subtitle: 'content.blades.edit-page.subtitle-post',
+                    subtitle: 'content.blades.edit-page.subtitle-post'
                 });
             }
         } else {
             if (isNew) {
                 angular.extend(newBlade, {
                     title: 'content.blades.edit-page.title-new',
-                    subtitle: 'content.blades.edit-page.subtitle-new',
+                    subtitle: 'content.blades.edit-page.subtitle-new'
                 });
             } else {
                 angular.extend(newBlade, {
-                    subtitle: 'content.blades.edit-page.subtitle',
+                    subtitle: 'content.blades.edit-page.subtitle'
                 });
             }
         }

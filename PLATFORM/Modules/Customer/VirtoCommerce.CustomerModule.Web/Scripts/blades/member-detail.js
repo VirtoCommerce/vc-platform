@@ -34,7 +34,7 @@
                 function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
 
             if (parentRefresh) {
-                blade.parentBlade.refresh();
+                blade.parentBlade.refresh(true);
             }
         }
     };
@@ -68,15 +68,17 @@
         blade.isLoading = true;
 
         if (blade.isNew) {
-            members.save(blade.currentEntity, function (data) {
-                blade.parentBlade.refresh();
-                blade.origEntity = blade.currentEntity;
-                $scope.bladeClose();
-            }, function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
+            members.save(blade.currentEntity,
+                function () {
+                    blade.parentBlade.refresh(true);
+                    blade.origEntity = blade.currentEntity;
+                    $scope.bladeClose();
+                },
+                function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
         } else {
-            members.update(blade.currentEntity, function (data) {
-                blade.refresh(true);
-            }, function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
+            members.update(blade.currentEntity,
+                function () { blade.refresh(true); },
+                function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
         }
     };
 

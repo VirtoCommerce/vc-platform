@@ -7,16 +7,17 @@ function ($scope, members, dialogService, bladeUtils, uiGridHelper, memberTypesR
     blade.title = 'customer.blades.member-list.title';
     var bladeNavigationService = bladeUtils.bladeNavigationService;
 
-    blade.refresh = function () {
+    blade.refresh = function (parentRefresh) {
         blade.isLoading = true;
         members.search(
-        {
-            memberId: blade.currentEntity.id,
-            keyword: filter.keyword ? filter.keyword : undefined,
-            sort: uiGridHelper.getSortExpression($scope),
-            skip: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
-            take: $scope.pageSettings.itemsPerPageCount
-        },
+            {
+                memberType: blade.memberType,
+                memberId: blade.currentEntity.id,
+                keyword: filter.keyword ? filter.keyword : undefined,
+                sort: uiGridHelper.getSortExpression($scope),
+                skip: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
+                take: $scope.pageSettings.itemsPerPageCount
+            },
             function (data) {
                 blade.isLoading = false;
                 $scope.pageSettings.totalItems = data.totalCount;
@@ -31,9 +32,11 @@ function ($scope, members, dialogService, bladeUtils, uiGridHelper, memberTypesR
 
                 //Set navigation breadcrumbs
                 setBreadcrumbs();
-            }, function (error) {
-                bladeNavigationService.setError('Error ' + error.status, blade);
-            });
+            }, function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
+
+        if (parentRefresh && blade.parentRefresh) {
+            blade.parentRefresh();
+        }
     }
 
     //Breadcrumbs
@@ -69,31 +72,31 @@ function ($scope, members, dialogService, bladeUtils, uiGridHelper, memberTypesR
         }
     }
 
-    $scope.getMainAddress = function (data) {
-        var retVal;
-        if (_.some(data.addresses)) {
-            var primaries = _.where(data.addresses, { Primary: "Primary" });
-            if (_.some(primaries)) {
-                retVal = primaries[0];
-            } else {
-                primaries = _.where(data.addresses, { name: "Primary Address" });
-                if (_.some(primaries)) {
-                    retVal = primaries[0];
-                } else {
-                    retVal = data.addresses[0];
-                }
-            }
-        }
-        return retVal ? (retVal.line1 + ' ' + retVal.city + ' ' + retVal.countryName) : '';
-    }
+    //$scope.getMainAddress = function (data) {
+    //    var retVal;
+    //    if (_.some(data.addresses)) {
+    //        var primaries = _.where(data.addresses, { Primary: "Primary" });
+    //        if (_.some(primaries)) {
+    //            retVal = primaries[0];
+    //        } else {
+    //            primaries = _.where(data.addresses, { name: "Primary Address" });
+    //            if (_.some(primaries)) {
+    //                retVal = primaries[0];
+    //            } else {
+    //                retVal = data.addresses[0];
+    //            }
+    //        }
+    //    }
+    //    return retVal ? (retVal.line1 + ' ' + retVal.city + ' ' + retVal.countryName) : '';
+    //}
 
-    $scope.getMainEmail = function (data) {
-        var retVal;
-        if (_.some(data.emails)) {
-            retVal = data.emails[0];
-        }
-        return retVal;
-    }
+    //$scope.getMainEmail = function (data) {
+    //    var retVal;
+    //    if (_.some(data.emails)) {
+    //        retVal = data.emails[0];
+    //    }
+    //    return retVal;
+    //}
 
     blade.showDetailBlade = function (listItem, title) {
         blade.setSelectedNode(listItem);
@@ -135,7 +138,7 @@ function ($scope, members, dialogService, bladeUtils, uiGridHelper, memberTypesR
 
                         if (_.any(memberIds)) {
                             members.remove({ ids: memberIds },
-                            blade.refresh,
+                            function () { blade.refresh(true); },
                             function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
                         }
                     });
@@ -212,6 +215,9 @@ function ($scope, members, dialogService, bladeUtils, uiGridHelper, memberTypesR
     var filter = $scope.filter = {};
 
     filter.criteriaChanged = function () {
+        if (filter.keyword === null) {
+            blade.memberType = undefined;
+        }
         if ($scope.pageSettings.currentPage > 1) {
             $scope.pageSettings.currentPage = 1;
         } else {
