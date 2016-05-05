@@ -33,9 +33,9 @@
         }
       },
       "edit-asset": {
-        "subtitle": "Edit {{name}}",
-        "title-new": "New {{name}}",
-        "subtitle-new": "Create new {{name}}",
+        "subtitle": "Edit document content",
+        "title-new": "New document",
+        "subtitle-new": "Create new document",
         "labels": {
           "liquid-documentation": "Liquid Documentation",
           "asset-name": "Asset name",
