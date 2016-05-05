@@ -18,18 +18,28 @@ namespace VirtoCommerce.Platform.Data.Notifications
 		private INotificationTemplateResolver _resolver;
 		private Func<IPlatformRepository> _repositoryFactory;
 		private INotificationTemplateService _notificationTemplateService;
+        private List<Func<Core.Notifications.Notification>> _notifications = new List<Func<Core.Notifications.Notification>>();
+        private List<Func<INotificationSendingGateway>> _gateways = new List<Func<INotificationSendingGateway>>();
 
-		public NotificationManager(INotificationTemplateResolver resolver, Func<IPlatformRepository> repositoryFactory, INotificationTemplateService notificationTemplateService)
+        public NotificationManager(INotificationTemplateResolver resolver, Func<IPlatformRepository> repositoryFactory, INotificationTemplateService notificationTemplateService)
 		{
 			_resolver = resolver;
 			_repositoryFactory = repositoryFactory;
 			_notificationTemplateService = notificationTemplateService;
 		}
 
-		private List<Func<Core.Notifications.Notification>> _notifications = new List<Func<Core.Notifications.Notification>>();
-		private List<Func<INotificationSendingGateway>> _gateways = new List<Func<INotificationSendingGateway>>();
+		
+        public void OverrideNotificationType<T>(Func<Notification> notificationFactory)
+        {
+            var replacedNotification = _notifications.FirstOrDefault(x => x().GetType() == typeof(T));
+            if(replacedNotification != null)
+            {
+                var index = _notifications.IndexOf(replacedNotification);
+                _notifications[index] = notificationFactory;
+            }
+        }
 
-		public void RegisterNotificationType(Func<Core.Notifications.Notification> notificationFactory)
+        public void RegisterNotificationType(Func<Core.Notifications.Notification> notificationFactory)
 		{
             var notifications = GetNotifications();
             var notification = notificationFactory();

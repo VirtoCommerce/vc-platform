@@ -19,6 +19,7 @@ namespace VirtoCommerce.Platform.Core.Notifications
         void UpdateNotification(Notification notification);
         void DeleteNotification(string id);
         SearchNotificationsResult SearchNotifications(SearchNotificationCriteria criteria);
+        void OverrideNotificationType<T>(Func<Notification> notification);
         void RegisterNotificationType(Func<Notification> notification);
         Notification[] GetNotifications();
     }
