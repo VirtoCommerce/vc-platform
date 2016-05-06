@@ -127,7 +127,7 @@
 			        blade.testResolve();
 			    },
 			    canExecuteMethod: function () {
-			        return true;
+			        return false;
 			    },
 			    permission: blade.updatePermission
 			},
@@ -135,7 +135,7 @@
 			    name: "platform.commands.send", icon: 'fa fa-envelope',
 			    executeMethod: blade.testSend,
 			    canExecuteMethod: function () {
-			        return true;
+			        return false;
 			    },
 			    permission: blade.updatePermission
 			},
