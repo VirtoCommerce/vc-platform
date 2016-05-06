@@ -126,12 +126,21 @@
                     folderUrl: blade.currentEntity.url,
                     currentEntity: listItem,
                     isNew: isNew,
-                    title: listItem.name,
-                    subtitle: 'content.blades.edit-asset.subtitle',
-                    subtitleValues: { name: listItem.name },
                     controller: 'virtoCommerce.contentModule.assetDetailController',
                     template: 'Modules/$(VirtoCommerce.Content)/Scripts/blades/themes/asset-detail.tpl.html'
                 };
+
+                if (isNew) {
+                    angular.extend(newBlade, {
+                        title: 'content.blades.edit-asset.title-new',
+                        subtitle: 'content.blades.edit-asset.subtitle-new'
+                    });
+                } else {
+                    angular.extend(newBlade, {
+                        title: listItem.name,
+                        subtitle: 'content.blades.edit-asset.subtitle'
+                    });
+                }
                 bladeNavigationService.showBlade(newBlade, blade);
             }
         }

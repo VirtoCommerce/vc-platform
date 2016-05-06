@@ -117,7 +117,7 @@ namespace VirtoCommerce.Storefront.Converters
                     Code = shipment.ShipmentMethodCode,
                     Name = shipment.ShipmentMethodCode,
                     TaxType = shipment.TaxType,
-                    Amount = (double)shipment.ShippingPrice.Amount
+                    Amount = (double)shipment.Total.Amount
                 };
                 retVal.Lines.Add(line);
             }

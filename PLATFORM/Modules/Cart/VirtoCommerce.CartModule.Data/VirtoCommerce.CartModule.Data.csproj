@@ -128,6 +128,10 @@
     <Compile Include="Migrations\201604120843475_LineItemCategoryOptional.Designer.cs">
       <DependentUpon>201604120843475_LineItemCategoryOptional.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201604251544449_ShipmentTotalsFields.cs" />
+    <Compile Include="Migrations\201604251544449_ShipmentTotalsFields.Designer.cs">
+      <DependentUpon>201604251544449_ShipmentTotalsFields.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\AddressEntity.cs" />
     <Compile Include="Model\DiscountEntity.cs" />
@@ -140,7 +144,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\ICartRepository.cs" />
     <Compile Include="Repositories\CartRepositoryImpl.cs" />
-    <Compile Include="Services\DefaultCartTotalsCalculator.cs" />
     <Compile Include="Services\ShoppingCartSearchServiceImpl.cs" />
     <Compile Include="Services\ShoppingCartServiceImpl.cs" />
   </ItemGroup>
@@ -201,6 +204,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201604120843475_LineItemCategoryOptional.resx">
       <DependentUpon>201604120843475_LineItemCategoryOptional.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201604251544449_ShipmentTotalsFields.resx">
+      <DependentUpon>201604251544449_ShipmentTotalsFields.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

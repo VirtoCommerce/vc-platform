@@ -17,7 +17,6 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 			if (customerOrder.Discount != null)
 			{
 				retVal.Discount = customerOrder.Discount.ToWebModel();
-				retVal.DiscountAmount = customerOrder.Discount.DiscountAmount;
 			}
 
 			if (customerOrder.Shipments != null)

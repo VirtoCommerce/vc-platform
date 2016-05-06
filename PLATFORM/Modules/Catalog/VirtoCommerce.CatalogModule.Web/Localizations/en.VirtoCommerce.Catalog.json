@@ -248,6 +248,7 @@
           "has-user-agreement": "Has user agreement",
           "min-quantity": "Min. quantity",
           "max-quantity": "Max. quantity",
+          "vendor": "Vendor",
           "tax-type": "Tax type",
           "max-downloads": "Max. number of downloads",
           "expiration-date": "Download expiration date",
@@ -259,6 +260,7 @@
         "placeholders": {
           "sku": "Enter item sku",
           "name": "Enter item name",
+          "vendor": "Select...",
           "tax-type": "Select...",
           "expiration-date": "Choose date",
           "download-type": "Select..."
@@ -437,7 +439,7 @@
         "title": "Delete confirmation",
         "warning": "WARNING: this change is permanent and can't be undone afterwards. It can lead to data loss.",
         "message": "Are you sure you want to delete catalog",
-        "instruction": "Enter the first 5 characters of catalog name to delete"
+        "instruction": "Enter 'yes' to delete"
       },
       "catalog-items-delete": {
         "title": "Delete confirmation",

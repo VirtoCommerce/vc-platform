@@ -39,7 +39,7 @@
             </div>
         </div>
         <p>{{ product.title }}</p>
-        <div class="product-item--price" ng-if="!productPricesLoaded">
+        <div class="product-item--price" ng-if="!productListPricesLoaded">
             <span class="h1 medium--left">
                 {% if on_sale %}
                     <span class="old">
@@ -57,14 +57,14 @@
             {% endif %}
         </div>
 
-        <div class="product-item--price" ng-if="productPricesLoaded">
+        <div class="product-item--price" ng-if="productListPricesLoaded">
             <span class="h1 medium--left">
-                <span class="old" ng-if="productPrices['{{ product.id }}'].absoluteBenefit.amount > 0">
-                    <small ng-bind="productPrices['{{ product.id }}'].listPrice.formatedAmount"></small>
+                <span class="old" ng-if="productListPrices['{{ product.id }}'].absoluteBenefit.amount > 0">
+                    <small ng-bind="productListPrices['{{ product.id }}'].listPrice.formatedAmount"></small>
                 </span>
-                <small ng-bind="productPrices['{{ product.id }}'].actualPrice.formatedAmount"></small>
+                <small ng-bind="productListPrices['{{ product.id }}'].actualPrice.formatedAmount"></small>
             </span>
-            <span class="sale-tag medium--right" ng-if="productPrices['{{ product.id }}'].absoluteBenefit.amount > 0" ng-bind="'{{ 'products.general.save_html' | t }}'  + productPrices['{{ product.id }}'].absoluteBenefit.formatedAmount"></span>
+            <span class="sale-tag medium--right" ng-if="productListPrices['{{ product.id }}'].absoluteBenefit.amount > 0" ng-bind="'{{ 'products.general.save_html' | t }}'  + productListPrices['{{ product.id }}'].absoluteBenefit.formatedAmount"></span>
         </div>
 
         <div class="product-item--other">

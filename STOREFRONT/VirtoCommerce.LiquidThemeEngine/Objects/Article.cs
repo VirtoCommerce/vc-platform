@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.LiquidThemeEngine.Objects
@@ -14,7 +10,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
     {
         public Article()
         {
-            this.User = new ArticleUser();
+            User = new ArticleUser();
         }
 
         /// <summary>
@@ -24,7 +20,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
 
         public IMutablePagedList<Comment> Comments { get; set; }
 
-        public string CommentsCount { get; set; }
+        public int CommentsCount { get { return Comments.GetTotalCount(); } }
 
         public bool CommentsEnabled { get; set; }
 
@@ -45,5 +41,5 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
 
     }
 
-   
+
 }

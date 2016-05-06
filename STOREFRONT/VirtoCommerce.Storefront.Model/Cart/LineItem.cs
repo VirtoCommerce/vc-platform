@@ -169,6 +169,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// </summary>
         public Money SalePrice { get; set; }
 
+
         /// <summary>
         /// Gets the value of line item actual price (include all types of discounts)
         /// </summary>
@@ -176,7 +177,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
         {
             get
             {
-                return SalePrice - SingleItemDiscountTotal;
+                return SalePrice - DynamicItemDiscount;
             }
         }
 
@@ -192,9 +193,21 @@ namespace VirtoCommerce.Storefront.Model.Cart
         }
 
         /// <summary>
+        /// Static discount amount for one line item unit 
+        /// </summary>
+        public Money StaticItemDiscount
+        {
+            get
+            {
+                return ListPrice - SalePrice;
+            }
+        }
+
+
+        /// <summary>
         /// Gets the value of the single line item discount amount
         /// </summary>
-        public Money SingleItemDiscountTotal
+        public Money DynamicItemDiscount
         {
             get
             {
@@ -211,7 +224,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
         {
             get
             {
-                return SingleItemDiscountTotal* Quantity;
+                return (StaticItemDiscount + DynamicItemDiscount) * Quantity;
             }
         }
 
@@ -274,7 +287,8 @@ namespace VirtoCommerce.Storefront.Model.Cart
 
         public void ApplyRewards(IEnumerable<PromotionReward> rewards)
         {
-            var lineItemRewards = rewards.Where(r => r.RewardType == PromotionRewardType.CatalogItemAmountReward && r.ProductId == ProductId);
+            //TODO: quantity limit usage
+            var lineItemRewards = rewards.Where(r => r.RewardType == PromotionRewardType.CatalogItemAmountReward && (r.ProductId.IsNullOrEmpty() || r.ProductId.EqualsInvariant(ProductId)));
             if (lineItemRewards == null)
             {
                 return;
@@ -285,7 +299,12 @@ namespace VirtoCommerce.Storefront.Model.Cart
             foreach (var reward in lineItemRewards)
             {
                 var discount = reward.ToDiscountModel(SalePrice);
-
+                if(reward.Quantity > 0)
+                {
+                    var money = discount.Amount * Math.Min(reward.Quantity, Quantity);
+                    //TODO: need allocate more rightly between each quantities
+                    discount.Amount = money.Allocate(Quantity).FirstOrDefault();
+                }
                 if (reward.IsValid)
                 {
                     Discounts.Add(discount);

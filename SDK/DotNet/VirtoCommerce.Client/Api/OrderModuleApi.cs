@@ -209,30 +209,30 @@ namespace VirtoCommerce.Client.Api
         /// <returns>ApiResponse of VirtoCommerceOrderModuleWebModelShipment</returns>
         ApiResponse<VirtoCommerceOrderModuleWebModelShipment> OrderModuleGetNewShipmentWithHttpInfo (string id);
         /// <summary>
-        /// Registration customer order payment in external payment system
+        /// Register customer order payment in external payment system
         /// </summary>
         /// <remarks>
-        /// Used in front-end checkout or manual order payment registration
+        /// Used in storefront checkout or manual order payment registration
         /// </remarks>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="bankCardInfo">banking card information</param>
         /// <param name="orderId">customer order id</param>
         /// <param name="paymentId">payment id</param>
+        /// <param name="bankCardInfo">banking card information (optional)</param>
         /// <returns>VirtoCommerceOrderModuleWebModelProcessPaymentResult</returns>
-        VirtoCommerceOrderModuleWebModelProcessPaymentResult OrderModuleProcessOrderPayments (VirtoCommerceDomainPaymentModelBankCardInfo bankCardInfo, string orderId, string paymentId);
+        VirtoCommerceOrderModuleWebModelProcessPaymentResult OrderModuleProcessOrderPayments (string orderId, string paymentId, VirtoCommerceDomainPaymentModelBankCardInfo bankCardInfo = null);
 
         /// <summary>
-        /// Registration customer order payment in external payment system
+        /// Register customer order payment in external payment system
         /// </summary>
         /// <remarks>
-        /// Used in front-end checkout or manual order payment registration
+        /// Used in storefront checkout or manual order payment registration
         /// </remarks>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="bankCardInfo">banking card information</param>
         /// <param name="orderId">customer order id</param>
         /// <param name="paymentId">payment id</param>
+        /// <param name="bankCardInfo">banking card information (optional)</param>
         /// <returns>ApiResponse of VirtoCommerceOrderModuleWebModelProcessPaymentResult</returns>
-        ApiResponse<VirtoCommerceOrderModuleWebModelProcessPaymentResult> OrderModuleProcessOrderPaymentsWithHttpInfo (VirtoCommerceDomainPaymentModelBankCardInfo bankCardInfo, string orderId, string paymentId);
+        ApiResponse<VirtoCommerceOrderModuleWebModelProcessPaymentResult> OrderModuleProcessOrderPaymentsWithHttpInfo (string orderId, string paymentId, VirtoCommerceDomainPaymentModelBankCardInfo bankCardInfo = null);
         /// <summary>
         /// Search customer orders by given criteria
         /// </summary>
@@ -471,30 +471,30 @@ namespace VirtoCommerce.Client.Api
         /// <returns>Task of ApiResponse (VirtoCommerceOrderModuleWebModelShipment)</returns>
         System.Threading.Tasks.Task<ApiResponse<VirtoCommerceOrderModuleWebModelShipment>> OrderModuleGetNewShipmentAsyncWithHttpInfo (string id);
         /// <summary>
-        /// Registration customer order payment in external payment system
+        /// Register customer order payment in external payment system
         /// </summary>
         /// <remarks>
-        /// Used in front-end checkout or manual order payment registration
+        /// Used in storefront checkout or manual order payment registration
         /// </remarks>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="bankCardInfo">banking card information</param>
         /// <param name="orderId">customer order id</param>
         /// <param name="paymentId">payment id</param>
+        /// <param name="bankCardInfo">banking card information (optional)</param>
         /// <returns>Task of VirtoCommerceOrderModuleWebModelProcessPaymentResult</returns>
-        System.Threading.Tasks.Task<VirtoCommerceOrderModuleWebModelProcessPaymentResult> OrderModuleProcessOrderPaymentsAsync (VirtoCommerceDomainPaymentModelBankCardInfo bankCardInfo, string orderId, string paymentId);
+        System.Threading.Tasks.Task<VirtoCommerceOrderModuleWebModelProcessPaymentResult> OrderModuleProcessOrderPaymentsAsync (string orderId, string paymentId, VirtoCommerceDomainPaymentModelBankCardInfo bankCardInfo = null);
 
         /// <summary>
-        /// Registration customer order payment in external payment system
+        /// Register customer order payment in external payment system
         /// </summary>
         /// <remarks>
-        /// Used in front-end checkout or manual order payment registration
+        /// Used in storefront checkout or manual order payment registration
         /// </remarks>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="bankCardInfo">banking card information</param>
         /// <param name="orderId">customer order id</param>
         /// <param name="paymentId">payment id</param>
+        /// <param name="bankCardInfo">banking card information (optional)</param>
         /// <returns>Task of ApiResponse (VirtoCommerceOrderModuleWebModelProcessPaymentResult)</returns>
-        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceOrderModuleWebModelProcessPaymentResult>> OrderModuleProcessOrderPaymentsAsyncWithHttpInfo (VirtoCommerceDomainPaymentModelBankCardInfo bankCardInfo, string orderId, string paymentId);
+        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceOrderModuleWebModelProcessPaymentResult>> OrderModuleProcessOrderPaymentsAsyncWithHttpInfo (string orderId, string paymentId, VirtoCommerceDomainPaymentModelBankCardInfo bankCardInfo = null);
         /// <summary>
         /// Search customer orders by given criteria
         /// </summary>
@@ -648,6 +648,8 @@ namespace VirtoCommerce.Client.Api
             String[] localVarHttpContentTypes = new String[] {
                 "application/json", 
                 "text/json", 
+                "application/xml", 
+                "text/xml", 
                 "application/x-www-form-urlencoded"
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
@@ -655,7 +657,9 @@ namespace VirtoCommerce.Client.Api
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
                 "application/json", 
-                "text/json"
+                "text/json", 
+                "application/xml", 
+                "text/xml"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -729,6 +733,8 @@ namespace VirtoCommerce.Client.Api
             String[] localVarHttpContentTypes = new String[] {
                 "application/json", 
                 "text/json", 
+                "application/xml", 
+                "text/xml", 
                 "application/x-www-form-urlencoded"
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
@@ -736,7 +742,9 @@ namespace VirtoCommerce.Client.Api
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
                 "application/json", 
-                "text/json"
+                "text/json", 
+                "application/xml", 
+                "text/xml"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -813,7 +821,9 @@ namespace VirtoCommerce.Client.Api
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
                 "application/json", 
-                "text/json"
+                "text/json", 
+                "application/xml", 
+                "text/xml"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -884,7 +894,9 @@ namespace VirtoCommerce.Client.Api
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
                 "application/json", 
-                "text/json"
+                "text/json", 
+                "application/xml", 
+                "text/xml"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -1236,7 +1248,9 @@ namespace VirtoCommerce.Client.Api
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
                 "application/json", 
-                "text/json"
+                "text/json", 
+                "application/xml", 
+                "text/xml"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -1307,7 +1321,9 @@ namespace VirtoCommerce.Client.Api
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
                 "application/json", 
-                "text/json"
+                "text/json", 
+                "application/xml", 
+                "text/xml"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -1377,7 +1393,9 @@ namespace VirtoCommerce.Client.Api
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
                 "application/json", 
-                "text/json"
+                "text/json", 
+                "application/xml", 
+                "text/xml"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -1448,7 +1466,9 @@ namespace VirtoCommerce.Client.Api
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
                 "application/json", 
-                "text/json"
+                "text/json", 
+                "application/xml", 
+                "text/xml"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -1517,7 +1537,9 @@ namespace VirtoCommerce.Client.Api
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
                 "application/json", 
-                "text/json"
+                "text/json", 
+                "application/xml", 
+                "text/xml"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -1588,7 +1610,9 @@ namespace VirtoCommerce.Client.Api
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
                 "application/json", 
-                "text/json"
+                "text/json", 
+                "application/xml", 
+                "text/xml"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -1659,7 +1683,9 @@ namespace VirtoCommerce.Client.Api
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
                 "application/json", 
-                "text/json"
+                "text/json", 
+                "application/xml", 
+                "text/xml"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -1730,7 +1756,9 @@ namespace VirtoCommerce.Client.Api
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
                 "application/json", 
-                "text/json"
+                "text/json", 
+                "application/xml", 
+                "text/xml"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -1800,7 +1828,9 @@ namespace VirtoCommerce.Client.Api
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
                 "application/json", 
-                "text/json"
+                "text/json", 
+                "application/xml", 
+                "text/xml"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -1871,7 +1901,9 @@ namespace VirtoCommerce.Client.Api
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
                 "application/json", 
-                "text/json"
+                "text/json", 
+                "application/xml", 
+                "text/xml"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -1902,32 +1934,29 @@ namespace VirtoCommerce.Client.Api
         }
 
         /// <summary>
-        /// Registration customer order payment in external payment system Used in front-end checkout or manual order payment registration
+        /// Register customer order payment in external payment system Used in storefront checkout or manual order payment registration
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="bankCardInfo">banking card information</param>
         /// <param name="orderId">customer order id</param>
         /// <param name="paymentId">payment id</param>
+        /// <param name="bankCardInfo">banking card information (optional)</param>
         /// <returns>VirtoCommerceOrderModuleWebModelProcessPaymentResult</returns>
-        public VirtoCommerceOrderModuleWebModelProcessPaymentResult OrderModuleProcessOrderPayments (VirtoCommerceDomainPaymentModelBankCardInfo bankCardInfo, string orderId, string paymentId)
+        public VirtoCommerceOrderModuleWebModelProcessPaymentResult OrderModuleProcessOrderPayments (string orderId, string paymentId, VirtoCommerceDomainPaymentModelBankCardInfo bankCardInfo = null)
         {
-             ApiResponse<VirtoCommerceOrderModuleWebModelProcessPaymentResult> localVarResponse = OrderModuleProcessOrderPaymentsWithHttpInfo(bankCardInfo, orderId, paymentId);
+             ApiResponse<VirtoCommerceOrderModuleWebModelProcessPaymentResult> localVarResponse = OrderModuleProcessOrderPaymentsWithHttpInfo(orderId, paymentId, bankCardInfo);
              return localVarResponse.Data;
         }
 
         /// <summary>
-        /// Registration customer order payment in external payment system Used in front-end checkout or manual order payment registration
+        /// Register customer order payment in external payment system Used in storefront checkout or manual order payment registration
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="bankCardInfo">banking card information</param>
         /// <param name="orderId">customer order id</param>
         /// <param name="paymentId">payment id</param>
+        /// <param name="bankCardInfo">banking card information (optional)</param>
         /// <returns>ApiResponse of VirtoCommerceOrderModuleWebModelProcessPaymentResult</returns>
-        public ApiResponse< VirtoCommerceOrderModuleWebModelProcessPaymentResult > OrderModuleProcessOrderPaymentsWithHttpInfo (VirtoCommerceDomainPaymentModelBankCardInfo bankCardInfo, string orderId, string paymentId)
+        public ApiResponse< VirtoCommerceOrderModuleWebModelProcessPaymentResult > OrderModuleProcessOrderPaymentsWithHttpInfo (string orderId, string paymentId, VirtoCommerceDomainPaymentModelBankCardInfo bankCardInfo = null)
         {
-            // verify the required parameter 'bankCardInfo' is set
-            if (bankCardInfo == null)
-                throw new ApiException(400, "Missing required parameter 'bankCardInfo' when calling OrderModuleApi->OrderModuleProcessOrderPayments");
             // verify the required parameter 'orderId' is set
             if (orderId == null)
                 throw new ApiException(400, "Missing required parameter 'orderId' when calling OrderModuleApi->OrderModuleProcessOrderPayments");
@@ -1947,6 +1976,8 @@ namespace VirtoCommerce.Client.Api
             String[] localVarHttpContentTypes = new String[] {
                 "application/json", 
                 "text/json", 
+                "application/xml", 
+                "text/xml", 
                 "application/x-www-form-urlencoded"
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
@@ -1954,7 +1985,9 @@ namespace VirtoCommerce.Client.Api
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
                 "application/json", 
-                "text/json"
+                "text/json", 
+                "application/xml", 
+                "text/xml"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -1965,7 +1998,7 @@ namespace VirtoCommerce.Client.Api
             localVarPathParams.Add("format", "json");
             if (orderId != null) localVarPathParams.Add("orderId", Configuration.ApiClient.ParameterToString(orderId)); // path parameter
             if (paymentId != null) localVarPathParams.Add("paymentId", Configuration.ApiClient.ParameterToString(paymentId)); // path parameter
-            if (bankCardInfo.GetType() != typeof(byte[]))
+            if (bankCardInfo != null && bankCardInfo.GetType() != typeof(byte[]))
             {
                 localVarPostBody = Configuration.ApiClient.Serialize(bankCardInfo); // http body (model) parameter
             }
@@ -1994,33 +2027,30 @@ namespace VirtoCommerce.Client.Api
         }
 
         /// <summary>
-        /// Registration customer order payment in external payment system Used in front-end checkout or manual order payment registration
+        /// Register customer order payment in external payment system Used in storefront checkout or manual order payment registration
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="bankCardInfo">banking card information</param>
         /// <param name="orderId">customer order id</param>
         /// <param name="paymentId">payment id</param>
+        /// <param name="bankCardInfo">banking card information (optional)</param>
         /// <returns>Task of VirtoCommerceOrderModuleWebModelProcessPaymentResult</returns>
-        public async System.Threading.Tasks.Task<VirtoCommerceOrderModuleWebModelProcessPaymentResult> OrderModuleProcessOrderPaymentsAsync (VirtoCommerceDomainPaymentModelBankCardInfo bankCardInfo, string orderId, string paymentId)
+        public async System.Threading.Tasks.Task<VirtoCommerceOrderModuleWebModelProcessPaymentResult> OrderModuleProcessOrderPaymentsAsync (string orderId, string paymentId, VirtoCommerceDomainPaymentModelBankCardInfo bankCardInfo = null)
         {
-             ApiResponse<VirtoCommerceOrderModuleWebModelProcessPaymentResult> localVarResponse = await OrderModuleProcessOrderPaymentsAsyncWithHttpInfo(bankCardInfo, orderId, paymentId);
+             ApiResponse<VirtoCommerceOrderModuleWebModelProcessPaymentResult> localVarResponse = await OrderModuleProcessOrderPaymentsAsyncWithHttpInfo(orderId, paymentId, bankCardInfo);
              return localVarResponse.Data;
 
         }
 
         /// <summary>
-        /// Registration customer order payment in external payment system Used in front-end checkout or manual order payment registration
+        /// Register customer order payment in external payment system Used in storefront checkout or manual order payment registration
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="bankCardInfo">banking card information</param>
         /// <param name="orderId">customer order id</param>
         /// <param name="paymentId">payment id</param>
+        /// <param name="bankCardInfo">banking card information (optional)</param>
         /// <returns>Task of ApiResponse (VirtoCommerceOrderModuleWebModelProcessPaymentResult)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceOrderModuleWebModelProcessPaymentResult>> OrderModuleProcessOrderPaymentsAsyncWithHttpInfo (VirtoCommerceDomainPaymentModelBankCardInfo bankCardInfo, string orderId, string paymentId)
+        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceOrderModuleWebModelProcessPaymentResult>> OrderModuleProcessOrderPaymentsAsyncWithHttpInfo (string orderId, string paymentId, VirtoCommerceDomainPaymentModelBankCardInfo bankCardInfo = null)
         {
-            // verify the required parameter 'bankCardInfo' is set
-            if (bankCardInfo == null)
-                throw new ApiException(400, "Missing required parameter 'bankCardInfo' when calling OrderModuleApi->OrderModuleProcessOrderPayments");
             // verify the required parameter 'orderId' is set
             if (orderId == null)
                 throw new ApiException(400, "Missing required parameter 'orderId' when calling OrderModuleApi->OrderModuleProcessOrderPayments");
@@ -2040,6 +2070,8 @@ namespace VirtoCommerce.Client.Api
             String[] localVarHttpContentTypes = new String[] {
                 "application/json", 
                 "text/json", 
+                "application/xml", 
+                "text/xml", 
                 "application/x-www-form-urlencoded"
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
@@ -2047,7 +2079,9 @@ namespace VirtoCommerce.Client.Api
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
                 "application/json", 
-                "text/json"
+                "text/json", 
+                "application/xml", 
+                "text/xml"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -2058,7 +2092,7 @@ namespace VirtoCommerce.Client.Api
             localVarPathParams.Add("format", "json");
             if (orderId != null) localVarPathParams.Add("orderId", Configuration.ApiClient.ParameterToString(orderId)); // path parameter
             if (paymentId != null) localVarPathParams.Add("paymentId", Configuration.ApiClient.ParameterToString(paymentId)); // path parameter
-            if (bankCardInfo.GetType() != typeof(byte[]))
+            if (bankCardInfo != null && bankCardInfo.GetType() != typeof(byte[]))
             {
                 localVarPostBody = Configuration.ApiClient.Serialize(bankCardInfo); // http body (model) parameter
             }
@@ -2122,6 +2156,8 @@ namespace VirtoCommerce.Client.Api
             String[] localVarHttpContentTypes = new String[] {
                 "application/json", 
                 "text/json", 
+                "application/xml", 
+                "text/xml", 
                 "application/x-www-form-urlencoded"
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
@@ -2129,7 +2165,9 @@ namespace VirtoCommerce.Client.Api
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
                 "application/json", 
-                "text/json"
+                "text/json", 
+                "application/xml", 
+                "text/xml"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -2203,6 +2241,8 @@ namespace VirtoCommerce.Client.Api
             String[] localVarHttpContentTypes = new String[] {
                 "application/json", 
                 "text/json", 
+                "application/xml", 
+                "text/xml", 
                 "application/x-www-form-urlencoded"
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
@@ -2210,7 +2250,9 @@ namespace VirtoCommerce.Client.Api
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
                 "application/json", 
-                "text/json"
+                "text/json", 
+                "application/xml", 
+                "text/xml"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -2282,6 +2324,8 @@ namespace VirtoCommerce.Client.Api
             String[] localVarHttpContentTypes = new String[] {
                 "application/json", 
                 "text/json", 
+                "application/xml", 
+                "text/xml", 
                 "application/x-www-form-urlencoded"
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
@@ -2360,6 +2404,8 @@ namespace VirtoCommerce.Client.Api
             String[] localVarHttpContentTypes = new String[] {
                 "application/json", 
                 "text/json", 
+                "application/xml", 
+                "text/xml", 
                 "application/x-www-form-urlencoded"
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);

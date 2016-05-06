@@ -9,10 +9,10 @@
     
     {{ 'catalog.dialogs.catalog-delete.instruction' | translate }}:
     <div class="form-input __mini">
-        <input ng-model="enteredText" ng-keyup="$event.which === 13 && name.substring(0,5) === enteredText && yes()" ng-trim="false" />
+        <input ng-model="enteredText" ng-keyup="$event.which === 13 && 'yes' === enteredText && yes()" ng-trim="false" />
     </div>
 </div>
 <div class="modal-footer">
-    <button class="btn" ng-click="yes()" ng-class="{'__disabled': name.substring(0,5)!==enteredText}">{{ 'platform.commands.confirm' | translate }}</button>
+    <button class="btn" ng-click="yes()" ng-class="{'__disabled': 'yes' !== enteredText}">{{ 'platform.commands.confirm' | translate }}</button>
     <button class="btn" ng-click="cancel()">{{ 'platform.commands.cancel' | translate }}</button>
 </div>

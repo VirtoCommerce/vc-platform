@@ -47,11 +47,13 @@ namespace VirtoCommerce.CartModule.Data.Model
 		[Column(TypeName = "Money")]
 		public decimal ShippingPrice { get; set; }
 		[Column(TypeName = "Money")]
-		public decimal DiscountTotal { get; private set; }
+		public decimal DiscountTotal { get; set; }
 		[Column(TypeName = "Money")]
 		public decimal TaxTotal { get; set; }
+        [Column(TypeName = "Money")]
+        public decimal Total { get; set; }
 
-		[StringLength(64)]
+        [StringLength(64)]
 		public string TaxType { get; set; }
 
         public virtual ObservableCollection<ShipmentItemEntity> Items { get; set; }

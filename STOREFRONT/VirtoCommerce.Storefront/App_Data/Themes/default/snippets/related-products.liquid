@@ -7,9 +7,9 @@
             {% include 'product-grid-item', product: related_product %}
         {% endfor %}
         <script>
-            window.products = [];
+            window.productList = [];
             {% for related_product in product.related_products: number_of_products %}
-                window.products.push({
+                window.productList.push({
                     id: "{{ related_product.id }}",
                     catalogId: "{{ related_product.catalog_id }}",
                     categoryId: "{{ related_product.category_id }}"
@@ -32,7 +32,7 @@
     {% if collection and collection.products_count > 1 %}
       <hr>
       <span class="h1">{{ 'products.general.related_products' | t }}</span>
-      <div class="grid-uniform">
+      <div class="grid-uniform" ng-controller="productListController">
         {% assign current_product = product %}
         {% assign current_product_found = false %}
         {% for product in collection.products limit: number_of_products_to_fetch %}
@@ -44,6 +44,16 @@
             {% endunless %}
           {% endif %}
         {% endfor %}
+        <script>
+            window.productList = [];
+            {% for product in collection.products limit: number_of_products_to_fetch %}
+                window.productList.push({
+                    id: "{{ product.id }}",
+                    catalogId: "{{ product.catalog_id }}",
+                    categoryId: "{{ product.category_id }}"
+                });
+            {% endfor %}
+        </script>
       </div>
     {% endif %}
 {% endif %}

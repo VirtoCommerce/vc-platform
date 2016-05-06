@@ -16,7 +16,8 @@
                 <div class="tile-group six" ng-repeat-start="data in (filteredEntities = (blade.currentEntities | filter: {store: {name: blade.searchText}})) | orderBy:'store.name'">
                     <div class="tile double __brand">
                         <div class="tile-descr" style="line-height:30px">{{data.store.name}}</div>                        
-                        <div class="tile-image"><img ng-src="{{data.activeThemeName ? ('cms/themes/' + data.storeId + '/' + data.activeThemeName + '/logo.png') : 'Modules/$(VirtoCommerce.Content)/Content/logo.png'}}" /></div>
+                        <div class="tile-image">
+                            <img fallback-src="Modules/$(VirtoCommerce.Content)/Content/logo.png" ng-src="{{data.activeThemeName ? ('api/content/themes/' + data.storeId + '?relativeUrl=' + data.activeThemeName +'/logo.png') : 'Modules/$(VirtoCommerce.Content)/Content/logo.png'}}" /></div>
                     </div>
                     <div class="tile quadro wide mini __informer" ng-if="!data.activeThemeName" ng-click="blade.openThemes(data.store)">
                         <p>{{ 'content.blades.content-main.labels.no-active-theme' | translate }}</p>

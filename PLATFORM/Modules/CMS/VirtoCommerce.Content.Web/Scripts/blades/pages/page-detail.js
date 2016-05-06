@@ -1,7 +1,33 @@
 ﻿angular.module('virtoCommerce.contentModule')
-.controller('virtoCommerce.contentModule.pageDetailController', ['$rootScope', '$scope', 'platformWebApp.validators', 'platformWebApp.dialogService', 'virtoCommerce.contentModule.contentApi', '$timeout', 'platformWebApp.bladeNavigationService', 'platformWebApp.dynamicProperties.api', 'platformWebApp.settings', function ($rootScope, $scope, validators, dialogService, contentApi, $timeout, bladeNavigationService, dynamicPropertiesApi, settings) {
+.controller('virtoCommerce.contentModule.pageDetailController', ['$rootScope', '$scope', 'platformWebApp.validators', 'platformWebApp.dialogService', 'virtoCommerce.contentModule.contentApi', '$timeout', 'platformWebApp.bladeNavigationService', 'platformWebApp.dynamicProperties.api', 'platformWebApp.settings', 'FileUploader', function ($rootScope, $scope, validators, dialogService, contentApi, $timeout, bladeNavigationService, dynamicPropertiesApi, settings, FileUploader) {
     var blade = $scope.blade;
     $scope.validators = validators;
+    var contentType = blade.contentType.substr(0, 1).toUpperCase() + blade.contentType.substr(1, blade.contentType.length - 1);
+    $scope.fileUploader = new FileUploader({
+        url: 'api/platform/assets?folderUrl=cms-content/' + contentType + '/' + blade.storeId + '/assets',
+        headers: { Accept: 'application/json' },
+        autoUpload: true,
+        removeAfterUpload: true,
+        filters: [{
+            name: 'imageFilter',
+            fn: function (i, options) {
+                var type = '|' + i.type.slice(i.type.lastIndexOf('/') + 1) + '|';
+                return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
+            }
+        }],
+        onBeforeUploadItem: function (fileItem) {
+            blade.isLoading = true;
+        },
+        onSuccessItem: function (fileItem, response, status, headers) {
+            $scope.$broadcast('filesUploaded', { items: response });
+        },
+        onErrorItem: function (fileItem, response, status, headers) {
+            bladeNavigationService.setError(fileItem._file.name + ' failed: ' + (response.message ? response.message : status), blade);
+        },
+        onCompleteAll: function () {
+            blade.isLoading = false;
+        }
+    });
 
     blade.editAsMarkdown = true;
     blade.editAsHtml = false;

@@ -73,7 +73,7 @@ namespace VirtoCommerce.Storefront.Controllers
             {
                 if (_cartBuilder.Cart.HasPhysicalProducts)
                 {
-                    virtualRedirectUrl = "~/cart/checkout/#/customer-information";
+                    virtualRedirectUrl = "~/cart/checkout/#/shipping-address";
                 }
                 else
                 {

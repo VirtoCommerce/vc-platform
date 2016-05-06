@@ -78,7 +78,7 @@
                         <div class="cart-subtotal">
                             {{ 'cart.general.subtotal' | t }}
                             <span class="h1 cart-subtotal--price">
-                                <small ng-bind="cart.subTotal.formatedAmount"></small>
+                                <small ng-bind="cart.extendedPriceTotal.formatedAmount"></small>
                             </span>
                         </div>
                         <button type="button" ng-class="{ 'btn': !cartIsUpdating, 'btn-secondary': cartIsUpdating || errorOccured || cart.hasValidationErrors }" ng-disabled="cartIsUpdating || cart.hasValidationErrors" ng-click="submitCart()">

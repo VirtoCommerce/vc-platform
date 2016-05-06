@@ -712,6 +712,8 @@ namespace VirtoCommerce.Client.Api
             String[] localVarHttpContentTypes = new String[] {
                 "application/json", 
                 "text/json", 
+                "application/xml", 
+                "text/xml", 
                 "application/x-www-form-urlencoded"
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
@@ -719,7 +721,9 @@ namespace VirtoCommerce.Client.Api
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
                 "application/json", 
-                "text/json"
+                "text/json", 
+                "application/xml", 
+                "text/xml"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -793,6 +797,8 @@ namespace VirtoCommerce.Client.Api
             String[] localVarHttpContentTypes = new String[] {
                 "application/json", 
                 "text/json", 
+                "application/xml", 
+                "text/xml", 
                 "application/x-www-form-urlencoded"
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
@@ -800,7 +806,9 @@ namespace VirtoCommerce.Client.Api
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
                 "application/json", 
-                "text/json"
+                "text/json", 
+                "application/xml", 
+                "text/xml"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -873,6 +881,8 @@ namespace VirtoCommerce.Client.Api
             String[] localVarHttpContentTypes = new String[] {
                 "application/json", 
                 "text/json", 
+                "application/xml", 
+                "text/xml", 
                 "application/x-www-form-urlencoded"
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
@@ -880,7 +890,9 @@ namespace VirtoCommerce.Client.Api
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
                 "application/json", 
-                "text/json"
+                "text/json", 
+                "application/xml", 
+                "text/xml"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -954,6 +966,8 @@ namespace VirtoCommerce.Client.Api
             String[] localVarHttpContentTypes = new String[] {
                 "application/json", 
                 "text/json", 
+                "application/xml", 
+                "text/xml", 
                 "application/x-www-form-urlencoded"
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
@@ -961,7 +975,9 @@ namespace VirtoCommerce.Client.Api
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
                 "application/json", 
-                "text/json"
+                "text/json", 
+                "application/xml", 
+                "text/xml"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -1034,6 +1050,8 @@ namespace VirtoCommerce.Client.Api
             String[] localVarHttpContentTypes = new String[] {
                 "application/json", 
                 "text/json", 
+                "application/xml", 
+                "text/xml", 
                 "application/x-www-form-urlencoded"
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
@@ -1041,7 +1059,9 @@ namespace VirtoCommerce.Client.Api
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
                 "application/json", 
-                "text/json"
+                "text/json", 
+                "application/xml", 
+                "text/xml"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -1115,6 +1135,8 @@ namespace VirtoCommerce.Client.Api
             String[] localVarHttpContentTypes = new String[] {
                 "application/json", 
                 "text/json", 
+                "application/xml", 
+                "text/xml", 
                 "application/x-www-form-urlencoded"
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
@@ -1122,7 +1144,9 @@ namespace VirtoCommerce.Client.Api
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
                 "application/json", 
-                "text/json"
+                "text/json", 
+                "application/xml", 
+                "text/xml"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -1604,7 +1628,9 @@ namespace VirtoCommerce.Client.Api
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
                 "application/json", 
-                "text/json"
+                "text/json", 
+                "application/xml", 
+                "text/xml"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -1675,7 +1701,9 @@ namespace VirtoCommerce.Client.Api
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
                 "application/json", 
-                "text/json"
+                "text/json", 
+                "application/xml", 
+                "text/xml"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -1745,7 +1773,9 @@ namespace VirtoCommerce.Client.Api
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
                 "application/json", 
-                "text/json"
+                "text/json", 
+                "application/xml", 
+                "text/xml"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -1816,7 +1846,9 @@ namespace VirtoCommerce.Client.Api
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
                 "application/json", 
-                "text/json"
+                "text/json", 
+                "application/xml", 
+                "text/xml"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -1886,7 +1918,9 @@ namespace VirtoCommerce.Client.Api
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
                 "application/json", 
-                "text/json"
+                "text/json", 
+                "application/xml", 
+                "text/xml"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -1957,7 +1991,9 @@ namespace VirtoCommerce.Client.Api
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
                 "application/json", 
-                "text/json"
+                "text/json", 
+                "application/xml", 
+                "text/xml"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -2022,7 +2058,9 @@ namespace VirtoCommerce.Client.Api
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
                 "application/json", 
-                "text/json"
+                "text/json", 
+                "application/xml", 
+                "text/xml"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -2087,7 +2125,9 @@ namespace VirtoCommerce.Client.Api
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
                 "application/json", 
-                "text/json"
+                "text/json", 
+                "application/xml", 
+                "text/xml"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -2152,6 +2192,8 @@ namespace VirtoCommerce.Client.Api
             String[] localVarHttpContentTypes = new String[] {
                 "application/json", 
                 "text/json", 
+                "application/xml", 
+                "text/xml", 
                 "application/x-www-form-urlencoded"
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
@@ -2159,7 +2201,9 @@ namespace VirtoCommerce.Client.Api
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
                 "application/json", 
-                "text/json"
+                "text/json", 
+                "application/xml", 
+                "text/xml"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -2233,6 +2277,8 @@ namespace VirtoCommerce.Client.Api
             String[] localVarHttpContentTypes = new String[] {
                 "application/json", 
                 "text/json", 
+                "application/xml", 
+                "text/xml", 
                 "application/x-www-form-urlencoded"
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
@@ -2240,7 +2286,9 @@ namespace VirtoCommerce.Client.Api
             // to determine the Accept header
             String[] localVarHttpHeaderAccepts = new String[] {
                 "application/json", 
-                "text/json"
+                "text/json", 
+                "application/xml", 
+                "text/xml"
             };
             String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
@@ -2312,6 +2360,8 @@ namespace VirtoCommerce.Client.Api
             String[] localVarHttpContentTypes = new String[] {
                 "application/json", 
                 "text/json", 
+                "application/xml", 
+                "text/xml", 
                 "application/x-www-form-urlencoded"
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
@@ -2390,6 +2440,8 @@ namespace VirtoCommerce.Client.Api
             String[] localVarHttpContentTypes = new String[] {
                 "application/json", 
                 "text/json", 
+                "application/xml", 
+                "text/xml", 
                 "application/x-www-form-urlencoded"
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
@@ -2467,6 +2519,8 @@ namespace VirtoCommerce.Client.Api
             String[] localVarHttpContentTypes = new String[] {
                 "application/json", 
                 "text/json", 
+                "application/xml", 
+                "text/xml", 
                 "application/x-www-form-urlencoded"
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
@@ -2545,6 +2599,8 @@ namespace VirtoCommerce.Client.Api
             String[] localVarHttpContentTypes = new String[] {
                 "application/json", 
                 "text/json", 
+                "application/xml", 
+                "text/xml", 
                 "application/x-www-form-urlencoded"
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
@@ -2622,6 +2678,8 @@ namespace VirtoCommerce.Client.Api
             String[] localVarHttpContentTypes = new String[] {
                 "application/json", 
                 "text/json", 
+                "application/xml", 
+                "text/xml", 
                 "application/x-www-form-urlencoded"
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
@@ -2700,6 +2758,8 @@ namespace VirtoCommerce.Client.Api
             String[] localVarHttpContentTypes = new String[] {
                 "application/json", 
                 "text/json", 
+                "application/xml", 
+                "text/xml", 
                 "application/x-www-form-urlencoded"
             };
             String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);

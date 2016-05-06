@@ -16,6 +16,7 @@ namespace VirtoCommerce.Storefront.Model.Catalog
             Currency = currency;
             ListPrice = new Money(currency);
             SalePrice = new Money(currency);
+            TierPrices = new List<TierPrice>();
         }
         /// <summary>
         /// Price list id
@@ -102,6 +103,22 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         /// Tier prices 
         /// </summary>
         public ICollection<TierPrice> TierPrices { get; set; }
+
+        
+        /// <summary>
+        /// Return tire price for passed quantity
+        /// </summary>
+        /// <param name="quantity"></param>
+        /// <returns></returns>
+        public TierPrice GetTierPrice(int quantity)
+        {
+            var retVal = TierPrices.OrderBy(x => x.Quantity).LastOrDefault(x => x.Quantity <= quantity);
+            if(retVal == null)
+            {
+                retVal = new TierPrice(SalePrice, 1);
+            }
+            return retVal;
+        }
 
         #region IConvertible<ProductPrice> Members
         /// <summary>

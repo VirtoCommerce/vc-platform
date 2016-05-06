@@ -31,28 +31,28 @@ namespace VirtoCommerce.Platform.Data.Notifications
         {
             var retVal = new SendNotificationResult();
 
-            MailMessage mailMsg = new MailMessage();
-
-            //To email
-            mailMsg.To.Add(new MailAddress(notification.Recipient));
-            //From email
-            mailMsg.From = new MailAddress(notification.Sender);
-
-            mailMsg.Subject = notification.Subject;
-            mailMsg.Body = notification.Body;
-            mailMsg.IsBodyHtml = true;
-
-            var login = _settingsManager.GetSettingByName(smtpClientLoginSettingName).Value;
-            var password = _settingsManager.GetSettingByName(smtpClientPasswordSettingName).Value;
-            var host = _settingsManager.GetSettingByName(smtpClientHostSettingName).Value;
-            var port = _settingsManager.GetSettingByName(smtpClientPortSettingName).Value;
-
-            SmtpClient smtpClient = new SmtpClient(host, Convert.ToInt32(port));
-            System.Net.NetworkCredential credentials = new System.Net.NetworkCredential(login, password);
-            smtpClient.Credentials = credentials;
-
             try
             {
+                MailMessage mailMsg = new MailMessage();
+
+                //To email
+                mailMsg.To.Add(new MailAddress(notification.Recipient));
+                //From email
+                mailMsg.From = new MailAddress(notification.Sender);
+    
+                mailMsg.Subject = notification.Subject;
+                mailMsg.Body = notification.Body;
+                mailMsg.IsBodyHtml = true;
+    
+                var login = _settingsManager.GetSettingByName(smtpClientLoginSettingName).Value;
+                var password = _settingsManager.GetSettingByName(smtpClientPasswordSettingName).Value;
+                var host = _settingsManager.GetSettingByName(smtpClientHostSettingName).Value;
+                var port = _settingsManager.GetSettingByName(smtpClientPortSettingName).Value;
+    
+                SmtpClient smtpClient = new SmtpClient(host, Convert.ToInt32(port));
+                System.Net.NetworkCredential credentials = new System.Net.NetworkCredential(login, password);
+                smtpClient.Credentials = credentials;
+                
                 smtpClient.Send(mailMsg);
                 retVal.IsSuccess = true;
             }

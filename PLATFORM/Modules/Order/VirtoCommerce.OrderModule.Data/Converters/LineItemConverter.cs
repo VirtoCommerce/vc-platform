@@ -45,7 +45,8 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			retVal.IsGift = lineItem.IsGift;
             retVal.BasePrice = lineItem.ListPrice;
 			retVal.Price = lineItem.PlacedPrice;
-			retVal.Tax = lineItem.TaxTotal;
+            retVal.DiscountAmount = lineItem.DiscountTotal;
+            retVal.Tax = lineItem.TaxTotal;
 			retVal.FulfillmentLocationCode = lineItem.FulfillmentLocationCode;
             retVal.DynamicProperties = null; //to prevent copy dynamic properties from ShoppingCart LineItem to Order LineItem
 

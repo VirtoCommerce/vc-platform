@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using CacheManager.Core;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.Storefront.Converters;
 using VirtoCommerce.Storefront.Model;
@@ -11,6 +10,8 @@ using VirtoCommerce.Storefront.Model.Cart.ValidationErrors;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Services;
+using VirtoCommerce.Storefront.Model.Marketing.Services;
+using System.Collections.Generic;
 
 namespace VirtoCommerce.Storefront.Services
 {
@@ -45,12 +46,13 @@ namespace VirtoCommerce.Storefront.Services
             var workContext = _workContextFactory();
             var productIds = cart.Items.Select(i => i.ProductId).ToArray();
             var cacheKey = "CartValidator.ValidateItemsAsync-" + workContext.CurrentCurrency.Code + ":" + workContext.CurrentLanguage + ":" + string.Join(":", productIds);
-            var products = await _cacheManager.GetAsync(cacheKey, "ApiRegion", async () => { return await _catalogService.GetProductsAsync(productIds, ItemResponseGroup.ItemLarge); });
+            var products = await _cacheManager.GetAsync(cacheKey, "ApiRegion", async () => { return await _catalogService.GetProductsAsync(productIds, ItemResponseGroup.ItemWithPrices | ItemResponseGroup.ItemWithDiscounts | ItemResponseGroup.Inventory); });
+       
             foreach (var lineItem in cart.Items.ToList())
             {
-                var product = products.FirstOrDefault(x => x.Id == lineItem.ProductId);
-
                 lineItem.ValidationErrors.Clear();
+
+                var product = products.FirstOrDefault(p => p.Id == lineItem.ProductId);
                 if (product == null || (product != null && (!product.IsActive || !product.IsBuyable)))
                 {
                     lineItem.ValidationErrors.Add(new ProductUnavailableError());
@@ -70,15 +72,14 @@ namespace VirtoCommerce.Storefront.Services
                             lineItem.ValidationErrors.Add(new ProductQuantityError(availableQuantity.Value));
                         }
                     }
-
-                    if (lineItem.PlacedPrice != product.Price.ActualPrice &&
-                        (lineItem.ValidationType == ValidationType.PriceAndQuantity || lineItem.ValidationType == ValidationType.Price))
+                    if (lineItem.ValidationType == ValidationType.PriceAndQuantity || lineItem.ValidationType == ValidationType.Price)
                     {
-                        var newLineItem = product.ToLineItem(workContext.CurrentLanguage, lineItem.Quantity);
-                        newLineItem.ValidationWarnings.Add(new ProductPriceError(lineItem.PlacedPrice));
-
-                        cart.Items.Remove(lineItem);
-                        cart.Items.Add(newLineItem);
+                        var tierPrice = product.Price.GetTierPrice(lineItem.Quantity);
+                        if (tierPrice.ActualPrice != lineItem.PlacedPrice)
+                        {
+                            lineItem.ValidationWarnings.Add(new ProductPriceError(lineItem.PlacedPrice));
+                            lineItem.SalePrice = tierPrice.Price;
+                        }
                     }
                 }
             }

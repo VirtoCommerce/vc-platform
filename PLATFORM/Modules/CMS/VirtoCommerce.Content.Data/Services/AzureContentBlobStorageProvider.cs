@@ -31,10 +31,17 @@ namespace VirtoCommerce.Content.Data.Services
             throw new NotImplementedException();
         }
         #endregion
+        public override Stream OpenRead(string url)
+        {
+            return base.OpenRead(NormalizeUrl(url));
+        }
 
         public override void CreateFolder(BlobFolder folder)
         {
-            folder.Url = NormalizeUrl(folder.Url);
+            if (folder.ParentUrl.IsNullOrEmpty())
+            {
+                folder.Name = NormalizeUrl(folder.Name);
+            }
             base.CreateFolder(folder);
         }
 
@@ -43,6 +50,12 @@ namespace VirtoCommerce.Content.Data.Services
             return base.OpenWrite(NormalizeUrl(url));
         }
 
+        public override void Remove(string[] urls)
+        {
+            urls = urls.Select(x => NormalizeUrl(x)).ToArray();
+          
+            base.Remove(urls);
+        }
         public override BlobSearchResult Search(string folderUrl, string keyword)
         {
             folderUrl = NormalizeUrl(folderUrl);
@@ -65,6 +78,7 @@ namespace VirtoCommerce.Content.Data.Services
                 }
                 retVal = "\\" + url.Replace('/', '\\').TrimStart('\\');
                 retVal = _chrootPath + "\\" + retVal.Replace(_chrootPath, string.Empty);
+                retVal = retVal.Replace("\\\\", "\\");
             }
             return retVal;
         }

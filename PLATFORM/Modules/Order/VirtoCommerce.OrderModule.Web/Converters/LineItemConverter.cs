@@ -16,11 +16,7 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 			var retVal = new webModel.LineItem();
 			retVal.InjectFrom(orderItem);
 			retVal.Currency = orderItem.Currency;
-			if (orderItem.Discount != null)
-			{
-				retVal.Discount = orderItem.Discount.ToWebModel();
-				retVal.DiscountAmount = orderItem.Discount.DiscountAmount;
-			}
+           
 			retVal.TaxDetails = orderItem.TaxDetails;
 
 			if (orderItem.DynamicProperties != null)

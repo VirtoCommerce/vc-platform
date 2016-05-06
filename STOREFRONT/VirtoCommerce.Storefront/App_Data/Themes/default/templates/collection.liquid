@@ -82,9 +82,9 @@
 
 {% endpaginate %}
 <script>
-    window.products = [];
+    window.productList = [];
     {% for product in collection.products %}
-        window.products.push({
+        window.productList.push({
             id: "{{ product.id }}",
             catalogId: "{{ product.catalog_id }}",
             categoryId: "{{ product.category_id }}"

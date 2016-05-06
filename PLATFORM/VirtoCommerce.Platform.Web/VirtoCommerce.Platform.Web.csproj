@@ -314,6 +314,7 @@
     <Compile Include="Model\Packaging\ModuleBackgroundJobOptions.cs" />
     <Compile Include="Model\Packaging\ModulePushNotification.cs" />
     <Compile Include="Model\PlatformSetting.cs" />
+    <Content Include="Scripts\common\directives\fallbackSrc.js" />
     <Compile Include="SignalR\NoOpPerformanceCounter.cs" />
     <Compile Include="SignalR\NoOpPerformanceCounterManager.cs" />
     <Compile Include="VirtoCommercePlatformWebBootstrapper.cs" />

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
+using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.StaticContent;
 
 namespace VirtoCommerce.Storefront.Services
@@ -23,7 +24,7 @@ namespace VirtoCommerce.Storefront.Services
                 {
                     var blogName = blogMatch.Groups["blog"].Value;
                     var fileName = Path.GetFileNameWithoutExtension(path);
-                    if (fileName.ToLower() == "default")
+                    if (fileName.EqualsInvariant(blogName) || fileName.EqualsInvariant("default"))
                     {
                         retVal = new Blog()
                         {
