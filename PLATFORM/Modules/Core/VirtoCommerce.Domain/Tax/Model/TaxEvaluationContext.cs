@@ -15,10 +15,10 @@ namespace VirtoCommerce.Domain.Tax.Model
         {
             Lines = new List<TaxLine>();
         }
-
+        public VirtoCommerce.Domain.Store.Model.Store Store { get; set; }
         public string Code { get; set; }
         public string Type { get; set; }
-
+        
         public Customer.Model.Contact Customer { get; set; }
         public Customer.Model.Organization Organization { get; set; }
         public Address Address { get; set; }
