@@ -145,6 +145,7 @@ namespace VirtoCommerce.CartModule.Web.Controllers.Api
 
             var retVal = store.ShippingMethods.Where(x => x.IsActive)
                                               .SelectMany(x => x.CalculateRates(evalContext))
+                                              .Where(x => x.ShippingMethod == null || x.ShippingMethod.IsActive)
                                               .Select(x => x.ToWebModel()).ToArray();
 
             return Ok(retVal);
