@@ -56,6 +56,7 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
                 var activeTaxProvider = store.TaxProviders.FirstOrDefault(x => x.IsActive);
                 if(activeTaxProvider != null)
                 {
+                    evalContext.Store = store;
                     retVal.AddRange(activeTaxProvider.CalculateRates(evalContext));
                 }
             }
