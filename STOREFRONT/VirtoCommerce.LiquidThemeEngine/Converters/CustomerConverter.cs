@@ -57,6 +57,10 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                 }, customer.QuoteRequests.PageNumber, customer.QuoteRequests.PageSize);
             }
 
+            if (customer.DynamicProperties != null)
+            {
+                result.Metafields = new MetaFieldNamespacesCollection(new[] { new MetafieldsCollection("dynamic_properties", workContext.CurrentLanguage, customer.DynamicProperties) });
+            }
             return result;
         }
     }

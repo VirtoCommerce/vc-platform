@@ -108,9 +108,9 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         public ICollection<string> Tags { get; set; }
 
         /// <summary>
-        /// Returns the list of customer dynamic properties
+        /// Access in liquid template customer.metafields.dynamic_properties['propertyName']
         /// </summary>
-        public ICollection<DynamicProperty> DynamicProperties { get; set; }
+        public MetaFieldNamespacesCollection Metafields { get; set; }
 
         /// <summary>
         /// Returns an array of all orders placed by the customer.

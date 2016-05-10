@@ -65,6 +65,11 @@ namespace VirtoCommerce.Storefront.Converters
                 retVal.Email = contact.Emails.FirstOrDefault();
             }
 
+            if (!contact.DynamicProperties.IsNullOrEmpty())
+            {
+                retVal.DynamicProperties = contact.DynamicProperties.Select(x => x.ToWebModel()).ToList();            
+            }
+
             return retVal;
         }
 
