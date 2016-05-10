@@ -62,7 +62,8 @@
                 var metadata = {};
                 var nonEmptyProperties = _.filter(currentEntity.dynamicProperties, function (x) { return _.any(x.values) && x.values[0].value; });
                 _.each(nonEmptyProperties, function (x) {
-                    metadata[x.name] = _.pluck(x.values, 'value').join();
+                    var values = _.pluck(x.values, 'value');
+                    metadata[x.name] = x.isArray ? values : values.join();
                 });
                 var dataToSave = '---\n' + YAML.stringify(metadata) + '\n---\n' + (currentEntity.content || '').trim();
 
