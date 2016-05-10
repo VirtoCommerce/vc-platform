@@ -37,8 +37,8 @@ namespace VirtoCommerce.Storefront.Owin
 
                 //add remaining path part without store and language
                 var requestPath = context.Request.Path.Value;
-                requestPath = Regex.Replace(requestPath, "/" + currentStoreId + "/?", "/", RegexOptions.IgnoreCase);
-                requestPath = Regex.Replace(requestPath, "/" + currentCultureName + "/?", "/", RegexOptions.IgnoreCase);
+                requestPath = Regex.Replace(requestPath, @"/\b" + currentStoreId + @"\b/?", "/", RegexOptions.IgnoreCase);
+                requestPath = Regex.Replace(requestPath, @"/\b" + currentCultureName + @"\b/?", "/", RegexOptions.IgnoreCase);
                 normalizedPath = normalizedPath.Add(new PathString(requestPath));
 
                 context.Request.Path = normalizedPath;
