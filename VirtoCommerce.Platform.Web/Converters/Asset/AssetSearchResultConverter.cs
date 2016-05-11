@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using Omu.ValueInjecter;
-using VirtoCommerce.Platform.Core.Asset;
-using webModel = VirtoCommerce.Platform.Web.Model.Asset;
-using coreModel = VirtoCommerce.Platform.Core.Asset;
 using VirtoCommerce.Platform.Core.Common;
+using coreModel = VirtoCommerce.Platform.Core.Assets;
+using webModel = VirtoCommerce.Platform.Web.Model.Asset;
+
 namespace VirtoCommerce.Platform.Web.Converters.Asset
 {
     public static class AssetSearchResultConverter
     {
-        public static webModel.AssetListItem[] ToWebModel(this BlobSearchResult searchResult)
+        public static webModel.AssetListItem[] ToWebModel(this coreModel.BlobSearchResult searchResult)
         {
             var retVal = new List<webModel.AssetListItem>();
             retVal.AddRange(searchResult.Folders.Select(ToWebModel));

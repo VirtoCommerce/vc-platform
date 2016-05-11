@@ -315,6 +315,19 @@
     <Compile Include="Model\Packaging\ModulePushNotification.cs" />
     <Compile Include="Model\PlatformSetting.cs" />
     <Content Include="Scripts\common\directives\fallbackSrc.js" />
+    <Compile Include="Modularity\Bootstrapper.cs" />
+    <Compile Include="Modularity\ModuleInitializer.cs" />
+    <Compile Include="Modularity\ModuleManager.cs" />
+    <Compile Include="Modularity\UnityBootstrapper.cs" />
+    <Compile Include="Modularity\UnityBootstrapperExtension.cs" />
+    <Compile Include="Modularity\UnityContainerHelper.cs" />
+    <Compile Include="Modularity\UnityServiceLocatorAdapter.cs" />
+    <Compile Include="PushNotifications\InMemoryPushNotificationManager.cs" />
+    <Compile Include="Resources\ModularityResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ModularityResources.resx</DependentUpon>
+    </Compile>
     <Compile Include="SignalR\NoOpPerformanceCounter.cs" />
     <Compile Include="SignalR\NoOpPerformanceCounterManager.cs" />
     <Compile Include="VirtoCommercePlatformWebBootstrapper.cs" />
@@ -640,9 +653,25 @@
     <Content Include="Views\Shared\_FacebookTrackerPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\VirtoCommerce.Platform.Core.Web\VirtoCommerce.Platform.Core.Web.csproj">
+      <Project>{d30a07d3-04d4-4226-a6fa-2d54ea3946c1}</Project>
+      <Name>VirtoCommerce.Platform.Core.Web</Name>
+    </ProjectReference>
     <ProjectReference Include="..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj">
       <Project>{f7c9313b-522e-4619-abc9-8c7d4600d6b5}</Project>
       <Name>VirtoCommerce.Platform.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VirtoCommerce.Platform.Data.Azure\VirtoCommerce.Platform.Data.Azure.csproj">
+      <Project>{7b8a21eb-fe13-4fc7-8f93-c1b302d2c83d}</Project>
+      <Name>VirtoCommerce.Platform.Data.Azure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VirtoCommerce.Platform.Data.Notifications\VirtoCommerce.Platform.Data.Notifications.csproj">
+      <Project>{c6a9f9a0-953b-438d-989a-1169e32a60e6}</Project>
+      <Name>VirtoCommerce.Platform.Data.Notifications</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VirtoCommerce.Platform.Data.Security\VirtoCommerce.Platform.Data.Security.csproj">
+      <Project>{3e27ba0c-8982-44b9-8399-7cdf291f6806}</Project>
+      <Name>VirtoCommerce.Platform.Data.Security</Name>
     </ProjectReference>
     <ProjectReference Include="..\VirtoCommerce.Platform.Data\VirtoCommerce.Platform.Data.csproj">
       <Project>{39afd233-b2f7-4178-817d-0a339c57525d}</Project>
@@ -650,9 +679,14 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\ModularityResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ModularityResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\PlatformNotificationResource.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>PlatformNotificationResource.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

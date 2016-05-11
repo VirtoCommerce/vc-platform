@@ -8,7 +8,7 @@ using VirtoCommerce.Platform.Core.Properties;
 namespace VirtoCommerce.Platform.Core.Modularity
 {
     /// <summary>
-    /// Used by <see cref="ModuleInitializer"/> to get the load sequence
+    /// Used by ModuleInitializer to get the load sequence
     /// for the modules to load according to their dependencies.
     /// </summary>
     public class ModuleDependencySolver

@@ -157,9 +157,7 @@ $RECYCLE.BIN/
 .vs/
 
 /VirtoCommerce.Platform.Web/App_Data
-/VirtoCommerce.Platform.Web/Assets
-/VirtoCommerce.Platform.Web/Modules
 /VirtoCommerce.Platform.Web/client_packages
 /VirtoCommerce.Platform.Web/node_modules
-
-/artifacts
+/VirtoCommerce.Platform.Web/Assets
+/VirtoCommerce.Platform.Web/Modules

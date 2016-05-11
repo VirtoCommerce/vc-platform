@@ -4,6 +4,7 @@ using System.Web.Http.Description;
 using Hangfire;
 using Hangfire.States;
 using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Platform.Core.Web.Security;
 using VirtoCommerce.Platform.Web.Model.Jobs;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api

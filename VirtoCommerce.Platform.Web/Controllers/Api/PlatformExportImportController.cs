@@ -9,12 +9,13 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using Hangfire;
 using Omu.ValueInjecter;
-using VirtoCommerce.Platform.Core.Asset;
+using VirtoCommerce.Platform.Core.Assets;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.PushNotifications;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
+using VirtoCommerce.Platform.Core.Web.Security;
 using VirtoCommerce.Platform.Data.Common;
 using VirtoCommerce.Platform.Web.Converters.ExportImport;
 using VirtoCommerce.Platform.Web.Model.ExportImport;
@@ -146,7 +147,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [ResponseType(typeof(PlatformExportManifest))]
         public IHttpActionResult LoadExportManifest([FromUri]string fileUrl)
         {
-            if(string.IsNullOrEmpty(fileUrl))
+            if (string.IsNullOrEmpty(fileUrl))
             {
                 throw new ArgumentNullException("fileUrl");
             }

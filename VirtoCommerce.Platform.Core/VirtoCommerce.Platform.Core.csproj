@@ -42,45 +42,12 @@
     <NoWarn>1591</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Common.Logging">
-      <HintPath>..\packages\Common.Logging.3.1.0\lib\net40\Common.Logging.dll</HintPath>
-    </Reference>
-    <Reference Include="Common.Logging.Core">
-      <HintPath>..\packages\Common.Logging.Core.3.1.0\lib\net40\Common.Logging.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.Practices.Unity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
-      <HintPath>..\packages\Unity.4.0.1\lib\net45\Microsoft.Practices.Unity.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.Practices.Unity.Configuration, Version=4.0.0.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
-      <HintPath>..\packages\Unity.4.0.1\lib\net45\Microsoft.Practices.Unity.Configuration.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.Practices.Unity.RegistrationByConvention, Version=4.0.0.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
-      <HintPath>..\packages\Unity.4.0.1\lib\net45\Microsoft.Practices.Unity.RegistrationByConvention.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
-    </Reference>
-    <Reference Include="System.ServiceModel" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -88,12 +55,12 @@
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Asset\BlobConnectionString.cs" />
-    <Compile Include="Asset\BlobFolder.cs" />
-    <Compile Include="Asset\BlobSearchResult.cs" />
-    <Compile Include="Asset\BlobInfo.cs" />
-    <Compile Include="Asset\IBlobUrlResolver.cs" />
-    <Compile Include="Asset\IBlobStorageProvider.cs" />
+    <Compile Include="Assets\BlobConnectionString.cs" />
+    <Compile Include="Assets\BlobFolder.cs" />
+    <Compile Include="Assets\BlobSearchResult.cs" />
+    <Compile Include="Assets\BlobInfo.cs" />
+    <Compile Include="Assets\IBlobUrlResolver.cs" />
+    <Compile Include="Assets\IBlobStorageProvider.cs" />
     <Compile Include="ChangeLog\IHasChangesHistory.cs" />
     <Compile Include="Common\EnumerableExtensions.cs" />
     <Compile Include="Common\AsyncLock.cs" />
@@ -125,14 +92,12 @@
     <Compile Include="ExportImport\ExportImportProgressInfo.cs" />
     <Compile Include="ExportImport\ExportModuleInfo.cs" />
     <Compile Include="ExportImport\IPlatformExportImportManager.cs" />
-    <Compile Include="Bootstrapper.cs" />
     <Compile Include="ChangeLog\IChangeLoggingService.cs" />
     <Compile Include="ChangeLog\OperationLog.cs" />
     <Compile Include="Common\AnnonymousComparer.cs" />
     <Compile Include="Common\AssemblyExtensions.cs" />
     <Compile Include="Common\AttributeExtensions.cs" />
     <Compile Include="Common\AuditableEntity.cs" />
-    <Compile Include="Common\ClientCacheAttribute.cs" />
     <Compile Include="Common\DateTimeExtensions.cs" />
     <Compile Include="Common\Entity.cs" />
     <Compile Include="Common\EntryState.cs" />
@@ -189,9 +154,7 @@
     <Compile Include="Modularity\ModuleInfoGroup.cs" />
     <Compile Include="Modularity\Exceptions\ModuleInfoGroupExtensions.cs" />
     <Compile Include="Modularity\Exceptions\ModuleInitializeException.cs" />
-    <Compile Include="Modularity\ModuleInitializer.cs" />
     <Compile Include="Modularity\ModuleInitializerOptions.cs" />
-    <Compile Include="Modularity\ModuleManager.cs" />
     <Compile Include="Modularity\Exceptions\ModuleNotFoundException.cs" />
     <Compile Include="Modularity\ModuleManifest.cs" />
     <Compile Include="Modularity\ModuleManifestProvider.cs" />
@@ -208,6 +171,7 @@
     <Compile Include="Notifications\INotificationSendingGateway.cs" />
     <Compile Include="Notifications\INotificationTemplateResolver.cs" />
     <Compile Include="Notifications\INotificationTemplateService.cs" />
+    <Compile Include="Notifications\NotificationParameterAttribute.cs" />
     <Compile Include="Notifications\NotificationParameterValueType.cs" />
     <Compile Include="PushNotifications\IPushNotificationManager.cs" />
     <Compile Include="Notifications\ISmsNotificationSendingGateway.cs" />
@@ -236,7 +200,6 @@
     <Compile Include="Security\ApiAccountType.cs" />
     <Compile Include="Security\ApplicationUserExtended.cs" />
     <Compile Include="Security\AuthentificationOptions.cs" />
-    <Compile Include="Security\CheckPermissionAttribute.cs" />
     <Compile Include="Security\ICurrentUser.cs" />
     <Compile Include="Security\IHasSecurityAccounts.cs" />
     <Compile Include="Security\IUserNameResolver.cs" />
@@ -264,10 +227,6 @@
     <Compile Include="Settings\SettingEntry.cs" />
     <Compile Include="Settings\SettingsExtension.cs" />
     <Compile Include="Settings\SettingValueType.cs" />
-    <Compile Include="UnityBootstrapper.cs" />
-    <Compile Include="UnityBootstrapperExtension.cs" />
-    <Compile Include="UnityContainerHelper.cs" />
-    <Compile Include="UnityServiceLocatorAdapter.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -281,6 +240,9 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="VirtoCommerce.Platform.Core.nuspec">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>

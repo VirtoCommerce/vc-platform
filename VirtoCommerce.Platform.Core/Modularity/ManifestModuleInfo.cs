@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Practices.ObjectBuilder2;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Core.Modularity
 {
@@ -20,10 +20,10 @@ namespace VirtoCommerce.Platform.Core.Modularity
             Scripts = new List<ManifestBundleItem>();
 
             if (manifest.Styles != null)
-                manifest.Styles.ForEach(s => Styles.Add(s));
+                Styles.AddRange(manifest.Styles);
 
             if (manifest.Scripts != null)
-                manifest.Scripts.ForEach(s => Scripts.Add(s));
+                Scripts.AddRange(manifest.Scripts);
         }
     }
 }

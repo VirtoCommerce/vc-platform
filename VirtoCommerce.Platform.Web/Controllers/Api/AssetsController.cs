@@ -7,10 +7,11 @@ using System.Web;
 using System.Web.Hosting;
 using System.Web.Http;
 using System.Web.Http.Description;
-using VirtoCommerce.Platform.Core.Asset;
+using VirtoCommerce.Platform.Core.Assets;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
-using VirtoCommerce.Platform.Data.Asset;
+using VirtoCommerce.Platform.Core.Web.Assets;
+using VirtoCommerce.Platform.Core.Web.Security;
 using VirtoCommerce.Platform.Web.Converters.Asset;
 using webModel = VirtoCommerce.Platform.Web.Model.Asset;
 

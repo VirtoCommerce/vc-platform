@@ -7,13 +7,11 @@ using System.Linq;
 using System.Reflection;
 using System.Web;
 using System.Web.Hosting;
-using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using CacheManager.Core;
 using Hangfire;
-using Hangfire.SqlServer;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Infrastructure;
@@ -23,7 +21,7 @@ using Microsoft.Owin.Security.DataProtection;
 using Microsoft.Owin.StaticFiles;
 using Microsoft.Practices.Unity;
 using Owin;
-using VirtoCommerce.Platform.Core.Asset;
+using VirtoCommerce.Platform.Core.Assets;
 using VirtoCommerce.Platform.Core.ChangeLog;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
@@ -34,14 +32,14 @@ using VirtoCommerce.Platform.Core.Packaging;
 using VirtoCommerce.Platform.Core.PushNotifications;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
-using VirtoCommerce.Platform.Data.Asset;
+using VirtoCommerce.Platform.Data.Assets;
+using VirtoCommerce.Platform.Data.Azure;
 using VirtoCommerce.Platform.Data.ChangeLog;
 using VirtoCommerce.Platform.Data.DynamicProperties;
 using VirtoCommerce.Platform.Data.ExportImport;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Platform.Data.Notifications;
 using VirtoCommerce.Platform.Data.Packaging;
-using VirtoCommerce.Platform.Data.PushNotifications;
 using VirtoCommerce.Platform.Data.Repositories;
 using VirtoCommerce.Platform.Data.Security;
 using VirtoCommerce.Platform.Data.Security.Identity;
@@ -50,6 +48,7 @@ using VirtoCommerce.Platform.Web;
 using VirtoCommerce.Platform.Web.BackgroundJobs;
 using VirtoCommerce.Platform.Web.Controllers.Api;
 using VirtoCommerce.Platform.Web.Hangfire;
+using VirtoCommerce.Platform.Web.PushNotifications;
 using VirtoCommerce.Platform.Web.Resources;
 using VirtoCommerce.Platform.Web.SignalR;
 using WebGrease.Extensions;
@@ -505,7 +504,8 @@ namespace VirtoCommerce.Platform.Web
 
         private static string NormalizePath(string path)
         {
-            var retVal = path;
+            string retVal;
+
             if (path.StartsWith("~"))
             {
                 retVal = HostingEnvironment.MapPath(path);
@@ -519,8 +519,10 @@ namespace VirtoCommerce.Platform.Web
                 retVal = HostingEnvironment.MapPath("~/");
                 retVal += path;
             }
-            return Path.GetFullPath(retVal);
+
+            return retVal != null ? Path.GetFullPath(retVal) : null;
         }
+
         private static string MakeRelativePath(string rootPath, string fullPath)
         {
             var rootUri = new Uri(rootPath);
@@ -529,8 +531,4 @@ namespace VirtoCommerce.Platform.Web
             return relativePath;
         }
     }
-
-
-
-
 }
