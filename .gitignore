@@ -163,18 +163,3 @@ $RECYCLE.BIN/
 /VirtoCommerce.Platform.Web/node_modules
 
 /artifacts
-
-/PLATFORM/packages
-/PLATFORM/Modules/Catalog/VirtoCommerce.CatalogModule.Test/products.csv
-/PLATFORM/Modules/CMS/VirtoCommerce.Content.Web/client_packages
-/PLATFORM/Modules/CMS/VirtoCommerce.Content.Web/node_modules
-/PLATFORM/Modules/Marketing/VirtoCommerce.MarketingModule.Data/app.config
-
-/STOREFRONT/packages
-/STOREFRONT/VirtoCommerce.Storefront/App_Data/blogs/*
-/STOREFRONT/VirtoCommerce.Storefront/App_Data/Themes/*
-/STOREFRONT/VirtoCommerce.Storefront/App_Data/Pages/*
-!/STOREFRONT/VirtoCommerce.Storefront/App_Data/Themes/default/*
-/STOREFRONT/VirtoCommerce.Storefront/Areas
-
-/WebPI/wwwroot
