@@ -76,7 +76,7 @@
           "store-url": "Enter URL",
           "secure-url": "Enter secure URL",
           "store-country": "Select ...",
-          "store-region": "Select ...",
+          "store-region": "Enter region",
           "store-email": "Enter value",
           "store-admin-email": "Enter value",
           "fulfillment-center": "Select...",
