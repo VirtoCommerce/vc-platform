@@ -43,10 +43,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <returns></returns>
         [HttpGet]
         [Route("")]
-        [ResponseType(typeof(webModel.ModuleDescriptor[]))]
+        [ResponseType(typeof(ModuleDescriptor[]))]
         public IHttpActionResult GetModules()
         {
-            var retVal = _packageService.GetModules().Select(x => x.ToWebModel()).ToArray();
+            var retVal = _packageService.GetModules().ToArray();
             return Ok(retVal);
         }
 
@@ -57,13 +57,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <returns></returns>
         [HttpGet]
         [Route("{id}")]
-        [ResponseType(typeof(webModel.ModuleDescriptor))]
+        [ResponseType(typeof(ModuleDescriptor))]
         public IHttpActionResult GetModuleById(string id)
         {
             var retVal = _packageService.GetModules().FirstOrDefault(x => x.Id == id);
             if (retVal != null)
             {
-                return Ok(retVal.ToWebModel());
+                return Ok(retVal);
             }
             return NotFound();
         }
@@ -74,7 +74,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <returns></returns>
         [HttpPost]
         [Route("")]
-        [ResponseType(typeof(webModel.ModuleDescriptor))]
+        [ResponseType(typeof(ModuleDescriptor))]
         [CheckPermission(Permission = PredefinedPermissions.ModuleManage)]
         public async Task<IHttpActionResult> Upload()
         {
@@ -98,7 +98,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 var descriptor = _packageService.OpenPackage(file.LocalFileName);
                 if (descriptor != null)
                 {
-                    var retVal = descriptor.ToWebModel();
+                    var retVal = descriptor;
                     retVal.FileName = file.LocalFileName;
 
                     var dependencyErrors = _packageService.GetDependencyErrors(descriptor);

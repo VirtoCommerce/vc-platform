@@ -4,6 +4,8 @@ using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Net;
+using CacheManager.Core;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Packaging;
@@ -18,12 +20,15 @@ namespace VirtoCommerce.Platform.Data.Packaging
         private readonly IModuleCatalog _moduleCatalog;
         private readonly IModuleManifestProvider _manifestProvider;
         private readonly string _installedPackagesPath;
-
-        public ZipPackageService(IModuleCatalog moduleCatalog, IModuleManifestProvider manifestProvider, string installedPackagesPath)
+        private readonly string[] _updateServersUrls;
+        private readonly ICacheManager<object> _cacheManager;
+        public ZipPackageService(IModuleCatalog moduleCatalog, IModuleManifestProvider manifestProvider, string installedPackagesPath, string[] updateServersUrls, ICacheManager<object> cacheManager)
         {
             _moduleCatalog = moduleCatalog;
             _manifestProvider = manifestProvider;
             _installedPackagesPath = installedPackagesPath;
+            _updateServersUrls = updateServersUrls;
+            _cacheManager = cacheManager;
         }
 
         #region IPackageService Members
@@ -53,12 +58,21 @@ namespace VirtoCommerce.Platform.Data.Packaging
                     .Select(Path.GetFileName)
                     .ToList();
             }
-
+            //Load locally installed modules descriptors
             var result = _manifestProvider.GetModuleManifests().Values
                 .Select(m => ConvertToModuleDescriptor(m, installedPackages))
                 .OrderBy(m => m.Title)
                 .ToArray();
 
+            //Load remote modules 
+            if(!_updateServersUrls.IsNullOrEmpty())
+            {
+                var comparer = AnonymousComparer.Create((ModuleDescriptor x) => x.Id.ToLowerInvariant() + ":" + x.Version.ToString());
+                foreach (var updateServerUrl in  _updateServersUrls)
+                {
+                    result = result.Union(LoadModulesFromUpdateServer(updateServerUrl), comparer).ToArray();
+                }
+            }
             return result;
         }
 
@@ -231,6 +245,16 @@ namespace VirtoCommerce.Platform.Data.Packaging
 
         #endregion
 
+        private static IEnumerable<ModuleDescriptor> LoadModulesFromUpdateServer(string updateServerUrl)
+        {
+            var retVal = new List<ModuleDescriptor>();
+            using (WebClient webClient = new WebClient())
+            using (var stream = webClient.OpenRead(updateServerUrl))
+            {
+                retVal.AddRange(stream.DeserializeJson<List<ModuleDescriptor>>());
+            }
+            return retVal;
+        }
 
         private static bool CheckDependencies(ModuleDescriptor package, IEnumerable<ModuleIdentity> installedModules, IProgress<ProgressMessage> progress)
         {
@@ -423,6 +447,7 @@ namespace VirtoCommerce.Platform.Data.Packaging
                     ReleaseNotes = manifest.ReleaseNotes,
                     Copyright = manifest.Copyright,
                     Tags = manifest.Tags,
+                    IsInstalled = true
                 };
 
                 if (manifest.Dependencies != null)

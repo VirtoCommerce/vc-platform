@@ -459,7 +459,7 @@ namespace VirtoCommerce.Platform.Web
             #region Packaging
 
             var packagesPath = HostingEnvironment.MapPath(VirtualRoot + "/App_Data/InstalledPackages");
-            var packageService = new ZipPackageService(moduleCatalog, manifestProvider, packagesPath);
+            var packageService = new ZipPackageService(moduleCatalog, manifestProvider, packagesPath, ConfigurationManager.AppSettings.GetValues("VirtoCommerce:UpdatesUrl"), cacheManager);
             container.RegisterInstance<IPackageService>(packageService);
 
             var uploadsPath = HostingEnvironment.MapPath(VirtualRoot + "/App_Data/Uploads");

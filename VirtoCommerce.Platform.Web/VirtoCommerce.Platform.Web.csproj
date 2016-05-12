@@ -342,7 +342,6 @@
     <Compile Include="Controllers\Api\SettingController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Converters\Notifications\NotificationConverter.cs" />
-    <Compile Include="Converters\Packaging\ModuleDescriptorConverter.cs" />
     <Compile Include="Converters\Packaging\ProgressMessageConverter.cs" />
     <Compile Include="Converters\Settings\ModuleDescriptorConverter.cs" />
     <Compile Include="Converters\Settings\SettingConverter.cs" />
@@ -362,8 +361,6 @@
     <Compile Include="Model\Notifications\NotificationParameter.cs" />
     <Compile Include="Model\Notifications\NotificationTemplate.cs" />
     <Compile Include="Model\Notifications\SearchNotificationsResult.cs" />
-    <Compile Include="Model\Packaging\ModuleDescriptor.cs" />
-    <Compile Include="Model\Packaging\ModuleIdentity.cs" />
     <Compile Include="Model\Packaging\ProgressMessage.cs" />
     <Compile Include="Model\Security\ResetPasswordInfo.cs" />
     <Compile Include="Model\Security\ChangePasswordInfo.cs" />

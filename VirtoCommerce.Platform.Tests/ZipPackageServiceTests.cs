@@ -82,7 +82,7 @@ namespace VirtoCommerce.Platform.Tests
 
             var manifestProvider = new ModuleManifestProvider(modulesPath);
 
-            var service = new ZipPackageService(null, manifestProvider, packagesPath);
+            var service = new ZipPackageService(null, manifestProvider, packagesPath, null, null);
             return service;
         }
 

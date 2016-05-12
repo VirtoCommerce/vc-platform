@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 using VirtoCommerce.Platform.Core.ExportImport;
-using VirtoCommerce.Platform.Web.Model.Packaging;
+using VirtoCommerce.Platform.Core.Packaging;
 
 namespace VirtoCommerce.Platform.Web.Model.ExportImport
 {
-	public class ImportInfo
+    public class ImportInfo
 	{
 		public ImportInfo()
 		{
