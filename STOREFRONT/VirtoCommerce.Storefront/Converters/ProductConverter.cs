@@ -16,7 +16,7 @@ namespace VirtoCommerce.Storefront.Converters
     {
         public static Product ToWebModel(this VirtoCommerceCatalogModuleWebModelProduct product, Language currentLanguage, Currency currentCurrency, Store store)
         {
-            var retVal = new Product();
+            var retVal = new Product(currentCurrency, currentLanguage);
 
             retVal.Currency = currentCurrency;
             retVal.Price = new ProductPrice(currentCurrency);
@@ -55,7 +55,7 @@ namespace VirtoCommerce.Storefront.Converters
                 retVal.Variations = product.Variations.Select(v => v.ToWebModel(currentLanguage, currentCurrency, store)).ToList();
             }
 
-            if(!product.Associations.IsNullOrEmpty())
+            if (!product.Associations.IsNullOrEmpty())
             {
                 retVal.Associations.AddRange(product.Associations.Select(x => x.ToWebModel()));
             }
@@ -70,13 +70,13 @@ namespace VirtoCommerce.Storefront.Converters
                     Language = new Language(r.LanguageCode),
                     ReviewType = r.ReviewType,
                     Value = r.Content
-                }).Where(x=>x.Language.Equals(currentLanguage)).ToList();
+                }).Where(x => x.Language.Equals(currentLanguage)).ToList();
                 retVal.Description = retVal.Descriptions.FindWithLanguage(currentLanguage, x => x.Value, null);
             }
 
             return retVal;
         }
-        
+
         public static QuoteItem ToQuoteItem(this Product product, long quantity)
         {
             var quoteItem = new QuoteItem();
@@ -88,7 +88,7 @@ namespace VirtoCommerce.Storefront.Converters
             quoteItem.ListPrice = product.Price.ListPrice;
             quoteItem.ProductId = product.Id;
             quoteItem.SalePrice = product.Price.SalePrice;
-            quoteItem.ProposalPrices.Add(new TierPrice(product.Price.SalePrice, quantity));          
+            quoteItem.ProposalPrices.Add(new TierPrice(product.Price.SalePrice, quantity));
             quoteItem.SelectedTierPrice = quoteItem.ProposalPrices.First();
 
             return quoteItem;
@@ -112,5 +112,7 @@ namespace VirtoCommerce.Storefront.Converters
 
             return promoItem;
         }
+
+     
     }
 }

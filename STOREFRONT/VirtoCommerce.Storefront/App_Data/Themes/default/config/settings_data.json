@@ -84,7 +84,8 @@
             "type_navigation_transform": true,
             "remove_dollar_symbol": false,
             "superscript_decimals": true,
-            "store_selector_enable": true
+            "store_selector_enable": true,
+            "show_prices_with_taxes": true
         },
         "Soft Green": {
             "ajax_cart_enable": true,

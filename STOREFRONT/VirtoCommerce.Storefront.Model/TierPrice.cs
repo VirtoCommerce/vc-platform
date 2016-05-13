@@ -12,10 +12,21 @@ namespace VirtoCommerce.Storefront.Model
         public TierPrice(Money price, long quantity)
         {
             Price = price;
+            Tax = new Money(price.Currency);
             Quantity = quantity;
         }
 
         public Money Price { get; set; }
+
+        public Money PriceWithTax
+        {
+            get
+            {
+                return Price + Tax;
+            }
+        }
+
+        public Money Tax { get; set; }
         /// <summary>
         /// Current active discount
         /// </summary>
@@ -34,6 +45,14 @@ namespace VirtoCommerce.Storefront.Model
                     retVal -= ActiveDiscount.Amount;
                 }
                 return retVal;
+            }
+        }
+
+        public Money ActualPriceWithTax
+        {
+            get
+            {
+                return ActualPrice + Tax;
             }
         }
 

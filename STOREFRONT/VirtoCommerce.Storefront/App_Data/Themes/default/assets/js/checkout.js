@@ -45,7 +45,7 @@ storefrontApp.controller('checkoutController', ['$rootScope', '$scope', '$window
             var coupon = response.data;
             $scope.checkout.couponProcessing = false;
             $scope.checkout.coupon = coupon;
-            getCart(true);
+            getCart();
         }, function (response) {
             $scope.checkout.couponProcessing = false;
         });
@@ -56,7 +56,7 @@ storefrontApp.controller('checkoutController', ['$rootScope', '$scope', '$window
         cartService.removeCoupon().then(function (response) {
             $scope.checkout.couponProcessing = false;
             $scope.checkout.coupon = null;
-            getCart(true);
+            getCart();
         }, function (response) {
             $scope.checkout.couponProcessing = false;
         });
@@ -298,8 +298,13 @@ storefrontApp.controller('checkoutController', ['$rootScope', '$scope', '$window
     function updateTotals(cart) {
         $scope.checkout.coupon = $scope.checkout.coupon || cart.coupon;
         $scope.checkout.subtotal = cart.subTotal;
+        $scope.checkout.subtotalWithTax = cart.subTotalWithTax;
         $scope.checkout.discountTotal = cart.discountTotal;
+        $scope.checkout.discountTotalWithTax = cart.discountTotalWithTax;
+        $scope.checkout.shippingPrice = cart.shippingPrice;
+        $scope.checkout.shippingPriceWithTax = cart.shippingPriceWithTax;
         $scope.checkout.shippingTotal = cart.shippingTotal;
+        $scope.checkout.shippingTotalWithTax = cart.shippingTotalWithTax;
         $scope.checkout.taxTotal = cart.taxTotal;
         $scope.checkout.total = cart.total;
     }

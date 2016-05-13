@@ -172,9 +172,10 @@ namespace VirtoCommerce.Storefront.Test
         {
             var apiClientConfiguration = new Client.Client.Configuration(GetApiClient());
             var workContextFactory = new Func<WorkContext>(GetTestWorkContext);
+            var commerceApi = new CommerceCoreModuleApi(apiClientConfiguration);
             var catalogApi = new CatalogModuleApi(apiClientConfiguration);
             var pricingApi = new PricingModuleApi(apiClientConfiguration);
-            var pricingService = new PricingServiceImpl(workContextFactory, pricingApi);
+            var pricingService = new PricingServiceImpl(workContextFactory, pricingApi, commerceApi);
             var inventoryApi = new InventoryModuleApi(apiClientConfiguration);
             var searchApi = new SearchModuleApi(apiClientConfiguration);
             var marketingApi = new MarketingModuleApi(apiClientConfiguration);

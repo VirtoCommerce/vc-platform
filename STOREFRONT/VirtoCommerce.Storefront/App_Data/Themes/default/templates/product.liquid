@@ -60,14 +60,26 @@
                 </li>
                  <!--For sku-selector variations switches-->
                 <li ng-if="selectedVariation.id">
-                    <span ng-if="selectedVariation.price.absoluteBenefit.amount > 0" class="old">
-                        <small ng-bind="selectedVariation.price.listPrice.formatedAmount"></small>
-                    </span>
-                    <span ng-if="selectedVariation.price.absoluteBenefit.amount > 0" id="comparePrice" class="sale-tag large" ng-bind="'{{ 'products.general.save_html' | t }}' + selectedVariation.price.absoluteBenefit.formatedAmount">
-                    </span>
-                    <span id="productPrice" class="h1">
-                        <small ng-bind="selectedVariation.price.actualPrice.formatedAmount"></small>
-                    </span>
+                    {% if settings.show_prices_with_taxes %}
+                        <span ng-if="selectedVariation.price.absoluteBenefitWithTax.amount > 0" class="old">
+                            <small ng-bind="selectedVariation.price.listPriceWithTax.formatedAmount"></small>                      
+                        </span>
+                        <span ng-if="selectedVariation.price.absoluteBenefitWithTax.amount > 0" id="comparePrice" class="sale-tag large" ng-bind="'{{ 'products.general.save_html' | t }}' + selectedVariation.price.absoluteBenefitWithTax.formatedAmount">
+                        </span>
+                        <span id="productPrice" class="h1">
+                            <small ng-bind="selectedVariation.price.actualPriceWithTax.formatedAmount"></small>                           
+                        </span>
+                        <span>Inc VAT</span>      
+                    {% else %}
+                        <span ng-if="selectedVariation.price.absoluteBenefit.amount > 0" class="old">
+                            <small ng-bind="selectedVariation.price.listPrice.formatedAmount"></small>
+                        </span>
+                        <span ng-if="selectedVariation.price.absoluteBenefit.amount > 0" id="comparePrice" class="sale-tag large" ng-bind="'{{ 'products.general.save_html' | t }}' + selectedVariation.price.absoluteBenefit.formatedAmount">
+                        </span>
+                        <span id="productPrice" class="h1">
+                            <small ng-bind="selectedVariation.price.actualPrice.formatedAmount"></small>
+                        </span>
+                    {% endif %}
                 </li>
 
                 {% if settings.product_reviews_enable %}

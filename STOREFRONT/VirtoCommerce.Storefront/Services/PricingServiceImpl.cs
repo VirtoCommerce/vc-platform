@@ -16,10 +16,12 @@ namespace VirtoCommerce.Storefront.Services
     public class PricingServiceImpl : IPricingService
     {
         private readonly IPricingModuleApi _pricingApi;
+        private readonly ICommerceCoreModuleApi _commerceApi;
         private readonly Func<WorkContext> _workContextFactory;
-        public PricingServiceImpl(Func<WorkContext> workContextFactory, IPricingModuleApi pricingApi)
+        public PricingServiceImpl(Func<WorkContext> workContextFactory, IPricingModuleApi pricingApi, ICommerceCoreModuleApi commerceApi)
         {
             _pricingApi = pricingApi;
+            _commerceApi = commerceApi;
             _workContextFactory = workContextFactory;
         }
 
@@ -32,6 +34,10 @@ namespace VirtoCommerce.Storefront.Services
 
             var pricesResponse = await _pricingApi.PricingModuleEvaluatePricesAsync(evalContext);
             ApplyProductPricesInternal(products, pricesResponse);
+            //Evaluate product taxes
+            var taxEvalContext = workContext.ToTaxEvaluationContext(products);
+            var taxRates = await _commerceApi.CommerceEvaluateTaxesAsync(workContext.CurrentStore.Id, taxEvalContext);
+            ApplyProductTaxInternal(products, taxRates);
         }
 
         public void EvaluateProductPrices(IEnumerable<Product> products)
@@ -42,9 +48,23 @@ namespace VirtoCommerce.Storefront.Services
 
             var pricesResponse = _pricingApi.PricingModuleEvaluatePrices(evalContext);
             ApplyProductPricesInternal(products, pricesResponse);
+
+            //Evaluate product taxes
+            var taxEvalContext = workContext.ToTaxEvaluationContext(products);
+            var taxRates = _commerceApi.CommerceEvaluateTaxes(workContext.CurrentStore.Id, taxEvalContext);
+            ApplyProductTaxInternal(products, taxRates);
         }
 
         #endregion
+        private void ApplyProductTaxInternal(IEnumerable<Product> products, IEnumerable<VirtoCommerceDomainTaxModelTaxRate> taxes)
+        {
+            var workContext = _workContextFactory();
+            var taxRates = taxes.Select(x => x.ToWebModel(workContext.CurrentCurrency));
+            foreach(var product in products)
+            {
+                product.ApplyTaxRates(taxRates);
+            }
+        }
 
         private void ApplyProductPricesInternal(IEnumerable<Product> products, IEnumerable<VirtoCommercePricingModuleWebModelPrice> prices)
         {

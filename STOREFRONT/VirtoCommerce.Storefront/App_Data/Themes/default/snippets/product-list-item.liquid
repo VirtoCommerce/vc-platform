@@ -62,13 +62,23 @@
                 </div>
 
                 <div class="product-item--price text-center" ng-if="productPricesLoaded">
-                    <p class="h1 medium-down--left">
-                        <span class="old" ng-if="productPrices['{{ product.id }}'].absoluteBenefit.amount > 0">
-                            <small ng-bind="productPrices['{{ product.id }}'].listPrice.formatedAmount"></small>
-                        </span>
-                        <small ng-bind="productPrices['{{ product.id }}'].actualPrice.formatedAmount"></small>
-                    </p>
-                    <span class="sale-tag medium--right" ng-if="productPrices['{{ product.id }}'].absoluteBenefit.amount > 0" ng-bind="'save ' + productPrices['{{ product.id }}'].absoluteBenefit.formatedAmount"></span>
+                    {% if settings.show_prices_with_taxes %}
+                        <p class="h1 medium-down--left">
+                            <span class="old" ng-if="productPrices['{{ product.id }}'].absoluteBenefitWithTax.amount > 0">
+                                <small ng-bind="productPrices['{{ product.id }}'].listPriceWithTax.formatedAmount"></small>
+                            </span>
+                            <small ng-bind="productPrices['{{ product.id }}'].actualPriceWithTax.formatedAmount"></small>
+                        </p>
+                        <span class="sale-tag medium--right" ng-if="productPrices['{{ product.id }}'].absoluteBenefitWithTax.amount > 0" ng-bind="'save ' + productPrices['{{ product.id }}'].absoluteBenefitWithTax.formatedAmount"></span>
+                    {% else %}
+                        <p class="h1 medium-down--left">
+                            <span class="old" ng-if="productPrices['{{ product.id }}'].absoluteBenefit.amount > 0">
+                                <small ng-bind="productPrices['{{ product.id }}'].listPrice.formatedAmount"></small>
+                            </span>
+                            <small ng-bind="productPrices['{{ product.id }}'].actualPrice.formatedAmount"></small>
+                        </p>                         
+                        <span class="sale-tag medium--right" ng-if="productPrices['{{ product.id }}'].absoluteBenefit.amount > 0" ng-bind="'save ' + productPrices['{{ product.id }}'].absoluteBenefit.formatedAmount"></span>
+                    {% endif %}
 
                     {% if settings.product_reviews_enable %}
                         <span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span>
