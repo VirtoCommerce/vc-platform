@@ -161,6 +161,8 @@ namespace VirtoCommerce.Platform.Web
             }
 
             GlobalConfiguration.Configure(WebApiConfig.Register);
+            container.RegisterInstance(GlobalConfiguration.Configuration);
+
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
