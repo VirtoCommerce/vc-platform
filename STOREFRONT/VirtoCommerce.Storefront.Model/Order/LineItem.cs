@@ -21,12 +21,26 @@ namespace VirtoCommerce.Storefront.Model.Order
         /// </summary>
         /// <value>Price with tax and without dicount</value>
         public Money BasePrice { get; set; }
+        public Money BasePriceWithTax
+        {
+            get
+            {
+                return BasePrice + BasePrice * TaxRate;
+            }
+        }
 
         /// <summary>
         /// Price where tax is not applied and discount is applied
         /// </summary>
         /// <value>Price with tax and discount</value>
         public Money Price { get; set; }
+        public Money PriceWithTax
+        {
+            get
+            {
+                return Price + Price * TaxRate;
+            }
+        }
 
         /// <summary>
         /// Discount amount
@@ -39,6 +53,22 @@ namespace VirtoCommerce.Storefront.Model.Order
         /// </summary>
         /// <value>Tax sum</value>
         public Money Tax { get; set; }
+
+        /// <summary>
+        /// Evaluated from Tax total Tax rate
+        /// </summary>
+        public decimal TaxRate
+        {
+            get
+            {
+                var retVal = 0m;
+                if (Tax != null)
+                {
+                    retVal = Tax.Amount / (Price.Amount * (Quantity ?? 1));
+                }
+                return retVal;
+            }
+        }
 
         /// <summary>
         /// Gets or Sets Currency

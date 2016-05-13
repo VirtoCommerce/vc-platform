@@ -45,17 +45,32 @@
             <ul class="inline-list product-meta">
                 <li ng-if="!selectedVariation.id">
                     {% if product.compare_at_price > product.price %}
-                        <span class="old">
-                            {% include 'price' with variant.compare_at_price %}
-                        </span>
-                        <span id="comparePrice" class="sale-tag large">
-                            {% assign compare_price = variant.compare_at_price %}
-                            {% assign product_price = variant.price %}
-                            {% include 'price-sale' %}
-                        </span>
+                         {% if settings.show_prices_with_taxes %}
+                            <span class="old">
+                                {% include 'price' with variant.compare_at_price_with_tax %}
+                            </span>
+                            <span id="comparePrice" class="sale-tag large">
+                                {% assign compare_price = variant.compare_at_price_with_tax %}
+                                {% assign product_price = variant.price_with_tax %}
+                                {% include 'price-sale' %}
+                            </span>
+                         {% else %}
+                            <span class="old">
+                                {% include 'price' with variant.compare_at_price %}
+                            </span>
+                            <span id="comparePrice" class="sale-tag large">
+                                {% assign compare_price = variant.compare_at_price %}
+                                {% assign product_price = variant.price %}
+                                {% include 'price-sale' %}
+                            </span>
+                         {% endif %}                        
                     {% endif %}
                     <span id="productPrice" class="h1">
-                        {% include 'price' with variant.price %}
+                        {% if settings.show_prices_with_taxes %}
+                            {% include 'price' with variant.price_with_tax %}                           
+                        {% else %}
+                            {% include 'price' with variant.price %}
+                        {% endif %} 
                     </span>
                 </li>
                  <!--For sku-selector variations switches-->

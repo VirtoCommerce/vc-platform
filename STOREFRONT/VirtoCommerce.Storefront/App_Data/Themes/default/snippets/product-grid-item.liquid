@@ -43,15 +43,28 @@
             <span class="h1 medium--left">
                 {% if on_sale %}
                     <span class="old">
-                        {% include 'price' with product.compare_at_price %}
+                        {% if settings.show_prices_with_taxes %}
+                            {% include 'price' with product.compare_at_price_with_tax %}
+                        {% else %}
+                            {% include 'price' with product.compare_at_price %}
+                        {% endif %}                           
                     </span>
                 {% endif %}
-                {% include 'price' with product.price %}
+                {% if settings.show_prices_with_taxes %}
+                    {% include 'price' with product.price_with_tax %}
+                {% else %}
+                    {% include 'price' with product.price %}
+                {% endif %}            
             </span>
             {% if on_sale %}
                 <span class="sale-tag medium--right{% if settings.product_reviews_enable %} has-reviews{% endif %}">
-                    {% assign compare_price = product.compare_at_price %}
-                    {% assign product_price = product.price %}
+                    {% if settings.show_prices_with_taxes %}
+                        {% assign compare_price = product.compare_at_price_with_tax %}
+                        {% assign product_price = product.price_with_tax %}
+                    {% else %}
+                        {% assign compare_price = product.compare_at_price %}
+                        {% assign product_price = product.price %}
+                    {% endif %} 
                     {% include 'price-sale' %}
                 </span>
             {% endif %}

@@ -152,12 +152,17 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         /// </summary>
         [DataMember]
         public decimal ShippingPrice { get; set; }
+        [DataMember]
+        public decimal ShippingPriceWithTax { get; set; }
+
 
         /// <summary>
         /// Returns the subtotal price of an order. Use a money filter to return the value in a monetary format.
         /// </summary>
         [DataMember]
         public decimal SubtotalPrice { get; set; }
+        [DataMember]
+        public decimal SubtotalPriceWithTax { get; set; }
 
         /// <summary>
         /// Returns an array of tax_line variables for an order.

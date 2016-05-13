@@ -42,12 +42,16 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         /// </summary>
         [DataMember]
         public decimal LinePrice { get; set; }
+        [DataMember]
+        public decimal LinePriceWithTax { get; set; }
 
         /// <summary>
         /// Gets line item price
         /// </summary>
         [DataMember]
         public decimal Price { get; set; }
+        [DataMember]
+        public decimal PriceWithTax { get; set; }
 
         /// <summary>
         /// Gets product associated with the line item

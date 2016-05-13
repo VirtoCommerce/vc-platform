@@ -22,7 +22,9 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                 Src = lineItem.ImageUrl
             };
             shopifyModel.LinePrice = lineItem.ExtendedPrice.Amount * 100;
+            shopifyModel.LinePriceWithTax = lineItem.ExtendedPriceWithTax.Amount * 100;
             shopifyModel.Price = lineItem.PlacedPrice.Amount * 100;
+            shopifyModel.PriceWithTax = lineItem.PlacedPriceWithTax.Amount * 100;
             shopifyModel.ProductId = lineItem.ProductId;
             //shopifyModel.Properties = null; // TODO
             shopifyModel.Quantity = lineItem.Quantity;
@@ -48,6 +50,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                 Id = lineItem.Id,
                 Quantity = lineItem.Quantity ?? 0,
                 Price = lineItem.Price.Amount * 100,
+                PriceWithTax = lineItem.PriceWithTax.Amount * 100,
                 ProductId = lineItem.ProductId,
                 Sku = lineItem.Name,
                 Title = lineItem.Name,
@@ -55,6 +58,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             };
 
             result.LinePrice = result.Price * result.Quantity;
+            result.LinePriceWithTax = result.PriceWithTax * result.Quantity;
 
             result.Product = new Product
             {

@@ -34,11 +34,10 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             result.CompareAtPriceVaries = result.CompareAtPriceMax != result.CompareAtPriceMin;
 
             result.CompareAtPrice = product.Price.ListPrice.Amount * 100;
-            result.Price = product.Price.SalePrice.Amount * 100;
-            if (product.Price.ActiveDiscount != null)
-            {
-                result.Price = result.Price - product.Price.ActiveDiscount.Amount.Amount * 100;
-            }
+            result.CompareAtPriceWithTax = product.Price.ListPriceWithTax.Amount * 100;
+            result.Price = product.Price.ActualPrice.Amount * 100;           
+            result.PriceWithTax = product.Price.ActualPriceWithTax.Amount * 100;
+           
             result.PriceMax = result.Variants.Select(x => x.Price).Max();
             result.PriceMin = result.Variants.Select(x => x.Price).Min();
             result.PriceVaries = result.PriceMax != result.PriceMin;
@@ -111,12 +110,9 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             result.InventoryQuantity = product.Inventory != null ? product.Inventory.InStockQuantity ?? 0 : 0;
             result.Options = product.VariationProperties.Where(p => !string.IsNullOrEmpty(p.Value)).Select(p => p.Value).ToArray();
             result.CompareAtPrice = product.Price.ListPrice.Amount * 100;
-            result.Price = product.Price.SalePrice.Amount * 100;
-            if (product.Price.ActiveDiscount != null)
-            {
-                result.Price = result.Price - product.Price.ActiveDiscount.Amount.Amount * 100;
-            }
-
+            result.CompareAtPriceWithTax = product.Price.ListPriceWithTax.Amount * 100;
+            result.Price = product.Price.ActualPrice.Amount * 100;
+            result.PriceWithTax = product.Price.ActualPriceWithTax.Amount * 100;
             result.Selected = false;
             result.Sku = product.Sku;
             result.Title = product.Name;

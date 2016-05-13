@@ -63,16 +63,26 @@
             {% endif %}
           </td>
           <td>{{ line_item.sku }}</td>
-          <td>{{ line_item.price | money }}</td>
-          <td class="text-center">{{ line_item.quantity }}</td>
-          <td class="text-right">{{ line_item.line_price | money }}</td>
+            {% if settings.show_prices_with_taxes %}
+                <td>{{ line_item.price_with_tax | money }}</td>
+                <td class="text-center">{{ line_item.quantity }}</td>
+                <td class="text-right">{{ line_item.line_price_with_tax | money }}</td>
+            {% else %}
+                <td>{{ line_item.price | money }}</td>
+                <td class="text-center">{{ line_item.quantity }}</td>
+                <td class="text-right">{{ line_item.line_price | money }}</td>
+            {% endif %}  
         </tr>
         {% endfor %}
       </tbody>
       <tfoot>
         <tr>
           <td colspan="4">{{ 'customer.order.subtotal' | t }}:</td>
-          <td class="text-right">{{ order.subtotal_price | money }}</td>
+            {% if settings.show_prices_with_taxes %}
+                <td class="text-right">{{ order.subtotal_price_with_tax | money }}</td>
+            {% else %}
+                 <td class="text-right">{{ order.subtotal_price | money }}</td>
+            {% endif %}  
         </tr>
 
         {% for discount in order.discounts %}
