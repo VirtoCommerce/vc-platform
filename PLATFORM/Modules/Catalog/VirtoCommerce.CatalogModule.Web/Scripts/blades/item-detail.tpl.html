@@ -121,6 +121,31 @@
                         </div>
                     </div>
                 </div>
+                <div class="form-group" ng-if="blade.item.productType!=='Digital'">
+                    <div class="columns">
+                        <div class="column">
+                            <div class="form-group">
+                                <label class="form-label">{{ 'catalog.blades.item-detail.labels.weight-unit' | translate }} <a href="" ng-click="openDictionarySettingManagement('WeightUnits')" class="form-edit" va-permission="platform:setting:update"><i class="form-ico fa fa-pencil"></i></a></label>
+                                <div class="form-input">
+                                    <ui-select ng-model="blade.item.weightUnit">
+                                        <ui-select-match allow-clear="true" placeholder="{{ 'catalog.blades.item-detail.placeholders.weight-unit' | translate }}">{{$select.selected}}</ui-select-match>
+                                        <ui-select-choices repeat="x in weightUnits | filter: $select.search">
+                                            <span ng-bind-html="x | highlight: $select.search"></span>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column">
+                            <div class="form-group">
+                                <label class="form-label">{{ 'catalog.blades.item-detail.labels.weight' | translate }}</label>
+                                <div class="form-input __number">
+                                    <input smart-float num-type="float" ng-model="blade.item.weight" placeholder="{{ 'catalog.blades.item-detail.placeholders.weight' | translate}}" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="form-group">
                     <div class="columns clearfix">
                         <div class="column">
@@ -138,7 +163,7 @@
                         </div>
                         <div class="column">
                             <div class="form-group">
-                                <label class="form-label">{{ 'catalog.blades.item-detail.labels.tax-type' | translate }} <a href="" ng-click="openDictionarySettingManagement()" class="form-edit" va-permission="platform:setting:update"><i class="form-ico fa fa-pencil"></i></a></label>
+                                <label class="form-label">{{ 'catalog.blades.item-detail.labels.tax-type' | translate }} <a href="" ng-click="openDictionarySettingManagement('TaxTypes')" class="form-edit" va-permission="platform:setting:update"><i class="form-ico fa fa-pencil"></i></a></label>
                                 <div class="form-input">
                                     <ui-select ng-model="blade.item.taxType">
                                         <ui-select-match allow-clear="true" placeholder="{{ 'catalog.blades.item-detail.placeholders.tax-type' | translate }}">{{$select.selected}}</ui-select-match>

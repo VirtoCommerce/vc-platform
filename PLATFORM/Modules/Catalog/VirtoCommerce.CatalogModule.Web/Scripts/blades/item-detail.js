@@ -135,15 +135,28 @@
         bladeNavigationService.showBlade(newBlade, blade);
     };
 
-    $scope.openDictionarySettingManagement = function () {
+    $scope.openDictionarySettingManagement = function (setting) {
         var newBlade = {
             id: 'settingDetailChild',
             isApiSave: true,
-            currentEntityId: 'VirtoCommerce.Core.General.TaxTypes',
-            parentRefresh: function (data) { $scope.taxTypes = data; },
             controller: 'platformWebApp.settingDictionaryController',
             template: '$(Platform)/Scripts/app/settings/blades/setting-dictionary.tpl.html'
         };
+        switch (setting) {
+            case 'TaxTypes':
+                _.extend(newBlade, {
+                    currentEntityId: 'VirtoCommerce.Core.General.TaxTypes',
+                    parentRefresh: function (data) { $scope.taxTypes = data; }
+                });
+                break;
+            case 'WeightUnits':
+                _.extend(newBlade, {
+                    currentEntityId: 'VirtoCommerce.Core.General.WeightUnits',
+                    parentRefresh: function (data) { $scope.weightUnits = data; }
+                });
+                break;
+        }
+
         bladeNavigationService.showBlade(newBlade, blade);
     };
 
@@ -155,5 +168,6 @@
 
     initVendors();
     $scope.taxTypes = settings.getValues({ id: 'VirtoCommerce.Core.General.TaxTypes' });
+    $scope.weightUnits = settings.getValues({ id: 'VirtoCommerce.Core.General.WeightUnits' });
     blade.refresh(false);
 }]);

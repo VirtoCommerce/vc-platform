@@ -250,6 +250,8 @@
           "max-quantity": "Max. quantity",
           "vendor": "Vendor",
           "tax-type": "Tax type",
+          "weight-unit": "Weight unit",
+          "weight": "Weight",
           "max-downloads": "Max. number of downloads",
           "expiration-date": "Download expiration date",
           "download-type": "Download type"
@@ -262,6 +264,8 @@
           "name": "Enter item name",
           "vendor": "Select...",
           "tax-type": "Select...",
+          "weight-unit": "Select...",
+          "weight": "Enter weight",
           "expiration-date": "Choose date",
           "download-type": "Select..."
         }

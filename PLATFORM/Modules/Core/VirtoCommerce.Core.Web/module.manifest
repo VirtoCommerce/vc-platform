@@ -39,11 +39,24 @@
         </arrayValues>
       </setting>
       <setting>
+        <name>VirtoCommerce.Core.General.WeightUnits</name>
+        <valueType>string</valueType>
+        <defaultValue>gram</defaultValue>
+        <title>Mass units</title>
+        <description>Mass units available for physical goods weighting</description>
+        <isArray>true</isArray>
+        <arrayValues>
+          <value>gram</value>
+          <value>ounce</value>
+          <value>pound</value>
+        </arrayValues>
+      </setting>
+      <setting>
         <name>VirtoCommerce.Core.General.Languages</name>
         <valueType>string</valueType>
         <defaultValue>en-US</defaultValue>
         <title>Languages</title>
-        <description>Languages available in system</description>
+        <description>Languages available in the platform</description>
         <isArray>true</isArray>
         <arrayValues>
           <value>en-US</value>
@@ -81,7 +94,7 @@
       <permission id="core:currency:read" name="View currencies" />
       <permission id="core:currency:update" name="Update currency" />
       <permission id="core:currency:delete" name="Delete currency" />
-      
+
       <!--<permission id="core:fulfillment:access" name="Manage fulfillment centers" description="Permission to manage fulfillment centers."/>-->
       <permission id="core:fulfillment:create" name="Create fulfillment center" description=""/>
       <permission id="core:fulfillment:read" name="View fulfillment center data" description=""/>
