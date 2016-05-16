@@ -9,14 +9,19 @@ namespace VirtoCommerce.Storefront.Model.Cart
 {
     public class Shipment : Entity, IDiscountable, IValidatable, ITaxable
     {
-        public Shipment(Currency currency)
+        public Shipment()
         {
-            Currency = currency;
             Discounts = new List<Discount>();
             Items = new List<CartShipmentItem>();
             TaxDetails = new List<TaxDetail>();
             ValidationErrors = new List<ValidationError>();
             ValidationWarnings = new List<ValidationError>();
+        }
+        public Shipment(Currency currency)
+            :this()
+        {
+            Currency = currency;
+        
             ShippingPrice = new Money(currency);
             ShippingPriceWithTax = new Money(currency);
             TaxTotal = new Money(currency);

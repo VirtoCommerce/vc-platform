@@ -207,7 +207,8 @@ namespace VirtoCommerce.Storefront.Builders
                 }
             }
 
-            Shipment shipment = null;
+            //Temporary support only one shipment in cart
+            var shipment = _cart.Shipments.FirstOrDefault();
             if (!string.IsNullOrEmpty(changedShipment.Id))
             {
                 shipment = _cart.Shipments.FirstOrDefault(s => s.Id == changedShipment.Id);
@@ -215,10 +216,10 @@ namespace VirtoCommerce.Storefront.Builders
                 {
                     throw new StorefrontException(string.Format("Shipment with {0} not found", changedShipment.Id));
                 }
-            }
-            else
+            }            
+            if(shipment == null)
             {
-                shipment = new Shipment(_cart.Currency);
+                 shipment = new Shipment(_cart.Currency);
                 _cart.Shipments.Add(shipment);
             }
 
@@ -433,8 +434,24 @@ namespace VirtoCommerce.Storefront.Builders
             var serviceModels = await _cartApi.CartModuleGetShipmentMethodsAsync(_cart.Id);
             foreach (var serviceModel in serviceModels)
             {
-                availableShippingMethods.Add(serviceModel.ToWebModel(new Currency[] { _cart.Currency }, _cart.Language));
+                availableShippingMethods.Add(serviceModel.ToWebModel(_cart.Currency));
             }
+            //Evaluate tax for shipping methods
+            var taxEvalContext = _cart.ToTaxEvalContext();
+            taxEvalContext.Lines.Clear();
+            taxEvalContext.Lines.AddRange(availableShippingMethods.Select(x => x.ToTaxLine()));
+            var taxResult = await _commerceApi.CommerceEvaluateTaxesAsync(_cart.StoreId, taxEvalContext);
+            if (taxResult != null)
+            {
+                var taxRates = taxResult.Select(x => x.ToWebModel(_cart.Currency));
+                foreach (var shippingMethod in availableShippingMethods)
+                {
+                    shippingMethod.ApplyTaxRates(taxRates);
+                }
+            }
+            //Evaluate promotions for shipping methods
+            var promoEvalContext = _cart.ToPromotionEvaluationContext();
+            await _promotionEvaluator.EvaluateDiscountsAsync(promoEvalContext, availableShippingMethods);
 
             return availableShippingMethods;
         }
@@ -454,20 +471,9 @@ namespace VirtoCommerce.Storefront.Builders
 
         public virtual async Task<ICartBuilder> EvaluatePromotionsAsync()
         {
-            var promotionItems = _cart.Items.Select(i => i.ToPromotionItem()).ToList();
+            var evalContext = _cart.ToPromotionEvaluationContext();
 
-            var promotionContext = new PromotionEvaluationContext();
-            promotionContext.CartPromoEntries = promotionItems;
-            promotionContext.CartTotal = _cart.Total;
-            promotionContext.Coupon = _cart.Coupon != null ? _cart.Coupon.Code : null;
-            promotionContext.Currency = _cart.Currency;
-            promotionContext.CustomerId = _cart.Customer.Id;
-            promotionContext.IsRegisteredUser = _cart.Customer.IsRegisteredUser;
-            promotionContext.Language = _cart.Language;
-            promotionContext.PromoEntries = promotionItems;
-            promotionContext.StoreId = _cart.StoreId;
-
-            await _promotionEvaluator.EvaluateDiscountsAsync(promotionContext, new IDiscountable[] { _cart });
+            await _promotionEvaluator.EvaluateDiscountsAsync(evalContext, new IDiscountable[] { _cart });
 
             return this;
         }

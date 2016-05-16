@@ -183,13 +183,27 @@
                         </div>
                         <div class="content-box" ng-repeat="availableShippingMethod in checkout.availableShippingMethods" ng-if="!checkout.shipment.validationWarnings.length">
                             <div class="content-box__row">
-                                <div class="radio-wrapper">
+							
+								<div class="radio-wrapper">
                                     <div class="radio__input">
                                         <input class="input-radio" id="{% raw %}{{ availableShippingMethod.shipmentMethodCode }}{% endraw %}" name="ShipmentMethodCode" type="radio" ng-model="checkout.shipment.shipmentMethodCode" ng-required="true" ng-change="setShippingMethod()" ng-value="availableShippingMethod.shipmentMethodCode" ng-disabled="checkout.shippingMethodProcessing" />
                                     </div>
                                     <label class="radio__label" for="{% raw %}{{ availableShippingMethod.shipmentMethodCode }}{% endraw %}" ng-bind="availableShippingMethod.name"></label>
-                                    <span class="radio__accessory content-box__emphasis" ng-bind="availableShippingMethod.price.formatedAmount"></span>
-                                </div>
+									{% if settings.show_prices_with_taxes %}
+										<span class="order-summary__emphasis" ng-bind="availableShippingMethod.totalWithTax.formatedAmount"></span>
+										<span ng-if="availableShippingMethod.discountTotalWithTax.amount > 0">
+											<br />
+											<span class="order-summary__small-text strikethrough" ng-bind="availableShippingMethod.priceWithTax.formatedAmount"></span>
+										</span>									
+									{% else %}
+										<span class="order-summary__emphasis" ng-bind="availableShippingMethod.total.formatedAmount"></span>
+										<span ng-if="availableShippingMethod.discountTotal.amount > 0">
+											<br />
+											<span class="order-summary__small-text strikethrough" ng-bind="availableShippingMethod.price.formatedAmount"></span>
+										</span>
+									{% endif %}
+							</div>
+								
                             </div>
                         </div>
                         <div class="alert alert-error" style="margin-top: 20px;" ng-if="formShippingMethod.$submitted && formShippingMethod.ShipmentMethodCode.$error.required">

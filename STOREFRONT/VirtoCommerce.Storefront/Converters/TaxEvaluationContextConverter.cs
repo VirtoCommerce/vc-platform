@@ -11,6 +11,19 @@ namespace VirtoCommerce.Storefront.Converters
 {
     public static class TaxEvaluationContextConverter
     {
+        public static VirtoCommerceDomainTaxModelTaxLine ToTaxLine(this ShippingMethod shipmentMethod)
+        {
+            var retVal = new VirtoCommerceDomainTaxModelTaxLine
+            {
+                Id = shipmentMethod.ShipmentMethodCode,
+                Code = shipmentMethod.ShipmentMethodCode,
+                Name = shipmentMethod.ShipmentMethodCode,
+                TaxType = shipmentMethod.TaxType,
+                Amount = (double)shipmentMethod.Price.Amount
+            };
+            return retVal;
+        }
+
         public static VirtoCommerceDomainTaxModelTaxLine[] ToListAndSaleTaxLines(this Product product)
         {
             var retVal = new List<VirtoCommerceDomainTaxModelTaxLine>();

@@ -6,11 +6,28 @@ using VirtoCommerce.Storefront.Model.Marketing;
 using VirtoCommerce.Storefront.Model;
 using System.Collections.Generic;
 using VirtoCommerce.Storefront.Model.Catalog;
+using VirtoCommerce.Storefront.Model.Cart;
 
 namespace VirtoCommerce.Storefront.Converters
 {
     public static class PromotionEvaluationContextConverter
     {
+        public static PromotionEvaluationContext ToPromotionEvaluationContext(this ShoppingCart cart)
+        {
+            var promotionItems = cart.Items.Select(i => i.ToPromotionItem()).ToList();
+
+            var retVal = new PromotionEvaluationContext();
+            retVal.CartPromoEntries = promotionItems;
+            retVal.CartTotal = cart.Total;
+            retVal.Coupon = cart.Coupon != null ? cart.Coupon.Code : null;
+            retVal.Currency = cart.Currency;
+            retVal.CustomerId = cart.Customer.Id;
+            retVal.IsRegisteredUser = cart.Customer.IsRegisteredUser;
+            retVal.Language = cart.Language;
+            retVal.PromoEntries = promotionItems;
+            retVal.StoreId = cart.StoreId;
+            return retVal;
+        }
         public static PromotionEvaluationContext ToPromotionEvaluationContext(this WorkContext workContext, IEnumerable<Product> products = null)
         {
             var retVal = new PromotionEvaluationContext
