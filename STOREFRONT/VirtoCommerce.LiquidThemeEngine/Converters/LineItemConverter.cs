@@ -12,7 +12,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
 
             //shopifyModel.Product = lineItem.Product.ToShopifyModel();
             shopifyModel.Fulfillment = null; // TODO
-            shopifyModel.Grams = lineItem.Weight;
+            shopifyModel.Grams = lineItem.Weight ?? 0m;
             shopifyModel.Id = lineItem.Id;
             shopifyModel.Image = new Image
             {

@@ -113,7 +113,7 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         /// <summary>
         /// Weight of product (for physical product only)
         /// </summary>
-        public decimal Weight { get; set; }
+        public decimal? Weight { get; set; }
 
         /// <summary>
         /// Dimensions measure unit of size (for physical product only)
@@ -123,17 +123,17 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         /// <summary>
         /// Height of product size (for physical product only)
         /// </summary>
-        public decimal Height { get; set; }
+        public decimal? Height { get; set; }
 
         /// <summary>
         /// Length of product size (for physical product only)
         /// </summary>
-        public decimal Length { get; set; }
+        public decimal? Length { get; set; }
 
         /// <summary>
         /// Width of product size (for physical product only)
         /// </summary>
-        public decimal Width { get; set; }
+        public decimal? Width { get; set; }
 
         /// <summary>
         /// Indicating whether this product can be reviewed in storefront

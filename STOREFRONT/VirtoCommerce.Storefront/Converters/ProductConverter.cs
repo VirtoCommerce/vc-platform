@@ -20,7 +20,10 @@ namespace VirtoCommerce.Storefront.Converters
 
             retVal.Currency = currentCurrency;
             retVal.Price = new ProductPrice(currentCurrency);
-
+            retVal.Weight = (decimal?)product.Weight;
+            retVal.Height = (decimal?)product.Height;
+            retVal.Width = (decimal?)product.Width;
+            retVal.Length = (decimal?)product.Length;
             retVal.InjectFrom<NullableAndEnumValueInjecter>(product);
 
             retVal.Sku = product.Code;

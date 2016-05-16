@@ -117,7 +117,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             result.Sku = product.Sku;
             result.Title = product.Name;
             result.Url = product.Url;
-            result.Weight = product.Weight;
+            result.Weight = product.Weight ?? 0m;
             result.WeightUnit = product.WeightUnit;
             return result;
         }
