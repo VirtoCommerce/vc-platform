@@ -13,4 +13,7 @@
         <description>$description$</description>
         <copyright>Copyright © VirtoCommerce 2011-2016</copyright>
     </metadata>
+    <files>
+        <file src="lib\ExpressionSerialization.dll" target="lib\net451" />
+    </files>
 </package>

@@ -31,6 +31,7 @@ using VirtoCommerce.Platform.Core.Notifications;
 using VirtoCommerce.Platform.Core.Packaging;
 using VirtoCommerce.Platform.Core.PushNotifications;
 using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Platform.Core.Serialization;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Assets;
 using VirtoCommerce.Platform.Data.Azure;
@@ -43,6 +44,7 @@ using VirtoCommerce.Platform.Data.Packaging;
 using VirtoCommerce.Platform.Data.Repositories;
 using VirtoCommerce.Platform.Data.Security;
 using VirtoCommerce.Platform.Data.Security.Identity;
+using VirtoCommerce.Platform.Data.Serialization;
 using VirtoCommerce.Platform.Data.Settings;
 using VirtoCommerce.Platform.Web;
 using VirtoCommerce.Platform.Web.BackgroundJobs;
@@ -501,6 +503,12 @@ namespace VirtoCommerce.Platform.Web
 
             #region ExportImport
             container.RegisterType<IPlatformExportImportManager, PlatformExportImportManager>();
+            #endregion
+
+            #region Serialization
+
+            container.RegisterType<IExpressionSerializer, XmlExpressionSerializer>();
+
             #endregion
         }
 

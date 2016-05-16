@@ -5,3 +5,4 @@ nuget push VirtoCommerce.Platform.Data.%V%.nupkg -Source nuget.org -ApiKey %1
 nuget push VirtoCommerce.Platform.Data.Azure.%V%.nupkg -Source nuget.org -ApiKey %1
 nuget push VirtoCommerce.Platform.Data.Notifications.%V%.nupkg -Source nuget.org -ApiKey %1
 nuget push VirtoCommerce.Platform.Data.Security.%V%.nupkg -Source nuget.org -ApiKey %1
+nuget push VirtoCommerce.Platform.Data.Serialization.%V%.nupkg -Source nuget.org -ApiKey %1

@@ -670,6 +670,10 @@
       <Project>{3e27ba0c-8982-44b9-8399-7cdf291f6806}</Project>
       <Name>VirtoCommerce.Platform.Data.Security</Name>
     </ProjectReference>
+    <ProjectReference Include="..\VirtoCommerce.Platform.Data.Serialization\VirtoCommerce.Platform.Data.Serialization.csproj">
+      <Project>{55f07f1b-8cb5-418f-9a4b-1efde30b9ba4}</Project>
+      <Name>VirtoCommerce.Platform.Data.Serialization</Name>
+    </ProjectReference>
     <ProjectReference Include="..\VirtoCommerce.Platform.Data\VirtoCommerce.Platform.Data.csproj">
       <Project>{39afd233-b2f7-4178-817d-0a339c57525d}</Project>
       <Name>VirtoCommerce.Platform.Data</Name>

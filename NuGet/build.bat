@@ -14,5 +14,6 @@ nuget pack "%SOURCE_DIR%\VirtoCommerce.Platform.Data\VirtoCommerce.Platform.Data
 nuget pack "%SOURCE_DIR%\VirtoCommerce.Platform.Data.Azure\VirtoCommerce.Platform.Data.Azure.csproj" -IncludeReferencedProjects -Symbols -Properties Configuration=Release -o "%TARGET_DIR%"
 nuget pack "%SOURCE_DIR%\VirtoCommerce.Platform.Data.Notifications\VirtoCommerce.Platform.Data.Notifications.csproj" -IncludeReferencedProjects -Symbols -Properties Configuration=Release -o "%TARGET_DIR%"
 nuget pack "%SOURCE_DIR%\VirtoCommerce.Platform.Data.Security\VirtoCommerce.Platform.Data.Security.csproj" -IncludeReferencedProjects -Symbols -Properties Configuration=Release -o "%TARGET_DIR%"
+nuget pack "%SOURCE_DIR%\VirtoCommerce.Platform.Data.Serialization\VirtoCommerce.Platform.Data.Serialization.csproj" -IncludeReferencedProjects -Symbols -Properties Configuration=Release -o "%TARGET_DIR%"
 
 @pause

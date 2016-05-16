@@ -221,6 +221,7 @@
     <Compile Include="Security\UserSearchResponse.cs" />
     <Compile Include="Security\AccountState.cs" />
     <Compile Include="Security\AccountType.cs" />
+    <Compile Include="Serialization\IExpressionSerializer.cs" />
     <Compile Include="Settings\IHaveSettings.cs" />
     <Compile Include="Settings\ISettingsManager.cs" />
     <Compile Include="Settings\ModuleDescriptor.cs" />
