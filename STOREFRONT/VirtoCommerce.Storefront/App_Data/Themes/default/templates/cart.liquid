@@ -36,7 +36,11 @@
                                     <span ng-if="lineItem.validationErrors[0].errorCode == 'ProductQuantityError'" ng-bind="'Product quantity exceeded! Available quantity is: ' + lineItem.validationErrors[0].availableQuantity"></span>
                                 </div>
                                 <div class="note" ng-if="lineItem.validationWarnings.length">
-                                    <span ng-if="lineItem.validationWarnings[0].errorCode == 'ProductPriceError'" ng-bind="'Product price has been changed. Old price was: ' + lineItem.validationWarnings[0].oldPrice.formatedAmount"></span>
+                                    {% if settings.show_prices_with_taxes %}
+                                        <span ng-if="lineItem.validationWarnings[0].errorCode == 'ProductPriceError'" ng-bind="'Product price has been changed. Old price was: ' + lineItem.validationWarnings[0].oldPriceWithTax.formatedAmount"></span>
+                                    {% else %}
+                                        <span ng-if="lineItem.validationWarnings[0].errorCode == 'ProductPriceError'" ng-bind="'Product price has been changed. Old price was: ' + lineItem.validationWarnings[0].oldPrice.formatedAmount"></span>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -53,10 +57,17 @@
                                 <div class="alert alert-error" style="margin-top: 5px;" ng-if="formCart['item' + lineItem.id].$error.min">Quantity should be greater than 0</div>
                             </div>
                             <div class="grid-item one-third medium-down--one-third medium-down--text-left text-right">
-                                <span class="h2">
-                                    <small ng-bind="lineItem.placedPrice.formatedAmount"></small>
-                                </span>
-                                <span style="text-decoration: line-through;" ng-if="lineItem.listPrice.amount != lineItem.placedPrice.amount" ng-bind="lineItem.listPrice.formatedAmount"></span>
+                                {% if settings.show_prices_with_taxes %}
+                                    <span class="h2">
+                                        <small ng-bind="lineItem.placedPriceWithTax.formatedAmount"></small> 
+                                    </span>
+                                    <span style="text-decoration: line-through;" ng-if="lineItem.listPriceWithTax.amount != lineItem.placedPriceWithTax.amount" ng-bind="lineItem.listPriceWithTax.formatedAmount"></span>
+                                {% else %}
+                                    <span class="h2">
+                                        <small ng-bind="lineItem.placedPrice.formatedAmount"></small>
+                                    </span>
+                                    <span style="text-decoration: line-through;" ng-if="lineItem.listPrice.amount != lineItem.placedPrice.amount" ng-bind="lineItem.listPrice.formatedAmount"></span>
+                                {% endif %}
                             </div>
                             <div class="grid-item one-sixth medium-down--one-third text-right">
                                 <a class="icon-fallback-text btn-secondary remove" href="" ng-click="removeLineItem(lineItem.id)">
@@ -76,10 +87,17 @@
                     </div>
                     <div class="grid-item text-right large--one-half">
                         <div class="cart-subtotal">
-                            {{ 'cart.general.subtotal' | t }}
-                            <span class="h1 cart-subtotal--price">
-                                <small ng-bind="cart.extendedPriceTotal.formatedAmount"></small>
-                            </span>
+                            {% if settings.show_prices_with_taxes %}
+                                {{ 'cart.general.subtotalWithTax' | t }}
+                                <span class="h1 cart-subtotal--price">
+                                    <small ng-bind="cart.extendedPriceTotalWithTax.formatedAmount"></small>
+                                </span>
+                            {% else %}
+                                {{ 'cart.general.subtotal' | t }}
+                                <span class="h1 cart-subtotal--price">
+                                    <small ng-bind="cart.extendedPriceTotal.formatedAmount"></small>
+                                </span>
+                            {% endif %}
                         </div>
                         <button type="button" ng-class="{ 'btn': !cartIsUpdating, 'btn-secondary': cartIsUpdating || errorOccured || cart.hasValidationErrors }" ng-disabled="cartIsUpdating || cart.hasValidationErrors" ng-click="submitCart()">
                             <span class="icon icon-cart"></span>

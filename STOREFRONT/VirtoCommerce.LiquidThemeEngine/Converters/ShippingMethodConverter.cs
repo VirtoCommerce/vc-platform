@@ -10,6 +10,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             var ret = new ShippingMethod
             {
                 Price = shipment.Sum.Amount * 100,
+                PriceWithTax = shipment.SumWithTax.Amount * 100,
                 Title = shipment.ShipmentMethodCode,
                 Handle = shipment.ShipmentMethodCode
             };

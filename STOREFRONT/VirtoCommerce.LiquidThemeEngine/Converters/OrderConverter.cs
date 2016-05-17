@@ -95,6 +95,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             {
                 result.ShippingMethods = order.Shipments.Select(s => s.ToShopifyModel()).ToArray();
                 result.ShippingPrice = result.ShippingMethods.Sum(s => s.Price);
+                result.ShippingPriceWithTax = result.ShippingMethods.Sum(s => s.PriceWithTax);
 
                 var orderShipment = order.Shipments.FirstOrDefault();
 
@@ -153,6 +154,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             {
                 result.LineItems = order.Items.Select(i => i.ToShopifyModel(urlBuilder)).ToArray();
                 result.SubtotalPrice = order.Items.Sum(i => i.BasePrice.Amount * i.Quantity ?? 0) * 100;
+                result.SubtotalPriceWithTax = order.Items.Sum(i => i.BasePriceWithTax.Amount * i.Quantity ?? 0) * 100;
 
                 var itemsWithTax = order.Items
                     .Where(i => i.Tax.Amount > 0m)

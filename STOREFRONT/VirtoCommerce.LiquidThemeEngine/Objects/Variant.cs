@@ -49,6 +49,8 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         /// </summary>
         [DataMember]
         public decimal CompareAtPrice { get; set; }
+        [DataMember]
+        public decimal CompareAtPriceWithTax { get; set; }
 
         /// <summary>
         /// Returns the variant's unique id.
@@ -133,6 +135,8 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         /// </summary>
         [DataMember]
         public decimal Price { get; set; }
+        [DataMember]
+        public decimal PriceWithTax { get; set; }
 
         /// <summary>
         /// Returns true if the variant is currently selected by the ?variant= URL parameter.

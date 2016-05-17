@@ -27,12 +27,7 @@
                         <div class="form-group">
                             <label class="form-label">{{ 'stores.blades.store-advanced.labels.store-region' | translate }}</label>
                             <div class="form-input">
-                                <ui-select ng-model="blade.currentEntity.region">
-                                    <ui-select-match placeholder="{{ 'stores.blades.store-advanced.placeholders.store-region' | translate }}">{{$select.selected.name}}</ui-select-match>
-                                    <ui-select-choices repeat="x.id as x in regions | filter: { name: $select.search }">
-                                        <span ng-bind-html="x.name | highlight: $select.search"></span>
-                                    </ui-select-choices>
-                                </ui-select>
+                                <input ng-model="blade.currentEntity.region" placeholder="{{ 'stores.blades.store-advanced.placeholders.store-region' | translate }}" />
                             </div>
                         </div>
                     </div>

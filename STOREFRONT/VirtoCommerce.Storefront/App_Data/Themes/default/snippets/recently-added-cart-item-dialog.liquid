@@ -26,9 +26,14 @@
                                 <div class="ajaxifyCart--qty" ng-bind="dialogData.quantity"></div>
                             </div>
                             <div class="grid-item one-third medium-down--one-third medium-down--text-left text-right">
-                                <span class="h2" ng-bind="dialogData.placedPrice.formatedAmount"></span>
-                                <span style="text-decoration: line-through;" ng-if="dialogData.listPrice.amount != dialogData.placedPrice.amount" ng-bind="dialogData.listPrice.formatedAmount"></span>
-                            </div>
+                                {% if settings.show_prices_with_taxes %}
+                                    <span class="h2" ng-bind="dialogData.placedPriceWithTax.formatedAmount"></span>
+                                    <span style="text-decoration: line-through;" ng-if="dialogData.listPriceWithTax.amount != dialogData.placedPriceWithTax.amount" ng-bind="dialogData.listPriceWithTax.formatedAmount"></span>
+                                {% else %}
+                                    <span class="h2" ng-bind="dialogData.placedPrice.formatedAmount"></span>
+                                    <span style="text-decoration: line-through;" ng-if="dialogData.listPrice.amount != dialogData.placedPrice.amount" ng-bind="dialogData.listPrice.formatedAmount"></span>
+                                {% endif %}
+                             </div>
                         </div>
                     </div>
                 </div>

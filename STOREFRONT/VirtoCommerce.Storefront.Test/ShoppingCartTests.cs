@@ -69,7 +69,7 @@ namespace VirtoCommerce.Storefront.Test
             var catalogModuleApi = new CatalogModuleApi(apiClientCfg);
             var pricingApi = new PricingModuleApi(apiClientCfg);
             var commerceApi = new CommerceCoreModuleApi(apiClientCfg);
-            var pricingService = new PricingServiceImpl(workContextFactory, pricingApi);
+            var pricingService = new PricingServiceImpl(workContextFactory, pricingApi, commerceApi);
             var inventoryApi = new InventoryModuleApi(apiClientCfg);
             var searchApi = new SearchModuleApi(apiClientCfg);
             var catalogSearchService = new CatalogSearchServiceImpl(workContextFactory, catalogModuleApi, pricingService, inventoryApi, searchApi, promotionEvaluator);

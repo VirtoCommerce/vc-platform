@@ -32,8 +32,10 @@ storefrontApp.controller('productController', ['$rootScope', '$scope', '$window'
         return {
             imageUrl: product.primaryImage ? product.primaryImage.url : null,
             listPrice: product.price.listPrice,
+			listPriceWithTax: product.price.listPriceWithTax,
             name: product.name,
             placedPrice: product.price.actualPrice,
+            placedPriceWithTax: product.price.actualPriceWithTax,
             quantity: quantity,
             updated: false
         }

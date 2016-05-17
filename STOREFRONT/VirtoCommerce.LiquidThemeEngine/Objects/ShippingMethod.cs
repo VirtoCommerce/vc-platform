@@ -25,6 +25,8 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         /// </summary>
         [DataMember]
         public decimal Price { get; set; }
+        [DataMember]
+        public decimal PriceWithTax { get; set; }
 
         /// <summary>
         /// Returns the title of the shipping method.

@@ -19,7 +19,7 @@ namespace VirtoCommerce.Storefront.Converters
             retVal.Currency = currency;
             retVal.ListPrice = new Money(price.List ?? 0d, currency);
             retVal.SalePrice = price.Sale == null ? retVal.ListPrice : new Money(price.Sale ?? 0d, currency);
-            retVal.ActiveDiscount = new Discount { Amount = new Money(currency) };
+            retVal.ActiveDiscount = new Discount(currency);
             retVal.MinQuantity = price.MinQuantity;
             return retVal;
         }

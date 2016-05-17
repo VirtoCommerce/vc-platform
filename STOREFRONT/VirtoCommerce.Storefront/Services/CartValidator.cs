@@ -77,8 +77,9 @@ namespace VirtoCommerce.Storefront.Services
                         var tierPrice = product.Price.GetTierPrice(lineItem.Quantity);
                         if (tierPrice.ActualPrice != lineItem.PlacedPrice)
                         {
-                            lineItem.ValidationWarnings.Add(new ProductPriceError(lineItem.PlacedPrice));
+                            lineItem.ValidationWarnings.Add(new ProductPriceError(lineItem.PlacedPrice, lineItem.PlacedPriceWithTax));
                             lineItem.SalePrice = tierPrice.Price;
+                            lineItem.SalePriceWithTax = tierPrice.PriceWithTax;
                         }
                     }
                 }
@@ -88,7 +89,7 @@ namespace VirtoCommerce.Storefront.Services
         private async Task ValidateShipmentsAsync(ShoppingCart cart)
         {
             var workContext = _workContextFactory();
-            foreach (var shipment in cart.Shipments)
+            foreach (var shipment in cart.Shipments.ToArray())
             {
                 shipment.ValidationErrors.Clear();
                 var availableShippingMethods = await _cacheManager.GetAsync("CartValidator.ValidateShipmentsAsync-" + workContext.CurrentCurrency + ":" + cart.Id, "ApiRegion", async () => { return await _cartApi.CartModuleGetShipmentMethodsAsync(cart.Id); });
@@ -107,7 +108,7 @@ namespace VirtoCommerce.Storefront.Services
                     }
                     if (existingShippingMethod != null)
                     {
-                        var shippingMethod = existingShippingMethod.ToWebModel(workContext.AllCurrencies, workContext.CurrentLanguage);
+                        var shippingMethod = existingShippingMethod.ToWebModel(cart.Currency);
                         if (shippingMethod.Price != shipment.ShippingPrice &&
                             (cart.ValidationType == ValidationType.PriceAndQuantity || cart.ValidationType == ValidationType.Price))
                         {

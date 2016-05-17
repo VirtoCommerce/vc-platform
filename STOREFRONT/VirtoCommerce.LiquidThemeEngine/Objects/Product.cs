@@ -46,6 +46,8 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         /// </summary>
         [DataMember]
         public decimal CompareAtPrice { get; set; }
+        [DataMember]
+        public decimal CompareAtPriceWithTax { get; set; }
 
         /// <summary>
         /// Returns the highest compare at price. Use one of the money filters to return
@@ -132,6 +134,8 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         /// </summary>
         [DataMember]
         public decimal Price { get; set; }
+        [DataMember]
+        public decimal PriceWithTax { get; set; }
 
         /// <summary>
         /// Returns the highest price of the product. Use one of the money filters to return

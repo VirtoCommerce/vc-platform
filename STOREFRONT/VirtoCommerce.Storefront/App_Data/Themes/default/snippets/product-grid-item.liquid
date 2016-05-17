@@ -43,28 +43,51 @@
             <span class="h1 medium--left">
                 {% if on_sale %}
                     <span class="old">
-                        {% include 'price' with product.compare_at_price %}
+                        {% if settings.show_prices_with_taxes %}
+                            {% include 'price' with product.compare_at_price_with_tax %}
+                        {% else %}
+                            {% include 'price' with product.compare_at_price %}
+                        {% endif %}                           
                     </span>
                 {% endif %}
-                {% include 'price' with product.price %}
+                {% if settings.show_prices_with_taxes %}
+                    {% include 'price' with product.price_with_tax %}
+                {% else %}
+                    {% include 'price' with product.price %}
+                {% endif %}            
             </span>
             {% if on_sale %}
                 <span class="sale-tag medium--right{% if settings.product_reviews_enable %} has-reviews{% endif %}">
-                    {% assign compare_price = product.compare_at_price %}
-                    {% assign product_price = product.price %}
+                    {% if settings.show_prices_with_taxes %}
+                        {% assign compare_price = product.compare_at_price_with_tax %}
+                        {% assign product_price = product.price_with_tax %}
+                    {% else %}
+                        {% assign compare_price = product.compare_at_price %}
+                        {% assign product_price = product.price %}
+                    {% endif %} 
                     {% include 'price-sale' %}
                 </span>
             {% endif %}
         </div>
 
         <div class="product-item--price" ng-if="productListPricesLoaded">
-            <span class="h1 medium--left">
-                <span class="old" ng-if="productListPrices['{{ product.id }}'].absoluteBenefit.amount > 0">
-                    <small ng-bind="productListPrices['{{ product.id }}'].listPrice.formatedAmount"></small>
+            {% if settings.show_prices_with_taxes %}
+                <span class="h1 medium--left">
+                    <span class="old" ng-if="productListPrices['{{ product.id }}'].absoluteBenefitWithTax.amount > 0">
+                        <small ng-bind="productListPrices['{{ product.id }}'].listPriceWithTax.formatedAmount"></small>
+                    </span>
+                    <small ng-bind="productListPrices['{{ product.id }}'].actualPriceWithTax.formatedAmount"></small>
                 </span>
-                <small ng-bind="productListPrices['{{ product.id }}'].actualPrice.formatedAmount"></small>
-            </span>
-            <span class="sale-tag medium--right" ng-if="productListPrices['{{ product.id }}'].absoluteBenefit.amount > 0" ng-bind="'{{ 'products.general.save_html' | t }}'  + productListPrices['{{ product.id }}'].absoluteBenefit.formatedAmount"></span>
+                <span class="sale-tag medium--right" ng-if="productListPrices['{{ product.id }}'].absoluteBenefitWithTax.amount > 0" ng-bind="'{{ 'products.general.save_html' | t }}'  + productListPrices['{{ product.id }}'].absoluteBenefitWithTax.formatedAmount"></span>
+            {% else %}
+                <span class="h1 medium--left">
+                    <span class="old" ng-if="productListPrices['{{ product.id }}'].absoluteBenefit.amount > 0">
+                        <small ng-bind="productListPrices['{{ product.id }}'].listPrice.formatedAmount"></small>
+                    </span>
+                    <small ng-bind="productListPrices['{{ product.id }}'].actualPrice.formatedAmount"></small>
+                </span>
+                <span class="sale-tag medium--right" ng-if="productListPrices['{{ product.id }}'].absoluteBenefit.amount > 0" ng-bind="'{{ 'products.general.save_html' | t }}'  + productListPrices['{{ product.id }}'].absoluteBenefit.formatedAmount"></span>
+            {% endif %}
         </div>
 
         <div class="product-item--other">

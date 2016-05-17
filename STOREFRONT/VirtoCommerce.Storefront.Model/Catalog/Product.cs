@@ -6,7 +6,7 @@ using VirtoCommerce.Storefront.Model.Marketing;
 
 namespace VirtoCommerce.Storefront.Model.Catalog
 {
-    public class Product : Entity, IDiscountable
+    public class Product : Entity, IDiscountable, ITaxable
     {
         public Product()
         {
@@ -19,6 +19,15 @@ namespace VirtoCommerce.Storefront.Model.Catalog
             Descriptions = new List<EditorialReview>();
             Discounts = new List<Discount>();
             Associations = new List<ProductAssociation>();
+            TaxDetails = new List<TaxDetail>();
+        }
+
+        public Product(Currency currency, Language language)
+            :this()
+        {
+            Currency = currency;
+            TaxTotal = new Money(currency);
+
         }
 
         /// <summary>
@@ -104,7 +113,7 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         /// <summary>
         /// Weight of product (for physical product only)
         /// </summary>
-        public decimal Weight { get; set; }
+        public decimal? Weight { get; set; }
 
         /// <summary>
         /// Dimensions measure unit of size (for physical product only)
@@ -114,17 +123,17 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         /// <summary>
         /// Height of product size (for physical product only)
         /// </summary>
-        public decimal Height { get; set; }
+        public decimal? Height { get; set; }
 
         /// <summary>
         /// Length of product size (for physical product only)
         /// </summary>
-        public decimal Length { get; set; }
+        public decimal? Length { get; set; }
 
         /// <summary>
         /// Width of product size (for physical product only)
         /// </summary>
-        public decimal Width { get; set; }
+        public decimal? Width { get; set; }
 
         /// <summary>
         /// Indicating whether this product can be reviewed in storefront
@@ -155,11 +164,6 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         /// Type of product shipping
         /// </summary>
         public string ShippingType { get; set; }
-
-        /// <summary>
-        /// Type of product tax
-        /// </summary>
-        public string TaxType { get; set; }
 
         /// <summary>
         /// Product's vendor
@@ -281,6 +285,54 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         public ICollection<CatalogProperty> Properties { get; set; }
         #endregion
 
+        #region ITaxable Members
+        /// <summary>
+        /// Gets or sets the value of total shipping tax amount
+        /// </summary>
+        public Money TaxTotal { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of shipping tax type
+        /// </summary>
+        public string TaxType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the collection of line item tax details lines
+        /// </summary>
+        /// <value>
+        /// Collection of TaxDetail objects
+        /// </value>
+        public ICollection<TaxDetail> TaxDetails { get; set; }
+
+        public void ApplyTaxRates(IEnumerable<TaxRate> taxRates)
+        {
+            var productTaxRates = taxRates.Where(x => x.Line.Id == Id);
+            TaxTotal = new Money(Currency);
+            if (productTaxRates.Any())
+            {
+                var listPriceRate = productTaxRates.First(x => x.Line.Code.EqualsInvariant("list"));
+                var salePriceRate = productTaxRates.FirstOrDefault(x => x.Line.Code.EqualsInvariant("sale"));
+                if(salePriceRate == null)
+                {
+                    salePriceRate = listPriceRate;
+                }
+                TaxTotal += salePriceRate.Rate;
+                Price.ListPriceWithTax = Price.ListPrice + listPriceRate.Rate;
+                Price.SalePriceWithTax = Price.SalePrice + salePriceRate.Rate;
+
+                //Apply tax for tier prices
+                foreach (var tierPrice in Price.TierPrices)
+                {
+                    var tierPriceTaxRate = productTaxRates.FirstOrDefault(x => x.Line.Code.EqualsInvariant(tierPrice.Quantity.ToString()));
+                    if(tierPrice != null)
+                    {
+                        tierPrice.Tax = tierPriceTaxRate.Rate;
+                    }
+                }
+            }
+        }
+        #endregion
+
         #region IDiscountable Members
         public ICollection<Discount> Discounts { get; private set; }
 
@@ -299,7 +351,8 @@ namespace VirtoCommerce.Storefront.Model.Catalog
             foreach (var reward in productRewards)
             {
                 //Apply discount to main price
-                var discount = reward.ToDiscountModel(Price.SalePrice);
+                var discount = reward.ToDiscountModel(Price.SalePrice, Price.SalePriceWithTax);
+ 
                 if (reward.IsValid)
                 {
                     Discounts.Add(discount);
@@ -307,7 +360,7 @@ namespace VirtoCommerce.Storefront.Model.Catalog
                     //apply discount to tier prices
                     foreach (var tierPrice in Price.TierPrices)
                     {
-                        discount = reward.ToDiscountModel(tierPrice.Price);
+                        discount = reward.ToDiscountModel(tierPrice.Price, tierPrice.PriceWithTax);
                         tierPrice.ActiveDiscount = discount;
                     }
                 }            

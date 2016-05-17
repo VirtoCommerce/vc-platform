@@ -167,6 +167,7 @@ namespace VirtoCommerce.Storefront.Model.Order
         /// <value>Tax total</value>
         public Money Tax { get; set; }
 
+
         /// <summary>
         /// Gets or Sets IsCancelled
         /// </summary>

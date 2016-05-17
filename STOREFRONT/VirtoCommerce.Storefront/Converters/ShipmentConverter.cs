@@ -34,6 +34,10 @@ namespace VirtoCommerce.Storefront.Converters
                 webModel.TaxDetails = shipment.TaxDetails.Select(td => td.ToWebModel(cart.Currency)).ToList();
             }
 
+            if (!shipment.Discounts.IsNullOrEmpty())
+            {
+                webModel.Discounts.AddRange(shipment.Discounts.Select(x => x.ToWebModel(new[] { cart.Currency }, cart.Language)));
+            }
             return webModel;
         }
 

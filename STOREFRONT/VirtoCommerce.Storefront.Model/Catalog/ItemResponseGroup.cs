@@ -5,10 +5,11 @@ namespace VirtoCommerce.Storefront.Model.Catalog
     [Flags]
     public enum ItemResponseGroup
     {
+        None = 0,
         /// <summary>
         /// Only simple product information and properties without meta information
         /// </summary>
-        ItemInfo = 0,
+        ItemInfo = 1 << 0,
         /// <summary>
         /// With images and assets
         /// </summary>
@@ -41,14 +42,17 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         /// With product inventory information
         /// </summary>
         Inventory = 1 << 8,
+        /// <summary>
+        /// With category outlines
+        /// </summary>
+        Outlines = 1 << 9,
 
-        ItemWithPrices = 1 << 9,
+        ItemWithPrices = 1 << 10,
 
-        ItemWithDiscounts = 1 << 10,
+        ItemWithDiscounts = 1 << 11,
 
         ItemSmall = ItemInfo | ItemAssets | ItemEditorialReviews | Seo,
         ItemMedium = ItemSmall | ItemAssociations | ItemProperties,
-        ItemLarge = ItemMedium | Variations | Links | Inventory | ItemWithPrices | ItemWithDiscounts
-
+        ItemLarge = ItemMedium | Variations | Links | Inventory | Outlines | ItemWithPrices | ItemWithDiscounts
     }
 }

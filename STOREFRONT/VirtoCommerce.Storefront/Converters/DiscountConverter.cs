@@ -12,10 +12,10 @@ namespace VirtoCommerce.Storefront.Converters
     {
         public static Discount ToWebModel(this VirtoCommerceCartModuleWebModelDiscount serviceModel, IEnumerable<Currency> availCurrencies, Language language)
         {
-            var webModel = new Discount();
+            var currency = availCurrencies.FirstOrDefault(x => x.Equals(serviceModel.Currency)) ?? new Currency(language, serviceModel.Currency);
+            var webModel = new Discount(currency);
 
             webModel.InjectFrom(serviceModel);
-            var currency = availCurrencies.FirstOrDefault(x => x.Equals(serviceModel.Currency)) ?? new Currency(language, serviceModel.Currency);
             webModel.Amount = new Money(serviceModel.DiscountAmount ?? 0, currency);
 
             return webModel;
@@ -35,10 +35,11 @@ namespace VirtoCommerce.Storefront.Converters
 
         public static Discount ToWebModel(this VirtoCommerceOrderModuleWebModelDiscount serviceModel, IEnumerable<Currency> availCurrencies, Language language)
         {
-            var webModel = new Discount();
+            var currency = availCurrencies.FirstOrDefault(x => x.Equals(serviceModel.Currency)) ?? new Currency(language, serviceModel.Currency);
+            var webModel = new Discount(currency);
 
             webModel.InjectFrom(serviceModel);
-            var currency = availCurrencies.FirstOrDefault(x => x.Equals(serviceModel.Currency)) ?? new Currency(language, serviceModel.Currency);
+           
             webModel.Amount = new Money(serviceModel.DiscountAmount ?? 0, currency);
 
             return webModel;

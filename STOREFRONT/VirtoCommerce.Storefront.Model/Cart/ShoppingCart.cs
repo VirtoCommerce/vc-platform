@@ -78,12 +78,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
         /// Coupon object
         /// </value>
         public Coupon Coupon { get; set; }
-     
-        /// <summary>
-        /// Gets or sets the flag of shopping cart has tax
-        /// </summary>
-        public bool TaxIncluded { get; set; }
-
+    
         /// <summary>
         /// Gets or sets the flag of shopping cart is recurring
         /// </summary>
@@ -136,7 +131,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
         {
             get
             {
-                return SubTotal + TaxTotal + ShippingTotal - DiscountTotal;
+                return SubTotal + TaxTotal + ShippingPrice - DiscountTotal;
             }
         }
 
@@ -148,8 +143,19 @@ namespace VirtoCommerce.Storefront.Model.Cart
             get
             {
                 var subtotal = Items.Sum(i => i.ListPrice.Amount * i.Quantity);
-
                 return new Money(subtotal, Currency);
+            }
+        }
+
+        /// <summary>
+        /// Gets the value of shopping cart subtotal with taxes
+        /// </summary>
+        public Money SubTotalWithTax
+        {
+            get
+            {
+                var subtotalWithTax = Items.Sum(i => i.ListPriceWithTax.Amount * i.Quantity);
+                return new Money(subtotalWithTax, Currency);
             }
         }
 
@@ -161,10 +167,40 @@ namespace VirtoCommerce.Storefront.Model.Cart
             get
             {
                 var extendedPriceTotal = Items.Sum(i => i.ExtendedPrice.Amount);
-
                 return new Money(extendedPriceTotal, Currency);
             }
         }
+
+        public Money ExtendedPriceTotalWithTax
+        {
+            get
+            {
+                var extendedPriceWithTaxTotal = Items.Sum(i => i.ExtendedPriceWithTax.Amount);
+                return new Money(extendedPriceWithTaxTotal, Currency);
+            }
+        }
+
+        /// <summary>
+        /// Gets the value of sum shipping cost without discount
+        /// </summary>
+        public Money ShippingPrice
+        {
+            get
+            {
+                var shippingPrice = Shipments.Sum(s => s.ShippingPrice.Amount);
+                return new Money(shippingPrice, Currency);
+            }
+        }
+
+        public Money ShippingPriceWithTax
+        {
+            get
+            {
+                var shippingPriceWithTax = Shipments.Sum(s => s.ShippingPriceWithTax.Amount);
+                return new Money(shippingPriceWithTax, Currency);
+            }
+        }
+
 
         /// <summary>
         /// Gets the value of shipping total cost
@@ -174,8 +210,16 @@ namespace VirtoCommerce.Storefront.Model.Cart
             get
             {
                 var shippingTotal = Shipments.Sum(s => s.Total.Amount);
-
                 return new Money(shippingTotal, Currency);
+            }
+        }
+
+        public Money ShippingTotalWithTax
+        {
+            get
+            {
+                var shippingTotalWithTax = Shipments.Sum(s => s.TotalWithTax.Amount);
+                return new Money(shippingTotalWithTax, Currency);
             }
         }
 
@@ -196,6 +240,18 @@ namespace VirtoCommerce.Storefront.Model.Cart
                 var shipmentDiscountTotal = Shipments.Sum(s => s.DiscountTotal.Amount);
   
                 return new Money(discountTotal + itemDiscountTotal + shipmentDiscountTotal, Currency);
+            }
+        }
+
+        public Money DiscountTotalWithTax
+        {
+            get
+            {
+                var discountTotalWithTax = Discounts.Sum(d => d.AmountWithTax.Amount);
+                var itemDiscountTotalWithTax = Items.Sum(i => i.DiscountTotalWithTax.Amount);
+                var shipmentDiscountTotalWithTax = Shipments.Sum(s => s.DiscountTotalWithTax.Amount);
+
+                return new Money(discountTotalWithTax + itemDiscountTotalWithTax + shipmentDiscountTotalWithTax, Currency);
             }
         }
 
@@ -401,7 +457,7 @@ namespace VirtoCommerce.Storefront.Model.Cart
             var cartRewards = rewards.Where(r => r.RewardType == PromotionRewardType.CartSubtotalReward);
             foreach (var reward in cartRewards)
             {
-                var discount = reward.ToDiscountModel(SubTotal);
+                var discount = reward.ToDiscountModel(SubTotal, SubTotalWithTax);
 
                 if (reward.IsValid)
                 {
@@ -465,17 +521,16 @@ namespace VirtoCommerce.Storefront.Model.Cart
         public void ApplyTaxRates(IEnumerable<TaxRate> taxRates)
         {
             TaxTotal = new Money(TaxTotal.Currency);
-            foreach (var taxRate in taxRates)
-            {
-                TaxTotal += taxRate.Rate;
-            }
+          
             foreach(var lineItem in Items)
             {
                 lineItem.ApplyTaxRates(taxRates);
+                TaxTotal += lineItem.TaxTotal;
             }
             foreach(var shipment in Shipments)
             {
                 shipment.ApplyTaxRates(taxRates);
+                TaxTotal += shipment.TaxTotal;
             }
         }
         #endregion

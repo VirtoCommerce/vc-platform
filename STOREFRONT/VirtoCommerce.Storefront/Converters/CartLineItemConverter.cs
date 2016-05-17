@@ -6,6 +6,7 @@ using VirtoCommerce.Storefront.Model.Cart;
 using VirtoCommerce.Storefront.Model.Catalog;
 using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Marketing;
+using System.Collections.Generic;
 
 namespace VirtoCommerce.Storefront.Converters
 {
@@ -21,7 +22,9 @@ namespace VirtoCommerce.Storefront.Converters
 
             lineItemWebModel.ImageUrl = product.PrimaryImage != null ? product.PrimaryImage.Url : null;
             lineItemWebModel.ListPrice = product.Price.ListPrice;
+            lineItemWebModel.ListPriceWithTax = product.Price.ListPriceWithTax;
             lineItemWebModel.SalePrice = product.Price.GetTierPrice(quantity).Price;
+            lineItemWebModel.SalePriceWithTax = product.Price.GetTierPrice(quantity).PriceWithTax;
             lineItemWebModel.ProductId = product.Id;
             lineItemWebModel.Quantity = quantity;
 
@@ -32,6 +35,7 @@ namespace VirtoCommerce.Storefront.Converters
 
         public static LineItem ToWebModel(this VirtoCommerceCartModuleWebModelLineItem serviceModel, Currency currency, Language language)
         {
+         
             var webModel = new LineItem(currency, language);
 
             webModel.InjectFrom<NullableAndEnumValueInjecter>(serviceModel);
@@ -46,18 +50,21 @@ namespace VirtoCommerce.Storefront.Converters
                 webModel.DynamicProperties = serviceModel.DynamicProperties.Select(dp => dp.ToWebModel()).ToList();
             }
 
-
+            if(!serviceModel.Discounts.IsNullOrEmpty())
+            {
+                webModel.Discounts.AddRange(serviceModel.Discounts.Select(x => x.ToWebModel(new[] { currency }, language)));
+            }
             webModel.IsGift = (bool)serviceModel.IsGift;
             webModel.IsReccuring = (bool)serviceModel.IsReccuring;
-            webModel.Length = (decimal)(serviceModel.Length ?? 0);
             webModel.ListPrice = new Money(serviceModel.ListPrice ?? 0, currency);
-
             webModel.RequiredShipping = (bool)serviceModel.RequiredShipping;
             webModel.SalePrice = new Money(serviceModel.SalePrice ?? 0, currency);
             webModel.TaxIncluded = (bool)serviceModel.TaxIncluded;
             webModel.TaxTotal = new Money(serviceModel.TaxTotal ?? 0, currency);
-            webModel.Weight = (decimal)(serviceModel.Weight ?? 0);
-            webModel.Width = (decimal)(serviceModel.Width ?? 0);
+            webModel.Weight = (decimal?)serviceModel.Weight;
+            webModel.Width = (decimal?)serviceModel.Width;
+            webModel.Height = (decimal?)serviceModel.Height;
+            webModel.Length = (decimal?)serviceModel.Length;
             webModel.ValidationType = EnumUtility.SafeParse(serviceModel.ValidationType, ValidationType.PriceAndQuantity);
 
             return webModel;
@@ -73,8 +80,7 @@ namespace VirtoCommerce.Storefront.Converters
             serviceModel.Discounts = webModel.Discounts.Select(d => d.ToServiceModel()).ToList();
             serviceModel.DiscountTotal = (double)webModel.DiscountTotal.Amount;
             serviceModel.ExtendedPrice = (double)webModel.ExtendedPrice.Amount;
-            serviceModel.Height = (double)webModel.Height;
-            serviceModel.Length = (double)webModel.Length;
+         
             serviceModel.ListPrice = (double)webModel.ListPrice.Amount;
             serviceModel.PlacedPrice = (double)webModel.PlacedPrice.Amount;
             serviceModel.SalePrice = (double)webModel.SalePrice.Amount;
@@ -82,8 +88,10 @@ namespace VirtoCommerce.Storefront.Converters
             serviceModel.DynamicProperties = webModel.DynamicProperties.Select(dp => dp.ToServiceModel()).ToList();
             serviceModel.TaxTotal = (double)webModel.TaxTotal.Amount;
             serviceModel.VolumetricWeight = (double)(webModel.VolumetricWeight ?? 0);
-            serviceModel.Weight = (double)webModel.Weight;
-            serviceModel.Width = (double)webModel.Width;
+            serviceModel.Weight = (double?)webModel.Weight;
+            serviceModel.Width = (double?)webModel.Width;
+            serviceModel.Height = (double?)webModel.Height;
+            serviceModel.Length = (double?)webModel.Length;
             serviceModel.ValidationType = webModel.ValidationType.ToString();
 
             return serviceModel;

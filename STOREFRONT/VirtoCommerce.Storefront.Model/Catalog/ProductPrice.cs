@@ -15,6 +15,8 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         {
             Currency = currency;
             ListPrice = new Money(currency);
+            ListPriceWithTax = new Money(currency);
+            SalePriceWithTax = new Money(currency);
             SalePrice = new Money(currency);
             TierPrices = new List<TierPrice>();
         }
@@ -49,6 +51,22 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         }
 
         /// <summary>
+        /// Absilute price benefit including tax. You save 40.00 USD
+        /// </summary>
+        public Money AbsoluteBenefitWithTax
+        {
+            get
+            {
+                var retVal = ListPriceWithTax - SalePriceWithTax;
+                if (ActiveDiscount != null)
+                {
+                    retVal += ActiveDiscount.AmountWithTax;
+                }
+                return retVal;
+            }
+        }
+
+        /// <summary>
         /// Relative benefit. 30% 
         /// </summary>
         public decimal RelativeBenefit
@@ -67,11 +85,43 @@ namespace VirtoCommerce.Storefront.Model.Catalog
         /// Original product price (old price)
         /// </summary>
         public Money ListPrice { get; set; }
+        private Money _listPriceWithTax;
+        /// <summary>
+        /// Original product price (old price) including tax 
+        /// </summary>
+        public Money ListPriceWithTax
+        {
+            get
+            {
+                return _listPriceWithTax ?? ListPrice;
+            }
+            set
+            {
+                _listPriceWithTax = value;
+            }
+        }
  
         /// <summary>
         /// Sale product price (new price)
         /// </summary>
         public Money SalePrice { get; set; }
+
+        private Money _salePriceWithTax;
+        /// <summary>
+        /// Sale product price (new price) including tax 
+        /// </summary>
+        public Money SalePriceWithTax
+        {
+            get
+            {
+                return _salePriceWithTax ?? SalePrice;
+            }
+            set
+            {
+                _salePriceWithTax = value;
+            }
+        }
+
 
         /// <summary>
         /// Actual price includes all kind of discounts
@@ -81,6 +131,17 @@ namespace VirtoCommerce.Storefront.Model.Catalog
             get
             {
                 return ListPrice - AbsoluteBenefit;
+            }
+        }
+
+        /// <summary>
+        /// Actual price includes all kind of discounts including tax
+        /// </summary>
+        public Money ActualPriceWithTax
+        {
+            get
+            {
+                return ListPriceWithTax - AbsoluteBenefitWithTax;
             }
         }
 
@@ -120,6 +181,7 @@ namespace VirtoCommerce.Storefront.Model.Catalog
             return retVal;
         }
 
+
         #region IConvertible<ProductPrice> Members
         /// <summary>
         /// Convert current product price to other currency using currency exchange rate
@@ -131,6 +193,8 @@ namespace VirtoCommerce.Storefront.Model.Catalog
             var retVal = new ProductPrice(currency);
             retVal.ListPrice = ListPrice.ConvertTo(currency);
             retVal.SalePrice = SalePrice.ConvertTo(currency);
+            retVal.SalePriceWithTax = SalePriceWithTax.ConvertTo(currency);
+            retVal.ListPriceWithTax = ListPriceWithTax.ConvertTo(currency);
             retVal.ProductId = ProductId;
             if (ActiveDiscount != null)
             {

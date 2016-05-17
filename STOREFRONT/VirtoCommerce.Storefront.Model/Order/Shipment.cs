@@ -183,12 +183,20 @@ namespace VirtoCommerce.Storefront.Model.Order
         /// <value>Money amount without tax</value>
         public Money Sum { get; set; }
 
+        public Money SumWithTax
+        {
+            get
+            {
+                return Sum + Tax;
+            }
+        }
+
         /// <summary>
         /// Tax total
         /// </summary>
         /// <value>Tax total</value>
         public Money Tax { get; set; }
-
+      
         /// <summary>
         /// Gets or Sets IsCancelled
         /// </summary>
