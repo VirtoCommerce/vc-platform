@@ -7,13 +7,11 @@ using System.Linq;
 using System.Reflection;
 using System.Web;
 using System.Web.Hosting;
-using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using CacheManager.Core;
 using Hangfire;
-using Hangfire.SqlServer;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Infrastructure;
@@ -146,6 +144,8 @@ namespace VirtoCommerce.Platform.Web
                     FileSystem = new Microsoft.Owin.FileSystems.PhysicalFileSystem(modulesRelativePath)
                 });
             }
+
+            container.RegisterInstance(GlobalConfiguration.Configuration);
 
             // Ensure all modules are loaded
             foreach (var module in moduleCatalog.Modules.Where(x => x.State == ModuleState.NotStarted))
@@ -529,8 +529,4 @@ namespace VirtoCommerce.Platform.Web
             return relativePath;
         }
     }
-
-
-
-
 }
