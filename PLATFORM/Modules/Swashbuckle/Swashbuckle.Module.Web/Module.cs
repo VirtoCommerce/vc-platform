@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -32,61 +33,92 @@ namespace SwashbuckleModule.Web
         public override void Initialize()
         {
             var moduleInitializerOptions = _container.Resolve<IModuleInitializerOptions>();
+            var routePrefix = moduleInitializerOptions.RoutePrefix;
 
-            var assembly = Assembly.GetExecutingAssembly();
-            var xmlRelativePaths = new[] { moduleInitializerOptions.VirtualRoot + "/App_Data/Modules", moduleInitializerOptions.VirtualRoot + "/bin" };
-            Func<PopulateTagsFilter> tagsFilterFactory = () => new PopulateTagsFilter(_container.Resolve<IPackageService>(), _container.Resolve<ISettingsManager>());
-            Func<ISwaggerProvider, ISwaggerProvider> providerFactory = (defaultProvider) => new CachedSwaggerProviderWrapper(defaultProvider, _container.Resolve<ICacheManager<object>>());
+            var xmlCommentsDirectoryPaths = new[]
+            {
+                moduleInitializerOptions.VirtualRoot + "/App_Data/Modules",
+                moduleInitializerOptions.VirtualRoot + "/bin"
+            };
+            var xmlCommentsFilePaths = xmlCommentsDirectoryPaths.SelectMany(GetXmlFilesPaths).ToArray();
 
-            GlobalConfiguration.Configuration.
-                 EnableSwagger(moduleInitializerOptions.RoutePrefix + "docs/{apiVersion}",
-                 c =>
-                 {
-                     //c.CustomProvider(providerFactory);
-                     foreach (var xmlRelativePath in xmlRelativePaths)
-                     {
-                         var xmlFilesPaths = GetXmlFilesPaths(xmlRelativePath);
-                         foreach (var path in xmlFilesPaths)
-                         {
-                             c.IncludeXmlComments(path);
-                         }
-                     }
-                     c.MapType<object>(() => new Schema { type = "object" });
-                     c.IgnoreObsoleteProperties();
-                     c.UseFullTypeNameInSchemaIds();
-                     c.DescribeAllEnumsAsStrings();
-                     c.SingleApiVersion("v1", "VirtoCommerce Platform RESTful API documentation");
-                     c.DocumentFilter(tagsFilterFactory);
-                     c.OperationFilter(tagsFilterFactory);
-                     c.OperationFilter(() => new OptionalParametersFilter());
-                     c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
-                     c.RootUrl(GetRootUrl);
-                     c.PrettyPrint();
-                     c.ApiKey("apiKey")
-                         .Description("API Key Authentication")
-                         .Name("api_key")
-                         .In("header");
-                 }
-                ).EnableSwaggerUi(moduleInitializerOptions.RoutePrefix + "docs/ui/{*assetPath}",
-                c =>
+            Func<TagsFilter> tagsFilterFactory = () => new TagsFilter(_container.Resolve<IPackageService>(), _container.Resolve<ISettingsManager>());
+
+            var httpConfiguration = _container.Resolve<HttpConfiguration>();
+
+            // Add full swagger generator
+            httpConfiguration.EnableSwagger(routePrefix + "docs/{apiVersion}", c =>
+            {
+                c.SingleApiVersion("v1", "VirtoCommerce Solution REST API documentation");
+                c.DocumentFilter(tagsFilterFactory);
+                c.OperationFilter(tagsFilterFactory);
+                ApplyCommonSwaggerConfiguration(c, string.Empty, xmlCommentsFilePaths, tagsFilterFactory);
+            })
+            .EnableSwaggerUi(routePrefix + "docs/ui/{*assetPath}", c =>
+            {
+                var assembly = Assembly.GetExecutingAssembly();
+                c.CustomAsset("index", assembly, "SwashbuckleModule.Web.SwaggerUi.CustomAssets.index.html");
+                c.CustomAsset("images/logo_small-png", assembly, "SwashbuckleModule.Web.SwaggerUi.CustomAssets.logo_small.png");
+                c.CustomAsset("css/vc-css", assembly, "SwashbuckleModule.Web.SwaggerUi.CustomAssets.vc.css");
+                c.CustomAsset("swagger-ui-js", assembly, "SwashbuckleModule.Web.SwaggerUi.CustomAssets.swagger-ui.js");
+            });
+
+            // Add separate swagger generator for each installed module
+            var moduleCatalog = _container.Resolve<IModuleCatalog>();
+
+            var modules = moduleCatalog.Modules
+                .Where(m => m.ModuleInstance != null)
+                .ToArray();
+
+            foreach (var module in modules)
+            {
+                var routeName = string.Concat("swagger_", module.ModuleName);
+                var routeTemplate = string.Concat(routePrefix, "docs/", module.ModuleName, "/{apiVersion}");
+
+                httpConfiguration.EnableSwagger(routeName, routeTemplate, c =>
                 {
-                    c.CustomAsset("index", assembly, "SwashbuckleModule.Web.SwaggerUi.CustomAssets.index.html");
-                    c.CustomAsset("images/logo_small-png", assembly, "SwashbuckleModule.Web.SwaggerUi.CustomAssets.logo_small.png");
-                    c.CustomAsset("css/vc-css", assembly, "SwashbuckleModule.Web.SwaggerUi.CustomAssets.vc.css");
-                    c.CustomAsset("swagger-ui-js", assembly, "SwashbuckleModule.Web.SwaggerUi.CustomAssets.swagger-ui.js");
+                    // Include only APIs from current module
+                    c.MultipleApiVersions(
+                        (apiDescription, apiVersion) => module.ModuleInstance != null && apiDescription.ActionDescriptor.ControllerDescriptor.ControllerType.Assembly == module.ModuleInstance.GetType().Assembly,
+                        versionInfoBuilder => versionInfoBuilder.Version("v1", module.ModuleName + " REST API documentation"));
+                    ApplyCommonSwaggerConfiguration(c, module.ModuleName, xmlCommentsFilePaths, tagsFilterFactory);
                 });
+            }
+        }
 
+        private void ApplyCommonSwaggerConfiguration(SwaggerDocsConfig c, string cacheKey, string[] xmlCommentsFilePaths, Func<TagsFilter> tagsFilterFactory)
+        {
+            var cacheManager = _container.Resolve<ICacheManager<object>>();
+
+            c.CustomProvider(defaultProvider => new CachingSwaggerProvider(defaultProvider, cacheManager, cacheKey));
+            c.MapType<object>(() => new Schema { type = "object" });
+            c.IgnoreObsoleteProperties();
+            c.UseFullTypeNameInSchemaIds();
+            c.DescribeAllEnumsAsStrings();
+            c.OperationFilter(() => new OptionalParametersFilter());
+            c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+            c.RootUrl(GetRootUrl);
+            c.PrettyPrint();
+            c.ApiKey("apiKey")
+                .Description("API Key Authentication")
+                .Name("api_key")
+                .In("header");
+
+            foreach (var path in xmlCommentsFilePaths)
+            {
+                c.IncludeXmlComments(path);
+            }
         }
 
         #endregion
 
-        private string GetRootUrl(HttpRequestMessage req)
+        private static string GetRootUrl(HttpRequestMessage message)
         {
-            var retVal = new Uri(req.RequestUri, req.GetRequestContext().VirtualPathRoot).ToString();
-            return retVal;
+            var result = new Uri(message.RequestUri, message.GetRequestContext().VirtualPathRoot).ToString();
+            return result;
         }
 
-        private string[] GetXmlFilesPaths(string xmlRelativePath)
+        private static string[] GetXmlFilesPaths(string xmlRelativePath)
         {
             var path = HostingEnvironment.MapPath(xmlRelativePath);
             var files = Directory.GetFiles(path, "*.Web.XML");
@@ -116,12 +148,12 @@ namespace SwashbuckleModule.Web
             #endregion
         }
 
-        private class PopulateTagsFilter : IDocumentFilter, IOperationFilter
+        private class TagsFilter : IDocumentFilter, IOperationFilter
         {
             private readonly IPackageService _packageService;
             private readonly ISettingsManager _settingManager;
 
-            public PopulateTagsFilter(IPackageService packageService, ISettingsManager settingManager)
+            public TagsFilter(IPackageService packageService, ISettingsManager settingManager)
             {
                 _packageService = packageService;
                 _settingManager = settingManager;
@@ -133,7 +165,7 @@ namespace SwashbuckleModule.Web
             {
                 var defaultApiKey = _settingManager.GetValue("Swashbuckle.DefaultApiKey", string.Empty);
 
-                swaggerDoc.info.description = string.Format("For this sample, you can use the `{0}` key to test the authorization filters.", defaultApiKey);
+                swaggerDoc.info.description = string.Format(CultureInfo.InvariantCulture, "For this sample, you can use the `{0}` key to test the authorization filters.", defaultApiKey);
                 swaggerDoc.info.contact = new Contact
                 {
                     email = "support@virtocommerce.com",
@@ -186,20 +218,16 @@ namespace SwashbuckleModule.Web
             get
             {
                 var settingManager = _container.Resolve<ISettingsManager>();
-                return settingManager.GetValue("Swashbuckle.ExportImport.Description", String.Empty);
+                return settingManager.GetValue("Swashbuckle.ExportImport.Description", string.Empty);
             }
         }
 
         public void DoExport(Stream outStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
         {
-            //Nothing todo
-            //Is needed only for settings export
         }
 
         public void DoImport(Stream inputStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback)
         {
-            //Nothing todo
-            //Is needed only for settings import
         }
 
         #endregion

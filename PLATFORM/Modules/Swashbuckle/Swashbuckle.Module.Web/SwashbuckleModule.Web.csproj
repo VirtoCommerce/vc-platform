@@ -123,7 +123,8 @@
     <None Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CachedSwaggerProviderWrapper.cs" />
+    <Compile Include="CachingSwaggerProvider.cs" />
+    <Compile Include="HttpConfigurationExtensions.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
