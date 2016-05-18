@@ -17,17 +17,24 @@ namespace VirtoCommerce.CatalogModule.Web.Security
                     .SelectMany(x => x.AssignedScopes)
                     .ToList();
 
-                // Filter by selected catalog
-                criteria.CatalogIds = readPermissionScopes.OfType<CatalogSelectedScope>()
-                    .Select(x => x.Scope)
-                    .Where(x => !string.IsNullOrEmpty(x))
-                    .ToArray();
+                var catalogScopes = readPermissionScopes.OfType<CatalogSelectedScope>();
+                if (catalogScopes.Any())
+                {
+                    // Filter by selected catalog
+                    criteria.CatalogIds = catalogScopes.Select(x => x.Scope)
+                                                       .Where(x => !string.IsNullOrEmpty(x))
+                                                       .ToArray();
+                }
 
-                // Filter by selected category
-                criteria.CategoryIds = readPermissionScopes.OfType<CatalogSelectedCategoryScope>()
-                    .Select(x => x.Scope)
-                    .Where(x => !string.IsNullOrEmpty(x))
-                    .ToArray();
+                var categoryScopes = readPermissionScopes.OfType<CatalogSelectedCategoryScope>();
+                if (categoryScopes.Any())
+                {
+                    // Filter by selected categories
+                    criteria.CategoryIds = categoryScopes.Select(x => x.Scope)
+                                                         .Where(x => !string.IsNullOrEmpty(x))
+                                                         .ToArray();
+                }
+
             }
         }
     }

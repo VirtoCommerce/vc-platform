@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using VirtoCommerce.Domain.Store.Model;
 using VirtoCommerce.Platform.Core.Security;
 
 namespace VirtoCommerce.StoreModule.Web.Security
@@ -22,10 +23,20 @@ namespace VirtoCommerce.StoreModule.Web.Security
             {
                 throw new ArgumentNullException("obj");
             }
+            string storeId = null;
+            var coreStore = obj as Store;
+            var webModelStore = obj as Model.Store;
+            if (coreStore != null)
+            {
+                storeId = coreStore.Id;
+            }
+            if (webModelStore != null)
+            {
+                storeId = webModelStore.Id;
+            }
 
-            var store = obj as Model.Store;
-            if (store != null)
-                return new[] { Type + ":" + store.Id };
+            if (storeId != null)
+                return new[] { Type + ":" + storeId };
 
             return Enumerable.Empty<string>();
         }
