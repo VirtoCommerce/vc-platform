@@ -8,17 +8,15 @@ namespace VirtoCommerce.Platform.Core.Modularity
 {
     public class ManifestModuleCatalog : ModuleCatalog
     {
+        private readonly string _modulesLocalPath;
         private readonly string _contentVirtualPath;
         private readonly string _assembliesPath;
         private readonly string _platformPath;
-        private static readonly string[] _assemblyFileExtensions = { ".dll", ".pdb", ".exe", ".xml" };
+        private static readonly string[] _assemblyFileExtensions = { ".dll", ".pdb", ".exe", ".xml" };           
 
-        public IModuleManifestProvider ManifestProvider { get; private set; }
-
-        public ManifestModuleCatalog(IModuleManifestProvider manifestProvider, string contentVirtualPath, 
-            string assembliesPath, string platformPath)
+        public ManifestModuleCatalog(string modulesLocalPath, string contentVirtualPath, string assembliesPath, string platformPath)
         {
-            ManifestProvider = manifestProvider;
+            _modulesLocalPath = modulesLocalPath;
             if (contentVirtualPath != null)
             {
                 _contentVirtualPath = contentVirtualPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
@@ -29,7 +27,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
 
         protected override void InnerLoad()
         {
-            var contentPhysicalPath = ManifestProvider.RootPath;
+            var contentPhysicalPath = _modulesLocalPath;
 
             if (string.IsNullOrEmpty(_assembliesPath))
                 throw new InvalidOperationException(Resources.AssembliesPathCannotBeNullOrEmpty);
@@ -46,9 +44,9 @@ namespace VirtoCommerce.Platform.Core.Modularity
 
             var rootUri = new Uri(contentPhysicalPath);
 
-            CopyAssemblies(ManifestProvider.RootPath, _assembliesPath);
+            CopyAssemblies(_modulesLocalPath, _assembliesPath);
 
-            foreach (var pair in ManifestProvider.GetModuleManifests())
+            foreach (var pair in GetModuleManifests())
             {
                 var manifest = pair.Value;
                 var manifestPath = pair.Key;
@@ -60,7 +58,8 @@ namespace VirtoCommerce.Platform.Core.Modularity
                 ConvertVirtualPath(manifest.Scripts, moduleVirtualPath);
                 ConvertVirtualPath(manifest.Styles, moduleVirtualPath);
 
-                var moduleInfo = new ManifestModuleInfo(manifest, modulePath);
+                var moduleInfo = new ManifestModuleInfo(manifest);
+                moduleInfo.FullPhysicalPath = Path.GetDirectoryName(manifestPath);
 
                 // Modules without assembly file don't need initialization
                 if (string.IsNullOrEmpty(manifest.AssemblyFile))
@@ -68,10 +67,19 @@ namespace VirtoCommerce.Platform.Core.Modularity
                 else
                     moduleInfo.Ref = GetFileAbsoluteUri(_assembliesPath, manifest.AssemblyFile);
 
+                moduleInfo.IsInstalled = true;
                 AddModule(moduleInfo);
             }
         }
 
+        private IDictionary<string, ModuleManifest> GetModuleManifests()
+        {
+            var result = new Dictionary<string, ModuleManifest>();
+
+            if (Directory.Exists(_modulesLocalPath))
+                result = Directory.EnumerateFiles(_modulesLocalPath, "module.manifest", SearchOption.AllDirectories).ToDictionary(path => path, ManifestReader.Read);
+            return result;
+        }
 
         private static void CopyAssemblies(string sourceParentPath, string targetDirectoryPath)
         {

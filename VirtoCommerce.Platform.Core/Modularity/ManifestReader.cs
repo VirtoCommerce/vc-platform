@@ -3,14 +3,17 @@ using System.Xml.Serialization;
 
 namespace VirtoCommerce.Platform.Core.Modularity
 {
-	public static class ManifestReader
+	internal static class ManifestReader
 	{
 		public static ModuleManifest Read(string filePath)
 		{
-			using (var stream = File.OpenRead(filePath))
+            ModuleManifest retVal = null;
+            using (var stream = File.OpenRead(filePath))
 			{
-				return Read(stream);
+                retVal = Read(stream);
+                retVal.LocalPath = Path.GetDirectoryName(filePath);
 			}
+            return retVal;
 		}
 
 		public static ModuleManifest Read(Stream stream)

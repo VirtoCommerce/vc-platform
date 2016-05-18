@@ -134,7 +134,6 @@
     <Compile Include="Modularity\IModuleInitializer.cs" />
     <Compile Include="Modularity\IModuleInitializerOptions.cs" />
     <Compile Include="Modularity\IModuleManager.cs" />
-    <Compile Include="Modularity\IModuleManifestProvider.cs" />
     <Compile Include="Modularity\IModuleTypeLoader.cs" />
     <Compile Include="Modularity\InitializationMode.cs" />
     <Compile Include="Modularity\LoadModuleCompletedEventArgs.cs" />
@@ -157,7 +156,6 @@
     <Compile Include="Modularity\ModuleInitializerOptions.cs" />
     <Compile Include="Modularity\Exceptions\ModuleNotFoundException.cs" />
     <Compile Include="Modularity\ModuleManifest.cs" />
-    <Compile Include="Modularity\ModuleManifestProvider.cs" />
     <Compile Include="Modularity\ModulePermission.cs" />
     <Compile Include="Modularity\ModulePermissionGroup.cs" />
     <Compile Include="Modularity\ModuleSetting.cs" />
@@ -185,9 +183,7 @@
     <Compile Include="Notifications\SearchNotificationsResult.cs" />
     <Compile Include="Notifications\SendNotificationResult.cs" />
     <Compile Include="Notifications\SmsNotification.cs" />
-    <Compile Include="Packaging\ModuleIdentity.cs" />
-    <Compile Include="Packaging\IPackageService.cs" />
-    <Compile Include="Packaging\ModuleDescriptor.cs" />
+    <Compile Include="Modularity\IModuleInstaller.cs" />
     <Compile Include="Packaging\ProgressMessage.cs" />
     <Compile Include="Packaging\ProgressMessageLevel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

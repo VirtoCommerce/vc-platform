@@ -458,7 +458,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
         }
 
         /// <summary>
-        /// Returns the <see cref="ModuleInfo"/> on which the received module dependens on.
+        /// Returns the <see cref="ModuleInfo"/> on which the received module dependents on.
         /// </summary>
         /// <param name="moduleInfo">Module whose dependant modules are requested.</param>
         /// <returns>Collection of <see cref="ModuleInfo"/> dependants of <paramref name="moduleInfo"/>.</returns>

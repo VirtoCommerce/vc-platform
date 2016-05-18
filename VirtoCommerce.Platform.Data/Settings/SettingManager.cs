@@ -16,29 +16,26 @@ namespace VirtoCommerce.Platform.Data.Settings
 {
     public class SettingsManager : ISettingsManager
     {
-        private readonly IModuleManifestProvider _manifestProvider;
+        private readonly IModuleCatalog _moduleCatalog;
         private readonly Func<IPlatformRepository> _repositoryFactory;
         private readonly ICacheManager<object> _cacheManager;
-        private readonly ModuleManifest[] _predefinedManifests;
+        private readonly ManifestModuleInfo[] _predefinedModules;
         private readonly IDictionary<string, List<SettingEntry>> _runtimeModuleSettingsMap = new Dictionary<string, List<SettingEntry>>();
 
         [CLSCompliant(false)]
-        public SettingsManager(IModuleManifestProvider manifestProvider, Func<IPlatformRepository> repositoryFactory, ICacheManager<object> cacheManager, ModuleManifest[] predefinedManifests)
+        public SettingsManager(IModuleCatalog moduleCatalog, Func<IPlatformRepository> repositoryFactory, ICacheManager<object> cacheManager, ManifestModuleInfo[] predefinedModules)
         {
-            _manifestProvider = manifestProvider;
+            _moduleCatalog = moduleCatalog;
             _repositoryFactory = repositoryFactory;
             _cacheManager = cacheManager;
-            _predefinedManifests = predefinedManifests ?? new ModuleManifest[0];
+            _predefinedModules = predefinedModules ?? new ManifestModuleInfo[0];
         }
 
         #region ISettingsManager Members
 
-        public ModuleDescriptor[] GetModules()
+        public ManifestModuleInfo[] GetModules()
         {
-            var retVal = GetModuleManifestsWithSettings()
-                .Select(x => x.ToModel())
-                .ToArray();
-
+            var retVal = GetModulesWithSettings().ToArray();
             return retVal;
         }
 
@@ -48,7 +45,7 @@ namespace VirtoCommerce.Platform.Data.Settings
                 throw new ArgumentNullException("name");
 
             SettingEntry retVal = null;
-            var manifestSetting = LoadSettingFromManifest(name);
+            var manifestSetting = LoadModuleSettings(name);
             var storedSetting = GetAllEntities().FirstOrDefault(s => string.Equals(s.Name, name, StringComparison.OrdinalIgnoreCase));
             if (manifestSetting != null)
             {
@@ -172,7 +169,7 @@ namespace VirtoCommerce.Platform.Data.Settings
         {
             var result = new List<SettingEntry>();
 
-            var manifest = GetModuleManifestsWithSettings().FirstOrDefault(m => m.Id == moduleId);
+            var manifest = GetModulesWithSettings().FirstOrDefault(m => m.Id == moduleId);
 
             if (manifest != null && manifest.Settings != null && manifest.Settings.Any())
             {
@@ -275,7 +272,7 @@ namespace VirtoCommerce.Platform.Data.Settings
             }
             else
             {
-                var manifestSetting = LoadSettingFromManifest(name);
+                var manifestSetting = LoadModuleSettings(name);
 
                 if (manifestSetting != null)
                 {
@@ -318,21 +315,20 @@ namespace VirtoCommerce.Platform.Data.Settings
         #endregion
 
 
-        private IEnumerable<ModuleManifest> GetModuleManifestsWithSettings()
+        private IEnumerable<ManifestModuleInfo> GetModulesWithSettings()
         {
-            return _manifestProvider.GetModuleManifests().Values
-                .Union(_predefinedManifests)
-                .Where(m => m.Settings != null && m.Settings.Any());
+            return _moduleCatalog.Modules.OfType<ManifestModuleInfo>().Union(_predefinedModules)
+                .Where(m => !m.Settings.IsNullOrEmpty());
         }
 
-        private ModuleSetting LoadSettingFromManifest(string name)
+        private ModuleSetting LoadModuleSettings(string name)
         {
             return GetAllManifestSettings().FirstOrDefault(s => s.Name == name);
         }
 
         private IEnumerable<ModuleSetting> GetAllManifestSettings()
         {
-            return GetModuleManifestsWithSettings()
+            return GetModulesWithSettings()
                 .SelectMany(m => m.Settings)
                 .SelectMany(g => g.Settings);
         }

@@ -1,9 +1,11 @@
 ﻿using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Modularity;
+
 namespace VirtoCommerce.Platform.Core.Settings
 {
     public interface ISettingsManager
     {
-        ModuleDescriptor[] GetModules();
+        ManifestModuleInfo[] GetModules();
         /// <summary>
         /// Deep load and populate settings values for entity and all nested objects 
         /// </summary>

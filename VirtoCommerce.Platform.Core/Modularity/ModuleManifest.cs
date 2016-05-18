@@ -1,4 +1,5 @@
-﻿using System.Xml.Serialization;
+﻿using System;
+using System.Xml.Serialization;
 
 namespace VirtoCommerce.Platform.Core.Modularity
 {
@@ -33,6 +34,9 @@ namespace VirtoCommerce.Platform.Core.Modularity
 
         [XmlElement("projectUrl")]
         public string ProjectUrl { get; set; }
+
+        [XmlElement("packageUrl")]
+        public string PackageUrl { get; set; }
 
         [XmlElement("iconUrl")]
         public string IconUrl { get; set; }
@@ -76,5 +80,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
         [XmlArray("permissions")]
         [XmlArrayItem("group")]
         public ModulePermissionGroup[] Permissions { get; set; }
+
+        public string LocalPath { get; set; }
     }
 }

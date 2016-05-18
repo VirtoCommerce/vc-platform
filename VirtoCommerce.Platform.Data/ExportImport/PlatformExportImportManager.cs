@@ -8,7 +8,7 @@ using CacheManager.Core;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Core.ExportImport;
-using VirtoCommerce.Platform.Core.Packaging;
+using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Common;
@@ -44,20 +44,20 @@ namespace VirtoCommerce.Platform.Data.ExportImport
         private readonly Uri _manifestPartUri;
         private readonly Uri _platformEntriesPartUri;
 
-        private readonly IPackageService _packageService;
+        private readonly IModuleCatalog _moduleCatalog;
         private readonly ISecurityService _securityService;
         private readonly IRoleManagementService _roleManagementService;
         private readonly ISettingsManager _settingsManager;
         private readonly IDynamicPropertyService _dynamicPropertyService;
         private readonly ICacheManager<object> _cacheManager;
         [CLSCompliant(false)]
-        public PlatformExportImportManager(ISecurityService securityService, IRoleManagementService roleManagementService, ISettingsManager settingsManager, IDynamicPropertyService dynamicPropertyService, IPackageService packageService, ICacheManager<object> cacheManager)
+        public PlatformExportImportManager(ISecurityService securityService, IRoleManagementService roleManagementService, ISettingsManager settingsManager, IDynamicPropertyService dynamicPropertyService, IModuleCatalog moduleCatalog, ICacheManager<object> cacheManager)
         {
             _dynamicPropertyService = dynamicPropertyService;
             _securityService = securityService;
             _roleManagementService = roleManagementService;
             _settingsManager = settingsManager;
-            _packageService = packageService;
+            _moduleCatalog = moduleCatalog;
             _cacheManager = cacheManager;
             _manifestPartUri = PackUriHelper.CreatePartUri(new Uri("Manifest.json", UriKind.Relative));
             _platformEntriesPartUri = PackUriHelper.CreatePartUri(new Uri("PlatformEntries.json", UriKind.Relative));
@@ -76,7 +76,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                     Id = x.Id,
                     Dependencies = x.Dependencies != null ? x.Dependencies.ToArray() : null,
                     Version = x.Version,
-                    Description = ((ISupportExportImportModule)x.ModuleInfo.ModuleInstance).ExportDescription
+                    Description = ((ISupportExportImportModule)x.ModuleInstance).ExportDescription
                 }).ToArray()
             };
 
@@ -272,7 +272,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                         };
                         try
                         {
-                            ((ISupportExportImportModule)moduleDescriptor.ModuleInfo.ModuleInstance).DoImport(modulePartStream, manifest, modulePorgressCallback);
+                            ((ISupportExportImportModule)moduleDescriptor.ModuleInstance).DoImport(modulePartStream, manifest, modulePorgressCallback);
                         }
                         catch (Exception ex)
                         {
@@ -308,7 +308,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 
                     try
                     {
-                        ((ISupportExportImportModule)moduleDescriptor.ModuleInfo.ModuleInstance).DoExport(modulePart.GetStream(), manifest, modulePorgressCallback);
+                        ((ISupportExportImportModule)moduleDescriptor.ModuleInstance).DoExport(modulePart.GetStream(), manifest, modulePorgressCallback);
                     }
                     catch (Exception ex)
                     {
@@ -323,10 +323,10 @@ namespace VirtoCommerce.Platform.Data.ExportImport
         }
 
 
-        private VirtoCommerce.Platform.Core.Packaging.ModuleDescriptor[] InnerGetModulesWithInterface(Type interfaceType)
+        private ManifestModuleInfo[] InnerGetModulesWithInterface(Type interfaceType)
         {
-            var retVal = _packageService.GetModules().Where(x => x.ModuleInfo.ModuleInstance != null)
-                                        .Where(x => x.ModuleInfo.ModuleInstance.GetType().GetInterfaces().Contains(interfaceType))
+            var retVal = _moduleCatalog.Modules.OfType<ManifestModuleInfo>().Where(x => x.ModuleInstance != null)
+                                        .Where(x => x.ModuleInstance.GetType().GetInterfaces().Contains(interfaceType))
                                         .ToArray();
             return retVal;
         }

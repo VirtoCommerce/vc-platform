@@ -9,6 +9,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using Hangfire;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Packaging;
 using VirtoCommerce.Platform.Core.PushNotifications;
 using VirtoCommerce.Platform.Core.Security;
@@ -24,14 +25,14 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     [CheckPermission(Permission = PredefinedPermissions.ModuleQuery)]
     public class ModulesController : ApiController
     {
-        private readonly IPackageService _packageService;
+        private readonly IModuleCatalog _moduleCatalog;
         private readonly string _uploadsPath;
         private readonly IPushNotificationManager _pushNotifier;
         private readonly IUserNameResolver _userNameResolver;
 
-        public ModulesController(IPackageService packageService, string uploadsPath, IPushNotificationManager pushNotifier, IUserNameResolver userNameResolver)
+        public ModulesController(IModuleCatalog moduleCatalog, string uploadsPath, IPushNotificationManager pushNotifier, IUserNameResolver userNameResolver)
         {
-            _packageService = packageService;
+            _moduleCatalog = moduleCatalog;
             _uploadsPath = uploadsPath;
             _pushNotifier = pushNotifier;
             _userNameResolver = userNameResolver;
@@ -43,29 +44,37 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <returns></returns>
         [HttpGet]
         [Route("")]
-        [ResponseType(typeof(ModuleDescriptor[]))]
+        [ResponseType(typeof(ManifestModuleInfo[]))]
         public IHttpActionResult GetModules()
         {
-            var retVal = _packageService.GetModules().ToArray();
+            var retVal = _moduleCatalog.Modules.OfType<ManifestModuleInfo>().ToArray();
             return Ok(retVal);
         }
 
         /// <summary>
-        /// Get module details
+        /// Get all dependent modules for module
         /// </summary>
-        /// <param name="id">Module ID.</param>
+        /// <param name="module">module</param>
         /// <returns></returns>
-        [HttpGet]
-        [Route("{id}")]
-        [ResponseType(typeof(ModuleDescriptor))]
-        public IHttpActionResult GetModuleById(string id)
+        [HttpPost]
+        [Route("dependent")]
+        [ResponseType(typeof(ManifestModuleInfo))]
+        public IHttpActionResult GetDependentModules(ManifestModuleInfo module)
         {
-            var retVal = _packageService.GetModules().FirstOrDefault(x => x.Id == id);
-            if (retVal != null)
-            {
-                return Ok(retVal);
-            }
-            return NotFound();
+            return Ok(_moduleCatalog.GetDependentModules(module).OfType<ManifestModuleInfo>().ToArray());
+        }
+
+        /// <summary>
+        /// Returns a flat expanded  list of modules that depend on passed modules
+        /// </summary>
+        /// <param name="modules">modules</param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("dependencies")]
+        [ResponseType(typeof(ManifestModuleInfo[]))]
+        public IHttpActionResult GetCompleteListWithDependencies(ManifestModuleInfo[] modules)
+        {
+            return Ok(_moduleCatalog.CompleteListWithDependencies(modules).OfType<ManifestModuleInfo>().ToArray());
         }
 
         /// <summary>
@@ -74,7 +83,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <returns></returns>
         [HttpPost]
         [Route("")]
-        [ResponseType(typeof(ModuleDescriptor))]
+        [ResponseType(typeof(ManifestModuleInfo))]
         [CheckPermission(Permission = PredefinedPermissions.ModuleManage)]
         public async Task<IHttpActionResult> Upload()
         {
@@ -95,17 +104,16 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var file = streamProvider.FileData.FirstOrDefault();
             if (file != null)
             {
-                var descriptor = _packageService.OpenPackage(file.LocalFileName);
-                if (descriptor != null)
-                {
-                    var retVal = descriptor;
-                    retVal.FileName = file.LocalFileName;
+                //var moduleInfo = _moduleInstaller.LoadModule(file.LocalFileName);
+                //if (moduleInfo != null)
+                //{
+                //    var retVal = moduleInfo;
 
-                    var dependencyErrors = _packageService.GetDependencyErrors(descriptor);
-                    retVal.ValidationErrors.AddRange(dependencyErrors);
+                //    //var dependencyErrors = _moduleInstaller.GetDependencyErrors(moduleInfo);
+                //    //retVal.ValidationErrors.AddRange(dependencyErrors);
 
-                    return Ok(retVal);
-                }
+                //    return Ok(retVal);
+                //}
             }
 
             return NotFound();
@@ -203,13 +211,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 switch (options.Action)
                 {
                     case webModel.ModuleAction.Install:
-                        _packageService.Install(options.PackageFilePath, reportProgress);
+                       // _moduleInstaller.Install(options.PackageFilePath, reportProgress);
                         break;
                     case webModel.ModuleAction.Update:
-                        _packageService.Update(options.PackageId, options.PackageFilePath, reportProgress);
+                       // _moduleInstaller.Update(options.PackageId, options.PackageFilePath, reportProgress);
                         break;
                     case webModel.ModuleAction.Uninstall:
-                        _packageService.Uninstall(options.PackageId, reportProgress);
+                       // _moduleInstaller.Uninstall(options.PackageId, reportProgress);
                         break;
                 }
             }

@@ -9,6 +9,7 @@ using Unity.WebApi;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Modularity;
 using Common.Logging;
+using VirtoCommerce.Platform.Data.Modularity;
 
 namespace VirtoCommerce.Platform.Web
 {
@@ -30,8 +31,7 @@ namespace VirtoCommerce.Platform.Web
 
         protected override IModuleCatalog CreateModuleCatalog()
         {
-            var manifestProvider = new ModuleManifestProvider(_modulesPhysicalPath);
-            return new ManifestModuleCatalog(manifestProvider, _modulesVirtualPath, _assembliesPath, _platformPath);
+            return new ManifestModuleCatalog(_modulesPhysicalPath, _modulesVirtualPath, _assembliesPath, _platformPath);
         }
 
         /// <summary>
@@ -44,6 +44,7 @@ namespace VirtoCommerce.Platform.Web
 
             var options = new ModuleInitializerOptions();
             Container.RegisterInstance<IModuleInitializerOptions>(options);
+            Container.RegisterInstance<IModuleCatalog>(ModuleCatalog);
         }
 
         public override void Run(bool runWithDefaultConfiguration)
@@ -62,11 +63,6 @@ namespace VirtoCommerce.Platform.Web
             // Standard WebHostHttpControllerTypeResolver uses cache and does not see new modules.
             GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpControllerTypeResolver), new DefaultHttpControllerTypeResolver());
 
-            var moduleCatalog = ModuleCatalog as ManifestModuleCatalog;
-            if (moduleCatalog != null)
-            {
-                Container.RegisterInstance(moduleCatalog.ManifestProvider);
-            }
         }
 
         public class CustomAssemblyResolver : DefaultAssembliesResolver

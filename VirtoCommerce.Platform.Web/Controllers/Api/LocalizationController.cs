@@ -13,10 +13,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     [RoutePrefix("api/platform/localization")]
     public class LocalizationController : ApiController
     {
-        private readonly IModuleManifestProvider _manifestProvider;
-        public LocalizationController(IModuleManifestProvider manifestProvider)
+        private readonly IModuleCatalog _moduleCatalog;
+        public LocalizationController(IModuleCatalog moduleCatalog)
         {
-            _manifestProvider = manifestProvider;
+            _moduleCatalog = moduleCatalog;
         }
 
         /// <summary>
@@ -71,10 +71,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             files.AddRange(platformFileNames);
 
             // Get modules localization files
-            foreach (var pair in _manifestProvider.GetModuleManifests())
+            foreach (var module in _moduleCatalog.Modules.OfType<ManifestModuleInfo>())
             {
-                var modulePath = Path.GetDirectoryName(pair.Key);
-                var moduleFileNames = GetLocalizationFilesByPath(modulePath, searchPattern);
+                  var moduleFileNames = GetLocalizationFilesByPath(module.FullPhysicalPath, searchPattern);
                 files.AddRange(moduleFileNames);
             }
 

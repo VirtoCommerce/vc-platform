@@ -21,18 +21,18 @@ namespace VirtoCommerce.Platform.Data.Security
         private readonly Func<ApplicationUserManager> _userManagerFactory;
         private readonly IApiAccountProvider _apiAccountProvider;
         private readonly ICacheManager<object> _cacheManager;
-        private readonly IModuleManifestProvider _manifestProvider;
+        private readonly IModuleCatalog _moduleCatalog;
         private readonly IPermissionScopeService _permissionScopeService;
 
         [CLSCompliant(false)]
         public SecurityService(Func<IPlatformRepository> platformRepository, Func<ApplicationUserManager> userManagerFactory, IApiAccountProvider apiAccountProvider,
-                               IModuleManifestProvider manifestProvider, IPermissionScopeService permissionScopeService, ICacheManager<object> cacheManager)
+                               IModuleCatalog moduleCatalog, IPermissionScopeService permissionScopeService, ICacheManager<object> cacheManager)
         {
             _platformRepository = platformRepository;
             _userManagerFactory = userManagerFactory;
             _apiAccountProvider = apiAccountProvider;
             _cacheManager = cacheManager;
-            _manifestProvider = manifestProvider;
+            _moduleCatalog = moduleCatalog;
             _permissionScopeService = permissionScopeService;
         }
 
@@ -374,10 +374,7 @@ namespace VirtoCommerce.Platform.Data.Security
         {
             var manifestPermissions = new List<Permission>();
 
-            var manifestsWithPermissions = _manifestProvider.GetModuleManifests().Values
-                .Where(m => m.Permissions != null);
-
-            foreach (var module in manifestsWithPermissions)
+            foreach (var module in _moduleCatalog.Modules.OfType<ManifestModuleInfo>())
             {
                 foreach (var group in module.Permissions)
                 {

@@ -53,7 +53,7 @@ namespace VirtoCommerce.Platform.Web
 
             // Register styles and scripts listed in module manifests ordered by dependency.
             var moduleCatalog = ServiceLocator.Current.GetInstance<IModuleCatalog>();
-            var allModules = moduleCatalog.Modules.ToArray();
+            var allModules = moduleCatalog.Modules.OfType<ManifestModuleInfo>().ToArray();
             var manifestModules = moduleCatalog.CompleteListWithDependencies(allModules)
                 .OfType<ManifestModuleInfo>()
                 .ToArray();
