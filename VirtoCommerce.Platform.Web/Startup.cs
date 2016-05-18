@@ -148,6 +148,8 @@ namespace VirtoCommerce.Platform.Web
                 });
             }
 
+            container.RegisterInstance(GlobalConfiguration.Configuration);
+
             // Ensure all modules are loaded
             foreach (var module in moduleCatalog.Modules.Where(x => x.State == ModuleState.NotStarted))
             {
@@ -163,8 +165,6 @@ namespace VirtoCommerce.Platform.Web
             }
 
             GlobalConfiguration.Configure(WebApiConfig.Register);
-            container.RegisterInstance(GlobalConfiguration.Configuration);
-
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
