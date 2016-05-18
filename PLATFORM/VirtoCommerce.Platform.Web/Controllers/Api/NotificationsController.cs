@@ -1,17 +1,12 @@
-﻿using DotLiquid;
-using System;
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Globalization;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Notifications;
 using VirtoCommerce.Platform.Web.Converters.Notifications;
-using VirtoCommerce.Platform.Core.Common;
 using webModels = VirtoCommerce.Platform.Web.Model.Notifications;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
@@ -132,7 +127,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <remarks>Method returns notification properties, that defined in notification class, this properties used in notification template.</remarks>
         /// <param name="type">Notification type</param>
         [HttpGet]
-        [ResponseType(typeof(NotificationParameter[]))]
+        [ResponseType(typeof(webModels.NotificationParameter[]))]
         [Route("template/{type}/getTestingParameters")]
         public IHttpActionResult GetTestingParameters(string type)
         {

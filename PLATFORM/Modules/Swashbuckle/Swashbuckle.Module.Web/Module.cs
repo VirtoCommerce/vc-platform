@@ -32,6 +32,7 @@ namespace SwashbuckleModule.Web
 
         public override void Initialize()
         {
+            var httpConfiguration = _container.Resolve<HttpConfiguration>();
             var moduleInitializerOptions = _container.Resolve<IModuleInitializerOptions>();
             var routePrefix = moduleInitializerOptions.RoutePrefix;
 
@@ -42,17 +43,17 @@ namespace SwashbuckleModule.Web
             };
             var xmlCommentsFilePaths = xmlCommentsDirectoryPaths.SelectMany(GetXmlFilesPaths).ToArray();
 
-            Func<TagsFilter> tagsFilterFactory = () => new TagsFilter(_container.Resolve<IPackageService>(), _container.Resolve<ISettingsManager>());
-
-            var httpConfiguration = _container.Resolve<HttpConfiguration>();
 
             // Add full swagger generator
             httpConfiguration.EnableSwagger(routePrefix + "docs/{apiVersion}", c =>
             {
+                Func<TagsFilter> tagsFilterFactory = () => new TagsFilter(_container.Resolve<IPackageService>(), _container.Resolve<ISettingsManager>());
+
                 c.SingleApiVersion("v1", "VirtoCommerce Solution REST API documentation");
                 c.DocumentFilter(tagsFilterFactory);
                 c.OperationFilter(tagsFilterFactory);
-                ApplyCommonSwaggerConfiguration(c, string.Empty, xmlCommentsFilePaths, tagsFilterFactory);
+                c.UseFullTypeNameInSchemaIds();
+                ApplyCommonSwaggerConfiguration(c, string.Empty, xmlCommentsFilePaths);
             })
             .EnableSwaggerUi(routePrefix + "docs/ui/{*assetPath}", c =>
             {
@@ -61,6 +62,16 @@ namespace SwashbuckleModule.Web
                 c.CustomAsset("images/logo_small-png", assembly, "SwashbuckleModule.Web.SwaggerUi.CustomAssets.logo_small.png");
                 c.CustomAsset("css/vc-css", assembly, "SwashbuckleModule.Web.SwaggerUi.CustomAssets.vc.css");
                 c.CustomAsset("swagger-ui-js", assembly, "SwashbuckleModule.Web.SwaggerUi.CustomAssets.swagger-ui.js");
+            });
+
+            // Add separate swagger generator for platform
+            httpConfiguration.EnableSwagger("swagger_VirtoCommerce.Platform", "docs/VirtoCommerce.Platform/{apiVersion}", c =>
+            {
+                // Include only APIs from current module
+                c.MultipleApiVersions(
+                    (apiDescription, apiVersion) => apiDescription.ActionDescriptor.ControllerDescriptor.ControllerType.Assembly.GetName().Name == "VirtoCommerce.Platform.Web",
+                    versionInfoBuilder => versionInfoBuilder.Version("v1", "VirtoCommerce.Platform REST API documentation"));
+                ApplyCommonSwaggerConfiguration(c, "VirtoCommerce.Platform", xmlCommentsFilePaths);
             });
 
             // Add separate swagger generator for each installed module
@@ -79,21 +90,21 @@ namespace SwashbuckleModule.Web
                 {
                     // Include only APIs from current module
                     c.MultipleApiVersions(
-                        (apiDescription, apiVersion) => module.ModuleInstance != null && apiDescription.ActionDescriptor.ControllerDescriptor.ControllerType.Assembly == module.ModuleInstance.GetType().Assembly,
-                        versionInfoBuilder => versionInfoBuilder.Version("v1", module.ModuleName + " REST API documentation"));
-                    ApplyCommonSwaggerConfiguration(c, module.ModuleName, xmlCommentsFilePaths, tagsFilterFactory);
+                        (apiDescription, apiVersion) => apiDescription.ActionDescriptor.ControllerDescriptor.ControllerType.Assembly == module.ModuleInstance.GetType().Assembly,
+                        versionInfoBuilder => versionInfoBuilder.Version("v1", module.ModuleName + " module REST API documentation"));
+                    c.UseFullTypeNameInSchemaIds();
+                    ApplyCommonSwaggerConfiguration(c, module.ModuleName, xmlCommentsFilePaths);
                 });
             }
         }
 
-        private void ApplyCommonSwaggerConfiguration(SwaggerDocsConfig c, string cacheKey, string[] xmlCommentsFilePaths, Func<TagsFilter> tagsFilterFactory)
+        private void ApplyCommonSwaggerConfiguration(SwaggerDocsConfig c, string cacheKey, string[] xmlCommentsFilePaths)
         {
             var cacheManager = _container.Resolve<ICacheManager<object>>();
 
             c.CustomProvider(defaultProvider => new CachingSwaggerProvider(defaultProvider, cacheManager, cacheKey));
             c.MapType<object>(() => new Schema { type = "object" });
             c.IgnoreObsoleteProperties();
-            c.UseFullTypeNameInSchemaIds();
             c.DescribeAllEnumsAsStrings();
             c.OperationFilter(() => new OptionalParametersFilter());
             c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
