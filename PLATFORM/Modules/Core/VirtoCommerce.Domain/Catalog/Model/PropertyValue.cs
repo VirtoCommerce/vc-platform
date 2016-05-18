@@ -13,7 +13,31 @@ namespace VirtoCommerce.Domain.Catalog.Model
 		public Property Property { get; set; }
 		public string Alias { get; set; }
 		public string ValueId { get; set; }
-		public object Value { get; set; }
+
+        private object _value;
+		public object Value
+        {
+            get
+            {
+                var retVal = _value;
+                /// Return actual dictionary property value from property meta-information instead stored
+                if (Property != null && Property.Dictionary && Property.DictionaryValues != null && ValueId != null)
+                {
+                    var dictValue = Property.DictionaryValues.FirstOrDefault(x => x.Id == ValueId);
+                    if (dictValue != null)
+                    {
+                        retVal = dictValue.Value;
+                    }
+
+                }
+                return retVal;
+            }
+            set
+            {
+                _value = value;
+            }
+        }
+
 		public PropertyValueType ValueType { get; set; }
 		public string LanguageCode { get; set; }
 
@@ -21,6 +45,7 @@ namespace VirtoCommerce.Domain.Catalog.Model
 		{
 			return (PropertyName ?? "unknown") + ":" + (Value ?? "undefined");
 		}
+
 
         /// <summary>
         /// Returns for current value all dictionary values in all defined languages 
