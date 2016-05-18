@@ -1,7 +1,7 @@
 ﻿angular.module('virtoCommerce.catalogModule')
 .controller('virtoCommerce.catalogModule.imagesController', ['$scope', '$filter', '$translate', 'FileUploader', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'platformWebApp.authService', 'platformWebApp.assets.api', function ($scope, $filter, $translate, FileUploader, dialogService, bladeNavigationService, authService, assets) {
     var blade = $scope.blade;
-    blade.updatePermission = 'catalog:update';
+    blade.hasAssetCreatePermission = bladeNavigationService.checkPermission('platform:asset:create');
 
     blade.refresh = function (parentRefresh) {
         blade.currentResource.get({ id: blade.currentEntityId }, function (data) {
@@ -47,7 +47,7 @@
     };
 
     function initialize() {
-        if (!$scope.uploader && blade.hasUpdatePermission()) {
+        if (!$scope.uploader && blade.hasAssetCreatePermission) {
             // create the uploader            
             var uploader = $scope.uploader = new FileUploader({
                 scope: $scope,
