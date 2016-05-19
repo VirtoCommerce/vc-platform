@@ -1,13 +1,12 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using VirtoCommerce.Platform.Core.Modularity;
 
 namespace VirtoCommerce.Platform.Web.Model.Packaging
 {
     public class ModuleBackgroundJobOptions
     {
-        [JsonConverter(typeof(StringEnumConverter))]
         public ModuleAction Action { get; set; }
-        public string PackageId { get; set; }
-        public string PackageFilePath { get; set; }
+        public ManifestModuleInfo[] Modules { get; set; }
     }
 }

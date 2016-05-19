@@ -72,12 +72,23 @@ namespace VirtoCommerce.Platform.Core.Modularity
             }
         }
 
+        protected override IEnumerable<ModuleInfo> GetDependentModulesInner(ModuleInfo moduleInfo)
+        {
+            return base.GetDependentModulesInner(moduleInfo);
+        }
+
         private IDictionary<string, ModuleManifest> GetModuleManifests()
         {
             var result = new Dictionary<string, ModuleManifest>();
 
             if (Directory.Exists(_modulesLocalPath))
-                result = Directory.EnumerateFiles(_modulesLocalPath, "module.manifest", SearchOption.AllDirectories).ToDictionary(path => path, ManifestReader.Read);
+            {
+                foreach(var manifestFile in Directory.EnumerateFiles(_modulesLocalPath, "module.manifest", SearchOption.AllDirectories))
+                {
+                    var manifest = ManifestReader.Read(manifestFile);
+                    result.Add(manifestFile, manifest);
+                }              
+            }
             return result;
         }
 

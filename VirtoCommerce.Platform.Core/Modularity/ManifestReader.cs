@@ -11,7 +11,6 @@ namespace VirtoCommerce.Platform.Core.Modularity
             using (var stream = File.OpenRead(filePath))
 			{
                 retVal = Read(stream);
-                retVal.LocalPath = Path.GetDirectoryName(filePath);
 			}
             return retVal;
 		}

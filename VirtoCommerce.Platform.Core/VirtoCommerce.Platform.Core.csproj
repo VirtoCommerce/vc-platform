@@ -149,6 +149,7 @@
     <Compile Include="Modularity\ModuleDependencyAttribute.cs" />
     <Compile Include="Modularity\ModuleDependencySolver.cs" />
     <Compile Include="Modularity\ModuleDownloadProgressChangedEventArgs.cs" />
+    <Compile Include="Modularity\ModuleIdentity.cs" />
     <Compile Include="Modularity\ModuleInfo.cs" />
     <Compile Include="Modularity\ModuleInfoGroup.cs" />
     <Compile Include="Modularity\Exceptions\ModuleInfoGroupExtensions.cs" />

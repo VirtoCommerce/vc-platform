@@ -107,7 +107,7 @@ namespace VirtoCommerce.Platform.Web
             };
             var hangfireLauncher = new HangfireLauncher(hangfireOptions);
 
-            InitializePlatform(app, container, connectionStringName, hangfireLauncher);
+            InitializePlatform(app, container, connectionStringName, hangfireLauncher, modulesPhysicalPath);
 
             var moduleManager = container.Resolve<IModuleManager>();
             var moduleCatalog = container.Resolve<IModuleCatalog>();
@@ -263,7 +263,7 @@ namespace VirtoCommerce.Platform.Web
             return assembly;
         }
 
-        private static void InitializePlatform(IAppBuilder app, IUnityContainer container, string connectionStringName, HangfireLauncher hangfireLauncher)
+        private static void InitializePlatform(IAppBuilder app, IUnityContainer container, string connectionStringName, HangfireLauncher hangfireLauncher, string modulesPath)
         {
             container.RegisterType<ICurrentUser, CurrentUser>(new HttpContextLifetimeManager());
             container.RegisterType<IUserNameResolver, UserNameResolver>();
@@ -456,16 +456,17 @@ namespace VirtoCommerce.Platform.Web
 
             #endregion
 
-            #region Packaging
-
+            #region Modules
+            
             var externalModuleCatalog = new ExternalManifestModuleCatalog(moduleCatalog.Modules, ConfigurationManager.AppSettings.GetValues("VirtoCommerce:UpdatesUrl"), container.Resolve<ILog>());
             externalModuleCatalog.Initialize();
+            var moduleInstaller = new ModuleInstallerImpl(modulesPath);
             //var packagesPath = HostingEnvironment.MapPath(VirtualRoot + "/App_Data/InstalledPackages");
             //var packageService = new ZipPackageService(moduleCatalog, manifestProvider, packagesPath, ConfigurationManager.AppSettings.GetValues("VirtoCommerce:UpdatesUrl"), cacheManager);
             //container.RegisterInstance<IModuleInstaller>(packageService);
 
             var uploadsPath = HostingEnvironment.MapPath(VirtualRoot + "/App_Data/Uploads");
-            container.RegisterType<ModulesController>(new InjectionConstructor(externalModuleCatalog, uploadsPath, notifier, container.Resolve<IUserNameResolver>()));
+            container.RegisterType<ModulesController>(new InjectionConstructor(externalModuleCatalog, moduleInstaller, uploadsPath, notifier, container.Resolve<IUserNameResolver>()));
 
             #endregion
 

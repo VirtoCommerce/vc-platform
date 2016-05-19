@@ -2,9 +2,7 @@
 {
     public enum ModuleAction
     {
-        Undefined,
         Install,
-        Update,
         Uninstall
     }
 }

@@ -26,13 +26,15 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     public class ModulesController : ApiController
     {
         private readonly IModuleCatalog _moduleCatalog;
+        private readonly IModuleInstaller _moduleInstaller;
         private readonly string _uploadsPath;
         private readonly IPushNotificationManager _pushNotifier;
         private readonly IUserNameResolver _userNameResolver;
 
-        public ModulesController(IModuleCatalog moduleCatalog, string uploadsPath, IPushNotificationManager pushNotifier, IUserNameResolver userNameResolver)
+        public ModulesController(IModuleCatalog moduleCatalog, IModuleInstaller moduleInstaller, string uploadsPath, IPushNotificationManager pushNotifier, IUserNameResolver userNameResolver)
         {
             _moduleCatalog = moduleCatalog;
+            _moduleInstaller = moduleInstaller;
             _uploadsPath = uploadsPath;
             _pushNotifier = pushNotifier;
             _userNameResolver = userNameResolver;
@@ -56,9 +58,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// </summary>
         /// <param name="module">module</param>
         /// <returns></returns>
-        [HttpPost]
+        [HttpGet]
         [Route("dependent")]
-        [ResponseType(typeof(ManifestModuleInfo))]
+        [ResponseType(typeof(ManifestModuleInfo[]))]
         public IHttpActionResult GetDependentModules(ManifestModuleInfo module)
         {
             return Ok(_moduleCatalog.GetDependentModules(module).OfType<ManifestModuleInfo>().ToArray());
@@ -70,11 +72,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <param name="modules">modules</param>
         /// <returns></returns>
         [HttpPost]
-        [Route("dependencies")]
+        [Route("getmissingdependencies")]
         [ResponseType(typeof(ManifestModuleInfo[]))]
-        public IHttpActionResult GetCompleteListWithDependencies(ManifestModuleInfo[] modules)
+        public IHttpActionResult GetMissingDependencies(ManifestModuleInfo[] modules)
         {
-            return Ok(_moduleCatalog.CompleteListWithDependencies(modules).OfType<ManifestModuleInfo>().ToArray());
+            return Ok(_moduleCatalog.CompleteListWithDependencies(modules).OfType<ManifestModuleInfo>().Where(x=>!x.IsInstalled).ToArray());
         }
 
         /// <summary>
@@ -120,62 +122,41 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
-        /// Install module from uploaded file
+        /// Install modules 
         /// </summary>
-        /// <param name="fileName">Module package file name.</param>
+        /// <param name="modules">modules for install</param>
         /// <returns></returns>
-        [HttpGet]
+        [HttpPost]
         [Route("install")]
         [ResponseType(typeof(webModel.ModulePushNotification))]
         [CheckPermission(Permission = PredefinedPermissions.ModuleManage)]
-        public IHttpActionResult InstallModule(string fileName)
+        public IHttpActionResult InstallModules(ManifestModuleInfo[] modules)
         {
+            var notInstalledModules = _moduleCatalog.CompleteListWithDependencies(modules).OfType<ManifestModuleInfo>().Where(x => !x.IsInstalled).ToArray();
             var options = new webModel.ModuleBackgroundJobOptions
             {
                 Action = webModel.ModuleAction.Install,
-                PackageFilePath = Path.Combine(_uploadsPath, fileName),
+                Modules = notInstalledModules
             };
             var result = ScheduleJob(options);
-            return Ok(result);
-        }
-
-        /// <summary>
-        /// Update module from uploaded file
-        /// </summary>
-        /// <param name="id">Module ID.</param>
-        /// <param name="fileName">Module package file name.</param>
-        /// <returns></returns>
-        [HttpGet]
-        [Route("{id}/update")]
-        [ResponseType(typeof(webModel.ModulePushNotification))]
-        [CheckPermission(Permission = PredefinedPermissions.ModuleManage)]
-        public IHttpActionResult UpdateModule(string id, string fileName)
-        {
-            var options = new webModel.ModuleBackgroundJobOptions
-            {
-                Action = webModel.ModuleAction.Update,
-                PackageId = id,
-                PackageFilePath = Path.Combine(_uploadsPath, fileName)
-            };
-            var result = ScheduleJob(options);
-            return Ok(result);
+            return Ok();
         }
 
         /// <summary>
         /// Uninstall module
         /// </summary>
-        /// <param name="id">Module ID.</param>
+        /// <param name="modules">modules</param>
         /// <returns></returns>
         [HttpGet]
-        [Route("{id}/uninstall")]
+        [Route("install")]
         [ResponseType(typeof(webModel.ModulePushNotification))]
         [CheckPermission(Permission = PredefinedPermissions.ModuleManage)]
-        public IHttpActionResult UninstallModule(string id)
+        public IHttpActionResult UninstallModule(ManifestModuleInfo[] modules)
         {
             var options = new webModel.ModuleBackgroundJobOptions
             {
                 Action = webModel.ModuleAction.Uninstall,
-                PackageId = id
+                Modules = modules
             };
             var result = ScheduleJob(options);
             return Ok(result);
@@ -211,13 +192,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 switch (options.Action)
                 {
                     case webModel.ModuleAction.Install:
-                       // _moduleInstaller.Install(options.PackageFilePath, reportProgress);
-                        break;
-                    case webModel.ModuleAction.Update:
-                       // _moduleInstaller.Update(options.PackageId, options.PackageFilePath, reportProgress);
-                        break;
+                        _moduleInstaller.Install(options.Modules, reportProgress);
+                        break;           
                     case webModel.ModuleAction.Uninstall:
-                       // _moduleInstaller.Uninstall(options.PackageId, reportProgress);
+                        _moduleInstaller.Uninstall(options.Modules, reportProgress);
                         break;
                 }
             }
@@ -245,10 +223,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 case webModel.ModuleAction.Install:
                     notification.Title = "Install Module";
-                    break;
-                case webModel.ModuleAction.Update:
-                    notification.Title = "Update Module";
-                    break;
+                    break;           
                 case webModel.ModuleAction.Uninstall:
                     notification.Title = "Uninstall Module";
                     break;

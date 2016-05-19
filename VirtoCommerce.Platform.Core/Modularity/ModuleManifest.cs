@@ -81,6 +81,5 @@ namespace VirtoCommerce.Platform.Core.Modularity
         [XmlArrayItem("group")]
         public ModulePermissionGroup[] Permissions { get; set; }
 
-        public string LocalPath { get; set; }
     }
 }

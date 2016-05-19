@@ -7,11 +7,29 @@ namespace VirtoCommerce.Platform.Core.Modularity
 {
     public class ManifestModuleInfo : ModuleInfo
     {
-        private readonly ModuleManifest _manifest;
+        public ManifestModuleInfo()
+        {
+        }
         public ManifestModuleInfo(ModuleManifest manifest)
             : base(manifest.Id, manifest.ModuleType, (manifest.Dependencies ?? new ManifestDependency[0]).Select(d => d.Id).ToArray())
         {
-            _manifest = manifest;
+            Id = manifest.Id;
+            Version = manifest.Version;
+            PlatformVersion = manifest.ProjectUrl;
+            Title = manifest.Title;
+            Description = manifest.Description;
+            Authors = manifest.Authors;
+            Owners = manifest.Owners;
+            LicenseUrl = manifest.LicenseUrl;
+            ProjectUrl = manifest.ProjectUrl;
+            IconUrl = manifest.IconUrl;
+            RequireLicenseAcceptance = manifest.RequireLicenseAcceptance;
+            ReleaseNotes = manifest.ReleaseNotes;
+            Copyright = manifest.Copyright;
+            Tags = manifest.Tags;
+            Dependencies = manifest.Dependencies;
+            Ref = manifest.PackageUrl;
+
             Styles = new List<ManifestBundleItem>();
             if (manifest.Styles != null)
             {
@@ -34,29 +52,29 @@ namespace VirtoCommerce.Platform.Core.Modularity
             }
             InitializationMode = InitializationMode.OnDemand;         
         }
-        public string Id { get { return _manifest.Id; } }
-        public string Version { get { return _manifest.Version; } }
-        public string PlatformVersion { get { return _manifest.PlatformVersion; } }
-        public string Title { get { return _manifest.Title; } }
-        public string Description { get { return _manifest.Description; } }
-        public IEnumerable<string> Authors { get { return _manifest.Authors; } }
-        public IEnumerable<string> Owners { get { return _manifest.Owners; } }
-        public string LicenseUrl { get { return _manifest.LicenseUrl; } }
-        public string ProjectUrl { get { return _manifest.ProjectUrl; } }
-        public string IconUrl { get { return _manifest.IconUrl; } }
+        public string Id { get; set; }
+        public string Version { get; set; }
+        public string PlatformVersion { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public IEnumerable<string> Authors { get; set; }
+        public IEnumerable<string> Owners { get; set; }
+        public string LicenseUrl { get; set; }
+        public string ProjectUrl { get; set; }
+        public string IconUrl { get; set; }
 
-        public bool RequireLicenseAcceptance { get { return _manifest.RequireLicenseAcceptance; } }
-        public string ReleaseNotes { get { return _manifest.ReleaseNotes; } }
-        public string Copyright { get { return _manifest.Copyright; } }
-        public string Tags { get { return _manifest.Tags; } }
-        public IEnumerable<ManifestDependency> Dependencies { get { return _manifest.Dependencies; } }
+        public bool RequireLicenseAcceptance { get; set; }
+        public string ReleaseNotes { get; set; }
+        public string Copyright { get; set; }
+        public string Tags { get; set; }
+        public IEnumerable<ManifestDependency> Dependencies { get; set; }
         public bool IsRemovable { get; set; }
         public bool IsInstalled { get; set; }
         public string FullPhysicalPath { get; set; }
-        public ICollection<ManifestBundleItem> Styles { get; private set; }
-        public ICollection<ManifestBundleItem> Scripts { get; private set; }
-        public ICollection<ModulePermissionGroup> Permissions { get; private set; }
-        public ICollection<ModuleSettingsGroup> Settings { get; private set; }
+        public ICollection<ManifestBundleItem> Styles { get; set; }
+        public ICollection<ManifestBundleItem> Scripts { get; set; }
+        public ICollection<ModulePermissionGroup> Permissions { get; set; }
+        public ICollection<ModuleSettingsGroup> Settings { get; set; }
 
     }
 }
