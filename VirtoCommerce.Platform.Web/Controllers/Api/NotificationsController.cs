@@ -1,17 +1,12 @@
-﻿using DotLiquid;
-using System;
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Globalization;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Notifications;
 using VirtoCommerce.Platform.Web.Converters.Notifications;
-using VirtoCommerce.Platform.Core.Common;
 using webModels = VirtoCommerce.Platform.Web.Model.Notifications;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
@@ -37,8 +32,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// </summary>
         /// <remarks>Get all registered notification types in platform</remarks>
         [HttpGet]
-        [ResponseType(typeof(webModels.Notification[]))]
         [Route("")]
+        [ResponseType(typeof(webModels.Notification[]))]
         public IHttpActionResult GetNotifications()
         {
             var notifications = _notificationManager.GetNotifications();
@@ -59,11 +54,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// template. By default object id and object type id = "Platform". For example for store with id = "SampleStore", objectId = "SampleStore", objectTypeId = "Store".
         /// </remarks>
         [HttpGet]
-        [ResponseType(typeof(webModels.NotificationTemplate))]
         [Route("template/{type}/{objectId}/{objectTypeId}/{language}")]
+        [ResponseType(typeof(webModels.NotificationTemplate))]
         public IHttpActionResult GetNotificationTemplate(string type, string objectId, string objectTypeId, string language)
         {
-            NotificationTemplate retVal = new NotificationTemplate();
+            var retVal = new NotificationTemplate();
             var notification = _notificationManager.GetNewNotification(type, objectId, objectTypeId, language);
             if (notification != null)
             {
@@ -84,11 +79,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <param name="objectId">Object id of template</param>
         /// <param name="objectTypeId">Object type id of template</param>
         [HttpGet]
-        [ResponseType(typeof(webModels.NotificationTemplate[]))]
         [Route("template/{type}/{objectId}/{objectTypeId}")]
+        [ResponseType(typeof(webModels.NotificationTemplate[]))]
         public IHttpActionResult GetNotificationTemplates(string type, string objectId, string objectTypeId)
         {
-            List<webModels.NotificationTemplate> retVal = new List<webModels.NotificationTemplate>();
+            var retVal = new List<webModels.NotificationTemplate>();
             var templates = _notificationTemplateService.GetNotificationTemplatesByNotification(type, objectId, objectTypeId);
 
             if (templates.Any())
@@ -103,11 +98,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// </summary>
         /// <param name="notificationTemplate">Notification template</param>
         [HttpPost]
-        [ResponseType(typeof(void))]
         [Route("template")]
+        [ResponseType(typeof(void))]
         public IHttpActionResult UpdateNotificationTemplate([FromBody] webModels.NotificationTemplate notificationTemplate)
         {
-            _notificationTemplateService.Update(new NotificationTemplate[] { notificationTemplate.ToCoreModel() });
+            _notificationTemplateService.Update(new[] { notificationTemplate.ToCoreModel() });
 
             return StatusCode(HttpStatusCode.NoContent);
         }
@@ -117,11 +112,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// </summary>
         /// <param name="id">Template id</param>
         [HttpDelete]
-        [ResponseType(typeof(void))]
         [Route("template/{id}")]
+        [ResponseType(typeof(void))]
         public IHttpActionResult DeleteNotificationTemplate(string id)
         {
-            _notificationTemplateService.Delete(new string[] { id });
+            _notificationTemplateService.Delete(new[] { id });
 
             return StatusCode(HttpStatusCode.NoContent);
         }
@@ -132,8 +127,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <remarks>Method returns notification properties, that defined in notification class, this properties used in notification template.</remarks>
         /// <param name="type">Notification type</param>
         [HttpGet]
-        [ResponseType(typeof(NotificationParameter[]))]
         [Route("template/{type}/getTestingParameters")]
+        [ResponseType(typeof(webModels.NotificationParameter[]))]
         public IHttpActionResult GetTestingParameters(string type)
         {
             var notification = _notificationManager.GetNewNotification(type);
@@ -151,8 +146,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// </remarks>
         /// <param name="request">Test notification request</param>
         [HttpPost]
-        [ResponseType(typeof(webModels.RenderNotificationContentResult))]
         [Route("template/rendernotificationcontent")]
+        [ResponseType(typeof(webModels.RenderNotificationContentResult))]
         public IHttpActionResult RenderNotificationContent(webModels.TestNotificationRequest request)
         {
             var retVal = new webModels.RenderNotificationContentResult();
@@ -179,8 +174,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// </remarks>
         /// <param name="request">Test notification request</param>
         [HttpPost]
-        [ResponseType(typeof(string))]
         [Route("template/sendnotification")]
+        [ResponseType(typeof(string))]
         public IHttpActionResult SendNotification(webModels.TestNotificationRequest request)
         {
             var notification = _notificationManager.GetNewNotification(request.Type, request.ObjectId, request.ObjectTypeId, request.Language);
@@ -205,15 +200,17 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <param name="start">Page setting start</param>
         /// <param name="count">Page setting count</param>
         [HttpGet]
-        [ResponseType(typeof(webModels.SearchNotificationsResult))]
         [Route("journal/{objectId}/{objectTypeId}")]
+        [ResponseType(typeof(webModels.SearchNotificationsResult))]
         public IHttpActionResult GetNotificationJournal(string objectId, string objectTypeId, int start, int count)
         {
-            var result = _notificationManager.SearchNotifications(new SearchNotificationCriteria() { ObjectId = objectId, ObjectTypeId = objectTypeId, Skip = start, Take = count });
+            var result = _notificationManager.SearchNotifications(new SearchNotificationCriteria { ObjectId = objectId, ObjectTypeId = objectTypeId, Skip = start, Take = count });
 
-            var retVal = new webModels.SearchNotificationsResult();
-            retVal.Notifications = result.Notifications.Select(nt => nt.ToWebModel()).ToArray();
-            retVal.TotalCount = result.TotalCount;
+            var retVal = new webModels.SearchNotificationsResult
+            {
+                Notifications = result.Notifications.Select(n => n.ToWebModel()).ToArray(),
+                TotalCount = result.TotalCount
+            };
 
             return Ok(retVal);
         }
@@ -223,8 +220,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// </summary>
         /// <param name="id">Sending notification id</param>
         [HttpGet]
-        [ResponseType(typeof(webModels.Notification))]
         [Route("notification/{id}")]
+        [ResponseType(typeof(webModels.Notification))]
         public IHttpActionResult GetNotification(string id)
         {
             var retVal = _notificationManager.GetNotificationById(id);
@@ -237,8 +234,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// </summary>
         /// <param name="ids">Stop sending notification ids</param>
         [HttpPost]
-        [ResponseType(typeof(void))]
         [Route("stopnotifications")]
+        [ResponseType(typeof(void))]
         public IHttpActionResult StopSendingNotifications(string[] ids)
         {
             _notificationManager.StopSendingNotifications(ids);
@@ -246,7 +243,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        private void SetValue(Notification notification, webModels.NotificationParameter param)
+
+        private static void SetValue(Notification notification, webModels.NotificationParameter param)
         {
             var property = notification.GetType().GetProperty(param.ParameterName);
             var jObject = param.Value as Newtonsoft.Json.Linq.JObject;
@@ -261,9 +259,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 {
                     case NotificationParameterValueType.Boolean:
                         if (jArray != null && param.IsArray)
-                            property.SetValue(notification, jArray.ToObject<Boolean[]>());
+                            property.SetValue(notification, jArray.ToObject<bool[]>());
                         else
-                            property.SetValue(notification, param.Value.ToNullable<Boolean>());
+                            property.SetValue(notification, param.Value.ToNullable<bool>());
                         break;
 
                     case NotificationParameterValueType.DateTime:
@@ -275,28 +273,28 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
                     case NotificationParameterValueType.Decimal:
                         if (jArray != null && param.IsArray)
-                            property.SetValue(notification, jArray.ToObject<Decimal[]>());
+                            property.SetValue(notification, jArray.ToObject<decimal[]>());
                         else
                             property.SetValue(notification, Convert.ToDecimal(param.Value));
                         break;
 
                     case NotificationParameterValueType.Integer:
                         if (jArray != null && param.IsArray)
-                            property.SetValue(notification, jArray.ToObject<Int32[]>());
+                            property.SetValue(notification, jArray.ToObject<int[]>());
                         else
-                            property.SetValue(notification, param.Value.ToNullable<Int32>());
+                            property.SetValue(notification, param.Value.ToNullable<int>());
                         break;
 
                     case NotificationParameterValueType.String:
                         if (jArray != null && param.IsArray)
-                            property.SetValue(notification, jArray.ToObject<String[]>());
+                            property.SetValue(notification, jArray.ToObject<string[]>());
                         else
                             property.SetValue(notification, (string)param.Value);
                         break;
 
                     default:
                         if (jArray != null && param.IsArray)
-                            property.SetValue(notification, jArray.ToObject<String[]>());
+                            property.SetValue(notification, jArray.ToObject<string[]>());
                         else
                             property.SetValue(notification, (string)param.Value);
                         break;

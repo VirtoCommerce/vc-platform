@@ -1,0 +1,88 @@
+body
+{
+  font-family: 'Exo 2';
+}
+.swagger-section .swagger-ui-wrap
+{
+    font-family: 'Exo 2';
+}
+.swagger-section #header {
+  background-color: rgba(0,0,0,.05);
+  border-bottom: 1px solid #ddd;
+  padding: 0;
+}
+.swagger-section #header form#api_selector
+{
+    padding: 13px 0;
+}
+.swagger-section #header a#logo {
+  display: inline-block;
+  font-size: 1.2em;
+  font-weight: bold;
+  text-decoration: none;
+  background: transparent url(../images/logo_small-png) no-repeat left center;
+  padding: 20px 0 20px 40px;
+  color: #666;
+}
+.swagger-section #header form#api_selector .input a#explore
+{
+    background: #43b0e6 none repeat scroll 0 0;
+    border: medium none;
+    color: #ffffff;
+    cursor: pointer;
+    display: inline-block;
+    font-family: inherit;
+    font-size: 13px;
+    height: 34px;
+    line-height: 34px;
+    padding: 0 20px;
+    text-shadow: 1px 1px rgba(0, 0, 0, 0.1);
+    text-decoration: none;
+    vertical-align: top;
+
+    -webkit-border-radius: 0;
+            border-radius: 0;
+}
+.swagger-section #header form#api_selector .input a#explore:hover
+{
+    opacity: .8;
+    text-decoration: none;
+}
+.swagger-section #header form#api_selector .input input
+{
+  border: 1px solid #a1c0d4;
+  height: 34px;
+  padding: 5px 10px;
+
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+.apiDescriptionInfo
+{
+    display: block;
+    color: #222;
+    margin: 5px 0 0;
+    font-size: 0.75em;
+    font-weight: 300;
+}
+
+.swagger-section .swagger-ui-wrap ul#resources li.resource div.heading h2
+{
+    font-family: 'Exo 2';
+}
+
+.swagger-section .swagger-ui-wrap ul#resources li.resource div.heading ul.options
+{
+    margin: 10px 10px 0 0;
+}
+
+.swagger-section .swagger-ui-wrap ul#resources li.resource div.heading h2 a
+{
+    color: #4c4c4c;
+}
+
+.swagger-section .swagger-ui-wrap ul#resources
+{
+    font-family: 'Exo 2';
+}

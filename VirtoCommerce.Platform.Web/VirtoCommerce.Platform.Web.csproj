@@ -194,6 +194,10 @@
     <Reference Include="SendGridMail">
       <HintPath>..\packages\Sendgrid.6.1.0\lib\SendGridMail.dll</HintPath>
     </Reference>
+    <Reference Include="Swashbuckle.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cd1bb07a5ac7c7bc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Swashbuckle.Core.5.3.2\lib\net40\Swashbuckle.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -330,6 +334,11 @@
     </Compile>
     <Compile Include="SignalR\NoOpPerformanceCounter.cs" />
     <Compile Include="SignalR\NoOpPerformanceCounterManager.cs" />
+    <Compile Include="Swagger\CachingSwaggerProvider.cs" />
+    <Compile Include="Swagger\HttpConfigurationExtensions.cs" />
+    <Compile Include="Swagger\OptionalParametersFilter.cs" />
+    <Compile Include="Swagger\SwaggerConfig.cs" />
+    <Compile Include="Swagger\TagsFilter.cs" />
     <Compile Include="VirtoCommercePlatformWebBootstrapper.cs" />
     <Compile Include="Controllers\Api\AssetsController.cs" />
     <Compile Include="Controllers\Api\DynamicPropertiesController.cs" />
@@ -611,6 +620,11 @@
     <Content Include="Scripts\app\navigation\blade\bladeNavigation.js" />
     <Content Include="Scripts\codemirror\ui-codemirror.js" />
     <Content Include="Scripts\codemirror\xml.js" />
+    <EmbeddedResource Include="Swagger\UI\index.html" />
+    <EmbeddedResource Include="Swagger\UI\logo_small.png" />
+    <None Include="Swagger\UI\swagger-ui.js" />
+    <EmbeddedResource Include="Swagger\UI\vc.css" />
+    <EmbeddedResource Include="Swagger\UI\swagger-ui.min.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>

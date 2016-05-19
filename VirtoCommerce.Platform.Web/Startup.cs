@@ -29,7 +29,6 @@ using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Notifications;
-using VirtoCommerce.Platform.Core.Packaging;
 using VirtoCommerce.Platform.Core.PushNotifications;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Serialization;
@@ -54,6 +53,7 @@ using VirtoCommerce.Platform.Web.Hangfire;
 using VirtoCommerce.Platform.Web.PushNotifications;
 using VirtoCommerce.Platform.Web.Resources;
 using VirtoCommerce.Platform.Web.SignalR;
+using VirtoCommerce.Platform.Web.Swagger;
 using WebGrease.Extensions;
 using GlobalConfiguration = System.Web.Http.GlobalConfiguration;
 
@@ -112,7 +112,6 @@ namespace VirtoCommerce.Platform.Web
             var moduleManager = container.Resolve<IModuleManager>();
             var moduleCatalog = container.Resolve<IModuleCatalog>();
 
-
             var applicationBase = AppDomain.CurrentDomain.SetupInformation.ApplicationBase.EnsureEndSeparator();
 
             // Register URL rewriter for platform scripts
@@ -156,6 +155,8 @@ namespace VirtoCommerce.Platform.Web
             {
                 moduleManager.LoadModule(module.ModuleName);
             }
+
+            SwaggerConfig.RegisterRoutes(container);
 
             // Post-initialize
 
@@ -241,7 +242,6 @@ namespace VirtoCommerce.Platform.Web
                     exportImportController.TryToImportSampleData(sampleDataUrl);
                 }
             }
-
         }
 
         private static Assembly CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs args)
@@ -303,104 +303,102 @@ namespace VirtoCommerce.Platform.Web
             #endregion
 
             #region Settings
-            var platformModuleManifest =
-                new ModuleManifest
+
+            var platformModuleManifest = new ModuleManifest
+            {
+                Settings = new[]
                 {
-                    Settings = new[]
+                    new ModuleSettingsGroup
                     {
-                        new ModuleSettingsGroup
+                        Name = "Platform|Notifications|SendGrid",
+                        Settings = new []
                         {
-                            Name = "Platform|Notifications|SendGrid",
-                            Settings = new []
+                            new ModuleSetting
                             {
-                                new ModuleSetting
-                                {
-                                    Name = "VirtoCommerce.Platform.Notifications.SendGrid.UserName",
-                                    ValueType = ModuleSetting.TypeString,
-                                    Title = "SendGrid UserName",
-                                    Description = "Your SendGrid account username"
-                                },
-                                new ModuleSetting
-                                {
-                                    Name = "VirtoCommerce.Platform.Notifications.SendGrid.Secret",
-                                    ValueType = ModuleSetting.TypeString,
-                                    Title = "SendGrid Password",
-                                    Description = "Your SendGrid account password"
-                                }
-                            }
-                        },
-
-                        new ModuleSettingsGroup
-                        {
-                            Name = "Platform|Notifications|SendingJob",
-                            Settings = new []
+                                Name = "VirtoCommerce.Platform.Notifications.SendGrid.UserName",
+                                ValueType = ModuleSetting.TypeString,
+                                Title = "SendGrid UserName",
+                                Description = "Your SendGrid account username"
+                            },
+                            new ModuleSetting
                             {
-                                new ModuleSetting
-                                {
-                                    Name = "VirtoCommerce.Platform.Notifications.SendingJob.TakeCount",
-                                    ValueType = ModuleSetting.TypeInteger,
-                                    Title = "Job Take Count",
-                                    Description = "Take count for sending job"
-                                }
-                            }
-                        },
-                        new ModuleSettingsGroup
-                        {
-                            Name = "Platform|Notifications|SmtpClient",
-                            Settings = new []
-                            {
-                                new ModuleSetting
-                                {
-                                    Name = "VirtoCommerce.Platform.Notifications.SmptClient.Host",
-                                    ValueType = ModuleSetting.TypeString,
-                                    Title = "Smtp server host",
-                                    Description = "Smtp server host"
-                                },
-                                new ModuleSetting
-                                {
-                                    Name = "VirtoCommerce.Platform.Notifications.SmptClient.Port",
-                                    ValueType = ModuleSetting.TypeInteger,
-                                    Title = "Smtp server port",
-                                    Description = "Smtp server port"
-                                },
-                                new ModuleSetting
-                                {
-                                    Name = "VirtoCommerce.Platform.Notifications.SmptClient.Login",
-                                    ValueType = ModuleSetting.TypeString,
-                                    Title = "Smtp server login",
-                                    Description = "Smtp server login"
-                                },
-                                new ModuleSetting
-                                {
-                                    Name = "VirtoCommerce.Platform.Notifications.SmptClient.Password",
-                                    ValueType = ModuleSetting.TypeString,
-                                    Title = "Smtp server password",
-                                    Description = "Smtp server password"
-                                }
-                            }
-                        },
-
-                         new ModuleSettingsGroup
-                        {
-                            Name = "Platform|Security",
-                            Settings = new []
-                            {
-                                new ModuleSetting
-                                {
-                                    Name = "VirtoCommerce.Platform.Security.AccountTypes",
-                                    ValueType = ModuleSetting.TypeString,
-                                    Title = "Account types",
-                                    Description = "Dictionary for possible account types",
-                                    IsArray = true,
-                                    ArrayValues = Enum.GetNames(typeof(AccountType)),
-                                    DefaultValue = AccountType.Manager.ToString()
-                                }
+                                Name = "VirtoCommerce.Platform.Notifications.SendGrid.Secret",
+                                ValueType = ModuleSetting.TypeString,
+                                Title = "SendGrid Password",
+                                Description = "Your SendGrid account password"
                             }
                         }
-
+                    },
+                    new ModuleSettingsGroup
+                    {
+                        Name = "Platform|Notifications|SendingJob",
+                        Settings = new []
+                        {
+                            new ModuleSetting
+                            {
+                                Name = "VirtoCommerce.Platform.Notifications.SendingJob.TakeCount",
+                                ValueType = ModuleSetting.TypeInteger,
+                                Title = "Job Take Count",
+                                Description = "Take count for sending job"
+                            }
+                        }
+                    },
+                    new ModuleSettingsGroup
+                    {
+                        Name = "Platform|Notifications|SmtpClient",
+                        Settings = new []
+                        {
+                            new ModuleSetting
+                            {
+                                Name = "VirtoCommerce.Platform.Notifications.SmptClient.Host",
+                                ValueType = ModuleSetting.TypeString,
+                                Title = "Smtp server host",
+                                Description = "Smtp server host"
+                            },
+                            new ModuleSetting
+                            {
+                                Name = "VirtoCommerce.Platform.Notifications.SmptClient.Port",
+                                ValueType = ModuleSetting.TypeInteger,
+                                Title = "Smtp server port",
+                                Description = "Smtp server port"
+                            },
+                            new ModuleSetting
+                            {
+                                Name = "VirtoCommerce.Platform.Notifications.SmptClient.Login",
+                                ValueType = ModuleSetting.TypeString,
+                                Title = "Smtp server login",
+                                Description = "Smtp server login"
+                            },
+                            new ModuleSetting
+                            {
+                                Name = "VirtoCommerce.Platform.Notifications.SmptClient.Password",
+                                ValueType = ModuleSetting.TypeString,
+                                Title = "Smtp server password",
+                                Description = "Smtp server password"
+                            }
+                        }
+                    },
+                    new ModuleSettingsGroup
+                    {
+                        Name = "Platform|Security",
+                        Settings = new []
+                        {
+                            new ModuleSetting
+                            {
+                                Name = "VirtoCommerce.Platform.Security.AccountTypes",
+                                ValueType = ModuleSetting.TypeString,
+                                Title = "Account types",
+                                Description = "Dictionary for possible account types",
+                                IsArray = true,
+                                ArrayValues = Enum.GetNames(typeof(AccountType)),
+                                DefaultValue = AccountType.Manager.ToString()
+                            }
+                        }
                     }
-                };
-            var settingsManager = new SettingsManager(moduleCatalog, platformRepositoryFactory, cacheManager,  new[] { new ManifestModuleInfo(platformModuleManifest) });
+                }
+            };
+
+            var settingsManager = new SettingsManager(moduleCatalog, platformRepositoryFactory, cacheManager, new[] { new ManifestModuleInfo(platformModuleManifest) });
             container.RegisterInstance<ISettingsManager>(settingsManager);
 
             #endregion
