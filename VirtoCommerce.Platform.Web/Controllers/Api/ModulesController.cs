@@ -61,7 +61,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <param name="module">module</param>
         /// <returns></returns>
         [HttpPost]
-        [Route("getdepending")]
+        [Route("getdependents")]
         [ResponseType(typeof(webModel.ModuleDescriptor[]))]
         public IHttpActionResult GetDependingModules(webModel.ModuleDescriptor module)
         {
@@ -180,7 +180,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// Restart web application
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
+        [HttpPost]
         [Route("restart")]
         [ResponseType(typeof(void))]
         [CheckPermission(Permission = PredefinedPermissions.ModuleManage)]
