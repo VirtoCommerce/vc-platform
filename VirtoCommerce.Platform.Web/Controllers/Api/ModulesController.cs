@@ -139,8 +139,16 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     {
                         var manifest = ManifestReader.Read(manifestStream);
                         var module = new ManifestModuleInfo(manifest);
+                        var alreadyExistModule = _moduleCatalog.Modules.OfType<ManifestModuleInfo>().FirstOrDefault(x => x.Equals(module));
+                        if (alreadyExistModule != null)
+                        {
+                            module = alreadyExistModule;
+                        }
+                        else
+                        {
+                            _moduleCatalog.AddModule(module);
+                        }
                         module.Ref = path;
-                        _moduleCatalog.AddModule(module);
                         retVal = module.ToWebModel();
                     }
                 }

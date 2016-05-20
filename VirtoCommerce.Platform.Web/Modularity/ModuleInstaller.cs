@@ -46,7 +46,15 @@ namespace VirtoCommerce.Platform.Web.Modularity
                 var alreadyInstalledModule = _moduleCatalog.Modules.OfType<ManifestModuleInfo>().Where(x => x.IsInstalled).FirstOrDefault(x => x.Id.EqualsInvariant(module.Id));
                 if (alreadyInstalledModule != null && !alreadyInstalledModule.Version.IsCompatibleWith(module.Version))
                 {
-                    Report(progress, ProgressMessageLevel.Error, string.Format("{0}  is not compatible with installed {1}", module.Identity, alreadyInstalledModule.Identity));
+                    Report(progress, ProgressMessageLevel.Error, string.Format("{0}  is not compatible with installed {1}", module, alreadyInstalledModule));
+                    isValid = false;
+                }
+                //Check that dependencies for installable modules 
+                var missedDependencies = _moduleCatalog.CompleteListWithDependencies(new[] { module }).OfType<ManifestModuleInfo>()
+                                                       .Where(x => !x.IsInstalled).Except(modules);
+                if (missedDependencies != null)
+                {
+                    Report(progress, ProgressMessageLevel.Error, string.Format("{0} dependencies required for {1}", string.Join(" ", missedDependencies), module));
                     isValid = false;
                 }
             }
