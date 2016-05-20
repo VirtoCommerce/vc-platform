@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Practices.Unity;
 
-namespace VirtoCommerce.Platform.Core
+namespace VirtoCommerce.Platform.Web.Modularity
 {
     /// <summary>
     /// Extensions methods to extend and facilitate the usage of <see cref="IUnityContainer"/>.

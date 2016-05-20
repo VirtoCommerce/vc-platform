@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using VirtoCommerce.Platform.Core.Modularity.Exceptions;
 using VirtoCommerce.Platform.Core.Properties;
 
 namespace VirtoCommerce.Platform.Core.Modularity
@@ -70,12 +71,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
                 moduleInfo.IsInstalled = true;
                 AddModule(moduleInfo);
             }
-        }
-
-        protected override IEnumerable<ModuleInfo> GetDependentModulesInner(ModuleInfo moduleInfo)
-        {
-            return base.GetDependentModulesInner(moduleInfo);
-        }
+        }      
 
         private IDictionary<string, ModuleManifest> GetModuleManifests()
         {

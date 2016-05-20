@@ -2,10 +2,13 @@ using System;
 using System.Globalization;
 using Common.Logging;
 using Microsoft.Practices.ServiceLocation;
+using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Modularity.Exceptions;
+using VirtoCommerce.Platform.Core.PushNotifications;
+using VirtoCommerce.Platform.Web.Model.Modularity;
 using VirtoCommerce.Platform.Web.Resources;
 
-namespace VirtoCommerce.Platform.Core.Modularity
+namespace VirtoCommerce.Platform.Web.Modularity
 {
     /// <summary>
     /// Implements the <see cref="IModuleInitializer"/> interface. Handles loading of a module based on a type.
@@ -38,7 +41,6 @@ namespace VirtoCommerce.Platform.Core.Modularity
             {
                 throw new ArgumentNullException("options");
             }
-
             _serviceLocator = serviceLocator;
             _loggerFacade = loggerFacade;
             _options = options;
@@ -60,6 +62,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
                 moduleInfo.ModuleInstance = moduleInstance;
                 moduleInstance.SetupDatabase();
                 moduleInstance.Initialize();
+                moduleInfo.State = ModuleState.Initialized;
             }
             catch (Exception ex)
             {
@@ -117,7 +120,11 @@ namespace VirtoCommerce.Platform.Core.Modularity
                     moduleException = new ModuleInitializeException(moduleInfo.ModuleName, exception.Message, exception);
                 }
             }
-
+            var manifestModule = moduleInfo as ManifestModuleInfo;
+            if(manifestModule != null)
+            {
+                manifestModule.Errors.Add(exception.ToString());
+            }
             _loggerFacade.Error(moduleException.ToString());
 
             throw moduleException;

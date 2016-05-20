@@ -1,7 +1,7 @@
-﻿using webModel = VirtoCommerce.Platform.Web.Model.Packaging;
+﻿using webModel = VirtoCommerce.Platform.Web.Model.Modularity;
 using moduleModel = VirtoCommerce.Platform.Core.Packaging;
 
-namespace VirtoCommerce.Platform.Web.Converters.Packaging
+namespace VirtoCommerce.Platform.Web.Converters.Modularity
 {
     public static class ProgressMessageConverter
     {

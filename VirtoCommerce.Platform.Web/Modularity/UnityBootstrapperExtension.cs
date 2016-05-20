@@ -2,7 +2,7 @@ using System;
 using Microsoft.Practices.ObjectBuilder2;
 using Microsoft.Practices.Unity;
 
-namespace VirtoCommerce.Platform.Core
+namespace VirtoCommerce.Platform.Web.Modularity
 {
     /// <summary>
     /// Implements a <see cref="UnityContainerExtension"/> that checks if a specific type was registered with the container.

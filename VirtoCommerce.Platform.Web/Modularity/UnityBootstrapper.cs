@@ -6,7 +6,7 @@ using Microsoft.Practices.Unity;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Web.Resources;
 
-namespace VirtoCommerce.Platform.Core
+namespace VirtoCommerce.Platform.Web.Modularity
 {
     /// <summary>
     /// Base class that provides a basic bootstrapping sequence that

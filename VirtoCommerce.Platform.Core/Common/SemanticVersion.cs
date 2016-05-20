@@ -13,7 +13,7 @@ namespace VirtoCommerce.Platform.Core.Common
 
 		public static readonly Regex SemanticVersionStrictRegex = new Regex(@"^(?<Version>([0-9]|[1-9][0-9]*)(\.([0-9]|[1-9][0-9]*)){2})(?<Release>-([0]\b|[0]$|[0][0-9]*[A-Za-z-]+|[1-9A-Za-z-][0-9A-Za-z-]*)+(\.([0]\b|[0]$|[0][0-9]*[A-Za-z-]+|[1-9A-Za-z-][0-9A-Za-z-]*)+)*)?(?<Metadata>\+[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?$", RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture);
 
-		public SemanticVersion(Version version)
+        public SemanticVersion(Version version)
 		{
 			if (version == null)
 			{
@@ -76,9 +76,54 @@ namespace VirtoCommerce.Platform.Core.Common
 							   Math.Max(version.Revision, 0));
 		}
 
-		#region IComparable Members
+        public static bool operator ==(SemanticVersion a, SemanticVersion b)
+        {
+            // If both are null, or both are same instance, return true.
+            if (System.Object.ReferenceEquals(a, b))
+            {
+                return true;
+            }
 
-		public int CompareTo(object obj)
+            // If one is null, but not both, return false.
+            if (((object)a == null) || ((object)b == null))
+            {
+                return false;
+            }
+
+            // Return true if the fields match:
+            return a.Equals(b);
+        }
+
+        public static bool operator !=(SemanticVersion a, SemanticVersion b)
+        {
+            return !(a == b);
+        }
+
+        public override bool Equals(object obj)
+        {
+            // If parameter is null return false.
+            if (obj == null)
+            {
+                return false;
+            }
+
+            // If parameter cannot be cast to ModuleIdentity return false.
+            SemanticVersion other = obj as SemanticVersion;
+            if ((System.Object)other == null)
+            {
+                return false;
+            }
+            // Return true if the fields match:
+            return _version == other._version;
+        }
+        public override int GetHashCode()
+        {
+            return _version.GetHashCode();
+        }
+
+        #region IComparable Members
+
+        public int CompareTo(object obj)
 		{
 			SemanticVersion other = (SemanticVersion)obj;
 

@@ -16,8 +16,8 @@ using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Web.Assets;
 using VirtoCommerce.Platform.Core.Web.Security;
 using VirtoCommerce.Platform.Data.Common;
-using VirtoCommerce.Platform.Web.Converters.Packaging;
-using webModel = VirtoCommerce.Platform.Web.Model.Packaging;
+using VirtoCommerce.Platform.Web.Converters.Modularity;
+using webModel = VirtoCommerce.Platform.Web.Model.Modularity;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
@@ -46,10 +46,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <returns></returns>
         [HttpGet]
         [Route("")]
-        [ResponseType(typeof(ManifestModuleInfo[]))]
+        [ResponseType(typeof(webModel.ModuleDescriptor[]))]
         public IHttpActionResult GetModules()
         {
-            var retVal = _moduleCatalog.Modules.OfType<ManifestModuleInfo>().ToArray();
+            var retVal = _moduleCatalog.Modules.OfType<ManifestModuleInfo>()
+                                       .Select(x => x.ToWebModel())
+                                       .ToArray();
             return Ok(retVal);
         }
 
@@ -58,12 +60,17 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// </summary>
         /// <param name="module">module</param>
         /// <returns></returns>
-        [HttpGet]
-        [Route("dependent")]
-        [ResponseType(typeof(ManifestModuleInfo[]))]
-        public IHttpActionResult GetDependentModules(ManifestModuleInfo module)
+        [HttpPost]
+        [Route("getdepending")]
+        [ResponseType(typeof(webModel.ModuleDescriptor[]))]
+        public IHttpActionResult GetDependingModules(webModel.ModuleDescriptor module)
         {
-            return Ok(_moduleCatalog.GetDependentModules(module).OfType<ManifestModuleInfo>().ToArray());
+            var retVal = _moduleCatalog.Modules.OfType<ManifestModuleInfo>()
+                                               .Where(x => x.IsInstalled)
+                                               .Where(x => x.DependsOn.Contains(module.Id))
+                                               .Select(x => x.ToWebModel())
+                                               .ToArray();
+            return Ok(retVal);
         }
 
         /// <summary>
@@ -73,10 +80,18 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <returns></returns>
         [HttpPost]
         [Route("getmissingdependencies")]
-        [ResponseType(typeof(ManifestModuleInfo[]))]
-        public IHttpActionResult GetMissingDependencies(ManifestModuleInfo[] modules)
+        [ResponseType(typeof(webModel.ModuleDescriptor[]))]
+        public IHttpActionResult GetMissingDependencies(webModel.ModuleDescriptor[] modules)
         {
-            return Ok(_moduleCatalog.CompleteListWithDependencies(modules).OfType<ManifestModuleInfo>().Where(x=>!x.IsInstalled).ToArray());
+            var moduleInfos = _moduleCatalog.Modules.OfType<ManifestModuleInfo>()
+                                              .Where(x => modules.Any(y=>y.Identity.Equals(x.Identity)));
+
+            var retVal = _moduleCatalog.CompleteListWithDependencies(moduleInfos).OfType<ManifestModuleInfo>()
+                                       .Where(x => !x.IsInstalled)
+                                       .Select(x => x.ToWebModel())
+                                       .ToArray();
+
+            return Ok(retVal);
         }
 
         /// <summary>
@@ -130,16 +145,15 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Route("install")]
         [ResponseType(typeof(webModel.ModulePushNotification))]
         [CheckPermission(Permission = PredefinedPermissions.ModuleManage)]
-        public IHttpActionResult InstallModules(ManifestModuleInfo[] modules)
+        public IHttpActionResult InstallModules(webModel.ModuleDescriptor[] modules)
         {
-            var notInstalledModules = _moduleCatalog.CompleteListWithDependencies(modules).OfType<ManifestModuleInfo>().Where(x => !x.IsInstalled).ToArray();
             var options = new webModel.ModuleBackgroundJobOptions
             {
                 Action = webModel.ModuleAction.Install,
-                Modules = notInstalledModules
+                Modules = modules
             };
             var result = ScheduleJob(options);
-            return Ok();
+            return Ok(result);
         }
 
         /// <summary>
@@ -147,11 +161,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// </summary>
         /// <param name="modules">modules</param>
         /// <returns></returns>
-        [HttpGet]
-        [Route("install")]
+        [HttpPost]
+        [Route("uninstall")]
         [ResponseType(typeof(webModel.ModulePushNotification))]
         [CheckPermission(Permission = PredefinedPermissions.ModuleManage)]
-        public IHttpActionResult UninstallModule(ManifestModuleInfo[] modules)
+        public IHttpActionResult UninstallModule(webModel.ModuleDescriptor[] modules)
         {
             var options = new webModel.ModuleBackgroundJobOptions
             {
@@ -182,7 +196,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             try
             {
                 notification.Started = DateTime.UtcNow;
-
+                var moduleInfos = _moduleCatalog.Modules.OfType<ManifestModuleInfo>()
+                                     .Where(x => options.Modules.Any(y => y.Identity.Equals(x.Identity)))
+                                     .ToArray();
                 var reportProgress = new Progress<ProgressMessage>(m =>
                 {
                     notification.ProgressLog.Add(m.ToWebModel());
@@ -192,10 +208,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 switch (options.Action)
                 {
                     case webModel.ModuleAction.Install:
-                        _moduleInstaller.Install(options.Modules, reportProgress);
+                        _moduleInstaller.Install(moduleInfos, reportProgress);
                         break;           
                     case webModel.ModuleAction.Uninstall:
-                        _moduleInstaller.Uninstall(options.Modules, reportProgress);
+                        _moduleInstaller.Uninstall(moduleInfos, reportProgress);
                         break;
                 }
             }

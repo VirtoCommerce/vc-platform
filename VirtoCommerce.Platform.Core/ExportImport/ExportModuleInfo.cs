@@ -12,6 +12,5 @@ namespace VirtoCommerce.Platform.Core.ExportImport
     {
 		public string PartUri { get; set; }
 		public string Description { get; set; }
-		public ManifestDependency[] Dependencies { get; set; }
 	}
 }

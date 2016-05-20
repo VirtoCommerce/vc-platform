@@ -39,7 +39,6 @@ using VirtoCommerce.Platform.Data.ChangeLog;
 using VirtoCommerce.Platform.Data.DynamicProperties;
 using VirtoCommerce.Platform.Data.ExportImport;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
-using VirtoCommerce.Platform.Data.Modularity;
 using VirtoCommerce.Platform.Data.Notifications;
 using VirtoCommerce.Platform.Data.Repositories;
 using VirtoCommerce.Platform.Data.Security;
@@ -50,6 +49,7 @@ using VirtoCommerce.Platform.Web;
 using VirtoCommerce.Platform.Web.BackgroundJobs;
 using VirtoCommerce.Platform.Web.Controllers.Api;
 using VirtoCommerce.Platform.Web.Hangfire;
+using VirtoCommerce.Platform.Web.Modularity;
 using VirtoCommerce.Platform.Web.PushNotifications;
 using VirtoCommerce.Platform.Web.Resources;
 using VirtoCommerce.Platform.Web.SignalR;
@@ -153,7 +153,7 @@ namespace VirtoCommerce.Platform.Web
             // Ensure all modules are loaded
             foreach (var module in moduleCatalog.Modules.OfType<ManifestModuleInfo>().Where(x => x.State == ModuleState.NotStarted))
             {
-                moduleManager.LoadModule(module.ModuleName);
+                moduleManager.LoadModule(module.ModuleName);            
             }
 
             SwaggerConfig.RegisterRoutes(container);
@@ -306,6 +306,9 @@ namespace VirtoCommerce.Platform.Web
 
             var platformModuleManifest = new ModuleManifest
             {
+                Id = "VirtoCommerce.Platform",
+                Version = PlatformVersion.CurrentVersion.ToString(),
+                PlatformVersion = PlatformVersion.CurrentVersion.ToString(),
                 Settings = new[]
                 {
                     new ModuleSettingsGroup
@@ -454,17 +457,12 @@ namespace VirtoCommerce.Platform.Web
 
             #endregion
 
-            #region Modules
+            #region Modularity
             
             var externalModuleCatalog = new ExternalManifestModuleCatalog(moduleCatalog.Modules, ConfigurationManager.AppSettings.GetValues("VirtoCommerce:UpdatesUrl"), container.Resolve<ILog>());
             externalModuleCatalog.Initialize();
-            var moduleInstaller = new ModuleInstallerImpl(modulesPath);
-            //var packagesPath = HostingEnvironment.MapPath(VirtualRoot + "/App_Data/InstalledPackages");
-            //var packageService = new ZipPackageService(moduleCatalog, manifestProvider, packagesPath, ConfigurationManager.AppSettings.GetValues("VirtoCommerce:UpdatesUrl"), cacheManager);
-            //container.RegisterInstance<IModuleInstaller>(packageService);
-
             var uploadsPath = HostingEnvironment.MapPath(VirtualRoot + "/App_Data/Uploads");
-            container.RegisterType<ModulesController>(new InjectionConstructor(externalModuleCatalog, moduleInstaller, uploadsPath, notifier, container.Resolve<IUserNameResolver>()));
+            container.RegisterType<ModulesController>(new InjectionConstructor(externalModuleCatalog, new ModuleInstaller(modulesPath, externalModuleCatalog), uploadsPath, notifier, container.Resolve<IUserNameResolver>()));
 
             #endregion
 

@@ -3,7 +3,7 @@ using Common.Logging;
 using Microsoft.Practices.ServiceLocation;
 using VirtoCommerce.Platform.Core.Modularity;
 
-namespace VirtoCommerce.Platform.Core
+namespace VirtoCommerce.Platform.Web.Modularity
 {
     /// <summary>
     /// Base class that provides a basic bootstrapping sequence and hooks

@@ -132,7 +132,6 @@
     <Compile Include="Model\PermissionScopeEntity.cs" />
     <Compile Include="Model\SettingEntity.cs" />
     <Compile Include="Model\SettingValueEntity.cs" />
-    <Compile Include="Modularity\ExternalManifestModuleCatalog.cs" />
     <Compile Include="Notifications\DefaultSmsNotificationSendingGateway.cs" />
     <Compile Include="Notifications\DefaultSmtpEmailNotificationSendingGateway.cs" />
     <Compile Include="Notifications\RegistrationEmailNotification.cs" />
@@ -141,7 +140,6 @@
     <Compile Include="Notifications\NotificationManager.cs" />
     <Compile Include="Notifications\NotificationTemplateServiceImpl.cs" />
     <Compile Include="Notifications\RegistrationSmsNotification.cs" />
-    <Compile Include="Modularity\ModuleInstallerImpl.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\IPlatformRepository.cs" />
     <Compile Include="Repositories\Migrations\201504300700222_Initial.cs" />

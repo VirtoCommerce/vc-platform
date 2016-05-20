@@ -1,4 +1,4 @@
-﻿namespace VirtoCommerce.Platform.Web.Model.Packaging
+﻿namespace VirtoCommerce.Platform.Web.Model.Modularity
 {
     public enum ModuleAction
     {

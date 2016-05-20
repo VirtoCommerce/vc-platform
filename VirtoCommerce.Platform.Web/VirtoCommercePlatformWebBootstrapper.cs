@@ -9,7 +9,7 @@ using Unity.WebApi;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Modularity;
 using Common.Logging;
-using VirtoCommerce.Platform.Data.Modularity;
+using VirtoCommerce.Platform.Web.Modularity;
 
 namespace VirtoCommerce.Platform.Web
 {

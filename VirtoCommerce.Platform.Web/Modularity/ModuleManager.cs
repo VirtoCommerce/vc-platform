@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Common.Logging;
+using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Modularity.Exceptions;
 using VirtoCommerce.Platform.Web.Resources;
 
-namespace VirtoCommerce.Platform.Core.Modularity
+namespace VirtoCommerce.Platform.Web.Modularity
 {
     /// <summary>
     /// Component responsible for coordinating the modules' type loading and module initialization process. 
@@ -341,7 +342,6 @@ namespace VirtoCommerce.Platform.Core.Modularity
             if (moduleInfo.State == ModuleState.Initializing)
             {
                 this.moduleInitializer.Initialize(moduleInfo);
-                moduleInfo.State = ModuleState.Initialized;
                 this.RaiseLoadModuleCompleted(moduleInfo, null);
             }
         }
