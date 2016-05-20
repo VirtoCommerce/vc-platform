@@ -461,8 +461,7 @@ namespace VirtoCommerce.Platform.Web
             
             var externalModuleCatalog = new ExternalManifestModuleCatalog(moduleCatalog.Modules, ConfigurationManager.AppSettings.GetValues("VirtoCommerce:UpdatesUrl"), container.Resolve<ILog>());
             externalModuleCatalog.Initialize();
-            var uploadsPath = HostingEnvironment.MapPath(VirtualRoot + "/App_Data/Uploads");
-            container.RegisterType<ModulesController>(new InjectionConstructor(externalModuleCatalog, new ModuleInstaller(modulesPath, externalModuleCatalog), uploadsPath, notifier, container.Resolve<IUserNameResolver>()));
+            container.RegisterType<ModulesController>(new InjectionConstructor(externalModuleCatalog, new ModuleInstaller(modulesPath, externalModuleCatalog), notifier, container.Resolve<IUserNameResolver>()));
 
             #endregion
 

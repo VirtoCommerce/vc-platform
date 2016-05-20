@@ -3,7 +3,7 @@ using System.Xml.Serialization;
 
 namespace VirtoCommerce.Platform.Core.Modularity
 {
-	internal static class ManifestReader
+	public static class ManifestReader
 	{
 		public static ModuleManifest Read(string filePath)
 		{

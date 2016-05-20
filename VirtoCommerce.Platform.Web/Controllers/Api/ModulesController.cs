@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Hosting;
 using System.Web.Http;
 using System.Web.Http.Description;
 using Hangfire;
@@ -25,17 +28,16 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     [CheckPermission(Permission = PredefinedPermissions.ModuleQuery)]
     public class ModulesController : ApiController
     {
+        private readonly string _uploadsUrl = Startup.VirtualRoot + "/App_Data/Uploads/";
         private readonly IModuleCatalog _moduleCatalog;
         private readonly IModuleInstaller _moduleInstaller;
-        private readonly string _uploadsPath;
         private readonly IPushNotificationManager _pushNotifier;
         private readonly IUserNameResolver _userNameResolver;
 
-        public ModulesController(IModuleCatalog moduleCatalog, IModuleInstaller moduleInstaller, string uploadsPath, IPushNotificationManager pushNotifier, IUserNameResolver userNameResolver)
+        public ModulesController(IModuleCatalog moduleCatalog, IModuleInstaller moduleInstaller, IPushNotificationManager pushNotifier, IUserNameResolver userNameResolver)
         {
             _moduleCatalog = moduleCatalog;
             _moduleInstaller = moduleInstaller;
-            _uploadsPath = uploadsPath;
             _pushNotifier = pushNotifier;
             _userNameResolver = userNameResolver;
         }
@@ -47,6 +49,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpGet]
         [Route("")]
         [ResponseType(typeof(webModel.ModuleDescriptor[]))]
+        [CheckPermission(Permission = PredefinedPermissions.ModuleManage)]
         public IHttpActionResult GetModules()
         {
             var retVal = _moduleCatalog.Modules.OfType<ManifestModuleInfo>()
@@ -58,19 +61,22 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <summary>
         /// Get all dependent modules for module
         /// </summary>
-        /// <param name="module">module</param>
+        /// <param name="modules">modules</param>
         /// <returns></returns>
         [HttpPost]
         [Route("getdepending")]
         [ResponseType(typeof(webModel.ModuleDescriptor[]))]
-        public IHttpActionResult GetDependingModules(webModel.ModuleDescriptor module)
+        [CheckPermission(Permission = PredefinedPermissions.ModuleManage)]
+        public IHttpActionResult GetDependingModules(webModel.ModuleDescriptor[] modules)
         {
-            var retVal = _moduleCatalog.Modules.OfType<ManifestModuleInfo>()
-                                               .Where(x => x.IsInstalled)
-                                               .Where(x => x.DependsOn.Contains(module.Id))
-                                               .Select(x => x.ToWebModel())
-                                               .ToArray();
-            return Ok(retVal);
+            var retVal = new List<ManifestModuleInfo>();
+            foreach (var module in modules)
+            {
+                retVal.AddRange(_moduleCatalog.Modules.OfType<ManifestModuleInfo>()
+                                                   .Where(x => x.IsInstalled)
+                                                   .Where(x => x.DependsOn.Contains(module.Id)));
+            }
+            return Ok(retVal.Distinct().Select(x=>x.ToWebModel()).ToArray());
         }
 
         /// <summary>
@@ -81,6 +87,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [Route("getmissingdependencies")]
         [ResponseType(typeof(webModel.ModuleDescriptor[]))]
+        [CheckPermission(Permission = PredefinedPermissions.ModuleManage)]
         public IHttpActionResult GetMissingDependencies(webModel.ModuleDescriptor[] modules)
         {
             var moduleInfos = _moduleCatalog.Modules.OfType<ManifestModuleInfo>()
@@ -99,41 +106,46 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        [Route("")]
-        [ResponseType(typeof(ManifestModuleInfo))]
+        [Route("localstorage")]
+        [ResponseType(typeof(webModel.ModuleDescriptor))]
         [CheckPermission(Permission = PredefinedPermissions.ModuleManage)]
-        public async Task<IHttpActionResult> Upload()
+        public async Task<IHttpActionResult> UploadModuleArchive()
         {
-            // Check if the request contains multipart/form-data.
             if (!Request.Content.IsMimeMultipartContent())
             {
-                throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+                throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.NotAcceptable, "This request is not properly formatted"));
             }
+            webModel.ModuleDescriptor retVal = null;
+            var uploadsPath = HostingEnvironment.MapPath(_uploadsUrl);
+            var streamProvider = new CustomMultipartFormDataStreamProvider(uploadsPath);
 
-            if (!Directory.Exists(_uploadsPath))
+            await Request.Content.ReadAsMultipartAsync(streamProvider).ContinueWith(t =>
             {
-                Directory.CreateDirectory(_uploadsPath);
-            }
+                if (t.IsFaulted || t.IsCanceled)
+                    throw new HttpResponseException(HttpStatusCode.InternalServerError);
+            });
 
-            var streamProvider = new CustomMultipartFormDataStreamProvider(_uploadsPath);
-            await Request.Content.ReadAsMultipartAsync(streamProvider);
+            var fileData = streamProvider.FileData.FirstOrDefault();
+            var fileName = fileData.Headers.ContentDisposition.FileName.Replace("\"", string.Empty);
+            var path = VirtualPathUtility.ToAbsolute(_uploadsUrl + fileName);
 
-            var file = streamProvider.FileData.FirstOrDefault();
-            if (file != null)
+            using (var packageStream = File.Open(path, FileMode.Open))
+            using (var package = new ZipArchive(packageStream, ZipArchiveMode.Read))
             {
-                //var moduleInfo = _moduleInstaller.LoadModule(file.LocalFileName);
-                //if (moduleInfo != null)
-                //{
-                //    var retVal = moduleInfo;
-
-                //    //var dependencyErrors = _moduleInstaller.GetDependencyErrors(moduleInfo);
-                //    //retVal.ValidationErrors.AddRange(dependencyErrors);
-
-                //    return Ok(retVal);
-                //}
+                var entry = package.GetEntry("module.manifest");
+                if (entry != null)
+                {
+                    using (var manifestStream = entry.Open())
+                    {
+                        var manifest = ManifestReader.Read(manifestStream);
+                        var module = new ManifestModuleInfo(manifest);
+                        module.Ref = path;
+                        _moduleCatalog.AddModule(module);
+                        retVal = module.ToWebModel();
+                    }
+                }
             }
-
-            return NotFound();
+            return Ok(retVal);
         }
 
         /// <summary>
