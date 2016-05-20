@@ -99,7 +99,7 @@
                     }
                 }
             }
-            dialogService.showDialog(dialog, '$(Platform)/Scripts/app/packaging/dialogs/moduleAction-dialog.tpl.html', 'platformWebApp.confirmDialogController');
+            dialogService.showDialog(dialog, '$(Platform)/Scripts/app/modularity/dialogs/moduleAction-dialog.tpl.html', 'platformWebApp.confirmDialogController');
         }, function (error) {
             bladeNavigationService.setError('Error ' + error.status, blade);
         });
@@ -112,7 +112,7 @@
             // currentEntityId: data.id,
             title: 'platform.blades.module-wizard-progress-step.title',
             controller: 'platformWebApp.moduleInstallProgressController',
-            template: '$(Platform)/Scripts/app/packaging/wizards/newModule/module-wizard-progress-step.tpl.html'
+            template: '$(Platform)/Scripts/app/modularity/wizards/newModule/module-wizard-progress-step.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, blade.parentBlade);
     }

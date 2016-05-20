@@ -20,7 +20,7 @@ function ($scope, filterFilter, bladeNavigationService, dialogService, modules, 
             title: 'platform.blades.module-detail.title',
             currentEntity: node,
             controller: 'platformWebApp.moduleDetailController',
-            template: '$(Platform)/Scripts/app/packaging/blades/module-detail.tpl.html'
+            template: '$(Platform)/Scripts/app/modularity/blades/module-detail.tpl.html'
         };
 
         bladeNavigationService.showBlade(newBlade, blade);
@@ -74,7 +74,7 @@ function ($scope, filterFilter, bladeNavigationService, dialogService, modules, 
                             });
                         }
                     }
-                    dialogService.showDialog(dialog, '$(Platform)/Scripts/app/packaging/dialogs/moduleAction-dialog.tpl.html', 'platformWebApp.confirmDialogController');
+                    dialogService.showDialog(dialog, '$(Platform)/Scripts/app/modularity/dialogs/moduleAction-dialog.tpl.html', 'platformWebApp.confirmDialogController');
                 }, function (error) {
                     bladeNavigationService.setError('Error ' + error.status, blade);
                 });
@@ -88,7 +88,7 @@ function ($scope, filterFilter, bladeNavigationService, dialogService, modules, 
             currentEntity: data,
             title: blade.title,
             controller: 'platformWebApp.moduleInstallProgressController',
-            template: '$(Platform)/Scripts/app/packaging/wizards/newModule/module-wizard-progress-step.tpl.html'
+            template: '$(Platform)/Scripts/app/modularity/wizards/newModule/module-wizard-progress-step.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, blade);
     }
