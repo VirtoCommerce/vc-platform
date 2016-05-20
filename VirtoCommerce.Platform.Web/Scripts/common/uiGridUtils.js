@@ -32,9 +32,9 @@
                 var foundDef;
                 _.each(savedState.columns, function (x) {
                     if (foundDef = _.findWhere(gridOptions.columnDefs, { name: x.name })) {
-                        var customSort = x.sort;
+                        foundDef.sort = x.sort;
+                        foundDef.width = x.width || foundDef.width;
                         _.extend(x, foundDef);
-                        x.sort = customSort;
                         x.wasPredefined = true;
                         gridOptions.columnDefs.splice(gridOptions.columnDefs.indexOf(foundDef), 1);
                     } else {

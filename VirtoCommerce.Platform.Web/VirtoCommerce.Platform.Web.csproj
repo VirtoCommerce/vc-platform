@@ -318,6 +318,9 @@
     <Compile Include="Model\Packaging\ModuleBackgroundJobOptions.cs" />
     <Compile Include="Model\Packaging\ModulePushNotification.cs" />
     <Compile Include="Model\PlatformSetting.cs" />
+    <Content Include="Scripts\app\packaging\blades\modules-main.js" />
+    <Content Include="Scripts\app\packaging\blades\modules-main.tpl.html" />
+    <Content Include="Scripts\app\packaging\dialogs\moduleAction-dialog.tpl.html" />
     <Content Include="Scripts\common\directives\fallbackSrc.js" />
     <Compile Include="Modularity\Bootstrapper.cs" />
     <Compile Include="Modularity\ModuleInitializer.cs" />
@@ -498,7 +501,6 @@
     <Content Include="Scripts\common\templates\home.tpl.html" />
     <Content Include="Scripts\app\packaging\packaging.js" />
     <Content Include="Scripts\app\packaging\resources\modules.js" />
-    <Content Include="Scripts\app\packaging\wizards\newModule\install-wizard.js" />
     <Content Include="Scripts\app\packaging\wizards\newModule\module-wizard-progress-step.js" />
     <Content Include="Scripts\app\packaging\wizards\newModule\module-wizard-progress-step.tpl.html" />
     <Content Include="Scripts\app\settings\blades\setting-dictionary.js" />
