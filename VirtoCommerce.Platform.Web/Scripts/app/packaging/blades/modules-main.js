@@ -1,5 +1,5 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.modulesMainController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.modules', function ($scope, bladeNavigationService, modules) {
+.controller('platformWebApp.modulesMainController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.modules', 'platformWebApp.moduleHelper', function ($scope, bladeNavigationService, modules, moduleHelper) {
     var blade = $scope.blade;
     var nodeUpdate, nodeAvailable, nodeInstalled;
     $scope.selectedNodeId = null;
@@ -8,6 +8,7 @@
         blade.isLoading = true;
 
         return modules.query().$promise.then(function (results) {
+            moduleHelper.allmodules = results;
             _.each(results, function (x) {
                 if (x.tags) {
                     x.tagsArray = x.tags.split(' ');

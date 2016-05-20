@@ -1,5 +1,5 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.moduleDetailController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'platformWebApp.modules', 'FileUploader', function ($scope, dialogService, bladeNavigationService, modules, FileUploader) {
+.controller('platformWebApp.moduleDetailController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'platformWebApp.modules', 'platformWebApp.moduleHelper', 'FileUploader', function ($scope, dialogService, bladeNavigationService, modules, moduleHelper, FileUploader) {
     var blade = $scope.blade;
 
     function initializeBlade() {
@@ -47,7 +47,10 @@
         }
     }
 
-    $scope.openModule = function (module) {
+    $scope.openDependencyModule = function (dependency) {
+        module = _.findWhere(moduleHelper.allmodules, { id: dependency.id, version: dependency.version }) ||
+                    _.findWhere(moduleHelper.allmodules, { id: dependency.id }) ||
+                     module;
         blade.parentBlade.selectNode(module);
     };
 
@@ -55,7 +58,7 @@
         blade.isLoading = true;
 
         var clone = angular.copy(blade.currentEntity);
-        _.extend(clone, { $all: undefined, $latestModule: undefined });
+        clone.$all = clone.$latestModule = undefined;
         //var clone = {
         //    id: blade.currentEntity.id,
         //    version: blade.currentEntity.version,
@@ -66,9 +69,8 @@
         //};
 
         var selection = [clone];
-        var modulesApiParameter = action === 'uninstall' ? clone : selection;
-        var modulesApiMethod = action === 'uninstall' ? modules.getDependent : modules.getDependencies;
-        modulesApiMethod(modulesApiParameter, function (data) {
+        var modulesApiMethod = action === 'uninstall' ? modules.getDependents : modules.getDependencies;
+        modulesApiMethod(selection, function (data) {
             blade.isLoading = false;
             data = _.filter(data, function (x) { return _.all(selection, function (s) { return s.id !== x.id; }) });
 
@@ -89,7 +91,7 @@
                                 });
                                 break;
                             case 'uninstall':
-                                modules.uninstall(blade.currentEntity, onAfterSubmitted, function (error) {
+                                modules.uninstall(selection, onAfterSubmitted, function (error) {
                                     bladeNavigationService.setError('Error ' + error.status, blade);
                                 });
                                 break;
