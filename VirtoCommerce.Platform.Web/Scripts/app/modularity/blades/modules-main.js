@@ -65,13 +65,13 @@
             parentRefresh: blade.refresh,
             subtitle: 'platform.blades.modules-list.subtitle',
             controller: 'platformWebApp.modulesListController',
-            template: '$(Platform)/Scripts/app/packaging/blades/modules-list.tpl.html'
+            template: '$(Platform)/Scripts/app/modularity/blades/modules-list.tpl.html'
         };
 
         if (data.mode === 'advanced') {
             angular.extend(newBlade, {
                 controller: 'platformWebApp.moduleDetailController',
-                template: '$(Platform)/Scripts/app/packaging/blades/module-detail.tpl.html'
+                template: '$(Platform)/Scripts/app/modularity/blades/module-detail.tpl.html'
             });
         }
 
