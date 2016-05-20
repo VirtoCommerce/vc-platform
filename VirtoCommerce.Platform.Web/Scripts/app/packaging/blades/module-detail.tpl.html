@@ -9,15 +9,17 @@
             </label>
         </div>
     </div>
-    <button class="btn" ng-click="submit()" ng-disabled="!blade.currentEntity || isInstalling || (blade.currentEntity.requireLicenseAcceptance && !blade.currentEntity.licenseAccepted)">
-        <span>{{actionButtonTitle | translate}}</span>
+    <button class="btn" ng-click="confirmActionInDialog(blade.mode)" ng-if="blade.currentEntity" ng-disabled="isInstalling || (blade.currentEntity.requireLicenseAcceptance && !blade.currentEntity.licenseAccepted)">
+        <span ng-if="blade.mode === 'install'">{{'platform.commands.install' | translate}}</span>
+        <span ng-if="blade.mode === 'update'">{{'platform.commands.update' | translate}}</span>
     </button>
 </div>
 <div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
-            <div class="form" ng-if="!blade.currentEntity && !blade.isLoading">
-                <div class="form-group">
+            <div ng-if="blade.mode === 'advanced'">
+                <div class="t __divider">{{ 'platform.blades.module-detail.labels.install-from-file' | translate }}</div>
+                <div class="form-group" ng-if="!blade.isLoading">
                     <label class="form-label">{{ 'platform.blades.module-detail.labels.select-module-file' | translate }}</label>
                     <div class="form-input">
                         <input type="file" uploader="uploader" nv-file-select>
@@ -26,7 +28,7 @@
                             <i class="btn-ico fa fa-image"></i>
                         </button>
                     </div>
-                </div>                
+                </div>
             </div>
             <div ng-show="uploader.isUploading">
                 <div class="sub-t">{{ 'platform.blades.module-detail.labels.upload-progress' | translate }}</div>
@@ -69,22 +71,33 @@
                         <div class="list-t">{{ 'platform.blades.module-detail.labels.dependencies' | translate }}</div>
                         <div class="list-descr">
                             <div ng-repeat="dependency in blade.currentEntity.dependencies">
-                                <a class="__link" ng-click="openModule(dependency.id)">{{dependency.id}}</a> {{dependency.version}}
+                                <a class="__link" ng-click="openModule(dependency)">{{dependency.id}}</a> {{dependency.version}}
                             </div>
                         </div>
                     </li>
                     <li class="list-item">
                         <div class="list-t">{{ 'platform.blades.module-detail.labels.tags' | translate }}</div>
                         <ul class="list __tags">
-                            <li class="list-item" ng-repeat="tag in blade.currentEntity.tags track by $index">
+                            <li class="list-item" ng-repeat="tag in blade.currentEntity.tagsArray track by $index">
                                 <i class="list-ico fa fa-tags"></i>
                                 <div class="list-name">{{tag}}</div>
                             </li>
                         </ul>
                     </li>
-                    <li class="list-item" ng-if="blade.currentEntity.validationErrors.length>0">
+                    <div class="form-group" ng-if="blade.mode">
+                        <label class="form-label">{{ 'platform.blades.module-detail.labels.install-version' | translate }}</label>
+                        <div class="form-input">
+                            <ui-select ng-model="blade.currentEntity">
+                                <ui-select-match>{{$select.selected.version}}</ui-select-match>
+                                <ui-select-choices repeat="x in availableVersions | filter: {version: $select.search}">
+                                    <span ng-bind-html="x.version | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                    <li class="list-item" ng-if="blade.currentEntity.validationErrors.length">
                         <div class="list-t">{{ 'platform.blades.module-detail.labels.errors' | translate }}</div>
-                        <div class="list-descr">
+                        <div class="list-descr error">
                             <span ng-repeat="x in blade.currentEntity.validationErrors">{{x}}<br></span>
                         </div>
                     </li>

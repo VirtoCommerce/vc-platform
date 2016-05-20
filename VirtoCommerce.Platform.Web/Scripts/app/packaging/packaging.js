@@ -7,16 +7,14 @@
               templateUrl: '$(Platform)/Scripts/common/templates/home.tpl.html',
               controller: ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
                   var blade = {
-                      id: 'modules',
-                      title: 'platform.blades.modules-list.title',
-                      subtitle: 'platform.blades.modules-list.subtitle',
-                      controller: 'platformWebApp.modulesListController',
-                      template: '$(Platform)/Scripts/app/packaging/blades/modules-list.tpl.html',
+                      id: 'modulesMain',
+                      title: 'platform.blades.modules-main.title',
+                      controller: 'platformWebApp.modulesMainController',
+                      template: '$(Platform)/Scripts/app/packaging/blades/modules-main.tpl.html',
                       isClosingDisabled: true
                   };
                   bladeNavigationService.showBlade(blade);
-              }
-              ]
+              }]
           });
   }]
 )
@@ -61,4 +59,8 @@
 	  };
       pushNotificationTemplateResolver.register(historyExportImportTemplate);
   }])
+.factory('platformWebApp.moduleHelper', function () {
+    // https://gist.github.com/TheDistantSea/8021359
+    return {};
+})
 ;

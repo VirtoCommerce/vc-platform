@@ -300,11 +300,12 @@
         "title-update": "Module update",
         "title-install": "Module install",
         "labels": {
-          "I-accept-the": "I accept the",
-          "license-link": "License",
+          "i-accept-the": "I accept the",
+          "license-link": "license",
           "license": "License",
-          "agreement": "agreement",
-          "select-module-file": "Select module file",
+          "agreement": "agreement.",
+          "install-from-file": "Install / update module from file",
+          "select-module-file": "Upload a module (.zip) file from outside the central modules repository",
           "upload-progress": "Upload progress",
           "module-info": "Module info",
           "title": "Title",
@@ -316,18 +317,29 @@
           "platform-version": "Platform Version",
           "dependencies": "Dependencies",
           "tags": "Tags",
+          "install-version": "Install version",
           "errors": "Errors"
         }
       },
-      "modules-list": {
+      "modules-main": {
         "title": "Modules",
-        "subtitle": "Manage installed modules",
+        "labels": {
+          "updates": "Updates",
+          "available": "Available",
+          "installed": "Installed",
+          "advanced": "Advanced"
+        }
+      },
+      "modules-list": {
+        "subtitle": "Modules management",
         "labels": {
           "no-modules-part1": "No Modules found. Check if virtual directory with alias Modules is configured as described in",
           "no-modules-part2": "the documentation",
           "icon": "Icon",
           "module": "Module",
+          "installed": "Installed",
           "version": "Version",
+          "new-version": "New version",
           "author": "Author"
         }
       },
@@ -643,6 +655,19 @@
       "dictionary-items-delete": {
         "title": "Delete confirmation",
         "message": "Are you sure you want to delete {{quantity}} selected dictionary item(s)?"
+      },
+      "module-action": {
+        "title-install": "Install confirmation",
+        "title-update": "Update confirmation",
+        "title-delete": "Uninstall confirmation",
+        "message0-install": "You are about to install:",
+        "message0-update": "You are about to update:",
+        "message0-delete": "You are about to uninstall:",
+        "message1-install": "The following dependencies will also be installed:",
+        "message1-delete": "The following depending modules will also be uninstalled:",
+        "message2-install": "Install selection and dependencies?",
+        "message2-update": "Update selection and dependencies?",
+        "message2-delete": "Uninstall this and ALL depending modules?"
       },
       "module-delete": {
         "title": "Delete confirmation",
