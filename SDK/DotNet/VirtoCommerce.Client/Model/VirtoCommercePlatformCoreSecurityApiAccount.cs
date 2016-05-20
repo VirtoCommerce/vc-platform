@@ -12,7 +12,7 @@ using Newtonsoft.Json.Converters;
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
-    /// 
+    /// VirtoCommercePlatformCoreSecurityApiAccount
     /// </summary>
     [DataContract]
     public partial class VirtoCommercePlatformCoreSecurityApiAccount :  IEquatable<VirtoCommercePlatformCoreSecurityApiAccount>
@@ -168,6 +168,5 @@ namespace VirtoCommerce.Client.Model
                 return hash;
             }
         }
-
     }
 }

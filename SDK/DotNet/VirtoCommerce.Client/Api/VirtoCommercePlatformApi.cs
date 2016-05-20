@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -12,7 +11,7 @@ namespace VirtoCommerce.Client.Api
     /// <summary>
     /// Represents a collection of functions to interact with the API endpoints
     /// </summary>
-    public interface IVirtoCommercePlatformApi
+    public interface IVirtoCommercePlatformApi : IApiAccessor
     {
         #region Synchronous Operations
         /// <summary>
@@ -535,7 +534,7 @@ namespace VirtoCommerce.Client.Api
         /// Get notification journal page
         /// </summary>
         /// <remarks>
-        /// Method returns notification journal page with array of notification, that was send, sending or will be send in future. Result contains total count, that can be used\r\n            for paging.
+        /// Method returns notification journal page with array of notification, that was send, sending or will be send in future. Result contains total count, that can be used              for paging.
         /// </remarks>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="objectId">Object id</param>
@@ -549,7 +548,7 @@ namespace VirtoCommerce.Client.Api
         /// Get notification journal page
         /// </summary>
         /// <remarks>
-        /// Method returns notification journal page with array of notification, that was send, sending or will be send in future. Result contains total count, that can be used\r\n            for paging.
+        /// Method returns notification journal page with array of notification, that was send, sending or will be send in future. Result contains total count, that can be used              for paging.
         /// </remarks>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="objectId">Object id</param>
@@ -562,7 +561,7 @@ namespace VirtoCommerce.Client.Api
         /// Get notification template
         /// </summary>
         /// <remarks>
-        /// Get notification template by notification type, objectId, objectTypeId and language. Object id and object type id - params of object, that initialize creating of\r\n            template. By default object id and object type id &#x3D; \&quot;Platform\&quot;. For example for store with id &#x3D; \&quot;SampleStore\&quot;, objectId &#x3D; \&quot;SampleStore\&quot;, objectTypeId &#x3D; \&quot;Store\&quot;.
+        /// Get notification template by notification type, objectId, objectTypeId and language. Object id and object type id - params of object, that initialize creating of              template. By default object id and object type id &#x3D; \&quot;Platform\&quot;. For example for store with id &#x3D; \&quot;SampleStore\&quot;, objectId &#x3D; \&quot;SampleStore\&quot;, objectTypeId &#x3D; \&quot;Store\&quot;.
         /// </remarks>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="type">Notification type of template</param>
@@ -576,7 +575,7 @@ namespace VirtoCommerce.Client.Api
         /// Get notification template
         /// </summary>
         /// <remarks>
-        /// Get notification template by notification type, objectId, objectTypeId and language. Object id and object type id - params of object, that initialize creating of\r\n            template. By default object id and object type id &#x3D; \&quot;Platform\&quot;. For example for store with id &#x3D; \&quot;SampleStore\&quot;, objectId &#x3D; \&quot;SampleStore\&quot;, objectTypeId &#x3D; \&quot;Store\&quot;.
+        /// Get notification template by notification type, objectId, objectTypeId and language. Object id and object type id - params of object, that initialize creating of              template. By default object id and object type id &#x3D; \&quot;Platform\&quot;. For example for store with id &#x3D; \&quot;SampleStore\&quot;, objectId &#x3D; \&quot;SampleStore\&quot;, objectTypeId &#x3D; \&quot;Store\&quot;.
         /// </remarks>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="type">Notification type of template</param>
@@ -589,7 +588,7 @@ namespace VirtoCommerce.Client.Api
         /// Get notification templates
         /// </summary>
         /// <remarks>
-        /// Get all notification templates by notification type, objectId, objectTypeId. Object id and object type id - params of object, that initialize creating of\r\n            template. By default object id and object type id &#x3D; \&quot;Platform\&quot;. For example for store with id &#x3D; \&quot;SampleStore\&quot;, objectId &#x3D; \&quot;SampleStore\&quot;, objectTypeId &#x3D; \&quot;Store\&quot;.
+        /// Get all notification templates by notification type, objectId, objectTypeId. Object id and object type id - params of object, that initialize creating of              template. By default object id and object type id &#x3D; \&quot;Platform\&quot;. For example for store with id &#x3D; \&quot;SampleStore\&quot;, objectId &#x3D; \&quot;SampleStore\&quot;, objectTypeId &#x3D; \&quot;Store\&quot;.
         /// </remarks>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="type">Notification type of template</param>
@@ -602,7 +601,7 @@ namespace VirtoCommerce.Client.Api
         /// Get notification templates
         /// </summary>
         /// <remarks>
-        /// Get all notification templates by notification type, objectId, objectTypeId. Object id and object type id - params of object, that initialize creating of\r\n            template. By default object id and object type id &#x3D; \&quot;Platform\&quot;. For example for store with id &#x3D; \&quot;SampleStore\&quot;, objectId &#x3D; \&quot;SampleStore\&quot;, objectTypeId &#x3D; \&quot;Store\&quot;.
+        /// Get all notification templates by notification type, objectId, objectTypeId. Object id and object type id - params of object, that initialize creating of              template. By default object id and object type id &#x3D; \&quot;Platform\&quot;. For example for store with id &#x3D; \&quot;SampleStore\&quot;, objectId &#x3D; \&quot;SampleStore\&quot;, objectTypeId &#x3D; \&quot;Store\&quot;.
         /// </remarks>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="type">Notification type of template</param>
@@ -637,8 +636,8 @@ namespace VirtoCommerce.Client.Api
         /// </remarks>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="type">Notification type</param>
-        /// <returns>List&lt;VirtoCommercePlatformCoreNotificationsNotificationParameter&gt;</returns>
-        List<VirtoCommercePlatformCoreNotificationsNotificationParameter> NotificationsGetTestingParameters (string type);
+        /// <returns>List&lt;VirtoCommercePlatformWebModelNotificationsNotificationParameter&gt;</returns>
+        List<VirtoCommercePlatformWebModelNotificationsNotificationParameter> NotificationsGetTestingParameters (string type);
 
         /// <summary>
         /// Get testing parameters
@@ -648,13 +647,13 @@ namespace VirtoCommerce.Client.Api
         /// </remarks>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="type">Notification type</param>
-        /// <returns>ApiResponse of List&lt;VirtoCommercePlatformCoreNotificationsNotificationParameter&gt;</returns>
-        ApiResponse<List<VirtoCommercePlatformCoreNotificationsNotificationParameter>> NotificationsGetTestingParametersWithHttpInfo (string type);
+        /// <returns>ApiResponse of List&lt;VirtoCommercePlatformWebModelNotificationsNotificationParameter&gt;</returns>
+        ApiResponse<List<VirtoCommercePlatformWebModelNotificationsNotificationParameter>> NotificationsGetTestingParametersWithHttpInfo (string type);
         /// <summary>
         /// Get rendered notification content
         /// </summary>
         /// <remarks>
-        /// Method returns rendered content, that based on notification template. Template for rendering chosen by type, objectId, objectTypeId, language.\r\n            Parameters for template may be prepared by the method of getTestingParameters.
+        /// Method returns rendered content, that based on notification template. Template for rendering chosen by type, objectId, objectTypeId, language.              Parameters for template may be prepared by the method of getTestingParameters.
         /// </remarks>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="request">Test notification request</param>
@@ -665,7 +664,7 @@ namespace VirtoCommerce.Client.Api
         /// Get rendered notification content
         /// </summary>
         /// <remarks>
-        /// Method returns rendered content, that based on notification template. Template for rendering chosen by type, objectId, objectTypeId, language.\r\n            Parameters for template may be prepared by the method of getTestingParameters.
+        /// Method returns rendered content, that based on notification template. Template for rendering chosen by type, objectId, objectTypeId, language.              Parameters for template may be prepared by the method of getTestingParameters.
         /// </remarks>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="request">Test notification request</param>
@@ -675,7 +674,7 @@ namespace VirtoCommerce.Client.Api
         /// Sending test notification
         /// </summary>
         /// <remarks>
-        /// Method sending notification, that based on notification template. Template for rendering chosen by type, objectId, objectTypeId, language.\r\n            Parameters for template may be prepared by the method of getTestingParameters. Method returns string. If sending finished with success status\r\n            this string is empty, otherwise string contains error message.
+        /// Method sending notification, that based on notification template. Template for rendering chosen by type, objectId, objectTypeId, language.              Parameters for template may be prepared by the method of getTestingParameters. Method returns string. If sending finished with success status              this string is empty, otherwise string contains error message.
         /// </remarks>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="request">Test notification request</param>
@@ -686,7 +685,7 @@ namespace VirtoCommerce.Client.Api
         /// Sending test notification
         /// </summary>
         /// <remarks>
-        /// Method sending notification, that based on notification template. Template for rendering chosen by type, objectId, objectTypeId, language.\r\n            Parameters for template may be prepared by the method of getTestingParameters. Method returns string. If sending finished with success status\r\n            this string is empty, otherwise string contains error message.
+        /// Method sending notification, that based on notification template. Template for rendering chosen by type, objectId, objectTypeId, language.              Parameters for template may be prepared by the method of getTestingParameters. Method returns string. If sending finished with success status              this string is empty, otherwise string contains error message.
         /// </remarks>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="request">Test notification request</param>
@@ -1733,7 +1732,7 @@ namespace VirtoCommerce.Client.Api
         /// Get notification journal page
         /// </summary>
         /// <remarks>
-        /// Method returns notification journal page with array of notification, that was send, sending or will be send in future. Result contains total count, that can be used\r\n            for paging.
+        /// Method returns notification journal page with array of notification, that was send, sending or will be send in future. Result contains total count, that can be used              for paging.
         /// </remarks>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="objectId">Object id</param>
@@ -1747,7 +1746,7 @@ namespace VirtoCommerce.Client.Api
         /// Get notification journal page
         /// </summary>
         /// <remarks>
-        /// Method returns notification journal page with array of notification, that was send, sending or will be send in future. Result contains total count, that can be used\r\n            for paging.
+        /// Method returns notification journal page with array of notification, that was send, sending or will be send in future. Result contains total count, that can be used              for paging.
         /// </remarks>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="objectId">Object id</param>
@@ -1760,7 +1759,7 @@ namespace VirtoCommerce.Client.Api
         /// Get notification template
         /// </summary>
         /// <remarks>
-        /// Get notification template by notification type, objectId, objectTypeId and language. Object id and object type id - params of object, that initialize creating of\r\n            template. By default object id and object type id &#x3D; \&quot;Platform\&quot;. For example for store with id &#x3D; \&quot;SampleStore\&quot;, objectId &#x3D; \&quot;SampleStore\&quot;, objectTypeId &#x3D; \&quot;Store\&quot;.
+        /// Get notification template by notification type, objectId, objectTypeId and language. Object id and object type id - params of object, that initialize creating of              template. By default object id and object type id &#x3D; \&quot;Platform\&quot;. For example for store with id &#x3D; \&quot;SampleStore\&quot;, objectId &#x3D; \&quot;SampleStore\&quot;, objectTypeId &#x3D; \&quot;Store\&quot;.
         /// </remarks>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="type">Notification type of template</param>
@@ -1774,7 +1773,7 @@ namespace VirtoCommerce.Client.Api
         /// Get notification template
         /// </summary>
         /// <remarks>
-        /// Get notification template by notification type, objectId, objectTypeId and language. Object id and object type id - params of object, that initialize creating of\r\n            template. By default object id and object type id &#x3D; \&quot;Platform\&quot;. For example for store with id &#x3D; \&quot;SampleStore\&quot;, objectId &#x3D; \&quot;SampleStore\&quot;, objectTypeId &#x3D; \&quot;Store\&quot;.
+        /// Get notification template by notification type, objectId, objectTypeId and language. Object id and object type id - params of object, that initialize creating of              template. By default object id and object type id &#x3D; \&quot;Platform\&quot;. For example for store with id &#x3D; \&quot;SampleStore\&quot;, objectId &#x3D; \&quot;SampleStore\&quot;, objectTypeId &#x3D; \&quot;Store\&quot;.
         /// </remarks>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="type">Notification type of template</param>
@@ -1787,7 +1786,7 @@ namespace VirtoCommerce.Client.Api
         /// Get notification templates
         /// </summary>
         /// <remarks>
-        /// Get all notification templates by notification type, objectId, objectTypeId. Object id and object type id - params of object, that initialize creating of\r\n            template. By default object id and object type id &#x3D; \&quot;Platform\&quot;. For example for store with id &#x3D; \&quot;SampleStore\&quot;, objectId &#x3D; \&quot;SampleStore\&quot;, objectTypeId &#x3D; \&quot;Store\&quot;.
+        /// Get all notification templates by notification type, objectId, objectTypeId. Object id and object type id - params of object, that initialize creating of              template. By default object id and object type id &#x3D; \&quot;Platform\&quot;. For example for store with id &#x3D; \&quot;SampleStore\&quot;, objectId &#x3D; \&quot;SampleStore\&quot;, objectTypeId &#x3D; \&quot;Store\&quot;.
         /// </remarks>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="type">Notification type of template</param>
@@ -1800,7 +1799,7 @@ namespace VirtoCommerce.Client.Api
         /// Get notification templates
         /// </summary>
         /// <remarks>
-        /// Get all notification templates by notification type, objectId, objectTypeId. Object id and object type id - params of object, that initialize creating of\r\n            template. By default object id and object type id &#x3D; \&quot;Platform\&quot;. For example for store with id &#x3D; \&quot;SampleStore\&quot;, objectId &#x3D; \&quot;SampleStore\&quot;, objectTypeId &#x3D; \&quot;Store\&quot;.
+        /// Get all notification templates by notification type, objectId, objectTypeId. Object id and object type id - params of object, that initialize creating of              template. By default object id and object type id &#x3D; \&quot;Platform\&quot;. For example for store with id &#x3D; \&quot;SampleStore\&quot;, objectId &#x3D; \&quot;SampleStore\&quot;, objectTypeId &#x3D; \&quot;Store\&quot;.
         /// </remarks>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="type">Notification type of template</param>
@@ -1835,8 +1834,8 @@ namespace VirtoCommerce.Client.Api
         /// </remarks>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="type">Notification type</param>
-        /// <returns>Task of List&lt;VirtoCommercePlatformCoreNotificationsNotificationParameter&gt;</returns>
-        System.Threading.Tasks.Task<List<VirtoCommercePlatformCoreNotificationsNotificationParameter>> NotificationsGetTestingParametersAsync (string type);
+        /// <returns>Task of List&lt;VirtoCommercePlatformWebModelNotificationsNotificationParameter&gt;</returns>
+        System.Threading.Tasks.Task<List<VirtoCommercePlatformWebModelNotificationsNotificationParameter>> NotificationsGetTestingParametersAsync (string type);
 
         /// <summary>
         /// Get testing parameters
@@ -1846,13 +1845,13 @@ namespace VirtoCommerce.Client.Api
         /// </remarks>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="type">Notification type</param>
-        /// <returns>Task of ApiResponse (List&lt;VirtoCommercePlatformCoreNotificationsNotificationParameter&gt;)</returns>
-        System.Threading.Tasks.Task<ApiResponse<List<VirtoCommercePlatformCoreNotificationsNotificationParameter>>> NotificationsGetTestingParametersAsyncWithHttpInfo (string type);
+        /// <returns>Task of ApiResponse (List&lt;VirtoCommercePlatformWebModelNotificationsNotificationParameter&gt;)</returns>
+        System.Threading.Tasks.Task<ApiResponse<List<VirtoCommercePlatformWebModelNotificationsNotificationParameter>>> NotificationsGetTestingParametersAsyncWithHttpInfo (string type);
         /// <summary>
         /// Get rendered notification content
         /// </summary>
         /// <remarks>
-        /// Method returns rendered content, that based on notification template. Template for rendering chosen by type, objectId, objectTypeId, language.\r\n            Parameters for template may be prepared by the method of getTestingParameters.
+        /// Method returns rendered content, that based on notification template. Template for rendering chosen by type, objectId, objectTypeId, language.              Parameters for template may be prepared by the method of getTestingParameters.
         /// </remarks>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="request">Test notification request</param>
@@ -1863,7 +1862,7 @@ namespace VirtoCommerce.Client.Api
         /// Get rendered notification content
         /// </summary>
         /// <remarks>
-        /// Method returns rendered content, that based on notification template. Template for rendering chosen by type, objectId, objectTypeId, language.\r\n            Parameters for template may be prepared by the method of getTestingParameters.
+        /// Method returns rendered content, that based on notification template. Template for rendering chosen by type, objectId, objectTypeId, language.              Parameters for template may be prepared by the method of getTestingParameters.
         /// </remarks>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="request">Test notification request</param>
@@ -1873,7 +1872,7 @@ namespace VirtoCommerce.Client.Api
         /// Sending test notification
         /// </summary>
         /// <remarks>
-        /// Method sending notification, that based on notification template. Template for rendering chosen by type, objectId, objectTypeId, language.\r\n            Parameters for template may be prepared by the method of getTestingParameters. Method returns string. If sending finished with success status\r\n            this string is empty, otherwise string contains error message.
+        /// Method sending notification, that based on notification template. Template for rendering chosen by type, objectId, objectTypeId, language.              Parameters for template may be prepared by the method of getTestingParameters. Method returns string. If sending finished with success status              this string is empty, otherwise string contains error message.
         /// </remarks>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="request">Test notification request</param>
@@ -1884,7 +1883,7 @@ namespace VirtoCommerce.Client.Api
         /// Sending test notification
         /// </summary>
         /// <remarks>
-        /// Method sending notification, that based on notification template. Template for rendering chosen by type, objectId, objectTypeId, language.\r\n            Parameters for template may be prepared by the method of getTestingParameters. Method returns string. If sending finished with success status\r\n            this string is empty, otherwise string contains error message.
+        /// Method sending notification, that based on notification template. Template for rendering chosen by type, objectId, objectTypeId, language.              Parameters for template may be prepared by the method of getTestingParameters. Method returns string. If sending finished with success status              this string is empty, otherwise string contains error message.
         /// </remarks>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="request">Test notification request</param>
@@ -2415,7 +2414,7 @@ namespace VirtoCommerce.Client.Api
     /// <summary>
     /// Represents a collection of functions to interact with the API endpoints
     /// </summary>
-    public class VirtoCommercePlatformApi : IVirtoCommercePlatformApi
+    public partial class VirtoCommercePlatformApi : IVirtoCommercePlatformApi
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommercePlatformApi"/> class
@@ -2450,7 +2449,7 @@ namespace VirtoCommerce.Client.Api
         /// Sets the base path of the API client.
         /// </summary>
         /// <value>The base path</value>
-        [Obsolete("SetBasePath is deprecated, please do 'Configuraiton.ApiClient = new ApiClient(\"http://new-path\")' instead.")]
+        [Obsolete("SetBasePath is deprecated, please do 'Configuration.ApiClient = new ApiClient(\"http://new-path\")' instead.")]
         public void SetBasePath(String basePath)
         {
             // do nothing
@@ -6023,7 +6022,7 @@ namespace VirtoCommerce.Client.Api
         }
 
         /// <summary>
-        /// Get notification journal page Method returns notification journal page with array of notification, that was send, sending or will be send in future. Result contains total count, that can be used\r\n            for paging.
+        /// Get notification journal page Method returns notification journal page with array of notification, that was send, sending or will be send in future. Result contains total count, that can be used              for paging.
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="objectId">Object id</param>
@@ -6038,7 +6037,7 @@ namespace VirtoCommerce.Client.Api
         }
 
         /// <summary>
-        /// Get notification journal page Method returns notification journal page with array of notification, that was send, sending or will be send in future. Result contains total count, that can be used\r\n            for paging.
+        /// Get notification journal page Method returns notification journal page with array of notification, that was send, sending or will be send in future. Result contains total count, that can be used              for paging.
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="objectId">Object id</param>
@@ -6113,7 +6112,7 @@ namespace VirtoCommerce.Client.Api
         }
 
         /// <summary>
-        /// Get notification journal page Method returns notification journal page with array of notification, that was send, sending or will be send in future. Result contains total count, that can be used\r\n            for paging.
+        /// Get notification journal page Method returns notification journal page with array of notification, that was send, sending or will be send in future. Result contains total count, that can be used              for paging.
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="objectId">Object id</param>
@@ -6129,7 +6128,7 @@ namespace VirtoCommerce.Client.Api
         }
 
         /// <summary>
-        /// Get notification journal page Method returns notification journal page with array of notification, that was send, sending or will be send in future. Result contains total count, that can be used\r\n            for paging.
+        /// Get notification journal page Method returns notification journal page with array of notification, that was send, sending or will be send in future. Result contains total count, that can be used              for paging.
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="objectId">Object id</param>
@@ -6204,7 +6203,7 @@ namespace VirtoCommerce.Client.Api
         }
 
         /// <summary>
-        /// Get notification template Get notification template by notification type, objectId, objectTypeId and language. Object id and object type id - params of object, that initialize creating of\r\n            template. By default object id and object type id &#x3D; \&quot;Platform\&quot;. For example for store with id &#x3D; \&quot;SampleStore\&quot;, objectId &#x3D; \&quot;SampleStore\&quot;, objectTypeId &#x3D; \&quot;Store\&quot;.
+        /// Get notification template Get notification template by notification type, objectId, objectTypeId and language. Object id and object type id - params of object, that initialize creating of              template. By default object id and object type id &#x3D; \&quot;Platform\&quot;. For example for store with id &#x3D; \&quot;SampleStore\&quot;, objectId &#x3D; \&quot;SampleStore\&quot;, objectTypeId &#x3D; \&quot;Store\&quot;.
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="type">Notification type of template</param>
@@ -6219,7 +6218,7 @@ namespace VirtoCommerce.Client.Api
         }
 
         /// <summary>
-        /// Get notification template Get notification template by notification type, objectId, objectTypeId and language. Object id and object type id - params of object, that initialize creating of\r\n            template. By default object id and object type id &#x3D; \&quot;Platform\&quot;. For example for store with id &#x3D; \&quot;SampleStore\&quot;, objectId &#x3D; \&quot;SampleStore\&quot;, objectTypeId &#x3D; \&quot;Store\&quot;.
+        /// Get notification template Get notification template by notification type, objectId, objectTypeId and language. Object id and object type id - params of object, that initialize creating of              template. By default object id and object type id &#x3D; \&quot;Platform\&quot;. For example for store with id &#x3D; \&quot;SampleStore\&quot;, objectId &#x3D; \&quot;SampleStore\&quot;, objectTypeId &#x3D; \&quot;Store\&quot;.
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="type">Notification type of template</param>
@@ -6294,7 +6293,7 @@ namespace VirtoCommerce.Client.Api
         }
 
         /// <summary>
-        /// Get notification template Get notification template by notification type, objectId, objectTypeId and language. Object id and object type id - params of object, that initialize creating of\r\n            template. By default object id and object type id &#x3D; \&quot;Platform\&quot;. For example for store with id &#x3D; \&quot;SampleStore\&quot;, objectId &#x3D; \&quot;SampleStore\&quot;, objectTypeId &#x3D; \&quot;Store\&quot;.
+        /// Get notification template Get notification template by notification type, objectId, objectTypeId and language. Object id and object type id - params of object, that initialize creating of              template. By default object id and object type id &#x3D; \&quot;Platform\&quot;. For example for store with id &#x3D; \&quot;SampleStore\&quot;, objectId &#x3D; \&quot;SampleStore\&quot;, objectTypeId &#x3D; \&quot;Store\&quot;.
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="type">Notification type of template</param>
@@ -6310,7 +6309,7 @@ namespace VirtoCommerce.Client.Api
         }
 
         /// <summary>
-        /// Get notification template Get notification template by notification type, objectId, objectTypeId and language. Object id and object type id - params of object, that initialize creating of\r\n            template. By default object id and object type id &#x3D; \&quot;Platform\&quot;. For example for store with id &#x3D; \&quot;SampleStore\&quot;, objectId &#x3D; \&quot;SampleStore\&quot;, objectTypeId &#x3D; \&quot;Store\&quot;.
+        /// Get notification template Get notification template by notification type, objectId, objectTypeId and language. Object id and object type id - params of object, that initialize creating of              template. By default object id and object type id &#x3D; \&quot;Platform\&quot;. For example for store with id &#x3D; \&quot;SampleStore\&quot;, objectId &#x3D; \&quot;SampleStore\&quot;, objectTypeId &#x3D; \&quot;Store\&quot;.
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="type">Notification type of template</param>
@@ -6385,7 +6384,7 @@ namespace VirtoCommerce.Client.Api
         }
 
         /// <summary>
-        /// Get notification templates Get all notification templates by notification type, objectId, objectTypeId. Object id and object type id - params of object, that initialize creating of\r\n            template. By default object id and object type id &#x3D; \&quot;Platform\&quot;. For example for store with id &#x3D; \&quot;SampleStore\&quot;, objectId &#x3D; \&quot;SampleStore\&quot;, objectTypeId &#x3D; \&quot;Store\&quot;.
+        /// Get notification templates Get all notification templates by notification type, objectId, objectTypeId. Object id and object type id - params of object, that initialize creating of              template. By default object id and object type id &#x3D; \&quot;Platform\&quot;. For example for store with id &#x3D; \&quot;SampleStore\&quot;, objectId &#x3D; \&quot;SampleStore\&quot;, objectTypeId &#x3D; \&quot;Store\&quot;.
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="type">Notification type of template</param>
@@ -6399,7 +6398,7 @@ namespace VirtoCommerce.Client.Api
         }
 
         /// <summary>
-        /// Get notification templates Get all notification templates by notification type, objectId, objectTypeId. Object id and object type id - params of object, that initialize creating of\r\n            template. By default object id and object type id &#x3D; \&quot;Platform\&quot;. For example for store with id &#x3D; \&quot;SampleStore\&quot;, objectId &#x3D; \&quot;SampleStore\&quot;, objectTypeId &#x3D; \&quot;Store\&quot;.
+        /// Get notification templates Get all notification templates by notification type, objectId, objectTypeId. Object id and object type id - params of object, that initialize creating of              template. By default object id and object type id &#x3D; \&quot;Platform\&quot;. For example for store with id &#x3D; \&quot;SampleStore\&quot;, objectId &#x3D; \&quot;SampleStore\&quot;, objectTypeId &#x3D; \&quot;Store\&quot;.
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="type">Notification type of template</param>
@@ -6469,7 +6468,7 @@ namespace VirtoCommerce.Client.Api
         }
 
         /// <summary>
-        /// Get notification templates Get all notification templates by notification type, objectId, objectTypeId. Object id and object type id - params of object, that initialize creating of\r\n            template. By default object id and object type id &#x3D; \&quot;Platform\&quot;. For example for store with id &#x3D; \&quot;SampleStore\&quot;, objectId &#x3D; \&quot;SampleStore\&quot;, objectTypeId &#x3D; \&quot;Store\&quot;.
+        /// Get notification templates Get all notification templates by notification type, objectId, objectTypeId. Object id and object type id - params of object, that initialize creating of              template. By default object id and object type id &#x3D; \&quot;Platform\&quot;. For example for store with id &#x3D; \&quot;SampleStore\&quot;, objectId &#x3D; \&quot;SampleStore\&quot;, objectTypeId &#x3D; \&quot;Store\&quot;.
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="type">Notification type of template</param>
@@ -6484,7 +6483,7 @@ namespace VirtoCommerce.Client.Api
         }
 
         /// <summary>
-        /// Get notification templates Get all notification templates by notification type, objectId, objectTypeId. Object id and object type id - params of object, that initialize creating of\r\n            template. By default object id and object type id &#x3D; \&quot;Platform\&quot;. For example for store with id &#x3D; \&quot;SampleStore\&quot;, objectId &#x3D; \&quot;SampleStore\&quot;, objectTypeId &#x3D; \&quot;Store\&quot;.
+        /// Get notification templates Get all notification templates by notification type, objectId, objectTypeId. Object id and object type id - params of object, that initialize creating of              template. By default object id and object type id &#x3D; \&quot;Platform\&quot;. For example for store with id &#x3D; \&quot;SampleStore\&quot;, objectId &#x3D; \&quot;SampleStore\&quot;, objectTypeId &#x3D; \&quot;Store\&quot;.
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="type">Notification type of template</param>
@@ -6691,10 +6690,10 @@ namespace VirtoCommerce.Client.Api
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="type">Notification type</param>
-        /// <returns>List&lt;VirtoCommercePlatformCoreNotificationsNotificationParameter&gt;</returns>
-        public List<VirtoCommercePlatformCoreNotificationsNotificationParameter> NotificationsGetTestingParameters (string type)
+        /// <returns>List&lt;VirtoCommercePlatformWebModelNotificationsNotificationParameter&gt;</returns>
+        public List<VirtoCommercePlatformWebModelNotificationsNotificationParameter> NotificationsGetTestingParameters (string type)
         {
-             ApiResponse<List<VirtoCommercePlatformCoreNotificationsNotificationParameter>> localVarResponse = NotificationsGetTestingParametersWithHttpInfo(type);
+             ApiResponse<List<VirtoCommercePlatformWebModelNotificationsNotificationParameter>> localVarResponse = NotificationsGetTestingParametersWithHttpInfo(type);
              return localVarResponse.Data;
         }
 
@@ -6703,8 +6702,8 @@ namespace VirtoCommerce.Client.Api
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="type">Notification type</param>
-        /// <returns>ApiResponse of List&lt;VirtoCommercePlatformCoreNotificationsNotificationParameter&gt;</returns>
-        public ApiResponse< List<VirtoCommercePlatformCoreNotificationsNotificationParameter> > NotificationsGetTestingParametersWithHttpInfo (string type)
+        /// <returns>ApiResponse of List&lt;VirtoCommercePlatformWebModelNotificationsNotificationParameter&gt;</returns>
+        public ApiResponse< List<VirtoCommercePlatformWebModelNotificationsNotificationParameter> > NotificationsGetTestingParametersWithHttpInfo (string type)
         {
             // verify the required parameter 'type' is set
             if (type == null)
@@ -6752,9 +6751,9 @@ namespace VirtoCommerce.Client.Api
             else if (localVarStatusCode == 0)
                 throw new ApiException (localVarStatusCode, "Error calling NotificationsGetTestingParameters: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
-            return new ApiResponse<List<VirtoCommercePlatformCoreNotificationsNotificationParameter>>(localVarStatusCode,
+            return new ApiResponse<List<VirtoCommercePlatformWebModelNotificationsNotificationParameter>>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (List<VirtoCommercePlatformCoreNotificationsNotificationParameter>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<VirtoCommercePlatformCoreNotificationsNotificationParameter>)));
+                (List<VirtoCommercePlatformWebModelNotificationsNotificationParameter>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<VirtoCommercePlatformWebModelNotificationsNotificationParameter>)));
             
         }
 
@@ -6763,10 +6762,10 @@ namespace VirtoCommerce.Client.Api
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="type">Notification type</param>
-        /// <returns>Task of List&lt;VirtoCommercePlatformCoreNotificationsNotificationParameter&gt;</returns>
-        public async System.Threading.Tasks.Task<List<VirtoCommercePlatformCoreNotificationsNotificationParameter>> NotificationsGetTestingParametersAsync (string type)
+        /// <returns>Task of List&lt;VirtoCommercePlatformWebModelNotificationsNotificationParameter&gt;</returns>
+        public async System.Threading.Tasks.Task<List<VirtoCommercePlatformWebModelNotificationsNotificationParameter>> NotificationsGetTestingParametersAsync (string type)
         {
-             ApiResponse<List<VirtoCommercePlatformCoreNotificationsNotificationParameter>> localVarResponse = await NotificationsGetTestingParametersAsyncWithHttpInfo(type);
+             ApiResponse<List<VirtoCommercePlatformWebModelNotificationsNotificationParameter>> localVarResponse = await NotificationsGetTestingParametersAsyncWithHttpInfo(type);
              return localVarResponse.Data;
 
         }
@@ -6776,8 +6775,8 @@ namespace VirtoCommerce.Client.Api
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="type">Notification type</param>
-        /// <returns>Task of ApiResponse (List&lt;VirtoCommercePlatformCoreNotificationsNotificationParameter&gt;)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<List<VirtoCommercePlatformCoreNotificationsNotificationParameter>>> NotificationsGetTestingParametersAsyncWithHttpInfo (string type)
+        /// <returns>Task of ApiResponse (List&lt;VirtoCommercePlatformWebModelNotificationsNotificationParameter&gt;)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<List<VirtoCommercePlatformWebModelNotificationsNotificationParameter>>> NotificationsGetTestingParametersAsyncWithHttpInfo (string type)
         {
             // verify the required parameter 'type' is set
             if (type == null)
@@ -6825,14 +6824,14 @@ namespace VirtoCommerce.Client.Api
             else if (localVarStatusCode == 0)
                 throw new ApiException (localVarStatusCode, "Error calling NotificationsGetTestingParameters: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
-            return new ApiResponse<List<VirtoCommercePlatformCoreNotificationsNotificationParameter>>(localVarStatusCode,
+            return new ApiResponse<List<VirtoCommercePlatformWebModelNotificationsNotificationParameter>>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (List<VirtoCommercePlatformCoreNotificationsNotificationParameter>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<VirtoCommercePlatformCoreNotificationsNotificationParameter>)));
+                (List<VirtoCommercePlatformWebModelNotificationsNotificationParameter>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<VirtoCommercePlatformWebModelNotificationsNotificationParameter>)));
             
         }
 
         /// <summary>
-        /// Get rendered notification content Method returns rendered content, that based on notification template. Template for rendering chosen by type, objectId, objectTypeId, language.\r\n            Parameters for template may be prepared by the method of getTestingParameters.
+        /// Get rendered notification content Method returns rendered content, that based on notification template. Template for rendering chosen by type, objectId, objectTypeId, language.              Parameters for template may be prepared by the method of getTestingParameters.
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="request">Test notification request</param>
@@ -6844,7 +6843,7 @@ namespace VirtoCommerce.Client.Api
         }
 
         /// <summary>
-        /// Get rendered notification content Method returns rendered content, that based on notification template. Template for rendering chosen by type, objectId, objectTypeId, language.\r\n            Parameters for template may be prepared by the method of getTestingParameters.
+        /// Get rendered notification content Method returns rendered content, that based on notification template. Template for rendering chosen by type, objectId, objectTypeId, language.              Parameters for template may be prepared by the method of getTestingParameters.
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="request">Test notification request</param>
@@ -6916,7 +6915,7 @@ namespace VirtoCommerce.Client.Api
         }
 
         /// <summary>
-        /// Get rendered notification content Method returns rendered content, that based on notification template. Template for rendering chosen by type, objectId, objectTypeId, language.\r\n            Parameters for template may be prepared by the method of getTestingParameters.
+        /// Get rendered notification content Method returns rendered content, that based on notification template. Template for rendering chosen by type, objectId, objectTypeId, language.              Parameters for template may be prepared by the method of getTestingParameters.
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="request">Test notification request</param>
@@ -6929,7 +6928,7 @@ namespace VirtoCommerce.Client.Api
         }
 
         /// <summary>
-        /// Get rendered notification content Method returns rendered content, that based on notification template. Template for rendering chosen by type, objectId, objectTypeId, language.\r\n            Parameters for template may be prepared by the method of getTestingParameters.
+        /// Get rendered notification content Method returns rendered content, that based on notification template. Template for rendering chosen by type, objectId, objectTypeId, language.              Parameters for template may be prepared by the method of getTestingParameters.
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="request">Test notification request</param>
@@ -7001,7 +7000,7 @@ namespace VirtoCommerce.Client.Api
         }
 
         /// <summary>
-        /// Sending test notification Method sending notification, that based on notification template. Template for rendering chosen by type, objectId, objectTypeId, language.\r\n            Parameters for template may be prepared by the method of getTestingParameters. Method returns string. If sending finished with success status\r\n            this string is empty, otherwise string contains error message.
+        /// Sending test notification Method sending notification, that based on notification template. Template for rendering chosen by type, objectId, objectTypeId, language.              Parameters for template may be prepared by the method of getTestingParameters. Method returns string. If sending finished with success status              this string is empty, otherwise string contains error message.
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="request">Test notification request</param>
@@ -7013,7 +7012,7 @@ namespace VirtoCommerce.Client.Api
         }
 
         /// <summary>
-        /// Sending test notification Method sending notification, that based on notification template. Template for rendering chosen by type, objectId, objectTypeId, language.\r\n            Parameters for template may be prepared by the method of getTestingParameters. Method returns string. If sending finished with success status\r\n            this string is empty, otherwise string contains error message.
+        /// Sending test notification Method sending notification, that based on notification template. Template for rendering chosen by type, objectId, objectTypeId, language.              Parameters for template may be prepared by the method of getTestingParameters. Method returns string. If sending finished with success status              this string is empty, otherwise string contains error message.
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="request">Test notification request</param>
@@ -7085,7 +7084,7 @@ namespace VirtoCommerce.Client.Api
         }
 
         /// <summary>
-        /// Sending test notification Method sending notification, that based on notification template. Template for rendering chosen by type, objectId, objectTypeId, language.\r\n            Parameters for template may be prepared by the method of getTestingParameters. Method returns string. If sending finished with success status\r\n            this string is empty, otherwise string contains error message.
+        /// Sending test notification Method sending notification, that based on notification template. Template for rendering chosen by type, objectId, objectTypeId, language.              Parameters for template may be prepared by the method of getTestingParameters. Method returns string. If sending finished with success status              this string is empty, otherwise string contains error message.
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="request">Test notification request</param>
@@ -7098,7 +7097,7 @@ namespace VirtoCommerce.Client.Api
         }
 
         /// <summary>
-        /// Sending test notification Method sending notification, that based on notification template. Template for rendering chosen by type, objectId, objectTypeId, language.\r\n            Parameters for template may be prepared by the method of getTestingParameters. Method returns string. If sending finished with success status\r\n            this string is empty, otherwise string contains error message.
+        /// Sending test notification Method sending notification, that based on notification template. Template for rendering chosen by type, objectId, objectTypeId, language.              Parameters for template may be prepared by the method of getTestingParameters. Method returns string. If sending finished with success status              this string is empty, otherwise string contains error message.
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="request">Test notification request</param>

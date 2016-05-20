@@ -12,7 +12,7 @@ using Newtonsoft.Json.Converters;
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
-    /// 
+    /// VirtoCommercePlatformWebModelSecurityResetPasswordInfo
     /// </summary>
     [DataContract]
     public partial class VirtoCommercePlatformWebModelSecurityResetPasswordInfo :  IEquatable<VirtoCommercePlatformWebModelSecurityResetPasswordInfo>
@@ -93,6 +93,5 @@ namespace VirtoCommerce.Client.Model
                 return hash;
             }
         }
-
     }
 }

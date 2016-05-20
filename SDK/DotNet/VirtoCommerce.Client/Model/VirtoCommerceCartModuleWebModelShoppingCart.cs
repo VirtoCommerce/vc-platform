@@ -12,7 +12,7 @@ using Newtonsoft.Json.Converters;
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
-    /// 
+    /// VirtoCommerceCartModuleWebModelShoppingCart
     /// </summary>
     [DataContract]
     public partial class VirtoCommerceCartModuleWebModelShoppingCart :  IEquatable<VirtoCommerceCartModuleWebModelShoppingCart>
@@ -158,9 +158,9 @@ namespace VirtoCommerce.Client.Model
         public double? Width { get; set; }
 
         /// <summary>
-        /// Represent any line item validation type (noPriceValidate, noQuantityValidate etc) this value can be used in storefront \r\n            to select appropriate validation strategy
+        /// Represent any line item validation type (noPriceValidate, noQuantityValidate etc) this value can be used in storefront               to select appropriate validation strategy
         /// </summary>
-        /// <value>Represent any line item validation type (noPriceValidate, noQuantityValidate etc) this value can be used in storefront \r\n            to select appropriate validation strategy</value>
+        /// <value>Represent any line item validation type (noPriceValidate, noQuantityValidate etc) this value can be used in storefront               to select appropriate validation strategy</value>
         [DataMember(Name="validationType", EmitDefaultValue=false)]
         public string ValidationType { get; set; }
 
@@ -713,6 +713,5 @@ namespace VirtoCommerce.Client.Model
                 return hash;
             }
         }
-
     }
 }

@@ -12,10 +12,10 @@ using Newtonsoft.Json.Converters;
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
-    /// Represent fulfillment center information
+    /// VirtoCommerceDomainCommerceModelFulfillmentCenter
     /// </summary>
     [DataContract]
-    public partial class VirtoCommerceCoreModuleWebModelFulfillmentCenter :  IEquatable<VirtoCommerceCoreModuleWebModelFulfillmentCenter>
+    public partial class VirtoCommerceDomainCommerceModelFulfillmentCenter :  IEquatable<VirtoCommerceDomainCommerceModelFulfillmentCenter>
     {
         /// <summary>
         /// Gets or Sets Name
@@ -102,7 +102,7 @@ namespace VirtoCommerce.Client.Model
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class VirtoCommerceCoreModuleWebModelFulfillmentCenter {\n");
+            sb.Append("class VirtoCommerceDomainCommerceModelFulfillmentCenter {\n");
             sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  Description: ").Append(Description).Append("\n");
             sb.Append("  MaxReleasesPerPickBatch: ").Append(MaxReleasesPerPickBatch).Append("\n");
@@ -137,15 +137,15 @@ namespace VirtoCommerce.Client.Model
         public override bool Equals(object obj)
         {
             // credit: http://stackoverflow.com/a/10454552/677735
-            return this.Equals(obj as VirtoCommerceCoreModuleWebModelFulfillmentCenter);
+            return this.Equals(obj as VirtoCommerceDomainCommerceModelFulfillmentCenter);
         }
 
         /// <summary>
-        /// Returns true if VirtoCommerceCoreModuleWebModelFulfillmentCenter instances are equal
+        /// Returns true if VirtoCommerceDomainCommerceModelFulfillmentCenter instances are equal
         /// </summary>
-        /// <param name="other">Instance of VirtoCommerceCoreModuleWebModelFulfillmentCenter to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceDomainCommerceModelFulfillmentCenter to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(VirtoCommerceCoreModuleWebModelFulfillmentCenter other)
+        public bool Equals(VirtoCommerceDomainCommerceModelFulfillmentCenter other)
         {
             // credit: http://stackoverflow.com/a/10454552/677735
             if (other == null)

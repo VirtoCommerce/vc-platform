@@ -71,6 +71,7 @@
     <Compile Include="Client\ApiException.cs" />
     <Compile Include="Client\ApiResponse.cs" />
     <Compile Include="Client\Configuration.cs" />
+    <Compile Include="Client\IApiAccessor.cs" />
     <Compile Include="HmacApiClient.cs" />
     <Compile Include="HmacUtility.cs" />
     <Compile Include="Model\VirtoCommerceCartModuleWebModelAddress.cs" />
@@ -140,6 +141,7 @@
     <Compile Include="Model\VirtoCommerceDomainCatalogModelSearchCriteria.cs" />
     <Compile Include="Model\VirtoCommerceDomainCommerceModelAddress.cs" />
     <Compile Include="Model\VirtoCommerceDomainCommerceModelCurrency.cs" />
+    <Compile Include="Model\VirtoCommerceDomainCommerceModelFulfillmentCenter.cs" />
     <Compile Include="Model\VirtoCommerceDomainCommerceModelSeoInfo.cs" />
     <Compile Include="Model\VirtoCommerceDomainCommerceModelTaxDetail.cs" />
     <Compile Include="Model\VirtoCommerceDomainCommonConditionExpressionTree.cs" />
@@ -158,11 +160,14 @@
     <Compile Include="Model\VirtoCommerceDomainMarketingModelPromotionEvaluationContext.cs" />
     <Compile Include="Model\VirtoCommerceDomainOrderModelSearchCriteria.cs" />
     <Compile Include="Model\VirtoCommerceDomainPaymentModelBankCardInfo.cs" />
+    <Compile Include="Model\VirtoCommerceDomainPaymentModelPaymentMethod.cs" />
     <Compile Include="Model\VirtoCommerceDomainPaymentModelPostProcessPaymentResult.cs" />
     <Compile Include="Model\VirtoCommerceDomainPricingModelPrice.cs" />
     <Compile Include="Model\VirtoCommerceDomainPricingModelPriceEvaluationContext.cs" />
     <Compile Include="Model\VirtoCommerceDomainQuoteModelQuoteRequestSearchCriteria.cs" />
+    <Compile Include="Model\VirtoCommerceDomainShippingModelShippingMethod.cs" />
     <Compile Include="Model\VirtoCommerceDomainStoreModelSearchCriteria.cs" />
+    <Compile Include="Model\VirtoCommerceDomainStoreModelStore.cs" />
     <Compile Include="Model\VirtoCommerceDomainTaxModelTaxEvaluationContext.cs" />
     <Compile Include="Model\VirtoCommerceDomainTaxModelTaxLine.cs" />
     <Compile Include="Model\VirtoCommerceDomainTaxModelTaxProvider.cs" />
@@ -202,7 +207,6 @@
     <Compile Include="Model\VirtoCommercePlatformCoreDynamicPropertiesDynamicPropertyDictionaryItemName.cs" />
     <Compile Include="Model\VirtoCommercePlatformCoreDynamicPropertiesDynamicPropertyName.cs" />
     <Compile Include="Model\VirtoCommercePlatformCoreDynamicPropertiesDynamicPropertyObjectValue.cs" />
-    <Compile Include="Model\VirtoCommercePlatformCoreNotificationsNotificationParameter.cs" />
     <Compile Include="Model\VirtoCommercePlatformCorePushNotificationsPushNotification.cs" />
     <Compile Include="Model\VirtoCommercePlatformCorePushNotificationsPushNotificationSearchCriteria.cs" />
     <Compile Include="Model\VirtoCommercePlatformCorePushNotificationsPushNotificationSearchResult.cs" />

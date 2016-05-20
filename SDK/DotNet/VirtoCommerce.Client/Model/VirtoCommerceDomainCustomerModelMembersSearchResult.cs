@@ -12,7 +12,7 @@ using Newtonsoft.Json.Converters;
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
-    /// 
+    /// VirtoCommerceDomainCustomerModelMembersSearchResult
     /// </summary>
     [DataContract]
     public partial class VirtoCommerceDomainCustomerModelMembersSearchResult :  IEquatable<VirtoCommerceDomainCustomerModelMembersSearchResult>
@@ -108,6 +108,5 @@ namespace VirtoCommerce.Client.Model
                 return hash;
             }
         }
-
     }
 }

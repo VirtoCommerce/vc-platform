@@ -12,7 +12,7 @@ using Newtonsoft.Json.Converters;
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
-    /// 
+    /// VirtoCommercePlatformWebModelJobsJob
     /// </summary>
     [DataContract]
     public partial class VirtoCommercePlatformWebModelJobsJob :  IEquatable<VirtoCommercePlatformWebModelJobsJob>
@@ -123,6 +123,5 @@ namespace VirtoCommerce.Client.Model
                 return hash;
             }
         }
-
     }
 }

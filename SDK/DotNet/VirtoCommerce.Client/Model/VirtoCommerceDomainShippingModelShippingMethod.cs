@@ -12,66 +12,64 @@ using Newtonsoft.Json.Converters;
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
-    /// VirtoCommerceOrderModuleWebModelPaymentMethod
+    /// VirtoCommerceDomainShippingModelShippingMethod
     /// </summary>
     [DataContract]
-    public partial class VirtoCommerceOrderModuleWebModelPaymentMethod :  IEquatable<VirtoCommerceOrderModuleWebModelPaymentMethod>
+    public partial class VirtoCommerceDomainShippingModelShippingMethod :  IEquatable<VirtoCommerceDomainShippingModelShippingMethod>
     {
         /// <summary>
-        /// Gets or sets the value of payment gateway code
+        /// Gets or Sets Code
         /// </summary>
-        /// <value>Gets or sets the value of payment gateway code</value>
         [DataMember(Name="code", EmitDefaultValue=false)]
         public string Code { get; set; }
 
         /// <summary>
-        /// Gets or sets the value of payment method name
+        /// Gets or Sets Name
         /// </summary>
-        /// <value>Gets or sets the value of payment method name</value>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the value of payment method logo absolute URL
+        /// Gets or Sets Description
         /// </summary>
-        /// <value>Gets or sets the value of payment method logo absolute URL</value>
-        [DataMember(Name="iconUrl", EmitDefaultValue=false)]
-        public string IconUrl { get; set; }
-
-        /// <summary>
-        /// Gets or sets the value of payment method description
-        /// </summary>
-        /// <value>Gets or sets the value of payment method description</value>
         [DataMember(Name="description", EmitDefaultValue=false)]
         public string Description { get; set; }
 
         /// <summary>
-        /// Gets or sets the value of payment method type
+        /// Gets or Sets LogoUrl
         /// </summary>
-        /// <value>Gets or sets the value of payment method type</value>
-        [DataMember(Name="paymentMethodType", EmitDefaultValue=false)]
-        public string PaymentMethodType { get; set; }
+        [DataMember(Name="logoUrl", EmitDefaultValue=false)]
+        public string LogoUrl { get; set; }
 
         /// <summary>
-        /// Gets or sets the value of payment method group type
+        /// Gets or Sets IsActive
         /// </summary>
-        /// <value>Gets or sets the value of payment method group type</value>
-        [DataMember(Name="paymentMethodGroupType", EmitDefaultValue=false)]
-        public string PaymentMethodGroupType { get; set; }
+        [DataMember(Name="isActive", EmitDefaultValue=false)]
+        public bool? IsActive { get; set; }
 
         /// <summary>
-        /// Gets or sets the value of payment method priority
+        /// Gets or Sets Priority
         /// </summary>
-        /// <value>Gets or sets the value of payment method priority</value>
         [DataMember(Name="priority", EmitDefaultValue=false)]
         public int? Priority { get; set; }
 
         /// <summary>
-        /// Is payment method available for partial payments
+        /// Gets or Sets TaxType
         /// </summary>
-        /// <value>Is payment method available for partial payments</value>
-        [DataMember(Name="isAvailableForPartial", EmitDefaultValue=false)]
-        public bool? IsAvailableForPartial { get; set; }
+        [DataMember(Name="taxType", EmitDefaultValue=false)]
+        public string TaxType { get; set; }
+
+        /// <summary>
+        /// Gets or Sets Settings
+        /// </summary>
+        [DataMember(Name="settings", EmitDefaultValue=false)]
+        public List<VirtoCommercePlatformCoreSettingsSettingEntry> Settings { get; set; }
+
+        /// <summary>
+        /// Gets or Sets Id
+        /// </summary>
+        [DataMember(Name="id", EmitDefaultValue=false)]
+        public string Id { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -80,15 +78,16 @@ namespace VirtoCommerce.Client.Model
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class VirtoCommerceOrderModuleWebModelPaymentMethod {\n");
+            sb.Append("class VirtoCommerceDomainShippingModelShippingMethod {\n");
             sb.Append("  Code: ").Append(Code).Append("\n");
             sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  IconUrl: ").Append(IconUrl).Append("\n");
             sb.Append("  Description: ").Append(Description).Append("\n");
-            sb.Append("  PaymentMethodType: ").Append(PaymentMethodType).Append("\n");
-            sb.Append("  PaymentMethodGroupType: ").Append(PaymentMethodGroupType).Append("\n");
+            sb.Append("  LogoUrl: ").Append(LogoUrl).Append("\n");
+            sb.Append("  IsActive: ").Append(IsActive).Append("\n");
             sb.Append("  Priority: ").Append(Priority).Append("\n");
-            sb.Append("  IsAvailableForPartial: ").Append(IsAvailableForPartial).Append("\n");
+            sb.Append("  TaxType: ").Append(TaxType).Append("\n");
+            sb.Append("  Settings: ").Append(Settings).Append("\n");
+            sb.Append("  Id: ").Append(Id).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -110,15 +109,15 @@ namespace VirtoCommerce.Client.Model
         public override bool Equals(object obj)
         {
             // credit: http://stackoverflow.com/a/10454552/677735
-            return this.Equals(obj as VirtoCommerceOrderModuleWebModelPaymentMethod);
+            return this.Equals(obj as VirtoCommerceDomainShippingModelShippingMethod);
         }
 
         /// <summary>
-        /// Returns true if VirtoCommerceOrderModuleWebModelPaymentMethod instances are equal
+        /// Returns true if VirtoCommerceDomainShippingModelShippingMethod instances are equal
         /// </summary>
-        /// <param name="other">Instance of VirtoCommerceOrderModuleWebModelPaymentMethod to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceDomainShippingModelShippingMethod to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(VirtoCommerceOrderModuleWebModelPaymentMethod other)
+        public bool Equals(VirtoCommerceDomainShippingModelShippingMethod other)
         {
             // credit: http://stackoverflow.com/a/10454552/677735
             if (other == null)
@@ -136,24 +135,19 @@ namespace VirtoCommerce.Client.Model
                     this.Name.Equals(other.Name)
                 ) && 
                 (
-                    this.IconUrl == other.IconUrl ||
-                    this.IconUrl != null &&
-                    this.IconUrl.Equals(other.IconUrl)
-                ) && 
-                (
                     this.Description == other.Description ||
                     this.Description != null &&
                     this.Description.Equals(other.Description)
                 ) && 
                 (
-                    this.PaymentMethodType == other.PaymentMethodType ||
-                    this.PaymentMethodType != null &&
-                    this.PaymentMethodType.Equals(other.PaymentMethodType)
+                    this.LogoUrl == other.LogoUrl ||
+                    this.LogoUrl != null &&
+                    this.LogoUrl.Equals(other.LogoUrl)
                 ) && 
                 (
-                    this.PaymentMethodGroupType == other.PaymentMethodGroupType ||
-                    this.PaymentMethodGroupType != null &&
-                    this.PaymentMethodGroupType.Equals(other.PaymentMethodGroupType)
+                    this.IsActive == other.IsActive ||
+                    this.IsActive != null &&
+                    this.IsActive.Equals(other.IsActive)
                 ) && 
                 (
                     this.Priority == other.Priority ||
@@ -161,9 +155,19 @@ namespace VirtoCommerce.Client.Model
                     this.Priority.Equals(other.Priority)
                 ) && 
                 (
-                    this.IsAvailableForPartial == other.IsAvailableForPartial ||
-                    this.IsAvailableForPartial != null &&
-                    this.IsAvailableForPartial.Equals(other.IsAvailableForPartial)
+                    this.TaxType == other.TaxType ||
+                    this.TaxType != null &&
+                    this.TaxType.Equals(other.TaxType)
+                ) && 
+                (
+                    this.Settings == other.Settings ||
+                    this.Settings != null &&
+                    this.Settings.SequenceEqual(other.Settings)
+                ) && 
+                (
+                    this.Id == other.Id ||
+                    this.Id != null &&
+                    this.Id.Equals(other.Id)
                 );
         }
 
@@ -185,23 +189,26 @@ namespace VirtoCommerce.Client.Model
                 if (this.Name != null)
                     hash = hash * 59 + this.Name.GetHashCode();
 
-                if (this.IconUrl != null)
-                    hash = hash * 59 + this.IconUrl.GetHashCode();
-
                 if (this.Description != null)
                     hash = hash * 59 + this.Description.GetHashCode();
 
-                if (this.PaymentMethodType != null)
-                    hash = hash * 59 + this.PaymentMethodType.GetHashCode();
+                if (this.LogoUrl != null)
+                    hash = hash * 59 + this.LogoUrl.GetHashCode();
 
-                if (this.PaymentMethodGroupType != null)
-                    hash = hash * 59 + this.PaymentMethodGroupType.GetHashCode();
+                if (this.IsActive != null)
+                    hash = hash * 59 + this.IsActive.GetHashCode();
 
                 if (this.Priority != null)
                     hash = hash * 59 + this.Priority.GetHashCode();
 
-                if (this.IsAvailableForPartial != null)
-                    hash = hash * 59 + this.IsAvailableForPartial.GetHashCode();
+                if (this.TaxType != null)
+                    hash = hash * 59 + this.TaxType.GetHashCode();
+
+                if (this.Settings != null)
+                    hash = hash * 59 + this.Settings.GetHashCode();
+
+                if (this.Id != null)
+                    hash = hash * 59 + this.Id.GetHashCode();
 
                 return hash;
             }

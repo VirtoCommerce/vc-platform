@@ -12,7 +12,7 @@ using Newtonsoft.Json.Converters;
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
-    /// 
+    /// VirtoCommerceDomainCommerceModelSeoInfo
     /// </summary>
     [DataContract]
     public partial class VirtoCommerceDomainCommerceModelSeoInfo :  IEquatable<VirtoCommerceDomainCommerceModelSeoInfo>
@@ -318,6 +318,5 @@ namespace VirtoCommerce.Client.Model
                 return hash;
             }
         }
-
     }
 }

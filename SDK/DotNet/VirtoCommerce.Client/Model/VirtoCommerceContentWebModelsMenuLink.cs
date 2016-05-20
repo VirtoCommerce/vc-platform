@@ -12,7 +12,7 @@ using Newtonsoft.Json.Converters;
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
-    /// 
+    /// VirtoCommerceContentWebModelsMenuLink
     /// </summary>
     [DataContract]
     public partial class VirtoCommerceContentWebModelsMenuLink :  IEquatable<VirtoCommerceContentWebModelsMenuLink>
@@ -58,9 +58,9 @@ namespace VirtoCommerce.Client.Model
         public string MenuLinkListId { get; set; }
 
         /// <summary>
-        /// Each link element can have an associated object like Product, Category, Promotion, etc.\r\n            Is a primary key of associated object
+        /// Each link element can have an associated object like Product, Category, Promotion, etc.              Is a primary key of associated object
         /// </summary>
-        /// <value>Each link element can have an associated object like Product, Category, Promotion, etc.\r\n            Is a primary key of associated object</value>
+        /// <value>Each link element can have an associated object like Product, Category, Promotion, etc.              Is a primary key of associated object</value>
         [DataMember(Name="associatedObjectId", EmitDefaultValue=false)]
         public string AssociatedObjectId { get; set; }
 
@@ -235,6 +235,5 @@ namespace VirtoCommerce.Client.Model
                 return hash;
             }
         }
-
     }
 }

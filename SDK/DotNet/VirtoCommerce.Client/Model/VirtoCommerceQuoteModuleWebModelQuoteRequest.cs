@@ -12,7 +12,7 @@ using Newtonsoft.Json.Converters;
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
-    /// Request for quotation (RFQ) is a standard business process whose purpose is to invite suppliers into a\r\n             bidding process to bid on specific products or services.
+    /// Request for quotation (RFQ) is a standard business process whose purpose is to invite suppliers into a               bidding process to bid on specific products or services.
     /// </summary>
     [DataContract]
     public partial class VirtoCommerceQuoteModuleWebModelQuoteRequest :  IEquatable<VirtoCommerceQuoteModuleWebModelQuoteRequest>
@@ -710,6 +710,5 @@ namespace VirtoCommerce.Client.Model
                 return hash;
             }
         }
-
     }
 }

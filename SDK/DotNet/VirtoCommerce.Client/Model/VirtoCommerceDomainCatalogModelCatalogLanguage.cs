@@ -12,7 +12,7 @@ using Newtonsoft.Json.Converters;
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
-    /// 
+    /// VirtoCommerceDomainCatalogModelCatalogLanguage
     /// </summary>
     [DataContract]
     public partial class VirtoCommerceDomainCatalogModelCatalogLanguage :  IEquatable<VirtoCommerceDomainCatalogModelCatalogLanguage>
@@ -153,6 +153,5 @@ namespace VirtoCommerce.Client.Model
                 return hash;
             }
         }
-
     }
 }

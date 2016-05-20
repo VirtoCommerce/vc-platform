@@ -12,7 +12,7 @@ using Newtonsoft.Json.Converters;
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
-    /// 
+    /// VirtoCommerceCartModuleWebModelSearchCriteria
     /// </summary>
     [DataContract]
     public partial class VirtoCommerceCartModuleWebModelSearchCriteria :  IEquatable<VirtoCommerceCartModuleWebModelSearchCriteria>
@@ -158,6 +158,5 @@ namespace VirtoCommerce.Client.Model
                 return hash;
             }
         }
-
     }
 }

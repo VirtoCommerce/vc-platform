@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -12,7 +11,7 @@ namespace VirtoCommerce.Client.Api
     /// <summary>
     /// Represents a collection of functions to interact with the API endpoints
     /// </summary>
-    public interface ISearchModuleApi
+    public interface ISearchModuleApi : IApiAccessor
     {
         #region Synchronous Operations
         /// <summary>
@@ -153,7 +152,7 @@ namespace VirtoCommerce.Client.Api
     /// <summary>
     /// Represents a collection of functions to interact with the API endpoints
     /// </summary>
-    public class SearchModuleApi : ISearchModuleApi
+    public partial class SearchModuleApi : ISearchModuleApi
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="SearchModuleApi"/> class
@@ -188,7 +187,7 @@ namespace VirtoCommerce.Client.Api
         /// Sets the base path of the API client.
         /// </summary>
         /// <value>The base path</value>
-        [Obsolete("SetBasePath is deprecated, please do 'Configuraiton.ApiClient = new ApiClient(\"http://new-path\")' instead.")]
+        [Obsolete("SetBasePath is deprecated, please do 'Configuration.ApiClient = new ApiClient(\"http://new-path\")' instead.")]
         public void SetBasePath(String basePath)
         {
             // do nothing

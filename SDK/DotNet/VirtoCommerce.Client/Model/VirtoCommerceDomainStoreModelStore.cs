@@ -12,10 +12,10 @@ using Newtonsoft.Json.Converters;
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
-    /// VirtoCommerceStoreModuleWebModelStore
+    /// VirtoCommerceDomainStoreModelStore
     /// </summary>
     [DataContract]
-    public partial class VirtoCommerceStoreModuleWebModelStore :  IEquatable<VirtoCommerceStoreModuleWebModelStore>
+    public partial class VirtoCommerceDomainStoreModelStore :  IEquatable<VirtoCommerceDomainStoreModelStore>
     {
         /// <summary>
         /// Gets or Sets Name
@@ -30,16 +30,8 @@ namespace VirtoCommerce.Client.Model
         public string Description { get; set; }
 
         /// <summary>
-        /// Url of store storefront, required
+        /// Gets or Sets StoreState
         /// </summary>
-        /// <value>Url of store storefront, required</value>
-        [DataMember(Name="url", EmitDefaultValue=false)]
-        public string Url { get; set; }
-
-        /// <summary>
-        /// State of store
-        /// </summary>
-        /// <value>State of store</value>
         [DataMember(Name="storeState", EmitDefaultValue=false)]
         public string StoreState { get; set; }
 
@@ -62,23 +54,20 @@ namespace VirtoCommerce.Client.Model
         public string Region { get; set; }
 
         /// <summary>
-        /// Default locale of store
+        /// Gets or Sets DefaultLanguage
         /// </summary>
-        /// <value>Default locale of store</value>
         [DataMember(Name="defaultLanguage", EmitDefaultValue=false)]
         public string DefaultLanguage { get; set; }
 
         /// <summary>
-        /// Default currency of store. Use ISO 4217 currency codes
+        /// Gets or Sets DefaultCurrency
         /// </summary>
-        /// <value>Default currency of store. Use ISO 4217 currency codes</value>
         [DataMember(Name="defaultCurrency", EmitDefaultValue=false)]
         public string DefaultCurrency { get; set; }
 
         /// <summary>
-        /// Product catalog id of store
+        /// Gets or Sets Catalog
         /// </summary>
-        /// <value>Product catalog id of store</value>
         [DataMember(Name="catalog", EmitDefaultValue=false)]
         public string Catalog { get; set; }
 
@@ -89,30 +78,32 @@ namespace VirtoCommerce.Client.Model
         public bool? CreditCardSavePolicy { get; set; }
 
         /// <summary>
-        /// Secure url of store, must use https protocol, required
+        /// Gets or Sets Url
         /// </summary>
-        /// <value>Secure url of store, must use https protocol, required</value>
+        [DataMember(Name="url", EmitDefaultValue=false)]
+        public string Url { get; set; }
+
+        /// <summary>
+        /// Gets or Sets SecureUrl
+        /// </summary>
         [DataMember(Name="secureUrl", EmitDefaultValue=false)]
         public string SecureUrl { get; set; }
 
         /// <summary>
-        /// Contact email of store
+        /// Gets or Sets Email
         /// </summary>
-        /// <value>Contact email of store</value>
         [DataMember(Name="email", EmitDefaultValue=false)]
         public string Email { get; set; }
 
         /// <summary>
-        /// Administrator contact email of store
+        /// Gets or Sets AdminEmail
         /// </summary>
-        /// <value>Administrator contact email of store</value>
         [DataMember(Name="adminEmail", EmitDefaultValue=false)]
         public string AdminEmail { get; set; }
 
         /// <summary>
-        /// If true - store shows product with status out of stock
+        /// Gets or Sets DisplayOutOfStock
         /// </summary>
-        /// <value>If true - store shows product with status out of stock</value>
         [DataMember(Name="displayOutOfStock", EmitDefaultValue=false)]
         public bool? DisplayOutOfStock { get; set; }
 
@@ -120,58 +111,49 @@ namespace VirtoCommerce.Client.Model
         /// Gets or Sets FulfillmentCenter
         /// </summary>
         [DataMember(Name="fulfillmentCenter", EmitDefaultValue=false)]
-        public VirtoCommerceStoreModuleWebModelFulfillmentCenter FulfillmentCenter { get; set; }
+        public VirtoCommerceDomainCommerceModelFulfillmentCenter FulfillmentCenter { get; set; }
 
         /// <summary>
         /// Gets or Sets ReturnsFulfillmentCenter
         /// </summary>
         [DataMember(Name="returnsFulfillmentCenter", EmitDefaultValue=false)]
-        public VirtoCommerceStoreModuleWebModelFulfillmentCenter ReturnsFulfillmentCenter { get; set; }
+        public VirtoCommerceDomainCommerceModelFulfillmentCenter ReturnsFulfillmentCenter { get; set; }
 
         /// <summary>
-        /// All store supported languages
+        /// Gets or Sets Languages
         /// </summary>
-        /// <value>All store supported languages</value>
         [DataMember(Name="languages", EmitDefaultValue=false)]
         public List<string> Languages { get; set; }
 
         /// <summary>
-        /// All store supported currencies
+        /// Gets or Sets Currencies
         /// </summary>
-        /// <value>All store supported currencies</value>
         [DataMember(Name="currencies", EmitDefaultValue=false)]
         public List<string> Currencies { get; set; }
 
         /// <summary>
-        /// All linked stores (their accounts can be reused here)
+        /// Gets or Sets TrustedGroups
         /// </summary>
-        /// <value>All linked stores (their accounts can be reused here)</value>
         [DataMember(Name="trustedGroups", EmitDefaultValue=false)]
         public List<string> TrustedGroups { get; set; }
-
-        /// <summary>
-        /// Gets or Sets PaymentMethods
-        /// </summary>
-        [DataMember(Name="paymentMethods", EmitDefaultValue=false)]
-        public List<VirtoCommerceStoreModuleWebModelPaymentMethod> PaymentMethods { get; set; }
-
-        /// <summary>
-        /// Gets or Sets ShippingMethods
-        /// </summary>
-        [DataMember(Name="shippingMethods", EmitDefaultValue=false)]
-        public List<VirtoCommerceStoreModuleWebModelShippingMethod> ShippingMethods { get; set; }
 
         /// <summary>
         /// Gets or Sets TaxProviders
         /// </summary>
         [DataMember(Name="taxProviders", EmitDefaultValue=false)]
-        public List<VirtoCommerceStoreModuleWebModelTaxProvider> TaxProviders { get; set; }
+        public List<VirtoCommerceDomainTaxModelTaxProvider> TaxProviders { get; set; }
 
         /// <summary>
-        /// Gets or Sets SecurityScopes
+        /// Gets or Sets PaymentMethods
         /// </summary>
-        [DataMember(Name="securityScopes", EmitDefaultValue=false)]
-        public List<string> SecurityScopes { get; set; }
+        [DataMember(Name="paymentMethods", EmitDefaultValue=false)]
+        public List<VirtoCommerceDomainPaymentModelPaymentMethod> PaymentMethods { get; set; }
+
+        /// <summary>
+        /// Gets or Sets ShippingMethods
+        /// </summary>
+        [DataMember(Name="shippingMethods", EmitDefaultValue=false)]
+        public List<VirtoCommerceDomainShippingModelShippingMethod> ShippingMethods { get; set; }
 
         /// <summary>
         /// Gets or Sets SeoObjectType
@@ -201,7 +183,7 @@ namespace VirtoCommerce.Client.Model
         /// Gets or Sets Settings
         /// </summary>
         [DataMember(Name="settings", EmitDefaultValue=false)]
-        public List<VirtoCommerceStoreModuleWebModelSetting> Settings { get; set; }
+        public List<VirtoCommercePlatformCoreSettingsSettingEntry> Settings { get; set; }
 
         /// <summary>
         /// Gets or Sets CreatedDate
@@ -240,10 +222,9 @@ namespace VirtoCommerce.Client.Model
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class VirtoCommerceStoreModuleWebModelStore {\n");
+            sb.Append("class VirtoCommerceDomainStoreModelStore {\n");
             sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  Description: ").Append(Description).Append("\n");
-            sb.Append("  Url: ").Append(Url).Append("\n");
             sb.Append("  StoreState: ").Append(StoreState).Append("\n");
             sb.Append("  TimeZone: ").Append(TimeZone).Append("\n");
             sb.Append("  Country: ").Append(Country).Append("\n");
@@ -252,6 +233,7 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  DefaultCurrency: ").Append(DefaultCurrency).Append("\n");
             sb.Append("  Catalog: ").Append(Catalog).Append("\n");
             sb.Append("  CreditCardSavePolicy: ").Append(CreditCardSavePolicy).Append("\n");
+            sb.Append("  Url: ").Append(Url).Append("\n");
             sb.Append("  SecureUrl: ").Append(SecureUrl).Append("\n");
             sb.Append("  Email: ").Append(Email).Append("\n");
             sb.Append("  AdminEmail: ").Append(AdminEmail).Append("\n");
@@ -261,10 +243,9 @@ namespace VirtoCommerce.Client.Model
             sb.Append("  Languages: ").Append(Languages).Append("\n");
             sb.Append("  Currencies: ").Append(Currencies).Append("\n");
             sb.Append("  TrustedGroups: ").Append(TrustedGroups).Append("\n");
+            sb.Append("  TaxProviders: ").Append(TaxProviders).Append("\n");
             sb.Append("  PaymentMethods: ").Append(PaymentMethods).Append("\n");
             sb.Append("  ShippingMethods: ").Append(ShippingMethods).Append("\n");
-            sb.Append("  TaxProviders: ").Append(TaxProviders).Append("\n");
-            sb.Append("  SecurityScopes: ").Append(SecurityScopes).Append("\n");
             sb.Append("  SeoObjectType: ").Append(SeoObjectType).Append("\n");
             sb.Append("  SeoInfos: ").Append(SeoInfos).Append("\n");
             sb.Append("  ObjectType: ").Append(ObjectType).Append("\n");
@@ -296,15 +277,15 @@ namespace VirtoCommerce.Client.Model
         public override bool Equals(object obj)
         {
             // credit: http://stackoverflow.com/a/10454552/677735
-            return this.Equals(obj as VirtoCommerceStoreModuleWebModelStore);
+            return this.Equals(obj as VirtoCommerceDomainStoreModelStore);
         }
 
         /// <summary>
-        /// Returns true if VirtoCommerceStoreModuleWebModelStore instances are equal
+        /// Returns true if VirtoCommerceDomainStoreModelStore instances are equal
         /// </summary>
-        /// <param name="other">Instance of VirtoCommerceStoreModuleWebModelStore to be compared</param>
+        /// <param name="other">Instance of VirtoCommerceDomainStoreModelStore to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(VirtoCommerceStoreModuleWebModelStore other)
+        public bool Equals(VirtoCommerceDomainStoreModelStore other)
         {
             // credit: http://stackoverflow.com/a/10454552/677735
             if (other == null)
@@ -320,11 +301,6 @@ namespace VirtoCommerce.Client.Model
                     this.Description == other.Description ||
                     this.Description != null &&
                     this.Description.Equals(other.Description)
-                ) && 
-                (
-                    this.Url == other.Url ||
-                    this.Url != null &&
-                    this.Url.Equals(other.Url)
                 ) && 
                 (
                     this.StoreState == other.StoreState ||
@@ -365,6 +341,11 @@ namespace VirtoCommerce.Client.Model
                     this.CreditCardSavePolicy == other.CreditCardSavePolicy ||
                     this.CreditCardSavePolicy != null &&
                     this.CreditCardSavePolicy.Equals(other.CreditCardSavePolicy)
+                ) && 
+                (
+                    this.Url == other.Url ||
+                    this.Url != null &&
+                    this.Url.Equals(other.Url)
                 ) && 
                 (
                     this.SecureUrl == other.SecureUrl ||
@@ -412,6 +393,11 @@ namespace VirtoCommerce.Client.Model
                     this.TrustedGroups.SequenceEqual(other.TrustedGroups)
                 ) && 
                 (
+                    this.TaxProviders == other.TaxProviders ||
+                    this.TaxProviders != null &&
+                    this.TaxProviders.SequenceEqual(other.TaxProviders)
+                ) && 
+                (
                     this.PaymentMethods == other.PaymentMethods ||
                     this.PaymentMethods != null &&
                     this.PaymentMethods.SequenceEqual(other.PaymentMethods)
@@ -420,16 +406,6 @@ namespace VirtoCommerce.Client.Model
                     this.ShippingMethods == other.ShippingMethods ||
                     this.ShippingMethods != null &&
                     this.ShippingMethods.SequenceEqual(other.ShippingMethods)
-                ) && 
-                (
-                    this.TaxProviders == other.TaxProviders ||
-                    this.TaxProviders != null &&
-                    this.TaxProviders.SequenceEqual(other.TaxProviders)
-                ) && 
-                (
-                    this.SecurityScopes == other.SecurityScopes ||
-                    this.SecurityScopes != null &&
-                    this.SecurityScopes.SequenceEqual(other.SecurityScopes)
                 ) && 
                 (
                     this.SeoObjectType == other.SeoObjectType ||
@@ -501,9 +477,6 @@ namespace VirtoCommerce.Client.Model
                 if (this.Description != null)
                     hash = hash * 59 + this.Description.GetHashCode();
 
-                if (this.Url != null)
-                    hash = hash * 59 + this.Url.GetHashCode();
-
                 if (this.StoreState != null)
                     hash = hash * 59 + this.StoreState.GetHashCode();
 
@@ -527,6 +500,9 @@ namespace VirtoCommerce.Client.Model
 
                 if (this.CreditCardSavePolicy != null)
                     hash = hash * 59 + this.CreditCardSavePolicy.GetHashCode();
+
+                if (this.Url != null)
+                    hash = hash * 59 + this.Url.GetHashCode();
 
                 if (this.SecureUrl != null)
                     hash = hash * 59 + this.SecureUrl.GetHashCode();
@@ -555,17 +531,14 @@ namespace VirtoCommerce.Client.Model
                 if (this.TrustedGroups != null)
                     hash = hash * 59 + this.TrustedGroups.GetHashCode();
 
+                if (this.TaxProviders != null)
+                    hash = hash * 59 + this.TaxProviders.GetHashCode();
+
                 if (this.PaymentMethods != null)
                     hash = hash * 59 + this.PaymentMethods.GetHashCode();
 
                 if (this.ShippingMethods != null)
                     hash = hash * 59 + this.ShippingMethods.GetHashCode();
-
-                if (this.TaxProviders != null)
-                    hash = hash * 59 + this.TaxProviders.GetHashCode();
-
-                if (this.SecurityScopes != null)
-                    hash = hash * 59 + this.SecurityScopes.GetHashCode();
 
                 if (this.SeoObjectType != null)
                     hash = hash * 59 + this.SeoObjectType.GetHashCode();

@@ -12,7 +12,7 @@ using Newtonsoft.Json.Converters;
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
-    /// 
+    /// VirtoCommercePlatformCoreSecurityUserSearchResponse
     /// </summary>
     [DataContract]
     public partial class VirtoCommercePlatformCoreSecurityUserSearchResponse :  IEquatable<VirtoCommercePlatformCoreSecurityUserSearchResponse>
@@ -108,6 +108,5 @@ namespace VirtoCommerce.Client.Model
                 return hash;
             }
         }
-
     }
 }

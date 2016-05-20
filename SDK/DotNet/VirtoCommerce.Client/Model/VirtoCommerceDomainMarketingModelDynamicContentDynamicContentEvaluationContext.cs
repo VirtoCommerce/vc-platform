@@ -12,7 +12,7 @@ using Newtonsoft.Json.Converters;
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
-    /// 
+    /// VirtoCommerceDomainMarketingModelDynamicContentDynamicContentEvaluationContext
     /// </summary>
     [DataContract]
     public partial class VirtoCommerceDomainMarketingModelDynamicContentDynamicContentEvaluationContext :  IEquatable<VirtoCommerceDomainMarketingModelDynamicContentDynamicContentEvaluationContext>
@@ -408,6 +408,5 @@ namespace VirtoCommerce.Client.Model
                 return hash;
             }
         }
-
     }
 }

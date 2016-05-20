@@ -18,6 +18,11 @@ namespace VirtoCommerce.Client.Client
     /// </summary>
     public class ApiClient
     {
+        private JsonSerializerSettings serializerSettings = new JsonSerializerSettings
+        {
+            ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor
+        };
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiClient" /> class
         /// with default configuration and base path (http://localhost/admin).
@@ -289,7 +294,7 @@ namespace VirtoCommerce.Client.Client
             // at this point, it must be a model (json)
             try
             {
-                return JsonConvert.DeserializeObject(response.Content, type);
+                return JsonConvert.DeserializeObject(response.Content, type, serializerSettings);
             }
             catch (Exception e)
             {

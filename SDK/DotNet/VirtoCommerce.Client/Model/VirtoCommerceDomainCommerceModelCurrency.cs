@@ -12,7 +12,7 @@ using Newtonsoft.Json.Converters;
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
-    /// 
+    /// VirtoCommerceDomainCommerceModelCurrency
     /// </summary>
     [DataContract]
     public partial class VirtoCommerceDomainCommerceModelCurrency :  IEquatable<VirtoCommerceDomainCommerceModelCurrency>
@@ -168,6 +168,5 @@ namespace VirtoCommerce.Client.Model
                 return hash;
             }
         }
-
     }
 }

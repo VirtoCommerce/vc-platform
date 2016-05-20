@@ -12,7 +12,7 @@ using Newtonsoft.Json.Converters;
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
-    /// 
+    /// VirtoCommerceDomainPricingModelPriceEvaluationContext
     /// </summary>
     [DataContract]
     public partial class VirtoCommerceDomainPricingModelPriceEvaluationContext :  IEquatable<VirtoCommerceDomainPricingModelPriceEvaluationContext>
@@ -498,6 +498,5 @@ namespace VirtoCommerce.Client.Model
                 return hash;
             }
         }
-
     }
 }
