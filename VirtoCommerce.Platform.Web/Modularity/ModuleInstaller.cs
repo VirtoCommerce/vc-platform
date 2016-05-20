@@ -52,7 +52,7 @@ namespace VirtoCommerce.Platform.Web.Modularity
                 //Check that dependencies for installable modules 
                 var missedDependencies = _moduleCatalog.CompleteListWithDependencies(new[] { module }).OfType<ManifestModuleInfo>()
                                                        .Where(x => !x.IsInstalled).Except(modules);
-                if (missedDependencies != null)
+                if (missedDependencies.Any())
                 {
                     Report(progress, ProgressMessageLevel.Error, string.Format("{0} dependencies required for {1}", string.Join(" ", missedDependencies), module));
                     isValid = false;

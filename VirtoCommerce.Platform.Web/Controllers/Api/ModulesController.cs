@@ -52,7 +52,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [CheckPermission(Permission = PredefinedPermissions.ModuleManage)]
         public IHttpActionResult GetModules()
         {
-            var retVal = _moduleCatalog.Modules.OfType<ManifestModuleInfo>()
+            var retVal = _moduleCatalog.Modules.OfType<ManifestModuleInfo>().OrderBy(x=>x.Id).ThenBy(x=>x.Version)
                                        .Select(x => x.ToWebModel())
                                        .ToArray();
             return Ok(retVal);
