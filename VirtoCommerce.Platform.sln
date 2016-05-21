@@ -1,0 +1,70 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Platform.Web", "VirtoCommerce.Platform.Web\VirtoCommerce.Platform.Web.csproj", "{B53BA685-B324-42E6-80AD-7B641DD414E7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Platform.Data", "VirtoCommerce.Platform.Data\VirtoCommerce.Platform.Data.csproj", "{39AFD233-B2F7-4178-817D-0A339C57525D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Platform.Core", "VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj", "{F7C9313B-522E-4619-ABC9-8C7D4600D6B5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Platform.Tests", "VirtoCommerce.Platform.Tests\VirtoCommerce.Platform.Tests.csproj", "{A3B5EC9F-A1C9-43FE-8FC9-E11BBACF31BD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Platform.Core.Web", "VirtoCommerce.Platform.Core.Web\VirtoCommerce.Platform.Core.Web.csproj", "{D30A07D3-04D4-4226-A6FA-2D54EA3946C1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Platform.Data.Azure", "VirtoCommerce.Platform.Data.Azure\VirtoCommerce.Platform.Data.Azure.csproj", "{7B8A21EB-FE13-4FC7-8F93-C1B302D2C83D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Platform.Data.Security", "VirtoCommerce.Platform.Data.Security\VirtoCommerce.Platform.Data.Security.csproj", "{3E27BA0C-8982-44B9-8399-7CDF291F6806}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Platform.Data.Notifications", "VirtoCommerce.Platform.Data.Notifications\VirtoCommerce.Platform.Data.Notifications.csproj", "{C6A9F9A0-953B-438D-989A-1169E32A60E6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Platform.Data.Serialization", "VirtoCommerce.Platform.Data.Serialization\VirtoCommerce.Platform.Data.Serialization.csproj", "{55F07F1B-8CB5-418F-9A4B-1EFDE30B9BA4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B53BA685-B324-42E6-80AD-7B641DD414E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B53BA685-B324-42E6-80AD-7B641DD414E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B53BA685-B324-42E6-80AD-7B641DD414E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B53BA685-B324-42E6-80AD-7B641DD414E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39AFD233-B2F7-4178-817D-0A339C57525D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39AFD233-B2F7-4178-817D-0A339C57525D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39AFD233-B2F7-4178-817D-0A339C57525D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39AFD233-B2F7-4178-817D-0A339C57525D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7C9313B-522E-4619-ABC9-8C7D4600D6B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7C9313B-522E-4619-ABC9-8C7D4600D6B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7C9313B-522E-4619-ABC9-8C7D4600D6B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7C9313B-522E-4619-ABC9-8C7D4600D6B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3B5EC9F-A1C9-43FE-8FC9-E11BBACF31BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3B5EC9F-A1C9-43FE-8FC9-E11BBACF31BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3B5EC9F-A1C9-43FE-8FC9-E11BBACF31BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3B5EC9F-A1C9-43FE-8FC9-E11BBACF31BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D30A07D3-04D4-4226-A6FA-2D54EA3946C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D30A07D3-04D4-4226-A6FA-2D54EA3946C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D30A07D3-04D4-4226-A6FA-2D54EA3946C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D30A07D3-04D4-4226-A6FA-2D54EA3946C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B8A21EB-FE13-4FC7-8F93-C1B302D2C83D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B8A21EB-FE13-4FC7-8F93-C1B302D2C83D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B8A21EB-FE13-4FC7-8F93-C1B302D2C83D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B8A21EB-FE13-4FC7-8F93-C1B302D2C83D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E27BA0C-8982-44B9-8399-7CDF291F6806}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E27BA0C-8982-44B9-8399-7CDF291F6806}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E27BA0C-8982-44B9-8399-7CDF291F6806}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E27BA0C-8982-44B9-8399-7CDF291F6806}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6A9F9A0-953B-438D-989A-1169E32A60E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6A9F9A0-953B-438D-989A-1169E32A60E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6A9F9A0-953B-438D-989A-1169E32A60E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6A9F9A0-953B-438D-989A-1169E32A60E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55F07F1B-8CB5-418F-9A4B-1EFDE30B9BA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55F07F1B-8CB5-418F-9A4B-1EFDE30B9BA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55F07F1B-8CB5-418F-9A4B-1EFDE30B9BA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55F07F1B-8CB5-418F-9A4B-1EFDE30B9BA4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
