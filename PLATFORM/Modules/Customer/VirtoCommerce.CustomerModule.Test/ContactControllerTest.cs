@@ -2,14 +2,9 @@
 using System.Linq;
 using System.Web.Http.Results;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using VirtoCommerce.CustomerModule.Data.Repositories;
-using VirtoCommerce.CustomerModule.Data.Services;
 using VirtoCommerce.CustomerModule.Web.Controllers.Api;
 using VirtoCommerce.Domain.Commerce.Model;
 using VirtoCommerce.Domain.Customer.Model;
-using VirtoCommerce.Platform.Data.DynamicProperties;
-using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
-using VirtoCommerce.Platform.Data.Repositories;
 
 
 namespace VirtoCommerce.CustomerModule.Test
@@ -66,7 +61,7 @@ namespace VirtoCommerce.CustomerModule.Test
                 FullName = "Vasa2",
                 BirthDate = DateTime.UtcNow,
                 Organizations = new[] { "org1" },
-                Addresses = new Address[]
+                Addresses = new[]
                 {
                     new Address {
                     Name = "some name",
@@ -83,7 +78,7 @@ namespace VirtoCommerce.CustomerModule.Test
                     Organization = "org1"
                     }
                 }.ToList(),
-                Notes = new Note[] { new Note { Title = "1111", Body = "dfsdfs sdf sdf sdf sd" } },
+                Notes = new[] { new Note { Title = "1111", Body = "dfsdfs sdf sdf sdf sd" } },
                 Emails = new[] { "uuu@mail.ru", "ssss@mail.ru" },
                 Phones = new[] { "2322232", "32323232" },
                 //DynamicPropertyValues = new[] { new DynamicPropertyObjectValue { Property = new DynamicProperty { Name = "testProp", ValueType = DynamicPropertyValueType.ShortText }, Values = new object[] { "sss" } } }.ToList(),
@@ -142,7 +137,7 @@ namespace VirtoCommerce.CustomerModule.Test
         private static CustomerModuleController GetContactController()
         {
 
-            return new CustomerModuleController(null, null, null);
+            return new CustomerModuleController(null, null);
         }
     }
 }

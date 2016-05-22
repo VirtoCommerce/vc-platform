@@ -3,18 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.Platform.Core.Notifications;
 using VirtoCommerce.Platform.Data.Infrastructure;
 
 namespace VirtoCommerce.OrderModule.Data.Notifications
 {
-    public class OrderSentEmailNotification : EmailNotification
+    public class OrderSentEmailNotification : OrderEmailNotificationBase
     {
         public OrderSentEmailNotification(IEmailNotificationSendingGateway gateway) : base(gateway) { }
 
-        [NotificationParameter("Readable order number")]
-        public string OrderNumber { get; set; }
-
+    
         [NotificationParameter("Sent date")]
         public DateTime SentOrderDate { get; set; }
 

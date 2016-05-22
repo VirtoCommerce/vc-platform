@@ -248,6 +248,7 @@
           "has-user-agreement": "Has user agreement",
           "min-quantity": "Min. quantity",
           "max-quantity": "Max. quantity",
+          "vendor": "Vendor",
           "tax-type": "Tax type",
           "max-downloads": "Max. number of downloads",
           "expiration-date": "Download expiration date",
@@ -259,6 +260,7 @@
         "placeholders": {
           "sku": "Enter item sku",
           "name": "Enter item name",
+          "vendor": "Select...",
           "tax-type": "Select...",
           "expiration-date": "Choose date",
           "download-type": "Select..."

@@ -7,6 +7,7 @@ using VirtoCommerce.Platform.Core.Notifications;
 using VirtoCommerce.Platform.Data.Repositories;
 using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Data.Model;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Data.Notifications
 {
@@ -18,18 +19,28 @@ namespace VirtoCommerce.Platform.Data.Notifications
 		private INotificationTemplateResolver _resolver;
 		private Func<IPlatformRepository> _repositoryFactory;
 		private INotificationTemplateService _notificationTemplateService;
+        private List<Func<Core.Notifications.Notification>> _notifications = new List<Func<Core.Notifications.Notification>>();
+        private List<Func<INotificationSendingGateway>> _gateways = new List<Func<INotificationSendingGateway>>();
 
-		public NotificationManager(INotificationTemplateResolver resolver, Func<IPlatformRepository> repositoryFactory, INotificationTemplateService notificationTemplateService)
+        public NotificationManager(INotificationTemplateResolver resolver, Func<IPlatformRepository> repositoryFactory, INotificationTemplateService notificationTemplateService)
 		{
 			_resolver = resolver;
 			_repositoryFactory = repositoryFactory;
 			_notificationTemplateService = notificationTemplateService;
 		}
 
-		private List<Func<Core.Notifications.Notification>> _notifications = new List<Func<Core.Notifications.Notification>>();
-		private List<Func<INotificationSendingGateway>> _gateways = new List<Func<INotificationSendingGateway>>();
+		
+        public void OverrideNotificationType<T>(Func<Notification> notificationFactory)
+        {
+            var replacedNotification = _notifications.FirstOrDefault(x => x().GetType() == typeof(T));
+            if(replacedNotification != null)
+            {
+                var index = _notifications.IndexOf(replacedNotification);
+                _notifications[index] = notificationFactory;
+            }
+        }
 
-		public void RegisterNotificationType(Func<Core.Notifications.Notification> notificationFactory)
+        public void RegisterNotificationType(Func<Core.Notifications.Notification> notificationFactory)
 		{
             var notifications = GetNotifications();
             var notification = notificationFactory();
@@ -100,6 +111,11 @@ namespace VirtoCommerce.Platform.Data.Notifications
             var notifications = GetNotifications();
             var retVal = notifications.FirstOrDefault(x => x.GetType().Name == type);
             if (retVal == null)
+            {
+                //try to find in derived types
+                retVal = notifications.FirstOrDefault(x => x.GetType().GetTypeInheritanceChain().Select(y => y.Name).Contains(type));
+            }
+            if(retVal == null)
             {
                 throw new NullReferenceException("Notification  " + type + " not found. Please register this type by notificationManager.RegisterNotificationType before use");
             }

@@ -18,7 +18,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="columns clearfix">
+                    <div class="columns">
                         <div class="column">
                             <div class="form-group">
                                 <div class="form-control __checkbox">
@@ -66,7 +66,7 @@
                     </div>
                 </div>
                 <div class="form-group" ng-if="blade.item.productType!=='Digital'">
-                    <div class="columns clearfix">
+                    <div class="columns">
                         <div class="column">
                             <div class="form-group">
                                 <label class="form-label">{{ 'catalog.blades.item-detail.labels.min-quantity' | translate }}</label>
@@ -83,23 +83,23 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+                <div class="form-group" ng-if="blade.item.productType==='Digital'">
+                    <div class="columns">
                         <div class="column">
                             <div class="form-group">
-                                <label class="form-label">{{ 'catalog.blades.item-detail.labels.tax-type' | translate }} <a href="" ng-click="openDictionarySettingManagement()" class="form-edit" va-permission="platform:setting:update"><i class="form-ico fa fa-pencil"></i></a></label>
+                                <label class="form-label">{{ 'catalog.blades.item-detail.labels.download-type' | translate }}</label>
                                 <div class="form-input">
-                                    <ui-select ng-model="blade.item.taxType">
-                                        <ui-select-match allow-clear="true" placeholder="{{ 'catalog.blades.item-detail.placeholders.tax-type' | translate }}">{{$select.selected}}</ui-select-match>
-                                        <ui-select-choices repeat="x in taxTypes | filter: $select.search">
+                                    <ui-select ng-model="blade.item.downloadType" ng-init="downloadTypes=['Standard Product', 'Software', 'Music']">
+                                        <ui-select-match placeholder="{{ 'catalog.blades.item-detail.placeholders.download-type' | translate }}">{{$select.selected}}</ui-select-match>
+                                        <ui-select-choices repeat="x in downloadTypes | filter: $select.search">
                                             <span ng-bind-html="x | highlight: $select.search"></span>
                                         </ui-select-choices>
                                     </ui-select>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="form-group" ng-if="blade.item.productType==='Digital'">
-                    <div class="columns clearfix">
                         <div class="column">
                             <div class="form-group">
                                 <label class="form-label">{{ 'catalog.blades.item-detail.labels.max-downloads' | translate }}</label>
@@ -121,16 +121,16 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group" ng-if="blade.item.productType==='Digital'">
+                <div class="form-group">
                     <div class="columns clearfix">
                         <div class="column">
                             <div class="form-group">
-                                <label class="form-label">{{ 'catalog.blades.item-detail.labels.download-type' | translate }}</label>
+                                <label class="form-label">{{ 'catalog.blades.item-detail.labels.vendor' | translate }} <a href="" ng-click="openVendorsManagement()" class="form-edit" va-permission="customer:read"><i class="form-ico fa fa-pencil"></i></a></label>
                                 <div class="form-input">
-                                    <ui-select ng-model="blade.item.downloadType" ng-init="downloadTypes=['Standard Product', 'Software', 'Music']">
-                                        <ui-select-match placeholder="{{ 'catalog.blades.item-detail.placeholders.download-type' | translate }}">{{$select.selected}}</ui-select-match>
-                                        <ui-select-choices repeat="x in downloadTypes | filter: $select.search">
-                                            <span ng-bind-html="x | highlight: $select.search"></span>
+                                    <ui-select ng-model="blade.item.vendor">
+                                        <ui-select-match allow-clear placeholder="{{ 'catalog.blades.item-detail.placeholders.vendor' | translate }}">{{$select.selected.name}}</ui-select-match>
+                                        <ui-select-choices repeat="x.id as x in vendors.members | filter: {name: $select.search}">
+                                            <span ng-bind-html="x.name | highlight: $select.search"></span>
                                         </ui-select-choices>
                                     </ui-select>
                                 </div>
