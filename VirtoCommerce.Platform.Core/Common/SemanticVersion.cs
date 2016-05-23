@@ -38,11 +38,31 @@ namespace VirtoCommerce.Platform.Core.Common
 		/// </summary>
 		public int Patch { get { return _version.Build; } }
 
-		public bool IsCompatibleWith(SemanticVersion other)
+        public bool IsCompatibleWithBySemVer(SemanticVersion other)
+        {
+            if (other == null)
+                throw new ArgumentNullException("other");
+
+            //MAJOR version when you make incompatible API changes,
+            var retVal = Major == other.Major;
+            if (retVal)
+            {
+                //MINOR version when you add functionality in a backwards-compatible manner
+                retVal =  Minor <= other.Minor;
+            }
+            if (retVal)
+            {
+                //PATCH version when you make backwards-compatible bug fixes.
+                retVal = Patch <= other.Patch;
+            }
+            return retVal;
+        }
+
+        public bool IsCompatibleWith(SemanticVersion other)
 		{
 			if (other == null)
 				throw new ArgumentNullException("other");
-
+        
 			var comparisonResult = this.CompareTo(other);
 			return comparisonResult <= 0;
 		}

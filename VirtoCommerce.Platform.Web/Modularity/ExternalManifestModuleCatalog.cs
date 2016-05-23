@@ -17,7 +17,8 @@ namespace VirtoCommerce.Platform.Web.Modularity
         private readonly string[] _externalManifestUrls;
         private readonly ILog _logger;
         private IEnumerable<ModuleInfo> _installedModules;
-
+        private static object _lockObject = new object();
+ 
         public ExternalManifestModuleCatalog(IEnumerable<ModuleInfo> installedModules, string[] externalManifestUrls, ILog logger)
         {
             _installedModules = installedModules;
@@ -25,28 +26,32 @@ namespace VirtoCommerce.Platform.Web.Modularity
             _logger = logger;
         }
 
+        #region ModuleCatalog overrides      
         protected override void InnerLoad()
         {
-            //Load remote modules 
-            if (!_externalManifestUrls.IsNullOrEmpty())
+            lock (_lockObject)
             {
-                foreach (var externalManifestUrl in _externalManifestUrls)
+                //Load remote modules 
+                if (!_externalManifestUrls.IsNullOrEmpty())
                 {
-                    var externalModuleInfos = LoadExternalModulesManifest(externalManifestUrl);
-                    foreach (var externalModuleInfo in externalModuleInfos)
+                    foreach (var externalManifestUrl in _externalManifestUrls)
                     {
-                        if (!Modules.OfType<ManifestModuleInfo>().Contains(externalModuleInfo))
+                        var externalModuleInfos = LoadExternalModulesManifest(externalManifestUrl);
+                        foreach (var externalModuleInfo in externalModuleInfos)
                         {
-                            externalModuleInfo.IsInstalled = _installedModules.Contains(externalModuleInfo);
-                            externalModuleInfo.InitializationMode = InitializationMode.OnDemand;
-                            AddModule(externalModuleInfo);
+                            if (!base.Modules.OfType<ManifestModuleInfo>().Contains(externalModuleInfo))
+                            {
+                                externalModuleInfo.IsInstalled = _installedModules.Contains(externalModuleInfo);
+                                externalModuleInfo.InitializationMode = InitializationMode.OnDemand;
+                                AddModule(externalModuleInfo);
+                            }
                         }
                     }
-                }
-
-                foreach(var installedModuleNotFoundInExternal in _installedModules.Except(Modules))
-                {
-                    AddModule(installedModuleNotFoundInExternal);
+                    //Add already installed module not presenting in external modules list
+                    foreach (var installedModuleNotFoundInExternal in _installedModules.Except(base.Modules))
+                    {
+                        AddModule(installedModuleNotFoundInExternal);
+                    }
                 }
             }
         }
@@ -68,7 +73,7 @@ namespace VirtoCommerce.Platform.Web.Modularity
             foreach (var dependency in dependecies)
             {
                 var allDependencyVersions = base.Modules.OfType<ManifestModuleInfo>().Where(x => x.Id == dependency.Id);
-                var allCompatibleDependencies = allDependencyVersions.Where(x => dependency.Version.IsCompatibleWith(x.Version)).OrderByDescending(x => x.Version);
+                var allCompatibleDependencies = allDependencyVersions.Where(x => dependency.Version.IsCompatibleWithBySemVer(x.Version)).OrderByDescending(x => x.Version);
                 var latestCompatibleDependency = allCompatibleDependencies.FirstOrDefault(x => x.IsInstalled);
                 //If dependency not installed need find latest compatible version
                 if (latestCompatibleDependency == null)
@@ -93,7 +98,8 @@ namespace VirtoCommerce.Platform.Web.Modularity
             {
                 throw new DuplicateModuleException(duplicateModule.ToString());
             }
-        }
+        } 
+        #endregion
 
         private IEnumerable<ManifestModuleInfo> LoadExternalModulesManifest(string externalManifestUrl)
         {
@@ -117,6 +123,7 @@ namespace VirtoCommerce.Platform.Web.Modularity
             catch (Exception ex)
             {
                 _logger.Error(ex.ToString());
+                throw (ex);
             }
             return retVal;
         }

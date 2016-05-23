@@ -44,7 +44,7 @@ namespace VirtoCommerce.Platform.Web.Modularity
                 }
                 //Check that installed version compatible with already installed
                 var alreadyInstalledModule = _moduleCatalog.Modules.OfType<ManifestModuleInfo>().Where(x => x.IsInstalled).FirstOrDefault(x => x.Id.EqualsInvariant(module.Id));
-                if (alreadyInstalledModule != null && !alreadyInstalledModule.Version.IsCompatibleWith(module.Version))
+                if (alreadyInstalledModule != null && !alreadyInstalledModule.Version.IsCompatibleWithBySemVer(module.Version))
                 {
                     Report(progress, ProgressMessageLevel.Error, string.Format("{0}  is not compatible with installed {1}", module, alreadyInstalledModule));
                     isValid = false;

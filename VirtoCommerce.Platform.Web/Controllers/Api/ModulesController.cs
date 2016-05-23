@@ -57,9 +57,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [CheckPermission(Permission = PredefinedPermissions.ModuleManage)]
         public IHttpActionResult GetModules()
         {
-            var retVal = _moduleCatalog.Modules.OfType<ManifestModuleInfo>().OrderBy(x=>x.Id).ThenBy(x=>x.Version)
-                                       .Select(x => x.ToWebModel())
-                                       .ToArray();
+            EnsureModulesCatalogInitialized();
+            var retVal = _moduleCatalog.Modules.OfType<ManifestModuleInfo>().OrderBy(x => x.Id).ThenBy(x => x.Version)
+                                    .Select(x => x.ToWebModel())
+                                    .ToArray();
             return Ok(retVal);
         }
 
@@ -74,6 +75,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [CheckPermission(Permission = PredefinedPermissions.ModuleManage)]
         public IHttpActionResult GetDependingModules(webModel.ModuleDescriptor[] moduleDescriptors)
         {
+            EnsureModulesCatalogInitialized();
             var modules = _moduleCatalog.Modules.OfType<ManifestModuleInfo>().Join(moduleDescriptors, x => x.Identity, y => y.Identity, (x, y) => x);
             var retVal = GetDependingModulesRecursive(modules).Distinct()
                                                               .Except(modules)
@@ -93,6 +95,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [CheckPermission(Permission = PredefinedPermissions.ModuleManage)]
         public IHttpActionResult GetMissingDependencies(webModel.ModuleDescriptor[] moduleDescriptors)
         {
+            EnsureModulesCatalogInitialized();
             var modules = _moduleCatalog.Modules.OfType<ManifestModuleInfo>().Join(moduleDescriptors, x => x.Identity, y => y.Identity, (x, y) => x);
        
             var retVal = _moduleCatalog.CompleteListWithDependencies(modules).OfType<ManifestModuleInfo>()
@@ -114,6 +117,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [CheckPermission(Permission = PredefinedPermissions.ModuleManage)]
         public async Task<IHttpActionResult> UploadModuleArchive()
         {
+            EnsureModulesCatalogInitialized();
+
             if (!Request.Content.IsMimeMultipartContent())
             {
                 throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.NotAcceptable, "This request is not properly formatted"));
@@ -129,10 +134,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             });
 
             var fileData = streamProvider.FileData.FirstOrDefault();
-            var fileName = fileData.Headers.ContentDisposition.FileName.Replace("\"", string.Empty);
-            var path = VirtualPathUtility.ToAbsolute(_uploadsUrl + fileName);
 
-            using (var packageStream = File.Open(path, FileMode.Open))
+            using (var packageStream = File.Open(fileData.LocalFileName, FileMode.Open))
             using (var package = new ZipArchive(packageStream, ZipArchiveMode.Read))
             {
                 var entry = package.GetEntry("module.manifest");
@@ -151,7 +154,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                         {
                             _moduleCatalog.AddModule(module);
                         }
-                        module.Ref = path;
+                        module.Ref = fileData.LocalFileName;
                         retVal = module.ToWebModel();
                     }
                 }
@@ -170,6 +173,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [CheckPermission(Permission = PredefinedPermissions.ModuleManage)]
         public IHttpActionResult InstallModules(webModel.ModuleDescriptor[] modules)
         {
+            EnsureModulesCatalogInitialized();
+
             var options = new webModel.ModuleBackgroundJobOptions
             {
                 Action = webModel.ModuleAction.Install,
@@ -190,6 +195,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [CheckPermission(Permission = PredefinedPermissions.ModuleManage)]
         public IHttpActionResult UninstallModule(webModel.ModuleDescriptor[] modules)
         {
+            EnsureModulesCatalogInitialized();
+
             var options = new webModel.ModuleBackgroundJobOptions
             {
                 Action = webModel.ModuleAction.Uninstall,
@@ -222,6 +229,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [ResponseType(typeof(webModel.ModuleAutoInstallPushNotification))]
         public IHttpActionResult TryToAutoInstallModules()
         {
+            EnsureModulesCatalogInitialized();
+
             lock (_lockObject)
             {
                 if (!_settingsManager.GetValue("VirtoCommerce:ModulesAutoInstalled", false))
@@ -288,6 +297,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 notification.Finished = DateTime.UtcNow;
                 _pushNotifier.Upsert(notification);
             }
+        }
+
+        private void EnsureModulesCatalogInitialized()
+        {
+            _moduleCatalog.Initialize();
         }
 
         private IEnumerable<ManifestModuleInfo> GetDependingModulesRecursive(IEnumerable<ManifestModuleInfo> modules)
