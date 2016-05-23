@@ -3,7 +3,6 @@ using System.Reflection;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace VirtoCommerce.Client.Client
 {
@@ -13,58 +12,12 @@ namespace VirtoCommerce.Client.Client
     public class Configuration
     {
         /// <summary>
-        /// Initializes a new instance of the Configuration class with different settings
-        /// </summary>
-        /// <param name="apiClient">Api client</param>
-        /// <param name="defaultHeader">Dictionary of default HTTP header</param>
-        /// <param name="username">Username</param>
-        /// <param name="password">Password</param>
-        /// <param name="accessToken">accessToken</param>
-        /// <param name="apiKey">Dictionary of API key</param>
-        /// <param name="apiKeyPrefix">Dictionary of API key prefix</param>
-        /// <param name="tempFolderPath">Temp folder path</param>
-        /// <param name="dateTimeFormat">DateTime format string</param>
-        /// <param name="timeout">HTTP connection timeout (in milliseconds)</param>
-        /// <param name="userAgent">HTTP user agent</param>
-        public Configuration(ApiClient apiClient = null,
-                             Dictionary<String, String> defaultHeader = null,
-                             string username = null,
-                             string password = null,
-                             string accessToken = null,
-                             Dictionary<String, String> apiKey = null,
-                             Dictionary<String, String> apiKeyPrefix = null,
-                             string tempFolderPath = null,
-                             string dateTimeFormat = null,
-                             int timeout = 100000,
-                             string userAgent = "Swagger-Codegen/1.0.0/csharp"
-                            )
-        {
-            setApiClientUsingDefault(apiClient);
-
-            Username = username;
-            Password = password;
-            AccessToken = accessToken;
-            UserAgent = userAgent;
-
-            if (defaultHeader != null)
-                DefaultHeader = defaultHeader;
-            if (apiKey != null)
-                ApiKey = apiKey;
-            if (apiKeyPrefix != null)
-                ApiKeyPrefix = apiKeyPrefix;
-
-            TempFolderPath = tempFolderPath;
-            DateTimeFormat = dateTimeFormat;
-            Timeout = timeout;
-        }
-
-        /// <summary>
         /// Initializes a new instance of the Configuration class.
         /// </summary>
-        /// <param name="apiClient">Api client.</param>
-        public Configuration(ApiClient apiClient)
+        public Configuration()
         {
-            setApiClientUsingDefault(apiClient);
+            UserAgent = "Swagger-Codegen/1.0.0/csharp";
+            Timeout = 100000;
         }
 
         /// <summary>
@@ -74,25 +27,10 @@ namespace VirtoCommerce.Client.Client
         public const string Version = "1.0.0";
 
         /// <summary>
-        /// Gets or sets the default Configuration.
-        /// </summary>
-        /// <value>Configuration.</value>
-        public static Configuration Default = new Configuration();
-
-        /// <summary>
         /// Gets or sets the HTTP timeout (milliseconds) of ApiClient. Default to 100000 milliseconds.
         /// </summary>
         /// <value>Timeout.</value>
-        public int Timeout
-        {
-            get { return ApiClient.RestClient.Timeout; }
-
-            set
-            {
-                if (ApiClient != null)
-                    ApiClient.RestClient.Timeout = value;
-            }
-        }
+        public int Timeout { get; set; }
 
         /// <summary>
         /// Gets or sets the default API client for making HTTP calls.
@@ -100,35 +38,12 @@ namespace VirtoCommerce.Client.Client
         /// <value>The API client.</value>
         public ApiClient ApiClient;
 
-        /// <summary>
-        /// Set the ApiClient using Default or ApiClient instance.
-        /// </summary>
-        /// <param name="apiClient">An instance of ApiClient.</param>
-        /// <returns></returns>
-        public void setApiClientUsingDefault (ApiClient apiClient = null)
-        {
-            if (apiClient == null)
-            {
-                if (Default != null && Default.ApiClient == null)
-                    Default.ApiClient = new ApiClient();
-
-                ApiClient = Default != null ? Default.ApiClient : new ApiClient();
-            }
-            else
-            {
-                if (Default != null && Default.ApiClient == null)
-                    Default.ApiClient = apiClient;
-
-                ApiClient = apiClient;
-            }
-        }
-
-        private Dictionary<String, String> _defaultHeaderMap = new Dictionary<String, String>();
+        private Dictionary<string, string> _defaultHeaderMap = new Dictionary<string, string>();
 
         /// <summary>
         /// Gets or sets the default header.
         /// </summary>
-        public Dictionary<String, String> DefaultHeader
+        public Dictionary<string, string> DefaultHeader
         {
             get { return _defaultHeaderMap; }
 
@@ -153,49 +68,49 @@ namespace VirtoCommerce.Client.Client
         /// Gets or sets the HTTP user agent.
         /// </summary>
         /// <value>Http user agent.</value>
-        public String UserAgent { get; set; }
+        public string UserAgent { get; set; }
 
         /// <summary>
         /// Gets or sets the username (HTTP basic authentication).
         /// </summary>
         /// <value>The username.</value>
-        public String Username { get; set; }
+        public string Username { get; set; }
 
         /// <summary>
         /// Gets or sets the password (HTTP basic authentication).
         /// </summary>
         /// <value>The password.</value>
-        public String Password { get; set; }
+        public string Password { get; set; }
 
         /// <summary>
         /// Gets or sets the access token for OAuth2 authentication.
         /// </summary>
         /// <value>The access token.</value>
-        public String AccessToken { get; set; }
+        public string AccessToken { get; set; }
 
         /// <summary>
         /// Gets or sets the API key based on the authentication name.
         /// </summary>
         /// <value>The API key.</value>
-        public Dictionary<String, String> ApiKey = new Dictionary<String, String>();
+        public Dictionary<string, string> ApiKey = new Dictionary<string, string>();
 
         /// <summary>
         /// Gets or sets the prefix (e.g. Token) of the API key based on the authentication name.
         /// </summary>
         /// <value>The prefix of the API key.</value>
-        public Dictionary<String, String> ApiKeyPrefix = new Dictionary<String, String>();
+        public Dictionary<string, string> ApiKeyPrefix = new Dictionary<string, string>();
 
         /// <summary>
         /// Get the API key with prefix.
         /// </summary>
         /// <param name="apiKeyIdentifier">API key identifier (authentication scheme).</param>
         /// <returns>API key with prefix.</returns>
-        public string GetApiKeyWithPrefix (string apiKeyIdentifier)
+        public string GetApiKeyWithPrefix(string apiKeyIdentifier)
         {
             var apiKeyValue = "";
-            ApiKey.TryGetValue (apiKeyIdentifier, out apiKeyValue);
+            ApiKey.TryGetValue(apiKeyIdentifier, out apiKeyValue);
             var apiKeyPrefix = "";
-            if (ApiKeyPrefix.TryGetValue (apiKeyIdentifier, out apiKeyPrefix))
+            if (ApiKeyPrefix.TryGetValue(apiKeyIdentifier, out apiKeyPrefix))
                 return apiKeyPrefix + " " + apiKeyValue;
             else
                 return apiKeyValue;
@@ -207,13 +122,13 @@ namespace VirtoCommerce.Client.Client
         /// Gets or sets the temporary folder path to store the files downloaded from the server.
         /// </summary>
         /// <value>Folder path.</value>
-        public String TempFolderPath
+        public string TempFolderPath
         {
             get { return _tempFolderPath; }
 
             set
             {
-                if (String.IsNullOrEmpty(value))
+                if (string.IsNullOrEmpty(value))
                 {
                     _tempFolderPath = value;
                     return;
@@ -227,7 +142,7 @@ namespace VirtoCommerce.Client.Client
                 if (value[value.Length - 1] == Path.DirectorySeparatorChar)
                     _tempFolderPath = value;
                 else
-                    _tempFolderPath = value  + Path.DirectorySeparatorChar;
+                    _tempFolderPath = value + Path.DirectorySeparatorChar;
             }
         }
 
@@ -243,7 +158,7 @@ namespace VirtoCommerce.Client.Client
         /// No validation is done to ensure that the string you're providing is valid
         /// </summary>
         /// <value>The DateTimeFormat string</value>
-        public String DateTimeFormat
+        public string DateTimeFormat
         {
             get
             {
@@ -267,14 +182,14 @@ namespace VirtoCommerce.Client.Client
         /// <summary>
         /// Returns a string with essential information for debugging.
         /// </summary>
-        public static String ToDebugReport()
+        public static string ToDebugReport()
         {
-            String report = "C# SDK (VirtoCommerce.Client) Debug Report:\n";
+            string report = "C# SDK (VirtoCommerce.Client) Debug Report:\n";
             report += "    OS: " + Environment.OSVersion + "\n";
             report += "    .NET Framework Version: " + Assembly
                      .GetExecutingAssembly()
                      .GetReferencedAssemblies()
-                     .Where(x => x.Name == "System.Core").First().Version.ToString()  + "\n";
+                     .Where(x => x.Name == "System.Core").First().Version.ToString() + "\n";
             report += "    Version of the API: v1\n";
             report += "    SDK Package Version: 1.0.0\n";
 

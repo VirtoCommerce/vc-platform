@@ -23,7 +23,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="contentItem">dynamic content object that needs to be added to the dynamic content system</param>
         /// <returns>VirtoCommerceMarketingModuleWebModelDynamicContentItem</returns>
-        VirtoCommerceMarketingModuleWebModelDynamicContentItem MarketingModuleDynamicContentCreateDynamicContent (VirtoCommerceMarketingModuleWebModelDynamicContentItem contentItem);
+        VirtoCommerceMarketingModuleWebModelDynamicContentItem MarketingModuleDynamicContentCreateDynamicContent(VirtoCommerceMarketingModuleWebModelDynamicContentItem contentItem);
 
         /// <summary>
         /// Add new dynamic content item object to marketing system
@@ -34,7 +34,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="contentItem">dynamic content object that needs to be added to the dynamic content system</param>
         /// <returns>ApiResponse of VirtoCommerceMarketingModuleWebModelDynamicContentItem</returns>
-        ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentItem> MarketingModuleDynamicContentCreateDynamicContentWithHttpInfo (VirtoCommerceMarketingModuleWebModelDynamicContentItem contentItem);
+        ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentItem> MarketingModuleDynamicContentCreateDynamicContentWithHttpInfo(VirtoCommerceMarketingModuleWebModelDynamicContentItem contentItem);
         /// <summary>
         /// Add new dynamic content folder
         /// </summary>
@@ -44,7 +44,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="folder">dynamic content folder that needs to be added</param>
         /// <returns>VirtoCommerceMarketingModuleWebModelDynamicContentFolder</returns>
-        VirtoCommerceMarketingModuleWebModelDynamicContentFolder MarketingModuleDynamicContentCreateDynamicContentFolder (VirtoCommerceMarketingModuleWebModelDynamicContentFolder folder);
+        VirtoCommerceMarketingModuleWebModelDynamicContentFolder MarketingModuleDynamicContentCreateDynamicContentFolder(VirtoCommerceMarketingModuleWebModelDynamicContentFolder folder);
 
         /// <summary>
         /// Add new dynamic content folder
@@ -55,7 +55,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="folder">dynamic content folder that needs to be added</param>
         /// <returns>ApiResponse of VirtoCommerceMarketingModuleWebModelDynamicContentFolder</returns>
-        ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentFolder> MarketingModuleDynamicContentCreateDynamicContentFolderWithHttpInfo (VirtoCommerceMarketingModuleWebModelDynamicContentFolder folder);
+        ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentFolder> MarketingModuleDynamicContentCreateDynamicContentFolderWithHttpInfo(VirtoCommerceMarketingModuleWebModelDynamicContentFolder folder);
         /// <summary>
         /// Add new dynamic content place object to marketing system
         /// </summary>
@@ -65,7 +65,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="contentPlace">dynamic content place object that needs to be added to the dynamic content system</param>
         /// <returns>VirtoCommerceMarketingModuleWebModelDynamicContentPlace</returns>
-        VirtoCommerceMarketingModuleWebModelDynamicContentPlace MarketingModuleDynamicContentCreateDynamicContentPlace (VirtoCommerceMarketingModuleWebModelDynamicContentPlace contentPlace);
+        VirtoCommerceMarketingModuleWebModelDynamicContentPlace MarketingModuleDynamicContentCreateDynamicContentPlace(VirtoCommerceMarketingModuleWebModelDynamicContentPlace contentPlace);
 
         /// <summary>
         /// Add new dynamic content place object to marketing system
@@ -76,7 +76,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="contentPlace">dynamic content place object that needs to be added to the dynamic content system</param>
         /// <returns>ApiResponse of VirtoCommerceMarketingModuleWebModelDynamicContentPlace</returns>
-        ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentPlace> MarketingModuleDynamicContentCreateDynamicContentPlaceWithHttpInfo (VirtoCommerceMarketingModuleWebModelDynamicContentPlace contentPlace);
+        ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentPlace> MarketingModuleDynamicContentCreateDynamicContentPlaceWithHttpInfo(VirtoCommerceMarketingModuleWebModelDynamicContentPlace contentPlace);
         /// <summary>
         /// Add new dynamic content publication object to marketing system
         /// </summary>
@@ -86,7 +86,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="publication">dynamic content publication object that needs to be added to the dynamic content system</param>
         /// <returns>VirtoCommerceMarketingModuleWebModelDynamicContentPublication</returns>
-        VirtoCommerceMarketingModuleWebModelDynamicContentPublication MarketingModuleDynamicContentCreateDynamicContentPublication (VirtoCommerceMarketingModuleWebModelDynamicContentPublication publication);
+        VirtoCommerceMarketingModuleWebModelDynamicContentPublication MarketingModuleDynamicContentCreateDynamicContentPublication(VirtoCommerceMarketingModuleWebModelDynamicContentPublication publication);
 
         /// <summary>
         /// Add new dynamic content publication object to marketing system
@@ -97,7 +97,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="publication">dynamic content publication object that needs to be added to the dynamic content system</param>
         /// <returns>ApiResponse of VirtoCommerceMarketingModuleWebModelDynamicContentPublication</returns>
-        ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentPublication> MarketingModuleDynamicContentCreateDynamicContentPublicationWithHttpInfo (VirtoCommerceMarketingModuleWebModelDynamicContentPublication publication);
+        ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentPublication> MarketingModuleDynamicContentCreateDynamicContentPublicationWithHttpInfo(VirtoCommerceMarketingModuleWebModelDynamicContentPublication publication);
         /// <summary>
         /// Delete a dynamic content folders
         /// </summary>
@@ -107,7 +107,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="ids">folders ids for delete</param>
         /// <returns></returns>
-        void MarketingModuleDynamicContentDeleteDynamicContentFolders (List<string> ids);
+        void MarketingModuleDynamicContentDeleteDynamicContentFolders(List<string> ids);
 
         /// <summary>
         /// Delete a dynamic content folders
@@ -118,7 +118,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="ids">folders ids for delete</param>
         /// <returns>ApiResponse of Object(void)</returns>
-        ApiResponse<Object> MarketingModuleDynamicContentDeleteDynamicContentFoldersWithHttpInfo (List<string> ids);
+        ApiResponse<Object> MarketingModuleDynamicContentDeleteDynamicContentFoldersWithHttpInfo(List<string> ids);
         /// <summary>
         /// Delete a dynamic content place objects
         /// </summary>
@@ -128,7 +128,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="ids">content place object ids for delete from dynamic content system</param>
         /// <returns></returns>
-        void MarketingModuleDynamicContentDeleteDynamicContentPlaces (List<string> ids);
+        void MarketingModuleDynamicContentDeleteDynamicContentPlaces(List<string> ids);
 
         /// <summary>
         /// Delete a dynamic content place objects
@@ -139,7 +139,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="ids">content place object ids for delete from dynamic content system</param>
         /// <returns>ApiResponse of Object(void)</returns>
-        ApiResponse<Object> MarketingModuleDynamicContentDeleteDynamicContentPlacesWithHttpInfo (List<string> ids);
+        ApiResponse<Object> MarketingModuleDynamicContentDeleteDynamicContentPlacesWithHttpInfo(List<string> ids);
         /// <summary>
         /// Delete a dynamic content publication objects
         /// </summary>
@@ -149,7 +149,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="ids">content publication object ids for delete from dynamic content system</param>
         /// <returns></returns>
-        void MarketingModuleDynamicContentDeleteDynamicContentPublications (List<string> ids);
+        void MarketingModuleDynamicContentDeleteDynamicContentPublications(List<string> ids);
 
         /// <summary>
         /// Delete a dynamic content publication objects
@@ -160,7 +160,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="ids">content publication object ids for delete from dynamic content system</param>
         /// <returns>ApiResponse of Object(void)</returns>
-        ApiResponse<Object> MarketingModuleDynamicContentDeleteDynamicContentPublicationsWithHttpInfo (List<string> ids);
+        ApiResponse<Object> MarketingModuleDynamicContentDeleteDynamicContentPublicationsWithHttpInfo(List<string> ids);
         /// <summary>
         /// Delete a dynamic content item objects
         /// </summary>
@@ -170,7 +170,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="ids">content item object ids for delete in the dynamic content system</param>
         /// <returns></returns>
-        void MarketingModuleDynamicContentDeleteDynamicContents (List<string> ids);
+        void MarketingModuleDynamicContentDeleteDynamicContents(List<string> ids);
 
         /// <summary>
         /// Delete a dynamic content item objects
@@ -181,7 +181,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="ids">content item object ids for delete in the dynamic content system</param>
         /// <returns>ApiResponse of Object(void)</returns>
-        ApiResponse<Object> MarketingModuleDynamicContentDeleteDynamicContentsWithHttpInfo (List<string> ids);
+        ApiResponse<Object> MarketingModuleDynamicContentDeleteDynamicContentsWithHttpInfo(List<string> ids);
         /// <summary>
         /// Get dynamic content for given placeholders
         /// </summary>
@@ -191,7 +191,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="evalContext"></param>
         /// <returns>List&lt;VirtoCommerceMarketingModuleWebModelDynamicContentItem&gt;</returns>
-        List<VirtoCommerceMarketingModuleWebModelDynamicContentItem> MarketingModuleDynamicContentEvaluateDynamicContent (VirtoCommerceDomainMarketingModelDynamicContentDynamicContentEvaluationContext evalContext);
+        List<VirtoCommerceMarketingModuleWebModelDynamicContentItem> MarketingModuleDynamicContentEvaluateDynamicContent(VirtoCommerceDomainMarketingModelDynamicContentDynamicContentEvaluationContext evalContext);
 
         /// <summary>
         /// Get dynamic content for given placeholders
@@ -202,7 +202,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="evalContext"></param>
         /// <returns>ApiResponse of List&lt;VirtoCommerceMarketingModuleWebModelDynamicContentItem&gt;</returns>
-        ApiResponse<List<VirtoCommerceMarketingModuleWebModelDynamicContentItem>> MarketingModuleDynamicContentEvaluateDynamicContentWithHttpInfo (VirtoCommerceDomainMarketingModelDynamicContentDynamicContentEvaluationContext evalContext);
+        ApiResponse<List<VirtoCommerceMarketingModuleWebModelDynamicContentItem>> MarketingModuleDynamicContentEvaluateDynamicContentWithHttpInfo(VirtoCommerceDomainMarketingModelDynamicContentDynamicContentEvaluationContext evalContext);
         /// <summary>
         /// Find dynamic content item object by id
         /// </summary>
@@ -212,7 +212,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">content item id</param>
         /// <returns>VirtoCommerceMarketingModuleWebModelDynamicContentItem</returns>
-        VirtoCommerceMarketingModuleWebModelDynamicContentItem MarketingModuleDynamicContentGetDynamicContentById (string id);
+        VirtoCommerceMarketingModuleWebModelDynamicContentItem MarketingModuleDynamicContentGetDynamicContentById(string id);
 
         /// <summary>
         /// Find dynamic content item object by id
@@ -223,7 +223,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">content item id</param>
         /// <returns>ApiResponse of VirtoCommerceMarketingModuleWebModelDynamicContentItem</returns>
-        ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentItem> MarketingModuleDynamicContentGetDynamicContentByIdWithHttpInfo (string id);
+        ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentItem> MarketingModuleDynamicContentGetDynamicContentByIdWithHttpInfo(string id);
         /// <summary>
         /// Find dynamic content folder by id
         /// </summary>
@@ -233,7 +233,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">folder id</param>
         /// <returns>VirtoCommerceMarketingModuleWebModelDynamicContentFolder</returns>
-        VirtoCommerceMarketingModuleWebModelDynamicContentFolder MarketingModuleDynamicContentGetDynamicContentFolderById (string id);
+        VirtoCommerceMarketingModuleWebModelDynamicContentFolder MarketingModuleDynamicContentGetDynamicContentFolderById(string id);
 
         /// <summary>
         /// Find dynamic content folder by id
@@ -244,7 +244,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">folder id</param>
         /// <returns>ApiResponse of VirtoCommerceMarketingModuleWebModelDynamicContentFolder</returns>
-        ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentFolder> MarketingModuleDynamicContentGetDynamicContentFolderByIdWithHttpInfo (string id);
+        ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentFolder> MarketingModuleDynamicContentGetDynamicContentFolderByIdWithHttpInfo(string id);
         /// <summary>
         /// Find dynamic content place object by id
         /// </summary>
@@ -254,7 +254,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">place id</param>
         /// <returns>VirtoCommerceMarketingModuleWebModelDynamicContentPlace</returns>
-        VirtoCommerceMarketingModuleWebModelDynamicContentPlace MarketingModuleDynamicContentGetDynamicContentPlaceById (string id);
+        VirtoCommerceMarketingModuleWebModelDynamicContentPlace MarketingModuleDynamicContentGetDynamicContentPlaceById(string id);
 
         /// <summary>
         /// Find dynamic content place object by id
@@ -265,7 +265,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">place id</param>
         /// <returns>ApiResponse of VirtoCommerceMarketingModuleWebModelDynamicContentPlace</returns>
-        ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentPlace> MarketingModuleDynamicContentGetDynamicContentPlaceByIdWithHttpInfo (string id);
+        ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentPlace> MarketingModuleDynamicContentGetDynamicContentPlaceByIdWithHttpInfo(string id);
         /// <summary>
         /// Find dynamic content publication object by id
         /// </summary>
@@ -275,7 +275,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">publication id</param>
         /// <returns>VirtoCommerceMarketingModuleWebModelDynamicContentPublication</returns>
-        VirtoCommerceMarketingModuleWebModelDynamicContentPublication MarketingModuleDynamicContentGetDynamicContentPublicationById (string id);
+        VirtoCommerceMarketingModuleWebModelDynamicContentPublication MarketingModuleDynamicContentGetDynamicContentPublicationById(string id);
 
         /// <summary>
         /// Find dynamic content publication object by id
@@ -286,7 +286,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">publication id</param>
         /// <returns>ApiResponse of VirtoCommerceMarketingModuleWebModelDynamicContentPublication</returns>
-        ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentPublication> MarketingModuleDynamicContentGetDynamicContentPublicationByIdWithHttpInfo (string id);
+        ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentPublication> MarketingModuleDynamicContentGetDynamicContentPublicationByIdWithHttpInfo(string id);
         /// <summary>
         /// Get new dynamic content publication object
         /// </summary>
@@ -295,7 +295,7 @@ namespace VirtoCommerce.Client.Api
         /// </remarks>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <returns>VirtoCommerceMarketingModuleWebModelDynamicContentPublication</returns>
-        VirtoCommerceMarketingModuleWebModelDynamicContentPublication MarketingModuleDynamicContentGetNewDynamicPublication ();
+        VirtoCommerceMarketingModuleWebModelDynamicContentPublication MarketingModuleDynamicContentGetNewDynamicPublication();
 
         /// <summary>
         /// Get new dynamic content publication object
@@ -305,7 +305,7 @@ namespace VirtoCommerce.Client.Api
         /// </remarks>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <returns>ApiResponse of VirtoCommerceMarketingModuleWebModelDynamicContentPublication</returns>
-        ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentPublication> MarketingModuleDynamicContentGetNewDynamicPublicationWithHttpInfo ();
+        ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentPublication> MarketingModuleDynamicContentGetNewDynamicPublicationWithHttpInfo();
         /// <summary>
         /// Update a existing dynamic content item object
         /// </summary>
@@ -315,7 +315,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="contentItem">dynamic content object that needs to be updated in the dynamic content system</param>
         /// <returns></returns>
-        void MarketingModuleDynamicContentUpdateDynamicContent (VirtoCommerceMarketingModuleWebModelDynamicContentItem contentItem);
+        void MarketingModuleDynamicContentUpdateDynamicContent(VirtoCommerceMarketingModuleWebModelDynamicContentItem contentItem);
 
         /// <summary>
         /// Update a existing dynamic content item object
@@ -326,7 +326,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="contentItem">dynamic content object that needs to be updated in the dynamic content system</param>
         /// <returns>ApiResponse of Object(void)</returns>
-        ApiResponse<Object> MarketingModuleDynamicContentUpdateDynamicContentWithHttpInfo (VirtoCommerceMarketingModuleWebModelDynamicContentItem contentItem);
+        ApiResponse<Object> MarketingModuleDynamicContentUpdateDynamicContentWithHttpInfo(VirtoCommerceMarketingModuleWebModelDynamicContentItem contentItem);
         /// <summary>
         /// Update a existing dynamic content folder
         /// </summary>
@@ -336,7 +336,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="folder">dynamic content folder that needs to be updated</param>
         /// <returns></returns>
-        void MarketingModuleDynamicContentUpdateDynamicContentFolder (VirtoCommerceMarketingModuleWebModelDynamicContentFolder folder);
+        void MarketingModuleDynamicContentUpdateDynamicContentFolder(VirtoCommerceMarketingModuleWebModelDynamicContentFolder folder);
 
         /// <summary>
         /// Update a existing dynamic content folder
@@ -347,7 +347,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="folder">dynamic content folder that needs to be updated</param>
         /// <returns>ApiResponse of Object(void)</returns>
-        ApiResponse<Object> MarketingModuleDynamicContentUpdateDynamicContentFolderWithHttpInfo (VirtoCommerceMarketingModuleWebModelDynamicContentFolder folder);
+        ApiResponse<Object> MarketingModuleDynamicContentUpdateDynamicContentFolderWithHttpInfo(VirtoCommerceMarketingModuleWebModelDynamicContentFolder folder);
         /// <summary>
         /// Update a existing dynamic content place object
         /// </summary>
@@ -357,7 +357,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="contentPlace">dynamic content place object that needs to be updated in the dynamic content system</param>
         /// <returns></returns>
-        void MarketingModuleDynamicContentUpdateDynamicContentPlace (VirtoCommerceMarketingModuleWebModelDynamicContentPlace contentPlace);
+        void MarketingModuleDynamicContentUpdateDynamicContentPlace(VirtoCommerceMarketingModuleWebModelDynamicContentPlace contentPlace);
 
         /// <summary>
         /// Update a existing dynamic content place object
@@ -368,7 +368,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="contentPlace">dynamic content place object that needs to be updated in the dynamic content system</param>
         /// <returns>ApiResponse of Object(void)</returns>
-        ApiResponse<Object> MarketingModuleDynamicContentUpdateDynamicContentPlaceWithHttpInfo (VirtoCommerceMarketingModuleWebModelDynamicContentPlace contentPlace);
+        ApiResponse<Object> MarketingModuleDynamicContentUpdateDynamicContentPlaceWithHttpInfo(VirtoCommerceMarketingModuleWebModelDynamicContentPlace contentPlace);
         /// <summary>
         /// Update a existing dynamic content publication object
         /// </summary>
@@ -378,7 +378,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="publication">dynamic content publication object that needs to be updated in the dynamic content system</param>
         /// <returns></returns>
-        void MarketingModuleDynamicContentUpdateDynamicContentPublication (VirtoCommerceMarketingModuleWebModelDynamicContentPublication publication);
+        void MarketingModuleDynamicContentUpdateDynamicContentPublication(VirtoCommerceMarketingModuleWebModelDynamicContentPublication publication);
 
         /// <summary>
         /// Update a existing dynamic content publication object
@@ -389,7 +389,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="publication">dynamic content publication object that needs to be updated in the dynamic content system</param>
         /// <returns>ApiResponse of Object(void)</returns>
-        ApiResponse<Object> MarketingModuleDynamicContentUpdateDynamicContentPublicationWithHttpInfo (VirtoCommerceMarketingModuleWebModelDynamicContentPublication publication);
+        ApiResponse<Object> MarketingModuleDynamicContentUpdateDynamicContentPublicationWithHttpInfo(VirtoCommerceMarketingModuleWebModelDynamicContentPublication publication);
         /// <summary>
         /// Add new dynamic promotion object to marketing system
         /// </summary>
@@ -399,7 +399,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="promotion">dynamic promotion object that needs to be added to the marketing system</param>
         /// <returns>VirtoCommerceMarketingModuleWebModelPromotion</returns>
-        VirtoCommerceMarketingModuleWebModelPromotion MarketingModulePromotionCreatePromotion (VirtoCommerceMarketingModuleWebModelPromotion promotion);
+        VirtoCommerceMarketingModuleWebModelPromotion MarketingModulePromotionCreatePromotion(VirtoCommerceMarketingModuleWebModelPromotion promotion);
 
         /// <summary>
         /// Add new dynamic promotion object to marketing system
@@ -410,7 +410,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="promotion">dynamic promotion object that needs to be added to the marketing system</param>
         /// <returns>ApiResponse of VirtoCommerceMarketingModuleWebModelPromotion</returns>
-        ApiResponse<VirtoCommerceMarketingModuleWebModelPromotion> MarketingModulePromotionCreatePromotionWithHttpInfo (VirtoCommerceMarketingModuleWebModelPromotion promotion);
+        ApiResponse<VirtoCommerceMarketingModuleWebModelPromotion> MarketingModulePromotionCreatePromotionWithHttpInfo(VirtoCommerceMarketingModuleWebModelPromotion promotion);
         /// <summary>
         /// Delete promotions objects
         /// </summary>
@@ -420,7 +420,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="ids">promotions object ids for delete in the marketing system</param>
         /// <returns></returns>
-        void MarketingModulePromotionDeletePromotions (List<string> ids);
+        void MarketingModulePromotionDeletePromotions(List<string> ids);
 
         /// <summary>
         /// Delete promotions objects
@@ -431,7 +431,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="ids">promotions object ids for delete in the marketing system</param>
         /// <returns>ApiResponse of Object(void)</returns>
-        ApiResponse<Object> MarketingModulePromotionDeletePromotionsWithHttpInfo (List<string> ids);
+        ApiResponse<Object> MarketingModulePromotionDeletePromotionsWithHttpInfo(List<string> ids);
         /// <summary>
         /// Evaluate promotions
         /// </summary>
@@ -441,7 +441,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="context">Promotion evaluation context</param>
         /// <returns>List&lt;VirtoCommerceMarketingModuleWebModelPromotionReward&gt;</returns>
-        List<VirtoCommerceMarketingModuleWebModelPromotionReward> MarketingModulePromotionEvaluatePromotions (VirtoCommerceDomainMarketingModelPromotionEvaluationContext context);
+        List<VirtoCommerceMarketingModuleWebModelPromotionReward> MarketingModulePromotionEvaluatePromotions(VirtoCommerceDomainMarketingModelPromotionEvaluationContext context);
 
         /// <summary>
         /// Evaluate promotions
@@ -452,7 +452,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="context">Promotion evaluation context</param>
         /// <returns>ApiResponse of List&lt;VirtoCommerceMarketingModuleWebModelPromotionReward&gt;</returns>
-        ApiResponse<List<VirtoCommerceMarketingModuleWebModelPromotionReward>> MarketingModulePromotionEvaluatePromotionsWithHttpInfo (VirtoCommerceDomainMarketingModelPromotionEvaluationContext context);
+        ApiResponse<List<VirtoCommerceMarketingModuleWebModelPromotionReward>> MarketingModulePromotionEvaluatePromotionsWithHttpInfo(VirtoCommerceDomainMarketingModelPromotionEvaluationContext context);
         /// <summary>
         /// Get new dynamic promotion object
         /// </summary>
@@ -461,7 +461,7 @@ namespace VirtoCommerce.Client.Api
         /// </remarks>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <returns>VirtoCommerceMarketingModuleWebModelPromotion</returns>
-        VirtoCommerceMarketingModuleWebModelPromotion MarketingModulePromotionGetNewDynamicPromotion ();
+        VirtoCommerceMarketingModuleWebModelPromotion MarketingModulePromotionGetNewDynamicPromotion();
 
         /// <summary>
         /// Get new dynamic promotion object
@@ -471,7 +471,7 @@ namespace VirtoCommerce.Client.Api
         /// </remarks>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <returns>ApiResponse of VirtoCommerceMarketingModuleWebModelPromotion</returns>
-        ApiResponse<VirtoCommerceMarketingModuleWebModelPromotion> MarketingModulePromotionGetNewDynamicPromotionWithHttpInfo ();
+        ApiResponse<VirtoCommerceMarketingModuleWebModelPromotion> MarketingModulePromotionGetNewDynamicPromotionWithHttpInfo();
         /// <summary>
         /// Find promotion object by id
         /// </summary>
@@ -481,7 +481,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">promotion id</param>
         /// <returns>VirtoCommerceMarketingModuleWebModelPromotion</returns>
-        VirtoCommerceMarketingModuleWebModelPromotion MarketingModulePromotionGetPromotionById (string id);
+        VirtoCommerceMarketingModuleWebModelPromotion MarketingModulePromotionGetPromotionById(string id);
 
         /// <summary>
         /// Find promotion object by id
@@ -492,7 +492,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">promotion id</param>
         /// <returns>ApiResponse of VirtoCommerceMarketingModuleWebModelPromotion</returns>
-        ApiResponse<VirtoCommerceMarketingModuleWebModelPromotion> MarketingModulePromotionGetPromotionByIdWithHttpInfo (string id);
+        ApiResponse<VirtoCommerceMarketingModuleWebModelPromotion> MarketingModulePromotionGetPromotionByIdWithHttpInfo(string id);
         /// <summary>
         /// Update a existing dynamic promotion object in marketing system
         /// </summary>
@@ -502,7 +502,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="promotion">&amp;gt;dynamic promotion object that needs to be updated in the marketing system</param>
         /// <returns></returns>
-        void MarketingModulePromotionUpdatePromotions (VirtoCommerceMarketingModuleWebModelPromotion promotion);
+        void MarketingModulePromotionUpdatePromotions(VirtoCommerceMarketingModuleWebModelPromotion promotion);
 
         /// <summary>
         /// Update a existing dynamic promotion object in marketing system
@@ -513,7 +513,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="promotion">&amp;gt;dynamic promotion object that needs to be updated in the marketing system</param>
         /// <returns>ApiResponse of Object(void)</returns>
-        ApiResponse<Object> MarketingModulePromotionUpdatePromotionsWithHttpInfo (VirtoCommerceMarketingModuleWebModelPromotion promotion);
+        ApiResponse<Object> MarketingModulePromotionUpdatePromotionsWithHttpInfo(VirtoCommerceMarketingModuleWebModelPromotion promotion);
         /// <summary>
         /// Search marketing objects by given criteria
         /// </summary>
@@ -523,7 +523,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="criteria">criteria</param>
         /// <returns>VirtoCommerceMarketingModuleWebModelMarketingSearchResult</returns>
-        VirtoCommerceMarketingModuleWebModelMarketingSearchResult MarketingModuleSearch (VirtoCommerceDomainMarketingModelMarketingSearchCriteria criteria);
+        VirtoCommerceMarketingModuleWebModelMarketingSearchResult MarketingModuleSearch(VirtoCommerceDomainMarketingModelMarketingSearchCriteria criteria);
 
         /// <summary>
         /// Search marketing objects by given criteria
@@ -534,7 +534,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="criteria">criteria</param>
         /// <returns>ApiResponse of VirtoCommerceMarketingModuleWebModelMarketingSearchResult</returns>
-        ApiResponse<VirtoCommerceMarketingModuleWebModelMarketingSearchResult> MarketingModuleSearchWithHttpInfo (VirtoCommerceDomainMarketingModelMarketingSearchCriteria criteria);
+        ApiResponse<VirtoCommerceMarketingModuleWebModelMarketingSearchResult> MarketingModuleSearchWithHttpInfo(VirtoCommerceDomainMarketingModelMarketingSearchCriteria criteria);
         #endregion Synchronous Operations
         #region Asynchronous Operations
         /// <summary>
@@ -546,7 +546,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="contentItem">dynamic content object that needs to be added to the dynamic content system</param>
         /// <returns>Task of VirtoCommerceMarketingModuleWebModelDynamicContentItem</returns>
-        System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelDynamicContentItem> MarketingModuleDynamicContentCreateDynamicContentAsync (VirtoCommerceMarketingModuleWebModelDynamicContentItem contentItem);
+        System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelDynamicContentItem> MarketingModuleDynamicContentCreateDynamicContentAsync(VirtoCommerceMarketingModuleWebModelDynamicContentItem contentItem);
 
         /// <summary>
         /// Add new dynamic content item object to marketing system
@@ -557,7 +557,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="contentItem">dynamic content object that needs to be added to the dynamic content system</param>
         /// <returns>Task of ApiResponse (VirtoCommerceMarketingModuleWebModelDynamicContentItem)</returns>
-        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentItem>> MarketingModuleDynamicContentCreateDynamicContentAsyncWithHttpInfo (VirtoCommerceMarketingModuleWebModelDynamicContentItem contentItem);
+        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentItem>> MarketingModuleDynamicContentCreateDynamicContentAsyncWithHttpInfo(VirtoCommerceMarketingModuleWebModelDynamicContentItem contentItem);
         /// <summary>
         /// Add new dynamic content folder
         /// </summary>
@@ -567,7 +567,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="folder">dynamic content folder that needs to be added</param>
         /// <returns>Task of VirtoCommerceMarketingModuleWebModelDynamicContentFolder</returns>
-        System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelDynamicContentFolder> MarketingModuleDynamicContentCreateDynamicContentFolderAsync (VirtoCommerceMarketingModuleWebModelDynamicContentFolder folder);
+        System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelDynamicContentFolder> MarketingModuleDynamicContentCreateDynamicContentFolderAsync(VirtoCommerceMarketingModuleWebModelDynamicContentFolder folder);
 
         /// <summary>
         /// Add new dynamic content folder
@@ -578,7 +578,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="folder">dynamic content folder that needs to be added</param>
         /// <returns>Task of ApiResponse (VirtoCommerceMarketingModuleWebModelDynamicContentFolder)</returns>
-        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentFolder>> MarketingModuleDynamicContentCreateDynamicContentFolderAsyncWithHttpInfo (VirtoCommerceMarketingModuleWebModelDynamicContentFolder folder);
+        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentFolder>> MarketingModuleDynamicContentCreateDynamicContentFolderAsyncWithHttpInfo(VirtoCommerceMarketingModuleWebModelDynamicContentFolder folder);
         /// <summary>
         /// Add new dynamic content place object to marketing system
         /// </summary>
@@ -588,7 +588,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="contentPlace">dynamic content place object that needs to be added to the dynamic content system</param>
         /// <returns>Task of VirtoCommerceMarketingModuleWebModelDynamicContentPlace</returns>
-        System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelDynamicContentPlace> MarketingModuleDynamicContentCreateDynamicContentPlaceAsync (VirtoCommerceMarketingModuleWebModelDynamicContentPlace contentPlace);
+        System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelDynamicContentPlace> MarketingModuleDynamicContentCreateDynamicContentPlaceAsync(VirtoCommerceMarketingModuleWebModelDynamicContentPlace contentPlace);
 
         /// <summary>
         /// Add new dynamic content place object to marketing system
@@ -599,7 +599,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="contentPlace">dynamic content place object that needs to be added to the dynamic content system</param>
         /// <returns>Task of ApiResponse (VirtoCommerceMarketingModuleWebModelDynamicContentPlace)</returns>
-        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentPlace>> MarketingModuleDynamicContentCreateDynamicContentPlaceAsyncWithHttpInfo (VirtoCommerceMarketingModuleWebModelDynamicContentPlace contentPlace);
+        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentPlace>> MarketingModuleDynamicContentCreateDynamicContentPlaceAsyncWithHttpInfo(VirtoCommerceMarketingModuleWebModelDynamicContentPlace contentPlace);
         /// <summary>
         /// Add new dynamic content publication object to marketing system
         /// </summary>
@@ -609,7 +609,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="publication">dynamic content publication object that needs to be added to the dynamic content system</param>
         /// <returns>Task of VirtoCommerceMarketingModuleWebModelDynamicContentPublication</returns>
-        System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelDynamicContentPublication> MarketingModuleDynamicContentCreateDynamicContentPublicationAsync (VirtoCommerceMarketingModuleWebModelDynamicContentPublication publication);
+        System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelDynamicContentPublication> MarketingModuleDynamicContentCreateDynamicContentPublicationAsync(VirtoCommerceMarketingModuleWebModelDynamicContentPublication publication);
 
         /// <summary>
         /// Add new dynamic content publication object to marketing system
@@ -620,7 +620,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="publication">dynamic content publication object that needs to be added to the dynamic content system</param>
         /// <returns>Task of ApiResponse (VirtoCommerceMarketingModuleWebModelDynamicContentPublication)</returns>
-        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentPublication>> MarketingModuleDynamicContentCreateDynamicContentPublicationAsyncWithHttpInfo (VirtoCommerceMarketingModuleWebModelDynamicContentPublication publication);
+        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentPublication>> MarketingModuleDynamicContentCreateDynamicContentPublicationAsyncWithHttpInfo(VirtoCommerceMarketingModuleWebModelDynamicContentPublication publication);
         /// <summary>
         /// Delete a dynamic content folders
         /// </summary>
@@ -630,7 +630,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="ids">folders ids for delete</param>
         /// <returns>Task of void</returns>
-        System.Threading.Tasks.Task MarketingModuleDynamicContentDeleteDynamicContentFoldersAsync (List<string> ids);
+        System.Threading.Tasks.Task MarketingModuleDynamicContentDeleteDynamicContentFoldersAsync(List<string> ids);
 
         /// <summary>
         /// Delete a dynamic content folders
@@ -641,7 +641,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="ids">folders ids for delete</param>
         /// <returns>Task of ApiResponse</returns>
-        System.Threading.Tasks.Task<ApiResponse<Object>> MarketingModuleDynamicContentDeleteDynamicContentFoldersAsyncWithHttpInfo (List<string> ids);
+        System.Threading.Tasks.Task<ApiResponse<object>> MarketingModuleDynamicContentDeleteDynamicContentFoldersAsyncWithHttpInfo(List<string> ids);
         /// <summary>
         /// Delete a dynamic content place objects
         /// </summary>
@@ -651,7 +651,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="ids">content place object ids for delete from dynamic content system</param>
         /// <returns>Task of void</returns>
-        System.Threading.Tasks.Task MarketingModuleDynamicContentDeleteDynamicContentPlacesAsync (List<string> ids);
+        System.Threading.Tasks.Task MarketingModuleDynamicContentDeleteDynamicContentPlacesAsync(List<string> ids);
 
         /// <summary>
         /// Delete a dynamic content place objects
@@ -662,7 +662,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="ids">content place object ids for delete from dynamic content system</param>
         /// <returns>Task of ApiResponse</returns>
-        System.Threading.Tasks.Task<ApiResponse<Object>> MarketingModuleDynamicContentDeleteDynamicContentPlacesAsyncWithHttpInfo (List<string> ids);
+        System.Threading.Tasks.Task<ApiResponse<object>> MarketingModuleDynamicContentDeleteDynamicContentPlacesAsyncWithHttpInfo(List<string> ids);
         /// <summary>
         /// Delete a dynamic content publication objects
         /// </summary>
@@ -672,7 +672,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="ids">content publication object ids for delete from dynamic content system</param>
         /// <returns>Task of void</returns>
-        System.Threading.Tasks.Task MarketingModuleDynamicContentDeleteDynamicContentPublicationsAsync (List<string> ids);
+        System.Threading.Tasks.Task MarketingModuleDynamicContentDeleteDynamicContentPublicationsAsync(List<string> ids);
 
         /// <summary>
         /// Delete a dynamic content publication objects
@@ -683,7 +683,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="ids">content publication object ids for delete from dynamic content system</param>
         /// <returns>Task of ApiResponse</returns>
-        System.Threading.Tasks.Task<ApiResponse<Object>> MarketingModuleDynamicContentDeleteDynamicContentPublicationsAsyncWithHttpInfo (List<string> ids);
+        System.Threading.Tasks.Task<ApiResponse<object>> MarketingModuleDynamicContentDeleteDynamicContentPublicationsAsyncWithHttpInfo(List<string> ids);
         /// <summary>
         /// Delete a dynamic content item objects
         /// </summary>
@@ -693,7 +693,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="ids">content item object ids for delete in the dynamic content system</param>
         /// <returns>Task of void</returns>
-        System.Threading.Tasks.Task MarketingModuleDynamicContentDeleteDynamicContentsAsync (List<string> ids);
+        System.Threading.Tasks.Task MarketingModuleDynamicContentDeleteDynamicContentsAsync(List<string> ids);
 
         /// <summary>
         /// Delete a dynamic content item objects
@@ -704,7 +704,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="ids">content item object ids for delete in the dynamic content system</param>
         /// <returns>Task of ApiResponse</returns>
-        System.Threading.Tasks.Task<ApiResponse<Object>> MarketingModuleDynamicContentDeleteDynamicContentsAsyncWithHttpInfo (List<string> ids);
+        System.Threading.Tasks.Task<ApiResponse<object>> MarketingModuleDynamicContentDeleteDynamicContentsAsyncWithHttpInfo(List<string> ids);
         /// <summary>
         /// Get dynamic content for given placeholders
         /// </summary>
@@ -714,7 +714,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="evalContext"></param>
         /// <returns>Task of List&lt;VirtoCommerceMarketingModuleWebModelDynamicContentItem&gt;</returns>
-        System.Threading.Tasks.Task<List<VirtoCommerceMarketingModuleWebModelDynamicContentItem>> MarketingModuleDynamicContentEvaluateDynamicContentAsync (VirtoCommerceDomainMarketingModelDynamicContentDynamicContentEvaluationContext evalContext);
+        System.Threading.Tasks.Task<List<VirtoCommerceMarketingModuleWebModelDynamicContentItem>> MarketingModuleDynamicContentEvaluateDynamicContentAsync(VirtoCommerceDomainMarketingModelDynamicContentDynamicContentEvaluationContext evalContext);
 
         /// <summary>
         /// Get dynamic content for given placeholders
@@ -725,7 +725,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="evalContext"></param>
         /// <returns>Task of ApiResponse (List&lt;VirtoCommerceMarketingModuleWebModelDynamicContentItem&gt;)</returns>
-        System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceMarketingModuleWebModelDynamicContentItem>>> MarketingModuleDynamicContentEvaluateDynamicContentAsyncWithHttpInfo (VirtoCommerceDomainMarketingModelDynamicContentDynamicContentEvaluationContext evalContext);
+        System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceMarketingModuleWebModelDynamicContentItem>>> MarketingModuleDynamicContentEvaluateDynamicContentAsyncWithHttpInfo(VirtoCommerceDomainMarketingModelDynamicContentDynamicContentEvaluationContext evalContext);
         /// <summary>
         /// Find dynamic content item object by id
         /// </summary>
@@ -735,7 +735,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">content item id</param>
         /// <returns>Task of VirtoCommerceMarketingModuleWebModelDynamicContentItem</returns>
-        System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelDynamicContentItem> MarketingModuleDynamicContentGetDynamicContentByIdAsync (string id);
+        System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelDynamicContentItem> MarketingModuleDynamicContentGetDynamicContentByIdAsync(string id);
 
         /// <summary>
         /// Find dynamic content item object by id
@@ -746,7 +746,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">content item id</param>
         /// <returns>Task of ApiResponse (VirtoCommerceMarketingModuleWebModelDynamicContentItem)</returns>
-        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentItem>> MarketingModuleDynamicContentGetDynamicContentByIdAsyncWithHttpInfo (string id);
+        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentItem>> MarketingModuleDynamicContentGetDynamicContentByIdAsyncWithHttpInfo(string id);
         /// <summary>
         /// Find dynamic content folder by id
         /// </summary>
@@ -756,7 +756,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">folder id</param>
         /// <returns>Task of VirtoCommerceMarketingModuleWebModelDynamicContentFolder</returns>
-        System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelDynamicContentFolder> MarketingModuleDynamicContentGetDynamicContentFolderByIdAsync (string id);
+        System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelDynamicContentFolder> MarketingModuleDynamicContentGetDynamicContentFolderByIdAsync(string id);
 
         /// <summary>
         /// Find dynamic content folder by id
@@ -767,7 +767,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">folder id</param>
         /// <returns>Task of ApiResponse (VirtoCommerceMarketingModuleWebModelDynamicContentFolder)</returns>
-        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentFolder>> MarketingModuleDynamicContentGetDynamicContentFolderByIdAsyncWithHttpInfo (string id);
+        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentFolder>> MarketingModuleDynamicContentGetDynamicContentFolderByIdAsyncWithHttpInfo(string id);
         /// <summary>
         /// Find dynamic content place object by id
         /// </summary>
@@ -777,7 +777,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">place id</param>
         /// <returns>Task of VirtoCommerceMarketingModuleWebModelDynamicContentPlace</returns>
-        System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelDynamicContentPlace> MarketingModuleDynamicContentGetDynamicContentPlaceByIdAsync (string id);
+        System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelDynamicContentPlace> MarketingModuleDynamicContentGetDynamicContentPlaceByIdAsync(string id);
 
         /// <summary>
         /// Find dynamic content place object by id
@@ -788,7 +788,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">place id</param>
         /// <returns>Task of ApiResponse (VirtoCommerceMarketingModuleWebModelDynamicContentPlace)</returns>
-        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentPlace>> MarketingModuleDynamicContentGetDynamicContentPlaceByIdAsyncWithHttpInfo (string id);
+        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentPlace>> MarketingModuleDynamicContentGetDynamicContentPlaceByIdAsyncWithHttpInfo(string id);
         /// <summary>
         /// Find dynamic content publication object by id
         /// </summary>
@@ -798,7 +798,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">publication id</param>
         /// <returns>Task of VirtoCommerceMarketingModuleWebModelDynamicContentPublication</returns>
-        System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelDynamicContentPublication> MarketingModuleDynamicContentGetDynamicContentPublicationByIdAsync (string id);
+        System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelDynamicContentPublication> MarketingModuleDynamicContentGetDynamicContentPublicationByIdAsync(string id);
 
         /// <summary>
         /// Find dynamic content publication object by id
@@ -809,7 +809,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">publication id</param>
         /// <returns>Task of ApiResponse (VirtoCommerceMarketingModuleWebModelDynamicContentPublication)</returns>
-        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentPublication>> MarketingModuleDynamicContentGetDynamicContentPublicationByIdAsyncWithHttpInfo (string id);
+        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentPublication>> MarketingModuleDynamicContentGetDynamicContentPublicationByIdAsyncWithHttpInfo(string id);
         /// <summary>
         /// Get new dynamic content publication object
         /// </summary>
@@ -818,7 +818,7 @@ namespace VirtoCommerce.Client.Api
         /// </remarks>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <returns>Task of VirtoCommerceMarketingModuleWebModelDynamicContentPublication</returns>
-        System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelDynamicContentPublication> MarketingModuleDynamicContentGetNewDynamicPublicationAsync ();
+        System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelDynamicContentPublication> MarketingModuleDynamicContentGetNewDynamicPublicationAsync();
 
         /// <summary>
         /// Get new dynamic content publication object
@@ -828,7 +828,7 @@ namespace VirtoCommerce.Client.Api
         /// </remarks>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <returns>Task of ApiResponse (VirtoCommerceMarketingModuleWebModelDynamicContentPublication)</returns>
-        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentPublication>> MarketingModuleDynamicContentGetNewDynamicPublicationAsyncWithHttpInfo ();
+        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentPublication>> MarketingModuleDynamicContentGetNewDynamicPublicationAsyncWithHttpInfo();
         /// <summary>
         /// Update a existing dynamic content item object
         /// </summary>
@@ -838,7 +838,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="contentItem">dynamic content object that needs to be updated in the dynamic content system</param>
         /// <returns>Task of void</returns>
-        System.Threading.Tasks.Task MarketingModuleDynamicContentUpdateDynamicContentAsync (VirtoCommerceMarketingModuleWebModelDynamicContentItem contentItem);
+        System.Threading.Tasks.Task MarketingModuleDynamicContentUpdateDynamicContentAsync(VirtoCommerceMarketingModuleWebModelDynamicContentItem contentItem);
 
         /// <summary>
         /// Update a existing dynamic content item object
@@ -849,7 +849,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="contentItem">dynamic content object that needs to be updated in the dynamic content system</param>
         /// <returns>Task of ApiResponse</returns>
-        System.Threading.Tasks.Task<ApiResponse<Object>> MarketingModuleDynamicContentUpdateDynamicContentAsyncWithHttpInfo (VirtoCommerceMarketingModuleWebModelDynamicContentItem contentItem);
+        System.Threading.Tasks.Task<ApiResponse<object>> MarketingModuleDynamicContentUpdateDynamicContentAsyncWithHttpInfo(VirtoCommerceMarketingModuleWebModelDynamicContentItem contentItem);
         /// <summary>
         /// Update a existing dynamic content folder
         /// </summary>
@@ -859,7 +859,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="folder">dynamic content folder that needs to be updated</param>
         /// <returns>Task of void</returns>
-        System.Threading.Tasks.Task MarketingModuleDynamicContentUpdateDynamicContentFolderAsync (VirtoCommerceMarketingModuleWebModelDynamicContentFolder folder);
+        System.Threading.Tasks.Task MarketingModuleDynamicContentUpdateDynamicContentFolderAsync(VirtoCommerceMarketingModuleWebModelDynamicContentFolder folder);
 
         /// <summary>
         /// Update a existing dynamic content folder
@@ -870,7 +870,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="folder">dynamic content folder that needs to be updated</param>
         /// <returns>Task of ApiResponse</returns>
-        System.Threading.Tasks.Task<ApiResponse<Object>> MarketingModuleDynamicContentUpdateDynamicContentFolderAsyncWithHttpInfo (VirtoCommerceMarketingModuleWebModelDynamicContentFolder folder);
+        System.Threading.Tasks.Task<ApiResponse<object>> MarketingModuleDynamicContentUpdateDynamicContentFolderAsyncWithHttpInfo(VirtoCommerceMarketingModuleWebModelDynamicContentFolder folder);
         /// <summary>
         /// Update a existing dynamic content place object
         /// </summary>
@@ -880,7 +880,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="contentPlace">dynamic content place object that needs to be updated in the dynamic content system</param>
         /// <returns>Task of void</returns>
-        System.Threading.Tasks.Task MarketingModuleDynamicContentUpdateDynamicContentPlaceAsync (VirtoCommerceMarketingModuleWebModelDynamicContentPlace contentPlace);
+        System.Threading.Tasks.Task MarketingModuleDynamicContentUpdateDynamicContentPlaceAsync(VirtoCommerceMarketingModuleWebModelDynamicContentPlace contentPlace);
 
         /// <summary>
         /// Update a existing dynamic content place object
@@ -891,7 +891,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="contentPlace">dynamic content place object that needs to be updated in the dynamic content system</param>
         /// <returns>Task of ApiResponse</returns>
-        System.Threading.Tasks.Task<ApiResponse<Object>> MarketingModuleDynamicContentUpdateDynamicContentPlaceAsyncWithHttpInfo (VirtoCommerceMarketingModuleWebModelDynamicContentPlace contentPlace);
+        System.Threading.Tasks.Task<ApiResponse<object>> MarketingModuleDynamicContentUpdateDynamicContentPlaceAsyncWithHttpInfo(VirtoCommerceMarketingModuleWebModelDynamicContentPlace contentPlace);
         /// <summary>
         /// Update a existing dynamic content publication object
         /// </summary>
@@ -901,7 +901,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="publication">dynamic content publication object that needs to be updated in the dynamic content system</param>
         /// <returns>Task of void</returns>
-        System.Threading.Tasks.Task MarketingModuleDynamicContentUpdateDynamicContentPublicationAsync (VirtoCommerceMarketingModuleWebModelDynamicContentPublication publication);
+        System.Threading.Tasks.Task MarketingModuleDynamicContentUpdateDynamicContentPublicationAsync(VirtoCommerceMarketingModuleWebModelDynamicContentPublication publication);
 
         /// <summary>
         /// Update a existing dynamic content publication object
@@ -912,7 +912,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="publication">dynamic content publication object that needs to be updated in the dynamic content system</param>
         /// <returns>Task of ApiResponse</returns>
-        System.Threading.Tasks.Task<ApiResponse<Object>> MarketingModuleDynamicContentUpdateDynamicContentPublicationAsyncWithHttpInfo (VirtoCommerceMarketingModuleWebModelDynamicContentPublication publication);
+        System.Threading.Tasks.Task<ApiResponse<object>> MarketingModuleDynamicContentUpdateDynamicContentPublicationAsyncWithHttpInfo(VirtoCommerceMarketingModuleWebModelDynamicContentPublication publication);
         /// <summary>
         /// Add new dynamic promotion object to marketing system
         /// </summary>
@@ -922,7 +922,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="promotion">dynamic promotion object that needs to be added to the marketing system</param>
         /// <returns>Task of VirtoCommerceMarketingModuleWebModelPromotion</returns>
-        System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelPromotion> MarketingModulePromotionCreatePromotionAsync (VirtoCommerceMarketingModuleWebModelPromotion promotion);
+        System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelPromotion> MarketingModulePromotionCreatePromotionAsync(VirtoCommerceMarketingModuleWebModelPromotion promotion);
 
         /// <summary>
         /// Add new dynamic promotion object to marketing system
@@ -933,7 +933,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="promotion">dynamic promotion object that needs to be added to the marketing system</param>
         /// <returns>Task of ApiResponse (VirtoCommerceMarketingModuleWebModelPromotion)</returns>
-        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelPromotion>> MarketingModulePromotionCreatePromotionAsyncWithHttpInfo (VirtoCommerceMarketingModuleWebModelPromotion promotion);
+        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelPromotion>> MarketingModulePromotionCreatePromotionAsyncWithHttpInfo(VirtoCommerceMarketingModuleWebModelPromotion promotion);
         /// <summary>
         /// Delete promotions objects
         /// </summary>
@@ -943,7 +943,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="ids">promotions object ids for delete in the marketing system</param>
         /// <returns>Task of void</returns>
-        System.Threading.Tasks.Task MarketingModulePromotionDeletePromotionsAsync (List<string> ids);
+        System.Threading.Tasks.Task MarketingModulePromotionDeletePromotionsAsync(List<string> ids);
 
         /// <summary>
         /// Delete promotions objects
@@ -954,7 +954,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="ids">promotions object ids for delete in the marketing system</param>
         /// <returns>Task of ApiResponse</returns>
-        System.Threading.Tasks.Task<ApiResponse<Object>> MarketingModulePromotionDeletePromotionsAsyncWithHttpInfo (List<string> ids);
+        System.Threading.Tasks.Task<ApiResponse<object>> MarketingModulePromotionDeletePromotionsAsyncWithHttpInfo(List<string> ids);
         /// <summary>
         /// Evaluate promotions
         /// </summary>
@@ -964,7 +964,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="context">Promotion evaluation context</param>
         /// <returns>Task of List&lt;VirtoCommerceMarketingModuleWebModelPromotionReward&gt;</returns>
-        System.Threading.Tasks.Task<List<VirtoCommerceMarketingModuleWebModelPromotionReward>> MarketingModulePromotionEvaluatePromotionsAsync (VirtoCommerceDomainMarketingModelPromotionEvaluationContext context);
+        System.Threading.Tasks.Task<List<VirtoCommerceMarketingModuleWebModelPromotionReward>> MarketingModulePromotionEvaluatePromotionsAsync(VirtoCommerceDomainMarketingModelPromotionEvaluationContext context);
 
         /// <summary>
         /// Evaluate promotions
@@ -975,7 +975,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="context">Promotion evaluation context</param>
         /// <returns>Task of ApiResponse (List&lt;VirtoCommerceMarketingModuleWebModelPromotionReward&gt;)</returns>
-        System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceMarketingModuleWebModelPromotionReward>>> MarketingModulePromotionEvaluatePromotionsAsyncWithHttpInfo (VirtoCommerceDomainMarketingModelPromotionEvaluationContext context);
+        System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceMarketingModuleWebModelPromotionReward>>> MarketingModulePromotionEvaluatePromotionsAsyncWithHttpInfo(VirtoCommerceDomainMarketingModelPromotionEvaluationContext context);
         /// <summary>
         /// Get new dynamic promotion object
         /// </summary>
@@ -984,7 +984,7 @@ namespace VirtoCommerce.Client.Api
         /// </remarks>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <returns>Task of VirtoCommerceMarketingModuleWebModelPromotion</returns>
-        System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelPromotion> MarketingModulePromotionGetNewDynamicPromotionAsync ();
+        System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelPromotion> MarketingModulePromotionGetNewDynamicPromotionAsync();
 
         /// <summary>
         /// Get new dynamic promotion object
@@ -994,7 +994,7 @@ namespace VirtoCommerce.Client.Api
         /// </remarks>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <returns>Task of ApiResponse (VirtoCommerceMarketingModuleWebModelPromotion)</returns>
-        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelPromotion>> MarketingModulePromotionGetNewDynamicPromotionAsyncWithHttpInfo ();
+        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelPromotion>> MarketingModulePromotionGetNewDynamicPromotionAsyncWithHttpInfo();
         /// <summary>
         /// Find promotion object by id
         /// </summary>
@@ -1004,7 +1004,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">promotion id</param>
         /// <returns>Task of VirtoCommerceMarketingModuleWebModelPromotion</returns>
-        System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelPromotion> MarketingModulePromotionGetPromotionByIdAsync (string id);
+        System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelPromotion> MarketingModulePromotionGetPromotionByIdAsync(string id);
 
         /// <summary>
         /// Find promotion object by id
@@ -1015,7 +1015,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">promotion id</param>
         /// <returns>Task of ApiResponse (VirtoCommerceMarketingModuleWebModelPromotion)</returns>
-        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelPromotion>> MarketingModulePromotionGetPromotionByIdAsyncWithHttpInfo (string id);
+        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelPromotion>> MarketingModulePromotionGetPromotionByIdAsyncWithHttpInfo(string id);
         /// <summary>
         /// Update a existing dynamic promotion object in marketing system
         /// </summary>
@@ -1025,7 +1025,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="promotion">&amp;gt;dynamic promotion object that needs to be updated in the marketing system</param>
         /// <returns>Task of void</returns>
-        System.Threading.Tasks.Task MarketingModulePromotionUpdatePromotionsAsync (VirtoCommerceMarketingModuleWebModelPromotion promotion);
+        System.Threading.Tasks.Task MarketingModulePromotionUpdatePromotionsAsync(VirtoCommerceMarketingModuleWebModelPromotion promotion);
 
         /// <summary>
         /// Update a existing dynamic promotion object in marketing system
@@ -1036,7 +1036,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="promotion">&amp;gt;dynamic promotion object that needs to be updated in the marketing system</param>
         /// <returns>Task of ApiResponse</returns>
-        System.Threading.Tasks.Task<ApiResponse<Object>> MarketingModulePromotionUpdatePromotionsAsyncWithHttpInfo (VirtoCommerceMarketingModuleWebModelPromotion promotion);
+        System.Threading.Tasks.Task<ApiResponse<object>> MarketingModulePromotionUpdatePromotionsAsyncWithHttpInfo(VirtoCommerceMarketingModuleWebModelPromotion promotion);
         /// <summary>
         /// Search marketing objects by given criteria
         /// </summary>
@@ -1046,7 +1046,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="criteria">criteria</param>
         /// <returns>Task of VirtoCommerceMarketingModuleWebModelMarketingSearchResult</returns>
-        System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelMarketingSearchResult> MarketingModuleSearchAsync (VirtoCommerceDomainMarketingModelMarketingSearchCriteria criteria);
+        System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelMarketingSearchResult> MarketingModuleSearchAsync(VirtoCommerceDomainMarketingModelMarketingSearchCriteria criteria);
 
         /// <summary>
         /// Search marketing objects by given criteria
@@ -1057,81 +1057,47 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="criteria">criteria</param>
         /// <returns>Task of ApiResponse (VirtoCommerceMarketingModuleWebModelMarketingSearchResult)</returns>
-        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelMarketingSearchResult>> MarketingModuleSearchAsyncWithHttpInfo (VirtoCommerceDomainMarketingModelMarketingSearchCriteria criteria);
+        System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelMarketingSearchResult>> MarketingModuleSearchAsyncWithHttpInfo(VirtoCommerceDomainMarketingModelMarketingSearchCriteria criteria);
         #endregion Asynchronous Operations
     }
 
     /// <summary>
     /// Represents a collection of functions to interact with the API endpoints
     /// </summary>
-    public partial class MarketingModuleApi : IMarketingModuleApi
+    public class MarketingModuleApi : IMarketingModuleApi
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="MarketingModuleApi"/> class
         /// using Configuration object
         /// </summary>
-        /// <param name="configuration">An instance of Configuration</param>
+        /// <param name="apiClient">An instance of ApiClient.</param>
         /// <returns></returns>
-        public MarketingModuleApi(Configuration configuration)
+        public MarketingModuleApi(ApiClient apiClient)
         {
-            if (configuration == null) // use the default one in Configuration
-                this.Configuration = Configuration.Default;
-            else
-                this.Configuration = configuration;
-
-            // ensure API client has configuration ready
-            if (Configuration.ApiClient.Configuration == null)
-            {
-                this.Configuration.ApiClient.Configuration = this.Configuration;
-            }
+            ApiClient = apiClient;
+            Configuration = apiClient.Configuration;
         }
 
         /// <summary>
         /// Gets the base path of the API client.
         /// </summary>
         /// <value>The base path</value>
-        public String GetBasePath()
+        public string GetBasePath()
         {
-            return this.Configuration.ApiClient.RestClient.BaseUrl.ToString();
-        }
-
-        /// <summary>
-        /// Sets the base path of the API client.
-        /// </summary>
-        /// <value>The base path</value>
-        [Obsolete("SetBasePath is deprecated, please do 'Configuration.ApiClient = new ApiClient(\"http://new-path\")' instead.")]
-        public void SetBasePath(String basePath)
-        {
-            // do nothing
+            return ApiClient.RestClient.BaseUrl.ToString();
         }
 
         /// <summary>
         /// Gets or sets the configuration object
         /// </summary>
         /// <value>An instance of the Configuration</value>
-        public Configuration Configuration {get; set;}
+        public Configuration Configuration { get; set; }
 
         /// <summary>
-        /// Gets the default header.
+        /// Gets or sets the API client object
         /// </summary>
-        /// <returns>Dictionary of HTTP header</returns>
-        [Obsolete("DefaultHeader is deprecated, please use Configuration.DefaultHeader instead.")]
-        public Dictionary<String, String> DefaultHeader()
-        {
-            return this.Configuration.DefaultHeader;
-        }
-
-        /// <summary>
-        /// Add default header.
-        /// </summary>
-        /// <param name="key">Header field name.</param>
-        /// <param name="value">Header field value.</param>
-        /// <returns></returns>
-        [Obsolete("AddDefaultHeader is deprecated, please use Configuration.AddDefaultHeader instead.")]
-        public void AddDefaultHeader(string key, string value)
-        {
-            this.Configuration.AddDefaultHeader(key, value);
-        }
+        /// <value>An instance of the ApiClient</value>
+        public ApiClient ApiClient { get; set; }
 
         /// <summary>
         /// Add new dynamic content item object to marketing system 
@@ -1139,7 +1105,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="contentItem">dynamic content object that needs to be added to the dynamic content system</param>
         /// <returns>VirtoCommerceMarketingModuleWebModelDynamicContentItem</returns>
-        public VirtoCommerceMarketingModuleWebModelDynamicContentItem MarketingModuleDynamicContentCreateDynamicContent (VirtoCommerceMarketingModuleWebModelDynamicContentItem contentItem)
+        public VirtoCommerceMarketingModuleWebModelDynamicContentItem MarketingModuleDynamicContentCreateDynamicContent(VirtoCommerceMarketingModuleWebModelDynamicContentItem contentItem)
         {
              ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentItem> localVarResponse = MarketingModuleDynamicContentCreateDynamicContentWithHttpInfo(contentItem);
              return localVarResponse.Data;
@@ -1151,38 +1117,38 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="contentItem">dynamic content object that needs to be added to the dynamic content system</param>
         /// <returns>ApiResponse of VirtoCommerceMarketingModuleWebModelDynamicContentItem</returns>
-        public ApiResponse< VirtoCommerceMarketingModuleWebModelDynamicContentItem > MarketingModuleDynamicContentCreateDynamicContentWithHttpInfo (VirtoCommerceMarketingModuleWebModelDynamicContentItem contentItem)
+        public ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentItem> MarketingModuleDynamicContentCreateDynamicContentWithHttpInfo(VirtoCommerceMarketingModuleWebModelDynamicContentItem contentItem)
         {
             // verify the required parameter 'contentItem' is set
             if (contentItem == null)
                 throw new ApiException(400, "Missing required parameter 'contentItem' when calling MarketingModuleApi->MarketingModuleDynamicContentCreateDynamicContent");
 
             var localVarPath = "/api/marketing/contentitems";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
+            string[] localVarHttpContentTypes = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml", 
                 "application/x-www-form-urlencoded"
             };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
+            string[] localVarHttpHeaderAccepts = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml"
             };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
@@ -1191,7 +1157,7 @@ namespace VirtoCommerce.Client.Api
             localVarPathParams.Add("format", "json");
             if (contentItem.GetType() != typeof(byte[]))
             {
-                localVarPostBody = Configuration.ApiClient.Serialize(contentItem); // http body (model) parameter
+                localVarPostBody = ApiClient.Serialize(contentItem); // http body (model) parameter
             }
             else
             {
@@ -1200,20 +1166,20 @@ namespace VirtoCommerce.Client.Api
 
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)ApiClient.CallApi(localVarPath,
                 Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentCreateDynamicContent: " + localVarResponse.Content, localVarResponse.Content);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentCreateDynamicContent: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentCreateDynamicContent: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentCreateDynamicContent: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
             return new ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentItem>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommerceMarketingModuleWebModelDynamicContentItem) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentItem)));
+                (VirtoCommerceMarketingModuleWebModelDynamicContentItem)ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentItem)));
             
         }
 
@@ -1223,7 +1189,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="contentItem">dynamic content object that needs to be added to the dynamic content system</param>
         /// <returns>Task of VirtoCommerceMarketingModuleWebModelDynamicContentItem</returns>
-        public async System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelDynamicContentItem> MarketingModuleDynamicContentCreateDynamicContentAsync (VirtoCommerceMarketingModuleWebModelDynamicContentItem contentItem)
+        public async System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelDynamicContentItem> MarketingModuleDynamicContentCreateDynamicContentAsync(VirtoCommerceMarketingModuleWebModelDynamicContentItem contentItem)
         {
              ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentItem> localVarResponse = await MarketingModuleDynamicContentCreateDynamicContentAsyncWithHttpInfo(contentItem);
              return localVarResponse.Data;
@@ -1236,38 +1202,38 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="contentItem">dynamic content object that needs to be added to the dynamic content system</param>
         /// <returns>Task of ApiResponse (VirtoCommerceMarketingModuleWebModelDynamicContentItem)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentItem>> MarketingModuleDynamicContentCreateDynamicContentAsyncWithHttpInfo (VirtoCommerceMarketingModuleWebModelDynamicContentItem contentItem)
+        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentItem>> MarketingModuleDynamicContentCreateDynamicContentAsyncWithHttpInfo(VirtoCommerceMarketingModuleWebModelDynamicContentItem contentItem)
         {
             // verify the required parameter 'contentItem' is set
             if (contentItem == null)
                 throw new ApiException(400, "Missing required parameter 'contentItem' when calling MarketingModuleApi->MarketingModuleDynamicContentCreateDynamicContent");
 
             var localVarPath = "/api/marketing/contentitems";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
+            string[] localVarHttpContentTypes = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml", 
                 "application/x-www-form-urlencoded"
             };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
+            string[] localVarHttpHeaderAccepts = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml"
             };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
@@ -1276,7 +1242,7 @@ namespace VirtoCommerce.Client.Api
             localVarPathParams.Add("format", "json");
             if (contentItem.GetType() != typeof(byte[]))
             {
-                localVarPostBody = Configuration.ApiClient.Serialize(contentItem); // http body (model) parameter
+                localVarPostBody = ApiClient.Serialize(contentItem); // http body (model) parameter
             }
             else
             {
@@ -1285,30 +1251,29 @@ namespace VirtoCommerce.Client.Api
 
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)await ApiClient.CallApiAsync(localVarPath,
                 Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentCreateDynamicContent: " + localVarResponse.Content, localVarResponse.Content);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentCreateDynamicContent: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentCreateDynamicContent: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentCreateDynamicContent: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
             return new ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentItem>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommerceMarketingModuleWebModelDynamicContentItem) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentItem)));
+                (VirtoCommerceMarketingModuleWebModelDynamicContentItem)ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentItem)));
             
         }
-
         /// <summary>
         /// Add new dynamic content folder 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="folder">dynamic content folder that needs to be added</param>
         /// <returns>VirtoCommerceMarketingModuleWebModelDynamicContentFolder</returns>
-        public VirtoCommerceMarketingModuleWebModelDynamicContentFolder MarketingModuleDynamicContentCreateDynamicContentFolder (VirtoCommerceMarketingModuleWebModelDynamicContentFolder folder)
+        public VirtoCommerceMarketingModuleWebModelDynamicContentFolder MarketingModuleDynamicContentCreateDynamicContentFolder(VirtoCommerceMarketingModuleWebModelDynamicContentFolder folder)
         {
              ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentFolder> localVarResponse = MarketingModuleDynamicContentCreateDynamicContentFolderWithHttpInfo(folder);
              return localVarResponse.Data;
@@ -1320,38 +1285,38 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="folder">dynamic content folder that needs to be added</param>
         /// <returns>ApiResponse of VirtoCommerceMarketingModuleWebModelDynamicContentFolder</returns>
-        public ApiResponse< VirtoCommerceMarketingModuleWebModelDynamicContentFolder > MarketingModuleDynamicContentCreateDynamicContentFolderWithHttpInfo (VirtoCommerceMarketingModuleWebModelDynamicContentFolder folder)
+        public ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentFolder> MarketingModuleDynamicContentCreateDynamicContentFolderWithHttpInfo(VirtoCommerceMarketingModuleWebModelDynamicContentFolder folder)
         {
             // verify the required parameter 'folder' is set
             if (folder == null)
                 throw new ApiException(400, "Missing required parameter 'folder' when calling MarketingModuleApi->MarketingModuleDynamicContentCreateDynamicContentFolder");
 
             var localVarPath = "/api/marketing/contentfolders";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
+            string[] localVarHttpContentTypes = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml", 
                 "application/x-www-form-urlencoded"
             };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
+            string[] localVarHttpHeaderAccepts = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml"
             };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
@@ -1360,7 +1325,7 @@ namespace VirtoCommerce.Client.Api
             localVarPathParams.Add("format", "json");
             if (folder.GetType() != typeof(byte[]))
             {
-                localVarPostBody = Configuration.ApiClient.Serialize(folder); // http body (model) parameter
+                localVarPostBody = ApiClient.Serialize(folder); // http body (model) parameter
             }
             else
             {
@@ -1369,20 +1334,20 @@ namespace VirtoCommerce.Client.Api
 
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)ApiClient.CallApi(localVarPath,
                 Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentCreateDynamicContentFolder: " + localVarResponse.Content, localVarResponse.Content);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentCreateDynamicContentFolder: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentCreateDynamicContentFolder: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentCreateDynamicContentFolder: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
             return new ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentFolder>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommerceMarketingModuleWebModelDynamicContentFolder) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentFolder)));
+                (VirtoCommerceMarketingModuleWebModelDynamicContentFolder)ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentFolder)));
             
         }
 
@@ -1392,7 +1357,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="folder">dynamic content folder that needs to be added</param>
         /// <returns>Task of VirtoCommerceMarketingModuleWebModelDynamicContentFolder</returns>
-        public async System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelDynamicContentFolder> MarketingModuleDynamicContentCreateDynamicContentFolderAsync (VirtoCommerceMarketingModuleWebModelDynamicContentFolder folder)
+        public async System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelDynamicContentFolder> MarketingModuleDynamicContentCreateDynamicContentFolderAsync(VirtoCommerceMarketingModuleWebModelDynamicContentFolder folder)
         {
              ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentFolder> localVarResponse = await MarketingModuleDynamicContentCreateDynamicContentFolderAsyncWithHttpInfo(folder);
              return localVarResponse.Data;
@@ -1405,38 +1370,38 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="folder">dynamic content folder that needs to be added</param>
         /// <returns>Task of ApiResponse (VirtoCommerceMarketingModuleWebModelDynamicContentFolder)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentFolder>> MarketingModuleDynamicContentCreateDynamicContentFolderAsyncWithHttpInfo (VirtoCommerceMarketingModuleWebModelDynamicContentFolder folder)
+        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentFolder>> MarketingModuleDynamicContentCreateDynamicContentFolderAsyncWithHttpInfo(VirtoCommerceMarketingModuleWebModelDynamicContentFolder folder)
         {
             // verify the required parameter 'folder' is set
             if (folder == null)
                 throw new ApiException(400, "Missing required parameter 'folder' when calling MarketingModuleApi->MarketingModuleDynamicContentCreateDynamicContentFolder");
 
             var localVarPath = "/api/marketing/contentfolders";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
+            string[] localVarHttpContentTypes = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml", 
                 "application/x-www-form-urlencoded"
             };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
+            string[] localVarHttpHeaderAccepts = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml"
             };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
@@ -1445,7 +1410,7 @@ namespace VirtoCommerce.Client.Api
             localVarPathParams.Add("format", "json");
             if (folder.GetType() != typeof(byte[]))
             {
-                localVarPostBody = Configuration.ApiClient.Serialize(folder); // http body (model) parameter
+                localVarPostBody = ApiClient.Serialize(folder); // http body (model) parameter
             }
             else
             {
@@ -1454,30 +1419,29 @@ namespace VirtoCommerce.Client.Api
 
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)await ApiClient.CallApiAsync(localVarPath,
                 Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentCreateDynamicContentFolder: " + localVarResponse.Content, localVarResponse.Content);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentCreateDynamicContentFolder: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentCreateDynamicContentFolder: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentCreateDynamicContentFolder: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
             return new ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentFolder>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommerceMarketingModuleWebModelDynamicContentFolder) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentFolder)));
+                (VirtoCommerceMarketingModuleWebModelDynamicContentFolder)ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentFolder)));
             
         }
-
         /// <summary>
         /// Add new dynamic content place object to marketing system 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="contentPlace">dynamic content place object that needs to be added to the dynamic content system</param>
         /// <returns>VirtoCommerceMarketingModuleWebModelDynamicContentPlace</returns>
-        public VirtoCommerceMarketingModuleWebModelDynamicContentPlace MarketingModuleDynamicContentCreateDynamicContentPlace (VirtoCommerceMarketingModuleWebModelDynamicContentPlace contentPlace)
+        public VirtoCommerceMarketingModuleWebModelDynamicContentPlace MarketingModuleDynamicContentCreateDynamicContentPlace(VirtoCommerceMarketingModuleWebModelDynamicContentPlace contentPlace)
         {
              ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentPlace> localVarResponse = MarketingModuleDynamicContentCreateDynamicContentPlaceWithHttpInfo(contentPlace);
              return localVarResponse.Data;
@@ -1489,38 +1453,38 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="contentPlace">dynamic content place object that needs to be added to the dynamic content system</param>
         /// <returns>ApiResponse of VirtoCommerceMarketingModuleWebModelDynamicContentPlace</returns>
-        public ApiResponse< VirtoCommerceMarketingModuleWebModelDynamicContentPlace > MarketingModuleDynamicContentCreateDynamicContentPlaceWithHttpInfo (VirtoCommerceMarketingModuleWebModelDynamicContentPlace contentPlace)
+        public ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentPlace> MarketingModuleDynamicContentCreateDynamicContentPlaceWithHttpInfo(VirtoCommerceMarketingModuleWebModelDynamicContentPlace contentPlace)
         {
             // verify the required parameter 'contentPlace' is set
             if (contentPlace == null)
                 throw new ApiException(400, "Missing required parameter 'contentPlace' when calling MarketingModuleApi->MarketingModuleDynamicContentCreateDynamicContentPlace");
 
             var localVarPath = "/api/marketing/contentplaces";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
+            string[] localVarHttpContentTypes = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml", 
                 "application/x-www-form-urlencoded"
             };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
+            string[] localVarHttpHeaderAccepts = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml"
             };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
@@ -1529,7 +1493,7 @@ namespace VirtoCommerce.Client.Api
             localVarPathParams.Add("format", "json");
             if (contentPlace.GetType() != typeof(byte[]))
             {
-                localVarPostBody = Configuration.ApiClient.Serialize(contentPlace); // http body (model) parameter
+                localVarPostBody = ApiClient.Serialize(contentPlace); // http body (model) parameter
             }
             else
             {
@@ -1538,20 +1502,20 @@ namespace VirtoCommerce.Client.Api
 
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)ApiClient.CallApi(localVarPath,
                 Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentCreateDynamicContentPlace: " + localVarResponse.Content, localVarResponse.Content);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentCreateDynamicContentPlace: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentCreateDynamicContentPlace: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentCreateDynamicContentPlace: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
             return new ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentPlace>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommerceMarketingModuleWebModelDynamicContentPlace) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentPlace)));
+                (VirtoCommerceMarketingModuleWebModelDynamicContentPlace)ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentPlace)));
             
         }
 
@@ -1561,7 +1525,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="contentPlace">dynamic content place object that needs to be added to the dynamic content system</param>
         /// <returns>Task of VirtoCommerceMarketingModuleWebModelDynamicContentPlace</returns>
-        public async System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelDynamicContentPlace> MarketingModuleDynamicContentCreateDynamicContentPlaceAsync (VirtoCommerceMarketingModuleWebModelDynamicContentPlace contentPlace)
+        public async System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelDynamicContentPlace> MarketingModuleDynamicContentCreateDynamicContentPlaceAsync(VirtoCommerceMarketingModuleWebModelDynamicContentPlace contentPlace)
         {
              ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentPlace> localVarResponse = await MarketingModuleDynamicContentCreateDynamicContentPlaceAsyncWithHttpInfo(contentPlace);
              return localVarResponse.Data;
@@ -1574,38 +1538,38 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="contentPlace">dynamic content place object that needs to be added to the dynamic content system</param>
         /// <returns>Task of ApiResponse (VirtoCommerceMarketingModuleWebModelDynamicContentPlace)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentPlace>> MarketingModuleDynamicContentCreateDynamicContentPlaceAsyncWithHttpInfo (VirtoCommerceMarketingModuleWebModelDynamicContentPlace contentPlace)
+        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentPlace>> MarketingModuleDynamicContentCreateDynamicContentPlaceAsyncWithHttpInfo(VirtoCommerceMarketingModuleWebModelDynamicContentPlace contentPlace)
         {
             // verify the required parameter 'contentPlace' is set
             if (contentPlace == null)
                 throw new ApiException(400, "Missing required parameter 'contentPlace' when calling MarketingModuleApi->MarketingModuleDynamicContentCreateDynamicContentPlace");
 
             var localVarPath = "/api/marketing/contentplaces";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
+            string[] localVarHttpContentTypes = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml", 
                 "application/x-www-form-urlencoded"
             };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
+            string[] localVarHttpHeaderAccepts = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml"
             };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
@@ -1614,7 +1578,7 @@ namespace VirtoCommerce.Client.Api
             localVarPathParams.Add("format", "json");
             if (contentPlace.GetType() != typeof(byte[]))
             {
-                localVarPostBody = Configuration.ApiClient.Serialize(contentPlace); // http body (model) parameter
+                localVarPostBody = ApiClient.Serialize(contentPlace); // http body (model) parameter
             }
             else
             {
@@ -1623,30 +1587,29 @@ namespace VirtoCommerce.Client.Api
 
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)await ApiClient.CallApiAsync(localVarPath,
                 Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentCreateDynamicContentPlace: " + localVarResponse.Content, localVarResponse.Content);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentCreateDynamicContentPlace: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentCreateDynamicContentPlace: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentCreateDynamicContentPlace: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
             return new ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentPlace>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommerceMarketingModuleWebModelDynamicContentPlace) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentPlace)));
+                (VirtoCommerceMarketingModuleWebModelDynamicContentPlace)ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentPlace)));
             
         }
-
         /// <summary>
         /// Add new dynamic content publication object to marketing system 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="publication">dynamic content publication object that needs to be added to the dynamic content system</param>
         /// <returns>VirtoCommerceMarketingModuleWebModelDynamicContentPublication</returns>
-        public VirtoCommerceMarketingModuleWebModelDynamicContentPublication MarketingModuleDynamicContentCreateDynamicContentPublication (VirtoCommerceMarketingModuleWebModelDynamicContentPublication publication)
+        public VirtoCommerceMarketingModuleWebModelDynamicContentPublication MarketingModuleDynamicContentCreateDynamicContentPublication(VirtoCommerceMarketingModuleWebModelDynamicContentPublication publication)
         {
              ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentPublication> localVarResponse = MarketingModuleDynamicContentCreateDynamicContentPublicationWithHttpInfo(publication);
              return localVarResponse.Data;
@@ -1658,38 +1621,38 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="publication">dynamic content publication object that needs to be added to the dynamic content system</param>
         /// <returns>ApiResponse of VirtoCommerceMarketingModuleWebModelDynamicContentPublication</returns>
-        public ApiResponse< VirtoCommerceMarketingModuleWebModelDynamicContentPublication > MarketingModuleDynamicContentCreateDynamicContentPublicationWithHttpInfo (VirtoCommerceMarketingModuleWebModelDynamicContentPublication publication)
+        public ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentPublication> MarketingModuleDynamicContentCreateDynamicContentPublicationWithHttpInfo(VirtoCommerceMarketingModuleWebModelDynamicContentPublication publication)
         {
             // verify the required parameter 'publication' is set
             if (publication == null)
                 throw new ApiException(400, "Missing required parameter 'publication' when calling MarketingModuleApi->MarketingModuleDynamicContentCreateDynamicContentPublication");
 
             var localVarPath = "/api/marketing/contentpublications";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
+            string[] localVarHttpContentTypes = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml", 
                 "application/x-www-form-urlencoded"
             };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
+            string[] localVarHttpHeaderAccepts = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml"
             };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
@@ -1698,7 +1661,7 @@ namespace VirtoCommerce.Client.Api
             localVarPathParams.Add("format", "json");
             if (publication.GetType() != typeof(byte[]))
             {
-                localVarPostBody = Configuration.ApiClient.Serialize(publication); // http body (model) parameter
+                localVarPostBody = ApiClient.Serialize(publication); // http body (model) parameter
             }
             else
             {
@@ -1707,20 +1670,20 @@ namespace VirtoCommerce.Client.Api
 
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)ApiClient.CallApi(localVarPath,
                 Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentCreateDynamicContentPublication: " + localVarResponse.Content, localVarResponse.Content);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentCreateDynamicContentPublication: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentCreateDynamicContentPublication: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentCreateDynamicContentPublication: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
             return new ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentPublication>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommerceMarketingModuleWebModelDynamicContentPublication) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentPublication)));
+                (VirtoCommerceMarketingModuleWebModelDynamicContentPublication)ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentPublication)));
             
         }
 
@@ -1730,7 +1693,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="publication">dynamic content publication object that needs to be added to the dynamic content system</param>
         /// <returns>Task of VirtoCommerceMarketingModuleWebModelDynamicContentPublication</returns>
-        public async System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelDynamicContentPublication> MarketingModuleDynamicContentCreateDynamicContentPublicationAsync (VirtoCommerceMarketingModuleWebModelDynamicContentPublication publication)
+        public async System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelDynamicContentPublication> MarketingModuleDynamicContentCreateDynamicContentPublicationAsync(VirtoCommerceMarketingModuleWebModelDynamicContentPublication publication)
         {
              ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentPublication> localVarResponse = await MarketingModuleDynamicContentCreateDynamicContentPublicationAsyncWithHttpInfo(publication);
              return localVarResponse.Data;
@@ -1743,38 +1706,38 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="publication">dynamic content publication object that needs to be added to the dynamic content system</param>
         /// <returns>Task of ApiResponse (VirtoCommerceMarketingModuleWebModelDynamicContentPublication)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentPublication>> MarketingModuleDynamicContentCreateDynamicContentPublicationAsyncWithHttpInfo (VirtoCommerceMarketingModuleWebModelDynamicContentPublication publication)
+        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentPublication>> MarketingModuleDynamicContentCreateDynamicContentPublicationAsyncWithHttpInfo(VirtoCommerceMarketingModuleWebModelDynamicContentPublication publication)
         {
             // verify the required parameter 'publication' is set
             if (publication == null)
                 throw new ApiException(400, "Missing required parameter 'publication' when calling MarketingModuleApi->MarketingModuleDynamicContentCreateDynamicContentPublication");
 
             var localVarPath = "/api/marketing/contentpublications";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
+            string[] localVarHttpContentTypes = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml", 
                 "application/x-www-form-urlencoded"
             };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
+            string[] localVarHttpHeaderAccepts = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml"
             };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
@@ -1783,7 +1746,7 @@ namespace VirtoCommerce.Client.Api
             localVarPathParams.Add("format", "json");
             if (publication.GetType() != typeof(byte[]))
             {
-                localVarPostBody = Configuration.ApiClient.Serialize(publication); // http body (model) parameter
+                localVarPostBody = ApiClient.Serialize(publication); // http body (model) parameter
             }
             else
             {
@@ -1792,30 +1755,29 @@ namespace VirtoCommerce.Client.Api
 
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)await ApiClient.CallApiAsync(localVarPath,
                 Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentCreateDynamicContentPublication: " + localVarResponse.Content, localVarResponse.Content);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentCreateDynamicContentPublication: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentCreateDynamicContentPublication: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentCreateDynamicContentPublication: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
             return new ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentPublication>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommerceMarketingModuleWebModelDynamicContentPublication) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentPublication)));
+                (VirtoCommerceMarketingModuleWebModelDynamicContentPublication)ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentPublication)));
             
         }
-
         /// <summary>
         /// Delete a dynamic content folders 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="ids">folders ids for delete</param>
         /// <returns></returns>
-        public void MarketingModuleDynamicContentDeleteDynamicContentFolders (List<string> ids)
+        public void MarketingModuleDynamicContentDeleteDynamicContentFolders(List<string> ids)
         {
              MarketingModuleDynamicContentDeleteDynamicContentFoldersWithHttpInfo(ids);
         }
@@ -1826,52 +1788,52 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="ids">folders ids for delete</param>
         /// <returns>ApiResponse of Object(void)</returns>
-        public ApiResponse<Object> MarketingModuleDynamicContentDeleteDynamicContentFoldersWithHttpInfo (List<string> ids)
+        public ApiResponse<object> MarketingModuleDynamicContentDeleteDynamicContentFoldersWithHttpInfo(List<string> ids)
         {
             // verify the required parameter 'ids' is set
             if (ids == null)
                 throw new ApiException(400, "Missing required parameter 'ids' when calling MarketingModuleApi->MarketingModuleDynamicContentDeleteDynamicContentFolders");
 
             var localVarPath = "/api/marketing/contentfolders";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
+            string[] localVarHttpContentTypes = new string[] {
             };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
+            string[] localVarHttpHeaderAccepts = new string[] {
             };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
-            if (ids != null) localVarQueryParams.Add("ids", Configuration.ApiClient.ParameterToString(ids)); // query parameter
+            if (ids != null) localVarQueryParams.Add("ids", ApiClient.ParameterToString(ids)); // query parameter
 
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)ApiClient.CallApi(localVarPath,
                 Method.DELETE, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentDeleteDynamicContentFolders: " + localVarResponse.Content, localVarResponse.Content);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentDeleteDynamicContentFolders: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentDeleteDynamicContentFolders: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentDeleteDynamicContentFolders: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
             
-            return new ApiResponse<Object>(localVarStatusCode,
+            return new ApiResponse<object>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 null);
         }
@@ -1882,7 +1844,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="ids">folders ids for delete</param>
         /// <returns>Task of void</returns>
-        public async System.Threading.Tasks.Task MarketingModuleDynamicContentDeleteDynamicContentFoldersAsync (List<string> ids)
+        public async System.Threading.Tasks.Task MarketingModuleDynamicContentDeleteDynamicContentFoldersAsync(List<string> ids)
         {
              await MarketingModuleDynamicContentDeleteDynamicContentFoldersAsyncWithHttpInfo(ids);
 
@@ -1894,63 +1856,62 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="ids">folders ids for delete</param>
         /// <returns>Task of ApiResponse</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Object>> MarketingModuleDynamicContentDeleteDynamicContentFoldersAsyncWithHttpInfo (List<string> ids)
+        public async System.Threading.Tasks.Task<ApiResponse<object>> MarketingModuleDynamicContentDeleteDynamicContentFoldersAsyncWithHttpInfo(List<string> ids)
         {
             // verify the required parameter 'ids' is set
             if (ids == null)
                 throw new ApiException(400, "Missing required parameter 'ids' when calling MarketingModuleApi->MarketingModuleDynamicContentDeleteDynamicContentFolders");
 
             var localVarPath = "/api/marketing/contentfolders";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
+            string[] localVarHttpContentTypes = new string[] {
             };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
+            string[] localVarHttpHeaderAccepts = new string[] {
             };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
-            if (ids != null) localVarQueryParams.Add("ids", Configuration.ApiClient.ParameterToString(ids)); // query parameter
+            if (ids != null) localVarQueryParams.Add("ids", ApiClient.ParameterToString(ids)); // query parameter
 
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)await ApiClient.CallApiAsync(localVarPath,
                 Method.DELETE, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentDeleteDynamicContentFolders: " + localVarResponse.Content, localVarResponse.Content);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentDeleteDynamicContentFolders: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentDeleteDynamicContentFolders: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentDeleteDynamicContentFolders: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
             
-            return new ApiResponse<Object>(localVarStatusCode,
+            return new ApiResponse<object>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 null);
         }
-
         /// <summary>
         /// Delete a dynamic content place objects 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="ids">content place object ids for delete from dynamic content system</param>
         /// <returns></returns>
-        public void MarketingModuleDynamicContentDeleteDynamicContentPlaces (List<string> ids)
+        public void MarketingModuleDynamicContentDeleteDynamicContentPlaces(List<string> ids)
         {
              MarketingModuleDynamicContentDeleteDynamicContentPlacesWithHttpInfo(ids);
         }
@@ -1961,52 +1922,52 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="ids">content place object ids for delete from dynamic content system</param>
         /// <returns>ApiResponse of Object(void)</returns>
-        public ApiResponse<Object> MarketingModuleDynamicContentDeleteDynamicContentPlacesWithHttpInfo (List<string> ids)
+        public ApiResponse<object> MarketingModuleDynamicContentDeleteDynamicContentPlacesWithHttpInfo(List<string> ids)
         {
             // verify the required parameter 'ids' is set
             if (ids == null)
                 throw new ApiException(400, "Missing required parameter 'ids' when calling MarketingModuleApi->MarketingModuleDynamicContentDeleteDynamicContentPlaces");
 
             var localVarPath = "/api/marketing/contentplaces";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
+            string[] localVarHttpContentTypes = new string[] {
             };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
+            string[] localVarHttpHeaderAccepts = new string[] {
             };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
-            if (ids != null) localVarQueryParams.Add("ids", Configuration.ApiClient.ParameterToString(ids)); // query parameter
+            if (ids != null) localVarQueryParams.Add("ids", ApiClient.ParameterToString(ids)); // query parameter
 
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)ApiClient.CallApi(localVarPath,
                 Method.DELETE, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentDeleteDynamicContentPlaces: " + localVarResponse.Content, localVarResponse.Content);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentDeleteDynamicContentPlaces: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentDeleteDynamicContentPlaces: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentDeleteDynamicContentPlaces: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
             
-            return new ApiResponse<Object>(localVarStatusCode,
+            return new ApiResponse<object>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 null);
         }
@@ -2017,7 +1978,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="ids">content place object ids for delete from dynamic content system</param>
         /// <returns>Task of void</returns>
-        public async System.Threading.Tasks.Task MarketingModuleDynamicContentDeleteDynamicContentPlacesAsync (List<string> ids)
+        public async System.Threading.Tasks.Task MarketingModuleDynamicContentDeleteDynamicContentPlacesAsync(List<string> ids)
         {
              await MarketingModuleDynamicContentDeleteDynamicContentPlacesAsyncWithHttpInfo(ids);
 
@@ -2029,63 +1990,62 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="ids">content place object ids for delete from dynamic content system</param>
         /// <returns>Task of ApiResponse</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Object>> MarketingModuleDynamicContentDeleteDynamicContentPlacesAsyncWithHttpInfo (List<string> ids)
+        public async System.Threading.Tasks.Task<ApiResponse<object>> MarketingModuleDynamicContentDeleteDynamicContentPlacesAsyncWithHttpInfo(List<string> ids)
         {
             // verify the required parameter 'ids' is set
             if (ids == null)
                 throw new ApiException(400, "Missing required parameter 'ids' when calling MarketingModuleApi->MarketingModuleDynamicContentDeleteDynamicContentPlaces");
 
             var localVarPath = "/api/marketing/contentplaces";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
+            string[] localVarHttpContentTypes = new string[] {
             };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
+            string[] localVarHttpHeaderAccepts = new string[] {
             };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
-            if (ids != null) localVarQueryParams.Add("ids", Configuration.ApiClient.ParameterToString(ids)); // query parameter
+            if (ids != null) localVarQueryParams.Add("ids", ApiClient.ParameterToString(ids)); // query parameter
 
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)await ApiClient.CallApiAsync(localVarPath,
                 Method.DELETE, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentDeleteDynamicContentPlaces: " + localVarResponse.Content, localVarResponse.Content);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentDeleteDynamicContentPlaces: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentDeleteDynamicContentPlaces: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentDeleteDynamicContentPlaces: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
             
-            return new ApiResponse<Object>(localVarStatusCode,
+            return new ApiResponse<object>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 null);
         }
-
         /// <summary>
         /// Delete a dynamic content publication objects 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="ids">content publication object ids for delete from dynamic content system</param>
         /// <returns></returns>
-        public void MarketingModuleDynamicContentDeleteDynamicContentPublications (List<string> ids)
+        public void MarketingModuleDynamicContentDeleteDynamicContentPublications(List<string> ids)
         {
              MarketingModuleDynamicContentDeleteDynamicContentPublicationsWithHttpInfo(ids);
         }
@@ -2096,52 +2056,52 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="ids">content publication object ids for delete from dynamic content system</param>
         /// <returns>ApiResponse of Object(void)</returns>
-        public ApiResponse<Object> MarketingModuleDynamicContentDeleteDynamicContentPublicationsWithHttpInfo (List<string> ids)
+        public ApiResponse<object> MarketingModuleDynamicContentDeleteDynamicContentPublicationsWithHttpInfo(List<string> ids)
         {
             // verify the required parameter 'ids' is set
             if (ids == null)
                 throw new ApiException(400, "Missing required parameter 'ids' when calling MarketingModuleApi->MarketingModuleDynamicContentDeleteDynamicContentPublications");
 
             var localVarPath = "/api/marketing/contentpublications";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
+            string[] localVarHttpContentTypes = new string[] {
             };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
+            string[] localVarHttpHeaderAccepts = new string[] {
             };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
-            if (ids != null) localVarQueryParams.Add("ids", Configuration.ApiClient.ParameterToString(ids)); // query parameter
+            if (ids != null) localVarQueryParams.Add("ids", ApiClient.ParameterToString(ids)); // query parameter
 
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)ApiClient.CallApi(localVarPath,
                 Method.DELETE, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentDeleteDynamicContentPublications: " + localVarResponse.Content, localVarResponse.Content);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentDeleteDynamicContentPublications: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentDeleteDynamicContentPublications: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentDeleteDynamicContentPublications: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
             
-            return new ApiResponse<Object>(localVarStatusCode,
+            return new ApiResponse<object>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 null);
         }
@@ -2152,7 +2112,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="ids">content publication object ids for delete from dynamic content system</param>
         /// <returns>Task of void</returns>
-        public async System.Threading.Tasks.Task MarketingModuleDynamicContentDeleteDynamicContentPublicationsAsync (List<string> ids)
+        public async System.Threading.Tasks.Task MarketingModuleDynamicContentDeleteDynamicContentPublicationsAsync(List<string> ids)
         {
              await MarketingModuleDynamicContentDeleteDynamicContentPublicationsAsyncWithHttpInfo(ids);
 
@@ -2164,63 +2124,62 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="ids">content publication object ids for delete from dynamic content system</param>
         /// <returns>Task of ApiResponse</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Object>> MarketingModuleDynamicContentDeleteDynamicContentPublicationsAsyncWithHttpInfo (List<string> ids)
+        public async System.Threading.Tasks.Task<ApiResponse<object>> MarketingModuleDynamicContentDeleteDynamicContentPublicationsAsyncWithHttpInfo(List<string> ids)
         {
             // verify the required parameter 'ids' is set
             if (ids == null)
                 throw new ApiException(400, "Missing required parameter 'ids' when calling MarketingModuleApi->MarketingModuleDynamicContentDeleteDynamicContentPublications");
 
             var localVarPath = "/api/marketing/contentpublications";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
+            string[] localVarHttpContentTypes = new string[] {
             };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
+            string[] localVarHttpHeaderAccepts = new string[] {
             };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
-            if (ids != null) localVarQueryParams.Add("ids", Configuration.ApiClient.ParameterToString(ids)); // query parameter
+            if (ids != null) localVarQueryParams.Add("ids", ApiClient.ParameterToString(ids)); // query parameter
 
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)await ApiClient.CallApiAsync(localVarPath,
                 Method.DELETE, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentDeleteDynamicContentPublications: " + localVarResponse.Content, localVarResponse.Content);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentDeleteDynamicContentPublications: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentDeleteDynamicContentPublications: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentDeleteDynamicContentPublications: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
             
-            return new ApiResponse<Object>(localVarStatusCode,
+            return new ApiResponse<object>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 null);
         }
-
         /// <summary>
         /// Delete a dynamic content item objects 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="ids">content item object ids for delete in the dynamic content system</param>
         /// <returns></returns>
-        public void MarketingModuleDynamicContentDeleteDynamicContents (List<string> ids)
+        public void MarketingModuleDynamicContentDeleteDynamicContents(List<string> ids)
         {
              MarketingModuleDynamicContentDeleteDynamicContentsWithHttpInfo(ids);
         }
@@ -2231,52 +2190,52 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="ids">content item object ids for delete in the dynamic content system</param>
         /// <returns>ApiResponse of Object(void)</returns>
-        public ApiResponse<Object> MarketingModuleDynamicContentDeleteDynamicContentsWithHttpInfo (List<string> ids)
+        public ApiResponse<object> MarketingModuleDynamicContentDeleteDynamicContentsWithHttpInfo(List<string> ids)
         {
             // verify the required parameter 'ids' is set
             if (ids == null)
                 throw new ApiException(400, "Missing required parameter 'ids' when calling MarketingModuleApi->MarketingModuleDynamicContentDeleteDynamicContents");
 
             var localVarPath = "/api/marketing/contentitems";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
+            string[] localVarHttpContentTypes = new string[] {
             };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
+            string[] localVarHttpHeaderAccepts = new string[] {
             };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
-            if (ids != null) localVarQueryParams.Add("ids", Configuration.ApiClient.ParameterToString(ids)); // query parameter
+            if (ids != null) localVarQueryParams.Add("ids", ApiClient.ParameterToString(ids)); // query parameter
 
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)ApiClient.CallApi(localVarPath,
                 Method.DELETE, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentDeleteDynamicContents: " + localVarResponse.Content, localVarResponse.Content);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentDeleteDynamicContents: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentDeleteDynamicContents: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentDeleteDynamicContents: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
             
-            return new ApiResponse<Object>(localVarStatusCode,
+            return new ApiResponse<object>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 null);
         }
@@ -2287,7 +2246,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="ids">content item object ids for delete in the dynamic content system</param>
         /// <returns>Task of void</returns>
-        public async System.Threading.Tasks.Task MarketingModuleDynamicContentDeleteDynamicContentsAsync (List<string> ids)
+        public async System.Threading.Tasks.Task MarketingModuleDynamicContentDeleteDynamicContentsAsync(List<string> ids)
         {
              await MarketingModuleDynamicContentDeleteDynamicContentsAsyncWithHttpInfo(ids);
 
@@ -2299,63 +2258,62 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="ids">content item object ids for delete in the dynamic content system</param>
         /// <returns>Task of ApiResponse</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Object>> MarketingModuleDynamicContentDeleteDynamicContentsAsyncWithHttpInfo (List<string> ids)
+        public async System.Threading.Tasks.Task<ApiResponse<object>> MarketingModuleDynamicContentDeleteDynamicContentsAsyncWithHttpInfo(List<string> ids)
         {
             // verify the required parameter 'ids' is set
             if (ids == null)
                 throw new ApiException(400, "Missing required parameter 'ids' when calling MarketingModuleApi->MarketingModuleDynamicContentDeleteDynamicContents");
 
             var localVarPath = "/api/marketing/contentitems";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
+            string[] localVarHttpContentTypes = new string[] {
             };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
+            string[] localVarHttpHeaderAccepts = new string[] {
             };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
-            if (ids != null) localVarQueryParams.Add("ids", Configuration.ApiClient.ParameterToString(ids)); // query parameter
+            if (ids != null) localVarQueryParams.Add("ids", ApiClient.ParameterToString(ids)); // query parameter
 
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)await ApiClient.CallApiAsync(localVarPath,
                 Method.DELETE, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentDeleteDynamicContents: " + localVarResponse.Content, localVarResponse.Content);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentDeleteDynamicContents: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentDeleteDynamicContents: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentDeleteDynamicContents: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
             
-            return new ApiResponse<Object>(localVarStatusCode,
+            return new ApiResponse<object>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 null);
         }
-
         /// <summary>
         /// Get dynamic content for given placeholders 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="evalContext"></param>
         /// <returns>List&lt;VirtoCommerceMarketingModuleWebModelDynamicContentItem&gt;</returns>
-        public List<VirtoCommerceMarketingModuleWebModelDynamicContentItem> MarketingModuleDynamicContentEvaluateDynamicContent (VirtoCommerceDomainMarketingModelDynamicContentDynamicContentEvaluationContext evalContext)
+        public List<VirtoCommerceMarketingModuleWebModelDynamicContentItem> MarketingModuleDynamicContentEvaluateDynamicContent(VirtoCommerceDomainMarketingModelDynamicContentDynamicContentEvaluationContext evalContext)
         {
              ApiResponse<List<VirtoCommerceMarketingModuleWebModelDynamicContentItem>> localVarResponse = MarketingModuleDynamicContentEvaluateDynamicContentWithHttpInfo(evalContext);
              return localVarResponse.Data;
@@ -2367,38 +2325,38 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="evalContext"></param>
         /// <returns>ApiResponse of List&lt;VirtoCommerceMarketingModuleWebModelDynamicContentItem&gt;</returns>
-        public ApiResponse< List<VirtoCommerceMarketingModuleWebModelDynamicContentItem> > MarketingModuleDynamicContentEvaluateDynamicContentWithHttpInfo (VirtoCommerceDomainMarketingModelDynamicContentDynamicContentEvaluationContext evalContext)
+        public ApiResponse<List<VirtoCommerceMarketingModuleWebModelDynamicContentItem>> MarketingModuleDynamicContentEvaluateDynamicContentWithHttpInfo(VirtoCommerceDomainMarketingModelDynamicContentDynamicContentEvaluationContext evalContext)
         {
             // verify the required parameter 'evalContext' is set
             if (evalContext == null)
                 throw new ApiException(400, "Missing required parameter 'evalContext' when calling MarketingModuleApi->MarketingModuleDynamicContentEvaluateDynamicContent");
 
             var localVarPath = "/api/marketing/contentitems/evaluate";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
+            string[] localVarHttpContentTypes = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml", 
                 "application/x-www-form-urlencoded"
             };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
+            string[] localVarHttpHeaderAccepts = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml"
             };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
@@ -2407,7 +2365,7 @@ namespace VirtoCommerce.Client.Api
             localVarPathParams.Add("format", "json");
             if (evalContext.GetType() != typeof(byte[]))
             {
-                localVarPostBody = Configuration.ApiClient.Serialize(evalContext); // http body (model) parameter
+                localVarPostBody = ApiClient.Serialize(evalContext); // http body (model) parameter
             }
             else
             {
@@ -2416,20 +2374,20 @@ namespace VirtoCommerce.Client.Api
 
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)ApiClient.CallApi(localVarPath,
                 Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentEvaluateDynamicContent: " + localVarResponse.Content, localVarResponse.Content);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentEvaluateDynamicContent: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentEvaluateDynamicContent: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentEvaluateDynamicContent: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
             return new ApiResponse<List<VirtoCommerceMarketingModuleWebModelDynamicContentItem>>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (List<VirtoCommerceMarketingModuleWebModelDynamicContentItem>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<VirtoCommerceMarketingModuleWebModelDynamicContentItem>)));
+                (List<VirtoCommerceMarketingModuleWebModelDynamicContentItem>)ApiClient.Deserialize(localVarResponse, typeof(List<VirtoCommerceMarketingModuleWebModelDynamicContentItem>)));
             
         }
 
@@ -2439,7 +2397,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="evalContext"></param>
         /// <returns>Task of List&lt;VirtoCommerceMarketingModuleWebModelDynamicContentItem&gt;</returns>
-        public async System.Threading.Tasks.Task<List<VirtoCommerceMarketingModuleWebModelDynamicContentItem>> MarketingModuleDynamicContentEvaluateDynamicContentAsync (VirtoCommerceDomainMarketingModelDynamicContentDynamicContentEvaluationContext evalContext)
+        public async System.Threading.Tasks.Task<List<VirtoCommerceMarketingModuleWebModelDynamicContentItem>> MarketingModuleDynamicContentEvaluateDynamicContentAsync(VirtoCommerceDomainMarketingModelDynamicContentDynamicContentEvaluationContext evalContext)
         {
              ApiResponse<List<VirtoCommerceMarketingModuleWebModelDynamicContentItem>> localVarResponse = await MarketingModuleDynamicContentEvaluateDynamicContentAsyncWithHttpInfo(evalContext);
              return localVarResponse.Data;
@@ -2452,38 +2410,38 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="evalContext"></param>
         /// <returns>Task of ApiResponse (List&lt;VirtoCommerceMarketingModuleWebModelDynamicContentItem&gt;)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceMarketingModuleWebModelDynamicContentItem>>> MarketingModuleDynamicContentEvaluateDynamicContentAsyncWithHttpInfo (VirtoCommerceDomainMarketingModelDynamicContentDynamicContentEvaluationContext evalContext)
+        public async System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceMarketingModuleWebModelDynamicContentItem>>> MarketingModuleDynamicContentEvaluateDynamicContentAsyncWithHttpInfo(VirtoCommerceDomainMarketingModelDynamicContentDynamicContentEvaluationContext evalContext)
         {
             // verify the required parameter 'evalContext' is set
             if (evalContext == null)
                 throw new ApiException(400, "Missing required parameter 'evalContext' when calling MarketingModuleApi->MarketingModuleDynamicContentEvaluateDynamicContent");
 
             var localVarPath = "/api/marketing/contentitems/evaluate";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
+            string[] localVarHttpContentTypes = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml", 
                 "application/x-www-form-urlencoded"
             };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
+            string[] localVarHttpHeaderAccepts = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml"
             };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
@@ -2492,7 +2450,7 @@ namespace VirtoCommerce.Client.Api
             localVarPathParams.Add("format", "json");
             if (evalContext.GetType() != typeof(byte[]))
             {
-                localVarPostBody = Configuration.ApiClient.Serialize(evalContext); // http body (model) parameter
+                localVarPostBody = ApiClient.Serialize(evalContext); // http body (model) parameter
             }
             else
             {
@@ -2501,30 +2459,29 @@ namespace VirtoCommerce.Client.Api
 
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)await ApiClient.CallApiAsync(localVarPath,
                 Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentEvaluateDynamicContent: " + localVarResponse.Content, localVarResponse.Content);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentEvaluateDynamicContent: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentEvaluateDynamicContent: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentEvaluateDynamicContent: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
             return new ApiResponse<List<VirtoCommerceMarketingModuleWebModelDynamicContentItem>>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (List<VirtoCommerceMarketingModuleWebModelDynamicContentItem>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<VirtoCommerceMarketingModuleWebModelDynamicContentItem>)));
+                (List<VirtoCommerceMarketingModuleWebModelDynamicContentItem>)ApiClient.Deserialize(localVarResponse, typeof(List<VirtoCommerceMarketingModuleWebModelDynamicContentItem>)));
             
         }
-
         /// <summary>
         /// Find dynamic content item object by id Return a single dynamic content item object
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">content item id</param>
         /// <returns>VirtoCommerceMarketingModuleWebModelDynamicContentItem</returns>
-        public VirtoCommerceMarketingModuleWebModelDynamicContentItem MarketingModuleDynamicContentGetDynamicContentById (string id)
+        public VirtoCommerceMarketingModuleWebModelDynamicContentItem MarketingModuleDynamicContentGetDynamicContentById(string id)
         {
              ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentItem> localVarResponse = MarketingModuleDynamicContentGetDynamicContentByIdWithHttpInfo(id);
              return localVarResponse.Data;
@@ -2536,57 +2493,57 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">content item id</param>
         /// <returns>ApiResponse of VirtoCommerceMarketingModuleWebModelDynamicContentItem</returns>
-        public ApiResponse< VirtoCommerceMarketingModuleWebModelDynamicContentItem > MarketingModuleDynamicContentGetDynamicContentByIdWithHttpInfo (string id)
+        public ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentItem> MarketingModuleDynamicContentGetDynamicContentByIdWithHttpInfo(string id)
         {
             // verify the required parameter 'id' is set
             if (id == null)
                 throw new ApiException(400, "Missing required parameter 'id' when calling MarketingModuleApi->MarketingModuleDynamicContentGetDynamicContentById");
 
             var localVarPath = "/api/marketing/contentitems/{id}";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
+            string[] localVarHttpContentTypes = new string[] {
             };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
+            string[] localVarHttpHeaderAccepts = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml"
             };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
-            if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
+            if (id != null) localVarPathParams.Add("id", ApiClient.ParameterToString(id)); // path parameter
 
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)ApiClient.CallApi(localVarPath,
                 Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentGetDynamicContentById: " + localVarResponse.Content, localVarResponse.Content);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentGetDynamicContentById: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentGetDynamicContentById: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentGetDynamicContentById: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
             return new ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentItem>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommerceMarketingModuleWebModelDynamicContentItem) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentItem)));
+                (VirtoCommerceMarketingModuleWebModelDynamicContentItem)ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentItem)));
             
         }
 
@@ -2596,7 +2553,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">content item id</param>
         /// <returns>Task of VirtoCommerceMarketingModuleWebModelDynamicContentItem</returns>
-        public async System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelDynamicContentItem> MarketingModuleDynamicContentGetDynamicContentByIdAsync (string id)
+        public async System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelDynamicContentItem> MarketingModuleDynamicContentGetDynamicContentByIdAsync(string id)
         {
              ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentItem> localVarResponse = await MarketingModuleDynamicContentGetDynamicContentByIdAsyncWithHttpInfo(id);
              return localVarResponse.Data;
@@ -2609,67 +2566,66 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">content item id</param>
         /// <returns>Task of ApiResponse (VirtoCommerceMarketingModuleWebModelDynamicContentItem)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentItem>> MarketingModuleDynamicContentGetDynamicContentByIdAsyncWithHttpInfo (string id)
+        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentItem>> MarketingModuleDynamicContentGetDynamicContentByIdAsyncWithHttpInfo(string id)
         {
             // verify the required parameter 'id' is set
             if (id == null)
                 throw new ApiException(400, "Missing required parameter 'id' when calling MarketingModuleApi->MarketingModuleDynamicContentGetDynamicContentById");
 
             var localVarPath = "/api/marketing/contentitems/{id}";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
+            string[] localVarHttpContentTypes = new string[] {
             };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
+            string[] localVarHttpHeaderAccepts = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml"
             };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
-            if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
+            if (id != null) localVarPathParams.Add("id", ApiClient.ParameterToString(id)); // path parameter
 
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)await ApiClient.CallApiAsync(localVarPath,
                 Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentGetDynamicContentById: " + localVarResponse.Content, localVarResponse.Content);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentGetDynamicContentById: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentGetDynamicContentById: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentGetDynamicContentById: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
             return new ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentItem>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommerceMarketingModuleWebModelDynamicContentItem) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentItem)));
+                (VirtoCommerceMarketingModuleWebModelDynamicContentItem)ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentItem)));
             
         }
-
         /// <summary>
         /// Find dynamic content folder by id Return a single dynamic content folder
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">folder id</param>
         /// <returns>VirtoCommerceMarketingModuleWebModelDynamicContentFolder</returns>
-        public VirtoCommerceMarketingModuleWebModelDynamicContentFolder MarketingModuleDynamicContentGetDynamicContentFolderById (string id)
+        public VirtoCommerceMarketingModuleWebModelDynamicContentFolder MarketingModuleDynamicContentGetDynamicContentFolderById(string id)
         {
              ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentFolder> localVarResponse = MarketingModuleDynamicContentGetDynamicContentFolderByIdWithHttpInfo(id);
              return localVarResponse.Data;
@@ -2681,57 +2637,57 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">folder id</param>
         /// <returns>ApiResponse of VirtoCommerceMarketingModuleWebModelDynamicContentFolder</returns>
-        public ApiResponse< VirtoCommerceMarketingModuleWebModelDynamicContentFolder > MarketingModuleDynamicContentGetDynamicContentFolderByIdWithHttpInfo (string id)
+        public ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentFolder> MarketingModuleDynamicContentGetDynamicContentFolderByIdWithHttpInfo(string id)
         {
             // verify the required parameter 'id' is set
             if (id == null)
                 throw new ApiException(400, "Missing required parameter 'id' when calling MarketingModuleApi->MarketingModuleDynamicContentGetDynamicContentFolderById");
 
             var localVarPath = "/api/marketing/contentfolders/{id}";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
+            string[] localVarHttpContentTypes = new string[] {
             };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
+            string[] localVarHttpHeaderAccepts = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml"
             };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
-            if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
+            if (id != null) localVarPathParams.Add("id", ApiClient.ParameterToString(id)); // path parameter
 
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)ApiClient.CallApi(localVarPath,
                 Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentGetDynamicContentFolderById: " + localVarResponse.Content, localVarResponse.Content);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentGetDynamicContentFolderById: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentGetDynamicContentFolderById: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentGetDynamicContentFolderById: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
             return new ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentFolder>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommerceMarketingModuleWebModelDynamicContentFolder) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentFolder)));
+                (VirtoCommerceMarketingModuleWebModelDynamicContentFolder)ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentFolder)));
             
         }
 
@@ -2741,7 +2697,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">folder id</param>
         /// <returns>Task of VirtoCommerceMarketingModuleWebModelDynamicContentFolder</returns>
-        public async System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelDynamicContentFolder> MarketingModuleDynamicContentGetDynamicContentFolderByIdAsync (string id)
+        public async System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelDynamicContentFolder> MarketingModuleDynamicContentGetDynamicContentFolderByIdAsync(string id)
         {
              ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentFolder> localVarResponse = await MarketingModuleDynamicContentGetDynamicContentFolderByIdAsyncWithHttpInfo(id);
              return localVarResponse.Data;
@@ -2754,67 +2710,66 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">folder id</param>
         /// <returns>Task of ApiResponse (VirtoCommerceMarketingModuleWebModelDynamicContentFolder)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentFolder>> MarketingModuleDynamicContentGetDynamicContentFolderByIdAsyncWithHttpInfo (string id)
+        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentFolder>> MarketingModuleDynamicContentGetDynamicContentFolderByIdAsyncWithHttpInfo(string id)
         {
             // verify the required parameter 'id' is set
             if (id == null)
                 throw new ApiException(400, "Missing required parameter 'id' when calling MarketingModuleApi->MarketingModuleDynamicContentGetDynamicContentFolderById");
 
             var localVarPath = "/api/marketing/contentfolders/{id}";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
+            string[] localVarHttpContentTypes = new string[] {
             };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
+            string[] localVarHttpHeaderAccepts = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml"
             };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
-            if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
+            if (id != null) localVarPathParams.Add("id", ApiClient.ParameterToString(id)); // path parameter
 
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)await ApiClient.CallApiAsync(localVarPath,
                 Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentGetDynamicContentFolderById: " + localVarResponse.Content, localVarResponse.Content);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentGetDynamicContentFolderById: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentGetDynamicContentFolderById: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentGetDynamicContentFolderById: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
             return new ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentFolder>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommerceMarketingModuleWebModelDynamicContentFolder) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentFolder)));
+                (VirtoCommerceMarketingModuleWebModelDynamicContentFolder)ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentFolder)));
             
         }
-
         /// <summary>
         /// Find dynamic content place object by id Return a single dynamic content place object
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">place id</param>
         /// <returns>VirtoCommerceMarketingModuleWebModelDynamicContentPlace</returns>
-        public VirtoCommerceMarketingModuleWebModelDynamicContentPlace MarketingModuleDynamicContentGetDynamicContentPlaceById (string id)
+        public VirtoCommerceMarketingModuleWebModelDynamicContentPlace MarketingModuleDynamicContentGetDynamicContentPlaceById(string id)
         {
              ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentPlace> localVarResponse = MarketingModuleDynamicContentGetDynamicContentPlaceByIdWithHttpInfo(id);
              return localVarResponse.Data;
@@ -2826,57 +2781,57 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">place id</param>
         /// <returns>ApiResponse of VirtoCommerceMarketingModuleWebModelDynamicContentPlace</returns>
-        public ApiResponse< VirtoCommerceMarketingModuleWebModelDynamicContentPlace > MarketingModuleDynamicContentGetDynamicContentPlaceByIdWithHttpInfo (string id)
+        public ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentPlace> MarketingModuleDynamicContentGetDynamicContentPlaceByIdWithHttpInfo(string id)
         {
             // verify the required parameter 'id' is set
             if (id == null)
                 throw new ApiException(400, "Missing required parameter 'id' when calling MarketingModuleApi->MarketingModuleDynamicContentGetDynamicContentPlaceById");
 
             var localVarPath = "/api/marketing/contentplaces/{id}";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
+            string[] localVarHttpContentTypes = new string[] {
             };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
+            string[] localVarHttpHeaderAccepts = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml"
             };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
-            if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
+            if (id != null) localVarPathParams.Add("id", ApiClient.ParameterToString(id)); // path parameter
 
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)ApiClient.CallApi(localVarPath,
                 Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentGetDynamicContentPlaceById: " + localVarResponse.Content, localVarResponse.Content);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentGetDynamicContentPlaceById: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentGetDynamicContentPlaceById: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentGetDynamicContentPlaceById: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
             return new ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentPlace>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommerceMarketingModuleWebModelDynamicContentPlace) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentPlace)));
+                (VirtoCommerceMarketingModuleWebModelDynamicContentPlace)ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentPlace)));
             
         }
 
@@ -2886,7 +2841,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">place id</param>
         /// <returns>Task of VirtoCommerceMarketingModuleWebModelDynamicContentPlace</returns>
-        public async System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelDynamicContentPlace> MarketingModuleDynamicContentGetDynamicContentPlaceByIdAsync (string id)
+        public async System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelDynamicContentPlace> MarketingModuleDynamicContentGetDynamicContentPlaceByIdAsync(string id)
         {
              ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentPlace> localVarResponse = await MarketingModuleDynamicContentGetDynamicContentPlaceByIdAsyncWithHttpInfo(id);
              return localVarResponse.Data;
@@ -2899,67 +2854,66 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">place id</param>
         /// <returns>Task of ApiResponse (VirtoCommerceMarketingModuleWebModelDynamicContentPlace)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentPlace>> MarketingModuleDynamicContentGetDynamicContentPlaceByIdAsyncWithHttpInfo (string id)
+        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentPlace>> MarketingModuleDynamicContentGetDynamicContentPlaceByIdAsyncWithHttpInfo(string id)
         {
             // verify the required parameter 'id' is set
             if (id == null)
                 throw new ApiException(400, "Missing required parameter 'id' when calling MarketingModuleApi->MarketingModuleDynamicContentGetDynamicContentPlaceById");
 
             var localVarPath = "/api/marketing/contentplaces/{id}";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
+            string[] localVarHttpContentTypes = new string[] {
             };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
+            string[] localVarHttpHeaderAccepts = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml"
             };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
-            if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
+            if (id != null) localVarPathParams.Add("id", ApiClient.ParameterToString(id)); // path parameter
 
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)await ApiClient.CallApiAsync(localVarPath,
                 Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentGetDynamicContentPlaceById: " + localVarResponse.Content, localVarResponse.Content);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentGetDynamicContentPlaceById: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentGetDynamicContentPlaceById: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentGetDynamicContentPlaceById: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
             return new ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentPlace>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommerceMarketingModuleWebModelDynamicContentPlace) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentPlace)));
+                (VirtoCommerceMarketingModuleWebModelDynamicContentPlace)ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentPlace)));
             
         }
-
         /// <summary>
         /// Find dynamic content publication object by id Return a single dynamic content publication object
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">publication id</param>
         /// <returns>VirtoCommerceMarketingModuleWebModelDynamicContentPublication</returns>
-        public VirtoCommerceMarketingModuleWebModelDynamicContentPublication MarketingModuleDynamicContentGetDynamicContentPublicationById (string id)
+        public VirtoCommerceMarketingModuleWebModelDynamicContentPublication MarketingModuleDynamicContentGetDynamicContentPublicationById(string id)
         {
              ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentPublication> localVarResponse = MarketingModuleDynamicContentGetDynamicContentPublicationByIdWithHttpInfo(id);
              return localVarResponse.Data;
@@ -2971,57 +2925,57 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">publication id</param>
         /// <returns>ApiResponse of VirtoCommerceMarketingModuleWebModelDynamicContentPublication</returns>
-        public ApiResponse< VirtoCommerceMarketingModuleWebModelDynamicContentPublication > MarketingModuleDynamicContentGetDynamicContentPublicationByIdWithHttpInfo (string id)
+        public ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentPublication> MarketingModuleDynamicContentGetDynamicContentPublicationByIdWithHttpInfo(string id)
         {
             // verify the required parameter 'id' is set
             if (id == null)
                 throw new ApiException(400, "Missing required parameter 'id' when calling MarketingModuleApi->MarketingModuleDynamicContentGetDynamicContentPublicationById");
 
             var localVarPath = "/api/marketing/contentpublications/{id}";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
+            string[] localVarHttpContentTypes = new string[] {
             };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
+            string[] localVarHttpHeaderAccepts = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml"
             };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
-            if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
+            if (id != null) localVarPathParams.Add("id", ApiClient.ParameterToString(id)); // path parameter
 
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)ApiClient.CallApi(localVarPath,
                 Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentGetDynamicContentPublicationById: " + localVarResponse.Content, localVarResponse.Content);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentGetDynamicContentPublicationById: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentGetDynamicContentPublicationById: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentGetDynamicContentPublicationById: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
             return new ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentPublication>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommerceMarketingModuleWebModelDynamicContentPublication) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentPublication)));
+                (VirtoCommerceMarketingModuleWebModelDynamicContentPublication)ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentPublication)));
             
         }
 
@@ -3031,7 +2985,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">publication id</param>
         /// <returns>Task of VirtoCommerceMarketingModuleWebModelDynamicContentPublication</returns>
-        public async System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelDynamicContentPublication> MarketingModuleDynamicContentGetDynamicContentPublicationByIdAsync (string id)
+        public async System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelDynamicContentPublication> MarketingModuleDynamicContentGetDynamicContentPublicationByIdAsync(string id)
         {
              ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentPublication> localVarResponse = await MarketingModuleDynamicContentGetDynamicContentPublicationByIdAsyncWithHttpInfo(id);
              return localVarResponse.Data;
@@ -3044,66 +2998,65 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">publication id</param>
         /// <returns>Task of ApiResponse (VirtoCommerceMarketingModuleWebModelDynamicContentPublication)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentPublication>> MarketingModuleDynamicContentGetDynamicContentPublicationByIdAsyncWithHttpInfo (string id)
+        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentPublication>> MarketingModuleDynamicContentGetDynamicContentPublicationByIdAsyncWithHttpInfo(string id)
         {
             // verify the required parameter 'id' is set
             if (id == null)
                 throw new ApiException(400, "Missing required parameter 'id' when calling MarketingModuleApi->MarketingModuleDynamicContentGetDynamicContentPublicationById");
 
             var localVarPath = "/api/marketing/contentpublications/{id}";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
+            string[] localVarHttpContentTypes = new string[] {
             };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
+            string[] localVarHttpHeaderAccepts = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml"
             };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
-            if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
+            if (id != null) localVarPathParams.Add("id", ApiClient.ParameterToString(id)); // path parameter
 
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)await ApiClient.CallApiAsync(localVarPath,
                 Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentGetDynamicContentPublicationById: " + localVarResponse.Content, localVarResponse.Content);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentGetDynamicContentPublicationById: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentGetDynamicContentPublicationById: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentGetDynamicContentPublicationById: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
             return new ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentPublication>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommerceMarketingModuleWebModelDynamicContentPublication) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentPublication)));
+                (VirtoCommerceMarketingModuleWebModelDynamicContentPublication)ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentPublication)));
             
         }
-
         /// <summary>
         /// Get new dynamic content publication object 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <returns>VirtoCommerceMarketingModuleWebModelDynamicContentPublication</returns>
-        public VirtoCommerceMarketingModuleWebModelDynamicContentPublication MarketingModuleDynamicContentGetNewDynamicPublication ()
+        public VirtoCommerceMarketingModuleWebModelDynamicContentPublication MarketingModuleDynamicContentGetNewDynamicPublication()
         {
              ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentPublication> localVarResponse = MarketingModuleDynamicContentGetNewDynamicPublicationWithHttpInfo();
              return localVarResponse.Data;
@@ -3114,30 +3067,30 @@ namespace VirtoCommerce.Client.Api
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <returns>ApiResponse of VirtoCommerceMarketingModuleWebModelDynamicContentPublication</returns>
-        public ApiResponse< VirtoCommerceMarketingModuleWebModelDynamicContentPublication > MarketingModuleDynamicContentGetNewDynamicPublicationWithHttpInfo ()
+        public ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentPublication> MarketingModuleDynamicContentGetNewDynamicPublicationWithHttpInfo()
         {
 
             var localVarPath = "/api/marketing/contentpublications/new";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
+            string[] localVarHttpContentTypes = new string[] {
             };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
+            string[] localVarHttpHeaderAccepts = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml"
             };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
@@ -3147,20 +3100,20 @@ namespace VirtoCommerce.Client.Api
 
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)ApiClient.CallApi(localVarPath,
                 Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentGetNewDynamicPublication: " + localVarResponse.Content, localVarResponse.Content);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentGetNewDynamicPublication: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentGetNewDynamicPublication: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentGetNewDynamicPublication: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
             return new ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentPublication>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommerceMarketingModuleWebModelDynamicContentPublication) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentPublication)));
+                (VirtoCommerceMarketingModuleWebModelDynamicContentPublication)ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentPublication)));
             
         }
 
@@ -3169,7 +3122,7 @@ namespace VirtoCommerce.Client.Api
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <returns>Task of VirtoCommerceMarketingModuleWebModelDynamicContentPublication</returns>
-        public async System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelDynamicContentPublication> MarketingModuleDynamicContentGetNewDynamicPublicationAsync ()
+        public async System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelDynamicContentPublication> MarketingModuleDynamicContentGetNewDynamicPublicationAsync()
         {
              ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentPublication> localVarResponse = await MarketingModuleDynamicContentGetNewDynamicPublicationAsyncWithHttpInfo();
              return localVarResponse.Data;
@@ -3181,30 +3134,30 @@ namespace VirtoCommerce.Client.Api
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <returns>Task of ApiResponse (VirtoCommerceMarketingModuleWebModelDynamicContentPublication)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentPublication>> MarketingModuleDynamicContentGetNewDynamicPublicationAsyncWithHttpInfo ()
+        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentPublication>> MarketingModuleDynamicContentGetNewDynamicPublicationAsyncWithHttpInfo()
         {
 
             var localVarPath = "/api/marketing/contentpublications/new";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
+            string[] localVarHttpContentTypes = new string[] {
             };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
+            string[] localVarHttpHeaderAccepts = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml"
             };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
@@ -3214,30 +3167,29 @@ namespace VirtoCommerce.Client.Api
 
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)await ApiClient.CallApiAsync(localVarPath,
                 Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentGetNewDynamicPublication: " + localVarResponse.Content, localVarResponse.Content);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentGetNewDynamicPublication: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentGetNewDynamicPublication: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentGetNewDynamicPublication: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
             return new ApiResponse<VirtoCommerceMarketingModuleWebModelDynamicContentPublication>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommerceMarketingModuleWebModelDynamicContentPublication) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentPublication)));
+                (VirtoCommerceMarketingModuleWebModelDynamicContentPublication)ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceMarketingModuleWebModelDynamicContentPublication)));
             
         }
-
         /// <summary>
         /// Update a existing dynamic content item object 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="contentItem">dynamic content object that needs to be updated in the dynamic content system</param>
         /// <returns></returns>
-        public void MarketingModuleDynamicContentUpdateDynamicContent (VirtoCommerceMarketingModuleWebModelDynamicContentItem contentItem)
+        public void MarketingModuleDynamicContentUpdateDynamicContent(VirtoCommerceMarketingModuleWebModelDynamicContentItem contentItem)
         {
              MarketingModuleDynamicContentUpdateDynamicContentWithHttpInfo(contentItem);
         }
@@ -3248,34 +3200,34 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="contentItem">dynamic content object that needs to be updated in the dynamic content system</param>
         /// <returns>ApiResponse of Object(void)</returns>
-        public ApiResponse<Object> MarketingModuleDynamicContentUpdateDynamicContentWithHttpInfo (VirtoCommerceMarketingModuleWebModelDynamicContentItem contentItem)
+        public ApiResponse<object> MarketingModuleDynamicContentUpdateDynamicContentWithHttpInfo(VirtoCommerceMarketingModuleWebModelDynamicContentItem contentItem)
         {
             // verify the required parameter 'contentItem' is set
             if (contentItem == null)
                 throw new ApiException(400, "Missing required parameter 'contentItem' when calling MarketingModuleApi->MarketingModuleDynamicContentUpdateDynamicContent");
 
             var localVarPath = "/api/marketing/contentitems";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
+            string[] localVarHttpContentTypes = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml", 
                 "application/x-www-form-urlencoded"
             };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
+            string[] localVarHttpHeaderAccepts = new string[] {
             };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
@@ -3284,7 +3236,7 @@ namespace VirtoCommerce.Client.Api
             localVarPathParams.Add("format", "json");
             if (contentItem.GetType() != typeof(byte[]))
             {
-                localVarPostBody = Configuration.ApiClient.Serialize(contentItem); // http body (model) parameter
+                localVarPostBody = ApiClient.Serialize(contentItem); // http body (model) parameter
             }
             else
             {
@@ -3293,19 +3245,19 @@ namespace VirtoCommerce.Client.Api
 
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)ApiClient.CallApi(localVarPath,
                 Method.PUT, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentUpdateDynamicContent: " + localVarResponse.Content, localVarResponse.Content);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentUpdateDynamicContent: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentUpdateDynamicContent: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentUpdateDynamicContent: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
             
-            return new ApiResponse<Object>(localVarStatusCode,
+            return new ApiResponse<object>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 null);
         }
@@ -3316,7 +3268,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="contentItem">dynamic content object that needs to be updated in the dynamic content system</param>
         /// <returns>Task of void</returns>
-        public async System.Threading.Tasks.Task MarketingModuleDynamicContentUpdateDynamicContentAsync (VirtoCommerceMarketingModuleWebModelDynamicContentItem contentItem)
+        public async System.Threading.Tasks.Task MarketingModuleDynamicContentUpdateDynamicContentAsync(VirtoCommerceMarketingModuleWebModelDynamicContentItem contentItem)
         {
              await MarketingModuleDynamicContentUpdateDynamicContentAsyncWithHttpInfo(contentItem);
 
@@ -3328,34 +3280,34 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="contentItem">dynamic content object that needs to be updated in the dynamic content system</param>
         /// <returns>Task of ApiResponse</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Object>> MarketingModuleDynamicContentUpdateDynamicContentAsyncWithHttpInfo (VirtoCommerceMarketingModuleWebModelDynamicContentItem contentItem)
+        public async System.Threading.Tasks.Task<ApiResponse<object>> MarketingModuleDynamicContentUpdateDynamicContentAsyncWithHttpInfo(VirtoCommerceMarketingModuleWebModelDynamicContentItem contentItem)
         {
             // verify the required parameter 'contentItem' is set
             if (contentItem == null)
                 throw new ApiException(400, "Missing required parameter 'contentItem' when calling MarketingModuleApi->MarketingModuleDynamicContentUpdateDynamicContent");
 
             var localVarPath = "/api/marketing/contentitems";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
+            string[] localVarHttpContentTypes = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml", 
                 "application/x-www-form-urlencoded"
             };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
+            string[] localVarHttpHeaderAccepts = new string[] {
             };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
@@ -3364,7 +3316,7 @@ namespace VirtoCommerce.Client.Api
             localVarPathParams.Add("format", "json");
             if (contentItem.GetType() != typeof(byte[]))
             {
-                localVarPostBody = Configuration.ApiClient.Serialize(contentItem); // http body (model) parameter
+                localVarPostBody = ApiClient.Serialize(contentItem); // http body (model) parameter
             }
             else
             {
@@ -3373,30 +3325,29 @@ namespace VirtoCommerce.Client.Api
 
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)await ApiClient.CallApiAsync(localVarPath,
                 Method.PUT, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentUpdateDynamicContent: " + localVarResponse.Content, localVarResponse.Content);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentUpdateDynamicContent: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentUpdateDynamicContent: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentUpdateDynamicContent: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
             
-            return new ApiResponse<Object>(localVarStatusCode,
+            return new ApiResponse<object>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 null);
         }
-
         /// <summary>
         /// Update a existing dynamic content folder 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="folder">dynamic content folder that needs to be updated</param>
         /// <returns></returns>
-        public void MarketingModuleDynamicContentUpdateDynamicContentFolder (VirtoCommerceMarketingModuleWebModelDynamicContentFolder folder)
+        public void MarketingModuleDynamicContentUpdateDynamicContentFolder(VirtoCommerceMarketingModuleWebModelDynamicContentFolder folder)
         {
              MarketingModuleDynamicContentUpdateDynamicContentFolderWithHttpInfo(folder);
         }
@@ -3407,34 +3358,34 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="folder">dynamic content folder that needs to be updated</param>
         /// <returns>ApiResponse of Object(void)</returns>
-        public ApiResponse<Object> MarketingModuleDynamicContentUpdateDynamicContentFolderWithHttpInfo (VirtoCommerceMarketingModuleWebModelDynamicContentFolder folder)
+        public ApiResponse<object> MarketingModuleDynamicContentUpdateDynamicContentFolderWithHttpInfo(VirtoCommerceMarketingModuleWebModelDynamicContentFolder folder)
         {
             // verify the required parameter 'folder' is set
             if (folder == null)
                 throw new ApiException(400, "Missing required parameter 'folder' when calling MarketingModuleApi->MarketingModuleDynamicContentUpdateDynamicContentFolder");
 
             var localVarPath = "/api/marketing/contentfolders";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
+            string[] localVarHttpContentTypes = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml", 
                 "application/x-www-form-urlencoded"
             };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
+            string[] localVarHttpHeaderAccepts = new string[] {
             };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
@@ -3443,7 +3394,7 @@ namespace VirtoCommerce.Client.Api
             localVarPathParams.Add("format", "json");
             if (folder.GetType() != typeof(byte[]))
             {
-                localVarPostBody = Configuration.ApiClient.Serialize(folder); // http body (model) parameter
+                localVarPostBody = ApiClient.Serialize(folder); // http body (model) parameter
             }
             else
             {
@@ -3452,19 +3403,19 @@ namespace VirtoCommerce.Client.Api
 
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)ApiClient.CallApi(localVarPath,
                 Method.PUT, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentUpdateDynamicContentFolder: " + localVarResponse.Content, localVarResponse.Content);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentUpdateDynamicContentFolder: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentUpdateDynamicContentFolder: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentUpdateDynamicContentFolder: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
             
-            return new ApiResponse<Object>(localVarStatusCode,
+            return new ApiResponse<object>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 null);
         }
@@ -3475,7 +3426,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="folder">dynamic content folder that needs to be updated</param>
         /// <returns>Task of void</returns>
-        public async System.Threading.Tasks.Task MarketingModuleDynamicContentUpdateDynamicContentFolderAsync (VirtoCommerceMarketingModuleWebModelDynamicContentFolder folder)
+        public async System.Threading.Tasks.Task MarketingModuleDynamicContentUpdateDynamicContentFolderAsync(VirtoCommerceMarketingModuleWebModelDynamicContentFolder folder)
         {
              await MarketingModuleDynamicContentUpdateDynamicContentFolderAsyncWithHttpInfo(folder);
 
@@ -3487,34 +3438,34 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="folder">dynamic content folder that needs to be updated</param>
         /// <returns>Task of ApiResponse</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Object>> MarketingModuleDynamicContentUpdateDynamicContentFolderAsyncWithHttpInfo (VirtoCommerceMarketingModuleWebModelDynamicContentFolder folder)
+        public async System.Threading.Tasks.Task<ApiResponse<object>> MarketingModuleDynamicContentUpdateDynamicContentFolderAsyncWithHttpInfo(VirtoCommerceMarketingModuleWebModelDynamicContentFolder folder)
         {
             // verify the required parameter 'folder' is set
             if (folder == null)
                 throw new ApiException(400, "Missing required parameter 'folder' when calling MarketingModuleApi->MarketingModuleDynamicContentUpdateDynamicContentFolder");
 
             var localVarPath = "/api/marketing/contentfolders";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
+            string[] localVarHttpContentTypes = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml", 
                 "application/x-www-form-urlencoded"
             };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
+            string[] localVarHttpHeaderAccepts = new string[] {
             };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
@@ -3523,7 +3474,7 @@ namespace VirtoCommerce.Client.Api
             localVarPathParams.Add("format", "json");
             if (folder.GetType() != typeof(byte[]))
             {
-                localVarPostBody = Configuration.ApiClient.Serialize(folder); // http body (model) parameter
+                localVarPostBody = ApiClient.Serialize(folder); // http body (model) parameter
             }
             else
             {
@@ -3532,30 +3483,29 @@ namespace VirtoCommerce.Client.Api
 
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)await ApiClient.CallApiAsync(localVarPath,
                 Method.PUT, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentUpdateDynamicContentFolder: " + localVarResponse.Content, localVarResponse.Content);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentUpdateDynamicContentFolder: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentUpdateDynamicContentFolder: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentUpdateDynamicContentFolder: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
             
-            return new ApiResponse<Object>(localVarStatusCode,
+            return new ApiResponse<object>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 null);
         }
-
         /// <summary>
         /// Update a existing dynamic content place object 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="contentPlace">dynamic content place object that needs to be updated in the dynamic content system</param>
         /// <returns></returns>
-        public void MarketingModuleDynamicContentUpdateDynamicContentPlace (VirtoCommerceMarketingModuleWebModelDynamicContentPlace contentPlace)
+        public void MarketingModuleDynamicContentUpdateDynamicContentPlace(VirtoCommerceMarketingModuleWebModelDynamicContentPlace contentPlace)
         {
              MarketingModuleDynamicContentUpdateDynamicContentPlaceWithHttpInfo(contentPlace);
         }
@@ -3566,34 +3516,34 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="contentPlace">dynamic content place object that needs to be updated in the dynamic content system</param>
         /// <returns>ApiResponse of Object(void)</returns>
-        public ApiResponse<Object> MarketingModuleDynamicContentUpdateDynamicContentPlaceWithHttpInfo (VirtoCommerceMarketingModuleWebModelDynamicContentPlace contentPlace)
+        public ApiResponse<object> MarketingModuleDynamicContentUpdateDynamicContentPlaceWithHttpInfo(VirtoCommerceMarketingModuleWebModelDynamicContentPlace contentPlace)
         {
             // verify the required parameter 'contentPlace' is set
             if (contentPlace == null)
                 throw new ApiException(400, "Missing required parameter 'contentPlace' when calling MarketingModuleApi->MarketingModuleDynamicContentUpdateDynamicContentPlace");
 
             var localVarPath = "/api/marketing/contentplaces";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
+            string[] localVarHttpContentTypes = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml", 
                 "application/x-www-form-urlencoded"
             };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
+            string[] localVarHttpHeaderAccepts = new string[] {
             };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
@@ -3602,7 +3552,7 @@ namespace VirtoCommerce.Client.Api
             localVarPathParams.Add("format", "json");
             if (contentPlace.GetType() != typeof(byte[]))
             {
-                localVarPostBody = Configuration.ApiClient.Serialize(contentPlace); // http body (model) parameter
+                localVarPostBody = ApiClient.Serialize(contentPlace); // http body (model) parameter
             }
             else
             {
@@ -3611,19 +3561,19 @@ namespace VirtoCommerce.Client.Api
 
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)ApiClient.CallApi(localVarPath,
                 Method.PUT, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentUpdateDynamicContentPlace: " + localVarResponse.Content, localVarResponse.Content);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentUpdateDynamicContentPlace: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentUpdateDynamicContentPlace: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentUpdateDynamicContentPlace: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
             
-            return new ApiResponse<Object>(localVarStatusCode,
+            return new ApiResponse<object>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 null);
         }
@@ -3634,7 +3584,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="contentPlace">dynamic content place object that needs to be updated in the dynamic content system</param>
         /// <returns>Task of void</returns>
-        public async System.Threading.Tasks.Task MarketingModuleDynamicContentUpdateDynamicContentPlaceAsync (VirtoCommerceMarketingModuleWebModelDynamicContentPlace contentPlace)
+        public async System.Threading.Tasks.Task MarketingModuleDynamicContentUpdateDynamicContentPlaceAsync(VirtoCommerceMarketingModuleWebModelDynamicContentPlace contentPlace)
         {
              await MarketingModuleDynamicContentUpdateDynamicContentPlaceAsyncWithHttpInfo(contentPlace);
 
@@ -3646,34 +3596,34 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="contentPlace">dynamic content place object that needs to be updated in the dynamic content system</param>
         /// <returns>Task of ApiResponse</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Object>> MarketingModuleDynamicContentUpdateDynamicContentPlaceAsyncWithHttpInfo (VirtoCommerceMarketingModuleWebModelDynamicContentPlace contentPlace)
+        public async System.Threading.Tasks.Task<ApiResponse<object>> MarketingModuleDynamicContentUpdateDynamicContentPlaceAsyncWithHttpInfo(VirtoCommerceMarketingModuleWebModelDynamicContentPlace contentPlace)
         {
             // verify the required parameter 'contentPlace' is set
             if (contentPlace == null)
                 throw new ApiException(400, "Missing required parameter 'contentPlace' when calling MarketingModuleApi->MarketingModuleDynamicContentUpdateDynamicContentPlace");
 
             var localVarPath = "/api/marketing/contentplaces";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
+            string[] localVarHttpContentTypes = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml", 
                 "application/x-www-form-urlencoded"
             };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
+            string[] localVarHttpHeaderAccepts = new string[] {
             };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
@@ -3682,7 +3632,7 @@ namespace VirtoCommerce.Client.Api
             localVarPathParams.Add("format", "json");
             if (contentPlace.GetType() != typeof(byte[]))
             {
-                localVarPostBody = Configuration.ApiClient.Serialize(contentPlace); // http body (model) parameter
+                localVarPostBody = ApiClient.Serialize(contentPlace); // http body (model) parameter
             }
             else
             {
@@ -3691,30 +3641,29 @@ namespace VirtoCommerce.Client.Api
 
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)await ApiClient.CallApiAsync(localVarPath,
                 Method.PUT, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentUpdateDynamicContentPlace: " + localVarResponse.Content, localVarResponse.Content);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentUpdateDynamicContentPlace: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentUpdateDynamicContentPlace: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentUpdateDynamicContentPlace: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
             
-            return new ApiResponse<Object>(localVarStatusCode,
+            return new ApiResponse<object>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 null);
         }
-
         /// <summary>
         /// Update a existing dynamic content publication object 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="publication">dynamic content publication object that needs to be updated in the dynamic content system</param>
         /// <returns></returns>
-        public void MarketingModuleDynamicContentUpdateDynamicContentPublication (VirtoCommerceMarketingModuleWebModelDynamicContentPublication publication)
+        public void MarketingModuleDynamicContentUpdateDynamicContentPublication(VirtoCommerceMarketingModuleWebModelDynamicContentPublication publication)
         {
              MarketingModuleDynamicContentUpdateDynamicContentPublicationWithHttpInfo(publication);
         }
@@ -3725,34 +3674,34 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="publication">dynamic content publication object that needs to be updated in the dynamic content system</param>
         /// <returns>ApiResponse of Object(void)</returns>
-        public ApiResponse<Object> MarketingModuleDynamicContentUpdateDynamicContentPublicationWithHttpInfo (VirtoCommerceMarketingModuleWebModelDynamicContentPublication publication)
+        public ApiResponse<object> MarketingModuleDynamicContentUpdateDynamicContentPublicationWithHttpInfo(VirtoCommerceMarketingModuleWebModelDynamicContentPublication publication)
         {
             // verify the required parameter 'publication' is set
             if (publication == null)
                 throw new ApiException(400, "Missing required parameter 'publication' when calling MarketingModuleApi->MarketingModuleDynamicContentUpdateDynamicContentPublication");
 
             var localVarPath = "/api/marketing/contentpublications";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
+            string[] localVarHttpContentTypes = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml", 
                 "application/x-www-form-urlencoded"
             };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
+            string[] localVarHttpHeaderAccepts = new string[] {
             };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
@@ -3761,7 +3710,7 @@ namespace VirtoCommerce.Client.Api
             localVarPathParams.Add("format", "json");
             if (publication.GetType() != typeof(byte[]))
             {
-                localVarPostBody = Configuration.ApiClient.Serialize(publication); // http body (model) parameter
+                localVarPostBody = ApiClient.Serialize(publication); // http body (model) parameter
             }
             else
             {
@@ -3770,19 +3719,19 @@ namespace VirtoCommerce.Client.Api
 
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)ApiClient.CallApi(localVarPath,
                 Method.PUT, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentUpdateDynamicContentPublication: " + localVarResponse.Content, localVarResponse.Content);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentUpdateDynamicContentPublication: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentUpdateDynamicContentPublication: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentUpdateDynamicContentPublication: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
             
-            return new ApiResponse<Object>(localVarStatusCode,
+            return new ApiResponse<object>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 null);
         }
@@ -3793,7 +3742,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="publication">dynamic content publication object that needs to be updated in the dynamic content system</param>
         /// <returns>Task of void</returns>
-        public async System.Threading.Tasks.Task MarketingModuleDynamicContentUpdateDynamicContentPublicationAsync (VirtoCommerceMarketingModuleWebModelDynamicContentPublication publication)
+        public async System.Threading.Tasks.Task MarketingModuleDynamicContentUpdateDynamicContentPublicationAsync(VirtoCommerceMarketingModuleWebModelDynamicContentPublication publication)
         {
              await MarketingModuleDynamicContentUpdateDynamicContentPublicationAsyncWithHttpInfo(publication);
 
@@ -3805,34 +3754,34 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="publication">dynamic content publication object that needs to be updated in the dynamic content system</param>
         /// <returns>Task of ApiResponse</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Object>> MarketingModuleDynamicContentUpdateDynamicContentPublicationAsyncWithHttpInfo (VirtoCommerceMarketingModuleWebModelDynamicContentPublication publication)
+        public async System.Threading.Tasks.Task<ApiResponse<object>> MarketingModuleDynamicContentUpdateDynamicContentPublicationAsyncWithHttpInfo(VirtoCommerceMarketingModuleWebModelDynamicContentPublication publication)
         {
             // verify the required parameter 'publication' is set
             if (publication == null)
                 throw new ApiException(400, "Missing required parameter 'publication' when calling MarketingModuleApi->MarketingModuleDynamicContentUpdateDynamicContentPublication");
 
             var localVarPath = "/api/marketing/contentpublications";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
+            string[] localVarHttpContentTypes = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml", 
                 "application/x-www-form-urlencoded"
             };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
+            string[] localVarHttpHeaderAccepts = new string[] {
             };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
@@ -3841,7 +3790,7 @@ namespace VirtoCommerce.Client.Api
             localVarPathParams.Add("format", "json");
             if (publication.GetType() != typeof(byte[]))
             {
-                localVarPostBody = Configuration.ApiClient.Serialize(publication); // http body (model) parameter
+                localVarPostBody = ApiClient.Serialize(publication); // http body (model) parameter
             }
             else
             {
@@ -3850,30 +3799,29 @@ namespace VirtoCommerce.Client.Api
 
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)await ApiClient.CallApiAsync(localVarPath,
                 Method.PUT, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentUpdateDynamicContentPublication: " + localVarResponse.Content, localVarResponse.Content);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentUpdateDynamicContentPublication: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleDynamicContentUpdateDynamicContentPublication: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleDynamicContentUpdateDynamicContentPublication: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
             
-            return new ApiResponse<Object>(localVarStatusCode,
+            return new ApiResponse<object>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 null);
         }
-
         /// <summary>
         /// Add new dynamic promotion object to marketing system 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="promotion">dynamic promotion object that needs to be added to the marketing system</param>
         /// <returns>VirtoCommerceMarketingModuleWebModelPromotion</returns>
-        public VirtoCommerceMarketingModuleWebModelPromotion MarketingModulePromotionCreatePromotion (VirtoCommerceMarketingModuleWebModelPromotion promotion)
+        public VirtoCommerceMarketingModuleWebModelPromotion MarketingModulePromotionCreatePromotion(VirtoCommerceMarketingModuleWebModelPromotion promotion)
         {
              ApiResponse<VirtoCommerceMarketingModuleWebModelPromotion> localVarResponse = MarketingModulePromotionCreatePromotionWithHttpInfo(promotion);
              return localVarResponse.Data;
@@ -3885,38 +3833,38 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="promotion">dynamic promotion object that needs to be added to the marketing system</param>
         /// <returns>ApiResponse of VirtoCommerceMarketingModuleWebModelPromotion</returns>
-        public ApiResponse< VirtoCommerceMarketingModuleWebModelPromotion > MarketingModulePromotionCreatePromotionWithHttpInfo (VirtoCommerceMarketingModuleWebModelPromotion promotion)
+        public ApiResponse<VirtoCommerceMarketingModuleWebModelPromotion> MarketingModulePromotionCreatePromotionWithHttpInfo(VirtoCommerceMarketingModuleWebModelPromotion promotion)
         {
             // verify the required parameter 'promotion' is set
             if (promotion == null)
                 throw new ApiException(400, "Missing required parameter 'promotion' when calling MarketingModuleApi->MarketingModulePromotionCreatePromotion");
 
             var localVarPath = "/api/marketing/promotions";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
+            string[] localVarHttpContentTypes = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml", 
                 "application/x-www-form-urlencoded"
             };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
+            string[] localVarHttpHeaderAccepts = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml"
             };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
@@ -3925,7 +3873,7 @@ namespace VirtoCommerce.Client.Api
             localVarPathParams.Add("format", "json");
             if (promotion.GetType() != typeof(byte[]))
             {
-                localVarPostBody = Configuration.ApiClient.Serialize(promotion); // http body (model) parameter
+                localVarPostBody = ApiClient.Serialize(promotion); // http body (model) parameter
             }
             else
             {
@@ -3934,20 +3882,20 @@ namespace VirtoCommerce.Client.Api
 
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)ApiClient.CallApi(localVarPath,
                 Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModulePromotionCreatePromotion: " + localVarResponse.Content, localVarResponse.Content);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModulePromotionCreatePromotion: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModulePromotionCreatePromotion: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModulePromotionCreatePromotion: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
             return new ApiResponse<VirtoCommerceMarketingModuleWebModelPromotion>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommerceMarketingModuleWebModelPromotion) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceMarketingModuleWebModelPromotion)));
+                (VirtoCommerceMarketingModuleWebModelPromotion)ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceMarketingModuleWebModelPromotion)));
             
         }
 
@@ -3957,7 +3905,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="promotion">dynamic promotion object that needs to be added to the marketing system</param>
         /// <returns>Task of VirtoCommerceMarketingModuleWebModelPromotion</returns>
-        public async System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelPromotion> MarketingModulePromotionCreatePromotionAsync (VirtoCommerceMarketingModuleWebModelPromotion promotion)
+        public async System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelPromotion> MarketingModulePromotionCreatePromotionAsync(VirtoCommerceMarketingModuleWebModelPromotion promotion)
         {
              ApiResponse<VirtoCommerceMarketingModuleWebModelPromotion> localVarResponse = await MarketingModulePromotionCreatePromotionAsyncWithHttpInfo(promotion);
              return localVarResponse.Data;
@@ -3970,38 +3918,38 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="promotion">dynamic promotion object that needs to be added to the marketing system</param>
         /// <returns>Task of ApiResponse (VirtoCommerceMarketingModuleWebModelPromotion)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelPromotion>> MarketingModulePromotionCreatePromotionAsyncWithHttpInfo (VirtoCommerceMarketingModuleWebModelPromotion promotion)
+        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelPromotion>> MarketingModulePromotionCreatePromotionAsyncWithHttpInfo(VirtoCommerceMarketingModuleWebModelPromotion promotion)
         {
             // verify the required parameter 'promotion' is set
             if (promotion == null)
                 throw new ApiException(400, "Missing required parameter 'promotion' when calling MarketingModuleApi->MarketingModulePromotionCreatePromotion");
 
             var localVarPath = "/api/marketing/promotions";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
+            string[] localVarHttpContentTypes = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml", 
                 "application/x-www-form-urlencoded"
             };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
+            string[] localVarHttpHeaderAccepts = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml"
             };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
@@ -4010,7 +3958,7 @@ namespace VirtoCommerce.Client.Api
             localVarPathParams.Add("format", "json");
             if (promotion.GetType() != typeof(byte[]))
             {
-                localVarPostBody = Configuration.ApiClient.Serialize(promotion); // http body (model) parameter
+                localVarPostBody = ApiClient.Serialize(promotion); // http body (model) parameter
             }
             else
             {
@@ -4019,30 +3967,29 @@ namespace VirtoCommerce.Client.Api
 
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)await ApiClient.CallApiAsync(localVarPath,
                 Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModulePromotionCreatePromotion: " + localVarResponse.Content, localVarResponse.Content);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModulePromotionCreatePromotion: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModulePromotionCreatePromotion: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModulePromotionCreatePromotion: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
             return new ApiResponse<VirtoCommerceMarketingModuleWebModelPromotion>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommerceMarketingModuleWebModelPromotion) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceMarketingModuleWebModelPromotion)));
+                (VirtoCommerceMarketingModuleWebModelPromotion)ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceMarketingModuleWebModelPromotion)));
             
         }
-
         /// <summary>
         /// Delete promotions objects 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="ids">promotions object ids for delete in the marketing system</param>
         /// <returns></returns>
-        public void MarketingModulePromotionDeletePromotions (List<string> ids)
+        public void MarketingModulePromotionDeletePromotions(List<string> ids)
         {
              MarketingModulePromotionDeletePromotionsWithHttpInfo(ids);
         }
@@ -4053,52 +4000,52 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="ids">promotions object ids for delete in the marketing system</param>
         /// <returns>ApiResponse of Object(void)</returns>
-        public ApiResponse<Object> MarketingModulePromotionDeletePromotionsWithHttpInfo (List<string> ids)
+        public ApiResponse<object> MarketingModulePromotionDeletePromotionsWithHttpInfo(List<string> ids)
         {
             // verify the required parameter 'ids' is set
             if (ids == null)
                 throw new ApiException(400, "Missing required parameter 'ids' when calling MarketingModuleApi->MarketingModulePromotionDeletePromotions");
 
             var localVarPath = "/api/marketing/promotions";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
+            string[] localVarHttpContentTypes = new string[] {
             };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
+            string[] localVarHttpHeaderAccepts = new string[] {
             };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
-            if (ids != null) localVarQueryParams.Add("ids", Configuration.ApiClient.ParameterToString(ids)); // query parameter
+            if (ids != null) localVarQueryParams.Add("ids", ApiClient.ParameterToString(ids)); // query parameter
 
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)ApiClient.CallApi(localVarPath,
                 Method.DELETE, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModulePromotionDeletePromotions: " + localVarResponse.Content, localVarResponse.Content);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModulePromotionDeletePromotions: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModulePromotionDeletePromotions: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModulePromotionDeletePromotions: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
             
-            return new ApiResponse<Object>(localVarStatusCode,
+            return new ApiResponse<object>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 null);
         }
@@ -4109,7 +4056,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="ids">promotions object ids for delete in the marketing system</param>
         /// <returns>Task of void</returns>
-        public async System.Threading.Tasks.Task MarketingModulePromotionDeletePromotionsAsync (List<string> ids)
+        public async System.Threading.Tasks.Task MarketingModulePromotionDeletePromotionsAsync(List<string> ids)
         {
              await MarketingModulePromotionDeletePromotionsAsyncWithHttpInfo(ids);
 
@@ -4121,63 +4068,62 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="ids">promotions object ids for delete in the marketing system</param>
         /// <returns>Task of ApiResponse</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Object>> MarketingModulePromotionDeletePromotionsAsyncWithHttpInfo (List<string> ids)
+        public async System.Threading.Tasks.Task<ApiResponse<object>> MarketingModulePromotionDeletePromotionsAsyncWithHttpInfo(List<string> ids)
         {
             // verify the required parameter 'ids' is set
             if (ids == null)
                 throw new ApiException(400, "Missing required parameter 'ids' when calling MarketingModuleApi->MarketingModulePromotionDeletePromotions");
 
             var localVarPath = "/api/marketing/promotions";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
+            string[] localVarHttpContentTypes = new string[] {
             };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
+            string[] localVarHttpHeaderAccepts = new string[] {
             };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
-            if (ids != null) localVarQueryParams.Add("ids", Configuration.ApiClient.ParameterToString(ids)); // query parameter
+            if (ids != null) localVarQueryParams.Add("ids", ApiClient.ParameterToString(ids)); // query parameter
 
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)await ApiClient.CallApiAsync(localVarPath,
                 Method.DELETE, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModulePromotionDeletePromotions: " + localVarResponse.Content, localVarResponse.Content);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModulePromotionDeletePromotions: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModulePromotionDeletePromotions: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModulePromotionDeletePromotions: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
             
-            return new ApiResponse<Object>(localVarStatusCode,
+            return new ApiResponse<object>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 null);
         }
-
         /// <summary>
         /// Evaluate promotions 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="context">Promotion evaluation context</param>
         /// <returns>List&lt;VirtoCommerceMarketingModuleWebModelPromotionReward&gt;</returns>
-        public List<VirtoCommerceMarketingModuleWebModelPromotionReward> MarketingModulePromotionEvaluatePromotions (VirtoCommerceDomainMarketingModelPromotionEvaluationContext context)
+        public List<VirtoCommerceMarketingModuleWebModelPromotionReward> MarketingModulePromotionEvaluatePromotions(VirtoCommerceDomainMarketingModelPromotionEvaluationContext context)
         {
              ApiResponse<List<VirtoCommerceMarketingModuleWebModelPromotionReward>> localVarResponse = MarketingModulePromotionEvaluatePromotionsWithHttpInfo(context);
              return localVarResponse.Data;
@@ -4189,38 +4135,38 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="context">Promotion evaluation context</param>
         /// <returns>ApiResponse of List&lt;VirtoCommerceMarketingModuleWebModelPromotionReward&gt;</returns>
-        public ApiResponse< List<VirtoCommerceMarketingModuleWebModelPromotionReward> > MarketingModulePromotionEvaluatePromotionsWithHttpInfo (VirtoCommerceDomainMarketingModelPromotionEvaluationContext context)
+        public ApiResponse<List<VirtoCommerceMarketingModuleWebModelPromotionReward>> MarketingModulePromotionEvaluatePromotionsWithHttpInfo(VirtoCommerceDomainMarketingModelPromotionEvaluationContext context)
         {
             // verify the required parameter 'context' is set
             if (context == null)
                 throw new ApiException(400, "Missing required parameter 'context' when calling MarketingModuleApi->MarketingModulePromotionEvaluatePromotions");
 
             var localVarPath = "/api/marketing/promotions/evaluate";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
+            string[] localVarHttpContentTypes = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml", 
                 "application/x-www-form-urlencoded"
             };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
+            string[] localVarHttpHeaderAccepts = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml"
             };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
@@ -4229,7 +4175,7 @@ namespace VirtoCommerce.Client.Api
             localVarPathParams.Add("format", "json");
             if (context.GetType() != typeof(byte[]))
             {
-                localVarPostBody = Configuration.ApiClient.Serialize(context); // http body (model) parameter
+                localVarPostBody = ApiClient.Serialize(context); // http body (model) parameter
             }
             else
             {
@@ -4238,20 +4184,20 @@ namespace VirtoCommerce.Client.Api
 
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)ApiClient.CallApi(localVarPath,
                 Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModulePromotionEvaluatePromotions: " + localVarResponse.Content, localVarResponse.Content);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModulePromotionEvaluatePromotions: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModulePromotionEvaluatePromotions: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModulePromotionEvaluatePromotions: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
             return new ApiResponse<List<VirtoCommerceMarketingModuleWebModelPromotionReward>>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (List<VirtoCommerceMarketingModuleWebModelPromotionReward>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<VirtoCommerceMarketingModuleWebModelPromotionReward>)));
+                (List<VirtoCommerceMarketingModuleWebModelPromotionReward>)ApiClient.Deserialize(localVarResponse, typeof(List<VirtoCommerceMarketingModuleWebModelPromotionReward>)));
             
         }
 
@@ -4261,7 +4207,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="context">Promotion evaluation context</param>
         /// <returns>Task of List&lt;VirtoCommerceMarketingModuleWebModelPromotionReward&gt;</returns>
-        public async System.Threading.Tasks.Task<List<VirtoCommerceMarketingModuleWebModelPromotionReward>> MarketingModulePromotionEvaluatePromotionsAsync (VirtoCommerceDomainMarketingModelPromotionEvaluationContext context)
+        public async System.Threading.Tasks.Task<List<VirtoCommerceMarketingModuleWebModelPromotionReward>> MarketingModulePromotionEvaluatePromotionsAsync(VirtoCommerceDomainMarketingModelPromotionEvaluationContext context)
         {
              ApiResponse<List<VirtoCommerceMarketingModuleWebModelPromotionReward>> localVarResponse = await MarketingModulePromotionEvaluatePromotionsAsyncWithHttpInfo(context);
              return localVarResponse.Data;
@@ -4274,38 +4220,38 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="context">Promotion evaluation context</param>
         /// <returns>Task of ApiResponse (List&lt;VirtoCommerceMarketingModuleWebModelPromotionReward&gt;)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceMarketingModuleWebModelPromotionReward>>> MarketingModulePromotionEvaluatePromotionsAsyncWithHttpInfo (VirtoCommerceDomainMarketingModelPromotionEvaluationContext context)
+        public async System.Threading.Tasks.Task<ApiResponse<List<VirtoCommerceMarketingModuleWebModelPromotionReward>>> MarketingModulePromotionEvaluatePromotionsAsyncWithHttpInfo(VirtoCommerceDomainMarketingModelPromotionEvaluationContext context)
         {
             // verify the required parameter 'context' is set
             if (context == null)
                 throw new ApiException(400, "Missing required parameter 'context' when calling MarketingModuleApi->MarketingModulePromotionEvaluatePromotions");
 
             var localVarPath = "/api/marketing/promotions/evaluate";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
+            string[] localVarHttpContentTypes = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml", 
                 "application/x-www-form-urlencoded"
             };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
+            string[] localVarHttpHeaderAccepts = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml"
             };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
@@ -4314,7 +4260,7 @@ namespace VirtoCommerce.Client.Api
             localVarPathParams.Add("format", "json");
             if (context.GetType() != typeof(byte[]))
             {
-                localVarPostBody = Configuration.ApiClient.Serialize(context); // http body (model) parameter
+                localVarPostBody = ApiClient.Serialize(context); // http body (model) parameter
             }
             else
             {
@@ -4323,29 +4269,28 @@ namespace VirtoCommerce.Client.Api
 
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)await ApiClient.CallApiAsync(localVarPath,
                 Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModulePromotionEvaluatePromotions: " + localVarResponse.Content, localVarResponse.Content);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModulePromotionEvaluatePromotions: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModulePromotionEvaluatePromotions: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModulePromotionEvaluatePromotions: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
             return new ApiResponse<List<VirtoCommerceMarketingModuleWebModelPromotionReward>>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (List<VirtoCommerceMarketingModuleWebModelPromotionReward>) Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<VirtoCommerceMarketingModuleWebModelPromotionReward>)));
+                (List<VirtoCommerceMarketingModuleWebModelPromotionReward>)ApiClient.Deserialize(localVarResponse, typeof(List<VirtoCommerceMarketingModuleWebModelPromotionReward>)));
             
         }
-
         /// <summary>
         /// Get new dynamic promotion object Return a new dynamic promotion object with populated dynamic expression tree
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <returns>VirtoCommerceMarketingModuleWebModelPromotion</returns>
-        public VirtoCommerceMarketingModuleWebModelPromotion MarketingModulePromotionGetNewDynamicPromotion ()
+        public VirtoCommerceMarketingModuleWebModelPromotion MarketingModulePromotionGetNewDynamicPromotion()
         {
              ApiResponse<VirtoCommerceMarketingModuleWebModelPromotion> localVarResponse = MarketingModulePromotionGetNewDynamicPromotionWithHttpInfo();
              return localVarResponse.Data;
@@ -4356,30 +4301,30 @@ namespace VirtoCommerce.Client.Api
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <returns>ApiResponse of VirtoCommerceMarketingModuleWebModelPromotion</returns>
-        public ApiResponse< VirtoCommerceMarketingModuleWebModelPromotion > MarketingModulePromotionGetNewDynamicPromotionWithHttpInfo ()
+        public ApiResponse<VirtoCommerceMarketingModuleWebModelPromotion> MarketingModulePromotionGetNewDynamicPromotionWithHttpInfo()
         {
 
             var localVarPath = "/api/marketing/promotions/new";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
+            string[] localVarHttpContentTypes = new string[] {
             };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
+            string[] localVarHttpHeaderAccepts = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml"
             };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
@@ -4389,20 +4334,20 @@ namespace VirtoCommerce.Client.Api
 
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)ApiClient.CallApi(localVarPath,
                 Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModulePromotionGetNewDynamicPromotion: " + localVarResponse.Content, localVarResponse.Content);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModulePromotionGetNewDynamicPromotion: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModulePromotionGetNewDynamicPromotion: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModulePromotionGetNewDynamicPromotion: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
             return new ApiResponse<VirtoCommerceMarketingModuleWebModelPromotion>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommerceMarketingModuleWebModelPromotion) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceMarketingModuleWebModelPromotion)));
+                (VirtoCommerceMarketingModuleWebModelPromotion)ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceMarketingModuleWebModelPromotion)));
             
         }
 
@@ -4411,7 +4356,7 @@ namespace VirtoCommerce.Client.Api
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <returns>Task of VirtoCommerceMarketingModuleWebModelPromotion</returns>
-        public async System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelPromotion> MarketingModulePromotionGetNewDynamicPromotionAsync ()
+        public async System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelPromotion> MarketingModulePromotionGetNewDynamicPromotionAsync()
         {
              ApiResponse<VirtoCommerceMarketingModuleWebModelPromotion> localVarResponse = await MarketingModulePromotionGetNewDynamicPromotionAsyncWithHttpInfo();
              return localVarResponse.Data;
@@ -4423,30 +4368,30 @@ namespace VirtoCommerce.Client.Api
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <returns>Task of ApiResponse (VirtoCommerceMarketingModuleWebModelPromotion)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelPromotion>> MarketingModulePromotionGetNewDynamicPromotionAsyncWithHttpInfo ()
+        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelPromotion>> MarketingModulePromotionGetNewDynamicPromotionAsyncWithHttpInfo()
         {
 
             var localVarPath = "/api/marketing/promotions/new";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
+            string[] localVarHttpContentTypes = new string[] {
             };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
+            string[] localVarHttpHeaderAccepts = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml"
             };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
@@ -4456,30 +4401,29 @@ namespace VirtoCommerce.Client.Api
 
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)await ApiClient.CallApiAsync(localVarPath,
                 Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModulePromotionGetNewDynamicPromotion: " + localVarResponse.Content, localVarResponse.Content);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModulePromotionGetNewDynamicPromotion: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModulePromotionGetNewDynamicPromotion: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModulePromotionGetNewDynamicPromotion: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
             return new ApiResponse<VirtoCommerceMarketingModuleWebModelPromotion>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommerceMarketingModuleWebModelPromotion) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceMarketingModuleWebModelPromotion)));
+                (VirtoCommerceMarketingModuleWebModelPromotion)ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceMarketingModuleWebModelPromotion)));
             
         }
-
         /// <summary>
         /// Find promotion object by id Return a single promotion (dynamic or custom) object
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">promotion id</param>
         /// <returns>VirtoCommerceMarketingModuleWebModelPromotion</returns>
-        public VirtoCommerceMarketingModuleWebModelPromotion MarketingModulePromotionGetPromotionById (string id)
+        public VirtoCommerceMarketingModuleWebModelPromotion MarketingModulePromotionGetPromotionById(string id)
         {
              ApiResponse<VirtoCommerceMarketingModuleWebModelPromotion> localVarResponse = MarketingModulePromotionGetPromotionByIdWithHttpInfo(id);
              return localVarResponse.Data;
@@ -4491,57 +4435,57 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">promotion id</param>
         /// <returns>ApiResponse of VirtoCommerceMarketingModuleWebModelPromotion</returns>
-        public ApiResponse< VirtoCommerceMarketingModuleWebModelPromotion > MarketingModulePromotionGetPromotionByIdWithHttpInfo (string id)
+        public ApiResponse<VirtoCommerceMarketingModuleWebModelPromotion> MarketingModulePromotionGetPromotionByIdWithHttpInfo(string id)
         {
             // verify the required parameter 'id' is set
             if (id == null)
                 throw new ApiException(400, "Missing required parameter 'id' when calling MarketingModuleApi->MarketingModulePromotionGetPromotionById");
 
             var localVarPath = "/api/marketing/promotions/{id}";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
+            string[] localVarHttpContentTypes = new string[] {
             };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
+            string[] localVarHttpHeaderAccepts = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml"
             };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
-            if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
+            if (id != null) localVarPathParams.Add("id", ApiClient.ParameterToString(id)); // path parameter
 
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)ApiClient.CallApi(localVarPath,
                 Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModulePromotionGetPromotionById: " + localVarResponse.Content, localVarResponse.Content);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModulePromotionGetPromotionById: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModulePromotionGetPromotionById: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModulePromotionGetPromotionById: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
             return new ApiResponse<VirtoCommerceMarketingModuleWebModelPromotion>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommerceMarketingModuleWebModelPromotion) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceMarketingModuleWebModelPromotion)));
+                (VirtoCommerceMarketingModuleWebModelPromotion)ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceMarketingModuleWebModelPromotion)));
             
         }
 
@@ -4551,7 +4495,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">promotion id</param>
         /// <returns>Task of VirtoCommerceMarketingModuleWebModelPromotion</returns>
-        public async System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelPromotion> MarketingModulePromotionGetPromotionByIdAsync (string id)
+        public async System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelPromotion> MarketingModulePromotionGetPromotionByIdAsync(string id)
         {
              ApiResponse<VirtoCommerceMarketingModuleWebModelPromotion> localVarResponse = await MarketingModulePromotionGetPromotionByIdAsyncWithHttpInfo(id);
              return localVarResponse.Data;
@@ -4564,67 +4508,66 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">promotion id</param>
         /// <returns>Task of ApiResponse (VirtoCommerceMarketingModuleWebModelPromotion)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelPromotion>> MarketingModulePromotionGetPromotionByIdAsyncWithHttpInfo (string id)
+        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelPromotion>> MarketingModulePromotionGetPromotionByIdAsyncWithHttpInfo(string id)
         {
             // verify the required parameter 'id' is set
             if (id == null)
                 throw new ApiException(400, "Missing required parameter 'id' when calling MarketingModuleApi->MarketingModulePromotionGetPromotionById");
 
             var localVarPath = "/api/marketing/promotions/{id}";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
+            string[] localVarHttpContentTypes = new string[] {
             };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
+            string[] localVarHttpHeaderAccepts = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml"
             };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
-            if (id != null) localVarPathParams.Add("id", Configuration.ApiClient.ParameterToString(id)); // path parameter
+            if (id != null) localVarPathParams.Add("id", ApiClient.ParameterToString(id)); // path parameter
 
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)await ApiClient.CallApiAsync(localVarPath,
                 Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModulePromotionGetPromotionById: " + localVarResponse.Content, localVarResponse.Content);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModulePromotionGetPromotionById: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModulePromotionGetPromotionById: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModulePromotionGetPromotionById: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
             return new ApiResponse<VirtoCommerceMarketingModuleWebModelPromotion>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommerceMarketingModuleWebModelPromotion) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceMarketingModuleWebModelPromotion)));
+                (VirtoCommerceMarketingModuleWebModelPromotion)ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceMarketingModuleWebModelPromotion)));
             
         }
-
         /// <summary>
         /// Update a existing dynamic promotion object in marketing system 
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="promotion">&amp;gt;dynamic promotion object that needs to be updated in the marketing system</param>
         /// <returns></returns>
-        public void MarketingModulePromotionUpdatePromotions (VirtoCommerceMarketingModuleWebModelPromotion promotion)
+        public void MarketingModulePromotionUpdatePromotions(VirtoCommerceMarketingModuleWebModelPromotion promotion)
         {
              MarketingModulePromotionUpdatePromotionsWithHttpInfo(promotion);
         }
@@ -4635,34 +4578,34 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="promotion">&amp;gt;dynamic promotion object that needs to be updated in the marketing system</param>
         /// <returns>ApiResponse of Object(void)</returns>
-        public ApiResponse<Object> MarketingModulePromotionUpdatePromotionsWithHttpInfo (VirtoCommerceMarketingModuleWebModelPromotion promotion)
+        public ApiResponse<object> MarketingModulePromotionUpdatePromotionsWithHttpInfo(VirtoCommerceMarketingModuleWebModelPromotion promotion)
         {
             // verify the required parameter 'promotion' is set
             if (promotion == null)
                 throw new ApiException(400, "Missing required parameter 'promotion' when calling MarketingModuleApi->MarketingModulePromotionUpdatePromotions");
 
             var localVarPath = "/api/marketing/promotions";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
+            string[] localVarHttpContentTypes = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml", 
                 "application/x-www-form-urlencoded"
             };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
+            string[] localVarHttpHeaderAccepts = new string[] {
             };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
@@ -4671,7 +4614,7 @@ namespace VirtoCommerce.Client.Api
             localVarPathParams.Add("format", "json");
             if (promotion.GetType() != typeof(byte[]))
             {
-                localVarPostBody = Configuration.ApiClient.Serialize(promotion); // http body (model) parameter
+                localVarPostBody = ApiClient.Serialize(promotion); // http body (model) parameter
             }
             else
             {
@@ -4680,19 +4623,19 @@ namespace VirtoCommerce.Client.Api
 
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)ApiClient.CallApi(localVarPath,
                 Method.PUT, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModulePromotionUpdatePromotions: " + localVarResponse.Content, localVarResponse.Content);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModulePromotionUpdatePromotions: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModulePromotionUpdatePromotions: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModulePromotionUpdatePromotions: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
             
-            return new ApiResponse<Object>(localVarStatusCode,
+            return new ApiResponse<object>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 null);
         }
@@ -4703,7 +4646,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="promotion">&amp;gt;dynamic promotion object that needs to be updated in the marketing system</param>
         /// <returns>Task of void</returns>
-        public async System.Threading.Tasks.Task MarketingModulePromotionUpdatePromotionsAsync (VirtoCommerceMarketingModuleWebModelPromotion promotion)
+        public async System.Threading.Tasks.Task MarketingModulePromotionUpdatePromotionsAsync(VirtoCommerceMarketingModuleWebModelPromotion promotion)
         {
              await MarketingModulePromotionUpdatePromotionsAsyncWithHttpInfo(promotion);
 
@@ -4715,34 +4658,34 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="promotion">&amp;gt;dynamic promotion object that needs to be updated in the marketing system</param>
         /// <returns>Task of ApiResponse</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Object>> MarketingModulePromotionUpdatePromotionsAsyncWithHttpInfo (VirtoCommerceMarketingModuleWebModelPromotion promotion)
+        public async System.Threading.Tasks.Task<ApiResponse<object>> MarketingModulePromotionUpdatePromotionsAsyncWithHttpInfo(VirtoCommerceMarketingModuleWebModelPromotion promotion)
         {
             // verify the required parameter 'promotion' is set
             if (promotion == null)
                 throw new ApiException(400, "Missing required parameter 'promotion' when calling MarketingModuleApi->MarketingModulePromotionUpdatePromotions");
 
             var localVarPath = "/api/marketing/promotions";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
+            string[] localVarHttpContentTypes = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml", 
                 "application/x-www-form-urlencoded"
             };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
+            string[] localVarHttpHeaderAccepts = new string[] {
             };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
@@ -4751,7 +4694,7 @@ namespace VirtoCommerce.Client.Api
             localVarPathParams.Add("format", "json");
             if (promotion.GetType() != typeof(byte[]))
             {
-                localVarPostBody = Configuration.ApiClient.Serialize(promotion); // http body (model) parameter
+                localVarPostBody = ApiClient.Serialize(promotion); // http body (model) parameter
             }
             else
             {
@@ -4760,30 +4703,29 @@ namespace VirtoCommerce.Client.Api
 
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)await ApiClient.CallApiAsync(localVarPath,
                 Method.PUT, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModulePromotionUpdatePromotions: " + localVarResponse.Content, localVarResponse.Content);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModulePromotionUpdatePromotions: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModulePromotionUpdatePromotions: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModulePromotionUpdatePromotions: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
             
-            return new ApiResponse<Object>(localVarStatusCode,
+            return new ApiResponse<object>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 null);
         }
-
         /// <summary>
         /// Search marketing objects by given criteria Allow to find all marketing module objects (Promotions, Dynamic content objects)
         /// </summary>
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="criteria">criteria</param>
         /// <returns>VirtoCommerceMarketingModuleWebModelMarketingSearchResult</returns>
-        public VirtoCommerceMarketingModuleWebModelMarketingSearchResult MarketingModuleSearch (VirtoCommerceDomainMarketingModelMarketingSearchCriteria criteria)
+        public VirtoCommerceMarketingModuleWebModelMarketingSearchResult MarketingModuleSearch(VirtoCommerceDomainMarketingModelMarketingSearchCriteria criteria)
         {
              ApiResponse<VirtoCommerceMarketingModuleWebModelMarketingSearchResult> localVarResponse = MarketingModuleSearchWithHttpInfo(criteria);
              return localVarResponse.Data;
@@ -4795,38 +4737,38 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="criteria">criteria</param>
         /// <returns>ApiResponse of VirtoCommerceMarketingModuleWebModelMarketingSearchResult</returns>
-        public ApiResponse< VirtoCommerceMarketingModuleWebModelMarketingSearchResult > MarketingModuleSearchWithHttpInfo (VirtoCommerceDomainMarketingModelMarketingSearchCriteria criteria)
+        public ApiResponse<VirtoCommerceMarketingModuleWebModelMarketingSearchResult> MarketingModuleSearchWithHttpInfo(VirtoCommerceDomainMarketingModelMarketingSearchCriteria criteria)
         {
             // verify the required parameter 'criteria' is set
             if (criteria == null)
                 throw new ApiException(400, "Missing required parameter 'criteria' when calling MarketingModuleApi->MarketingModuleSearch");
 
             var localVarPath = "/api/marketing/search";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
+            string[] localVarHttpContentTypes = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml", 
                 "application/x-www-form-urlencoded"
             };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
+            string[] localVarHttpHeaderAccepts = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml"
             };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
@@ -4835,7 +4777,7 @@ namespace VirtoCommerce.Client.Api
             localVarPathParams.Add("format", "json");
             if (criteria.GetType() != typeof(byte[]))
             {
-                localVarPostBody = Configuration.ApiClient.Serialize(criteria); // http body (model) parameter
+                localVarPostBody = ApiClient.Serialize(criteria); // http body (model) parameter
             }
             else
             {
@@ -4844,20 +4786,20 @@ namespace VirtoCommerce.Client.Api
 
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) Configuration.ApiClient.CallApi(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)ApiClient.CallApi(localVarPath,
                 Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleSearch: " + localVarResponse.Content, localVarResponse.Content);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleSearch: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleSearch: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleSearch: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
             return new ApiResponse<VirtoCommerceMarketingModuleWebModelMarketingSearchResult>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommerceMarketingModuleWebModelMarketingSearchResult) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceMarketingModuleWebModelMarketingSearchResult)));
+                (VirtoCommerceMarketingModuleWebModelMarketingSearchResult)ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceMarketingModuleWebModelMarketingSearchResult)));
             
         }
 
@@ -4867,7 +4809,7 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="criteria">criteria</param>
         /// <returns>Task of VirtoCommerceMarketingModuleWebModelMarketingSearchResult</returns>
-        public async System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelMarketingSearchResult> MarketingModuleSearchAsync (VirtoCommerceDomainMarketingModelMarketingSearchCriteria criteria)
+        public async System.Threading.Tasks.Task<VirtoCommerceMarketingModuleWebModelMarketingSearchResult> MarketingModuleSearchAsync(VirtoCommerceDomainMarketingModelMarketingSearchCriteria criteria)
         {
              ApiResponse<VirtoCommerceMarketingModuleWebModelMarketingSearchResult> localVarResponse = await MarketingModuleSearchAsyncWithHttpInfo(criteria);
              return localVarResponse.Data;
@@ -4880,38 +4822,38 @@ namespace VirtoCommerce.Client.Api
         /// <exception cref="VirtoCommerce.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="criteria">criteria</param>
         /// <returns>Task of ApiResponse (VirtoCommerceMarketingModuleWebModelMarketingSearchResult)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelMarketingSearchResult>> MarketingModuleSearchAsyncWithHttpInfo (VirtoCommerceDomainMarketingModelMarketingSearchCriteria criteria)
+        public async System.Threading.Tasks.Task<ApiResponse<VirtoCommerceMarketingModuleWebModelMarketingSearchResult>> MarketingModuleSearchAsyncWithHttpInfo(VirtoCommerceDomainMarketingModelMarketingSearchCriteria criteria)
         {
             // verify the required parameter 'criteria' is set
             if (criteria == null)
                 throw new ApiException(400, "Missing required parameter 'criteria' when calling MarketingModuleApi->MarketingModuleSearch");
 
             var localVarPath = "/api/marketing/search";
-            var localVarPathParams = new Dictionary<String, String>();
-            var localVarQueryParams = new Dictionary<String, String>();
-            var localVarHeaderParams = new Dictionary<String, String>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<String, String>();
-            var localVarFileParams = new Dictionary<String, FileParameter>();
-            Object localVarPostBody = null;
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
 
             // to determine the Content-Type header
-            String[] localVarHttpContentTypes = new String[] {
+            string[] localVarHttpContentTypes = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml", 
                 "application/x-www-form-urlencoded"
             };
-            String localVarHttpContentType = Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
             // to determine the Accept header
-            String[] localVarHttpHeaderAccepts = new String[] {
+            string[] localVarHttpHeaderAccepts = new string[] {
                 "application/json", 
                 "text/json", 
                 "application/xml", 
                 "text/xml"
             };
-            String localVarHttpHeaderAccept = Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
@@ -4920,7 +4862,7 @@ namespace VirtoCommerce.Client.Api
             localVarPathParams.Add("format", "json");
             if (criteria.GetType() != typeof(byte[]))
             {
-                localVarPostBody = Configuration.ApiClient.Serialize(criteria); // http body (model) parameter
+                localVarPostBody = ApiClient.Serialize(criteria); // http body (model) parameter
             }
             else
             {
@@ -4929,22 +4871,21 @@ namespace VirtoCommerce.Client.Api
 
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await Configuration.ApiClient.CallApiAsync(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)await ApiClient.CallApiAsync(localVarPath,
                 Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleSearch: " + localVarResponse.Content, localVarResponse.Content);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleSearch: " + localVarResponse.Content, localVarResponse.Content);
             else if (localVarStatusCode == 0)
-                throw new ApiException (localVarStatusCode, "Error calling MarketingModuleSearch: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+                throw new ApiException(localVarStatusCode, "Error calling MarketingModuleSearch: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
 
             return new ApiResponse<VirtoCommerceMarketingModuleWebModelMarketingSearchResult>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (VirtoCommerceMarketingModuleWebModelMarketingSearchResult) Configuration.ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceMarketingModuleWebModelMarketingSearchResult)));
+                (VirtoCommerceMarketingModuleWebModelMarketingSearchResult)ApiClient.Deserialize(localVarResponse, typeof(VirtoCommerceMarketingModuleWebModelMarketingSearchResult)));
             
         }
-
     }
 }

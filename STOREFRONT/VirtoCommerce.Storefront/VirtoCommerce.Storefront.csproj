@@ -216,6 +216,10 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
+    <Reference Include="VirtoCommerce.Platform.Client.Security, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\VirtoCommerce.Platform.Client.Security.2.10.2\lib\net451\VirtoCommerce.Platform.Client.Security.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="WebActivatorEx, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
       <HintPath>..\packages\WebActivatorEx.2.1.0\lib\net40\WebActivatorEx.dll</HintPath>
       <Private>True</Private>
@@ -398,7 +402,7 @@
     <Compile Include="Common\NameValueCollectionExtensions.cs" />
     <Compile Include="Common\ObjectExtensions.cs" />
     <Compile Include="Common\SeoExtensions.cs" />
-    <Compile Include="Common\StorefrontHmacApiClient.cs" />
+    <Compile Include="Common\CurrentUserRestRequestHandler.cs" />
     <Compile Include="Controllers\Api\ApiQuoteRequestController.cs" />
     <Compile Include="Controllers\Api\ApiCommonController.cs" />
     <Compile Include="Controllers\Api\ApiAccountController.cs" />

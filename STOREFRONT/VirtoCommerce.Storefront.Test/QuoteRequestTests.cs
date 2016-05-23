@@ -1,7 +1,6 @@
-﻿using CacheManager.Core;
-using Moq;
-using System;
+﻿using System;
 using System.Linq;
+using Moq;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.Storefront.Builders;
 using VirtoCommerce.Storefront.Model;
@@ -60,7 +59,7 @@ namespace VirtoCommerce.Storefront.Test
 
             var quoteItem = quoteRequestBuilder.QuoteRequest.Items.First();
             var productPrice = quoteItem.SalePrice;
-            quoteItem.ProposalPrices.Add(new TierPrice(productPrice, 10 ));
+            quoteItem.ProposalPrices.Add(new TierPrice(productPrice, 10));
             quoteRequestBuilder.SaveAsync().Wait();
             quoteRequest = quoteRequestBuilder.GetOrCreateNewTransientQuoteRequestAsync(workContext.CurrentStore, customer, workContext.CurrentLanguage, workContext.CurrentCurrency).Result.QuoteRequest;
             quoteItem = quoteRequestBuilder.QuoteRequest.Items.First();
@@ -136,7 +135,7 @@ namespace VirtoCommerce.Storefront.Test
 
             var quoteItem = quoteRequestBuilder.QuoteRequest.Items.First();
             var productPrice = quoteItem.SalePrice;
-            quoteItem.ProposalPrices.Add(new TierPrice(productPrice, 10 ));
+            quoteItem.ProposalPrices.Add(new TierPrice(productPrice, 10));
             quoteRequestBuilder.SaveAsync().Wait();
             quoteRequest = quoteRequestBuilder.GetOrCreateNewTransientQuoteRequestAsync(workContext.CurrentStore, customer, workContext.CurrentLanguage, workContext.CurrentCurrency).Result.QuoteRequest;
             quoteItem = quoteRequestBuilder.QuoteRequest.Items.First();
@@ -160,8 +159,7 @@ namespace VirtoCommerce.Storefront.Test
 
         private IQuoteRequestBuilder GetQuoteRequestBuilder()
         {
-            var apiClientConfiguration = new Client.Client.Configuration(GetApiClient());
-            var quoteApi = new QuoteModuleApi(apiClientConfiguration);
+            var quoteApi = new QuoteModuleApi(GetApiClient());
             var cacheManager = new Mock<ILocalCacheManager>();
             var quoteRequestEventPublisher = new Mock<IEventPublisher<QuoteRequestUpdatedEvent>>();
 
@@ -170,15 +168,15 @@ namespace VirtoCommerce.Storefront.Test
 
         private ICatalogSearchService GetCatalogSearchService()
         {
-            var apiClientConfiguration = new Client.Client.Configuration(GetApiClient());
+            var apiClient = GetApiClient();
             var workContextFactory = new Func<WorkContext>(GetTestWorkContext);
-            var commerceApi = new CommerceCoreModuleApi(apiClientConfiguration);
-            var catalogApi = new CatalogModuleApi(apiClientConfiguration);
-            var pricingApi = new PricingModuleApi(apiClientConfiguration);
+            var commerceApi = new CommerceCoreModuleApi(apiClient);
+            var catalogApi = new CatalogModuleApi(apiClient);
+            var pricingApi = new PricingModuleApi(apiClient);
             var pricingService = new PricingServiceImpl(workContextFactory, pricingApi, commerceApi);
-            var inventoryApi = new InventoryModuleApi(apiClientConfiguration);
-            var searchApi = new SearchModuleApi(apiClientConfiguration);
-            var marketingApi = new MarketingModuleApi(apiClientConfiguration);
+            var inventoryApi = new InventoryModuleApi(apiClient);
+            var searchApi = new SearchModuleApi(apiClient);
+            var marketingApi = new MarketingModuleApi(apiClient);
             var promotionEvaluator = new PromotionEvaluator(marketingApi);
 
             return new CatalogSearchServiceImpl(workContextFactory, catalogApi, pricingService, inventoryApi, searchApi, promotionEvaluator);

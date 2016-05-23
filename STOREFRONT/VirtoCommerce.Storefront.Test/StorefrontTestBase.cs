@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Configuration;
 using System.Linq;
-using VirtoCommerce.Client;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.Client.Client;
+using VirtoCommerce.Platform.Client.Security;
 using VirtoCommerce.Storefront.Converters;
 using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Customer;
@@ -14,9 +14,9 @@ namespace VirtoCommerce.Storefront.Test
     {
         protected WorkContext GetTestWorkContext()
         {
-            var apiClientCfg = new Client.Client.Configuration(GetApiClient());
-            var storeApi = new StoreModuleApi(apiClientCfg);
-            var commerceApi = new CommerceCoreModuleApi(apiClientCfg);
+            var apiClient = GetApiClient();
+            var storeApi = new StoreModuleApi(apiClient);
+            var commerceApi = new CommerceCoreModuleApi(apiClient);
             var allStores = storeApi.StoreModuleGetStores().Select(x => x.ToWebModel());
             var defaultStore = allStores.FirstOrDefault(x => string.Equals(x.Id, "Electronics", StringComparison.InvariantCultureIgnoreCase));
             var currencies = commerceApi.CommerceGetAllCurrencies().Select(x => x.ToWebModel(defaultStore.DefaultLanguage));
@@ -40,7 +40,10 @@ namespace VirtoCommerce.Storefront.Test
         protected ApiClient GetApiClient()
         {
             var baseUrl = ConfigurationManager.ConnectionStrings["VirtoCommerceBaseUrl"].ConnectionString;
-            var apiClient = new HmacApiClient(baseUrl, ConfigurationManager.AppSettings["vc-public-ApiAppId"], ConfigurationManager.AppSettings["vc-public-ApiSecretKey"]);
+            var apiAppId = ConfigurationManager.AppSettings["vc-public-ApiAppId"];
+            var apiSecretKey = ConfigurationManager.AppSettings["vc-public-ApiSecretKey"];
+            var hmacHandler = new HmacRestRequestHandler(apiAppId, apiSecretKey);
+            var apiClient = new ApiClient(baseUrl, new VirtoCommerce.Client.Client.Configuration(), hmacHandler.PrepareRequest);
             return apiClient;
         }
     }

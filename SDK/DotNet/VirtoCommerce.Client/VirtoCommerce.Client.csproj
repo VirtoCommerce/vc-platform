@@ -72,8 +72,6 @@
     <Compile Include="Client\ApiResponse.cs" />
     <Compile Include="Client\Configuration.cs" />
     <Compile Include="Client\IApiAccessor.cs" />
-    <Compile Include="HmacApiClient.cs" />
-    <Compile Include="HmacUtility.cs" />
     <Compile Include="Model\VirtoCommerceCartModuleWebModelAddress.cs" />
     <Compile Include="Model\VirtoCommerceCartModuleWebModelDiscount.cs" />
     <Compile Include="Model\VirtoCommerceCartModuleWebModelLineItem.cs" />
@@ -262,7 +260,6 @@
     <Compile Include="Model\VirtoCommerceStoreModuleWebModelStore.cs" />
     <Compile Include="Model\VirtoCommerceStoreModuleWebModelTaxProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SimpleKeyApiClient.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="codegen-config.json" />

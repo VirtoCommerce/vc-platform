@@ -1,26 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
 using RestSharp;
-using VirtoCommerce.Client;
 using VirtoCommerce.Storefront.Model;
 
 namespace VirtoCommerce.Storefront.Common
 {
-    public class StorefrontHmacApiClient : HmacApiClient
+    public class CurrentUserRestRequestHandler
     {
         private readonly Func<WorkContext> _workContextFactory;
 
-        public StorefrontHmacApiClient(string basePath, string appId, string secretKey, Func<WorkContext> workContextFactory) : base(basePath, appId, secretKey)
+        public CurrentUserRestRequestHandler(Func<WorkContext> workContextFactory)
         {
             _workContextFactory = workContextFactory;
         }
 
-
-        protected override RestRequest PrepareRequest(string path, Method method, Dictionary<string, string> queryParams, object postBody, Dictionary<string, string> headerParams,
-            Dictionary<string, string> formParams, Dictionary<string, FileParameter> fileParams, Dictionary<string, string> pathParams, string contentType)
+        public void PrepareRequest(IRestRequest request)
         {
-            var request = base.PrepareRequest(path, method, queryParams, postBody, headerParams, formParams, fileParams, pathParams, contentType);
-
             var workContext = _workContextFactory();
             var currentUser = workContext.CurrentCustomer;
 
@@ -39,8 +33,6 @@ namespace VirtoCommerce.Storefront.Common
                     request.AddHeader("VirtoCommerce-User-Name", userName);
                 }
             }
-
-            return request;
         }
     }
 }

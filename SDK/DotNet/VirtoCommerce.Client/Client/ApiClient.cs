@@ -1,13 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Text.RegularExpressions;
 using System.IO;
-using System.Web;
 using System.Linq;
-using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using RestSharp;
 
@@ -18,48 +15,28 @@ namespace VirtoCommerce.Client.Client
     /// </summary>
     public class ApiClient
     {
-        private JsonSerializerSettings serializerSettings = new JsonSerializerSettings
+        private readonly Action<IRestRequest>[] _requestHandlers;
+
+        private readonly JsonSerializerSettings _serializerSettings = new JsonSerializerSettings
         {
             ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor
         };
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiClient" /> class
-        /// with default configuration and base path (http://localhost/admin).
-        /// </summary>
-        public ApiClient()
-        {
-            Configuration = Configuration.Default;
-            RestClient = new RestClient("http://localhost/admin");
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ApiClient" /> class
-        /// with default base path (http://localhost/admin).
-        /// </summary>
-        /// <param name="config">An instance of Configuration.</param>
-        public ApiClient(Configuration config = null)
-        {
-            if (config == null)
-                Configuration = Configuration.Default;
-            else
-                Configuration = config;
-
-            RestClient = new RestClient("http://localhost/admin");
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ApiClient" /> class
         /// with default configuration.
         /// </summary>
-        /// <param name="basePath">The base path.</param>
-        public ApiClient(String basePath = "http://localhost/admin")
+        /// <param name="baseAddress">The base path.</param>
+        /// <param name="configuration"></param>
+        /// <param name="requestHandlers"></param>
+        public ApiClient(string baseAddress, Configuration configuration, params Action<IRestRequest>[] requestHandlers)
         {
-           if (String.IsNullOrEmpty(basePath))
-                throw new ArgumentException("basePath cannot be empty");
+            if (string.IsNullOrEmpty(baseAddress))
+                throw new ArgumentException("baseAddress cannot be empty");
 
-            RestClient = new RestClient(basePath);
-            Configuration = Configuration.Default;
+            RestClient = new RestClient(baseAddress);
+            Configuration = configuration;
+            _requestHandlers = requestHandlers;
         }
 
         /// <summary>
@@ -83,44 +60,52 @@ namespace VirtoCommerce.Client.Client
 
         // Creates and sets up a RestRequest prior to a call.
         protected virtual RestRequest PrepareRequest(
-            String path, RestSharp.Method method, Dictionary<String, String> queryParams, Object postBody,
-            Dictionary<String, String> headerParams, Dictionary<String, String> formParams,
-            Dictionary<String, FileParameter> fileParams, Dictionary<String, String> pathParams,
-            String contentType)
+            string path, Method method, Dictionary<string, string> queryParams, object postBody,
+            Dictionary<string, string> headerParams, Dictionary<string, string> formParams,
+            Dictionary<string, FileParameter> fileParams, Dictionary<string, string> pathParams,
+            string contentType)
         {
             var request = new RestRequest(path, method);
 
             // add path parameter, if any
-            foreach(var param in pathParams)
+            foreach (var param in pathParams)
                 request.AddParameter(param.Key, param.Value, ParameterType.UrlSegment);
 
             // add header parameter, if any
-            foreach(var param in headerParams)
+            foreach (var param in headerParams)
                 request.AddHeader(param.Key, param.Value);
 
             // add query parameter, if any
-            foreach(var param in queryParams)
+            foreach (var param in queryParams)
                 request.AddQueryParameter(param.Key, param.Value);
 
             // add form parameter, if any
-            foreach(var param in formParams)
+            foreach (var param in formParams)
                 request.AddParameter(param.Key, param.Value);
 
             // add file parameter, if any
-            foreach(var param in fileParams)
+            foreach (var param in fileParams)
             {
                 request.AddFile(param.Value.Name, param.Value.Writer, param.Value.FileName, param.Value.ContentType);
             }
 
             if (postBody != null) // http body (model or byte[]) parameter
             {
-                if (postBody.GetType() == typeof(String))
+                if (postBody is string)
                 {
                     request.AddParameter("application/json", postBody, ParameterType.RequestBody);
                 }
                 else if (postBody.GetType() == typeof(byte[]))
                 {
                     request.AddParameter(contentType, postBody, ParameterType.RequestBody);
+                }
+            }
+
+            if (_requestHandlers != null)
+            {
+                foreach (var handler in _requestHandlers)
+                {
+                    handler(request);
                 }
             }
 
@@ -139,12 +124,12 @@ namespace VirtoCommerce.Client.Client
         /// <param name="fileParams">File parameters.</param>
         /// <param name="pathParams">Path parameters.</param>
         /// <param name="contentType">Content Type of the request</param>
-        /// <returns>Object</returns>
-        public Object CallApi(
-            String path, RestSharp.Method method, Dictionary<String, String> queryParams, Object postBody,
-            Dictionary<String, String> headerParams, Dictionary<String, String> formParams,
-            Dictionary<String, FileParameter> fileParams, Dictionary<String, String> pathParams,
-            String contentType)
+        /// <returns>object</returns>
+        public object CallApi(
+            string path, Method method, Dictionary<string, string> queryParams, object postBody,
+            Dictionary<string, string> headerParams, Dictionary<string, string> formParams,
+            Dictionary<string, FileParameter> fileParams, Dictionary<string, string> pathParams,
+            string contentType)
         {
             var request = PrepareRequest(
                 path, method, queryParams, postBody, headerParams, formParams, fileParams,
@@ -156,7 +141,7 @@ namespace VirtoCommerce.Client.Client
             RestClient.UserAgent = Configuration.UserAgent;
 
             var response = RestClient.Execute(request);
-            return (Object) response;
+            return response;
         }
         /// <summary>
         /// Makes the asynchronous HTTP request.
@@ -171,17 +156,18 @@ namespace VirtoCommerce.Client.Client
         /// <param name="pathParams">Path parameters.</param>
         /// <param name="contentType">Content type.</param>
         /// <returns>The Task instance.</returns>
-        public async System.Threading.Tasks.Task<Object> CallApiAsync(
-            String path, RestSharp.Method method, Dictionary<String, String> queryParams, Object postBody,
-            Dictionary<String, String> headerParams, Dictionary<String, String> formParams,
-            Dictionary<String, FileParameter> fileParams, Dictionary<String, String> pathParams,
-            String contentType)
+        public async System.Threading.Tasks.Task<object> CallApiAsync(
+            string path, Method method, Dictionary<string, string> queryParams, object postBody,
+            Dictionary<string, string> headerParams, Dictionary<string, string> formParams,
+            Dictionary<string, FileParameter> fileParams, Dictionary<string, string> pathParams,
+            string contentType)
         {
             var request = PrepareRequest(
                 path, method, queryParams, postBody, headerParams, formParams, fileParams,
                 pathParams, contentType);
+
             var response = await RestClient.ExecuteTaskAsync(request);
-            return (Object)response;
+            return response;
         }
 
         /// <summary>
@@ -202,8 +188,9 @@ namespace VirtoCommerce.Client.Client
         /// <returns>FileParameter.</returns>
         public FileParameter ParameterToFile(string name, Stream stream)
         {
-            if (stream is FileStream)
-                return FileParameter.Create(name, ReadAsBytes(stream), Path.GetFileName(((FileStream)stream).Name));
+            var fileStream = stream as FileStream;
+            if (fileStream != null)
+                return FileParameter.Create(name, ReadAsBytes(stream), Path.GetFileName(fileStream.Name));
             else
                 return FileParameter.Create(name, ReadAsBytes(stream), "no_file_name_provided");
         }
@@ -222,13 +209,13 @@ namespace VirtoCommerce.Client.Client
                 // Defaults to an ISO 8601, using the known as a Round-trip date/time pattern ("o")
                 // https://msdn.microsoft.com/en-us/library/az4se3k1(v=vs.110).aspx#Anchor_8
                 // For example: 2009-06-15T13:45:30.0000000
-                return ((DateTime)obj).ToString (Configuration.DateTimeFormat);
+                return ((DateTime)obj).ToString(Configuration.DateTimeFormat);
             else if (obj is DateTimeOffset)
                 // Return a formatted date string - Can be customized with Configuration.DateTimeFormat
                 // Defaults to an ISO 8601, using the known as a Round-trip date/time pattern ("o")
                 // https://msdn.microsoft.com/en-us/library/az4se3k1(v=vs.110).aspx#Anchor_8
                 // For example: 2009-06-15T13:45:30.0000000
-                return ((DateTimeOffset)obj).ToString (Configuration.DateTimeFormat);
+                return ((DateTimeOffset)obj).ToString(Configuration.DateTimeFormat);
             else if (obj is IList)
             {
                 var flattenedString = new StringBuilder();
@@ -241,7 +228,7 @@ namespace VirtoCommerce.Client.Client
                 return flattenedString.ToString();
             }
             else
-                return Convert.ToString (obj);
+                return Convert.ToString(obj);
         }
 
         /// <summary>
@@ -262,7 +249,7 @@ namespace VirtoCommerce.Client.Client
             {
                 if (headers != null)
                 {
-                    var filePath = String.IsNullOrEmpty(Configuration.TempFolderPath)
+                    var filePath = string.IsNullOrEmpty(Configuration.TempFolderPath)
                         ? Path.GetTempPath()
                         : Configuration.TempFolderPath;
                     var regex = new Regex(@"Content-Disposition=.*filename=['""]?([^'""\s]+)['""]?$");
@@ -283,10 +270,10 @@ namespace VirtoCommerce.Client.Client
 
             if (type.Name.StartsWith("System.Nullable`1[[System.DateTime")) // return a datetime object
             {
-                return DateTime.Parse(response.Content,  null, System.Globalization.DateTimeStyles.RoundtripKind);
+                return DateTime.Parse(response.Content, null, System.Globalization.DateTimeStyles.RoundtripKind);
             }
 
-            if (type == typeof(String) || type.Name.StartsWith("System.Nullable")) // return primitive type
+            if (type == typeof(string) || type.Name.StartsWith("System.Nullable")) // return primitive type
             {
                 return ConvertType(response.Content, type);
             }
@@ -294,7 +281,7 @@ namespace VirtoCommerce.Client.Client
             // at this point, it must be a model (json)
             try
             {
-                return JsonConvert.DeserializeObject(response.Content, type, serializerSettings);
+                return JsonConvert.DeserializeObject(response.Content, type, _serializerSettings);
             }
             catch (Exception e)
             {
@@ -307,7 +294,7 @@ namespace VirtoCommerce.Client.Client
         /// </summary>
         /// <param name="obj">Object.</param>
         /// <returns>JSON string.</returns>
-        public String Serialize(object obj)
+        public string Serialize(object obj)
         {
             try
             {
@@ -326,7 +313,7 @@ namespace VirtoCommerce.Client.Client
         /// </summary>
         /// <param name="contentTypes">The Content-Type array to select from.</param>
         /// <returns>The Content-Type header to use.</returns>
-        public String SelectHeaderContentType(String[] contentTypes)
+        public string SelectHeaderContentType(string[] contentTypes)
         {
             if (contentTypes.Length == 0)
                 return null;
@@ -344,7 +331,7 @@ namespace VirtoCommerce.Client.Client
         /// </summary>
         /// <param name="accepts">The accepts array to select from.</param>
         /// <returns>The Accept header to use.</returns>
-        public String SelectHeaderAccept(String[] accepts)
+        public string SelectHeaderAccept(string[] accepts)
         {
             if (accepts.Length == 0)
                 return null;
@@ -352,7 +339,7 @@ namespace VirtoCommerce.Client.Client
             if (accepts.Contains("application/json", StringComparer.OrdinalIgnoreCase))
                 return "application/json";
 
-            return String.Join(",", accepts);
+            return string.Join(",", accepts);
         }
 
         /// <summary>
@@ -362,7 +349,7 @@ namespace VirtoCommerce.Client.Client
         /// <returns>Encoded string.</returns>
         public static string Base64Encode(string text)
         {
-            return System.Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(text));
+            return Convert.ToBase64String(Encoding.UTF8.GetBytes(text));
         }
 
         /// <summary>
@@ -385,7 +372,7 @@ namespace VirtoCommerce.Client.Client
         /// <returns>Byte array</returns>
         public static byte[] ReadAsBytes(Stream input)
         {
-            byte[] buffer = new byte[16*1024];
+            byte[] buffer = new byte[16 * 1024];
             using (MemoryStream ms = new MemoryStream())
             {
                 int read;

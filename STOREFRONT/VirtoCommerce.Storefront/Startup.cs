@@ -23,6 +23,7 @@ using VirtoCommerce.Client.Api;
 using VirtoCommerce.Client.Client;
 using VirtoCommerce.LiquidThemeEngine;
 using VirtoCommerce.LiquidThemeEngine.Binders;
+using VirtoCommerce.Platform.Client.Security;
 using VirtoCommerce.Storefront;
 using VirtoCommerce.Storefront.App_Start;
 using VirtoCommerce.Storefront.Builders;
@@ -155,9 +156,11 @@ namespace VirtoCommerce.Storefront
 
             var apiAppId = ConfigurationManager.AppSettings["vc-public-ApiAppId"];
             var apiSecretKey = ConfigurationManager.AppSettings["vc-public-ApiSecretKey"];
-            var apiClient = new StorefrontHmacApiClient(baseUrl, apiAppId, apiSecretKey, workContextFactory);
+            var hmacHandler = new HmacRestRequestHandler(apiAppId, apiSecretKey);
+            var currentUserHandler = new CurrentUserRestRequestHandler(workContextFactory);
+
+            var apiClient = new ApiClient(baseUrl, new VirtoCommerce.Client.Client.Configuration(), hmacHandler.PrepareRequest, currentUserHandler.PrepareRequest);
             container.RegisterInstance<ApiClient>(apiClient);
-            container.RegisterInstance(new VirtoCommerce.Client.Client.Configuration(apiClient));
 
             container.RegisterType<IStoreModuleApi, StoreModuleApi>();
             container.RegisterType<IVirtoCommercePlatformApi, VirtoCommercePlatformApi>();

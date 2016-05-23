@@ -1,17 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CacheManager.Core;
 using VirtoCommerce.Client.Api;
 using VirtoCommerce.Storefront.Builders;
+using VirtoCommerce.Storefront.Model;
 using VirtoCommerce.Storefront.Model.Cart.Services;
+using VirtoCommerce.Storefront.Model.Common;
 using VirtoCommerce.Storefront.Model.Customer;
 using VirtoCommerce.Storefront.Services;
 using Xunit;
-using VirtoCommerce.Storefront.Model;
-using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.Storefront.Test
 {
@@ -60,18 +55,18 @@ namespace VirtoCommerce.Storefront.Test
 
         private ICartBuilder GetCartBuilder()
         {
-            var apiClientCfg = new Client.Client.Configuration(GetApiClient());
-            var marketingApi = new MarketingModuleApi(apiClientCfg);
-            var cartApi = new ShoppingCartModuleApi(apiClientCfg);
+            var apiClient = GetApiClient();
+            var marketingApi = new MarketingModuleApi(apiClient);
+            var cartApi = new ShoppingCartModuleApi(apiClient);
             var cacheManager = new Moq.Mock<ILocalCacheManager>();
             var workContextFactory = new Func<WorkContext>(GetTestWorkContext);
             var promotionEvaluator = new PromotionEvaluator(marketingApi);
-            var catalogModuleApi = new CatalogModuleApi(apiClientCfg);
-            var pricingApi = new PricingModuleApi(apiClientCfg);
-            var commerceApi = new CommerceCoreModuleApi(apiClientCfg);
+            var catalogModuleApi = new CatalogModuleApi(apiClient);
+            var pricingApi = new PricingModuleApi(apiClient);
+            var commerceApi = new CommerceCoreModuleApi(apiClient);
             var pricingService = new PricingServiceImpl(workContextFactory, pricingApi, commerceApi);
-            var inventoryApi = new InventoryModuleApi(apiClientCfg);
-            var searchApi = new SearchModuleApi(apiClientCfg);
+            var inventoryApi = new InventoryModuleApi(apiClient);
+            var searchApi = new SearchModuleApi(apiClient);
             var catalogSearchService = new CatalogSearchServiceImpl(workContextFactory, catalogModuleApi, pricingService, inventoryApi, searchApi, promotionEvaluator);
             var retVal = new CartBuilder(cartApi, promotionEvaluator, catalogSearchService, commerceApi, cacheManager.Object);
             return retVal;
