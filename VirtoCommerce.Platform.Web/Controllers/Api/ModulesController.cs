@@ -66,22 +66,20 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <summary>
         /// Get all dependent modules for module
         /// </summary>
-        /// <param name="modules">modules</param>
+        /// <param name="moduleDescriptors">modules descriptors</param>
         /// <returns></returns>
         [HttpPost]
         [Route("getdependents")]
         [ResponseType(typeof(webModel.ModuleDescriptor[]))]
         [CheckPermission(Permission = PredefinedPermissions.ModuleManage)]
-        public IHttpActionResult GetDependingModules(webModel.ModuleDescriptor[] modules)
+        public IHttpActionResult GetDependingModules(webModel.ModuleDescriptor[] moduleDescriptors)
         {
-            var retVal = new List<ManifestModuleInfo>();
-            foreach (var module in modules)
-            {
-                retVal.AddRange(_moduleCatalog.Modules.OfType<ManifestModuleInfo>()
-                                                   .Where(x => x.IsInstalled)
-                                                   .Where(x => x.DependsOn.Contains(module.Id)));
-            }
-            return Ok(retVal.Distinct().Select(x=>x.ToWebModel()).ToArray());
+            var modules = _moduleCatalog.Modules.OfType<ManifestModuleInfo>().Join(moduleDescriptors, x => x.Identity, y => y.Identity, (x, y) => x);
+            var retVal = GetDependingModulesRecursive(modules).Distinct()
+                                                              .Except(modules)
+                                                              .Select(x => x.ToWebModel())                                              
+                                                              .ToArray();
+            return Ok(retVal);
         }
 
         /// <summary>
@@ -290,6 +288,23 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 notification.Finished = DateTime.UtcNow;
                 _pushNotifier.Upsert(notification);
             }
+        }
+
+        private IEnumerable<ManifestModuleInfo> GetDependingModulesRecursive(IEnumerable<ManifestModuleInfo> modules)
+        {
+            var retVal = new List<ManifestModuleInfo>();
+            foreach (var module in modules)
+            {
+                retVal.Add(module);
+                var dependingModules = _moduleCatalog.Modules.OfType<ManifestModuleInfo>()
+                                                             .Where(x => x.IsInstalled)
+                                                             .Where(x => x.DependsOn.Contains(module.Id, StringComparer.OrdinalIgnoreCase));
+                if (dependingModules.Any())
+                {
+                    retVal.AddRange(GetDependingModulesRecursive(dependingModules));
+                }
+            }
+            return retVal;
         }
 
         private webModel.ModulePushNotification ScheduleJob(webModel.ModuleBackgroundJobOptions options)
