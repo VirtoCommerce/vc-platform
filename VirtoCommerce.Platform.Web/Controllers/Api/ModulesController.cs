@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -16,6 +17,7 @@ using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Packaging;
 using VirtoCommerce.Platform.Core.PushNotifications;
 using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Core.Web.Assets;
 using VirtoCommerce.Platform.Core.Web.Security;
 using VirtoCommerce.Platform.Data.Common;
@@ -33,13 +35,16 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly IModuleInstaller _moduleInstaller;
         private readonly IPushNotificationManager _pushNotifier;
         private readonly IUserNameResolver _userNameResolver;
+        private readonly ISettingsManager _settingsManager;
+        private static readonly object _lockObject = new object();
 
-        public ModulesController(IModuleCatalog moduleCatalog, IModuleInstaller moduleInstaller, IPushNotificationManager pushNotifier, IUserNameResolver userNameResolver)
+        public ModulesController(IModuleCatalog moduleCatalog, IModuleInstaller moduleInstaller, IPushNotificationManager pushNotifier, IUserNameResolver userNameResolver, ISettingsManager settingsManager)
         {
             _moduleCatalog = moduleCatalog;
             _moduleInstaller = moduleInstaller;
             _pushNotifier = pushNotifier;
             _userNameResolver = userNameResolver;
+            _settingsManager = settingsManager;
         }
 
         /// <summary>
@@ -210,6 +215,43 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return StatusCode(HttpStatusCode.NoContent);
         }
 
+        /// <summary>
+        /// Auto-install modules with specified groups
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("autoinstall")]
+        [ResponseType(typeof(webModel.ModuleAutoInstallPushNotification))]
+        public IHttpActionResult TryToAutoInstallModules()
+        {
+            lock (_lockObject)
+            {
+                if (!_settingsManager.GetValue("VirtoCommerce:ModulesAutoInstalled", false))
+                {
+                    var modulesGroups = ConfigurationManager.AppSettings.GetValues("VirtoCommerce:AutoInstallModulesGroups");
+                    if (!modulesGroups.IsNullOrEmpty())
+                    {
+                        _settingsManager.SetValue("VirtoCommerce:ModulesAutoInstalled", true);
+                        var modules = _moduleCatalog.Modules.OfType<ManifestModuleInfo>().Where(x => x.Groups.Intersect(modulesGroups, StringComparer.OrdinalIgnoreCase).Any()).Where(x => !x.IsInstalled);
+                        var modulesWithDependencies = _moduleCatalog.CompleteListWithDependencies(modules).OfType<ManifestModuleInfo>()
+                                                                    .Where(x => !x.IsInstalled);
+                        var options = new webModel.ModuleBackgroundJobOptions
+                        {
+                            Action = webModel.ModuleAction.Install,
+                            Modules = modules.Select(x=>x.ToWebModel()).ToArray()
+                        };
+                        var notification = new webModel.ModuleAutoInstallPushNotification("System")
+                        {
+                            Title = "Modules auto installation"
+                        };
+                        BackgroundJob.Enqueue(() => ModuleBackgroundJob(options, notification));
+                        return Ok(notification);
+                    }
+                }
+            }
+            return StatusCode(HttpStatusCode.NoContent);
+        }
+
         [ApiExplorerSettings(IgnoreApi = true)]
         public void ModuleBackgroundJob(webModel.ModuleBackgroundJobOptions options, webModel.ModulePushNotification notification)
         {
@@ -249,7 +291,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 _pushNotifier.Upsert(notification);
             }
         }
-
 
         private webModel.ModulePushNotification ScheduleJob(webModel.ModuleBackgroundJobOptions options)
         {
