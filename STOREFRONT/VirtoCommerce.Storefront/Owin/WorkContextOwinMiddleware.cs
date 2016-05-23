@@ -201,8 +201,8 @@ namespace VirtoCommerce.Storefront.Owin
 
                             return new { Pages = allContentItems, Blogs = blogs };
                         });
-                        workContext.Pages = new MutablePagedList<ContentItem>(staticContents.Pages);
-                        workContext.Blogs = new MutablePagedList<Blog>(staticContents.Blogs);
+                        workContext.Pages = new MutablePagedList<ContentItem>(staticContents.Pages.Where(x => x.Language.IsInvariant || x.Language == workContext.CurrentLanguage));
+                        workContext.Blogs = new MutablePagedList<Blog>(staticContents.Blogs.Where(x => x.Language.IsInvariant || x.Language == workContext.CurrentLanguage));
 
                         // Initialize blogs search criteria 
                         workContext.CurrentBlogSearchCritera = new BlogSearchCriteria(qs);

@@ -61,9 +61,9 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
                     workContext.Categories.Slice(pageNumber, pageSize);
                     return new StaticPagedList<Collection>(workContext.Categories.Select(x => x.ToShopifyModel(workContext)), workContext.Categories);
                 }));
-                }
+            }
 
-            if(!string.IsNullOrEmpty(workContext.CurrentCatalogSearchCriteria.Keyword) && workContext.Products != null)
+            if (!string.IsNullOrEmpty(workContext.CurrentCatalogSearchCriteria.Keyword) && workContext.Products != null)
             {
                 result.Search = workContext.Products.ToShopifyModel(workContext.CurrentCatalogSearchCriteria.Keyword);
             }

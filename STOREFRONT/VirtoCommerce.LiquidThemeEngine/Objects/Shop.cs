@@ -1,5 +1,6 @@
 ﻿using DotLiquid;
 using System.Runtime.Serialization;
+using VirtoCommerce.Storefront.Model.Common;
 
 namespace VirtoCommerce.LiquidThemeEngine.Objects
 {
@@ -24,11 +25,14 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         [DataMember]
         public string Currency { get; set; }
 
+        
+        public IMutablePagedList<Collection> Collections { get; set; }
+
         /// <summary>
         /// Returns the number of collections in a shop.
         /// </summary>
         [DataMember]
-        public string CollectionsCount { get; set; }
+        public int CollectionsCount { get { return Collections.GetTotalCount(); } }
 
         /// <summary>
         /// Returns the description of the shop.

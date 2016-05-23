@@ -6,7 +6,8 @@ using VirtoCommerce.Storefront.Model;
 namespace VirtoCommerce.Storefront.Common
 {
     public static class LocalizationExtension
-    {
+    {     
+
         public static IHasLanguage FindWithLanguage(this IEnumerable<IHasLanguage> items, Language language)
         {
             var retVal =  items.FirstOrDefault(i => i.Language.Equals(language));

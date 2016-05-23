@@ -11,6 +11,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
         {
             var retVal = new Page();
             retVal.InjectFrom<StorefrontModel.Common.NullableAndEnumValueInjecter>(contentPage);
+            retVal.Handle = contentPage.Url;
             return retVal;
         }
     }
