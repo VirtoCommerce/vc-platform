@@ -12,7 +12,7 @@ using Newtonsoft.Json.Converters;
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
-    /// 
+    /// VirtoCommerceDomainPaymentModelBankCardInfo
     /// </summary>
     [DataContract]
     public partial class VirtoCommerceDomainPaymentModelBankCardInfo :  IEquatable<VirtoCommerceDomainPaymentModelBankCardInfo>
@@ -153,6 +153,5 @@ namespace VirtoCommerce.Client.Model
                 return hash;
             }
         }
-
     }
 }

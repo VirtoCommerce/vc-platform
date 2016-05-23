@@ -12,7 +12,7 @@ using Newtonsoft.Json.Converters;
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
-    /// 
+    /// VirtoCommerceCatalogModuleWebExportImportCsvExportInfo
     /// </summary>
     [DataContract]
     public partial class VirtoCommerceCatalogModuleWebExportImportCsvExportInfo :  IEquatable<VirtoCommerceCatalogModuleWebExportImportCsvExportInfo>
@@ -183,6 +183,5 @@ namespace VirtoCommerce.Client.Model
                 return hash;
             }
         }
-
     }
 }

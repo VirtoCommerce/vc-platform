@@ -12,7 +12,7 @@ using Newtonsoft.Json.Converters;
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
-    /// 
+    /// VirtoCommerceMarketingModuleWebModelPromotionReward
     /// </summary>
     [DataContract]
     public partial class VirtoCommerceMarketingModuleWebModelPromotionReward :  IEquatable<VirtoCommerceMarketingModuleWebModelPromotionReward>
@@ -350,6 +350,5 @@ namespace VirtoCommerce.Client.Model
                 return hash;
             }
         }
-
     }
 }

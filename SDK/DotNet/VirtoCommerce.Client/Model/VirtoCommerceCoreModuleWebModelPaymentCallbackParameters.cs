@@ -12,7 +12,7 @@ using Newtonsoft.Json.Converters;
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
-    /// 
+    /// VirtoCommerceCoreModuleWebModelPaymentCallbackParameters
     /// </summary>
     [DataContract]
     public partial class VirtoCommerceCoreModuleWebModelPaymentCallbackParameters :  IEquatable<VirtoCommerceCoreModuleWebModelPaymentCallbackParameters>
@@ -93,6 +93,5 @@ namespace VirtoCommerce.Client.Model
                 return hash;
             }
         }
-
     }
 }

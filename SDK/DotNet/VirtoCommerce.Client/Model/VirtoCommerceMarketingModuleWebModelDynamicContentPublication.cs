@@ -12,7 +12,7 @@ using Newtonsoft.Json.Converters;
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
-    /// Represent dynamic content publication and link content and places together\r\n            may contain conditional expressions applicability
+    /// Represent dynamic content publication and link content and places together              may contain conditional expressions applicability
     /// </summary>
     [DataContract]
     public partial class VirtoCommerceMarketingModuleWebModelDynamicContentPublication :  IEquatable<VirtoCommerceMarketingModuleWebModelDynamicContentPublication>
@@ -306,6 +306,5 @@ namespace VirtoCommerce.Client.Model
                 return hash;
             }
         }
-
     }
 }

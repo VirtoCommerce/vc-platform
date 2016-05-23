@@ -12,7 +12,7 @@ using Newtonsoft.Json.Converters;
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
-    /// 
+    /// VirtoCommercePlatformCoreChangeLogOperationLog
     /// </summary>
     [DataContract]
     public partial class VirtoCommercePlatformCoreChangeLogOperationLog :  IEquatable<VirtoCommercePlatformCoreChangeLogOperationLog>
@@ -213,6 +213,5 @@ namespace VirtoCommerce.Client.Model
                 return hash;
             }
         }
-
     }
 }

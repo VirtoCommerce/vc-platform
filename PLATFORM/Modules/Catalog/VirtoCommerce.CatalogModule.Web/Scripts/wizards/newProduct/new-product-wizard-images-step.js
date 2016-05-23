@@ -1,6 +1,7 @@
 ﻿angular.module('virtoCommerce.catalogModule')
 .controller('virtoCommerce.catalogModule.newProductWizardImagesController', ['$scope', '$filter', 'platformWebApp.bladeNavigationService', 'FileUploader', 'platformWebApp.assets.api', function ($scope, $filter, bladeNavigationService, FileUploader, assets) {
     var blade = $scope.blade;
+    blade.hasAssetCreatePermission = bladeNavigationService.checkPermission('platform:asset:create');
 
     blade.currentEntity = angular.copy(blade.item);
     if (!blade.currentEntity.images) {
@@ -23,7 +24,7 @@
     };
 
     function initialize() {
-        if (!$scope.uploader) {
+        if (!$scope.uploader && blade.hasAssetCreatePermission) {
             // create the uploader
             var uploader = $scope.uploader = new FileUploader({
                 scope: $scope,

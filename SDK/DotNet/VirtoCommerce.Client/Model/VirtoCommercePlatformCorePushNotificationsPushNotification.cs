@@ -12,7 +12,7 @@ using Newtonsoft.Json.Converters;
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
-    /// 
+    /// VirtoCommercePlatformCorePushNotificationsPushNotification
     /// </summary>
     [DataContract]
     public partial class VirtoCommercePlatformCorePushNotificationsPushNotification :  IEquatable<VirtoCommercePlatformCorePushNotificationsPushNotification>
@@ -198,6 +198,5 @@ namespace VirtoCommerce.Client.Model
                 return hash;
             }
         }
-
     }
 }

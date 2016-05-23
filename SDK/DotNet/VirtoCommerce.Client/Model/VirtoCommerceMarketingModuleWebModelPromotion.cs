@@ -18,9 +18,9 @@ namespace VirtoCommerce.Client.Model
     public partial class VirtoCommerceMarketingModuleWebModelPromotion :  IEquatable<VirtoCommerceMarketingModuleWebModelPromotion>
     {
         /// <summary>
-        /// It contains the name of realizing this type promotion.\r\n            DynamicPromotion is build in implementation allow to construct promotion with dynamic conditions and rewards.\r\n            For complex custom scenarios user may define personal &#39;hard-coded&#39; promotion types
+        /// It contains the name of realizing this type promotion.              DynamicPromotion is build in implementation allow to construct promotion with dynamic conditions and rewards.              For complex custom scenarios user may define personal &#39;hard-coded&#39; promotion types
         /// </summary>
-        /// <value>It contains the name of realizing this type promotion.\r\n            DynamicPromotion is build in implementation allow to construct promotion with dynamic conditions and rewards.\r\n            For complex custom scenarios user may define personal &#39;hard-coded&#39; promotion types</value>
+        /// <value>It contains the name of realizing this type promotion.              DynamicPromotion is build in implementation allow to construct promotion with dynamic conditions and rewards.              For complex custom scenarios user may define personal &#39;hard-coded&#39; promotion types</value>
         [DataMember(Name="type", EmitDefaultValue=false)]
         public string Type { get; set; }
 
@@ -355,6 +355,5 @@ namespace VirtoCommerce.Client.Model
                 return hash;
             }
         }
-
     }
 }

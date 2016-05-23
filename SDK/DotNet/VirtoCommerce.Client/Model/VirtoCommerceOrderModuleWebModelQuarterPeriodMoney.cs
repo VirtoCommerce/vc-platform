@@ -12,7 +12,7 @@ using Newtonsoft.Json.Converters;
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
-    /// 
+    /// VirtoCommerceOrderModuleWebModelQuarterPeriodMoney
     /// </summary>
     [DataContract]
     public partial class VirtoCommerceOrderModuleWebModelQuarterPeriodMoney :  IEquatable<VirtoCommerceOrderModuleWebModelQuarterPeriodMoney>
@@ -138,6 +138,5 @@ namespace VirtoCommerce.Client.Model
                 return hash;
             }
         }
-
     }
 }

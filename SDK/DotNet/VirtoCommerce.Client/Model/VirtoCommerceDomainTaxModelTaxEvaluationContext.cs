@@ -12,11 +12,17 @@ using Newtonsoft.Json.Converters;
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
-    /// 
+    /// VirtoCommerceDomainTaxModelTaxEvaluationContext
     /// </summary>
     [DataContract]
     public partial class VirtoCommerceDomainTaxModelTaxEvaluationContext :  IEquatable<VirtoCommerceDomainTaxModelTaxEvaluationContext>
     {
+        /// <summary>
+        /// Gets or Sets Store
+        /// </summary>
+        [DataMember(Name="store", EmitDefaultValue=false)]
+        public VirtoCommerceDomainStoreModelStore Store { get; set; }
+
         /// <summary>
         /// Gets or Sets Code
         /// </summary>
@@ -73,6 +79,7 @@ namespace VirtoCommerce.Client.Model
         {
             var sb = new StringBuilder();
             sb.Append("class VirtoCommerceDomainTaxModelTaxEvaluationContext {\n");
+            sb.Append("  Store: ").Append(Store).Append("\n");
             sb.Append("  Code: ").Append(Code).Append("\n");
             sb.Append("  Type: ").Append(Type).Append("\n");
             sb.Append("  Customer: ").Append(Customer).Append("\n");
@@ -117,6 +124,11 @@ namespace VirtoCommerce.Client.Model
                 return false;
 
             return 
+                (
+                    this.Store == other.Store ||
+                    this.Store != null &&
+                    this.Store.Equals(other.Store)
+                ) && 
                 (
                     this.Code == other.Code ||
                     this.Code != null &&
@@ -171,6 +183,9 @@ namespace VirtoCommerce.Client.Model
                 int hash = 41;
                 // Suitable nullity checks etc, of course :)
 
+                if (this.Store != null)
+                    hash = hash * 59 + this.Store.GetHashCode();
+
                 if (this.Code != null)
                     hash = hash * 59 + this.Code.GetHashCode();
 
@@ -198,6 +213,5 @@ namespace VirtoCommerce.Client.Model
                 return hash;
             }
         }
-
     }
 }

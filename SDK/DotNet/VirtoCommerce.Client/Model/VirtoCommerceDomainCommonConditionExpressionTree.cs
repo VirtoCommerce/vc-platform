@@ -12,7 +12,7 @@ using Newtonsoft.Json.Converters;
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
-    /// 
+    /// VirtoCommerceDomainCommonConditionExpressionTree
     /// </summary>
     [DataContract]
     public partial class VirtoCommerceDomainCommonConditionExpressionTree :  IEquatable<VirtoCommerceDomainCommonConditionExpressionTree>
@@ -123,6 +123,5 @@ namespace VirtoCommerce.Client.Model
                 return hash;
             }
         }
-
     }
 }

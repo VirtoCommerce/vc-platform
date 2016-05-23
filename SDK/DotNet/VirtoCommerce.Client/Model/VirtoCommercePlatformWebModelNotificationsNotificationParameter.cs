@@ -12,7 +12,7 @@ using Newtonsoft.Json.Converters;
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
-    /// 
+    /// VirtoCommercePlatformWebModelNotificationsNotificationParameter
     /// </summary>
     [DataContract]
     public partial class VirtoCommercePlatformWebModelNotificationsNotificationParameter :  IEquatable<VirtoCommercePlatformWebModelNotificationsNotificationParameter>
@@ -186,6 +186,5 @@ namespace VirtoCommerce.Client.Model
                 return hash;
             }
         }
-
     }
 }

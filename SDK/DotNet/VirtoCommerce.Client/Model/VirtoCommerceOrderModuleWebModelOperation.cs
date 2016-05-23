@@ -12,7 +12,7 @@ using Newtonsoft.Json.Converters;
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
-    /// Represent base class for all order module documents (operations)\r\n            contains shared set of properties
+    /// Represent base class for all order module documents (operations)              contains shared set of properties
     /// </summary>
     [DataContract]
     public partial class VirtoCommerceOrderModuleWebModelOperation :  IEquatable<VirtoCommerceOrderModuleWebModelOperation>
@@ -32,9 +32,9 @@ namespace VirtoCommerce.Client.Model
         public string Number { get; set; }
 
         /// <summary>
-        /// Flag can be used to refer to a specific order status in a variety of user scenarios with combination of Status\r\n            (Order completion, Shipment send etc)
+        /// Flag can be used to refer to a specific order status in a variety of user scenarios with combination of Status              (Order completion, Shipment send etc)
         /// </summary>
-        /// <value>Flag can be used to refer to a specific order status in a variety of user scenarios with combination of Status\r\n            (Order completion, Shipment send etc)</value>
+        /// <value>Flag can be used to refer to a specific order status in a variety of user scenarios with combination of Status              (Order completion, Shipment send etc)</value>
         [DataMember(Name="isApproved", EmitDefaultValue=false)]
         public bool? IsApproved { get; set; }
 
@@ -403,6 +403,5 @@ namespace VirtoCommerce.Client.Model
                 return hash;
             }
         }
-
     }
 }

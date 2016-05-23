@@ -12,7 +12,7 @@ using Newtonsoft.Json.Converters;
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
-    /// 
+    /// VirtoCommerceDomainTaxModelTaxRate
     /// </summary>
     [DataContract]
     public partial class VirtoCommerceDomainTaxModelTaxRate :  IEquatable<VirtoCommerceDomainTaxModelTaxRate>
@@ -138,6 +138,5 @@ namespace VirtoCommerce.Client.Model
                 return hash;
             }
         }
-
     }
 }

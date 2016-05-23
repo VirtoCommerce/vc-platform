@@ -12,7 +12,7 @@ using Newtonsoft.Json.Converters;
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
-    /// 
+    /// VirtoCommerceContentWebModelsMenuLinkList
     /// </summary>
     [DataContract]
     public partial class VirtoCommerceContentWebModelsMenuLinkList :  IEquatable<VirtoCommerceContentWebModelsMenuLinkList>
@@ -171,6 +171,5 @@ namespace VirtoCommerce.Client.Model
                 return hash;
             }
         }
-
     }
 }

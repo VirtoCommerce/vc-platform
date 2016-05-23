@@ -12,7 +12,7 @@ using Newtonsoft.Json.Converters;
 namespace VirtoCommerce.Client.Model
 {
     /// <summary>
-    /// 
+    /// VirtoCommerceQuoteModuleWebModelQuoteRequestTotals
     /// </summary>
     [DataContract]
     public partial class VirtoCommerceQuoteModuleWebModelQuoteRequestTotals :  IEquatable<VirtoCommerceQuoteModuleWebModelQuoteRequestTotals>
@@ -203,6 +203,5 @@ namespace VirtoCommerce.Client.Model
                 return hash;
             }
         }
-
     }
 }
