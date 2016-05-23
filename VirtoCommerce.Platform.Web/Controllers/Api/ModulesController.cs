@@ -82,22 +82,22 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <summary>
         /// Returns a flat expanded  list of modules that depend on passed modules
         /// </summary>
-        /// <param name="modules">modules</param>
+        /// <param name="moduleDescriptors">modules descriptors</param>
         /// <returns></returns>
         [HttpPost]
         [Route("getmissingdependencies")]
         [ResponseType(typeof(webModel.ModuleDescriptor[]))]
         [CheckPermission(Permission = PredefinedPermissions.ModuleManage)]
-        public IHttpActionResult GetMissingDependencies(webModel.ModuleDescriptor[] modules)
+        public IHttpActionResult GetMissingDependencies(webModel.ModuleDescriptor[] moduleDescriptors)
         {
-            var moduleInfos = _moduleCatalog.Modules.OfType<ManifestModuleInfo>()
-                                              .Where(x => modules.Any(y=>y.Identity.Equals(x.Identity)));
-
-            var retVal = _moduleCatalog.CompleteListWithDependencies(moduleInfos).OfType<ManifestModuleInfo>()
+            var modules = _moduleCatalog.Modules.OfType<ManifestModuleInfo>().Join(moduleDescriptors, x => x.Identity, y => y.Identity, (x, y) => x);
+       
+            var retVal = _moduleCatalog.CompleteListWithDependencies(modules).OfType<ManifestModuleInfo>()
                                        .Where(x => !x.IsInstalled)
+                                       .Except(modules)
                                        .Select(x => x.ToWebModel())
                                        .ToArray();
-
+       
             return Ok(retVal);
         }
 
@@ -259,9 +259,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 case webModel.ModuleAction.Install:
                     notification.Title = "Install Module";
+                    notification.ProgressLog.Add(new webModel.ProgressMessage { Level = ProgressMessageLevel.Info.ToString(), Message = "Starting installation..." });
                     break;           
                 case webModel.ModuleAction.Uninstall:
                     notification.Title = "Uninstall Module";
+                    notification.ProgressLog.Add(new webModel.ProgressMessage { Level = ProgressMessageLevel.Info.ToString(), Message = "Starting uninstalling..." });
                     break;
             }
 

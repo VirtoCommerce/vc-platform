@@ -125,14 +125,17 @@ namespace VirtoCommerce.Platform.Web.Modularity
                             //Call module Uninstall method
                             if (uninstallingModule.ModuleInstance != null)
                             {
+                                Report(progress, ProgressMessageLevel.Info, "Execution module.Uninstall()");
                                 uninstallingModule.ModuleInstance.Uninstall();
                             }
                             var dstModuleDir = Path.Combine(_modulesPath, uninstallingModule.Id);
                             if (Directory.Exists(dstModuleDir))
                             {
+                                Report(progress, ProgressMessageLevel.Info, "Deleting module directory {0}", dstModuleDir);
                                 _txFileManager.DeleteDirectory(dstModuleDir);
                             }
-                        }
+                            uninstallingModule.IsInstalled = false;
+                        }                     
                         scope.Complete();
                     }
                     catch (Exception ex)
@@ -186,6 +189,8 @@ namespace VirtoCommerce.Platform.Web.Modularity
                     File.SetLastWriteTime(filePath, entry.LastWriteTime.LocalDateTime);
                 }
             }
+            module.IsInstalled = true;
+            _moduleCatalog.AddModule(module);
             Report(progress, ProgressMessageLevel.Info, "Successfully installed '{0}'.", module);
         }
 

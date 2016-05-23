@@ -20,13 +20,13 @@ namespace VirtoCommerce.Platform.Web.Modularity
 
         public ExternalManifestModuleCatalog(IEnumerable<ModuleInfo> installedModules, string[] externalManifestUrls, ILog logger)
         {
-            foreach(var installedModule in installedModules)
+            foreach (var installedModule in installedModules)
             {
                 base.AddModule(installedModule);
             }
             _externalManifestUrls = externalManifestUrls;
             _logger = logger;
-        }       
+        }
 
         protected override void InnerLoad()
         {
@@ -62,38 +62,35 @@ namespace VirtoCommerce.Platform.Web.Modularity
             {
                 throw new ModularityException("moduleInfo not ManifestModuleInfo type");
             }
-            //Get all dependent modules which may contains different version same module
-            var allDependentModules = base.GetDependentModulesInner(moduleInfo);
-            //Then need groups by id and get best compatible version from all
-            foreach (var group in allDependentModules.OfType<ManifestModuleInfo>().GroupBy(x => x.Id))
+            var dependecies = base.GetDependentModulesInner(moduleInfo).OfType<ManifestModuleInfo>();
+            foreach (var dependency in dependecies)
             {
-                var moduleDependency = manifestModule.Dependencies.First(x => x.Id == group.Key);
-                var bestCompatibleDependency = group.Where(x => moduleDependency.Version.IsCompatibleWith(x.Version))
-                                                    .OrderByDescending(x => x.Version)
-                                                    .FirstOrDefault();
-                if (bestCompatibleDependency != null)
+                var allDependencyVersions = base.Modules.OfType<ManifestModuleInfo>().Where(x => x.Id == dependency.Id);
+                var allCompatibleDependencies = allDependencyVersions.Where(x => dependency.Version.IsCompatibleWith(x.Version)).OrderByDescending(x => x.Version);
+                var latestCompatibleDependency = allCompatibleDependencies.FirstOrDefault(x => x.IsInstalled);
+                //If dependency not installed need find latest compatible version
+                if (latestCompatibleDependency == null)
                 {
-                    retVal.Add(bestCompatibleDependency);
+                    latestCompatibleDependency = allCompatibleDependencies.FirstOrDefault();
+                }
+                if (latestCompatibleDependency != null)
+                {
+                    retVal.Add(latestCompatibleDependency);
                 }
             }
-
             return retVal;
         }
 
         protected override void ValidateUniqueModules()
         {
-            List<string> moduleIdentities = this.Modules.OfType<ManifestModuleInfo>().Select(x=>x.Identity.ToString()).ToList();
+            var modules = this.Modules.OfType<ManifestModuleInfo>().ToList();
 
-            string duplicateModule = moduleIdentities.FirstOrDefault(m => moduleIdentities.Count(m2 => m2 == m) > 1);
+            var duplicateModule = modules.FirstOrDefault(x => modules.Count(y => y.Equals(x)) > 1);
 
             if (duplicateModule != null)
             {
-                throw new DuplicateModuleException(duplicateModule, duplicateModule);
+                throw new DuplicateModuleException(duplicateModule.ToString());
             }
-        }
-        protected override void ValidateDependencyGraph()
-        {
-            base.ValidateDependencyGraph();
         }
 
         private IEnumerable<ManifestModuleInfo> LoadExternalModulesManifest(string externalManifestUrl)
