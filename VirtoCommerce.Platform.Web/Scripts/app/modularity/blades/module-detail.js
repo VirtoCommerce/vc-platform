@@ -4,16 +4,17 @@
 
     function initializeBlade() {
         if (blade.currentEntity.isInstalled) {
+            var canUpdate = _.any(moduleHelper.allmodules, function (x) {
+                return x.id === blade.currentEntity.id && !x.isInstalled;
+            });
             blade.toolbarCommands = [
                 {
                     name: "platform.commands.update", icon: 'fa fa-upload',
                     executeMethod: function () {
-                        blade.currentEntity = blade.currentEntity.$latestModule;
+                        blade.currentEntity = _.last(_.where(moduleHelper.allmodules, { id: blade.currentEntity.id, isInstalled: false }));
                         initializeBlade();
                     },
-                    canExecuteMethod: function () {
-                        return blade.currentEntity.$latestModule;
-                    },
+                    canExecuteMethod: function () { return canUpdate; },
                     permission: 'platform:module:manage'
                 },
                 {
@@ -42,8 +43,8 @@
             ];
         } else {
             blade.toolbarCommands = [];
-            blade.mode = blade.currentEntity.installedVersion ? 'update' : 'install';
-            $scope.availableVersions = _.where(blade.currentEntity.$all, { isInstalled: false });
+            blade.mode = blade.currentEntity.$alternativeVersion ? 'update' : 'install';
+            $scope.availableVersions = _.where(moduleHelper.allmodules, { id: blade.currentEntity.id, isInstalled: false });
         }
     }
 
@@ -58,7 +59,6 @@
         blade.isLoading = true;
 
         var clone = angular.copy(blade.currentEntity);
-        clone.$all = clone.$latestModule = undefined;
         //var clone = {
         //    id: blade.currentEntity.id,
         //    version: blade.currentEntity.version,
@@ -72,30 +72,32 @@
         var modulesApiMethod = action === 'uninstall' ? modules.getDependents : modules.getDependencies;
         modulesApiMethod(selection, function (data) {
             blade.isLoading = false;
-            data = _.filter(data, function (x) { return _.all(selection, function (s) { return s.id !== x.id; }) });
 
             var dialog = {
                 id: "confirmation",
                 action: action,
                 selection: selection,
                 dependencies: data,
-                callback: function (remove) {
-                    if (remove) {
-                        blade.isLoading = true;
-
-                        switch (action) {
-                            case 'install':
-                            case 'update':
-                                modules.install(selection, onAfterSubmitted, function (error) {
-                                    bladeNavigationService.setError('Error ' + error.status, blade);
-                                });
-                                break;
-                            case 'uninstall':
-                                modules.uninstall(selection, onAfterSubmitted, function (error) {
-                                    bladeNavigationService.setError('Error ' + error.status, blade);
-                                });
-                                break;
+                callback: function () {
+                    blade.isLoading = true;
+                    _.each(selection, function (x) {
+                        if (!_.findWhere(data, { id: x.id })) {
+                            data.push(x);
                         }
+                    });
+
+                    switch (action) {
+                        case 'install':
+                        case 'update':
+                            modules.install(data, onAfterSubmitted, function (error) {
+                                bladeNavigationService.setError('Error ' + error.status, blade);
+                            });
+                            break;
+                        case 'uninstall':
+                            modules.uninstall(data, onAfterSubmitted, function (error) {
+                                bladeNavigationService.setError('Error ' + error.status, blade);
+                            });
+                            break;
                     }
                 }
             }
@@ -126,7 +128,7 @@
             headers: {
                 Accept: 'application/json'
             },
-            url: 'api/platform/modules',
+            url: 'api/platform/modules/localstorage',
             autoUpload: true,
             removeAfterUpload: true
         });

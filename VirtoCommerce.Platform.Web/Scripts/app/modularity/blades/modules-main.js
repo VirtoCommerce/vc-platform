@@ -18,29 +18,24 @@
             var newResults = [];
             var grouped = _.groupBy(results, 'id');
             _.each(grouped, function (vals, key) {
-                // vals.sort(function (a, b) { return moduleHelper.versionCompare(a.version, b.version); })
                 var latest = _.last(vals);
-                latest.$all = vals;
                 newResults.push(latest);
-            });
 
-            // pre-calculate installedVersion AND latest available version ($latestModule) properties
-            _.each(newResults, function (x) {
-                if (!x.isInstalled) {
-                    var foundInstalledModule;
-                    if (foundInstalledModule = _.findWhere(x.$all, { isInstalled: true })) {
-                        _.each(x.$all, function (m) {
-                            if (m === foundInstalledModule) {
-                                m.$latestModule = x;
-                            } else {
-                                m.installedVersion = foundInstalledModule.version;
-                            }
-                        });
-                    }
+                // pre-calculate $alternativeVersion: set latest OR installed version here
+                var foundInstalledModule;
+                if (foundInstalledModule = _.findWhere(vals, { isInstalled: true })) {
+                    _.each(vals, function (m) {
+                        if (m === foundInstalledModule) {
+                            if (m !== latest)
+                                m.$alternativeVersion = latest.version;
+                        } else {
+                            m.$alternativeVersion = foundInstalledModule.version;
+                        }
+                    });
                 }
             });
 
-            nodeUpdate.entities = _.filter(newResults, function (x) { return !x.isInstalled && x.installedVersion; });
+            nodeUpdate.entities = _.filter(newResults, function (x) { return !x.isInstalled && x.$alternativeVersion; });
             nodeAvailable.entities = newResults;
             nodeInstalled.entities = _.where(results, { isInstalled: true });
 

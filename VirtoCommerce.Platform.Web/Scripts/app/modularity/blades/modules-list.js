@@ -56,12 +56,8 @@ function ($scope, filterFilter, bladeNavigationService, dialogService, modules, 
                 blade.isLoading = true;
 
                 selection = angular.copy(selection);
-                _.each(selection, function (x) {
-                    x.$all = x.$latestModule = undefined;
-                });
                 modules.getDependencies(selection, function (data) {
                     blade.isLoading = false;
-                    data = _.filter(data, function (x) { return _.all(selection, function (s) { return s.id !== x.id; }) });
 
                     var dialog = {
                         id: "confirm",
@@ -69,7 +65,12 @@ function ($scope, filterFilter, bladeNavigationService, dialogService, modules, 
                         selection: selection,
                         dependencies: data,
                         callback: function () {
-                            modules.install(selection, onAfterConfirmed, function (error) {
+                            _.each(selection, function (x) {
+                                if (!_.findWhere(data, { id: x.id })) {
+                                    data.push(x);
+                                }
+                            });
+                            modules.install(data, onAfterConfirmed, function (error) {
                                 bladeNavigationService.setError('Error ' + error.status, blade);
                             });
                         }
@@ -99,8 +100,6 @@ function ($scope, filterFilter, bladeNavigationService, dialogService, modules, 
         //var versionColumn = _.findWhere(gridOptions.columnDefs, { name: 'version' });
         switch (blade.mode) {
             //case 'update':
-            //    // versionColumn.displayName = 'platform.blades.modules-list.labels.new-version';
-            //    break;
             //case 'available':
             //    break;
             case 'installed':

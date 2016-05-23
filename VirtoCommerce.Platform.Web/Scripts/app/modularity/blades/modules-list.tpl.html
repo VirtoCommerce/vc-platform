@@ -32,7 +32,9 @@
             displayName: 'platform.blades.modules-list.labels.author', name: 'authors',
             cellTemplate: 'modules-list-authors.cell.html'
             }-->
-            <div class="note" ng-if="blade.currentEntities.length == 0">{{ 'platform.blades.modules-list.labels.no-modules-part1' | translate }} <a href="http://docs.virtocommerce.com/display/vc2devguide/Source+Code+Getting+Started#SourceCodeGettingStarted-ConfigureIIS" target="_blank">{{ 'platform.blades.modules-list.labels.no-modules-part2' | translate }}</a>.</div>
+            <div class="note" ng-if="!blade.currentEntities.length && blade.mode==='update'">{{ 'platform.blades.modules-list.labels.no-updates' | translate }}</div>
+            <div class="note" ng-if="!blade.currentEntities.length && blade.mode==='available'">{{ 'platform.blades.modules-list.labels.no-modules-part1' | translate }} <a href="http://docs.virtocommerce.com/display/vc2devguide/Source+Code+Getting+Started#SourceCodeGettingStarted-ConfigureIIS" target="_blank">{{ 'platform.blades.modules-list.labels.no-modules-part2' | translate }}</a>.</div>
+            <div class="note" ng-if="!blade.currentEntities.length && blade.mode==='installed'">{{ 'platform.blades.modules-list.labels.no-installed-modules' | translate }}</div>
             <div class="table-wrapper" ng-if="blade.currentEntities.length">
                 <div ui-grid="gridOptions" ui-grid-auto-resize ui-grid-save-state ui-grid-selection ui-grid-resize-columns ui-grid-move-columns ui-grid-height></div>
             </div>
@@ -63,10 +65,9 @@
 <script type="text/ng-template" id="modules-list-version.cell.html">
     <div class="ui-grid-cell-contents">
         <div class="inner-contents">
-            <i class="table-ico fa fa-check-square-o" ng-if="row.entity.isInstalled && !row.entity.$latestModule" title="Module is up to date"></i>
+            <i class="table-ico fa fa-check-square-o" ng-if="row.entity.isInstalled && !row.entity.$alternativeVersion" title="Module is up to date"></i>
             <span class="table-t" title="{{COL_FIELD}}">{{COL_FIELD}}</span>
-            <span class="table-descr">{{row.entity.installedVersion}}</span>
-            <span class="table-descr">{{row.entity.$latestModule.version}}</span>
+            <span class="table-descr">{{row.entity.$alternativeVersion}}</span>
         </div>
     </div>
 </script>

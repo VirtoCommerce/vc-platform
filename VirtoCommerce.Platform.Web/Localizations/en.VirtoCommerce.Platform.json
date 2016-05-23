@@ -333,13 +333,13 @@
       "modules-list": {
         "subtitle": "Modules management",
         "labels": {
+          "no-updates": "No updates found.",
           "no-modules-part1": "No Modules found. Check if virtual directory with alias Modules is configured as described in",
           "no-modules-part2": "the documentation",
+          "no-installed-modules": "No installed Modules found.",
           "icon": "Icon",
           "module": "Module",
-          "installed": "Installed",
           "version": "Version",
-          "new-version": "New version",
           "author": "Author"
         }
       },

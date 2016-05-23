@@ -8,7 +8,7 @@
     <p ng-if="action==='update'">{{ 'platform.dialogs.module-action.message0-update' | translate }}</p>
     <p ng-if="action==='uninstall'">{{ 'platform.dialogs.module-action.message0-delete' | translate }}</p>
     <ul>
-        <li ng-repeat="data in selection">{{data.id}} ({{action==='update' ? data.installedVersion + ' &#8658; ' : ''}}{{data.version}})</li>
+        <li ng-repeat="data in selection">{{data.id}} ({{action==='update' ? data.$alternativeVersion + ' &#8658; ' : ''}}{{data.version}})</li>
     </ul>
     <div ng-if="dependencies.length">
         <br>
