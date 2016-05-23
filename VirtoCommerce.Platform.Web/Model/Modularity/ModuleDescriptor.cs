@@ -35,6 +35,7 @@ namespace VirtoCommerce.Platform.Web.Model.Modularity
         public string ReleaseNotes { get; set; }
         public string Copyright { get; set; }
         public string Tags { get; set; }
+        public IEnumerable<string> Groups { get; set; }
         public IEnumerable<ModuleIdentity> Dependencies { get; set; }
 
         public ICollection<string> ValidationErrors { get; set; }

@@ -72,18 +72,21 @@ namespace VirtoCommerce.Platform.Web.Modularity
                         {
                             Report(progress, ProgressMessageLevel.Info, "Installing '{0}'", installableModule);
                             InnerInstall(installableModule, progress);
+                            installableModule.IsInstalled = true;                            
                         }
 
-                        foreach (var updatableModule in updatableModules)
+                        foreach (var newModule in updatableModules)
                         {
-                            var existModule = _moduleCatalog.Modules.OfType<ManifestModuleInfo>().Where(x => x.IsInstalled && x.Id == updatableModule.Id).First();
+                            var existModule = _moduleCatalog.Modules.OfType<ManifestModuleInfo>().Where(x => x.IsInstalled && x.Id == newModule.Id).First();
                             var dstModuleDir = Path.Combine(_modulesPath, existModule.Id);
                             if (Directory.Exists(dstModuleDir))
                             {
                                 _txFileManager.DeleteDirectory(dstModuleDir);
                             }
-                            Report(progress, ProgressMessageLevel.Info, "Updating '{0}' -> '{1}'", existModule, updatableModule);
-                            InnerInstall(updatableModule, progress);
+                            Report(progress, ProgressMessageLevel.Info, "Updating '{0}' -> '{1}'", existModule, newModule);
+                            InnerInstall(newModule, progress);
+                            existModule.IsInstalled = false;
+                            newModule.IsInstalled = true;
                         }
                         scope.Complete();
                     }
@@ -189,8 +192,7 @@ namespace VirtoCommerce.Platform.Web.Modularity
                     File.SetLastWriteTime(filePath, entry.LastWriteTime.LocalDateTime);
                 }
             }
-            module.IsInstalled = true;
-            _moduleCatalog.AddModule(module);
+        
             Report(progress, ProgressMessageLevel.Info, "Successfully installed '{0}'.", module);
         }
 

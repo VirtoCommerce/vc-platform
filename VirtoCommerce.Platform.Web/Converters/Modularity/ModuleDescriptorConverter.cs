@@ -13,6 +13,7 @@ namespace VirtoCommerce.Platform.Web.Converters.Modularity
             retVal.InjectFrom(moduleInfo);
             retVal.Version = moduleInfo.Version.ToString();
             retVal.PlatformVersion = moduleInfo.PlatformVersion.ToString();
+            retVal.Groups = moduleInfo.Groups;
             if(moduleInfo.Dependencies != null)
             {
                 retVal.Dependencies = moduleInfo.Dependencies.Select(x => new ModuleIdentity { Id = x.Id, Version = x.Version.ToString() }).ToList();

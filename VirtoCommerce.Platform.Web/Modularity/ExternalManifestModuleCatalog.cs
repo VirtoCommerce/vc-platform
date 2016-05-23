@@ -16,14 +16,11 @@ namespace VirtoCommerce.Platform.Web.Modularity
     {
         private readonly string[] _externalManifestUrls;
         private readonly ILog _logger;
-        private List<ModuleInfo> _externalModules = new List<ModuleInfo>();
+        private IEnumerable<ModuleInfo> _installedModules;
 
         public ExternalManifestModuleCatalog(IEnumerable<ModuleInfo> installedModules, string[] externalManifestUrls, ILog logger)
         {
-            foreach (var installedModule in installedModules)
-            {
-                base.AddModule(installedModule);
-            }
+            _installedModules = installedModules;
             _externalManifestUrls = externalManifestUrls;
             _logger = logger;
         }
@@ -40,11 +37,16 @@ namespace VirtoCommerce.Platform.Web.Modularity
                     {
                         if (!Modules.OfType<ManifestModuleInfo>().Contains(externalModuleInfo))
                         {
-                            externalModuleInfo.IsInstalled = false;
+                            externalModuleInfo.IsInstalled = _installedModules.Contains(externalModuleInfo);
                             externalModuleInfo.InitializationMode = InitializationMode.OnDemand;
                             AddModule(externalModuleInfo);
                         }
                     }
+                }
+
+                foreach(var installedModuleNotFoundInExternal in _installedModules.Except(Modules))
+                {
+                    AddModule(installedModuleNotFoundInExternal);
                 }
             }
         }

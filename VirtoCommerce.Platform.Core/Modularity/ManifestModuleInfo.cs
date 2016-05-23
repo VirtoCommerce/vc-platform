@@ -30,6 +30,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
 
             Errors = new List<string>();
 
+            
             Dependencies = new List<ModuleIdentity>();
             if (manifest.Dependencies != null)
             {
@@ -55,6 +56,11 @@ namespace VirtoCommerce.Platform.Core.Modularity
             {
                 Settings.AddRange(manifest.Settings);
             }
+            Groups = new List<string>();
+            if(manifest.Groups != null)
+            {
+                Groups.AddRange(manifest.Groups);
+            }
             InitializationMode = InitializationMode.OnDemand;         
         }
 
@@ -77,6 +83,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
         public ICollection<ModuleIdentity> Dependencies { get; private set; }
         public bool IsRemovable { get; set; }
         public bool IsInstalled { get; set; }
+        public ICollection<string> Groups { get; private set; }
         public string FullPhysicalPath { get; set; }
         public ICollection<ManifestBundleItem> Styles { get; private set; }
         public ICollection<ManifestBundleItem> Scripts { get; private set; }

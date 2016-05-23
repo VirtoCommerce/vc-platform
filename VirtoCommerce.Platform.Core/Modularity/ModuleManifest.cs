@@ -63,6 +63,8 @@ namespace VirtoCommerce.Platform.Core.Modularity
         [XmlArrayItem("dependency")]
         public ManifestDependency[] Dependencies { get; set; }
 
+        public string[] Groups { get; set; }
+
         [XmlArray("styles")]
         [XmlArrayItem(typeof(ManifestBundleFile), ElementName = "file")]
         [XmlArrayItem(typeof(ManifestBundleDirectory), ElementName = "directory")]
