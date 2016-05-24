@@ -145,12 +145,16 @@
         };
 
         uploader.onSuccessItem = function (fileItem, data, status, headers) {
-            if (data.tags) {
-                data.tagsArray = data.tags.split(' ');
+            if (data) {
+                if (data.tags) {
+                    data.tagsArray = data.tags.split(' ');
+                }
+                blade.currentEntity = data;
+                blade.mode = undefined;
+                initializeBlade();
+            } else {
+                bladeNavigationService.setError('Invalid module package: ' + fileItem.file.name, blade);
             }
-            blade.currentEntity = data;
-            blade.mode = undefined;
-            initializeBlade();
         };
 
         uploader.onErrorItem = function (item, response, status, headers) {

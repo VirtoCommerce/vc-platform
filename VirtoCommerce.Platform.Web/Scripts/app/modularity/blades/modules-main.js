@@ -11,6 +11,7 @@
             moduleHelper.moduleBundles = [];
             moduleHelper.allmodules = results;
             _.each(results, function (x) {
+                x.description = x.description || '';
                 x.tags = x.tags || '';
                 if (x.tags) {
                     x.tagsArray = x.tags.split(' ');
