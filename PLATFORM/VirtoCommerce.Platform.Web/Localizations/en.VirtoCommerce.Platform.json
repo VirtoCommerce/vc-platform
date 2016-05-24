@@ -234,8 +234,9 @@
       "notification-templates-list": {
         "title": "Notification templates",
         "labels": {
-          "subject": "Subject",
-          "body": "Body"
+            "subject": "Subject",
+            "body": "Body",
+            "language": "Language"
         }
       },
       "notifications-test-resolve": {

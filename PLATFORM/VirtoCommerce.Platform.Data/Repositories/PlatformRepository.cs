@@ -270,12 +270,11 @@ namespace VirtoCommerce.Platform.Data.Repositories
 
         public NotificationTemplateEntity GetNotificationTemplateByNotification(string notificationTypeId, string objectId, string objectTypeId, string language)
         {
-            var query = NotificationTemplates.Where(nt => nt.NotificationTypeId.Equals(notificationTypeId) && nt.ObjectId.Equals(objectId) && nt.ObjectTypeId.Equals(objectTypeId));
-
-            var retVal = query.FirstOrDefault(nt => nt.Language.Equals(language));
+            var query = NotificationTemplates.Where(x => x.NotificationTypeId == notificationTypeId && x.ObjectId == objectId && x.ObjectTypeId == objectTypeId);                            
+            var retVal = query.Where(x => x.Language == null || x.Language == language).OrderByDescending(x => x.Language).FirstOrDefault();
             if (retVal == null)
             {
-                retVal = query.FirstOrDefault(nt => nt.IsDefault);
+                retVal = query.FirstOrDefault(x => x.IsDefault);
             }
 
             return retVal;

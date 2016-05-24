@@ -60,8 +60,7 @@ namespace VirtoCommerce.StoreModule.Web
                 NotificationTemplate = new NotificationTemplate
                 {
                     Body = "",
-                    Subject = "",
-                    Language = "en-US"
+                    Subject = ""
                 }
             });
         }

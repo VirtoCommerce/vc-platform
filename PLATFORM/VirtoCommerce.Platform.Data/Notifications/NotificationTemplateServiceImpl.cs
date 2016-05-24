@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Notifications;
 using VirtoCommerce.Platform.Data.Infrastructure;
+using VirtoCommerce.Platform.Data.Model;
 using VirtoCommerce.Platform.Data.Repositories;
 
 namespace VirtoCommerce.Platform.Data.Notifications
@@ -31,15 +33,18 @@ namespace VirtoCommerce.Platform.Data.Notifications
 			NotificationTemplate retVal = null;
 			using (var repository = _repositoryFactory())
 			{
-				var entity = repository.NotificationTemplates.FirstOrDefault(nt => nt.ObjectId.Equals(objectId) && nt.NotificationTypeId.Equals(notificationTypeId) && nt.Language.Equals(language) && nt.ObjectTypeId.Equals(objectTypeId));
-                if (entity == null)
-                {
-                    entity = repository.NotificationTemplates.FirstOrDefault(nt => nt.NotificationTypeId.Equals(notificationTypeId) && nt.Language.Equals(language));
-                }
+                var templatesEntities = repository.NotificationTemplates.Where(x => x.ObjectId == objectId && x.NotificationTypeId == notificationTypeId && x.ObjectTypeId == objectTypeId).ToArray();
 
-                if (entity != null)
+                if(!templatesEntities.Any())
+                {
+                    //Get default templates without object
+                    templatesEntities = repository.NotificationTemplates.Where(x => x.NotificationTypeId == notificationTypeId && x.ObjectId == null && x.ObjectTypeId == null).ToArray();
+                }
+                var templateEntity = templatesEntities.Where(x => x.Language == null || x.Language.EqualsInvariant(language))
+                                                       .OrderByDescending(x => x.Language).FirstOrDefault();
+                if (templateEntity != null)
 				{
-					retVal = entity.ToCoreModel();
+					retVal = templateEntity.ToCoreModel();
 				}
 			}
 
@@ -91,8 +96,17 @@ namespace VirtoCommerce.Platform.Data.Notifications
 				foreach (var notificationTemplate in notificationTemplates)
 				{
 					var sourceEntity = notificationTemplate.ToDataModel();
-					var targetEntity = repository.GetNotificationTemplateByNotification(notificationTemplate.NotificationTypeId, notificationTemplate.ObjectId, notificationTemplate.ObjectTypeId, notificationTemplate.Language);
-					if (targetEntity == null)
+                    NotificationTemplateEntity targetEntity = null;
+                    if (!sourceEntity.IsTransient())
+                    {
+                        targetEntity = repository.NotificationTemplates.FirstOrDefault(x => x.Id == sourceEntity.Id);
+                    }
+                    else
+                    {
+                        targetEntity = repository.GetNotificationTemplateByNotification(notificationTemplate.NotificationTypeId, notificationTemplate.ObjectId, notificationTemplate.ObjectTypeId, notificationTemplate.Language);
+                    }
+
+                    if (targetEntity == null)
 					{
 						repository.Add(sourceEntity);
 					}

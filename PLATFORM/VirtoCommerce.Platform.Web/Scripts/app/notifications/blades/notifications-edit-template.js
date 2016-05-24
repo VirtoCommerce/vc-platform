@@ -9,36 +9,45 @@
 
     blade.initialize = function () {
         blade.isLoading = true;
+        if (blade.templateId) {
+        	notifications.getTemplateById({ id: blade.templateId }, function (data) {
+        		setTemplate(data);
+        	}, function (error) {
+        		bladeNavigationService.setError('Error ' + error.status, blade);
+        	});
+        }
+        else {
+        	notifications.getTemplate({ type: blade.notificationType, objectId: blade.objectId, objectTypeId: blade.objectTypeId, language: blade.language }, function (data) {
+        		setTemplate(data);
+        	}, function (error) {
+        		bladeNavigationService.setError('Error ' + error.status, blade);
+        	});
+        }
+    };
 
-        notifications.getTemplate({ type: blade.notificationType, objectId: blade.objectId, objectTypeId: blade.objectTypeId, language: blade.language }, function (data) {
-            data.type = blade.notificationType;
-            data.objectId = blade.objectId;
-            data.objectTypeId = blade.objectTypeId;
-            if (blade.language === 'undefined' && _.indexOf(blade.usedLanguages, data.language) !== -1) {
-                data.language = _.first(blade.languages);
-            }
-            blade.origEntity = _.clone(data);
-            blade.currentEntity = data;
+    function setTemplate(data) {   
+    		data.type = blade.notificationType;
+    		data.objectId = blade.objectId;
+    		data.objectTypeId = blade.objectTypeId;
+    		blade.origEntity = _.clone(data);
+    		blade.currentEntity = data;
 
-            notifications.prepareTestData({ type: blade.notificationType }, function (data) {
-                blade.parametersForTemplate = data;
+    		notifications.prepareTestData({ type: blade.notificationType }, function (data) {
+    			blade.parametersForTemplate = data;
 
-                blade.isLoading = false;
+    			blade.isLoading = false;
 
-            }, function (error) {
-                bladeNavigationService.setError('Error ' + error.status, blade);
-            });
+    		}, function (error) {
+    			bladeNavigationService.setError('Error ' + error.status, blade);
+    		});
 
-            $timeout(function () {
-                if (codemirrorEditor) {
-                    codemirrorEditor.refresh();
-                    codemirrorEditor.focus();
-                }
-                blade.origEntity = angular.copy(blade.currentEntity);
-            }, 1);
-        }, function (error) {
-            bladeNavigationService.setError('Error ' + error.status, blade);
-        });
+    		$timeout(function () {
+    			if (codemirrorEditor) {
+    				codemirrorEditor.refresh();
+    				codemirrorEditor.focus();
+    			}
+    			blade.origEntity = angular.copy(blade.currentEntity);
+    		}, 1);
     };
 
     blade.updateTemplate = function () {
@@ -197,35 +206,7 @@
         bladeNavigationService.showConfirmationIfNeeded(isDirty(), canSave(), blade, blade.updateTemplate, closeCallback, "platform.dialogs.notification-template-save.title", "platform.dialogs.notification-template-save.message");
     };
 
-    blade.getLanguages = function () {
-        blade.languages = ['ru-RU', 'en-US', 'fr-FR', 'de-DE'];
-        blade.languages = _.difference(blade.languages, blade.usedLanguages);
-    }
-
-    blade.getFlag = function (x) {
-        switch (x) {
-            case 'en-US':
-                return 'us';
-
-            case 'fr-FR':
-                return 'fr';
-
-            case 'zh-CN':
-                return 'ch';
-
-            case 'ru-RU':
-                return 'ru';
-
-            case 'ja-JP':
-                return 'jp';
-
-            case 'de-DE':
-                return 'de';
-        }
-    }
-
     blade.headIcon = 'fa-envelope';
 
-    blade.getLanguages();
     blade.initialize();
 }]);

@@ -43,19 +43,19 @@ namespace VirtoCommerce.OrderModule.Data.Observers
 
             if(IsOrderCanceled(value))
             {
-                var notification = _notificationManager.GetNewNotification<CancelOrderEmailNotification>(value.ModifiedOrder.StoreId, "Store", "en-US");
+                var notification = _notificationManager.GetNewNotification<CancelOrderEmailNotification>(value.ModifiedOrder.StoreId, "Store", null);
                 notifications.Add(notification);
             }
 
             if(value.ChangeState == EntryState.Added)
             {
-                var notification = _notificationManager.GetNewNotification<OrderCreateEmailNotification>(value.ModifiedOrder.StoreId, "Store", "en-US");
+                var notification = _notificationManager.GetNewNotification<OrderCreateEmailNotification>(value.ModifiedOrder.StoreId, "Store",  null);
                  notifications.Add(notification);
             }
 
             if(IsNewStatus(value))
             {
-                var notification = _notificationManager.GetNewNotification<NewOrderStatusEmailNotification>(value.ModifiedOrder.StoreId, "Store", "en-US");
+                var notification = _notificationManager.GetNewNotification<NewOrderStatusEmailNotification>(value.ModifiedOrder.StoreId, "Store", null);
       
                 notification.NewStatus = value.ModifiedOrder.Status;
                 notification.OldStatus = value.OrigOrder.Status;
@@ -65,7 +65,7 @@ namespace VirtoCommerce.OrderModule.Data.Observers
 
             if(IsOrderPaid(value))
             {
-                var notification = _notificationManager.GetNewNotification<OrderPaidEmailNotification>(value.ModifiedOrder.StoreId, "Store", "en-US");
+                var notification = _notificationManager.GetNewNotification<OrderPaidEmailNotification>(value.ModifiedOrder.StoreId, "Store", null);
                 notification.FullPrice = value.ModifiedOrder.Sum;
                 notification.PaidDate = DateTime.UtcNow;
                 notification.Currency = value.ModifiedOrder.Currency.ToString();
@@ -75,7 +75,7 @@ namespace VirtoCommerce.OrderModule.Data.Observers
 
             if(IsOrderSent(value))
             {
-                var notification = _notificationManager.GetNewNotification<OrderSentEmailNotification>(value.ModifiedOrder.StoreId, "Store", "en-US");
+                var notification = _notificationManager.GetNewNotification<OrderSentEmailNotification>(value.ModifiedOrder.StoreId, "Store", null);
       
                 notification.SentOrderDate = DateTime.UtcNow;
                 notification.NumberOfShipments = value.ModifiedOrder.Shipments.Count(i => i.Status == "Send");

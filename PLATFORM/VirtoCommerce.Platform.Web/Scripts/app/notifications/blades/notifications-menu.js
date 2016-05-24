@@ -16,8 +16,8 @@
 
         $scope.selectedNodeId = data.id;
 
-        var objectId = (angular.isUndefined($stateParams.objectId) || $stateParams.objectId === null) ? 'Platform' : $stateParams.objectId;
-        var objectTypeId = (angular.isUndefined($stateParams.objectTypeId) || $stateParams.objectTypeId === null) ? 'Platform' : $stateParams.objectTypeId;
+        var objectId = $stateParams.objectId;
+        var objectTypeId = $stateParams.objectTypeId;
         var newBlade = {
             id: 'marketingMainListChildren',
             title: data.name,

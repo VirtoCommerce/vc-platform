@@ -80,7 +80,6 @@ namespace VirtoCommerce.OrderModule.Web
                 {
                     Body = OrderNotificationResource.CreateOrderNotificationBody,
                     Subject = OrderNotificationResource.CreateOrderNotificationSubject,
-                    Language = "en-US"
                 }
             });
 
@@ -92,7 +91,6 @@ namespace VirtoCommerce.OrderModule.Web
                 {
                     Body = OrderNotificationResource.OrderPaidNotificationBody,
                     Subject = OrderNotificationResource.OrderPaidNotificationSubject,
-                    Language = "en-US"
                 }
             });
 
@@ -104,7 +102,6 @@ namespace VirtoCommerce.OrderModule.Web
                 {
                     Body = OrderNotificationResource.OrderSentNotificationBody,
                     Subject = OrderNotificationResource.OrderSentNotificationSubject,
-                    Language = "en-US"
                 }
             });
 
@@ -116,8 +113,7 @@ namespace VirtoCommerce.OrderModule.Web
                 {
                     Body = OrderNotificationResource.NewOrderStatusNotificationBody,
                     Subject = OrderNotificationResource.NewOrderStatusNotificatonSubject,
-                    Language = "en-US"
-                }
+               }
             });
 
             notificationManager.RegisterNotificationType(() => new CancelOrderEmailNotification(_container.Resolve<IEmailNotificationSendingGateway>())
@@ -128,7 +124,6 @@ namespace VirtoCommerce.OrderModule.Web
                 {
                     Body = OrderNotificationResource.CancelOrderNotificationBody,
                     Subject = OrderNotificationResource.CancelOrderNotificationSubject,
-                    Language = "en-US"
                 }
             });
 

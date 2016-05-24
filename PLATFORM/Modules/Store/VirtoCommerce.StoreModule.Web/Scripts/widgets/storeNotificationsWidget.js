@@ -9,8 +9,9 @@
 			id: 'storeNotificationWidgetChild',
 			title: 'stores.widgets.storeNotificationsWidget.blade-title',
 			titleValues: { id: blade.currentEntity.id },
-			objectId: objectId,
+			objectId: objectId,			
 			objectTypeId: objectTypeId,
+			languages: blade.currentEntity.languages,
 			subtitle: 'stores.widgets.storeNotificationsWidget.blade-subtitle',
 			controller: 'platformWebApp.notificationsListController',
 			template: '$(Platform)/Scripts/app/notifications/blades/notifications-list.tpl.html'

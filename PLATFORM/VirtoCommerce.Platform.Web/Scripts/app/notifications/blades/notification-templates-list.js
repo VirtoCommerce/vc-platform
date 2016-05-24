@@ -1,8 +1,12 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.notificationTemplatesListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.notifications', function ($scope, bladeNavigationService, dialogService, notifications) {
+.controller('platformWebApp.notificationTemplatesListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.notifications', 'platformWebApp.settings', function ($scope, bladeNavigationService, dialogService, notifications, settings) {
     var blade = $scope.blade;
     blade.selectedLanguage = null;
 
+    if (!blade.languages) {
+    	blade.languages = settings.getValues({ id: 'VirtoCommerce.Core.General.Languages' });
+    }
+  
     blade.initialize = function () {
         blade.isLoading = true;
         notifications.getTemplates({ type: blade.notificationType, objectId: blade.objectId, objectTypeId: blade.objectTypeId }, function (data) {
@@ -20,13 +24,11 @@
         var newBlade = {
             id: 'editTemplate',
             title: 'platform.blades.notifications-edit-template.title',
+            templateId: template.id,
             notificationType: blade.notificationType,
-            objectId: blade.objectId,
-            objectTypeId: blade.objectTypeId,
-            language: template.language,
             isNew: false,
             isFirst: false,
-            usedLanguages: _.pluck(blade.currentEntities, 'language'),
+            languages: blade.languages,
             controller: 'platformWebApp.editTemplateController',
             template: '$(Platform)/Scripts/app/notifications/blades/notifications-edit-template.tpl.html'
         };
@@ -44,7 +46,7 @@
             language: 'undefined',
             isNew: true,
             isFirst: false,
-            usedLanguages: _.pluck(blade.currentEntities, 'language'),
+            languages: blade.languages,
             controller: 'platformWebApp.editTemplateController',
             template: '$(Platform)/Scripts/app/notifications/blades/notifications-edit-template.tpl.html'
         };
@@ -60,31 +62,6 @@
 			    permission: 'platform:notification:create'
 			}
     ];
-
-    blade.getFlag = function (x) {
-        switch (x) {
-            case 'ru-RU':
-                return 'ru';
-
-            case 'en-US':
-                return 'us';
-
-            case 'fr-FR':
-                return 'fr';
-
-            case 'zh-CN':
-                return 'ch';
-
-            case 'ru-RU':
-                return 'ru';
-
-            case 'ja-JP':
-                return 'jp';
-
-            case 'de-DE':
-                return 'de';
-        }
-    }
 
     blade.initialize();
 }]);

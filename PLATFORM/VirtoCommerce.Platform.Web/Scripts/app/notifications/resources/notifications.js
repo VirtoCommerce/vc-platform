@@ -2,9 +2,10 @@
 .factory('platformWebApp.notifications', ['$resource', function ($resource) {
 
     return $resource('api/platform/notification/:id', { id: '@Id' }, {
-        getNotificationList: { method: 'GET', url: 'api/platform/notification', isArray: true },
-        getTemplate: { method: 'GET', url: 'api/platform/notification/template/:type/:objectId/:objectTypeId/:language' },
-        getTemplates: { method: 'GET', url: 'api/platform/notification/template/:type/:objectId/:objectTypeId', isArray: true },
+    	getNotificationList: { method: 'GET', url: 'api/platform/notification', isArray: true },
+    	getTemplateById: { method: 'GET', url: 'api/platform/notification/template/:id' },
+        getTemplate: { method: 'GET', url: 'api/platform/notification/template' },
+        getTemplates: { method: 'GET', url: 'api/platform/notification/templates', isArray: true },
         updateTemplate: { method: 'POST', url: 'api/platform/notification/template' },
         deleteTemplate: { method: 'DELETE', url: 'api/platform/notification/template/:id' },
         prepareTestData: { method: 'GET', url: 'api/platform/notification/template/:type/getTestingParameters', isArray: true },
