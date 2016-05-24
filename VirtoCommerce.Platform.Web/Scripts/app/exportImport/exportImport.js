@@ -39,7 +39,8 @@
         .state('sampleDataInitialization', {
         	url: '/sampleDataInitialization',
         	templateUrl: '$(Platform)/Scripts/app/exportImport/templates/sampleDataInitialization.tpl.html',
-        	controller: ['$scope', '$state', function ($scope, $state) {
+        	controller: ['$scope', '$state', '$stateParams', 'platformWebApp.exportImport.resource', function ($scope, $state, $stateParams, exportImportResource) {
+        		var sampleDataInfos = $stateParams.sampleDataInfos;
         		$scope.notification = {};
         		$scope.close = function () { $state.go('workspace') };
         		$scope.$on("new-notification-event", function (event, notification) {
@@ -50,14 +51,17 @@
         				}
         			}
         		});
+				//run sample data installation if its passed as state parameter
+        		if (sampleDataInfos.length > 1) {
+        			exportImportResourse.importSampleData({ url: sampleDataInfos[0].url });
+        		}
         	
-        	}
-        	]
+        	}]
         });
 }]
 )
 .run(
-  ['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', 'platformWebApp.pushNotificationTemplateResolver', 'platformWebApp.bladeNavigationService', 'platformWebApp.exportImport.resource', function ($rootScope, mainMenuService, widgetService, $state, pushNotificationTemplateResolver, bladeNavigationService, exportImportResourse) {
+  ['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', 'platformWebApp.pushNotificationTemplateResolver', 'platformWebApp.bladeNavigationService', 'platformWebApp.exportImport.resource', '$localStorage', function ($rootScope, mainMenuService, widgetService, $state, pushNotificationTemplateResolver, bladeNavigationService, exportImportResourse, $localStorage) {
   	var menuItem = {
   		path: 'configuration/exportImport',
   		icon: 'fa fa-database',
@@ -102,22 +106,19 @@
   			$state.go('sampleDataInitialization')
   		}
   	});
-  	//Try to import sample data
-  	$rootScope.$on('loginStatusChanged', function (event, authContext) {
-  		if (authContext.isAuthenticated) {
-  			exportImportResourse.sampleDataDiscover({}, function (sampleDataInfos) {
-  				if (angular.isArray(sampleDataInfos) && sampleDataInfos.length > 0)
-  				{
-  					if (sampleDataInfos.length > 1) {
-  						$state.go('sampleDataChoose', { sampleDataInfos: sampleDataInfos });
-  					}
-  					else
-  					{
-  						exportImportResourse.importSampleData({ url: sampleDataInfos[0].url });
-  					}
+
+  	if ($localStorage['RunSampleDataImport']) {
+  		$localStorage['RunSampleDataImport'] = false;
+  		//next show sample data installation state depend on sample data discover response
+  		exportImportResourse.sampleDataDiscover({}, function (sampleDataInfos) {
+  			if (angular.isArray(sampleDataInfos) && sampleDataInfos.length > 0) {
+  				if (sampleDataInfos.length > 1) {
+  					$state.go('sampleDataChoose', { sampleDataInfos: sampleDataInfos });
   				}
-  			});
-  		}
-  	});
-  
+  				else {
+  					exportImportResourse.importSampleData({ url: sampleDataInfos[0].url });
+  				}
+  			}
+  		});
+  	}
   }]);

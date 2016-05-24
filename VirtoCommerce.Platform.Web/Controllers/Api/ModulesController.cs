@@ -79,7 +79,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var modules = _moduleCatalog.Modules.OfType<ManifestModuleInfo>().Join(moduleDescriptors, x => x.Identity, y => y.Identity, (x, y) => x);
             var retVal = GetDependingModulesRecursive(modules).Distinct()
                                                               .Except(modules)
-                                                              .Select(x => x.ToWebModel())                                              
+                                                              .Select(x => x.ToWebModel())
                                                               .ToArray();
             return Ok(retVal);
         }
@@ -97,13 +97,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         {
             EnsureModulesCatalogInitialized();
             var modules = _moduleCatalog.Modules.OfType<ManifestModuleInfo>().Join(moduleDescriptors, x => x.Identity, y => y.Identity, (x, y) => x);
-       
+
             var retVal = _moduleCatalog.CompleteListWithDependencies(modules).OfType<ManifestModuleInfo>()
                                        .Where(x => !x.IsInstalled)
                                        .Except(modules)
                                        .Select(x => x.ToWebModel())
                                        .ToArray();
-       
+
             return Ok(retVal);
         }
 
@@ -231,28 +231,50 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         {
             EnsureModulesCatalogInitialized();
 
-            lock (_lockObject)
+            if (!_settingsManager.GetValue("VirtoCommerce:ModulesAutoInstalled", false))
             {
-                if (!_settingsManager.GetValue("VirtoCommerce:ModulesAutoInstalled", false))
+                lock (_lockObject)
                 {
-                    var modulesGroups = ConfigurationManager.AppSettings.GetValues("VirtoCommerce:AutoInstallModulesGroups");
-                    if (!modulesGroups.IsNullOrEmpty())
+                    if (!_settingsManager.GetValue("VirtoCommerce:ModulesAutoInstalled", false))
                     {
-                        _settingsManager.SetValue("VirtoCommerce:ModulesAutoInstalled", true);
-                        var modules = _moduleCatalog.Modules.OfType<ManifestModuleInfo>().Where(x => x.Groups.Intersect(modulesGroups, StringComparer.OrdinalIgnoreCase).Any()).Where(x => !x.IsInstalled);
-                        var modulesWithDependencies = _moduleCatalog.CompleteListWithDependencies(modules).OfType<ManifestModuleInfo>()
-                                                                    .Where(x => !x.IsInstalled);
-                        var options = new webModel.ModuleBackgroundJobOptions
+                        var modulesGroups = ConfigurationManager.AppSettings.GetValues("VirtoCommerce:AutoInstallModulesGroups");
+                        if (!modulesGroups.IsNullOrEmpty())
                         {
-                            Action = webModel.ModuleAction.Install,
-                            Modules = modules.Select(x=>x.ToWebModel()).ToArray()
-                        };
-                        var notification = new webModel.ModuleAutoInstallPushNotification("System")
-                        {
-                            Title = "Modules auto installation"
-                        };
-                        BackgroundJob.Enqueue(() => ModuleBackgroundJob(options, notification));
-                        return Ok(notification);
+                            _settingsManager.SetValue("VirtoCommerce:ModulesAutoInstalled", true);
+                            var modules = new List<ManifestModuleInfo>();
+                            var moduleVersionsGroups = _moduleCatalog.Modules.OfType<ManifestModuleInfo>().Where(x => x.Groups.Intersect(modulesGroups, StringComparer.OrdinalIgnoreCase).Any())
+                                                                                             .GroupBy(x => x.Id);
+                            //Need install only latest versions
+                            foreach (var moduleVersionsGroup in moduleVersionsGroups)
+                            {
+                                //skip already installed modules
+                                if (!moduleVersionsGroup.Any(x => x.IsInstalled))
+                                {
+                                    var latestVersion = moduleVersionsGroup.OrderBy(x => x.Version).LastOrDefault();
+                                    if (latestVersion != null)
+                                    {
+                                        modules.Add(latestVersion);
+                                    }
+                                }
+                            }
+                            var modulesWithDependencies = _moduleCatalog.CompleteListWithDependencies(modules).OfType<ManifestModuleInfo>()
+                                                                        .Where(x => !x.IsInstalled);
+                            if (modulesWithDependencies.Any())
+                            {
+                                var options = new webModel.ModuleBackgroundJobOptions
+                                {
+                                    Action = webModel.ModuleAction.Install,
+                                    Modules = modulesWithDependencies.Select(x => x.ToWebModel()).ToArray()
+                                };
+                                var notification = new webModel.ModuleAutoInstallPushNotification("System")
+                                {
+                                    Title = "Modules auto installation"
+                                };
+
+                                BackgroundJob.Enqueue(() => ModuleBackgroundJob(options, notification));
+                                return Ok(notification);
+                            }
+                        }
                     }
                 }
             }
@@ -270,15 +292,18 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                                      .ToArray();
                 var reportProgress = new Progress<ProgressMessage>(m =>
                 {
-                    notification.ProgressLog.Add(m.ToWebModel());
-                    _pushNotifier.Upsert(notification);
+                    lock (_lockObject)
+                    {
+                        notification.ProgressLog.Add(m.ToWebModel());
+                        _pushNotifier.Upsert(notification);
+                    }
                 });
 
                 switch (options.Action)
                 {
                     case webModel.ModuleAction.Install:
                         _moduleInstaller.Install(moduleInfos, reportProgress);
-                        break;           
+                        break;
                     case webModel.ModuleAction.Uninstall:
                         _moduleInstaller.Uninstall(moduleInfos, reportProgress);
                         break;
@@ -330,7 +355,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 case webModel.ModuleAction.Install:
                     notification.Title = "Install Module";
                     notification.ProgressLog.Add(new webModel.ProgressMessage { Level = ProgressMessageLevel.Info.ToString(), Message = "Starting installation..." });
-                    break;           
+                    break;
                 case webModel.ModuleAction.Uninstall:
                     notification.Title = "Uninstall Module";
                     notification.ProgressLog.Add(new webModel.ProgressMessage { Level = ProgressMessageLevel.Info.ToString(), Message = "Starting uninstalling..." });

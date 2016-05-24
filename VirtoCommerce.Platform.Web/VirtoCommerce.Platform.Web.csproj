@@ -330,6 +330,7 @@
     <Content Include="Scripts\app\modularity\blades\modules-main.js" />
     <Content Include="Scripts\app\modularity\blades\modules-main.tpl.html" />
     <Content Include="Scripts\app\modularity\dialogs\moduleAction-dialog.tpl.html" />
+    <Content Include="Scripts\app\modularity\templates\modulesAutoInstallation.tpl.html" />
     <Content Include="Scripts\common\directives\fallbackSrc.js" />
     <Compile Include="Modularity\Bootstrapper.cs" />
     <Compile Include="Modularity\ExternalManifestModuleCatalog.cs" />

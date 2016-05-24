@@ -562,22 +562,29 @@
       }
     },
     "templates": {
-      "sampleDataChoose": {
-        "labels": {
-          "choose-sample-data-type": "Choose sample data type",
-          "size": "size",
-          "version": "version"
+        "sampleDataChoose": {
+            "labels": {
+                "choose-sample-data-type": "Choose sample data type",
+                "size": "size",
+                "version": "version"
+            }
+        },
+        "sampleDataInitialization": {
+            "labels": {
+                "sample-data-initialization": "Sample data initialization",
+                "starting-initialization": "Starting sample data initialization...",
+                "errors": "Errors",
+                "start": "Start",
+                "end": "End"
+            }
+        },
+        "modulesAutoInstallation": {
+            "labels": {
+                "module-auto-installation": "Modules auto installation",
+                "start": "Start",
+                "end": "End"
+            }
         }
-      },
-      "sampleDataInitialization": {
-        "labels": {
-          "sample-data-initialization": "Sample data initialization",
-          "starting-initialization": "Starting sample data initialization...",
-          "errors": "Errors",
-          "start": "Start",
-          "end": "End"
-        }
-      }
     },
     "widgets": {
       "operations": {

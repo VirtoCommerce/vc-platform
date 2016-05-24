@@ -6,6 +6,7 @@
         getDependents: { method: 'POST', url: 'api/platform/modules/getdependents', isArray: true },
         install: { method: 'POST', url: 'api/platform/modules/install' },
         uninstall: { method: 'POST', url: 'api/platform/modules/uninstall' },
-        restart: { method: 'POST', url: 'api/platform/modules/restart' }
+        restart: { method: 'POST', url: 'api/platform/modules/restart' },
+        autoInstall: { method: 'POST', url: 'api/platform/modules/autoinstall' }
     });
 }]);
