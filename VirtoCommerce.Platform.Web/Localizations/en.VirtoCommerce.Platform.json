@@ -333,6 +333,8 @@
       "modules-list": {
         "subtitle": "Modules management",
         "labels": {
+          "grouping": "Show Module bundles",
+          "ungrouped": "Other",
           "no-updates": "No updates found.",
           "no-modules-part1": "No Modules found. Check if virtual directory with alias Modules is configured as described in",
           "no-modules-part2": "the documentation",

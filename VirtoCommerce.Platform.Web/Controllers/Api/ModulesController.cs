@@ -333,7 +333,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     break;           
                 case webModel.ModuleAction.Uninstall:
                     notification.Title = "Uninstall Module";
-                    notification.ProgressLog.Add(new webModel.ProgressMessage { Level = ProgressMessageLevel.Info.ToString(), Message = "Starting uninstalling..." });
+                    notification.ProgressLog.Add(new webModel.ProgressMessage { Level = ProgressMessageLevel.Info.ToString(), Message = "Starting uninstall..." });
                     break;
             }
 

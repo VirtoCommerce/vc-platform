@@ -1,13 +1,13 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.modulesListController', ['$scope', 'filterFilter', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.modules', 'uiGridConstants', 'platformWebApp.uiGridHelper', 'platformWebApp.moduleHelper',
-function ($scope, filterFilter, bladeNavigationService, dialogService, modules, uiGridConstants, uiGridHelper, moduleHelper) {
+.controller('platformWebApp.modulesListController', ['$scope', 'filterFilter', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.modules', 'uiGridConstants', 'platformWebApp.uiGridHelper', 'platformWebApp.moduleHelper', '$timeout',
+function ($scope, filterFilter, bladeNavigationService, dialogService, modules, uiGridConstants, uiGridHelper, moduleHelper, $timeout) {
     $scope.uiGridConstants = uiGridConstants;
     var blade = $scope.blade;
 
     blade.refresh = function () {
         blade.isLoading = true;
-        blade.parentRefresh().then(function (data) {
-            blade.currentEntities = data;
+        blade.parentBlade.refresh().then(function (data) {
+            blade.currentEntities = blade.isGrouped ? moduleHelper.moduleBundles : data;
             blade.isLoading = false;
         })
     };
@@ -55,7 +55,13 @@ function ($scope, filterFilter, bladeNavigationService, dialogService, modules, 
             bladeNavigationService.closeChildrenBlades(blade, function () {
                 blade.isLoading = true;
 
-                selection = angular.copy(selection);
+                // eliminate duplicating nodes, if any
+                var grouped = _.groupBy(selection, 'id');
+                selection = [];
+                _.each(grouped, function (vals) {
+                    selection.push(_.last(vals));
+                });
+
                 modules.getDependencies(selection, function (data) {
                     blade.isLoading = false;
 
@@ -97,13 +103,15 @@ function ($scope, filterFilter, bladeNavigationService, dialogService, modules, 
 
     // ui-grid
     $scope.setGridOptions = function (gridOptions) {
-        //var versionColumn = _.findWhere(gridOptions.columnDefs, { name: 'version' });
         switch (blade.mode) {
-            //case 'update':
-            //case 'available':
-            //    break;
+            case 'update':
+                _.extend(gridOptions, {
+                    showTreeRowHeader: false
+                });
+                break;
             case 'installed':
                 _.extend(gridOptions, {
+                    showTreeRowHeader: false,
                     selectionRowHeaderWidth: 0,
                     enableRowSelection: false,
                     enableSelectAll: false
@@ -113,6 +121,29 @@ function ($scope, filterFilter, bladeNavigationService, dialogService, modules, 
 
         uiGridHelper.initialize($scope, gridOptions, function (gridApi) {
             gridApi.grid.registerRowsProcessor($scope.singleFilter, 90);
+
+            if (blade.mode === 'available') {
+                $scope.$watch('blade.isGrouped', function (isGrouped) {
+                    if (isGrouped) {
+                        blade.currentEntities = moduleHelper.moduleBundles;
+                        if (!_.any($scope.gridApi.grouping.getGrouping().grouping)) {
+                            $scope.gridApi.grouping.groupColumn('$group');
+                        }
+                        $timeout($scope.gridApi.treeBase.expandAllRows);
+                    } else {
+                        blade.currentEntities = moduleHelper.availableModules;
+                        $scope.gridApi.grouping.clearGrouping();
+                    }
+                });
+
+                $scope.toggleRow = function (row) {
+                    $scope.gridApi.treeBase.toggleRowTreeState(row);
+                };
+
+                $scope.getGroupInfo = function (groupEntity) {
+                    return _.values(groupEntity)[0];
+                };
+            }
         });
     };
 
