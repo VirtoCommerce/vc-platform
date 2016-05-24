@@ -1,6 +1,6 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.modulesListController', ['$scope', 'filterFilter', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.modules', 'uiGridConstants', 'platformWebApp.uiGridHelper', 'platformWebApp.moduleHelper', '$timeout',
-function ($scope, filterFilter, bladeNavigationService, dialogService, modules, uiGridConstants, uiGridHelper, moduleHelper, $timeout) {
+.controller('platformWebApp.modulesListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.modules', 'uiGridConstants', 'platformWebApp.uiGridHelper', 'platformWebApp.moduleHelper', '$timeout',
+function ($scope, bladeNavigationService, dialogService, modules, uiGridConstants, uiGridHelper, moduleHelper, $timeout) {
     $scope.uiGridConstants = uiGridConstants;
     var blade = $scope.blade;
 
@@ -109,6 +109,11 @@ function ($scope, filterFilter, bladeNavigationService, dialogService, modules, 
                     showTreeRowHeader: false
                 });
                 break;
+            case 'available':
+                _.extend(gridOptions, {
+                    enableGroupHeaderSelection: true
+                });
+                break;
             case 'installed':
                 _.extend(gridOptions, {
                     showTreeRowHeader: false,
@@ -126,18 +131,31 @@ function ($scope, filterFilter, bladeNavigationService, dialogService, modules, 
                 $scope.$watch('blade.isGrouped', function (isGrouped) {
                     if (isGrouped) {
                         blade.currentEntities = moduleHelper.moduleBundles;
-                        if (!_.any($scope.gridApi.grouping.getGrouping().grouping)) {
-                            $scope.gridApi.grouping.groupColumn('$group');
+                        if (!_.any(gridApi.grouping.getGrouping().grouping)) {
+                            gridApi.grouping.groupColumn('$group');
                         }
-                        $timeout($scope.gridApi.treeBase.expandAllRows);
+                        $timeout(gridApi.treeBase.expandAllRows);
                     } else {
                         blade.currentEntities = moduleHelper.availableModules;
-                        $scope.gridApi.grouping.clearGrouping();
+                        gridApi.grouping.clearGrouping();
+                    }
+                });
+
+                // toggle grouped rows selection
+                gridApi.selection.on.rowSelectionChanged($scope, function (row) {
+                    if (row.internalRow) {
+                        _.each(row.treeNode.children, function (treeNode) {
+                            if (row.isSelected) {
+                                gridApi.selection.selectRow(treeNode.row.entity);
+                            } else {
+                                gridApi.selection.unSelectRow(treeNode.row.entity);
+                            }
+                        });
                     }
                 });
 
                 $scope.toggleRow = function (row) {
-                    $scope.gridApi.treeBase.toggleRowTreeState(row);
+                    gridApi.treeBase.toggleRowTreeState(row);
                 };
 
                 $scope.getGroupInfo = function (groupEntity) {
@@ -150,7 +168,12 @@ function ($scope, filterFilter, bladeNavigationService, dialogService, modules, 
     $scope.singleFilter = function (renderableRows) {
         var visibleCount = 0;
         renderableRows.forEach(function (row) {
-            row.visible = _.any(filterFilter([row.entity], blade.searchText));
+            var searchText = angular.lowercase(blade.searchText);
+            row.visible = !searchText ||
+                            row.entity.title.toLowerCase().indexOf(searchText) !== -1 ||
+                            row.entity.tags.toLowerCase().indexOf(searchText) !== -1 ||
+                            row.entity.version.toLowerCase().indexOf(searchText) !== -1 ||
+                            row.entity.description.toLowerCase().indexOf(searchText) !== -1;
             if (row.visible) visibleCount++;
         });
 
