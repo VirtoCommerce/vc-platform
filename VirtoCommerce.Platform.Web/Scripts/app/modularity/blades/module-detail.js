@@ -58,17 +58,11 @@
     $scope.confirmActionInDialog = function (action) {
         blade.isLoading = true;
 
-        var clone = angular.copy(blade.currentEntity);
         //var clone = {
         //    id: blade.currentEntity.id,
         //    version: blade.currentEntity.version,
-        //    title: blade.currentEntity.title,
-        //    moduleName: blade.currentEntity.moduleName,
-        //    moduleType: blade.currentEntity.moduleType,
-        //    fullPhysicalPath: blade.currentEntity.fullPhysicalPath
         //};
-
-        var selection = [clone];
+        var selection = [blade.currentEntity];
         var modulesApiMethod = action === 'uninstall' ? modules.getDependents : modules.getDependencies;
         modulesApiMethod(selection, function (data) {
             blade.isLoading = false;

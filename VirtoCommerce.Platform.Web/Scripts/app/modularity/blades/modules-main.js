@@ -8,6 +8,7 @@
         blade.isLoading = true;
 
         return modules.query().$promise.then(function (results) {
+            moduleHelper.moduleBundles = [];
             moduleHelper.allmodules = results;
             _.each(results, function (x) {
                 if (x.tags) {
@@ -33,10 +34,23 @@
                         }
                     });
                 }
+
+                // prepare bundled (grouped) data source
+                if (_.any(latest.groups)) {
+                    _.each(latest.groups, function (x, index) {
+                        var clone = angular.copy(latest);
+                        clone.$group = x;
+                        moduleHelper.moduleBundles.push(clone);
+                    });
+                } else {
+                    var clone = angular.copy(latest);
+                    clone.$group = 'platform.blades.modules-list.labels.ungrouped';
+                    moduleHelper.moduleBundles.push(clone);
+                }
             });
 
             nodeUpdate.entities = _.filter(newResults, function (x) { return !x.isInstalled && x.$alternativeVersion; });
-            nodeAvailable.entities = newResults;
+            nodeAvailable.entities = moduleHelper.availableModules = newResults;
             nodeInstalled.entities = _.where(results, { isInstalled: true });
 
             openFirstBladeInitially();
@@ -57,7 +71,6 @@
             mode: data.mode,
             currentEntities: data.entities,
             title: data.name,
-            parentRefresh: blade.refresh,
             subtitle: 'platform.blades.modules-list.subtitle',
             controller: 'platformWebApp.modulesListController',
             template: '$(Platform)/Scripts/app/modularity/blades/modules-list.tpl.html'
