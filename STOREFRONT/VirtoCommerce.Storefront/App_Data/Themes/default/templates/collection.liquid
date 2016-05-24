@@ -87,7 +87,8 @@
         window.productList.push({
             id: "{{ product.id }}",
             catalogId: "{{ product.catalog_id }}",
-            categoryId: "{{ product.category_id }}"
+            categoryId: "{{ product.category_id }}",
+			taxType: "{{ product.tax_type }}"
         });
     {% endfor %}
 </script>

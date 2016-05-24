@@ -235,6 +235,9 @@ namespace VirtoCommerce.LiquidThemeEngine.Objects
         [DataMember]
         public bool IsQuotable { get; set; }
 
+        [DataMember]
+        public string TaxType { get; set; }
+
         /// <summary>
         /// Gets or sets the collection of related products
         /// </summary>
