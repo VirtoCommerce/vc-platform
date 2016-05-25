@@ -1,7 +1,11 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.notificationsListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.notifications', function ($scope, bladeNavigationService, notifications) {
+.controller('platformWebApp.notificationsListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.notifications', 'platformWebApp.settings', function ($scope, bladeNavigationService, notifications, settings) {
 	var blade = $scope.blade;
 	blade.selectedType = null;
+
+	if (!blade.languages) {
+		blade.languages = settings.getValues({ id: 'VirtoCommerce.Core.General.Languages' });
+	}
 
 	blade.initialize = function () {
 		blade.isLoading = true;
@@ -21,6 +25,7 @@
 			notificationType: type,
 			objectId: blade.objectId,
 			objectTypeId: blade.objectTypeId,
+			languages: blade.languages,
 			controller: 'platformWebApp.notificationTemplatesListController',
 			template: '$(Platform)/Scripts/app/notifications/blades/notification-templates-list.tpl.html'
 		};
@@ -35,10 +40,9 @@
 			notificationType: type,
 			objectId: blade.objectId,
 			objectTypeId: blade.objectTypeId,
-			language: 'undefined',
 			isNew: true,
 			isFirst: true,
-			usedLanguages: [],
+			languages: blade.languages,
 			controller: 'platformWebApp.editTemplateController',
 			template: '$(Platform)/Scripts/app/notifications/blades/notifications-edit-template.tpl.html'
 		};

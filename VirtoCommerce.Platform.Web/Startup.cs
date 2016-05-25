@@ -199,8 +199,7 @@ namespace VirtoCommerce.Platform.Web
                 NotificationTemplate = new NotificationTemplate
                 {
                     Body = PlatformNotificationResource.RegistrationNotificationBody,
-                    Subject = PlatformNotificationResource.RegistrationNotificationSubject,
-                    Language = "en-US"
+                    Subject = PlatformNotificationResource.RegistrationNotificationSubject
                 }
             });
 
@@ -211,8 +210,7 @@ namespace VirtoCommerce.Platform.Web
                 NotificationTemplate = new NotificationTemplate
                 {
                     Body = PlatformNotificationResource.ResetPasswordNotificationBody,
-                    Subject = PlatformNotificationResource.ResetPasswordNotificationSubject,
-                    Language = "en-US"
+                    Subject = PlatformNotificationResource.ResetPasswordNotificationSubject
                 }
             });
 
