@@ -1,0 +1,33 @@
+function Compress-Module
+{
+    Param(
+        [string] $ProjectName,
+        [string] $OutputDir
+    )
+
+    if ($ProjectName) {
+        $project = Get-Project -Name $ProjectName
+    } else {
+        $project = Get-Project
+    }
+
+    if (-Not $OutputDir) {
+        $OutputDir = Split-Path $project.FullName -Parent
+    }
+
+    $msbuild = "${env:ProgramFiles(x86)}\MSBuild\14.0\Bin\MSBuild.exe"
+    if (-Not (Test-Path $msbuild)) {
+        $msbuild = "${env:ProgramFiles(x86)}\MSBuild\12.0\Bin\MSBuild.exe"
+    }
+    if (-Not (Test-Path $msbuild)) {
+        $msbuild = "${env:windir}\Microsoft.NET\Framework\v4.0.30319\msbuild.exe"
+    }
+
+    $tempDir = Join-Path $env:temp (New-Guid)
+    $modulesDir = "$tempDir\_PublishedWebsites"
+    $packagesDir = $OutputDir
+
+    & $msbuild $project.FullName /nologo /verbosity:m /t:PackModule /p:Configuration=Release "/p:Platform=Any CPU" /p:DebugType=none /p:AllowedReferenceRelatedFileExtensions=: "/p:OutputPath=$tempDir" "/p:VCModulesOutputDir=$modulesDir" "/p:VCModulesZipDir=$packagesDir"
+}
+
+Export-ModuleMember Compress-Module
