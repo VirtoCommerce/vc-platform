@@ -30,7 +30,10 @@ namespace VirtoCommerce.Platform.Web
             {
                 var stopWatch = timer as Stopwatch;
                 stopWatch.Stop();
-                actionExecutedContext.Response.Headers.Add("X-Response-Time", stopWatch.ElapsedMilliseconds.ToString());
+                if (actionExecutedContext.Response != null)
+                {
+                    actionExecutedContext.Response.Headers.Add("X-Response-Time", stopWatch.ElapsedMilliseconds.ToString());
+                }
             }
         }
     }

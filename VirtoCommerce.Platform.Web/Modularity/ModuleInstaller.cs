@@ -183,7 +183,12 @@ namespace VirtoCommerce.Platform.Web.Modularity
                 {
                     Report(progress, ProgressMessageLevel.Info, "Extracting '{0}' ", entry.FullName);
                     var filePath = Path.Combine(dstModuleDir, entry.FullName);
-
+                    //Create directory if not exist
+                    var directoryPath = Path.GetDirectoryName(filePath);
+                    if(!_txFileManager.DirectoryExists(directoryPath))
+                    {
+                        _txFileManager.CreateDirectory(directoryPath);
+                    }
                     using (var entryStream = entry.Open())
                     using (var fileStream = File.Create(filePath))
                     {
