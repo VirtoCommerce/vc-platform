@@ -42,12 +42,19 @@ namespace VirtoCommerce.Platform.Web.Modularity
                     Report(progress, ProgressMessageLevel.Error, string.Format("Platform version {0}  is not compatible with installed {1}", module.PlatformVersion, PlatformVersion.CurrentVersion));
                     isValid = false;
                 }
-                //Check that installed version compatible with already installed
+                //Check that installable version compatible with already installed
                 var alreadyInstalledModule = _moduleCatalog.Modules.OfType<ManifestModuleInfo>().Where(x => x.IsInstalled).FirstOrDefault(x => x.Id.EqualsInvariant(module.Id));
                 if (alreadyInstalledModule != null && !alreadyInstalledModule.Version.IsCompatibleWithBySemVer(module.Version))
                 {
-                    Report(progress, ProgressMessageLevel.Error, string.Format("{0}  is not compatible with installed {1}", module, alreadyInstalledModule));
-                    isValid = false;
+                    //Allow downgrade or install not compatible version only if not exist any modules depending on it
+                    var dependingModules = _moduleCatalog.Modules.OfType<ManifestModuleInfo>()
+                                                           .Where(x => x.IsInstalled)
+                                                           .Where(x => x.DependsOn.Contains(module.Id, StringComparer.OrdinalIgnoreCase));
+                    if (dependingModules.Any())
+                    {
+                        Report(progress, ProgressMessageLevel.Error, string.Format("{0}  is not compatible with installed {1}", module, alreadyInstalledModule));
+                        isValid = false;
+                    }
                 }
                 //Check that dependencies for installable modules 
                 var missedDependencies = _moduleCatalog.CompleteListWithDependencies(new[] { module }).OfType<ManifestModuleInfo>()
