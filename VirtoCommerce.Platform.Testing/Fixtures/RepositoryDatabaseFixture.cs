@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Data.Entity;
 using System.IO;
-using VirtoCommerce.Platform.Tests.Bases;
 
-namespace VirtoCommerce.Platform.Tests.Fixtures
+namespace VirtoCommerce.Platform.Testing.Fixtures
 {
     /*
      * http://xunit.github.io/docs/shared-context.html#class-fixture
@@ -33,7 +32,7 @@ namespace VirtoCommerce.Platform.Tests.Fixtures
             AppDomain.CurrentDomain.SetData("DataDirectory", TempPath);
 
             EnsureDatabaseInitialized(() => (TRepository)Activator.CreateInstance(typeof(TRepository), DatabaseConnectionString), () => Database.SetInitializer(new TInitializer()));
-            this.Db = (TRepository)Activator.CreateInstance(typeof(TRepository), DatabaseConnectionString);
+            Db = (TRepository)Activator.CreateInstance(typeof(TRepository), DatabaseConnectionString);
         }
 
 

@@ -2,23 +2,23 @@
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Migrations;
-using VirtoCommerce.Platform.Tests.Helpers;
+using VirtoCommerce.Platform.Testing.Helpers;
 
-namespace VirtoCommerce.Platform.Tests.Bases
+namespace VirtoCommerce.Platform.Testing.Bases
 {
     public class MigrationsTestBase : TestBase
     {
-        private string _DefaultDatabaseName;
+        private string _defaultDatabaseName;
 
         public string DefaultDatabaseName
         {
             get
             {
-                if(_DefaultDatabaseName == null)
+                if (_defaultDatabaseName == null)
                 {
-                    _DefaultDatabaseName = String.Format("VCM_{0}", Guid.NewGuid().ToString("N"));
+                    _defaultDatabaseName = string.Format("VCM_{0}", Guid.NewGuid().ToString("N"));
                 }
-                return _DefaultDatabaseName;
+                return _defaultDatabaseName;
             }
         }
 

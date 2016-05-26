@@ -1,23 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Data.Common;
-using System.Data.Entity;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Globalization;
 
-namespace VirtoCommerce.Platform.Tests.Helpers
+namespace VirtoCommerce.Platform.Testing.Helpers
 {
     public class SqlTestDatabase : TestDatabase
     {
         private readonly string _name;
-
-        private string ConnectionStringFormat
-            = "Server=(local);Database={0};Trusted_Connection=True";
+        private readonly string _connectionStringFormat = "Server=(local);Database={0};Trusted_Connection=True";
         //= "Data Source=(local);Initial Catalog={0};Integrated Security=True;Pooling=false;";
-
 
         public SqlTestDatabase(string name)
         {
@@ -28,10 +21,10 @@ namespace VirtoCommerce.Platform.Tests.Helpers
 
             if (setting != null)
             {
-                ConnectionStringFormat = setting.ConnectionString;
+                _connectionStringFormat = setting.ConnectionString;
             }
 
-            ConnectionString = string.Format(ConnectionStringFormat, name) + String.Format(file, name);
+            ConnectionString = string.Format(_connectionStringFormat, name) + String.Format(file, name);
             ProviderName = "System.Data.SqlClient";
             //Info = CreateInfoContext(new SqlConnection(ConnectionString));
         }
@@ -40,15 +33,7 @@ namespace VirtoCommerce.Platform.Tests.Helpers
 
         public override InfoContext Info
         {
-            get
-            {
-                if (base.Info == null)
-                {
-                    base.Info = CreateInfoContext(new SqlConnection(ConnectionString));
-                }
-
-                return base.Info;
-            }
+            get { return base.Info ?? (base.Info = CreateInfoContext(new SqlConnection(ConnectionString))); }
         }
 
         #endregion
@@ -131,7 +116,7 @@ namespace VirtoCommerce.Platform.Tests.Helpers
 
         public override bool Exists()
         {
-            return Exists(string.Format(ConnectionStringFormat, "master"), _name);
+            return Exists(string.Format(_connectionStringFormat, "master"), _name);
             /*
             var sql
                 = "SELECT count(name) FROM sys.databases WHERE name = N'" + _name + "'";
@@ -146,8 +131,7 @@ namespace VirtoCommerce.Platform.Tests.Helpers
         {
             using (var connection = new SqlConnection(connectionString))
             {
-                using (var command = new SqlCommand(string.Format(
-                       "SELECT db_id('{0}')", databaseName), connection))
+                using (var command = new SqlCommand(string.Format(CultureInfo.InvariantCulture, "SELECT db_id('{0}')", databaseName), connection))
                 {
                     connection.Open();
                     return (command.ExecuteScalar() != DBNull.Value);

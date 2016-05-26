@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Configuration;
 using System.Data.Entity;
+using System.Globalization;
 using System.IO;
 
-namespace VirtoCommerce.Platform.Tests.Bases
+namespace VirtoCommerce.Platform.Testing.Bases
 {
 
     public abstract class FunctionalTestBase : TestBase, IDisposable
@@ -11,28 +12,14 @@ namespace VirtoCommerce.Platform.Tests.Bases
         private static readonly string ConnectionStringFormat
             = "Server=(local);Database={0};Trusted_Connection=True";
 
-        private string _DefaultDatabaseName;
+        private string _defaultDatabaseName;
 
         public string DefaultDatabaseName
         {
-            get
-            {
-                if (_DefaultDatabaseName == null)
-                {
-                    _DefaultDatabaseName = String.Format("VCT_{0}", Guid.NewGuid().ToString("N"));
-                }
-
-                return _DefaultDatabaseName;
-            }
+            get { return _defaultDatabaseName ?? (_defaultDatabaseName = string.Format(CultureInfo.InvariantCulture, "VCT_{0}", Guid.NewGuid().ToString("N"))); }
         }
 
-        private string _DatabaseConnectionString;
-
-        public string ConnectionString
-        {
-            get { return _DatabaseConnectionString; }
-            set { _DatabaseConnectionString = value; }
-        }
+        public string ConnectionString { get; set; }
 
         public static string TempPath
         {
@@ -46,9 +33,9 @@ namespace VirtoCommerce.Platform.Tests.Bases
         private readonly object _previousDataDirectory;
 
         protected FunctionalTestBase()
-		{
-			_previousDataDirectory = AppDomain.CurrentDomain.GetData("DataDirectory");
-			AppDomain.CurrentDomain.SetData("DataDirectory", TempPath);
+        {
+            _previousDataDirectory = AppDomain.CurrentDomain.GetData("DataDirectory");
+            AppDomain.CurrentDomain.SetData("DataDirectory", TempPath);
 
             var setting = ConfigurationManager.ConnectionStrings["VirtoCommerce_MigrationTestsBase"];
 
@@ -59,7 +46,7 @@ namespace VirtoCommerce.Platform.Tests.Bases
             }
 
             var file = @";AttachDBFilename=|DataDirectory|\{0}.mdf";
-            ConnectionString = string.Format(connectionStringFormat, DefaultDatabaseName) + String.Format(file, DefaultDatabaseName);
+            ConnectionString = string.Format(connectionStringFormat, DefaultDatabaseName) + string.Format(file, DefaultDatabaseName);
         }
 
         /*

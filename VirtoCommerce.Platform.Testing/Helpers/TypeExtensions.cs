@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace VirtoCommerce.Platform.Tests.Helpers
+namespace VirtoCommerce.Platform.Testing.Helpers
 {
     internal static class TypeExtensions
     {
