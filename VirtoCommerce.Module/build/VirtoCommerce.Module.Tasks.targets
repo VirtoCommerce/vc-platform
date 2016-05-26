@@ -419,6 +419,7 @@ Copyright (C) Microsoft Corporation. All rights reserved.
             <Link Include="$(WebProjectOutputDir)\bin\**\*.*"
                   Exclude="
                   $(WebProjectOutputDir)\bin\CacheManager.Core.dll;
+                  $(WebProjectOutputDir)\bin\Common.Logging.dll;
                   $(WebProjectOutputDir)\bin\Common.Logging.Core.dll;
                   $(WebProjectOutputDir)\bin\EntityFramework.dll;
                   $(WebProjectOutputDir)\bin\EntityFramework.SqlServer.dll;
