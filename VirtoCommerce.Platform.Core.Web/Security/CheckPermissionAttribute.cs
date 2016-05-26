@@ -9,20 +9,9 @@ namespace VirtoCommerce.Platform.Core.Web.Security
 {
     public class CheckPermissionAttribute : AuthorizeAttribute
     {
-        #region Static Fields
-
         private static readonly string[] _emptyArray = new string[0];
-
-        #endregion
-
-        #region Fields
-
         private string _permission;
         private string[] _permissions = _emptyArray;
-
-        #endregion
-
-        #region Public Properties
 
         public string Permission
         {
@@ -43,10 +32,6 @@ namespace VirtoCommerce.Platform.Core.Web.Security
                 _permission = string.Join(",", value ?? _emptyArray);
             }
         }
-
-        #endregion
-
-        #region Methods
 
         /// <summary>
         ///     Indicates whether the specified control is authorized.
@@ -85,7 +70,5 @@ namespace VirtoCommerce.Platform.Core.Web.Security
 
             return isAuthorized;
         }
-
-        #endregion
     }
 }
