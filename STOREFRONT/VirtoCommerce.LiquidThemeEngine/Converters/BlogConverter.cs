@@ -18,7 +18,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             var retVal = new Blog();
 
             retVal.InjectFrom<NullableAndEnumValueInjecter>(blog);
-            retVal.Handle = blog.Url;
+            retVal.Handle = blog.Name;
             if (blog.Articles != null)
             {
                 retVal.Articles = new MutablePagedList<Article>((pageNumber, pageSize) =>
