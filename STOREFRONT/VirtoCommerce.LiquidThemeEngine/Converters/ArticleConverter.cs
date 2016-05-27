@@ -17,6 +17,7 @@ namespace VirtoCommerce.LiquidThemeEngine.Converters
             var retVal = new Article();
 
             retVal.InjectFrom<NullableAndEnumValueInjecter>(article);
+            retVal.Handle = article.Url;
             retVal.CreatedAt = article.CreatedDate;
             retVal.PublishedAt = article.PublishedDate ?? article.CreatedDate;
 
