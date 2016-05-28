@@ -57,9 +57,16 @@ namespace VirtoCommerce.Storefront.Services
         /// <returns>Returns relative path for all found blobs  example: /folder/blob.md </returns>
         public virtual IEnumerable<string> Search(string path, string searchPattern, bool recursive)
         {
+            var retVal = new List<string>();
             path = NormalizePath(path);
-            return Directory.GetFiles(path, searchPattern, recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly)
-                            .Select(x=> GetRelativePath(x));
+            searchPattern = searchPattern.TrimStart(Path.PathSeparator);
+            if (Directory.Exists(Path.GetDirectoryName(Path.Combine(path, searchPattern))))
+            {
+                var files = Directory.GetFiles(path, searchPattern, recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly)
+                                     .Select(x => GetRelativePath(x));
+                retVal.AddRange(files);
+            }
+            return retVal;
         }
         #endregion
 
