@@ -326,7 +326,7 @@ namespace VirtoCommerce.SearchModule.Data.Services
 
         private List<OperationLog> GetProductChanges(DateTime startDate, DateTime endDate)
         {
-            var allProductChanges = _changeLogService.FindChangeHistory("Product", startDate, endDate).ToList();
+            var allProductChanges = _changeLogService.FindChangeHistory("Item", startDate, endDate).ToList();
             var allPriceChanges = _changeLogService.FindChangeHistory("Price", startDate, endDate).ToList();
 
             var priceIds = allPriceChanges.Select(c => c.ObjectId).ToList();

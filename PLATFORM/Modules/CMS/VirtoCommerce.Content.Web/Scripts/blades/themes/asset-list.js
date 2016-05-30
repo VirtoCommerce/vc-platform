@@ -123,7 +123,6 @@
                     contentType: blade.contentType,
                     storeId: blade.storeId,
                     themeId: blade.themeId,
-                    folderUrl: blade.currentEntity.url,
                     currentEntity: listItem,
                     isNew: isNew,
                     controller: 'virtoCommerce.contentModule.assetDetailController',
@@ -132,11 +131,13 @@
 
                 if (isNew) {
                     angular.extend(newBlade, {
+                        folderUrl: blade.currentEntity.url,
                         title: 'content.blades.edit-asset.title-new',
                         subtitle: 'content.blades.edit-asset.subtitle-new'
                     });
                 } else {
                     angular.extend(newBlade, {
+                        folderUrl: listItem.url.substring(0, listItem.url.length - listItem.name.length - 1),
                         title: listItem.name,
                         subtitle: 'content.blades.edit-asset.subtitle'
                     });
