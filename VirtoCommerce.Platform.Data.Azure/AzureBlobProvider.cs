@@ -34,15 +34,23 @@ namespace VirtoCommerce.Platform.Data.Azure
                 throw new ArgumentNullException("url");
 
             var uri = url.IsAbsoluteUrl() ? new Uri(url) : new Uri(_cloudBlobClient.BaseUri, url.TrimStart('/'));
-            var cloudBlob = _cloudBlobClient.GetBlobReferenceFromServer(uri);
-            var retVal = new BlobInfo
+            BlobInfo retVal = null;
+            try
             {
-                Url = Uri.EscapeUriString(cloudBlob.Uri.ToString()),
-                FileName = Path.GetFileName(Uri.UnescapeDataString(cloudBlob.Uri.ToString())),
-                ContentType = cloudBlob.Properties.ContentType,
-                Size = cloudBlob.Properties.Length,
-                ModifiedDate = cloudBlob.Properties.LastModified != null ? cloudBlob.Properties.LastModified.Value.DateTime : (DateTime?)null
-            };
+                var cloudBlob = _cloudBlobClient.GetBlobReferenceFromServer(uri);
+                retVal = new BlobInfo
+                {
+                    Url = Uri.EscapeUriString(cloudBlob.Uri.ToString()),
+                    FileName = Path.GetFileName(Uri.UnescapeDataString(cloudBlob.Uri.ToString())),
+                    ContentType = cloudBlob.Properties.ContentType,
+                    Size = cloudBlob.Properties.Length,
+                    ModifiedDate = cloudBlob.Properties.LastModified != null ? cloudBlob.Properties.LastModified.Value.DateTime : (DateTime?)null
+                };
+            }
+            catch(Exception)
+            {
+                //Azure blob storage client does not provide method to check blob url exist without throwing exception
+            }
             return retVal;
         }
 
