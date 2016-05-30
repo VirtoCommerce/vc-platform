@@ -40,7 +40,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
 
             if (!File.Exists(assemblyUri.LocalPath))
             {
-                throw new FileNotFoundException();
+                throw new FileNotFoundException(assemblyUri.LocalPath);
             }
 
             AssemblyName assemblyName = AssemblyName.GetAssemblyName(assemblyUri.LocalPath);
