@@ -65,6 +65,7 @@ namespace VirtoCommerce.Storefront.Model.Catalog
             Keyword = queryString.Get("q");
             //TODO move this code to Parse or Converter method
             // tags=name1:value1,value2,value3;name2:value1,value2,value3
+            SearchInChildren = Convert.ToBoolean(queryString.Get("deep_search") ?? SearchInChildren.ToString());
             SortBy = queryString.Get("sort_by");
             Terms = (queryString.GetValues("terms") ?? new string[0])
                 .SelectMany(s => s.Split(';'))
