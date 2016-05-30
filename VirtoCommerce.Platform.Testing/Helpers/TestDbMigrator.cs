@@ -2,12 +2,10 @@
 using System.Data.Entity.Migrations;
 using VirtoCommerce.Platform.Data.Infrastructure;
 
-namespace VirtoCommerce.Platform.Tests.Helpers
+namespace VirtoCommerce.Platform.Testing.Helpers
 {
     public class TestDbMigrator : System.Data.Entity.Migrations.DbMigrator
     {
-        private readonly DbContextInfo _usersContextInfo;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="System.Data.Entity.Migrations.DbMigrator"/> class.
         /// </summary>
@@ -15,17 +13,17 @@ namespace VirtoCommerce.Platform.Tests.Helpers
         public TestDbMigrator(DbMigrationsConfiguration configuration)
             : base(configuration)
         {
-            _usersContextInfo = configuration.TargetDatabase == null ?
+            var usersContextInfo = configuration.TargetDatabase == null ?
                 new DbContextInfo(configuration.ContextType) :
                 new DbContextInfo(configuration.ContextType, configuration.TargetDatabase);
-            if (_usersContextInfo.IsConstructible)
+
+            if (usersContextInfo.IsConstructible)
             {
-                using (var context = _usersContextInfo.CreateInstance())
+                using (var context = usersContextInfo.CreateInstance())
                 {
                     DbMigrationContext.Current.DatabaseName = context.Database.Connection.Database;
                 }
             }
-
         }
     }
 }

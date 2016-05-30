@@ -84,17 +84,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Bases\FunctionalTestBase.cs" />
-    <Compile Include="Bases\MigrationsTestBase.cs" />
-    <Compile Include="Bases\TestBase.cs" />
     <Compile Include="DynamicPropertyTests.cs" />
-    <Compile Include="Fixtures\RepositoryDatabaseFixture.cs" />
-    <Compile Include="Helpers\EmptyContext.cs" />
-    <Compile Include="Helpers\InfoContext.cs" />
-    <Compile Include="Helpers\SqlTestDatabase.cs" />
-    <Compile Include="Helpers\TestDatabase.cs" />
-    <Compile Include="Helpers\TestDbMigrator.cs" />
-    <Compile Include="Helpers\TypeExtensions.cs" />
     <Compile Include="NotificationScenarios.cs" />
     <Compile Include="ZipPackageServiceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -107,6 +97,10 @@
     <ProjectReference Include="..\VirtoCommerce.Platform.Data\VirtoCommerce.Platform.Data.csproj">
       <Project>{39afd233-b2f7-4178-817d-0a339c57525d}</Project>
       <Name>VirtoCommerce.Platform.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VirtoCommerce.Platform.Testing\VirtoCommerce.Platform.Testing.csproj">
+      <Project>{a98db6c2-bd2e-46d8-a0cb-df7f942f2ce3}</Project>
+      <Name>VirtoCommerce.Platform.Testing</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

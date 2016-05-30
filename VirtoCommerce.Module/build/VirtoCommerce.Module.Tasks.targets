@@ -419,6 +419,7 @@ Copyright (C) Microsoft Corporation. All rights reserved.
             <Link Include="$(WebProjectOutputDir)\bin\**\*.*"
                   Exclude="
                   $(WebProjectOutputDir)\bin\CacheManager.Core.dll;
+                  $(WebProjectOutputDir)\bin\Common.Logging.dll;
                   $(WebProjectOutputDir)\bin\Common.Logging.Core.dll;
                   $(WebProjectOutputDir)\bin\EntityFramework.dll;
                   $(WebProjectOutputDir)\bin\EntityFramework.SqlServer.dll;
@@ -426,6 +427,12 @@ Copyright (C) Microsoft Corporation. All rights reserved.
                   $(WebProjectOutputDir)\bin\Microsoft.AspNet.Identity.Core.dll;
                   $(WebProjectOutputDir)\bin\Microsoft.AspNet.Identity.EntityFramework.dll;
                   $(WebProjectOutputDir)\bin\Microsoft.AspNet.Identity.Owin.dll;
+                  $(WebProjectOutputDir)\bin\Microsoft.Data.Edm.dll;
+                  $(WebProjectOutputDir)\bin\**\Microsoft.Data.Edm.resources.dll;
+                  $(WebProjectOutputDir)\bin\Microsoft.Data.OData.dll;
+                  $(WebProjectOutputDir)\bin\**\Microsoft.Data.OData.resources.dll;
+                  $(WebProjectOutputDir)\bin\Microsoft.Data.Services.Client.dll;
+                  $(WebProjectOutputDir)\bin\**\Microsoft.Data.Services.Client.resources.dll;
                   $(WebProjectOutputDir)\bin\Microsoft.Owin.dll;
                   $(WebProjectOutputDir)\bin\Microsoft.Owin.Security.dll;
                   $(WebProjectOutputDir)\bin\Microsoft.Owin.Security.Cookies.dll;
@@ -434,10 +441,14 @@ Copyright (C) Microsoft Corporation. All rights reserved.
                   $(WebProjectOutputDir)\bin\Microsoft.Practices.Unity.dll;
                   $(WebProjectOutputDir)\bin\Microsoft.Practices.Unity.Configuration.dll;
                   $(WebProjectOutputDir)\bin\Microsoft.Practices.Unity.RegistrationByConvention.dll;
+                  $(WebProjectOutputDir)\bin\Microsoft.WindowsAzure.Configuration.dll;
+                  $(WebProjectOutputDir)\bin\Microsoft.WindowsAzure.Storage.dll;
                   $(WebProjectOutputDir)\bin\Newtonsoft.Json.dll;
                   $(WebProjectOutputDir)\bin\Omu.ValueInjecter.dll;
                   $(WebProjectOutputDir)\bin\Owin.dll;
                   $(WebProjectOutputDir)\bin\System.Net.Http.Formatting.dll;
+                  $(WebProjectOutputDir)\bin\System.Spatial.dll;
+                  $(WebProjectOutputDir)\bin\**\System.Spatial.resources.dll;
                   $(WebProjectOutputDir)\bin\System.Web.Http.dll;
 
                   $(WebProjectOutputDir)\bin\VirtoCommerce.Platform.Core.dll;
@@ -447,14 +458,6 @@ Copyright (C) Microsoft Corporation. All rights reserved.
                   $(WebProjectOutputDir)\bin\VirtoCommerce.Platform.Data.Notifications.dll;
                   $(WebProjectOutputDir)\bin\VirtoCommerce.Platform.Data.Security.dll;
                   $(WebProjectOutputDir)\bin\VirtoCommerce.Platform.Data.Serialization.dll;
-                  
-                  $(WebProjectOutputDir)\bin\VirtoCommerce.Domain.dll;
-                  $(WebProjectOutputDir)\bin\VirtoCommerce.CoreModule.Data.dll;
-                  " />
-            <Link Condition="'$(VCModuleId)' == 'VirtoCommerce.Core'"
-                  Include="
-                  $(WebProjectOutputDir)\bin\VirtoCommerce.Domain.dll;
-                  $(WebProjectOutputDir)\bin\VirtoCommerce.CoreModule.Data.dll;
                   " />
         </ItemGroup>
 
