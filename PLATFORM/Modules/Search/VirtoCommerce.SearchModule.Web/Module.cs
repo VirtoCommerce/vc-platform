@@ -1,9 +1,9 @@
-﻿using System;
-using Microsoft.Practices.Unity;
-using Owin;
+﻿using Microsoft.Practices.Unity;
 using VirtoCommerce.Domain.Search;
 using VirtoCommerce.Domain.Search.Model;
 using VirtoCommerce.Domain.Search.Services;
+using VirtoCommerce.Domain.Store.Model;
+using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Data.Common;
 using VirtoCommerce.SearchModule.Data.Model;
@@ -19,12 +19,10 @@ namespace VirtoCommerce.SearchModule.Web
     public class Module : ModuleBase
     {
         private readonly IUnityContainer _container;
-        private readonly IAppBuilder _appBuilder;
 
-        public Module(IUnityContainer container, IAppBuilder appBuilder)
+        public Module(IUnityContainer container)
         {
             _container = container;
-            _appBuilder = appBuilder;
         }
 
         #region IModule Members
@@ -60,7 +58,18 @@ namespace VirtoCommerce.SearchModule.Web
             searchProviderManager.RegisterSearchProvider(SearchProviders.Lucene.ToString(), connection => new LuceneSearchProvider(new LuceneSearchQueryBuilder(), connection));
             searchProviderManager.RegisterSearchProvider(SearchProviders.AzureSearch.ToString(), connection => new AzureSearchProvider(new AzureSearchQueryBuilder(), connection));
 
-         
+            // Register dynamic property for storing browsing filters
+            var filteredBrowsingProperty = new DynamicProperty
+            {
+                Id = "FilteredBrowsing",
+                Name = "FilteredBrowsing",
+                ObjectType = typeof(Store).FullName,
+                ValueType = DynamicPropertyValueType.LongText,
+                CreatedBy = "Auto"
+            };
+
+            var dynamicPropertyService = _container.Resolve<IDynamicPropertyService>();
+            dynamicPropertyService.SaveProperties(new[] { filteredBrowsingProperty });
         }
 
         #endregion
