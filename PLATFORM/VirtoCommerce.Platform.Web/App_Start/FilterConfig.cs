@@ -29,8 +29,14 @@ namespace VirtoCommerce.Platform.Web
             if (actionExecutedContext != null && actionExecutedContext.Request != null && actionExecutedContext.Request.Properties.TryGetValue("X-Response-Time", out timer))
             {
                 var stopWatch = timer as Stopwatch;
-                stopWatch.Stop();
-                actionExecutedContext.Response.Headers.Add("X-Response-Time", stopWatch.ElapsedMilliseconds.ToString());
+                if (stopWatch != null)
+                {
+                    stopWatch.Stop();
+                    if (actionExecutedContext.Response != null)
+                    {
+                        actionExecutedContext.Response.Headers.Add("X-Response-Time", stopWatch.ElapsedMilliseconds.ToString());
+                    }
+                }
             }
         }
     }
