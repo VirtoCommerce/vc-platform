@@ -215,7 +215,7 @@ angular.module(catalogsModuleName, [
 	    widgetService.registerWidget(catalogLanguagesWidget, 'catalogDetail');
 
 	    var catalogPropertyWidget = {
-	        isVisible: function (blade) { return !blade.isNew && blade.controller !== 'virtoCommerce.catalogModule.virtualCatalogDetailController'; },
+	    	isVisible: function (blade) { return !blade.isNew; },
 	        controller: 'virtoCommerce.catalogModule.catalogPropertyWidgetController',
 	        template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/widgets/catalogPropertyWidget.tpl.html'
 	    };
