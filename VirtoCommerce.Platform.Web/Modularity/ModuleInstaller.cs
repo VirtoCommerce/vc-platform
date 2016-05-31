@@ -37,7 +37,7 @@ namespace VirtoCommerce.Platform.Web.Modularity
             foreach (var module in modules.Where(x => !x.IsInstalled))
             {
                 //Check platform version
-                if (PlatformVersion.CurrentVersion.IsCompatibleWith(module.PlatformVersion))
+                if (!PlatformVersion.CurrentVersion.IsCompatibleWith(module.PlatformVersion))
                 {
                     Report(progress, ProgressMessageLevel.Error, string.Format("Platform version {0}  is not compatible with installed {1}", module.PlatformVersion, PlatformVersion.CurrentVersion));
                     isValid = false;
