@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using VirtoCommerce.Platform.Core.Modularity.Exceptions;
 using VirtoCommerce.Platform.Core.Properties;
 
 namespace VirtoCommerce.Platform.Core.Modularity
@@ -104,6 +104,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
                         {
                             var relativePath = MakeRelativePath(sourceDirectoryUri, sourceFilePath);
                             var targetFilePath = Path.Combine(targetDirectoryPath, relativePath);
+
                             CopyFile(sourceFilePath, targetFilePath);
                         }
                     }
@@ -115,8 +116,13 @@ namespace VirtoCommerce.Platform.Core.Modularity
         {
             var sourceFileInfo = new FileInfo(sourceFilePath);
             var targetFileInfo = new FileInfo(targetFilePath);
-
-            if (!targetFileInfo.Exists || targetFileInfo.LastWriteTimeUtc < sourceFileInfo.LastWriteTimeUtc)
+            var sourceVersion = Version.Parse(FileVersionInfo.GetVersionInfo(sourceFilePath).FileVersion);
+            Version targetVersion = sourceVersion;
+            if (targetFileInfo.Exists)
+            {
+                targetVersion = Version.Parse(FileVersionInfo.GetVersionInfo(targetFilePath).FileVersion);
+            }
+            if (!targetFileInfo.Exists || sourceVersion > targetVersion || (sourceVersion == targetVersion && targetFileInfo.LastWriteTimeUtc < sourceFileInfo.LastWriteTimeUtc))
             {
                 var targetDirectoryPath = Path.GetDirectoryName(targetFilePath);
                 Directory.CreateDirectory(targetDirectoryPath);

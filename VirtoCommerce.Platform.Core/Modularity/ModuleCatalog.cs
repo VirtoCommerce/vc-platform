@@ -113,9 +113,9 @@ namespace VirtoCommerce.Platform.Core.Modularity
         /// Loads the catalog if necessary.
         /// </summary>
         public void Load()
-        {
-            this.isLoaded = true;
+        {        
             this.InnerLoad();
+            this.isLoaded = true;
         }
 
         /// <summary>

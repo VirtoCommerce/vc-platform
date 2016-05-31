@@ -121,8 +121,8 @@ namespace VirtoCommerce.Platform.Web.Modularity
                 }
             }
             catch (Exception ex)
-            {
-                _logger.Error(ex.ToString());
+            {                
+                _logger.Error(ex.ToString());                
                 throw (ex);
             }
             return retVal;
