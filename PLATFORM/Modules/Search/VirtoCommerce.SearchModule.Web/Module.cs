@@ -61,7 +61,7 @@ namespace VirtoCommerce.SearchModule.Web
             // Register dynamic property for storing browsing filters
             var filteredBrowsingProperty = new DynamicProperty
             {
-                Id = "FilteredBrowsing",
+                Id = "2b15f370ab524186bec1ace82509a60a",
                 Name = "FilteredBrowsing",
                 ObjectType = typeof(Store).FullName,
                 ValueType = DynamicPropertyValueType.LongText,
