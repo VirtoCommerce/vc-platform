@@ -1,14 +1,13 @@
-﻿using Microsoft.Practices.Unity;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
-using Unity.WebApi;
-using VirtoCommerce.Platform.Core;
-using VirtoCommerce.Platform.Core.Modularity;
 using Common.Logging;
+using Microsoft.Practices.Unity;
+using Unity.WebApi;
+using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Web.Modularity;
 
 namespace VirtoCommerce.Platform.Web
@@ -18,20 +17,18 @@ namespace VirtoCommerce.Platform.Web
         private readonly string _modulesVirtualPath;
         private readonly string _modulesPhysicalPath;
         private readonly string _assembliesPath;
-        private readonly string _platformPath;
-        private static ILog _logger = LogManager.GetLogger("platform");
-        public VirtoCommercePlatformWebBootstrapper(string modulesVirtualPath, string modulesPhysicalPath, 
-            string assembliesPath, string platformPath)
+        private static readonly ILog _logger = LogManager.GetLogger("platform");
+
+        public VirtoCommercePlatformWebBootstrapper(string modulesVirtualPath, string modulesPhysicalPath, string assembliesPath)
         {
             _modulesVirtualPath = modulesVirtualPath;
             _modulesPhysicalPath = modulesPhysicalPath;
             _assembliesPath = assembliesPath;
-            _platformPath = platformPath;
         }
 
         protected override IModuleCatalog CreateModuleCatalog()
         {
-            return new ManifestModuleCatalog(_modulesPhysicalPath, _modulesVirtualPath, _assembliesPath, _platformPath);
+            return new ManifestModuleCatalog(_modulesPhysicalPath, _modulesVirtualPath, _assembliesPath);
         }
 
         /// <summary>
