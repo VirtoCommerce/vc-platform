@@ -1,17 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Serialization;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Core.Modularity
 {
     public class ManifestModuleInfo : ModuleInfo
-    {      
+    {
         public ManifestModuleInfo(ModuleManifest manifest)
             : base(manifest.Id, manifest.ModuleType, (manifest.Dependencies ?? new ManifestDependency[0]).Select(d => d.Id).ToArray())
         {
             Id = manifest.Id;
-            Version = new SemanticVersion(new System.Version(manifest.Version)); 
+            Version = new SemanticVersion(new System.Version(manifest.Version));
             PlatformVersion = new SemanticVersion(new System.Version(manifest.PlatformVersion));
             Title = manifest.Title;
             Description = manifest.Description;
@@ -24,17 +23,18 @@ namespace VirtoCommerce.Platform.Core.Modularity
             ReleaseNotes = manifest.ReleaseNotes;
             Copyright = manifest.Copyright;
             Tags = manifest.Tags;
-          
+            UseFullTypeNameInSwagger = manifest.UseFullTypeNameInSwagger;
+
             Ref = manifest.PackageUrl;
             Identity = new ModuleIdentity(Id, Version);
 
             Errors = new List<string>();
 
-            
+
             Dependencies = new List<ModuleIdentity>();
             if (manifest.Dependencies != null)
             {
-                Dependencies.AddRange(manifest.Dependencies.Select(x=> new ModuleIdentity(x.Id, x.Version)));
+                Dependencies.AddRange(manifest.Dependencies.Select(x => new ModuleIdentity(x.Id, x.Version)));
             }
             Styles = new List<ManifestBundleItem>();
             if (manifest.Styles != null)
@@ -47,7 +47,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
                 Scripts.AddRange(manifest.Scripts);
             }
             Permissions = new List<ModulePermissionGroup>();
-            if(manifest.Permissions != null)
+            if (manifest.Permissions != null)
             {
                 Permissions.AddRange(manifest.Permissions);
             }
@@ -57,11 +57,11 @@ namespace VirtoCommerce.Platform.Core.Modularity
                 Settings.AddRange(manifest.Settings);
             }
             Groups = new List<string>();
-            if(manifest.Groups != null)
+            if (manifest.Groups != null)
             {
                 Groups.AddRange(manifest.Groups);
             }
-            InitializationMode = InitializationMode.OnDemand;         
+            InitializationMode = InitializationMode.OnDemand;
         }
 
         public ModuleIdentity Identity { get; private set; }
@@ -90,6 +90,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
         public ICollection<ModulePermissionGroup> Permissions { get; private set; }
         public ICollection<ModuleSettingsGroup> Settings { get; private set; }
         public ICollection<string> Errors { get; set; }
+        public bool UseFullTypeNameInSwagger { get; set; }
 
         public override string ToString()
         {
@@ -106,7 +107,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
 
             // If parameter cannot be cast to ModuleIdentity return false.
             ManifestModuleInfo other = obj as ManifestModuleInfo;
-            if ((System.Object)other == null)
+            if (other == null)
             {
                 return false;
             }
@@ -116,9 +117,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
 
         public override int GetHashCode()
         {
-            return this.ToString().GetHashCode();
+            return ToString().GetHashCode();
         }
-
-
     }
 }

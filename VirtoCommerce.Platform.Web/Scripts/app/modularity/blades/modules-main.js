@@ -105,7 +105,7 @@
         { name: 'platform.blades.modules-main.labels.advanced', mode: 'advanced' }
     ];
 
-    var openFirstBladeInitially = _.once(function () { blade.openBlade(blade.currentEntities[0]); });
+    var openFirstBladeInitially = _.once(function () { blade.openBlade(blade.currentEntities[2]); });
 
     blade.refresh();
 }]);
