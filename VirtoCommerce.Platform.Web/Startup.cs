@@ -79,14 +79,14 @@ namespace VirtoCommerce.Platform.Web
             VirtualRoot = virtualRoot;
 
             _assembliesPath = HostingEnvironment.MapPath(VirtualRoot + "/App_Data/Modules");
-            var platformPath = HostingEnvironment.MapPath(VirtualRoot).EnsureEndSeparator();
+            HostingEnvironment.MapPath(VirtualRoot).EnsureEndSeparator();
             var modulesVirtualPath = VirtualRoot + "/Modules";
             var modulesPhysicalPath = HostingEnvironment.MapPath(modulesVirtualPath).EnsureEndSeparator();
 
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
 
             //Modules initialization
-            var bootstrapper = new VirtoCommercePlatformWebBootstrapper(modulesVirtualPath, modulesPhysicalPath, _assembliesPath, platformPath);
+            var bootstrapper = new VirtoCommercePlatformWebBootstrapper(modulesVirtualPath, modulesPhysicalPath, _assembliesPath);
             bootstrapper.Run();
 
             var container = bootstrapper.Container;
@@ -153,7 +153,7 @@ namespace VirtoCommerce.Platform.Web
             // Ensure all modules are loaded
             foreach (var module in moduleCatalog.Modules.OfType<ManifestModuleInfo>().Where(x => x.State == ModuleState.NotStarted))
             {
-                moduleManager.LoadModule(module.ModuleName);            
+                moduleManager.LoadModule(module.ModuleName);
             }
 
             SwaggerConfig.RegisterRoutes(container);
@@ -456,7 +456,7 @@ namespace VirtoCommerce.Platform.Web
             #endregion
 
             #region Modularity
-            
+
             var externalModuleCatalog = new ExternalManifestModuleCatalog(moduleCatalog.Modules, ConfigurationManager.AppSettings.GetValues("VirtoCommerce:ModulesDataSources"), container.Resolve<ILog>());
             container.RegisterType<ModulesController>(new InjectionConstructor(externalModuleCatalog, new ModuleInstaller(modulesPath, externalModuleCatalog), notifier, container.Resolve<IUserNameResolver>(), settingsManager));
 

@@ -12,10 +12,9 @@ namespace VirtoCommerce.Platform.Core.Modularity
         private readonly string _modulesLocalPath;
         private readonly string _contentVirtualPath;
         private readonly string _assembliesPath;
-        private readonly string _platformPath;
-        private static readonly string[] _assemblyFileExtensions = { ".dll", ".pdb", ".exe", ".xml" };           
+        private static readonly string[] _assemblyFileExtensions = { ".dll", ".pdb", ".exe", ".xml" };
 
-        public ManifestModuleCatalog(string modulesLocalPath, string contentVirtualPath, string assembliesPath, string platformPath)
+        public ManifestModuleCatalog(string modulesLocalPath, string contentVirtualPath, string assembliesPath)
         {
             _modulesLocalPath = modulesLocalPath;
             if (contentVirtualPath != null)
@@ -23,7 +22,6 @@ namespace VirtoCommerce.Platform.Core.Modularity
                 _contentVirtualPath = contentVirtualPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
             }
             _assembliesPath = assembliesPath;
-            _platformPath = platformPath;
         }
 
         protected override void InnerLoad()
@@ -59,8 +57,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
                 ConvertVirtualPath(manifest.Scripts, moduleVirtualPath);
                 ConvertVirtualPath(manifest.Styles, moduleVirtualPath);
 
-                var moduleInfo = new ManifestModuleInfo(manifest);
-                moduleInfo.FullPhysicalPath = Path.GetDirectoryName(manifestPath);
+                var moduleInfo = new ManifestModuleInfo(manifest) { FullPhysicalPath = Path.GetDirectoryName(manifestPath) };
 
                 // Modules without assembly file don't need initialization
                 if (string.IsNullOrEmpty(manifest.AssemblyFile))
@@ -71,7 +68,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
                 moduleInfo.IsInstalled = true;
                 AddModule(moduleInfo);
             }
-        }      
+        }
 
         private IDictionary<string, ModuleManifest> GetModuleManifests()
         {
@@ -79,11 +76,11 @@ namespace VirtoCommerce.Platform.Core.Modularity
 
             if (Directory.Exists(_modulesLocalPath))
             {
-                foreach(var manifestFile in Directory.EnumerateFiles(_modulesLocalPath, "module.manifest", SearchOption.AllDirectories))
+                foreach (var manifestFile in Directory.EnumerateFiles(_modulesLocalPath, "module.manifest", SearchOption.AllDirectories))
                 {
                     var manifest = ManifestReader.Read(manifestFile);
                     result.Add(manifestFile, manifest);
-                }              
+                }
             }
             return result;
         }
@@ -116,12 +113,17 @@ namespace VirtoCommerce.Platform.Core.Modularity
         {
             var sourceFileInfo = new FileInfo(sourceFilePath);
             var targetFileInfo = new FileInfo(targetFilePath);
-            var sourceVersion = Version.Parse(FileVersionInfo.GetVersionInfo(sourceFilePath).FileVersion);
-            Version targetVersion = sourceVersion;
+
+            var sourceFileVersionInfo = FileVersionInfo.GetVersionInfo(sourceFilePath);
+            var sourceVersion = new Version(sourceFileVersionInfo.FileMajorPart, sourceFileVersionInfo.FileMinorPart, sourceFileVersionInfo.FileBuildPart, sourceFileVersionInfo.FilePrivatePart);
+            var targetVersion = sourceVersion;
+
             if (targetFileInfo.Exists)
             {
-                targetVersion = Version.Parse(FileVersionInfo.GetVersionInfo(targetFilePath).FileVersion);
+                var targetFileVersionInfo = FileVersionInfo.GetVersionInfo(targetFilePath);
+                targetVersion = new Version(targetFileVersionInfo.FileMajorPart, targetFileVersionInfo.FileMinorPart, targetFileVersionInfo.FileBuildPart, targetFileVersionInfo.FilePrivatePart);
             }
+
             if (!targetFileInfo.Exists || sourceVersion > targetVersion || (sourceVersion == targetVersion && targetFileInfo.LastWriteTimeUtc < sourceFileInfo.LastWriteTimeUtc))
             {
                 var targetDirectoryPath = Path.GetDirectoryName(targetFilePath);
