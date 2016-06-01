@@ -141,7 +141,6 @@
     <Compile Include="Modularity\ManifestBundleDirectory.cs" />
     <Compile Include="Modularity\ManifestBundleFile.cs" />
     <Compile Include="Modularity\ManifestBundleItem.cs" />
-    <Compile Include="Modularity\ManifestModuleCatalog.cs" />
     <Compile Include="Modularity\ManifestModuleInfo.cs" />
     <Compile Include="Modularity\ManifestReader.cs" />
     <Compile Include="Modularity\ModuleAttribute.cs" />

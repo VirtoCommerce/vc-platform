@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Properties;
 
-namespace VirtoCommerce.Platform.Core.Modularity
+namespace VirtoCommerce.Platform.Web.Modularity
 {
     public class ManifestModuleCatalog : ModuleCatalog
     {
@@ -29,11 +30,11 @@ namespace VirtoCommerce.Platform.Core.Modularity
             var contentPhysicalPath = _modulesLocalPath;
 
             if (string.IsNullOrEmpty(_assembliesPath))
-                throw new InvalidOperationException(Resources.AssembliesPathCannotBeNullOrEmpty);
+                throw new InvalidOperationException("The AssembliesPath cannot contain a null value or be empty");
             if (string.IsNullOrEmpty(_contentVirtualPath))
-                throw new InvalidOperationException(Resources.ContentPathCannotBeNullOrEmpty);
+                throw new InvalidOperationException("The ContentVirtualPath cannot contain a null value or be empty");
             if (string.IsNullOrEmpty(contentPhysicalPath))
-                throw new InvalidOperationException(Resources.ContentPathCannotBeNullOrEmpty);
+                throw new InvalidOperationException("The ContentPhysicalPath cannot contain a null value or be empty");
 
             if (!Directory.Exists(_assembliesPath))
                 Directory.CreateDirectory(_assembliesPath);

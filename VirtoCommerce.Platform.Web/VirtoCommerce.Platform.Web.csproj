@@ -334,6 +334,7 @@
     <Content Include="Scripts\common\directives\fallbackSrc.js" />
     <Compile Include="Modularity\Bootstrapper.cs" />
     <Compile Include="Modularity\ExternalManifestModuleCatalog.cs" />
+    <Compile Include="Modularity\ManifestModuleCatalog.cs" />
     <Compile Include="Modularity\ModuleInitializer.cs" />
     <Compile Include="Modularity\ModuleInstaller.cs" />
     <Compile Include="Modularity\ModuleManager.cs" />
