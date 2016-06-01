@@ -1,5 +1,4 @@
-﻿using System;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace VirtoCommerce.Platform.Core.Modularity
 {
@@ -83,5 +82,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
         [XmlArrayItem("group")]
         public ModulePermissionGroup[] Permissions { get; set; }
 
+        [XmlElement("useFullTypeNameInSwagger")]
+        public bool UseFullTypeNameInSwagger { get; set; }
     }
 }

@@ -33,9 +33,9 @@ namespace VirtoCommerce.Platform.Web.Swagger
             EnableSwagger("VirtoCommerce.Platform", httpConfiguration, container, routePrefix, xmlCommentsFilePaths, false, Assembly.GetExecutingAssembly());
 
             // Add separate swagger generator for each installed module
-            foreach (var module in container.Resolve<IModuleCatalog>().Modules.Where(m => m.ModuleInstance != null))
+            foreach (var module in container.Resolve<IModuleCatalog>().Modules.OfType<ManifestModuleInfo>().Where(m => m.ModuleInstance != null))
             {
-                EnableSwagger(module.ModuleName, httpConfiguration, container, routePrefix, xmlCommentsFilePaths, true, module.ModuleInstance.GetType().Assembly);
+                EnableSwagger(module.ModuleName, httpConfiguration, container, routePrefix, xmlCommentsFilePaths, module.UseFullTypeNameInSwagger, module.ModuleInstance.GetType().Assembly);
             }
 
             // Add full swagger generator
