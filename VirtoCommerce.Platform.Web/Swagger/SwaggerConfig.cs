@@ -79,6 +79,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
                 }
 
                 ApplyCommonSwaggerConfiguration(c, container, moduleName, xmlCommentsFilePaths);
+                c.OperationFilter(() => new ModuleTagsFilter(moduleName));
             });
         }
 

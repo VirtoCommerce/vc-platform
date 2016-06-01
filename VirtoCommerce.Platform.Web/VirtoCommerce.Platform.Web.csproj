@@ -351,6 +351,7 @@
     <Compile Include="SignalR\NoOpPerformanceCounterManager.cs" />
     <Compile Include="Swagger\CachingSwaggerProvider.cs" />
     <Compile Include="Swagger\HttpConfigurationExtensions.cs" />
+    <Compile Include="Swagger\ModuleTagsFilter.cs" />
     <Compile Include="Swagger\OptionalParametersFilter.cs" />
     <Compile Include="Swagger\SwaggerConfig.cs" />
     <Compile Include="Swagger\TagsFilter.cs" />
