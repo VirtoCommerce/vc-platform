@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package>
+    <metadata>
+        <id>$id$</id>
+        <version>2.10.4</version>
+        <title>$title$</title>
+        <authors>$author$</authors>
+        <owners>$author$</owners>
+        <licenseUrl>https://github.com/VirtoCommerce/vc-community/raw/platform/LICENSE</licenseUrl>
+        <projectUrl>https://github.com/VirtoCommerce/vc-community</projectUrl>
+        <iconUrl>https://github.com/VirtoCommerce/vc-community/raw/platform/NuGet/icon.png</iconUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>$description$</description>
+        <copyright>Copyright (C) VirtoCommerce 2011-2016</copyright>
+        <tags></tags>
+    </metadata>
+</package>
