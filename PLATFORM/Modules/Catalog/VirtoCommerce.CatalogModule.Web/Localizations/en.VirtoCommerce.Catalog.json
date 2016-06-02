@@ -252,6 +252,10 @@
           "tax-type": "Tax type",
           "weight-unit": "Weight unit",
           "weight": "Weight",
+          "measure-unit": "Measure unit",
+          "length": "Length",
+          "width": "Width",
+          "height": "Height",
           "max-downloads": "Max. number of downloads",
           "expiration-date": "Download expiration date",
           "download-type": "Download type"
@@ -266,6 +270,10 @@
           "tax-type": "Select...",
           "weight-unit": "Select...",
           "weight": "Enter weight",
+          "measure-unit": "Select...",
+          "length": "Enter length",
+          "width": "Enter width",
+          "height": "Enter height",
           "expiration-date": "Choose date",
           "download-type": "Select..."
         }

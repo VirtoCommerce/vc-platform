@@ -145,6 +145,50 @@
                             </div>
                         </div>
                     </div>
+
+
+                    <div class="columns">
+                        <div class="column">
+                            <div class="form-group">
+                                <label class="form-label">{{ 'catalog.blades.item-detail.labels.measure-unit' | translate }} <a href="" ng-click="openDictionarySettingManagement('MeasureUnits')" class="form-edit" va-permission="platform:setting:update"><i class="form-ico fa fa-pencil"></i></a></label>
+                                <div class="form-input">
+                                    <ui-select ng-model="blade.item.measureUnit">
+                                        <ui-select-match allow-clear="true" placeholder="{{ 'catalog.blades.item-detail.placeholders.measure-unit' | translate }}">{{$select.selected}}</ui-select-match>
+                                        <ui-select-choices repeat="x in measureUnits | filter: $select.search">
+                                            <span ng-bind-html="x | highlight: $select.search"></span>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column">
+                            <div class="form-group">
+                                <label class="form-label">{{ 'catalog.blades.item-detail.labels.length' | translate }}</label>
+                                <div class="form-input __number">
+                                    <input smart-float num-type="float" ng-model="blade.item.length" placeholder="{{ 'catalog.blades.item-detail.placeholders.length' | translate}}" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="columns">
+
+                        <div class="column">
+                            <div class="form-group">
+                                <label class="form-label">{{ 'catalog.blades.item-detail.labels.width' | translate }}</label>
+                                <div class="form-input __number">
+                                    <input smart-float num-type="float" ng-model="blade.item.width" placeholder="{{ 'catalog.blades.item-detail.placeholders.width' | translate}}" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column">
+                            <div class="form-group">
+                                <label class="form-label">{{ 'catalog.blades.item-detail.labels.height' | translate }}</label>
+                                <div class="form-input __number">
+                                    <input smart-float num-type="float" ng-model="blade.item.height" placeholder="{{ 'catalog.blades.item-detail.placeholders.height' | translate}}" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group">
                     <div class="columns clearfix">

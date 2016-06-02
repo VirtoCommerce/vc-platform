@@ -155,6 +155,12 @@
                     parentRefresh: function (data) { $scope.weightUnits = data; }
                 });
                 break;
+            case 'MeasureUnits':
+                _.extend(newBlade, {
+                    currentEntityId: 'VirtoCommerce.Core.General.MeasureUnits',
+                    parentRefresh: function (data) { $scope.measureUnits = data; }
+                });
+                break;
         }
 
         bladeNavigationService.showBlade(newBlade, blade);
@@ -169,5 +175,6 @@
     initVendors();
     $scope.taxTypes = settings.getValues({ id: 'VirtoCommerce.Core.General.TaxTypes' });
     $scope.weightUnits = settings.getValues({ id: 'VirtoCommerce.Core.General.WeightUnits' });
+    $scope.measureUnits = settings.getValues({ id: 'VirtoCommerce.Core.General.MeasureUnits' });
     blade.refresh(false);
 }]);
