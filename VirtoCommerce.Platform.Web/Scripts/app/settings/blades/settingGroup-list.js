@@ -19,7 +19,7 @@ function ($injector, $scope, settings, bladeNavigationService) {
                     if (!lastParent[path]) {
                         var treeNode = { name: path, groupName: lastParentId.substring(1) }
                         lastParent[path] = treeNode;
-                        if (_.all(blade.allSettings, function (x) { return x.groupName !== treeNode.groupName; })) {
+                        if (setting.groupName && _.all(blade.allSettings, function (x) { return x.groupName !== treeNode.groupName; })) {
                             blade.allSettings.push(treeNode);
                         }
                     }
@@ -37,14 +37,14 @@ function ($injector, $scope, settings, bladeNavigationService) {
 
             // restore previous selection
             if (blade.searchText) {
-                $scope.blade.currentEntities = settingsTree;
+                blade.currentEntities = settingsTree;
             } else {
                 // reconstruct tree by breadCrumbs
                 var lastchildren = settingsTree;
                 for (var i = 1; i < blade.breadcrumbs.length; i++) {
                     lastchildren = lastchildren[blade.breadcrumbs[i].name].children;
                 }
-                $scope.blade.currentEntities = lastchildren;
+                blade.currentEntities = lastchildren;
             }
 
             // open previous settings detail blade if possible
@@ -60,11 +60,11 @@ function ($injector, $scope, settings, bladeNavigationService) {
             $scope.selectedNodeId = node.groupName;
             if (node.children) {
                 blade.searchText = null;
-                $scope.blade.currentEntities = node.children;
+                blade.currentEntities = node.children;
 
                 setBreadcrumbs(node);
             } else {
-                var selectedSettings = _.where(blade.allSettings, { groupName: node.groupName });
+                var selectedSettings = _.filter(blade.allSettings, function (x) { return x.groupName === node.groupName || (node.groupName === 'General' && !x.groupName); });
                 var newBlade = {
                     id: 'settingsSection',
                     data: selectedSettings,
@@ -116,7 +116,7 @@ function ($injector, $scope, settings, bladeNavigationService) {
 
     $scope.$watch('blade.searchText', function (newVal) {
         if (newVal) {
-            $scope.blade.currentEntities = settingsTree;
+            blade.currentEntities = settingsTree;
             setBreadcrumbs({ groupName: null });
         }
     });

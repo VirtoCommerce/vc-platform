@@ -30,7 +30,7 @@
                     executeMethod: function () {
                         var newBlade = {
                             id: 'moduleSettingsSection',
-                            moduleId: blade.currentEntityId,
+                            moduleId: blade.currentEntity.id,
                             title: 'platform.blades.module-settings-detail.title',
                             //subtitle: '',
                             controller: 'platformWebApp.settingsDetailController',
@@ -105,7 +105,6 @@
         var newBlade = {
             id: 'moduleInstallProgress',
             currentEntity: data,
-            // currentEntityId: data.id,
             title: 'platform.blades.module-wizard-progress-step.title',
             controller: 'platformWebApp.moduleInstallProgressController',
             template: '$(Platform)/Scripts/app/modularity/wizards/newModule/module-wizard-progress-step.tpl.html'
