@@ -51,29 +51,27 @@ namespace VirtoCommerce.Platform.Core.Common
             }
         }
 
-        private static JsonSerializer GetSerializer()
+        public static void SerializeJson<T>(this T source, Stream stream) where T : class, new()
         {
-            var serializer = new JsonSerializer
-            {
-                TypeNameHandling = TypeNameHandling.Auto,
-                TypeNameAssemblyFormat = FormatterAssemblyStyle.Full,
-                NullValueHandling = NullValueHandling.Ignore,
-                Formatting = Formatting.Indented,
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-            };
-            return serializer;
+            source.SerializeJson<T>(stream, GetDefaultSerializer());
         }
 
-        public static void SerializeJson<T>(this T source, Stream backupStream) where T : class, new()
+        public static void SerializeJson<T>(this T source, Stream stream, JsonSerializer serializer) where T : class, new()
         {
-            if (backupStream == null)
+            if (source == null)
             {
-                throw new ArgumentNullException("backupStream");
+                throw new ArgumentNullException("source");
+            }
+            if (stream == null)
+            {
+                throw new ArgumentNullException("stream");
+            }
+            if (serializer == null)
+            {
+                throw new ArgumentNullException("serializer");
             }
 
-            var serializer = GetSerializer();
-
-            using (var streamWriter = new StreamWriter(backupStream, Encoding.UTF8, 1024, true) { AutoFlush = true })
+            using (var streamWriter = new StreamWriter(stream, Encoding.UTF8, 1024, true) { AutoFlush = true })
             {
                 using (JsonWriter writer = new JsonTextWriter(streamWriter))
                 {
@@ -82,11 +80,22 @@ namespace VirtoCommerce.Platform.Core.Common
             }
         }
 
-        public static T DeserializeJson<T>(this Stream backupStream) where T : class, new()
+        public static T DeserializeJson<T>(this Stream stream) where T : class, new()
         {
-            var serializer = GetSerializer();
+            return stream.DeserializeJson<T>(GetDefaultSerializer());
+        }
 
-            using (var streamReader = new StreamReader(backupStream, Encoding.UTF8))
+        public static T DeserializeJson<T>(this Stream stream, JsonSerializer serializer) where T : class, new()
+        {
+            if (stream == null)
+            {
+                throw new ArgumentNullException("stream");
+            }
+            if (serializer == null)
+            {
+                throw new ArgumentNullException("serializer");
+            }
+            using (var streamReader = new StreamReader(stream, Encoding.UTF8))
             {
                 using (JsonReader reader = new JsonTextReader(streamReader))
                 {
@@ -94,6 +103,17 @@ namespace VirtoCommerce.Platform.Core.Common
                     return result;
                 }
             }
+        }
+
+        private static JsonSerializer GetDefaultSerializer()
+        {
+            var serializer = new JsonSerializer
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+                Formatting = Formatting.Indented,
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+            };
+            return serializer;
         }
     }
 }
