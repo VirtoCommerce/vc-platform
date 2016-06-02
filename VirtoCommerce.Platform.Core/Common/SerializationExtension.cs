@@ -112,6 +112,9 @@ namespace VirtoCommerce.Platform.Core.Common
                 NullValueHandling = NullValueHandling.Ignore,
                 Formatting = Formatting.Indented,
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                TypeNameHandling = TypeNameHandling.Auto,
+                TypeNameAssemblyFormat = FormatterAssemblyStyle.Full
+
             };
             return serializer;
         }
