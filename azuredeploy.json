@@ -69,7 +69,7 @@
                     ],
                     "properties": {
                         "edition": "Basic",
-                        "collation": "SQL_Latin1_General_Cp1_CI_AS_KI_WI",
+                        "collation": "SQL_Latin1_General_Cp1_CI_AS",
                         "maxSizeBytes": "1073741824",
                         "requestedServiceObjectiveId": "DD6D99BB-F193-4EC1-86F2-43D3BCCBC49C"
                     }
