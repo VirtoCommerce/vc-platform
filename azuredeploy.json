@@ -28,15 +28,6 @@
         "sqlAdministratorPassword": {
             "type": "securestring"
         },
-        "deployApplications": {
-            "type": "string",
-            "allowedValues": [
-                "Manager and Storefront",
-                "Manager Only",
-                "Storefront Only"
-            ],
-            "defaultValue": "Manager and Storefront"
-        },
 
         "repoUrl": {
             "type": "string"
@@ -57,26 +48,12 @@
             "defaultValue": "0"
         }
     },
-    "variables": {
-        "Manager and Storefront": {
-            "configValue": "Manager and Storefront",
-            "rootDir": "store"
-        },
-        "Manager Only": {
-            "configValue": "Manager Only",
-            "rootDir": "admin"
-        },
-        "Storefront Only": {
-            "configValue": "Storefront Only",
-            "rootDir": "store"
-        }
-    },
     "resources": [
         {
             "type": "Microsoft.Sql/servers",
             "name": "[parameters('sqlServerName')]",
             "location": "[parameters('siteLocation')]",
-            "apiVersion": "2.0",
+            "apiVersion": "2014-04-01-preview",
             "properties": {
                 "administratorLogin": "[parameters('sqlAdministratorLogin')]",
                 "administratorLoginPassword": "[parameters('sqlAdministratorPassword')]"
@@ -86,22 +63,22 @@
                     "type": "databases",
                     "name": "[parameters('siteName')]",
                     "location": "[parameters('siteLocation')]",
-                    "apiVersion": "2.0",
+                    "apiVersion": "2014-04-01-preview",
                     "dependsOn": [
                         "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
                     ],
                     "properties": {
                         "edition": "Basic",
-                        "collation": "SQL_Latin1_General_CP1_CI_AS",
+                        "collation": "SQL_Latin1_General_Cp1_CI_AS_KI_WI",
                         "maxSizeBytes": "1073741824",
-                        "requestedServiceObjectiveId": "dd6d99bb-f193-4ec1-86f2-43d3bccbc49c"
+                        "requestedServiceObjectiveId": "DD6D99BB-F193-4EC1-86F2-43D3BCCBC49C"
                     }
                 },
                 {
                     "type": "firewallrules",
                     "name": "AllowAllWindowsAzureIps",
                     "location": "[parameters('siteLocation')]",
-                    "apiVersion": "2.0",
+                    "apiVersion": "2014-04-01-preview",
                     "dependsOn": [
                         "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
                     ],
@@ -113,7 +90,7 @@
             ]
         },
         {
-            "type": "Microsoft.Web/serverFarms",
+            "type": "Microsoft.Web/serverfarms",
             "name": "[parameters('hostingPlanName')]",
             "location": "[parameters('siteLocation')]",
             "apiVersion": "2014-06-01",
@@ -125,7 +102,7 @@
             }
         },
         {
-            "type": "Microsoft.Web/Sites",
+            "type": "Microsoft.Web/sites",
             "name": "[parameters('siteName')]",
             "location": "[parameters('siteLocation')]",
             "apiVersion": "2014-06-01",
@@ -143,7 +120,7 @@
                 {
                     "type": "config",
                     "name": "web",
-                    "apiVersion": "2014-04-01",
+                    "apiVersion": "2014-06-01",
                     "dependsOn": [
                         "[concat('Microsoft.Web/Sites/', parameters('siteName'))]"
                     ],
@@ -155,45 +132,25 @@
                                 "Type": 2
                             },
                             {
-                                "Name": "VirtoCommerceBaseUrl",
-                                "ConnectionString": "[concat('http://', parameters('siteName'), '.azurewebsites.net/admin')]",
-                                "Type": 3
-                            },
-                            {
                                 "Name": "AssetsConnectionString",
                                 "ConnectionString": "[concat('provider=LocalStorage;rootPath=~/App_Data/Assets;publicUrl=http://', parameters('siteName'), '.azurewebsites.net/assets')]",
                                 "Type": 3
-                            },
-                            {
-                                "Name": "CmsContentConnectionString",
-                                "ConnectionString": "[concat('provider=LocalStorage;rootPath=..\\store\\App_Data;publicUrl=http://', parameters('siteName'), '.azurewebsites.net/cms')]",
-                                "Type": 3
-                            }
-                        ],
-                        "appSettings": [
-                            {
-                                "name": "VirtoCommerce_DeployApplications",
-                                "value": "[variables(parameters('deployApplications')).configValue]"
                             }
                         ],
                         "virtualApplications": [
                             {
                                 "virtualPath": "/",
-                                "physicalPath": "[concat('site\\wwwroot\\', variables(parameters('deployApplications')).rootDir)]",
+                                "physicalPath": "site\\wwwroot\\platform",
                                 "virtualDirectories": [
                                     {
-                                        "virtualPath": "/assets",
-                                        "physicalPath": "site\\wwwroot\\admin\\App_Data\\Assets"
+                                        "virtualPath": "/modules",
+                                        "physicalPath": "site\\wwwroot\\modules"
                                     },
                                     {
-                                        "virtualPath": "/cms",
-                                        "physicalPath": "site\\wwwroot\\store\\App_Data"
+                                        "virtualPath": "/assets",
+                                        "physicalPath": "site\\wwwroot\\platform\\App_Data\\Assets"
                                     }
                                 ]
-                            },
-                            {
-                                "virtualPath": "/admin",
-                                "physicalPath": "site\\wwwroot\\admin"
                             }
                         ]
                     }
@@ -201,7 +158,7 @@
                 {
                     "type": "sourcecontrols",
                     "name": "web",
-                    "apiVersion": "2014-04-01",
+                    "apiVersion": "2014-06-01",
                     "dependsOn": [
                         "[resourceId('Microsoft.Web/Sites', parameters('siteName'))]",
                         "[concat('Microsoft.Web/Sites/', parameters('siteName'), '/config/web')]"

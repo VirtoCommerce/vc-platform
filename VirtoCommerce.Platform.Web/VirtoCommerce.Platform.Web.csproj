@@ -667,6 +667,7 @@
     <Folder Include="App_Data\Localizations\" />
     <Folder Include="App_Data\Modules\" />
     <Folder Include="Filters\" />
+    <Folder Include="Modules\" />
     <Folder Include="Views\Notifications\" />
   </ItemGroup>
   <ItemGroup>
