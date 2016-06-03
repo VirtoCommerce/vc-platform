@@ -5,6 +5,7 @@ using System.IO.Packaging;
 using System.Linq;
 using System.Threading.Tasks;
 using CacheManager.Core;
+using Newtonsoft.Json;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Core.ExportImport;
@@ -90,7 +91,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                 var manifestPart = package.GetPart(_manifestPartUri);
                 using (var manifestStream = manifestPart.GetStream())
                 {
-                    retVal = manifestStream.DeserializeJson<PlatformExportManifest>();
+                    retVal = manifestStream.DeserializeJson<PlatformExportManifest>(GetJsonSerializer());
                 }
             }
 
@@ -117,7 +118,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                 //After all modules exported need write export manifest part
                 using (var stream = manifestPart.GetStream())
                 {
-                    manifest.SerializeJson<PlatformExportManifest>(stream);
+                    manifest.SerializeJson<PlatformExportManifest>(stream, GetJsonSerializer());
                 }
             }
         }
@@ -157,7 +158,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                 PlatformExportEntries platformEntries;
                 using (var stream = platformEntriesPart.GetStream())
                 {
-                    platformEntries = stream.DeserializeJson<PlatformExportEntries>();
+                    platformEntries = stream.DeserializeJson<PlatformExportEntries>(GetJsonSerializer());
                 }
 
                 //Import security objects
@@ -328,6 +329,17 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                                         .Where(x => x.ModuleInstance.GetType().GetInterfaces().Contains(interfaceType))
                                         .ToArray();
             return retVal;
+        }
+
+        private static JsonSerializer GetJsonSerializer()
+        {
+            var serializer = new JsonSerializer
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+                Formatting = Formatting.Indented,
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            };
+            return serializer;
         }
 
     }
