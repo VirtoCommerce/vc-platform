@@ -28,6 +28,14 @@
         "sqlAdministratorPassword": {
             "type": "securestring"
         },
+        "installModuleBundle": {
+            "type": "string",
+            "allowedValues": [
+                "Commerce",
+                "None"
+            ],
+            "defaultValue": "Commerce"
+        },
 
         "repoUrl": {
             "type": "string"
@@ -46,6 +54,14 @@
                 "2"
             ],
             "defaultValue": "0"
+        }
+    },
+    "variables": {
+        "Commerce": {
+            "configValue": "commerce"
+        },
+        "None": {
+            "configValue": ""
         }
     },
     "resources": [
@@ -69,7 +85,7 @@
                     ],
                     "properties": {
                         "edition": "Basic",
-                        "collation": "SQL_Latin1_General_Cp1_CI_AS",
+                        "collation": "SQL_Latin1_General_CP1_CI_AS",
                         "maxSizeBytes": "1073741824",
                         "requestedServiceObjectiveId": "DD6D99BB-F193-4EC1-86F2-43D3BCCBC49C"
                     }
@@ -135,6 +151,12 @@
                                 "Name": "AssetsConnectionString",
                                 "ConnectionString": "[concat('provider=LocalStorage;rootPath=~/App_Data/Assets;publicUrl=http://', parameters('siteName'), '.azurewebsites.net/assets')]",
                                 "Type": 3
+                            }
+                        ],
+                        "appSettings": [
+                            {
+                                "name": "VirtoCommerce:AutoInstallModuleBundles",
+                                "value": "[variables(parameters('installModuleBundle')).configValue]"
                             }
                         ],
                         "virtualApplications": [
