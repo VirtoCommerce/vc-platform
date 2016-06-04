@@ -57,6 +57,8 @@
         }
     },
     "variables": {
+        "storageName": "[parameters('siteName')]",
+        "storageType": "Standard_LRS",
         "Commerce": {
             "configValue": "commerce"
         },
@@ -65,6 +67,15 @@
         }
     },
     "resources": [
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "name": "[variables('storageName')]",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2015-06-15",
+            "properties": {
+                "accountType": "[variables('storageType')]"
+            }
+        },
         {
             "type": "Microsoft.Sql/servers",
             "name": "[parameters('sqlServerName')]",
