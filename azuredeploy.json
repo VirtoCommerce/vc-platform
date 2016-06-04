@@ -160,7 +160,7 @@
                             },
                             {
                                 "Name": "AssetsConnectionString",
-                                "ConnectionString": "[concat('provider=AzureBlobStorage;DefaultEndpointsProtocol=https;AccountName=', variables('storageName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key1)]",
+                                "ConnectionString": "[concat('provider=LocalStorage;rootPath=~/App_Data/Assets;publicUrl=http://', parameters('siteName'), '.azurewebsites.net/assets')]",
                                 "Type": 3
                             }
                         ],
