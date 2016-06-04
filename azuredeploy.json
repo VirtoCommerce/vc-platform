@@ -57,7 +57,7 @@
         }
     },
     "variables": {
-        "storageName": "[parameters('siteName')]",
+        "storageName": "[replace(parameters('siteName'), '-', '')]",
         "storageType": "Standard_LRS",
         "Commerce": {
             "configValue": "commerce"
