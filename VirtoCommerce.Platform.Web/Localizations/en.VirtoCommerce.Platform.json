@@ -287,7 +287,9 @@
         "title": "Module settings"
       },
       "module-wizard-progress-step": {
-        "title": "Module uninstall",
+        "title-install": "Module install",
+        "title-update": "Module update",
+        "title-uninstall": "Module uninstall",
         "labels": {
           "start": "Start",
           "end": "End",
@@ -297,9 +299,7 @@
         }
       },
       "module-detail": {
-        "title": "Module information",
-        "title-update": "Module update",
-        "title-install": "Module install",
+        "title": "Module information",        
         "labels": {
           "i-accept-the": "I accept the",
           "license-link": "license",

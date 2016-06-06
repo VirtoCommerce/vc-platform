@@ -115,7 +115,7 @@ namespace VirtoCommerce.Platform.Web.Modularity
                 var dependingModules = _moduleCatalog.Modules.OfType<ManifestModuleInfo>().Where(x => x.IsInstalled)
                                                     .Where(x => x.DependsOn.Contains(module.Id))
                                                     .Except(modules);
-                //If uninstalled module have depending modules and they not fully contains in uninstalling list 
+                //If module being uninstalled has depending modules and they are not contained in uninstall list
                 foreach (var dependingModule in dependingModules)
                 {
                     Report(progress, ProgressMessageLevel.Error, "Unable to uninstall '{0}' because '{1}' depends on it", module, dependingModule);
@@ -135,13 +135,13 @@ namespace VirtoCommerce.Platform.Web.Modularity
                             //Call module Uninstall method
                             if (uninstallingModule.ModuleInstance != null)
                             {
-                                Report(progress, ProgressMessageLevel.Info, "Execution module.Uninstall()");
+                                Report(progress, ProgressMessageLevel.Info, "Executing module.Uninstall()");
                                 uninstallingModule.ModuleInstance.Uninstall();
                             }
                             var dstModuleDir = Path.Combine(_modulesPath, uninstallingModule.Id);
                             if (Directory.Exists(dstModuleDir))
                             {
-                                Report(progress, ProgressMessageLevel.Info, "Deletion  module {0} content", dstModuleDir);
+                                Report(progress, ProgressMessageLevel.Info, "Deleting module {0} content", dstModuleDir);
                                 foreach (string file in Directory.EnumerateFiles(dstModuleDir, "*.*", SearchOption.AllDirectories))
                                 {
                                     _txFileManager.Delete(file);
@@ -160,7 +160,7 @@ namespace VirtoCommerce.Platform.Web.Modularity
                                 }
                                 try
                                 {
-                                    Report(progress, ProgressMessageLevel.Info, "Deletion  module {0} folder", dstModuleDir);
+                                    Report(progress, ProgressMessageLevel.Info, "Deleting module {0} folder", dstModuleDir);
                                     _txFileManager.DeleteDirectory(dstModuleDir);
                                 }
                                 catch(System.IO.IOException ex)

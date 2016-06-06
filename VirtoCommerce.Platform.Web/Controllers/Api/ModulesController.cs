@@ -58,9 +58,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         public IHttpActionResult GetModules()
         {
             EnsureModulesCatalogInitialized();
-            var retVal = _moduleCatalog.Modules.OfType<ManifestModuleInfo>().OrderBy(x => x.Id).ThenBy(x => x.Version)
-                                    .Select(x => x.ToWebModel())
-                                    .ToArray();
+
+            var retVal = _moduleCatalog.Modules
+                                       .OfType<ManifestModuleInfo>().OrderBy(x => x.Id).ThenBy(x => x.Version)
+                                       .Select(x => x.ToWebModel())
+                                       .ToArray();
+
             return Ok(retVal);
         }
 
@@ -76,11 +79,16 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         public IHttpActionResult GetDependingModules(webModel.ModuleDescriptor[] moduleDescriptors)
         {
             EnsureModulesCatalogInitialized();
-            var modules = _moduleCatalog.Modules.OfType<ManifestModuleInfo>().Join(moduleDescriptors, x => x.Identity, y => y.Identity, (x, y) => x);
+
+            var modules = _moduleCatalog.Modules
+                .OfType<ManifestModuleInfo>()
+                .Join(moduleDescriptors, x => x.Identity, y => y.Identity, (x, y) => x)
+                .ToList();
+
             var retVal = GetDependingModulesRecursive(modules).Distinct()
                                                               .Except(modules)
                                                               .Select(x => x.ToWebModel())
-                                                              .ToArray();
+                                                              .ToList();
             return Ok(retVal);
         }
 
@@ -96,9 +104,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         public IHttpActionResult GetMissingDependencies(webModel.ModuleDescriptor[] moduleDescriptors)
         {
             EnsureModulesCatalogInitialized();
-            var modules = _moduleCatalog.Modules.OfType<ManifestModuleInfo>().Join(moduleDescriptors, x => x.Identity, y => y.Identity, (x, y) => x);
+            var modules = _moduleCatalog.Modules
+                                        .OfType<ManifestModuleInfo>().Join(moduleDescriptors, x => x.Identity, y => y.Identity, (x, y) => x)
+                                        .ToList();
 
-            var retVal = _moduleCatalog.CompleteListWithDependencies(modules).OfType<ManifestModuleInfo>()
+            var retVal = _moduleCatalog.CompleteListWithDependencies(modules)
+                                       .OfType<ManifestModuleInfo>()
                                        .Where(x => !x.IsInstalled)
                                        .Except(modules)
                                        .Select(x => x.ToWebModel())
@@ -246,34 +257,42 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 {
                     if (!_settingsManager.GetValue("VirtoCommerce.ModulesAutoInstalled", false))
                     {
-                        var modulesGroups = ConfigurationManager.AppSettings.GetValues("VirtoCommerce:AutoInstallModulesGroups");
-                        if (!modulesGroups.IsNullOrEmpty())
+                        var moduleBundles = ConfigurationManager.AppSettings.GetValues("VirtoCommerce:AutoInstallModuleBundles");
+                        if (!moduleBundles.IsNullOrEmpty())
                         {
                             _settingsManager.SetValue("VirtoCommerce.ModulesAutoInstalled", true);
                             var modules = new List<ManifestModuleInfo>();
-                            var moduleVersionsGroups = _moduleCatalog.Modules.OfType<ManifestModuleInfo>().Where(x => x.Groups.Intersect(modulesGroups, StringComparer.OrdinalIgnoreCase).Any())
-                                                                                             .GroupBy(x => x.Id);
+                            var moduleVersionGroups = _moduleCatalog.Modules
+                                .OfType<ManifestModuleInfo>()
+                                .Where(x => x.Groups.Intersect(moduleBundles, StringComparer.OrdinalIgnoreCase).Any())
+                                .GroupBy(x => x.Id);
+
                             //Need install only latest versions
-                            foreach (var moduleVersionsGroup in moduleVersionsGroups)
+                            foreach (var moduleVersionGroup in moduleVersionGroups)
                             {
                                 //skip already installed modules
-                                if (!moduleVersionsGroup.Any(x => x.IsInstalled))
+                                if (!moduleVersionGroup.Any(x => x.IsInstalled))
                                 {
-                                    var latestVersion = moduleVersionsGroup.OrderBy(x => x.Version).LastOrDefault();
+                                    var latestVersion = moduleVersionGroup.OrderBy(x => x.Version).LastOrDefault();
                                     if (latestVersion != null)
                                     {
                                         modules.Add(latestVersion);
                                     }
                                 }
                             }
-                            var modulesWithDependencies = _moduleCatalog.CompleteListWithDependencies(modules).OfType<ManifestModuleInfo>()
-                                                                        .Where(x => !x.IsInstalled);
+
+                            var modulesWithDependencies = _moduleCatalog.CompleteListWithDependencies(modules)
+                                .OfType<ManifestModuleInfo>()
+                                .Where(x => !x.IsInstalled)
+                                .Select(x => x.ToWebModel())
+                                .ToArray();
+
                             if (modulesWithDependencies.Any())
                             {
                                 var options = new webModel.ModuleBackgroundJobOptions
                                 {
                                     Action = webModel.ModuleAction.Install,
-                                    Modules = modulesWithDependencies.Select(x => x.ToWebModel()).ToArray()
+                                    Modules = modulesWithDependencies
                                 };
                                 //reset finished date
                                 notification.Finished = null;
@@ -339,7 +358,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _moduleCatalog.Initialize();
         }
 
-        private IEnumerable<ManifestModuleInfo> GetDependingModulesRecursive(IEnumerable<ManifestModuleInfo> modules)
+        private IEnumerable<ManifestModuleInfo> GetDependingModulesRecursive(List<ManifestModuleInfo> modules)
         {
             var retVal = new List<ManifestModuleInfo>();
             foreach (var module in modules)
@@ -347,7 +366,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 retVal.Add(module);
                 var dependingModules = _moduleCatalog.Modules.OfType<ManifestModuleInfo>()
                                                              .Where(x => x.IsInstalled)
-                                                             .Where(x => x.DependsOn.Contains(module.Id, StringComparer.OrdinalIgnoreCase));
+                                                             .Where(x => x.DependsOn.Contains(module.Id, StringComparer.OrdinalIgnoreCase))
+                                                             .ToList();
                 if (dependingModules.Any())
                 {
                     retVal.AddRange(GetDependingModulesRecursive(dependingModules));
