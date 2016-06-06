@@ -17,21 +17,28 @@
         });
 
 	$stateProvider
-	.state('modulesAutoInstallation', {
-		url: '/modulesAutoInstallation',
-		templateUrl: '$(Platform)/Scripts/app/modularity/templates/modulesAutoInstallation.tpl.html',
-		controller: ['$scope', '$state', '$window', 'platformWebApp.modules', '$localStorage', 'platformWebApp.exportImport.resource', function ($scope, $state, $window, modules, $localStorage, exportImportResourse) {
-			$scope.notification = {};		
+	.state('setupWizard.modulesInstallation', {
+		url: '/modulesInstallation',
+		templateUrl: '$(Platform)/Scripts/app/modularity/templates/modulesInstallation.tpl.html',
+		controller: ['$scope', '$state', '$window', 'platformWebApp.modules', 'platformWebApp.exportImport.resource', 'platformWebApp.setupWizard', function ($scope, $state, $window, modules, exportImportResourse, setupWizard) {
+			$scope.notification = {};
+			//thats need when state direct open by url or push notification
+			setupWizard.nextStep("setupWizard.modulesInstallation");
+			modules.autoInstall({}, function (data) {
+				//if already installed need skip this step
+				if (data.finished) {					
+					setupWizard.nextStep();
+				}
+			});
 
 			$scope.restart = function () {
 				$scope.restarted = true;
-				$localStorage['RunSampleDataImport'] = true;				
 				modules.restart({}, function () {
-					$state.go('workspace');
+					setupWizard.nextStep();
 					$window.location.reload();
 				});
-			};
-			$scope.close = function () { $state.go('workspace') };
+			};		
+
 			$scope.$on("new-notification-event", function (event, notification) {
 				if (notification.notifyType == 'ModuleAutoInstallPushNotification') {
 					angular.copy(notification, $scope.notification);
@@ -44,7 +51,7 @@
 	});
 }])
 .run(
-  ['platformWebApp.pushNotificationTemplateResolver', 'platformWebApp.bladeNavigationService', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', '$rootScope', 'platformWebApp.modules', function (pushNotificationTemplateResolver, bladeNavigationService, mainMenuService, widgetService, $state, $rootScope, modules) {
+  ['platformWebApp.pushNotificationTemplateResolver', 'platformWebApp.bladeNavigationService', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', '$rootScope', 'platformWebApp.modules', 'platformWebApp.setupWizard', function (pushNotificationTemplateResolver, bladeNavigationService, mainMenuService, widgetService, $state, $rootScope, modules, setupWizard) {
   	//Register module in main menu
   	var menuItem = {
   		path: 'configuration/modularity',
@@ -84,21 +91,20 @@
 	};
   	pushNotificationTemplateResolver.register(historyExportImportTemplate);
 
-  	//Switch to  modulesAutoInstallation state when receive ModuleAutoInstallPushNotification push notification
+  	//Switch to  setupWizard.modulesInstallation state when receive ModuleAutoInstallPushNotification push notification
   	$rootScope.$on("new-notification-event", function (event, notification) {
-  		if (notification.notifyType == 'ModuleAutoInstallPushNotification' && $state.current && $state.current.name != 'modulesAutoInstallation') {
-  			$state.go('modulesAutoInstallation')
+  		if (notification.notifyType == 'ModuleAutoInstallPushNotification' && $state.current && $state.current.name != 'setupWizard.modulesInstallation') {
+  			$state.go('setupWizard.modulesInstallation')
   		}
   	});
-  	//Try to auto install  modules
-  	$rootScope.$on('loginStatusChanged', function (event, authContext) {
-  		if (authContext.isAuthenticated) {
-  			modules.autoInstall();
-  		}
+	//register setup wizard step - modules auto installation
+  	setupWizard.registerStep({
+  		state: "setupWizard.modulesInstallation",
+  		priority: 1
   	});
+  
   }])
 .factory('platformWebApp.moduleHelper', function () {
 	// semver comparison: https://gist.github.com/TheDistantSea/8021359
 	return {};
-})
-;
+});

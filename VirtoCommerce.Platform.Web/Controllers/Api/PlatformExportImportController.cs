@@ -27,7 +27,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     [ApiExplorerSettings(IgnoreApi = true)]
     public class PlatformExportImportController : ApiController
     {
-        private const string _sampledataStateSetting = "VirtoCommerce:SampleDataState";
+        private const string _sampledataStateSetting = "VirtoCommerce.SampleDataState";
 
         private readonly IPlatformExportImportManager _platformExportManager;
         private readonly IPushNotificationManager _pushNotifier;
@@ -51,62 +51,33 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Route("sampledata/discover")]
         [ResponseType(typeof(SampleDataInfo[]))]
         public IHttpActionResult DiscoverSampleData()
-        {
-            var retVal = new List<SampleDataInfo>();
-            if (!_settingsManager.GetValue("VirtoCommerce:SampleDataInstalled", false))
-            {
-                var sampleDataUrl = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:SampleDataUrl", string.Empty);
-                if (!string.IsNullOrEmpty(sampleDataUrl))
-                {
-                    //Discovery mode
-                    if (!sampleDataUrl.EndsWith(".zip"))
-                    {
-                        var manifestUrl = sampleDataUrl + "\\manifest.json";
-                        using (var client = new WebClient())
-                        using (var stream = client.OpenRead(new Uri(manifestUrl)))
-                        {
-                            //Add empty template
-                            retVal.Add(new SampleDataInfo { Name = "Empty" });
-                            var sampleDataInfos = stream.DeserializeJson<List<SampleDataInfo>>();
-                            //Need filter unsupported versions and take one most new sample data
-                            sampleDataInfos = sampleDataInfos.Select(x => new { Version = SemanticVersion.Parse(x.PlatformVersion), x.Name, Data = x })
-                                                             .Where(x => x.Version.IsCompatibleWith(PlatformVersion.CurrentVersion))
-                                                             .GroupBy(x => x.Name)
-                                                             .Select(x => x.OrderByDescending(y => y.Version).First().Data)
-                                                             .ToList();
-                            //Convert relative  sample data urls to absolute
-                            foreach (var sampleDataInfo in sampleDataInfos)
-                            {
-                                if (!Uri.IsWellFormedUriString(sampleDataInfo.Url, UriKind.Absolute))
-                                {
-                                    var uri = new Uri(sampleDataUrl);
-                                    sampleDataInfo.Url = new Uri(uri, uri.AbsolutePath + "/" + sampleDataInfo.Url).ToString();
-                                }
-                            }
-                            retVal.AddRange(sampleDataInfos);
+        {           
+            return Ok(InnerDiscoverSampleData().ToArray());
+        }
 
-                        }
-                    }
-                    else
-                    {
-                        //Direct file mode
-                        retVal.Add(new SampleDataInfo { Url = sampleDataUrl });
-                    }
-                }
+        [HttpPost]
+        [Route("sampledata/autoinstall")]
+        [ResponseType(typeof(SampleDataImportPushNotification))]
+        public IHttpActionResult TryToAutoInstallSampleData()
+        {
+            var singleSampleData = InnerDiscoverSampleData().SingleOrDefault();
+            if(singleSampleData != null && !string.IsNullOrEmpty(singleSampleData.Url))
+            {
+                return ImportSampleData(singleSampleData.Url);
             }
-            return Ok(retVal);
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
         [HttpPost]
         [Route("sampledata/import")]
         [ResponseType(typeof(SampleDataImportPushNotification))]
-        public IHttpActionResult TryToImportSampleData([FromUri]string url = null)
+        public IHttpActionResult ImportSampleData([FromUri]string url = null)
         {
             lock (_lockObject)
             {
-                if (!_settingsManager.GetValue("VirtoCommerce:SampleDataInstalled", false))
+                var sampleDataState = EnumUtility.SafeParse<SampleDataState>(_settingsManager.GetValue<string>(_sampledataStateSetting, SampleDataState.Undefined.ToString()), SampleDataState.Undefined);
+                if (sampleDataState == SampleDataState.Undefined)
                 {
-                    _settingsManager.SetValue("VirtoCommerce:SampleDataInstalled", true);
                     //Sample data initialization
                     if (Uri.IsWellFormedUriString(url, UriKind.Absolute))
                     {
@@ -119,10 +90,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     }
                 }
             }
-
             return StatusCode(HttpStatusCode.NoContent);
         }
 
+        /// <summary>
+        /// This method used for azure automatically deployment
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [Route("sampledata/state")]
         [ResponseType(typeof(SampleDataState))]
@@ -196,6 +170,52 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return Ok(notification);
         }
 
+        private IEnumerable<SampleDataInfo> InnerDiscoverSampleData()
+        {
+            var retVal = new List<SampleDataInfo>();
+
+            var sampleDataUrl = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:SampleDataUrl", string.Empty);
+            if (!string.IsNullOrEmpty(sampleDataUrl))
+            {
+                //Discovery mode
+                if (!sampleDataUrl.EndsWith(".zip"))
+                {
+                    var manifestUrl = sampleDataUrl + "\\manifest.json";
+                    using (var client = new WebClient())
+                    using (var stream = client.OpenRead(new Uri(manifestUrl)))
+                    {
+                        //Add empty template
+                        retVal.Add(new SampleDataInfo { Name = "Empty" });
+                        var sampleDataInfos = stream.DeserializeJson<List<SampleDataInfo>>();
+                        //Need filter unsupported versions and take one most new sample data
+                        sampleDataInfos = sampleDataInfos.Select(x => new { Version = SemanticVersion.Parse(x.PlatformVersion), x.Name, Data = x })
+                                                         .Where(x => x.Version.IsCompatibleWith(PlatformVersion.CurrentVersion))
+                                                         .GroupBy(x => x.Name)
+                                                         .Select(x => x.OrderByDescending(y => y.Version).First().Data)
+                                                         .ToList();
+                        //Convert relative  sample data urls to absolute
+                        foreach (var sampleDataInfo in sampleDataInfos)
+                        {
+                            if (!Uri.IsWellFormedUriString(sampleDataInfo.Url, UriKind.Absolute))
+                            {
+                                var uri = new Uri(sampleDataUrl);
+                                sampleDataInfo.Url = new Uri(uri, uri.AbsolutePath + "/" + sampleDataInfo.Url).ToString();
+                            }
+                        }
+                        retVal.AddRange(sampleDataInfos);
+
+                    }
+                }
+                else
+                {
+                    //Direct file mode
+                    retVal.Add(new SampleDataInfo { Url = sampleDataUrl });
+                }
+            }
+            return retVal;
+        }
+
+
         public void SampleDataImportBackground(Uri url, string tmpPath, SampleDataImportPushNotification pushNotification)
         {
             Action<ExportImportProgressInfo> progressCallback = x =>
@@ -240,6 +260,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             finally
             {
                 _settingsManager.SetValue(_sampledataStateSetting, SampleDataState.Completed);
+                pushNotification.Description = "Import finished";
                 pushNotification.Finished = DateTime.UtcNow;
                 _pushNotifier.Upsert(pushNotification);
             }

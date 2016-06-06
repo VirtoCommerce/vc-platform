@@ -584,6 +584,8 @@
         "modulesAutoInstallation": {
             "labels": {
                 "module-auto-installation": "Modules auto installation",
+                "loading": "Retrieving modules information...",
+                "finished":  "Installation finished click restart to continue.",
                 "start": "Start",
                 "end": "End"
             }

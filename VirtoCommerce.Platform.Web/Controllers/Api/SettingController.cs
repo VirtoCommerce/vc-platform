@@ -49,16 +49,16 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <summary>
         /// Get setting details by name
         /// </summary>
-        /// <param name="id">Setting system name.</param>
+        /// <param name="name">Setting system name.</param>
         /// <returns></returns>
         /// <response code="200"></response>
         /// <response code="404">Setting not found.</response>
         [HttpGet]
-        [Route("{id}")]
+        [Route("{name}")]
         [ResponseType(typeof(webModel.Setting))]
-        public IHttpActionResult GetSetting(string id)
+        public IHttpActionResult GetSetting(string name)
         {
-            var retVal = _settingsManager.GetSettingByName(id);
+            var retVal = _settingsManager.GetSettingByName(name);
             if (retVal != null)
             {
                 return Ok(retVal.ToWebModel());
@@ -78,23 +78,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         {
             _settingsManager.SaveSettings(settings.Select(x => x.ToModuleModel()).ToArray());
             return StatusCode(HttpStatusCode.NoContent);
-        }
-
-        /// <summary>
-        /// Get non-array setting value by name
-        /// </summary>
-        /// <param name="name">Setting system name.</param>
-        /// <returns></returns>
-        [HttpGet]
-        [Route("value/{name}")]
-        [ResponseType(typeof(object))] // Produces invalid response type in generated client
-        [ApiExplorerSettings(IgnoreApi = true)]
-        public IHttpActionResult GetValue(string name)
-        {
-            var value = _settingsManager.GetValue<object>(name, null);
-            return Ok(value);
-        }
-
+        }        
+       
         /// <summary>
         /// Get array setting values by name
         /// </summary>

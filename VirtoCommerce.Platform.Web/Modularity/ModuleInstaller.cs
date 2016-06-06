@@ -214,7 +214,7 @@ namespace VirtoCommerce.Platform.Web.Modularity
             {
                 foreach (var entry in archive.Entries.Where(e => !string.IsNullOrEmpty(e.Name)))
                 {
-                    Report(progress, ProgressMessageLevel.Info, "Extracting '{0}' ", entry.FullName);
+                    //Report(progress, ProgressMessageLevel.Info, "Extracting '{0}' ", entry.FullName);
                     var filePath = Path.Combine(dstModuleDir, entry.FullName);
                     //Create directory if not exist
                     var directoryPath = Path.GetDirectoryName(filePath);

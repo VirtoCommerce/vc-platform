@@ -153,6 +153,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                         else
                         {
                             _moduleCatalog.AddModule(module);
+                            //Force validation
+                            _moduleCatalog.Initialize();
                         }
                         module.Ref = fileData.LocalFileName;
                         retVal = module.ToWebModel();
@@ -229,18 +231,25 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [ResponseType(typeof(webModel.ModuleAutoInstallPushNotification))]
         public IHttpActionResult TryToAutoInstallModules()
         {
+            var notification = new webModel.ModuleAutoInstallPushNotification("System")
+            {
+                Title = "Modules installation",
+                //set completed by default
+                Finished = DateTime.UtcNow
+            };
+
             EnsureModulesCatalogInitialized();
 
-            if (!_settingsManager.GetValue("VirtoCommerce:ModulesAutoInstalled", false))
+            if (!_settingsManager.GetValue("VirtoCommerce.ModulesAutoInstalled", false))
             {
                 lock (_lockObject)
                 {
-                    if (!_settingsManager.GetValue("VirtoCommerce:ModulesAutoInstalled", false))
+                    if (!_settingsManager.GetValue("VirtoCommerce.ModulesAutoInstalled", false))
                     {
                         var modulesGroups = ConfigurationManager.AppSettings.GetValues("VirtoCommerce:AutoInstallModulesGroups");
                         if (!modulesGroups.IsNullOrEmpty())
                         {
-                            _settingsManager.SetValue("VirtoCommerce:ModulesAutoInstalled", true);
+                            _settingsManager.SetValue("VirtoCommerce.ModulesAutoInstalled", true);
                             var modules = new List<ManifestModuleInfo>();
                             var moduleVersionsGroups = _moduleCatalog.Modules.OfType<ManifestModuleInfo>().Where(x => x.Groups.Intersect(modulesGroups, StringComparer.OrdinalIgnoreCase).Any())
                                                                                              .GroupBy(x => x.Id);
@@ -266,19 +275,15 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                                     Action = webModel.ModuleAction.Install,
                                     Modules = modulesWithDependencies.Select(x => x.ToWebModel()).ToArray()
                                 };
-                                var notification = new webModel.ModuleAutoInstallPushNotification("System")
-                                {
-                                    Title = "Modules auto installation"
-                                };
-
+                                //reset finished date
+                                notification.Finished = null;
                                 BackgroundJob.Enqueue(() => ModuleBackgroundJob(options, notification));
-                                return Ok(notification);
                             }
                         }
                     }
                 }
             }
-            return StatusCode(HttpStatusCode.NoContent);
+            return Ok(notification);
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
@@ -320,6 +325,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             finally
             {
                 notification.Finished = DateTime.UtcNow;
+                notification.ProgressLog.Add(new webModel.ProgressMessage
+                {
+                    Level = ProgressMessageLevel.Info.ToString(),
+                    Message = "Installation finished.",
+                });
                 _pushNotifier.Upsert(notification);
             }
         }

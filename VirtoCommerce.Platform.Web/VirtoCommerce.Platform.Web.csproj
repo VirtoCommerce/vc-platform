@@ -327,10 +327,12 @@
     <Compile Include="Model\Modularity\ModuleDescriptor.cs" />
     <Compile Include="Model\Modularity\ModulePushNotification.cs" />
     <Compile Include="Model\PlatformSetting.cs" />
+    <Content Include="Scripts\app\setup\templates\setupWizard.tpl.html" />
     <Content Include="Scripts\app\modularity\blades\modules-main.js" />
     <Content Include="Scripts\app\modularity\blades\modules-main.tpl.html" />
     <Content Include="Scripts\app\modularity\dialogs\moduleAction-dialog.tpl.html" />
-    <Content Include="Scripts\app\modularity\templates\modulesAutoInstallation.tpl.html" />
+    <Content Include="Scripts\app\modularity\templates\modulesInstallation.tpl.html" />
+    <Content Include="Scripts\app\setup\setup.js" />
     <Content Include="Scripts\common\directives\fallbackSrc.js" />
     <Compile Include="Modularity\Bootstrapper.cs" />
     <Compile Include="Modularity\ExternalManifestModuleCatalog.cs" />
@@ -473,8 +475,7 @@
     <Content Include="Scripts\app\exportImport\notifications\history.tpl.html" />
     <Content Include="Scripts\app\exportImport\notifications\menu.tpl.html" />
     <Content Include="Scripts\app\exportImport\resources\exportImport.js" />
-    <Content Include="Scripts\app\exportImport\templates\sampleDataChoose.tpl.html" />
-    <Content Include="Scripts\app\exportImport\templates\sampleDataInitialization.tpl.html" />
+    <Content Include="Scripts\app\exportImport\templates\sampleDataInstallation.tpl.html" />
     <Content Include="Scripts\app\notifications\blades\notification-journal-details.js" />
     <Content Include="Scripts\app\notifications\blades\notification-journal-details.tpl.html" />
     <Content Include="Scripts\app\notifications\blades\notification-templates-list.tpl.html" />

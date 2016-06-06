@@ -16,33 +16,23 @@
         	}
         	]
         });
-
+	
 	$stateProvider
-        .state('sampleDataChoose', {
-        	url: '/sampleDataChoose',
-        	params: { sampleDataInfos: null },
-        	templateUrl: '$(Platform)/Scripts/app/exportImport/templates/sampleDataChoose.tpl.html',
-        	controller: ['$scope', '$state', '$stateParams', 'platformWebApp.exportImport.resource', function ($scope, $state, $stateParams, exportImportResource) {
-        		$scope.sampleDataInfos = $stateParams.sampleDataInfos;
-        		$scope.loading = false;
-        		$scope.selectItem = function (sampleData) {
-        			$scope.loading = true;
-        			exportImportResource.importSampleData({ url: sampleData.url }, function () {
-        				$state.go(sampleData.url ? 'sampleDataInitialization' : 'workspace');
-        			});
-        		};
-        	}
-        	]
-        });
-
-	$stateProvider
-        .state('sampleDataInitialization', {
-        	url: '/sampleDataInitialization',
-        	templateUrl: '$(Platform)/Scripts/app/exportImport/templates/sampleDataInitialization.tpl.html',
-        	controller: ['$scope', '$state', '$stateParams', 'platformWebApp.exportImport.resource', function ($scope, $state, $stateParams, exportImportResource) {
-        		var sampleDataInfos = $stateParams.sampleDataInfos;
+        .state('setupWizard.sampleDataInstallation', {
+        	url: '/sampleDataInstallation',
+        	templateUrl: '$(Platform)/Scripts/app/exportImport/templates/sampleDataInstallation.tpl.html',
+        	controller: ['$scope', '$state', '$window', '$stateParams', 'platformWebApp.exportImport.resource', 'platformWebApp.setupWizard', function ($scope, $state, $window, $stateParams, exportImportResourse, setupWizard) {
         		$scope.notification = {};
-        		$scope.close = function () { $state.go('workspace') };
+        		$scope.sampleDataInfos = {};
+        		//thats need when state direct open by url or push notification
+        		setupWizard.nextStep("setupWizard.sampleDataInstallation");
+
+        		$scope.close = function () {
+        			setupWizard.nextStep();
+        			$window.location.reload();
+        		};
+
+				//copy notification to scope
         		$scope.$on("new-notification-event", function (event, notification) {
         			if (notification.notifyType == 'SampleDataImportPushNotification') {
         				angular.copy(notification, $scope.notification);
@@ -51,17 +41,51 @@
         				}
         			}
         		});
-				//run sample data installation if its passed as state parameter
-        		if (sampleDataInfos.length > 1) {
-        			exportImportResourse.importSampleData({ url: sampleDataInfos[0].url });
+
+        		$scope.importData = function (sampleData) {
+        			if (sampleData.url) {
+        				exportImportResourse.importSampleData({ url: sampleData.url }, function (data) {
+							//need check notification.created because not exist any way to check empty response 
+        					if (data && data.created) {
+        						angular.copy(data, $scope.notification);
+        					}
+        					else
+        					{
+        						setupWizard.nextStep();
+        					}
+        				});
+        			}
+        			else
+        			{
+        				setupWizard.nextStep();
+        			}
         		}
-        	
+
+        		function discoverSampleData() {
+        			$scope.loading = true;
+        			exportImportResourse.sampleDataDiscover({}, function (sampleDataInfos) {
+        				$scope.loading = false;
+						//run obvious sample data installation 
+        				if (angular.isArray(sampleDataInfos) && sampleDataInfos.length > 0) {
+        					if (sampleDataInfos.length > 1) {
+        						$scope.sampleDataInfos = sampleDataInfos;
+        					}
+        					else {
+        						$scope.importData(sampleDataInfos[0]);
+        					}
+        				} 
+        				else {
+							//nothing to import - skip step
+        					setupWizard.nextStep();
+        				}
+        			});
+        		};
+        		discoverSampleData();
         	}]
         });
-}]
-)
+}])
 .run(
-  ['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', 'platformWebApp.pushNotificationTemplateResolver', 'platformWebApp.bladeNavigationService', 'platformWebApp.exportImport.resource', '$localStorage', function ($rootScope, mainMenuService, widgetService, $state, pushNotificationTemplateResolver, bladeNavigationService, exportImportResourse, $localStorage) {
+  ['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', 'platformWebApp.pushNotificationTemplateResolver', 'platformWebApp.bladeNavigationService', 'platformWebApp.exportImport.resource', 'platformWebApp.setupWizard', function ($rootScope, mainMenuService, widgetService, $state, pushNotificationTemplateResolver, bladeNavigationService, exportImportResourse, setupWizard) {
   	var menuItem = {
   		path: 'configuration/exportImport',
   		icon: 'fa fa-database',
@@ -101,24 +125,15 @@
   	pushNotificationTemplateResolver.register(historyExportImportTemplate);
 
   	$rootScope.$on("new-notification-event", function (event, notification) {
-  		if (notification.notifyType == 'SampleDataImportPushNotification' && $state.current && $state.current.name != 'sampleDataInitialization')
+  		if (notification.notifyType == 'SampleDataImportPushNotification' && $state.current && $state.current.name != 'setupWizard.sampleDataInstallation')
   		{
-  			$state.go('sampleDataInitialization')
+  			$state.go('setupWizard.sampleDataInstallation')
   		}
   	});
+  	//register setup wizard step - sample data auto installation
+  	setupWizard.registerStep({
+  		state: "setupWizard.sampleDataInstallation",
+  		priority: 10
+  	});
 
-  	if ($localStorage['RunSampleDataImport']) {
-  		$localStorage['RunSampleDataImport'] = false;
-  		//next show sample data installation state depend on sample data discover response
-  		exportImportResourse.sampleDataDiscover({}, function (sampleDataInfos) {
-  			if (angular.isArray(sampleDataInfos) && sampleDataInfos.length > 0) {
-  				if (sampleDataInfos.length > 1) {
-  					$state.go('sampleDataChoose', { sampleDataInfos: sampleDataInfos });
-  				}
-  				else {
-  					exportImportResourse.importSampleData({ url: sampleDataInfos[0].url });
-  				}
-  			}
-  		});
-  	}
   }]);
