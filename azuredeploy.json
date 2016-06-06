@@ -1,5 +1,5 @@
 ﻿{
-    "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
         "siteName": {
@@ -59,11 +59,13 @@
     "variables": {
         "storageName": "[replace(parameters('siteName'), '-', '')]",
         "storageType": "Standard_LRS",
-        "Commerce": {
-            "configValue": "commerce"
-        },
-        "None": {
-            "configValue": ""
+        "moduleBundles": {
+            "Commerce": {
+                "configValue": "commerce"
+            },
+            "None": {
+                "configValue": ""
+            }
         }
     },
     "resources": [
@@ -163,12 +165,17 @@
                                 "Name": "AssetsConnectionString",
                                 "ConnectionString": "[concat('provider=AzureBlobStorage;DefaultEndpointsProtocol=https;AccountName=', variables('storageName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key1)]",
                                 "Type": 3
+                            },
+                            {
+                                "Name": "CmsContentConnectionString",
+                                "ConnectionString": "[concat('provider=AzureBlobStorage;DefaultEndpointsProtocol=https;AccountName=', variables('storageName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key1)]",
+                                "Type": 3
                             }
                         ],
                         "appSettings": [
                             {
                                 "name": "VirtoCommerce:AutoInstallModuleBundles",
-                                "value": "[variables(parameters('installModuleBundle')).configValue]"
+                                "value": "[variables('moduleBundles')[parameters('installModuleBundle')].configValue]"
                             }
                         ],
                         "virtualApplications": [
@@ -179,10 +186,6 @@
                                     {
                                         "virtualPath": "/modules",
                                         "physicalPath": "site\\wwwroot\\modules"
-                                    },
-                                    {
-                                        "virtualPath": "/assets",
-                                        "physicalPath": "site\\wwwroot\\platform\\App_Data\\Assets"
                                     }
                                 ]
                             }
@@ -205,11 +208,5 @@
                 }
             ]
         }
-    ],
-    "outputs": {
-        "storageKeys": {
-            "value": "[listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15')]",
-            "type": "object"
-        }
-    }
+    ]
 }
