@@ -73,6 +73,7 @@
                 selection: selection,
                 dependencies: data,
                 callback: function () {
+                    // initiate module (un)installation
                     blade.isLoading = true;
                     _.each(selection, function (x) {
                         if (!_.findWhere(data, { id: x.id })) {
@@ -83,16 +84,35 @@
                     switch (action) {
                         case 'install':
                         case 'update':
-                            modules.install(data, onAfterSubmitted, function (error) {
-                                bladeNavigationService.setError('Error ' + error.status, blade);
-                            });
+                            modulesApiMethod = modules.install;
                             break;
                         case 'uninstall':
-                            modules.uninstall(data, onAfterSubmitted, function (error) {
-                                bladeNavigationService.setError('Error ' + error.status, blade);
-                            });
+                            modulesApiMethod = modules.uninstall;
                             break;
                     }
+                    modulesApiMethod(data, function (data) {
+                        // show module (un)installation progress
+                        var newBlade = {
+                            id: 'moduleInstallProgress',
+                            currentEntity: data,
+                            controller: 'platformWebApp.moduleInstallProgressController',
+                            template: '$(Platform)/Scripts/app/modularity/wizards/newModule/module-wizard-progress-step.tpl.html'
+                        };
+                        switch (action) {
+                            case 'install':
+                                _.extend(newBlade, { title: 'platform.blades.module-wizard-progress-step.title-install' });
+                                break;
+                            case 'update':
+                                _.extend(newBlade, { title: 'platform.blades.module-wizard-progress-step.title-update' });
+                                break;
+                            case 'uninstall':
+                                _.extend(newBlade, { title: 'platform.blades.module-wizard-progress-step.title-uninstall' });
+                                break;
+                        }
+                        bladeNavigationService.showBlade(newBlade, blade.parentBlade);
+                    }, function (error) {
+                        bladeNavigationService.setError('Error ' + error.status, blade);
+                    });
                 }
             }
             dialogService.showDialog(dialog, '$(Platform)/Scripts/app/modularity/dialogs/moduleAction-dialog.tpl.html', 'platformWebApp.confirmDialogController');
@@ -100,17 +120,6 @@
             bladeNavigationService.setError('Error ' + error.status, blade);
         });
     };
-
-    function onAfterSubmitted(data) {
-        var newBlade = {
-            id: 'moduleInstallProgress',
-            currentEntity: data,
-            title: 'platform.blades.module-wizard-progress-step.title',
-            controller: 'platformWebApp.moduleInstallProgressController',
-            template: '$(Platform)/Scripts/app/modularity/wizards/newModule/module-wizard-progress-step.tpl.html'
-        };
-        bladeNavigationService.showBlade(newBlade, blade.parentBlade);
-    }
 
     blade.headIcon = 'fa-cubes';
 
