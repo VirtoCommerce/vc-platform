@@ -93,8 +93,8 @@ angular.module('platformWebApp', AppDependencies).
   }])
 
 .run(
-  ['$rootScope', '$state', '$stateParams', 'platformWebApp.authService', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService', '$animate', '$templateCache', 'gridsterConfig', 'taOptions',
-    function ($rootScope, $state, $stateParams, authService, mainMenuService, pushNotificationService, $animate, $templateCache, gridsterConfig, taOptions) {
+  ['$rootScope', '$state', '$stateParams', 'platformWebApp.authService', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService', '$animate', '$templateCache', 'gridsterConfig', 'taOptions', '$timeout',
+    function ($rootScope, $state, $stateParams, authService, mainMenuService, pushNotificationService, $animate, $templateCache, gridsterConfig, taOptions, $timeout) {
         //Disable animation
         $animate.enabled(false);
 
@@ -140,20 +140,22 @@ angular.module('platformWebApp', AppDependencies).
         //});
 
         $rootScope.$on('loginStatusChanged', function (event, authContext) {
-            if (authContext.isAuthenticated) {
-                console.log('State - ' + $state.current.name);
-                if (!$state.current.name || $state.current.name == 'loginDialog') {
-                    homeMenuItem.action();
-                }
-            }
-            else {
-                $state.go('loginDialog');
-            }
+			//timeout need because $state not fully loading in run method and need to wait little time
+			$timeout(function () {
+				if (authContext.isAuthenticated) {
+				    if (!$state.current.name || $state.current.name == 'loginDialog') {
+				        homeMenuItem.action();
+				    }
+				}
+				else {
+				    $state.go('loginDialog');
+				}			
+			}, 500);
+        	
         });
 
         authService.fillAuthData();
-
-
+       
         // cache application level templates
         $templateCache.put('pagerTemplate.html', '<div class="pagination"><pagination boundary-links="true" max-size="pageSettings.numPages" items-per-page="pageSettings.itemsPerPageCount" total-items="pageSettings.totalItems" ng-model="pageSettings.currentPage" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination></div>');
 

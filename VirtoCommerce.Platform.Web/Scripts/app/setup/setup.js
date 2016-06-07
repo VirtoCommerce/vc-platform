@@ -5,66 +5,66 @@
         	url: '/setupWizard',
         	templateUrl: '$(Platform)/Scripts/app/setup/templates/setupWizard.tpl.html',
         	controller: ['$scope', '$state', '$stateParams', 'platformWebApp.setupWizard', function ($scope, $state, $stateParams, setupWizard) {
-        		var step = setupWizard.currentStep
-        		if (!step)
-        		{
-        			step = setupWizard.wizardSteps[0];
-        		}
-        		setupWizard.nextStep(step.state);
+        		setupWizard.loadStep(function (step) {
+        			if (step) {
+        				setupWizard.showStep(step);
+        			};
+        		});
         	}]
         });
 }])
 .factory('platformWebApp.setupWizard', ['$state', 'platformWebApp.settings', function ($state, settings) {	
-	var retVal = {
-		currentStep: undefined,
-		wizardSteps: []
-	};
-	//switches the current step in the wizard to passed or next on the current
-	retVal.nextStep = function (state) {
-		if (state) {
-			retVal.currentStep = _.find(retVal.wizardSteps, function (x) { return x.state == state; });
-		}
-		else {
-			if (retVal.currentStep) {
-				retVal.currentStep = retVal.currentStep.nextStep;
-			}
-		};
+	var wizardSteps = [];
+	var wizard =
+	{
+		//switches the current step in the wizard to passed or next on the current
+		showStep : function (step) {
+			var state = step ? step.state : "workspace";
+			settings.update([{ name: 'VirtoCommerce.SetupStep', value: state }]);
+			$state.go(state);
+		},
 
-		settings.update([{ name: 'VirtoCommerce.SetupStep', value: retVal.currentStep ? retVal.currentStep.state : "n/a" }]);
-		if (retVal.currentStep) {
-			$state.go(retVal.currentStep.state)
-		}
-		else {
-			$state.go("workspace");
+		findStep : function (state) {
+			return _.find(wizardSteps, function (x) { return x.state == state; });
+		},
+
+		//registered step in the wizard
+		registerStep : function (wizardStep) {
+			wizardSteps.push(wizardStep);
+			wizardSteps = _.sortBy(wizardSteps, function (x) { return x.priority; });
+			var nextStep = undefined;
+			for (var i = wizardSteps.length; i-- > 0;) {
+				wizardSteps[i].nextStep = nextStep;
+				nextStep = wizardSteps[i];
+			}
+		},
+
+		loadStep : function (callback) {
+			//Initial step
+			var step = wizardSteps[0];
+			//restore  saved setup step
+			settings.getValues({ id: "VirtoCommerce.SetupStep" }, function (data) {
+				if (angular.isArray(data) && data.length > 0) {
+					step = wizard.findStep(data[0]);
+				}
+				callback(step);
+			}, function (error) { callback(step); });
 		}
 	};
-	//registered step in the wizard
-	retVal.registerStep = function(wizardStep) {
-		retVal.wizardSteps.push(wizardStep);
-		retVal.wizardSteps = _.sortBy(retVal.wizardSteps, function (x) { return x.priority; });
-		var nextStep = undefined;
-		for (var i = retVal.wizardSteps.length; i-- > 0;) {
-			retVal.wizardSteps[i].nextStep = nextStep;
-			nextStep = retVal.wizardSteps[i];
-		}
-		//Initial step
-		retVal.currentStep = retVal.wizardSteps[0];
-	};	
-	return retVal;
+	return wizard;
 }])
 .run(
-  ['$rootScope', '$state', 'platformWebApp.setupWizard', 'platformWebApp.settings', function ($rootScope, $state, setupWizard, settings) {
+  ['$rootScope', '$state', 'platformWebApp.setupWizard', 'platformWebApp.settings', '$timeout', function ($rootScope, $state, setupWizard, settings, $timeout) {
   	//Try to run setup wizard
   	$rootScope.$on('loginStatusChanged', function (event, authContext) {
-  		//Try to display setup starting with previous saved step
-  		if (settings.getValues({ id: "VirtoCommerce.SetupStep" }, function (data) {
-			var stepState = setupWizard.currentStep.state;
-			if (angular.isArray(data) && data.length > 0) {
-				stepState = data[0];
-  			}			
-			setupWizard.nextStep(stepState);
-  			//VirtoCommerce.SetupStep setting 204 not found response handling
-  		}, function (error) { setupWizard.nextStep(setupWizard.currentStep.state); }));
+  		//timeout need because $state not fully loading in run method and need to wait little time
+  		$timeout(function () {
+  			setupWizard.loadStep(function (step) {
+  				if (step) {
+  					setupWizard.showStep(step);
+  				};
+  			});
+  		}, 500);
   	});
 
   }]);

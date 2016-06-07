@@ -20,21 +20,27 @@
 	.state('setupWizard.modulesInstallation', {
 		url: '/modulesInstallation',
 		templateUrl: '$(Platform)/Scripts/app/modularity/templates/modulesInstallation.tpl.html',
-		controller: ['$scope', '$state', '$window', 'platformWebApp.modules', 'platformWebApp.exportImport.resource', 'platformWebApp.setupWizard', function ($scope, $state, $window, modules, exportImportResourse, setupWizard) {
+		controller: ['$scope', '$state', '$stateParams', '$window', 'platformWebApp.modules', 'platformWebApp.exportImport.resource', 'platformWebApp.setupWizard', function ($scope, $state, $stateParams, $window, modules, exportImportResourse, setupWizard) {
 			$scope.notification = {};
+			if ($stateParams.notification)
+			{
+				$scope.notification = $stateParams.notification;
+			}
 			//thats need when state direct open by url or push notification
-			setupWizard.nextStep("setupWizard.modulesInstallation");
-			modules.autoInstall({}, function (data) {
-				//if already installed need skip this step
-				if (data.finished) {					
-					setupWizard.nextStep();
-				}
-			});
+			var step = setupWizard.findStep($state.current.name);
+			if (!$scope.notification.created) {
+				modules.autoInstall({}, function (data) {
+					//if already installed need skip this step
+					if (data.finished) {
+						setupWizard.showStep(step.nextStep);
+					}
+				});
+			}
 
 			$scope.restart = function () {
 				$scope.restarted = true;
 				modules.restart({}, function () {
-					setupWizard.nextStep();
+					setupWizard.showStep(step.nextStep);
 					$window.location.reload();
 				});
 			};		
@@ -94,7 +100,7 @@
   	//Switch to  setupWizard.modulesInstallation state when receive ModuleAutoInstallPushNotification push notification
   	$rootScope.$on("new-notification-event", function (event, notification) {
   		if (notification.notifyType == 'ModuleAutoInstallPushNotification' && $state.current && $state.current.name != 'setupWizard.modulesInstallation') {
-  			$state.go('setupWizard.modulesInstallation')
+  			$state.go('setupWizard.modulesInstallation', { notification: notification });
   		}
   	});
 	//register setup wizard step - modules auto installation

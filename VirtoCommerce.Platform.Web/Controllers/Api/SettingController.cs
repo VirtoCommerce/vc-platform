@@ -13,6 +13,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     [RoutePrefix("api/platform/settings")]
     public class SettingController : ApiController
     {
+        private static object _lock = new object();
         private readonly ISettingsManager _settingsManager;
         public SettingController(ISettingsManager settingsManager)
         {
@@ -76,7 +77,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [CheckPermission(Permission = PredefinedPermissions.SettingUpdate)]
         public IHttpActionResult Update(webModel.Setting[] settings)
         {
-            _settingsManager.SaveSettings(settings.Select(x => x.ToModuleModel()).ToArray());
+            lock (_lock)
+            {
+                _settingsManager.SaveSettings(settings.Select(x => x.ToModuleModel()).ToArray());
+            }
             return StatusCode(HttpStatusCode.NoContent);
         }        
        

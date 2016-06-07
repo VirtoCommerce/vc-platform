@@ -23,12 +23,15 @@
         	templateUrl: '$(Platform)/Scripts/app/exportImport/templates/sampleDataInstallation.tpl.html',
         	controller: ['$scope', '$state', '$window', '$stateParams', 'platformWebApp.exportImport.resource', 'platformWebApp.setupWizard', function ($scope, $state, $window, $stateParams, exportImportResourse, setupWizard) {
         		$scope.notification = {};
+        		if ($stateParams.notification) {
+        			$scope.notification = $stateParams.notification;
+        		}
         		$scope.sampleDataInfos = {};
         		//thats need when state direct open by url or push notification
-        		setupWizard.nextStep("setupWizard.sampleDataInstallation");
+        		var step = setupWizard.findStep($state.current.name);
 
         		$scope.close = function () {
-        			setupWizard.nextStep();
+        			setupWizard.showStep(step.nextStep);
         			$window.location.reload();
         		};
 
@@ -51,13 +54,13 @@
         					}
         					else
         					{
-        						setupWizard.nextStep();
+        						setupWizard.showStep(step.nextStep);
         					}
         				});
         			}
         			else
         			{
-        				setupWizard.nextStep();
+        				setupWizard.showStep(step.nextStep);
         			}
         		}
 
@@ -76,7 +79,7 @@
         				} 
         				else {
 							//nothing to import - skip step
-        					setupWizard.nextStep();
+        					setupWizard.showStep(step.nextStep);
         				}
         			});
         		};
@@ -127,7 +130,7 @@
   	$rootScope.$on("new-notification-event", function (event, notification) {
   		if (notification.notifyType == 'SampleDataImportPushNotification' && $state.current && $state.current.name != 'setupWizard.sampleDataInstallation')
   		{
-  			$state.go('setupWizard.sampleDataInstallation')
+  			$state.go('setupWizard.sampleDataInstallation', { notification: notification });
   		}
   	});
   	//register setup wizard step - sample data auto installation
