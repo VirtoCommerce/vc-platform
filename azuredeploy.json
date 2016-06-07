@@ -84,6 +84,7 @@
             "location": "[parameters('siteLocation')]",
             "apiVersion": "2014-04-01-preview",
             "properties": {
+                "version": "12.0",
                 "administratorLogin": "[parameters('sqlAdministratorLogin')]",
                 "administratorLoginPassword": "[parameters('sqlAdministratorPassword')]"
             },
@@ -169,6 +170,11 @@
                             {
                                 "Name": "CmsContentConnectionString",
                                 "ConnectionString": "[concat('provider=AzureBlobStorage;rootPath=cms;DefaultEndpointsProtocol=https;AccountName=', variables('storageName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key1)]",
+                                "Type": 3
+                            },
+                            {
+                                "Name": "SearchConnectionString",
+                                "ConnectionString": "provider=Lucene;server=~/App_Data/Lucene;scope=default",
                                 "Type": 3
                             }
                         ],

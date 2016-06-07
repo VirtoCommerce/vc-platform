@@ -9,11 +9,12 @@
 using System.Reflection;
 
 [assembly: AssemblyCompany("VirtoCommerce")]
-[assembly: AssemblyProduct("Virto Commerce 2.10")]
+[assembly: AssemblyProduct("Virto Commerce 2.11")]
 [assembly: AssemblyCopyright("Copyright © VirtoCommerce 2011-2016")]
-[assembly: AssemblyFileVersion("2.10.1438.0")]
-[assembly: AssemblyVersion("2.10.0.0")]
-[assembly: AssemblyInformationalVersion("2.10")]
+
+[assembly: AssemblyFileVersion("2.11.0.0")]
+[assembly: AssemblyVersion("2.11.0.0")]
+[assembly: AssemblyInformationalVersion("2.11")]
 
 #if DEBUG
 [assembly: AssemblyConfiguration("Debug")]
