@@ -54,7 +54,7 @@
 }])
 .run(
   ['$rootScope', '$state', 'platformWebApp.setupWizard', 'platformWebApp.settings', function ($rootScope, $state, setupWizard, settings) {
-  	//Try to auto install  modules
+  	//Try to run setup wizard
   	$rootScope.$on('loginStatusChanged', function (event, authContext) {
   		//Try to display setup starting with previous saved step
   		if (settings.getValues({ id: "VirtoCommerce.SetupStep" }, function (data) {

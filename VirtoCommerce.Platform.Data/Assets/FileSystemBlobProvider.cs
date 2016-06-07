@@ -209,8 +209,14 @@ namespace VirtoCommerce.Platform.Data.Assets
 
         protected string GetRelativeUrl(string url)
         {
-            return url.Replace(_basePublicUrl, string.Empty);
+            var retVal = url;
+            if (!string.IsNullOrEmpty(_basePublicUrl))
+            {
+                retVal = url.Replace(_basePublicUrl, string.Empty);
+            }
+            return retVal;
         }
+
         protected string GetAbsoluteUrlFromPath(string path)
         {
             var retVal = _basePublicUrl + "/" + path.Replace(_storagePath, String.Empty).TrimStart('\\').Replace('\\', '/');
