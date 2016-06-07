@@ -21,7 +21,7 @@ namespace VirtoCommerce.Platform.Data.Model
         [StringLength(128)]
         public string Name { get; set; }
 
-        [StringLength(256)]
+        [StringLength(1024)]
         public string Description { get; set; }
 
         public bool IsSystem { get; set; }

@@ -210,6 +210,10 @@
     <Compile Include="Repositories\Migrations\201601281430196_NewIndexes.Designer.cs">
       <DependentUpon>201601281430196_NewIndexes.cs</DependentUpon>
     </Compile>
+    <Compile Include="Repositories\Migrations\201606071049349_SettingDescriptionIncSize.cs" />
+    <Compile Include="Repositories\Migrations\201606071049349_SettingDescriptionIncSize.Designer.cs">
+      <DependentUpon>201606071049349_SettingDescriptionIncSize.cs</DependentUpon>
+    </Compile>
     <Compile Include="Repositories\Migrations\Configuration.cs" />
     <Compile Include="Repositories\PlatformDatabaseInitializer.cs" />
     <Compile Include="Repositories\PlatformRepository.cs" />
@@ -286,6 +290,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Repositories\Migrations\201601281430196_NewIndexes.resx">
       <DependentUpon>201601281430196_NewIndexes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Repositories\Migrations\201606071049349_SettingDescriptionIncSize.resx">
+      <DependentUpon>201606071049349_SettingDescriptionIncSize.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
