@@ -6,7 +6,10 @@
 //   Virto Commerce
 // </summary>
 // ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+using System;
 using System.Reflection;
+using System.Runtime.InteropServices;
 
 [assembly: AssemblyCompany("VirtoCommerce")]
 [assembly: AssemblyProduct("Virto Commerce 2.11")]
@@ -21,3 +24,6 @@ using System.Reflection;
 #else
 [assembly: AssemblyConfiguration("Release")]
 #endif
+
+[assembly: ComVisible(false)]
+[assembly: CLSCompliant(true)]

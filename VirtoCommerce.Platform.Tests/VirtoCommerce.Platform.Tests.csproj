@@ -84,6 +84,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="DynamicPropertyTests.cs" />
     <Compile Include="NotificationScenarios.cs" />
     <Compile Include="ZipPackageServiceTests.cs" />
