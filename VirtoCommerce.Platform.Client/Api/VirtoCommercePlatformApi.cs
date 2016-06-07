@@ -1213,9 +1213,9 @@ namespace VirtoCommerce.Platform.Client.Api
         /// 
         /// </remarks>
         /// <exception cref="VirtoCommerce.Platform.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">Setting system name.</param>
+        /// <param name="name">Setting system name.</param>
         /// <returns>Setting</returns>
-        Setting SettingGetSetting(string id);
+        Setting SettingGetSetting(string name);
 
         /// <summary>
         /// Get setting details by name
@@ -1224,9 +1224,9 @@ namespace VirtoCommerce.Platform.Client.Api
         /// 
         /// </remarks>
         /// <exception cref="VirtoCommerce.Platform.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">Setting system name.</param>
+        /// <param name="name">Setting system name.</param>
         /// <returns>ApiResponse of Setting</returns>
-        ApiResponse<Setting> SettingGetSettingWithHttpInfo(string id);
+        ApiResponse<Setting> SettingGetSettingWithHttpInfo(string name);
         /// <summary>
         /// Update settings values
         /// </summary>
@@ -2449,9 +2449,9 @@ namespace VirtoCommerce.Platform.Client.Api
         /// 
         /// </remarks>
         /// <exception cref="VirtoCommerce.Platform.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">Setting system name.</param>
+        /// <param name="name">Setting system name.</param>
         /// <returns>Task of Setting</returns>
-        System.Threading.Tasks.Task<Setting> SettingGetSettingAsync(string id);
+        System.Threading.Tasks.Task<Setting> SettingGetSettingAsync(string name);
 
         /// <summary>
         /// Get setting details by name
@@ -2460,9 +2460,9 @@ namespace VirtoCommerce.Platform.Client.Api
         /// 
         /// </remarks>
         /// <exception cref="VirtoCommerce.Platform.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">Setting system name.</param>
+        /// <param name="name">Setting system name.</param>
         /// <returns>Task of ApiResponse (Setting)</returns>
-        System.Threading.Tasks.Task<ApiResponse<Setting>> SettingGetSettingAsyncWithHttpInfo(string id);
+        System.Threading.Tasks.Task<ApiResponse<Setting>> SettingGetSettingAsyncWithHttpInfo(string name);
         /// <summary>
         /// Update settings values
         /// </summary>
@@ -11003,11 +11003,11 @@ namespace VirtoCommerce.Platform.Client.Api
         /// Get setting details by name 
         /// </summary>
         /// <exception cref="VirtoCommerce.Platform.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">Setting system name.</param>
+        /// <param name="name">Setting system name.</param>
         /// <returns>Setting</returns>
-        public Setting SettingGetSetting(string id)
+        public Setting SettingGetSetting(string name)
         {
-             ApiResponse<Setting> localVarResponse = SettingGetSettingWithHttpInfo(id);
+             ApiResponse<Setting> localVarResponse = SettingGetSettingWithHttpInfo(name);
              return localVarResponse.Data;
         }
 
@@ -11015,15 +11015,15 @@ namespace VirtoCommerce.Platform.Client.Api
         /// Get setting details by name 
         /// </summary>
         /// <exception cref="VirtoCommerce.Platform.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">Setting system name.</param>
+        /// <param name="name">Setting system name.</param>
         /// <returns>ApiResponse of Setting</returns>
-        public ApiResponse<Setting> SettingGetSettingWithHttpInfo(string id)
+        public ApiResponse<Setting> SettingGetSettingWithHttpInfo(string name)
         {
-            // verify the required parameter 'id' is set
-            if (id == null)
-                throw new ApiException(400, "Missing required parameter 'id' when calling VirtoCommercePlatformApi->SettingGetSetting");
+            // verify the required parameter 'name' is set
+            if (name == null)
+                throw new ApiException(400, "Missing required parameter 'name' when calling VirtoCommercePlatformApi->SettingGetSetting");
 
-            var localVarPath = "/api/platform/settings/{id}";
+            var localVarPath = "/api/platform/settings/{name}";
             var localVarPathParams = new Dictionary<string, string>();
             var localVarQueryParams = new Dictionary<string, string>();
             var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
@@ -11050,7 +11050,7 @@ namespace VirtoCommerce.Platform.Client.Api
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
-            if (id != null) localVarPathParams.Add("id", ApiClient.ParameterToString(id)); // path parameter
+            if (name != null) localVarPathParams.Add("name", ApiClient.ParameterToString(name)); // path parameter
 
 
             // make the HTTP request
@@ -11075,11 +11075,11 @@ namespace VirtoCommerce.Platform.Client.Api
         /// Get setting details by name 
         /// </summary>
         /// <exception cref="VirtoCommerce.Platform.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">Setting system name.</param>
+        /// <param name="name">Setting system name.</param>
         /// <returns>Task of Setting</returns>
-        public async System.Threading.Tasks.Task<Setting> SettingGetSettingAsync(string id)
+        public async System.Threading.Tasks.Task<Setting> SettingGetSettingAsync(string name)
         {
-             ApiResponse<Setting> localVarResponse = await SettingGetSettingAsyncWithHttpInfo(id);
+             ApiResponse<Setting> localVarResponse = await SettingGetSettingAsyncWithHttpInfo(name);
              return localVarResponse.Data;
 
         }
@@ -11088,15 +11088,15 @@ namespace VirtoCommerce.Platform.Client.Api
         /// Get setting details by name 
         /// </summary>
         /// <exception cref="VirtoCommerce.Platform.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="id">Setting system name.</param>
+        /// <param name="name">Setting system name.</param>
         /// <returns>Task of ApiResponse (Setting)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Setting>> SettingGetSettingAsyncWithHttpInfo(string id)
+        public async System.Threading.Tasks.Task<ApiResponse<Setting>> SettingGetSettingAsyncWithHttpInfo(string name)
         {
-            // verify the required parameter 'id' is set
-            if (id == null)
-                throw new ApiException(400, "Missing required parameter 'id' when calling VirtoCommercePlatformApi->SettingGetSetting");
+            // verify the required parameter 'name' is set
+            if (name == null)
+                throw new ApiException(400, "Missing required parameter 'name' when calling VirtoCommercePlatformApi->SettingGetSetting");
 
-            var localVarPath = "/api/platform/settings/{id}";
+            var localVarPath = "/api/platform/settings/{name}";
             var localVarPathParams = new Dictionary<string, string>();
             var localVarQueryParams = new Dictionary<string, string>();
             var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
@@ -11123,7 +11123,7 @@ namespace VirtoCommerce.Platform.Client.Api
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
-            if (id != null) localVarPathParams.Add("id", ApiClient.ParameterToString(id)); // path parameter
+            if (name != null) localVarPathParams.Add("name", ApiClient.ParameterToString(name)); // path parameter
 
 
             // make the HTTP request
