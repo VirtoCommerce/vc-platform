@@ -8,14 +8,13 @@ using VirtoCommerce.Platform.Data.Repositories;
 using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Data.Model;
 using VirtoCommerce.Platform.Core.Common;
+using System.Data.Entity.Core.Objects;
+using System.Data.Entity;
 
 namespace VirtoCommerce.Platform.Data.Notifications
 {
 	public class NotificationManager : INotificationManager
 	{
-		private const string _platformObjectId = "Platform";
-		private const string _platformObjectType = "Platform";
-
 		private INotificationTemplateResolver _resolver;
 		private Func<IPlatformRepository> _repositoryFactory;
 		private INotificationTemplateService _notificationTemplateService;
@@ -175,37 +174,34 @@ namespace VirtoCommerce.Platform.Data.Notifications
 		{
 			var retVal = new SearchNotificationsResult();
 
-			using (var repository = _repositoryFactory())
-			{
-				retVal.Notifications = new List<Core.Notifications.Notification>();
-				if (!criteria.IsActive)
-				{
-					var query = repository.Notifications;
-					
-					if (!criteria.ObjectId.Equals(_platformObjectId) || !criteria.ObjectTypeId.Equals(_platformObjectType))
-					{
-						query = query.Where(n => n.ObjectId == criteria.ObjectId && n.ObjectTypeId == criteria.ObjectTypeId);
-					}
+            using (var repository = _repositoryFactory())
+            {
+                retVal.Notifications = new List<Core.Notifications.Notification>();
 
-					query = query.OrderBy(n => n.CreatedDate).Skip(criteria.Skip).Take(criteria.Take);
+                var query = repository.Notifications;
 
-					foreach (var notification in query.ToList())
-					{
-						retVal.Notifications.Add(GetNotificationCoreModel(notification));
-					}
-					retVal.TotalCount = repository.Notifications.Count(n => n.ObjectId == criteria.ObjectId && n.ObjectTypeId == criteria.ObjectTypeId);
-				}
-				else
-				{
-					var notifications = repository.Notifications.Where(n => n.IsActive && !n.IsSuccessSend && !n.SentDate.HasValue && (!n.StartSendingDate.HasValue || (n.StartSendingDate.HasValue && n.StartSendingDate.Value < DateTime.UtcNow))).OrderBy(n => n.CreatedBy).Take(criteria.Take);
-					foreach(var notification in notifications)
-					{
-						retVal.Notifications.Add(GetNotificationCoreModel(notification));
-					}
-				}
-			}
+                if (!string.IsNullOrEmpty(criteria.ObjectId))
+                {
+                    query = query.Where(n => n.ObjectId == criteria.ObjectId);
+                }
+                if (!string.IsNullOrEmpty(criteria.ObjectTypeId))
+                {
+                    query = query.Where(n => n.ObjectTypeId == criteria.ObjectTypeId);
+                }
+                if (criteria.IsActive)
+                {
+                    query = query.Where(n => n.IsActive && n.SentDate == null && (n.LastFailAttemptDate == null || DbFunctions.AddHours(n.LastFailAttemptDate, criteria.RepeatHoursIntervalForFail) < DateTime.UtcNow));
+                }
+                retVal.TotalCount = query.Count();
+                retVal.Notifications = query.OrderBy(n => n.CreatedDate)
+                                            .Skip(criteria.Skip)
+                                            .Take(criteria.Take)
+                                            .ToArray()
+                                            .Select(x => GetNotificationCoreModel(x))
+                                            .ToList();
+            }
 
-			return retVal;
+            return retVal;
 		}
 
 		public void StopSendingNotifications(string[] ids)

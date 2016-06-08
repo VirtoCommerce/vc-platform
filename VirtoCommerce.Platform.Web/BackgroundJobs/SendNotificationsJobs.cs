@@ -11,27 +11,18 @@ namespace VirtoCommerce.Platform.Web.BackgroundJobs
 	public class SendNotificationsJobs
 	{
 		private readonly INotificationManager _notificationManager;
-
-		private readonly int _take;
+		private readonly int _sendingBatchSize;
 
 		public SendNotificationsJobs(INotificationManager notificationManager, ISettingsManager settingsManager)
         {
-			if (notificationManager != null)
-			{
-				_notificationManager = notificationManager;
-			}
-
-			if(settingsManager != null)
-			{
-				var takeSetting = settingsManager.GetSettingByName("VirtoCommerce.Platform.Notifications.SendingJob.TakeCount");
-				_take = Convert.ToInt32(takeSetting.Value);
-			}
+			_notificationManager = notificationManager;
+	        _sendingBatchSize = settingsManager.GetValue("VirtoCommerce.Platform.Notifications.SendingJob.TakeCount", 20);          
         }
 
         [DisableConcurrentExecution(60 * 60 * 24)]
         public void Process()
         {
-			var criteria = new SearchNotificationCriteria() { IsActive = true, Take = _take };
+			var criteria = new SearchNotificationCriteria() { IsActive = true, Take = _sendingBatchSize };
 
 			var result = _notificationManager.SearchNotifications(criteria);
 			if(result != null && result.Notifications != null && result.Notifications.Count > 0)

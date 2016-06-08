@@ -201,7 +201,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
-        /// Get notification journal page
+        /// Get notification journal for object
         /// </summary>
         /// <remarks>
         /// Method returns notification journal page with array of notification, that was send, sending or will be send in future. Result contains total count, that can be used
@@ -214,9 +214,32 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpGet]
         [ResponseType(typeof(webModels.SearchNotificationsResult))]
         [Route("journal/{objectId}/{objectTypeId}")]
-        public IHttpActionResult GetNotificationJournal(string objectId, string objectTypeId, int start, int count)
+        public IHttpActionResult GetObjectNotificationJournal(string objectId, string objectTypeId, int start, int count)
         {
             var result = _notificationManager.SearchNotifications(new SearchNotificationCriteria() { ObjectId = objectId, ObjectTypeId = objectTypeId, Skip = start, Take = count });
+
+            var retVal = new webModels.SearchNotificationsResult();
+            retVal.Notifications = result.Notifications.Select(nt => nt.ToWebModel()).ToArray();
+            retVal.TotalCount = result.TotalCount;
+
+            return Ok(retVal);
+        }
+
+        /// <summary>
+        /// Get all notification journal 
+        /// </summary>
+        /// <remarks>
+        /// Method returns notification journal page with array of notification, that was send, sending or will be send in future. Result contains total count, that can be used
+        /// for paging.
+        /// </remarks>
+        /// <param name="start">Page setting start</param>
+        /// <param name="count">Page setting count</param>
+        [HttpGet]
+        [ResponseType(typeof(webModels.SearchNotificationsResult))]
+        [Route("journal")]
+        public IHttpActionResult GetNotificationJournal(int start, int count)
+        {
+            var result = _notificationManager.SearchNotifications(new SearchNotificationCriteria() { Skip = start, Take = count });
 
             var retVal = new webModels.SearchNotificationsResult();
             retVal.Notifications = result.Notifications.Select(nt => nt.ToWebModel()).ToArray();

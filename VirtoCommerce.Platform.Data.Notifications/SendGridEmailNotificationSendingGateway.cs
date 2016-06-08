@@ -9,14 +9,14 @@ using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.Platform.Data.Notifications
 {
-    public class DefaultEmailNotificationSendingGateway : IEmailNotificationSendingGateway
+    public class SendGridEmailNotificationSendingGateway : IEmailNotificationSendingGateway
     {
         private readonly ISettingsManager _settingsManager;
 
         private const string _sendGridUserNameSettingName = "VirtoCommerce.Platform.Notifications.SendGrid.UserName";
         private const string _sendGridPasswordSettingName = "VirtoCommerce.Platform.Notifications.SendGrid.Secret";
 
-        public DefaultEmailNotificationSendingGateway(ISettingsManager settingsManager)
+        public SendGridEmailNotificationSendingGateway(ISettingsManager settingsManager)
         {
             if (settingsManager == null)
                 throw new ArgumentNullException("settingsManager");
