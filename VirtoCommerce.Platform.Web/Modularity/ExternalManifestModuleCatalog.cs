@@ -69,11 +69,12 @@ namespace VirtoCommerce.Platform.Web.Modularity
             {
                 throw new ModularityException("moduleInfo not ManifestModuleInfo type");
             }
+            //get all dependency modules with all versions
             var dependecies = base.GetDependentModulesInner(moduleInfo).OfType<ManifestModuleInfo>();
-            foreach (var dependency in dependecies)
+            foreach (var dependencyVersions in dependecies.GroupBy(x => x.Id))
             {
-                var allDependencyVersions = base.Modules.OfType<ManifestModuleInfo>().Where(x => x.Id == dependency.Id);
-                var allCompatibleDependencies = allDependencyVersions.Where(x => dependency.Version.IsCompatibleWithBySemVer(x.Version)).OrderByDescending(x => x.Version);
+                var dependency = manifestModule.Dependencies.First(x => x.Id == dependencyVersions.Key);
+                var allCompatibleDependencies = dependencyVersions.Where(x => dependency.Version.IsCompatibleWithBySemVer(x.Version)).OrderByDescending(x => x.Version);
                 var latestCompatibleDependency = allCompatibleDependencies.FirstOrDefault(x => x.IsInstalled);
                 //If dependency not installed need find latest compatible version
                 if (latestCompatibleDependency == null)

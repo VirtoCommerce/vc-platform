@@ -163,9 +163,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                         }
                         else
                         {
+                            //Force dependency validation for new module
+                            _moduleCatalog.CompleteListWithDependencies(new[] { module }).ToArray();
                             _moduleCatalog.AddModule(module);
-                            //Force validation
-                            _moduleCatalog.Initialize();
+                         
                         }
                         module.Ref = fileData.LocalFileName;
                         retVal = module.ToWebModel();
