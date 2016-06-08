@@ -548,32 +548,28 @@ namespace VirtoCommerce.Platform.Client.Api
         /// <returns>ApiResponse of Notification</returns>
         ApiResponse<Notification> NotificationsGetNotificationWithHttpInfo(string id);
         /// <summary>
-        /// Get notification journal page
+        /// Get all notification journal
         /// </summary>
         /// <remarks>
         /// Method returns notification journal page with array of notification, that was send, sending or will be send in future. Result contains total count, that can be used              for paging.
         /// </remarks>
         /// <exception cref="VirtoCommerce.Platform.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="objectId">Object id</param>
-        /// <param name="objectTypeId">Object type id</param>
         /// <param name="start">Page setting start</param>
         /// <param name="count">Page setting count</param>
         /// <returns>SearchNotificationsResult</returns>
-        SearchNotificationsResult NotificationsGetNotificationJournal(string objectId, string objectTypeId, int? start, int? count);
+        SearchNotificationsResult NotificationsGetNotificationJournal(int? start, int? count);
 
         /// <summary>
-        /// Get notification journal page
+        /// Get all notification journal
         /// </summary>
         /// <remarks>
         /// Method returns notification journal page with array of notification, that was send, sending or will be send in future. Result contains total count, that can be used              for paging.
         /// </remarks>
         /// <exception cref="VirtoCommerce.Platform.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="objectId">Object id</param>
-        /// <param name="objectTypeId">Object type id</param>
         /// <param name="start">Page setting start</param>
         /// <param name="count">Page setting count</param>
         /// <returns>ApiResponse of SearchNotificationsResult</returns>
-        ApiResponse<SearchNotificationsResult> NotificationsGetNotificationJournalWithHttpInfo(string objectId, string objectTypeId, int? start, int? count);
+        ApiResponse<SearchNotificationsResult> NotificationsGetNotificationJournalWithHttpInfo(int? start, int? count);
         /// <summary>
         /// Get notification template
         /// </summary>
@@ -666,6 +662,33 @@ namespace VirtoCommerce.Platform.Client.Api
         /// <exception cref="VirtoCommerce.Platform.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <returns>ApiResponse of List&lt;Notification&gt;</returns>
         ApiResponse<List<Notification>> NotificationsGetNotificationsWithHttpInfo();
+        /// <summary>
+        /// Get notification journal for object
+        /// </summary>
+        /// <remarks>
+        /// Method returns notification journal page with array of notification, that was send, sending or will be send in future. Result contains total count, that can be used              for paging.
+        /// </remarks>
+        /// <exception cref="VirtoCommerce.Platform.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="objectId">Object id</param>
+        /// <param name="objectTypeId">Object type id</param>
+        /// <param name="start">Page setting start</param>
+        /// <param name="count">Page setting count</param>
+        /// <returns>SearchNotificationsResult</returns>
+        SearchNotificationsResult NotificationsGetObjectNotificationJournal(string objectId, string objectTypeId, int? start, int? count);
+
+        /// <summary>
+        /// Get notification journal for object
+        /// </summary>
+        /// <remarks>
+        /// Method returns notification journal page with array of notification, that was send, sending or will be send in future. Result contains total count, that can be used              for paging.
+        /// </remarks>
+        /// <exception cref="VirtoCommerce.Platform.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="objectId">Object id</param>
+        /// <param name="objectTypeId">Object type id</param>
+        /// <param name="start">Page setting start</param>
+        /// <param name="count">Page setting count</param>
+        /// <returns>ApiResponse of SearchNotificationsResult</returns>
+        ApiResponse<SearchNotificationsResult> NotificationsGetObjectNotificationJournalWithHttpInfo(string objectId, string objectTypeId, int? start, int? count);
         /// <summary>
         /// Get testing parameters
         /// </summary>
@@ -1784,32 +1807,28 @@ namespace VirtoCommerce.Platform.Client.Api
         /// <returns>Task of ApiResponse (Notification)</returns>
         System.Threading.Tasks.Task<ApiResponse<Notification>> NotificationsGetNotificationAsyncWithHttpInfo(string id);
         /// <summary>
-        /// Get notification journal page
+        /// Get all notification journal
         /// </summary>
         /// <remarks>
         /// Method returns notification journal page with array of notification, that was send, sending or will be send in future. Result contains total count, that can be used              for paging.
         /// </remarks>
         /// <exception cref="VirtoCommerce.Platform.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="objectId">Object id</param>
-        /// <param name="objectTypeId">Object type id</param>
         /// <param name="start">Page setting start</param>
         /// <param name="count">Page setting count</param>
         /// <returns>Task of SearchNotificationsResult</returns>
-        System.Threading.Tasks.Task<SearchNotificationsResult> NotificationsGetNotificationJournalAsync(string objectId, string objectTypeId, int? start, int? count);
+        System.Threading.Tasks.Task<SearchNotificationsResult> NotificationsGetNotificationJournalAsync(int? start, int? count);
 
         /// <summary>
-        /// Get notification journal page
+        /// Get all notification journal
         /// </summary>
         /// <remarks>
         /// Method returns notification journal page with array of notification, that was send, sending or will be send in future. Result contains total count, that can be used              for paging.
         /// </remarks>
         /// <exception cref="VirtoCommerce.Platform.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="objectId">Object id</param>
-        /// <param name="objectTypeId">Object type id</param>
         /// <param name="start">Page setting start</param>
         /// <param name="count">Page setting count</param>
         /// <returns>Task of ApiResponse (SearchNotificationsResult)</returns>
-        System.Threading.Tasks.Task<ApiResponse<SearchNotificationsResult>> NotificationsGetNotificationJournalAsyncWithHttpInfo(string objectId, string objectTypeId, int? start, int? count);
+        System.Threading.Tasks.Task<ApiResponse<SearchNotificationsResult>> NotificationsGetNotificationJournalAsyncWithHttpInfo(int? start, int? count);
         /// <summary>
         /// Get notification template
         /// </summary>
@@ -1902,6 +1921,33 @@ namespace VirtoCommerce.Platform.Client.Api
         /// <exception cref="VirtoCommerce.Platform.Client.Client.ApiException">Thrown when fails to make API call</exception>
         /// <returns>Task of ApiResponse (List&lt;Notification&gt;)</returns>
         System.Threading.Tasks.Task<ApiResponse<List<Notification>>> NotificationsGetNotificationsAsyncWithHttpInfo();
+        /// <summary>
+        /// Get notification journal for object
+        /// </summary>
+        /// <remarks>
+        /// Method returns notification journal page with array of notification, that was send, sending or will be send in future. Result contains total count, that can be used              for paging.
+        /// </remarks>
+        /// <exception cref="VirtoCommerce.Platform.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="objectId">Object id</param>
+        /// <param name="objectTypeId">Object type id</param>
+        /// <param name="start">Page setting start</param>
+        /// <param name="count">Page setting count</param>
+        /// <returns>Task of SearchNotificationsResult</returns>
+        System.Threading.Tasks.Task<SearchNotificationsResult> NotificationsGetObjectNotificationJournalAsync(string objectId, string objectTypeId, int? start, int? count);
+
+        /// <summary>
+        /// Get notification journal for object
+        /// </summary>
+        /// <remarks>
+        /// Method returns notification journal page with array of notification, that was send, sending or will be send in future. Result contains total count, that can be used              for paging.
+        /// </remarks>
+        /// <exception cref="VirtoCommerce.Platform.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="objectId">Object id</param>
+        /// <param name="objectTypeId">Object type id</param>
+        /// <param name="start">Page setting start</param>
+        /// <param name="count">Page setting count</param>
+        /// <returns>Task of ApiResponse (SearchNotificationsResult)</returns>
+        System.Threading.Tasks.Task<ApiResponse<SearchNotificationsResult>> NotificationsGetObjectNotificationJournalAsyncWithHttpInfo(string objectId, string objectTypeId, int? start, int? count);
         /// <summary>
         /// Get testing parameters
         /// </summary>
@@ -6256,37 +6302,27 @@ namespace VirtoCommerce.Platform.Client.Api
             
         }
         /// <summary>
-        /// Get notification journal page Method returns notification journal page with array of notification, that was send, sending or will be send in future. Result contains total count, that can be used              for paging.
+        /// Get all notification journal Method returns notification journal page with array of notification, that was send, sending or will be send in future. Result contains total count, that can be used              for paging.
         /// </summary>
         /// <exception cref="VirtoCommerce.Platform.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="objectId">Object id</param>
-        /// <param name="objectTypeId">Object type id</param>
         /// <param name="start">Page setting start</param>
         /// <param name="count">Page setting count</param>
         /// <returns>SearchNotificationsResult</returns>
-        public SearchNotificationsResult NotificationsGetNotificationJournal(string objectId, string objectTypeId, int? start, int? count)
+        public SearchNotificationsResult NotificationsGetNotificationJournal(int? start, int? count)
         {
-             ApiResponse<SearchNotificationsResult> localVarResponse = NotificationsGetNotificationJournalWithHttpInfo(objectId, objectTypeId, start, count);
+             ApiResponse<SearchNotificationsResult> localVarResponse = NotificationsGetNotificationJournalWithHttpInfo(start, count);
              return localVarResponse.Data;
         }
 
         /// <summary>
-        /// Get notification journal page Method returns notification journal page with array of notification, that was send, sending or will be send in future. Result contains total count, that can be used              for paging.
+        /// Get all notification journal Method returns notification journal page with array of notification, that was send, sending or will be send in future. Result contains total count, that can be used              for paging.
         /// </summary>
         /// <exception cref="VirtoCommerce.Platform.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="objectId">Object id</param>
-        /// <param name="objectTypeId">Object type id</param>
         /// <param name="start">Page setting start</param>
         /// <param name="count">Page setting count</param>
         /// <returns>ApiResponse of SearchNotificationsResult</returns>
-        public ApiResponse<SearchNotificationsResult> NotificationsGetNotificationJournalWithHttpInfo(string objectId, string objectTypeId, int? start, int? count)
+        public ApiResponse<SearchNotificationsResult> NotificationsGetNotificationJournalWithHttpInfo(int? start, int? count)
         {
-            // verify the required parameter 'objectId' is set
-            if (objectId == null)
-                throw new ApiException(400, "Missing required parameter 'objectId' when calling VirtoCommercePlatformApi->NotificationsGetNotificationJournal");
-            // verify the required parameter 'objectTypeId' is set
-            if (objectTypeId == null)
-                throw new ApiException(400, "Missing required parameter 'objectTypeId' when calling VirtoCommercePlatformApi->NotificationsGetNotificationJournal");
             // verify the required parameter 'start' is set
             if (start == null)
                 throw new ApiException(400, "Missing required parameter 'start' when calling VirtoCommercePlatformApi->NotificationsGetNotificationJournal");
@@ -6294,7 +6330,7 @@ namespace VirtoCommerce.Platform.Client.Api
             if (count == null)
                 throw new ApiException(400, "Missing required parameter 'count' when calling VirtoCommercePlatformApi->NotificationsGetNotificationJournal");
 
-            var localVarPath = "/api/platform/notification/journal/{objectId}/{objectTypeId}";
+            var localVarPath = "/api/platform/notification/journal";
             var localVarPathParams = new Dictionary<string, string>();
             var localVarQueryParams = new Dictionary<string, string>();
             var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
@@ -6321,8 +6357,6 @@ namespace VirtoCommerce.Platform.Client.Api
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
-            if (objectId != null) localVarPathParams.Add("objectId", ApiClient.ParameterToString(objectId)); // path parameter
-            if (objectTypeId != null) localVarPathParams.Add("objectTypeId", ApiClient.ParameterToString(objectTypeId)); // path parameter
             if (start != null) localVarQueryParams.Add("start", ApiClient.ParameterToString(start)); // query parameter
             if (count != null) localVarQueryParams.Add("count", ApiClient.ParameterToString(count)); // query parameter
 
@@ -6346,38 +6380,28 @@ namespace VirtoCommerce.Platform.Client.Api
         }
 
         /// <summary>
-        /// Get notification journal page Method returns notification journal page with array of notification, that was send, sending or will be send in future. Result contains total count, that can be used              for paging.
+        /// Get all notification journal Method returns notification journal page with array of notification, that was send, sending or will be send in future. Result contains total count, that can be used              for paging.
         /// </summary>
         /// <exception cref="VirtoCommerce.Platform.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="objectId">Object id</param>
-        /// <param name="objectTypeId">Object type id</param>
         /// <param name="start">Page setting start</param>
         /// <param name="count">Page setting count</param>
         /// <returns>Task of SearchNotificationsResult</returns>
-        public async System.Threading.Tasks.Task<SearchNotificationsResult> NotificationsGetNotificationJournalAsync(string objectId, string objectTypeId, int? start, int? count)
+        public async System.Threading.Tasks.Task<SearchNotificationsResult> NotificationsGetNotificationJournalAsync(int? start, int? count)
         {
-             ApiResponse<SearchNotificationsResult> localVarResponse = await NotificationsGetNotificationJournalAsyncWithHttpInfo(objectId, objectTypeId, start, count);
+             ApiResponse<SearchNotificationsResult> localVarResponse = await NotificationsGetNotificationJournalAsyncWithHttpInfo(start, count);
              return localVarResponse.Data;
 
         }
 
         /// <summary>
-        /// Get notification journal page Method returns notification journal page with array of notification, that was send, sending or will be send in future. Result contains total count, that can be used              for paging.
+        /// Get all notification journal Method returns notification journal page with array of notification, that was send, sending or will be send in future. Result contains total count, that can be used              for paging.
         /// </summary>
         /// <exception cref="VirtoCommerce.Platform.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="objectId">Object id</param>
-        /// <param name="objectTypeId">Object type id</param>
         /// <param name="start">Page setting start</param>
         /// <param name="count">Page setting count</param>
         /// <returns>Task of ApiResponse (SearchNotificationsResult)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<SearchNotificationsResult>> NotificationsGetNotificationJournalAsyncWithHttpInfo(string objectId, string objectTypeId, int? start, int? count)
+        public async System.Threading.Tasks.Task<ApiResponse<SearchNotificationsResult>> NotificationsGetNotificationJournalAsyncWithHttpInfo(int? start, int? count)
         {
-            // verify the required parameter 'objectId' is set
-            if (objectId == null)
-                throw new ApiException(400, "Missing required parameter 'objectId' when calling VirtoCommercePlatformApi->NotificationsGetNotificationJournal");
-            // verify the required parameter 'objectTypeId' is set
-            if (objectTypeId == null)
-                throw new ApiException(400, "Missing required parameter 'objectTypeId' when calling VirtoCommercePlatformApi->NotificationsGetNotificationJournal");
             // verify the required parameter 'start' is set
             if (start == null)
                 throw new ApiException(400, "Missing required parameter 'start' when calling VirtoCommercePlatformApi->NotificationsGetNotificationJournal");
@@ -6385,7 +6409,7 @@ namespace VirtoCommerce.Platform.Client.Api
             if (count == null)
                 throw new ApiException(400, "Missing required parameter 'count' when calling VirtoCommercePlatformApi->NotificationsGetNotificationJournal");
 
-            var localVarPath = "/api/platform/notification/journal/{objectId}/{objectTypeId}";
+            var localVarPath = "/api/platform/notification/journal";
             var localVarPathParams = new Dictionary<string, string>();
             var localVarQueryParams = new Dictionary<string, string>();
             var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
@@ -6412,8 +6436,6 @@ namespace VirtoCommerce.Platform.Client.Api
             // set "format" to json by default
             // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
             localVarPathParams.Add("format", "json");
-            if (objectId != null) localVarPathParams.Add("objectId", ApiClient.ParameterToString(objectId)); // path parameter
-            if (objectTypeId != null) localVarPathParams.Add("objectTypeId", ApiClient.ParameterToString(objectTypeId)); // path parameter
             if (start != null) localVarQueryParams.Add("start", ApiClient.ParameterToString(start)); // query parameter
             if (count != null) localVarQueryParams.Add("count", ApiClient.ParameterToString(count)); // query parameter
 
@@ -7027,6 +7049,186 @@ namespace VirtoCommerce.Platform.Client.Api
             return new ApiResponse<List<Notification>>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 (List<Notification>)ApiClient.Deserialize(localVarResponse, typeof(List<Notification>)));
+            
+        }
+        /// <summary>
+        /// Get notification journal for object Method returns notification journal page with array of notification, that was send, sending or will be send in future. Result contains total count, that can be used              for paging.
+        /// </summary>
+        /// <exception cref="VirtoCommerce.Platform.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="objectId">Object id</param>
+        /// <param name="objectTypeId">Object type id</param>
+        /// <param name="start">Page setting start</param>
+        /// <param name="count">Page setting count</param>
+        /// <returns>SearchNotificationsResult</returns>
+        public SearchNotificationsResult NotificationsGetObjectNotificationJournal(string objectId, string objectTypeId, int? start, int? count)
+        {
+             ApiResponse<SearchNotificationsResult> localVarResponse = NotificationsGetObjectNotificationJournalWithHttpInfo(objectId, objectTypeId, start, count);
+             return localVarResponse.Data;
+        }
+
+        /// <summary>
+        /// Get notification journal for object Method returns notification journal page with array of notification, that was send, sending or will be send in future. Result contains total count, that can be used              for paging.
+        /// </summary>
+        /// <exception cref="VirtoCommerce.Platform.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="objectId">Object id</param>
+        /// <param name="objectTypeId">Object type id</param>
+        /// <param name="start">Page setting start</param>
+        /// <param name="count">Page setting count</param>
+        /// <returns>ApiResponse of SearchNotificationsResult</returns>
+        public ApiResponse<SearchNotificationsResult> NotificationsGetObjectNotificationJournalWithHttpInfo(string objectId, string objectTypeId, int? start, int? count)
+        {
+            // verify the required parameter 'objectId' is set
+            if (objectId == null)
+                throw new ApiException(400, "Missing required parameter 'objectId' when calling VirtoCommercePlatformApi->NotificationsGetObjectNotificationJournal");
+            // verify the required parameter 'objectTypeId' is set
+            if (objectTypeId == null)
+                throw new ApiException(400, "Missing required parameter 'objectTypeId' when calling VirtoCommercePlatformApi->NotificationsGetObjectNotificationJournal");
+            // verify the required parameter 'start' is set
+            if (start == null)
+                throw new ApiException(400, "Missing required parameter 'start' when calling VirtoCommercePlatformApi->NotificationsGetObjectNotificationJournal");
+            // verify the required parameter 'count' is set
+            if (count == null)
+                throw new ApiException(400, "Missing required parameter 'count' when calling VirtoCommercePlatformApi->NotificationsGetObjectNotificationJournal");
+
+            var localVarPath = "/api/platform/notification/journal/{objectId}/{objectTypeId}";
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            string[] localVarHttpContentTypes = new string[] {
+            };
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            string[] localVarHttpHeaderAccepts = new string[] {
+                "application/json", 
+                "text/json", 
+                "application/xml", 
+                "text/xml"
+            };
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            localVarPathParams.Add("format", "json");
+            if (objectId != null) localVarPathParams.Add("objectId", ApiClient.ParameterToString(objectId)); // path parameter
+            if (objectTypeId != null) localVarPathParams.Add("objectTypeId", ApiClient.ParameterToString(objectTypeId)); // path parameter
+            if (start != null) localVarQueryParams.Add("start", ApiClient.ParameterToString(start)); // query parameter
+            if (count != null) localVarQueryParams.Add("count", ApiClient.ParameterToString(count)); // query parameter
+
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse)ApiClient.CallApi(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
+
+            if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
+                throw new ApiException(localVarStatusCode, "Error calling NotificationsGetObjectNotificationJournal: " + localVarResponse.Content, localVarResponse.Content);
+            else if (localVarStatusCode == 0)
+                throw new ApiException(localVarStatusCode, "Error calling NotificationsGetObjectNotificationJournal: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+
+            return new ApiResponse<SearchNotificationsResult>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (SearchNotificationsResult)ApiClient.Deserialize(localVarResponse, typeof(SearchNotificationsResult)));
+            
+        }
+
+        /// <summary>
+        /// Get notification journal for object Method returns notification journal page with array of notification, that was send, sending or will be send in future. Result contains total count, that can be used              for paging.
+        /// </summary>
+        /// <exception cref="VirtoCommerce.Platform.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="objectId">Object id</param>
+        /// <param name="objectTypeId">Object type id</param>
+        /// <param name="start">Page setting start</param>
+        /// <param name="count">Page setting count</param>
+        /// <returns>Task of SearchNotificationsResult</returns>
+        public async System.Threading.Tasks.Task<SearchNotificationsResult> NotificationsGetObjectNotificationJournalAsync(string objectId, string objectTypeId, int? start, int? count)
+        {
+             ApiResponse<SearchNotificationsResult> localVarResponse = await NotificationsGetObjectNotificationJournalAsyncWithHttpInfo(objectId, objectTypeId, start, count);
+             return localVarResponse.Data;
+
+        }
+
+        /// <summary>
+        /// Get notification journal for object Method returns notification journal page with array of notification, that was send, sending or will be send in future. Result contains total count, that can be used              for paging.
+        /// </summary>
+        /// <exception cref="VirtoCommerce.Platform.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="objectId">Object id</param>
+        /// <param name="objectTypeId">Object type id</param>
+        /// <param name="start">Page setting start</param>
+        /// <param name="count">Page setting count</param>
+        /// <returns>Task of ApiResponse (SearchNotificationsResult)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<SearchNotificationsResult>> NotificationsGetObjectNotificationJournalAsyncWithHttpInfo(string objectId, string objectTypeId, int? start, int? count)
+        {
+            // verify the required parameter 'objectId' is set
+            if (objectId == null)
+                throw new ApiException(400, "Missing required parameter 'objectId' when calling VirtoCommercePlatformApi->NotificationsGetObjectNotificationJournal");
+            // verify the required parameter 'objectTypeId' is set
+            if (objectTypeId == null)
+                throw new ApiException(400, "Missing required parameter 'objectTypeId' when calling VirtoCommercePlatformApi->NotificationsGetObjectNotificationJournal");
+            // verify the required parameter 'start' is set
+            if (start == null)
+                throw new ApiException(400, "Missing required parameter 'start' when calling VirtoCommercePlatformApi->NotificationsGetObjectNotificationJournal");
+            // verify the required parameter 'count' is set
+            if (count == null)
+                throw new ApiException(400, "Missing required parameter 'count' when calling VirtoCommercePlatformApi->NotificationsGetObjectNotificationJournal");
+
+            var localVarPath = "/api/platform/notification/journal/{objectId}/{objectTypeId}";
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            string[] localVarHttpContentTypes = new string[] {
+            };
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            string[] localVarHttpHeaderAccepts = new string[] {
+                "application/json", 
+                "text/json", 
+                "application/xml", 
+                "text/xml"
+            };
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            localVarPathParams.Add("format", "json");
+            if (objectId != null) localVarPathParams.Add("objectId", ApiClient.ParameterToString(objectId)); // path parameter
+            if (objectTypeId != null) localVarPathParams.Add("objectTypeId", ApiClient.ParameterToString(objectTypeId)); // path parameter
+            if (start != null) localVarQueryParams.Add("start", ApiClient.ParameterToString(start)); // query parameter
+            if (count != null) localVarQueryParams.Add("count", ApiClient.ParameterToString(count)); // query parameter
+
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse)await ApiClient.CallApiAsync(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
+
+            if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
+                throw new ApiException(localVarStatusCode, "Error calling NotificationsGetObjectNotificationJournal: " + localVarResponse.Content, localVarResponse.Content);
+            else if (localVarStatusCode == 0)
+                throw new ApiException(localVarStatusCode, "Error calling NotificationsGetObjectNotificationJournal: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+
+            return new ApiResponse<SearchNotificationsResult>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (SearchNotificationsResult)ApiClient.Deserialize(localVarResponse, typeof(SearchNotificationsResult)));
             
         }
         /// <summary>

@@ -2,7 +2,7 @@
 <package>
     <metadata>
         <id>$id$</id>
-        <version>2.10.5</version>
+        <version>2.11.0-rc1</version>
         <title>$title$</title>
         <authors>$author$</authors>
         <owners>$author$</owners>
@@ -11,7 +11,6 @@
         <iconUrl>https://github.com/VirtoCommerce/vc-community/raw/platform/NuGet/icon.png</iconUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>$description$</description>
-        <copyright>Copyright (C) VirtoCommerce 2011-2016</copyright>
-        <tags></tags>
+        <copyright>Copyright © VirtoCommerce 2011-2016</copyright>
     </metadata>
 </package>
