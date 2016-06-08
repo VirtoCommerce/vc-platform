@@ -135,39 +135,14 @@ namespace VirtoCommerce.Platform.Web.Modularity
                             //Call module Uninstall method
                             if (uninstallingModule.ModuleInstance != null)
                             {
-                                Report(progress, ProgressMessageLevel.Info, "Executing module.Uninstall()");
+                                Report(progress, ProgressMessageLevel.Info, "Executing module.Uninstall() method");
                                 uninstallingModule.ModuleInstance.Uninstall();
                             }
-                            var dstModuleDir = Path.Combine(_modulesPath, uninstallingModule.Id);
-                            if (Directory.Exists(dstModuleDir))
+                            var moduleDir = Path.Combine(_modulesPath, uninstallingModule.Id);
+                            if (Directory.Exists(moduleDir))
                             {
-                                Report(progress, ProgressMessageLevel.Info, "Deleting module {0} content", dstModuleDir);
-                                foreach (string file in Directory.EnumerateFiles(dstModuleDir, "*.*", SearchOption.AllDirectories))
-                                {
-                                    _txFileManager.Delete(file);
-                                }
-                                foreach (string directory in Directory.EnumerateDirectories(dstModuleDir, "*", SearchOption.AllDirectories))
-                                {
-                                    try
-                                    {                                      
-                                        _txFileManager.DeleteDirectory(directory);
-                                    }
-                                    catch (System.IO.IOException ex)
-                                    {
-                                        //Because some folder can be locked by ASP.NET Bundles file monitor we should ignore IOException
-                                        Report(progress, ProgressMessageLevel.Warning, ex.ToString());
-                                    }
-                                }
-                                try
-                                {
-                                    Report(progress, ProgressMessageLevel.Info, "Deleting module {0} folder", dstModuleDir);
-                                    _txFileManager.DeleteDirectory(dstModuleDir);
-                                }
-                                catch(System.IO.IOException ex)
-                                {
-                                    //Because module folder can be locked by ASP.NET Bundles file monitor we should ignore IOException
-                                    Report(progress, ProgressMessageLevel.Warning, ex.ToString());
-                                }
+                                Report(progress, ProgressMessageLevel.Info, "Deleting module {0} folder", moduleDir);
+                                _txFileManager.DeleteDirectory(moduleDir);
                             }
                             Report(progress, ProgressMessageLevel.Info, "'{0}' uninstalled successfully.", uninstallingModule);
                             uninstallingModule.IsInstalled = false;
