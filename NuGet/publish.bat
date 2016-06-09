@@ -1,10 +1,17 @@
-set V=2.10.3
-nuget push VirtoCommerce.Platform.Core.%V%.nupkg -Source nuget.org -ApiKey %1
-nuget push VirtoCommerce.Platform.Core.Web.%V%.nupkg -Source nuget.org -ApiKey %1
-nuget push VirtoCommerce.Platform.Data.%V%.nupkg -Source nuget.org -ApiKey %1
-nuget push VirtoCommerce.Platform.Data.Azure.%V%.nupkg -Source nuget.org -ApiKey %1
-nuget push VirtoCommerce.Platform.Data.Notifications.%V%.nupkg -Source nuget.org -ApiKey %1
-nuget push VirtoCommerce.Platform.Data.Security.%V%.nupkg -Source nuget.org -ApiKey %1
-nuget push VirtoCommerce.Platform.Data.Serialization.%V%.nupkg -Source nuget.org -ApiKey %1
-nuget push VirtoCommerce.Platform.Testing.%V%.nupkg -Source nuget.org -ApiKey %1
+@echo off
+setlocal enabledelayedexpansion
+
+if "%1" equ "" (
+    echo Pass NuGet API key as first parameter
+    pause
+    exit /b 1
+)
+
+for %%f in (*.nupkg) do (
+    set fileName=%%~nf
+    if "!fileName!" equ "!fileName:.symbols=!" (
+        nuget push %%f -Source nuget.org -ApiKey %1
+    )
+)
+
 pause
