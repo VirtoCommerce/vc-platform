@@ -48,7 +48,7 @@
 					step = wizard.findStep(data[0]);
 				}
 				callback(step);
-			}, function (error) { callback(step); });
+			});
 		}
 	};
 	return wizard;
@@ -57,14 +57,16 @@
   ['$rootScope', '$state', 'platformWebApp.setupWizard', 'platformWebApp.settings', '$timeout', function ($rootScope, $state, setupWizard, settings, $timeout) {
   	//Try to run setup wizard
   	$rootScope.$on('loginStatusChanged', function (event, authContext) {
-  		//timeout need because $state not fully loading in run method and need to wait little time
-  		$timeout(function () {
-  			setupWizard.loadStep(function (step) {
-  				if (step) {
-  					setupWizard.showStep(step);
-  				};
-  			});
-  		}, 500);
+  		if (authContext.isAuthenticated) {
+  			//timeout need because $state not fully loading in run method and need to wait little time
+  			$timeout(function () {
+  				setupWizard.loadStep(function (step) {
+  					if (step) {
+  						setupWizard.showStep(step);
+  					};
+  				});
+  			}, 500);
+  		}
   	});
 
   }]);

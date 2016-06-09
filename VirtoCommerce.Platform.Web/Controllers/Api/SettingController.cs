@@ -64,7 +64,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 return Ok(retVal.ToWebModel());
             }
-            return NotFound();
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
         /// <summary>
