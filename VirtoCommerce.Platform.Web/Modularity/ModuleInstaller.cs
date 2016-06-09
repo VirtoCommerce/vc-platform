@@ -39,7 +39,7 @@ namespace VirtoCommerce.Platform.Web.Modularity
                 //Check platform version
                 if (!module.PlatformVersion.IsCompatibleWith(PlatformVersion.CurrentVersion))
                 {
-                    Report(progress, ProgressMessageLevel.Error, string.Format("Platform version {0}  is not compatible with installed {1}", module.PlatformVersion, PlatformVersion.CurrentVersion));
+                    Report(progress, ProgressMessageLevel.Error, string.Format("Target Platform version {0} is incompatible with current {1}", module.PlatformVersion, PlatformVersion.CurrentVersion));
                     isValid = false;
                 }
                 //Check that installable version compatible with already installed
@@ -52,7 +52,7 @@ namespace VirtoCommerce.Platform.Web.Modularity
                                                            .Where(x => x.DependsOn.Contains(module.Id, StringComparer.OrdinalIgnoreCase));
                     if (dependingModules.Any())
                     {
-                        Report(progress, ProgressMessageLevel.Error, string.Format("{0}  is not compatible with installed {1}", module, alreadyInstalledModule));
+                        Report(progress, ProgressMessageLevel.Error, string.Format("{0} is incompatible with installed {1}", module, alreadyInstalledModule));
                         isValid = false;
                     }
                 }
