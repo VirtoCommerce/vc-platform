@@ -177,11 +177,11 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                     {
                         if (_securityService.FindByIdAsync(user.Id, UserDetails.Reduced).Result != null)
                         {
-                            _securityService.UpdateAsync(user);
+                             var dummy = _securityService.UpdateAsync(user).Result;
                         }
                         else
                         {
-                            _securityService.CreateAsync(user);
+                            var dummy = _securityService.CreateAsync(user).Result;
                         }
                     }
                 }

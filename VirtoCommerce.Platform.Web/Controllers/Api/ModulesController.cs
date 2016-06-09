@@ -54,7 +54,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpGet]
         [Route("")]
         [ResponseType(typeof(webModel.ModuleDescriptor[]))]
-        [CheckPermission(Permission = PredefinedPermissions.ModuleManage)]
+        [CheckPermission(Permission = PredefinedPermissions.ModuleQuery)]
         public IHttpActionResult GetModules()
         {
             EnsureModulesCatalogInitialized();
@@ -75,7 +75,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [Route("getdependents")]
         [ResponseType(typeof(webModel.ModuleDescriptor[]))]
-        [CheckPermission(Permission = PredefinedPermissions.ModuleManage)]
+        [CheckPermission(Permission = PredefinedPermissions.ModuleQuery)]
         public IHttpActionResult GetDependingModules(webModel.ModuleDescriptor[] moduleDescriptors)
         {
             EnsureModulesCatalogInitialized();
@@ -100,7 +100,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [Route("getmissingdependencies")]
         [ResponseType(typeof(webModel.ModuleDescriptor[]))]
-        [CheckPermission(Permission = PredefinedPermissions.ModuleManage)]
+        [CheckPermission(Permission = PredefinedPermissions.ModuleQuery)]
         public IHttpActionResult GetMissingDependencies(webModel.ModuleDescriptor[] moduleDescriptors)
         {
             EnsureModulesCatalogInitialized();
@@ -271,8 +271,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                             //Need install only latest versions
                             foreach (var moduleVersionGroup in moduleVersionGroups)
                             {
+                                var alreadyInstalledModule = _moduleCatalog.Modules.OfType<ManifestModuleInfo>().FirstOrDefault(x => x.IsInstalled && x.Id.EqualsInvariant(moduleVersionGroup.Key));
                                 //skip already installed modules
-                                if (!moduleVersionGroup.Any(x => x.IsInstalled))
+                                if (alreadyInstalledModule == null)
                                 {
                                     var latestVersion = moduleVersionGroup.OrderBy(x => x.Version).LastOrDefault();
                                     if (latestVersion != null)
