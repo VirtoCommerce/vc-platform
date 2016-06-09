@@ -29,12 +29,12 @@
 			//thats need when state direct open by url or push notification
 			var step = setupWizard.findStep($state.current.name);
 			if (!$scope.notification.created) {
-				modules.autoInstall({}, function (data) {
-					//if already installed need skip this step
-					if (data.finished) {
+			modules.autoInstall({}, function (data) {
+				//if already installed need skip this step
+				if (data.finished) {					
 						setupWizard.showStep(step.nextStep);
-					}
-				});
+				}
+			});
 			}
 
 			$scope.restart = function () {
@@ -69,15 +69,13 @@
   	};
   	mainMenuService.addMenuItem(menuItem);
 
-  	//Push notifications
-  	var menuExportImportTemplate =
-	   {
+      // Register push notification template
+      pushNotificationTemplateResolver.register({
 	   	priority: 900,
 	   	satisfy: function (notify, place) { return place == 'menu' && notify.notifyType == 'ModulePushNotification'; },
 	   	template: '$(Platform)/Scripts/app/modularity/notifications/menu.tpl.html',
 	   	action: function (notify) { $state.go('pushNotificationsHistory', notify); }
-	   };
-  	pushNotificationTemplateResolver.register(menuExportImportTemplate);
+      });
 
   	var historyExportImportTemplate =
 	{
