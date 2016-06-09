@@ -46,13 +46,15 @@ namespace VirtoCommerce.Platform.Web.Modularity
                 var alreadyInstalledModule = _moduleCatalog.Modules.OfType<ManifestModuleInfo>().Where(x => x.IsInstalled).FirstOrDefault(x => x.Id.EqualsInvariant(module.Id));
                 if (alreadyInstalledModule != null && !alreadyInstalledModule.Version.IsCompatibleWithBySemVer(module.Version))
                 {
-                    //Allow downgrade or install not compatible version only if not exist any modules depending on it
-                    var dependingModules = _moduleCatalog.Modules.OfType<ManifestModuleInfo>()
-                                                           .Where(x => x.IsInstalled)
-                                                           .Where(x => x.DependsOn.Contains(module.Id, StringComparer.OrdinalIgnoreCase));
-                    if (dependingModules.Any())
+                    //Allow downgrade or install not compatible version only if all dependencies will be compatible with installed version
+                    var modulesHasIncompatibleDependecies = _moduleCatalog.Modules.OfType<ManifestModuleInfo>()
+                                                          .Where(x => x.IsInstalled)
+                                                          .Where(x => x.DependsOn.Contains(module.Id, StringComparer.OrdinalIgnoreCase))
+                                                          .Where(x => x.Dependencies.Any(d => !module.Version.IsCompatibleWithBySemVer(d.Version)));
+
+                    if (modulesHasIncompatibleDependecies.Any())
                     {
-                        Report(progress, ProgressMessageLevel.Error, string.Format("{0} is incompatible with installed {1}", module, alreadyInstalledModule));
+                        Report(progress, ProgressMessageLevel.Error, string.Format("{0} is incompatible with installed {1} is required  by {2} ", module, alreadyInstalledModule, string.Join(", ", modulesHasIncompatibleDependecies.Select(x => x.ToString()))));
                         isValid = false;
                     }
                 }
