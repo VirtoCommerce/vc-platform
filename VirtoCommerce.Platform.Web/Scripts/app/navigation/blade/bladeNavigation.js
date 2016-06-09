@@ -191,12 +191,10 @@ angular.module('platformWebApp')
         showConfirmationIfNeeded: showConfirmationIfNeeded,
         closeBlade: function (blade, callback, onBeforeClosing) {
             //Need in case a copy was passed
-            blade = service.findBlade(blade.id);
+            blade = service.findBlade(blade.id) || blade;
 
             // close all children
             service.closeChildrenBlades(blade, function () {
-                var idx = service.stateBlades().indexOf(blade);
-
                 var doCloseBlade = function () {
                     if (angular.isFunction(onBeforeClosing)) {
                         onBeforeClosing(doCloseBladeFinal);
@@ -206,7 +204,9 @@ angular.module('platformWebApp')
                 }
 
                 var doCloseBladeFinal = function () {
-                    service.stateBlades().splice(idx, 1);
+                    var idx = service.stateBlades().indexOf(blade);
+                    if (idx >= 0) service.stateBlades().splice(idx, 1);
+
                     //remove blade from children collection
                     if (angular.isDefined(blade.parentBlade)) {
                         var childIdx = blade.parentBlade.childrenBlades.indexOf(blade);
@@ -219,13 +219,11 @@ angular.module('platformWebApp')
                     };
                 };
 
-                if (idx >= 0) {
-                    if (angular.isFunction(blade.onClose)) {
-                        blade.onClose(doCloseBlade);
-                    }
-                    else {
-                        doCloseBlade();
-                    }
+                if (angular.isFunction(blade.onClose)) {
+                    blade.onClose(doCloseBlade);
+                }
+                else {
+                    doCloseBlade();
                 }
             });
         },
