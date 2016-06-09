@@ -71,6 +71,7 @@ namespace VirtoCommerce.Platform.Web.Modularity
                 var installedModulesIds = _moduleCatalog.Modules.OfType<ManifestModuleInfo>().Where(x => x.IsInstalled).Select(x => x.Id).ToArray();
                 var updatableModules = modules.Where(x => installedModulesIds.Contains(x.Id));
                 var installableModules = modules.Except(updatableModules);
+                var changedModulesLog = new List<ManifestModuleInfo>();
                 using (TransactionScope scope = new TransactionScope())
                 {
                     try
@@ -79,6 +80,7 @@ namespace VirtoCommerce.Platform.Web.Modularity
                         {
                             Report(progress, ProgressMessageLevel.Info, "Installing '{0}'", installableModule);
                             InnerInstall(installableModule, progress);
+                            changedModulesLog.Add(installableModule);
                             installableModule.IsInstalled = true;                            
                         }
 
@@ -94,13 +96,19 @@ namespace VirtoCommerce.Platform.Web.Modularity
                             InnerInstall(newModule, progress);
                             existModule.IsInstalled = false;
                             newModule.IsInstalled = true;
+                            changedModulesLog.AddRange(new[] { existModule, newModule });
                         }
                         scope.Complete();
                     }
                     catch (Exception ex)
-                    {
-                        //TODO: rollback all changes
+                    {                    
                         Report(progress, ProgressMessageLevel.Error, ex.ToString());
+                        Report(progress, ProgressMessageLevel.Error, "Rollback all changes...");  
+                        //Revert changed modules state
+                        foreach(var changedModule in changedModulesLog)
+                        {
+                            changedModule.IsInstalled = !changedModule.IsInstalled;
+                        }                    
                     }
                 }
             }
@@ -125,6 +133,7 @@ namespace VirtoCommerce.Platform.Web.Modularity
 
             if (isValid)
             {
+                var changedModulesLog = new List<ManifestModuleInfo>();
                 using (TransactionScope scope = new TransactionScope())
                 {
                     try
@@ -146,12 +155,19 @@ namespace VirtoCommerce.Platform.Web.Modularity
                             }
                             Report(progress, ProgressMessageLevel.Info, "'{0}' uninstalled successfully.", uninstallingModule);
                             uninstallingModule.IsInstalled = false;
+                            changedModulesLog.Add(uninstallingModule);
                         }                     
                         scope.Complete();
                     }
                     catch (Exception ex)
                     {
                         Report(progress, ProgressMessageLevel.Error, ex.ToString());
+                        Report(progress, ProgressMessageLevel.Error, "Rollback all changes...");
+                        //Revert changed modules state
+                        foreach (var changedModule in changedModulesLog)
+                        {
+                            changedModule.IsInstalled = !changedModule.IsInstalled;
+                        }
                     }
                 }
             }
