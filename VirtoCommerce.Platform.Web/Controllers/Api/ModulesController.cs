@@ -249,8 +249,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 //set completed by default
                 Finished = DateTime.UtcNow
             };
-
-            EnsureModulesCatalogInitialized();
+                       
 
             if (!_settingsManager.GetValue("VirtoCommerce.ModulesAutoInstalled", false))
             {
@@ -262,6 +261,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                         if (!moduleBundles.IsNullOrEmpty())
                         {
                             _settingsManager.SetValue("VirtoCommerce.ModulesAutoInstalled", true);
+
+                            EnsureModulesCatalogInitialized();
+
                             var modules = new List<ManifestModuleInfo>();
                             var moduleVersionGroups = _moduleCatalog.Modules
                                 .OfType<ManifestModuleInfo>()
