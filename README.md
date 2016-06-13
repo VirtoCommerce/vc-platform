@@ -28,6 +28,12 @@ Setup your own private Microsoft Cloud environment and evaluate the latest versi
   <img alt="Deploy to Azure" src="http://azuredeploy.net/deploybutton.png"/>
 </a>
 
+## Developer resources
+* <a href="http://docs.virtocommerce.com/x/W4Dd" target="_blank">Source Code Getting Started</a>
+* <a href="http://docs.virtocommerce.com/x/wgDr" target="_blank">Platform settings</a>
+* <a href="http://docs.virtocommerce.com/x/BwAEAQ" target="_blank">Developing a custom solution</a>
+
+ 
 Contributing
 -----------
 We welcome & recognize contributors to Virto Commerce. There are many benefits available for our contributers, from special licensing to project involvement and access to private repositories. Follow the guide below to contribute:

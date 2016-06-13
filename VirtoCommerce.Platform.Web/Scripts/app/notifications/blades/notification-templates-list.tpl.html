@@ -1,0 +1,30 @@
+﻿<div class="blade-content ">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <div class="table-wrapper">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="table-col">{{ 'platform.blades.notification-templates-list.labels.language' | translate }}</th>
+                            <th class="table-col">{{ 'platform.blades.notification-templates-list.labels.subject' | translate }}</th>
+                            <th class="table-col">{{ 'platform.blades.notification-templates-list.labels.body' | translate }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="table-item" ng-repeat="data in blade.currentEntities" ng-click="blade.openTemplate(data)" ng-class="{ '__selected': blade.selectedLanguage === data.language }">
+                            <td class="table-col">
+                                {{data.language}}
+                            </td>
+                            <td class="table-col">
+                                {{data.subject.substring(0,10)}}{{data.subject.length > 10 ? '...' : ''}}
+                            </td>
+                            <td class="table-col">
+                                {{data.body.substring(0,10)}}{{data.body.length > 10 ? '...' : ''}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

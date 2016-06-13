@@ -12,13 +12,10 @@
 [Rr]elease/
 bin/x64/
 bin/x86/
-build/
+build/*
 [Bb]in/
 [Bb]in/**/*
 [Oo]bj/
-
-# Enable "build/" folder in the NuGet Packages folder since NuGet packages use it for MSBuild targets
-!packages/*/build/
 
 # MSTest test Results
 [Tt]est[Rr]esult*/
@@ -152,23 +149,16 @@ $RECYCLE.BIN/
 # Mac crap
 .DS_Store
 
-/artifacts
-/PLATFORM/packages
-/PLATFORM/VirtoCommerce.Platform.Web/App_Data
-/PLATFORM/Modules/Catalog/VirtoCommerce.CatalogModule.Test/products.csv
-/PLATFORM/Modules/Marketing/VirtoCommerce.MarketingModule.Data/app.config
-/STOREFRONT/packages
-/STOREFRONT/VirtoCommerce.Storefront/App_Data/blogs/*
-/STOREFRONT/VirtoCommerce.Storefront/App_Data/Themes/*
-/STOREFRONT/VirtoCommerce.Storefront/App_Data/Pages/*
-!/STOREFRONT/VirtoCommerce.Storefront/App_Data/Themes/default/*
-.vs/
-/PLATFORM/VirtoCommerce.Platform.Web/client_packages
-/PLATFORM/VirtoCommerce.Platform.Web/node_modules
-/PLATFORM/Modules/CMS/VirtoCommerce.Content.Web/client_packages
-/PLATFORM/Modules/CMS/VirtoCommerce.Content.Web/node_modules
-/WebPI/wwwroot
 *.nupkg
-/PLATFORM/VirtoCommerce.Platform.Web/Assets
-/PLATFORM/VirtoCommerce.Platform.Web/Modules
-/STOREFRONT/VirtoCommerce.Storefront/Areas
+
+.vs/
+
+/VirtoCommerce.Platform.Web/App_Data
+/VirtoCommerce.Platform.Web/client_packages
+/VirtoCommerce.Platform.Web/node_modules
+/VirtoCommerce.Platform.Web/Assets
+/VirtoCommerce.Platform.Web/Modules
+
+# VirtoCommerce.Module/build folder is required for the NuGet package
+!VirtoCommerce.Module/build/
+/artifacts
