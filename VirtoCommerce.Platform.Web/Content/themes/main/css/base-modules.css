@@ -4473,6 +4473,8 @@ tags-input .tags .tag-item .remove-button
                 z-index: 250;
             }
 
+            .blade-nav .menu-item.__minimize,
+            .blade-nav .menu-item.__maximize,
             .blade-nav .menu-item.__close
             {
                 z-index: 350;
