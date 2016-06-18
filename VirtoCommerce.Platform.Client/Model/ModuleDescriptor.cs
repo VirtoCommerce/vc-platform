@@ -132,6 +132,12 @@ namespace VirtoCommerce.Platform.Client.Model
         public bool? IsInstalled { get; set; }
 
         /// <summary>
+        /// Gets or Sets InstalledVersion
+        /// </summary>
+        [DataMember(Name="installedVersion", EmitDefaultValue=false)]
+        public ModuleIdentity InstalledVersion { get; set; }
+
+        /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
@@ -158,6 +164,7 @@ namespace VirtoCommerce.Platform.Client.Model
             sb.Append("  ValidationErrors: ").Append(ValidationErrors).Append("\n");
             sb.Append("  IsRemovable: ").Append(IsRemovable).Append("\n");
             sb.Append("  IsInstalled: ").Append(IsInstalled).Append("\n");
+            sb.Append("  InstalledVersion: ").Append(InstalledVersion).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -288,6 +295,11 @@ namespace VirtoCommerce.Platform.Client.Model
                     this.IsInstalled == other.IsInstalled ||
                     this.IsInstalled != null &&
                     this.IsInstalled.Equals(other.IsInstalled)
+                ) && 
+                (
+                    this.InstalledVersion == other.InstalledVersion ||
+                    this.InstalledVersion != null &&
+                    this.InstalledVersion.Equals(other.InstalledVersion)
                 );
         }
 
@@ -359,6 +371,9 @@ namespace VirtoCommerce.Platform.Client.Model
 
                 if (this.IsInstalled != null)
                     hash = hash * 59 + this.IsInstalled.GetHashCode();
+
+                if (this.InstalledVersion != null)
+                    hash = hash * 59 + this.InstalledVersion.GetHashCode();
 
                 return hash;
             }
