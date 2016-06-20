@@ -318,8 +318,10 @@ angular.module('platformWebApp')
         },
         checkPermission: authService.checkPermission,
         setError: function (msg, blade) {
-            blade.isLoading = false;
-            blade.error = msg;
+            if (blade) {
+                blade.isLoading = false;
+                blade.error = msg;
+            }
         }
     };
 

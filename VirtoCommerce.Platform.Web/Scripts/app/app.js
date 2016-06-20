@@ -42,6 +42,14 @@ angular.module('platformWebApp', AppDependencies).
 .factory('platformWebApp.httpErrorInterceptor', ['$q', '$rootScope', function ($q, $rootScope) {
     var httpErrorInterceptor = {};
 
+    httpErrorInterceptor.request = function (config) {
+        // do something on success
+        if (!config.cache) {
+            $rootScope.$broadcast('httpRequestSuccess', config);
+        }
+        return config;
+    };
+
     httpErrorInterceptor.responseError = function (rejection) {
         if (rejection.status === 401) {
             $rootScope.$broadcast('unauthorized', rejection);
@@ -93,8 +101,8 @@ angular.module('platformWebApp', AppDependencies).
   }])
 
 .run(
-  ['$rootScope', '$state', '$stateParams', 'platformWebApp.authService', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService', '$animate', '$templateCache', 'gridsterConfig', 'taOptions', '$timeout',
-    function ($rootScope, $state, $stateParams, authService, mainMenuService, pushNotificationService, $animate, $templateCache, gridsterConfig, taOptions, $timeout) {
+  ['$rootScope', '$state', '$stateParams', 'platformWebApp.authService', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService', '$animate', '$templateCache', 'gridsterConfig', 'taOptions', '$timeout', 'platformWebApp.bladeNavigationService',
+    function ($rootScope, $state, $stateParams, authService, mainMenuService, pushNotificationService, $animate, $templateCache, gridsterConfig, taOptions, $timeout, bladeNavigationService) {
         //Disable animation
         $animate.enabled(false);
 
@@ -132,30 +140,41 @@ angular.module('platformWebApp', AppDependencies).
             }
         });
 
-        //server error  handling
+        $rootScope.$on('httpRequestSuccess', function (event, rejection) {
+            // clear error on blade cap
+            if (bladeNavigationService.currentBlade) {
+                bladeNavigationService.currentBlade.error = undefined;
+            }
+        });
+
+        //server error handling
         //$rootScope.$on('httpError', function (event, rejection) {
         //    if (!(rejection.config.url.indexOf('api/platform/notification') + 1)) {
         //        pushNotificationService.error({ title: 'HTTP error', description: rejection.status + ' — ' + rejection.statusText, extendedData: rejection.data });
         //    }
         //});
+        $rootScope.$on('httpError', function (event, rejection) {
+            var msg = (rejection.data && rejection.data.exceptionMessage) ? rejection.data.exceptionMessage : rejection.statusText;
+            bladeNavigationService.setError(rejection.status + ': ' + msg, bladeNavigationService.currentBlade);
+        });
 
         $rootScope.$on('loginStatusChanged', function (event, authContext) {
-			//timeout need because $state not fully loading in run method and need to wait little time
-			$timeout(function () {
-				if (authContext.isAuthenticated) {
-				    if (!$state.current.name || $state.current.name == 'loginDialog') {
-				        homeMenuItem.action();
-				    }
-				}
-				else {
-				    $state.go('loginDialog');
-				}			
-			}, 500);
-        	
+            //timeout need because $state not fully loading in run method and need to wait little time
+            $timeout(function () {
+                if (authContext.isAuthenticated) {
+                    if (!$state.current.name || $state.current.name == 'loginDialog') {
+                        homeMenuItem.action();
+                    }
+                }
+                else {
+                    $state.go('loginDialog');
+                }
+            }, 500);
+
         });
 
         authService.fillAuthData();
-       
+
         // cache application level templates
         $templateCache.put('pagerTemplate.html', '<div class="pagination"><pagination boundary-links="true" max-size="pageSettings.numPages" items-per-page="pageSettings.itemsPerPageCount" total-items="pageSettings.totalItems" ng-model="pageSettings.currentPage" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination></div>');
 
