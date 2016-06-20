@@ -49,12 +49,7 @@ namespace VirtoCommerce.Platform.Core.Common
             {
                 //MINOR version when you add functionality in a backwards-compatible manner
                 retVal =  Minor <= other.Minor;
-            }
-            if (retVal)
-            {
-                //PATCH version when you make backwards-compatible bug fixes.
-                retVal = Patch <= other.Patch;
-            }
+            }         
             return retVal;
         }
 

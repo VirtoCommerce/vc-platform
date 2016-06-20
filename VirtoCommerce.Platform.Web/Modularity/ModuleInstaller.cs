@@ -92,7 +92,7 @@ namespace VirtoCommerce.Platform.Web.Modularity
                             var dstModuleDir = Path.Combine(_modulesPath, existModule.Id);
                             if (Directory.Exists(dstModuleDir))
                             {
-                                _txFileManager.DeleteDirectory(dstModuleDir);
+                                SafeDeleteDirectory(dstModuleDir);
                             }
                             Report(progress, ProgressMessageLevel.Info, "Updating '{0}' -> '{1}'", existModule, newModule);
                             InnerInstall(newModule, progress);
@@ -153,7 +153,7 @@ namespace VirtoCommerce.Platform.Web.Modularity
                             if (Directory.Exists(moduleDir))
                             {
                                 Report(progress, ProgressMessageLevel.Info, "Deleting module {0} folder", moduleDir);
-                                _txFileManager.DeleteDirectory(moduleDir);
+                                SafeDeleteDirectory(moduleDir);
                             }
                             Report(progress, ProgressMessageLevel.Info, "'{0}' uninstalled successfully.", uninstallingModule);
                             uninstallingModule.IsInstalled = false;
@@ -225,6 +225,47 @@ namespace VirtoCommerce.Platform.Web.Modularity
             }
         
             Report(progress, ProgressMessageLevel.Info, "Successfully installed '{0}'.", module);
+        }
+
+        private void SafeDeleteDirectory(string directoryPath)
+        {
+            if (Directory.Exists(directoryPath))
+            {
+                //try delete whole directory
+                try
+                {
+                    _txFileManager.DeleteDirectory(directoryPath);
+                }
+                //Because some folder can be locked by ASP.NET Bundles file monitor we should ignore IOException
+                catch (System.IO.IOException)
+                {   
+                    //If fail need to delete directory content first
+                    //Files                 
+                    foreach (string file in Directory.EnumerateFiles(directoryPath, "*.*", SearchOption.AllDirectories))
+                    {
+                        _txFileManager.Delete(file);
+                    }
+                    //Dirs
+                    foreach (string subDirectory in Directory.EnumerateDirectories(directoryPath, "*", SearchOption.AllDirectories))
+                    {
+                        try
+                        {
+                            _txFileManager.DeleteDirectory(subDirectory);
+                        }
+                        catch (System.IO.IOException)
+                        {
+                        }
+                    }
+                    //Then try to delete main directory itself
+                    try
+                    {
+                        _txFileManager.DeleteDirectory(directoryPath);
+                    }
+                    catch (System.IO.IOException)
+                    {
+                    }
+                }
+            }
         }
 
         private static void Report(IProgress<ProgressMessage> progress, ProgressMessageLevel level, string format, params object[] args)

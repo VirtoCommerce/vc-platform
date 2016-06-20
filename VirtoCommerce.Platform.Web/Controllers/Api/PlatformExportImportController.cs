@@ -50,6 +50,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpGet]
         [Route("sampledata/discover")]
         [ResponseType(typeof(SampleDataInfo[]))]
+        [AllowAnonymous]
         public IHttpActionResult DiscoverSampleData()
         {           
             return Ok(InnerDiscoverSampleData().ToArray());
@@ -58,6 +59,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [Route("sampledata/autoinstall")]
         [ResponseType(typeof(SampleDataImportPushNotification))]
+        [AllowAnonymous]
         public IHttpActionResult TryToAutoInstallSampleData()
         {
             var singleSampleData = InnerDiscoverSampleData().SingleOrDefault();
@@ -71,6 +73,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [Route("sampledata/import")]
         [ResponseType(typeof(SampleDataImportPushNotification))]
+        [AllowAnonymous]
         public IHttpActionResult ImportSampleData([FromUri]string url = null)
         {
             lock (_lockObject)

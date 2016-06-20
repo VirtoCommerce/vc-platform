@@ -58,7 +58,7 @@ namespace VirtoCommerce.Platform.Data.Notifications
             }
             catch (Exception ex)
             {
-                retVal.ErrorMessage = ex.Message;
+                retVal.ErrorMessage =  ex.Message + ex.InnerException;
             }
 
             return retVal;
