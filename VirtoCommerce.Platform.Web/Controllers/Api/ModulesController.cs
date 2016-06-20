@@ -241,6 +241,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [Route("autoinstall")]
         [ResponseType(typeof(webModel.ModuleAutoInstallPushNotification))]
+        [AllowAnonymous]
         public IHttpActionResult TryToAutoInstallModules()
         {
             var notification = new webModel.ModuleAutoInstallPushNotification("System")
