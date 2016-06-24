@@ -3,7 +3,7 @@ Virto Commerce 2.x
 
 | Branch  | Status |
 | ------------- | ------------- |
-| [Master - releases](https://github.com/VirtoCommerce/vc-community)  | [![Build Status](http://ci.virtocommerce.com:8080/buildStatus/icon?job=http://ci.virtocommerce.com:8080/buildStatus/icon?job=vc-2-org/vc-community/master)](http://ci.virtocommerce.com:8080/job/vc-2-org/vc-community/master)  |
+| [Master - releases](https://github.com/VirtoCommerce/vc-community)  | [![Build Status](http://ci.virtocommerce.com:8080/buildStatus/icon?job=http://ci.virtocommerce.com:8080/buildStatus/icon?job=vc-2-org/job/vc-community/job/master)](http://ci.virtocommerce.com:8080/job/vc-2-org/job/vc-community/job/master/)  |
 
 Virto Commerce is the second generation release and is the only enterprise level e-commerce product fully available under Open Source license. Virto Commerce is based on .NET 4.5 with extensive use of MVC, IoC, EF, Azure, Angular JS and many other cutting edge technologies. It can be deployed in Microsoft Cloud (Azure), Amazon Web Services (AWS) and on-premise. Mobile App Starter built using Ionic Framework is also available.
 
