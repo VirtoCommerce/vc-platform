@@ -44,10 +44,21 @@
             cellTemplate: 'modules-list-authors.cell.html'
             }-->
             <div class="note" ng-if="!blade.currentEntities.length && blade.mode==='update'">{{ 'platform.blades.modules-list.labels.no-updates' | translate }}</div>
-            <div class="note" ng-if="!blade.currentEntities.length && blade.mode==='available'">{{ 'platform.blades.modules-list.labels.no-modules-part1' | translate }} <a href="http://docs.virtocommerce.com/display/vc2devguide/Source+Code+Getting+Started#SourceCodeGettingStarted-ConfigureIIS" target="_blank">{{ 'platform.blades.modules-list.labels.no-modules-part2' | translate }}</a>.</div>
+            <div class="note" ng-if="!blade.currentEntities.length && blade.mode==='available'">{{ 'platform.blades.modules-list.labels.no-modules-part1' | translate }}</div>
             <div class="note" ng-if="!blade.currentEntities.length && blade.mode==='installed'">{{ 'platform.blades.modules-list.labels.no-installed-modules' | translate }}</div>
             <div class="table-wrapper" ng-if="blade.currentEntities.length">
                 <div ui-grid="gridOptions" ui-grid-auto-resize ui-grid-save-state ui-grid-selection ui-grid-resize-columns ui-grid-move-columns ui-grid-grouping ui-grid-height></div>
+                <ul class="menu __context" role="menu" id="mdl_menu">
+                    <li class="menu-item" ng-click="confirmActionInDialog('update', [contextMenuEntity])" ng-if="blade.mode==='update'" va-permission="platform:module:manage">
+                        <i class="menu-ico fa fa-arrow-up"></i>{{'platform.commands.update' | translate}}
+                    </li>
+                    <li class="menu-item" ng-click="confirmActionInDialog('install', [contextMenuEntity])" ng-if="blade.mode==='available'" va-permission="platform:module:manage">
+                        <i class="menu-ico fa fa-plus"></i>{{'platform.commands.install' | translate}}
+                    </li>
+                    <li class="menu-item" ng-click="confirmActionInDialog('uninstall', [contextMenuEntity])" ng-if="blade.mode==='installed'" va-permission="platform:module:manage">
+                        <i class="menu-ico fa fa-trash-o"></i> {{'platform.commands.uninstall' | translate}}
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
@@ -60,7 +71,7 @@
             <div class="inner-contents"><span class="inner-t">{{grid.appScope.getGroupInfo(row.entity).groupVal | translate}}: <span class="count">{{grid.appScope.getGroupInfo(row.entity).value}}</span></span></div>
         </div>
     </div>
-    <div ng-if="!row.groupHeader" ng-click='col.isRowHeader || grid.appScope.blade.selectNode(row.entity)' ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + '-' + col.uid + '-cell'" class="ui-grid-cell" ng-class="{'ui-grid-row-header-cell': col.isRowHeader, '__selected': row.entity.id===grid.appScope.selectedNodeId }" role="{{col.isRowHeader ? 'rowheader' : 'gridcell' }}" ui-grid-cell></div>
+    <div ng-if="!row.groupHeader" ng-click='col.isRowHeader || grid.appScope.blade.selectNode(row.entity)' ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + '-' + col.uid + '-cell'" class="ui-grid-cell" ng-class="{'ui-grid-row-header-cell': col.isRowHeader, '__selected': row.entity.id===grid.appScope.selectedNodeId }" role="{{col.isRowHeader ? 'rowheader' : 'gridcell' }}" ui-grid-cell context-menu="grid.appScope.contextMenuEntity = row.entity" data-target="mdl_menu"></div>
 </script>
 
 <script type="text/ng-template" id="modules-list-icon.cell.html">

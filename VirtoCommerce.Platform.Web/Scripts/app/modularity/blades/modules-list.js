@@ -30,11 +30,12 @@ function ($scope, bladeNavigationService, dialogService, modules, uiGridConstant
         return $scope.gridApi && _.any($scope.gridApi.selection.getSelectedRows());
     }
 
+    // initialize blade.toolbarCommands
     switch (blade.mode) {
         case 'update':
             blade.toolbarCommands = [{
                 name: "platform.commands.update", icon: 'fa fa-arrow-up',
-                executeMethod: function () { executeAction('update'); },
+                executeMethod: function () { $scope.confirmActionInDialog('update', $scope.gridApi.selection.getSelectedRows()); },
                 canExecuteMethod: isItemsChecked,
                 permission: 'platform:module:manage'
             }];
@@ -42,15 +43,22 @@ function ($scope, bladeNavigationService, dialogService, modules, uiGridConstant
         case 'available':
             blade.toolbarCommands = [{
                 name: "platform.commands.install", icon: 'fa fa-plus',
-                executeMethod: function () { executeAction('install'); },
+                executeMethod: function () { $scope.confirmActionInDialog('install', $scope.gridApi.selection.getSelectedRows()); },
+                canExecuteMethod: isItemsChecked,
+                permission: 'platform:module:manage'
+            }];
+            break;
+        case 'installed':
+            blade.toolbarCommands = [{
+                name: "platform.commands.uninstall", icon: 'fa fa-trash-o',
+                executeMethod: function () { $scope.confirmActionInDialog('uninstall', $scope.gridApi.selection.getSelectedRows()); },
                 canExecuteMethod: isItemsChecked,
                 permission: 'platform:module:manage'
             }];
             break;
     }
 
-    function executeAction(action) {
-        var selection = _.where($scope.gridApi.selection.getSelectedRows(), { isInstalled: false });
+    $scope.confirmActionInDialog = function (action, selection) {
         if (_.any(selection)) {
             bladeNavigationService.closeChildrenBlades(blade, function () {
                 blade.isLoading = true;
@@ -62,7 +70,8 @@ function ($scope, bladeNavigationService, dialogService, modules, uiGridConstant
                     selection.push(_.last(vals));
                 });
 
-                modules.getDependencies(selection, function (data) {
+                var modulesApiMethod = action === 'uninstall' ? modules.getDependents : modules.getDependencies;
+                modulesApiMethod(selection, function (data) {
                     blade.isLoading = false;
 
                     var dialog = {
@@ -71,12 +80,15 @@ function ($scope, bladeNavigationService, dialogService, modules, uiGridConstant
                         selection: selection,
                         dependencies: data,
                         callback: function () {
+                            // confirmed. Initiate modules (un)installation
                             _.each(selection, function (x) {
                                 if (!_.findWhere(data, { id: x.id })) {
                                     data.push(x);
                                 }
                             });
-                            modules.install(data, onAfterConfirmed, function (error) {
+
+                            modulesApiMethod = action === 'uninstall' ? modules.uninstall : modules.install;
+                            modulesApiMethod(data, onAfterConfirmed, function (error) {
                                 bladeNavigationService.setError('Error ' + error.status, blade);
                             });
                         }
@@ -105,6 +117,7 @@ function ($scope, bladeNavigationService, dialogService, modules, uiGridConstant
     $scope.setGridOptions = function (gridOptions) {
         switch (blade.mode) {
             case 'update':
+            case 'installed':
                 _.extend(gridOptions, {
                     showTreeRowHeader: false
                 });
@@ -112,14 +125,6 @@ function ($scope, bladeNavigationService, dialogService, modules, uiGridConstant
             case 'available':
                 _.extend(gridOptions, {
                     enableGroupHeaderSelection: true
-                });
-                break;
-            case 'installed':
-                _.extend(gridOptions, {
-                    showTreeRowHeader: false,
-                    selectionRowHeaderWidth: 0,
-                    enableRowSelection: false,
-                    enableSelectAll: false
                 });
                 break;
         }
