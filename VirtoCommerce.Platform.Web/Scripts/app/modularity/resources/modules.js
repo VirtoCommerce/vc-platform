@@ -7,6 +7,7 @@
         install: { method: 'POST', url: 'api/platform/modules/install' },
         uninstall: { method: 'POST', url: 'api/platform/modules/uninstall' },
         restart: { method: 'POST', url: 'api/platform/modules/restart' },
-        autoInstall: { method: 'POST', url: 'api/platform/modules/autoinstall' }
+        autoInstall: { method: 'POST', url: 'api/platform/modules/autoinstall' },
+        reload: { method: 'POST', url: 'api/platform/modules/reload', isArray: true },
     });
 }]);

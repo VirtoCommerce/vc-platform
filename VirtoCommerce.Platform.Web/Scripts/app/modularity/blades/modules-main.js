@@ -4,6 +4,11 @@
     var nodeUpdate, nodeAvailable, nodeInstalled;
     $scope.selectedNodeId = null;
 
+    blade.reload = function () {
+    	modules.reload();
+    	blade.refresh();
+    };
+
     blade.refresh = function () {
         blade.isLoading = true;
 
@@ -93,7 +98,7 @@
     blade.toolbarCommands = [
           {
               name: "platform.commands.refresh", icon: 'fa fa-refresh',
-              executeMethod: blade.refresh,
+              executeMethod: blade.reload,
               canExecuteMethod: function () { return true; }
           }
     ];

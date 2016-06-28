@@ -227,20 +227,7 @@ namespace VirtoCommerce.Platform.Web
             var tempCounterManager = new TempPerformanceCounterManager();
             GlobalHost.DependencyResolver.Register(typeof(IPerformanceCounterManager), () => tempCounterManager);
             var hubConfiguration = new HubConfiguration { EnableJavaScriptProxies = false };
-            app.MapSignalR("/" + moduleInitializerOptions.RoutePrefix + "signalr", hubConfiguration);
-
-            //Start background sample data installation if in config set concrete zip path (need for demo)
-            //var settingManager = container.Resolve<ISettingsManager>();
-            //var sampleDataState = EnumUtility.SafeParse<VirtoCommerce.Platform.Web.Model.ExportImport.SampleDataState>(settingManager.GetValue<string>("VirtoCommerce.SampleDataState", VirtoCommerce.Platform.Web.Model.ExportImport.SampleDataState.Undefined.ToString()), VirtoCommerce.Platform.Web.Model.ExportImport.SampleDataState.Undefined);
-            //if (sampleDataState == Model.ExportImport.SampleDataState.Undefined)
-            //{
-            //    var sampleDataUrl = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:SampleDataUrl", string.Empty);
-            //    if (!string.IsNullOrEmpty(sampleDataUrl) && sampleDataUrl.EndsWith(".zip"))
-            //    {
-            //        var exportImportController = container.Resolve<PlatformExportImportController>();
-            //        exportImportController.ImportSampleData(sampleDataUrl);
-            //    }
-            //}
+            app.MapSignalR("/" + moduleInitializerOptions.RoutePrefix + "signalr", hubConfiguration);    
         }
 
         private static Assembly CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs args)
