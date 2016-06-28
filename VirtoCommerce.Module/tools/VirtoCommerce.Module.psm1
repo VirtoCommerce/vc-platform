@@ -23,7 +23,9 @@ function Compress-Module
         $msbuild = "${env:windir}\Microsoft.NET\Framework\v4.0.30319\msbuild.exe"
     }
 
-    $tempDir = Join-Path $env:temp (New-Guid)
+    $newGuid = [Guid]::NewGuid()
+    $tempDirName = "_vc_module_$newGuid"
+    $tempDir = Join-Path $env:temp $tempDirName
     $modulesDir = "$tempDir\_PublishedWebsites"
     $packagesDir = $OutputDir
 
