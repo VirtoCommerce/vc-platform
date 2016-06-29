@@ -428,6 +428,25 @@ namespace VirtoCommerce.Platform.Client.Api
         /// <returns>ApiResponse of ModulePushNotification</returns>
         ApiResponse<ModulePushNotification> ModulesInstallModulesWithHttpInfo(List<ModuleDescriptor> modules);
         /// <summary>
+        /// Reload  modules
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="VirtoCommerce.Platform.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <returns></returns>
+        void ModulesReloadModules();
+
+        /// <summary>
+        /// Reload  modules
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="VirtoCommerce.Platform.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <returns>ApiResponse of Object(void)</returns>
+        ApiResponse<Object> ModulesReloadModulesWithHttpInfo();
+        /// <summary>
         /// Restart web application
         /// </summary>
         /// <remarks>
@@ -1686,6 +1705,25 @@ namespace VirtoCommerce.Platform.Client.Api
         /// <param name="modules">modules for install</param>
         /// <returns>Task of ApiResponse (ModulePushNotification)</returns>
         System.Threading.Tasks.Task<ApiResponse<ModulePushNotification>> ModulesInstallModulesAsyncWithHttpInfo(List<ModuleDescriptor> modules);
+        /// <summary>
+        /// Reload  modules
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="VirtoCommerce.Platform.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <returns>Task of void</returns>
+        System.Threading.Tasks.Task ModulesReloadModulesAsync();
+
+        /// <summary>
+        /// Reload  modules
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="VirtoCommerce.Platform.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <returns>Task of ApiResponse</returns>
+        System.Threading.Tasks.Task<ApiResponse<object>> ModulesReloadModulesAsyncWithHttpInfo();
         /// <summary>
         /// Restart web application
         /// </summary>
@@ -5476,6 +5514,128 @@ namespace VirtoCommerce.Platform.Client.Api
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 (ModulePushNotification)ApiClient.Deserialize(localVarResponse, typeof(ModulePushNotification)));
             
+        }
+        /// <summary>
+        /// Reload  modules 
+        /// </summary>
+        /// <exception cref="VirtoCommerce.Platform.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <returns></returns>
+        public void ModulesReloadModules()
+        {
+             ModulesReloadModulesWithHttpInfo();
+        }
+
+        /// <summary>
+        /// Reload  modules 
+        /// </summary>
+        /// <exception cref="VirtoCommerce.Platform.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <returns>ApiResponse of Object(void)</returns>
+        public ApiResponse<object> ModulesReloadModulesWithHttpInfo()
+        {
+
+            var localVarPath = "/api/platform/modules/reload";
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            string[] localVarHttpContentTypes = new string[] {
+            };
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            string[] localVarHttpHeaderAccepts = new string[] {
+            };
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            localVarPathParams.Add("format", "json");
+
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse)ApiClient.CallApi(localVarPath,
+                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
+
+            if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
+                throw new ApiException(localVarStatusCode, "Error calling ModulesReloadModules: " + localVarResponse.Content, localVarResponse.Content);
+            else if (localVarStatusCode == 0)
+                throw new ApiException(localVarStatusCode, "Error calling ModulesReloadModules: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+
+            
+            return new ApiResponse<object>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                null);
+        }
+
+        /// <summary>
+        /// Reload  modules 
+        /// </summary>
+        /// <exception cref="VirtoCommerce.Platform.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <returns>Task of void</returns>
+        public async System.Threading.Tasks.Task ModulesReloadModulesAsync()
+        {
+             await ModulesReloadModulesAsyncWithHttpInfo();
+
+        }
+
+        /// <summary>
+        /// Reload  modules 
+        /// </summary>
+        /// <exception cref="VirtoCommerce.Platform.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <returns>Task of ApiResponse</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<object>> ModulesReloadModulesAsyncWithHttpInfo()
+        {
+
+            var localVarPath = "/api/platform/modules/reload";
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            string[] localVarHttpContentTypes = new string[] {
+            };
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            string[] localVarHttpHeaderAccepts = new string[] {
+            };
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            localVarPathParams.Add("format", "json");
+
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse)await ApiClient.CallApiAsync(localVarPath,
+                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
+
+            if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
+                throw new ApiException(localVarStatusCode, "Error calling ModulesReloadModules: " + localVarResponse.Content, localVarResponse.Content);
+            else if (localVarStatusCode == 0)
+                throw new ApiException(localVarStatusCode, "Error calling ModulesReloadModules: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+
+            
+            return new ApiResponse<object>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                null);
         }
         /// <summary>
         /// Restart web application 

@@ -327,6 +327,7 @@
     <Compile Include="Model\Modularity\ModuleDescriptor.cs" />
     <Compile Include="Model\Modularity\ModulePushNotification.cs" />
     <Compile Include="Model\PlatformSetting.cs" />
+    <Content Include="Content\themes\main\images\grid.png" />
     <Content Include="Scripts\app\setup\templates\setupWizard.tpl.html" />
     <Content Include="Scripts\app\modularity\blades\modules-main.js" />
     <Content Include="Scripts\app\modularity\blades\modules-main.tpl.html" />
