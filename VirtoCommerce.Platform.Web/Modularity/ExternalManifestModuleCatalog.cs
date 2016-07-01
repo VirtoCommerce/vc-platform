@@ -27,6 +27,7 @@ namespace VirtoCommerce.Platform.Web.Modularity
         }
 
         #region ModuleCatalog overrides      
+     
         protected override void InnerLoad()
         {
             lock (_lockObject)
@@ -101,7 +102,7 @@ namespace VirtoCommerce.Platform.Web.Modularity
             }
         } 
         #endregion
-
+     
         private IEnumerable<ManifestModuleInfo> LoadExternalModulesManifest(string externalManifestUrl)
         {
             var retVal = new List<ManifestModuleInfo>();

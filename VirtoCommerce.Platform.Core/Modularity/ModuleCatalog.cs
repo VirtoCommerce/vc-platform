@@ -119,6 +119,16 @@ namespace VirtoCommerce.Platform.Core.Modularity
         }
 
         /// <summary>
+        /// Reload catalog
+        /// </summary>
+        public void Reload()
+        {
+            this.isLoaded = false;
+            this.Items.Clear();
+            Initialize();
+        }
+
+        /// <summary>
         /// Return the list of <see cref="ModuleInfo"/>s that <paramref name="moduleInfo"/> depends on.
         /// </summary>
         /// <remarks>

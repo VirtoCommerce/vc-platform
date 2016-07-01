@@ -25,7 +25,8 @@ function Compress-Module
 
     $newGuid = [Guid]::NewGuid()
     $tempDirName = "_vc_module_$newGuid"
-    $tempDir = Join-Path $env:temp $tempDirName
+    $tempPath = [System.IO.Path]::GetTempPath()
+    $tempDir = Join-Path $tempPath $tempDirName
     $modulesDir = "$tempDir\_PublishedWebsites"
     $packagesDir = $OutputDir
 

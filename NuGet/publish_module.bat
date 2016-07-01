@@ -1,1 +1,1 @@
-nuget push VirtoCommerce.Module.0.5.0.nupkg -Source nuget.org -ApiKey %1
+nuget push VirtoCommerce.Module.0.7.0.nupkg -Source nuget.org -ApiKey %1

@@ -48,6 +48,20 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
+        /// Reload  modules
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("reload")]
+        [ResponseType(typeof(void))]
+        [CheckPermission(Permission = PredefinedPermissions.ModuleQuery)]
+        public IHttpActionResult ReloadModules()
+        {
+            _moduleCatalog.Reload();
+            return Ok();
+        }
+
+        /// <summary>
         /// Get installed modules
         /// </summary>
         /// <returns></returns>

@@ -4,6 +4,11 @@
     var nodeUpdate, nodeAvailable, nodeInstalled;
     $scope.selectedNodeId = null;
 
+    blade.reload = function () {
+    	modules.reload();
+    	blade.refresh();
+    };
+
     blade.refresh = function () {
         blade.isLoading = true;
 
@@ -37,22 +42,24 @@
                     });
                 }
 
-                // prepare bundled (grouped) data source
-                if (_.any(latest.groups)) {
-                    _.each(latest.groups, function (x, index) {
+                // prepare bundled (grouped) data source of available modules
+                if (!latest.isInstalled && !latest.$alternativeVersion) {
+                    if (_.any(latest.groups)) {
+                        _.each(latest.groups, function (x, index) {
+                            var clone = angular.copy(latest);
+                            clone.$group = x;
+                            moduleHelper.moduleBundles.push(clone);
+                        });
+                    } else {
                         var clone = angular.copy(latest);
-                        clone.$group = x;
+                        clone.$group = 'platform.blades.modules-list.labels.ungrouped';
                         moduleHelper.moduleBundles.push(clone);
-                    });
-                } else {
-                    var clone = angular.copy(latest);
-                    clone.$group = 'platform.blades.modules-list.labels.ungrouped';
-                    moduleHelper.moduleBundles.push(clone);
+                    }
                 }
             });
 
             nodeUpdate.entities = _.filter(newResults, function (x) { return !x.isInstalled && x.$alternativeVersion; });
-            nodeAvailable.entities = moduleHelper.availableModules = newResults;
+            nodeAvailable.entities = moduleHelper.availableModules = _.filter(newResults, function (x) { return !x.isInstalled && !x.$alternativeVersion; });
             nodeInstalled.entities = _.where(results, { isInstalled: true });
 
             openFirstBladeInitially();
@@ -91,7 +98,7 @@
     blade.toolbarCommands = [
           {
               name: "platform.commands.refresh", icon: 'fa fa-refresh',
-              executeMethod: blade.refresh,
+              executeMethod: blade.reload,
               canExecuteMethod: function () { return true; }
           }
     ];
@@ -105,7 +112,7 @@
         { name: 'platform.blades.modules-main.labels.advanced', mode: 'advanced' }
     ];
 
-    var openFirstBladeInitially = _.once(function () { blade.openBlade(blade.currentEntities[2]); });
+    var openFirstBladeInitially = _.once(function () { blade.openBlade(blade.currentEntities[0]); });
 
     blade.refresh();
 }]);

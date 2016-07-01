@@ -44,5 +44,10 @@ namespace VirtoCommerce.Platform.Core.Modularity
         /// <param name="moduleInfo">The <see cref="ModuleInfo"/> to add.</param>
         /// <returns>The <see cref="ModuleCatalog"/> for easily adding multiple modules.</returns>
         void AddModule(ModuleInfo moduleInfo);
+
+        /// <summary>
+        /// Reload modules
+        /// </summary>
+        void Reload();
     }
 }
