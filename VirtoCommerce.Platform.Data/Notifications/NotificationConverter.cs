@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VirtoCommerce.Platform.Data.Model;
 using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Data.Common.ConventionInjections;
+using VirtoCommerce.Platform.Data.Model;
 
 namespace VirtoCommerce.Platform.Data.Notifications
 {
@@ -45,7 +41,7 @@ namespace VirtoCommerce.Platform.Data.Notifications
             if (target == null)
                 throw new ArgumentNullException("target");
 
-            var patchInjection = new PatchInjection<NotificationTemplateEntity>(x => x.Subject, x => x.Body, x => x.Language, x => x.IsDefault);
+            var patchInjection = new PatchInjection<NotificationTemplateEntity>(x => x.Sender, x => x.Recipient, x => x.Subject, x => x.Body, x => x.Language, x => x.IsDefault);
             target.InjectFrom(patchInjection, source);
         }
     }

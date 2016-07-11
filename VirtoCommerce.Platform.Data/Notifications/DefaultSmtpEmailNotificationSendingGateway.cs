@@ -35,6 +35,7 @@ namespace VirtoCommerce.Platform.Data.Notifications
                 mailMsg.To.Add(new MailAddress(notification.Recipient));
                 //From email
                 mailMsg.From = new MailAddress(notification.Sender);
+                mailMsg.ReplyToList.Add(mailMsg.From);
 
                 mailMsg.Subject = notification.Subject;
                 mailMsg.Body = notification.Body;
