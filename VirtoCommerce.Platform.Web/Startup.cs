@@ -412,20 +412,34 @@ namespace VirtoCommerce.Platform.Web
             container.RegisterInstance<IPushNotificationManager>(notifier);
 
             var resolver = new LiquidNotificationTemplateResolver();
-            var notificationTemplateService = new NotificationTemplateServiceImpl(platformRepositoryFactory);
-            var notificationManager = new NotificationManager(resolver, platformRepositoryFactory, notificationTemplateService);
+            container.RegisterInstance<INotificationTemplateResolver>(resolver);
 
-            //var emailNotificationSendingGateway = new DefaultEmailNotificationSendingGateway(settingsManager);
-            var emailNotificationSendingGateway = new DefaultSmtpEmailNotificationSendingGateway(settingsManager);
+            var notificationTemplateService = new NotificationTemplateServiceImpl(platformRepositoryFactory);
+            container.RegisterInstance<INotificationTemplateService>(notificationTemplateService);
+
+            var notificationManager = new NotificationManager(resolver, platformRepositoryFactory, notificationTemplateService);
+            container.RegisterInstance<INotificationManager>(notificationManager);
+
+            IEmailNotificationSendingGateway emailNotificationSendingGateway = null;
+
+            var emailNotificationSendingGatewayName = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Notifications:Gateway", "Default");
+
+            if (string.Equals(emailNotificationSendingGatewayName, "Default", StringComparison.OrdinalIgnoreCase))
+            {
+                emailNotificationSendingGateway = new DefaultSmtpEmailNotificationSendingGateway(settingsManager);
+            }
+            else if (string.Equals(emailNotificationSendingGatewayName, "SendGrid", StringComparison.OrdinalIgnoreCase))
+            {
+                emailNotificationSendingGateway = new SendGridEmailNotificationSendingGateway(settingsManager);
+            }
+
+            if (emailNotificationSendingGateway != null)
+            {
+                container.RegisterInstance(emailNotificationSendingGateway);
+            }
 
             var defaultSmsNotificationSendingGateway = new DefaultSmsNotificationSendingGateway();
-
-            container.RegisterInstance<INotificationTemplateService>(notificationTemplateService);
-            container.RegisterInstance<INotificationManager>(notificationManager);
-            container.RegisterInstance<INotificationTemplateResolver>(resolver);
-            container.RegisterInstance<IEmailNotificationSendingGateway>(emailNotificationSendingGateway);
             container.RegisterInstance<ISmsNotificationSendingGateway>(defaultSmsNotificationSendingGateway);
-
 
             #endregion
 
