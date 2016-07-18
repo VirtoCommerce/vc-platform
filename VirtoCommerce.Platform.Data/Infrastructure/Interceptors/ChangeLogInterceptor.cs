@@ -59,10 +59,7 @@ namespace VirtoCommerce.Platform.Data.Infrastructure.Interceptors
                                                                 .FirstOrDefault(x => x.ObjectId == activityLog.ObjectId && x.ObjectType == activityLog.ObjectType);
                                 if (alreadyExistLog != null)
                                 {
-                                    alreadyExistLog.ModifiedBy = activityLog.ModifiedBy;
-                                    alreadyExistLog.ModifiedDate = activityLog.ModifiedDate;
                                     alreadyExistLog.OperationType = activityLog.OperationType;
-
                                 }
                                 else
                                 {
@@ -97,11 +94,8 @@ namespace VirtoCommerce.Platform.Data.Infrastructure.Interceptors
         {
             var retVal = new OperationLogEntity
             {
-                Id = Guid.NewGuid().ToString("N"),
-                CreatedDate = createdDate,
                 ObjectId = objectId,
                 ObjectType = objectType,
-                CreatedBy = GetCurrentUserName(),
                 OperationType = state.ToString()
             };
 
