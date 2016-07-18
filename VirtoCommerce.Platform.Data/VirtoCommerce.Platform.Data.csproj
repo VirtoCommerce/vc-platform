@@ -214,6 +214,10 @@
     <Compile Include="Repositories\Migrations\201606071049349_SettingDescriptionIncSize.Designer.cs">
       <DependentUpon>201606071049349_SettingDescriptionIncSize.cs</DependentUpon>
     </Compile>
+    <Compile Include="Repositories\Migrations\201607111016388_AddSenderAndRecipient.cs" />
+    <Compile Include="Repositories\Migrations\201607111016388_AddSenderAndRecipient.Designer.cs">
+      <DependentUpon>201607111016388_AddSenderAndRecipient.cs</DependentUpon>
+    </Compile>
     <Compile Include="Repositories\Migrations\Configuration.cs" />
     <Compile Include="Repositories\PlatformDatabaseInitializer.cs" />
     <Compile Include="Repositories\PlatformRepository.cs" />
@@ -293,6 +297,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Repositories\Migrations\201606071049349_SettingDescriptionIncSize.resx">
       <DependentUpon>201606071049349_SettingDescriptionIncSize.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Repositories\Migrations\201607111016388_AddSenderAndRecipient.resx">
+      <DependentUpon>201607111016388_AddSenderAndRecipient.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

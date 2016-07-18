@@ -30,6 +30,7 @@ namespace VirtoCommerce.Platform.Data.Notifications
 
             var mail = new SendGridMessage();
             mail.From = new MailAddress(notification.Sender);
+            mail.ReplyTo = new[] { mail.From };
             mail.AddTo(notification.Recipient);
             mail.Subject = notification.Subject;
             mail.Html = notification.Body;
