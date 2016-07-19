@@ -223,11 +223,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <returns></returns>
         [HttpGet]
         [Route("users/{userName}/hasPermissions")]
-        [ResponseType(typeof(bool))]
+        [ResponseType(typeof(CheckPermissionsResult))]
         [CheckPermission(Permission = PredefinedPermissions.SecurityQuery)]
         public IHttpActionResult UserHasAnyPermission(string userName, [FromUri] string[] permissions, [FromUri] string[] scopes)
         {
-            return Ok(_securityService.UserHasAnyPermission(userName, scopes, permissions));
+            return Ok(new CheckPermissionsResult { Result = _securityService.UserHasAnyPermission(userName, scopes, permissions) });
         }
 
         /// <summary>
