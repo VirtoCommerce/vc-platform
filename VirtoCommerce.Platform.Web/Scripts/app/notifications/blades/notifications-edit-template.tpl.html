@@ -41,14 +41,41 @@
                 </div>
 
                 <fieldset style="margin-top:20px;" ng-if="blade.isNew">
-                    <legend>{{ 'platform.blades.notifications-edit-template.labels.subject' | translate }}</legend>
+                    <legend>{{ 'platform.blades.notifications-edit-template.labels.sender' | translate }}</legend>
                     <div class="form-group" style="margin-top:0">
                         <div class="form-input">
-                            <ui-codemirror ng-model="blade.currentEntity.subject" ui-codemirror-opts="editorOptions"></ui-codemirror>
+                            <ui-codemirror ng-model="blade.currentEntity.sender" ui-codemirror-opts="editorOptions"></ui-codemirror>
+                        </div>
+                        <div class="table-descr">
+                            {{ 'platform.blades.notifications-edit-template.labels.blank-note' | translate }}
                         </div>
                     </div>
                 </fieldset>
                 <fieldset ng-if="!blade.isNew">
+                    <legend>{{ 'platform.blades.notifications-edit-template.labels.sender' | translate }}</legend>
+                    <div class="form-group" style="margin-top:0">
+                        <div class="form-input">
+                            <ui-codemirror ng-model="blade.currentEntity.sender" ui-codemirror-opts="editorOptions"></ui-codemirror>
+                        </div>
+                        <div class="table-descr">
+                            {{ 'platform.blades.notifications-edit-template.labels.blank-note' | translate }}
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset style="margin-top:20px;">
+                    <legend>{{ 'platform.blades.notifications-edit-template.labels.recipient' | translate }}</legend>
+                    <div class="form-group" style="margin-top:0">
+                        <div class="form-input">
+                            <ui-codemirror ng-model="blade.currentEntity.recipient" ui-codemirror-opts="editorOptions"></ui-codemirror>
+                        </div>
+                        <div class="table-descr">
+                            {{ 'platform.blades.notifications-edit-template.labels.blank-note' | translate }}
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset style="margin-top:20px;">
                     <legend>{{ 'platform.blades.notifications-edit-template.labels.subject' | translate }}</legend>
                     <div class="form-group" style="margin-top:0">
                         <div class="form-input">

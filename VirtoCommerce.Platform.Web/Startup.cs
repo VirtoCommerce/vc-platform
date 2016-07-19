@@ -227,7 +227,7 @@ namespace VirtoCommerce.Platform.Web
             var tempCounterManager = new TempPerformanceCounterManager();
             GlobalHost.DependencyResolver.Register(typeof(IPerformanceCounterManager), () => tempCounterManager);
             var hubConfiguration = new HubConfiguration { EnableJavaScriptProxies = false };
-            app.MapSignalR("/" + moduleInitializerOptions.RoutePrefix + "signalr", hubConfiguration);    
+            app.MapSignalR("/" + moduleInitializerOptions.RoutePrefix + "signalr", hubConfiguration);
         }
 
         private static Assembly CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs args)
@@ -312,7 +312,7 @@ namespace VirtoCommerce.Platform.Web
                             new ModuleSetting
                             {
                                 Name = "VirtoCommerce.Platform.Notifications.SendGrid.Secret",
-                                ValueType = ModuleSetting.TypeString,
+                                ValueType = ModuleSetting.TypeSecureString,
                                 Title = "SendGrid Password",
                                 Description = "Your SendGrid account password"
                             }
@@ -361,10 +361,17 @@ namespace VirtoCommerce.Platform.Web
                             new ModuleSetting
                             {
                                 Name = "VirtoCommerce.Platform.Notifications.SmptClient.Password",
-                                ValueType = ModuleSetting.TypeString,
+                                ValueType = ModuleSetting.TypeSecureString,
                                 Title = "Smtp server password",
                                 Description = "Smtp server password"
-                            }
+                            },
+                            new ModuleSetting
+                            {
+                                Name = "VirtoCommerce.Platform.Notifications.SmptClient.UseSsl",
+                                ValueType = ModuleSetting.TypeBoolean,
+                                Title = "Use SSL",
+                                Description = "Use secure connection"
+                            },
                         }
                     },
                     new ModuleSettingsGroup
@@ -405,20 +412,34 @@ namespace VirtoCommerce.Platform.Web
             container.RegisterInstance<IPushNotificationManager>(notifier);
 
             var resolver = new LiquidNotificationTemplateResolver();
-            var notificationTemplateService = new NotificationTemplateServiceImpl(platformRepositoryFactory);
-            var notificationManager = new NotificationManager(resolver, platformRepositoryFactory, notificationTemplateService);
+            container.RegisterInstance<INotificationTemplateResolver>(resolver);
 
-            //var emailNotificationSendingGateway = new DefaultEmailNotificationSendingGateway(settingsManager);
-            var emailNotificationSendingGateway = new DefaultSmtpEmailNotificationSendingGateway(settingsManager);
+            var notificationTemplateService = new NotificationTemplateServiceImpl(platformRepositoryFactory);
+            container.RegisterInstance<INotificationTemplateService>(notificationTemplateService);
+
+            var notificationManager = new NotificationManager(resolver, platformRepositoryFactory, notificationTemplateService);
+            container.RegisterInstance<INotificationManager>(notificationManager);
+
+            IEmailNotificationSendingGateway emailNotificationSendingGateway = null;
+
+            var emailNotificationSendingGatewayName = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Notifications:Gateway", "Default");
+
+            if (string.Equals(emailNotificationSendingGatewayName, "Default", StringComparison.OrdinalIgnoreCase))
+            {
+                emailNotificationSendingGateway = new DefaultSmtpEmailNotificationSendingGateway(settingsManager);
+            }
+            else if (string.Equals(emailNotificationSendingGatewayName, "SendGrid", StringComparison.OrdinalIgnoreCase))
+            {
+                emailNotificationSendingGateway = new SendGridEmailNotificationSendingGateway(settingsManager);
+            }
+
+            if (emailNotificationSendingGateway != null)
+            {
+                container.RegisterInstance(emailNotificationSendingGateway);
+            }
 
             var defaultSmsNotificationSendingGateway = new DefaultSmsNotificationSendingGateway();
-
-            container.RegisterInstance<INotificationTemplateService>(notificationTemplateService);
-            container.RegisterInstance<INotificationManager>(notificationManager);
-            container.RegisterInstance<INotificationTemplateResolver>(resolver);
-            container.RegisterInstance<IEmailNotificationSendingGateway>(emailNotificationSendingGateway);
             container.RegisterInstance<ISmsNotificationSendingGateway>(defaultSmsNotificationSendingGateway);
-
 
             #endregion
 

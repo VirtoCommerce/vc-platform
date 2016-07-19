@@ -21,10 +21,26 @@ namespace VirtoCommerce.Platform.Data.Notifications
                 myDict.Add(parameter.ParameterName, notification.GetType().GetProperty(parameter.ParameterName).GetValue(notification));
             }
 
-            var templateSubject = Template.Parse(notification.NotificationTemplate.Subject);
+            var template = notification.NotificationTemplate;
+
+            var templateSender = Template.Parse(template.Sender);
+            var sender = templateSender.Render(Hash.FromDictionary(myDict));
+            if (!string.IsNullOrEmpty(sender))
+            {
+                notification.Sender = sender;
+            }
+
+            var templateRecipient = Template.Parse(template.Recipient);
+            var recipient = templateRecipient.Render(Hash.FromDictionary(myDict));
+            if (!string.IsNullOrEmpty(recipient))
+            {
+                notification.Recipient = recipient;
+            }
+
+            var templateSubject = Template.Parse(template.Subject);
             notification.Subject = templateSubject.Render(Hash.FromDictionary(myDict));
 
-            var templateBody = Template.Parse(notification.NotificationTemplate.Body);
+            var templateBody = Template.Parse(template.Body);
             notification.Body = templateBody.Render(Hash.FromDictionary(myDict));
         }
 

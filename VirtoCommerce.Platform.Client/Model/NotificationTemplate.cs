@@ -24,16 +24,28 @@ namespace VirtoCommerce.Platform.Client.Model
         public string Id { get; set; }
 
         /// <summary>
-        /// Gets or Sets Body
+        /// Gets or Sets Sender
         /// </summary>
-        [DataMember(Name="body", EmitDefaultValue=false)]
-        public string Body { get; set; }
+        [DataMember(Name="sender", EmitDefaultValue=false)]
+        public string Sender { get; set; }
+
+        /// <summary>
+        /// Gets or Sets Recipient
+        /// </summary>
+        [DataMember(Name="recipient", EmitDefaultValue=false)]
+        public string Recipient { get; set; }
 
         /// <summary>
         /// Gets or Sets Subject
         /// </summary>
         [DataMember(Name="subject", EmitDefaultValue=false)]
         public string Subject { get; set; }
+
+        /// <summary>
+        /// Gets or Sets Body
+        /// </summary>
+        [DataMember(Name="body", EmitDefaultValue=false)]
+        public string Body { get; set; }
 
         /// <summary>
         /// Gets or Sets NotificationTypeId
@@ -78,8 +90,10 @@ namespace VirtoCommerce.Platform.Client.Model
             var sb = new StringBuilder();
             sb.Append("class NotificationTemplate {\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
-            sb.Append("  Body: ").Append(Body).Append("\n");
+            sb.Append("  Sender: ").Append(Sender).Append("\n");
+            sb.Append("  Recipient: ").Append(Recipient).Append("\n");
             sb.Append("  Subject: ").Append(Subject).Append("\n");
+            sb.Append("  Body: ").Append(Body).Append("\n");
             sb.Append("  NotificationTypeId: ").Append(NotificationTypeId).Append("\n");
             sb.Append("  ObjectId: ").Append(ObjectId).Append("\n");
             sb.Append("  ObjectTypeId: ").Append(ObjectTypeId).Append("\n");
@@ -127,14 +141,24 @@ namespace VirtoCommerce.Platform.Client.Model
                     this.Id.Equals(other.Id)
                 ) && 
                 (
-                    this.Body == other.Body ||
-                    this.Body != null &&
-                    this.Body.Equals(other.Body)
+                    this.Sender == other.Sender ||
+                    this.Sender != null &&
+                    this.Sender.Equals(other.Sender)
+                ) && 
+                (
+                    this.Recipient == other.Recipient ||
+                    this.Recipient != null &&
+                    this.Recipient.Equals(other.Recipient)
                 ) && 
                 (
                     this.Subject == other.Subject ||
                     this.Subject != null &&
                     this.Subject.Equals(other.Subject)
+                ) && 
+                (
+                    this.Body == other.Body ||
+                    this.Body != null &&
+                    this.Body.Equals(other.Body)
                 ) && 
                 (
                     this.NotificationTypeId == other.NotificationTypeId ||
@@ -178,11 +202,17 @@ namespace VirtoCommerce.Platform.Client.Model
                 if (this.Id != null)
                     hash = hash * 59 + this.Id.GetHashCode();
 
-                if (this.Body != null)
-                    hash = hash * 59 + this.Body.GetHashCode();
+                if (this.Sender != null)
+                    hash = hash * 59 + this.Sender.GetHashCode();
+
+                if (this.Recipient != null)
+                    hash = hash * 59 + this.Recipient.GetHashCode();
 
                 if (this.Subject != null)
                     hash = hash * 59 + this.Subject.GetHashCode();
+
+                if (this.Body != null)
+                    hash = hash * 59 + this.Body.GetHashCode();
 
                 if (this.NotificationTypeId != null)
                     hash = hash * 59 + this.NotificationTypeId.GetHashCode();

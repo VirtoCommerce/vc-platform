@@ -215,6 +215,22 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
+        /// Check specified user has passed permissions in specified scope
+        /// </summary>
+        /// <param name="userName">security account name</param>
+        /// <param name="permissions">checked permissions Example: ?permissions=read&amp;permissions=write </param>
+        /// <param name="scopes">security bounded scopes. Read mode: http://docs.virtocommerce.com/display/vc2devguide/Working+with+platform+security </param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("users/{userName}/hasPermissions")]
+        [ResponseType(typeof(ApplicationUserExtended))]
+        [CheckPermission(Permission = PredefinedPermissions.SecurityQuery)]
+        public IHttpActionResult CheckUserPermissions(string userName, [FromUri] string[] permissions, [FromUri] string[] scopes)
+        {
+            return Ok(_securityService.UserHasAnyPermission(userName, scopes, permissions));
+        }
+
+        /// <summary>
         /// Get user details by user ID
         /// </summary>
         /// <param name="id"></param>
