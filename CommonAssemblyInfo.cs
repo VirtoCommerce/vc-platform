@@ -17,7 +17,7 @@ using System.Runtime.InteropServices;
 
 [assembly: AssemblyFileVersion("2.11.4.0")]
 [assembly: AssemblyVersion("2.11.4.0")]
-[assembly: AssemblyInformationalVersion("2.11.4.0")]
+[assembly: AssemblyInformationalVersion("2.11")]
 
 #if DEBUG
 [assembly: AssemblyConfiguration("Debug")]
