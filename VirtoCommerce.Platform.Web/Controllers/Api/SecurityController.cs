@@ -218,7 +218,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// Check specified user has passed permissions in specified scope
         /// </summary>
         /// <param name="userName">security account name</param>
-        /// <param name="permissions">checked permissions Example: ?permissions=read&permissions=write </param>
+        /// <param name="permissions">checked permissions Example: ?permissions=read&amp;permissions=write </param>
         /// <param name="scopes">security bounded scopes. Read mode: http://docs.virtocommerce.com/display/vc2devguide/Working+with+platform+security </param>
         /// <returns></returns>
         [HttpGet]
