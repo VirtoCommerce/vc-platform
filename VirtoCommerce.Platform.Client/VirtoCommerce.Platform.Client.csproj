@@ -67,6 +67,7 @@
     <Compile Include="Model\BlobFolder.cs" />
     <Compile Include="Model\BlobInfo.cs" />
     <Compile Include="Model\ChangePasswordInfo.cs" />
+    <Compile Include="Model\CheckPermissionsResult.cs" />
     <Compile Include="Model\DynamicProperty.cs" />
     <Compile Include="Model\DynamicPropertyDictionaryItem.cs" />
     <Compile Include="Model\DynamicPropertyDictionaryItemName.cs" />

@@ -877,31 +877,6 @@ namespace VirtoCommerce.Platform.Client.Api
         /// <returns>ApiResponse of SecurityResult</returns>
         ApiResponse<SecurityResult> SecurityChangePasswordWithHttpInfo(string userName, ChangePasswordInfo changePassword);
         /// <summary>
-        /// 
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="VirtoCommerce.Platform.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="userName"></param>
-        /// <param name="permissions"></param>
-        /// <param name="scopes"></param>
-        /// <returns>ApplicationUserExtended</returns>
-        ApplicationUserExtended SecurityCheckUserPermissions(string userName, List<string> permissions, List<string> scopes);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="VirtoCommerce.Platform.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="userName"></param>
-        /// <param name="permissions"></param>
-        /// <param name="scopes"></param>
-        /// <returns>ApiResponse of ApplicationUserExtended</returns>
-        ApiResponse<ApplicationUserExtended> SecurityCheckUserPermissionsWithHttpInfo(string userName, List<string> permissions, List<string> scopes);
-        /// <summary>
         /// Create new user
         /// </summary>
         /// <remarks>
@@ -1233,6 +1208,31 @@ namespace VirtoCommerce.Platform.Client.Api
         /// <param name="role"></param>
         /// <returns>ApiResponse of Role</returns>
         ApiResponse<Role> SecurityUpdateRoleWithHttpInfo(Role role);
+        /// <summary>
+        /// Check specified user has passed permissions in specified scope
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="VirtoCommerce.Platform.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="userName">security account name</param>
+        /// <param name="permissions">checked permissions Example: ?permissions&#x3D;read&amp;amp;permissions&#x3D;write</param>
+        /// <param name="scopes">security bounded scopes. Read mode: http://docs.virtocommerce.com/display/vc2devguide/Working+with+platform+security</param>
+        /// <returns>CheckPermissionsResult</returns>
+        CheckPermissionsResult SecurityUserHasAnyPermission(string userName, List<string> permissions, List<string> scopes);
+
+        /// <summary>
+        /// Check specified user has passed permissions in specified scope
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="VirtoCommerce.Platform.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="userName">security account name</param>
+        /// <param name="permissions">checked permissions Example: ?permissions&#x3D;read&amp;amp;permissions&#x3D;write</param>
+        /// <param name="scopes">security bounded scopes. Read mode: http://docs.virtocommerce.com/display/vc2devguide/Working+with+platform+security</param>
+        /// <returns>ApiResponse of CheckPermissionsResult</returns>
+        ApiResponse<CheckPermissionsResult> SecurityUserHasAnyPermissionWithHttpInfo(string userName, List<string> permissions, List<string> scopes);
         /// <summary>
         /// Get all settings
         /// </summary>
@@ -2180,31 +2180,6 @@ namespace VirtoCommerce.Platform.Client.Api
         /// <returns>Task of ApiResponse (SecurityResult)</returns>
         System.Threading.Tasks.Task<ApiResponse<SecurityResult>> SecurityChangePasswordAsyncWithHttpInfo(string userName, ChangePasswordInfo changePassword);
         /// <summary>
-        /// 
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="VirtoCommerce.Platform.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="userName"></param>
-        /// <param name="permissions"></param>
-        /// <param name="scopes"></param>
-        /// <returns>Task of ApplicationUserExtended</returns>
-        System.Threading.Tasks.Task<ApplicationUserExtended> SecurityCheckUserPermissionsAsync(string userName, List<string> permissions, List<string> scopes);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        /// <exception cref="VirtoCommerce.Platform.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="userName"></param>
-        /// <param name="permissions"></param>
-        /// <param name="scopes"></param>
-        /// <returns>Task of ApiResponse (ApplicationUserExtended)</returns>
-        System.Threading.Tasks.Task<ApiResponse<ApplicationUserExtended>> SecurityCheckUserPermissionsAsyncWithHttpInfo(string userName, List<string> permissions, List<string> scopes);
-        /// <summary>
         /// Create new user
         /// </summary>
         /// <remarks>
@@ -2536,6 +2511,31 @@ namespace VirtoCommerce.Platform.Client.Api
         /// <param name="role"></param>
         /// <returns>Task of ApiResponse (Role)</returns>
         System.Threading.Tasks.Task<ApiResponse<Role>> SecurityUpdateRoleAsyncWithHttpInfo(Role role);
+        /// <summary>
+        /// Check specified user has passed permissions in specified scope
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="VirtoCommerce.Platform.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="userName">security account name</param>
+        /// <param name="permissions">checked permissions Example: ?permissions&#x3D;read&amp;amp;permissions&#x3D;write</param>
+        /// <param name="scopes">security bounded scopes. Read mode: http://docs.virtocommerce.com/display/vc2devguide/Working+with+platform+security</param>
+        /// <returns>Task of CheckPermissionsResult</returns>
+        System.Threading.Tasks.Task<CheckPermissionsResult> SecurityUserHasAnyPermissionAsync(string userName, List<string> permissions, List<string> scopes);
+
+        /// <summary>
+        /// Check specified user has passed permissions in specified scope
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="VirtoCommerce.Platform.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="userName">security account name</param>
+        /// <param name="permissions">checked permissions Example: ?permissions&#x3D;read&amp;amp;permissions&#x3D;write</param>
+        /// <param name="scopes">security bounded scopes. Read mode: http://docs.virtocommerce.com/display/vc2devguide/Working+with+platform+security</param>
+        /// <returns>Task of ApiResponse (CheckPermissionsResult)</returns>
+        System.Threading.Tasks.Task<ApiResponse<CheckPermissionsResult>> SecurityUserHasAnyPermissionAsyncWithHttpInfo(string userName, List<string> permissions, List<string> scopes);
         /// <summary>
         /// Get all settings
         /// </summary>
@@ -8718,174 +8718,6 @@ namespace VirtoCommerce.Platform.Client.Api
             
         }
         /// <summary>
-        ///  
-        /// </summary>
-        /// <exception cref="VirtoCommerce.Platform.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="userName"></param>
-        /// <param name="permissions"></param>
-        /// <param name="scopes"></param>
-        /// <returns>ApplicationUserExtended</returns>
-        public ApplicationUserExtended SecurityCheckUserPermissions(string userName, List<string> permissions, List<string> scopes)
-        {
-             ApiResponse<ApplicationUserExtended> localVarResponse = SecurityCheckUserPermissionsWithHttpInfo(userName, permissions, scopes);
-             return localVarResponse.Data;
-        }
-
-        /// <summary>
-        ///  
-        /// </summary>
-        /// <exception cref="VirtoCommerce.Platform.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="userName"></param>
-        /// <param name="permissions"></param>
-        /// <param name="scopes"></param>
-        /// <returns>ApiResponse of ApplicationUserExtended</returns>
-        public ApiResponse<ApplicationUserExtended> SecurityCheckUserPermissionsWithHttpInfo(string userName, List<string> permissions, List<string> scopes)
-        {
-            // verify the required parameter 'userName' is set
-            if (userName == null)
-                throw new ApiException(400, "Missing required parameter 'userName' when calling VirtoCommercePlatformApi->SecurityCheckUserPermissions");
-            // verify the required parameter 'permissions' is set
-            if (permissions == null)
-                throw new ApiException(400, "Missing required parameter 'permissions' when calling VirtoCommercePlatformApi->SecurityCheckUserPermissions");
-            // verify the required parameter 'scopes' is set
-            if (scopes == null)
-                throw new ApiException(400, "Missing required parameter 'scopes' when calling VirtoCommercePlatformApi->SecurityCheckUserPermissions");
-
-            var localVarPath = "/api/platform/security/users/{userName}/hasPermissions";
-            var localVarPathParams = new Dictionary<string, string>();
-            var localVarQueryParams = new Dictionary<string, string>();
-            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<string, string>();
-            var localVarFileParams = new Dictionary<string, FileParameter>();
-            object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            string[] localVarHttpContentTypes = new string[] {
-            };
-            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            string[] localVarHttpHeaderAccepts = new string[] {
-                "application/json", 
-                "text/json", 
-                "application/xml", 
-                "text/xml"
-            };
-            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            // set "format" to json by default
-            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
-            localVarPathParams.Add("format", "json");
-            if (userName != null) localVarPathParams.Add("userName", ApiClient.ParameterToString(userName)); // path parameter
-            if (permissions != null) localVarQueryParams.Add("permissions", ApiClient.ParameterToString(permissions)); // query parameter
-            if (scopes != null) localVarQueryParams.Add("scopes", ApiClient.ParameterToString(scopes)); // query parameter
-
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse)ApiClient.CallApi(localVarPath,
-                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int)localVarResponse.StatusCode;
-
-            if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException(localVarStatusCode, "Error calling SecurityCheckUserPermissions: " + localVarResponse.Content, localVarResponse.Content);
-            else if (localVarStatusCode == 0)
-                throw new ApiException(localVarStatusCode, "Error calling SecurityCheckUserPermissions: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
-
-            return new ApiResponse<ApplicationUserExtended>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ApplicationUserExtended)ApiClient.Deserialize(localVarResponse, typeof(ApplicationUserExtended)));
-            
-        }
-
-        /// <summary>
-        ///  
-        /// </summary>
-        /// <exception cref="VirtoCommerce.Platform.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="userName"></param>
-        /// <param name="permissions"></param>
-        /// <param name="scopes"></param>
-        /// <returns>Task of ApplicationUserExtended</returns>
-        public async System.Threading.Tasks.Task<ApplicationUserExtended> SecurityCheckUserPermissionsAsync(string userName, List<string> permissions, List<string> scopes)
-        {
-             ApiResponse<ApplicationUserExtended> localVarResponse = await SecurityCheckUserPermissionsAsyncWithHttpInfo(userName, permissions, scopes);
-             return localVarResponse.Data;
-
-        }
-
-        /// <summary>
-        ///  
-        /// </summary>
-        /// <exception cref="VirtoCommerce.Platform.Client.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="userName"></param>
-        /// <param name="permissions"></param>
-        /// <param name="scopes"></param>
-        /// <returns>Task of ApiResponse (ApplicationUserExtended)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<ApplicationUserExtended>> SecurityCheckUserPermissionsAsyncWithHttpInfo(string userName, List<string> permissions, List<string> scopes)
-        {
-            // verify the required parameter 'userName' is set
-            if (userName == null)
-                throw new ApiException(400, "Missing required parameter 'userName' when calling VirtoCommercePlatformApi->SecurityCheckUserPermissions");
-            // verify the required parameter 'permissions' is set
-            if (permissions == null)
-                throw new ApiException(400, "Missing required parameter 'permissions' when calling VirtoCommercePlatformApi->SecurityCheckUserPermissions");
-            // verify the required parameter 'scopes' is set
-            if (scopes == null)
-                throw new ApiException(400, "Missing required parameter 'scopes' when calling VirtoCommercePlatformApi->SecurityCheckUserPermissions");
-
-            var localVarPath = "/api/platform/security/users/{userName}/hasPermissions";
-            var localVarPathParams = new Dictionary<string, string>();
-            var localVarQueryParams = new Dictionary<string, string>();
-            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
-            var localVarFormParams = new Dictionary<string, string>();
-            var localVarFileParams = new Dictionary<string, FileParameter>();
-            object localVarPostBody = null;
-
-            // to determine the Content-Type header
-            string[] localVarHttpContentTypes = new string[] {
-            };
-            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
-
-            // to determine the Accept header
-            string[] localVarHttpHeaderAccepts = new string[] {
-                "application/json", 
-                "text/json", 
-                "application/xml", 
-                "text/xml"
-            };
-            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
-            if (localVarHttpHeaderAccept != null)
-                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
-
-            // set "format" to json by default
-            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
-            localVarPathParams.Add("format", "json");
-            if (userName != null) localVarPathParams.Add("userName", ApiClient.ParameterToString(userName)); // path parameter
-            if (permissions != null) localVarQueryParams.Add("permissions", ApiClient.ParameterToString(permissions)); // query parameter
-            if (scopes != null) localVarQueryParams.Add("scopes", ApiClient.ParameterToString(scopes)); // query parameter
-
-
-            // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse)await ApiClient.CallApiAsync(localVarPath,
-                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
-                localVarPathParams, localVarHttpContentType);
-
-            int localVarStatusCode = (int)localVarResponse.StatusCode;
-
-            if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
-                throw new ApiException(localVarStatusCode, "Error calling SecurityCheckUserPermissions: " + localVarResponse.Content, localVarResponse.Content);
-            else if (localVarStatusCode == 0)
-                throw new ApiException(localVarStatusCode, "Error calling SecurityCheckUserPermissions: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
-
-            return new ApiResponse<ApplicationUserExtended>(localVarStatusCode,
-                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (ApplicationUserExtended)ApiClient.Deserialize(localVarResponse, typeof(ApplicationUserExtended)));
-            
-        }
-        /// <summary>
         /// Create new user 
         /// </summary>
         /// <exception cref="VirtoCommerce.Platform.Client.Client.ApiException">Thrown when fails to make API call</exception>
@@ -11301,6 +11133,174 @@ namespace VirtoCommerce.Platform.Client.Api
             return new ApiResponse<Role>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
                 (Role)ApiClient.Deserialize(localVarResponse, typeof(Role)));
+            
+        }
+        /// <summary>
+        /// Check specified user has passed permissions in specified scope 
+        /// </summary>
+        /// <exception cref="VirtoCommerce.Platform.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="userName">security account name</param>
+        /// <param name="permissions">checked permissions Example: ?permissions&#x3D;read&amp;amp;permissions&#x3D;write</param>
+        /// <param name="scopes">security bounded scopes. Read mode: http://docs.virtocommerce.com/display/vc2devguide/Working+with+platform+security</param>
+        /// <returns>CheckPermissionsResult</returns>
+        public CheckPermissionsResult SecurityUserHasAnyPermission(string userName, List<string> permissions, List<string> scopes)
+        {
+             ApiResponse<CheckPermissionsResult> localVarResponse = SecurityUserHasAnyPermissionWithHttpInfo(userName, permissions, scopes);
+             return localVarResponse.Data;
+        }
+
+        /// <summary>
+        /// Check specified user has passed permissions in specified scope 
+        /// </summary>
+        /// <exception cref="VirtoCommerce.Platform.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="userName">security account name</param>
+        /// <param name="permissions">checked permissions Example: ?permissions&#x3D;read&amp;amp;permissions&#x3D;write</param>
+        /// <param name="scopes">security bounded scopes. Read mode: http://docs.virtocommerce.com/display/vc2devguide/Working+with+platform+security</param>
+        /// <returns>ApiResponse of CheckPermissionsResult</returns>
+        public ApiResponse<CheckPermissionsResult> SecurityUserHasAnyPermissionWithHttpInfo(string userName, List<string> permissions, List<string> scopes)
+        {
+            // verify the required parameter 'userName' is set
+            if (userName == null)
+                throw new ApiException(400, "Missing required parameter 'userName' when calling VirtoCommercePlatformApi->SecurityUserHasAnyPermission");
+            // verify the required parameter 'permissions' is set
+            if (permissions == null)
+                throw new ApiException(400, "Missing required parameter 'permissions' when calling VirtoCommercePlatformApi->SecurityUserHasAnyPermission");
+            // verify the required parameter 'scopes' is set
+            if (scopes == null)
+                throw new ApiException(400, "Missing required parameter 'scopes' when calling VirtoCommercePlatformApi->SecurityUserHasAnyPermission");
+
+            var localVarPath = "/api/platform/security/users/{userName}/hasPermissions";
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            string[] localVarHttpContentTypes = new string[] {
+            };
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            string[] localVarHttpHeaderAccepts = new string[] {
+                "application/json", 
+                "text/json", 
+                "application/xml", 
+                "text/xml"
+            };
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            localVarPathParams.Add("format", "json");
+            if (userName != null) localVarPathParams.Add("userName", ApiClient.ParameterToString(userName)); // path parameter
+            if (permissions != null) localVarQueryParams.Add("permissions", ApiClient.ParameterToString(permissions)); // query parameter
+            if (scopes != null) localVarQueryParams.Add("scopes", ApiClient.ParameterToString(scopes)); // query parameter
+
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse)ApiClient.CallApi(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
+
+            if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
+                throw new ApiException(localVarStatusCode, "Error calling SecurityUserHasAnyPermission: " + localVarResponse.Content, localVarResponse.Content);
+            else if (localVarStatusCode == 0)
+                throw new ApiException(localVarStatusCode, "Error calling SecurityUserHasAnyPermission: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+
+            return new ApiResponse<CheckPermissionsResult>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (CheckPermissionsResult)ApiClient.Deserialize(localVarResponse, typeof(CheckPermissionsResult)));
+            
+        }
+
+        /// <summary>
+        /// Check specified user has passed permissions in specified scope 
+        /// </summary>
+        /// <exception cref="VirtoCommerce.Platform.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="userName">security account name</param>
+        /// <param name="permissions">checked permissions Example: ?permissions&#x3D;read&amp;amp;permissions&#x3D;write</param>
+        /// <param name="scopes">security bounded scopes. Read mode: http://docs.virtocommerce.com/display/vc2devguide/Working+with+platform+security</param>
+        /// <returns>Task of CheckPermissionsResult</returns>
+        public async System.Threading.Tasks.Task<CheckPermissionsResult> SecurityUserHasAnyPermissionAsync(string userName, List<string> permissions, List<string> scopes)
+        {
+             ApiResponse<CheckPermissionsResult> localVarResponse = await SecurityUserHasAnyPermissionAsyncWithHttpInfo(userName, permissions, scopes);
+             return localVarResponse.Data;
+
+        }
+
+        /// <summary>
+        /// Check specified user has passed permissions in specified scope 
+        /// </summary>
+        /// <exception cref="VirtoCommerce.Platform.Client.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="userName">security account name</param>
+        /// <param name="permissions">checked permissions Example: ?permissions&#x3D;read&amp;amp;permissions&#x3D;write</param>
+        /// <param name="scopes">security bounded scopes. Read mode: http://docs.virtocommerce.com/display/vc2devguide/Working+with+platform+security</param>
+        /// <returns>Task of ApiResponse (CheckPermissionsResult)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<CheckPermissionsResult>> SecurityUserHasAnyPermissionAsyncWithHttpInfo(string userName, List<string> permissions, List<string> scopes)
+        {
+            // verify the required parameter 'userName' is set
+            if (userName == null)
+                throw new ApiException(400, "Missing required parameter 'userName' when calling VirtoCommercePlatformApi->SecurityUserHasAnyPermission");
+            // verify the required parameter 'permissions' is set
+            if (permissions == null)
+                throw new ApiException(400, "Missing required parameter 'permissions' when calling VirtoCommercePlatformApi->SecurityUserHasAnyPermission");
+            // verify the required parameter 'scopes' is set
+            if (scopes == null)
+                throw new ApiException(400, "Missing required parameter 'scopes' when calling VirtoCommercePlatformApi->SecurityUserHasAnyPermission");
+
+            var localVarPath = "/api/platform/security/users/{userName}/hasPermissions";
+            var localVarPathParams = new Dictionary<string, string>();
+            var localVarQueryParams = new Dictionary<string, string>();
+            var localVarHeaderParams = new Dictionary<string, string>(Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<string, string>();
+            var localVarFileParams = new Dictionary<string, FileParameter>();
+            object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            string[] localVarHttpContentTypes = new string[] {
+            };
+            string localVarHttpContentType = ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            string[] localVarHttpHeaderAccepts = new string[] {
+                "application/json", 
+                "text/json", 
+                "application/xml", 
+                "text/xml"
+            };
+            string localVarHttpHeaderAccept = ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            // set "format" to json by default
+            // e.g. /pet/{petId}.{format} becomes /pet/{petId}.json
+            localVarPathParams.Add("format", "json");
+            if (userName != null) localVarPathParams.Add("userName", ApiClient.ParameterToString(userName)); // path parameter
+            if (permissions != null) localVarQueryParams.Add("permissions", ApiClient.ParameterToString(permissions)); // query parameter
+            if (scopes != null) localVarQueryParams.Add("scopes", ApiClient.ParameterToString(scopes)); // query parameter
+
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse)await ApiClient.CallApiAsync(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
+
+            if (localVarStatusCode >= 400 && (localVarStatusCode != 404 || Configuration.ThrowExceptionWhenStatusCodeIs404))
+                throw new ApiException(localVarStatusCode, "Error calling SecurityUserHasAnyPermission: " + localVarResponse.Content, localVarResponse.Content);
+            else if (localVarStatusCode == 0)
+                throw new ApiException(localVarStatusCode, "Error calling SecurityUserHasAnyPermission: " + localVarResponse.ErrorMessage, localVarResponse.ErrorMessage);
+
+            return new ApiResponse<CheckPermissionsResult>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
+                (CheckPermissionsResult)ApiClient.Deserialize(localVarResponse, typeof(CheckPermissionsResult)));
             
         }
         /// <summary>
