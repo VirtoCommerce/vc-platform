@@ -17,9 +17,14 @@ namespace VirtoCommerce.Platform.Tests
     public class ModuleCatalogScenarios : FunctionalTestBase
     {
         private static string _tempDir;
+        private static string _CatalogSourceFolder = "source";
 
         public ModuleCatalogScenarios()
         {
+            var folderVariable = Environment.GetEnvironmentVariable("xunit_virto_modules_folder");
+            if (!String.IsNullOrEmpty(folderVariable))
+                _CatalogSourceFolder = folderVariable;
+
             _tempDir = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
             Directory.CreateDirectory(_tempDir);
         }
@@ -27,7 +32,7 @@ namespace VirtoCommerce.Platform.Tests
         [Fact]
         public void Can_list_all_modules()
         {
-            var catalog = GetModuleCatalog("source");
+            var catalog = GetModuleCatalog(_CatalogSourceFolder);
             ListModules(catalog);
         }
 
@@ -35,7 +40,7 @@ namespace VirtoCommerce.Platform.Tests
         public void Can_install_and_uninstall_modules()
         {
             // load all modules from local folder
-            var catalogInternal = GetModuleCatalog("source");
+            var catalogInternal = GetModuleCatalog(_CatalogSourceFolder);
             var modules = catalogInternal.Modules.OfType<ManifestModuleInfo>().ToArray();
 
             // initialize exteranl dependency loader
