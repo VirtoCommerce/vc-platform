@@ -10,6 +10,7 @@ using VirtoCommerce.Platform.Core.Packaging;
 using VirtoCommerce.Platform.Testing.Bases;
 using VirtoCommerce.Platform.Web.Modularity;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace VirtoCommerce.Platform.Tests
 {
@@ -18,9 +19,11 @@ namespace VirtoCommerce.Platform.Tests
     {
         private static string _tempDir;
         private static string _CatalogSourceFolder = "source";
+        private readonly ITestOutputHelper _output;
 
-        public ModuleCatalogScenarios()
+        public ModuleCatalogScenarios(ITestOutputHelper output)
         {
+            _output = output;
             var folderVariable = Environment.GetEnvironmentVariable("xunit_virto_modules_folder");
             if (!String.IsNullOrEmpty(folderVariable))
                 _CatalogSourceFolder = folderVariable;
@@ -99,7 +102,7 @@ namespace VirtoCommerce.Platform.Tests
             return externalModuleCatalog;
         }
 
-        static void ListModules(IModuleCatalog service)
+        void ListModules(IModuleCatalog service)
         {
             var modules = service.Modules.OfType<ManifestModuleInfo>().ToArray();
             Debug.WriteLine("Modules count: {0}", modules.Length);
@@ -144,14 +147,14 @@ namespace VirtoCommerce.Platform.Tests
             return null;
         }
 
-        static void WriteModuleLine(ManifestModuleInfo module)
+        void WriteModuleLine(ManifestModuleInfo module)
         {
-            Debug.WriteLine("{0} {1} {2}", module.IsInstalled ? "INSTALLED" : "", module.Id, module.Version);
+            _output.WriteLine("{0} {1} {2}", module.IsInstalled ? "INSTALLED" : "", module.Id, module.Version);
         }
 
-        static void WriteProgressMessage(ProgressMessage message)
+        void WriteProgressMessage(ProgressMessage message)
         {
-            Debug.WriteLine("{0}: {1}", message.Level, message.Message);
+            _output.WriteLine("{0}: {1}", message.Level, message.Message);
         }
     }
 }
