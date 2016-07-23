@@ -69,13 +69,6 @@ namespace VirtoCommerce.Platform.Tests
             Assert.Equal(0, catalog.Modules.OfType<ManifestModuleInfo>().Where(x => x.IsInstalled).Count());
         }
 
-
-        [Fact]
-        public void Can_install_and_uninstall_module()
-        {
-
-        }
-
         public override void Dispose()
         {
             Directory.Delete(_tempDir, true);
