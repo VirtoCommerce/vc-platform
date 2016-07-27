@@ -34,7 +34,7 @@
                 <div class="sub-t">{{ 'platform.blades.module-detail.labels.upload-progress' | translate }}</div>
                 <div class="progress-bar __aqua" ng-style="{'width': uploader.progress + '%'}"></div>
             </div>
-            <div ng-if="blade.currentEntity">
+            <ul ng-if="blade.currentEntity">
                 <div class="t __divider">{{ 'platform.blades.module-detail.labels.module-info' | translate }}</div>
                 <ul class="list __info">
                     <li class="list-item">
@@ -42,10 +42,12 @@
                         <div class="list-descr">{{blade.currentEntity.title}}</div>
                     </li>
                     <li class="list-item">
-                        <div class="list-t">{{ 'platform.blades.module-detail.labels.author' | translate }}</div>
-                        <div class="list-descr">
-                            <span ng-repeat="x in blade.currentEntity.authors">{{x}}</span>
-                        </div>
+                        <div class="list-t">{{ 'platform.blades.module-detail.labels.authors' | translate }}</div>
+                        <ul class="list">
+                            <li class="list-item" ng-repeat="author in blade.currentEntity.authors">
+                                <div class="list-descr">{{author}}</div>
+                            </li>
+                        </ul>
                     </li>
                     <li class="list-item">
                         <div class="list-t">{{ 'platform.blades.module-detail.labels.id' | translate }}</div>
