@@ -228,7 +228,7 @@ angular.module('platformWebApp')
             });
         },
         closeChildrenBlades: function (blade, callback) {
-            if (blade && blade.childrenBlades.length > 0) {
+            if (blade && _.any(blade.childrenBlades)) {
                 angular.forEach(blade.childrenBlades.slice(), function (child) {
                     service.closeBlade(child, function () {
                         // show only when all children were closed
