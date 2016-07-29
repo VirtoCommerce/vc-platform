@@ -19,6 +19,15 @@ namespace VirtoCommerce.Platform.Data.Notifications
             _repositoryFactory = repositoryFactory;
         }
 
+        public IEnumerable<NotificationTemplate> GetAllTemplates()
+        {
+            using (var repository = _repositoryFactory())
+            {
+                var retVal = repository.NotificationTemplates.ToArray();
+                return retVal.Select(x => x.ToCoreModel());
+            }
+        }
+
         public NotificationTemplate GetById(string notificationTemplateId)
         {
             using (var repository = _repositoryFactory())

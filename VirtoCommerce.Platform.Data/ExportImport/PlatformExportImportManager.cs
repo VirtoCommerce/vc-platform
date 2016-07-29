@@ -10,6 +10,7 @@ using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Modularity;
+using VirtoCommerce.Platform.Core.Notifications;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Common;
@@ -23,6 +24,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             Users = new List<ApplicationUserExtended>();
             Settings = new List<SettingEntry>();
             DynamicPropertyDictionaryItems = new List<DynamicPropertyDictionaryItem>();
+            NotificationTemplates = new List<NotificationTemplate>();
         }
         public bool IsNotEmpty
         {
@@ -36,6 +38,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
         public ICollection<SettingEntry> Settings { get; set; }
         public ICollection<DynamicPropertyDictionaryItem> DynamicPropertyDictionaryItems { get; set; }
         public ICollection<DynamicProperty> DynamicProperties { get; set; }
+        public ICollection<NotificationTemplate> NotificationTemplates { get; set; }
     }
 
 
@@ -50,9 +53,10 @@ namespace VirtoCommerce.Platform.Data.ExportImport
         private readonly IRoleManagementService _roleManagementService;
         private readonly ISettingsManager _settingsManager;
         private readonly IDynamicPropertyService _dynamicPropertyService;
+        private readonly INotificationTemplateService _notificationTemplateService;
         private readonly ICacheManager<object> _cacheManager;
         [CLSCompliant(false)]
-        public PlatformExportImportManager(ISecurityService securityService, IRoleManagementService roleManagementService, ISettingsManager settingsManager, IDynamicPropertyService dynamicPropertyService, IModuleCatalog moduleCatalog, ICacheManager<object> cacheManager)
+        public PlatformExportImportManager(ISecurityService securityService, IRoleManagementService roleManagementService, ISettingsManager settingsManager, IDynamicPropertyService dynamicPropertyService, IModuleCatalog moduleCatalog, ICacheManager<object> cacheManager, INotificationTemplateService notificationTemplateService)
         {
             _dynamicPropertyService = dynamicPropertyService;
             _securityService = securityService;
@@ -60,6 +64,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             _settingsManager = settingsManager;
             _moduleCatalog = moduleCatalog;
             _cacheManager = cacheManager;
+            _notificationTemplateService = notificationTemplateService;
             _manifestPartUri = PackUriHelper.CreatePartUri(new Uri("Manifest.json", UriKind.Relative));
             _platformEntriesPartUri = PackUriHelper.CreatePartUri(new Uri("PlatformEntries.json", UriKind.Relative));
         }
@@ -177,7 +182,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                     {
                         if (_securityService.FindByIdAsync(user.Id, UserDetails.Reduced).Result != null)
                         {
-                             var dummy = _securityService.UpdateAsync(user).Result;
+                            var dummy = _securityService.UpdateAsync(user).Result;
                         }
                         else
                         {
@@ -200,6 +205,12 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                     {
                         _settingsManager.SaveSettings(platformEntries.Settings.Where(x => x.ModuleId == module.Id).ToArray());
                     }
+                }
+
+                //Import notification templates
+                if (!platformEntries.NotificationTemplates.IsNullOrEmpty())
+                {
+                    _notificationTemplateService.Update(platformEntries.NotificationTemplates.ToArray());
                 }
             }
         }
@@ -245,6 +256,11 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 
             platformExportObj.DynamicProperties = allTypes.SelectMany(x => _dynamicPropertyService.GetProperties(x)).ToList();
             platformExportObj.DynamicPropertyDictionaryItems = platformExportObj.DynamicProperties.Where(x => x.IsDictionary).SelectMany(x => _dynamicPropertyService.GetDictionaryItems(x.Id)).ToList();
+
+            //Notification templates
+            progressInfo.Description = String.Format("Notifications: load templates...");
+            progressCallback(progressInfo);
+            platformExportObj.NotificationTemplates = _notificationTemplateService.GetAllTemplates().ToList();
 
             //Create part for platform entries
             var platformEntiriesPart = package.CreatePart(_platformEntriesPartUri, System.Net.Mime.MediaTypeNames.Application.Octet, CompressionOption.Normal);
