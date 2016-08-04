@@ -150,40 +150,12 @@
                 {
                     "type": "config",
                     "name": "web",
-                    "apiVersion": "2014-04-01",
+                    "apiVersion": "2014-11-01",
                     "dependsOn": [
                         "[concat('Microsoft.Web/Sites/', parameters('siteName'))]",
                         "[concat('Microsoft.Storage/storageAccounts/', variables('storageName'))]"
                     ],
                     "properties": {
-                        "connectionStrings": [
-                            {
-                                "Name": "VirtoCommerce",
-                                "ConnectionString": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', parameters('sqlServerName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', parameters('siteName'), ';User Id=', parameters('sqlAdministratorLogin'), '@', parameters('sqlServerName'), ';Password=', parameters('sqlAdministratorPassword'), ';MultipleActiveResultSets=True;Connection Timeout=30;Trusted_Connection=False;Encrypt=True;')]",
-                                "Type": 2
-                            },
-                            {
-                                "Name": "AssetsConnectionString",
-                                "ConnectionString": "[concat('provider=AzureBlobStorage;rootPath=assets;DefaultEndpointsProtocol=https;AccountName=', variables('storageName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key1)]",
-                                "Type": 3
-                            },
-                            {
-                                "Name": "CmsContentConnectionString",
-                                "ConnectionString": "[concat('provider=AzureBlobStorage;rootPath=cms;DefaultEndpointsProtocol=https;AccountName=', variables('storageName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key1)]",
-                                "Type": 3
-                            },
-                            {
-                                "Name": "SearchConnectionString",
-                                "ConnectionString": "provider=Lucene;server=~/App_Data/Lucene;scope=default",
-                                "Type": 3
-                            }
-                        ],
-                        "appSettings": [
-                            {
-                                "name": "VirtoCommerce:AutoInstallModuleBundles",
-                                "value": "[variables('moduleBundles')[parameters('installModuleBundle')].configValue]"
-                            }
-                        ],
                         "virtualApplications": [
                             {
                                 "virtualPath": "/",
@@ -199,12 +171,51 @@
                     }
                 },
                 {
+                    "type": "config",
+                    "name": "connectionstrings",
+                    "apiVersion": "2014-11-01",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Web/Sites', parameters('siteName'))]"
+                    ],
+                    "properties": {
+                        "VirtoCommerce": {
+                            "value": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', parameters('sqlServerName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', parameters('siteName'), ';User Id=', parameters('sqlAdministratorLogin'), '@', parameters('sqlServerName'), ';Password=', parameters('sqlAdministratorPassword'), ';MultipleActiveResultSets=True;Connection Timeout=30;Trusted_Connection=False;Encrypt=True;')]",
+                            "type": "SQLAzure"
+                        },
+                        "AssetsConnectionString": {
+                            "value": "[concat('provider=AzureBlobStorage;rootPath=assets;DefaultEndpointsProtocol=https;AccountName=', variables('storageName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key1)]",
+                            "type": "custom"
+                        },
+                        "CmsContentConnectionString": {
+                            "value": "[concat('provider=AzureBlobStorage;rootPath=cms;DefaultEndpointsProtocol=https;AccountName=', variables('storageName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key1)]",
+                            "type": "custom"
+                        },
+                        "SearchConnectionString": {
+                            "value": "provider=Lucene;server=~/App_Data/Lucene;scope=default",
+                            "type": "custom"
+                        }
+                    }
+                },
+                {
+                    "type": "config",
+                    "name": "appsettings",
+                    "apiVersion": "2014-11-01",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Web/Sites', parameters('siteName'))]"
+                    ],
+                    "properties": {
+                        "VirtoCommerce:AutoInstallModuleBundles": "[variables('moduleBundles')[parameters('installModuleBundle')].configValue]"
+                    }
+                },
+                {
                     "type": "sourcecontrols",
                     "name": "web",
                     "apiVersion": "2014-06-01",
                     "dependsOn": [
                         "[resourceId('Microsoft.Web/Sites', parameters('siteName'))]",
-                        "[concat('Microsoft.Web/Sites/', parameters('siteName'), '/config/web')]"
+                        "[concat('Microsoft.Web/Sites/', parameters('siteName'), '/config/web')]",
+                        "[concat('Microsoft.Web/Sites/', parameters('siteName'), '/config/connectionstrings')]",
+                        "[concat('Microsoft.Web/Sites/', parameters('siteName'), '/config/appsettings')]"
                     ],
                     "properties": {
                         "RepoUrl": "[parameters('repoUrl')]",
