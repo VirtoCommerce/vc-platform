@@ -1,5 +1,5 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.propertyValueListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.settings', 'platformWebApp.dynamicProperties.dictionaryItemsApi', function ($scope, bladeNavigationService, dialogService, settings, dictionaryItemsApi) {
+.controller('platformWebApp.propertyValueListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.settings', 'platformWebApp.dynamicProperties.dictionaryItemsApi', '$timeout', function ($scope, bladeNavigationService, dialogService, settings, dictionaryItemsApi, $timeout) {
     var blade = $scope.blade;
     blade.updatePermission = 'platform:dynamic_properties:update';
     blade.headIcon = 'fa-plus-square-o';
@@ -7,18 +7,25 @@
     blade.subtitle = "platform.blades.propertyValue-list.subtitle";
 
     blade.refresh = function () {
-        settings.getValues({ id: 'VirtoCommerce.Core.General.Languages' }, function (data) {
-            $scope.languages = data;
-        });
-
         blade.data = blade.currentEntity;
-
         var rawProperties = angular.copy(blade.currentEntity.dynamicProperties);
+
         _.each(rawProperties, function (x) {
             x.values.sort(function (a, b) {
-                return a.value.name ? a.value.name.localeCompare(b.value.name) : a.value.localeCompare(b.value);
+                return a.value && b.value ? (a.value.name ? a.value.name.localeCompare(b.value.name) : a.value.localeCompare(b.value)) : -1;
             });
         });
+
+        if (_.any(rawProperties, function (x) { return x.isMultilingual; })) {
+            settings.getValues({ id: 'VirtoCommerce.Core.General.Languages' }, function (data) {
+                $scope.languages = data;
+
+                // wait for va-generic-value-input to initialize empty values and repeat init
+                $timeout(function () {
+                    blade.origEntity = angular.copy(blade.currentEntities);
+                });
+            });
+        }
 
         blade.origEntity = rawProperties;
         blade.currentEntities = angular.copy(rawProperties);
