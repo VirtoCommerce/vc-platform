@@ -39,7 +39,7 @@ angular.module('platformWebApp', AppDependencies).
       };
       modules.query().$promise.then(function (results) {
       	var modulesWithErrors = _.filter(results, function (x) { return x.validationErrors && x.validationErrors.length; });
-      	if(modulesWithErrors)
+      	if (modulesWithErrors && modulesWithErrors.length)
       	{
       		$scope.platformError = {
       			title: modulesWithErrors.length + " modules are loaded with errors and require your attention.",
