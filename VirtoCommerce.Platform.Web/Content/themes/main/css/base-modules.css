@@ -1,4 +1,8 @@
 /* Fix by angular ng-animate */
+[ng\:cloak], [ng-cloak], .ng-cloak {
+  display: none !important;
+}
+
 .ng-hide,
 .ng-hide-animate,
 .__hide
@@ -64,6 +68,64 @@ ui-codemirror > *:first-child {
 	position: absolute;
 	font-family: 'Exo 2';
 }
+
+.platform-error-bar {
+	background: #e51400;
+	color: #fff;
+	font-family: 'Exo 2';
+	font-size: 13px;
+	left: 0;
+	padding: 5px 0;
+	position: absolute;
+	right: 0;
+	top: 0;
+	text-align: center;
+	z-index: 9000;
+}
+
+	.platform-error-bar a {
+		color: #fff;
+	}
+
+	.platform-error-bar .close {
+		position: absolute;
+		right: 15px;
+		top: 12px;
+		cursor: pointer;
+		z-index:5;
+	}
+
+	.platform-error-bar .error-title {
+		align-items: center;
+		display: -webkit-flex;
+		display: -moz-flex;
+		display: -ms-flex;
+		display: -o-flex;
+		display: flex;
+		justify-content: center;
+		height: 30px;
+		position: relative;
+	}
+
+	.platform-error-bar .more {
+		color: #fff;
+		font-size: 12px;
+		position: absolute;
+		right: 40px;
+		top: 50%;
+		-webkit-transform: translateY(-50%);
+		-ms-transform: translateY(-50%);
+		-o-transform: translateY(-50%);
+		transform: translateY(-50%);
+	}
+
+	.platform-error-bar .error-detail {
+		margin: 5px 0;
+		max-height: 250px;
+		padding: 10px 20px;
+		text-align: left;
+		overflow: auto;
+	}
 
 /* Flags */
 .flag

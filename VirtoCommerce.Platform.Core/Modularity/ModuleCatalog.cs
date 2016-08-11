@@ -336,7 +336,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
 
             ModuleDependencySolver solver = new ModuleDependencySolver();
 
-            foreach (ModuleInfo data in modules)
+            foreach (ModuleInfo data in modules.ToArray())
             {
                 solver.AddModule(data.ModuleName);
 
@@ -372,7 +372,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
             if (modules == null) throw new System.ArgumentNullException("modules");
 
             var moduleNames = modules.Select(m => m.ModuleName).ToList();
-            foreach (ModuleInfo moduleInfo in modules)
+            foreach (ModuleInfo moduleInfo in modules.ToArray())
             {
                 if (moduleInfo.DependsOn != null && moduleInfo.DependsOn.Except(moduleNames).Any())
                 {

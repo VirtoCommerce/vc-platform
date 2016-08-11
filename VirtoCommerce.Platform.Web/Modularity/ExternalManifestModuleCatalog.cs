@@ -42,7 +42,12 @@ namespace VirtoCommerce.Platform.Web.Modularity
                         {
                             if (!base.Modules.OfType<ManifestModuleInfo>().Contains(externalModuleInfo))
                             {
-                                externalModuleInfo.IsInstalled = _installedModules.Contains(externalModuleInfo);
+                                var alreadyInstalledModule = _installedModules.OfType<ManifestModuleInfo>().FirstOrDefault(x => x.Equals(externalModuleInfo));
+                                if(alreadyInstalledModule != null)
+                                {
+                                    externalModuleInfo.IsInstalled = alreadyInstalledModule.IsInstalled;
+                                    externalModuleInfo.Errors = alreadyInstalledModule.Errors;
+                                }
                                 externalModuleInfo.InitializationMode = InitializationMode.OnDemand;
                                 AddModule(externalModuleInfo);
                             }

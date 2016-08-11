@@ -127,7 +127,7 @@ namespace VirtoCommerce.Platform.Web.Modularity
             }
             _loggerFacade.Error(moduleException.ToString());
 
-            throw moduleException;
+            //throw moduleException;
         }
 
         /// <summary>
