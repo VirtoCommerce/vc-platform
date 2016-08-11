@@ -332,6 +332,7 @@
                     "updates": "Updates",
                     "available": "Available",
                     "installed": "Installed",
+                    "withErrors": "Errors",
                     "advanced": "Advanced"
                 }
             },

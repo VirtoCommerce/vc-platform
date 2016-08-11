@@ -35,38 +35,37 @@ angular.module('platformWebApp', AppDependencies).
       }, 100);
 
       $scope.closeError = function () {
-      	$scope.platformError = undefined;
+          $scope.platformError = undefined;
       };
       modules.query().$promise.then(function (results) {
-      	var modulesWithErrors = _.filter(results, function (x) { return x.validationErrors && x.validationErrors.length; });
-      	if (modulesWithErrors && modulesWithErrors.length)
-      	{
-      		$scope.platformError = {
-      			title: modulesWithErrors.length + " modules are loaded with errors and require your attention.",
-				detail: ''
-      		};
-      		_.each(modulesWithErrors, function (x) {
-      			var moduleErrors = "<br/><br/><b>" + x.id + "</b> " + x.version + "<br/>" + x.validationErrors.join("<br/>");
-      			$scope.platformError.detail += moduleErrors;
-      		});      	
-      		$state.go('workspace.modularity');
-      	}
+          var modulesWithErrors = _.filter(results, function (x) { return _.any(x.validationErrors); });
+          if (_.any(modulesWithErrors)) {
+              $scope.platformError = {
+                  title: modulesWithErrors.length + " modules are loaded with errors and require your attention.",
+                  detail: ''
+              };
+              _.each(modulesWithErrors, function (x) {
+                  var moduleErrors = "<br/><br/><b>" + x.id + "</b> " + x.version + "<br/>" + x.validationErrors.join("<br/>");
+                  $scope.platformError.detail += moduleErrors;
+              });
+              $state.go('workspace.modularity');
+          }
       });
 
 
       $scope.$on('httpError', function (event, error) {
-      	if (bladeNavigationService.currentBlade) {
-      		bladeNavigationService.setError(error.status + ': ' + error.statusText, bladeNavigationService.currentBlade);
-      	}
+          if (bladeNavigationService.currentBlade) {
+              bladeNavigationService.setError(error.status + ': ' + error.statusText, bladeNavigationService.currentBlade);
+          }
       });
 
       $scope.$on('httpRequestSuccess', function (event, data) {
-      	// clear error on blade cap
-      	if (bladeNavigationService.currentBlade) {
-      		bladeNavigationService.currentBlade.error = undefined;
-      	}
+          // clear error on blade cap
+          if (bladeNavigationService.currentBlade) {
+              bladeNavigationService.currentBlade.error = undefined;
+          }
       });
-   
+
   }])
 // Specify SignalR server URL (application URL)
 .factory('platformWebApp.signalRServerName', ['$location', function ($location) {
@@ -89,12 +88,12 @@ angular.module('platformWebApp', AppDependencies).
             $rootScope.$broadcast('unauthorized', rejection);
         }
         else {
-        	$rootScope.$broadcast('httpError', rejection);
+            $rootScope.$broadcast('httpError', rejection);
         }
         return $q.reject(rejection);
     };
     httpErrorInterceptor.requestError = function (rejection) {
-       	$rootScope.$broadcast('httpError', rejection);
+        $rootScope.$broadcast('httpError', rejection);
         return $q.reject(rejection);
     };
 
@@ -174,7 +173,7 @@ angular.module('platformWebApp', AppDependencies).
             }
         });
 
-    
+
 
         //server error handling
         //$rootScope.$on('httpError', function (event, rejection) {
@@ -182,8 +181,8 @@ angular.module('platformWebApp', AppDependencies).
         //        pushNotificationService.error({ title: 'HTTP error', description: rejection.status + ' — ' + rejection.statusText, extendedData: rejection.data });
         //    }
         //});
-     
-  
+
+
 
         $rootScope.$on('loginStatusChanged', function (event, authContext) {
             //timeout need because $state not fully loading in run method and need to wait little time
