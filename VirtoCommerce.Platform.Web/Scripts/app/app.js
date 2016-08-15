@@ -25,7 +25,7 @@
 ];
 
 angular.module('platformWebApp', AppDependencies).
-  controller('platformWebApp.appCtrl', ['$scope', '$window', 'platformWebApp.pushNotificationService', '$translate', '$timeout', function ($scope, $window, pushNotificationService, $translate, $timeout) {
+  controller('platformWebApp.appCtrl', ['$scope', '$window', 'platformWebApp.pushNotificationService', '$translate', '$timeout', 'platformWebApp.modules', '$state', 'platformWebApp.bladeNavigationService', function ($scope, $window, pushNotificationService, $translate, $timeout, modules, $state, bladeNavigationService) {
       pushNotificationService.run();
 
       $timeout(function () {
@@ -33,6 +33,39 @@ angular.module('platformWebApp', AppDependencies).
           var rtlLanguages = ['ar', 'arc', 'bcc', 'bqi', 'ckb', 'dv', 'fa', 'glk', 'he', 'lrc', 'mzn', 'pnb', 'ps', 'sd', 'ug', 'ur', 'yi'];
           $scope.isRTL = rtlLanguages.indexOf(currentLanguage) >= 0;
       }, 100);
+
+      $scope.closeError = function () {
+          $scope.platformError = undefined;
+      };
+      modules.query().$promise.then(function (results) {
+          var modulesWithErrors = _.filter(results, function (x) { return _.any(x.validationErrors); });
+          if (_.any(modulesWithErrors)) {
+              $scope.platformError = {
+                  title: modulesWithErrors.length + " modules are loaded with errors and require your attention.",
+                  detail: ''
+              };
+              _.each(modulesWithErrors, function (x) {
+                  var moduleErrors = "<br/><br/><b>" + x.id + "</b> " + x.version + "<br/>" + x.validationErrors.join("<br/>");
+                  $scope.platformError.detail += moduleErrors;
+              });
+              $state.go('workspace.modularity');
+          }
+      });
+
+
+      $scope.$on('httpError', function (event, error) {
+          if (bladeNavigationService.currentBlade) {
+              bladeNavigationService.setError(error.status + ': ' + error.statusText, bladeNavigationService.currentBlade);
+          }
+      });
+
+      $scope.$on('httpRequestSuccess', function (event, data) {
+          // clear error on blade cap
+          if (bladeNavigationService.currentBlade) {
+              bladeNavigationService.currentBlade.error = undefined;
+          }
+      });
+
   }])
 // Specify SignalR server URL (application URL)
 .factory('platformWebApp.signalRServerName', ['$location', function ($location) {
@@ -140,12 +173,7 @@ angular.module('platformWebApp', AppDependencies).
             }
         });
 
-        $rootScope.$on('httpRequestSuccess', function (event, rejection) {
-            // clear error on blade cap
-            if (bladeNavigationService.currentBlade) {
-                bladeNavigationService.currentBlade.error = undefined;
-            }
-        });
+
 
         //server error handling
         //$rootScope.$on('httpError', function (event, rejection) {
@@ -153,10 +181,8 @@ angular.module('platformWebApp', AppDependencies).
         //        pushNotificationService.error({ title: 'HTTP error', description: rejection.status + ' — ' + rejection.statusText, extendedData: rejection.data });
         //    }
         //});
-        $rootScope.$on('httpError', function (event, rejection) {
-            var msg = (rejection.data && rejection.data.exceptionMessage) ? rejection.data.exceptionMessage : rejection.statusText;
-            bladeNavigationService.setError(rejection.status + ': ' + msg, bladeNavigationService.currentBlade);
-        });
+
+
 
         $rootScope.$on('loginStatusChanged', function (event, authContext) {
             //timeout need because $state not fully loading in run method and need to wait little time

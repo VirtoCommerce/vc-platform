@@ -5,8 +5,8 @@
     $scope.selectedNodeId = null;
 
     blade.reload = function () {
-    	modules.reload();
-    	blade.refresh();
+        modules.reload();
+        blade.refresh();
     };
 
     blade.refresh = function () {
@@ -61,6 +61,11 @@
             nodeUpdate.entities = _.filter(newResults, function (x) { return !x.isInstalled && x.$alternativeVersion; });
             nodeAvailable.entities = moduleHelper.availableModules = _.filter(newResults, function (x) { return !x.isInstalled && !x.$alternativeVersion; });
             nodeInstalled.entities = _.where(results, { isInstalled: true });
+            nodeWithErrors.entities = _.filter(results, function (x) { return x.isInstalled && _.any(x.validationErrors); });
+            if (_.any(nodeWithErrors.entities) && !nodeWithErrors.isAddedToList) {
+                nodeWithErrors.isAddedToList = true;
+                blade.currentEntities.splice(3, 0, nodeWithErrors);
+            }
 
             openFirstBladeInitially();
             blade.isLoading = false;
@@ -84,6 +89,12 @@
             controller: 'platformWebApp.modulesListController',
             template: '$(Platform)/Scripts/app/modularity/blades/modules-list.tpl.html'
         };
+
+        if (data.mode === 'withErrors') {
+            angular.extend(newBlade, {
+                mode: 'installed'
+            });
+        }
 
         if (data.mode === 'advanced') {
             angular.extend(newBlade, {
@@ -111,6 +122,8 @@
         nodeInstalled = { name: 'platform.blades.modules-main.labels.installed', mode: 'installed' },
         { name: 'platform.blades.modules-main.labels.advanced', mode: 'advanced' }
     ];
+
+    var nodeWithErrors = { name: 'platform.blades.modules-main.labels.withErrors', mode: 'withErrors' };
 
     var openFirstBladeInitially = _.once(function () { blade.openBlade(blade.currentEntities[0]); });
 

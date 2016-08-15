@@ -59,6 +59,7 @@ namespace VirtoCommerce.Platform.Data.Infrastructure.Interceptors
                                                                 .FirstOrDefault(x => x.ObjectId == activityLog.ObjectId && x.ObjectType == activityLog.ObjectType);
                                 if (alreadyExistLog != null)
                                 {
+                                    alreadyExistLog.ModifiedDate = DateTime.UtcNow;
                                     alreadyExistLog.OperationType = activityLog.OperationType;
                                 }
                                 else

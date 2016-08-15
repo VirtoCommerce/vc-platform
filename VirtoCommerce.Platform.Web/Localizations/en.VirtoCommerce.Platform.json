@@ -314,6 +314,7 @@
                     "module-info": "Module info",
                     "title": "Title",
                     "author": "Author",
+                    "authors": "Authors",
                     "id": "ID",
                     "version": "Version",
                     "project-information": "Project Information",
@@ -331,6 +332,7 @@
                     "updates": "Updates",
                     "available": "Available",
                     "installed": "Installed",
+                    "withErrors": "Errors",
                     "advanced": "Advanced"
                 }
             },

@@ -1,10 +1,18 @@
 ﻿<div class="breadcrumbs">
+    <style>
+        .breadcrumbs .menu .menu-item .menu-link {
+            max-width: 110px;
+            display: block;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+    </style>
     <a title="Back" ng-click='navigateBack()' class="back" ng-class="{'__disabled': !canNavigateBack()}" ng-disabled="!canNavigateBack()">
         <i class="fa fa-arrow-left"></i>
     </a>
     <ul class="menu __inline">
         <li class="menu-item" ng-repeat-start="breadcrumb in breadcrumbs">
-            <a class="menu-link" ng-click='innerNavigate(breadcrumb)' ng-class="{'active': $last}" href="">{{breadcrumb.name | translate}}</a>
+            <a class="menu-link" ng-click='innerNavigate(breadcrumb)' href="" title="{{breadcrumb.name}}">{{(($first || $index > breadcrumbs.length - 3) ? breadcrumb.name : '...') | translate}}</a>
         </li>
         <li class="menu-item __divider" ng-repeat-end ng-if="!$last"></li>
     </ul>
