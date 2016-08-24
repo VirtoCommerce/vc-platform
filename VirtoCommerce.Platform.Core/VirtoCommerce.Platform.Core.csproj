@@ -199,6 +199,7 @@
     <Compile Include="Security\AuthentificationOptions.cs" />
     <Compile Include="Security\ICurrentUser.cs" />
     <Compile Include="Security\IHasSecurityAccounts.cs" />
+    <Compile Include="Security\ISupportSecurityScopes.cs" />
     <Compile Include="Security\IUserNameResolver.cs" />
     <Compile Include="Security\VirtoCommerceClaimTypes.cs" />
     <Compile Include="Security\IPermissionScopeService.cs" />

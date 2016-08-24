@@ -6,10 +6,17 @@ using System.Threading.Tasks;
 
 namespace VirtoCommerce.Platform.Core.Common
 {
+    /// <summary>
+    /// Abstract static type factory. With supports of type overriding and sets special factories.
+    /// </summary>
+    /// <typeparam name="BaseType"></typeparam>
     public static class AbstractTypeFactory<BaseType>
     {
         private static List<TypeInfo<BaseType>> _typeInfos = new List<TypeInfo<BaseType>>();
 
+        /// <summary>
+        /// All registered type mapping informations within current factory instance
+        /// </summary>
         public static IEnumerable<TypeInfo<BaseType>> AllTypeInfos
         {
             get
@@ -21,7 +28,7 @@ namespace VirtoCommerce.Platform.Core.Common
         /// <summary>
         /// Register new  type (fluent method)
         /// </summary>
-        /// <returns>TypeMappingInfo instance to continue configuration through fluent syntax</returns>
+        /// <returns>TypeInfo instance to continue configuration through fluent syntax</returns>
         public static TypeInfo<BaseType> RegisterType<T>() where T : BaseType
         {
             var kowTypes = _typeInfos.SelectMany(x => x.AllInheritedTypes);
@@ -37,41 +44,70 @@ namespace VirtoCommerce.Platform.Core.Common
         /// <summary>
         /// Override already registered  type to new 
         /// </summary>
-        /// <returns>TypeMappingInfo instance to continue configuration through fluent syntax</returns>
+        /// <returns>TypeInfo instance to continue configuration through fluent syntax</returns>
         public static TypeInfo<BaseType> OverrideType<OldType, NewType>() where NewType : BaseType
         {
             var oldType = typeof(OldType);
             var newType = typeof(NewType);
             var existTypeInfo = _typeInfos.FirstOrDefault(x => x.Type == oldType);
-            if (existTypeInfo == null)
+            var newTypeInfo = new TypeInfo<BaseType>(newType);
+            if (existTypeInfo != null)
             {
-                throw new ArgumentException("Not found");
+                newTypeInfo.Services = existTypeInfo.Services;
+                _typeInfos.Remove(existTypeInfo);
             }
-            _typeInfos.Remove(existTypeInfo);
-
-            var newTypeInfo = new TypeInfo<BaseType>(newType)
-            {
-                Services = existTypeInfo.Services
-            };
+       
             _typeInfos.Add(newTypeInfo);
             return newTypeInfo;
         }
 
+        /// <summary>
+        /// Create BaseType instance considering type mapping information
+        /// </summary>
+        /// <returns></returns>
+        public static BaseType TryCreateInstance() 
+        {
+            return TryCreateInstance(typeof(BaseType).Name);
+        }
+
+        /// <summary>
+        /// Create derived from BaseType  specified type instance considering type mapping information
+        /// </summary>
+        /// <returns></returns>
+        public static T TryCreateInstance<T>() where T : BaseType
+        {
+            return (T)TryCreateInstance(typeof(T).Name);
+        }
 
         public static BaseType TryCreateInstance(string typeName)
         {
-            BaseType retVal = default(BaseType);
-            var result = _typeInfos.Select(x => new { TypeInfo = x, Type = x.ResolveTypeByName(typeName) }).FirstOrDefault(x => x.Type != null);
-            if (result != null)
+            BaseType retVal;
+            //Try find first direct type from registered types
+            var typeInfo = _typeInfos.FirstOrDefault(x => x.Type.Name.EqualsInvariant(typeName));
+            //Then need to find in inheritance chain from registered types
+            if (typeInfo == null)
             {
-                if (result.TypeInfo.Factory != null)
+                typeInfo = _typeInfos.Where(x => x.ResolveTypeByName(typeName) != null).FirstOrDefault();
+            }
+            //Then get first type of registered. Special for case when resolved BaseType name
+            if(typeInfo == null)
+            {
+                typeInfo = _typeInfos.FirstOrDefault();
+            }
+            if (typeInfo != null)
+            {
+                if (typeInfo.Factory != null)
                 {
-                    retVal = result.TypeInfo.Factory();
+                    retVal = typeInfo.Factory();
                 }
                 else
                 {
-                    retVal = (BaseType)Activator.CreateInstance(result.Type);
+                    retVal = (BaseType)Activator.CreateInstance(typeInfo.Type);
                 }
+            }
+            else
+            {
+                retVal = (BaseType)Activator.CreateInstance(typeof(BaseType));
             }
             return retVal;
         }
@@ -83,7 +119,6 @@ namespace VirtoCommerce.Platform.Core.Common
     /// </summary>
     public class TypeInfo<BaseType>
     {
-        private Func<BaseType> _factory;
         public TypeInfo(Type type)
         {
             Services = new List<object>();
@@ -109,13 +144,13 @@ namespace VirtoCommerce.Platform.Core.Common
         }
         public TypeInfo<BaseType> WithFactory(Func<BaseType> factory)
         {
-            _factory = factory;
+            Factory = factory;
             return this;
         }
 
         public Type ResolveTypeByName(string typeName)
         {
-            if (Type.GetTypeInheritanceChainTo(typeof(BaseType)).Any(t => string.Equals(typeName, t.Name, StringComparison.OrdinalIgnoreCase)))
+            if (Type.GetTypeInheritanceChainTo(typeof(BaseType)).Any(t => typeName.EqualsInvariant(t.Name)))
             {
                 return Type;
             }
