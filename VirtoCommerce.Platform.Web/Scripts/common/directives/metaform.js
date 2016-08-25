@@ -1,5 +1,5 @@
 ﻿angular.module('platformWebApp')
-.directive('vaGenericInputsContainer', [function () {
+.directive('vaMetaform', [function () {
     return {
         restrict: 'E',
         replace: true,
@@ -8,9 +8,9 @@
             registeredInputs: '=',
             columnCount: '@?'
         },
-        templateUrl: '$(Platform)/Scripts/common/directives/genericInputsContainer.tpl.html',
+        templateUrl: '$(Platform)/Scripts/common/directives/metaform.tpl.html',
         link: function (scope) {
-            scope.columnsCount = scope.columnCount ? parseInt(scope.columnCount, 10) : 1;
+            var columnCount = scope.columnCount ? parseInt(scope.columnCount, 10) : 1;
 
             var filteredInputs = _.filter(scope.registeredInputs, function (x) { return !x.isVisibleFn || x.isVisibleFn(scope.blade); });
 
@@ -32,20 +32,16 @@
 
             // generate empty columns
             _.each(resultingGroups, function (gr) {
-                while (scope.columnsCount > gr.length) {
+                while (columnCount > gr.length) {
                     gr.push({ templateUrl: 'emptyColumn.html' });
                 }
             });
             scope.bladeInputGroups = resultingGroups;
-
-            scope.range = function (n) {
-                return new Array(n);
-            };
         }
     }
 }])
-//.component('vaGenericInputsContainer', {
-//    templateUrl: '$(Platform)/Scripts/common/directives/genericInputsContainer.tpl.html',
+//.component('vaMetaform', {
+//    templateUrl: '$(Platform)/Scripts/common/directives/metaform.tpl.html',
 //    bindings: {
 //        blade: '=',
 //        registeredInputs: '=',
