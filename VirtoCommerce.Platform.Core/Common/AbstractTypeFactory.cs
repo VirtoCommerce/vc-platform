@@ -31,7 +31,7 @@ namespace VirtoCommerce.Platform.Core.Common
         /// <returns>TypeInfo instance to continue configuration through fluent syntax</returns>
         public static TypeInfo<BaseType> RegisterType<T>() where T : BaseType
         {
-            var kowTypes = _typeInfos.SelectMany(x => x.AllInheritedTypes);
+            var kowTypes = _typeInfos.SelectMany(x => x.AllSubclasses);
             if (kowTypes.Contains(typeof(T)))
             {
                 throw new ArgumentException(string.Format("Type {0} already registered", typeof(T).Name));
@@ -56,7 +56,7 @@ namespace VirtoCommerce.Platform.Core.Common
                 newTypeInfo.Services = existTypeInfo.Services;
                 _typeInfos.Remove(existTypeInfo);
             }
-       
+
             _typeInfos.Add(newTypeInfo);
             return newTypeInfo;
         }
@@ -65,7 +65,7 @@ namespace VirtoCommerce.Platform.Core.Common
         /// Create BaseType instance considering type mapping information
         /// </summary>
         /// <returns></returns>
-        public static BaseType TryCreateInstance() 
+        public static BaseType TryCreateInstance()
         {
             return TryCreateInstance(typeof(BaseType).Name);
         }
@@ -82,18 +82,13 @@ namespace VirtoCommerce.Platform.Core.Common
         public static BaseType TryCreateInstance(string typeName)
         {
             BaseType retVal;
-            //Try find first direct type from registered types
+            //Try find first direct type match from registered types
             var typeInfo = _typeInfos.FirstOrDefault(x => x.Type.Name.EqualsInvariant(typeName));
             //Then need to find in inheritance chain from registered types
             if (typeInfo == null)
-            {
-                typeInfo = _typeInfos.Where(x => x.ResolveTypeByName(typeName) != null).FirstOrDefault();
-            }
-            //Then get first type of registered. Special for case when resolved BaseType name
-            if(typeInfo == null)
-            {
-                typeInfo = _typeInfos.FirstOrDefault();
-            }
+            {                
+                typeInfo = _typeInfos.Where(x => x.IsAssignableTo(typeName)).FirstOrDefault();
+            }          
             if (typeInfo != null)
             {
                 if (typeInfo.Factory != null)
@@ -110,8 +105,7 @@ namespace VirtoCommerce.Platform.Core.Common
                 retVal = (BaseType)Activator.CreateInstance(typeof(BaseType));
             }
             return retVal;
-        }
-
+        }      
     }
 
     /// <summary>
@@ -125,8 +119,9 @@ namespace VirtoCommerce.Platform.Core.Common
             Type = type;
         }
 
-        public Func<BaseType> Factory { get; set; }
+        public Func<BaseType> Factory { get; private set; }
         public Type Type { get; private set; }
+        public Type MappedType { get; set; }
         public ICollection<object> Services { get; set; }
 
         public T GetService<T>()
@@ -142,30 +137,25 @@ namespace VirtoCommerce.Platform.Core.Common
             }
             return this;
         }
+
+        public TypeInfo<BaseType> MapToType<T>()
+        {
+            MappedType = typeof(T);
+            return this;
+        }
+
         public TypeInfo<BaseType> WithFactory(Func<BaseType> factory)
         {
             Factory = factory;
             return this;
         }
 
-        public Type ResolveTypeByName(string typeName)
+        public bool IsAssignableTo(string typeName)
         {
-            if (Type.GetTypeInheritanceChainTo(typeof(BaseType)).Any(t => typeName.EqualsInvariant(t.Name)))
-            {
-                return Type;
-            }
-            return null;
+            return Type.GetTypeInheritanceChainTo(typeof(BaseType)).Concat(new[] { typeof(BaseType) }).Any(t => typeName.EqualsInvariant(t.Name));
         }
 
-        public IEnumerable<string> AllInheritedTypeNames
-        {
-            get
-            {
-                return AllInheritedTypes.Select(x => x.Name);
-            }
-        }
-
-        public IEnumerable<Type> AllInheritedTypes
+        public IEnumerable<Type> AllSubclasses
         {
             get
             {
