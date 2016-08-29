@@ -1364,6 +1364,7 @@ ol li {
         color: #999;
         font-size: 12px;
         margin: 5px 0 0;
+        word-break: break-word;
     }
 
     .list.__info .list-link {
