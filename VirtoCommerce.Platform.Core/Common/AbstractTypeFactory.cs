@@ -52,8 +52,7 @@ namespace VirtoCommerce.Platform.Core.Common
             var existTypeInfo = _typeInfos.FirstOrDefault(x => x.Type == oldType);
             var newTypeInfo = new TypeInfo<BaseType>(newType);
             if (existTypeInfo != null)
-            {
-                newTypeInfo.Services = existTypeInfo.Services;
+            {             
                 _typeInfos.Remove(existTypeInfo);
             }
 
