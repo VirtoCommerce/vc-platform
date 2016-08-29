@@ -51,11 +51,12 @@
     <script type="text/ng-template" id="dDateTime.html">
         <div class="form-input __calendar">
             <input ng-model="context.currentPropValues[0].value"
-                   datepicker-popup
+                   datepicker-popup="{{currentEntity.isReadonly ? 'short' : '' }}"
+                   ng-disabled="currentEntity.isReadonly"
                    is-open="datepickers.DateTime"
                    placeholder="{{ 'platform.genericValueInput.placeholders.date-time' | translate}}"
                    close-text="Close">
-            <button ng-click="open($event, 'DateTime')" type="button" class="btn">
+            <button ng-click="open($event, 'DateTime')" type="button" class="btn" ng-disabled="currentEntity.isReadonly">
                 <i class="btn-ico fa fa-calendar"></i>
             </button>
         </div>
