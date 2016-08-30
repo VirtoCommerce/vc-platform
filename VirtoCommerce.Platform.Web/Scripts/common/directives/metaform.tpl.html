@@ -1,6 +1,6 @@
 ﻿<div>
     <div ng-repeat="group in bladeInputGroups" ng-class="{'columns clearfix': $last}">
-        <div class="column" ng-repeat-start="data in group" ng-if="!data.templateUrl || !data.spanAllColumns" ng-init="data.blade=blade">
+        <div ng-repeat-start="data in group" ng-if="!data.templateUrl || !data.spanAllColumns" ng-class="{'column': !$first || !$last}" ng-init="data.blade=blade">
             <div class="form-group">
                 <label class="form-label" ng-if="data.title">{{ data.title | translate }}</label>
                 <!--get-dictionary-values="data.getDictionaryValues"-->

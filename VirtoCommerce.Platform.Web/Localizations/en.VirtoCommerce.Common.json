@@ -104,6 +104,7 @@
       "placeholders": {
         "short-text": "Enter short text",
         "secure-string": "Enter secret text",
+        "url": "Enter URL",
         "long-text": "Enter long text",
         "integer": "Enter integer number",
         "number": "Enter decimal number",
