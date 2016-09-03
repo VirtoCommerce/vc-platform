@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Data.DynamicProperties.Converters;
@@ -27,7 +26,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
         {
             var typeName = typeof(IHasDynamicProperties).Name;
             return AppDomain.CurrentDomain.GetAssemblies()
-                   .SelectMany(a => a.GetTypes())
+                   .SelectMany(a => a.GetLoadableTypes())
                    .Where(t => t.IsClass && t.IsPublic && !t.IsAbstract && t.GetInterface(typeName) != null)
                    .Select(GetObjectTypeName);
         }
