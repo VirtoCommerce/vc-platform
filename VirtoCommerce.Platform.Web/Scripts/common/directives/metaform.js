@@ -21,13 +21,12 @@
                 x.ngBindingModel = x.name;
 
                 if (isGroupStart || (x.templateUrl && x.spanAllColumns)) {
-                    isGroupStart = !isGroupStart;
                     currentGroup = [x];
                     resultingGroups.push(currentGroup);
                 } else {
                     currentGroup.push(x);
-                    isGroupStart = currentGroup.length == scope.columnCount;
                 }
+                isGroupStart = (x.templateUrl && x.spanAllColumns) || currentGroup.length == columnCount;
             });
 
             // generate empty columns
