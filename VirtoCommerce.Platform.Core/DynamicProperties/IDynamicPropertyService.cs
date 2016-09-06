@@ -46,7 +46,7 @@ namespace VirtoCommerce.Platform.Core.DynamicProperties
         /// Deep loads and populate dynamic properties values for object
         /// </summary>
         /// <param name="owner"></param>
-        void LoadDynamicPropertyValues(IHasDynamicProperties owner);
+        void LoadDynamicPropertyValues(params IHasDynamicProperties[] owner);
         /// <summary>
         /// Deep save dynamic properties values for object
         /// </summary>
