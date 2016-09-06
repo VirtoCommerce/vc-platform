@@ -1,6 +1,6 @@
 /* Fix by angular ng-animate */
 [ng\:cloak], [ng-cloak], .ng-cloak {
-  display: none !important;
+    display: none !important;
 }
 
 .ng-hide,
@@ -61,62 +61,62 @@ ui-codemirror > *:first-child {
 }
 
 .platform-error-bar {
-	background: #e51400;
-	color: #fff;
-	font-family: 'Exo 2';
-	font-size: 13px;
-	left: 0;
-	padding: 5px 0;
-	position: absolute;
-	right: 0;
-	top: 0;
-	text-align: center;
-	z-index: 9000;
+    background: #e51400;
+    color: #fff;
+    font-family: 'Exo 2';
+    font-size: 13px;
+    left: 0;
+    padding: 5px 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    text-align: center;
+    z-index: 9000;
 }
 
-	.platform-error-bar a {
-		color: #fff;
-	}
+    .platform-error-bar a {
+        color: #fff;
+    }
 
-	.platform-error-bar .close {
-		position: absolute;
-		right: 15px;
-		top: 12px;
-		cursor: pointer;
-		z-index:5;
-	}
+    .platform-error-bar .close {
+        position: absolute;
+        right: 15px;
+        top: 12px;
+        cursor: pointer;
+        z-index: 5;
+    }
 
-	.platform-error-bar .error-title {
-		align-items: center;
-		display: -webkit-flex;
-		display: -moz-flex;
-		display: -ms-flex;
-		display: -o-flex;
-		display: flex;
-		justify-content: center;
-		height: 30px;
-		position: relative;
-	}
+    .platform-error-bar .error-title {
+        align-items: center;
+        display: -webkit-flex;
+        display: -moz-flex;
+        display: -ms-flex;
+        display: -o-flex;
+        display: flex;
+        justify-content: center;
+        height: 30px;
+        position: relative;
+    }
 
-	.platform-error-bar .more {
-		color: #fff;
-		font-size: 12px;
-		position: absolute;
-		right: 40px;
-		top: 50%;
-		-webkit-transform: translateY(-50%);
-		-ms-transform: translateY(-50%);
-		-o-transform: translateY(-50%);
-		transform: translateY(-50%);
-	}
+    .platform-error-bar .more {
+        color: #fff;
+        font-size: 12px;
+        position: absolute;
+        right: 40px;
+        top: 50%;
+        -webkit-transform: translateY(-50%);
+        -ms-transform: translateY(-50%);
+        -o-transform: translateY(-50%);
+        transform: translateY(-50%);
+    }
 
-	.platform-error-bar .error-detail {
-		margin: 5px 0;
-		max-height: 250px;
-		padding: 10px 20px;
-		text-align: left;
-		overflow: auto;
-	}
+    .platform-error-bar .error-detail {
+        margin: 5px 0;
+        max-height: 250px;
+        padding: 10px 20px;
+        text-align: left;
+        overflow: auto;
+    }
 
 /* Flags */
 .flag {
@@ -5448,6 +5448,14 @@ input.ui-grid-filter-input[type="text"] {
     margin: 0;
     top: 0;
 }
+
+.ui-grid[dir=rtl] .ui-grid-filter-container .ui-grid-filter-button {
+    right: inherit;
+}
+
+    .ui-grid[dir=rtl] .ui-grid-filter-container .ui-grid-filter-button [class^="ui-grid-icon"] {
+        right: inherit;
+    }
 
 .ui-grid-column-menu-button {
     top: 50%;
