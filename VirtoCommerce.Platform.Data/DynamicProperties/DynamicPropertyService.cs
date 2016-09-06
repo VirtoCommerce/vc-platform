@@ -184,6 +184,11 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
             }
         }
 
+        public void LoadDynamicPropertyValues(IHasDynamicProperties owner)
+        {
+            LoadDynamicPropertyValues(new[] { owner });
+        }
+
         public void LoadDynamicPropertyValues(params IHasDynamicProperties[] owners)
         {
             if(owners == null)
