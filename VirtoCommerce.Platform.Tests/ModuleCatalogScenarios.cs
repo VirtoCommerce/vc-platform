@@ -87,12 +87,18 @@ namespace VirtoCommerce.Platform.Tests
             moduleInstaller.Install(modules.Union(modulesWithDependencies), progress);
             ListModules(catalog);
 
-            // validate installed modules
-            Assert.Equal(modules.Union(modulesWithDependencies).Count(), modules.Union(modulesWithDependencies).OfType<ManifestModuleInfo>().Where(x => x.IsInstalled).Count());
+            // validate installed modules, if it doesn't equal then modules were not installed
+            Assert.Equal(
+                modules.Union(modulesWithDependencies).Count(), 
+                modules.Union(modulesWithDependencies).OfType<ManifestModuleInfo>().Where(x => x.IsInstalled).Count()
+            );
 
             moduleInstaller.Uninstall(modules.Union(modulesWithDependencies), progress);
             ListModules(catalog);
-            Assert.Equal(0, modules.Union(modulesWithDependencies).OfType<ManifestModuleInfo>().Where(x => x.IsInstalled).Count());
+            Assert.Equal(
+                0, 
+                modules.Union(modulesWithDependencies).OfType<ManifestModuleInfo>().Where(x => x.IsInstalled).Count()
+            );
         }
 
         public override void Dispose()
