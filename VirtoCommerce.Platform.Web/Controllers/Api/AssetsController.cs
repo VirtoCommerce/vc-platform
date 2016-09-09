@@ -92,6 +92,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
             }
 
+            var retVal = new List<webModel.BlobInfo>();
             if (url != null)
             {
                 var fileName = HttpUtility.UrlDecode(Path.GetFileName(url));
@@ -102,21 +103,18 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 {
                     remoteStream.CopyTo(blobStream);
 
-                    var retVal = new webModel.BlobInfo
+                    retVal.Add(new webModel.BlobInfo
                     {
                         Name = fileName,
                         RelativeUrl = fileUrl,
                         Url = _urlResolver.GetAbsoluteUrl(fileUrl)
-                    };
-                    return Ok(retVal);
+                    });
                 }
             }
             else
             {
                 var blobMultipartProvider = new BlobStorageMultipartProvider(_blobProvider, _urlResolver, folderUrl);
                 await Request.Content.ReadAsMultipartAsync(blobMultipartProvider);
-
-                var retVal = new List<webModel.BlobInfo>();
 
                 foreach (var blobInfo in blobMultipartProvider.BlobInfos)
                 {
@@ -130,8 +128,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     });
                 }
 
-                return Ok(retVal.ToArray());
             }
+
+            return Ok(retVal.ToArray());
         }
 
         /// <summary>
@@ -180,8 +179,5 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _blobProvider.CreateFolder(folder);
             return StatusCode(HttpStatusCode.NoContent);
         }
-
     }
-
-
 }

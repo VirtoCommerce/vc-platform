@@ -44,8 +44,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// Verifies provided credentials and if succeeded returns full user details, otherwise returns 401 Unauthorized.
         /// </remarks>
         /// <param name="model">User credentials.</param>
-        /// <response code="200"></response>
-        /// <response code="401">Invalid user name or password.</response>
         [HttpPost]
         [Route("login")]
         [ResponseType(typeof(ApplicationUserExtended))]
@@ -264,8 +262,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// </summary>
         /// <param name="userName"></param>
         /// <param name="changePassword">Old and new passwords.</param>
-        /// <response code="200"></response>
-        /// <response code="404">User not found.</response>
         [HttpPost]
         [Route("users/{userName}/changepassword")]
         [ResponseType(typeof(SecurityResult))]
@@ -367,7 +363,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 if (!securityResult.Succeeded)
                     result = BadRequest(securityResult.Errors != null ? string.Join(" ", securityResult.Errors) : "Unknown error.");
                 else
-                    result = Ok();
+                    result = Ok(securityResult);
             }
 
             return result;

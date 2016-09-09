@@ -58,7 +58,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         public IHttpActionResult ReloadModules()
         {
             _moduleCatalog.Reload();
-            return Ok();
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var retVal = GetDependingModulesRecursive(modules).Distinct()
                                                               .Except(modules)
                                                               .Select(x => x.ToWebModel())
-                                                              .ToList();
+                                                              .ToArray();
             return Ok(retVal);
         }
 

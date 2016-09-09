@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
@@ -52,8 +52,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// </summary>
         /// <param name="name">Setting system name.</param>
         /// <returns></returns>
-        /// <response code="200"></response>
-        /// <response code="404">Setting not found.</response>
         [HttpGet]
         [Route("{name}")]
         [ResponseType(typeof(webModel.Setting))]
@@ -64,7 +62,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 return Ok(retVal.ToWebModel());
             }
-            return StatusCode(HttpStatusCode.NoContent);
+            return NotFound();
         }
 
         /// <summary>
@@ -82,8 +80,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 _settingsManager.SaveSettings(settings.Select(x => x.ToModuleModel()).ToArray());
             }
             return StatusCode(HttpStatusCode.NoContent);
-        }        
-       
+        }
+
         /// <summary>
         /// Get array setting values by name
         /// </summary>
