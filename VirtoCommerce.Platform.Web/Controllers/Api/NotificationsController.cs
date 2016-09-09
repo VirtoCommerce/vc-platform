@@ -186,7 +186,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// </remarks>
         /// <param name="request">Test notification request</param>
         [HttpPost]
-        [ResponseType(typeof(string))]
+        [ResponseType(typeof(SendNotificationResult))]
         [Route("template/sendnotification")]
         public IHttpActionResult SendNotification(webModels.TestNotificationRequest request)
         {
@@ -197,7 +197,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
             var result = _notificationManager.SendNotification(notification);
 
-            return Ok(result.ErrorMessage);
+            return Ok(result);
         }
 
         /// <summary>

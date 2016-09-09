@@ -1,64 +1,106 @@
 ﻿<div class="blade-static __collapsed">
-	<div class="form-group">
-		<!--<div class="form-input __search">
-			<input placeholder="{{ 'platform.placeholders.search-keyword' | translate }}" ng-model="filter.searchKeyword" ng-keyup="$event.which === 13 && blade.refresh()">
-		</div>-->
-		<p class="form-count">{{ 'platform.list.count' | translate }}: <span class="count">{{pageSettings.totalItems}}</span></p>
-	</div>
+    <div class="form-group">
+        <!--<div class="form-input __search">
+            <input placeholder="{{ 'platform.placeholders.search-keyword' | translate }}" ng-model="filter.searchKeyword" ng-keyup="$event.which === 13 && blade.refresh()">
+        </div>-->
+        <p class="form-count">{{ 'platform.list.count' | translate }}: <span class="count">{{pageSettings.totalItems}}</span></p>
+    </div>
 </div>
 <div class="blade-static __bottom" ng-if="pageSettings.itemsPerPageCount < pageSettings.totalItems" ng-include="'pagerTemplate.html'"></div>
 <div class="blade-content __large-wide">
-	<div class="blade-inner">
-		<div class="inner-block">
-			<div class="table-wrapper" ng-if="blade.currentEntities.length > 0">
-				<table class="table" style="margin-bottom:70px;">
-					<thead>
-						<tr>
-							<th class="table-col __product-control">
-								<label class="form-control __checkbox">
-									<input type="checkbox" ng-model="blade.selectedAll" ng-change="blade.checkAll(blade.selectedAll)" />
-									<span class="check"></span>
-								</label>
-							</th>
-							<th class="table-col">{{ 'platform.blades.notifications-journal.labels.display-name' | translate }}</th>
-							<th class="table-col">{{ 'platform.blades.notifications-journal.labels.recipient' | translate }}</th>
-							<th class="table-col">{{ 'platform.blades.notifications-journal.labels.sent-date' | translate }}</th>
-							<th class="table-col">{{ 'platform.blades.notifications-journal.labels.channel' | translate }}</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr class="table-item" ng-repeat="data in blade.currentEntities track by data.id" ng-class="{'__selected': data.id === blade.selectedItemId}">
-							<td class="table-col">
-								<label class="form-control __checkbox">
-									<input type="checkbox" ng-model="data.selected" ng-change="blade.selectedAll = false;">
-									<span class="check"></span>
-								</label>
-							</td>
-							<td class="table-col" ng-click='blade.openNotification(data)'>
-								<span class="table-t">{{data.displayName}}</span>
-								<span class="table-status" ng-if="!data.isActive && !data.isSuccessSend" style="background:red">{{ 'platform.blades.notifications-journal.labels.error' | translate }}</span>
-								<span class="table-status" ng-if="data.isActive && !data.isSuccessSend" style="max-width:60px;">{{ 'platform.blades.notifications-journal.labels.processing' | translate }}</span>
-								<span class="table-status __active" ng-if="(!data.isActive && data.isSuccessSend) || (data.isActive && data.isSuccessSend)">{{ 'platform.blades.notifications-journal.labels.success' | translate }}</span>
-							</td>
-							<td class="table-col" ng-click='blade.openNotification(data)'>
-								{{data.recipient}}
-							</td>
-							<td class="table-col __date" ng-click='blade.openNotification(data)'>
-								{{data.sendingDate}}
-							</td>
-							<td class="table-col" ng-click='blade.openNotification(data)'>
-								<div class="product-img">
-									<i class="table-ico fa fa-envelope" ng-if="data.isEmail"></i>
-									<i class="table-ico fa fa-mobile" ng-if="data.isSms"></i>
-								</div>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-			<div class="note" ng-if="items.length == 0">
-				{{ 'platform.blades.notifications-journal.labels.no-notifications' | translate }}
-			</div>
-		</div>
-	</div>
+    <div class="blade-inner">
+        <div class="inner-block" ng-init="setGridOptions({
+                 rowTemplate: 'list.row.html',
+                 rowHeight: 61,
+                 columnDefs: [
+                            { name: 'actions', displayName: '', enableColumnResizing: false, enableSorting: false, width: 30, cellTemplate: 'list-actions.cell.html', pinnedLeft:true },
+                            { name: 'displayName', displayName: 'platform.blades.notifications-journal.labels.display-name', cellTemplate: 'displayName.cell.html' },
+                            { name: 'recipient', displayName: 'platform.blades.notifications-journal.labels.recipient' },
+                            {
+                                name: 'sendingDate', displayName: 'platform.blades.notifications-journal.labels.sent-date',
+                                sort: { direction: uiGridConstants.DESC }, width: 87, cellTemplate: 'am-time-ago.cell.html'
+                            },
+                            { name: 'channel', displayName: 'platform.blades.notifications-journal.labels.channel', width: 65, cellTemplate: 'channel.cell.html' }
+                ]})">
+            <div class="table-wrapper" ng-if="blade.currentEntities.length">
+                <div ui-grid="gridOptions" ui-grid-auto-resize ui-grid-save-state ui-grid-selection ui-grid-resize-columns ui-grid-move-columns ui-grid-pinning ui-grid-height></div>
+                <ul class="menu __context" role="menu" id="njo_menu">
+                    <li class="menu-item" ng-click='stopNotifications([contextMenuEntity])'>
+                        <i class="menu-ico fa fa-stop"></i> {{'platform.commands.stop-sending' | translate}}
+                    </li>
+                </ul>
+
+
+                <!--<table class="table" style="margin-bottom:70px;">
+                    <thead>
+                        <tr>
+                            <th class="table-col __product-control">
+                                <label class="form-control __checkbox">
+                                    <input type="checkbox" ng-model="blade.selectedAll" ng-change="blade.checkAll(blade.selectedAll)" />
+                                    <span class="check"></span>
+                                </label>
+                            </th>
+                            <th class="table-col">{{ 'platform.blades.notifications-journal.labels.display-name' | translate }}</th>
+                            <th class="table-col">{{ 'platform.blades.notifications-journal.labels.recipient' | translate }}</th>
+                            <th class="table-col">{{ 'platform.blades.notifications-journal.labels.sent-date' | translate }}</th>
+                            <th class="table-col">{{ 'platform.blades.notifications-journal.labels.channel' | translate }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="table-item" ng-repeat="data in blade.currentEntities track by data.id" ng-class="{'__selected': data.id === blade.selectedItemId}">
+                            <td class="table-col">
+                                <label class="form-control __checkbox">
+                                    <input type="checkbox" ng-model="data.selected" ng-change="blade.selectedAll = false;">
+                                    <span class="check"></span>
+                                </label>
+                            </td>
+                            <td class="table-col" ng-click='blade.openNotification(data)'>
+                                <span class="table-t">{{data.displayName}}</span>
+                                <span class="table-status" ng-if="!data.isActive && !data.isSuccessSend" style="background:red">{{ 'platform.blades.notifications-journal.labels.error' | translate }}</span>
+                                <span class="table-status" ng-if="data.isActive && !data.isSuccessSend" style="max-width:60px;">{{ 'platform.blades.notifications-journal.labels.processing' | translate }}</span>
+                                <span class="table-status __active" ng-if="(!data.isActive && data.isSuccessSend) || (data.isActive && data.isSuccessSend)">{{ 'platform.blades.notifications-journal.labels.success' | translate }}</span>
+                            </td>
+                            <td class="table-col" ng-click='blade.openNotification(data)'>
+                                {{data.recipient}}
+                            </td>
+                            <td class="table-col __date" ng-click='blade.openNotification(data)'>
+                                {{data.sendingDate}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>-->
+            </div>
+            <div class="note" ng-if="!blade.currentEntities.length">
+                {{ 'platform.blades.notifications-journal.labels.no-notifications' | translate }}
+            </div>
+        </div>
+    </div>
 </div>
+
+<script type="text/ng-template" id="list.row.html">
+    <div ng-click='grid.appScope.selectNode(row.entity)' ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + '-' + col.uid + '-cell'" class="ui-grid-cell" ng-class="{'ui-grid-row-header-cell': col.isRowHeader, '__hovered': grid.appScope.contextMenuEntity === row.entity, '__selected': row.entity.id===grid.appScope.selectedNodeId}" role="{{col.isRowHeader ? 'rowheader' : 'gridcell' }}" ui-grid-cell context-menu="grid.appScope.contextMenuEntity = row.entity" data-target="njo_menu"></div>
+</script>
+<script type="text/ng-template" id="list-actions.cell.html">
+    <div class="ui-grid-actions" left-click-menu="grid.appScope.contextMenuEntity = row.entity" data-target="njo_menu">
+        <i class="fa fa-ellipsis-v"></i>
+    </div>
+</script>
+<script type="text/ng-template" id="displayName.cell.html">
+    <div class="ui-grid-cell-contents">
+        <div class="inner-contents">
+            <span class="table-t">{{COL_FIELD}}</span>
+            <span class="table-status" ng-if="!row.entity.isActive && !row.entity.isSuccessSend" style="background:red">{{ 'platform.blades.notifications-journal.labels.error' | translate }}</span>
+            <span class="table-status" ng-if="row.entity.isActive && !row.entity.isSuccessSend" style="max-width:60px;">{{ 'platform.blades.notifications-journal.labels.processing' | translate }}</span>
+            <span class="table-status __active" ng-if="row.entity.isSuccessSend">{{ 'platform.blades.notifications-journal.labels.success' | translate }}</span>
+        </div>
+    </div>
+</script>
+<script type="text/ng-template" id="am-time-ago.cell.html">
+    <span class="table-date" am-time-ago="COL_FIELD" title="{{COL_FIELD | date: 'medium' }}"></span>
+</script>
+<script type="text/ng-template" id="channel.cell.html">
+    <div class="product-img">
+        <i class="table-ico fa fa-envelope" ng-if="row.entity.isEmail"></i>
+        <i class="table-ico fa fa-mobile" ng-if="row.entity.isSms"></i>
+    </div>
+</script>
