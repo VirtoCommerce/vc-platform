@@ -17,8 +17,10 @@ namespace VirtoCommerce.Platform.Web
         {
             config.Filters.Add(new CheckPermissionAttribute { Permission = PredefinedPermissions.SecurityCallApi });
 
-            // Web API routes
-            config.MapHttpAttributeRoutes();
+			config.EnableCors();
+
+			// Web API routes
+			config.MapHttpAttributeRoutes();
 
             config.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
 
