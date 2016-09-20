@@ -19,14 +19,19 @@ namespace VirtoCommerce.Platform.Tests
     {
         private static string _tempDir;
         private static string _CatalogSourceFolder = "source";
+        private static string _CatalogDependencySourceFolder = "";
         private readonly ITestOutputHelper _output;
 
         public ModuleCatalogScenarios(ITestOutputHelper output)
         {
             _output = output;
             var folderVariable = Environment.GetEnvironmentVariable("xunit_virto_modules_folder");
-            if (!String.IsNullOrEmpty(folderVariable))
+            if (!string.IsNullOrEmpty(folderVariable))
                 _CatalogSourceFolder = folderVariable;
+
+            var folderVariable2 = Environment.GetEnvironmentVariable("xunit_virto_dependency_modules_folder");
+            if (!string.IsNullOrEmpty(folderVariable2))
+                _CatalogDependencySourceFolder = folderVariable2;
 
             _tempDir = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
             Directory.CreateDirectory(_tempDir);
@@ -45,6 +50,19 @@ namespace VirtoCommerce.Platform.Tests
             // load all modules from local folder
             var catalogInternal = GetModuleCatalog(_CatalogSourceFolder);
             var modules = catalogInternal.Modules.OfType<ManifestModuleInfo>().ToArray();
+
+            // when local dependency defined, use that to create catalog
+            if(!string.IsNullOrEmpty(_CatalogDependencySourceFolder))
+            {
+                catalogInternal = GetModuleCatalog(_CatalogDependencySourceFolder);
+                if (modules != null)
+                {
+                    foreach (var module in modules)
+                    {
+                        catalogInternal.AddModule(module);
+                    }
+                }
+            }
 
             // initialize exteranl dependency loader
             var catalog = GetExternalModuleCatalog(catalogInternal);
@@ -69,12 +87,18 @@ namespace VirtoCommerce.Platform.Tests
             moduleInstaller.Install(modules.Union(modulesWithDependencies), progress);
             ListModules(catalog);
 
-            // validate installed modules
-            Assert.Equal(modules.Union(modulesWithDependencies).Count(), modules.Union(modulesWithDependencies).OfType<ManifestModuleInfo>().Where(x => x.IsInstalled).Count());
+            // validate installed modules, if it doesn't equal then modules were not installed
+            Assert.Equal(
+                modules.Union(modulesWithDependencies).Count(), 
+                modules.Union(modulesWithDependencies).OfType<ManifestModuleInfo>().Where(x => x.IsInstalled).Count()
+            );
 
             moduleInstaller.Uninstall(modules.Union(modulesWithDependencies), progress);
             ListModules(catalog);
-            Assert.Equal(0, modules.Union(modulesWithDependencies).OfType<ManifestModuleInfo>().Where(x => x.IsInstalled).Count());
+            Assert.Equal(
+                0, 
+                modules.Union(modulesWithDependencies).OfType<ManifestModuleInfo>().Where(x => x.IsInstalled).Count()
+            );
         }
 
         public override void Dispose()

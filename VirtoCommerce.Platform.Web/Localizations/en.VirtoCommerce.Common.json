@@ -59,7 +59,8 @@
       "count": "Count"
     },
     "placeholders": {
-      "search-keyword": "Search keyword..."
+        "n-a": "N/A",
+        "search-keyword": "Search keyword..."
     },
     "dialogs": {
       "delete": {
