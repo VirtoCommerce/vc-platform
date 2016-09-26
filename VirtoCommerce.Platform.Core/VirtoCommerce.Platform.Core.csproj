@@ -42,8 +42,8 @@
     <NoWarn>1591</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -62,6 +62,7 @@
     <Compile Include="Assets\IBlobUrlResolver.cs" />
     <Compile Include="Assets\IBlobStorageProvider.cs" />
     <Compile Include="ChangeLog\IHasChangesHistory.cs" />
+    <Compile Include="Common\AbstractTypeFactory.cs" />
     <Compile Include="Common\EnumerableExtensions.cs" />
     <Compile Include="Common\AsyncLock.cs" />
     <Compile Include="Common\ConfigManagerExtensions.cs" />
@@ -198,6 +199,7 @@
     <Compile Include="Security\AuthentificationOptions.cs" />
     <Compile Include="Security\ICurrentUser.cs" />
     <Compile Include="Security\IHasSecurityAccounts.cs" />
+    <Compile Include="Security\ISupportSecurityScopes.cs" />
     <Compile Include="Security\IUserNameResolver.cs" />
     <Compile Include="Security\VirtoCommerceClaimTypes.cs" />
     <Compile Include="Security\IPermissionScopeService.cs" />

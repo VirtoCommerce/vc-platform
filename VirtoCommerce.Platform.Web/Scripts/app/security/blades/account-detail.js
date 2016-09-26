@@ -2,7 +2,7 @@
 .controller('platformWebApp.accountDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.accounts', 'platformWebApp.roles', 'platformWebApp.dialogService', 'platformWebApp.settings', function ($scope, bladeNavigationService, accounts, roles, dialogService, settings) {
     var blade = $scope.blade;
     blade.updatePermission = 'platform:security:update';
-    blade.promise = roles.search({ count: 10000 }).$promise;
+    blade.promise = roles.search({ takeCount: 10000 }).$promise;
     $scope.accountTypes = [];
 
     blade.refresh = function (parentRefresh) {

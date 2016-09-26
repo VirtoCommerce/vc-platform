@@ -1,0 +1,18 @@
+﻿<div>
+    <div ng-repeat="group in bladeInputGroups" ng-class="{'columns clearfix': $last}">
+        <div ng-repeat-start="data in group" ng-if="!data.templateUrl || !data.spanAllColumns" ng-class="{'column': !$first || !$last}" ng-init="data.blade=blade">
+            <div class="form-group">
+                <label class="form-label" ng-if="data.title">{{ data.title | translate }}</label>
+                <!--get-dictionary-values="data.getDictionaryValues"-->
+                <va-generic-value-input ng-model="data" ng-if="!data.templateUrl"></va-generic-value-input>
+                <ng-include src='data.templateUrl' ng-if="data.templateUrl"></ng-include>
+            </div>
+        </div>
+
+        <ng-include src='data.templateUrl' ng-repeat-end ng-if="data.templateUrl && data.spanAllColumns"></ng-include>
+    </div>
+
+    <script type="text/ng-template" id="emptyColumn.html">
+        <div style="height:60px">&nbsp;</div>
+    </script>
+</div>

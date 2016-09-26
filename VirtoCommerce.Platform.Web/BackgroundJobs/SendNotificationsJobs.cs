@@ -30,14 +30,27 @@ namespace VirtoCommerce.Platform.Web.BackgroundJobs
 				foreach(var notification in result.Notifications)
 				{
 					notification.AttemptCount++;
-					var sendResult = notification.SendNotification();
-					if(sendResult.IsSuccess)
-					{
-						notification.IsActive = false;
-						notification.IsSuccessSend = true;
-						notification.SentDate = DateTime.UtcNow;
-					}
-					else
+                    SendNotificationResult sendResult = null;
+                    try
+                    {
+                        sendResult = notification.SendNotification();
+                    }
+                    catch (Exception ex)
+                    {
+                        sendResult = new SendNotificationResult
+                        {
+                            IsSuccess = false,
+                            ErrorMessage = ex.ToString()
+                        };
+                    }
+
+                    if (sendResult.IsSuccess)
+                    {
+                        notification.IsActive = false;
+                        notification.IsSuccessSend = true;
+                        notification.SentDate = DateTime.UtcNow;
+                    }
+                    else
 					{
 						if(notification.AttemptCount >= notification.MaxAttemptCount)
 						{

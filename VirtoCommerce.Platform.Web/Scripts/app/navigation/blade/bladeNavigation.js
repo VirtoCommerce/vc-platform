@@ -27,7 +27,7 @@ angular.module('platformWebApp')
         }
     };
 })
-.directive('vaBladeContainer', ['$compile', 'platformWebApp.bladeNavigationService', function ($compile, bladeNavigationService) {
+.directive('vaBladeContainer', ['platformWebApp.bladeNavigationService', function (bladeNavigationService) {
     return {
         restrict: 'E',
         replace: true,

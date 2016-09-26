@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
+using VirtoCommerce.Platform.Data.Common;
 using VirtoCommerce.Platform.Data.DynamicProperties.Converters;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Model;
@@ -27,7 +27,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
         {
             var typeName = typeof(IHasDynamicProperties).Name;
             return AppDomain.CurrentDomain.GetAssemblies()
-                   .SelectMany(a => a.GetTypes())
+                   .SelectMany(a => a.GetLoadableTypes())
                    .Where(t => t.IsClass && t.IsPublic && !t.IsAbstract && t.GetInterface(typeName) != null)
                    .Select(GetObjectTypeName);
         }
@@ -186,7 +186,17 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
 
         public void LoadDynamicPropertyValues(IHasDynamicProperties owner)
         {
-            var propOwners = owner.GetFlatObjectsListWithInterface<IHasDynamicProperties>();
+            LoadDynamicPropertyValues(new[] { owner });
+        }
+
+        public void LoadDynamicPropertyValues(params IHasDynamicProperties[] owners)
+        {
+            if(owners == null)
+            {
+                throw new ArgumentNullException("owners");
+            }
+
+            var propOwners = owners.SelectMany(x=> x.GetFlatObjectsListWithInterface<IHasDynamicProperties>());
             using (var repository = _repositoryFactory())
             {
                 var objectTypeNames = propOwners.Select(x => GetObjectTypeName(x)).Distinct().ToArray();
@@ -201,7 +211,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
                 }
             }
         }
-
+     
         public void SaveDynamicPropertyValues(IHasDynamicProperties owner)
         {
             if (owner == null)

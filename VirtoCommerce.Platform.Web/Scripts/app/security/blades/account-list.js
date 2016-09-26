@@ -37,11 +37,7 @@ function ($scope, accounts, dialogService, uiGridHelper, bladeNavigationService,
         bladeNavigationService.showBlade(newBlade, blade);
     };
 
-    $scope.delete = function (data) {
-        deleteList([data]);
-    };
-
-    function deleteList(selection) {
+    $scope.deleteList = function (selection) {
         var dialog = {
             id: "confirmDeleteItem",
             title: "platform.dialogs.account-delete.title",
@@ -50,18 +46,14 @@ function ($scope, accounts, dialogService, uiGridHelper, bladeNavigationService,
                 if (remove) {
                     bladeNavigationService.closeChildrenBlades(blade, function () {
                         var itemIds = _.pluck(selection, 'userName');
-                        accounts.remove({ names: itemIds }, function (data, headers) {
-                            blade.refresh();
-                        }, function (error) {
-                            bladeNavigationService.setError('Error ' + error.status, blade);
-                        });
+                        accounts.remove({ names: itemIds }, blade.refresh);
                     });
                 }
             }
         };
         dialogService.showConfirmationDialog(dialog);
-    }
-    
+    };
+
     blade.headIcon = 'fa-key';
 
     blade.toolbarCommands = [
@@ -85,7 +77,7 @@ function ($scope, accounts, dialogService, uiGridHelper, bladeNavigationService,
                         template: '$(Platform)/Scripts/app/security/wizards/newAccount/new-account-wizard.tpl.html'
                     };
                     bladeNavigationService.showBlade(newBlade, blade);
-                });                
+                });
             },
             canExecuteMethod: function () {
                 return true;
@@ -94,7 +86,7 @@ function ($scope, accounts, dialogService, uiGridHelper, bladeNavigationService,
         },
         {
             name: "platform.commands.delete", icon: 'fa fa-trash-o',
-            executeMethod: function () { deleteList($scope.gridApi.selection.getSelectedRows()); },
+            executeMethod: function () { $scope.deleteList($scope.gridApi.selection.getSelectedRows()); },
             canExecuteMethod: function () {
                 return $scope.gridApi && _.any($scope.gridApi.selection.getSelectedRows());
             },

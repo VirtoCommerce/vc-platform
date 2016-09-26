@@ -52,7 +52,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [ResponseType(typeof(SampleDataInfo[]))]
         [AllowAnonymous]
         public IHttpActionResult DiscoverSampleData()
-        {           
+        {
             return Ok(InnerDiscoverSampleData().ToArray());
         }
 
@@ -63,7 +63,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         public IHttpActionResult TryToAutoInstallSampleData()
         {
             var singleSampleData = InnerDiscoverSampleData().SingleOrDefault();
-            if(singleSampleData != null && !string.IsNullOrEmpty(singleSampleData.Url))
+            if (singleSampleData != null && !string.IsNullOrEmpty(singleSampleData.Url))
             {
                 return ImportSampleData(singleSampleData.Url);
             }
@@ -139,7 +139,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         [HttpPost]
         [Route("export")]
-        [ResponseType(typeof(PushNotification))]
+        [ResponseType(typeof(PlatformExportPushNotification))]
         [CheckPermission(Permission = PredefinedPermissions.PlatformExport)]
         public IHttpActionResult ProcessExport(PlatformImportExportRequest exportRequest)
         {
@@ -157,7 +157,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         [HttpPost]
         [Route("import")]
-        [ResponseType(typeof(PushNotification))]
+        [ResponseType(typeof(PlatformImportPushNotification))]
         [CheckPermission(Permission = PredefinedPermissions.PlatformImport)]
         public IHttpActionResult ProcessImport(PlatformImportExportRequest importRequest)
         {

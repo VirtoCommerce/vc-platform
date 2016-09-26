@@ -846,11 +846,11 @@ fieldset[disabled] .ui-grid-menu .ui-grid-menu-inner .ui-grid-menu-close-button.
   right: auto;
 }
 .ui-grid[dir=rtl] .ui-grid-filter-container .ui-grid-filter-button {
-  right: inherit;
+  right: initial;
   left: 0;
 }
 .ui-grid[dir=rtl] .ui-grid-filter-container .ui-grid-filter-button [class^="ui-grid-icon"] {
-  right: inherit;
+  right: initial;
   left: 10px;
 }
 /*

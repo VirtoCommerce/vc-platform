@@ -22,8 +22,9 @@
 
             scope.$watch('context.currentPropValues', function (newValue, oldValue) {
                 //reflect only real changes
-                if (!objComparer.equal(newValue, [theEmptyValue]) &&
-                   (newValue.length != scope.currentEntity.values.length || !objComparer.equal(newValue, scope.currentEntity.values))) {
+                if (newValue !== oldValue &&
+                        !objComparer.equal(newValue, [theEmptyValue]) &&
+                        (newValue.length != scope.currentEntity.values.length || !objComparer.equal(newValue, scope.currentEntity.values))) {
                     if (scope.currentEntity.isDictionary) {
                         scope.currentEntity.values = _.map(newValue, function (x) { return { value: x } });
                     }
@@ -52,9 +53,11 @@
             ngModelController.$render = function () {
                 scope.currentEntity = ngModelController.$modelValue;
 
-                scope.context.currentPropValues = angular.copy(scope.currentEntity.values);
-                if (needAddEmptyValue(scope.currentEntity, scope.context.currentPropValues)) {
-                    scope.context.currentPropValues.push(angular.copy(theEmptyValue));
+                if (!scope.currentEntity.ngBindingModel) {
+                    scope.context.currentPropValues = angular.copy(scope.currentEntity.values);
+                    if (needAddEmptyValue(scope.currentEntity, scope.context.currentPropValues)) {
+                        scope.context.currentPropValues.push(angular.copy(theEmptyValue));
+                    }
                 }
 
                 if (scope.currentEntity.isDictionary) {
@@ -154,28 +157,30 @@
                 var templateName = getTemplateName(scope.currentEntity);
                 //load input template and display
                 $http.get(templateName, { cache: $templateCache }).then(function (results) {
-			            //Need to add ngForm to isolate form validation into sub form
-			            //var innerContainer = "<div id='innerContainer' />";
+                    //Need to add ngForm to isolate form validation into sub form
+                    //var innerContainer = "<div id='innerContainer' />";
 
-			            //We must destroy scope of elements we are removing from DOM to avoid angular firing events
-			            var el = element.find('#valuePlaceHolder #innerContainer');
-			            if (el.length > 0) {
-			                el.scope().$destroy();
-			            }
-			            var container = element.find('#valuePlaceHolder');
-			            var result = container.html(results.data.trim());
+                    //We must destroy scope of elements we are removing from DOM to avoid angular firing events
+                    var el = element.find('#valuePlaceHolder #innerContainer');
+                    if (el.length > 0) {
+                        el.scope().$destroy();
+                    }
+                    var container = element.find('#valuePlaceHolder');
+                    var result = container.html(results.data.trim());
+                    if (scope.currentEntity.ngBindingModel) {
+                        $(result).find('[ng-model]').attr("ng-model", 'currentEntity.blade.currentEntity.' + scope.currentEntity.ngBindingModel)
+                    }
 
-			            //Create new scope, otherwise we would destroy our directive scope
-			            var newScope = scope.$new();
-			            $compile(result)(newScope);
-			        });
+                    //Create new scope, otherwise we would destroy our directive scope
+                    var newScope = scope.$new();
+                    $compile(result)(newScope);
+                });
             };
 
             /* Datepicker */
             scope.datepickers = {
                 DateTime: false
             }
-            scope.today = new Date();
 
             scope.open = function ($event, which) {
                 $event.preventDefault();
@@ -183,13 +188,6 @@
 
                 scope.datepickers[which] = true;
             };
-
-            scope.dateOptions = {
-                formatYear: 'yyyy',
-            };
-
-            scope.formats = ['shortDate', 'dd-MMMM-yyyy', 'yyyy/MM/dd'];
-            scope.format = scope.formats[0];
 
             linker(function (clone) {
                 element.append(clone);

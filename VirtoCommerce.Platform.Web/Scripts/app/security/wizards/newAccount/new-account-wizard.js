@@ -1,7 +1,7 @@
 ﻿angular.module('platformWebApp')
 .controller('platformWebApp.newAccountWizardController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.accounts', 'platformWebApp.roles', function ($scope, bladeNavigationService, accounts, roles) {
     var blade = $scope.blade;
-    var promise = roles.search({ count: 10000 }).$promise;
+    var promise = roles.search({ takeCount: 10000 }).$promise;
 
     function initializeBlade(data) {
         promise.then(function (promiseData) {
@@ -37,9 +37,9 @@
         postData.newPassword2 = undefined;
         postData.roles = _.where(blade.currentEntities, { $selected: true });
 
-        accounts.save({}, postData, function (data) {
+        accounts.save(postData, function () {
             blade.parentBlade.refresh();
-            blade.parentBlade.selectNode(data);
+            blade.parentBlade.selectNode(postData);
         }, function (error) {
             var errText = 'Error ' + error.status;
             if (error.data && error.data.message) {
@@ -48,9 +48,9 @@
             bladeNavigationService.setError(errText, $scope.blade);
         });
     };
-    
+
     blade.headIcon = 'fa-key';
-    
+
     // actions on load
     initializeBlade(blade.currentEntity);
 }]);

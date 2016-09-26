@@ -662,11 +662,11 @@
             },
             "email-sending-success": {
                 "title": "Sending success",
-                "message": "Email was send successfully!"
+                "message": "Email was sent successfully!"
             },
             "email-send-error": {
                 "title": "Error in sending",
-                "message": "Email wasn't send!"
+                "message": "Email wasn't send! Error: {{error}}"
             },
             "dictionary-items-delete": {
                 "title": "Delete confirmation",

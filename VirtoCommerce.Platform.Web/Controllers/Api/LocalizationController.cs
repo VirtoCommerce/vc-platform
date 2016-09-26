@@ -44,20 +44,20 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
-        /// Return all aviable locales
+        /// Return all available locales
         /// </summary>
         /// <returns></returns>
         [HttpGet]
         [Route("locales")]
         [ResponseType(typeof(string[]))]
-        public string[] GetLocales()
+        public IHttpActionResult GetLocales()
         {
             var files = GetAllLocalizationFiles("*.json");
             var locales = files
                 .Select(Path.GetFileName)
                 .Select(x => x.Substring(0, x.IndexOf('.'))).Distinct().ToArray();
 
-            return locales;
+            return Ok(locales);
         }
 
 

@@ -144,7 +144,7 @@
 				name: "platform.commands.send", icon: 'fa fa-envelope',
 				executeMethod: blade.testSend,
 				canExecuteMethod: function () {
-					return false;
+					return true;
 				},
 				permission: blade.updatePermission
 			},

@@ -32,7 +32,12 @@ namespace VirtoCommerce.Platform.Data.Notifications
                 MailMessage mailMsg = new MailMessage();
 
                 //To email
-                mailMsg.To.Add(new MailAddress(notification.Recipient));
+                var recipients = notification.Recipient.Split(';', ',');
+                foreach (var email in recipients)
+                {
+                    mailMsg.To.Add(new MailAddress(email));
+                }
+               
                 //From email
                 mailMsg.From = new MailAddress(notification.Sender);
                 mailMsg.ReplyToList.Add(mailMsg.From);
