@@ -30,7 +30,7 @@ function Compress-Module
     $modulesDir = "$tempDir\_PublishedWebsites"
     $packagesDir = $OutputDir
 
-    & $msbuild $project.FullName /nologo /verbosity:m /t:PackModule /p:Configuration=Release "/p:Platform=Any CPU" /p:DebugType=none /p:AllowedReferenceRelatedFileExtensions=: "/p:OutputPath=$tempDir" "/p:VCModulesOutputDir=$modulesDir" "/p:VCModulesZipDir=$packagesDir"
+    & $msbuild $project.FullName /nologo /verbosity:m /t:PackModule /p:Configuration=Release /p:Platform=AnyCPU /p:DebugType=none /p:AllowedReferenceRelatedFileExtensions=.xml "/p:OutputPath=$tempDir" "/p:VCModulesOutputDir=$modulesDir" "/p:VCModulesZipDir=$packagesDir"
 }
 
 Export-ModuleMember Compress-Module
