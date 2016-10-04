@@ -74,7 +74,7 @@ namespace VirtoCommerce.Platform.Web.Modularity
                 var updatableModules = modules.Where(x => installedModulesIds.Contains(x.Id));
                 var installableModules = modules.Except(updatableModules);
                 var changedModulesLog = new List<ManifestModuleInfo>();
-                using (TransactionScope scope = new TransactionScope())
+                using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, TransactionManager.MaximumTimeout))
                 {
                     try
                     {
