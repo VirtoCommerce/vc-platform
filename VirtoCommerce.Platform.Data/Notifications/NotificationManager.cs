@@ -188,9 +188,11 @@ namespace VirtoCommerce.Platform.Data.Notifications
                 {
                     query = query.Where(n => n.ObjectTypeId == criteria.ObjectTypeId);
                 }
+                
                 if (criteria.IsActive)
-                {
-                    query = query.Where(n => n.IsActive && n.SentDate == null && (n.LastFailAttemptDate == null || DbFunctions.AddHours(n.LastFailAttemptDate, criteria.RepeatHoursIntervalForFail) < DateTime.UtcNow));
+                {                   
+                    query = query.Where(n => n.IsActive && n.SentDate == null && (n.LastFailAttemptDate == null || DbFunctions.AddHours(n.LastFailAttemptDate, criteria.RepeatHoursIntervalForFail) < DateTime.UtcNow)
+                                             && (n.StartSendingDate == null || n.StartSendingDate < DateTime.UtcNow));
                 }
                 retVal.TotalCount = query.Count();
                 retVal.Notifications = query.OrderBy(n => n.CreatedDate)
