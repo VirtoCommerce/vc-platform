@@ -129,20 +129,20 @@
     }
 
     function deleteChecked() {
-        var dialog = {
-            id: "confirmDeleteItem",
-            title: "platform.dialogs.settings-value-delete.title",
-            message: "platform.dialogs.settings-value-delete.message",
-            callback: function (remove) {
-                if (remove) {
-                    var selection = _.where(currentEntities, { _selected: true });
-                    angular.forEach(selection, function (listItem) {
-                        $scope.delete(currentEntities.indexOf(listItem));
-                    });
-                }
-            }
-        }
-        dialogService.showConfirmationDialog(dialog);
+        //var dialog = {
+        //    id: "confirmDeleteItem",
+        //    title: "platform.dialogs.settings-value-delete.title",
+        //    message: "platform.dialogs.settings-value-delete.message",
+        //    callback: function (remove) {
+        //        if (remove) {
+        var selection = _.where(currentEntities, { _selected: true });
+        angular.forEach(selection, function (listItem) {
+            $scope.delete(currentEntities.indexOf(listItem));
+        });
+        //        }
+        //    }
+        //}
+        //dialogService.showConfirmationDialog(dialog);
     }
 
     // on load
