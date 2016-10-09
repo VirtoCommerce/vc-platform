@@ -1,5 +1,8 @@
 ﻿using System;
+using System.IO;
 using System.Net.Mail;
+using System.Net.Mime;
+using System.Text;
 using VirtoCommerce.Platform.Core.Notifications;
 using VirtoCommerce.Platform.Core.Settings;
 
@@ -37,7 +40,7 @@ namespace VirtoCommerce.Platform.Data.Notifications
                 {
                     mailMsg.To.Add(new MailAddress(email));
                 }
-               
+
                 //From email
                 mailMsg.From = new MailAddress(notification.Sender);
                 mailMsg.ReplyToList.Add(mailMsg.From);
@@ -45,6 +48,16 @@ namespace VirtoCommerce.Platform.Data.Notifications
                 mailMsg.Subject = notification.Subject;
                 mailMsg.Body = notification.Body;
                 mailMsg.IsBodyHtml = true;
+                if (notification.Attachments != null)
+                {
+                    foreach (var attachment in notification.Attachments)
+                    {
+                        byte[] byteArray = Encoding.UTF8.GetBytes(attachment.Content);
+                        MemoryStream stream = new MemoryStream(byteArray);
+                        mailMsg.Attachments.Add(new Attachment(stream, attachment.FileName));
+                    }
+                }
+
 
                 var login = _settingsManager.GetSettingByName(_smtpClientLoginSettingName).Value;
                 var password = _settingsManager.GetSettingByName(_smtpClientPasswordSettingName).Value;

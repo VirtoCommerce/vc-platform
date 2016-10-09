@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -101,5 +102,7 @@ namespace VirtoCommerce.Platform.Core.Notifications
 
             return result;
         }
+
+        public virtual ObservableCollection<NotificationAttachment> Attachments { get; set; }
     }
 }
