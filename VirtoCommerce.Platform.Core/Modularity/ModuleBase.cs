@@ -2,6 +2,8 @@
 {
     public abstract class ModuleBase : IModule
     {
+        public ManifestModuleInfo ModuleInfo { get; set; }
+
         public virtual void SetupDatabase()
         {
         }

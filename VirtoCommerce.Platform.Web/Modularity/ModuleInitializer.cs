@@ -2,6 +2,7 @@ using System;
 using System.Globalization;
 using Common.Logging;
 using Microsoft.Practices.ServiceLocation;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Modularity.Exceptions;
 using VirtoCommerce.Platform.Core.PushNotifications;
@@ -56,17 +57,22 @@ namespace VirtoCommerce.Platform.Web.Modularity
             if (moduleInfo == null)
                 throw new ArgumentNullException("moduleInfo");
 
-            try
+            var manifestModuleInfo = moduleInfo as ManifestModuleInfo;
+            //Do not initialize modules with errors
+            if (manifestModuleInfo.Errors.IsNullOrEmpty())
             {
-                var moduleInstance = CreateModule(moduleInfo);
-                moduleInfo.ModuleInstance = moduleInstance;
-                moduleInstance.SetupDatabase();
-                moduleInstance.Initialize();
-                moduleInfo.State = ModuleState.Initialized;
-            }
-            catch (Exception ex)
-            {
-                HandleModuleInitializationError(moduleInfo, ex);
+                try
+                {
+                    var moduleInstance = CreateModule(moduleInfo);
+                    moduleInfo.ModuleInstance = moduleInstance;
+                    moduleInstance.SetupDatabase();
+                    moduleInstance.Initialize();
+                    moduleInfo.State = ModuleState.Initialized;
+                }
+                catch (Exception ex)
+                {
+                    HandleModuleInitializationError(moduleInfo, ex);
+                }
             }
         }
 
@@ -139,7 +145,10 @@ namespace VirtoCommerce.Platform.Web.Modularity
         {
             if (moduleInfo == null)
                 throw new ArgumentNullException("moduleInfo");
-            return CreateModule(moduleInfo.ModuleType);
+            var result = CreateModule(moduleInfo.ModuleType);
+
+            result.ModuleInfo = moduleInfo as ManifestModuleInfo;
+            return result;
         }
 
         /// <summary>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Properties;
 
@@ -68,6 +69,32 @@ namespace VirtoCommerce.Platform.Web.Modularity
 
                 moduleInfo.IsInstalled = true;
                 AddModule(moduleInfo);
+            }
+        }
+
+        public override void Validate()
+        {
+
+            base.Validate();
+
+            var modules = Modules.OfType<ManifestModuleInfo>();
+            //Dependencies and platform version validation
+            foreach (var module in modules)
+            {
+                //Check platform version
+                if (!module.PlatformVersion.IsCompatibleWith(PlatformVersion.CurrentVersion))
+                {
+                    module.Errors.Add(string.Format("module platform version {0} is incompatible with current {1}", module.PlatformVersion, PlatformVersion.CurrentVersion));
+                }
+           
+                foreach (var declaredDependency in module.Dependencies)
+                {
+                    var installedDependency = modules.First(x => x.Id.EqualsInvariant(declaredDependency.Id));
+                    if (!declaredDependency.Version.IsCompatibleWithBySemVer(installedDependency.Version))
+                    {
+                        module.Errors.Add(string.Format("module dependency {0} is incompatible with installed {1}", declaredDependency, installedDependency.Version));
+                    }
+                }        
             }
         }
 

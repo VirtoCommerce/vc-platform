@@ -214,8 +214,9 @@ namespace VirtoCommerce.Platform.Web
                 }
             });
 
+            //Get initialized modules list sorted by dependency order
             var postInitializeModules = moduleCatalog.CompleteListWithDependencies(moduleCatalog.Modules.OfType<ManifestModuleInfo>())
-                .Where(m => m.ModuleInstance != null)
+                .Where(m => m.ModuleInstance != null && m.State == ModuleState.Initialized)
                 .ToArray();
 
             foreach (var module in postInitializeModules)
