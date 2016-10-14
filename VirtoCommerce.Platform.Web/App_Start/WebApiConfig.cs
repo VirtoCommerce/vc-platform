@@ -8,6 +8,8 @@ using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Web.Security;
+using System.Web.Http.ExceptionHandling;
+using VirtoCommerce.Platform.Web.App_Start;
 
 namespace VirtoCommerce.Platform.Web
 {
@@ -46,6 +48,8 @@ namespace VirtoCommerce.Platform.Web
             // For more information, visit http://go.microsoft.com/fwlink/?LinkId=279712.
             //config.EnableQuerySupport();
             config.AddODataQueryFilter();
-        }
+
+			config.Services.Replace(typeof(IExceptionHandler), new AiExceptionLogger());
+		}
     }
 }
