@@ -56,6 +56,7 @@ using VirtoCommerce.Platform.Web.SignalR;
 using VirtoCommerce.Platform.Web.Swagger;
 using WebGrease.Extensions;
 using GlobalConfiguration = System.Web.Http.GlobalConfiguration;
+using Microsoft.ApplicationInsights.Extensibility;
 
 [assembly: OwinStartup(typeof(Startup))]
 
@@ -229,9 +230,17 @@ namespace VirtoCommerce.Platform.Web
             GlobalHost.DependencyResolver.Register(typeof(IPerformanceCounterManager), () => tempCounterManager);
             var hubConfiguration = new HubConfiguration { EnableJavaScriptProxies = false };
             app.MapSignalR("/" + moduleInitializerOptions.RoutePrefix + "signalr", hubConfiguration);
-        }
 
-        private static Assembly CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs args)
+			// Initialize InstrumentationKey from EnvironmentVariable("APPINSIGHTS_INSTRUMENTATIONKEY")
+			var appInsightKey = Environment.GetEnvironmentVariable("APPINSIGHTS_INSTRUMENTATIONKEY");
+
+			if (!string.IsNullOrEmpty(appInsightKey))
+			{
+				TelemetryConfiguration.Active.InstrumentationKey = appInsightKey;
+			}
+		}
+
+		private static Assembly CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs args)
         {
             Assembly assembly = null;
 

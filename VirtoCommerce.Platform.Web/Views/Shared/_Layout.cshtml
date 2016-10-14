@@ -17,6 +17,7 @@
     <meta name="viewport" content="width=device-width" />
     <base href="~/" />
 	@Html.Partial("_FacebookTrackerPartial")
+    @Html.Partial("_AppInsightsPartial")
 </head>
 <body ng-class="{'has-demo-warning' : demoResetTime, 'lang-rtl': isRTL}" ng-controller="platformWebApp.appCtrl" ng-init="platformVersion ='@(Model.PlatformVersion)'; demoCredentials = @(Model.DemoCredentials); demoResetTime = @(Model.DemoResetTime);">
   
