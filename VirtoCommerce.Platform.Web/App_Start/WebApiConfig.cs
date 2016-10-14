@@ -49,7 +49,7 @@ namespace VirtoCommerce.Platform.Web
             //config.EnableQuerySupport();
             config.AddODataQueryFilter();
 
-			config.Services.Replace(typeof(IExceptionHandler), new AiExceptionLogger());
+			config.Services.Replace(typeof(IExceptionHandler), new AiExceptionHandler());
 		}
     }
 }

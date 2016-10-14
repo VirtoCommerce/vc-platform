@@ -336,7 +336,7 @@
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="ApplicationOAuthProvider.cs" />
-    <Compile Include="App_Start\AiExceptionLogger.cs" />
+    <Compile Include="App_Start\AiExceptionHandler.cs" />
     <Compile Include="App_Start\AuthConfig.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
