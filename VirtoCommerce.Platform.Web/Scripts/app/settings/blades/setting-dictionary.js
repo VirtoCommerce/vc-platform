@@ -5,18 +5,15 @@
     var currentEntities;
 
     blade.refresh = function (parentRefresh) {
-        if (blade.isApiSave) {
-            settings.get({ id: blade.currentEntityId }, function (setting) {
-                if (parentRefresh && blade.parentRefresh) {
-                    blade.parentRefresh(setting.arrayValues);
-                }
+        settings.get({ id: blade.currentEntityId }, function (setting) {
+            if (parentRefresh && blade.parentRefresh) {
+                blade.parentRefresh(setting.arrayValues);
+            }
 
-                setting.arrayValues = _.map(setting.arrayValues, function (x) { return { value: x }; });
-                blade.origEntity = angular.copy(setting.arrayValues);
-                initializeBlade(setting);
-            },
-            function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
-        }
+            setting.arrayValues = _.map(setting.arrayValues, function (x) { return { value: x }; });
+            blade.origEntity = angular.copy(setting.arrayValues);
+            initializeBlade(setting);
+        });
     }
 
     function initializeBlade(data) {
@@ -107,6 +104,14 @@
             },
             canExecuteMethod: isDirty,
         });
+        blade.refresh();
+    } else {
+        $scope.$watch('blade.parentBlade.currentEntities', function (data) {
+            if (data) {
+                var allEntities = _.flatten(_.map(data, _.values));
+                initializeBlade(_.findWhere(allEntities, { name: blade.currentEntityId }));
+            }
+        });
     }
 
     $scope.checkAll = function () {
@@ -124,30 +129,22 @@
     }
 
     function deleteChecked() {
-        var dialog = {
-            id: "confirmDeleteItem",
-            title: "platform.dialogs.settings-value-delete.title",
-            message: "platform.dialogs.settings-value-delete.message",
-            callback: function (remove) {
-                if (remove) {
-                    var selection = _.where(currentEntities, { _selected: true });
-                    angular.forEach(selection, function (listItem) {
-                        $scope.delete(currentEntities.indexOf(listItem));
-                    });
-                }
-            }
-        }
-        dialogService.showConfirmationDialog(dialog);
+        //var dialog = {
+        //    id: "confirmDeleteItem",
+        //    title: "platform.dialogs.settings-value-delete.title",
+        //    message: "platform.dialogs.settings-value-delete.message",
+        //    callback: function (remove) {
+        //        if (remove) {
+        var selection = _.where(currentEntities, { _selected: true });
+        angular.forEach(selection, function (listItem) {
+            $scope.delete(currentEntities.indexOf(listItem));
+        });
+        //        }
+        //    }
+        //}
+        //dialogService.showConfirmationDialog(dialog);
     }
-
-    $scope.$watch('blade.parentBlade.currentEntities', function (data) {
-        if (data) {
-            var allEntities = _.flatten(_.map(data, _.values));
-            initializeBlade(_.findWhere(allEntities, { name: blade.currentEntityId }));
-        }
-    });
 
     // on load
     resetNewValue();
-    blade.refresh();
 }]);

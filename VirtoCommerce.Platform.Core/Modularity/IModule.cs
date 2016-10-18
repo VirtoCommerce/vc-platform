@@ -6,6 +6,11 @@ namespace VirtoCommerce.Platform.Core.Modularity
     public interface IModule
     {
         /// <summary>
+        /// Contain module manifest information
+        /// </summary>
+        ManifestModuleInfo ModuleInfo { get; set; }
+
+        /// <summary>
         /// Allows module to configure database.
         /// This method is called before Initialize().
         /// </summary>

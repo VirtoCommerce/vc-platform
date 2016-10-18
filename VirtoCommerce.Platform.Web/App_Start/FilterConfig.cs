@@ -2,6 +2,7 @@
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using System.Web.Mvc;
+using VirtoCommerce.Platform.Web.Controllers;
 
 namespace VirtoCommerce.Platform.Web
 {
@@ -10,7 +11,9 @@ namespace VirtoCommerce.Platform.Web
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
             filters.Add(new HandleErrorAttribute());
-            System.Web.Http.GlobalConfiguration.Configuration.Filters.Add(new ResponseTimeHeaderFilter());
+			filters.Add(new AiHandleErrorAttribute());
+
+			System.Web.Http.GlobalConfiguration.Configuration.Filters.Add(new ResponseTimeHeaderFilter());
         }
     }
     /// <summary>

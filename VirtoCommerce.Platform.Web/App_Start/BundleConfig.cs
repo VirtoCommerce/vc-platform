@@ -55,6 +55,7 @@ namespace VirtoCommerce.Platform.Web
             var moduleCatalog = ServiceLocator.Current.GetInstance<IModuleCatalog>();
             var allModules = moduleCatalog.Modules.OfType<ManifestModuleInfo>().ToArray();
             var manifestModules = moduleCatalog.CompleteListWithDependencies(allModules)
+                .Where(x => x.State == ModuleState.Initialized)
                 .OfType<ManifestModuleInfo>()
                 .ToArray();
 
