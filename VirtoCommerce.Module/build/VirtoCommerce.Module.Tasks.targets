@@ -415,88 +415,95 @@ Copyright (C) Microsoft Corporation. All rights reserved.
             <VCModulePackagePath>$(VCModulesZipDir)\$(VCModuleId)_$(VCModuleVersion).zip</VCModulePackagePath>
         </PropertyGroup>
 
-        <ItemGroup>
-            <Link Include="$(WebProjectOutputDir)\bin\**\*.*"
-                  Exclude="
-                  $(WebProjectOutputDir)\bin\CacheManager.Core.dll;
-                  $(WebProjectOutputDir)\bin\CacheManager.Core.xml;
-                  $(WebProjectOutputDir)\bin\Common.Logging.dll;
-                  $(WebProjectOutputDir)\bin\Common.Logging.xml;
-                  $(WebProjectOutputDir)\bin\Common.Logging.Core.dll;
-                  $(WebProjectOutputDir)\bin\Common.Logging.Core.xml;
-                  $(WebProjectOutputDir)\bin\EntityFramework.dll;
-                  $(WebProjectOutputDir)\bin\EntityFramework.xml;
-                  $(WebProjectOutputDir)\bin\EntityFramework.SqlServer.dll;
-                  $(WebProjectOutputDir)\bin\EntityFramework.SqlServer.xml;
-                  $(WebProjectOutputDir)\bin\Hangfire.Core.dll;
-                  $(WebProjectOutputDir)\bin\Hangfire.Core.xml;
-                  $(WebProjectOutputDir)\bin\Microsoft.AspNet.Identity.Core.dll;
-                  $(WebProjectOutputDir)\bin\Microsoft.AspNet.Identity.Core.xml;
-                  $(WebProjectOutputDir)\bin\Microsoft.AspNet.Identity.EntityFramework.dll;
-                  $(WebProjectOutputDir)\bin\Microsoft.AspNet.Identity.EntityFramework.xml;
-                  $(WebProjectOutputDir)\bin\Microsoft.AspNet.Identity.Owin.dll;
-                  $(WebProjectOutputDir)\bin\Microsoft.AspNet.Identity.Owin.xml;
-                  $(WebProjectOutputDir)\bin\Microsoft.Data.Edm.dll;
-                  $(WebProjectOutputDir)\bin\Microsoft.Data.Edm.xml;
-                  $(WebProjectOutputDir)\bin\**\Microsoft.Data.Edm.resources.dll;
-                  $(WebProjectOutputDir)\bin\Microsoft.Data.OData.dll;
-                  $(WebProjectOutputDir)\bin\Microsoft.Data.OData.xml;
-                  $(WebProjectOutputDir)\bin\**\Microsoft.Data.OData.resources.dll;
-                  $(WebProjectOutputDir)\bin\Microsoft.Data.Services.Client.dll;
-                  $(WebProjectOutputDir)\bin\Microsoft.Data.Services.Client.xml;
-                  $(WebProjectOutputDir)\bin\**\Microsoft.Data.Services.Client.resources.dll;
-                  $(WebProjectOutputDir)\bin\Microsoft.Owin.dll;
-                  $(WebProjectOutputDir)\bin\Microsoft.Owin.xml;
-                  $(WebProjectOutputDir)\bin\Microsoft.Owin.Security.dll;
-                  $(WebProjectOutputDir)\bin\Microsoft.Owin.Security.xml;
-                  $(WebProjectOutputDir)\bin\Microsoft.Owin.Security.Cookies.dll;
-                  $(WebProjectOutputDir)\bin\Microsoft.Owin.Security.Cookies.xml;
-                  $(WebProjectOutputDir)\bin\Microsoft.Owin.Security.OAuth.dll;
-                  $(WebProjectOutputDir)\bin\Microsoft.Owin.Security.OAuth.xml;
-                  $(WebProjectOutputDir)\bin\Microsoft.Practices.ServiceLocation.dll;
-                  $(WebProjectOutputDir)\bin\Microsoft.Practices.ServiceLocation.xml;
-                  $(WebProjectOutputDir)\bin\Microsoft.Practices.Unity.dll;
-                  $(WebProjectOutputDir)\bin\Microsoft.Practices.Unity.xml;
-                  $(WebProjectOutputDir)\bin\Microsoft.Practices.Unity.Configuration.dll;
-                  $(WebProjectOutputDir)\bin\Microsoft.Practices.Unity.Configuration.xml;
-                  $(WebProjectOutputDir)\bin\Microsoft.Practices.Unity.RegistrationByConvention.dll;
-                  $(WebProjectOutputDir)\bin\Microsoft.Practices.Unity.RegistrationByConvention.xml;
-                  $(WebProjectOutputDir)\bin\Microsoft.WindowsAzure.Configuration.dll;
-                  $(WebProjectOutputDir)\bin\Microsoft.WindowsAzure.Configuration.xml;
-                  $(WebProjectOutputDir)\bin\Microsoft.WindowsAzure.Storage.dll;
-                  $(WebProjectOutputDir)\bin\Microsoft.WindowsAzure.Storage.xml;
-                  $(WebProjectOutputDir)\bin\Newtonsoft.Json.dll;
-                  $(WebProjectOutputDir)\bin\Newtonsoft.Json.xml;
-                  $(WebProjectOutputDir)\bin\Omu.ValueInjecter.dll;
-                  $(WebProjectOutputDir)\bin\Omu.ValueInjecter.xml;
-                  $(WebProjectOutputDir)\bin\Owin.dll;
-                  $(WebProjectOutputDir)\bin\Owin.xml;
-                  $(WebProjectOutputDir)\bin\System.Net.Http.Formatting.dll;
-                  $(WebProjectOutputDir)\bin\System.Net.Http.Formatting.xml;
-                  $(WebProjectOutputDir)\bin\System.Spatial.dll;
-                  $(WebProjectOutputDir)\bin\System.Spatial.xml;
-                  $(WebProjectOutputDir)\bin\**\System.Spatial.resources.dll;
-                  $(WebProjectOutputDir)\bin\System.Web.Http.dll;
-                  $(WebProjectOutputDir)\bin\System.Web.Http.xml;
+        <ReadLinesFromFile File="module.ignore" >
+            <Output TaskParameter="Lines" ItemName="ExcludeFiles" />
+        </ReadLinesFromFile>
 
-                  $(WebProjectOutputDir)\bin\VirtoCommerce.Platform.Core.dll;
-                  $(WebProjectOutputDir)\bin\VirtoCommerce.Platform.Core.xml;
-                  $(WebProjectOutputDir)\bin\VirtoCommerce.Platform.Core.Web.dll;
-                  $(WebProjectOutputDir)\bin\VirtoCommerce.Platform.Core.Web.xml;
-                  $(WebProjectOutputDir)\bin\VirtoCommerce.Platform.Data.dll;
-                  $(WebProjectOutputDir)\bin\VirtoCommerce.Platform.Data.xml;
-                  $(WebProjectOutputDir)\bin\VirtoCommerce.Platform.Data.Azure.dll;
-                  $(WebProjectOutputDir)\bin\VirtoCommerce.Platform.Data.Azure.xml;
-                  $(WebProjectOutputDir)\bin\VirtoCommerce.Platform.Data.Notifications.dll;
-                  $(WebProjectOutputDir)\bin\VirtoCommerce.Platform.Data.Notifications.xml;
-                  $(WebProjectOutputDir)\bin\VirtoCommerce.Platform.Data.Security.dll;
-                  $(WebProjectOutputDir)\bin\VirtoCommerce.Platform.Data.Security.xml;
-                  $(WebProjectOutputDir)\bin\VirtoCommerce.Platform.Data.Serialization.dll;
-                  $(WebProjectOutputDir)\bin\VirtoCommerce.Platform.Data.Serialization.xml;
+        <ItemGroup>
+            <ExcludeFiles Include="
+                  CacheManager.Core.dll;
+                  CacheManager.Core.xml;
+                  Common.Logging.dll;
+                  Common.Logging.xml;
+                  Common.Logging.Core.dll;
+                  Common.Logging.Core.xml;
+                  EntityFramework.dll;
+                  EntityFramework.xml;
+                  EntityFramework.SqlServer.dll;
+                  EntityFramework.SqlServer.xml;
+                  Hangfire.Core.dll;
+                  Hangfire.Core.xml;
+                  Microsoft.AspNet.Identity.Core.dll;
+                  Microsoft.AspNet.Identity.Core.xml;
+                  Microsoft.AspNet.Identity.EntityFramework.dll;
+                  Microsoft.AspNet.Identity.EntityFramework.xml;
+                  Microsoft.AspNet.Identity.Owin.dll;
+                  Microsoft.AspNet.Identity.Owin.xml;
+                  Microsoft.Data.Edm.dll;
+                  Microsoft.Data.Edm.xml;
+                  **\Microsoft.Data.Edm.resources.dll;
+                  Microsoft.Data.OData.dll;
+                  Microsoft.Data.OData.xml;
+                  **\Microsoft.Data.OData.resources.dll;
+                  Microsoft.Data.Services.Client.dll;
+                  Microsoft.Data.Services.Client.xml;
+                  **\Microsoft.Data.Services.Client.resources.dll;
+                  Microsoft.Owin.dll;
+                  Microsoft.Owin.xml;
+                  Microsoft.Owin.Security.dll;
+                  Microsoft.Owin.Security.xml;
+                  Microsoft.Owin.Security.Cookies.dll;
+                  Microsoft.Owin.Security.Cookies.xml;
+                  Microsoft.Owin.Security.OAuth.dll;
+                  Microsoft.Owin.Security.OAuth.xml;
+                  Microsoft.Practices.ServiceLocation.dll;
+                  Microsoft.Practices.ServiceLocation.xml;
+                  Microsoft.Practices.Unity.dll;
+                  Microsoft.Practices.Unity.xml;
+                  Microsoft.Practices.Unity.Configuration.dll;
+                  Microsoft.Practices.Unity.Configuration.xml;
+                  Microsoft.Practices.Unity.RegistrationByConvention.dll;
+                  Microsoft.Practices.Unity.RegistrationByConvention.xml;
+                  Microsoft.WindowsAzure.Configuration.dll;
+                  Microsoft.WindowsAzure.Configuration.xml;
+                  Microsoft.WindowsAzure.Storage.dll;
+                  Microsoft.WindowsAzure.Storage.xml;
+                  Newtonsoft.Json.dll;
+                  Newtonsoft.Json.xml;
+                  Omu.ValueInjecter.dll;
+                  Omu.ValueInjecter.xml;
+                  Owin.dll;
+                  Owin.xml;
+                  System.Net.Http.Formatting.dll;
+                  System.Net.Http.Formatting.xml;
+                  System.Spatial.dll;
+                  System.Spatial.xml;
+                  **\System.Spatial.resources.dll;
+                  System.Web.Http.dll;
+                  System.Web.Http.xml;
+
+                  VirtoCommerce.Platform.Core.dll;
+                  VirtoCommerce.Platform.Core.xml;
+                  VirtoCommerce.Platform.Core.Web.dll;
+                  VirtoCommerce.Platform.Core.Web.xml;
+                  VirtoCommerce.Platform.Data.dll;
+                  VirtoCommerce.Platform.Data.xml;
+                  VirtoCommerce.Platform.Data.Azure.dll;
+                  VirtoCommerce.Platform.Data.Azure.xml;
+                  VirtoCommerce.Platform.Data.Notifications.dll;
+                  VirtoCommerce.Platform.Data.Notifications.xml;
+                  VirtoCommerce.Platform.Data.Security.dll;
+                  VirtoCommerce.Platform.Data.Security.xml;
+                  VirtoCommerce.Platform.Data.Serialization.dll;
+                  VirtoCommerce.Platform.Data.Serialization.xml;
                   " />
         </ItemGroup>
 
-        <Zip Files="@(Content);@(Link)" WorkingDirectory="$(WebProjectOutputDir)" ZipFileName="$(VCModulePackagePath)" ZipLevel="9" />
+        <ItemGroup>
+            <BinFiles Include="$(WebProjectOutputDir)\bin\**\*.*" Exclude="@(ExcludeFiles -> '$(WebProjectOutputDir)\bin\%(Identity)')" />
+        </ItemGroup>
+
+        <Zip Files="@(Content);@(BinFiles)" WorkingDirectory="$(WebProjectOutputDir)" ZipFileName="$(VCModulePackagePath)" ZipLevel="9" />
         <Message Text="Created module package: $(VCModulePackagePath)" Importance="high" />
     </Target>
 </Project>
