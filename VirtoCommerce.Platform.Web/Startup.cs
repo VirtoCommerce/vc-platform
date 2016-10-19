@@ -13,6 +13,7 @@ using System.Web.Routing;
 using CacheManager.Core;
 using Common.Logging;
 using Hangfire;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Infrastructure;
@@ -56,7 +57,6 @@ using VirtoCommerce.Platform.Web.SignalR;
 using VirtoCommerce.Platform.Web.Swagger;
 using WebGrease.Extensions;
 using GlobalConfiguration = System.Web.Http.GlobalConfiguration;
-using Microsoft.ApplicationInsights.Extensibility;
 
 [assembly: OwinStartup(typeof(Startup))]
 
@@ -231,16 +231,16 @@ namespace VirtoCommerce.Platform.Web
             var hubConfiguration = new HubConfiguration { EnableJavaScriptProxies = false };
             app.MapSignalR("/" + moduleInitializerOptions.RoutePrefix + "signalr", hubConfiguration);
 
-			// Initialize InstrumentationKey from EnvironmentVariable("APPINSIGHTS_INSTRUMENTATIONKEY")
-			var appInsightKey = Environment.GetEnvironmentVariable("APPINSIGHTS_INSTRUMENTATIONKEY");
+            // Initialize InstrumentationKey from EnvironmentVariable("APPINSIGHTS_INSTRUMENTATIONKEY")
+            var appInsightKey = Environment.GetEnvironmentVariable("APPINSIGHTS_INSTRUMENTATIONKEY");
 
-			if (!string.IsNullOrEmpty(appInsightKey))
-			{
-				TelemetryConfiguration.Active.InstrumentationKey = appInsightKey;
-			}
-		}
+            if (!string.IsNullOrEmpty(appInsightKey))
+            {
+                TelemetryConfiguration.Active.InstrumentationKey = appInsightKey;
+            }
+        }
 
-		private static Assembly CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs args)
+        private static Assembly CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs args)
         {
             Assembly assembly = null;
 
@@ -476,7 +476,8 @@ namespace VirtoCommerce.Platform.Web
 
             #region Modularity
 
-            var externalModuleCatalog = new ExternalManifestModuleCatalog(moduleCatalog.Modules, ConfigurationManager.AppSettings.GetValues("VirtoCommerce:ModulesDataSources"), container.Resolve<ILog>());
+            var modulesDataSources = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:ModulesDataSources", string.Empty).Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+            var externalModuleCatalog = new ExternalManifestModuleCatalog(moduleCatalog.Modules, modulesDataSources, container.Resolve<ILog>());
             container.RegisterType<ModulesController>(new InjectionConstructor(externalModuleCatalog, new ModuleInstaller(modulesPath, externalModuleCatalog), notifier, container.Resolve<IUserNameResolver>(), settingsManager));
 
             #endregion
