@@ -64,12 +64,14 @@
                     "multivalue": "Multivalue",
                     "multilingual": "Multilingual",
                     "dictionary": "Dictionary",
+                    "description": "Description",
                     "display-name": "Display name",
                     "value-type": "Value Type",
                     "dictionary-values": "Dictionary values",
                     "manage-dictionary": "Manage dictionary"
                 },
                 "placeholders": {
+                    "description": "Enter property description",
                     "display-name": "Enter display name..."
                 },
                 "validations": {
