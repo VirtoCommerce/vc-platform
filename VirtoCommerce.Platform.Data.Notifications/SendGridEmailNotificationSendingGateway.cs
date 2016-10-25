@@ -1,6 +1,8 @@
 ﻿using System;
+using System.IO;
 using System.Net;
 using System.Net.Mail;
+using System.Text;
 using System.Threading.Tasks;
 using Exceptions;
 using SendGrid;
@@ -34,7 +36,15 @@ namespace VirtoCommerce.Platform.Data.Notifications
             mail.AddTo(notification.Recipient);
             mail.Subject = notification.Subject;
             mail.Html = notification.Body;
-
+            if (notification.Attachments != null)
+            {
+                foreach (var attachment in notification.Attachments)
+                {
+                    byte[] byteArray = Encoding.UTF8.GetBytes(attachment.Content);
+                    MemoryStream stream = new MemoryStream(byteArray);
+                    mail.AddAttachment(stream, attachment.FileName);
+                }
+            }
             var userName = _settingsManager.GetSettingByName(_sendGridUserNameSettingName).Value;
             var password = _settingsManager.GetSettingByName(_sendGridPasswordSettingName).Value;
 
