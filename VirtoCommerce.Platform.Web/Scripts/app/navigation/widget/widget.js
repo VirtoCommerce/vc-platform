@@ -27,11 +27,12 @@
         link: function (scope, element, attr) {
             if (!scope.gridsterOpts) { scope.gridsterOpts = {}; }
             scope.$storage = $localStorage;
-            
+
             scope.$watch('gridsterOpts', function () {
-                scope.widgets = _.filter(widgetService.widgetsMap[scope.group], function (w) { return !angular.isFunction(w.isVisible) || w.isVisible(scope.blade); });
+                var groupWidgets = _.filter(widgetService.widgetsMap[scope.group], function (w) { return !angular.isFunction(w.isVisible) || w.isVisible(scope.blade); });
+                scope.widgets = angular.copy(groupWidgets);
                 angular.forEach(scope.widgets, function (w) {
-                	w.blade = scope.blade;
+                    w.blade = scope.blade;
                     w.widgetsInContainer = scope.widgets;
                 });
             }, true);
@@ -43,17 +44,16 @@
     }
 }])
 .directive('vaWidget', ['$compile', 'platformWebApp.widgetService', 'platformWebApp.authService', function ($compile, widgetService, authService) {
-	return {
-		link: function (scope, element, attr) {
+    return {
+        link: function (scope, element, attr) {
 
-			if(!scope.widget.permission || authService.checkPermission(scope.widget.permission))
-			{
-				element.attr('ng-controller', scope.widget.controller);
-				element.attr('ng-model', 'widget');
-				element.removeAttr("va-widget");
-				$compile(element)(scope);
-			}
-		
+            if (!scope.widget.permission || authService.checkPermission(scope.widget.permission)) {
+                element.attr('ng-controller', scope.widget.controller);
+                element.attr('ng-model', 'widget');
+                element.removeAttr("va-widget");
+                $compile(element)(scope);
+            }
+
         }
     }
 }]);

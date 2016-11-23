@@ -222,6 +222,10 @@
     <Compile Include="Repositories\Migrations\201607111016388_AddSenderAndRecipient.Designer.cs">
       <DependentUpon>201607111016388_AddSenderAndRecipient.cs</DependentUpon>
     </Compile>
+    <Compile Include="Repositories\Migrations\201610251133362_DynamicPropertyAddDescription.cs" />
+    <Compile Include="Repositories\Migrations\201610251133362_DynamicPropertyAddDescription.Designer.cs">
+      <DependentUpon>201610251133362_DynamicPropertyAddDescription.cs</DependentUpon>
+    </Compile>
     <Compile Include="Repositories\Migrations\Configuration.cs" />
     <Compile Include="Repositories\PlatformDatabaseInitializer.cs" />
     <Compile Include="Repositories\PlatformRepository.cs" />
@@ -304,6 +308,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Repositories\Migrations\201607111016388_AddSenderAndRecipient.resx">
       <DependentUpon>201607111016388_AddSenderAndRecipient.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Repositories\Migrations\201610251133362_DynamicPropertyAddDescription.resx">
+      <DependentUpon>201610251133362_DynamicPropertyAddDescription.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

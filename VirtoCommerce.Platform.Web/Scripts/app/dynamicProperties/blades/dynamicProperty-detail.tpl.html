@@ -6,7 +6,7 @@
                 <div ng-init="setForm(formScope)">
                     <label class="form-label" for="">{{ 'platform.blades.dynamicProperty-detail.labels.property-name' | translate }}</label>
                     <div class="form-input">
-                        <input focus-on="" required class="form-control" ng-model="blade.currentEntity.name" />
+                        <input focus-on="" required ng-model="blade.currentEntity.name" placeholder="{{ 'platform.genericValueInput.placeholders.short-text' | translate}}" />
                     </div>
                 </div>
                 <div class="form-group">
@@ -43,10 +43,16 @@
                     <div class="error" ng-if="formScope.dictFlag.$invalid">{{ 'platform.blades.dynamicProperty-detail.validations.dictionary' | translate }}</div>
                 </div>
                 <div class="form-group">
+                    <label class="form-label" for="">{{ 'platform.blades.dynamicProperty-detail.labels.description' | translate }}</label>
+                    <div class="form-input">
+                        <input ng-model="blade.currentEntity.description" placeholder="{{ 'platform.blades.dynamicProperty-detail.placeholders.description' | translate}}" />
+                    </div>
+                </div>
+                <div class="form-group">
                     <label class="form-label" for="">{{ 'platform.blades.dynamicProperty-detail.labels.display-name' | translate }}</label>
                     <div class="form-input __langs" ng-repeat="data in blade.currentEntity.displayNames | orderBy: 'locale'">
                         <span class="flag flag-{{data.locale.substr(3).toLowerCase()}}"></span>
-                        <input ng-model="data.name" placeholder="{{ 'platform.blades.dynamicProperty-detail.placeholders.display-name' | translate }}" class="form-control" />
+                        <input ng-model="data.name" placeholder="{{ 'platform.blades.dynamicProperty-detail.placeholders.display-name' | translate }}" />
                     </div>
                 </div>
             </form>

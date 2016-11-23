@@ -8,6 +8,10 @@ namespace VirtoCommerce.Platform.Core.DynamicProperties
     public class DynamicProperty : AuditableEntity
     {
         public string Name { get; set; }
+        /// <summary>
+        /// dynamic property description
+        /// </summary>
+        public string Description { get; set; }
         public string ObjectType { get; set; }
         /// <summary>
         /// Defines whether a property supports multiple values.
@@ -46,6 +50,7 @@ namespace VirtoCommerce.Platform.Core.DynamicProperties
                 CreatedBy = CreatedBy,
                 ModifiedBy = ModifiedBy,
                 Name = Name,
+                Description = Description,
                 ObjectType = ObjectType,
                 IsArray = IsArray,
                 IsDictionary = IsDictionary,

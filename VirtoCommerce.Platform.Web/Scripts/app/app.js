@@ -110,7 +110,7 @@ angular.module('platformWebApp', AppDependencies).
     };
 })
 .config(
-  ['$stateProvider', '$httpProvider', 'uiSelectConfig', 'datepickerConfig', '$translateProvider', function ($stateProvider, $httpProvider, uiSelectConfig, datepickerConfig, $translateProvider) {
+  ['$stateProvider', '$httpProvider', 'uiSelectConfig', 'datepickerConfig', '$translateProvider', '$compileProvider', function ($stateProvider, $httpProvider, uiSelectConfig, datepickerConfig, $translateProvider, $compileProvider) {
       $stateProvider.state('workspace', {
           url: '/workspace',
           templateUrl: '$(Platform)/Scripts/app/workspace.tpl.html'
@@ -131,6 +131,10 @@ angular.module('platformWebApp', AppDependencies).
         .preferredLanguage('en')
         .fallbackLanguage('en')
         .useLocalStorage();
+
+      // Disable Debug Data in DOM ("significant performance boost").
+      // Comment the following line while debugging or execute this in browser console: angular.reloadWithDebugInfo();
+      $compileProvider.debugInfoEnabled(false);
   }])
 
 .run(
