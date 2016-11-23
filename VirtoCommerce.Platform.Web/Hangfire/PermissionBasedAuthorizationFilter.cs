@@ -8,7 +8,7 @@ using VirtoCommerce.Platform.Core.Web.Security;
 namespace VirtoCommerce.Platform.Web.Hangfire
 {
     [CLSCompliant(false)]
-    public class PermissionBasedAuthorizationFilter : CheckPermissionAttribute, IAuthorizationFilter
+    public class PermissionBasedAuthorizationFilter : CheckPermissionAttribute, IDashboardAuthorizationFilter
     {
         private readonly ISecurityService _securityService;
 
@@ -17,10 +17,10 @@ namespace VirtoCommerce.Platform.Web.Hangfire
             _securityService = securityService;
         }
 
-        public bool Authorize(IDictionary<string, object> owinEnvironment)
+        public bool Authorize(DashboardContext context)
         {
-            var context = new OwinContext(owinEnvironment);
-            var principal = context.Authentication.User;
+            var owinContext = new OwinContext(context.GetOwinEnvironment());
+            var principal = owinContext.Authentication.User;
             var isAuthorized = IsAuthorized(_securityService, principal);
             return isAuthorized;
         }

@@ -314,18 +314,11 @@ namespace VirtoCommerce.Platform.Web
                         {
                             new ModuleSetting
                             {
-                                Name = "VirtoCommerce.Platform.Notifications.SendGrid.UserName",
+                                Name = "VirtoCommerce.Platform.Notifications.SendGrid.ApiKey",
                                 ValueType = ModuleSetting.TypeString,
-                                Title = "SendGrid UserName",
-                                Description = "Your SendGrid account username"
-                            },
-                            new ModuleSetting
-                            {
-                                Name = "VirtoCommerce.Platform.Notifications.SendGrid.Secret",
-                                ValueType = ModuleSetting.TypeSecureString,
-                                Title = "SendGrid Password",
-                                Description = "Your SendGrid account password"
-                            }
+                                Title = "SendGrid API key",
+                                Description = "Your SendGrid API key"
+                            }                        
                         }
                     },
                     new ModuleSettingsGroup

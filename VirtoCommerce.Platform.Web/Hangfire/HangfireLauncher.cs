@@ -45,7 +45,7 @@ namespace VirtoCommerce.Platform.Web.Hangfire
             var dashboardOptions = new DashboardOptions
             {
                 AppPath = appPath,
-                AuthorizationFilters = authorizationFilters
+                Authorization = authorizationFilters
             };
 
             app.UseHangfireDashboard(appPath + "hangfire", dashboardOptions);
