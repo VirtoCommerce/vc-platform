@@ -90,6 +90,11 @@ namespace VirtoCommerce.Platform.Data.Azure
             var blob = container.GetBlockBlobReference(filePath);
 
             blob.Properties.ContentType = MimeTypeResolver.ResolveContentType(Path.GetFileName(filePath));
+            
+            // Leverage Browser Caching - 7days
+            // Setting Cache-Control on Azure Blobs can help reduce bandwidth and improve the performance by preventing consumers from having to continuously download resources. 
+            // More Info https://developers.google.com/speed/docs/insights/LeverageBrowserCaching
+            blob.Properties.CacheControl = "public, max-age=604800";
 
             return blob.OpenWrite();
         }
