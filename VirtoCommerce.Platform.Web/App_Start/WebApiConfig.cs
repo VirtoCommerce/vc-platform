@@ -32,7 +32,7 @@ namespace VirtoCommerce.Platform.Web
             jsonFormatter.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             jsonFormatter.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
             jsonFormatter.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
-            jsonFormatter.SerializerSettings.Converters.Add(new StringEnumConverter { CamelCaseText = true });
+            jsonFormatter.SerializerSettings.Converters.Add(new StringEnumConverter());
             jsonFormatter.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.None;
             jsonFormatter.SerializerSettings.Formatting = Formatting.Indented;
             jsonFormatter.MediaTypeMappings.Add(new RequestHeaderMapping("Accept", "text/html", StringComparison.InvariantCultureIgnoreCase, true, "application/json"));
