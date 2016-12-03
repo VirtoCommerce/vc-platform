@@ -25,6 +25,19 @@ namespace VirtoCommerce.Platform.Data.Notifications
 
         public SendNotificationResult SendNotification(Notification notification)
         {
+            return Task.Run(() => SendNotificationAsync(notification)).Result;
+        }
+
+
+        public bool ValidateNotification(Notification notification)
+        {
+            var retVal = ValidateNotificationRecipient(notification.Recipient);
+            return retVal;
+        }
+
+
+        private async Task<SendNotificationResult> SendNotificationAsync(Notification notification)
+        {
             var retVal = new SendNotificationResult();
             var apiKey = _settingsManager.GetSettingByName(_sendGridApiKeySettingName).Value;
             var sendGridClient = new SendGridAPIClient(apiKey);
@@ -37,22 +50,20 @@ namespace VirtoCommerce.Platform.Data.Notifications
 
             try
             {
-                Task.Run(async () => await sendGridClient.client.mail.send.post(mail.Get())).Wait();
-                retVal.IsSuccess = true;
+                SendGrid.CSharp.HTTP.Client.Response result = await sendGridClient.client.mail.send.post(requestBody: mail.Get());
+                retVal.IsSuccess = result.StatusCode == HttpStatusCode.Accepted;
+                if (!retVal.IsSuccess)
+                {
+                    retVal.ErrorMessage = result.StatusCode.ToString() + ":" + await result.Body.ReadAsStringAsync();
+                }
             }
             catch (Exception ex)
             {
-                retVal.ErrorMessage = ex.Message;             
+                retVal.ErrorMessage = ex.Message;
             }
-
             return retVal;
         }
 
-        public bool ValidateNotification(Notification notification)
-        {
-            var retVal = ValidateNotificationRecipient(notification.Recipient);
-            return retVal;
-        }
 
         private static bool ValidateNotificationRecipient(string recipient)
         {
