@@ -2,13 +2,13 @@
 using System.Net.Http.Formatting;
 using System.Web;
 using System.Web.Http;
+using System.Web.Http.ExceptionHandling;
 using System.Web.Http.OData.Extensions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Web.Security;
-using System.Web.Http.ExceptionHandling;
 using VirtoCommerce.Platform.Web.App_Start;
 
 namespace VirtoCommerce.Platform.Web
@@ -19,10 +19,10 @@ namespace VirtoCommerce.Platform.Web
         {
             config.Filters.Add(new CheckPermissionAttribute { Permission = PredefinedPermissions.SecurityCallApi });
 
-			config.EnableCors();
+            config.EnableCors();
 
-			// Web API routes
-			config.MapHttpAttributeRoutes();
+            // Web API routes
+            config.MapHttpAttributeRoutes();
 
             config.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
 
@@ -34,7 +34,7 @@ namespace VirtoCommerce.Platform.Web
             jsonFormatter.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
             jsonFormatter.SerializerSettings.Converters.Add(new StringEnumConverter());
             jsonFormatter.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.None;
-            jsonFormatter.SerializerSettings.Formatting = Formatting.Indented;
+            jsonFormatter.SerializerSettings.Formatting = Formatting.None;
             jsonFormatter.MediaTypeMappings.Add(new RequestHeaderMapping("Accept", "text/html", StringComparison.InvariantCultureIgnoreCase, true, "application/json"));
 
             jsonFormatter.SerializerSettings.Error += (sender, args) =>
@@ -49,7 +49,7 @@ namespace VirtoCommerce.Platform.Web
             //config.EnableQuerySupport();
             config.AddODataQueryFilter();
 
-			config.Services.Replace(typeof(IExceptionHandler), new AiExceptionHandler());
-		}
+            config.Services.Replace(typeof(IExceptionHandler), new AiExceptionHandler());
+        }
     }
 }
