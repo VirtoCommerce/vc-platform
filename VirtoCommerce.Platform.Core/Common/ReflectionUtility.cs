@@ -10,6 +10,10 @@ namespace VirtoCommerce.Platform.Core.Common
 {
 	public static class ReflectionUtility
 	{
+        private static Type[] _primitiveTypeList = new Type[]
+        {
+            typeof(decimal), typeof(DateTime), typeof(string)
+        };
 		public static IEnumerable<string> GetPropertyNames<T>(params Expression<Func<T, object>>[] propertyExpressions)
 		{
 			var retVal = new List<string>();
@@ -146,6 +150,11 @@ namespace VirtoCommerce.Platform.Core.Common
             }
             return retVal.ToArray();
         }
+        
 
+        public static bool IsTypePrimitive(this Type type)
+        {
+            return type.IsPrimitive || _primitiveTypeList.Contains(type);
+        }
     }
 }

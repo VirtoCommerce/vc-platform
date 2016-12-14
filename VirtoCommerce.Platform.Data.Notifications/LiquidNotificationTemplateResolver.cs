@@ -5,20 +5,50 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using DotLiquid;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Notifications;
 
 namespace VirtoCommerce.Platform.Data.Notifications
 {
     public class LiquidNotificationTemplateResolver : INotificationTemplateResolver
     {
+        static LiquidNotificationTemplateResolver()
+        {
+            Template.RegisterFilter(typeof(VirtoCommerce.Platform.Data.Notifications.LiquidFilters.MathFilters));
+        }
+
+        private void RegisterTypeAsDrop(Type type)
+        {
+            var allowedProperties = type.GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                                          .Select(x => x.Name)
+                                          .ToArray();
+            Template.RegisterSafeType(type, allowedProperties);
+        }
+
         public void ResolveTemplate(Notification notification)
         {
             var parameters = ResolveNotificationParameters(notification);
+
             var myDict = new Dictionary<string, object>();
 
             foreach (var parameter in parameters)
             {
-                myDict.Add(parameter.ParameterName, notification.GetType().GetProperty(parameter.ParameterName).GetValue(notification));
+                var propertyInfo = notification.GetType().GetProperty(parameter.ParameterName);
+                var propertyValue = propertyInfo.GetValue(notification);
+                if (propertyValue != null)
+                {
+                    myDict.Add(Template.NamingConvention.GetMemberName(propertyInfo.Name), propertyValue);
+                    if (!propertyInfo.PropertyType.IsTypePrimitive())
+                    {
+                        //For it is user type need to register this type as Drop in Liquid Template
+                        RegisterTypeAsDrop(propertyInfo.PropertyType);
+                        var allChildEntities = propertyValue.GetFlatObjectsListWithInterface<IEntity>();
+                        foreach (var type in allChildEntities.Select(x => x.GetType()).Distinct())
+                        {
+                            RegisterTypeAsDrop(type);
+                        }
+                    }
+                }
             }
 
             var template = notification.NotificationTemplate;
@@ -60,7 +90,7 @@ namespace VirtoCommerce.Platform.Data.Notifications
                     {
                         ParameterName = property.Name,
                         ParameterDescription = attributes.Length > 0 ? ((NotificationParameterAttribute)(attributes[0])).Description : string.Empty,
-                        ParameterCodeInView = GetLiquidCodeOfParameter(property.Name),
+                        ParameterCodeInView = "{{" + Template.NamingConvention.GetMemberName(property.Name) + "}}",
                         IsDictionary = property.PropertyType.IsAssignableFrom(typeof(IDictionary)),
                         IsArray = property.PropertyType.IsArray,
                         Type = GetParameterType(property)
@@ -69,23 +99,7 @@ namespace VirtoCommerce.Platform.Data.Notifications
             }
 
             return retVal.ToArray();
-        }
-
-        private string GetLiquidCodeOfParameter(string name)
-        {
-            var retVal = string.Empty;
-
-            var regex = new Regex(
-                @"(?<=[A-Z])(?=[A-Z][a-z])|(?<=[^A-Z])(?=[A-Z])|(?<=[A-Za-z])(?=[^A-Za-z])"
-            );
-
-            if (regex.Split(name).Length > 0)
-            {
-                retVal = "{{ " + name.ToLower() + " }}";
-            }
-
-            return retVal;
-        }
+        }    
 
         private NotificationParameterValueType GetParameterType(PropertyInfo property)
         {

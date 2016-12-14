@@ -73,6 +73,7 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="LiquidFilters\MathFilters.cs" />
     <Compile Include="SendGridEmailNotificationSendingGateway.cs" />
     <Compile Include="LiquidNotificationTemplateResolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
