@@ -28,10 +28,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
 
         private static bool IsFileResponse(ApiDescription apiDescription)
         {
-            var result = apiDescription.ParameterDescriptions.Select(x => x.ParameterDescriptor)
-                                       .Where(x => x != null)
-                                       .SelectMany(x=> x.GetCustomAttributes<SwaggerFileResponseAttribute>())
-                                       .Any();
+            var result = apiDescription.ActionDescriptor.GetCustomAttributes<SwaggerFileResponseAttribute>().Any();
             if (!result)
             {
                 result = apiDescription.ResponseDescription.ResponseType == typeof(Stream);
