@@ -3,9 +3,9 @@
   "name": "ASP.NET",
   "private": true,
   "devDependencies": {
-    "gulp": "3.9.0",
+    "gulp": "3.9.1",
     "gulp-concat": "^2.6.0",
-    "gulp-uglify": "1.2.0",
+    "gulp-uglify": "2.0.0",
     "main-bower-files": "2.9.0"
   }
 }
