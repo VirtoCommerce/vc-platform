@@ -5362,6 +5362,45 @@ tags-input .tags .tag-item {
     width: 100%;
 }
 
+/* ui grid editor */
+.ui-grid-cell-contents.ui-grid-cell-contents-hidden
+{
+    display: none;
+}
+
+.ui-grid-cell .form-editor
+{
+    height: 100%;
+    padding: 0 10px;
+    position: relative;
+}
+
+.ui-grid-cell .form-editor::after
+{
+    content: ' ';
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+}
+
+.ui-grid-cell .form-editor .form-input
+{
+    border-color: #dee9f0;
+    box-sizing: border-box;
+    padding: 5px 10px;
+}
+
+.ui-grid-cell-focus
+{
+    background: none;
+}
+
+.ui-grid-focuser:focus
+{
+    box-shadow: none;
+}
+/* ui grid editor */
+
 .ui-grid-cell.__filters .ui-grid-cell-contents {
     background: #f6f6f6;
 }
