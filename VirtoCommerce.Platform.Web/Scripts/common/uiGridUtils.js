@@ -85,7 +85,7 @@
 
                 if (!gridOptions.columnDefsGenerated && _.any(grid.rows)) {
                     var filteredColumns = _.filter(_.pairs(grid.rows[0].entity), function (x) {
-                        return x[0] !== '$$hashKey' && !_.isArray(x[1]);
+                        return !x[0].startsWith('$$') && !_.isObject(x[1]);
                     });
 
                     var allKeysFromEntity = _.map(filteredColumns, function (x) { return x[0]; });

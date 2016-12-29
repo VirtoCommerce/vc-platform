@@ -5362,41 +5362,29 @@ tags-input .tags .tag-item {
     width: 100%;
 }
 
-/* ui grid editor */
-.ui-grid-cell-contents.ui-grid-cell-contents-hidden
-{
-    display: none;
-}
+    /* ui grid editor */
+    .ui-grid-cell-contents.ui-grid-cell-contents-hidden {
+        display: none;
+    }
 
-.ui-grid-cell .form-editor
-{
-    height: 100%;
+.ui-grid-cell .form-editor {
+    height: 31px;
     padding: 0 10px;
+    margin: 14px 0;
     position: relative;
 }
 
-.ui-grid-cell .form-editor::after
-{
-    content: ' ';
-    display: inline-block;
-    height: 100%;
-    vertical-align: middle;
+    .ui-grid-cell .form-editor .form-input {
+        border-color: #dee9f0;
+        box-sizing: border-box;
+        padding: 5px 10px;
+    }
+
+.ui-grid-cell-focus {
+    background: #d9effa;
 }
 
-.ui-grid-cell .form-editor .form-input
-{
-    border-color: #dee9f0;
-    box-sizing: border-box;
-    padding: 5px 10px;
-}
-
-.ui-grid-cell-focus
-{
-    background: none;
-}
-
-.ui-grid-focuser:focus
-{
+.ui-grid-focuser:focus {
     box-shadow: none;
 }
 /* ui grid editor */

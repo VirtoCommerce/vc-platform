@@ -163,7 +163,7 @@
 				permission: blade.updatePermission
 			},
 			{
-				name: "platform.commands.delete", icon: 'fa fa-trash',
+				name: "platform.commands.delete", icon: 'fa fa-trash-o',
 				executeMethod: blade.delete,
 				canExecuteMethod: function () { return true; },
 				permission: 'platform:notification:delete'
