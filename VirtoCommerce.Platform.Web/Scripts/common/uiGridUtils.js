@@ -41,7 +41,7 @@
                         x.wasPredefined = false;
                     }
                 });
-                savedState.columns = _.reject(savedState.columns, function (x) { return x.cellTemplate && !x.wasPredefined; });
+                // savedState.columns = _.reject(savedState.columns, function (x) { return x.cellTemplate && !x.wasPredefined; }); // not sure why was this, but it rejected custom templated fields
                 gridOptions.columnDefs = _.union(gridOptions.columnDefs, savedState.columns);
             } else {
                 // mark predefined columns
@@ -57,18 +57,22 @@
                     //set gridApi on scope
                     $scope.gridApi = gridApi;
 
-                    if (savedState) {
-                        $timeout(function () {
-                            gridApi.saveState.restore($scope, savedState);
-                        }, 10);
-                    }
+                    if (gridApi.saveState) {
+                        if (savedState) {
+                            $timeout(function () {
+                                gridApi.saveState.restore($scope, savedState);
+                            }, 10);
+                        }
 
-                    gridApi.colResizable.on.columnSizeChanged($scope, saveState);
-                    gridApi.colMovable.on.columnPositionChanged($scope, saveState);
-                    gridApi.core.on.columnVisibilityChanged($scope, saveState);
-                    gridApi.core.on.sortChanged($scope, saveState);
-                    function saveState() {
-                        $localStorage['gridState:' + $scope.blade.template] = gridApi.saveState.save();
+                        if (gridApi.colResizable)
+                            gridApi.colResizable.on.columnSizeChanged($scope, saveState);
+                        if (gridApi.colMovable)
+                            gridApi.colMovable.on.columnPositionChanged($scope, saveState);
+                        gridApi.core.on.columnVisibilityChanged($scope, saveState);
+                        gridApi.core.on.sortChanged($scope, saveState);
+                        function saveState() {
+                            $localStorage['gridState:' + $scope.blade.template] = gridApi.saveState.save();
+                        }
                     }
 
                     gridApi.grid.registerDataChangeCallback(processMissingColumns, [uiGridConstants.dataChange.ROW]);
