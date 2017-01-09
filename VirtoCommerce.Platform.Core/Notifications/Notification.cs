@@ -16,6 +16,7 @@ namespace VirtoCommerce.Platform.Core.Notifications
             _notificationSendingGateway = notificationSendingGateway;
             MaxAttemptCount = 10;
             Type = GetType().Name;
+            IsActive = true;
         }
 
         public string DisplayName { get; set; }
