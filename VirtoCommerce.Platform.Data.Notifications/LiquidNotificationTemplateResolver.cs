@@ -38,7 +38,7 @@ namespace VirtoCommerce.Platform.Data.Notifications
                 if (propertyValue != null)
                 {
                     myDict.Add(Template.NamingConvention.GetMemberName(propertyInfo.Name), propertyValue);
-                    if (!propertyInfo.PropertyType.IsTypePrimitive())
+                    if (typeof(IEntity).IsAssignableFrom(propertyInfo.PropertyType))
                     {
                         //For it is user type need to register this type as Drop in Liquid Template
                         RegisterTypeAsDrop(propertyInfo.PropertyType);
@@ -91,7 +91,7 @@ namespace VirtoCommerce.Platform.Data.Notifications
                         ParameterName = property.Name,
                         ParameterDescription = attributes.Length > 0 ? ((NotificationParameterAttribute)(attributes[0])).Description : string.Empty,
                         ParameterCodeInView = "{{" + Template.NamingConvention.GetMemberName(property.Name) + "}}",
-                        IsDictionary = property.PropertyType.IsAssignableFrom(typeof(IDictionary)),
+                        IsDictionary = property.PropertyType.IsDictionary(),
                         IsArray = property.PropertyType.IsArray,
                         Type = GetParameterType(property)
                     });
@@ -99,7 +99,7 @@ namespace VirtoCommerce.Platform.Data.Notifications
             }
 
             return retVal.ToArray();
-        }    
+        }
 
         private NotificationParameterValueType GetParameterType(PropertyInfo property)
         {

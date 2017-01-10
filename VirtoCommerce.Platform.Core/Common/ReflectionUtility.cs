@@ -8,69 +8,66 @@ using System.Collections;
 
 namespace VirtoCommerce.Platform.Core.Common
 {
-	public static class ReflectionUtility
-	{
-        private static Type[] _primitiveTypeList = new Type[]
+    public static class ReflectionUtility
+    {
+
+        public static IEnumerable<string> GetPropertyNames<T>(params Expression<Func<T, object>>[] propertyExpressions)
         {
-            typeof(decimal), typeof(DateTime), typeof(string)
-        };
-		public static IEnumerable<string> GetPropertyNames<T>(params Expression<Func<T, object>>[] propertyExpressions)
-		{
-			var retVal = new List<string>();
-			foreach(var propertyExpression in propertyExpressions)
-			{
-				retVal.Add(GetPropertyName(propertyExpression));
-			}
-			return retVal;
-		}
+            var retVal = new List<string>();
+            foreach (var propertyExpression in propertyExpressions)
+            {
+                retVal.Add(GetPropertyName(propertyExpression));
+            }
+            return retVal;
+        }
 
-		public static string GetPropertyName<T>(Expression<Func<T, object>> propertyExpression)
-		{
-			string retVal = null;
-			if (propertyExpression != null)
-			{
-				var lambda = (LambdaExpression)propertyExpression;
-				MemberExpression memberExpression;
-				if (lambda.Body is UnaryExpression)
-				{
-					var unaryExpression = (UnaryExpression)lambda.Body;
-					memberExpression = (MemberExpression)unaryExpression.Operand;
-				}
-				else
-				{
-					memberExpression = (MemberExpression)lambda.Body;
-				}
-				retVal = memberExpression.Member.Name;
+        public static string GetPropertyName<T>(Expression<Func<T, object>> propertyExpression)
+        {
+            string retVal = null;
+            if (propertyExpression != null)
+            {
+                var lambda = (LambdaExpression)propertyExpression;
+                MemberExpression memberExpression;
+                if (lambda.Body is UnaryExpression)
+                {
+                    var unaryExpression = (UnaryExpression)lambda.Body;
+                    memberExpression = (MemberExpression)unaryExpression.Operand;
+                }
+                else
+                {
+                    memberExpression = (MemberExpression)lambda.Body;
+                }
+                retVal = memberExpression.Member.Name;
 
-			}
-			return retVal;
-		}
+            }
+            return retVal;
+        }
 
-		public static PropertyInfo[] FindPropertiesWithAttribute(this Type type, Type attribute)
-		{
-			PropertyInfo[] properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
-			return properties.Where(x => x.GetCustomAttributes(attribute, true).Any()).ToArray();
-		}
+        public static PropertyInfo[] FindPropertiesWithAttribute(this Type type, Type attribute)
+        {
+            PropertyInfo[] properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            return properties.Where(x => x.GetCustomAttributes(attribute, true).Any()).ToArray();
+        }
 
-		public static bool IsHaveAttribute(this PropertyInfo propertyInfo, Type attribute)
-		{
-			return propertyInfo.GetCustomAttributes(attribute, true).Any();
-		}
+        public static bool IsHaveAttribute(this PropertyInfo propertyInfo, Type attribute)
+        {
+            return propertyInfo.GetCustomAttributes(attribute, true).Any();
+        }
 
-	
-		public static Type[] GetTypeInheritanceChain(this Type type)
-		{
-			var retVal = new List<Type>();
 
-			retVal.Add(type);
-			var baseType = type.BaseType;
-			while (baseType != typeof(Entity) && baseType != typeof(object) )
-			{
-				retVal.Add(baseType);
-				baseType = baseType.BaseType;
-			}
-			return retVal.ToArray();
-		}
+        public static Type[] GetTypeInheritanceChain(this Type type)
+        {
+            var retVal = new List<Type>();
+
+            retVal.Add(type);
+            var baseType = type.BaseType;
+            while (baseType != typeof(Entity) && baseType != typeof(object))
+            {
+                retVal.Add(baseType);
+                baseType = baseType.BaseType;
+            }
+            return retVal.ToArray();
+        }
 
         public static Type[] GetTypeInheritanceChainTo(this Type type, Type toBaseType)
         {
@@ -87,23 +84,23 @@ namespace VirtoCommerce.Platform.Core.Common
         }
 
         public static bool IsDerivativeOf(this Type type, Type typeToCompare)
-		{
-			if (type == null)
-			{
-				throw new NullReferenceException();
-			}
+        {
+            if (type == null)
+            {
+                throw new NullReferenceException();
+            }
 
-			var retVal = type.BaseType != null;
-			if (retVal)
-			{
-				retVal = type.BaseType == typeToCompare;
-			}
-			if (!retVal && type.BaseType != null)
-			{
-				retVal = type.BaseType.IsDerivativeOf(typeToCompare);
-			}
-			return retVal;
-		}
+            var retVal = type.BaseType != null;
+            if (retVal)
+            {
+                retVal = type.BaseType == typeToCompare;
+            }
+            if (!retVal && type.BaseType != null)
+            {
+                retVal = type.BaseType.IsDerivativeOf(typeToCompare);
+            }
+            return retVal;
+        }
 
         public static T[] GetFlatObjectsListWithInterface<T>(this object obj, List<T> resultList = null)
         {
@@ -133,7 +130,8 @@ namespace VirtoCommerce.Platform.Core.Common
                 retVal.AddRange(objects.Where(x => x != null).SelectMany(x => x.GetFlatObjectsListWithInterface<T>(resultList)));
 
                 //Handle collection and arrays
-                var collections = properties.Select(x => x.GetValue(obj, null))
+                var collections = properties.Where(p => p.GetIndexParameters().Length == 0)
+                                            .Select(x => x.GetValue(obj, null))
                                             .Where(x => x is IEnumerable && !(x is String))
                                             .Cast<IEnumerable>();
 
@@ -150,11 +148,20 @@ namespace VirtoCommerce.Platform.Core.Common
             }
             return retVal.ToArray();
         }
-        
 
-        public static bool IsTypePrimitive(this Type type)
+        public static bool IsDictionary(this Type type)
         {
-            return type.IsPrimitive || _primitiveTypeList.Contains(type);
+            if (type == null)
+            {
+                throw new NullReferenceException("type");
+            }
+
+            var retVal = typeof(IDictionary).IsAssignableFrom(type);
+            if (!retVal)
+            {
+                retVal = type.IsGenericType && typeof(IDictionary<,>).IsAssignableFrom(type.GetGenericTypeDefinition());
+            }
+            return retVal;
         }
     }
 }
