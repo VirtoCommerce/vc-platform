@@ -99,7 +99,7 @@ namespace VirtoCommerce.Platform.Data.Notifications
             }
 
             return retVal.ToArray();
-        }    
+        }
 
         private NotificationParameterValueType GetParameterType(PropertyInfo property)
         {
