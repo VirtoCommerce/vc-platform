@@ -47,6 +47,7 @@ angular.module('platformWebApp')
             element.attr('ng-model', "blade");
             element.removeAttr("va-blade");
             $compile(element)(scope);
+            scope.blade.$scope = scope;
 
             var mainContent = $('.cnt');
             var blade = $('.blade:last', mainContent);
