@@ -416,7 +416,7 @@ namespace VirtoCommerce.Platform.Data.Security
                 {
                     return await userManager.FindByIdAsync(userId);
                 }
-            });
+            }, cacheNullValue: false);
 
             return result;
         }
@@ -431,7 +431,7 @@ namespace VirtoCommerce.Platform.Data.Security
                 {
                     return Task.Run(async () => await userManager.FindByNameAsync(userName)).Result;
                 }
-            });
+            }, cacheNullValue: false);
 
             return result;
         }
@@ -446,7 +446,7 @@ namespace VirtoCommerce.Platform.Data.Security
                 {
                     return await userManager.FindByNameAsync(userName);
                 }
-            });
+            }, cacheNullValue: false);
 
             return result;
         }
