@@ -37,7 +37,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
             {
                 EnableSwagger(module.ModuleName, httpConfiguration, container, routePrefix, xmlCommentsFilePaths, module.UseFullTypeNameInSwagger, module.ModuleInstance.GetType().Assembly);
             }
-
+           
             // Add full swagger generator
             httpConfiguration.EnableSwagger(routePrefix + "docs/{apiVersion}", c =>
             {
