@@ -1704,7 +1704,7 @@ h3 {
     background-repeat: no-repeat;
     background-size: contain;
     height: 100%;
-    margin: 0 0 0 8px;
+    margin: 0 0 0 6px;
     position: relative;
     width: 100%;
 }
@@ -1786,6 +1786,7 @@ h3 {
     color: #333;
     font-size: 14px;
     font-weight: 400;
+    vertical-align: middle;
 }
 
 .ui-grid-cell {
