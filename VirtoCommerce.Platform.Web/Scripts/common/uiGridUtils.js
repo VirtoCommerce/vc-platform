@@ -151,24 +151,19 @@
         return retVal;
     }])
 
-    // ui-grid extension service
-    .factory('platformWebApp.gridOptionsService', [function () {
+    // ui-grid extension service. Used for extension grid options from other modules
+    .factory('platformWebApp.ui-grid.extension', [function () {
         return {
-            optionMap: {},
-            removeColumnNamesMap: {},
-            addColumnsMap: {},
-            registerOptions: function (id, gridOptions, removeColumnNames, newColumns) {
-                if (!this.optionMap[id]) {
-                    this.optionMap[id] = {};
-                }
-                angular.extend(this.optionMap[id], gridOptions);
-
-                if (_.any(removeColumnNames)) {
-                    this.removeColumnNamesMap[id] = _.union(this.removeColumnNamesMap[id], removeColumnNames);
-                }
-
-                if (_.any(newColumns)) {
-                    this.addColumnsMap[id] = _.union(this.addColumnsMap[id], newColumns);
+            extensionsMap: [],
+            registerExtension : function(gridId, extensionFn)
+            {
+                this.extensionsMap[gridId] = extensionFn;
+            },
+            tryExtendGridOptions: function(gridId, gridOptions)
+            {
+                if(this.extensionsMap[gridId])
+                {
+                    this.extensionsMap[gridId](gridOptions);
                 }
             }
         };
