@@ -31,6 +31,7 @@ namespace VirtoCommerce.Platform.Web
                     //Theme UI
                     "~/Content/themes/main/css/reset.css",
                     "~/Content/themes/main/css/font-awesome.css",
+                    "~/Content/themes/main/css/google-fonts.css",
                     "~/Content/themes/main/css/base-modules.css",
                     "~/Content/themes/main/css/lang-rtl.css",
                     "~/Content/themes/main/css/project-modules.css",
