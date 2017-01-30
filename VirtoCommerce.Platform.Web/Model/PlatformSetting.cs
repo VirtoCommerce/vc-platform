@@ -14,5 +14,6 @@ namespace VirtoCommerce.Platform.Web.Model
         public MvcHtmlString PlatformVersion { get; set; }
         public MvcHtmlString DemoCredentials { get; set; }
         public MvcHtmlString DemoResetTime { get; set; }
+        public MvcHtmlString License { get; set; }
     }
 }

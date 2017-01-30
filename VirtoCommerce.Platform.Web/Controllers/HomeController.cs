@@ -14,6 +14,7 @@ namespace VirtoCommerce.Platform.Web.Controllers
             var assembly = Assembly.GetExecutingAssembly();
             var version = string.Format("{0}.{1}", assembly.GetInformationalVersion(), assembly.GetFileVersion());
             var demoCredentials = ConfigurationManager.AppSettings.GetValue<string>("VirtoCommerce:DemoCredentials", null);
+            var license = "{type:'Community deployment', name:'john doe company', expirationDate:1488102833811, hasExpired: true}";
             var resetTimeStr = ConfigurationManager.AppSettings.GetValue<string>("VirtoCommerce:DemoResetTime", null);
 
             if (!string.IsNullOrEmpty(resetTimeStr))
@@ -37,6 +38,7 @@ namespace VirtoCommerce.Platform.Web.Controllers
             {
                 PlatformVersion = new MvcHtmlString(version),
                 DemoCredentials = new MvcHtmlString(demoCredentials ?? "''"),
+                License = new MvcHtmlString(license ?? "''"),
                 DemoResetTime = new MvcHtmlString(resetTimeStr ?? "''")
             });
         }

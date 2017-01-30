@@ -375,6 +375,8 @@
     <Content Include="Content\themes\main\images\grid.png" />
     <Content Include="Scripts\ai.0.22.19-build00125.js" />
     <Content Include="Scripts\ai.0.22.19-build00125.min.js" />
+    <Content Include="Scripts\app\licensing\license-detailsDialog.js" />
+    <Content Include="Scripts\app\licensing\license-detailsDialog.tpl.html" />
     <Content Include="Scripts\common\directives\metaform.js" />
     <Content Include="Scripts\common\directives\metaform.tpl.html" />
     <Content Include="Scripts\app\setup\templates\setupWizard.tpl.html" />

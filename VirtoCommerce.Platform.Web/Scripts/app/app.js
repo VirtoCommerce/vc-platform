@@ -25,7 +25,7 @@
 ];
 
 angular.module('platformWebApp', AppDependencies).
-  controller('platformWebApp.appCtrl', ['$scope', '$window', 'platformWebApp.pushNotificationService', '$translate', '$timeout', 'platformWebApp.modules', '$state', 'platformWebApp.bladeNavigationService', function ($scope, $window, pushNotificationService, $translate, $timeout, modules, $state, bladeNavigationService) {
+  controller('platformWebApp.appCtrl', ['$scope', '$window', 'platformWebApp.pushNotificationService', '$translate', '$timeout', 'platformWebApp.modules', '$state', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', function ($scope, $window, pushNotificationService, $translate, $timeout, modules, $state, bladeNavigationService, dialogService) {
       pushNotificationService.run();
 
       $timeout(function () {
@@ -65,6 +65,14 @@ angular.module('platformWebApp', AppDependencies).
               bladeNavigationService.currentBlade.error = undefined;
           }
       });
+
+      $scope.$on('loginStatusChanged', function (event, authContext) {
+          $scope.isAuthenticated = authContext.isAuthenticated;
+      });
+
+      $scope.showLicense = function () {
+          dialogService.showDialog({ id: "licenseDetails" }, '$(Platform)/Scripts/app/licensing/license-detailsDialog.tpl.html', 'platformWebApp.licenseDetailsDialogController');
+      };
 
   }])
 // Specify SignalR server URL (application URL)
@@ -134,7 +142,7 @@ angular.module('platformWebApp', AppDependencies).
 
       // Disable Debug Data in DOM ("significant performance boost").
       // Comment the following line while debugging or execute this in browser console: angular.reloadWithDebugInfo();
-      $compileProvider.debugInfoEnabled(false);
+      //$compileProvider.debugInfoEnabled(false);
   }])
 
 .run(

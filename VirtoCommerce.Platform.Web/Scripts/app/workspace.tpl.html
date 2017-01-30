@@ -4,6 +4,7 @@
         <div class="dashboard" ng-if="$state.current.name === 'workspace'">
             <header class="dashboard-head">
                 <h1 class="dashboard-title">Virto Commerce</h1>
+                <div class="note info" ng-if="license" ng-click="showLicense()" style="cursor: pointer; width: 220px; top: 20px; position: absolute; right: 222px; white-space: normal;">Community deployment license for “[name of the company]”, expires on [date].</div>
                 <va-login-toolbar></va-login-toolbar>
             </header>
             <div class="dashboard-area">
@@ -11,6 +12,7 @@
                     <va-widget-container group="mainDashboard" gridster-opts="{columns: 6, minRows: 4}"></va-widget-container>
                 </div>
             </div>
+            <!--<div class="demo-warning" ng-if="license" ng-click="showLicense()" style="cursor: pointer; bottom: 0; top: initial;">Community deployment license for “[name of the company]”, expires on [date].</div>-->
         </div>
 
         <ui-view />

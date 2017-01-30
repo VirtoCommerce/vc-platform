@@ -30,12 +30,17 @@
     <span ng-bind-template="This is a demo VirtoCommerce Manager. This site is reset to its original state every day. The next reset will be in about"></span>
     <b ng-bind-template="{{ demoResetTime | amDifference : moment.utc() : 'minutes' | amDurationFormat : 'minutes' }}"></b>.
 </div>
+<div ng-class="{'demo-warning': license}" ng-if="isAuthenticated && (license.hasExpired || license.type === 'Community')" ng-click="showLicense()" style="cursor: pointer;">
+    <span ng-if="license.hasExpired" ng-bind="'platform.templates.licensing.expired' | translate: license"></span>
+    <span ng-if="license.type === 'Community'" ng-bind="'platform.templates.licensing.community' | translate"></span>
+
+</div>
 <div class="platform-error-bar" ng-if="platformError.title.length" ng-cloak >
-    <a class="close" ng-click="closeError()"><i class="fa fa-remove"></i> </a>   
+    <a class="close" ng-click="closeError()"><i class="fa fa-remove"></i> </a>
     <div class="error-title">
         {{ platformError.title }}
-        <a class="more" href=""  ng-click="platformError.detailVisible = !platformError.detailVisible" ng-if="!platformError.detailVisible">Show me technical details</a>
-        <a class="more" href=""  ng-click="platformError.detailVisible = !platformError.detailVisible" ng-if="platformError.detailVisible">Hide the technical details</a>
+        <a class="more" href="" ng-click="platformError.detailVisible = !platformError.detailVisible" ng-if="!platformError.detailVisible">Show me technical details</a>
+        <a class="more" href="" ng-click="platformError.detailVisible = !platformError.detailVisible" ng-if="platformError.detailVisible">Hide the technical details</a>
     </div>
     <div class="error-detail" ng-if="platformError.detailVisible" ng-bind-html="platformError.detail"></div>
 </div>

@@ -587,6 +587,10 @@
                     "end": "End"
                 }
             },
+            "licensing": {
+                "community": "Running community edition, request a commercial license.",                
+                "expired": "You license has expired on {{expirationDate | date}}, please renew."
+            },
             "modulesAutoInstallation": {
                 "labels": {
                     "module-auto-installation": "Modules auto installation",
@@ -673,6 +677,14 @@
             "dictionary-items-delete": {
                 "title": "Delete confirmation",
                 "message": "Are you sure you want to delete {{quantity}} selected dictionary item(s)?"
+            },
+            "license": {
+                "title": "Licensing",
+                "info": "<b>{{type}}</b> license for <b>{{name}}</b>, expires on <b>{{expirationDate | date}}</b>.",
+                "request-license": "Renew or upgrade your license.",
+                "code": "Activation code",
+                "code-placeholder": "Enter activation code",
+                "file": "Activate by license file"
             },
             "module-action": {
                 "title-install": "Install confirmation",
