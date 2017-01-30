@@ -406,6 +406,7 @@
     <Compile Include="Modularity\UnityBootstrapperExtension.cs" />
     <Compile Include="Modularity\UnityContainerHelper.cs" />
     <Compile Include="Modularity\UnityServiceLocatorAdapter.cs" />
+    <Compile Include="Modularity\WebClientExtensions.cs" />
     <Compile Include="PushNotifications\InMemoryPushNotificationManager.cs" />
     <Compile Include="Resources\ModularityResources.Designer.cs">
       <AutoGen>True</AutoGen>
