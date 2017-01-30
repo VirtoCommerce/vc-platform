@@ -142,7 +142,7 @@ angular.module('platformWebApp', AppDependencies).
 
       // Disable Debug Data in DOM ("significant performance boost").
       // Comment the following line while debugging or execute this in browser console: angular.reloadWithDebugInfo();
-      //$compileProvider.debugInfoEnabled(false);
+      $compileProvider.debugInfoEnabled(false);
   }])
 
 .run(
