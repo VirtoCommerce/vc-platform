@@ -20,7 +20,8 @@ namespace VirtoCommerce.Platform.Web.Swagger
                 Schema responseSchema = new Schema { format = "byte", type = "file" };
 
                 operation.responses[((int)HttpStatusCode.OK).ToString()] = new Response
-                {                
+                {
+                    description = "OK",
                     schema = responseSchema
                 };
             }

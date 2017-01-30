@@ -6,7 +6,6 @@ using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Transactions;
-using CacheManager.Core;
 using ChinhDo.Transactions;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
@@ -17,11 +16,10 @@ namespace VirtoCommerce.Platform.Web.Modularity
     public class ModuleInstaller : IModuleInstaller
     {
         private const string _packageFileExtension = ".zip";
-        private const string _packageFilePattern = "*" + _packageFileExtension;
-        private readonly IModuleCatalog _moduleCatalog;
-        private TxFileManager _txFileManager = new TxFileManager();
+        private readonly TxFileManager _txFileManager = new TxFileManager();
 
         private readonly string _modulesPath;
+        private readonly IModuleCatalog _moduleCatalog;
 
         public ModuleInstaller(string modulesPath, IModuleCatalog moduleCatalog)
         {
@@ -74,7 +72,7 @@ namespace VirtoCommerce.Platform.Web.Modularity
                 var updatableModules = modules.Where(x => installedModulesIds.Contains(x.Id));
                 var installableModules = modules.Except(updatableModules);
                 var changedModulesLog = new List<ManifestModuleInfo>();
-                using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, TransactionManager.MaximumTimeout))
+                using (var scope = new TransactionScope(TransactionScopeOption.Required, TransactionManager.MaximumTimeout))
                 {
                     try
                     {
@@ -83,7 +81,7 @@ namespace VirtoCommerce.Platform.Web.Modularity
                             Report(progress, ProgressMessageLevel.Info, "Installing '{0}'", installableModule);
                             InnerInstall(installableModule, progress);
                             changedModulesLog.Add(installableModule);
-                            installableModule.IsInstalled = true;                            
+                            installableModule.IsInstalled = true;
                         }
 
                         foreach (var newModule in updatableModules)
@@ -103,14 +101,14 @@ namespace VirtoCommerce.Platform.Web.Modularity
                         scope.Complete();
                     }
                     catch (Exception ex)
-                    {                    
+                    {
                         Report(progress, ProgressMessageLevel.Error, ex.ToString());
-                        Report(progress, ProgressMessageLevel.Error, "Rollback all changes...");  
+                        Report(progress, ProgressMessageLevel.Error, "Rollback all changes...");
                         //Revert changed modules state
-                        foreach(var changedModule in changedModulesLog)
+                        foreach (var changedModule in changedModulesLog)
                         {
                             changedModule.IsInstalled = !changedModule.IsInstalled;
-                        }                    
+                        }
                     }
                 }
             }
@@ -136,7 +134,7 @@ namespace VirtoCommerce.Platform.Web.Modularity
             if (isValid)
             {
                 var changedModulesLog = new List<ManifestModuleInfo>();
-                using (TransactionScope scope = new TransactionScope())
+                using (var scope = new TransactionScope())
                 {
                     try
                     {
@@ -158,7 +156,7 @@ namespace VirtoCommerce.Platform.Web.Modularity
                             Report(progress, ProgressMessageLevel.Info, "'{0}' uninstalled successfully.", uninstallingModule);
                             uninstallingModule.IsInstalled = false;
                             changedModulesLog.Add(uninstallingModule);
-                        }                     
+                        }
                         scope.Complete();
                     }
                     catch (Exception ex)
@@ -189,12 +187,18 @@ namespace VirtoCommerce.Platform.Web.Modularity
             //download  module archive from web
             if (Uri.IsWellFormedUriString(module.Ref, UriKind.Absolute))
             {
-                using (var client = new WebClient())
-                using (var fileStream = File.OpenWrite(moduleZipPath))
-                using (var webStream = client.OpenRead(new Uri(module.Ref)))
+                var moduleUrl = new Uri(module.Ref);
+
+                using (var webClient = new WebClient())
                 {
-                    Report(progress, ProgressMessageLevel.Info, "Downloading '{0}' ", module.Ref);
-                    webStream.CopyTo(fileStream);
+                    webClient.AddAuthorizationTokenForGitHub(moduleUrl);
+
+                    using (var fileStream = File.OpenWrite(moduleZipPath))
+                    using (var webStream = webClient.OpenRead(moduleUrl))
+                    {
+                        Report(progress, ProgressMessageLevel.Info, "Downloading '{0}' ", module.Ref);
+                        webStream.CopyTo(fileStream);
+                    }
                 }
             }
             else if (File.Exists(module.Ref))
@@ -211,7 +215,7 @@ namespace VirtoCommerce.Platform.Web.Modularity
                     var filePath = Path.Combine(dstModuleDir, entry.FullName);
                     //Create directory if not exist
                     var directoryPath = Path.GetDirectoryName(filePath);
-                    if(!_txFileManager.DirectoryExists(directoryPath))
+                    if (!_txFileManager.DirectoryExists(directoryPath))
                     {
                         _txFileManager.CreateDirectory(directoryPath);
                     }
@@ -223,7 +227,7 @@ namespace VirtoCommerce.Platform.Web.Modularity
                     File.SetLastWriteTime(filePath, entry.LastWriteTime.LocalDateTime);
                 }
             }
-        
+
             Report(progress, ProgressMessageLevel.Info, "Successfully installed '{0}'.", module);
         }
 
@@ -237,22 +241,22 @@ namespace VirtoCommerce.Platform.Web.Modularity
                     _txFileManager.DeleteDirectory(directoryPath);
                 }
                 //Because some folder can be locked by ASP.NET Bundles file monitor we should ignore IOException
-                catch (System.IO.IOException)
-                {   
+                catch (IOException)
+                {
                     //If fail need to delete directory content first
                     //Files                 
-                    foreach (string file in Directory.EnumerateFiles(directoryPath, "*.*", SearchOption.AllDirectories))
+                    foreach (var file in Directory.EnumerateFiles(directoryPath, "*.*", SearchOption.AllDirectories))
                     {
                         _txFileManager.Delete(file);
                     }
                     //Dirs
-                    foreach (string subDirectory in Directory.EnumerateDirectories(directoryPath, "*", SearchOption.AllDirectories))
+                    foreach (var subDirectory in Directory.EnumerateDirectories(directoryPath, "*", SearchOption.AllDirectories))
                     {
                         try
                         {
                             _txFileManager.DeleteDirectory(subDirectory);
                         }
-                        catch (System.IO.IOException)
+                        catch (IOException)
                         {
                         }
                     }
@@ -261,7 +265,7 @@ namespace VirtoCommerce.Platform.Web.Modularity
                     {
                         _txFileManager.DeleteDirectory(directoryPath);
                     }
-                    catch (System.IO.IOException)
+                    catch (IOException)
                     {
                     }
                 }

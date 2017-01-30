@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using Common.Logging;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
@@ -14,11 +11,11 @@ namespace VirtoCommerce.Platform.Web.Modularity
 {
     public class ExternalManifestModuleCatalog : ModuleCatalog
     {
+        private readonly IEnumerable<ModuleInfo> _installedModules;
         private readonly string[] _externalManifestUrls;
         private readonly ILog _logger;
-        private IEnumerable<ModuleInfo> _installedModules;
-        private static object _lockObject = new object();
- 
+        private static readonly object _lockObject = new object();
+
         public ExternalManifestModuleCatalog(IEnumerable<ModuleInfo> installedModules, string[] externalManifestUrls, ILog logger)
         {
             _installedModules = installedModules;
@@ -27,12 +24,12 @@ namespace VirtoCommerce.Platform.Web.Modularity
         }
 
         #region ModuleCatalog overrides      
-     
+
         protected override void InnerLoad()
         {
             lock (_lockObject)
             {
-                //Load remote modules 
+                // Load remote modules 
                 if (!_externalManifestUrls.IsNullOrEmpty())
                 {
                     foreach (var externalManifestUrl in _externalManifestUrls)
@@ -40,10 +37,10 @@ namespace VirtoCommerce.Platform.Web.Modularity
                         var externalModuleInfos = LoadExternalModulesManifest(externalManifestUrl);
                         foreach (var externalModuleInfo in externalModuleInfos)
                         {
-                            if (!base.Modules.OfType<ManifestModuleInfo>().Contains(externalModuleInfo))
+                            if (!Modules.OfType<ManifestModuleInfo>().Contains(externalModuleInfo))
                             {
                                 var alreadyInstalledModule = _installedModules.OfType<ManifestModuleInfo>().FirstOrDefault(x => x.Equals(externalModuleInfo));
-                                if(alreadyInstalledModule != null)
+                                if (alreadyInstalledModule != null)
                                 {
                                     externalModuleInfo.IsInstalled = alreadyInstalledModule.IsInstalled;
                                     externalModuleInfo.Errors = alreadyInstalledModule.Errors;
@@ -53,11 +50,12 @@ namespace VirtoCommerce.Platform.Web.Modularity
                             }
                         }
                     }
-                    //Add already installed module not presenting in external modules list
-                    foreach (var installedModuleNotFoundInExternal in _installedModules.Except(base.Modules))
-                    {
-                        AddModule(installedModuleNotFoundInExternal);
-                    }
+                }
+
+                // Add already installed module not presenting in external modules list
+                foreach (var installedModuleNotFoundInExternal in _installedModules.Except(Modules))
+                {
+                    AddModule(installedModuleNotFoundInExternal);
                 }
             }
         }
@@ -69,35 +67,41 @@ namespace VirtoCommerce.Platform.Web.Modularity
         /// <returns></returns>
         protected override IEnumerable<ModuleInfo> GetDependentModulesInner(ModuleInfo moduleInfo)
         {
-            var retVal = new List<ModuleInfo>();
             var manifestModule = moduleInfo as ManifestModuleInfo;
-            if (moduleInfo == null)
+            if (manifestModule == null)
             {
-                throw new ModularityException("moduleInfo not ManifestModuleInfo type");
+                throw new ModularityException("moduleInfo is not ManifestModuleInfo type");
             }
-            //get all dependency modules with all versions
+
+            var result = new List<ModuleInfo>();
+
+            // Get all dependency modules with all versions
             var dependecies = base.GetDependentModulesInner(moduleInfo).OfType<ManifestModuleInfo>();
-            foreach (var dependencyVersions in dependecies.GroupBy(x => x.Id))
+
+            foreach (var dependencyGroup in dependecies.GroupBy(x => x.Id))
             {
-                var dependency = manifestModule.Dependencies.First(x => x.Id == dependencyVersions.Key);
-                var allCompatibleDependencies = dependencyVersions.Where(x => dependency.Version.IsCompatibleWithBySemVer(x.Version)).OrderByDescending(x => x.Version);
+                var dependency = manifestModule.Dependencies.First(x => x.Id == dependencyGroup.Key);
+                var allCompatibleDependencies = dependencyGroup.Where(x => dependency.Version.IsCompatibleWithBySemVer(x.Version)).OrderByDescending(x => x.Version);
                 var latestCompatibleDependency = allCompatibleDependencies.FirstOrDefault(x => x.IsInstalled);
-                //If dependency not installed need find latest compatible version
+
+                // If dependency is not installed, find latest compatible version
                 if (latestCompatibleDependency == null)
                 {
                     latestCompatibleDependency = allCompatibleDependencies.FirstOrDefault();
                 }
+
                 if (latestCompatibleDependency != null)
                 {
-                    retVal.Add(latestCompatibleDependency);
+                    result.Add(latestCompatibleDependency);
                 }
             }
-            return retVal;
+
+            return result;
         }
 
         protected override void ValidateUniqueModules()
         {
-            var modules = this.Modules.OfType<ManifestModuleInfo>().ToList();
+            var modules = Modules.OfType<ManifestModuleInfo>().ToList();
 
             var duplicateModule = modules.FirstOrDefault(x => modules.Count(y => y.Equals(x)) > 1);
 
@@ -105,34 +109,39 @@ namespace VirtoCommerce.Platform.Web.Modularity
             {
                 throw new DuplicateModuleException(duplicateModule.ToString());
             }
-        } 
+        }
+
         #endregion
-     
+
+
         private IEnumerable<ManifestModuleInfo> LoadExternalModulesManifest(string externalManifestUrl)
         {
-            var retVal = new List<ManifestModuleInfo>();
+            var result = new List<ManifestModuleInfo>();
+
             try
             {
                 _logger.Debug("Download module manifests from " + externalManifestUrl);
-                using (WebClient webClient = new WebClient())
-                using (var stream = webClient.OpenRead(externalManifestUrl))
+                using (var webClient = new WebClient())
                 {
-                    var manifests = stream.DeserializeJson<List<ModuleManifest>>();
-                    if (!manifests.IsNullOrEmpty())
+                    webClient.AddAuthorizationTokenForGitHub(externalManifestUrl);
+
+                    using (var stream = webClient.OpenRead(externalManifestUrl))
                     {
-                        foreach (var manifest in manifests)
+                        var manifests = stream.DeserializeJson<List<ModuleManifest>>();
+                        if (!manifests.IsNullOrEmpty())
                         {
-                            retVal.Add(new ManifestModuleInfo(manifest));
+                            result.AddRange(manifests.Select(manifest => new ManifestModuleInfo(manifest)));
                         }
                     }
                 }
             }
             catch (Exception ex)
-            {                
-                _logger.Error(ex.ToString());                
-                throw (ex);
+            {
+                _logger.Error(ex.ToString());
+                throw;
             }
-            return retVal;
+
+            return result;
         }
     }
 }
