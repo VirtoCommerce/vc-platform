@@ -7,6 +7,9 @@
             </a>
             <ng-include src='menuItem.template'> </ng-include>
         </li>
+        <li class="menu-item __logo" style="bottom:40px;">
+            <a href="" ng-click="showLicense()">{{'platform.templates.licensing.license-status' | translate}}</a>
+        </li>
         <li class="menu-item __logo">
             <span class="logo-version">{{platformVersion}}</span>
         </li>

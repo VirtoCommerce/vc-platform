@@ -71,7 +71,7 @@ angular.module('platformWebApp', AppDependencies).
       });
 
       $scope.showLicense = function () {
-          dialogService.showDialog({ id: "licenseDetails" }, '$(Platform)/Scripts/app/licensing/license-detailsDialog.tpl.html', 'platformWebApp.licenseDetailsDialogController');
+          dialogService.showDialog({ id: "licenseDetails", license: $scope.license }, '$(Platform)/Scripts/app/licensing/license-detailsDialog.tpl.html', 'platformWebApp.licenseDetailsDialogController');
       };
 
   }])

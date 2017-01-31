@@ -1,9 +1,17 @@
 ﻿<div class="modal-header">
     <h3 class="modal-title">{{ 'platform.dialogs.license.title' | translate }}</h3>
+    <div class="loader" ng-if="isLoading">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
 </div>
 <div class="modal-body">
     <!--{{currentEntity}}-->
-    <p class="text" ng-bind-html="'platform.dialogs.license.info' | translate: currentEntity"></p>
+    <div class="note" ng-bind-html="'platform.dialogs.license.info' | translate: license"></div>
+    <div class="note" ng-bind-html="'platform.dialogs.license.expired' | translate: license"></div>
     <label class="form-label" style="height:27px;">
         <a href="https://virtocommerce.com/request-license" target="_blank">{{ 'platform.dialogs.license.request-license' | translate }}</a>
     </label>
@@ -25,6 +33,6 @@
     </div>
 </div>
 <div class="modal-footer">
-    <button class="btn btn-primary" ng-click="cancel()" disabled>{{ 'platform.commands.activate' | translate }}</button>
+    <button class="btn btn-primary" ng-click="activate(activationCode, license)" ng-disabled="!activationCode">{{ 'platform.commands.activate' | translate }}</button>
     <button class="btn btn-primary" ng-click="cancel()">{{ 'platform.commands.ok' | translate }}</button>
 </div>
