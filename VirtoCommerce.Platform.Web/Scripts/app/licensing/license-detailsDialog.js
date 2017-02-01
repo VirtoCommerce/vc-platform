@@ -8,10 +8,9 @@
         //    $scope.isLoading = false;
         //});
     }
-    // $scope.currentEntity = { type: "Community deployment", name: "john doe company", expirationDate: new Date().setMonth(new Date().getMonth() + 1) };
-    
 
     $scope.activate = function (activationCode, license) {
+        // TODO:
         $window.location.reload();
     };
     $scope.cancel = function () {
@@ -48,7 +47,6 @@
 
     // uploader.onCompleteAll = function () { $scope.isLoading = false; };
 
+    // uploader.onSuccessItem = $window.location.reload;
     uploader.onSuccessItem = refresh;
-
-    refresh();
 }]);

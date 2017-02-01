@@ -29,7 +29,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     @Html.Partial("_FacebookTrackerPartial")
     @Html.Partial("_AppInsightsPartial")
 </head>
-<body ng-class="{'has-demo-warning' : demoResetTime || license, 'lang-rtl': isRTL}" ng-controller="platformWebApp.appCtrl" ng-init="platformVersion ='@(Model.PlatformVersion)'; demoCredentials = @(Model.DemoCredentials); demoResetTime = @(Model.DemoResetTime); license = @Html.Encode(Model.License)">
+@*DO NOT CHANGE THE CODE BELOW: COPYRIGHT VIOLATION*@
+<body ng-class="{'has-demo-warning' : demoResetTime || !license || license.hasExpired, 'lang-rtl': isRTL}" ng-controller="platformWebApp.appCtrl" ng-init="platformVersion ='@(Model.PlatformVersion)'; demoCredentials = @(Model.DemoCredentials); demoResetTime = @(Model.DemoResetTime); license = initExpiration(@Html.Encode(Model.License))">
     @if (google_tag_container_id != null)
     {
      <!-- Google Tag Manager (noscript) -->

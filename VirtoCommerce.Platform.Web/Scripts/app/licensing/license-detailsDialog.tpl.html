@@ -9,10 +9,10 @@
     </div>
 </div>
 <div class="modal-body">
-    <!--{{currentEntity}}-->
-    <div class="note" ng-bind-html="'platform.dialogs.license.info' | translate: license"></div>
-    <div class="note" ng-bind-html="'platform.dialogs.license.expired' | translate: license"></div>
-    <label class="form-label" style="height:27px;">
+    <div class="note" ng-if="!license" ng-bind="'platform.templates.licensing.community' | translate: license"></div>
+    <div class="note" ng-if="license && !license.hasExpired" ng-bind-html="'platform.dialogs.license.info' | translate: license"></div>
+    <div class="note" ng-if="license.hasExpired" ng-bind-html="'platform.dialogs.license.expired' | translate: license"></div>
+    <label class="form-label">
         <a href="https://virtocommerce.com/request-license" target="_blank">{{ 'platform.dialogs.license.request-license' | translate }}</a>
     </label>
     <div class="form-group">

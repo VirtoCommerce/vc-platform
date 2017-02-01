@@ -70,6 +70,14 @@ angular.module('platformWebApp', AppDependencies).
           $scope.isAuthenticated = authContext.isAuthenticated;
       });
 
+      // DO NOT CHANGE THE FUNCTION BELOW: COPYRIGHT VIOLATION
+      $scope.initExpiration = function (x) {
+          if (x && x.expirationDate) {
+              x.hasExpired = new Date(x.expirationDate) < new Date();
+          }
+          return x;
+      };
+
       $scope.showLicense = function () {
           dialogService.showDialog({ id: "licenseDetails", license: $scope.license }, '$(Platform)/Scripts/app/licensing/license-detailsDialog.tpl.html', 'platformWebApp.licenseDetailsDialogController');
       };

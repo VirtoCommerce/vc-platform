@@ -681,8 +681,8 @@
             },
             "license": {
                 "title": "Licensing",
-                "info": "<b>{{type}}</b> license for <b>{{name}}</b> expires on <b>{{expirationDate | date}}</b>.",
-                "expired": "This <b>{{type}}</b> license for <b>{{name}}</b> expired on <b>{{expirationDate | date}}</b>.",
+                "info": "<b>{{type}}</b> license for <b>{{customerName}}</b> expires on <b>{{expirationDate | date}}</b>.",
+                "expired": "This <b>{{type}}</b> license for <b>{{customerName}}</b> expired on <b>{{expirationDate | date}}</b>.",
                 "request-license": "Renew or upgrade your license",
                 "code": "Activation code",
                 "code-placeholder": "Enter activation code",

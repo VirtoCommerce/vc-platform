@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+using System;
 using System.Configuration;
 using System.Reflection;
 using System.Web.Hosting;
 using System.Web.Mvc;
-using Newtonsoft.Json;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Web.Licensing;
 using VirtoCommerce.Platform.Web.Model;
@@ -21,7 +22,7 @@ namespace VirtoCommerce.Platform.Web.Controllers
             var demoCredentials = ConfigurationManager.AppSettings.GetValue<string>("VirtoCommerce:DemoCredentials", null);
             var resetTimeStr = ConfigurationManager.AppSettings.GetValue<string>("VirtoCommerce:DemoResetTime", null);
             var license = _licenseService.LoadLicense(HostingEnvironment.MapPath(Startup.VirtualRoot + "/App_Data/license.txt"));
-            var licenseString = JsonConvert.SerializeObject(license);
+            var licenseString = JsonConvert.SerializeObject(license, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() });
 
             if (!string.IsNullOrEmpty(resetTimeStr))
             {
