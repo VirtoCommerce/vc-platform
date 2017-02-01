@@ -372,6 +372,17 @@
     <Compile Include="Model\Modularity\ModuleDescriptor.cs" />
     <Compile Include="Model\Modularity\ModulePushNotification.cs" />
     <Compile Include="Model\PlatformSetting.cs" />
+    <Content Include="Content\themes\main\css\google-fonts.css" />
+    <Content Include="Content\themes\main\fonts\Exo-2-300\Exo-2-300.svg" />
+    <Content Include="Content\themes\main\fonts\Exo-2-300\LICENSE.txt" />
+    <Content Include="Content\themes\main\fonts\Exo-2-500\Exo-2-500.svg" />
+    <Content Include="Content\themes\main\fonts\Exo-2-500\LICENSE.txt" />
+    <Content Include="Content\themes\main\fonts\Exo-2-600\Exo-2-600.svg" />
+    <Content Include="Content\themes\main\fonts\Exo-2-600\LICENSE.txt" />
+    <Content Include="Content\themes\main\fonts\Exo-2-italic\Exo-2-italic.svg" />
+    <Content Include="Content\themes\main\fonts\Exo-2-italic\LICENSE.txt" />
+    <Content Include="Content\themes\main\fonts\Exo-2-regular\Exo-2-regular.svg" />
+    <Content Include="Content\themes\main\fonts\Exo-2-regular\LICENSE.txt" />
     <Content Include="Content\themes\main\images\grid.png" />
     <Content Include="Scripts\ai.0.22.19-build00125.js" />
     <Content Include="Scripts\ai.0.22.19-build00125.min.js" />
@@ -470,6 +481,26 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\themes\main\fonts\Exo-2-300\Exo-2-300.eot" />
+    <Content Include="Content\themes\main\fonts\Exo-2-300\Exo-2-300.ttf" />
+    <Content Include="Content\themes\main\fonts\Exo-2-300\Exo-2-300.woff" />
+    <Content Include="Content\themes\main\fonts\Exo-2-300\Exo-2-300.woff2" />
+    <Content Include="Content\themes\main\fonts\Exo-2-500\Exo-2-500.eot" />
+    <Content Include="Content\themes\main\fonts\Exo-2-500\Exo-2-500.ttf" />
+    <Content Include="Content\themes\main\fonts\Exo-2-500\Exo-2-500.woff" />
+    <Content Include="Content\themes\main\fonts\Exo-2-500\Exo-2-500.woff2" />
+    <Content Include="Content\themes\main\fonts\Exo-2-600\Exo-2-600.eot" />
+    <Content Include="Content\themes\main\fonts\Exo-2-600\Exo-2-600.ttf" />
+    <Content Include="Content\themes\main\fonts\Exo-2-600\Exo-2-600.woff" />
+    <Content Include="Content\themes\main\fonts\Exo-2-600\Exo-2-600.woff2" />
+    <Content Include="Content\themes\main\fonts\Exo-2-italic\Exo-2-italic.eot" />
+    <Content Include="Content\themes\main\fonts\Exo-2-italic\Exo-2-italic.ttf" />
+    <Content Include="Content\themes\main\fonts\Exo-2-italic\Exo-2-italic.woff" />
+    <Content Include="Content\themes\main\fonts\Exo-2-italic\Exo-2-italic.woff2" />
+    <Content Include="Content\themes\main\fonts\Exo-2-regular\Exo-2-regular.eot" />
+    <Content Include="Content\themes\main\fonts\Exo-2-regular\Exo-2-regular.ttf" />
+    <Content Include="Content\themes\main\fonts\Exo-2-regular\Exo-2-regular.woff" />
+    <Content Include="Content\themes\main\fonts\Exo-2-regular\Exo-2-regular.woff2" />
     <None Include="gulpfile.js" />
     <Content Include="Scripts\allPackages.js" />
     <Content Include="Content\allStyles.css" />

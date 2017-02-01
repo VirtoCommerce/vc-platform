@@ -5,8 +5,7 @@
     $scope.selectedNodeId = null;
 
     blade.reload = function () {
-        modules.reload();
-        blade.refresh();
+        modules.reload().$promise.then(blade.refresh);
     };
 
     blade.refresh = function () {

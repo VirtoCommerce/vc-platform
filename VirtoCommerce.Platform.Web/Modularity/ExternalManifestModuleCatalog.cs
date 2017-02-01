@@ -50,12 +50,12 @@ namespace VirtoCommerce.Platform.Web.Modularity
                             }
                         }
                     }
+                }
 
-                    // Add already installed module not presenting in external modules list
-                    foreach (var installedModuleNotFoundInExternal in _installedModules.Except(Modules))
-                    {
-                        AddModule(installedModuleNotFoundInExternal);
-                    }
+                // Add already installed module not presenting in external modules list
+                foreach (var installedModuleNotFoundInExternal in _installedModules.Except(Modules))
+                {
+                    AddModule(installedModuleNotFoundInExternal);
                 }
             }
         }
