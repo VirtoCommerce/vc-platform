@@ -1,21 +1,27 @@
 ﻿using System;
 using System.Configuration;
 using System.Reflection;
+using System.Web.Hosting;
 using System.Web.Mvc;
+using Newtonsoft.Json;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Web.Licensing;
 using VirtoCommerce.Platform.Web.Model;
 
 namespace VirtoCommerce.Platform.Web.Controllers
 {
     public class HomeController : Controller
     {
+        private static readonly LicenseService _licenseService = new LicenseService();
+
         public ActionResult Index()
         {
             var assembly = Assembly.GetExecutingAssembly();
-            var version = string.Format("{0}.{1}", assembly.GetInformationalVersion(), assembly.GetFileVersion());
+            var version = string.Join(".", assembly.GetInformationalVersion(), assembly.GetFileVersion());
             var demoCredentials = ConfigurationManager.AppSettings.GetValue<string>("VirtoCommerce:DemoCredentials", null);
-            var license = "{type:'Community deployment', name:'john doe company', expirationDate:1488102833811, hasExpired: true}";
             var resetTimeStr = ConfigurationManager.AppSettings.GetValue<string>("VirtoCommerce:DemoResetTime", null);
+            var license = _licenseService.LoadLicense(HostingEnvironment.MapPath(Startup.VirtualRoot + "/App_Data/license.txt"));
+            var licenseString = JsonConvert.SerializeObject(license);
 
             if (!string.IsNullOrEmpty(resetTimeStr))
             {
@@ -30,7 +36,7 @@ namespace VirtoCommerce.Platform.Web.Controllers
                         resetTime = resetTime.AddDays(1);
                     }
 
-                    resetTimeStr = Newtonsoft.Json.JsonConvert.SerializeObject(resetTime).Replace("\"", "'");
+                    resetTimeStr = JsonConvert.SerializeObject(resetTime).Replace("\"", "'");
                 }
             }
 
@@ -38,8 +44,8 @@ namespace VirtoCommerce.Platform.Web.Controllers
             {
                 PlatformVersion = new MvcHtmlString(version),
                 DemoCredentials = new MvcHtmlString(demoCredentials ?? "''"),
-                License = new MvcHtmlString(license ?? "''"),
-                DemoResetTime = new MvcHtmlString(resetTimeStr ?? "''")
+                DemoResetTime = new MvcHtmlString(resetTimeStr ?? "''"),
+                License = new MvcHtmlString(licenseString),
             });
         }
     }
