@@ -22,7 +22,7 @@ namespace VirtoCommerce.Platform.Data.ChangeLog
 
         public void LoadChangeLogs(IHasChangesHistory owner)
         {
-            var objectsWithChangesHistory = owner.GetFlatObjectsListWithInterface<IHasChangesHistory>();
+            var objectsWithChangesHistory = owner.GetFlatObjectsListWithInterface<IHasChangesHistory>().Distinct();
 
             foreach (var objectWithChangesHistory in objectsWithChangesHistory)
             {
