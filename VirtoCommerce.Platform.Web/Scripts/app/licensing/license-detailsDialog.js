@@ -3,6 +3,7 @@
     angular.extend($scope, dialog);
 
     function refresh() {
+        $window.location.reload();
         //licensingApi.get(null, function (license) {
         //    $scope.currentEntity = license;
         //    $scope.isLoading = false;
@@ -11,7 +12,8 @@
 
     $scope.activate = function (activationCode, license) {
         // TODO:
-        $window.location.reload();
+
+        refresh();
     };
     $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
@@ -21,7 +23,7 @@
     var uploader = $scope.uploader = new FileUploader({
         scope: $scope,
         headers: { Accept: 'application/json' },
-        url: 'api/platform/assets/localstorage',
+        url: 'api/platform/licensing/activateByFile',
         method: 'POST',
         autoUpload: true,
         removeAfterUpload: true
@@ -47,6 +49,5 @@
 
     // uploader.onCompleteAll = function () { $scope.isLoading = false; };
 
-    // uploader.onSuccessItem = $window.location.reload;
     uploader.onSuccessItem = refresh;
 }]);

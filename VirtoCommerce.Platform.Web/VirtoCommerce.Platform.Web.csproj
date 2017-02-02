@@ -348,6 +348,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="Controllers\AiHandleErrorAttribute.cs" />
+    <Compile Include="Controllers\Api\LicensingController.cs" />
     <Compile Include="Converters\Modularity\ModuleDescriptorConverter.cs" />
     <Compile Include="Hangfire\HangfireLauncher.cs" />
     <Compile Include="App_Start\OwinConfig.cs" />
