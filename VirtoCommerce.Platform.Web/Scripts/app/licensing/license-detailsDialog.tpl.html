@@ -30,9 +30,10 @@
                 <i class="btn-ico fa fa-file"></i>
             </button>
         </div>
+        <div class="form-error" ng-if="activationError">{{activationError}}</div>
     </div>
 </div>
 <div class="modal-footer">
-    <button class="btn btn-primary" ng-click="activate(activationCode, license)" ng-disabled="!activationCode">{{ 'platform.commands.activate' | translate }}</button>
+    <button class="btn btn-primary" ng-click="activate(activationCode)" ng-disabled="!activationCode">{{ 'platform.commands.activate' | translate }}</button>
     <button class="btn btn-primary" ng-click="cancel()">{{ 'platform.commands.ok' | translate }}</button>
 </div>

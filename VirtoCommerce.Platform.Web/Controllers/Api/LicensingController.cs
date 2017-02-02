@@ -21,13 +21,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Route("activateByCode")]
         [ResponseType(typeof(License))]
         [CheckPermission(Permission = PredefinedPermissions.ModuleManage)]
-        public async Task<IHttpActionResult> ActivateByCode(string activationCode)
+        public async Task<IHttpActionResult> ActivateByCode([FromBody]string activationCode)
         {
             License license;
 
             using (var webClient = new WebClient())
             {
-                var activationUrl = new Uri(string.Join("http://localhost/admin/api/licenses/getLicenseFile/", activationCode));
+                var activationUrl = new Uri("http://localhost/admin/api/licenses/getLicenseFile/" + activationCode);
                 var content = await webClient.DownloadStringTaskAsync(activationUrl);
                 license = _licenseService.SaveLicenseIfValid(content);
             }

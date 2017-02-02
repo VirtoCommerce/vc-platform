@@ -4,17 +4,17 @@
 
     function refresh() {
         $window.location.reload();
-        //licensingApi.get(null, function (license) {
-        //    $scope.currentEntity = license;
-        //    $scope.isLoading = false;
-        //});
     }
 
-    $scope.activate = function (activationCode, license) {
-        // TODO:
-
-        refresh();
+    $scope.activate = function (activationCode) {
+        $scope.isLoading = true;
+        $scope.activationError = null;
+        licensingApi.activateByCode('"' + activationCode + '"', refresh, function (error) {
+            $scope.isLoading = false;
+            $scope.activationError = error.data.message;
+        });
     };
+
     $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
     };
@@ -40,14 +40,13 @@
 
     uploader.onBeforeUploadItem = function (fileItem) {
         $scope.isLoading = true;
+        $scope.activationError = null;
     };
 
     uploader.onErrorItem = function (item, response, status, sdsdsd, assasa) {
         $scope.isLoading = false;
-        // bladeNavigationService.setError(item._file.name + ' failed: ' + (response.message ? response.message : status), blade);
+        $scope.activationError = response.message ? response.message : status;
     };
-
-    // uploader.onCompleteAll = function () { $scope.isLoading = false; };
 
     uploader.onSuccessItem = refresh;
 }]);
