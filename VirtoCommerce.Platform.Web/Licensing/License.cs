@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace VirtoCommerce.Platform.Core.Licensing
+namespace VirtoCommerce.Platform.Web.Licensing
 {
     public class License
     {

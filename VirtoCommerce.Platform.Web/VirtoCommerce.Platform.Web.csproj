@@ -360,6 +360,7 @@
     <Compile Include="Converters\ExportImport\ExportImportRequestConverter.cs" />
     <Compile Include="Hangfire\HangfireOptions.cs" />
     <Compile Include="HttpContextLifetimeManager.cs" />
+    <Compile Include="Licensing\License.cs" />
     <Compile Include="Licensing\LicenseService.cs" />
     <Compile Include="Model\Asset\AssetListItem.cs" />
     <Compile Include="Model\ExportImport\PushNotifications\SampleDataImportPushNotification.cs" />

@@ -2,47 +2,61 @@
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
+using System.Web.Hosting;
 using Newtonsoft.Json;
-using VirtoCommerce.Platform.Core.Licensing;
 
 namespace VirtoCommerce.Platform.Web.Licensing
 {
     public class LicenseService
     {
+        private static readonly string _licenseFilePath = HostingEnvironment.MapPath(Startup.VirtualRoot + "/App_Data/VirtoCommerce.lic");
         private static readonly string _hashAlgorithmName = HashAlgorithmName.SHA256.Name;
         private static readonly HashAlgorithm _hashAlgorithm = HashAlgorithm.Create(_hashAlgorithmName);
         private static readonly AsymmetricSignatureDeformatter _signatureDeformatter = CreateSignatureDeformatter(_hashAlgorithmName);
 
-        public License LoadLicense(string filePath)
+        public License LoadLicense()
         {
             License result = null;
 
-            var container = ReadLicenseFile(filePath);
-            if (container?.Data != null && container.Signature != null)
+            if (File.Exists(_licenseFilePath))
             {
-                if (ValidateSignature(container.Data, container.Signature))
-                {
-                    result = JsonConvert.DeserializeObject<License>(container.Data);
-                }
+                var content = File.ReadAllText(_licenseFilePath);
+                result = Parse(content);
             }
 
             return result;
         }
-
-
-        private static LicenseContainer ReadLicenseFile(string filePath)
+        public License SaveLicenseIfValid(string content)
         {
-            LicenseContainer result = null;
+            var license = Parse(content);
 
-            if (File.Exists(filePath))
+            if (license != null)
             {
-                using (var reader = File.OpenText(filePath))
+                File.WriteAllText(_licenseFilePath, content);
+            }
+
+            return license;
+        }
+
+
+        private static License Parse(string content)
+        {
+            License result = null;
+
+            if (!string.IsNullOrEmpty(content))
+            {
+                using (var reader = new StringReader(content))
                 {
-                    result = new LicenseContainer
+                    var data = reader.ReadLine();
+                    var signature = reader.ReadLine();
+
+                    if (data != null && signature != null)
                     {
-                        Data = reader.ReadLine(),
-                        Signature = reader.ReadLine(),
-                    };
+                        if (ValidateSignature(data, signature))
+                        {
+                            result = JsonConvert.DeserializeObject<License>(data);
+                        }
+                    }
                 }
             }
 

@@ -1,37 +1,38 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web.Hosting;
 using System.Web.Http;
 using System.Web.Http.Description;
 using VirtoCommerce.Platform.Core.Security;
-using VirtoCommerce.Platform.Core.Web.Assets;
 using VirtoCommerce.Platform.Core.Web.Security;
 using VirtoCommerce.Platform.Web.Licensing;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
     [RoutePrefix("api/platform/licensing")]
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class LicensingController : ApiController
     {
-        private readonly string _uploadsUrl = Startup.VirtualRoot + "/App_Data/";
-        private const string LicenseActivationUrlTemplate = "https://virtocommerce.com/admin/api/licenses/getLicenseFile/{1}";
-
         private static readonly LicenseService _licenseService = new LicenseService();
 
         [HttpPost]
         [Route("activateByCode")]
-        [ResponseType(typeof(void))]
+        [ResponseType(typeof(License))]
         [CheckPermission(Permission = PredefinedPermissions.ModuleManage)]
-        public IHttpActionResult ActivateByCode(string activationCode)
+        public async Task<IHttpActionResult> ActivateByCode(string activationCode)
         {
-            var getUrl = string.Format(LicenseActivationUrlTemplate, activationCode);
+            License license;
 
+            using (var webClient = new WebClient())
+            {
+                var activationUrl = new Uri(string.Join("http://localhost/admin/api/licenses/getLicenseFile/", activationCode));
+                var content = await webClient.DownloadStringTaskAsync(activationUrl);
+                license = _licenseService.SaveLicenseIfValid(content);
+            }
 
-            return StatusCode(HttpStatusCode.NoContent);
+            return Ok(license);
         }
 
         /// <summary>
@@ -40,28 +41,25 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <returns></returns>
         [HttpPost]
         [Route("activateByFile")]
-        [ResponseType(typeof(void))]
+        [ResponseType(typeof(License))]
         [CheckPermission(Permission = PredefinedPermissions.ModuleManage)]
-        public async Task<IHttpActionResult> UploadModuleArchive()
+        public async Task<IHttpActionResult> ActivateByFile()
         {
             if (!Request.Content.IsMimeMultipartContent())
+                throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.BadRequest, "MIME multipart content expected"));
+
+            License license = null;
+
+            var streamProvider = await Request.Content.ReadAsMultipartAsync();
+            var httpContent = streamProvider.Contents.FirstOrDefault();
+
+            if (httpContent != null)
             {
-                throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.NotAcceptable, "This request is not properly formatted"));
+                var content = await httpContent.ReadAsStringAsync();
+                license = _licenseService.SaveLicenseIfValid(content);
             }
-            var uploadsPath = HostingEnvironment.MapPath(_uploadsUrl);
-            var streamProvider = new CustomMultipartFormDataStreamProvider(uploadsPath);
 
-            await Request.Content.ReadAsMultipartAsync(streamProvider).ContinueWith(t =>
-            {
-                if (t.IsFaulted || t.IsCanceled)
-                    throw new HttpResponseException(HttpStatusCode.InternalServerError);
-            });
-
-            
-
-
-
-            return StatusCode(HttpStatusCode.NoContent);
+            return Ok(license);
         }
     }
 }
