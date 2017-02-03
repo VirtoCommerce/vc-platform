@@ -27,7 +27,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             using (var webClient = new WebClient())
             {
-                var activationUrl = new Uri("http://localhost/admin/api/licenses/getLicenseFile/" + activationCode);
+                var activationUrl = new Uri("http://localhost/admin/api/licenses/activate/" + activationCode);
                 var content = await webClient.DownloadStringTaskAsync(activationUrl);
                 license = _licenseService.SaveLicenseIfValid(content);
             }
