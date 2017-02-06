@@ -65,11 +65,22 @@ namespace VirtoCommerce.Platform.Web.Licensing
 
         private static bool ValidateSignature(string data, string signature)
         {
+            bool result;
+
             var dataBytes = Encoding.UTF8.GetBytes(data);
             var dataHash = _hashAlgorithm.ComputeHash(dataBytes);
-            var signatureBytes = Convert.FromBase64String(signature);
 
-            return _signatureDeformatter.VerifySignature(dataHash, signatureBytes);
+            try
+            {
+                var signatureBytes = Convert.FromBase64String(signature);
+                result = _signatureDeformatter.VerifySignature(dataHash, signatureBytes);
+            }
+            catch (FormatException)
+            {
+                result = false;
+            }
+
+            return result;
         }
 
         private static RSAPKCS1SignatureDeformatter CreateSignatureDeformatter(string hashAlgorithmName)
