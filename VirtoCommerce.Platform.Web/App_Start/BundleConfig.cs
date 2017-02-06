@@ -15,7 +15,7 @@ namespace VirtoCommerce.Platform.Web
 
         public static void RegisterBundles(BundleCollection bundles)
         {
-            BundleTable.EnableOptimizations = false;
+            //BundleTable.EnableOptimizations = true;
 
             #region CSS
 
