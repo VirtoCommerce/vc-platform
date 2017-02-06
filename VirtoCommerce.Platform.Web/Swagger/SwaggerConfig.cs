@@ -96,7 +96,8 @@ namespace VirtoCommerce.Platform.Web.Swagger
                     {
                         var uriBuilder = new UriBuilder(message.RequestUri)
                         {
-                            Scheme = protocol
+                            Scheme = protocol,
+                            Port = -1 // default port for scheme
                         };
                         return uriBuilder.Uri;
                     }
