@@ -65,5 +65,18 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             return Ok(license);
         }
+
+        [HttpPost]
+        [Route("activateLicense")]
+        [ResponseType(typeof(void))]
+        [CheckPermission(Permission = PredefinedPermissions.ModuleManage)]
+        public IHttpActionResult ActivateLicense(License license)
+        {
+            // TODO: impl.
+            // _licenseService.SaveLicenseIfValid(license);
+
+            
+            return StatusCode(HttpStatusCode.NoContent);
+        }
     }
 }

@@ -1,0 +1,13 @@
+﻿<div class="modal-header">
+    <h3 class="modal-title">{{ 'platform.dialogs.license-activation.title' | translate }}</h3>
+</div>
+<div class="modal-body">
+    <p>{{ 'platform.dialogs.license-activation.message0' | translate }}</p>
+    <p ng-bind-html="'platform.dialogs.license-activation.message1' | translate: license"></p>
+    <br>
+    <p>{{ 'platform.dialogs.license-activation.message2' | translate }}</p>
+</div>
+<div class="modal-footer">
+    <button class="btn" ng-click="yes()">{{ 'platform.commands.confirm' | translate }}</button>
+    <button class="btn __cancel" ng-click="cancel()">{{ 'platform.commands.cancel' | translate }}</button>
+</div>

@@ -1,15 +1,15 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.licenseDetailController', ['$scope', '$window', 'FileUploader', '$http', function ($scope, $window, FileUploader, $http) {
+.controller('platformWebApp.licenseDetailController', ['$scope', '$window', 'FileUploader', '$http', 'platformWebApp.dialogService', function ($scope, $window, FileUploader, $http, dialogService) {
     var blade = $scope.blade;
     $scope.license = $scope.license || { "type": "Community", "customerName": "N/A", "expirationDate": "N/A" };
 
     $scope.activate = function (activationCode, isActivationByCode) {
-        $scope.isLoading = true;
+        blade.isLoading = true;
         $scope.activationError = null;
 
         if (isActivationByCode) {
             $http.post('api/platform/licensing/activateByCode', JSON.stringify(activationCode)).then(function (response) {
-                activationCallback(response.data);
+                activationCallback(response.data, isActivationByCode);
             }, function (error) {
                 $scope.activationError = error.data.message;
             });
@@ -19,12 +19,28 @@
         }
     };
 
-    function activationCallback(result) {
+    function activationCallback(result, isActivationByCode) {
+        blade.isLoading = false;
+
         if (result) {
-            $window.location.reload();
+            if (result.expirationDate && new Date(result.expirationDate) < new Date()) {
+                $scope.activationError = 'Activation failed. This license has expired.';
+            } else {
+                var dialog = {
+                    id: "confirm",
+                    license: result,
+                    callback: function () {
+                        // confirmed. Activate the license
+                        blade.isLoading = true;
+                        $http.post('api/platform/licensing/activateLicense', result).then(function () {
+                            $window.location.reload();
+                        });
+                    }
+                };
+                dialogService.showDialog(dialog, '$(Platform)/Scripts/app/licensing/dialogs/licenseConfirmation-dialog.tpl.html', 'platformWebApp.confirmDialogController');
+            }
         } else {
-            $scope.isLoading = false;
-            $scope.activationError = 'Activation failed. Check the activation code.';
+            $scope.activationError = isActivationByCode ? 'Activation failed. Check the activation code.' : 'Activation failed. Check the license file.';
         }
     }
 
@@ -49,14 +65,15 @@
 
     uploader.onAfterAddingFile = function (fileItem) {
         $scope.filename = fileItem.file.name;
+        $scope.activationError = null;
     };
 
     uploader.onSuccessItem = function (item, response, status, headers) {
-        activationCallback(response);
+        activationCallback(response, false);
     };
 
     uploader.onErrorItem = function (item, response, status) {
-        $scope.isLoading = false;
+        blade.isLoading = false;
         $scope.activationError = response.message ? response.message : status;
     };
 

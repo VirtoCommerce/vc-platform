@@ -535,7 +535,7 @@
                     "code": "Activation code",
                     "file": "License file",
                     "upload-progress": "Upload progress",
-                    "errors": "Activation failed. Error"
+                    "errors": "Activation error"
                 },
                 "placeholders": {
                     "code": "Enter activation code"
@@ -715,6 +715,12 @@
             "module-delete": {
                 "title": "Delete confirmation",
                 "message": "Are you sure you want to uninstall this Module?"
+            },
+            "license-activation": {
+                "title": "License activation",
+                "message0": "You are about to activate:",
+                "message1": "Virto Commerce <b>{{type}}</b> license for <b>{{customerName}}</b>, expiring on <b>{{expirationDate | date}}</b>.",
+                "message2": "The page will be reloaded after activation. Continue?"
             },
             "api-key-delete": {
                 "title": "Delete confirmation",
