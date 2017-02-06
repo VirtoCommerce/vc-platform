@@ -522,6 +522,25 @@
                     "log-in": "Log in"
                 }
             },
+            "license": {
+                "title": "Licensing",
+                "license-info": "License information",
+                "license-activation": "License activation",
+                "labels": {
+                    "customer": "License issued to",
+                    "type": "Type",
+                    "expiration": "Expiration",
+                    "email": "Customer email",
+                    "request-license": "Renew or upgrade your license",
+                    "code": "Activation code",
+                    "file": "License file",
+                    "upload-progress": "Upload progress",
+                    "errors": "Activation failed. Error"
+                },
+                "placeholders": {
+                    "code": "Enter activation code"
+                }
+            },
             "new-account-wizard": {
                 "labels": {
                     "login": "Login",
@@ -588,8 +607,9 @@
                 }
             },
             "licensing": {
-                "license-status": "License status",
-                "community": "Running community edition, request a commercial license.",
+                "license-absent": "Community license",
+                "license-present": "Virto Commerce {{type}}",
+                "community": "Running community edition, click to request a commercial license.",
                 "expired": "You license has expired on {{expirationDate | date}}, please renew."
             },
             "modulesAutoInstallation": {
@@ -678,15 +698,6 @@
             "dictionary-items-delete": {
                 "title": "Delete confirmation",
                 "message": "Are you sure you want to delete {{quantity}} selected dictionary item(s)?"
-            },
-            "license": {
-                "title": "Licensing",
-                "info": "<b>{{type}}</b> license for <b>{{customerName}}</b> expires on <b>{{expirationDate | date}}</b>.",
-                "expired": "This <b>{{type}}</b> license for <b>{{customerName}}</b> expired on <b>{{expirationDate | date}}</b>.",
-                "request-license": "Renew or upgrade your license",
-                "code": "Activation code",
-                "code-placeholder": "Enter activation code",
-                "file": "Activate by license file"
             },
             "module-action": {
                 "title-install": "Install confirmation",

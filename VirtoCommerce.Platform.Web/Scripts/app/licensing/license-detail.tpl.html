@@ -1,0 +1,75 @@
+﻿<div class="blade-static __bottom">
+    <button class="btn" ng-click="activate(activationCode, method==='code')" ng-disabled="blade.isLoading || !((method==='code' && activationCode) || (method==='file' && filename))">{{ 'platform.commands.activate' | translate }}</button>
+</div>
+<div class="blade-content ___tree">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <fieldset>
+                <legend>{{ 'platform.blades.license.license-info' | translate }}</legend>
+                <ul class="list __info">
+                    <li class="list-item">
+                        <div class="list-t">{{ 'platform.blades.license.labels.customer' | translate }}</div>
+                        <div class="list-descr">{{license.customerName}}</div>
+                    </li>
+                    <li class="list-item">
+                        <div class="list-t">{{ 'platform.blades.license.labels.type' | translate }}</div>
+                        <div class="list-descr">{{license.type}}</div>
+                    </li>
+                    <li class="list-item">
+                        <div class="list-t">{{ 'platform.blades.license.labels.expiration' | translate }}</div>
+                        <div class="list-descr">{{license.expirationDate | date}}</div>
+                    </li>
+                    <li class="list-item" ng-if="license.customerEmail">
+                        <div class="list-t">{{ 'platform.blades.license.labels.email' | translate }}</div>
+                        <div class="list-descr">{{license.customerEmail}}</div>
+                    </li>
+                    <li class="list-item">
+                        <a href="https://virtocommerce.com/request-license" target="_blank">{{ 'platform.blades.license.labels.request-license' | translate }}</a>
+                    </li>
+                </ul>
+
+                <legend>{{ 'platform.blades.license.license-activation' | translate }}</legend>
+                <div class="form-group">
+                    <div class="list __items">
+                        <label class="list-item">
+                            <input type="radio" ng-model="method" value="code" name="method">
+                            <span class="switch"></span>
+                            <span class="list-name">{{ 'platform.blades.license.labels.code' | translate }}</span>
+                        </label>
+                    </div>
+                    <div class="form-input">
+                        <input ng-model="activationCode" placeholder="{{ 'platform.blades.license.placeholders.code' | translate }}" focus-on ng-focus="method='code'">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="list __items">
+                        <label class="list-item">
+                            <input type="radio" ng-model="method" value="file" name="method">
+                            <span class="switch"></span>
+                            <span class="list-name">{{ 'platform.blades.license.labels.file' | translate }}</span>
+                        </label>
+                    </div>
+                    <div class="form-input __file">
+                        <input type="file" accept=".lic" uploader="uploader" nv-file-select style="z-index: 0;" tabindex="-1">
+                        <input ng-model="filename" ng-focus="method='file'" type="text" style="z-index: 1; cursor: default;" readonly="" placeholder="{{ 'platform.placeholders.no-file' | translate }}">
+                        <button class="btn __file" type="button" ng-click="method='file'" onclick="$('input[type=file]').trigger('click')" title="Select license file">
+                            <i class="btn-ico fa fa-file"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div ng-show="uploader.isUploading">
+                    <div class="sub-t">{{ 'platform.blades.license.labels.upload-progress' | translate }}</div>
+                    <div class="progress-bar __aqua" ng-style="{'width': uploader.progress + '%'}"></div>
+                </div>
+                <ul class="list __info">
+                    <li class="list-item" ng-if="activationError">
+                        <div class="list-t">{{ 'platform.blades.license.labels.errors' | translate }}</div>
+                        <div class="list-descr error">{{activationError}}</div>
+                    </li>
+                </ul>
+            </fieldset>
+        </div>
+    </div>
+</div>

@@ -2,7 +2,7 @@
   "platform": {
     "commands": {
         "add": "Add",
-        "activate": "Activate by code",
+        "activate": "Activate",
         "assign": "Assign",
         "cancel": "Cancel",
         "clear-all": "Clear all",
@@ -61,6 +61,7 @@
     },
     "placeholders": {
         "n-a": "N/A",
+        "no-file": "No file chosen",
         "search-keyword": "Search keyword..."
     },
     "dialogs": {

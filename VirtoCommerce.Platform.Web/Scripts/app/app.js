@@ -25,7 +25,7 @@
 ];
 
 angular.module('platformWebApp', AppDependencies).
-  controller('platformWebApp.appCtrl', ['$scope', '$window', 'platformWebApp.pushNotificationService', '$translate', '$timeout', 'platformWebApp.modules', '$state', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', function ($scope, $window, pushNotificationService, $translate, $timeout, modules, $state, bladeNavigationService, dialogService) {
+  controller('platformWebApp.appCtrl', ['$scope', '$window', 'platformWebApp.pushNotificationService', '$translate', '$timeout', 'platformWebApp.modules', '$state', 'platformWebApp.bladeNavigationService', function ($scope, $window, pushNotificationService, $translate, $timeout, modules, $state, bladeNavigationService) {
       pushNotificationService.run();
 
       $timeout(function () {
@@ -79,7 +79,7 @@ angular.module('platformWebApp', AppDependencies).
       };
 
       $scope.showLicense = function () {
-          dialogService.showDialog({ id: "licenseDetails", license: $scope.license }, '$(Platform)/Scripts/app/licensing/license-detailsDialog.tpl.html', 'platformWebApp.licenseDetailsDialogController');
+          $state.go('workspace.appLicense');
       };
 
   }])
