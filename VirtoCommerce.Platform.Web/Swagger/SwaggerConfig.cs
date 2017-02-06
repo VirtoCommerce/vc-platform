@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -83,6 +84,27 @@ namespace VirtoCommerce.Platform.Web.Swagger
             });
         }
 
+        private static Uri HttpsProxySecuredUri(HttpRequestMessage message)
+        {
+            if (message.RequestUri.Scheme != Uri.UriSchemeHttps)
+            {
+                IEnumerable<string> headerValues;
+                if (message.Headers.TryGetValues("X-Forwarded-Proto", out headerValues))
+                {
+                    string protocol = headerValues.FirstOrDefault();
+                    if (!String.IsNullOrEmpty(protocol))
+                    {
+                        var uriBuilder = new UriBuilder(message.RequestUri)
+                        {
+                            Scheme = protocol
+                        };
+                        return uriBuilder.Uri;
+                    }
+                }
+            }
+            return message.RequestUri;
+        }
+
         private static void ApplyCommonSwaggerConfiguration(SwaggerDocsConfig c, IUnityContainer container, string cacheKey, string[] xmlCommentsFilePaths)
         {
             var cacheManager = container.Resolve<ICacheManager<object>>();
@@ -94,7 +116,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
             c.OperationFilter(() => new OptionalParametersFilter());
             c.OperationFilter(() => new FileResponseTypeFilter());
             c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
-            c.RootUrl(message => new Uri(message.RequestUri, message.GetRequestContext().VirtualPathRoot).ToString());
+            c.RootUrl(message => new Uri(HttpsProxySecuredUri(message), message.GetRequestContext().VirtualPathRoot).ToString());
             c.PrettyPrint();
             c.ApiKey("apiKey")
                 .Description("API Key Authentication")
