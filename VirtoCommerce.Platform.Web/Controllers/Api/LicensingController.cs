@@ -12,6 +12,7 @@ using VirtoCommerce.Platform.Web.Licensing;
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
     [RoutePrefix("api/platform/licensing")]
+    [CheckPermission(Permission = PredefinedPermissions.ModuleManage)]
     [ApiExplorerSettings(IgnoreApi = true)]
     public class LicensingController : ApiController
     {
@@ -19,40 +20,34 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         [HttpPost]
         [Route("activateByCode")]
-        [ResponseType(typeof(License))]
-        [CheckPermission(Permission = PredefinedPermissions.ModuleManage)]
+        [ResponseType(typeof(LicenseResponse))]
         public async Task<IHttpActionResult> ActivateByCode([FromBody]string activationCode)
         {
-            License license = null;
+            LicenseResponse response = null;
 
             using (var httpClient = new HttpClient())
             {
                 var activationUrl = new Uri("http://localhost/admin/api/licenses/activate/" + activationCode);
-                var response = await httpClient.GetAsync(activationUrl);
-                if (response.IsSuccessStatusCode)
+                var httpResponse = await httpClient.GetAsync(activationUrl);
+                if (httpResponse.IsSuccessStatusCode)
                 {
-                    var content = await response.Content.ReadAsStringAsync();
-                    license = _licenseService.SaveLicenseIfValid(content);
+                    var content = await httpResponse.Content.ReadAsStringAsync();
+                    response = ValidateLicense(content);
                 }
             }
 
-            return Ok(license);
+            return Ok(response);
         }
 
-        /// <summary>
-        /// Activate platform by file
-        /// </summary>
-        /// <returns></returns>
         [HttpPost]
         [Route("activateByFile")]
-        [ResponseType(typeof(License))]
-        [CheckPermission(Permission = PredefinedPermissions.ModuleManage)]
+        [ResponseType(typeof(LicenseResponse))]
         public async Task<IHttpActionResult> ActivateByFile()
         {
             if (!Request.Content.IsMimeMultipartContent())
                 throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.BadRequest, "MIME multipart content expected"));
 
-            License license = null;
+            LicenseResponse response = null;
 
             var streamProvider = await Request.Content.ReadAsMultipartAsync();
             var httpContent = streamProvider.Contents.FirstOrDefault();
@@ -60,23 +55,37 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             if (httpContent != null)
             {
                 var content = await httpContent.ReadAsStringAsync();
-                license = _licenseService.SaveLicenseIfValid(content);
+                response = ValidateLicense(content);
             }
 
-            return Ok(license);
+            return Ok(response);
         }
 
         [HttpPost]
         [Route("activateLicense")]
-        [ResponseType(typeof(void))]
-        [CheckPermission(Permission = PredefinedPermissions.ModuleManage)]
-        public IHttpActionResult ActivateLicense(License license)
+        [ResponseType(typeof(License))]
+        public IHttpActionResult ActivateLicense([FromBody]string licenseContent)
         {
-            // TODO: impl.
-            // _licenseService.SaveLicenseIfValid(license);
+            var license = _licenseService.SaveLicenseIfValid(licenseContent);
+            return Ok(license);
+        }
 
-            
-            return StatusCode(HttpStatusCode.NoContent);
+
+        private static LicenseResponse ValidateLicense(string content)
+        {
+            LicenseResponse response = null;
+
+            var license = _licenseService.Parse(content);
+            if (license != null)
+            {
+                response = new LicenseResponse
+                {
+                    License = license,
+                    Content = content,
+                };
+            }
+
+            return response;
         }
     }
 }

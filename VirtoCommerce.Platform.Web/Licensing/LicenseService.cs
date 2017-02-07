@@ -26,6 +26,7 @@ namespace VirtoCommerce.Platform.Web.Licensing
 
             return result;
         }
+
         public License SaveLicenseIfValid(string content)
         {
             var license = Parse(content);
@@ -38,8 +39,7 @@ namespace VirtoCommerce.Platform.Web.Licensing
             return license;
         }
 
-
-        private static License Parse(string content)
+        public License Parse(string content)
         {
             License result = null;
 
@@ -62,6 +62,7 @@ namespace VirtoCommerce.Platform.Web.Licensing
 
             return result;
         }
+
 
         private static bool ValidateSignature(string data, string signature)
         {
