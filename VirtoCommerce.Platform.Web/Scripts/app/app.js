@@ -151,7 +151,9 @@ angular.module('platformWebApp', AppDependencies).
             title: 'platform.menu.home',
             icon: 'fa fa-home',
             action: function () { $state.go('workspace'); },
-            priority: 0
+            // this item must always be at the top
+            priority: 0,
+            static: true
         };
         mainMenuService.addMenuItem(homeMenuItem);
 
@@ -170,6 +172,17 @@ angular.module('platformWebApp', AppDependencies).
             priority: 91,
         };
         mainMenuService.addMenuItem(cfgMenuItem);
+
+        var moreMenuItem = {
+            path: 'more',
+            icon: 'fa fa-folder-open',
+            title: 'platform.menu.more',
+            // this item must always be at the bottom, so
+            // don't use just 99 number: we have INFINITE list
+            priority: Number.MAX_SAFE_INTEGER,
+            static: true
+        };
+        mainMenuService.addMenuItem(moreMenuItem);
 
         $rootScope.$on('unauthorized', function (event, rejection) {
             if (!authService.isAuthenticated) {

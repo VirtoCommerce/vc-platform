@@ -4683,7 +4683,6 @@ tags-input .tags .tag-item {
     .nav-bar .bar {
         background: #333;
         height: 100%;
-        padding: 90px 0 0;
         position: relative;
         z-index: 50;
         -webkit-box-sizing: border-box;
@@ -4806,6 +4805,31 @@ tags-input .tags .tag-item {
             transform: translateX(90px);
         }
 
+    .nav-bar .dropdown-content .list-fav:hover+.list-link {
+        background: rgba(0,0,0,.2);;
+    }
+    
+    .nav-bar .dropdown-content .list-fav {
+        color: #c2c2c2;
+        display: block;
+        float: right;
+        font-size: 16px;
+        font-weight: 300;
+        line-height: 26px;
+        padding: 20px 10px;
+    }
+    
+    .nav-bar .dropdown-content .list-fav:hover {
+        color: #fff;
+    }
+
+    .nav-bar .dropdown-content .list-fav .list-ico {
+        text-align: center;
+        margin: 0;
+        top: 0;
+    }
+      
+
 .dropdown .dropdown-close {
     color: #c2c2c2;
     cursor: pointer;
@@ -4852,7 +4876,7 @@ tags-input .tags .tag-item {
     padding: 0 20px;
 }
 
-    .dropdown .dropdown-content:hover {
+    .dropdown .dropdown-content {
         overflow: auto;
     }
 
