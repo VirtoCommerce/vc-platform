@@ -23,6 +23,7 @@
         "more": "More",
         "no": "No",
         "new-folder": "New folder",
+        "new-license": "Activate license",
         "ok": "Ok",
         "paste": "Paste",
         "pick-selected": "Pick selected",
@@ -61,7 +62,7 @@
     },
     "placeholders": {
         "n-a": "N/A",
-        "no-file": "No file chosen",
+        "no-file": "Choose file",
         "search-keyword": "Search keyword..."
     },
     "dialogs": {

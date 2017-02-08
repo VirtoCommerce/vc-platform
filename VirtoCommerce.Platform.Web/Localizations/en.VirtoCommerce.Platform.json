@@ -523,7 +523,8 @@
                 }
             },
             "license": {
-                "title": "Licensing",
+                "title": "Current license",
+                "title-new": "New license activation",
                 "license-info": "License information",
                 "license-activation": "License activation",
                 "labels": {
@@ -533,7 +534,6 @@
                     "email": "Customer email",
                     "request-license": "Renew or upgrade your license",
                     "code": "Activation code",
-                    "file": "License file",
                     "upload-progress": "Upload progress",
                     "errors": "Activation error"
                 },
@@ -715,12 +715,6 @@
             "module-delete": {
                 "title": "Delete confirmation",
                 "message": "Are you sure you want to uninstall this Module?"
-            },
-            "license-activation": {
-                "title": "License activation",
-                "message0": "You are about to activate:",
-                "message1": "Virto Commerce <b>{{type}}</b> license for <b>{{customerName}}</b>, expiring on <b>{{expirationDate | date}}</b>.",
-                "message2": "The page will be reloaded after activation. Continue?"
             },
             "api-key-delete": {
                 "title": "Delete confirmation",
