@@ -2,23 +2,71 @@
 .factory('platformWebApp.mainMenuService', ['$filter', function ($filter) {
 
     var menuItems = [];
+    var menuBarItems = [];
 
-    function sortByParentFirst(a, b) {
-        return a.path.split('/').length - b.path.split('/').length;
-    };
+    // do not compare priority by substraction! "more" item has value as max integer
+    function compare(a, b) {
+        if (a < b) {
+            return -1;
+        }
+        if (a === b) {
+            return 0;
+        }
+        if (a > b) {
+            return 1;
+        }
+        return null;
+    }
+
     function sortByPriority(a, b) {
         if (angular.isDefined(a.priority) && angular.isDefined(b.priority)) {
-            return a.priority - b.priority;
+            return compare(a.priority, b.priority);
         }
         return -1;
     };
 
+    function sortMenuItem(a, b) {
+        var result;
+        if (a.parent === b.parent) {
+            result = compare(a.priority, b.priority);
+            return result;
+        }
+        var maximalParentNestingDepth = getParentNestingLevel(a) - getParentNestingLevel(b);
+        if (maximalParentNestingDepth === 0) {
+            result = compare(a.parent.priority, b.parent.priority);
+            return result;
+        }
+        var original = maximalParentNestingDepth > 0 ? b : a;
+        var nestedParent = getParentAtLevel(maximalParentNestingDepth > 0 ? a : b, Math.abs(maximalParentNestingDepth));
+        if (original === nestedParent) {
+            result = maximalParentNestingDepth;
+            return result;
+        }
+        result = compare(nestedParent.priority, original.priority) * maximalParentNestingDepth;
+        return result;
+    }
+
+    function getParentNestingLevel(menuItem) {
+        if (menuItem.parent == null) {
+            return 0;
+        }
+        var parentNestingLevel = getParentNestingLevel(menuItem.parent);
+        parentNestingLevel++;
+        return parentNestingLevel;
+    }
+
+   function getParentAtLevel(menuItem, depth) {
+       var result = menuItem;
+       for (var i = 0; i < depth; i++) {
+           result = result.parent;
+       }
+       return result;
+   }
+
     function constructTree() {
-        //clear arrays
-        //menuTree.splice(0, menuTree.length)
         //console.log('------------------constructTree---------------------');
-        angular.forEach(menuItems.sort(sortByParentFirst), function (menuItem) {
-            //console.log(x.path);
+        angular.forEach(menuItems, function (menuItem) {
+            //console.log(menuItem.path);
             if (menuItem.parent == null) {
                 var pathParts = menuItem.path.split('/');
                 var parentPath = null;
@@ -38,8 +86,15 @@
                 }
             }
         });
-        //sort tree items
-        menuItems.sort(sortByPriority);
+        // sort tree items
+        menuItems.sort(sortMenuItem);
+        // we want to check that menuItem has value defined and it is not null, so use '!= null'
+        menuBarItems.length = 0;
+        for (var i = 0; i < menuItems.length; i++) {
+            if (menuItems[i].dynamic != null) {
+                menuBarItems.push(menuItems[i]);
+            }
+        }
     };
 
     function findByPath(path) {
@@ -65,6 +120,7 @@
 
     var retVal = {
         menuItems: menuItems,
+        menuBarItems: menuBarItems,
         addMenuItem: addMenuItem,
         removeMenuItem: removeMenuItem,
         findByPath: findByPath
@@ -80,7 +136,9 @@
         link: function (scope, element, attr) {
 
             scope.currentMenuItem = undefined;
+            // keep for backward compatibility
             scope.menuItems = mainMenuService.menuItems;
+            scope.menuBarItems = mainMenuService.menuBarItems;
 
             scope.selectMenuItem = function (menuItem) {
                 if (scope.showSubMenu && scope.currentMenuItem === menuItem) {

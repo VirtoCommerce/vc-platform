@@ -179,7 +179,7 @@ angular.module('platformWebApp', AppDependencies).
             title: 'platform.menu.more',
             // this item must always be at the bottom, so
             // don't use just 99 number: we have INFINITE list
-            priority: Number.MAX_SAFE_INTEGER,
+            priority: 9007199254740991,// Number.MAX_SAFE_INTEGER,
             dynamic: false
         };
         mainMenuService.addMenuItem(moreMenuItem);
