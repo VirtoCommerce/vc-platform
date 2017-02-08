@@ -1,18 +1,19 @@
 ﻿{
     "platform": {
-        "menu": {
-            "home": "Home",
-            "browse": "Browse",
-            "configuration": "Configuration",
-            "settings": "Settings",
-            "dynamic-properties": "Dynamic properties",
-            "security": "Security",
-            "modules": "Modules",
-            "notifications": "Notifications",
-            "user-profile": "User profile",
-            "export-import": "Export & Import",
-            "assets": "Assets"
-        },
+      "menu": {
+        "home": "Home",
+        "browse": "Browse",
+        "configuration": "Configuration",
+        "notifications": "Notifications",
+        "more": "More",
+        "settings": "Settings",
+        "dynamic-properties": "Dynamic properties",
+        "security": "Security",
+        "modules": "Modules",
+        "export-import": "Export & Import",
+        "user-profile": "User profile",
+        "assets": "Assets"
+      },
         "navigation": {
             "back": "Back",
             "bread-crumb-top": "All"

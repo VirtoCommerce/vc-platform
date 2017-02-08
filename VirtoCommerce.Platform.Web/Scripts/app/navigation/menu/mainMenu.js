@@ -12,32 +12,27 @@
         }
         return -1;
     };
-    function constructTree() {
 
+    function constructTree() {
         //clear arrays
         //menuTree.splice(0, menuTree.length)
         //console.log('------------------constructTree---------------------');
-        angular.forEach(menuItems.sort(sortByParentFirst), function (x) {
+        angular.forEach(menuItems.sort(sortByParentFirst), function (menuItem) {
             //console.log(x.path);
-            if (!angular.isDefined(x.parent)) {
-                x.parent = null;
-            }
-            if (!angular.isDefined(x.children)) {
-                x.children = [];
-            }
-            if (x.parent == null) {
-                var pathParts = x.path.split('/');
-                var path = x.path;
+            if (menuItem.parent == null) {
+                var pathParts = menuItem.path.split('/');
                 var parentPath = null;
-                if (pathParts.length > 1) {
+                if (pathParts.length === 1 && !menuItem.static) {
+                    parentPath = "more";
+                }
+                if (pathParts.length > 1 && !menuItem.dynamic) {
                     pathParts.pop();
                     parentPath = pathParts.join('/');
                 }
-
-                var parent = _.find(menuItems, function (y) { return y.path == parentPath });
+                var parent = _.find(menuItems, function(currentMenuItem) { return currentMenuItem.path === parentPath });
                 if (angular.isDefined(parent)) {
-                    x.parent = parent;
-                    parent.children.push(x);
+                    menuItem.parent = parent;
+                    parent.children.push(menuItem);
                     parent.children.sort(sortByPriority);
                 }
             }
@@ -46,19 +41,31 @@
         menuItems.sort(sortByPriority);
     };
 
-
     function findByPath(path) {
-        return _.find(menuItems, function (x) { return x.path == path; });
+        return _.find(menuItems, function (menuItem) { return menuItem.path === path && !menuItem.dynamic; });
     };
 
     function addMenuItem(menuItem) {
+        // place it there, because we may need access to this properties BEFORE tree will be constructed
+        menuItem.parent = null;
+        menuItem.children = [];
+        if (!angular.isDefined(menuItem.favorite)) {
+            menuItem.favorite = false;
+        }
         menuItems.push(menuItem);
+        constructTree();
+    }
+
+    function removeMenuItem(menuItem) {
+        var index = menuItems.indexOf(menuItem);
+        menuItems.splice(index, 1);
         constructTree();
     }
 
     var retVal = {
         menuItems: menuItems,
         addMenuItem: addMenuItem,
+        removeMenuItem: removeMenuItem,
         findByPath: findByPath
     };
     return retVal;
@@ -88,6 +95,22 @@
                 if (angular.isDefined(menuItem.action)) {
                     menuItem.action();
                 }
+            };
+
+            scope.toggleFavorite = function(menuItem) {
+                menuItem.favorite = !menuItem.favorite;
+                var dynamicMenuItem;
+                if (menuItem.favorite) {
+                    dynamicMenuItem = angular.extend({}, { dynamic: true }, menuItem);
+                    mainMenuService.addMenuItem(dynamicMenuItem);
+                } else {
+                    dynamicMenuItem = _.find(mainMenuService.menuItems, function(currentMenuItem) { return currentMenuItem.path === menuItem.path && currentMenuItem.dynamic; });
+                    mainMenuService.removeMenuItem(dynamicMenuItem);
+                }
+            };
+
+            scope.sortableOptions = {
+                items: "li:not(.static)"
             };
         }
     }
