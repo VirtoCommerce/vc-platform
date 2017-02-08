@@ -161,8 +161,7 @@
                 var dynamicMenuItem;
                 if (menuItem.favorite) {
                     var lastMenuBarItemPriority = mainMenuService.menuBarItems[mainMenuService.menuBarItems.length - 2].priority;
-                    lastMenuBarItemPriority++;
-                    dynamicMenuItem = angular.extend({}, menuItem, { priority: lastMenuBarItemPriority, dynamic: true });
+                    dynamicMenuItem = angular.extend({}, menuItem, { priority: lastMenuBarItemPriority + 1, dynamic: true });
                     mainMenuService.addMenuItem(dynamicMenuItem);
                 } else {
                     dynamicMenuItem = _.find(mainMenuService.menuItems, function(currentMenuItem) { return currentMenuItem.path === menuItem.path && currentMenuItem.dynamic === true; });
@@ -171,6 +170,18 @@
             };
 
             scope.sortableOptions = {
+                stop: function (e, ui) {
+                    if (mainMenuService.menuBarItems[0].dynamic === true) {
+                        mainMenuService.menuBarItems[0].priority = 0;
+                    }
+                    for (var i = 1; i < mainMenuService.menuBarItems.length - 2; i++) {
+                        if (mainMenuService.menuBarItems[i].dynamic === true) {
+                            mainMenuService.menuBarItems[i].priority = mainMenuService.menuBarItems[i - 1].priority + 1;
+                        }
+                    }
+                },
+                axis: 'y',
+                cursor: "move",
                 items: "li:not(.static)"
             };
         }
