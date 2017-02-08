@@ -421,6 +421,7 @@ Copyright (C) Microsoft Corporation. All rights reserved.
 
         <ItemGroup>
             <ExcludeFiles Include="
+                  Antlr3.Runtime.dll;
                   CacheManager.Core.dll;
                   CacheManager.Core.xml;
                   Common.Logging.dll;
@@ -439,6 +440,10 @@ Copyright (C) Microsoft Corporation. All rights reserved.
                   Microsoft.AspNet.Identity.EntityFramework.xml;
                   Microsoft.AspNet.Identity.Owin.dll;
                   Microsoft.AspNet.Identity.Owin.xml;
+                  Microsoft.AspNet.SignalR.Core.dll;
+                  Microsoft.AspNet.SignalR.Core.xml;
+                  Microsoft.Azure.KeyVault.Core.dll;
+                  Microsoft.Azure.KeyVault.Core.xml;
                   Microsoft.Data.Edm.dll;
                   Microsoft.Data.Edm.xml;
                   **\Microsoft.Data.Edm.resources.dll;
@@ -464,6 +469,7 @@ Copyright (C) Microsoft Corporation. All rights reserved.
                   Microsoft.Practices.Unity.Configuration.xml;
                   Microsoft.Practices.Unity.RegistrationByConvention.dll;
                   Microsoft.Practices.Unity.RegistrationByConvention.xml;
+                  Microsoft.Web.Infrastructure.dll;
                   Microsoft.WindowsAzure.Configuration.dll;
                   Microsoft.WindowsAzure.Configuration.xml;
                   Microsoft.WindowsAzure.Storage.dll;
@@ -479,8 +485,14 @@ Copyright (C) Microsoft Corporation. All rights reserved.
                   System.Spatial.dll;
                   System.Spatial.xml;
                   **\System.Spatial.resources.dll;
+                  System.Web.Cors.dll;
                   System.Web.Http.dll;
                   System.Web.Http.xml;
+                  System.Web.Http.Cors.dll;
+                  System.Web.Http.Cors.xml;
+                  System.Web.Optimization.dll;
+                  System.Web.Optimization.xml;
+                  WebGrease.dll;
 
                   VirtoCommerce.Platform.Core.dll;
                   VirtoCommerce.Platform.Core.xml;
@@ -500,9 +512,16 @@ Copyright (C) Microsoft Corporation. All rights reserved.
         </ItemGroup>
 
         <ItemGroup>
-            <BinFiles Include="$(WebProjectOutputDir)\bin\**\*.*" Exclude="@(ExcludeFiles -> '$(WebProjectOutputDir)\bin\%(Identity)')" />
+            <ExcludeBinFiles Include="@(ExcludeFiles -> 'bin\%(Identity)')" Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch(%(Identity), '^bin\\'))" />
+        </ItemGroup>
+        <ItemGroup>
+            <ExcludeBinFiles Include="@(ExcludeFiles)" Condition="$([System.Text.RegularExpressions.Regex]::IsMatch(%(Identity), '^bin\\'))" />
         </ItemGroup>
 
+        <ItemGroup>
+            <BinFiles Include="$(WebProjectOutputDir)\bin\**\*.*" Exclude="@(ExcludeBinFiles -> '$(WebProjectOutputDir)\%(Identity)')" />
+        </ItemGroup>
+        
         <Zip Files="@(Content);@(BinFiles)" WorkingDirectory="$(WebProjectOutputDir)" ZipFileName="$(VCModulePackagePath)" ZipLevel="9" />
         <Message Text="Created module package: $(VCModulePackagePath)" Importance="high" />
     </Target>
