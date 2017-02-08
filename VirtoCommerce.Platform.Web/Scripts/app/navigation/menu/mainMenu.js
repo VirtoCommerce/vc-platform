@@ -22,10 +22,11 @@
             if (menuItem.parent == null) {
                 var pathParts = menuItem.path.split('/');
                 var parentPath = null;
-                if (pathParts.length === 1 && !menuItem.static) {
+                // we want to check menuItem for null or undefined, so use '== null'
+                if (pathParts.length === 1 && menuItem.dynamic == null) {
                     parentPath = "more";
                 }
-                if (pathParts.length > 1 && !menuItem.dynamic) {
+                if (pathParts.length > 1 && menuItem.dynamic == null) {
                     pathParts.pop();
                     parentPath = pathParts.join('/');
                 }
@@ -42,7 +43,7 @@
     };
 
     function findByPath(path) {
-        return _.find(menuItems, function (menuItem) { return menuItem.path === path && !menuItem.dynamic; });
+        return _.find(menuItems, function (menuItem) { return menuItem.path === path && menuItem.dynamic !== true; });
     };
 
     function addMenuItem(menuItem) {
@@ -104,7 +105,7 @@
                     dynamicMenuItem = angular.extend({}, { dynamic: true }, menuItem);
                     mainMenuService.addMenuItem(dynamicMenuItem);
                 } else {
-                    dynamicMenuItem = _.find(mainMenuService.menuItems, function(currentMenuItem) { return currentMenuItem.path === menuItem.path && currentMenuItem.dynamic; });
+                    dynamicMenuItem = _.find(mainMenuService.menuItems, function(currentMenuItem) { return currentMenuItem.path === menuItem.path && currentMenuItem.dynamic === true; });
                     mainMenuService.removeMenuItem(dynamicMenuItem);
                 }
             };

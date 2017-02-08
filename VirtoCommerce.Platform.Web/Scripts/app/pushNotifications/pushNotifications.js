@@ -145,7 +145,7 @@
                             icon: 'fa fa-bell-o',
                             title: 'platform.menu.notifications',
                             priority: 2,
-                            static: true,
+                            dynamic: false,
                             permission: '',
                             headerTemplate: '$(Platform)/Scripts/app/pushNotifications/menuHeader.tpl.html',
                             listTemplate: '$(Platform)/Scripts/app/pushNotifications/menuList.tpl.html',

@@ -153,7 +153,7 @@ angular.module('platformWebApp', AppDependencies).
             action: function () { $state.go('workspace'); },
             // this item must always be at the top
             priority: 0,
-            static: true
+            dynamic: false
         };
         mainMenuService.addMenuItem(homeMenuItem);
 
@@ -180,7 +180,7 @@ angular.module('platformWebApp', AppDependencies).
             // this item must always be at the bottom, so
             // don't use just 99 number: we have INFINITE list
             priority: Number.MAX_SAFE_INTEGER,
-            static: true
+            dynamic: false
         };
         mainMenuService.addMenuItem(moreMenuItem);
 
