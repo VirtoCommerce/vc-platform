@@ -160,7 +160,9 @@
                 menuItem.favorite = !menuItem.favorite;
                 var dynamicMenuItem;
                 if (menuItem.favorite) {
-                    dynamicMenuItem = angular.extend({}, { dynamic: true }, menuItem);
+                    var lastMenuBarItemPriority = mainMenuService.menuBarItems[mainMenuService.menuBarItems.length - 2].priority;
+                    lastMenuBarItemPriority++;
+                    dynamicMenuItem = angular.extend({}, menuItem, { priority: lastMenuBarItemPriority, dynamic: true });
                     mainMenuService.addMenuItem(dynamicMenuItem);
                 } else {
                     dynamicMenuItem = _.find(mainMenuService.menuItems, function(currentMenuItem) { return currentMenuItem.path === menuItem.path && currentMenuItem.dynamic === true; });
