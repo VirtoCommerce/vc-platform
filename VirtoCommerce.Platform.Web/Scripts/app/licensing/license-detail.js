@@ -1,6 +1,7 @@
 ﻿angular.module('platformWebApp')
 .controller('platformWebApp.licenseDetailController', ['$scope', '$window', 'FileUploader', '$http', 'platformWebApp.bladeNavigationService', function ($scope, $window, FileUploader, $http, bladeNavigationService) {
     var blade = $scope.blade;
+    blade.isNew = blade.isNew || !$scope.license;
 
     $scope.activate = function (activationCode) {
         blade.isLoading = true;
@@ -73,9 +74,7 @@
         };
         blade.title = 'platform.blades.license.title-new';
     } else {
-        $scope.currentEntity = $scope.license || {
-            "type": "Community", "customerName": "N/A", "expirationDate": "N/A"
-        };
+        $scope.currentEntity = $scope.license;
 
         blade.toolbarCommands = [
               {
@@ -96,9 +95,9 @@
               }];
 
         blade.title = 'platform.blades.license.title';
-        blade.headIcon = 'fa-id-card';
     }
 
+    blade.headIcon = 'fa-id-card';
     blade.isLoading = false;
 }])
 

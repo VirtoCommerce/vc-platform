@@ -21,7 +21,10 @@ namespace VirtoCommerce.Platform.Web.Controllers
             var demoCredentials = ConfigurationManager.AppSettings.GetValue<string>("VirtoCommerce:DemoCredentials", null);
             var resetTimeStr = ConfigurationManager.AppSettings.GetValue<string>("VirtoCommerce:DemoResetTime", null);
             var license = _licenseService.LoadLicense();
-            var licenseString = JsonConvert.SerializeObject(license, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() });
+            var licenseString = JsonConvert.SerializeObject(license, new JsonSerializerSettings {
+                ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                DateTimeZoneHandling = DateTimeZoneHandling.Utc
+            });
 
             if (!string.IsNullOrEmpty(resetTimeStr))
             {
