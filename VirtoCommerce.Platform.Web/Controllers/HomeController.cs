@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Configuration;
 using System.Reflection;
+using System.Web.Hosting;
 using System.Web.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -12,16 +13,15 @@ namespace VirtoCommerce.Platform.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private static readonly LicenseService _licenseService = new LicenseService();
-
         public ActionResult Index()
         {
             var assembly = Assembly.GetExecutingAssembly();
             var version = string.Join(".", assembly.GetInformationalVersion(), assembly.GetFileVersion());
             var demoCredentials = ConfigurationManager.AppSettings.GetValue<string>("VirtoCommerce:DemoCredentials", null);
             var resetTimeStr = ConfigurationManager.AppSettings.GetValue<string>("VirtoCommerce:DemoResetTime", null);
-            var license = _licenseService.LoadLicense();
-            var licenseString = JsonConvert.SerializeObject(license, new JsonSerializerSettings {
+            var license = LoadLicense();
+            var licenseString = JsonConvert.SerializeObject(license, new JsonSerializerSettings
+            {
                 ContractResolver = new CamelCasePropertyNamesContractResolver(),
                 DateTimeZoneHandling = DateTimeZoneHandling.Utc
             });
@@ -50,6 +50,25 @@ namespace VirtoCommerce.Platform.Web.Controllers
                 DemoResetTime = new MvcHtmlString(resetTimeStr ?? "''"),
                 License = new MvcHtmlString(licenseString),
             });
+        }
+
+        private static License LoadLicense()
+        {
+            License license = null;
+
+            var licenseFilePath = HostingEnvironment.MapPath(Startup.VirtualRoot + "/App_Data/VirtoCommerce.lic");
+            if (System.IO.File.Exists(licenseFilePath))
+            {
+                var rawLicense = System.IO.File.ReadAllText(licenseFilePath);
+                license = License.Parse(rawLicense);
+
+                if (license != null)
+                {
+                    license.RawLicense = null;
+                }
+            }
+
+            return license;
         }
     }
 }

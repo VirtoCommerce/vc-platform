@@ -6,7 +6,6 @@
     $scope.activate = function (activationCode) {
         blade.isLoading = true;
         $scope.activationError = null;
-        blade.licenseContent = null;
         $scope.filename = null;
 
         $http.post('api/platform/licensing/activateByCode', JSON.stringify(activationCode)).then(function (response) {
@@ -16,11 +15,10 @@
         });
     };
 
-    function activationCallback(licenseResponse, isActivationByCode) {
+    function activationCallback(license, isActivationByCode) {
         blade.isLoading = false;
-        if (licenseResponse) {
-            $scope.currentEntity = licenseResponse.license;
-            blade.licenseContent = licenseResponse.content;;
+        if (license) {
+            $scope.currentEntity = license;
             if ($scope.currentEntity.expirationDate && new Date($scope.currentEntity.expirationDate) < new Date()) {
                 $scope.activationError = 'Activation failed. This license has expired.';
             }
@@ -32,7 +30,7 @@
     $scope.activateLicense = function () {
         // confirmed. Activate the license
         blade.isLoading = true;
-        $http.post('api/platform/licensing/activateLicense', JSON.stringify(blade.licenseContent)).then(function () {
+        $http.post('api/platform/licensing/activateLicense', $scope.currentEntity).then(function () {
             $window.location.reload();
         });
     };

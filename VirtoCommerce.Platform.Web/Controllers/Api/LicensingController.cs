@@ -1,8 +1,10 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Web.Hosting;
 using System.Web.Http;
 using System.Web.Http.Description;
 using VirtoCommerce.Platform.Core.Security;
@@ -16,76 +18,63 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     [ApiExplorerSettings(IgnoreApi = true)]
     public class LicensingController : ApiController
     {
-        private static readonly LicenseService _licenseService = new LicenseService();
-
         [HttpPost]
         [Route("activateByCode")]
-        [ResponseType(typeof(LicenseResponse))]
+        [ResponseType(typeof(License))]
         public async Task<IHttpActionResult> ActivateByCode([FromBody]string activationCode)
         {
-            LicenseResponse response = null;
+            License license = null;
 
             using (var httpClient = new HttpClient())
             {
-                var activationUrl = new Uri("http://virtocommerce.com/admin/api/licenses/activate/" + activationCode);
+                var activationUrl = new Uri("https://virtocommerce.com/admin/api/licenses/activate/" + activationCode);
                 var httpResponse = await httpClient.GetAsync(activationUrl);
                 if (httpResponse.IsSuccessStatusCode)
                 {
-                    var content = await httpResponse.Content.ReadAsStringAsync();
-                    response = ValidateLicense(content);
+                    var rawLicense = await httpResponse.Content.ReadAsStringAsync();
+                    license = License.Parse(rawLicense);
                 }
             }
 
-            return Ok(response);
+            return Ok(license);
         }
 
         [HttpPost]
         [Route("activateByFile")]
-        [ResponseType(typeof(LicenseResponse))]
+        [ResponseType(typeof(License))]
         public async Task<IHttpActionResult> ActivateByFile()
         {
             if (!Request.Content.IsMimeMultipartContent())
                 throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.BadRequest, "MIME multipart content expected"));
 
-            LicenseResponse response = null;
+            License license = null;
 
             var streamProvider = await Request.Content.ReadAsMultipartAsync();
             var httpContent = streamProvider.Contents.FirstOrDefault();
 
             if (httpContent != null)
             {
-                var content = await httpContent.ReadAsStringAsync();
-                response = ValidateLicense(content);
+                var rawLicense = await httpContent.ReadAsStringAsync();
+                license = License.Parse(rawLicense);
             }
 
-            return Ok(response);
+            return Ok(license);
         }
 
         [HttpPost]
         [Route("activateLicense")]
         [ResponseType(typeof(License))]
-        public IHttpActionResult ActivateLicense([FromBody]string licenseContent)
+        public IHttpActionResult ActivateLicense(License license)
         {
-            var license = _licenseService.SaveLicenseIfValid(licenseContent);
-            return Ok(license);
-        }
+            license = License.Parse(license?.RawLicense);
 
-
-        private static LicenseResponse ValidateLicense(string content)
-        {
-            LicenseResponse response = null;
-
-            var license = _licenseService.Parse(content);
             if (license != null)
             {
-                response = new LicenseResponse
-                {
-                    License = license,
-                    Content = content,
-                };
+                var licenseFilePath = HostingEnvironment.MapPath(Startup.VirtualRoot + "/App_Data/VirtoCommerce.lic");
+                File.WriteAllText(licenseFilePath, license.RawLicense);
             }
 
-            return response;
+            return Ok(license);
         }
     }
 }
