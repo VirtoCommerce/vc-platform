@@ -2,7 +2,8 @@
 .factory('platformWebApp.mainMenuService', ['$filter', function ($filter) {
 
     var menuItems = [];
-    var menuBarItems = [];
+    var dynamicMenuItems = [];
+    var staticMenuItems = [];
 
     // do not compare priority by substraction! "more" item has value as max integer
     function compare(a, b) {
@@ -88,11 +89,17 @@
         });
         // sort tree items
         menuItems.sort(sortMenuItem);
-        // we want to check that menuItem has value defined and it is not null, so use '!= null'
-        menuBarItems.length = 0;
-        for (var i = 0; i < menuItems.length; i++) {
-            if (menuItems[i].dynamic != null) {
-                menuBarItems.push(menuItems[i]);
+        var i;
+        dynamicMenuItems.length = 0;
+        for (i = 0; i < menuItems.length; i++) {
+            if (menuItems[i].dynamic === true || menuItems[i].dynamic === 'list') {
+                dynamicMenuItems.push(menuItems[i]);
+            }
+        }
+        staticMenuItems.length = 0;
+        for (i = 0; i < menuItems.length; i++) {
+            if (menuItems[i].dynamic === false) {
+                staticMenuItems.push(menuItems[i]);
             }
         }
     };
@@ -120,7 +127,8 @@
 
     var retVal = {
         menuItems: menuItems,
-        menuBarItems: menuBarItems,
+        dynamicMenuItems: dynamicMenuItems,
+        staticMenuItems: staticMenuItems,
         addMenuItem: addMenuItem,
         removeMenuItem: removeMenuItem,
         findByPath: findByPath
@@ -138,7 +146,12 @@
             scope.currentMenuItem = undefined;
             // keep for backward compatibility
             scope.menuItems = mainMenuService.menuItems;
-            scope.menuBarItems = mainMenuService.menuBarItems;
+            scope.dynamicMenuItems = mainMenuService.dynamicMenuItems;
+            scope.staticMenuItems = mainMenuService.staticMenuItems;
+
+            scope.toggleSize = function() {
+                $('.nav-bar').toggleClass('__collapsed');
+            };
 
             scope.selectMenuItem = function (menuItem) {
                 if (scope.showSubMenu && scope.currentMenuItem === menuItem) {
@@ -160,8 +173,11 @@
                 menuItem.favorite = !menuItem.favorite;
                 var dynamicMenuItem;
                 if (menuItem.favorite) {
-                    var lastMenuBarItemPriority = mainMenuService.menuBarItems[mainMenuService.menuBarItems.length - 2].priority;
-                    dynamicMenuItem = angular.extend({}, menuItem, { priority: lastMenuBarItemPriority + 1, dynamic: true });
+                    var lastMenuBarItem = mainMenuService.dynamicMenuItems[mainMenuService.dynamicMenuItems.length - 2];
+                    if (lastMenuBarItem == null) {
+                        lastMenuBarItem = mainMenuService.staticMenuItems[mainMenuService.staticMenuItems.length - 1];
+                    }
+                    dynamicMenuItem = angular.extend({}, menuItem, { priority: lastMenuBarItem.priority + 1, dynamic: true });
                     mainMenuService.addMenuItem(dynamicMenuItem);
                 } else {
                     dynamicMenuItem = _.find(mainMenuService.menuItems, function(currentMenuItem) { return currentMenuItem.path === menuItem.path && currentMenuItem.dynamic === true; });
@@ -171,18 +187,15 @@
 
             scope.sortableOptions = {
                 stop: function (e, ui) {
-                    if (mainMenuService.menuBarItems[0].dynamic === true) {
-                        mainMenuService.menuBarItems[0].priority = 0;
-                    }
-                    for (var i = 1; i < mainMenuService.menuBarItems.length - 2; i++) {
-                        if (mainMenuService.menuBarItems[i].dynamic === true) {
-                            mainMenuService.menuBarItems[i].priority = mainMenuService.menuBarItems[i - 1].priority + 1;
-                        }
+                    var lastStaticMenuBarItem = mainMenuService.staticMenuItems[mainMenuService.staticMenuItems.length - 1];
+                    var priorityShift = lastStaticMenuBarItem.priority;
+                    for (var i = 0; i < mainMenuService.dynamicMenuItems.length - 2; i++) {
+                        mainMenuService.dynamicMenuItems[i].priority = priorityShift + i + 1;
                     }
                 },
                 axis: 'y',
                 cursor: "move",
-                items: "li:not(.static)"
+                items: "li:not(.list)"
             };
         }
     }

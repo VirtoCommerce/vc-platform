@@ -1,20 +1,40 @@
 ﻿<nav class="nav-bar">
-    <ul class="menu bar" ng-model="menuBarItems" ui-sortable="sortableOptions">
-        <li class="menu-item" ng-class="{'__selected': currentMenuItem === menuItem && showSubMenu, '__animated': menuItem.incremented, 'static': menuItem.dynamic === false}" ng-repeat="menuItem in menuBarItems" ng-click="selectMenuItem(menuItem)">
-            <a class="menu-link" ng-if="!menuItem.template" href="" va-permission="{{menuItem.permission}}">
-                <span class="menu-ico" ng-class="menuItem.icon"></span>
-                <span class="name">{{menuItem.title | translate}}</span>
-            </a>
-            <ng-include src='menuItem.template'> </ng-include>
-        </li>
-        <li class="menu-item __logo static">
+    <div class="bar">
+        <a class="menu-link" ng-click="toggleSize()">
+            <i  class="menu-ico fa fa-bars"></i>
+        </a>
+        <ul class="menu items">
+            <li class="menu-item" ng-class="{'__selected': currentMenuItem === menuItem && showSubMenu, '__animated': menuItem.incremented}" ng-repeat="menuItem in staticMenuItems" ng-click="selectMenuItem(menuItem)">
+                <a class="menu-link" ng-if="!menuItem.template" href="" va-permission="{{menuItem.permission}}">
+                    <i class="menu-ico" ng-class="menuItem.icon"></i>
+                    <span class="name">{{menuItem.title | translate}}</span>
+                </a>
+                <ng-include src='menuItem.template'> </ng-include>
+            </li>
+        </ul>
+        <div class="menu items favorites">
+            <div class="outer-wrapper">
+                <div class="inner-wrapper">
+                    <ul class="content" ng-model="dynamicMenuItems" ui-sortable="sortableOptions">
+                        <li class="menu-item" ng-class="{'__selected': currentMenuItem === menuItem && showSubMenu, '__animated': menuItem.incremented, 'list': menuItem.dynamic === 'list'}" ng-repeat="menuItem in dynamicMenuItems" ng-click="selectMenuItem(menuItem)">
+                            <a class="menu-link" ng-if="!menuItem.template" href="" va-permission="{{menuItem.permission}}">
+                                <i class="drag-and-drop fa fa-ellipsis-v" ng-if="menuItem.dynamic !== 'list'"></i><i class="menu-ico" ng-class="menuItem.icon"></i>
+                                <span class="name">{{menuItem.title | translate}}</span>
+                            </a>
+                            <ng-include src='menuItem.template'> </ng-include>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="__logo static">
             <span class="logo-version">{{platformVersion}}</span>
-        </li>
-    </ul>
+        </div>
+    </div>
     <div class="dropdown" ng-class="{'__opened': showSubMenu}">
         <a class="dropdown-close" ng-click="showSubMenu = false">×</a>
         <div class="dropdown-head" ng-if="!currentMenuItem.headerTemplate">
-             <ul class="menu __inline" style="height: 50px;">
+            <ul class="menu __inline" style="height: 50px;">
                 <!--<li class="menu-item">
                     <a class="menu-link">
                         <i class="menu-ico fa fa-clock-o"></i>
@@ -27,7 +47,7 @@
                         <span class="menu-name">Clear all recent</span>
                     </a>
                 </li>-->
-            </ul> 
+            </ul>
         </div>
         <ng-include src='currentMenuItem.headerTemplate'> </ng-include>
         <div class="dropdown-content">
@@ -39,7 +59,7 @@
                 <div class="list-fav" ng-if="menuItem.children.length == 0" ng-click="toggleFavorite(menuItem)">
                     <i class="list-ico {{menuItem.favorite ? 'fa fa-star' : 'fa fa-star-o'}}"></i>
                 </div>
-                <div class="list-link {{menuItem.icon == 'fa fa-user' ? '__customers' : ''}}" ng-if="!menuItem.template && menuItem.children.length > 0">
+                <div class="list-group {{menuItem.icon == 'fa fa-user' ? '__customers' : ''}}" ng-if="!menuItem.template && menuItem.children.length > 0">
                     {{menuItem.title | translate}}
                 </div>
                 <a class="list-link {{menuItem.icon == 'fa fa-user' ? '__customers' : ''}}" ng-if="!menuItem.template && menuItem.children.length == 0" href="" ng-click="selectMenuItem(menuItem)">

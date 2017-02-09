@@ -161,7 +161,7 @@ angular.module('platformWebApp', AppDependencies).
             path: 'browse',
             icon: 'fa fa-search',
             title: 'platform.menu.browse',
-            priority: 90,
+            priority: 0
         };
         mainMenuService.addMenuItem(browseMenuItem);
 
@@ -169,7 +169,7 @@ angular.module('platformWebApp', AppDependencies).
             path: 'configuration',
             icon: 'fa fa-wrench',
             title: 'platform.menu.configuration',
-            priority: 91,
+            priority: 1
         };
         mainMenuService.addMenuItem(cfgMenuItem);
 
@@ -180,7 +180,7 @@ angular.module('platformWebApp', AppDependencies).
             // this item must always be at the bottom, so
             // don't use just 99 number: we have INFINITE list
             priority: 9007199254740991,// Number.MAX_SAFE_INTEGER,
-            dynamic: false
+            dynamic: "list"
         };
         mainMenuService.addMenuItem(moreMenuItem);
 
