@@ -135,7 +135,7 @@
     };
     return retVal;
 }])
-.directive('vaMainMenu', ['$compile', '$filter', '$state', 'platformWebApp.mainMenuService', function ($compile, $filter, $state, mainMenuService) {
+.directive('vaMainMenu', ['$compile', '$filter', '$state', '$translate', 'platformWebApp.mainMenuService', function ($compile, $filter, $state, $translate, mainMenuService) {
 
     return {
         restrict: 'E',
@@ -148,6 +148,10 @@
             scope.menuItems = mainMenuService.menuItems;
             scope.dynamicMenuItems = mainMenuService.dynamicMenuItems;
             scope.staticMenuItems = mainMenuService.staticMenuItems;
+            scope.search = {
+                searchMenuItems: [],
+                searchText : ""
+            };
 
             scope.toggleSize = function() {
                 $('.nav-bar').toggleClass('__collapsed');
@@ -185,18 +189,48 @@
                 }
             };
 
+            scope.searchMenuItem = function (menuItems) {
+                scope.search.searchMenuItems.length = 0;
+                var searchMenuItemImpl = function(menuItems) {
+                    for (var i = 0; i < menuItems.length; i++) {
+                        if (menuItems[i].children.length > 0) {
+                            searchMenuItemImpl(menuItems[i].children);
+                        } else if ($translate.instant(menuItems[i].title).search(new RegExp(scope.search.searchText, "i")) > -1) {
+                            scope.search.searchMenuItems.push(menuItems[i]);
+                        }
+                    }
+                };
+                searchMenuItemImpl(menuItems);
+            };
+
             scope.sortableOptions = {
+                axis: 'y',
+                cursor: "move",
+                // bug in ui-sortable: always use container with tolerance
+                // because otherwise draggable item can't replace top item:
+                // where is no space between top item and container top border
+                containment: ".favorites",
+                items: "li:not(.list)",
+                tolerance: "pointer",
                 stop: function (e, ui) {
                     var lastStaticMenuBarItem = mainMenuService.staticMenuItems[mainMenuService.staticMenuItems.length - 1];
                     var priorityShift = lastStaticMenuBarItem.priority;
                     for (var i = 0; i < mainMenuService.dynamicMenuItems.length - 2; i++) {
                         mainMenuService.dynamicMenuItems[i].priority = priorityShift + i + 1;
                     }
-                },
-                axis: 'y',
-                cursor: "move",
-                items: "li:not(.list)"
+                }
             };
         }
     }
-}]);
+}]).directive('vaFavorites', function () {
+    return {
+        restrict: 'A',
+        link: function (scope, element, attr) {
+            $(element).keydown(function (e) {
+                if (e.shiftKey && e.keyCode == 32) { // Shift + Space
+                    $(e.target).prev(".list-fav").click();
+                }
+            });
+        }
+    }
+});

@@ -12,7 +12,8 @@
         "modules": "Modules",
         "export-import": "Export & Import",
         "user-profile": "User profile",
-        "assets": "Assets"
+        "assets": "Assets",
+        "toggle-favorites": "Shift + Space to toggle favorites"
       },
         "navigation": {
             "back": "Back",

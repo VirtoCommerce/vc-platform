@@ -38,25 +38,24 @@
     <div class="dropdown" ng-class="{'__opened': showSubMenu}">
         <a class="dropdown-close" ng-click="showSubMenu = false">×</a>
         <div class="dropdown-head" ng-if="!currentMenuItem.headerTemplate">
-            <ul class="menu __inline" style="height: 50px;">
-                <!--<li class="menu-item">
-                    <a class="menu-link">
-                        <i class="menu-ico fa fa-clock-o"></i>
-                        <span class="menu-name">Everything</span>
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a class="menu-link">
-                        <i class="menu-ico fa fa-times-circle"></i>
-                        <span class="menu-name">Clear all recent</span>
-                    </a>
-                </li>-->
-            </ul>
+            <div class="form-group">
+                <div class="form-hint">{{'platform.menu.toggle-favorites' | translate }}</div>
+                <div class="form-input __search">
+                    <input placeholder="{{'platform.placeholders.search-keyword' | translate }}" ng-model="search.searchText" ng-change="searchMenuItem(currentMenuItem.children)">
+                    <button class="btn __other">
+                        <i class="btn-ico fa fa-remove" title="Clear" ng-click="search.searchText=''"></i>
+                    </button>
+                </div>
+            </div>
         </div>
         <ng-include src='currentMenuItem.headerTemplate'> </ng-include>
         <div class="dropdown-content">
-            <ul class="list">
-                <li class="list-item" ng-repeat="menuItem in currentMenuItem.children" va-permission="{{menuItem.permission}}" ng-include="'menuItemTemplate.html'">
+            <ul class="list" ng-if="search.searchText == ''" va-favorites>
+                <li class="list-item" ng-repeat="menuItem in currentMenuItem.children" ng-include="'menuItemTemplate.html'" va-permission="{{menuItem.permission}}">
+                </li>
+            </ul>
+            <ul class="list" ng-if="search.searchText != ''" va-favorites>
+                <li class="list-item" ng-repeat="menuItem in search.searchMenuItems" ng-include="'searchMenuItemTemplate.html'" va-permission="{{menuItem.permission}}">
                 </li>
             </ul>
             <script type="text/ng-template" id="menuItemTemplate.html">
@@ -77,6 +76,18 @@
                     <li class="list-item" ng-repeat="menuItem in menuItem.children" va-permission="{{menuItem.permission}}" ng-include="'menuItemTemplate.html'">
                     </li>
                 </ul>
+            </script>
+            <script type="text/ng-template" id="searchMenuItemTemplate.html">
+                <div class="list-fav" ng-click="toggleFavorite(menuItem)">
+                    <i class="list-ico {{menuItem.favorite ? 'fa fa-star' : 'fa fa-star-o'}}"></i>
+                </div>
+                <a class="list-link {{menuItem.icon == 'fa fa-user' ? '__customers' : ''}}" ng-if="!menuItem.template" href="" ng-click="selectMenuItem(menuItem)">
+                    <i class="list-ico" ng-class="menuItem.icon">
+                        <i ng-if="menuItem.icon == 'fa fa-user'"></i>
+                    </i>
+                    {{menuItem.title | translate}}
+                </a>
+                <ng-include src='menuItem.template'> </ng-include>
             </script>
         </div>
     </div>
