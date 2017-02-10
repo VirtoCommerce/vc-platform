@@ -4,7 +4,7 @@
 <div class="blade-content ___tree">
     <div class="blade-inner">
         <div class="inner-block">
-            <div ng-if="blade.isNew">
+            <div ng-if="blade.isNew && !currentEntity">
                 <!--DO NOT CHANGE THE CODE BELOW: COPYRIGHT VIOLATION-->
                 <div class="form-group" ng-if="!license">
                     <label class="form-label">{{ 'platform.blades.license.labels.info-running-no-license' | translate }}</label>
