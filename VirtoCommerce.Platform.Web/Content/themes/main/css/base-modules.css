@@ -1420,35 +1420,6 @@ ol li {
             top: 2px;
         }
 
-/* widget for statistics: duplicates style from commerce.core next version after 2.17.0. To be deleted after commerce.core 2.18 released */
-.list.__stats {
-    height: 100%;
-    line-height: 1.2;
-    padding: 0 10px;
-    text-align: left;
-}
-
-    .list.__stats .list-item {
-        font-size: 14px;
-        padding: 4px 0;
-        position: inherit;
-        text-align: left;
-        -webkit-box-shadow: inherit;
-        box-shadow: inherit;
-    }
-
-        .list.__stats .list-item.__default {
-            border-bottom: 1px solid #dee9f0;
-            color: #43b0e6;
-            padding: 5px 0 0;
-        }
-
-    .list.__stats .list-price {
-        float: right;
-        font-weight: 500;
-        margin: 0 0 0 10px;
-    }
-
 /* Headings */
 h1 {
     font-size: 330%;
