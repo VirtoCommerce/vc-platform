@@ -84,23 +84,31 @@ namespace VirtoCommerce.Platform.Web.Swagger
             });
         }
 
-        private static Uri HttpsProxySecuredUri(HttpRequestMessage message)
+        private static Uri ComputeHostAsSeenByOriginalClient(HttpRequestMessage message)
         {
             if (message.RequestUri.Scheme != Uri.UriSchemeHttps)
             {
-                IEnumerable<string> headerValues;
-                if (message.Headers.TryGetValues("X-Forwarded-Proto", out headerValues))
+                //we are behind a reverse proxy, use the host that was used by the client
+                if (message.Headers.Contains("X-Forwarded-Host"))
                 {
-                    string protocol = headerValues.FirstOrDefault();
-                    if (!String.IsNullOrEmpty(protocol))
+                    //when multiple apache httpd are chained, each proxy append to the header 
+                    //with a comma (see //https://httpd.apache.org/docs/2.4/mod/mod_proxy.html#x-headers).
+                    string protocol = message.Headers.GetValues("X-Forwarded-Proto")?.FirstOrDefault()?.Split(',')[0];
+                    var host = message.Headers.GetValues("X-Forwarded-Host")?.FirstOrDefault()?.Split(',')[0];
+                    var port =  message.Headers.GetValues("x-Forwarded-Port")?.FirstOrDefault()?.Split(',')[0];
+
+                    if (String.IsNullOrEmpty(protocol)) protocol = message.RequestUri.Scheme;
+                    if (String.IsNullOrEmpty(host)) host = message.RequestUri.Host;
+                    if (String.IsNullOrEmpty(port)) port = message.RequestUri.Port.ToString();
+
+                    var uriBuilder = new UriBuilder(message.RequestUri)
                     {
-                        var uriBuilder = new UriBuilder(message.RequestUri)
-                        {
-                            Scheme = protocol,
-                            Port = -1 // default port for scheme
-                        };
-                        return uriBuilder.Uri;
-                    }
+                        Scheme = protocol,
+                        Host = host,
+                        Port = Int32.Parse(port)
+                    };
+                    return uriBuilder.Uri;
+
                 }
             }
             return message.RequestUri;
@@ -117,7 +125,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
             c.OperationFilter(() => new OptionalParametersFilter());
             c.OperationFilter(() => new FileResponseTypeFilter());
             c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
-            c.RootUrl(message => new Uri(HttpsProxySecuredUri(message), message.GetRequestContext().VirtualPathRoot).ToString());
+            c.RootUrl(message => new Uri(ComputeHostAsSeenByOriginalClient(message), message.GetRequestContext().VirtualPathRoot).ToString());
             c.PrettyPrint();
             c.ApiKey("apiKey")
                 .Description("API Key Authentication")
