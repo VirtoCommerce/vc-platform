@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace VirtoCommerce.Platform.Core.Settings
 {
@@ -20,5 +18,13 @@ namespace VirtoCommerce.Platform.Core.Settings
             return retVal;
         }
 
+        public static void SetSettingValue<T>(this ICollection<SettingEntry> settings, string settingName, T value)
+        {
+            var setting = settings.FirstOrDefault(x => x.Name.Equals(settingName, StringComparison.OrdinalIgnoreCase));
+            if (setting != null)
+            {
+                setting.Value = (string) Convert.ChangeType(value, typeof(string), CultureInfo.InvariantCulture);
+            }
+        }
     }
 }

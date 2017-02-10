@@ -1,12 +1,12 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.userProfile.userProfileController', ['$scope', 'platformWebApp.bladeNavigationService', '$translate', 'platformWebApp.userProfileApi', 'platformWebApp.common.worldLanguages', function ($scope, bladeNavigationService, $translate, userProfileApi, worldLanguages) {
+.controller('platformWebApp.userProfile.userProfileController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.authService', 'platformWebApp.localization', 'platformWebApp.common.worldLanguages', '$translate', function ($scope, bladeNavigationService, authService, localization, worldLanguages, $translate) {
     var blade = $scope.blade;
     blade.headIcon = 'fa-user';
     blade.title = 'platform.blades.user-profile.title';
-    blade.currentLanguage = $translate.use();
+    blade.currentLanguage = localization.get({ id: authService.userId });
 
     function initializeBlade() {
-        userProfileApi.query(
+        localization.query(
            function (result) {
                blade.isLoading = false;
                result.sort();
@@ -22,7 +22,8 @@
     };
 
     $scope.setLanguage = function () {
-        $translate.use(blade.currentLanguage);        
+        localization.update({ id: authService.userId }, blade.currentLanguage);
+        $translate.use(blade.currentLanguage);
     };
 
     initializeBlade();
